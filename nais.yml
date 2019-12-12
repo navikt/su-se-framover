@@ -1,0 +1,9 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+   name: su-se-framover
+   namespace: default
+   labels:
+      team: supstonad
+spec:
+   image: {{ image }}
