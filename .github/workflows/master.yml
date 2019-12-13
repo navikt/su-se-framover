@@ -43,13 +43,11 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
-        with:
-          resources: nais.yml
-          vars: dev.json
+          RESOURCE: nais.yml
+          VARS: dev.json
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-fss
-        with:
-          resources: nais.yml
-          vars: prod.json
+          RESOURCE: nais.yml
+          VARS: prod.json
