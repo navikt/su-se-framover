@@ -16,21 +16,21 @@ jobs:
     name: Build and push Docker container
     runs-on: ubuntu-latest
     steps:
-      -  uses: actions/checkout@v1
-      -  uses: actions/setup-node@v1
-         with:
-           node-version: '12.x'
-      -  name: install deps
-         run: npm install
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: install deps
+        run: npm install
       - name: build client
-         run: npm run build
+          run: npm run build
       - name: Build and publish Docker image
-         env:
-           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         run: |
-          docker build --tag ${IMAGE} .
-          docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
-          docker push ${IMAGE}
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            docker build --tag ${IMAGE} .
+            docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
+            docker push ${IMAGE}
 
   deploy-to-both:
     name: Deploy to NAIS
@@ -38,14 +38,14 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
-      -  uses: actions/checkout@v1
-      -  uses: nais/deploy/actions/deploy@v1
-         env:
-           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-           CLUSTER: dev-fss
-           RESOURCE: nais.yml
-      -  uses: nais/deploy/actions/deploy@v1
-         env:
-           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-           CLUSTER: prod-fss
-           RESOURCE: nais.yml
+      - uses: actions/checkout@v1
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: nais.yml
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-fss
+          RESOURCE: nais.yml
