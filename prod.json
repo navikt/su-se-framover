@@ -1,0 +1,6 @@
+{
+  "ingress": "https://su-se-framover.nais.adeo.no",
+  "env": {
+    "SU_SE_BAKOVER_URL": "https://su-se-bakover.nais.adeo.no"
+  }
+}
