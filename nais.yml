@@ -15,5 +15,4 @@ spec:
       path: isready
       port: 8080
    ingresses:
-      - "http://su-se-framover.nais.preprod.local/"
       - "https://su-se-framover.nais.preprod.local/"
