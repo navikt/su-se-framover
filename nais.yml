@@ -6,4 +6,11 @@ metadata:
    labels:
       team: supstonad
 spec:
+   port: 80
    image: {{ image }}
+   liveness:
+      path: isalive
+      port: 8080
+   readiness:
+      path: isready
+      port: 8080
