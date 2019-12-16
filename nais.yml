@@ -16,3 +16,8 @@ spec:
       port: 8080
    ingresses:
       - {{ingress}}
+   env:
+      {{#each env}}
+       - name: {{@key}}
+         value: "{{this}}"
+      {{/each}}
