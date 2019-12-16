@@ -4,18 +4,29 @@ const Root = () => {
     const [data, setData] = useState({text: "", isFetching: false});
 
     useEffect(() => {
-        console.log(process.env.SU_SE_BAKOVER_URL);
-        const fetchUsers = async () => {
+        const fetchConfig = async () => {
+            try {
+                const response = await fetch("/config.json").then(response => response.text());
+                return response;
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
+        const fetchUsers = async (config) => {
             try {
                 setData({isFetching: true});
-                const response = await fetch(process.env.SU_SE_BAKOVER_URL);
+                const response = await fetch(config.seSeBakoverUrl);
                 setData({text: await response.text(), isFetching: false});
             } catch (e) {
                 console.log(e);
                 setData({isFetching: false});
             }
         };
-        fetchUsers();
+        fetchConfig().then(value => {
+            var config = JSON.parse(value);
+            fetchUsers(config);
+        });
     }, []);
 
     return (
