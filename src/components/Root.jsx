@@ -16,7 +16,7 @@ const Root = () => {
         const fetchUsers = async (config) => {
             try {
                 setData({isFetching: true});
-                const response = await fetch(config.seSeBakoverUrl);
+                const response = await fetch(config.seSeBakoverUrl+"/hello");
                 setData({text: await response.text(), isFetching: false});
             } catch (e) {
                 console.log(e);
