@@ -1,33 +1,25 @@
 import React, {useEffect, useState} from 'react';
+import Config from './Config';
 
 const Root = () => {
     const [data, setData] = useState({text: "", isFetching: false});
+    const config = Config().state;
 
     useEffect(() => {
-        const fetchConfig = async () => {
-            try {
-                const response = await fetch("/config.json").then(response => response.text());
-                return response;
-            } catch (e) {
-                console.log(e);
-            }
-        };
-
         const fetchUsers = async (config) => {
             try {
                 setData({isFetching: true});
-                const response = await fetch(config.seSeBakoverUrl+"/hello");
+                const response = await fetch(config.seSeBakoverUrl + "/hello");
                 setData({text: await response.text(), isFetching: false});
             } catch (e) {
                 console.log(e);
                 setData({isFetching: false});
             }
         };
-        fetchConfig().then(value => {
-            var config = JSON.parse(value);
+        if (config !== undefined) {
             fetchUsers(config);
-        });
-    }, []);
+        }
+    }, [config]);
 
     return (
         <div>
@@ -35,6 +27,6 @@ const Root = () => {
             {data.isFetching ? "fetching" : <h2>{data.text}</h2>}
         </div>
     )
-}
+};
 
 export default Root;
