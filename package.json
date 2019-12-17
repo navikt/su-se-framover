@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Frontend for saksbehandlingsstøtteverktøy for supplerende stønad",
   "scripts": {
-    "test": "test",
+    "test": "jest",
+    "tdd": "jest --watch",
     "start": "NODE_ENV=development parcel src/index.html --open",
     "build": "npm run clean:dist && parcel build src/index.html --out-dir dist/ --no-source-maps",
     "clean:dist": "rimraf dist"
@@ -27,7 +28,10 @@
     "@babel/core": "^7.7.5",
     "@babel/plugin-transform-runtime": "^7.7.6",
     "@babel/preset-react": "^7.7.4",
+    "@testing-library/react-hooks": "^3.2.1",
+    "jest": "^24.9.0",
     "parcel-bundler": "^1.12.4",
+    "react-test-renderer": "^16.12.0",
     "rimraf": "^3.0.0"
   }
 }

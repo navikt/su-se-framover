@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import Config from './Config';
+import {useConfig} from './useConfig';
 
 const Root = () => {
     const [data, setData] = useState({text: "", isFetching: false});
-    const config = Config().state;
+    const {config} = useConfig();
 
     useEffect(() => {
         const fetchUsers = async (config) => {
             try {
                 setData({isFetching: true});
-                const response = await fetch(config.seSeBakoverUrl + "/hello");
+                const response = await fetch(config.suSeBakoverUrl + "/hello");
                 setData({text: await response.text(), isFetching: false});
             } catch (e) {
                 console.log(e);
