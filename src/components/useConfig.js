@@ -7,7 +7,7 @@ export const useConfig = () => {
     const data = useGet({ url });
 
     if (data.data && data.isFetching == false) {
-        setConfig(data.data);
+        !config && setConfig(data.data);
     }
     if (process.env.NODE_ENV === "development") {
         !config && setConfig({
