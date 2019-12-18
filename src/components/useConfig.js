@@ -10,13 +10,11 @@ export const useConfig = () => {
         setConfig(data.data);
     }
     if (process.env.NODE_ENV === "development") {
-        if (config === undefined) {
-            setConfig({
-                "suSeBakoverUrl": "http://localhost:8080"
-            });
-        }
+        !config && setConfig({
+            "suSeBakoverUrl": "http://localhost:8080"
+        });
     } else {
-        setUrl("/config.json");
+        !url && setUrl("/config.json");
     }
     return { config };
 };
