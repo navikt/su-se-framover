@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
 export const useConfig = () => {
     const [config, setConfig] = useState();
@@ -11,7 +11,13 @@ export const useConfig = () => {
                 console.log(e);
             }
         };
-        fetchConfig()
+        if (process.env.NODE_ENV === "development") {
+            setConfig({
+                "suSeBakoverUrl": "http://localhost:8080"
+            });
+        } else {
+            fetchConfig();
+        }
     }, []);
-    return {config};
+    return { config };
 };
