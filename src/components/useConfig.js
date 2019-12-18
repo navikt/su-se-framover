@@ -1,23 +1,22 @@
 import { useEffect, useState } from 'react';
+import { useGet } from './useGet';
 
 export const useConfig = () => {
     const [config, setConfig] = useState();
-    useEffect(() => {
-        const fetchConfig = async () => {
-            try {
-                const response = await fetch("/config.json").then(response => response.json());
-                setConfig(response);
-            } catch (e) {
-                console.log(e);
-            }
-        };
-        if (process.env.NODE_ENV === "development") {
+    const [url, setUrl] = useState(undefined);
+    const data = useGet({ url });
+
+    if (data.data && data.isFetching == false) {
+        setConfig(data.data);
+    }
+    if (process.env.NODE_ENV === "development") {
+        if (config === undefined) {
             setConfig({
                 "suSeBakoverUrl": "http://localhost:8080"
             });
-        } else {
-            fetchConfig();
         }
-    }, []);
+    } else {
+        setUrl("/config.json");
+    }
     return { config };
 };
