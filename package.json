@@ -5,6 +5,7 @@
   "scripts": {
     "test": "jest",
     "tdd": "jest --watch",
+    "start-no-browser": "NODE_ENV=development parcel src/index.html",
     "start": "NODE_ENV=development parcel src/index.html --open",
     "build": "npm run clean:dist && parcel build src/index.html --out-dir dist/ --no-source-maps",
     "clean:dist": "rimraf dist"
