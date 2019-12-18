@@ -1,30 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {useConfig} from './useConfig';
+import {useGet} from './useGet';
 
 const Root = () => {
-    const [data, setData] = useState({text: "", isFetching: false});
     const {config} = useConfig();
-
-    useEffect(() => {
-        const fetchUsers = async (config) => {
-            try {
-                setData({isFetching: true});
-                const response = await fetch(config.suSeBakoverUrl + "/hello");
-                setData({text: await response.text(), isFetching: false});
-            } catch (e) {
-                console.log(e);
-                setData({isFetching: false});
-            }
-        };
-        if (config !== undefined) {
-            fetchUsers(config);
-        }
-    }, [config]);
+    const url = config ? config.suSeBakoverUrl + "/hello" : undefined;
+    const {data, isFetching} = useGet({url});
+    const message = data ? data.greeting : "this message unreadable";
 
     return (
         <div>
             <h1>Hello world!</h1>
-            {data.isFetching ? "fetching" : <h2>{data.text}</h2>}
+            {isFetching ? "fetching" : <h2>{message}</h2>}
         </div>
     )
 };
