@@ -5,8 +5,8 @@
   "scripts": {
     "test": "jest",
     "tdd": "jest --watch",
-    "start-no-browser": "npm run inject_local_config && NODE_ENV=development parcel src/index.html",
-    "start": "npm run inject_local_config && NODE_ENV=development parcel src/index.html --open",
+    "start-no-browser": "npm run inject_local_config && parcel src/index.html",
+    "start": "npm run inject_local_config && parcel src/index.html --open",
     "build": "npm run clean:dist && parcel build src/index.html --out-dir dist/ --no-source-maps",
     "inject_local_config": "cp config.dev.json dist/config.json",
     "clean:dist": "rimraf dist"
