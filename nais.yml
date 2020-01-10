@@ -8,6 +8,8 @@ metadata:
 spec:
    port: 80
    image: {{ image }}
+   replicas:
+      min: 1
    liveness:
       path: isalive
       port: 8080
