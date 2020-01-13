@@ -3,6 +3,7 @@ import { useConfig } from './useConfig';
 import { useGet } from './useGet';
 import { useAuthRedirect } from './useAuthRedirect';
 import { AuthContext, AuthContextProvider } from './AuthContext';
+import 'reset-css'
 import {
   BrowserRouter as Router,
   Switch,
@@ -37,8 +38,48 @@ function Main({config}){
     const message = data ? data.data : "this message unreadable";
     return (
         <div>
+            <TopBar/>
             <h1>Hello world!</h1>
             {isFetching ? "fetching" : <h2>{message}</h2>}
+        </div>
+    )
+}
+
+const søkeboksStyle = {
+    marginLeft: '1em'
+}
+
+function Søkeboks(){
+    return (
+        <span>
+            <input/>
+            <button style={søkeboksStyle}>Søk</button>
+        </span>
+    )
+}
+
+const topBarStyle = {
+    backgroundColor: '#3E3832',
+    color: 'white',
+    height: '3em',
+    display: 'flex',
+    alignItems: 'center'
+
+}
+
+const appNameStyle = {
+    marginRight: '2em',
+    marginLeft: '1em'
+}
+
+
+function TopBar(){
+    return (
+        <div style={topBarStyle}>
+            <span style={appNameStyle}>
+                NAV Suse
+            </span>
+            <Søkeboks/>
         </div>
     )
 }
