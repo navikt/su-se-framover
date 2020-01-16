@@ -38,7 +38,7 @@ function Main({config}){
     const message = data ? data.data : "this message unreadable";
     return (
         <div>
-            <TopBar/>
+            <TopBar config={config} />
             <h1>Hello world!</h1>
             {isFetching ? "fetching" : <h2>{message}</h2>}
         </div>
@@ -50,18 +50,25 @@ const søkeboksStyle = {
     marginLeft: '1em'
 }
 
-function Søkeboks(){
+function Søkeboks({config}){
     const ref = useRef(null)
+    const [url, setUrl] = useState(undefined)
+    const {data} = useGet({url})
+    const history = useHistory();
 
-    function keyTyped(){
-
-    }
+    useEffect(() => {
+        if(data !== undefined){
+            history.push("/person")
+        }
+    }, [data])
 
     function search(value){
-        console.log(value)
+        const searchUrl = config.suSeBakoverUrl + "/devPerson?ident=" + value;
+
+        setUrl(searchUrl);
     }
 
-    function userHitsEnterOnInputField(e) {
+    function keyTyped(e) {
         if (e.key === 'Enter') {
             search(ref.current.value)
         }
@@ -69,7 +76,7 @@ function Søkeboks(){
 
     return (
         <span>
-            <input ref={ref} type="text" onKeyPress={keyTyped} onKeyDown={userHitsEnterOnInputField} />
+            <input ref={ref} type="text" onKeyDown={keyTyped} />
             <button style={søkeboksStyle} onClick={() => search(ref.current.value)} >Søk</button>
         </span>
     )
@@ -93,13 +100,13 @@ const appNameStyle = {
 }
 
 
-function TopBar(){
+function TopBar({config}){
     return (
         <div style={topBarStyle}>
             <span style={appNameStyle}>
                 NAV Suse
             </span>
-            <Søkeboks/>
+            <Søkeboks config={config}/>
         </div>
     )
 }
