@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import { useConfig } from './useConfig';
 import { useGet } from './useGet';
 import { useAuthRedirect } from './useAuthRedirect';
@@ -45,18 +45,38 @@ function Main({config}){
     )
 }
 
+
 const søkeboksStyle = {
     marginLeft: '1em'
 }
 
 function Søkeboks(){
+    const ref = useRef(null)
+
+    function keyTyped(){
+
+    }
+
+    function search(value){
+        console.log(value)
+    }
+
+    function userHitsEnterOnInputField(e) {
+        if (e.key === 'Enter') {
+            search(ref.current.value)
+        }
+    }
+
     return (
         <span>
-            <input/>
-            <button style={søkeboksStyle}>Søk</button>
+            <input ref={ref} type="text" onKeyPress={keyTyped} onKeyDown={userHitsEnterOnInputField} />
+            <button style={søkeboksStyle} onClick={() => search(ref.current.value)} >Søk</button>
         </span>
     )
 }
+
+
+
 
 const topBarStyle = {
     backgroundColor: '#3E3832',
@@ -97,5 +117,11 @@ function AuthComplete() {
     }, [accessToken])
     return null
 }
+
+
+
+
+
+
 
 export default Root;
