@@ -72,8 +72,8 @@ function Inntekt({config}){
     const history = useHistory();
     const {ident} = history.location.state
     const url = config ? config.suSeBakoverUrl + `/inntekt?ident=${ident}` : undefined;
-    const { data, isFetching } = useGet({ url });
-    const inntekt = data && !isFetching ?  data.arbeidsInntektMaaned[0].arbeidsInntektInformasjon.inntektListe[0].beloep : ""
+    const { data } = useGet({ url });
+    const inntekt = data ? data.arbeidsInntektMaaned[0].arbeidsInntektInformasjon.inntektListe[0].beloep : ""
     return (
 		<div>
 			<Innholdstittel>Inntekter</Innholdstittel>
