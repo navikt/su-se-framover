@@ -52,19 +52,38 @@ function Main({config}){
 
 function Person({config}){
     const history = useHistory();
-    const {fornavn, etternavn} = history.location.state.navn[0]
+    const {fornavn, etternavn} = history.location.state.data.navn[0]
     return (
         <div>
             <TopBar config={config} />
             <Panel>
-            <Panel border>
-            	<div><Normaltekst tag="span">Fornavn: </Normaltekst><Normaltekst tag="span">{fornavn}</Normaltekst></div>
-            	<div><Normaltekst tag="span">Etternavn: </Normaltekst><Normaltekst tag="span">{etternavn}</Normaltekst></div>
+				<Innholdstittel>Personinfo</Innholdstittel>
+				<Panel border>
+					<div><Normaltekst tag="span">Fornavn: </Normaltekst><Normaltekst tag="span">{fornavn}</Normaltekst></div>
+					<div><Normaltekst tag="span">Etternavn: </Normaltekst><Normaltekst tag="span">{etternavn}</Normaltekst></div>
+				</Panel>
+				<Inntekt config={config}/>
             </Panel>
-            </Panel>
-        </div>
+       	</div>
     )
 }
+
+function Inntekt({config}){
+    const history = useHistory();
+    const {ident} = history.location.state
+    const url = config ? config.suSeBakoverUrl + `/inntekt?ident=${ident}` : undefined;
+    const { data, isFetching } = useGet({ url });
+    const inntekt = data && !isFetching ?  data.arbeidsInntektMaaned[0].arbeidsInntektInformasjon.inntektListe[0].beloep : ""
+    return (
+		<div>
+			<Innholdstittel>Inntekter</Innholdstittel>
+			<Panel border>
+				<div><Normaltekst tag="span">Arbeidsinntekt: </Normaltekst><Normaltekst tag="span">{inntekt}</Normaltekst></div>
+			</Panel>
+		</div>
+    )
+}
+
 
 
 const søkeboksStyle = {
@@ -79,7 +98,7 @@ function Søkeboks({config}){
 
     useEffect(() => {
         if(data !== undefined){
-            history.push("/person", data)
+            history.push("/person", {ident:ref.current.value, data})
         }
     }, [data])
 
