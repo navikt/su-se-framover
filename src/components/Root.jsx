@@ -20,6 +20,7 @@ const Root = () => {
     return (
     <AuthContextProvider>
     <Router>
+		<ContentWrapper config={config}>
         <Switch>
             <Route path="/" exact>
                 <Main config={config}/>
@@ -31,6 +32,7 @@ const Root = () => {
                 <AuthComplete/>
             </Route>
         </Switch>
+    	</ContentWrapper>
     </Router>
     </AuthContextProvider>
     )
@@ -43,7 +45,6 @@ function Main({config}){
     const message = data ? data.data : "this message unreadable";
     return (
         <div>
-            <TopBar config={config} />
             <h1>Hello world!</h1>
             {isFetching ? "fetching" : <h2>{message}</h2>}
         </div>
@@ -55,7 +56,6 @@ function Person({config}){
     const {fornavn, etternavn} = history.location.state.data.navn[0]
     return (
         <div>
-            <TopBar config={config} />
             <Panel>
 				<Innholdstittel>Personinfo</Innholdstittel>
 				<Panel border>
@@ -83,8 +83,6 @@ function Inntekt({config}){
 		</div>
     )
 }
-
-
 
 const søkeboksStyle = {
     marginLeft: '1em'
@@ -122,10 +120,7 @@ function Søkeboks({config}){
     )
 }
 
-
-
-
-const topBarStyle = {
+const ContentWrapperStyle = {
     backgroundColor: '#3E3832',
     color: 'white',
     height: '3em',
@@ -140,13 +135,16 @@ const appNameStyle = {
 }
 
 
-function TopBar({config}){
+function ContentWrapper({config, children}){
     return (
-        <div style={topBarStyle}>
-            <Innholdstittel style={appNameStyle}>
-                NAV Suse
-            </Innholdstittel>
-            <Søkeboks config={config}/>
+        <div>
+			<div style={ContentWrapperStyle}>
+				<Innholdstittel style={appNameStyle}>
+					NAV Suse
+				</Innholdstittel>
+				<Søkeboks config={config}/>
+			</div>
+			{children}
         </div>
     )
 }
