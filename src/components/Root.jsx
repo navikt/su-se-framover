@@ -52,14 +52,14 @@ function Main({config}){
 
 function Person({config}){
     const history = useHistory();
-    const {firstName, lastName} = history.location.state
+    const {fornavn, etternavn} = history.location.state.navn[0]
     return (
         <div>
             <TopBar config={config} />
             <Panel>
             <Panel border>
-            	<div><Normaltekst tag="span">Fornavn: </Normaltekst><Normaltekst tag="span">{firstName}</Normaltekst></div>
-            	<div><Normaltekst tag="span">Etternavn: </Normaltekst><Normaltekst tag="span">{lastName}</Normaltekst></div>
+            	<div><Normaltekst tag="span">Fornavn: </Normaltekst><Normaltekst tag="span">{fornavn}</Normaltekst></div>
+            	<div><Normaltekst tag="span">Etternavn: </Normaltekst><Normaltekst tag="span">{etternavn}</Normaltekst></div>
             </Panel>
             </Panel>
         </div>

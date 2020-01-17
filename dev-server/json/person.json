@@ -1,5 +1,8 @@
 {
-    "firstName": "Moses",
-    "lastName": "Poses",
-    "ident": "12349876"
+  "navn": [
+    {
+      "fornavn": "TALENTFULL",
+      "etternavn": "KARAFFEL"
+    }
+  ]
 }
