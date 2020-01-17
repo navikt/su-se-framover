@@ -3,6 +3,8 @@ import { useConfig } from './useConfig';
 import { useGet } from './useGet';
 import { useAuthRedirect } from './useAuthRedirect';
 import { AuthContext, AuthContextProvider } from './AuthContext';
+import { Normaltekst, Innholdstittel } from 'nav-frontend-typografi';
+import { Panel } from 'nav-frontend-paneler';
 import 'reset-css'
 import {
   BrowserRouter as Router,
@@ -21,6 +23,9 @@ const Root = () => {
         <Switch>
             <Route path="/" exact>
                 <Main config={config}/>
+            </Route>
+            <Route path="/person">
+                <Person config={config}/>
             </Route>
             <Route path="/auth/complete">
                 <AuthComplete/>
@@ -45,6 +50,22 @@ function Main({config}){
     )
 }
 
+function Person({config}){
+    const history = useHistory();
+    const {firstName, lastName} = history.location.state
+    return (
+        <div>
+            <TopBar config={config} />
+            <Panel>
+            <Panel border>
+            	<div><Normaltekst tag="span">Fornavn: </Normaltekst><Normaltekst tag="span">{firstName}</Normaltekst></div>
+            	<div><Normaltekst tag="span">Etternavn: </Normaltekst><Normaltekst tag="span">{lastName}</Normaltekst></div>
+            </Panel>
+            </Panel>
+        </div>
+    )
+}
+
 
 const søkeboksStyle = {
     marginLeft: '1em'
@@ -58,12 +79,12 @@ function Søkeboks({config}){
 
     useEffect(() => {
         if(data !== undefined){
-            history.push("/person")
+            history.push("/person", data)
         }
     }, [data])
 
     function search(value){
-        const searchUrl = config.suSeBakoverUrl + "/devPerson?ident=" + value;
+        const searchUrl = config.suSeBakoverUrl + "/person?ident=" + value;
 
         setUrl(searchUrl);
     }
@@ -103,9 +124,9 @@ const appNameStyle = {
 function TopBar({config}){
     return (
         <div style={topBarStyle}>
-            <span style={appNameStyle}>
+            <Innholdstittel style={appNameStyle}>
                 NAV Suse
-            </span>
+            </Innholdstittel>
             <Søkeboks config={config}/>
         </div>
     )
