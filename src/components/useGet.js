@@ -9,9 +9,13 @@ export const useGet = ({url}) => {
         const fetchData = async () => {
             try {
                 setData({isFetching: true});
-                const response = await fetch(url, {headers: {'Authorization':`Bearer ${accessToken}`}});
-                if(response.status == 401){
-                    setData({isFetching: false, status: response.status});
+                const fetchConfig = {};
+                if (accessToken !== undefined) {
+                    fetchConfig.headers = { 'Authorization': `Bearer ${accessToken}` };
+                }
+                const response = await fetch(url, fetchConfig);
+                if (response.status == 401) {
+                    setData({isFetching: false, status: response.status, headers: response.headers});
                 } else {
                     setData({data: await response.json(), isFetching: false, status: response.status});
                 }
