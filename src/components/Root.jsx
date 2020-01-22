@@ -6,7 +6,6 @@ import { AuthContext, AuthContextProvider } from './AuthContext';
 import { Normaltekst, Innholdstittel } from 'nav-frontend-typografi';
 import { Panel } from 'nav-frontend-paneler';
 import 'reset-css'
-import Vilkarsprov from './Vilkarsprov.jsx'
 import {
   BrowserRouter as Router,
   Switch,
@@ -31,9 +30,6 @@ const Root = () => {
             </Route>
             <Route path="/auth/complete">
                 <AuthComplete/>
-            </Route>
-            <Route path="/vilkarsprov">
-				<Vilkarsprov/>
             </Route>
         </Switch>
     	</ContentWrapper>
@@ -60,12 +56,14 @@ function Person({config}){
     const {fornavn, etternavn} = history.location.state.data.navn[0]
     return (
         <div>
+            <Panel>
 				<Innholdstittel>Personinfo</Innholdstittel>
 				<Panel border>
 					<div><Normaltekst tag="span">Fornavn: </Normaltekst><Normaltekst tag="span">{fornavn}</Normaltekst></div>
 					<div><Normaltekst tag="span">Etternavn: </Normaltekst><Normaltekst tag="span">{etternavn}</Normaltekst></div>
 				</Panel>
 				<Inntekt config={config}/>
+            </Panel>
        	</div>
     )
 }
@@ -146,9 +144,7 @@ function ContentWrapper({config, children}){
 				</Innholdstittel>
 				<Søkeboks config={config}/>
 			</div>
-			<Panel>
 			{children}
-			</Panel>
         </div>
     )
 }
