@@ -195,9 +195,36 @@ function ContentWrapper({config, children}){
 				</Innholdstittel>
 				<Søkeboks config={config}/>
 			</div>
-			{children}
+			<table>
+			<tbody>
+			<tr>
+			<td style={{width: 100}}><Venstremeny/></td>
+			<td>{children}</td>
+			</tr>
+			</tbody>
+			</table>
         </div>
     )
+}
+
+function Venstremeny(){
+	return (
+		<>
+		<table>
+			<tbody>
+				<tr>
+					<td><a href="/" className="knapp">Hjem</a></td>
+				</tr>
+				<tr>
+					<td><a href="/vilkarsprov" className="knapp">Vilkårsprøving</a></td>
+				</tr>
+				<tr>
+					<td><a href="/Beregning" className="knapp">Beregning</a></td>
+				</tr>
+			</tbody>
+		</table>
+		</>
+	)
 }
 
 function AuthComplete() {
