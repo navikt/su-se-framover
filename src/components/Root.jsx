@@ -7,6 +7,8 @@ import { Normaltekst, Innholdstittel } from 'nav-frontend-typografi';
 import { Panel } from 'nav-frontend-paneler';
 import { Knapp } from 'nav-frontend-knapper';
 import 'reset-css'
+import Vilkarsprov from "./Vilkarsprov";
+import Beregning from "./Beregning"
 import 'nav-frontend-tabell-style';
 import {
   BrowserRouter as Router,
@@ -16,6 +18,7 @@ import {
   useLocation,
   useHistory
 } from "react-router-dom";
+
 
 const Root = () => {
     const { config } = useConfig();
@@ -32,6 +35,12 @@ const Root = () => {
             </Route>
             <Route path="/auth/complete">
                 <AuthComplete/>
+            </Route>
+            <Route path="/vilkarsprov">
+                <Vilkarsprov/>
+            </Route>
+            <Route path="/Beregning">
+                <Beregning/>
             </Route>
         </Switch>
     	</ContentWrapper>

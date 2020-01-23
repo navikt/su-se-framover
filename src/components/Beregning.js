@@ -1,13 +1,13 @@
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import {Sidetittel, Systemtittel} from "nav-frontend-typografi";
 import { Panel } from 'nav-frontend-paneler';
-import {Label, Input, TextareaControlled} from 'nav-frontend-skjema';
+import {Label, Input, Textarea} from 'nav-frontend-skjema';
 import Knapp from 'nav-frontend-knapper';
 import EtikettAdvarsel from 'nav-frontend-etiketter';
 
 
 function Beregning(){
-    const [state, setState] = useState({})
+    const [state, setState] = useState({sats: '', begrunnelse: ''})
 
 
     function setSats(sats){
@@ -21,6 +21,7 @@ function Beregning(){
             return {...state, begrunnelse}
         })
     }
+
 
     return (
         <div>
@@ -41,7 +42,7 @@ function Beregning(){
                         <Systemtittel>Sats:</Systemtittel>
                         <div>
                             <InputFieldWithText text={"kr"} value={state.sats} onChange={setSats}/>
-                            <TextareaControlled label="Begrunnelse:" onChange={setBegrunnelse}/>
+                            <Textarea label={"Begrunnelse:"} value={state.begrunnelse} onChange={e => setBegrunnelse(e.target.value)}/>
                         </div>
                     </div>
 
@@ -78,27 +79,39 @@ function Beregning(){
         console.log(formValues)
     }
 
+}
 
-    function InputFieldWithText({text, value, onChange}){
-        return (
-            <div style={{'display':'flex', 'alignItems': 'center'}}>
-            <Input id="min-input-2" value={value} onChange={(e => onChange(e.target.value))}/>
-            <div style={{'flexGrow':1}}>
-                <Label htmlFor="min-input-2" style={{'margin':0, 'marginRight':'1rem'}}>{text}</Label>
+function InputFieldWithText({text, value, onChange}){
+    const divStyle = {
+        display:'flex',
+        alignItems: 'center'
+    }
+    const innerDivstyle = {
+        flexGrow:'1'
+    }
+    const labelStyle = {
+        margin: '0',
+        marginRight:'1rem'
+    }
+
+
+    return (
+        <div style={divStyle}>
+            <Input value={value} onChange={(e => onChange(e.target.value))}/>
+            <div style={innerDivstyle}>
+                <Label style={labelStyle}>{text}</Label>
             </div>
         </div>
-        )
-    }
+    )
+}
 
 
-    function InputFields({labelText}){
-            return (
-                <span style={InputFieldsStyle}>
-                    <Input label={labelText} />
-                </span>
-            )
-    }
-
+function InputFields({labelText}){
+    return (
+        <span style={InputFieldsStyle}>
+            <Input label={labelText} />
+        </span>
+    )
 }
 
 const DivInputFieldsWrapperStyle = {
