@@ -5,6 +5,7 @@ import { useAuthRedirect } from './useAuthRedirect';
 import { AuthContext, AuthContextProvider } from './AuthContext';
 import { Normaltekst, Innholdstittel } from 'nav-frontend-typografi';
 import { Panel } from 'nav-frontend-paneler';
+import { Knapp } from 'nav-frontend-knapper';
 import 'reset-css'
 import {
   BrowserRouter as Router,
@@ -70,10 +71,10 @@ function Person({config}){
 
 function Inntekt({config}){
     const history = useHistory();
-    const {ident} = history.location.state
-    const url = config ? config.suSeBakoverUrl + `/inntekt?ident=${ident}` : undefined;
+    const props = history.location.state
+    const url = config ? config.suSeBakoverUrl + `/inntekt?ident=${props.ident}&fomDato=${props.fomDato}&tomDato=${props.tomDato}` : undefined;
     const { data } = useGet({ url });
-    const inntekt = data ? data.arbeidsInntektMaaned[0].arbeidsInntektInformasjon.inntektListe[0].beloep : ""
+    const inntekt = data ? data.maanedligInntekter[0].inntekter[0].beloep : ""
     return (
 		<div>
 			<Innholdstittel>Inntekter</Innholdstittel>
@@ -89,34 +90,39 @@ const søkeboksStyle = {
 }
 
 function Søkeboks({config}){
-    const ref = useRef(null)
+    const identSearch = useRef(null)
+    const fomDato = useRef(null)
+    const tomDato = useRef(null)
     const [url, setUrl] = useState(undefined)
     const {data} = useGet({url})
     const history = useHistory();
 
     useEffect(() => {
         if(data !== undefined){
-            history.push("/person", {ident:ref.current.value, data})
+            history.push("/person", {ident:identSearch.current.value, fomDato:fomDato.current.value, tomDato:tomDato.current.value, data})
         }
     }, [data])
 
     function search(value){
         const searchUrl = config.suSeBakoverUrl + "/person?ident=" + value;
-
         setUrl(searchUrl);
     }
 
     function keyTyped(e) {
         if (e.key === 'Enter') {
-            search(ref.current.value)
+            search(identSearch.current.value)
         }
     }
 
     return (
-        <span>
-            <input ref={ref} type="text" onKeyDown={keyTyped} />
-            <button style={søkeboksStyle} onClick={() => search(ref.current.value)} >Søk</button>
-        </span>
+        <>
+        	<input placeholder="FNR" ref={identSearch} type="text" onKeyDown={keyTyped} />
+			<label htmlFor="fom">FOM:</label>
+			<input type="date" id="fom" ref={fomDato} defaultValue="2020-01-01"/>
+			<label htmlFor="tom">TOM:</label>
+			<input type="date" id="tom" ref={tomDato} defaultValue={new Date().toISOString().slice(0,10)}/>
+			<Knapp onClick={() => search(identSearch.current.value)}>Søk</Knapp>
+        </>
     )
 }
 
