@@ -6,10 +6,10 @@ import { Innholdstittel, Undertittel, Element, Ingress } from 'nav-frontend-typo
 import { Panel } from 'nav-frontend-paneler';
 import EtikettAdvarsel from 'nav-frontend-etiketter';
 
+
 function Vilkarsprov(){
 	return (
 		<div>
-			<EtikettAdvarsel type="advarsel">ADVARSEL - EKSPERIMENTELT DESIGN - IKKE REPRESENTATIVT FOR ENDELIG UTSEENDE</EtikettAdvarsel>
 			<Innholdstittel>Vilkårsprøving</Innholdstittel>
 			<Panel border>
                 <CheckboksPanelGruppe
@@ -25,7 +25,6 @@ function Vilkarsprov(){
 //                     feil="Her er det noe feil"
                 />
 			</Panel>
-
 			<Hovedknapp>Lagre vilkårsvurdering</Hovedknapp>
 		</div>
 	)
@@ -34,56 +33,65 @@ function Vilkarsprov(){
 function Uforevilkar(){
 	return (
 		<div>
-		<Tekstomrade>{ `For å kunne motta Supplerende stønad for uføre, må brukeren oppfylle vilkårene §12-2 til §12-8 i folketrygdloven` }</Tekstomrade>
-
+			<Tekstomrade>{`For å kunne motta Supplerende stønad for uføre, må brukeren oppfylle vilkårene §12-2 til §12-8 i folketrygdloven`}
+			</Tekstomrade>
 			<br/>
-
 			<TextareaControlled label="Begrunnelse"/>
 		</div>
 	)
 }
 
-function Flyktningvilkar(){
+
+function ufor(){
 	return (
 		<div>
-        		<Tekstomrade>{ `For å kunne motta Supplerende stønad for uføre må brukeren ha status som flyktning. Bla bla bla henhold til Utlendingsloven §28 blah blah` }</Tekstomrade>
-
-					<br/>
-                   <TextareaControlled label="Begrunnelse"/>
-        		</div>
+			<Tekstomrade>{`For å kunne motta Supplerende stønad for uføre, må brukeren oppfylle vilkårene §12-2 til §12-8 i folketrygdloven`}
+			</Tekstomrade>
+		</div>
 	)
 }
 
-function BoOgOppholdVilkar(){
+const UforevilkarStyle = {
+	display: 'flex'
+}
+
+function Flyktningvilkar(){
 	return (
 		<div>
-                		<Tekstomrade>{ `For å kunne motta Supplerende stønad for uføre må brukeren være bosatt og oppholde seg i Norge. Bla bla maksimal lengde på utlandsopphold 90 dager, bla bla mister retten til  motta bla bla` }</Tekstomrade>
+			<Tekstomrade>{ `For å kunne motta Supplerende stønad for uføre må brukeren ha status som flyktning. Bla bla bla henhold til Utlendingsloven §28 blah blah` }</Tekstomrade>
+				<br/>
+				<TextareaControlled label="Begrunnelse"/>
+		</div>
+	)
+}
 
-        					<br/>
-                           <TextareaControlled label="Begrunnelse"/>
-                		</div>
+function BoOgOppholdVilkar() {
+	return (
+		<div>
+			<Tekstomrade>{`For å kunne motta Supplerende stønad for uføre må brukeren være bosatt og oppholde seg i Norge. Bla bla maksimal lengde på utlandsopphold 90 dager, bla bla mister retten til  motta bla bla`}</Tekstomrade>
+			<br/>
+			<TextareaControlled label="Begrunnelse"/>
+		</div>
 	)
 }
 
 function OppholdstillatelseVilkar(){
 	return (
 		<div>
-                		<Tekstomrade>{ `Brukeren må ha gyldig oppholdstillatelse i riket. blah blah` }</Tekstomrade>
-
-        					<br/>
-                           <TextareaControlled label="Begrunnelse"/>
-                		</div>
+			<Tekstomrade>{ `Brukeren må ha gyldig oppholdstillatelse i riket. blah blah` }</Tekstomrade>
+			<br/>
+			<TextareaControlled label="Begrunnelse"/>
+		</div>
 	)
 }
 
 function FormueVilkar(){
 	return (
 		<div>
-                		<Tekstomrade>{ `Brukeren må ha formue under 0,5G. Bla bla bla depositumskonto bla bla bla hytte og sånt` }</Tekstomrade>
-
-        					<br/>
-                           <TextareaControlled label="Begrunnelse"/>
-                		</div>
+			<Tekstomrade>{ `Brukeren må ha formue under 0,5G. Bla bla bla depositumskonto bla bla bla hytte og sånt` }</Tekstomrade>
+			<br/>
+			<TextareaControlled label="Begrunnelse"/>
+		</div>
 	)
 }
 
