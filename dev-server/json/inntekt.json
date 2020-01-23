@@ -37,6 +37,33 @@
           }
         }
       ]
+    },
+    {
+      "gjeldendeMaaned": "2020-02",
+      "inntekter": [
+        {
+          "beskrivelse": "fastloenn",
+          "beloep": "22000.0",
+          "type": "LOENNSINNTEKT",
+          "inntektsperiodetype": "Maaned",
+          "utbetaltIMaaned": "2020-01",
+          "virksomhet": {
+            "identifikator": "873152362",
+            "aktoerType": "ORGANISASJON"
+          }
+        },
+        {
+          "beskrivelse": "ufoeretrygd",
+          "beloep": "2500.0",
+          "type": "YTELSE_FRA_OFFENTLIGE",
+          "inntektsperiodetype": "Maaned",
+          "utbetaltIMaaned": "2020-01",
+          "virksomhet": {
+            "identifikator": "873152362",
+            "aktoerType": "ORGANISASJON"
+          }
+        }
+      ]
     }
   ]
 }

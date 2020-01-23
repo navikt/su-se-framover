@@ -7,6 +7,7 @@ import { Normaltekst, Innholdstittel } from 'nav-frontend-typografi';
 import { Panel } from 'nav-frontend-paneler';
 import { Knapp } from 'nav-frontend-knapper';
 import 'reset-css'
+import 'nav-frontend-tabell-style';
 import {
   BrowserRouter as Router,
   Switch,
@@ -79,10 +80,45 @@ function Inntekt({config}){
 		<div>
 			<Innholdstittel>Inntekter</Innholdstittel>
 			<Panel border>
-				<div><Normaltekst tag="span">Arbeidsinntekt: </Normaltekst><Normaltekst tag="span">{inntekt}</Normaltekst></div>
+				<InntektsTabell inntekt={data}/>
 			</Panel>
 		</div>
     )
+}
+
+function InntektsTabell({inntekt}){
+  if(inntekt){
+    return (
+      <table className="tabell">
+      	<thead>
+      		<tr>
+      			<th>Periode</th>
+      			<th>Type</th>
+      			<th>Beskrivelse</th>
+      			<th>Beløp</th>
+      		</tr>
+      	</thead>
+        {inntekt.maanedligInntekter.map((alleMnd, mndIndex) => {
+        	var monthSum = 0
+        	return <tbody key={mndIndex}>
+        	{alleMnd.inntekter.map((inntektMnd, inntektIndex) => {
+        		monthSum += parseInt(inntektMnd.beloep);
+        		return <tr key={inntektIndex}>
+        		<td>{inntektIndex === 0 ? alleMnd.gjeldendeMaaned : ""}</td>
+        		<td>{inntektMnd.type}</td>
+        		<td>{inntektMnd.beskrivelse.toUpperCase()}</td>
+        		<td>{inntektMnd.beloep}</td>
+        		</tr>
+        	})}
+        	<tr><td/><td/><td>SUM</td><td>{monthSum}</td></tr>
+        	</tbody>
+
+        })}
+      </table>
+    )
+  } else {
+  	return ("")
+  }
 }
 
 const søkeboksStyle = {
