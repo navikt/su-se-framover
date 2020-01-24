@@ -196,15 +196,20 @@ function ContentWrapper({config, children}){
 				<Søkeboks config={config}/>
 			</div>
 			<table>
-			<tbody>
-			<tr>
-			<td style={{width: 100}}><Venstremeny/></td>
-			<td>{children}</td>
-			</tr>
-			</tbody>
+				<tbody>
+					<tr>
+						<td><Venstremeny/></td>
+						<td>{children}</td>
+					</tr>
+				</tbody>
 			</table>
         </div>
     )
+}
+
+const VenstremenyStyle = {
+	display: 'flex',
+	border: 'none'
 }
 
 function Venstremeny(){
@@ -213,13 +218,13 @@ function Venstremeny(){
 		<table>
 			<tbody>
 				<tr>
-					<td><a href="/" className="knapp">Hjem</a></td>
+					<td><a href="/" className="knapp" style={VenstremenyStyle}>Hjem</a></td>
 				</tr>
 				<tr>
-					<td><a href="/vilkarsprov" className="knapp">Vilkårsprøving</a></td>
+					<td><a href="/vilkarsprov" className="knapp" style={VenstremenyStyle}>Vilkårsprøving</a></td>
 				</tr>
 				<tr>
-					<td><a href="/Beregning" className="knapp">Beregning</a></td>
+					<td><a href="/Beregning" className="knapp" style={VenstremenyStyle}>Beregning</a></td>
 				</tr>
 			</tbody>
 		</table>
