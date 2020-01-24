@@ -7,7 +7,19 @@ import EtikettAdvarsel from 'nav-frontend-etiketter';
 
 
 function Beregning(){
-    const [state, setState] = useState({sats: '', begrunnelse: '', inntekter:[{beløp:'', type:'', kilde:''}]})
+    const [state, setState] = useState({fraMåned:'', tilMåned:'', sats: '', begrunnelse: '', inntekter:[{beløp:'', type:'', kilde:''}]})
+
+    function setFraMåned(fraMåned){
+        setState((state) =>{
+            return {...state, fraMåned}
+        })
+    }
+
+    function setTilMåned(tilMåned){
+        setState((state) =>{
+            return {...state, tilMåned}
+        })
+    }
 
     function setSats(sats){
         setState((state) =>{
@@ -74,8 +86,8 @@ function Beregning(){
                     <div>
                         <Systemtittel>Periode:</Systemtittel>
                         <div style={DivInputFieldsWrapperStyle}>
-                            <InputFields labelText={"Fra måned"}/>
-                            <InputFields labelText={"Til måned"}/>
+                            <InputFields labelText={"Fra måned"} value={state.fraMåned} onChange={setFraMåned}/>
+                            <InputFields labelText={"Til måned"} value={state.tilMåned} onChange={setTilMåned}/>
                         </div>
                     </div>
 
