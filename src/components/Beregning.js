@@ -1,20 +1,23 @@
 import React, {useState} from "react";
-import {Sidetittel, Systemtittel, Undertittel} from "nav-frontend-typografi";
+import {Sidetittel, Systemtittel} from "nav-frontend-typografi";
 import { Panel } from 'nav-frontend-paneler';
 import {Label, Input, Textarea, Feiloppsummering} from 'nav-frontend-skjema';
 import Knapp from 'nav-frontend-knapper';
 import EtikettAdvarsel from 'nav-frontend-etiketter';
 import Inntekter from "./Inntekter";
 import {InputFields} from "./FormElements";
-
+import parse from "less/lib/less/parse";
 
 function Beregning(){
     const [state, setState] = useState({fraMåned:'', tilMåned:'', sats: '',
-        begrunnelse: '', inntekter:[{beløp:'', type:'', kilde:''}]})
+        begrunnelse: '', inntekter:[{beløp:'', type:'', kilde:''}]
+    })
 
     const [validationErrors, setValidationErrors] = useState([])
 
-    const fields = {fraMåned: {label: "Fra måned", htmlId:"fra-måned"}}
+    const fields = {fraMåned: {label: "Fra måned", htmlId:"fra-måned"},
+                    tilMåned: {label: 'Til måned', htmlId:"til-måned"}
+    }
 
 
     function setFraMåned(fraMåned){
@@ -99,22 +102,76 @@ function Beregning(){
     }
 
     function validateFormValues(formValues){
-        const fraMåned = formValues.fraMåned
         const errors = []
-        if (!/^\d{2}\/\d{2}$/.test(fraMåned)){
-            errors.push({skjemaelementId: fields.fraMåned.htmlId, feilmelding: "Fra måned følger ikke formen xx/xx"})
-        } else {
-            if (parseInt(fraMåned.substring(0,2),10) > 12 ) {
-                errors.push({skjemaelementId: fields.fraMåned.htmlId, feilmelding:"Måned må være mindre enn 12"})
-            }
-            if (parseInt(fraMåned.substring(3, 5), 10) <19){
-                errors.push({skjemaelementId: fields.fraMåned.htmlId, feilmelding: "År må være høyere enn 19"})
-            }
-        }
+
+        errors.push(...fraMånedValidation(formValues))
+        errors.push(...tilMånedValidation(formValues))
         setValidationErrors(errors)
     }
 
+
+
+    function fraMånedValidation(formValues){
+        const fraMåned = formValues.fraMåned
+        let feilmelding = ""
+        if (!/^\d{2}\/\d{2}$/.test(fraMåned)){
+            feilmelding += "Fra måned følger ikke formen xx/xx"
+        } else {
+            if (parseInt(fraMåned.substring(0,2),10) > 12 ) {
+                feilmelding += "Måned må være mindre enn 12"
+            }
+            if (parseInt(fraMåned.substring(3, 5), 10) < 19){
+                feilmelding += "År må være høyere enn 19"
+            }
+        }
+        if(feilmelding.length > 0){
+            return [{skjemaelementId: fields.fraMåned.htmlId, feilmelding}]
+        }
+        return []
+    }
+
+
+    function tilMånedValidation(formValues){
+        const tilMåned = formValues.tilMåned
+        let feilmelding = ""
+        if (!/^\d{2}\/\d{2}$/.test(tilMåned)){
+            feilmelding += "Fra måned følger ikke formen xx/xx"
+        } else {
+            if (parseInt(tilMåned.substring(3, 5), 10) < 19){
+                feilmelding += "År må være høyere enn 19"
+            }
+
+            if(parseInt(tilMåned.substring(3, 5), 10) < parseInt(formValues.fraMåned.substring(3,5), 10)){
+                feilmelding += "Til år må være høyere enn fra år"
+            }
+
+            if(parseInt(tilMåned.substring(3, 5), 10) == parseInt(formValues.fraMåned.substring(3,5), 10)){
+                if(parseInt(tilMåned.substring(0,2), 10) < parseInt(formValues.fraMåned.substring(0,2), 10)){
+                    feilmelding += "til måned må være høyere enn fra måned siden år er lik"
+                }
+            }
+
+        }
+
+        if(feilmelding.length > 0){
+            return [{skjemaelementId: fields.tilMåned.htmlId, feilmelding}]
+        }
+        
+        return []
+    }
+
+
+
+
+
+
 }
+
+
+
+
+
+
 
 function InputFieldWithText({text, value, onChange}){
     const divStyle = {
