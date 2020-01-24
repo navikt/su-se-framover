@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Sidetittel, Systemtittel} from "nav-frontend-typografi";
+import {Sidetittel, Systemtittel, Undertittel} from "nav-frontend-typografi";
 import { Panel } from 'nav-frontend-paneler';
 import {Label, Input, Textarea} from 'nav-frontend-skjema';
 import Knapp from 'nav-frontend-knapper';
@@ -7,7 +7,8 @@ import EtikettAdvarsel from 'nav-frontend-etiketter';
 
 
 function Beregning(){
-    const [state, setState] = useState({fraMåned:'', tilMåned:'', sats: '', begrunnelse: '', inntekter:[{beløp:'', type:'', kilde:''}]})
+    const [state, setState] = useState({fraMåned:'', tilMåned:'', sats: '',
+        begrunnelse: '', inntekter:[{beløp:'', type:'', kilde:''}]})
 
     function setFraMåned(fraMåned){
         setState((state) =>{
@@ -123,20 +124,29 @@ function Beregning(){
                         }
 
                     </div>
-
                     <div>
                         <br/>
                         <Knapp htmlType="button" onClick={addInntektsInput}>Legg til</Knapp>
                     </div>
+                    <div>
+                        <br/>
+                        <Undertittel>Sum Inntekt: {
+                            adderInntekter(state.inntekter
+                                .map(item => parseInt(item.beløp,10))
+                                .filter(item => ! isNaN(item))
+                            )
+                        }
+                        </Undertittel>
+                    </div>
+
                 </Panel>
                 <div style={buttonPositonStyle}>
                     <Knapp htmlType="submit">Lagre</Knapp>
+                    <Knapp >Neste</Knapp>
                 </div>
             </form>
         </div>
     )
-
-
 
     function handleSubmit(event){
         event.preventDefault()
@@ -145,6 +155,12 @@ function Beregning(){
         console.log(formValues)
     }
 
+}
+
+
+function adderInntekter(beløp){
+    const reducer = (accumulator, currentValue) => accumulator + currentValue
+    return beløp.reduce(reducer,0)
 }
 
 
