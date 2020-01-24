@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Sidetittel, Systemtittel} from "nav-frontend-typografi";
 import { Panel } from 'nav-frontend-paneler';
 import {Label, Input, Textarea, Feiloppsummering} from 'nav-frontend-skjema';
@@ -6,7 +6,6 @@ import Knapp from 'nav-frontend-knapper';
 import EtikettAdvarsel from 'nav-frontend-etiketter';
 import Inntekter from "./Inntekter";
 import {InputFields} from "./FormElements";
-import parse from "less/lib/less/parse";
 
 function Beregning(){
     const [state, setState] = useState({fraMåned:'', tilMåned:'', sats: '',
@@ -14,12 +13,12 @@ function Beregning(){
     })
 
     const [validationErrors, setValidationErrors] = useState([])
+    const [errorsCollector, setErrorsCollector] = useState()
 
     const fields = {fraMåned: {label: "Fra måned", htmlId:"fra-måned"},
                     tilMåned: {label: 'Til måned', htmlId:"til-måned"},
                     sats: {sats: 'Sats', htmlId:"sats"}
     }
-
 
     function setFraMåned(fraMåned){
         setState((state) =>{
@@ -51,6 +50,12 @@ function Beregning(){
         })
     }
 
+    useEffect(() => {
+        if (errorsCollector && errorsCollector.length > 0) {
+            setValidationErrors([...validationErrors, ...errorsCollector])
+        }
+    }, [errorsCollector])
+
     return (
         <div>
             <Sidetittel style={BeregningTittelStyle}>Beregning</Sidetittel>
@@ -75,7 +80,7 @@ function Beregning(){
                         </div>
                     </div>
 
-                    <Inntekter state={state} setState={setState} setInntekter={setInntekter} />
+                    <Inntekter state={state} setInntekter={setInntekter} errorsCollector={errorsCollector} />
                         {
                             validationErrors.length > 0 && <Feiloppsummering tittel={"Du har feil"} feil={validationErrors} />
 
@@ -97,7 +102,8 @@ function Beregning(){
         const formValues = state
         console.log(formValues)
 
-         validateFormValues(formValues)
+        validateFormValues(formValues)
+        setErrorsCollector([])
 
 
     }
@@ -146,8 +152,8 @@ function Beregning(){
                 feilmelding += "Til år må være høyere enn fra år"
             }
 
-            if(parseInt(tilMåned.substring(3, 5), 10) == parseInt(formValues.fraMåned.substring(3,5), 10)){
-                if(parseInt(tilMåned.substring(0,2), 10) < parseInt(formValues.fraMåned.substring(0,2), 10)){
+            if(parseInt(tilMåned.substring(3, 5), 10) === parseInt(formValues.fraMåned.substring(3,5), 10)){
+                if(parseInt(tilMåned.substring(0,2), 10) <= parseInt(formValues.fraMåned.substring(0,2), 10)){
                     feilmelding += "til måned må være høyere enn fra måned siden år er lik"
                 }
             }
@@ -173,17 +179,7 @@ function Beregning(){
 
 
 
-
-
-
-
 }
-
-
-
-
-
-
 
 function InputFieldWithText({text, value, onChange}){
     const divStyle = {

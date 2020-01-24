@@ -1,10 +1,31 @@
 import {Systemtittel, Undertittel} from "nav-frontend-typografi";
 import Knapp from "nav-frontend-knapper";
-import React from "react";
+import React, {useEffect} from "react";
 import {InputFields} from "./FormElements";
 
 
-function Inntekter({state, setInntekter}){
+function Inntekter({state, setInntekter, errorsCollector}){
+    useEffect(() => {
+        console.log("useEffect")
+        if (errorsCollector !== undefined) {
+            validateFormFields(errorsCollector)
+        }
+    }, [errorsCollector])
+
+    const validateFormFields = errorsCollector => {
+        state.inntekter.map((item, index) => {
+            if (item.beløp > 50) {
+                errorsCollector.push({skjemaelementId: `${index}-beløp`, feilmelding: "For høyt beløp"})
+            }
+            if (item.type.trim().length === 0) {
+                errorsCollector.push({skjemaelementId: `${index}-type`, feilmelding: "Type kan ikke være tom"})
+            }
+            if (item.kilde.trim().length === 0) {
+                errorsCollector.push({skjemaelementId: `${index}-kilde`, feilmelding: "Kilde kan ikke være tom"})
+            }
+        })
+    }
+
     return (
         <>
             <div>
@@ -15,13 +36,13 @@ function Inntekter({state, setInntekter}){
                                 console.log(item)
                                 return (
                                     <div key={item.key} style={DivInputFieldsWrapperStyle}>
-                                        <InputFields labelText={"Beløp:"}  value={item.beløp}
+                                        <InputFields id={`${item.key}-beløp`}labelText={"Beløp:"}  value={item.beløp}
                                                      onChange={(value) => updateBeløp(value, index)}/>
 
-                                        <InputFields labelText={"Velg type:"} value={item.type}
+                                        <InputFields id={`${item.key}-type`} labelText={"Velg type:"} value={item.type}
                                                      onChange={(value) => updateType(value, index)}/>
 
-                                        <InputFields labelText={"Kilde:"} value={item.kilde}
+                                        <InputFields id={`${item.key}-kilde`} labelText={"Kilde:"} value={item.kilde}
                                                      onChange={(value) => updateKilde(value,index)} />
                                     </div>
 
@@ -29,7 +50,6 @@ function Inntekter({state, setInntekter}){
                             }
                         )
                 }
-
             </div>
             <div>
                 <br/>

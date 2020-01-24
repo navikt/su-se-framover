@@ -41,7 +41,6 @@ function Uforevilkar(){
 	)
 }
 
-
 function ufor(){
 	return (
 		<div>
