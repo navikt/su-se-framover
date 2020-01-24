@@ -7,8 +7,7 @@ import EtikettAdvarsel from 'nav-frontend-etiketter';
 
 
 function Beregning(){
-    const [state, setState] = useState({sats: '', begrunnelse: ''})
-
+    const [state, setState] = useState({sats: '', begrunnelse: '', inntekter:[{beløp:'', type:'', kilde:''}]})
 
     function setSats(sats){
         setState((state) =>{
@@ -22,6 +21,28 @@ function Beregning(){
         })
     }
 
+    function setInntekter(inntekter){
+        setState((state) =>{
+            return {...state, inntekter}
+        })
+    }
+
+    function IClickedButton(){
+        console.log("Legger til")
+        const values = [...state.inntekter]
+        values.push({beløp:'', type:'', kilde:'' })
+        setInntekter(values)
+    }
+
+    function updateBeløp(beløp, index){
+        const inntekt = {...state.inntekter[index]}
+        inntekt.beløp = beløp
+
+        const tempInntekter = [...state.inntekter.slice(0,index), inntekt, ...state.inntekter.slice(index+1)]
+        setState((state) =>{
+            return {...state, inntekter: tempInntekter}
+        })
+    }
 
     return (
         <div>
@@ -46,14 +67,25 @@ function Beregning(){
                         </div>
                     </div>
 
-
                     <div>
                         <Systemtittel>Inntekt:</Systemtittel>
-                        <div style={DivInputFieldsWrapperStyle}>
-                            <InputFields labelText={"Beløp:"} />
-                            <InputFields labelText={"Velg type"}/>
-                            <InputFields labelText={"Kilde"}/>
-                        </div>
+                        {
+                            state.inntekter.map((item, index)=> ({...item, key:index}))
+                                            .map((item, index) => {
+                                                console.log(item)
+                                                return (
+                                                    <div key={item.key} style={DivInputFieldsWrapperStyle}>
+                                                        <InputFields labelText={"Beløp:"}  value={item.beløp}
+                                                                     onChange={(value) => updateBeløp(value, index)}/>
+                                                        <InputFields labelText={"Velg type:"} value={item.type} />
+                                                        <InputFields labelText={"Kilde:"} value={item.kilde} />
+                                                    </div>
+
+                                                )
+                                            }
+                                        )
+                        }
+
                     </div>
 
                     <div>
@@ -68,9 +100,7 @@ function Beregning(){
         </div>
     )
 
-    function IClickedButton(){
-        console.log("Legger til")
-    }
+
 
     function handleSubmit(event){
         event.preventDefault()
@@ -80,6 +110,8 @@ function Beregning(){
     }
 
 }
+
+
 
 function InputFieldWithText({text, value, onChange}){
     const divStyle = {
@@ -94,7 +126,6 @@ function InputFieldWithText({text, value, onChange}){
         marginRight:'1rem'
     }
 
-
     return (
         <div style={divStyle}>
             <Input value={value} onChange={(e => onChange(e.target.value))}/>
@@ -106,10 +137,10 @@ function InputFieldWithText({text, value, onChange}){
 }
 
 
-function InputFields({labelText}){
+function InputFields({labelText, value, onChange}){
     return (
         <span style={InputFieldsStyle}>
-            <Input label={labelText} />
+            <Input label={labelText} value={value} onChange={(e => onChange(e.target.value))}/>
         </span>
     )
 }
