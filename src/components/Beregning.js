@@ -16,7 +16,8 @@ function Beregning(){
     const [validationErrors, setValidationErrors] = useState([])
 
     const fields = {fraMåned: {label: "Fra måned", htmlId:"fra-måned"},
-                    tilMåned: {label: 'Til måned', htmlId:"til-måned"}
+                    tilMåned: {label: 'Til måned', htmlId:"til-måned"},
+                    sats: {sats: 'Sats', htmlId:"sats"}
     }
 
 
@@ -106,6 +107,7 @@ function Beregning(){
 
         errors.push(...fraMånedValidation(formValues))
         errors.push(...tilMånedValidation(formValues))
+        errors.push(...satsValidering(formValues))
         setValidationErrors(errors)
     }
 
@@ -130,7 +132,6 @@ function Beregning(){
         return []
     }
 
-
     function tilMånedValidation(formValues){
         const tilMåned = formValues.tilMåned
         let feilmelding = ""
@@ -150,15 +151,26 @@ function Beregning(){
                     feilmelding += "til måned må være høyere enn fra måned siden år er lik"
                 }
             }
-
         }
-
         if(feilmelding.length > 0){
             return [{skjemaelementId: fields.tilMåned.htmlId, feilmelding}]
         }
-        
         return []
     }
+
+    function satsValidering(formValues){
+        const sats = formValues.sats
+        let feilmelding = ""
+
+        if(isNaN(parseInt(sats, 10))){
+            feilmelding += "Sats må være tall"
+        }
+        if(feilmelding.length > 0){
+            return [{skjemaelementId: fields.sats.htmlId, feilmelding}]
+        }
+        return []
+    }
+
 
 
 
