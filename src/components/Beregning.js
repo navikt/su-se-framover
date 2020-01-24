@@ -27,7 +27,7 @@ function Beregning(){
         })
     }
 
-    function IClickedButton(){
+    function addInntektsInput(){
         console.log("Legger til")
         const values = [...state.inntekter]
         values.push({beløp:'', type:'', kilde:'' })
@@ -37,6 +37,26 @@ function Beregning(){
     function updateBeløp(beløp, index){
         const inntekt = {...state.inntekter[index]}
         inntekt.beløp = beløp
+
+        const tempInntekter = [...state.inntekter.slice(0,index), inntekt, ...state.inntekter.slice(index+1)]
+        setState((state) =>{
+            return {...state, inntekter: tempInntekter}
+        })
+    }
+
+    function updateType(type, index){
+        const inntekt = {...state.inntekter[index]}
+        inntekt.type = type
+
+        const tempInntekter = [...state.inntekter.slice(0,index), inntekt, ...state.inntekter.slice(index+1)]
+        setState((state) =>{
+            return {...state, inntekter: tempInntekter}
+        })
+    }
+
+    function updateKilde(kilde, index){
+        const inntekt = {...state.inntekter[index]}
+        inntekt.kilde = kilde
 
         const tempInntekter = [...state.inntekter.slice(0,index), inntekt, ...state.inntekter.slice(index+1)]
         setState((state) =>{
@@ -77,8 +97,12 @@ function Beregning(){
                                                     <div key={item.key} style={DivInputFieldsWrapperStyle}>
                                                         <InputFields labelText={"Beløp:"}  value={item.beløp}
                                                                      onChange={(value) => updateBeløp(value, index)}/>
-                                                        <InputFields labelText={"Velg type:"} value={item.type} />
-                                                        <InputFields labelText={"Kilde:"} value={item.kilde} />
+
+                                                        <InputFields labelText={"Velg type:"} value={item.type}
+                                                                     onChange={(value) => updateType(value, index)}/>
+
+                                                        <InputFields labelText={"Kilde:"} value={item.kilde}
+                                                                     onChange={(value) => updateKilde(value,index)} />
                                                     </div>
 
                                                 )
@@ -90,7 +114,7 @@ function Beregning(){
 
                     <div>
                         <br/>
-                        <Knapp htmlType="button" onClick={IClickedButton}>Legg til</Knapp>
+                        <Knapp htmlType="button" onClick={addInntektsInput}>Legg til</Knapp>
                     </div>
                 </Panel>
                 <div style={buttonPositonStyle}>
