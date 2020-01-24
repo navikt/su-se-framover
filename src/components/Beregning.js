@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Sidetittel, Systemtittel, Undertittel} from "nav-frontend-typografi";
 import { Panel } from 'nav-frontend-paneler';
-import {Label, Input, Textarea} from 'nav-frontend-skjema';
+import {Label, Input, Textarea, Feiloppsummering} from 'nav-frontend-skjema';
 import Knapp from 'nav-frontend-knapper';
 import EtikettAdvarsel from 'nav-frontend-etiketter';
 import Inntekter from "./Inntekter";
@@ -11,6 +11,11 @@ import {InputFields} from "./FormElements";
 function Beregning(){
     const [state, setState] = useState({fraMåned:'', tilMåned:'', sats: '',
         begrunnelse: '', inntekter:[{beløp:'', type:'', kilde:''}]})
+
+    const [validationErrors, setValidationErrors] = useState([])
+
+    const fields = {fraMåned: {label: "Fra måned", htmlId:"fra-måned"}}
+
 
     function setFraMåned(fraMåned){
         setState((state) =>{
@@ -52,7 +57,8 @@ function Beregning(){
                     <div>
                         <Systemtittel>Periode:</Systemtittel>
                         <div style={DivInputFieldsWrapperStyle}>
-                            <InputFields labelText={"Fra måned"} value={state.fraMåned} onChange={setFraMåned}/>
+                            <InputFields labelText={fields.fraMåned.label} id={fields.fraMåned.htmlId}
+                                         value={state.fraMåned} onChange={setFraMåned}/>
                             <InputFields labelText={"Til måned"} value={state.tilMåned} onChange={setTilMåned}/>
                         </div>
                     </div>
@@ -66,7 +72,13 @@ function Beregning(){
                     </div>
 
                     <Inntekter state={state} setState={setState} setInntekter={setInntekter} />
+                        {
+                            validationErrors.length > 0 && <Feiloppsummering tittel={"Du har feil"} feil={validationErrors} />
+
+                        }
+
                 </Panel>
+
                 <div style={buttonPositonStyle}>
                     <Knapp htmlType="submit">Lagre</Knapp>
                     <Knapp >Neste</Knapp>
@@ -81,6 +93,25 @@ function Beregning(){
         const formValues = state
         console.log(formValues)
 
+         validateFormValues(formValues)
+
+
+    }
+
+    function validateFormValues(formValues){
+        const fraMåned = formValues.fraMåned
+        const errors = []
+        if (!/^\d{2}\/\d{2}$/.test(fraMåned)){
+            errors.push({skjemaelementId: fields.fraMåned.htmlId, feilmelding: "Fra måned følger ikke formen xx/xx"})
+        } else {
+            if (parseInt(fraMåned.substring(0,2),10) > 12 ) {
+                errors.push({skjemaelementId: fields.fraMåned.htmlId, feilmelding:"Måned må være mindre enn 12"})
+            }
+            if (parseInt(fraMåned.substring(3, 5), 10) <19){
+                errors.push({skjemaelementId: fields.fraMåned.htmlId, feilmelding: "År må være høyere enn 19"})
+            }
+        }
+        setValidationErrors(errors)
     }
 
 }
