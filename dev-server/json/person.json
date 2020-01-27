@@ -1,8 +1,4 @@
 {
-  "navn": [
-    {
-      "fornavn": "TALENTFULL",
-      "etternavn": "KARAFFEL"
-    }
-  ]
+  "fornavn": "TALENTFULL",
+  "etternavn": "KARAFFEL"
 }

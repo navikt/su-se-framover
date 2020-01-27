@@ -64,7 +64,7 @@ function Main({config}){
 
 function Person({config}){
     const history = useHistory();
-    const {fornavn, etternavn} = history.location.state.data.navn[0]
+    const {fornavn, etternavn} = history.location.state.data
     return (
         <div>
             <Panel>
