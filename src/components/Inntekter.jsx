@@ -2,11 +2,14 @@ import {Systemtittel, Undertittel} from "nav-frontend-typografi";
 import Knapp from "nav-frontend-knapper";
 import React, {useEffect} from "react";
 import {InputFields} from "./FormElements";
+import Lukknapp from 'nav-frontend-lukknapp';
+
+
+
 
 
 function Inntekter({state, setInntekter, errorsCollector}){
     useEffect(() => {
-        console.log("useEffect")
         if (errorsCollector !== undefined) {
             validateFormFields(errorsCollector)
         }
@@ -33,7 +36,6 @@ function Inntekter({state, setInntekter, errorsCollector}){
                 {
                     state.inntekter.map((item, index)=> ({...item, key:index}))
                         .map((item, index) => {
-                                console.log(item)
                                 return (
                                     <div key={item.key} style={DivInputFieldsWrapperStyle}>
                                         <InputFields id={`${item.key}-beløp`}labelText={"Beløp:"}  value={item.beløp}
@@ -44,8 +46,10 @@ function Inntekter({state, setInntekter, errorsCollector}){
 
                                         <InputFields id={`${item.key}-kilde`} labelText={"Kilde:"} value={item.kilde}
                                                      onChange={(value) => updateKilde(value,index)} />
-                                    </div>
 
+                                        <Lukknapp type="button" style={fjernInnputKnappStyle}
+                                                  onClick={() => fjernValgtInputFelt(index)}>Lukk</Lukknapp>
+                                    </div>
                                 )
                             }
                         )
@@ -69,10 +73,14 @@ function Inntekter({state, setInntekter, errorsCollector}){
     )
 
     function addInntektsInput(){
-        console.log("Legger til")
         const values = [...state.inntekter]
         values.push({beløp:'', type:'', kilde:'' })
         setInntekter(values)
+    }
+
+    function fjernValgtInputFelt(index){
+        const tempInntekter = [...state.inntekter.slice(0,index), ...state.inntekter.slice(index+1)]
+        setInntekter(tempInntekter)
     }
 
     function updateBeløp(beløp, index){
@@ -107,6 +115,10 @@ function Inntekter({state, setInntekter, errorsCollector}){
 
 const DivInputFieldsWrapperStyle = {
     display: 'flex'
+}
+
+const fjernInnputKnappStyle = {
+    alignSelf: 'center'
 }
 
 

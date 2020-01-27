@@ -82,12 +82,10 @@ function Beregning(){
 
                     <Inntekter state={state} setInntekter={setInntekter} errorsCollector={errorsCollector} />
                         {
-                            validationErrors.length > 0 && <Feiloppsummering tittel={"Du har feil"} feil={validationErrors} />
+                            validationErrors.length > 0 && <Feiloppsummering tittel={"Vennligst fyll ut mangler"} feil={validationErrors} />
 
                         }
-
                 </Panel>
-
                 <div style={buttonPositonStyle}>
                     <Knapp htmlType="submit">Lagre</Knapp>
                     <Knapp >Neste</Knapp>
