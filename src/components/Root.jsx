@@ -9,6 +9,7 @@ import { Knapp } from 'nav-frontend-knapper';
 import 'reset-css'
 import Vilkarsprov from "./Vilkarsprov";
 import Beregning from "./Beregning"
+import ErrorBoundary from './ErrorBoundary'
 import 'nav-frontend-tabell-style';
 import {
   BrowserRouter as Router,
@@ -23,29 +24,31 @@ import {
 const Root = () => {
     const { config } = useConfig();
     return (
-    <AuthContextProvider>
-    <Router>
-		<ContentWrapper config={config}>
-        <Switch>
-            <Route path="/" exact>
-                <Main config={config}/>
-            </Route>
-            <Route path="/person">
-                <Person config={config}/>
-            </Route>
-            <Route path="/auth/complete">
-                <AuthComplete/>
-            </Route>
-            <Route path="/vilkarsprov">
-                <Vilkarsprov/>
-            </Route>
-            <Route path="/Beregning">
-                <Beregning/>
-            </Route>
-        </Switch>
-    	</ContentWrapper>
-    </Router>
-    </AuthContextProvider>
+        <ErrorBoundary>
+            <AuthContextProvider>
+                <Router>
+                    <ContentWrapper config={config}>
+                        <Switch>
+                            <Route path="/" exact>
+                                <Main config={config}/>
+                            </Route>
+                            <Route path="/person">
+                                <Person config={config}/>
+                            </Route>
+                            <Route path="/auth/complete">
+                                <AuthComplete/>
+                            </Route>
+                            <Route path="/vilkarsprov">
+                                <Vilkarsprov/>
+                            </Route>
+                            <Route path="/Beregning">
+                                <Beregning/>
+                            </Route>
+                        </Switch>
+                    </ContentWrapper>
+                </Router>
+            </AuthContextProvider>
+        </ErrorBoundary>
     )
 };
 
