@@ -166,7 +166,7 @@ function Søkeboks({config}){
         <>
         	<input placeholder="FNR" ref={identSearch} type="text" onKeyDown={keyTyped} />
 			<label htmlFor="fom">FOM:</label>
-			<input type="date" id="fom" ref={fomDato} defaultValue="2020-01-01"/>
+			<input type="date" id="fom" ref={fomDato} defaultValue={new Date(new Date(new Date().setMonth(-4)).setDate(1)).toISOString().slice(0,10)}/>
 			<label htmlFor="tom">TOM:</label>
 			<input type="date" id="tom" ref={tomDato} defaultValue={new Date().toISOString().slice(0,10)}/>
 			<Knapp onClick={() => search(identSearch.current.value)}>Søk</Knapp>
