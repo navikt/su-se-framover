@@ -21,7 +21,23 @@ function Vilkarsprov({state = initialState, setState}) {
 	useEffect(() => {
 		setState(initialState)
 	}, [])
-	
+
+	const updateField = (stateToChange, value) => {
+		const fieldData = typeof value === 'boolean'
+			? { checked: value }
+			: { begrunnelse: value }
+		setState(state => ({
+			...state,
+			[stateToChange]: {...state[stateToChange], ...fieldData}
+		}))
+	}
+
+	const handleSubmit = event => {
+		event.preventDefault()
+		console.log("submitting")
+		console.log(state)
+	}
+
 	return (
 		<div className="vilkårsprøving">
 			<Innholdstittel>Vilkårsprøving</Innholdstittel>
@@ -32,61 +48,54 @@ function Vilkarsprov({state = initialState, setState}) {
 								 sectionText={"For å kunne motta Supplerende stønad for uføre, må brukeren oppfylle vilkårene " +
 								 				"§12-4 til §12-8 i folketrygdloven"}
 								 stateToChange={"uførevilkår"}
-								 checkboxOnChange={setChecked}
 								 textAreaLabel={"Begrunnelse"}
 								 textAreaValue={state.uførevilkår.begrunnelse}
-								 textAreaOnChange={setTextAreaOnChange}
+								 onChange={updateField}
 						/>
 						<Section checkboxLabel={"§28 Flyktning"}
 								 sectionText={"For å kunne motta Supplerende stønad for uføre må brukeren ha status som flyktning." +
 								 				" Bla bla bla henhold til Utlendingsloven §28 blah blah"}
 								 stateToChange={"flyktning"}
-								 checkboxOnChange={setChecked}
 								 textAreaLabel={"Begrunnelse"}
 								 textAreaValue={state.flyktning.begrunnelse}
-								 textAreaOnChange={setTextAreaOnChange}
+								 onChange={updateField}
 						/>
 						<Section checkboxLabel={"§x-y Botid og opphold"}
 								 sectionText={"For å kunne motta Supplerende stønad for uføre må brukeren være bosatt og oppholde" +
 								 				" seg i Norge. Bla bla maksimal lengde på utlandsopphold " +
 								 				"90 dager, bla bla mister retten til  motta bla bla"}
 								 stateToChange={"boTidOgOpphold"}
-								 checkboxOnChange={setChecked}
 								 textAreaLabel={"Begrunnelse"}
 								 textAreaValue={state.boTidOgOpphold.begrunnelse}
-								 textAreaOnChange={setTextAreaOnChange}
+								 onChange={updateField}
 						/>
 						<Section checkboxLabel={"§x-y Personlig oppmøte"}
 								 sectionText={"For å kunne motta Supplerende stønad for uføre må brukeren ha møtt opp personlig"}
 								 stateToChange={"personligOppmøte"}
-								 checkboxOnChange={setChecked}
 								 textAreaLabel={"Begrunnelse"}
 								 textAreaValue={state.personligOppmøte.begrunnelse}
-								 textAreaOnChange={setTextAreaOnChange}
+								 onChange={updateField}
 						/>
 						<Section checkboxLabel={"§x-y Oppholdstillatelse"}
 								 sectionText={"Brukeren må ha gyldig oppholdstillatelse i riket. blah blah"}
 								 stateToChange={"oppholdstillatelse"}
-								 checkboxOnChange={setChecked}
 								 textAreaLabel={"Begrunnelse"}
 								 textAreaValue={state.oppholdstillatelse.begrunnelse}
-								 textAreaOnChange={setTextAreaOnChange}
+								 onChange={updateField}
 						/>
 						<Section checkboxLabel={"§x-y Sivilstatus"}
 								 sectionText={"Søker er enslig."}
 								 stateToChange={"sivilstatus"}
-								 checkboxOnChange={setChecked}
 								 textAreaLabel={"Begrunnelse"}
 								 textAreaValue={state.sivilstatus.begrunnelse}
-								 textAreaOnChange={setTextAreaOnChange}
+								 onChange={updateField}
 						/>
 						<Section checkboxLabel={"§x-y Formue"}
 								 sectionText={"Brukeren må ha formue under 0,5G. Bla bla bla depositumskonto bla bla bla hytte og sånt"}
 								 stateToChange={"formue"}
-								 checkboxOnChange={setChecked}
 								 textAreaLabel={"Begrunnelse"}
 								 textAreaValue={state.formue.begrunnelse}
-								 textAreaOnChange={setTextAreaOnChange}
+								 onChange={updateField}
 						/>
 					</div>
 				</Panel>
@@ -97,41 +106,28 @@ function Vilkarsprov({state = initialState, setState}) {
 			</form>
 		</div>
 	)
-
-	function handleSubmit(event) {
-		event.preventDefault()
-		console.log("submitting")
-		console.log(state)
-	}
-
-	function setChecked(stateToChange, checked) {
-		setState((state) => (
-			{...state, [stateToChange]: {...state[stateToChange], checked}}
-		))
-	}
-
-	function setTextAreaOnChange(stateToChange, begrunnelse) {
-		setState((state) => (
-			{...state, [stateToChange]: {...state[stateToChange], begrunnelse}}
-		))
-	}
 }
 
-function Section({checkboxLabel, stateToChange, checkboxOnChange, sectionText, textAreaLabel, textAreaValue, textAreaOnChange}){
-	return(
+const Section = ({
+	checkboxLabel,
+	stateToChange,
+	sectionText,
+	textAreaLabel,
+	textAreaValue,
+	onChange
+}) => {
+	return (
 		<div className="section">
-			<Checkbox label={<Undertittel>{checkboxLabel}</Undertittel>}
-					  onChange={(e => checkboxOnChange(stateToChange, e.target.checked))}/>
-			<div>
-				<div>
-					<Tekstomrade>{sectionText}</Tekstomrade>
-				</div>
-				<div>
-					<Textarea label={textAreaLabel} value={textAreaValue} onChange={e => textAreaOnChange(stateToChange, e.target.value)}
-									 />
-				</div>
-			</div>
-
+			<Checkbox
+				label={<Undertittel>{checkboxLabel}</Undertittel>}
+				onChange={e => onChange(stateToChange, e.target.checked)}
+			/>
+			<Tekstomrade>{sectionText}</Tekstomrade>
+			<Textarea
+				label={textAreaLabel}
+				value={textAreaValue}
+				onChange={e => onChange(stateToChange, e.target.value)}
+			/>
 		</div>
 	)
 }
