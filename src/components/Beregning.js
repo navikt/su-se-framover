@@ -20,35 +20,14 @@ function Beregning(){
                     sats: {sats: 'Sats', htmlId:"sats"}
     }
 
-    function setFraMåned(fraMåned){
-        setState((state) =>{
-            return {...state, fraMåned}
-        })
+    const updateFieldInState = (field, newState) => {
+        setState(state => ({
+            ...state,
+            [field]: newState
+        }))
     }
 
-    function setTilMåned(tilMåned){
-        setState((state) =>{
-            return {...state, tilMåned}
-        })
-    }
-
-    function setSats(sats){
-        setState((state) =>{
-            return {...state, sats}
-        })
-    }
-
-    function setBegrunnelse(begrunnelse){
-        setState((state) =>{
-            return {...state, begrunnelse}
-        })
-    }
-
-    function setInntekter(inntekter){
-        setState((state) =>{
-            return {...state, inntekter}
-        })
-    }
+    const updateFunction = name => value => updateFieldInState(name, value)
 
     useEffect(() => {
         if (errorsCollector && errorsCollector.length > 0) {
@@ -67,20 +46,20 @@ function Beregning(){
                         <Systemtittel>Periode:</Systemtittel>
                         <div style={DivInputFieldsWrapperStyle}>
                             <InputFields labelText={fields.fraMåned.label} id={fields.fraMåned.htmlId}
-                                         value={state.fraMåned} onChange={setFraMåned}/>
-                            <InputFields labelText={"Til måned"} value={state.tilMåned} onChange={setTilMåned}/>
+                                         value={state.fraMåned} onChange={updateFunction('fraMåned')}/>
+                            <InputFields labelText={"Til måned"} value={state.tilMåned} onChange={updateFunction('tilMåned')}/>
                         </div>
                     </div>
 
                     <div>
                         <Systemtittel>Sats:</Systemtittel>
                         <div>
-                            <InputFieldWithText text={"kr"} value={state.sats} onChange={setSats}/>
-                            <Textarea label={"Begrunnelse:"} value={state.begrunnelse} onChange={e => setBegrunnelse(e.target.value)}/>
+                            <InputFieldWithText text={"kr"} value={state.sats} onChange={updateFunction('sats')}/>
+                            <Textarea label={"Begrunnelse:"} value={state.begrunnelse} onChange={e => updateFieldInState('begrunnelse', e.target.value)}/>
                         </div>
                     </div>
 
-                    <Inntekter state={state} setInntekter={setInntekter} errorsCollector={errorsCollector} />
+                    <Inntekter state={state} setInntekter={updateFunction('inntekter')} errorsCollector={errorsCollector} />
                         {
                             validationErrors.length > 0 && <Feiloppsummering tittel={"Vennligst fyll ut mangler"} feil={validationErrors} />
 
