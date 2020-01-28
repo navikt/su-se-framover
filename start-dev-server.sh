@@ -7,4 +7,4 @@ declare -r container_name=$image_name-burk
 
 docker build . -t $image_name
 docker kill $container_name &>/dev/null
-docker run -d --rm --name $container_name -p8080:8080 $image_name
+docker run -d --rm --name $container_name -p8080:8080 -v "$(pwd)"/json:/app/www $image_name
