@@ -23,6 +23,22 @@ import {
 
 const Root = () => {
     const { config } = useConfig();
+    const [state, setState] = useState({
+        vilkårsprøving: undefined,
+        beregning: undefined
+    })
+
+    const updateVilkårsvurdering = nyeVilkår => {
+        setState(state => ({
+            ...state,
+            vilkårsprøving: (
+                typeof nyeVilkår === 'function' ?
+                    nyeVilkår(state.vilkårsprøving) :
+                    nyeVilkår
+            )
+        }))
+    }
+
     return (
         <ErrorBoundary>
             <AuthContextProvider>
@@ -39,7 +55,7 @@ const Root = () => {
                                 <AuthComplete/>
                             </Route>
                             <Route path="/vilkarsprov">
-                                <Vilkarsprov/>
+                                <Vilkarsprov state={state.vilkårsprøving} setState={updateVilkårsvurdering} />
                             </Route>
                             <Route path="/Beregning">
                                 <Beregning/>

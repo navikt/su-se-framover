@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useEffect } from 'react';
 import Tekstomrade from 'nav-frontend-tekstomrade';
 import {Checkbox, Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
@@ -6,17 +6,21 @@ import { Panel } from 'nav-frontend-paneler';
 import Knapp from 'nav-frontend-knapper';
 import "./vilkorsprov.less";
 
-function Vilkarsprov() {
+const initialState = {
+	uførevilkår: {checked: false, begrunnelse: ''},
+	flyktning: {checked: false, begrunnelse: ''},
+	boTidOgOpphold: {checked: false, begrunnelse: ''},
+	oppholdstillatelse: {checked: false, begrunnelse: ''},
+	personligOppmøte: {checked: false, begrunnelse: ''},
+	sivilstatus: {checked: false, begrunnelse: ''},
+	formue: {checked: false, begrunnelse: ''}
+}
 
-	const [state, setState] = useState({
-		uførevilkår: {checked: false, begrunnelse: ''},
-		flyktning: {checked: false, begrunnelse: ''},
-		boTidOgOpphold: {checked: false, begrunnelse: ''},
-		oppholdstillatelse: {checked: false, begrunnelse: ''},
-		personligOppmøte: {checked: false, begrunnelse: ''},
-		sivilstatus: {checked: false, begrunnelse: ''},
-		formue: {checked: false, begrunnelse: ''}
-	})
+function Vilkarsprov({state = initialState, setState}) {
+
+	useEffect(() => {
+		setState(initialState)
+	}, [])
 	
 	return (
 		<div className="vilkårsprøving">
