@@ -17,9 +17,6 @@ function Inntekter({state, setInntekter, errorsCollector}){
 
     const validateFormFields = errorsCollector => {
         state.inntekter.map((item, index) => {
-            if (item.beløp > 50) {
-                errorsCollector.push({skjemaelementId: `${index}-beløp`, feilmelding: "For høyt beløp"})
-            }
             if (item.type.trim().length === 0) {
                 errorsCollector.push({skjemaelementId: `${index}-type`, feilmelding: "Type kan ikke være tom"})
             }
@@ -114,11 +111,11 @@ function Inntekter({state, setInntekter, errorsCollector}){
 }
 
 const DivInputFieldsWrapperStyle = {
-    display: 'flex'
+    display: 'flex',
 }
 
 const fjernInnputKnappStyle = {
-    alignSelf: 'center'
+    alignSelf: 'flex-end'
 }
 
 

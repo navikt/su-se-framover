@@ -121,7 +121,7 @@ function Beregning(){
         const fraMåned = formValues.fraMåned
         let feilmelding = ""
         if (!/^\d{2}\/\d{2}$/.test(fraMåned)){
-            feilmelding += "Fra måned følger ikke formen xx/xx"
+            feilmelding += "Fra måned følger ikke formen mm/yy"
         } else {
             if (parseInt(fraMåned.substring(0,2),10) > 12 ) {
                 feilmelding += "Måned må være mindre enn 12"
@@ -140,7 +140,7 @@ function Beregning(){
         const tilMåned = formValues.tilMåned
         let feilmelding = ""
         if (!/^\d{2}\/\d{2}$/.test(tilMåned)){
-            feilmelding += "Fra måned følger ikke formen xx/xx"
+            feilmelding += "Fra måned følger ikke formen mm/yy"
         } else {
             if (parseInt(tilMåned.substring(3, 5), 10) < 19){
                 feilmelding += "År må være høyere enn 19"
