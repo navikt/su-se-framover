@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Sidetittel, Systemtittel} from "nav-frontend-typografi";
+import {Sidetittel, Systemtittel, Element} from "nav-frontend-typografi";
 import { Panel } from 'nav-frontend-paneler';
 import {Label, Input, Textarea, Feiloppsummering} from 'nav-frontend-skjema';
 import Knapp from 'nav-frontend-knapper';
@@ -7,10 +7,12 @@ import EtikettAdvarsel from 'nav-frontend-etiketter';
 import Inntekter from "./Inntekter";
 import {InputFields} from "./FormElements";
 
-function Beregning(){
-    const [state, setState] = useState({fraMåned:'', tilMåned:'', sats: '',
-        begrunnelse: '', inntekter:[{beløp:'', type:'', kilde:''}]
-    })
+
+const initialState = {fraMåned:'', tilMåned:'', sats: '',
+    begrunnelse: '', inntekter:[{beløp:'', type:'', kilde:''}]
+}
+
+function Beregning({state = initialState, setState}){
 
     const [validationErrors, setValidationErrors] = useState([])
     const [errorsCollector, setErrorsCollector] = useState()
@@ -19,6 +21,10 @@ function Beregning(){
                     tilMåned: {label: 'Til måned', htmlId:"til-måned"},
                     sats: {sats: 'Sats', htmlId:"sats"}
     }
+
+    useEffect(() => {
+        setState(initialState)
+    }, [])
 
     const updateFieldInState = (field, newState) => {
         setState(state => ({
@@ -60,10 +66,16 @@ function Beregning(){
                     </div>
 
                     <Inntekter state={state} setInntekter={updateFunction('inntekter')} errorsCollector={errorsCollector} />
-                        {
-                            validationErrors.length > 0 && <Feiloppsummering tittel={"Vennligst fyll ut mangler"} feil={validationErrors} />
+                    {validationErrors.length > 0 && <Feiloppsummering tittel={"Vennligst fyll ut mangler"} feil={validationErrors} />}
 
-                        }
+                    <hr />
+                    <Knapp htmlType="button" onClick={beregnFunction}>Beregn</Knapp>
+                    { state.stønadsberegning !== undefined &&
+                        <>
+                            <Element>Beregnet årlig stønad: {state.stønadsberegning.årsbeløp} kr</Element>
+                            <Element>Beregnet månedlig stønad: {state.stønadsberegning.årsbeløp /12} kr</Element>
+                        </>
+                    }
                 </Panel>
                 <div style={buttonPositonStyle}>
                     <Knapp htmlType="submit">Lagre</Knapp>
@@ -72,6 +84,13 @@ function Beregning(){
             </form>
         </div>
     )
+
+    function beregnFunction(){
+        setState(state => ({
+            ...state,
+            stønadsberegning: {årsbeløp: 92100}
+        }))
+    }
 
     function handleSubmit(event){
         event.preventDefault()

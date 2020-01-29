@@ -40,6 +40,21 @@ const Root = () => {
         }))
     }
 
+
+    useEffect(() =>{
+        console.log(state)
+    }, [state])
+    const updateBeregning = nyBeregning => {
+        setState(state => ({
+            ...state,
+            beregning: (
+                typeof nyBeregning === 'function' ?
+                    nyBeregning(state.beregning) :
+                    nyBeregning
+            )
+        }))
+    }
+
     return (
         <ErrorBoundary>
             <AuthContextProvider>
@@ -62,7 +77,7 @@ const Root = () => {
                                 <Vilkarsprov state={state.vilkårsprøving} setState={updateVilkårsvurdering} />
                             </Route>
                             <Route path="/Beregning">
-                                <Beregning/>
+                                <Beregning state={state.beregning} setState={updateBeregning}/>
                             </Route>
                         </Switch>
                     </ContentWrapper>
