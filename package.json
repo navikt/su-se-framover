@@ -42,6 +42,8 @@
     "nav-frontend-paneler-style": "^0.3.17",
     "nav-frontend-skjema": "^2.0.2",
     "nav-frontend-skjema-style": "^2.0.1",
+    "nav-frontend-stegindikator": "0.0.42",
+    "nav-frontend-stegindikator-style": "^1.0.26",
     "nav-frontend-tabell-style": "^0.2.19",
     "nav-frontend-tekstomrade": "^2.0.38",
     "nav-frontend-toggle": "0.0.32",

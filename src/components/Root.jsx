@@ -7,6 +7,7 @@ import { Normaltekst, Innholdstittel } from 'nav-frontend-typografi';
 import { Panel } from 'nav-frontend-paneler';
 import { Knapp } from 'nav-frontend-knapper';
 import 'reset-css'
+import Soknad from "./Soknad"
 import Vilkarsprov from "./Vilkarsprov";
 import Beregning from "./Beregning"
 import ErrorBoundary from './ErrorBoundary'
@@ -53,6 +54,9 @@ const Root = () => {
                             </Route>
                             <Route path="/auth/complete">
                                 <AuthComplete/>
+                            </Route>
+							<Route path="/soknad">
+                                <Soknad/>
                             </Route>
                             <Route path="/vilkarsprov">
                                 <Vilkarsprov state={state.vilkårsprøving} setState={updateVilkårsvurdering} />
@@ -238,6 +242,9 @@ function Venstremeny(){
 			<tbody>
 				<tr>
 					<td><a href="/" className="knapp" style={VenstremenyStyle}>Hjem</a></td>
+				</tr>
+				<tr>
+					<td><a href="/soknad" className="knapp" style={VenstremenyStyle}>Søknad</a></td>
 				</tr>
 				<tr>
 					<td><a href="/vilkarsprov" className="knapp" style={VenstremenyStyle}>Vilkårsprøving</a></td>
