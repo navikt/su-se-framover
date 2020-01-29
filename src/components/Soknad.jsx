@@ -38,24 +38,24 @@ function Soknad(){
 								<Input label="Poststed" />
 							</div>
 							<Input label="Statsborgerskap" />
-							<CheckboxGruppe legend="Sivilstand">
-								<Checkbox label={'Ugift'} />
-								<Checkbox label={'Samboer'} />
-								<Checkbox label={'Gift'} />
-								<Checkbox label={'Registrert partner'} />
-								<Checkbox label={'Separert'} />
-								<Checkbox label={'Skilt'} />
-								<Checkbox label={'Enke/enkemann'} />
-								<Checkbox label={'Bor sammen med annen voksen'} />
-							</CheckboxGruppe>
+							<RadioGruppe legend="Sivilstand">
+								<Radio name="sivilstand" label={'Ugift'} />
+								<Radio name="sivilstand" label={'Samboer'} />
+								<Radio name="sivilstand" label={'Gift'} />
+								<Radio name="sivilstand" label={'Registrert partner'} />
+								<Radio name="sivilstand" label={'Separert'} />
+								<Radio name="sivilstand" label={'Skilt'} />
+								<Radio name="sivilstand" label={'Enke/enkemann'} />
+								<Radio name="sivilstand" label={'Bor sammen med annen voksen'} />
+							</RadioGruppe>
 							<div style={container}>
 							<RadioGruppe legend="Bor du fast i Norge?" style={containerLeft}>
-                                <Radio label={'Ja'} name="Ja" />
-                                <Radio label={'Nei'} name="Nei" />
+                                <Radio name="bofastnorge" label={'Ja'} />
+                                <Radio name="bofastnorge" label={'Nei'} />
                             </RadioGruppe>
                             <RadioGruppe legend="Har du oppholdt deg i utlandet i løpet av de siste 90 dagene?" style={containerRight}>
-                                <Radio label={'Ja'} name="Ja" />
-                                <Radio label={'Nei'} name="Nei" />
+                                <Radio name="utenlandsopphold" label={'Ja'} />
+                                <Radio name="utenlandsopphold" label={'Nei'} />
                             </RadioGruppe>
                             </div>
 						</SkjemaGruppe>
@@ -66,12 +66,12 @@ function Soknad(){
 							<Input label="Telefonnummer" />
 							<Input label="Kommune" />
 							<RadioGruppe legend="Er du registrert som flyktning?" style={containerLeft}>
-                                 <Radio label={'Ja'} name="Ja" />
-                                 <Radio label={'Nei'} name="Nei" />
+                                 <Radio name="flyktning" label={'Ja'} />
+                                 <Radio name="flyktning" label={'Nei'} />
                              </RadioGruppe>
 							 <RadioGruppe legend="Har du tenkt å oppholde deg i utlandet i mer enn 90 dager i løpet av de kommende 12 mnd?" style={containerLeft}>
-                                 <Radio label={'Ja'} name="Ja" />
-                                 <Radio label={'Nei'} name="Nei" />
+                                 <Radio name="utenlandsplan" label={'Ja'} />
+                                 <Radio name="utenlandsplan" label={'Nei'} />
                              </RadioGruppe>
 						</SkjemaGruppe>
 					</div>
