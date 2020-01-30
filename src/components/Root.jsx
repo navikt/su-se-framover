@@ -8,6 +8,7 @@ import { Panel } from 'nav-frontend-paneler';
 import { Knapp } from 'nav-frontend-knapper';
 import 'reset-css'
 import Soknad from "./Soknad"
+import Kravliste from "./Kravliste"
 import Vilkarsprov from "./Vilkarsprov";
 import Beregning from "./Beregning"
 import ErrorBoundary from './ErrorBoundary'
@@ -72,6 +73,9 @@ const Root = () => {
                             </Route>
 							<Route path="/soknad">
                                 <Soknad/>
+                            </Route>
+							<Route path="/kravliste">
+                                <Kravliste/>
                             </Route>
                             <Route path="/vilkarsprov">
                                 <Vilkarsprov state={state.vilkårsprøving} setState={updateVilkårsvurdering} />
@@ -260,6 +264,9 @@ function Venstremeny(){
 				</tr>
 				<tr>
 					<td><a href="/soknad" className="knapp" style={VenstremenyStyle}>Søknad</a></td>
+				</tr>
+				<tr>
+					<td><a href="/kravliste" className="knapp" style={VenstremenyStyle}>Kravliste</a></td>
 				</tr>
 				<tr>
 					<td><a href="/vilkarsprov" className="knapp" style={VenstremenyStyle}>Vilkårsprøving</a></td>
