@@ -179,7 +179,7 @@ function Soknad(){
 
 					</SkjemaGruppe>
 				</div>				
-				<Hovedknapp onClick={() => history.push("/kravliste")}>Neste</Hovedknapp>
+				<Hovedknapp onClick={() => history.push("/saker")}>Neste</Hovedknapp>
             </Panel>
 		</>
 	)
