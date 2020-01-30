@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import Stegindikator from 'nav-frontend-stegindikator';
 import { Panel } from 'nav-frontend-paneler';
@@ -8,9 +8,93 @@ import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { useHistory } from "react-router-dom";
 import { Undertittel, Systemtittel } from 'nav-frontend-typografi';
+import {InputFields} from "./FormElements";
 
 function Soknad(){
 	const history = useHistory();
+
+	const [state, setState] = useState({
+		fnr: '',
+		borSammenMed: [],
+		pensjonsOrdning: [{ordning: '', beløp: ''}]
+	})
+
+	const updateFieldInState = (field, newState) => {
+		setState(state => ({
+			...state,
+			[field]: newState
+		}))
+	}
+
+	function lol() {
+		console.log(state)
+	}
+
+	function boSammenMedUpdate(target){
+	setState(state =>({
+		...state,
+			borSammenMed: updatedArray(state.borSammenMed, target)
+	}))
+	}
+
+	function updatedArray(sourceArray, target){
+		if(target.checked){
+			return [...sourceArray, target.value]
+		}else{
+			return sourceArray.filter(item => item !== target.value)
+		}
+	}
+
+	function addPensjonsOrgningsInput(){
+		const values = [...state.pensjonsOrdning]
+		values.push({ordning:'', beløp:''})
+		console.log(values)
+		updateFieldInState("pensjonsOrdning", values)
+	}
+
+	function updatePensjonsOrgning(kilde, index){
+		const ordning = {...state.pensjonsOrdning[index]}
+		ordning.ordning = kilde
+
+		const tempInntekter = [...state.pensjonsOrdning.slice(0,index), ordning, ...state.pensjonsOrdning.slice(index+1)]
+		updateFieldInState("pensjonsOrdning", tempInntekter)
+	}
+
+	function updatePensjonsOrgningsBeløp(kilde, index){
+		const beløp = {...state.pensjonsOrdning[index]}
+		beløp.beløp = kilde
+
+		const tempInntekter = [...state.pensjonsOrdning.slice(0,index), beløp, ...state.pensjonsOrdning.slice(index+1)]
+		updateFieldInState("pensjonsOrdning", tempInntekter)
+	}
+
+
+	function personDelerBolig(){
+		if(state.delerDuBolig === "true"){
+			return (
+				<CheckboxGruppe legend="Hvem deler du bolig med?">
+					<Checkbox name="boligdeler" label="Ektefelle/Partner/Samboer" value="esp" onChange={(e => boSammenMedUpdate(e.target))}/>
+					<Checkbox name="boligdeler" label="Barn over 18 år" value="over18" onChange={(e => boSammenMedUpdate(e.target))}/>
+					<Checkbox name="boligdeler" label="Andre personer over 18 år" value="annenPerson" onChange={(e => boSammenMedUpdate(e.target))}/>
+				</CheckboxGruppe>
+			)
+		}
+	}
+
+	function tillegsInfoDelerBolig(){
+		if(state.delerDuBolig === "true"){
+			return (
+				<div>
+					<Undertittel>Opplysninger om ektefellen/samboer/annen voksen person hvis dere bor sammen</Undertittel>
+					<div style={container}>
+						<InputFields labelText="Navn"/>
+						<InputFields labelText="Fødselsnummer"/>
+					</div>
+				</div>
+			)
+		}
+	}
+
 	return(
 		<>
 			<Panel border>
@@ -27,51 +111,64 @@ function Soknad(){
 					}}
 					visLabel
 				/>
-				<div style={container}>
+				<div>
 					<SkjemaGruppe>
-						<Systemtittel>Personlige opplysninger</Systemtittel>
-						<Input label="Fødselsnummer" />
-						<div style={container}>
-							<Input label="Fornavn" />
-							<Input label="Mellomnavn" />
-							<Input label="Etternavn" />
+						<div>
+							<Systemtittel>Personlige opplysninger</Systemtittel>
+							<div>
+								<Input label="Fødselsnummer" onChange={(e => updateFieldInState("fnr", e.target.value))}/>
+							</div>
+							<div style={container}>
+								<InputFields labelText="Fornavn" />
+								<InputFields labelText="Mellomnavn" />
+								<InputFields labelText="Etternavn" />
+							</div>
+							<div>
+								<Input label="Telefonnummer" />
+							</div>
+							<div style={container}>
+								<InputFields labelText="Gateadresse"/>
+								<InputFields labelText="Bruksenhet" />
+							</div>
+							<div style={container}>
+								<InputFields labelText="Postnummer"/>
+								<InputFields labelText="Poststed" />
+								<InputFields labelText="Bokommune" />
+							</div>
+							<div>
+								<Input label="Statsborgerskap" />
+							</div>
+							<div style={container}>
+								<RadioGruppe legend="Er du registrert som flyktning?"   >
+									<Radio name="flyktning" label={'Ja'} value="true"  onChange={(e => updateFieldInState("flyktning", e.target.value))}/>
+									<Radio name="flyktning" label={'Nei'} value="false" onChange={(e => updateFieldInState("flyktning", e.target.value))}/>
+								</RadioGruppe>
+								&nbsp;
+								<RadioGruppe legend="Bor du fast i Norge?" >
+									<Radio name="bofastnorge" label={'Ja'} />
+									<Radio name="bofastnorge" label={'Nei'} />
+								</RadioGruppe>
+							</div>
 						</div>
-						<Input label="Telefonnummer" />
-						<div style={container}>
-							<Input label="Gateadresse"/>
-							<Input label="Bruksenhet" />
+
+						<div>
+							<Systemtittel>Boforhold</Systemtittel>
+							<div>
+								<div style={container}>
+									<RadioGruppe legend="Deler du bolig med en annen voksen?">
+										<Radio name="delerDubolig" label="Ja" value="true" onChange={(e => updateFieldInState("delerDuBolig", e.target.value))} />
+										<Radio name="delerDubolig" label="Nei" value="false" onChange={(e => updateFieldInState("delerDuBolig", e.target.value))}/>
+									</RadioGruppe>
+									&nbsp;
+									{
+										personDelerBolig()
+									}
+								</div>
+								{
+									tillegsInfoDelerBolig()
+								}
+							</div>
 						</div>
-						<div style={container}>
-							<Input label="Postnummer"/>
-							<Input label="Poststed" />
-							<Input label="Bokommune" />
-						</div>
-						<Input label="Statsborgerskap" />
-						<RadioGruppe legend="Er du registrert som flyktning?" style={container}>
-							<Radio name="flyktning" label={'Ja'} />
-							<Radio name="flyktning" label={'Nei'} />
-						</RadioGruppe>
-						<RadioGruppe legend="Bor du fast i Norge?" style={container}>
-							<Radio name="bofastnorge" label={'Ja'} />
-							<Radio name="bofastnorge" label={'Nei'} />
-						</RadioGruppe>
-						<Systemtittel>Boforhold</Systemtittel>
-						<RadioGruppe legend="Deler du bolig med en annen voksen?">
-							<Radio name="delerdubolig" label="Ja" />
-							<Radio name="delerdubolig" label="Nei" />
-						</RadioGruppe>
-						<CheckboxGruppe legend="Hvem deler du bolig med?">
-							<Checkbox name="boligdeler" label="Ektefelle/Partner" />
-							<Checkbox name="boligdeler" label="Samboer" />
-							<Checkbox name="boligdeler" label="Barn over 18 år" />
-							<Checkbox name="boligdeler" label="Andre personer over 18 år" />
-						</CheckboxGruppe>
-						
-						<Undertittel>Opplysninger om ektefellen/samboer/annen voksen person hvis dere bor sammen</Undertittel>
-						<div style={container}>
-							<Input label="Navn"/>
-							<Input label="Fødselsnummer"/>
-						</div>						
 						
 						<Systemtittel>Utenlandsopphold</Systemtittel>						
 						<RadioGruppe legend="Har du vært utenlands i løpet av de siste 3 månedene?">
@@ -119,11 +216,32 @@ function Soknad(){
 							<Radio name="hardupensjon" label="Ja" />
 							<Radio name="hardupensjon" label="Nei" />
 						</RadioGruppe>
-						<div style={container}>
-							<Input label="Fra hvilken ordning mottar du pensjon?" />
-							<Input label="Brutto beløp per år" />
+						<div>
+							{
+								state.pensjonsOrdning.map((item, index)=> ({...item, key:index}))
+									.map((item, index) => {
+											return (
+												<div key={item.key} style={container}>
+
+													<InputFields id={`${item.key}-ordning`}
+																 labelText={"Fra hvilken ordning mottar du pensjon?:"}
+																 value={item.ordning}
+																 onChange={(value) => updatePensjonsOrgning(value,index)}
+													/>
+
+													<InputFields id={`${item.key}-beløp`}
+																 labelText={"Brutto beløp per år"}
+																 value={item.beløp}
+																 onChange={(value) => updatePensjonsOrgningsBeløp(value,index)}
+													/>
+
+												</div>
+											)
+										}
+									)
+							}
 						</div>
-						<Knapp>Legg til flere pensjonsordninger</Knapp>
+						<Knapp onClick={addPensjonsOrgningsInput}>Legg til flere pensjonsordninger</Knapp>
 						<Input label="Sum arbeidsinntekt/personinntekt, kapitalinntekt og pensjon" />
 
 						{/* <Systemtittel>Pensjon og annen inntekt for ektefelle/samboer</Systemtittel>
@@ -179,13 +297,16 @@ function Soknad(){
 
 					</SkjemaGruppe>
 				</div>				
-				<Hovedknapp onClick={() => history.push("/saker")}>Neste</Hovedknapp>
+				<Hovedknapp onClick={lol}>Neste</Hovedknapp>
             </Panel>
 		</>
 	)
 }
 export default Soknad;
 
+
+
 const container = {
 	display: 'flex'
 }
+
