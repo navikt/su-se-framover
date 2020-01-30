@@ -5,6 +5,7 @@ import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import { Panel } from 'nav-frontend-paneler';
 import Knapp from 'nav-frontend-knapper';
 import "./vilkorsprov.less";
+import { useLocation, useHistory} from "react-router-dom";
 
 const initialState = {
 	uførevilkår: {checked: false, begrunnelse: ''},
@@ -17,7 +18,7 @@ const initialState = {
 }
 
 function Vilkarsprov({state = initialState, setState}) {
-
+	const history = useHistory();
 	useEffect(() => {
 		setState(initialState)
 	}, [])
@@ -101,7 +102,7 @@ function Vilkarsprov({state = initialState, setState}) {
 				</Panel>
 				<div>
 					<Knapp htmlType="submit">Lagre</Knapp>
-					<Knapp>Neste</Knapp>
+					<Knapp onClick={() => history.push("/beregning")}>Neste</Knapp>
 				</div>
 			</form>
 		</div>
