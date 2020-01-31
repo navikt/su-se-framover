@@ -28,6 +28,7 @@ function Soknad(){
 
 	function lol() {
 		console.log(state)
+		history.push("/vilkarsprov", state)
 	}
 
 	function boSammenMedUpdate(target){

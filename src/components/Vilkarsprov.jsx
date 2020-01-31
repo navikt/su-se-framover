@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Tekstomrade from 'nav-frontend-tekstomrade';
 import {Checkbox, Textarea } from 'nav-frontend-skjema';
-import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
+import { Innholdstittel, Undertittel, Element, Normaltekst} from 'nav-frontend-typografi';
 import { Panel } from 'nav-frontend-paneler';
 import Knapp from 'nav-frontend-knapper';
 import "./vilkorsprov.less";
@@ -19,6 +19,7 @@ const initialState = {
 
 function Vilkarsprov({state = initialState, setState}) {
 	const history = useHistory();
+	const soknad = history.location.state ? history.location.state : {}
 	useEffect(() => {
 		setState(initialState)
 	}, [])
@@ -37,6 +38,13 @@ function Vilkarsprov({state = initialState, setState}) {
 		event.preventDefault()
 		console.log("submitting")
 		console.log(state)
+	}
+
+	const faktasjekkstyle = {
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'stretch',
+		justifyContent: 'center'
 	}
 
 	return (
@@ -60,6 +68,19 @@ function Vilkarsprov({state = initialState, setState}) {
 								 textAreaLabel={"Begrunnelse"}
 								 textAreaValue={state.flyktning.begrunnelse}
 								 onChange={updateField}
+								 customizedDisplay={
+								 <div style={faktasjekkstyle}>
+								 <Panel border style={{width: "50%"}}>
+								 	<Undertittel>Infomasjon fra søknad</Undertittel>
+								    <Element>Fra søknad: {soknad.flyktning}</Element>
+                                 </Panel>
+                                 <Panel border style={{width: "50%"}}>
+                                 	<Undertittel>Infomasjon fra UDI</Undertittel>
+                                 	<Element>Status som flyktning?: Ja</Element>
+                                 	<Element>Dato for vedtak: 01.01.2018</Element>
+                                 </Panel>
+                                 </div>
+								 }
 						/>
 						<Section checkboxLabel={"§x-y Botid og opphold"}
 								 sectionText={"For å kunne motta Supplerende stønad for uføre må brukeren være bosatt og oppholde" +
@@ -115,7 +136,8 @@ const Section = ({
 	sectionText,
 	textAreaLabel,
 	textAreaValue,
-	onChange
+	onChange,
+	customizedDisplay
 }) => {
 	return (
 		<div className="section">
@@ -123,12 +145,15 @@ const Section = ({
 				label={<Undertittel>{checkboxLabel}</Undertittel>}
 				onChange={e => onChange(stateToChange, e.target.checked)}
 			/>
+			<Panel>
 			<Tekstomrade>{sectionText}</Tekstomrade>
+			<>{customizedDisplay}</>
 			<Textarea
 				label={textAreaLabel}
 				value={textAreaValue}
 				onChange={e => onChange(stateToChange, e.target.value)}
 			/>
+			</Panel>
 		</div>
 	)
 }
