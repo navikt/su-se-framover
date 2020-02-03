@@ -9,7 +9,6 @@ import { useLocation, useHistory} from "react-router-dom";
 function Saker(){
 	const history = useHistory();
 
-	const sorting = ['alle']
 	const saker = [
 		{fnr:'12345678910', status:'Til behandling'},
 		{fnr:'12345678911', status:'Til attestering'},
