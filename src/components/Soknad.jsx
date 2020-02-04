@@ -83,6 +83,7 @@ function Soknad(){
 					]}
 					onChange={(index) => setStage(index)}
 					visLabel
+					aktivtSteg={stage}
 				/>
 				<div>
 					<SkjemaGruppe>
@@ -98,7 +99,7 @@ function Soknad(){
 
 	function lol() {
 		console.log(state)
-		history.push("/saker", state)
+		setStage(stage+1)
 	}
 }
 export default Soknad;
