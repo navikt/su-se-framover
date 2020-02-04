@@ -161,6 +161,7 @@ const Utenlandsopphold = ({state, updateFieldInState}) =>{
                     utenlandsoppholdFelter()
                 }
             </div>
+            &nbsp;
             <RadioGruppe legend="Har du planer om å reise utenlands?">
                 <Radio name="planlagtUtenlandsopphold"
                        label="Ja"

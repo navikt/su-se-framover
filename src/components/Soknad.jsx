@@ -7,6 +7,7 @@ import { Hovedknapp } from 'nav-frontend-knapper';
 import Personopplysninger from "./soknadComponents/Personopplysninger";
 import Boforhold from "./soknadComponents/Boforhold";
 import Utenlandsopphold from "./soknadComponents/Utenlandsopphold"
+import Oppholdstillatelse from "./soknadComponents/Oppholdstillatelse";
 import { useHistory } from "react-router-dom";
 
 
@@ -35,21 +36,22 @@ function Soknad(){
 	function ShowActiveComponent(){
 		if(stage.stage === 0){
 			return <Personopplysninger state={state}
-									   setState={setState}
 									   updateFunction={updateFunction}
 									   updateFieldInState={updateFieldInState}
 			/>
 		}else if(stage.stage === 1){
 			return <Boforhold state={state}
 							  setState={setState}
-							  updateFunction={updateFunction}
 							  updateFieldInState={updateFieldInState}
 			/>
 		}else if(stage.stage === 2){
 			return <Utenlandsopphold state={state}
-									 setState={setState}
-									 updateFunction={updateFunction}
 									 updateFieldInState={updateFieldInState}
+			/>
+		}else if(stage.stage === 3){
+			return <Oppholdstillatelse state={state}
+									   updateFunction={updateFunction}
+									   updateFieldInState={updateFieldInState}
 			/>
 		}else{
 			return (<div>

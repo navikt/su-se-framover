@@ -4,7 +4,7 @@ import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import {InputFields} from "../FormElements";
 
 
-const Personopplysninger = ({state, setState, updateFunction, updateFieldInState}) => {
+const Personopplysninger = ({state, updateFunction, updateFieldInState}) => {
     console.log(state)
 
     return (
