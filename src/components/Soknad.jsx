@@ -6,10 +6,11 @@ import { SkjemaGruppe } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Personopplysninger from "./soknadComponents/Personopplysninger";
 import Boforhold from "./soknadComponents/Boforhold";
-
+import { useHistory } from "react-router-dom";
 
 
 function Soknad(){
+	const history = useHistory();
 
 	const [state, setState] = useState({
 		borSammenMed: [],
@@ -94,6 +95,7 @@ function Soknad(){
 
 	function lol() {
 		console.log(state)
+		history.push("/saker", state)
 	}
 }
 export default Soknad;

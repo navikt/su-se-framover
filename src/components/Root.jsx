@@ -9,6 +9,7 @@ import { Knapp } from 'nav-frontend-knapper';
 import 'reset-css'
 import Soknad from "./Soknad"
 import Saker from "./Saker"
+import Saksoversikt from "./Saksoversikt"
 import Vilkarsprov from "./Vilkarsprov";
 import Beregning from "./Beregning"
 import ErrorBoundary from './ErrorBoundary'
@@ -79,6 +80,9 @@ const Root = () => {
                             </Route>
                             <Route path="/vilkarsprov">
                                 <Vilkarsprov state={state.vilkårsprøving} setState={updateVilkårsvurdering} />
+                            </Route>
+							<Route path="/saksoversikt">
+                                <Saksoversikt />
                             </Route>
                             <Route path="/Beregning">
                                 <Beregning state={state.beregning} setState={updateBeregning}/>

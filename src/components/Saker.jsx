@@ -4,10 +4,11 @@ import { Checkbox } from 'nav-frontend-skjema';
 import Lenke from 'nav-frontend-lenker';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { ToggleGruppe } from 'nav-frontend-toggle';
-import { useLocation, useHistory} from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 
 function Saker(){
 	const history = useHistory();
+	var state = history.location.state;
 
 	const saker = [
 		{fnr:'12345678910', status:'Til behandling'},
@@ -15,6 +16,15 @@ function Saker(){
 		{fnr:'12345678912', status:'Mangler dokumentasjson'},
 		{fnr:'12345678913', status:'Klar til behandling'}
 	];
+
+	//Create dummy from søknad input if fnr present
+	if(state !== undefined && state.fnr !== undefined){
+		saker.push(
+		{
+			fnr:state.fnr, status:'Til behandling'
+		})
+	}
+
 	return(
 		<>
 		<table className="tabell">
@@ -32,7 +42,7 @@ function Saker(){
 					    <tr key={index}>
 							<td>{krav.fnr}</td>
 							<td>{krav.status}</td>
-							<td><Hovedknapp onClick={() => history.push("/vilkarsprov")}>{"Behandle"}</Hovedknapp></td>
+							<td><Hovedknapp onClick={() => history.push("/saksoversikt", state)}>{"Behandle"}</Hovedknapp></td>
 						</tr>
            				)
            			})
