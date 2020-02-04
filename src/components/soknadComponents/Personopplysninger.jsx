@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React from 'react'
 import {Systemtittel} from "nav-frontend-typografi";
 import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import {InputFields} from "../FormElements";
@@ -6,7 +6,6 @@ import {InputFields} from "../FormElements";
 
 const Personopplysninger = ({state, setState, updateFunction, updateFieldInState}) => {
     console.log(state)
-
 
     return (
         <div>

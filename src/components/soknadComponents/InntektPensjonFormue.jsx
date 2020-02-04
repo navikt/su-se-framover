@@ -1,5 +1,4 @@
 import React from "react";
-import {SkjemaGruppe} from "nav-frontend-skjema";
 
 const InntektPensjonFormue = (state, setState) => {
 	console.log(state)
@@ -58,7 +57,7 @@ const InntektPensjonFormue = (state, setState) => {
                                         <InputFields id={`${item.key}-beløp`}
                                                      labelText={"Brutto beløp per år"}
                                                      value={item.beløp}
-                                                     onChange={(value) => updatePensjonsOrdning(value,index)}
+                                                     onChange={(value) => updatePensjonsOrdningsBeløp(value,index)}
                                         />
 
 

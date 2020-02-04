@@ -7,7 +7,7 @@ import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import {Checkbox, CheckboxGruppe} from "nav-frontend-skjema";
 import {Systemtittel} from "nav-frontend-typografi";
 
-const Boforhold = ({state, setState, updateFunction, updateFieldInState, addInputFields}) =>{
+const Boforhold = ({state, setState, updateFunction, updateFieldInState}) =>{
     console.log(state)
 
     function updatedArray(sourceArray, target){
@@ -25,39 +25,60 @@ const Boforhold = ({state, setState, updateFunction, updateFieldInState, addInpu
         }))
     }
 
+    function addInputFields(){
+        const values = state.delerBoligMed
+        values.push({navn:'', fødselsnummer:''})
+        updateFieldInState("delerBoligMed", values)
+    }
+
+    function updateEPSnavn(navn, index){
+        const ESPnavn = {...state.delerBoligMed[index]}
+        ESPnavn.navn = navn
+
+        const tempNavn = [...state.delerBoligMed.slice(0,index), ESPnavn, ...state.delerBoligMed.slice(index+1)]
+        updateFieldInState("delerBoligMed", tempNavn)
+    }
+
+    function oppdaterFødselsnummer(fødselsnummer, index){
+        const ESPfødselsnummer = {...state.delerBoligMed[index]}
+        ESPfødselsnummer.fødselsnummer = fødselsnummer
+
+        const tempFødselsnummer = [...state.delerBoligMed.slice(0,index), ESPfødselsnummer, ...state.delerBoligMed.slice(index+1)]
+        updateFieldInState("delerBoligMed", tempFødselsnummer)
+    }
+
     function personDelerBolig(){
         if(state.delerDuBolig === "true"){
 
             return (
                 <CheckboxGruppe legend="Hvem deler du bolig med?">
-                    <Checkbox name="boligdeler" label="Ektefelle/Partner/Samboer" value="esp" onChange={(e => boSammenMedUpdate(e.target))}/>
-                    <Checkbox name="boligdeler" label="Barn over 18 år" value="over18" onChange={(e => boSammenMedUpdate(e.target))}/>
-                    <Checkbox name="boligdeler" label="Andre personer over 18 år" value="annenPerson" onChange={(e => boSammenMedUpdate(e.target))}/>
+                    <Checkbox name="boligdeler"
+                              label="Ektefelle/Partner/Samboer"
+                              value="esp" checked={state.borSammenMed.includes("esp")}
+                              onChange={(e => boSammenMedUpdate(e.target))}
+                    />
+                    <Checkbox name="boligdeler"
+                              label="Barn over 18 år"
+                              value="over18"
+                              checked={state.borSammenMed.includes("over18")}
+                              onChange={(e => boSammenMedUpdate(e.target))}
+                    />
+                    <Checkbox name="boligdeler"
+                              label="Andre personer over 18 år"
+                              value="annenPerson"
+                              checked={state.borSammenMed.includes("annenPerson")}
+                              onChange={(e => boSammenMedUpdate(e.target))}
+                    />
                 </CheckboxGruppe>
             )
         }
     }
 
-    function tillegsInfoDelerBolig(){
+    function tillegsInfoESP(){
         if(state.delerDuBolig === "true"){
-
             return (
                 <div>
                     <Undertittel>Opplysninger om ektefellen/samboer/annen voksen person hvis dere bor sammen</Undertittel>
-                    <Opplysningerfelt />
-                    <div>
-                        <Knapp onClick={() => addInputFields(state.delerBoligMed)}>Legg til flere</Knapp>
-                    </div>
-                </div>
-            )
-        }
-    }
-
-    function Opplysningerfelt(){
-        if(state.delerDuBolig === "true"){
-
-            return (
-                <div>
                     {
                         state.delerBoligMed.map((item, index)=> ({...item, key:index}))
                             .map((item, index) => {
@@ -67,13 +88,13 @@ const Boforhold = ({state, setState, updateFunction, updateFieldInState, addInpu
                                             <InputFields id={`${item.key}-navn`}
                                                          labelText={"Navn"}
                                                          value={item.navn}
-                                                         onChange={(value) => updatePensjonsOrdning(value,index)}
+                                                         onChange={(value) => updateEPSnavn(value,index)}
                                             />
 
                                             <InputFields id={`${item.key}-fødselsnummer`}
                                                          labelText={"Fødselsnummer"}
                                                          value={item.fødselsnummer}
-                                                         onChange={(value) => updatePensjonsOrdningsBeløp(value,index)}
+                                                         onChange={(value) => oppdaterFødselsnummer(value,index)}
                                             />
 
                                             <Lukknapp type="button" style={fjernInnputKnappStyle}
@@ -83,6 +104,9 @@ const Boforhold = ({state, setState, updateFunction, updateFieldInState, addInpu
                                 }
                             )
                     }
+                    <div>
+                        <Knapp onClick={() => addInputFields()}>Legg til flere</Knapp>
+                    </div>
                 </div>
             )
         }
@@ -99,8 +123,17 @@ const Boforhold = ({state, setState, updateFunction, updateFieldInState, addInpu
             <div>
                 <div style={container}>
                     <RadioGruppe legend="Deler du bolig med en annen voksen?">
-                        <Radio name="delerDubolig" label="Ja" value="true" onChange={(e => updateFieldInState("delerDuBolig", e.target.value))} />
-                        <Radio name="delerDubolig" label="Nei" value="false" onChange={(e => updateFieldInState("delerDuBolig", e.target.value))}/>
+                        <Radio name="delerDubolig"
+                               label="Ja" value="true"
+                               checked={state.delerDuBolig === "true"}
+                               onChange={(e => updateFieldInState("delerDuBolig", e.target.value))}
+                        />
+                        <Radio name="delerDubolig"
+                               label="Nei"
+                               value="false"
+                               checked={state.delerDuBolig === "false"}
+                               onChange={(e => updateFieldInState("delerDuBolig", e.target.value))}
+                        />
                     </RadioGruppe>
                     &nbsp;
                     {
@@ -108,7 +141,7 @@ const Boforhold = ({state, setState, updateFunction, updateFieldInState, addInpu
                     }
                 </div>
                 {
-                    tillegsInfoDelerBolig()
+                    tillegsInfoESP()
                 }
             </div>
         </div>

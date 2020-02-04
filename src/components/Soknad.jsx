@@ -42,7 +42,6 @@ function Soknad(){
 							  setState={setState}
 							  updateFunction={updateFunction}
 							  updateFieldInState={updateFieldInState}
-							  addInputFields={addInputFields}
 			/>
 		}else{
 			return (<div>
@@ -52,12 +51,7 @@ function Soknad(){
 	}
 
 	function addInputFields(field){
-		if(field === state.delerBoligMed){
-			const values = state.delerBoligMed
-			values.push({navn:'', fødselsnummer:''})
-			updateFieldInState("delerBoligMed", values)
-
-		}else if(field === state.utenlandsoppholdArray){
+		if(field === state.utenlandsoppholdArray){
 			const values = state.utenlandsoppholdArray
 			values.push({utreisedato:'', innreisedato:''})
 			updateFieldInState("utenlandsoppholdArray", values)
