@@ -32,9 +32,18 @@ function Soknad(){
 
 	function ShowActiveComponent(){
 		if(stage === 0){
-			return Personopplysninger(state, setState, updateFunction, updateFieldInState)
+			return <Personopplysninger state={state}
+									   setState={setState}
+									   updateFunction={updateFunction}
+									   updateFieldInState={updateFieldInState}
+			/>
 		}else if(stage === 1){
-			return Boforhold(state, setState, updateFunction, updateFieldInState, addInputFields)
+			return <Boforhold state={state}
+							  setState={setState}
+							  updateFunction={updateFunction}
+							  updateFieldInState={updateFieldInState}
+							  addInputFields={addInputFields}
+			/>
 		}else{
 			return (<div>
 				<p>goofed</p>
