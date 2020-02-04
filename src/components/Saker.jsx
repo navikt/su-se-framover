@@ -10,21 +10,43 @@ function Saker(){
 	const history = useHistory();
 	var state = history.location.state;
 
-	const saker = [
-		{fnr:'12345678910', status:'Til behandling'},
-		{fnr:'12345678911', status:'Til attestering'},
-		{fnr:'12345678912', status:'Mangler dokumentasjson'},
-		{fnr:'12345678913', status:'Klar til behandling'}
-	];
-
-	//Create dummy from søknad input if fnr present
-	if(state !== undefined && state.fnr !== undefined){
+	var saker = [];
 		saker.push(
 		{
-			fnr:state.fnr, status:'Til behandling'
-		})
-	}
-
+			sakid: '01234',
+			person: {fnr:'12345678910'},
+			status: 'Til behandling',
+			stonadsperioder: [
+				{
+					fom:'01.01.20',
+					tom:'01.01.21',
+					krav: [
+						{
+							type:'Fortsettelse',
+							mottatt:'05.01.20'
+						}
+					],
+					vedtak: []
+				},
+				{
+					fom:'01.01.19',
+					tom:'01.01.20',
+					krav: [
+						{
+							type:'Førstegangssøknad',
+							mottatt:'01.01.19'
+						}
+					],
+					vedtak: [
+						{
+							status:'Iverksatt',
+							årsak:'Tilstått ytelse'
+						}
+					]
+				}
+			]
+		}
+		);
 	return(
 		<>
 		<table className="tabell">
@@ -37,12 +59,12 @@ function Saker(){
             </thead>
             <tbody>
            		{
-           			saker.map((krav, index) => {
+           			saker.map((sak, index) => {
            				return (
 					    <tr key={index}>
-							<td>{krav.fnr}</td>
-							<td>{krav.status}</td>
-							<td><Hovedknapp onClick={() => history.push("/saksoversikt", state)}>{"Behandle"}</Hovedknapp></td>
+							<td>{sak.person.fnr}</td>
+							<td>{sak.status}</td>
+							<td><Hovedknapp onClick={() => history.push("/saksoversikt", saker[0])}>{"Behandle"}</Hovedknapp></td>
 						</tr>
            				)
            			})
