@@ -14,7 +14,29 @@ function Saker(){
 		saker.push(
 		{
 			sakid: '01234',
-			person: {fnr:'12345678910'},
+			person: {
+				fnr:'12345678910',
+				fornavn:'Navn',
+				etternavn:'Navnesen',
+				adresse: {
+					postnr: '1000',
+					poststed: 'Oslo',
+					gatenavn: 'Gategata',
+					gatenr: '10'
+				},
+				sivilstand: {
+					status: 'Gift',
+					partner: 'Partner Partnersen 010101012351'
+				},
+				telefon: '123456789',
+				epost: {
+					epost: 'navn@navn.no',
+					metadata: {
+						kilde: "Kilde",
+						oppdatert: "01.01.2016"
+					}
+				}
+			},
 			status: 'Til behandling',
 			stonadsperioder: [
 				{

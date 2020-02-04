@@ -9,6 +9,7 @@ import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import { Panel } from 'nav-frontend-paneler';
 import 'nav-frontend-tabell-style';
 import { Undertittel } from 'nav-frontend-typografi';
+import PersonInfoBar from './PersonInfoBar'
 
 function Saksoversikt(){
 	const history = useHistory();
@@ -16,8 +17,7 @@ function Saksoversikt(){
 	console.log(sak)
 	return(
 		<>
-		<Undertittel>Sakid:{sak.sakid}</Undertittel>
-		<Undertittel>Person:{sak.person.fnr}</Undertittel>
+		<PersonInfoBar person={sak.person}/>
 		{
 			sak.stonadsperioder.map((periode, index) => {
 				return(
