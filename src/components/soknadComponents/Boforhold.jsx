@@ -7,7 +7,7 @@ import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import {Checkbox, CheckboxGruppe} from "nav-frontend-skjema";
 import {Systemtittel} from "nav-frontend-typografi";
 
-const Boforhold = (state, setState, updateFunction, updateFieldInState, addInputFields) =>{
+const Boforhold = ({state, setState, updateFunction, updateFieldInState, addInputFields}) =>{
     console.log(state)
 
     function updatedArray(sourceArray, target){
