@@ -15,63 +15,64 @@ function Soknad({config}){
 	const [stage, setStage] = useState(0)
 
 	const [state, setState] = useState({
-		borSammenMed: [],
-		delerBoligMed: [{navn:'', fødselsnummer:''}],
-		utenlandsoppholdArray: [{utreisedato: '', innreisedato: ''}],
-		PlanlagtUtenlandsoppholdArray: [{planlagtUtreisedato: '', planlagtInnreisedato: ''}],
-		pensjonsOrdning: [{ordning: '', beløp: ''}]
+		personopplysninger: {},
+		boforhold: {borSammenMed: [],
+					delerBoligMed: [{navn:'', fødselsnummer:''}]},
 
+		utenlandsopphold: {utenlandsoppholdArray: [{utreisedato: '', innreisedato: ''}],
+							PlanlagtUtenlandsoppholdArray: [{planlagtUtreisedato: '', planlagtInnreisedato: ''}]
+		},
+		oppholdstillatelse: {},
+		inntektPensjonFormue: {pensjonsOrdning: [{ordning: '', beløp: ''}]},
+		forNAV: {}
 	})
 
-	const updateFunction = name => value => updateFieldInState(name, value)
-
-	const updateFieldInState = (field, newState) => {
-		setState(state => ({
-			...state,
-			[field]: newState
-		}))
-	}
 
 	function addToStage(){
 		setStage(stage => stage+1)
 	}
 
+	const updateFunction = name => value => updateField(setState)(name, value)
+
+	const updateField = updateFunction => (stateToChange, value) => {
+		updateFunction(state => ({
+			...state,
+			[stateToChange]: (typeof value === "function"
+								? value(state[stateToChange])
+								: value
+			)
+		}))
+	}
+
 	function ShowActiveComponent(){
 		if(stage === 0){
-			return <Personopplysninger state={state}
-									   updateFunction={updateFunction}
-									   updateFieldInState={updateFieldInState}
+			return <Personopplysninger state={state.personopplysninger}
+									   updateField={updateField(updateFunction("personopplysninger"))}
 									   onClick={addToStage}
 			/>
 		}else if(stage === 1){
-			return <Boforhold state={state}
-							  setState={setState}
-							  updateFieldInState={updateFieldInState}
+			return <Boforhold state={state.boforhold}
+							  updateField={updateField(updateFunction("boforhold"))}
 							  onClick={addToStage}
 			/>
 		}else if(stage === 2){
-			return <Utenlandsopphold state={state}
-									 updateFieldInState={updateFieldInState}
+			return <Utenlandsopphold state={state.utenlandsopphold}
+									 updateField={updateField(updateFunction("utenlandsopphold"))}
 									 onClick={addToStage}
 			/>
 		}else if(stage === 3){
-			return <Oppholdstillatelse state={state}
-									   updateFunction={updateFunction}
-									   updateFieldInState={updateFieldInState}
+			return <Oppholdstillatelse state={state.oppholdstillatelse}
+									   updateField={updateField(updateFunction("oppholdstillatelse"))}
 									   onClick={addToStage}
 			/>
 		}else if(stage === 4){
-			return <InntektPensjonFormue state={state}
-										 setState={setState}
-										 updateFunction={updateFunction}
-										 updateFieldInState={updateFieldInState}
+			return <InntektPensjonFormue state={state.inntektPensjonFormue}
+										 updateField={updateField(updateFunction("inntektPensjonFormue"))}
 										 onClick={addToStage}
 			/>
 		}else if(stage === 5){
-			return <ForNAV state={state}
-						   setState={setState}
-						   updateFunction={updateFunction}
-						   updateFieldInState={updateFieldInState}
+			return <ForNAV state={state.forNAV}
+						   updateField={updateField(updateFunction("forNAV"))}
 						   onClick={addToStage}
 
 			/>

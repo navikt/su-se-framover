@@ -18,6 +18,7 @@ const OppsumeringOgSend = ({state, config}) => {
 
     function sendSøknad(){
         console.log("Sender søknad")
+        console.log(state)
         setPostData({url: config.suSeBakoverUrl+"/person", data: state})
     }
 

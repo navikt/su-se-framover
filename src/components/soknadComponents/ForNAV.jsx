@@ -4,9 +4,9 @@ import {Systemtittel} from "nav-frontend-typografi";
 import {InputFields} from "../FormElements";
 import {Hovedknapp} from "nav-frontend-knapper";
 
+const ForNAV = ({state, updateField, onClick}) => {
 
-
-const ForNAV = ({state, updateFunction, updateFieldInState, onClick}) => {
+    const updateFunction = name => value => updateField(name, value)
 
     return (
         <div>
@@ -19,14 +19,14 @@ const ForNAV = ({state, updateFunction, updateFieldInState, onClick}) => {
                                    label="Bokmål"
                                    value="bokmål"
                                    checked={state.maalform === "bokmål"}
-                                   onChange={(e => updateFieldInState("maalform", e.target.value))}
+                                   onChange={(e => updateField("maalform", e.target.value))}
                             />
                             &nbsp;
                             <Radio name="maalform"
                                    label="Nynorsk"
                                    value="nynorsk"
                                    checked={state.maalform === "nynorsk"}
-                                   onChange={(e => updateFieldInState("maalform", e.target.value))}
+                                   onChange={(e => updateField("maalform", e.target.value))}
                             />
                         </div>
                     </RadioGruppe>
@@ -42,13 +42,13 @@ const ForNAV = ({state, updateFunction, updateFieldInState, onClick}) => {
                                    label="Ja"
                                    value="ja"
                                    checked={state.personligmote === "ja"}
-                                   onChange={(e => updateFieldInState("personligmote", e.target.value))}
+                                   onChange={(e => updateField("personligmote", e.target.value))}
                             />
                             <Radio name="personligmote"
                                    label="Nei"
                                    value="nei"
                                    checked={state.personligmote === "nei"}
-                                   onChange={(e => updateFieldInState("personligmote", e.target.value))}
+                                   onChange={(e => updateField("personligmote", e.target.value))}
                             />
                         </RadioGruppe>
                     </div>
@@ -59,13 +59,13 @@ const ForNAV = ({state, updateFunction, updateFieldInState, onClick}) => {
                                    label="Ja"
                                    value="ja"
                                    checked={state.fullmektigmote === "ja"}
-                                   onChange={(e => updateFieldInState("fullmektigmote", e.target.value))}
+                                   onChange={(e => updateField("fullmektigmote", e.target.value))}
                             />
                             <Radio name="fullmektigmote"
                                    label="Nei"
                                    value="nei"
                                    checked={state.fullmektigmote === "nei"}
-                                   onChange={(e => updateFieldInState("fullmektigmote", e.target.value))}
+                                   onChange={(e => updateField("fullmektigmote", e.target.value))}
                             />
                         </RadioGruppe>
                     </div>
@@ -76,13 +76,13 @@ const ForNAV = ({state, updateFunction, updateFieldInState, onClick}) => {
                                    label="Ja"
                                    value="ja"
                                    checked={state.passsjekk === "ja"}
-                                   onChange={(e => updateFieldInState("passsjekk", e.target.value))}
+                                   onChange={(e => updateField("passsjekk", e.target.value))}
                             />
                             <Radio name="passsjekk"
                                    label="Nei"
                                    value="nei"
                                    checked={state.passsjekk === "nei"}
-                                   onChange={(e => updateFieldInState("passsjekk", e.target.value))}
+                                   onChange={(e => updateField("passsjekk", e.target.value))}
                             />
                         </RadioGruppe>
                     </div>

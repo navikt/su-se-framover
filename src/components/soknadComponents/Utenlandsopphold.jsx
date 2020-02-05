@@ -6,12 +6,13 @@ import {Systemtittel} from "nav-frontend-typografi";
 import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 
 
-const Utenlandsopphold = ({state, updateFieldInState, onClick}) =>{
+const Utenlandsopphold = ({state, updateField, onClick}) =>{
+
 
     function addInputFields(){
         const values = state.utenlandsoppholdArray
         values.push({utreisedato:'', innreisedato:''})
-        updateFieldInState("utenlandsoppholdArray", values)
+        updateField("utenlandsoppholdArray", values)
     }
 
     function utenlandsoppholdUtreisedato(dato, index){
@@ -19,7 +20,7 @@ const Utenlandsopphold = ({state, updateFieldInState, onClick}) =>{
         utenlandsopphold.utreisedato = dato
 
         const tempUtreiseDato = [...state.utenlandsoppholdArray.slice(0,index), utenlandsopphold, ...state.utenlandsoppholdArray.slice(index+1)]
-        updateFieldInState("utenlandsoppholdArray", tempUtreiseDato)
+        updateField("utenlandsoppholdArray", tempUtreiseDato)
     }
 
     function utenlandsoppholdInnreisedato(dato, index){
@@ -27,13 +28,13 @@ const Utenlandsopphold = ({state, updateFieldInState, onClick}) =>{
         utenlandsopphold.innreisedato = dato
 
         const tempInnreiseDato = [...state.utenlandsoppholdArray.slice(0,index), utenlandsopphold, ...state.utenlandsoppholdArray.slice(index+1)]
-        updateFieldInState("utenlandsoppholdArray", tempInnreiseDato)
+        updateField("utenlandsoppholdArray", tempInnreiseDato)
     }
 
 
     function fjernValgtInputFelt(state, field, index){
         const tempField = [...state.slice(0,index), ...state.slice(index+1)]
-        updateFieldInState(field, tempField)
+        updateField(field, tempField)
     }
 
     function utenlandsoppholdFelter(){
@@ -78,7 +79,7 @@ const Utenlandsopphold = ({state, updateFieldInState, onClick}) =>{
     function addInputFieldsPlantlagt(){
         const values = state.PlanlagtUtenlandsoppholdArray
         values.push({planlagtUtreisedato:'', planlagtInnreisedato:''})
-        updateFieldInState("PlanlagtUtenlandsoppholdArray", values)
+        updateField("PlanlagtUtenlandsoppholdArray", values)
     }
 
     function planlagtUtenlandsoppholdUtreisedato(dato, index){
@@ -86,7 +87,7 @@ const Utenlandsopphold = ({state, updateFieldInState, onClick}) =>{
         planlagtUtenlandsopphold.planlagtUtreisedato = dato
 
         const tempUtreiseDato = [...state.PlanlagtUtenlandsoppholdArray.slice(0,index), planlagtUtenlandsopphold, ...state.PlanlagtUtenlandsoppholdArray.slice(index+1)]
-        updateFieldInState("PlanlagtUtenlandsoppholdArray", tempUtreiseDato)
+        updateField("PlanlagtUtenlandsoppholdArray", tempUtreiseDato)
     }
 
     function planlagtUtenlandsoppholdInnreisedato(dato, index){
@@ -94,7 +95,7 @@ const Utenlandsopphold = ({state, updateFieldInState, onClick}) =>{
         planlagtUtenlandsopphold.planlagtInnreisedato = dato
 
         const tempInnreiseDato = [...state.PlanlagtUtenlandsoppholdArray.slice(0,index), planlagtUtenlandsopphold, ...state.PlanlagtUtenlandsoppholdArray.slice(index+1)]
-        updateFieldInState("PlanlagtUtenlandsoppholdArray", tempInnreiseDato)
+        updateField("PlanlagtUtenlandsoppholdArray", tempInnreiseDato)
     }
 
     function planlagtUtenlandsoppholdFelter(){
@@ -145,14 +146,14 @@ const Utenlandsopphold = ({state, updateFieldInState, onClick}) =>{
                        label="Ja"
                        value="true"
                        checked={state.utenlandsopphold === "true"}
-                       onChange={(e => updateFieldInState("utenlandsopphold", e.target.value))}
+                       onChange={(e => updateField("utenlandsopphold", e.target.value))}
                 />
 
                 <Radio name="utenlandsopphold"
                        label="Nei"
                        value="false"
                        checked={state.utenlandsopphold === "false"}
-                       onChange={(e => updateFieldInState("utenlandsopphold", e.target.value))}
+                       onChange={(e => updateField("utenlandsopphold", e.target.value))}
                 />
             </RadioGruppe>
             <div>
@@ -166,13 +167,13 @@ const Utenlandsopphold = ({state, updateFieldInState, onClick}) =>{
                        label="Ja"
                        value="true"
                        checked={state.planlagtUtenlandsopphold === "true"}
-                       onChange={(e => updateFieldInState("planlagtUtenlandsopphold", e.target.value))}
+                       onChange={(e => updateField("planlagtUtenlandsopphold", e.target.value))}
                 />
                 <Radio name="planlagtUtenlandsopphold"
                        label="Nei"
                        value="false"
                        checked={state.planlagtUtenlandsopphold === "false"}
-                       onChange={(e => updateFieldInState("planlagtUtenlandsopphold", e.target.value))}
+                       onChange={(e => updateField("planlagtUtenlandsopphold", e.target.value))}
                 />
             </RadioGruppe>
             <div>

@@ -5,7 +5,9 @@ import {InputFields} from "../FormElements";
 import {Hovedknapp} from "nav-frontend-knapper";
 
 
-const Personopplysninger = ({state, updateFunction, updateFieldInState, onClick}) => {
+const Personopplysninger = ({state, updateField, onClick}) => {
+
+    const updateFunction = name => value => updateField(name, value)
 
     return (
         <div>
@@ -38,13 +40,13 @@ const Personopplysninger = ({state, updateFunction, updateFieldInState, onClick}
                     <Radio name="flyktning"
                            label={'Ja'} value="true"
                            checked={state.flyktning === "true"}
-                           onChange={(e => updateFieldInState("flyktning", e.target.value))}
+                           onChange={(e => updateField("flyktning", e.target.value))}
                     />
                     <Radio name="flyktning"
                            label={'Nei'}
                            value="false"
                            checked={state.flyktning === "false"}
-                           onChange={(e => updateFieldInState("flyktning", e.target.value))}
+                           onChange={(e => updateField("flyktning", e.target.value))}
                     />
                 </RadioGruppe>
                 &nbsp;
@@ -53,12 +55,12 @@ const Personopplysninger = ({state, updateFunction, updateFieldInState, onClick}
                     <Radio name="bofastnorge"
                            label={'Ja'} value="true"
                            checked={state.bofastnorge === "true"}
-                           onChange={(e => updateFieldInState("bofastnorge", e.target.value))}
+                           onChange={(e => updateField("bofastnorge", e.target.value))}
                     />
                     <Radio name="bofastnorge"
                            label={'Nei'}  value="false"
                            checked={state.bofastnorge === "false"}
-                           onChange={(e => updateFieldInState("bofastnorge", e.target.value))}
+                           onChange={(e => updateField("bofastnorge", e.target.value))}
                     />
                 </RadioGruppe>
             </div>

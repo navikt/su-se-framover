@@ -8,8 +8,7 @@ import {Checkbox, CheckboxGruppe} from "nav-frontend-skjema";
 import {Systemtittel} from "nav-frontend-typografi";
 import { Hovedknapp } from 'nav-frontend-knapper';
 
-const Boforhold = ({state, setState, updateFieldInState, onClick}) =>{
-    console.log(state)
+const Boforhold = ({state, updateField, onClick}) =>{
 
     function updatedArray(sourceArray, target){
         if(target.checked){
@@ -20,16 +19,14 @@ const Boforhold = ({state, setState, updateFieldInState, onClick}) =>{
     }
 
     function boSammenMedUpdate(target){
-        setState(state =>({
-            ...state,
-            borSammenMed: updatedArray(state.borSammenMed, target)
-        }))
+        updateField("borSammenMed", state =>(updatedArray(state, target)
+        ))
     }
 
     function addInputFields(){
         const values = state.delerBoligMed
         values.push({navn:'', fødselsnummer:''})
-        updateFieldInState("delerBoligMed", values)
+        updateField("delerBoligMed", values)
     }
 
     function updateEPSnavn(navn, index){
@@ -37,7 +34,7 @@ const Boforhold = ({state, setState, updateFieldInState, onClick}) =>{
         ESPnavn.navn = navn
 
         const tempNavn = [...state.delerBoligMed.slice(0,index), ESPnavn, ...state.delerBoligMed.slice(index+1)]
-        updateFieldInState("delerBoligMed", tempNavn)
+        updateField("delerBoligMed", tempNavn)
     }
 
     function oppdaterFødselsnummer(fødselsnummer, index){
@@ -45,7 +42,7 @@ const Boforhold = ({state, setState, updateFieldInState, onClick}) =>{
         ESPfødselsnummer.fødselsnummer = fødselsnummer
 
         const tempFødselsnummer = [...state.delerBoligMed.slice(0,index), ESPfødselsnummer, ...state.delerBoligMed.slice(index+1)]
-        updateFieldInState("delerBoligMed", tempFødselsnummer)
+        updateField("delerBoligMed", tempFødselsnummer)
     }
 
     function personDelerBolig(){
@@ -115,7 +112,7 @@ const Boforhold = ({state, setState, updateFieldInState, onClick}) =>{
 
     function fjernValgtInputFelt(state, field, index){
         const tempField = [...state.slice(0,index), ...state.slice(index+1)]
-        updateFieldInState(field, tempField)
+        updateField(field, tempField)
     }
 
     return (
@@ -127,13 +124,13 @@ const Boforhold = ({state, setState, updateFieldInState, onClick}) =>{
                         <Radio name="delerDubolig"
                                label="Ja" value="true"
                                checked={state.delerDuBolig === "true"}
-                               onChange={(e => updateFieldInState("delerDuBolig", e.target.value))}
+                               onChange={(e => updateField("delerDuBolig", e.target.value))}
                         />
                         <Radio name="delerDubolig"
                                label="Nei"
                                value="false"
                                checked={state.delerDuBolig === "false"}
-                               onChange={(e => updateFieldInState("delerDuBolig", e.target.value))}
+                               onChange={(e => updateField("delerDuBolig", e.target.value))}
                         />
                     </RadioGruppe>
                     &nbsp;

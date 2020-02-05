@@ -6,7 +6,10 @@ import Lukknapp from "nav-frontend-lukknapp";
 import {Hovedknapp, Knapp} from "nav-frontend-knapper";
 
 
-const InntektPensjonFormue = ({state, updateFunction, updateFieldInState, onClick}) => {
+const InntektPensjonFormue = ({state, updateField, onClick}) => {
+
+	const updateFunction = name => value => updateField(name, value)
+
 
 	function kravannenytelseInput(){
 		if(state.kravannenytelse === "true"){
@@ -43,7 +46,7 @@ const InntektPensjonFormue = ({state, updateFunction, updateFieldInState, onClic
 		ordning.ordning = kilde
 
 		const tempPensjonsOrdning = [...state.pensjonsOrdning.slice(0,index), ordning, ...state.pensjonsOrdning.slice(index+1)]
-		updateFieldInState("pensjonsOrdning", tempPensjonsOrdning)
+		updateField("pensjonsOrdning", tempPensjonsOrdning)
 	}
 
 	function updatePensjonsOrdningsBeløp(kilde, index){
@@ -51,18 +54,18 @@ const InntektPensjonFormue = ({state, updateFunction, updateFieldInState, onClic
 		beløp.beløp = kilde
 
 		const tempPensjonsOrdning = [...state.pensjonsOrdning.slice(0,index), beløp, ...state.pensjonsOrdning.slice(index+1)]
-		updateFieldInState("pensjonsOrdning", tempPensjonsOrdning)
+		updateField("pensjonsOrdning", tempPensjonsOrdning)
 	}
 
 	function fjernValgtInputFelt(state, field, index){
 		const tempField = [...state.slice(0,index), ...state.slice(index+1)]
-		updateFieldInState(field, tempField)
+		updateField(field, tempField)
 	}
 
 	function addInputFields(){
 			const values = state.pensjonsOrdning
 			values.push({ordning:'', beløp:''})
-			updateFieldInState("pensjonsOrdning", values)
+		updateField("pensjonsOrdning", values)
 	}
 
 	function søkerHarPensjon(){
@@ -111,13 +114,13 @@ const InntektPensjonFormue = ({state, updateFunction, updateFieldInState, onClic
 						   label="Ja"
 						   value="true"
 						   checked={state.kravannenytelse === "true"}
-						   onChange={(e => updateFieldInState("kravannenytelse", e.target.value))}
+						   onChange={(e => updateField("kravannenytelse", e.target.value))}
 					/>
 					<Radio name="kravannenytelse"
 						   label="Nei"
 						   value="false"
 						   checked={state.kravannenytelse === "false"}
-						   onChange={(e => updateFieldInState("kravannenytelse", e.target.value))}
+						   onChange={(e => updateField("kravannenytelse", e.target.value))}
 					/>
 				</RadioGruppe>
 				{
@@ -132,13 +135,13 @@ const InntektPensjonFormue = ({state, updateFunction, updateFieldInState, onClic
 							   label="Ja"
 							   value="true"
 							   checked={state.arbeidselleranneninntekt === "true"}
-							   onChange={(e => updateFieldInState("arbeidselleranneninntekt", e.target.value))}
+							   onChange={(e => updateField("arbeidselleranneninntekt", e.target.value))}
 						/>
 						<Radio name="arbeidselleranneninntekt"
 							   label="Nei"
 							   value="false"
 							   checked={state.arbeidselleranneninntekt === "false"}
-							   onChange={(e => updateFieldInState("arbeidselleranneninntekt", e.target.value))}
+							   onChange={(e => updateField("arbeidselleranneninntekt", e.target.value))}
 						/>
 					</RadioGruppe>
 					{
@@ -152,13 +155,13 @@ const InntektPensjonFormue = ({state, updateFunction, updateFieldInState, onClic
 							   label="Ja"
 							   value="true"
 							   checked={state.hardupensjon === "true"}
-							   onChange={(e => updateFieldInState("hardupensjon", e.target.value))}
+							   onChange={(e => updateField("hardupensjon", e.target.value))}
 						/>
 						<Radio name="hardupensjon"
 							   label="Nei"
 							   value="false"
 							   checked={state.hardupensjon === "false"}
-							   onChange={(e => updateFieldInState("hardupensjon", e.target.value))}
+							   onChange={(e => updateField("hardupensjon", e.target.value))}
 						/>
 					</RadioGruppe>
 					&nbsp;
@@ -181,13 +184,13 @@ const InntektPensjonFormue = ({state, updateFunction, updateFieldInState, onClic
 							   label="Ja"
 							   value="true"
 							   checked={state.harduformueeiendom === "true"}
-							   onChange={(e => updateFieldInState("harduformueeiendom", e.target.value))}
+							   onChange={(e => updateField("harduformueeiendom", e.target.value))}
 						/>
 						<Radio name="harduformueeiendom"
 							   label="Nei"
 							   value="false"
 							   checked={state.harduformueeiendom === "false"}
-							   onChange={(e => updateFieldInState("harduformueeiendom", e.target.value))}
+							   onChange={(e => updateField("harduformueeiendom", e.target.value))}
 						/>
 					</RadioGruppe>
 					&nbsp;
@@ -196,13 +199,13 @@ const InntektPensjonFormue = ({state, updateFunction, updateFieldInState, onClic
 							   label="Ja"
 							   value="true"
 							   checked={state.hardufinansformue === "true"}
-							   onChange={(e => updateFieldInState("hardufinansformue", e.target.value))}
+							   onChange={(e => updateField("hardufinansformue", e.target.value))}
 						/>
 						<Radio name="hardufinansformue"
 							   label="Nei"
 							   value="false"
 							   checked={state.hardufinansformue === "false"}
-							   onChange={(e => updateFieldInState("hardufinansformue", e.target.value))}
+							   onChange={(e => updateField("hardufinansformue", e.target.value))}
 						/>
 					</RadioGruppe>
 				</div>
@@ -215,13 +218,13 @@ const InntektPensjonFormue = ({state, updateFunction, updateFieldInState, onClic
 							   label="Ja"
 							   value="true"
 							   checked={state.harduannenformueeiendom === "true"}
-							   onChange={(e => updateFieldInState("harduannenformueeiendom", e.target.value))}
+							   onChange={(e => updateField("harduannenformueeiendom", e.target.value))}
 						/>
 						<Radio name="harduannenformueeiendom"
 							   label="Nei"
 							   value="false"
 							   checked={state.harduannenformueeiendom === "false"}
-							   onChange={(e => updateFieldInState("harduannenformueeiendom", e.target.value))}
+							   onChange={(e => updateField("harduannenformueeiendom", e.target.value))}
 						/>
 					</RadioGruppe>
 					<div style={container}>
@@ -244,13 +247,13 @@ const InntektPensjonFormue = ({state, updateFunction, updateFieldInState, onClic
 						   label="Ja"
 						   value="true"
 						   checked={state.sosialstonad === "true"}
-						   onChange={(e => updateFieldInState("sosialstonad", e.target.value))}
+						   onChange={(e => updateField("sosialstonad", e.target.value))}
 					/>
 					<Radio name="sosialstonad"
 						   label="Nei"
 						   value="false"
 						   checked={state.sosialstonad === "false"}
-						   onChange={(e => updateFieldInState("sosialstonad", e.target.value))}
+						   onChange={(e => updateField("sosialstonad", e.target.value))}
 					/>
 				</RadioGruppe>
 			</div>
