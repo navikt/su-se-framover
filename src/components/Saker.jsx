@@ -33,9 +33,46 @@ function Saker(){
 					epost: 'navn@navn.no',
 					metadata: {
 						kilde: "Kilde",
-						oppdatert: "01.01.2016"
+						oppdatert: "2016-01-01"
 					}
-				}
+				},
+				statsborgerskap: [
+					{
+						land: 'ESP',
+						fom: '2010-01-05',
+					},
+					{
+						land: 'NOR',
+						fom: '2019-07-06'
+					}
+				],
+				foedsel: {
+					foedeland: 'ESP',
+					foedested: 'Barcelona',
+					fodselsedato: '1954-06-01'
+				},
+				opphold: [
+					{
+						type: 'Midlertidig',
+						fom: '2017-01-01',
+						tom: '2018-01-01'
+					},
+					{
+						type: 'Permanent',
+						fom: '2018-01-01'
+					}
+				],
+				folkeregisterpersonstatus: [
+					{
+						status: 'Bosatt',
+						fom: '2018-01-01'
+					},
+					{
+						status: 'Utflyttet',
+						fom: '2017-01-01',
+						tom: '2017-01-01'
+					}
+				]
 			},
 			status: 'Til behandling',
 			stonadsperioder: [
