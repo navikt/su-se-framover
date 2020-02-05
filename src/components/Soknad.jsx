@@ -8,6 +8,8 @@ import Personopplysninger from "./soknadComponents/Personopplysninger";
 import Boforhold from "./soknadComponents/Boforhold";
 import Utenlandsopphold from "./soknadComponents/Utenlandsopphold"
 import Oppholdstillatelse from "./soknadComponents/Oppholdstillatelse";
+import InntektPensjonFormue from "./soknadComponents/InntektPensjonFormue";
+import ForNAV from "./soknadComponents/ForNAV";
 import { useHistory } from "react-router-dom";
 
 
@@ -53,20 +55,23 @@ function Soknad(){
 									   updateFunction={updateFunction}
 									   updateFieldInState={updateFieldInState}
 			/>
+		}else if(stage.stage === 4){
+			return <InntektPensjonFormue state={state}
+										 setState={setState}
+										 updateFunction={updateFunction}
+										 updateFieldInState={updateFieldInState}
+			/>
+		}else if(stage.stage === 5){
+			return <ForNAV state={state}
+						   setState={setState}
+						   updateFunction={updateFunction}
+						   updateFieldInState={updateFieldInState}
+
+			/>
 		}else{
 			return (<div>
 				<p>goofed</p>
 			</div>)
-		}
-
-
-	}
-
-	function addInputFields(field){
-		if(field === state.pensjonsOrdning) {
-			const values = state.pensjonsOrdning
-			values.push({ordning:'', beløp:''})
-			updateFieldInState("pensjonsOrdning", values)
 		}
 	}
 
