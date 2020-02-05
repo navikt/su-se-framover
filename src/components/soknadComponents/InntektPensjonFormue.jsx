@@ -3,11 +3,10 @@ import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import {Systemtittel} from "nav-frontend-typografi";
 import {InputFields} from "../FormElements";
 import Lukknapp from "nav-frontend-lukknapp";
-import {Knapp} from "nav-frontend-knapper";
+import {Hovedknapp, Knapp} from "nav-frontend-knapper";
 
 
-const InntektPensjonFormue = ({state, updateFunction, updateFieldInState}) => {
-	console.log(state)
+const InntektPensjonFormue = ({state, updateFunction, updateFieldInState, onClick}) => {
 
 	function kravannenytelseInput(){
 		if(state.kravannenytelse === "true"){
@@ -255,6 +254,7 @@ const InntektPensjonFormue = ({state, updateFunction, updateFieldInState}) => {
 					/>
 				</RadioGruppe>
 			</div>
+			<Hovedknapp onClick={onClick}>Neste</Hovedknapp>
         </div>
     )
 }

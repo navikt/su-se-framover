@@ -1,13 +1,12 @@
 import React from 'react'
-import {Knapp} from "nav-frontend-knapper";
+import {Hovedknapp, Knapp} from "nav-frontend-knapper";
 import {InputFields} from "../FormElements";
 import Lukknapp from "nav-frontend-lukknapp";
 import {Systemtittel} from "nav-frontend-typografi";
 import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 
 
-const Utenlandsopphold = ({state, updateFieldInState}) =>{
-    console.log(state)
+const Utenlandsopphold = ({state, updateFieldInState, onClick}) =>{
 
     function addInputFields(){
         const values = state.utenlandsoppholdArray
@@ -182,6 +181,7 @@ const Utenlandsopphold = ({state, updateFieldInState}) =>{
                 }
             </div>
             &nbsp;
+            <Hovedknapp onClick={onClick}>Neste</Hovedknapp>
         </div>
     )
 }

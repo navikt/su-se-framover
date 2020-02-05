@@ -3,18 +3,16 @@ import React, {useState} from 'react';
 import Stegindikator from 'nav-frontend-stegindikator';
 import { Panel } from 'nav-frontend-paneler';
 import { SkjemaGruppe } from 'nav-frontend-skjema';
-import { Hovedknapp } from 'nav-frontend-knapper';
 import Personopplysninger from "./soknadComponents/Personopplysninger";
 import Boforhold from "./soknadComponents/Boforhold";
 import Utenlandsopphold from "./soknadComponents/Utenlandsopphold"
 import Oppholdstillatelse from "./soknadComponents/Oppholdstillatelse";
 import InntektPensjonFormue from "./soknadComponents/InntektPensjonFormue";
 import ForNAV from "./soknadComponents/ForNAV";
-import { useHistory } from "react-router-dom";
+import OppsumeringOgSend from "./soknadComponents/OppsumeringOgSend";
 
-
-function Soknad(){
-	const history = useHistory();
+function Soknad({config}){
+	const [stage, setStage] = useState(0)
 
 	const [state, setState] = useState({
 		borSammenMed: [],
@@ -24,7 +22,6 @@ function Soknad(){
 		pensjonsOrdning: [{ordning: '', beløp: ''}]
 
 	})
-	const [stage, setStage] = useState({stage: 0, hovedKnappTekst: "Neste"})
 
 	const updateFunction = name => value => updateFieldInState(name, value)
 
@@ -35,38 +32,52 @@ function Soknad(){
 		}))
 	}
 
+	function addToStage(){
+		setStage(stage => stage+1)
+	}
+
 	function ShowActiveComponent(){
-		if(stage.stage === 0){
+		if(stage === 0){
 			return <Personopplysninger state={state}
 									   updateFunction={updateFunction}
 									   updateFieldInState={updateFieldInState}
+									   onClick={addToStage}
 			/>
-		}else if(stage.stage === 1){
+		}else if(stage === 1){
 			return <Boforhold state={state}
 							  setState={setState}
 							  updateFieldInState={updateFieldInState}
+							  onClick={addToStage}
 			/>
-		}else if(stage.stage === 2){
+		}else if(stage === 2){
 			return <Utenlandsopphold state={state}
 									 updateFieldInState={updateFieldInState}
+									 onClick={addToStage}
 			/>
-		}else if(stage.stage === 3){
+		}else if(stage === 3){
 			return <Oppholdstillatelse state={state}
 									   updateFunction={updateFunction}
 									   updateFieldInState={updateFieldInState}
+									   onClick={addToStage}
 			/>
-		}else if(stage.stage === 4){
+		}else if(stage === 4){
 			return <InntektPensjonFormue state={state}
 										 setState={setState}
 										 updateFunction={updateFunction}
 										 updateFieldInState={updateFieldInState}
+										 onClick={addToStage}
 			/>
-		}else if(stage.stage === 5){
+		}else if(stage === 5){
 			return <ForNAV state={state}
 						   setState={setState}
 						   updateFunction={updateFunction}
 						   updateFieldInState={updateFieldInState}
+						   onClick={addToStage}
 
+			/>
+		}else if(stage === 6){
+			return <OppsumeringOgSend state={state}
+									  config={config}
 			/>
 		}else{
 			return (<div>
@@ -88,12 +99,9 @@ function Soknad(){
 						{"label": "For NAV"},
 						{"label": "Send søknad"}
 					]}
-					onChange={(index) => setStage(stage => ({
-						...stage,
-							stage: index
-					}))}
+					onChange={(index) => setStage(index)}
 					visLabel
-					aktivtSteg={stage.stage}
+					aktivtSteg={stage}
 				/>
 				<div>
 					<SkjemaGruppe>
@@ -102,37 +110,11 @@ function Soknad(){
 						}
 					</SkjemaGruppe>
 				</div>
-				<Hovedknapp onClick={lol}>{getButtonText()}</Hovedknapp>
+
             </Panel>
 		</>
 	)
 
-	function getButtonText(){
-		if(stage.stage <= 5){
-			return "Neste"
-		}else{
-			return "send søknad"
-		}
-	}
-
-	function addToStage(){
-		setStage(stage => ({
-			...stage,
-			stage: stage.stage + 1
-		}))
-	}
-	function sendSøknad(){
-		console.log("Sender søknad")
-		history.push("/saker")
-	}
-
-	function lol() {
-		if(stage.stage <= 5){
-			addToStage()
-		}else{
-			sendSøknad()
-		}
-	}
 }
 
 export default Soknad;

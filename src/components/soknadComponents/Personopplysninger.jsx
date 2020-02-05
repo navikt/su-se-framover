@@ -2,10 +2,10 @@ import React from 'react'
 import {Systemtittel} from "nav-frontend-typografi";
 import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import {InputFields} from "../FormElements";
+import {Hovedknapp} from "nav-frontend-knapper";
 
 
-const Personopplysninger = ({state, updateFunction, updateFieldInState}) => {
-    console.log(state)
+const Personopplysninger = ({state, updateFunction, updateFieldInState, onClick}) => {
 
     return (
         <div>
@@ -34,7 +34,7 @@ const Personopplysninger = ({state, updateFunction, updateFieldInState}) => {
                 <InputFields labelText="Statsborgerskap" value={state.statsborgerskap || ''} onChange={updateFunction("statsborgerskap")}/>
             </div>
             <div style={container}>
-                <RadioGruppe legend="Er du registrert som flyktning?"   >
+                <RadioGruppe legend="Er du registrert som flyktning?" >
                     <Radio name="flyktning"
                            label={'Ja'} value="true"
                            checked={state.flyktning === "true"}
@@ -62,6 +62,7 @@ const Personopplysninger = ({state, updateFunction, updateFieldInState}) => {
                     />
                 </RadioGruppe>
             </div>
+            <Hovedknapp onClick={onClick}>Neste</Hovedknapp>
         </div>
     )
 

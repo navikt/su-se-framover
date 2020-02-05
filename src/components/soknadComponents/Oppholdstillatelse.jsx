@@ -2,9 +2,9 @@ import React from "react";
 import {Systemtittel} from "nav-frontend-typografi";
 import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import {InputFields} from "../FormElements";
+import {Hovedknapp} from "nav-frontend-knapper";
 
-const Oppholdstillatelse = ({state, updateFunction, updateFieldInState}) => {
-    console.log(state)
+const Oppholdstillatelse = ({state, updateFunction, updateFieldInState, onClick}) => {
 
     function midlertidigOppholdstillatelse(){
         if(state.varigopphold === "false"){
@@ -60,11 +60,9 @@ const Oppholdstillatelse = ({state, updateFunction, updateFieldInState}) => {
                     }
                 </div>
             </div>
-
+            <Hovedknapp onClick={onClick}>Neste</Hovedknapp>
         </div>
     )
-
-
 }
 
 

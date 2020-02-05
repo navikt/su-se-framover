@@ -2,11 +2,11 @@ import React from "react";
 import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import {Systemtittel} from "nav-frontend-typografi";
 import {InputFields} from "../FormElements";
+import {Hovedknapp} from "nav-frontend-knapper";
 
 
 
-const ForNAV = ({state, updateFunction, updateFieldInState}) => {
-    console.log(state)
+const ForNAV = ({state, updateFunction, updateFieldInState, onClick}) => {
 
     return (
         <div>
@@ -92,6 +92,7 @@ const ForNAV = ({state, updateFunction, updateFieldInState}) => {
                          value={state.forNAVmerknader || ''}
                          onChange={updateFunction("forNAVmerknader")}
             />
+            <Hovedknapp onClick={onClick}>Neste</Hovedknapp>
         </div>
     )
 }

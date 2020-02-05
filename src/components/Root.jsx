@@ -72,8 +72,8 @@ const Root = () => {
                             <Route path="/auth/complete">
                                 <AuthComplete/>
                             </Route>
-							<Route path="/soknad">
-                                <Soknad/>
+							<Route path="/soknad" >
+                                <Soknad config={config}/>
                             </Route>
 							<Route path="/saker">
                                 <Saker/>

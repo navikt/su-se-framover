@@ -6,8 +6,9 @@ import Lukknapp from "nav-frontend-lukknapp";
 import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import {Checkbox, CheckboxGruppe} from "nav-frontend-skjema";
 import {Systemtittel} from "nav-frontend-typografi";
+import { Hovedknapp } from 'nav-frontend-knapper';
 
-const Boforhold = ({state, setState, updateFieldInState}) =>{
+const Boforhold = ({state, setState, updateFieldInState, onClick}) =>{
     console.log(state)
 
     function updatedArray(sourceArray, target){
@@ -144,6 +145,7 @@ const Boforhold = ({state, setState, updateFieldInState}) =>{
                     tillegsInfoESP()
                 }
             </div>
+            <Hovedknapp onClick={onClick}>Neste</Hovedknapp>
         </div>
     )
 }
