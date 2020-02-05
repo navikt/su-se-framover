@@ -1,3 +1,4 @@
+import { hot } from 'react-hot-loader';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import { useConfig } from './useConfig';
 import { useGet } from './useGet';
@@ -18,7 +19,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   useLocation,
   useHistory
 } from "react-router-dom";
@@ -298,10 +298,4 @@ function AuthComplete() {
     return null
 }
 
-
-
-
-
-
-
-export default Root;
+export default hot(module)(Root);
