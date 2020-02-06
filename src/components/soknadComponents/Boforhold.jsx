@@ -1,14 +1,22 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Undertittel} from "nav-frontend-typografi";
 import {Knapp} from "nav-frontend-knapper";
 import {InputFields} from "../FormElements";
 import Lukknapp from "nav-frontend-lukknapp";
-import { RadioGruppe, Radio } from 'nav-frontend-skjema';
+import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
 import {Checkbox, CheckboxGruppe} from "nav-frontend-skjema";
 import {Systemtittel} from "nav-frontend-typografi";
 import { Hovedknapp } from 'nav-frontend-knapper';
 
 const Boforhold = ({state, updateField, onClick}) =>{
+
+    const [feilmeldinger, setFeilmeldinger] = useState([])
+
+
+    const fields = {delerdubolig: {label: 'delerdubolig', htmlId: 'delerdubolig'},
+                    borsammenmed: {label: 'borsammenmed', htmlId: 'borsammenmed'},
+                    delerboligmed: {label: 'delerboligmed', htmlId: 'delerboligmed'}
+    }
 
     function updatedArray(sourceArray, target){
         if(target.checked){
@@ -142,9 +150,81 @@ const Boforhold = ({state, updateField, onClick}) =>{
                     tillegsInfoESP()
                 }
             </div>
-            <Hovedknapp onClick={onClick}>Neste</Hovedknapp>
+            {
+                feilmeldinger.length > 0 && <Feiloppsummering tittel={"Vennligst fyll ut mangler"} feil={feilmeldinger} />
+            }
+            <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     )
+
+    //--------Validering-------
+    function validateForm(){
+        const formValues = state
+        const errors = validateFormValues(formValues)
+        console.log(errors)
+        setFeilmeldinger(errors)
+        if(errors.length === 0){
+            onClick()
+        }
+    }
+
+    function validateFormValues(formValues){
+        const tempErrors = []
+        const delerBoligMedErrors = []
+        tempErrors.push(...delerBoligValidering(formValues))
+        tempErrors.push(...borSammenMedValidering(formValues))
+        tempErrors.push(...delerBoligMedValidering(formValues, delerBoligMedErrors))
+
+        return tempErrors
+    }
+
+    function delerBoligValidering(formValues){
+        const delerDuBolig = formValues.delerDuBolig
+        let feilmelding = ""
+
+        if(delerDuBolig === undefined){
+            feilmelding += "Vennligst velg boforhold"
+        }
+        if(feilmelding.length > 0){
+            return [{skjemaelementId: fields.delerdubolig.htmlId, feilmelding}]
+        }
+        return []
+    }
+
+    function borSammenMedValidering(formValues){
+        const borSammenMed = formValues.borSammenMed
+        console.log(borSammenMed)
+        let feilmelding = ""
+
+        if(formValues.delerDuBolig === "true"){
+            if(!borSammenMed.includes("esp")
+                && !borSammenMed.includes("over18")
+                && !borSammenMed.includes("annenPerson")){
+                feilmelding += "Vennligst velg hvem søker bor med"
+            }
+            if(feilmelding.length > 0){
+                return [{skjemaelementId: fields.borsammenmed.htmlId, feilmelding}]
+            }
+        }
+        return []
+    }
+
+    function delerBoligMedValidering(formValues, errorsArray){
+        const delerBoligMedArray = formValues.delerBoligMed
+
+        if(formValues.delerDuBolig === "true"){
+            delerBoligMedArray.map((item, index) => {
+                if(item.navn.trim().length === 0){
+                    errorsArray.push({skjemaelementId: `${index}-navn`, feilmelding: "navn kan ikke være tom"})
+                }
+                if(item.fødselsnummer.trim().length === 0){
+                    errorsArray.push({skjemaelementId: `${index}-fødselsnummer`, feilmelding: "Fødselsnummer kan ikke være tom"})
+                }
+            })
+        }
+        return errorsArray
+    }
+
 }
 
 
