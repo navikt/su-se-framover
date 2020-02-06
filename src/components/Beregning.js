@@ -18,7 +18,7 @@ function Beregning({state = initialState, setState}){
     const [errorsCollector, setErrorsCollector] = useState()
 
     const fields = {fraMåned: {label: "Fra måned", htmlId:"fra-måned"},
-                    tilMåned: {label: 'Til måned', htmlId:"til-måned"},
+                    tilMåned: {label: "Til måned", htmlId:"til-måned"},
                     sats: {sats: 'Sats', htmlId:"sats"}
     }
 
@@ -53,7 +53,7 @@ function Beregning({state = initialState, setState}){
                         <div style={DivInputFieldsWrapperStyle}>
                             <InputFields labelText={fields.fraMåned.label} id={fields.fraMåned.htmlId}
                                          value={state.fraMåned} onChange={updateFunction('fraMåned')}/>
-                            <InputFields labelText={"Til måned"} value={state.tilMåned} onChange={updateFunction('tilMåned')}/>
+                            <InputFields labelText={"Til måned"} value={state.tilMåned} id={fields.tilMåned.htmlId} onChange={updateFunction('tilMåned')}/>
                         </div>
                     </div>
 
