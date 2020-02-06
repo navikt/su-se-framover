@@ -46,6 +46,7 @@ const Root = () => {
     useEffect(() =>{
         console.log(state)
     }, [state])
+
     const updateBeregning = nyBeregning => {
         setState(state => ({
             ...state,
@@ -103,6 +104,7 @@ function Main({config}){
     return (
         <div>
             <h1>Hello world!</h1>
+            <br />
             {isFetching ? "fetching" : <h2>{message}</h2>}
         </div>
     )

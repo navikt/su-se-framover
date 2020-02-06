@@ -14,7 +14,7 @@ export const useGet = ({url}) => {
                     fetchConfig.headers = { 'Authorization': `Bearer ${accessToken}` };
                 }
                 const response = await fetch(url, fetchConfig);
-                if (response.status == 401) {
+                if (response.status === 401 || response.status === 403) {
                     setData({isFetching: false, status: response.status, headers: response.headers});
                 } else {
                     setData({data: await response.json(), isFetching: false, status: response.status});
