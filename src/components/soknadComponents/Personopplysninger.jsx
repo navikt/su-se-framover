@@ -27,6 +27,7 @@ const Personopplysninger = ({state, updateField, onClick}) => {
             <div>
                 <InputFields labelText="Fødselsnummer"
                              value={state.fnr || ''}
+                             bredde="S"
                              id={fields.fnr.htmlId}
                              onChange={updateFunction("fnr")}
                 />
@@ -34,22 +35,26 @@ const Personopplysninger = ({state, updateField, onClick}) => {
             <div style={inputFieldsStyle}>
                 <InputFields labelText="Fornavn"
                              value={state.fornavn || ''}
+                             style={{minWidth: '20em'}}
                              id={fields.fornavn.htmlId}
                              onChange={updateFunction("fornavn")}
                 />
                 <InputFields labelText="Mellomnavn"
                              value={state.mellomnavn || ''}
+                             style={{minWidth: '20em'}}
                              onChange={updateFunction("mellomnavn")}
                 />
                 <InputFields labelText="Etternavn"
                              value={state.etternavn || ''}
                              id={fields.etternavn.htmlId}
+                             style={{minWidth: '20em'}}
                              onChange={updateFunction("etternavn")}
                 />
             </div>
             <div>
                 <InputFields labelText="Telefonnummer"
                              value={state.telefonnummer || ''}
+                             bredde="S"
                              id={fields.telefonnummer.htmlId}
                              onChange={updateFunction("telefonnummer")}
                 />
@@ -57,6 +62,7 @@ const Personopplysninger = ({state, updateField, onClick}) => {
             <div style={container}>
                 <InputFields labelText="Gateadresse"
                              value={state.gateadresse || ''}
+                             style={{minWidth: '30em'}}
                              id={fields.gateadresse.htmlId}
                              onChange={updateFunction("gateadresse")}
                 />
@@ -68,6 +74,7 @@ const Personopplysninger = ({state, updateField, onClick}) => {
             <div style={container}>
                 <InputFields labelText="Postnummer"
                              value={state.postnummer || ''}
+                             bredde="XS"
                              id={fields.postnummer.htmlId}
                              onChange={updateFunction("postnummer")}
                 />
@@ -85,27 +92,27 @@ const Personopplysninger = ({state, updateField, onClick}) => {
             <div>
                 <InputFields labelText="Statsborgerskap"
                              value={state.statsborgerskap || ''}
+                             bredde="L"
                              id={fields.statsborgerskap.htmlId}
                              onChange={updateFunction("statsborgerskap")}
                 />
             </div>
             <div style={container}>
-                <RadioGruppe legend="Er du registrert som flyktning?" >
-                    <Radio name="flyktning"
-                           label={'Ja'} value="true"
-                           checked={state.flyktning === "true"}
-                           onChange={(e => updateField("flyktning", e.target.value))}
-                    />
-                    <Radio name="flyktning"
-                           label={'Nei'}
-                           value="false"
-                           checked={state.flyktning === "false"}
-                           onChange={(e => updateField("flyktning", e.target.value))}
-                    />
+                <RadioGruppe legend="Er du registrert som flyktning?" style={{flexGrow: '1'}}>
+                        <Radio name="flyktning"
+                               label={'Ja'} value="true"
+                               checked={state.flyktning === "true"}
+                               onChange={(e => updateField("flyktning", e.target.value))}
+                        />
+                        <Radio name="flyktning"
+                               label={'Nei'}
+                               value="false"
+                               checked={state.flyktning === "false"}
+                               onChange={(e => updateField("flyktning", e.target.value))}
+                        />
                 </RadioGruppe>
-                &nbsp;
 
-                <RadioGruppe legend="Bor du fast i Norge?" >
+                <RadioGruppe legend="Bor du fast i Norge?" style={{flexGrow: '2'}}>
                     <Radio name="bofastnorge"
                            label={'Ja'} value="true"
                            checked={state.bofastnorge === "true"}
@@ -124,7 +131,6 @@ const Personopplysninger = ({state, updateField, onClick}) => {
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     )
-
 
     //------------Lett Validering-----------------------
     function validateForm(){
@@ -307,12 +313,15 @@ const Personopplysninger = ({state, updateField, onClick}) => {
 }
 
 const inputFieldsStyle = {
-    marginRight: '1em'
+    display: 'flex',
+    justifyContent: 'space-between'
 }
 
 const container = {
     display: 'flex'
 }
+
+
 
 
 export default Personopplysninger;

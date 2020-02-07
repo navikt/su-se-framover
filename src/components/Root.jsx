@@ -241,14 +241,10 @@ function ContentWrapper({config, children}){
 				</Innholdstittel>
 				<Søkeboks config={config}/>
 			</div>
-			<table>
-				<tbody>
-					<tr>
-						<td><Venstremeny/></td>
-						<td>{children}</td>
-					</tr>
-				</tbody>
-			</table>
+			<div style={{display: 'flex'}}>
+                <div> <Venstremeny/></div>
+                <div> {children} </div>
+            </div>
         </div>
     )
 }

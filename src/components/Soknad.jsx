@@ -17,8 +17,8 @@ function Soknad({config}){
 	const [state, setState] = useState({
 		personopplysninger: {},
 		boforhold: {borSammenMed: [],
-					delerBoligMed: [{navn:'', fødselsnummer:''}]},
-
+					delerBoligMed: [{navn:'', fødselsnummer:''}]
+		},
 		utenlandsopphold: {utenlandsoppholdArray: [{utreisedato: '', innreisedato: ''}],
 							planlagtUtenlandsoppholdArray: [{planlagtUtreisedato: '', planlagtInnreisedato: ''}]
 		},
@@ -88,8 +88,8 @@ function Soknad({config}){
 
 	return(
 		<>
-			<Panel border>
-				<Stegindikator
+			<Panel border style={{width: '45em'}}>
+				<Stegindikator style={{marginBottom: '1em'}}
 					steg={[
 						{"label": "Personopplysninger"},
 						{"label": "Boforhold"},
@@ -100,7 +100,6 @@ function Soknad({config}){
 						{"label": "Send søknad"}
 					]}
 					onChange={(index) => setStage(index)}
-					visLabel
 					aktivtSteg={stage}
 				/>
 				<div>
