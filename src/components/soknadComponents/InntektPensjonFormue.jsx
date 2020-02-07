@@ -1,5 +1,5 @@
-import React from "react";
-import { RadioGruppe, Radio } from 'nav-frontend-skjema';
+import React, {useState} from "react";
+import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
 import {Systemtittel} from "nav-frontend-typografi";
 import {InputFields} from "../FormElements";
 import Lukknapp from "nav-frontend-lukknapp";
@@ -8,12 +8,28 @@ import {Hovedknapp, Knapp} from "nav-frontend-knapper";
 
 const InntektPensjonFormue = ({state, updateField, onClick}) => {
 
-	const updateFunction = name => value => updateField(name, value)
+	const [feilmeldinger, setFeilmeldinger] = useState([])
 
+	const fields = {kravannenytelse: {label: 'kravannenytelse', htmlId: 'kravannenytelse'},
+					kravannenytelseBegrunnelse: {label: 'kravannenytelseBegrunnelse', htmlId: 'kravannenytelseBegrunnelse'},
+					arbeidselleranneninntekt:{label: 'arbeidselleranneninntekt', htmlId: 'arbeidselleranneninntekt'},
+					arbeidsBeløp: {label: 'arbeidsBeløp', htmlId: 'arbeidsBeløp'},
+					pensjon: {label: 'pensjon', htmlId: 'pensjon'},
+					sumPersoninntekt: {label: 'sumPersoninntekt', htmlId: 'sumPersoninntekt'},
+					formue: {label: 'formue', htmlId: 'formue'},
+					finansformue: {label: 'finansformue', htmlId: 'finansformue'},
+					formueBeløp: {label: 'formueBeløp', htmlId: 'formueBeløp'},
+					typeFormue: {label: 'typeFormue', htmlId: 'typeFormue'},
+					skattetakst: {label: 'skattetakst', htmlId: 'skattetakst'},
+					sosialstonad: {label: 'sosialstonad', htmlId: 'sosialstonad'}
+	}
+
+	const updateFunction = name => value => updateField(name, value)
 
 	function kravannenytelseInput(){
 		if(state.kravannenytelse === "true"){
 		return <InputFields labelText="Hva slags ytelse/pensjon?"
+							id={fields.kravannenytelseBegrunnelse.htmlId}
 							value={state.kravannenytelseBegrunnelse || ''}
 							onChange={updateFunction("kravannenytelseBegrunnelse")}
 
@@ -24,6 +40,7 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 	function arbeidselleranneninntektInput(){
 		if(state.arbeidselleranneninntekt === "true"){
 			return <InputFields labelText="Brutto beløp per år:"
+								id={fields.arbeidsBeløp.htmlId}
 								value={state.arbeidselleranneninntektBegrunnelse || ''}
 								onChange={updateFunction("arbeidselleranneninntektBegrunnelse")}
 			/>
@@ -33,10 +50,30 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 	function personHarFormue(){
 		if(state.harduformueeiendom === "true" || state.hardufinansformue === "true"){
 			return (
-				<InputFields labelText="Beløp"
+				<InputFields labelText="Total beløp formue: "
+							 id={fields.formueBeløp.htmlId}
 							 value={state.formueBeløp || ''}
 							 onChange={updateFunction("formueBeløp")}
 				/>
+			)
+		}
+	}
+
+	function harAnnenFormueEiendom(){
+		if(state.harduannenformueeiendom === "true"){
+			return (
+				<div style={container}>
+					<InputFields labelText="Type formue/eiendom"
+								 id={fields.typeFormue.htmlId}
+								 value={state.typeFormue || ''}
+								 onChange={updateFunction("typeFormue")}
+					/>
+					<InputFields labelText="Samlet skattetakst"
+								 id={fields.skattetakst.htmlId}
+								 value={state.samletSkattetakst || ''}
+								 onChange={updateFunction("samletSkattetakst")}
+					/>
+				</div>
 			)
 		}
 	}
@@ -171,6 +208,7 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 				</div>
 			</div>
             <InputFields labelText="Sum arbeidsinntekt/personinntekt, kapitalinntekt og pensjon"
+						 id={fields.sumPersoninntekt.htmlId}
 						 value={state.sumPersoninntekt || ''}
 						 onChange={updateFunction("sumPersoninntekt")}
 			/>
@@ -227,16 +265,9 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 							   onChange={(e => updateField("harduannenformueeiendom", e.target.value))}
 						/>
 					</RadioGruppe>
-					<div style={container}>
-						<InputFields labelText="Type formue/eiendom"
-									 value={state.typeFormue || ''}
-									 onChange={updateFunction("typeFormue")}
-						/>
-						<InputFields labelText="Samlet skattetakst"
-									 value={state.samletSkattetakst || ''}
-									 onChange={updateFunction("samletSkattetakst")}
-						/>
-					</div>
+					{
+						harAnnenFormueEiendom()
+					}
 				</div>
 				{/*tilsvarende spørsmål for ektefelle/samboer/partner/etc. */}
 			</div>
@@ -257,9 +288,254 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 					/>
 				</RadioGruppe>
 			</div>
-			<Hovedknapp onClick={onClick}>Neste</Hovedknapp>
+			{
+				feilmeldinger.length > 0 && <Feiloppsummering tittel={"Vennligst fyll ut mangler"} feil={feilmeldinger} />
+			}
+			<Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     )
+
+	//------------Lett Validering-----------------------
+	function validateForm(){
+		const formValues = state
+		const errors = validateFormValues(formValues)
+		console.log(errors)
+		setFeilmeldinger(errors)
+		if(errors.length === 0){
+			onClick()
+		}
+	}
+
+	function validateFormValues(formValues){
+		const tempErrors = []
+		const pensjonsOrdningErrors = []
+
+		tempErrors.push(...kravannenytelseValidering(formValues))
+		tempErrors.push(...kravannenytelseBegrunnelseValidering(formValues))
+		tempErrors.push(...arbeidsInntektValidering(formValues))
+		tempErrors.push(...arbeidsBeløpValidering(formValues))
+		tempErrors.push(...pensjonValidering(formValues))
+		tempErrors.push(...pensjonsOrdningValidering(formValues, pensjonsOrdningErrors))
+		tempErrors.push(...sumInntektValidering(formValues))
+		tempErrors.push(...finansformueValidering(formValues))
+		tempErrors.push(...formueValidering(formValues))
+		tempErrors.push(...formueBeløpValidering(formValues))
+		tempErrors.push(...annenFormueEiendomTypeValidering(formValues))
+		tempErrors.push(...annenFormueEiendomSkattetakstValidering(formValues))
+		tempErrors.push(...sosialStønadValidering(formValues))
+
+		return tempErrors
+	}
+
+	function kravannenytelseValidering(formValues){
+		const krav = formValues.kravannenytelse
+		let feilmelding = ""
+
+		if(krav === undefined){
+			feilmelding += "Vennligst velg om søker fremsatt krav om annen norsk eller utenlandsk ytelse/pensjon som ikke er avgjort"
+
+			if(feilmelding.length > 0){
+				return [{skjemaelementId: fields.kravannenytelse.htmlId, feilmelding}]
+			}
+		}
+		return []
+	}
+
+	function kravannenytelseBegrunnelseValidering(formValues){
+		const begrunnelse = formValues.kravannenytelseBegrunnelse
+		let feilmelding = ""
+		console.log(begrunnelse)
+		if(formValues.kravannenytelse === "true"){
+			if(!/^([a-øA-Ø.,]{1,255})$/.test(begrunnelse) || begrunnelse === undefined){
+				feilmelding += "Vennligst fyll inn hva slags ytelse/pensjon søker får. Kan ikke inneholde tall, eller spesial tegn"
+			}
+			if(feilmelding.length > 0){
+				return [{skjemaelementId: fields.kravannenytelseBegrunnelse.htmlId, feilmelding}]
+			}
+		}
+		return []
+	}
+
+	function arbeidsInntektValidering(formValues){
+		const arbeidselleranneninntekt = formValues.arbeidselleranneninntekt
+		let feilmelding = ""
+
+		if(arbeidselleranneninntekt === undefined){
+			feilmelding += "Vennligst velg om søker har arbeids/person-inntekt"
+
+			if(feilmelding.length > 0){
+				return [{skjemaelementId: fields.arbeidselleranneninntekt.htmlId, feilmelding}]
+			}
+		}
+		return []
+	}
+
+	function arbeidsBeløpValidering(formValues){
+		const arbeidsBeløp = formValues.arbeidselleranneninntektBegrunnelse
+		let feilmelding = ""
+
+		if(formValues.arbeidselleranneninntekt === "true"){
+			if(!/^(\d{1,30})$/.test(arbeidsBeløp) || arbeidsBeløp === undefined ){
+				feilmelding += "Vennligst tast inn arbeids/pensjon-inntekt beløp"
+
+				if(feilmelding.length > 0){
+					return [{skjemaelementId: fields.arbeidsBeløp.htmlId, feilmelding}]
+				}
+			}
+		}
+		return []
+	}
+
+	function pensjonValidering(formValues){
+		const pensjon = formValues.hardupensjon
+		let feilmelding = ""
+
+		if(pensjon === undefined){
+			feilmelding += "Vennligst velg om søker har pensjon"
+
+			if(feilmelding.length > 0){
+				return [{skjemaelementId: fields.pensjon.htmlId, feilmelding}]
+			}
+		}
+		return []
+	}
+
+	function pensjonsOrdningValidering(formValues, errorsArray){
+		const tempPensjonsOrdningArray = formValues.pensjonsOrdning
+
+		if(formValues.hardupensjon === "true"){
+			tempPensjonsOrdningArray.map((item, index) => {
+				if(!/^([a-øA-Ø.,]{1,255})$/.test(item.ordning)){
+					console.log("hehe")
+					if(item.ordning === "" || item.ordning === undefined){
+						errorsArray.push({
+							skjemaelementId: `${index}-ordning`,
+							feilmelding: "Ordning kan ikke være tom"})
+					}else{
+						errorsArray.push({
+							skjemaelementId: `${index}-ordning`,
+							feilmelding: "Ordning kan ikke inneholde tall eller spesial tegn"})
+					}
+				}
+				if(!/^(\d{1,30})$/.test(item.beløp)) {
+					if (item.beløp === "" || item.beløp === undefined) {
+						errorsArray.push({
+							skjemaelementId: `${index}-beløp`,
+							feilmelding: "Beløp kan ikke være tom"
+						})
+					} else {
+						errorsArray.push({
+							skjemaelementId: `${index}-beløp`,
+							feilmelding: "Beløp kan kun inneholde tall"
+						})
+					}
+				}
+			})
+		}
+		return errorsArray
+	}
+
+	function sumInntektValidering(formValues){
+		const sum = formValues.sumPersoninntekt
+		let feilmelding = ""
+
+		if(!/^(\d{1,30})$/.test(sum) || sum === undefined){
+			feilmelding += "Vennligst fyll inn sum av inntekt. Kan kun inneholde Tall"
+		}
+		if(feilmelding.length > 0){
+			return [{skjemaelementId: fields.sumPersoninntekt.htmlId, feilmelding}]
+		}
+		return []
+	}
+
+	function formueValidering(formValues){
+		const formue = formValues.harduformueeiendom
+		let feilmelding = ""
+
+		if(formue === undefined){
+			feilmelding += "Vennligst velg om søker har formue/eiendom"
+
+			if(feilmelding.length > 0){
+				return [{skjemaelementId: fields.formue.htmlId, feilmelding}]
+			}
+		}
+		return []
+	}
+
+	function finansformueValidering(formValues){
+		const finansformue = formValues.hardufinansformue
+		let feilmelding = ""
+
+		if(finansformue === undefined){
+			feilmelding += "Vennligst velg om søker har finansformue"
+		}
+		if(feilmelding.length > 0){
+			return [{skjemaelementId: fields.finansformue.htmlId,feilmelding}]
+		}
+		return []
+	}
+
+	function formueBeløpValidering(formValues){
+		const formueBeløp = formValues.formueBeløp
+		let feilmelding = ""
+
+		if(formValues.harduformueeiendom === "true" || formValues.hardufinansformue === "true"){
+			if(!/^(\d{1,30})$/.test(formueBeløp) || formueBeløp === undefined ){
+				feilmelding += "Vennligst tast inn total formue beløp"
+
+				if(feilmelding.length > 0){
+					return [{skjemaelementId: fields.formueBeløp.htmlId, feilmelding}]
+				}
+			}
+		}
+		return []
+	}
+
+	function annenFormueEiendomTypeValidering(formValues){
+		const typeFormue = formValues.typeFormue
+		let feilmelding = ""
+
+		if(formValues.harduannenformueeiendom === "true"){
+			if(!/^([a-øA-Ø.,]{1,255})$/.test(typeFormue) || typeFormue === undefined ){
+				feilmelding += "Vennligst tast inn type formue"
+
+				if(feilmelding.length > 0){
+					return [{skjemaelementId: fields.typeFormue.htmlId, feilmelding}]
+				}
+			}
+		}
+		return []
+	}
+
+	function annenFormueEiendomSkattetakstValidering(formValues){
+		const samletSkattetakst = formValues.samletSkattetakst
+		let feilmelding = ""
+
+		if(formValues.harduannenformueeiendom === "true"){
+			if(!/^(\d{1,30})$/.test(samletSkattetakst) || samletSkattetakst === undefined ){
+				feilmelding += "Vennligst tast inn type samlet skattetakst. Kun tall"
+
+				if(feilmelding.length > 0){
+					return [{skjemaelementId: fields.skattetakst.htmlId, feilmelding}]
+				}
+			}
+		}
+		return []
+	}
+
+	function sosialStønadValidering(formValues){
+		const sosial = formValues.sosialstonad
+		let feilmelding = ""
+
+		if(sosial === undefined){
+			feilmelding += "Vennligst velg om søker mottar sosial stønad"
+		}
+		if(feilmelding.length > 0){
+			return [{skjemaelementId: fields.sosialstonad.htmlId,feilmelding}]
+		}
+		return []
+	}
+
 }
 
 const container = {

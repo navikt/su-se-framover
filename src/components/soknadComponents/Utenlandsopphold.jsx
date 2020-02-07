@@ -142,7 +142,6 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
         }
     }
 
-
     return (
         <div>
             <Systemtittel>Utenlandsopphold</Systemtittel>
@@ -300,12 +299,12 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
                 if(!/^\d{2}\/\d{2}\/\d{2}$/.test(item.planlagtInnreisedato)) {
                     if (item.planlagtInnreisedato === "" || item.planlagtInnreisedato === undefined) {
                         errorsArray.push({
-                            skjemaelementId: `${index}-planlagtInnreise`,
+                            skjemaelementId: `${index}-planlagtInnreisedato`,
                             feilmelding: "Planlagt Innreise må være ikke være tom. Den må være i formed dd/mm/yy"
                         })
                     } else {
                         errorsArray.push({
-                            skjemaelementId: `${index}-planlagtInnreise`,
+                            skjemaelementId: `${index}-planlagtInnreisedato`,
                             feilmelding: "Planlagt Innreise må være en dato i formen dd/mm/yy"
                         })
                     }

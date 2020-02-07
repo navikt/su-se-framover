@@ -22,6 +22,7 @@ const Oppholdstillatelse = ({state, updateField, onClick}) => {
            return (
                <div>
                    <InputFields labelText="Oppholdstillatelsens utløpsdato"
+                                id={fields.oppholdstillatelseUtløpsdato.htmlId}
                                 value={state.oppholdstillatelseUtløpsdato || ''}
                                 onChange={updateFunction("oppholdstillatelseUtløpsdato")}
                    />
@@ -118,12 +119,12 @@ const Oppholdstillatelse = ({state, updateField, onClick}) => {
         if(formValues.varigopphold === "false"){
             if(!/^\d{2}\/\d{2}\/\d{2}$/.test(oppholdstillatelseUtløpsdato)) {
                 if(oppholdstillatelseUtløpsdato === '' || oppholdstillatelseUtløpsdato === undefined){
-                    feilmelding += "Oppholdstillatelsens utløpsdato kan ikke være tom. Den må være i formed dd/mm/yy"
+                    feilmelding += "Oppholdstillatelsens utløpsdato kan ikke være tom. Den må være i formen dd/mm/yy"
                 }else{
-                    feilmelding += "Oppholdstillatelsens utløpsdato må være i formed dd/mm/yy"
+                    feilmelding += "Oppholdstillatelsens utløpsdato må være i formen dd/mm/yy"
                 }
                 if(feilmelding.length > 0){
-                    return [{skjemaelementId: fields.varigopphold.htmlId, feilmelding}]
+                    return [{skjemaelementId: fields.oppholdstillatelseUtløpsdato.htmlId, feilmelding}]
                 }
             }
         }
