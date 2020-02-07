@@ -157,7 +157,7 @@ const Boforhold = ({state, updateField, onClick}) =>{
         </div>
     )
 
-    //--------Validering-------
+    //------------Lett Validering-----------------------
     function validateForm(){
         const formValues = state
         const errors = validateFormValues(formValues)

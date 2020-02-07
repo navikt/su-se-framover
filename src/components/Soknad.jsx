@@ -20,13 +20,12 @@ function Soknad({config}){
 					delerBoligMed: [{navn:'', fødselsnummer:''}]},
 
 		utenlandsopphold: {utenlandsoppholdArray: [{utreisedato: '', innreisedato: ''}],
-							PlanlagtUtenlandsoppholdArray: [{planlagtUtreisedato: '', planlagtInnreisedato: ''}]
+							planlagtUtenlandsoppholdArray: [{planlagtUtreisedato: '', planlagtInnreisedato: ''}]
 		},
 		oppholdstillatelse: {},
 		inntektPensjonFormue: {pensjonsOrdning: [{ordning: '', beløp: ''}]},
 		forNAV: {}
 	})
-
 
 	function addToStage(){
 		setStage(stage => stage+1)

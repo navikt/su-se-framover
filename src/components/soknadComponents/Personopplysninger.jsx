@@ -126,7 +126,7 @@ const Personopplysninger = ({state, updateField, onClick}) => {
     )
 
 
-    //---------------Validering----------------
+    //------------Lett Validering-----------------------
     function validateForm(){
         const formValues = state
         const errors = validateFormValues(formValues)
@@ -172,8 +172,8 @@ const Personopplysninger = ({state, updateField, onClick}) => {
     function fornavnValidering(formValues){
         const fornavn = formValues.fornavn
         let feilmelding = ""
-        if(!/^([a-zA-Z]{1,255})$/.test(fornavn) || fornavn === undefined){
-            feilmelding += "Fornavn kan ikke være tom, navn ikke inneholde tall, eller spesial tegn"
+        if(!/^([a-øA-Ø.,]{1,255})$/.test(fornavn) || fornavn === undefined){
+            feilmelding += "Fornavn kan ikke være tom. Navn ikke inneholde tall, eller spesial tegn"
         }
         if(feilmelding.length > 0){
             return [{skjemaelementId: fields.fornavn.htmlId, feilmelding}]
@@ -184,8 +184,8 @@ const Personopplysninger = ({state, updateField, onClick}) => {
     function etternavnValidering(formValues){
         const etternavn = formValues.etternavn
         let feilmelding = ""
-        if(!/^([a-zA-Z]{1,255})$/.test(etternavn) || etternavn === undefined){
-            feilmelding += "Etternavn kan ikke være tom, etternavn ikke inneholde tall, eller spesial tegn"
+        if(!/^([a-øA-Ø.,]{1,255})$/.test(etternavn) || etternavn === undefined){
+            feilmelding += "Etternavn kan ikke være tom. Etternavn ikke inneholde tall, eller spesial tegn"
         }
         if(feilmelding.length > 0){
             return [{skjemaelementId: fields.etternavn.htmlId, feilmelding}]
@@ -214,7 +214,7 @@ const Personopplysninger = ({state, updateField, onClick}) => {
     function gateadresseValidering(formValues){
         const gate = formValues.gateadresse
         let feilmelding = ""
-        if(!/^.{1,255}$/.test(gate) || gate === undefined){
+        if(!/^([a-øA-Ø.\s\d-]{1,255})$/.test(gate) || gate === undefined){
             feilmelding += "Gateadresse kan ikke være tom"
         }
         if(feilmelding.length > 0){
@@ -244,7 +244,7 @@ const Personopplysninger = ({state, updateField, onClick}) => {
     function poststedValidering(formValues){
         const poststed = formValues.poststed
         let feilmelding = ""
-        if(!/^([a-zA-Z]{1,255})$/.test(poststed) || poststed === undefined){
+        if(!/^([a-øA-Ø]{1,255})$/.test(poststed) || poststed === undefined){
             feilmelding += "Poststed kan ikke være tom"
         }
         if(feilmelding.length > 0){
@@ -256,7 +256,7 @@ const Personopplysninger = ({state, updateField, onClick}) => {
     function bokommuneValidering(formValues){
         const bokommune = formValues.bokommune
         let feilmelding = ""
-        if(!/^([a-zA-Z]{1,255})$/.test(bokommune) || bokommune === undefined){
+        if(!/^([a-øA-Ø]{1,255})$/.test(bokommune) || bokommune === undefined){
             feilmelding += "Bokommune kan ikke være tom"
         }
         if(feilmelding.length > 0){
@@ -268,7 +268,7 @@ const Personopplysninger = ({state, updateField, onClick}) => {
     function statsborgerskapValidering(formValues){
         const statsborgerskap = formValues.statsborgerskap
         let feilmelding = ""
-        if(!/^([a-zA-Z]{1,255})$/.test(statsborgerskap) || statsborgerskap === undefined){
+        if(!/^([a-øA-Ø]{1,255})$/.test(statsborgerskap) || statsborgerskap === undefined){
             feilmelding += "Statsborgerskap kan ikke være tom"
         }
         if(feilmelding.length > 0){
@@ -305,6 +305,7 @@ const Personopplysninger = ({state, updateField, onClick}) => {
 
     }
 }
+
 const inputFieldsStyle = {
     marginRight: '1em'
 }
