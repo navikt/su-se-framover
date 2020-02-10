@@ -1,11 +1,10 @@
 import React, {useState} from 'react'
-import {Undertittel} from "nav-frontend-typografi";
 import {Knapp} from "nav-frontend-knapper";
 import {InputFields} from "../FormElements";
-import Lukknapp from "nav-frontend-lukknapp";
+import Lenke from 'nav-frontend-lenker';
 import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
 import {Checkbox, CheckboxGruppe} from "nav-frontend-skjema";
-import {Systemtittel} from "nav-frontend-typografi";
+import {Systemtittel, Ingress} from "nav-frontend-typografi";
 import { Hovedknapp } from 'nav-frontend-knapper';
 
 const Boforhold = ({state, updateField, onClick}) =>{
@@ -83,28 +82,31 @@ const Boforhold = ({state, updateField, onClick}) =>{
     function tillegsInfoESP(){
         if(state.delerDuBolig === "true"){
             return (
-                <div>
-                    <Undertittel>Opplysninger om ektefellen/samboer/annen voksen person hvis dere bor sammen</Undertittel>
+                <div style={{marginBottom: '2em'}}>
+                    <Ingress>Opplysninger om ektefellen/samboer/annen voksen person hvis dere bor sammen</Ingress>
                     {
                         state.delerBoligMed.map((item, index)=> ({...item, key:index}))
                             .map((item, index) => {
                                     return (
                                         <div key={item.key} style={container}>
-
+                                            <InputFields id={`${item.key}-fødselsnummer`}
+                                                         labelText={"Fødselsnummer"}
+                                                         value={item.fødselsnummer}
+                                                         onChange={(value) => oppdaterFødselsnummer(value,index)}
+                                            />
                                             <InputFields id={`${item.key}-navn`}
                                                          labelText={"Navn"}
                                                          value={item.navn}
                                                          onChange={(value) => updateEPSnavn(value,index)}
                                             />
 
-                                            <InputFields id={`${item.key}-fødselsnummer`}
-                                                         labelText={"Fødselsnummer"}
-                                                         value={item.fødselsnummer}
-                                                         onChange={(value) => oppdaterFødselsnummer(value,index)}
-                                            />
+                                            {
+                                                state.delerBoligMed.length > 1 &&
+                                                <Lenke type="button" style={fjernInnputKnappStyle}
 
-                                            <Lukknapp type="button" style={fjernInnputKnappStyle}
-                                                      onClick={() => fjernValgtInputFelt(state.delerBoligMed, "delerBoligMed", index)}>Lukk</Lukknapp>
+                                                       onClick={() => fjernValgtInputFelt(state.delerBoligMed, "delerBoligMed", index)}>Fjern felt</Lenke>
+                                            }
+
                                         </div>
                                     )
                                 }
@@ -128,7 +130,7 @@ const Boforhold = ({state, updateField, onClick}) =>{
             <Systemtittel>Boforhold</Systemtittel>
             <div>
                 <div style={container}>
-                    <RadioGruppe legend="Deler du bolig med en annen voksen?">
+                    <RadioGruppe legend="Deler du bolig med en annen voksen?" style={{marginRight: '2em'}}>
                         <Radio name="delerDubolig"
                                label="Ja" value="true"
                                checked={state.delerDuBolig === "true"}

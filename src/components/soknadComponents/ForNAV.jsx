@@ -44,7 +44,7 @@ const ForNAV = ({state, updateField, onClick}) => {
             <div>
                 <Systemtittel>For NAV</Systemtittel>
                 <div style={container}>
-                    <div>
+                    <div style={{marginRight: '2em'}}>
                         <RadioGruppe legend="Har bruker møtt personlig?">
                             <Radio name="personligmote"
                                    label="Ja"
@@ -60,8 +60,7 @@ const ForNAV = ({state, updateField, onClick}) => {
                             />
                         </RadioGruppe>
                     </div>
-                    &nbsp;
-                    <div>
+                    <div style={{marginRight: '2em'}}>
                         <RadioGruppe legend="Har fullmektig møtt?">
                             <Radio name="fullmektigmote"
                                    label="Ja"
@@ -77,7 +76,6 @@ const ForNAV = ({state, updateField, onClick}) => {
                             />
                         </RadioGruppe>
                     </div>
-                    &nbsp;
                     <div>
                         <RadioGruppe legend="Er originalt(e) pass sjekket for stempel?">
                             <Radio name="passsjekk"

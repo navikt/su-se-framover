@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
-import {Systemtittel} from "nav-frontend-typografi";
+import {Systemtittel, Undertittel} from "nav-frontend-typografi";
 import {InputFields} from "../FormElements";
-import Lukknapp from "nav-frontend-lukknapp";
+import Lenke from 'nav-frontend-lenker';
 import {Hovedknapp, Knapp} from "nav-frontend-knapper";
 
 
@@ -15,7 +15,6 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 					arbeidselleranneninntekt:{label: 'arbeidselleranneninntekt', htmlId: 'arbeidselleranneninntekt'},
 					arbeidsBeløp: {label: 'arbeidsBeløp', htmlId: 'arbeidsBeløp'},
 					pensjon: {label: 'pensjon', htmlId: 'pensjon'},
-					sumPersoninntekt: {label: 'sumPersoninntekt', htmlId: 'sumPersoninntekt'},
 					formue: {label: 'formue', htmlId: 'formue'},
 					finansformue: {label: 'finansformue', htmlId: 'finansformue'},
 					formueBeløp: {label: 'formueBeløp', htmlId: 'formueBeløp'},
@@ -41,6 +40,7 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 		if(state.arbeidselleranneninntekt === "true"){
 			return <InputFields labelText="Brutto beløp per år:"
 								id={fields.arbeidsBeløp.htmlId}
+								bredde="M"
 								value={state.arbeidselleranneninntektBegrunnelse || ''}
 								onChange={updateFunction("arbeidselleranneninntektBegrunnelse")}
 			/>
@@ -52,6 +52,7 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 			return (
 				<InputFields labelText="Total beløp formue: "
 							 id={fields.formueBeløp.htmlId}
+							 bredde="M"
 							 value={state.formueBeløp || ''}
 							 onChange={updateFunction("formueBeløp")}
 				/>
@@ -62,20 +63,60 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 	function harAnnenFormueEiendom(){
 		if(state.harduannenformueeiendom === "true"){
 			return (
-				<div style={container}>
-					<InputFields labelText="Type formue/eiendom"
-								 id={fields.typeFormue.htmlId}
-								 value={state.typeFormue || ''}
-								 onChange={updateFunction("typeFormue")}
-					/>
-					<InputFields labelText="Samlet skattetakst"
-								 id={fields.skattetakst.htmlId}
-								 value={state.samletSkattetakst || ''}
-								 onChange={updateFunction("samletSkattetakst")}
-					/>
+				<div style={{marginBottom: '1em'}}>
+					{
+						state.annenFormueEiendom.map((item, index)=> ({...item, key:index}))
+							.map((item, index) => {
+									return (
+										<div key={item.key} style={container}>
+
+											<InputFields labelText="Type formue/eiendom"
+														 id={`${item.key}-typeFormue`}
+														 value={item.typeFormue}
+														 onChange={(value) => updateFormueEiendomType(value,index)}
+											/>
+											<InputFields labelText="skattetakst"
+														 id={`${item.key}-skattetakst`}
+														 value={item.skattetakst}
+														 onChange={(value) => updateFormueEiendomSkattetakst(value,index)}
+											/>
+											{
+												state.annenFormueEiendom.length > 1 &&
+												<Lenke style={fjernInnputKnappStyle}
+													   onClick={() => fjernValgtInputFelt(state.annenFormueEiendom,
+														   		"annenFormueEiendom", index)}>Fjern felt</Lenke>
+											}
+										</div>
+									)
+								}
+							)
+					}
+					<Knapp onClick={() => addInputFieldsAnnenFormueEiendom()}>Legg til flere formue/eiendom felter</Knapp>
 				</div>
 			)
 		}
+	}
+
+	function addInputFieldsAnnenFormueEiendom(){
+		const values = state.annenFormueEiendom
+		values.push({typeFormue:'', skattetakst:''})
+		updateField("annenFormueEiendom", values)
+	}
+
+	function updateFormueEiendomType(kilde, index){
+		const type = {...state.annenFormueEiendom[index]}
+		type.typeFormue = kilde
+
+		const tempType = [...state.annenFormueEiendom.slice(0,index), type, ...state.annenFormueEiendom.slice(index+1)]
+		updateField("annenFormueEiendom", tempType)
+	}
+
+	function updateFormueEiendomSkattetakst(kilde, index){
+		const skattetakst = {...state.annenFormueEiendom[index]}
+		skattetakst.skattetakst = kilde
+
+		const tempSkattetakst = [...state.annenFormueEiendom.slice(0,index), skattetakst, ...state.annenFormueEiendom.slice(index+1)]
+		updateField("annenFormueEiendom", tempSkattetakst)
 	}
 
 	function updatePensjonsOrdning(kilde, index){
@@ -108,29 +149,29 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 	function søkerHarPensjon(){
 		if(state.hardupensjon === "true"){
 			return (
-				<div>
+				<div style={{marginBottom: '1em'}}>
 					{
 						state.pensjonsOrdning.map((item, index)=> ({...item, key:index}))
 							.map((item, index) => {
 									return (
 										<div key={item.key} style={container}>
-
 											<InputFields id={`${item.key}-ordning`}
 														 labelText={"Fra hvilken ordning mottar du pensjon?:"}
 														 value={item.ordning}
 														 onChange={(value) => updatePensjonsOrdning(value,index)}
 											/>
-
 											<InputFields id={`${item.key}-beløp`}
 														 labelText={"Brutto beløp per år"}
 														 value={item.beløp}
 														 onChange={(value) => updatePensjonsOrdningsBeløp(value,index)}
 											/>
+											{
+												state.pensjonsOrdning.length > 1 &&
+												<Lenke style={fjernInnputKnappStyle}
+												onClick={() => fjernValgtInputFelt(state.pensjonsOrdning, "pensjonsOrdning", index)}>Fjern felt</Lenke>
 
 
-
-											<Lukknapp type="button" style={fjernInnputKnappStyle}
-													  onClick={() => fjernValgtInputFelt(state.pensjonsOrdning, "pensjonsOrdning", index)}>Lukk</Lukknapp>
+											}
 										</div>
 									)
 								}
@@ -138,6 +179,30 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 					}
 					<Knapp onClick={() => addInputFields()}>Legg til flere pensjonsordninger</Knapp>
 				</div>
+			)
+		}
+	}
+
+	function søkerHarInntekt(){
+		if(state.hardupensjon === "true" || state.arbeidselleranneninntekt === "true"){
+			let beløp = 0;
+
+			if(state.arbeidselleranneninntektBegrunnelse !== ''){
+				beløp += parseInt(state.arbeidselleranneninntektBegrunnelse)
+			}
+
+			beløp +=  adderInntekter(state.pensjonsOrdning
+				.map(item => parseInt(item.beløp,10))
+				.filter(item => ! isNaN(item))
+			)
+
+			return (
+				<Undertittel>Sum Inntekt: {
+					beløp
+				}
+				<hr />
+				</Undertittel>
+
 			)
 		}
 	}
@@ -165,7 +230,7 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 				}
 			</div>
 
-			<div style={container}>
+			<div style={{marginBottom: '1em'}}>
 				<div>
 					<RadioGruppe legend="Har du arbeidsinntekt/personinntekt?" >
 						<Radio name="arbeidselleranneninntekt"
@@ -185,7 +250,6 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 						arbeidselleranneninntektInput()
 					}
 				</div>
-				&nbsp;
 				<div>
 					<RadioGruppe legend="Har du pensjon?">
 						<Radio name="hardupensjon"
@@ -201,17 +265,16 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 							   onChange={(e => updateField("hardupensjon", e.target.value))}
 						/>
 					</RadioGruppe>
-					&nbsp;
+
 					{
 						søkerHarPensjon()
 					}
 				</div>
+				{
+					søkerHarInntekt()
+				}
 			</div>
-            <InputFields labelText="Sum arbeidsinntekt/personinntekt, kapitalinntekt og pensjon"
-						 id={fields.sumPersoninntekt.htmlId}
-						 value={state.sumPersoninntekt || ''}
-						 onChange={updateFunction("sumPersoninntekt")}
-			/>
+
             {/* <Systemtittel>Pensjon og annen inntekt for ektefelle/samboer</Systemtittel>
 			TODO */}
 			<div>
@@ -294,6 +357,12 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 			<Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     )
+
+
+	function adderInntekter(beløp){
+		const reducer = (accumulator, currentValue) => accumulator + currentValue
+		return beløp.reduce(reducer,0)
+	}
 
 	//------------Lett Validering-----------------------
 	function validateForm(){
@@ -435,18 +504,6 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 		return errorsArray
 	}
 
-	function sumInntektValidering(formValues){
-		const sum = formValues.sumPersoninntekt
-		let feilmelding = ""
-
-		if(!/^(\d{1,30})$/.test(sum) || sum === undefined){
-			feilmelding += "Vennligst fyll inn sum av inntekt. Kan kun inneholde Tall"
-		}
-		if(feilmelding.length > 0){
-			return [{skjemaelementId: fields.sumPersoninntekt.htmlId, feilmelding}]
-		}
-		return []
-	}
 
 	function formueValidering(formValues){
 		const formue = formValues.harduformueeiendom

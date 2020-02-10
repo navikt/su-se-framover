@@ -13,16 +13,16 @@ const Oppholdstillatelse = ({state, updateField, onClick}) => {
                     soektforlengelse: {label: 'soektforlengelse', htmlId: 'soektforlengelse'}
     }
 
-
     const updateFunction = name => value => updateField(name, value)
 
     function midlertidigOppholdstillatelse(){
         if(state.varigopphold === "false"){
 
            return (
-               <div>
+               <div style={{display: 'flex'}}>
                    <InputFields labelText="Oppholdstillatelsens utløpsdato"
                                 id={fields.oppholdstillatelseUtløpsdato.htmlId}
+                                bredde={"S"}
                                 value={state.oppholdstillatelseUtløpsdato || ''}
                                 onChange={updateFunction("oppholdstillatelseUtløpsdato")}
                    />

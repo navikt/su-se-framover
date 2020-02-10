@@ -15,6 +15,7 @@ import Vilkarsprov from "./Vilkarsprov";
 import Beregning from "./Beregning"
 import ErrorBoundary from './ErrorBoundary'
 import 'nav-frontend-tabell-style';
+import './Root.less'
 import {
   BrowserRouter as Router,
   Switch,

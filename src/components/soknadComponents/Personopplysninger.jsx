@@ -35,19 +35,19 @@ const Personopplysninger = ({state, updateField, onClick}) => {
             <div style={inputFieldsStyle}>
                 <InputFields labelText="Fornavn"
                              value={state.fornavn || ''}
-                             style={{minWidth: '20em'}}
+                             style={{minWidth: '13em'}}
                              id={fields.fornavn.htmlId}
                              onChange={updateFunction("fornavn")}
                 />
                 <InputFields labelText="Mellomnavn"
                              value={state.mellomnavn || ''}
-                             style={{minWidth: '20em'}}
+                             style={{minWidth: '13em'}}
                              onChange={updateFunction("mellomnavn")}
                 />
                 <InputFields labelText="Etternavn"
                              value={state.etternavn || ''}
                              id={fields.etternavn.htmlId}
-                             style={{minWidth: '20em'}}
+                             style={{minWidth: '13em'}}
                              onChange={updateFunction("etternavn")}
                 />
             </div>
@@ -112,7 +112,7 @@ const Personopplysninger = ({state, updateField, onClick}) => {
                         />
                 </RadioGruppe>
 
-                <RadioGruppe legend="Bor du fast i Norge?" style={{flexGrow: '2'}}>
+                <RadioGruppe legend="Bor du fast i Norge?" style={{flexGrow: '5'}}>
                     <Radio name="bofastnorge"
                            label={'Ja'} value="true"
                            checked={state.bofastnorge === "true"}
@@ -316,6 +316,8 @@ const inputFieldsStyle = {
     display: 'flex',
     justifyContent: 'space-between'
 }
+
+
 
 const container = {
     display: 'flex'

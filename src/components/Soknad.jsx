@@ -10,6 +10,7 @@ import Oppholdstillatelse from "./soknadComponents/Oppholdstillatelse";
 import InntektPensjonFormue from "./soknadComponents/InntektPensjonFormue";
 import ForNAV from "./soknadComponents/ForNAV";
 import OppsumeringOgSend from "./soknadComponents/OppsumeringOgSend";
+import "./soknad.less"
 
 function Soknad({config}){
 	const [stage, setStage] = useState(0)
@@ -23,7 +24,8 @@ function Soknad({config}){
 							planlagtUtenlandsoppholdArray: [{planlagtUtreisedato: '', planlagtInnreisedato: ''}]
 		},
 		oppholdstillatelse: {},
-		inntektPensjonFormue: {pensjonsOrdning: [{ordning: '', beløp: ''}]},
+		inntektPensjonFormue: {pensjonsOrdning: [{ordning: '', beløp: ''}],
+								annenFormueEiendom: [{typeFormue: '', skattetakst: ''}]},
 		forNAV: {}
 	})
 
@@ -102,7 +104,7 @@ function Soknad({config}){
 					onChange={(index) => setStage(index)}
 					aktivtSteg={stage}
 				/>
-				<div>
+				<div className="søknadBody">
 					<SkjemaGruppe>
 						{
 							ShowActiveComponent()

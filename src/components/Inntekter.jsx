@@ -4,10 +4,6 @@ import React, {useEffect} from "react";
 import {InputFields} from "./FormElements";
 import Lukknapp from 'nav-frontend-lukknapp';
 
-
-
-
-
 function Inntekter({state, setInntekter, errorsCollector}){
     useEffect(() => {
         if (errorsCollector !== undefined) {

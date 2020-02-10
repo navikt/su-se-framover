@@ -100,8 +100,6 @@ function Beregning({state = initialState, setState}){
 
         validateFormValues(formValues)
         setErrorsCollector([])
-
-
     }
 
     function validateFormValues(formValues){

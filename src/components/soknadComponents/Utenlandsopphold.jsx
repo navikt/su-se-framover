@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
 import {Hovedknapp, Knapp} from "nav-frontend-knapper";
-import {InputFields} from "../FormElements";
-import Lukknapp from "nav-frontend-lukknapp";
+import Lenke from 'nav-frontend-lenker';
 import {Systemtittel} from "nav-frontend-typografi";
-import { RadioGruppe, Radio, Feiloppsummering} from 'nav-frontend-skjema';
-
+import {RadioGruppe, Radio, Feiloppsummering} from 'nav-frontend-skjema';
+import Datovelger from "nav-datovelger";
+import 'nav-datovelger/dist/datovelger/styles/datovelger.css'
 
 const Utenlandsopphold = ({state, updateField, onClick}) =>{
 
@@ -52,30 +52,38 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
                         {
                             state.utenlandsoppholdArray.map((item, index) => ({...item, key: index}))
                                 .map((item, index) => {
-                                        return (
-                                            <div key={item.key} style={container}>
-
-                                                <InputFields id={`${item.key}-utreisedato`}
-                                                             labelText={"Utreisedato"}
-                                                             value={item.utreisedato}
-                                                             onChange={(value) => utenlandsoppholdUtreisedato(value, index)}
+                                    return (
+                                        <div key={item.key} style={container}>
+                                            <div style={{marginRight: '1em'}}>
+                                                <label className="skjemaelement__label">Utreisedato</label>
+                                                <Datovelger.Datovelger
+                                                    input={{placeholder: "dd.mm.ååå" }}
+                                                    valgtDato={item.utreisedato}
+                                                    onChange={value => utenlandsoppholdUtreisedato(value, index)}
                                                 />
-
-                                                <InputFields id={`${item.key}-innreisedato`}
-                                                             labelText={"Innreisedato"}
-                                                             value={item.innreisedato}
-                                                             onChange={(value) => utenlandsoppholdInnreisedato(value, index)}
-                                                />
-
-                                                <Lukknapp type="button" style={fjernInnputKnappStyle}
-                                                          onClick={() => fjernValgtInputFelt(state.utenlandsoppholdArray, "utenlandsoppholdArray", index)}>Lukk</Lukknapp>
                                             </div>
-                                        )
+                                            <div style={{marginRight: '1em'}}>
+                                                <label className="skjemaelement__label">Innreisedato</label>
+                                                <Datovelger.Datovelger
+                                                    input={{placeholder: "dd.mm.åååå" }}
+                                                    valgtDato={item.innreisedato}
+                                                    onChange={value => utenlandsoppholdInnreisedato(value, index)}
+                                                />
+                                            </div>
+                                            {
+                                                state.utenlandsoppholdArray.length > 1 &&
+                                                <Lenke type="button" style={fjernInnputKnappStyle}
+                                                       onClick={() => fjernValgtInputFelt(state.utenlandsoppholdArray, "planlagtUtenlandsoppholdArray", index)}
+                                                >Fjern felt</Lenke>
+                                            }
+                                        </div>
+                                    )
+
                                     }
                                 )
                         }
                     </div>
-                    <Knapp onClick={() => addInputFields(state.utenlandsoppholdArray)}>Legg til flere utenlandsopphold</Knapp>
+                    <Knapp style={{marginTop: '1em'}} onClick={() => addInputFields(state.utenlandsoppholdArray)}>Legg til flere utenlandsopphold</Knapp>
                 </div>
             )
         }
@@ -83,7 +91,7 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
 
 //--------------------Planlagt utenlandsopphold ------------------------------
     function addInputFieldsPlantlagt(){
-        const values = state.PlanlagtUtenlandsoppholdArray
+        const values = state.planlagtUtenlandsoppholdArray
         values.push({planlagtUtreisedato:'', planlagtInnreisedato:''})
         updateField("planlagtUtenlandsoppholdArray", values)
     }
@@ -108,35 +116,42 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
         if(state.planlagtUtenlandsopphold === "true"){
 
             return (
-                <div>
+                <div style={{marginBottom: '2em'}}>
                     <div>
                         {
                             state.planlagtUtenlandsoppholdArray.map((item, index) => ({...item, key: index}))
                                 .map((item, index) => {
                                         return (
                                             <div key={item.key} style={container}>
-
-                                                <InputFields id={`${item.key}-planlagtUtreisedato`}
-                                                             labelText={"Utreisedato"}
-                                                             value={item.planlagtUtreisedato}
-                                                             onChange={(value) => planlagtUtenlandsoppholdUtreisedato(value, index)}
-                                                />
-
-                                                <InputFields id={`${item.key}-planlagtInnreisedato`}
-                                                             labelText={"Innreisedato"}
-                                                             value={item.planlagtInnreisedato}
-                                                             onChange={(value) => planlagtUtenlandsoppholdInnreisedato(value, index)}
-                                                />
-
-                                                <Lukknapp type="button" style={fjernInnputKnappStyle}
-                                                          onClick={() => fjernValgtInputFelt(state.planlagtUtenlandsoppholdArray, "PlanlagtUtenlandsoppholdArray", index)}>Lukk</Lukknapp>
+                                                <div style={{marginRight: '1em'}}>
+                                                    <label className="skjemaelement__label">Utreisedato</label>
+                                                    <Datovelger.Datovelger
+                                                        input={{placeholder: "dd.mm.ååå" }}
+                                                        valgtDato={item.planlagtUtreisedato}
+                                                        onChange={value => planlagtUtenlandsoppholdUtreisedato(value, index)}
+                                                    />
+                                                </div>
+                                                <div style={{marginRight: '1em'}}>
+                                                    <label className="skjemaelement__label">Innreisedato</label>
+                                                    <Datovelger.Datovelger
+                                                        input={{placeholder: "dd.mm.åååå" }}
+                                                        valgtDato={item.planlagtInnreisedato}
+                                                        onChange={value => planlagtUtenlandsoppholdInnreisedato(value, index)}
+                                                    />
+                                                </div>
+                                                {
+                                                    state.planlagtUtenlandsoppholdArray.length > 1 &&
+                                                    <Lenke type="button" style={fjernInnputKnappStyle}
+                                                           onClick={() => fjernValgtInputFelt(state.planlagtUtenlandsoppholdArray, "planlagtUtenlandsoppholdArray", index)}
+                                                    >Fjern felt</Lenke>
+                                                }
                                             </div>
                                         )
                                     }
                                 )
                         }
                     </div>
-                    <Knapp onClick={() => addInputFieldsPlantlagt(state.planlagtUtenlandsoppholdArray)}>Legg til flere planlagt utenlandsopphold</Knapp>
+                    <Knapp style={{marginTop: '1em'}} onClick={() => addInputFieldsPlantlagt(state.planlagtUtenlandsoppholdArray)}>Legg til flere planlagt utenlandsopphold</Knapp>
                 </div>
             )
         }
@@ -161,12 +176,11 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
                        onChange={(e => updateField("utenlandsopphold", e.target.value))}
                 />
             </RadioGruppe>
-            <div>
+            <div style={{marginBottom: '2em'}}>
                 {
                     utenlandsoppholdFelter()
                 }
             </div>
-            &nbsp;
             <RadioGruppe legend="Har du planer om å reise utenlands?">
                 <Radio name="planlagtUtenlandsopphold"
                        label="Ja"
@@ -186,7 +200,6 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
                     planlagtUtenlandsoppholdFelter()
                 }
             </div>
-            &nbsp;
             {
                 feilmeldinger.length > 0 && <Feiloppsummering tittel={"Vennligst fyll ut mangler"} feil={feilmeldinger} />
             }
@@ -315,9 +328,9 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
     }
 }
 
-
 const container = {
-    display: 'flex'
+    display: 'flex',
+    marginBottom: '1em'
 }
 
 const fjernInnputKnappStyle = {
