@@ -3,6 +3,7 @@ import Knapp from "nav-frontend-knapper";
 import React, {useEffect} from "react";
 import {InputFields} from "./FormElements";
 import Lukknapp from 'nav-frontend-lukknapp';
+import Lenke from "nav-frontend-lenker";
 
 function Inntekter({state, setInntekter, errorsCollector}){
     useEffect(() => {
@@ -40,8 +41,12 @@ function Inntekter({state, setInntekter, errorsCollector}){
                                         <InputFields id={`${item.key}-kilde`} labelText={"Kilde:"} value={item.kilde}
                                                      onChange={(value) => updateKilde(value,index)} />
 
-                                        <Lukknapp type="button" style={fjernInnputKnappStyle}
-                                                  onClick={() => fjernValgtInputFelt(index)}>Lukk</Lukknapp>
+                                        {
+                                            state.inntekter.length > 1 &&
+                                            <Lenke type="button" style={fjernInnputKnappStyle}
+
+                                                   onClick={() => fjernValgtInputFelt(index)}>Fjern felt</Lenke>
+                                        }
                                     </div>
                                 )
                             }
