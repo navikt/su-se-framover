@@ -89,26 +89,12 @@ const Personopplysninger = ({state, updateField, onClick}) => {
                              onChange={updateFunction("bokommune")}
                 />
             </div>
-
             <div style={{marginBottom: '1em'}}>
-                    <Select label={"Statsborgerskap"}
-                            value={state.statsborgerskap}
-                            feil={state.statsborgerskap === "velg" ? true : false}
-                            onChange={(e => updateField("statsborgerskap", e.target.value))}>
-                        <option value="velg">Velg land</option>
-                        <option value="ikkeIListen">Ikke i Listen</option>
-                        <option value="Norsk">Norsk</option>
-                        <option value="Svensk">Svensk</option>
-                        <option value="Dansk">Dansk</option>
-                    </Select>
-                {
-                    state.statsborgerskap === "ikkeIListen" &&
-                        <InputFields labelText={"Tast inn søkers statsborgerskap"}
+                        <InputFields labelText={"Søkers statsborgerskap (alle)"}
                                      bredde={"M"}
-                                     value={state.statsborgerskapOverstyrt || ''}
-                                     onChange={updateFunction("statsborgerskapOverstyrt")}
+                                     value={state.statsborgerskap  || ''}
+                                     onChange={updateFunction("statsborgerskap")}
                         />
-                }
             </div>
             <div style={container}>
                 <RadioGruppe legend="Er du registrert som flyktning?" style={{flexGrow: '1'}}>
@@ -288,8 +274,8 @@ const Personopplysninger = ({state, updateField, onClick}) => {
     function statsborgerskapValidering(formValues){
         const statsborgerskap = formValues.statsborgerskap
         let feilmelding = ""
-        if(statsborgerskap === "velg" || statsborgerskap === undefined){
-            feilmelding += "Vennligst velg statsborgerskap"
+        if(statsborgerskap === "" || statsborgerskap === undefined){
+            feilmelding += "Vennligst tast inn statsborgerskap"
         }
         if(feilmelding.length > 0){
             return [{skjemaelementId: fields.statsborgerskap.htmlId, feilmelding}]
