@@ -44,7 +44,6 @@ function Inntekter({state, setInntekter, errorsCollector}){
                                         {
                                             state.inntekter.length > 1 &&
                                             <Lenke type="button" style={fjernInnputKnappStyle}
-
                                                    onClick={() => fjernValgtInputFelt(index)}>Fjern felt</Lenke>
                                         }
                                     </div>

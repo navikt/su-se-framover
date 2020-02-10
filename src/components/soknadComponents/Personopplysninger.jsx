@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {Systemtittel} from "nav-frontend-typografi";
-import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
+import { RadioGruppe, Radio, Feiloppsummering, Select} from 'nav-frontend-skjema';
 import {InputFields} from "../FormElements";
 import {Hovedknapp} from "nav-frontend-knapper";
 
@@ -89,13 +89,26 @@ const Personopplysninger = ({state, updateField, onClick}) => {
                              onChange={updateFunction("bokommune")}
                 />
             </div>
-            <div>
-                <InputFields labelText="Statsborgerskap"
-                             value={state.statsborgerskap || ''}
-                             bredde="L"
-                             id={fields.statsborgerskap.htmlId}
-                             onChange={updateFunction("statsborgerskap")}
-                />
+
+            <div style={{marginBottom: '1em'}}>
+                    <Select label={"Statsborgerskap"}
+                            value={state.statsborgerskap}
+                            feil={state.statsborgerskap === "velg" ? true : false}
+                            onChange={(e => updateField("statsborgerskap", e.target.value))}>
+                        <option value="velg">Velg land</option>
+                        <option value="ikkeIListen">Ikke i Listen</option>
+                        <option value="Norsk">Norsk</option>
+                        <option value="Svensk">Svensk</option>
+                        <option value="Dansk">Dansk</option>
+                    </Select>
+                {
+                    state.statsborgerskap === "ikkeIListen" &&
+                        <InputFields labelText={"Tast inn søkers statsborgerskap"}
+                                     bredde={"M"}
+                                     value={state.statsborgerskapOverstyrt || ''}
+                                     onChange={updateFunction("statsborgerskapOverstyrt")}
+                        />
+                }
             </div>
             <div style={container}>
                 <RadioGruppe legend="Er du registrert som flyktning?" style={{flexGrow: '1'}}>
@@ -137,6 +150,7 @@ const Personopplysninger = ({state, updateField, onClick}) => {
         const formValues = state
         const errors = validateFormValues(formValues)
         setFeilmeldinger(errors)
+        console.log(state)
         if(errors.length === 0){
             onClick()
         }
@@ -274,8 +288,8 @@ const Personopplysninger = ({state, updateField, onClick}) => {
     function statsborgerskapValidering(formValues){
         const statsborgerskap = formValues.statsborgerskap
         let feilmelding = ""
-        if(!/^([a-øA-Ø]{1,255})$/.test(statsborgerskap) || statsborgerskap === undefined){
-            feilmelding += "Statsborgerskap kan ikke være tom"
+        if(statsborgerskap === "velg" || statsborgerskap === undefined){
+            feilmelding += "Vennligst velg statsborgerskap"
         }
         if(feilmelding.length > 0){
             return [{skjemaelementId: fields.statsborgerskap.htmlId, feilmelding}]
