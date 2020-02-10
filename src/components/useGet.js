@@ -17,7 +17,7 @@ export const useGet = ({url}) => {
                 if (response.status === 401 || response.status === 403) {
                     setData({isFetching: false, status: response.status, headers: response.headers});
                 } else {
-                    setData({data: await response.json(), isFetching: false, status: response.status});
+                    setData({data: await getData(response), isFetching: false, status: response.status});
                 }
             } catch (e) {
                 console.log(e);
@@ -30,3 +30,17 @@ export const useGet = ({url}) => {
     }, [url]);
     return data;
 };
+
+const getData = async response => {
+    try {
+        const responseText = await response.text()
+        try {
+            return JSON.parse(responseText)
+        } catch {
+            return responseText
+        }
+    } catch {
+        console.error("Uventet feil ved henting av tekst fra response.")
+        return { data: "no data received" }
+    }
+}
