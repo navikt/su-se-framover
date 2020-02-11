@@ -184,27 +184,29 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 	}
 
 	function søkerHarInntekt(){
-		if(state.hardupensjon === "true" || state.arbeidselleranneninntekt === "true"){
-			let beløp = 0;
+		let beløp = 0;
 
-			if(state.arbeidselleranneninntektBegrunnelse !== ''){
+		if(state.arbeidselleranneninntekt === "true"){
+			if(state.arbeidselleranneninntektBegrunnelse !== undefined && state.arbeidselleranneninntektBegrunnelse.length >= 1){
 				beløp += parseInt(state.arbeidselleranneninntektBegrunnelse)
 			}
+		}
 
+		if(state.hardupensjon === "true"){
 			beløp +=  adderInntekter(state.pensjonsOrdning
 				.map(item => parseInt(item.beløp,10))
 				.filter(item => ! isNaN(item))
 			)
-
-			return (
-				<Undertittel>Sum Inntekt: {
-					beløp
-				}
-				<hr />
-				</Undertittel>
-
-			)
 		}
+
+		return (
+			<Undertittel>Sum Inntekt: {
+				beløp
+			}
+				<hr />
+			</Undertittel>
+
+		)
 	}
 
     return (
@@ -385,7 +387,6 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 		tempErrors.push(...arbeidsBeløpValidering(formValues))
 		tempErrors.push(...pensjonValidering(formValues))
 		tempErrors.push(...pensjonsOrdningValidering(formValues, pensjonsOrdningErrors))
-		tempErrors.push(...sumInntektValidering(formValues))
 		tempErrors.push(...finansformueValidering(formValues))
 		tempErrors.push(...formueValidering(formValues))
 		tempErrors.push(...formueBeløpValidering(formValues))

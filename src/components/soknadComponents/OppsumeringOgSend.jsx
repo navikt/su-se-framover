@@ -29,14 +29,13 @@ const OppsumeringOgSend = ({state, config}) => {
             <Hovedknapp onClick={sendSøknad} disabled={postData.url !== undefined}>Send søknad</Hovedknapp>
             &nbsp;
             {
-                status === 200 &&
+                status === 201 &&
                 <Kvittering />
             }
             { failed && <p style={{marginTop: "1em"}}>{failed}</p> }
         </div>
     )
 }
-
 
 export default OppsumeringOgSend
 

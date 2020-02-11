@@ -18,12 +18,12 @@ import 'nav-frontend-tabell-style';
 import './Root.less'
 import {
   BrowserRouter as Router,
+    Link,
   Switch,
   Route,
   useLocation,
   useHistory
 } from "react-router-dom";
-
 
 const Root = () => {
     const { config } = useConfig();
@@ -42,7 +42,6 @@ const Root = () => {
             )
         }))
     }
-
 
     useEffect(() =>{
         console.log(state)
@@ -179,10 +178,6 @@ function InntektsTabell({inntekt}){
   }
 }
 
-const søkeboksStyle = {
-    marginLeft: '1em'
-}
-
 function Søkeboks({config}){
     const identSearch = useRef(null)
     const fomDato = useRef(null)
@@ -263,19 +258,19 @@ function Venstremeny(){
 		<table>
 			<tbody>
 				<tr>
-					<td><a href="/" className="knapp" style={VenstremenyStyle}>Hjem</a></td>
+					<td><Link to="/" className="knapp" style={VenstremenyStyle}>Hjem</Link></td>
 				</tr>
 				<tr>
-					<td><a href="/soknad" className="knapp" style={VenstremenyStyle}>Søknad</a></td>
+					<td><Link to="/soknad" className="knapp" style={VenstremenyStyle}>Søknad</Link></td>
 				</tr>
 				<tr>
-					<td><a href="/saker" className="knapp" style={VenstremenyStyle}>Saker</a></td>
+					<td><Link to="/saker" className="knapp" style={VenstremenyStyle}>Saker</Link></td>
 				</tr>
 				<tr>
-					<td><a href="/vilkarsprov" className="knapp" style={VenstremenyStyle}>Vilkårsprøving</a></td>
+					<td><Link to="/vilkarsprov" className="knapp" style={VenstremenyStyle}>Vilkårsprøving</Link></td>
 				</tr>
 				<tr>
-					<td><a href="/Beregning" className="knapp" style={VenstremenyStyle}>Beregning</a></td>
+					<td><Link to="/Beregning" className="knapp" style={VenstremenyStyle}>Beregning</Link></td>
 				</tr>
 			</tbody>
 		</table>
