@@ -55,7 +55,7 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
                                             <div style={{marginRight: '1em'}}>
                                                 <label className="skjemaelement__label">Utreisedato</label>
                                                 <Datovelger.Datovelger
-                                                    input={{placeholder: "dd.mm.ååå" }}
+                                                    input={{placeholder: "dd.mm.åååå", id: `${index}-utreisedato`}}
                                                     valgtDato={item.utreisedato}
                                                     onChange={value => utenlandsoppholdUtreisedato(value, index)}
                                                 />
@@ -63,7 +63,7 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
                                             <div style={{marginRight: '1em'}}>
                                                 <label className="skjemaelement__label">Innreisedato</label>
                                                 <Datovelger.Datovelger
-                                                    input={{placeholder: "dd.mm.åååå" }}
+                                                    input={{placeholder: "dd.mm.åååå", id: `${index}-innreisedato`}}
                                                     valgtDato={item.innreisedato}
                                                     onChange={value => utenlandsoppholdInnreisedato(value, index)}
                                                 />
@@ -71,7 +71,7 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
                                             {
                                                 state.utenlandsoppholdArray.length > 1 &&
                                                 <Lenke type="button" style={fjernInnputKnappStyle}
-                                                       onClick={() => fjernValgtInputFelt(state.utenlandsoppholdArray, "planlagtUtenlandsoppholdArray", index)}
+                                                       onClick={() => fjernValgtInputFelt(state.utenlandsoppholdArray, "utenlandsoppholdArray", index)}
                                                 >Fjern felt</Lenke>
                                             }
                                         </div>
@@ -124,7 +124,7 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
                                                 <div style={{marginRight: '1em'}}>
                                                     <label className="skjemaelement__label">Utreisedato</label>
                                                     <Datovelger.Datovelger
-                                                        input={{placeholder: "dd.mm.ååå" }}
+                                                        input={{placeholder: "dd.mm.åååå", id: `${index}-planlagtUtreisedato`}}
                                                         valgtDato={item.planlagtUtreisedato}
                                                         onChange={value => planlagtUtenlandsoppholdUtreisedato(value, index)}
                                                     />
@@ -132,7 +132,7 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
                                                 <div style={{marginRight: '1em'}}>
                                                     <label className="skjemaelement__label">Innreisedato</label>
                                                     <Datovelger.Datovelger
-                                                        input={{placeholder: "dd.mm.åååå" }}
+                                                        input={{placeholder: "dd.mm.åååå", id: `${index}-planlagtInnreisedato`}}
                                                         valgtDato={item.planlagtInnreisedato}
                                                         onChange={value => planlagtUtenlandsoppholdInnreisedato(value, index)}
                                                     />
@@ -263,12 +263,12 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
                     if (item.innreisedato === "" || item.innreisedato === undefined) {
                         errorsArray.push({
                             skjemaelementId: `${index}-innreisedato`,
-                            feilmelding: "Innreisedato må være ikke være tom. Den må være i formed dd/mm/yy"
+                            feilmelding: "Innreisedato må være ikke være tom. Den må være i formed dd.mm.åååå"
                         })
                     } else {
                         errorsArray.push({
                             skjemaelementId: `${index}-innreisedato`,
-                            feilmelding: "Innreisedato må være en dato i formen dd/mm/yy"
+                            feilmelding: "Innreisedato må være en dato i formen dd.mm.åååå"
                         })
                     }
                 }
@@ -300,7 +300,7 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
                         if(item.planlagtUtreisedato === "" || item.planlagtUtreisedato === undefined){
                             errorsArray.push({
                                 skjemaelementId: `${index}-planlagtUtreisedato`,
-                                feilmelding: "Planlagt utreisedato må være ikke være tom. Den må være i formed dd/mm/yy"})
+                                feilmelding: "Planlagt utreisedato må være ikke være tom. Den må være i formed dd.mm.åååå"})
                         }else{
                             errorsArray.push({
                                 skjemaelementId: `${index}-planlagtUtreisedato`,
@@ -311,7 +311,7 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
                     if (item.planlagtInnreisedato === "" || item.planlagtInnreisedato === undefined) {
                         errorsArray.push({
                             skjemaelementId: `${index}-planlagtInnreisedato`,
-                            feilmelding: "Planlagt Innreise må være ikke være tom. Den må være i formed dd/mm/yy"
+                            feilmelding: "Planlagt Innreise må være ikke være tom. Den må være i formed dd.mm.åååå"
                         })
                     } else {
                         errorsArray.push({
