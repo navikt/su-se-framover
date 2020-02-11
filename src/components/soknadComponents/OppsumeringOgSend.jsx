@@ -6,7 +6,7 @@ import {usePost} from "../usePost";
 const OppsumeringOgSend = ({state, config}) => {
 
     const [postData, setPostData] = useState({url: undefined})
-    const {status} = usePost(postData)
+    const {status, failed} = usePost(postData)
 
     const  Kvittering = () => {
         return (
@@ -19,7 +19,7 @@ const OppsumeringOgSend = ({state, config}) => {
     function sendSøknad(){
         console.log("Sender søknad")
         console.log(state)
-        setPostData({url: config.suSeBakoverUrl+"/person", data: state})
+        setPostData({url: config.suSeBakoverUrl+"/soknad", data: state})
     }
 
     return (
@@ -32,6 +32,7 @@ const OppsumeringOgSend = ({state, config}) => {
                 status === 200 &&
                 <Kvittering />
             }
+            { failed && <p style={{marginTop: "1em"}}>{failed}</p> }
         </div>
     )
 }

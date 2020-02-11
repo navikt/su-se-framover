@@ -11,9 +11,12 @@ export const usePost = ({url, data}) => {
             try {
                 setState({isFetching: true});
                 const fetchConfig = {method: 'post', body: JSON.stringify(data)};
-                if (accessToken !== undefined) {
-                    fetchConfig.headers = { 'Authorization': `Bearer ${accessToken}` };
+                if (accessToken === undefined) {
+                    setState({isFetching: false, failed: "Innloggingen er ikke lenger gyldig. Gå til 'HJEM' for å logge inn på nytt."})
+                    return
                 }
+                fetchConfig.headers = { 'Authorization': `Bearer ${accessToken}` };
+                fetchConfig.headers["Content-Type"] = "application/json"
                 const response = await fetch(url, fetchConfig);
                 if (response.status == 401) {
                     setState({isFetching: false, status: response.status, headers: response.headers});
