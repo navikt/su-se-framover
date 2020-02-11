@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Hovedknapp} from "nav-frontend-knapper";
-import { AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import AlertStripe from 'nav-frontend-alertstriper';
 import {usePost} from "../usePost";
 
 const OppsumeringOgSend = ({state, config}) => {
@@ -8,10 +8,10 @@ const OppsumeringOgSend = ({state, config}) => {
     const [postData, setPostData] = useState({url: undefined})
     const {status, failed} = usePost(postData)
 
-    const  Kvittering = () => {
+    const  Kvittering = ({type, melding}) => {
         return (
             <div style={{margin: '0.5em 0', display: 'flex'}}>
-                <AlertStripeSuksess type="suksess">Søknaden ble sendt. Takk!</AlertStripeSuksess>
+                <AlertStripe type={type}>{melding}</AlertStripe>
             </div>
         )
     }
@@ -27,12 +27,13 @@ const OppsumeringOgSend = ({state, config}) => {
             <p>Oppsumerings side</p>
             <p>Trykk på send for å sende</p>
             <Hovedknapp onClick={sendSøknad} disabled={postData.url !== undefined}>Send søknad</Hovedknapp>
-            &nbsp;
             {
                 status === 201 &&
-                <Kvittering />
+                <Kvittering type={"suksess"} melding={"Søknad er sent! Takk!"}/> ||
+                status === 401 &&
+                <Kvittering type="advarsel" melding="Du må logge inn på nytt!" /> ||
+                failed && <Kvittering type="advarsel" melding={failed} />
             }
-            { failed && <p style={{marginTop: "1em"}}>{failed}</p> }
         </div>
     )
 }
