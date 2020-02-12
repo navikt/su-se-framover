@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "description": "Frontend for saksbehandlingsstøtteverktøy for supplerende stønad",
   "scripts": {
-    "eslint": "eslint src --ext .js --ext .jsx",
+    "eslint": "eslint --fix src --ext .js --ext .jsx",
     "test": "jest",
     "tdd": "jest --watch",
     "start-no-browser": "npm run inject_local_config && parcel src/index.html",
     "start": "npm run start-no-browser -- --open",
     "build": "npm run clean:dist && npm run test && parcel build src/index.html --out-dir dist/ --no-source-maps",
     "inject_local_config": "cp config.dev.json dist/config.json",
-    "clean:dist": "rimraf dist"
+    "clean:dist": "rimraf dist",
+    "prettier": "prettier --write \"src/**/*.js*\""
   },
   "husky": {
     "hooks": {
@@ -81,10 +82,13 @@
     "@babel/preset-react": "^7.8.3",
     "@testing-library/react-hooks": "^3.2.1",
     "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
     "husky": "^4.2.2",
     "jest": "^24.9.0",
     "parcel-bundler": "^1.12.4",
+    "prettier": "1.19.1",
     "react-test-renderer": "^16.12.0",
     "rimraf": "^3.0.0"
   }

@@ -4,11 +4,11 @@ import { useGet } from './useGet';
 export const useConfig = () => {
     const [url, setUrl] = useState(undefined);
     const data = useGet({ url });
-    let config
+    let config;
     if (data.data && data.isFetching == false) {
         config = data.data;
     } else {
-        !url && setUrl("/config.json");
+        !url && setUrl('/config.json');
     }
     return { config };
 };
