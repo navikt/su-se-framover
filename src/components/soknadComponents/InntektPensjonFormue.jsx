@@ -37,19 +37,16 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
         }
     }
 
-    function personHarFormue() {
-        if (state.harduformueeiendom === 'true' || state.hardufinansformue === 'true') {
-            return (
-                <InputFields
-                    labelText="Total beløp formue: "
-                    id={fields.formueBeløp.htmlId}
-                    bredde="M"
-                    value={state.formueBeløp || ''}
-                    onChange={updateFunction('formueBeløp')}
-                />
-            );
-        }
-    }
+    const TotalbeløpFormue = () =>
+        (state.harduformueeiendom === 'true' || state.hardufinansformue === 'true') && (
+            <InputFields
+                labelText="Totalbeløp formue: "
+                id={fields.formueBeløp.htmlId}
+                bredde="M"
+                value={state.formueBeløp || ''}
+                onChange={updateFunction('formueBeløp')}
+            />
+        );
 
     function harAnnenFormueEiendom() {
         if (state.harduannenformueeiendom === 'true') {
@@ -333,7 +330,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                         />
                     </RadioGruppe>
                 </div>
-                {personHarFormue()}
+                <TotalbeløpFormue />
                 <div>
                     <RadioGruppe legend="Har du annen formue/eiendom?">
                         <Radio
@@ -593,7 +590,7 @@ function formueBeløpValidering(formValues) {
 
     if (formValues.harduformueeiendom === 'true' || formValues.hardufinansformue === 'true') {
         if (!/^(\d{1,30})$/.test(formueBeløp) || formueBeløp === undefined) {
-            feilmelding += 'Vennligst tast inn total formue beløp';
+            feilmelding += 'Vennligst tast inn totalbeløp for formue';
 
             if (feilmelding.length > 0) {
                 return [{ skjemaelementId: fields.formueBeløp.htmlId, feilmelding }];
