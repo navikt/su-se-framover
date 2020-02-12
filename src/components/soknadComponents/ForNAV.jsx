@@ -9,13 +9,6 @@ const ForNAV = ({ state, updateField, onClick }) => {
 
     const updateFunction = name => value => updateField(name, value);
 
-    const fields = {
-        målform: { label: 'målform', htmlId: 'målform' },
-        møttPersonlig: { label: 'møttPersonlig', htmlId: 'møttPersonlig' },
-        fullmektigMøtt: { label: 'fullmektigMøtt', htmlId: 'fullmektigMøtt' },
-        passSjekket: { label: 'passSjekket', htmlId: 'passSjekket' }
-    };
-
     return (
         <div>
             <div>
@@ -149,79 +142,90 @@ const ForNAV = ({ state, updateField, onClick }) => {
             onClick();
         }
     }
-
-    function validateFormValues(formValues) {
-        const tempErrors = [];
-
-        tempErrors.push(...målformValidering(formValues));
-        tempErrors.push(...møttPersonligValidering(formValues));
-        tempErrors.push(...fullmektigMøttValidering(formValues));
-        tempErrors.push(...passSjekketValidering(formValues));
-
-        return tempErrors;
-    }
-
-    function målformValidering(formValues) {
-        const målform = formValues.maalform;
-        let feilmelding = '';
-
-        if (målform === undefined) {
-            feilmelding += 'Vennligst velg målform';
-        }
-        if (feilmelding.length > 0) {
-            return [{ skjemaelementId: fields.målform.htmlId, feilmelding }];
-        }
-        return [];
-    }
-
-    function møttPersonligValidering(formValues) {
-        const personligmote = formValues.personligmote;
-        let feilmelding = '';
-
-        if (personligmote === undefined) {
-            feilmelding += 'Vennligst velg om søker har møtt personlig';
-        }
-        if (feilmelding.length > 0) {
-            return [
-                { skjemaelementId: fields.møttPersonlig.htmlId, feilmelding }
-            ];
-        }
-        return [];
-    }
-
-    function fullmektigMøttValidering(formValues) {
-        const fullmektigmote = formValues.fullmektigmote;
-        let feilmelding = '';
-
-        if (fullmektigmote === undefined) {
-            feilmelding += 'Vennligst velg om fullmektig har møtt';
-        }
-        if (feilmelding.length > 0) {
-            return [
-                { skjemaelementId: fields.fullmektigMøtt.htmlId, feilmelding }
-            ];
-        }
-        return [];
-    }
-
-    function passSjekketValidering(formValues) {
-        const passsjekk = formValues.passsjekk;
-        let feilmelding = '';
-
-        if (passsjekk === undefined) {
-            feilmelding += 'Vennligst velg om pass er sjekket';
-        }
-        if (feilmelding.length > 0) {
-            return [
-                { skjemaelementId: fields.passSjekket.htmlId, feilmelding }
-            ];
-        }
-        return [];
-    }
 };
+
+const fields = {
+    målform: { label: 'målform', htmlId: 'målform' },
+    møttPersonlig: { label: 'møttPersonlig', htmlId: 'møttPersonlig' },
+    fullmektigMøtt: { label: 'fullmektigMøtt', htmlId: 'fullmektigMøtt' },
+    passSjekket: { label: 'passSjekket', htmlId: 'passSjekket' }
+};
+
+function validateFormValues(formValues) {
+    const tempErrors = [];
+
+    tempErrors.push(...målformValidering(formValues));
+    tempErrors.push(...møttPersonligValidering(formValues));
+    tempErrors.push(...fullmektigMøttValidering(formValues));
+    tempErrors.push(...passSjekketValidering(formValues));
+
+    return tempErrors;
+}
+
+function målformValidering(formValues) {
+    const målform = formValues.maalform;
+    let feilmelding = '';
+
+    if (målform === undefined) {
+        feilmelding += 'Vennligst velg målform';
+    }
+    if (feilmelding.length > 0) {
+        return [{ skjemaelementId: fields.målform.htmlId, feilmelding }];
+    }
+    return [];
+}
+
+function møttPersonligValidering(formValues) {
+    const personligmote = formValues.personligmote;
+    let feilmelding = '';
+
+    if (personligmote === undefined) {
+        feilmelding += 'Vennligst velg om søker har møtt personlig';
+    }
+    if (feilmelding.length > 0) {
+        return [
+            { skjemaelementId: fields.møttPersonlig.htmlId, feilmelding }
+        ];
+    }
+    return [];
+}
+
+function fullmektigMøttValidering(formValues) {
+    const fullmektigmote = formValues.fullmektigmote;
+    let feilmelding = '';
+
+    if (fullmektigmote === undefined) {
+        feilmelding += 'Vennligst velg om fullmektig har møtt';
+    }
+    if (feilmelding.length > 0) {
+        return [
+            { skjemaelementId: fields.fullmektigMøtt.htmlId, feilmelding }
+        ];
+    }
+    return [];
+}
+
+function passSjekketValidering(formValues) {
+    const passsjekk = formValues.passsjekk;
+    let feilmelding = '';
+
+    if (passsjekk === undefined) {
+        feilmelding += 'Vennligst velg om pass er sjekket';
+    }
+    if (feilmelding.length > 0) {
+        return [
+            { skjemaelementId: fields.passSjekket.htmlId, feilmelding }
+        ];
+    }
+    return [];
+}
 
 const container = {
     display: 'flex'
 };
+
+export const validateForNAV = {
+    validateFormValues
+}
 
 export default ForNAV;

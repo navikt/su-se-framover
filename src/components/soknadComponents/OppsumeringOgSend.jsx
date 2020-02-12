@@ -8,6 +8,8 @@ import { validateBoforhold } from './Boforhold';
 import { validateUtenlandsopphold } from './Utenlandsopphold';
 import { validateOppholdstillatelse } from './Oppholdstillatelse';
 import { validateInntektPensjonFormue } from './InntektPensjonFormue';
+import { validateForNAV } from './ForNAV';
+
 
 const OppsumeringOgSend = ({ state, config }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -30,12 +32,12 @@ const OppsumeringOgSend = ({ state, config }) => {
             ).length > 0
         ) {
             errors.push(
-                'Det er feil i Personopplysninger (side 1). Vennligst fiks feilen'
+                'Det er feil i Personopplysninger (side 1)'
             );
         }
         if (validateBoforhold.validateFormValues(state.boforhold).length > 0) {
             errors.push(
-                'Det er feil i Boforhold (side 2). Vennligst fiks feilen'
+                'Det er feil i Boforhold (side 2)'
             );
         }
         if (
@@ -43,7 +45,7 @@ const OppsumeringOgSend = ({ state, config }) => {
                 .length > 0
         ) {
             errors.push(
-                'Det er feil i Utenlandsopphold (side 3). Vennligst fiks feilen'
+                'Det er feil i Utenlandsopphold (side 3)'
             );
         }
         if (
@@ -52,19 +54,23 @@ const OppsumeringOgSend = ({ state, config }) => {
             ).length > 0
         ) {
             errors.push(
-                'Det er feil i Oppholdstillatelse (side 4). Vennligst fiks feilen'
+                'Det er feil i Oppholdstillatelse (side 4)'
             );
         }
+
         if (
             validateInntektPensjonFormue.validateFormValues(
                 state.inntektPensjonFormue
             ).length > 0
         ) {
             errors.push(
-                'Det er feil i Inntekt, pensjon, og formue (side 5). Vennligst fiks feilen'
+                'Det er feil i Inntekt, pensjon, og formue (side 5)'
             );
         }
 
+        if (validateForNAV.validateFormValues(state.forNAV).length > 0) {
+            errors.push('Det er feil i For NAV (side 6)');
+        }
         return errors;
     }
 
