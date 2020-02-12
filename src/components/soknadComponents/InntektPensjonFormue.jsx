@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
+import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import { InputFields, JaNeiSpørsmål } from '../FormElements';
 import Lenke from 'nav-frontend-lenker';
@@ -56,7 +56,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                         .map((item, index) => ({ ...item, key: index }))
                         .map((item, index) => {
                             return (
-                                <div key={item.key} style={container}>
+                                <div key={item.key} style={{ display: 'flex' }}>
                                     <InputFields
                                         labelText="Type formue/eiendom"
                                         id={`${item.key}-typeFormue`}
@@ -64,7 +64,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                                         onChange={value => updateFormueEiendomType(value, index)}
                                     />
                                     <InputFields
-                                        labelText="skattetakst"
+                                        labelText="Skattetakst"
                                         id={`${item.key}-skattetakst`}
                                         value={item.skattetakst}
                                         onChange={value => updateFormueEiendomSkattetakst(value, index)}
@@ -167,7 +167,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                         .map((item, index) => ({ ...item, key: index }))
                         .map((item, index) => {
                             return (
-                                <div key={item.key} style={container}>
+                                <div key={item.key} style={{ display: 'flex' }}>
                                     <InputFields
                                         id={`${item.key}-ordning`}
                                         labelText={'Fra hvilken ordning mottar søker pensjon?'}
@@ -228,6 +228,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     return (
         <div>
             <Systemtittel>Pensjon og annen inntekt</Systemtittel>
+
             <JaNeiSpørsmål
                 fieldName="kravannenytelse"
                 legend="Har du fremsatt krav om annen norsk eller utenlandsk ytelse/pensjon som ikke er avgjort?"
@@ -236,129 +237,65 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
             />
             {kravannenytelseInput()}
 
-            <div style={{ marginBottom: '1em' }}>
-                <div>
-                    <RadioGruppe legend="Har du arbeidsinntekt/personinntekt?">
-                        <Radio
-                            name="arbeidselleranneninntekt"
-                            label="Ja"
-                            value="true"
-                            checked={state.arbeidselleranneninntekt === 'true'}
-                            onChange={e => updateField('arbeidselleranneninntekt', e.target.value)}
-                        />
-                        <Radio
-                            name="arbeidselleranneninntekt"
-                            label="Nei"
-                            value="false"
-                            checked={state.arbeidselleranneninntekt === 'false'}
-                            onChange={e => updateField('arbeidselleranneninntekt', e.target.value)}
-                        />
-                    </RadioGruppe>
-                    {arbeidselleranneninntektInput()}
-                </div>
-                <div>
-                    <RadioGruppe legend="Har du pensjon?">
-                        <Radio
-                            name="hardupensjon"
-                            label="Ja"
-                            value="true"
-                            checked={state.hardupensjon === 'true'}
-                            onChange={e => updateField('hardupensjon', e.target.value)}
-                        />
-                        <Radio
-                            name="hardupensjon"
-                            label="Nei"
-                            value="false"
-                            checked={state.hardupensjon === 'false'}
-                            onChange={e => updateField('hardupensjon', e.target.value)}
-                        />
-                    </RadioGruppe>
+            <JaNeiSpørsmål
+                fieldName="arbeidselleranneninntekt"
+                legend="Har du arbeidsinntekt/personinntekt?"
+                onChange={e => updateField('arbeidselleranneninntekt', e.target.value)}
+                state={state.arbeidselleranneninntekt}
+            />
 
-                    {søkerHarPensjon()}
-                </div>
-                {søkerHarInntekt()}
-            </div>
+            {arbeidselleranneninntektInput()}
+
+            <JaNeiSpørsmål
+                fieldName="hardupensjon"
+                legend="Har du pensjon?"
+                onChange={e => updateField('hardupensjon', e.target.value)}
+                state={state.hardupensjon}
+            />
+
+            {søkerHarPensjon()}
+
+            <div style={{ marginBottom: '1em' }}>{søkerHarInntekt()}</div>
 
             {/* <Systemtittel>Pensjon og annen inntekt for ektefelle/samboer</Systemtittel>
             TODO */}
             <div>
                 <Systemtittel>Opplysninger om formue</Systemtittel>
-                <div style={container}>
-                    <RadioGruppe legend="Har du formue/eiendom?">
-                        <Radio
-                            name="harduformueeiendom"
-                            label="Ja"
-                            value="true"
-                            checked={state.harduformueeiendom === 'true'}
-                            onChange={e => updateField('harduformueeiendom', e.target.value)}
-                        />
-                        <Radio
-                            name="harduformueeiendom"
-                            label="Nei"
-                            value="false"
-                            checked={state.harduformueeiendom === 'false'}
-                            onChange={e => updateField('harduformueeiendom', e.target.value)}
-                        />
-                    </RadioGruppe>
-                    &nbsp;
-                    <RadioGruppe legend="Har du finansformue?">
-                        <Radio
-                            name="hardufinansformue"
-                            label="Ja"
-                            value="true"
-                            checked={state.hardufinansformue === 'true'}
-                            onChange={e => updateField('hardufinansformue', e.target.value)}
-                        />
-                        <Radio
-                            name="hardufinansformue"
-                            label="Nei"
-                            value="false"
-                            checked={state.hardufinansformue === 'false'}
-                            onChange={e => updateField('hardufinansformue', e.target.value)}
-                        />
-                    </RadioGruppe>
+                <div style={formueContainer}>
+                    <JaNeiSpørsmål
+                        legend="Har du formue/eiendom?"
+                        fieldName="harduformueeiendom"
+                        onChange={e => updateField('harduformueeiendom', e.target.value)}
+                        state={state.harduformueeiendom}
+                    />
+                    <JaNeiSpørsmål
+                        legend="Har du finansformue?"
+                        fieldName="hardufinansformue"
+                        onChange={e => updateField('hardufinansformue', e.target.value)}
+                        state={state.hardufinansformue}
+                    />
                 </div>
+                <JaNeiSpørsmål
+                    legend="Har du annen formue/eiendom?"
+                    fieldName="harduannenformueeiendom"
+                    onChange={e => updateField('harduannenformueeiendom', e.target.value)}
+                    state={state.harduannenformueeiendom}
+                />
+
                 <TotalbeløpFormue />
-                <div>
-                    <RadioGruppe legend="Har du annen formue/eiendom?">
-                        <Radio
-                            name="harduannenformueeiendom"
-                            label="Ja"
-                            value="true"
-                            checked={state.harduannenformueeiendom === 'true'}
-                            onChange={e => updateField('harduannenformueeiendom', e.target.value)}
-                        />
-                        <Radio
-                            name="harduannenformueeiendom"
-                            label="Nei"
-                            value="false"
-                            checked={state.harduannenformueeiendom === 'false'}
-                            onChange={e => updateField('harduannenformueeiendom', e.target.value)}
-                        />
-                    </RadioGruppe>
-                    {harAnnenFormueEiendom()}
-                </div>
+
+                {harAnnenFormueEiendom()}
+
                 {/*tilsvarende spørsmål for ektefelle/samboer/partner/etc. */}
             </div>
-            <div>
-                <Systemtittel>Opplysninger om økonomisk sosialhjelp</Systemtittel>
-                <RadioGruppe legend="Mottar du eller ektefellen/samboer eller har du eller han/hun i løpet av de siste tre månedene mottatt sosialstønad til livsopphold?">
-                    <Radio
-                        name="sosialstonad"
-                        label="Ja"
-                        value="true"
-                        checked={state.sosialstonad === 'true'}
-                        onChange={e => updateField('sosialstonad', e.target.value)}
-                    />
-                    <Radio
-                        name="sosialstonad"
-                        label="Nei"
-                        value="false"
-                        checked={state.sosialstonad === 'false'}
-                        onChange={e => updateField('sosialstonad', e.target.value)}
-                    />
-                </RadioGruppe>
-            </div>
+            <Systemtittel>Opplysninger om økonomisk sosialhjelp</Systemtittel>
+            <JaNeiSpørsmål
+                legend="Mottar du eller ektefellen/samboer eller har du eller han/hun i løpet av de siste tre månedene mottatt sosialstønad til livsopphold?"
+                fieldName="sosialstonad"
+                onChange={e => updateField('sosialstonad', e.target.value)}
+                state={state.sosialstonad}
+            />
+
             {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
@@ -637,8 +574,9 @@ function sosialStønadValidering(formValues) {
     return [];
 }
 
-const container = {
-    display: 'flex'
+const formueContainer = {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr'
 };
 
 const fjernInnputKnappStyle = {
