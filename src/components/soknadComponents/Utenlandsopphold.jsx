@@ -249,7 +249,7 @@ function utenlandsoppholdFelterValidering(formValues, errorsArray){
 
     if(formValues.utenlandsopphold === "true"){
         tempUtenlandsoppholdArray.map((item, index) => {
-            if(!/^\d{4}\-\d{2}\-\d{2}$/.test(item.utreisedato)){
+            if(!/^\d{4}-\d{2}-\d{2}$/.test(item.utreisedato)){
                 if(item.utreisedato === "" || item.utreisedato === undefined){
                     errorsArray.push({
                         skjemaelementId: `${index}-utreisedato`,
@@ -260,7 +260,7 @@ function utenlandsoppholdFelterValidering(formValues, errorsArray){
                         feilmelding: "Utreisedato må være en dato i formen dd/mm/yy"})
                 }
             }
-            if(!/^\d{4}\-\d{2}\-\d{2}$/.test(item.innreisedato)) {
+            if(!/^\d{4}-\d{2}-\d{2}$/.test(item.innreisedato)) {
                 if (item.innreisedato === "" || item.innreisedato === undefined) {
                     errorsArray.push({
                         skjemaelementId: `${index}-innreisedato`,
@@ -297,7 +297,7 @@ function planlagtUtenlandsoppholdFelterValidering(formValues, errorsArray){
 
     if(formValues.planlagtUtenlandsopphold === "true"){
         tempPlanlagtUtenlandsoppholdArray.map((item, index) => {
-            if(!/^\d{4}\-\d{2}\-\d{2}$/.test(item.planlagtUtreisedato)){
+            if(!/^\d{4}-\d{2}-\d{2}$/.test(item.planlagtUtreisedato)){
                 if(item.planlagtUtreisedato === "" || item.planlagtUtreisedato === undefined){
                     errorsArray.push({
                         skjemaelementId: `${index}-planlagtUtreisedato`,
@@ -308,7 +308,7 @@ function planlagtUtenlandsoppholdFelterValidering(formValues, errorsArray){
                         feilmelding: "Planlagt utreisedato må være en dato i formen dd/mm/yy"})
                 }
             }
-            if(!/^\d{4}\-\d{2}\-\d{2}$/.test(item.planlagtInnreisedato)) {
+            if(!/^\d{4}-\d{2}-\d{2}$/.test(item.planlagtInnreisedato)) {
                 if (item.planlagtInnreisedato === "" || item.planlagtInnreisedato === undefined) {
                     errorsArray.push({
                         skjemaelementId: `${index}-planlagtInnreisedato`,

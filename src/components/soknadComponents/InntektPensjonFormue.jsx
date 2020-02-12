@@ -10,19 +10,6 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
 
     const [feilmeldinger, setFeilmeldinger] = useState([])
 
-    const fields = {kravannenytelse: {label: 'kravannenytelse', htmlId: 'kravannenytelse'},
-                    kravannenytelseBegrunnelse: {label: 'kravannenytelseBegrunnelse', htmlId: 'kravannenytelseBegrunnelse'},
-                    arbeidselleranneninntekt:{label: 'arbeidselleranneninntekt', htmlId: 'arbeidselleranneninntekt'},
-                    arbeidsBeløp: {label: 'arbeidsBeløp', htmlId: 'arbeidsBeløp'},
-                    pensjon: {label: 'pensjon', htmlId: 'pensjon'},
-                    formue: {label: 'formue', htmlId: 'formue'},
-                    finansformue: {label: 'finansformue', htmlId: 'finansformue'},
-                    formueBeløp: {label: 'formueBeløp', htmlId: 'formueBeløp'},
-                    typeFormue: {label: 'typeFormue', htmlId: 'typeFormue'},
-                    skattetakst: {label: 'skattetakst', htmlId: 'skattetakst'},
-                    sosialstonad: {label: 'sosialstonad', htmlId: 'sosialstonad'}
-    }
-
     const updateFunction = name => value => updateField(name, value)
 
     function kravannenytelseInput(){
@@ -377,6 +364,19 @@ const InntektPensjonFormue = ({state, updateField, onClick}) => {
         }
     }
 
+}
+
+const fields = {kravannenytelse: {label: 'kravannenytelse', htmlId: 'kravannenytelse'},
+    kravannenytelseBegrunnelse: {label: 'kravannenytelseBegrunnelse', htmlId: 'kravannenytelseBegrunnelse'},
+    arbeidselleranneninntekt:{label: 'arbeidselleranneninntekt', htmlId: 'arbeidselleranneninntekt'},
+    arbeidsBeløp: {label: 'arbeidsBeløp', htmlId: 'arbeidsBeløp'},
+    pensjon: {label: 'pensjon', htmlId: 'pensjon'},
+    formue: {label: 'formue', htmlId: 'formue'},
+    finansformue: {label: 'finansformue', htmlId: 'finansformue'},
+    formueBeløp: {label: 'formueBeløp', htmlId: 'formueBeløp'},
+    typeFormue: {label: 'typeFormue', htmlId: 'typeFormue'},
+    skattetakst: {label: 'skattetakst', htmlId: 'skattetakst'},
+    sosialstonad: {label: 'sosialstonad', htmlId: 'sosialstonad'}
 }
 
 function validateFormValues(formValues){

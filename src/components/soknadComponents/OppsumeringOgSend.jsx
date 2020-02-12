@@ -84,7 +84,7 @@ const SubmitFeilmeldinger = (feilmeldinger) => (
         <ul className="feiloppsummering__liste">
             {
                 feilmeldinger.map((item) => {
-                    return <li>{item}</li>
+                    return <li key={item}>{item}</li>
                 })
             }
         </ul>
