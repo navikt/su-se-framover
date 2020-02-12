@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
 import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
-import { InputFields } from '../FormElements';
+import { InputFields, JaNeiSpørsmål } from '../FormElements';
 import Lenke from 'nav-frontend-lenker';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 
@@ -228,25 +228,13 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     return (
         <div>
             <Systemtittel>Pensjon og annen inntekt</Systemtittel>
-            <div>
-                <RadioGruppe legend="Har du fremsatt krav om annen norsk eller utenlandsk ytelse/pensjon som ikke er avgjort?">
-                    <Radio
-                        name="kravannenytelse"
-                        label="Ja"
-                        value="true"
-                        checked={state.kravannenytelse === 'true'}
-                        onChange={e => updateField('kravannenytelse', e.target.value)}
-                    />
-                    <Radio
-                        name="kravannenytelse"
-                        label="Nei"
-                        value="false"
-                        checked={state.kravannenytelse === 'false'}
-                        onChange={e => updateField('kravannenytelse', e.target.value)}
-                    />
-                </RadioGruppe>
-                {kravannenytelseInput()}
-            </div>
+            <JaNeiSpørsmål
+                fieldName="kravannenytelse"
+                legend="Har du fremsatt krav om annen norsk eller utenlandsk ytelse/pensjon som ikke er avgjort?"
+                onChange={e => updateField('kravannenytelse', e.target.value)}
+                state={state.kravannenytelse}
+            />
+            {kravannenytelseInput()}
 
             <div style={{ marginBottom: '1em' }}>
                 <div>
