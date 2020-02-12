@@ -73,16 +73,16 @@ const Root = () => {
                             <Route path="/auth/complete">
                                 <AuthComplete/>
                             </Route>
-							<Route path="/soknad" >
+                            <Route path="/soknad" >
                                 <Soknad config={config}/>
                             </Route>
-							<Route path="/saker">
+                            <Route path="/saker">
                                 <Saker/>
                             </Route>
                             <Route path="/vilkarsprov">
                                 <Vilkarsprov state={state.vilkårsprøving} setState={updateVilkårsvurdering} />
                             </Route>
-							<Route path="/saksoversikt">
+                            <Route path="/saksoversikt">
                                 <Saksoversikt />
                             </Route>
                             <Route path="/Beregning">
@@ -116,14 +116,14 @@ function Person({config}){
     return (
         <div>
             <Panel>
-				<Innholdstittel>Personinfo</Innholdstittel>
-				<Panel border>
-					<div><Normaltekst tag="span">Fornavn: </Normaltekst><Normaltekst tag="span">{fornavn}</Normaltekst></div>
-					<div><Normaltekst tag="span">Etternavn: </Normaltekst><Normaltekst tag="span">{etternavn}</Normaltekst></div>
-				</Panel>
-				<Inntekt config={config}/>
+                <Innholdstittel>Personinfo</Innholdstittel>
+                <Panel border>
+                    <div><Normaltekst tag="span">Fornavn: </Normaltekst><Normaltekst tag="span">{fornavn}</Normaltekst></div>
+                    <div><Normaltekst tag="span">Etternavn: </Normaltekst><Normaltekst tag="span">{etternavn}</Normaltekst></div>
+                </Panel>
+                <Inntekt config={config}/>
             </Panel>
-       	</div>
+           </div>
     )
 }
 
@@ -132,14 +132,13 @@ function Inntekt({config}){
     const props = history.location.state
     const url = config ? config.suSeBakoverUrl + `/inntekt?ident=${props.ident}&fomDato=${props.fomDato}&tomDato=${props.tomDato}` : undefined;
     const { data } = useGet({ url });
-    const inntekt = data ? data.maanedligInntekter[0].inntekter[0].beloep : ""
     return (
-		<div>
-			<Innholdstittel>Inntekter</Innholdstittel>
-			<Panel border>
-				<InntektsTabell inntekt={data}/>
-			</Panel>
-		</div>
+        <div>
+            <Innholdstittel>Inntekter</Innholdstittel>
+            <Panel border>
+                <InntektsTabell inntekt={data}/>
+            </Panel>
+        </div>
     )
 }
 
@@ -147,34 +146,34 @@ function InntektsTabell({inntekt}){
   if(inntekt){
     return (
       <table className="tabell">
-      	<thead>
-      		<tr>
-      			<th>Periode</th>
-      			<th>Type</th>
-      			<th>Beskrivelse</th>
-      			<th>Beløp</th>
-      		</tr>
-      	</thead>
+          <thead>
+              <tr>
+                  <th>Periode</th>
+                  <th>Type</th>
+                  <th>Beskrivelse</th>
+                  <th>Beløp</th>
+              </tr>
+          </thead>
         {inntekt.maanedligInntekter.map((alleMnd, mndIndex) => {
-        	var monthSum = 0
-        	return <tbody key={mndIndex}>
-        	{alleMnd.inntekter.map((inntektMnd, inntektIndex) => {
-        		monthSum += parseInt(inntektMnd.beloep);
-        		return <tr key={inntektIndex}>
-        		<td>{inntektIndex === 0 ? alleMnd.gjeldendeMaaned : ""}</td>
-        		<td>{inntektMnd.type}</td>
-        		<td>{inntektMnd.beskrivelse.toUpperCase()}</td>
-        		<td>{inntektMnd.beloep}</td>
-        		</tr>
-        	})}
-        	<tr><td/><td/><td>SUM</td><td>{monthSum}</td></tr>
-        	</tbody>
+            var monthSum = 0
+            return <tbody key={mndIndex}>
+            {alleMnd.inntekter.map((inntektMnd, inntektIndex) => {
+                monthSum += parseInt(inntektMnd.beloep);
+                return <tr key={inntektIndex}>
+                <td>{inntektIndex === 0 ? alleMnd.gjeldendeMaaned : ""}</td>
+                <td>{inntektMnd.type}</td>
+                <td>{inntektMnd.beskrivelse.toUpperCase()}</td>
+                <td>{inntektMnd.beloep}</td>
+                </tr>
+            })}
+            <tr><td/><td/><td>SUM</td><td>{monthSum}</td></tr>
+            </tbody>
 
         })}
       </table>
     )
   } else {
-  	return ("")
+      return ("")
   }
 }
 
@@ -210,12 +209,12 @@ function Søkeboks({config}){
 
     return (
         <>
-        	<input placeholder="FNR" ref={identSearch} type="text" onKeyDown={keyTyped} />
-			<label style={{marginLeft: "0.5em"}} htmlFor="fom">FOM:</label>
-			<input type="date" id="fom" ref={fomDato} defaultValue={new Date(new Date(new Date().setMonth(-4)).setDate(1)).toISOString().slice(0,10)}/>
-			<label style={{marginLeft: "0.5em"}} htmlFor="tom">TOM:</label>
-			<input type="date" id="tom" ref={tomDato} defaultValue={new Date().toISOString().slice(0,10)}/>
-			<Knapp style={{marginLeft: "1em"}} spinner={isFetching} onClick={() => search(identSearch.current.value)}>Søk</Knapp>
+            <input placeholder="FNR" ref={identSearch} type="text" onKeyDown={keyTyped} />
+            <label style={{marginLeft: "0.5em"}} htmlFor="fom">FOM:</label>
+            <input type="date" id="fom" ref={fomDato} defaultValue={new Date(new Date(new Date().setMonth(-4)).setDate(1)).toISOString().slice(0,10)}/>
+            <label style={{marginLeft: "0.5em"}} htmlFor="tom">TOM:</label>
+            <input type="date" id="tom" ref={tomDato} defaultValue={new Date().toISOString().slice(0,10)}/>
+            <Knapp style={{marginLeft: "1em"}} spinner={isFetching} onClick={() => search(identSearch.current.value)}>Søk</Knapp>
         </>
     )
 }
@@ -238,13 +237,13 @@ const appNameStyle = {
 function ContentWrapper({config, children}){
     return (
         <div>
-			<div style={ContentWrapperStyle}>
-				<Innholdstittel style={appNameStyle}>
-					NAV Suse
-				</Innholdstittel>
-				<Søkeboks config={config}/>
-			</div>
-			<div style={{display: 'flex'}}>
+            <div style={ContentWrapperStyle}>
+                <Innholdstittel style={appNameStyle}>
+                    NAV Suse
+                </Innholdstittel>
+                <Søkeboks config={config}/>
+            </div>
+            <div style={{display: 'flex'}}>
                 <div> <Venstremeny/></div>
                 <div> {children} </div>
             </div>
@@ -253,34 +252,34 @@ function ContentWrapper({config, children}){
 }
 
 const VenstremenyStyle = {
-	display: 'flex',
-	border: 'none'
+    display: 'flex',
+    border: 'none'
 }
 
 function Venstremeny(){
-	return (
-		<>
-		<table>
-			<tbody>
-				<tr>
-					<td><Link to="/" className="knapp" style={VenstremenyStyle}>Hjem</Link></td>
-				</tr>
-				<tr>
-					<td><Link to="/soknad" className="knapp" style={VenstremenyStyle}>Søknad</Link></td>
-				</tr>
-				<tr>
-					<td><Link to="/saker" className="knapp" style={VenstremenyStyle}>Saker</Link></td>
-				</tr>
-				<tr>
-					<td><Link to="/vilkarsprov" className="knapp" style={VenstremenyStyle}>Vilkårsprøving</Link></td>
-				</tr>
-				<tr>
-					<td><Link to="/Beregning" className="knapp" style={VenstremenyStyle}>Beregning</Link></td>
-				</tr>
-			</tbody>
-		</table>
-		</>
-	)
+    return (
+        <>
+        <table>
+            <tbody>
+                <tr>
+                    <td><Link to="/" className="knapp" style={VenstremenyStyle}>Hjem</Link></td>
+                </tr>
+                <tr>
+                    <td><Link to="/soknad" className="knapp" style={VenstremenyStyle}>Søknad</Link></td>
+                </tr>
+                <tr>
+                    <td><Link to="/saker" className="knapp" style={VenstremenyStyle}>Saker</Link></td>
+                </tr>
+                <tr>
+                    <td><Link to="/vilkarsprov" className="knapp" style={VenstremenyStyle}>Vilkårsprøving</Link></td>
+                </tr>
+                <tr>
+                    <td><Link to="/Beregning" className="knapp" style={VenstremenyStyle}>Beregning</Link></td>
+                </tr>
+            </tbody>
+        </table>
+        </>
+    )
 }
 
 function AuthComplete() {
@@ -297,4 +296,5 @@ function AuthComplete() {
     return null
 }
 
+/* eslint-disable-next-line no-undef */
 export default hot(module)(Root);

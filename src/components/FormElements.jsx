@@ -8,6 +8,7 @@ export const InputFields = ({id, style, labelText:label, value, onChange, bredde
 
 )
 
+
 const InputFieldsStyle = {
     marginRight: '1em',
 }

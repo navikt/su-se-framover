@@ -36,10 +36,10 @@ const getData = async response => {
         const responseText = await response.text()
         try {
             return JSON.parse(responseText)
-        } catch {
+        } catch(error){
             return responseText
         }
-    } catch {
+    } catch(error){
         console.error("Uventet feil ved henting av tekst fra response.")
         return { data: "no data received" }
     }
