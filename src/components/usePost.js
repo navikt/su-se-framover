@@ -16,8 +16,7 @@ export const usePost = ({ url, data }) => {
                 if (accessToken === undefined) {
                     setState({
                         isFetching: false,
-                        failed:
-                            "Innloggingen er ikke lenger gyldig. Gå til 'HJEM' for å logge inn på nytt."
+                        failed: "Innloggingen er ikke lenger gyldig. Gå til 'HJEM' for å logge inn på nytt."
                     });
                     return;
                 }

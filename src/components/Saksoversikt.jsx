@@ -44,13 +44,7 @@ function Saksoversikt() {
                                                 <td>{krav.type}</td>
                                                 <td>{krav.mottatt}</td>
                                                 <td>
-                                                    <Hovedknapp
-                                                        onClick={() =>
-                                                            history.push(
-                                                                '/vilkarsprov'
-                                                            )
-                                                        }
-                                                    >
+                                                    <Hovedknapp onClick={() => history.push('/vilkarsprov')}>
                                                         Behandle krav
                                                     </Hovedknapp>
                                                 </td>
@@ -76,13 +70,7 @@ function Saksoversikt() {
                                                 <td>{vedtak.status}</td>
                                                 <td>{vedtak.årsak}</td>
                                                 <td>
-                                                    <Hovedknapp
-                                                        onClick={() =>
-                                                            history.push(
-                                                                '/vilkarsprov'
-                                                            )
-                                                        }
-                                                    >
+                                                    <Hovedknapp onClick={() => history.push('/vilkarsprov')}>
                                                         Se vedtak
                                                     </Hovedknapp>
                                                 </td>

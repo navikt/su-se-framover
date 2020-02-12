@@ -122,14 +122,7 @@ function Saker() {
                                 <td>{sak.person.fnr}</td>
                                 <td>{sak.status}</td>
                                 <td>
-                                    <Hovedknapp
-                                        onClick={() =>
-                                            history.push(
-                                                '/saksoversikt',
-                                                saker[0]
-                                            )
-                                        }
-                                    >
+                                    <Hovedknapp onClick={() => history.push('/saksoversikt', saker[0])}>
                                         {'Behandle'}
                                     </Hovedknapp>
                                 </td>

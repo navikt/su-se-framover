@@ -18,9 +18,7 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
                         id={fields.oppholdstillatelseUtløpsdato.htmlId}
                         bredde={'S'}
                         value={state.oppholdstillatelseUtløpsdato || ''}
-                        onChange={updateFunction(
-                            'oppholdstillatelseUtløpsdato'
-                        )}
+                        onChange={updateFunction('oppholdstillatelseUtløpsdato')}
                     />
                     <RadioGruppe legend="Har du søkt om forlengelse?">
                         <Radio
@@ -28,9 +26,7 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
                             label="Ja"
                             value="true"
                             checked={state.soektforlengelse === 'true'}
-                            onChange={e =>
-                                updateField('soektforlengelse', e.target.value)
-                            }
+                            onChange={e => updateField('soektforlengelse', e.target.value)}
                         />
 
                         <Radio
@@ -38,9 +34,7 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
                             label="Nei"
                             value="false"
                             checked={state.soektforlengelse === 'false'}
-                            onChange={e =>
-                                updateField('soektforlengelse', e.target.value)
-                            }
+                            onChange={e => updateField('soektforlengelse', e.target.value)}
                         />
                     </RadioGruppe>
                 </div>
@@ -59,28 +53,19 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
                         label="Ja"
                         value="true"
                         checked={state.varigopphold === 'true'}
-                        onChange={e =>
-                            updateField('varigopphold', e.target.value)
-                        }
+                        onChange={e => updateField('varigopphold', e.target.value)}
                     />
                     <Radio
                         name="varigopphold"
                         label="Nei"
                         value="false"
                         checked={state.varigopphold === 'false'}
-                        onChange={e =>
-                            updateField('varigopphold', e.target.value)
-                        }
+                        onChange={e => updateField('varigopphold', e.target.value)}
                     />
                 </RadioGruppe>
                 <div>{midlertidigOppholdstillatelse()}</div>
             </div>
-            {feilmeldinger.length > 0 && (
-                <Feiloppsummering
-                    tittel={'Vennligst fyll ut mangler'}
-                    feil={feilmeldinger}
-                />
-            )}
+            {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
@@ -130,27 +115,20 @@ function varigOppholdstillatelseValidering(formValues) {
 }
 
 function oppholdstillatelseUtløpsdatoValidering(formValues) {
-    const oppholdstillatelseUtløpsdato =
-        formValues.oppholdstillatelseUtløpsdato;
+    const oppholdstillatelseUtløpsdato = formValues.oppholdstillatelseUtløpsdato;
     let feilmelding = '';
 
     if (formValues.varigopphold === 'false') {
         if (!/^\d{2}\/\d{2}\/\d{2}$/.test(oppholdstillatelseUtløpsdato)) {
-            if (
-                oppholdstillatelseUtløpsdato === '' ||
-                oppholdstillatelseUtløpsdato === undefined
-            ) {
-                feilmelding +=
-                    'Oppholdstillatelsens utløpsdato kan ikke være tom. Den må være i formen dd/mm/yy';
+            if (oppholdstillatelseUtløpsdato === '' || oppholdstillatelseUtløpsdato === undefined) {
+                feilmelding += 'Oppholdstillatelsens utløpsdato kan ikke være tom. Den må være i formen dd/mm/yy';
             } else {
-                feilmelding +=
-                    'Oppholdstillatelsens utløpsdato må være i formen dd/mm/yy';
+                feilmelding += 'Oppholdstillatelsens utløpsdato må være i formen dd/mm/yy';
             }
             if (feilmelding.length > 0) {
                 return [
                     {
-                        skjemaelementId:
-                            fields.oppholdstillatelseUtløpsdato.htmlId,
+                        skjemaelementId: fields.oppholdstillatelseUtløpsdato.htmlId,
                         feilmelding
                     }
                 ];
@@ -169,9 +147,7 @@ function søktforlengelseValidering(formValues) {
             feilmelding += 'Vennligst velg om søker har søkt om forlengelse';
         }
         if (feilmelding.length > 0) {
-            return [
-                { skjemaelementId: fields.soektforlengelse.htmlId, feilmelding }
-            ];
+            return [{ skjemaelementId: fields.soektforlengelse.htmlId, feilmelding }];
         }
     }
     return [];

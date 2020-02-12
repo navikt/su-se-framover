@@ -25,10 +25,7 @@ function Vilkarsprov({ state = initialState, setState }) {
     }, []);
 
     const updateField = (stateToChange, value) => {
-        const fieldData =
-            typeof value === 'boolean'
-                ? { checked: value }
-                : { begrunnelse: value };
+        const fieldData = typeof value === 'boolean' ? { checked: value } : { begrunnelse: value };
         setState(state => ({
             ...state,
             [stateToChange]: { ...state[stateToChange], ...fieldData }
@@ -78,23 +75,13 @@ function Vilkarsprov({ state = initialState, setState }) {
                             customizedDisplay={
                                 <div style={faktasjekkstyle}>
                                     <Panel border style={{ width: '50%' }}>
-                                        <Undertittel>
-                                            Infomasjon fra søknad
-                                        </Undertittel>
-                                        <Element>
-                                            Fra søknad: {soknad.flyktning}
-                                        </Element>
+                                        <Undertittel>Infomasjon fra søknad</Undertittel>
+                                        <Element>Fra søknad: {soknad.flyktning}</Element>
                                     </Panel>
                                     <Panel border style={{ width: '50%' }}>
-                                        <Undertittel>
-                                            Infomasjon fra UDI
-                                        </Undertittel>
-                                        <Element>
-                                            Status som flyktning?: Ja
-                                        </Element>
-                                        <Element>
-                                            Dato for vedtak: 01.01.2018
-                                        </Element>
+                                        <Undertittel>Infomasjon fra UDI</Undertittel>
+                                        <Element>Status som flyktning?: Ja</Element>
+                                        <Element>Dato for vedtak: 01.01.2018</Element>
                                     </Panel>
                                 </div>
                             }
@@ -123,9 +110,7 @@ function Vilkarsprov({ state = initialState, setState }) {
                         />
                         <Section
                             checkboxLabel={'§x-y Oppholdstillatelse'}
-                            sectionText={
-                                'Brukeren må ha gyldig oppholdstillatelse i riket. blah blah'
-                            }
+                            sectionText={'Brukeren må ha gyldig oppholdstillatelse i riket. blah blah'}
                             stateToChange={'oppholdstillatelse'}
                             textAreaLabel={'Begrunnelse'}
                             textAreaValue={state.oppholdstillatelse.begrunnelse}
@@ -153,9 +138,7 @@ function Vilkarsprov({ state = initialState, setState }) {
                 </Panel>
                 <div>
                     <Knapp htmlType="submit">Lagre</Knapp>
-                    <Knapp onClick={() => history.push('/beregning')}>
-                        Neste
-                    </Knapp>
+                    <Knapp onClick={() => history.push('/beregning')}>Neste</Knapp>
                 </div>
             </form>
         </div>

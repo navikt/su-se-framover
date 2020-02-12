@@ -32,11 +32,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
         const ESPnavn = { ...state.delerBoligMed[index] };
         ESPnavn.navn = navn;
 
-        const tempNavn = [
-            ...state.delerBoligMed.slice(0, index),
-            ESPnavn,
-            ...state.delerBoligMed.slice(index + 1)
-        ];
+        const tempNavn = [...state.delerBoligMed.slice(0, index), ESPnavn, ...state.delerBoligMed.slice(index + 1)];
         updateField('delerBoligMed', tempNavn);
     }
 
@@ -86,10 +82,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
         if (state.delerDuBolig === 'true') {
             return (
                 <div style={{ marginBottom: '2em' }}>
-                    <Ingress>
-                        Opplysninger om ektefellen/samboer/annen voksen person
-                        hvis dere bor sammen
-                    </Ingress>
+                    <Ingress>Opplysninger om ektefellen/samboer/annen voksen person hvis dere bor sammen</Ingress>
                     {state.delerBoligMed
                         .map((item, index) => ({ ...item, key: index }))
                         .map((item, index) => {
@@ -99,17 +92,13 @@ const Boforhold = ({ state, updateField, onClick }) => {
                                         id={`${item.key}-fødselsnummer`}
                                         labelText={'Fødselsnummer'}
                                         value={item.fødselsnummer}
-                                        onChange={value =>
-                                            oppdaterFødselsnummer(value, index)
-                                        }
+                                        onChange={value => oppdaterFødselsnummer(value, index)}
                                     />
                                     <InputFields
                                         id={`${item.key}-navn`}
                                         labelText={'Navn'}
                                         value={item.navn}
-                                        onChange={value =>
-                                            updateEPSnavn(value, index)
-                                        }
+                                        onChange={value => updateEPSnavn(value, index)}
                                     />
 
                                     {state.delerBoligMed.length > 1 && (
@@ -117,11 +106,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
                                             type="button"
                                             style={fjernInnputKnappStyle}
                                             onClick={() =>
-                                                fjernValgtInputFelt(
-                                                    state.delerBoligMed,
-                                                    'delerBoligMed',
-                                                    index
-                                                )
+                                                fjernValgtInputFelt(state.delerBoligMed, 'delerBoligMed', index)
                                             }
                                         >
                                             Fjern felt
@@ -131,9 +116,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
                             );
                         })}
                     <div>
-                        <Knapp onClick={() => addInputFields()}>
-                            Legg til flere
-                        </Knapp>
+                        <Knapp onClick={() => addInputFields()}>Legg til flere</Knapp>
                     </div>
                 </div>
             );
@@ -150,27 +133,20 @@ const Boforhold = ({ state, updateField, onClick }) => {
             <Systemtittel>Boforhold</Systemtittel>
             <div>
                 <div style={container}>
-                    <RadioGruppe
-                        legend="Deler du bolig med en annen voksen?"
-                        style={{ marginRight: '2em' }}
-                    >
+                    <RadioGruppe legend="Deler du bolig med en annen voksen?" style={{ marginRight: '2em' }}>
                         <Radio
                             name="delerDubolig"
                             label="Ja"
                             value="true"
                             checked={state.delerDuBolig === 'true'}
-                            onChange={e =>
-                                updateField('delerDuBolig', e.target.value)
-                            }
+                            onChange={e => updateField('delerDuBolig', e.target.value)}
                         />
                         <Radio
                             name="delerDubolig"
                             label="Nei"
                             value="false"
                             checked={state.delerDuBolig === 'false'}
-                            onChange={e =>
-                                updateField('delerDuBolig', e.target.value)
-                            }
+                            onChange={e => updateField('delerDuBolig', e.target.value)}
                         />
                     </RadioGruppe>
                     &nbsp;
@@ -178,12 +154,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
                 </div>
                 {tillegsInfoESP()}
             </div>
-            {feilmeldinger.length > 0 && (
-                <Feiloppsummering
-                    tittel={'Vennligst fyll ut mangler'}
-                    feil={feilmeldinger}
-                />
-            )}
+            {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
@@ -211,9 +182,7 @@ function validateFormValues(formValues) {
     const delerBoligMedErrors = [];
     tempErrors.push(...delerBoligValidering(formValues));
     tempErrors.push(...borSammenMedValidering(formValues));
-    tempErrors.push(
-        ...delerBoligMedValidering(formValues, delerBoligMedErrors)
-    );
+    tempErrors.push(...delerBoligMedValidering(formValues, delerBoligMedErrors));
 
     return tempErrors;
 }
@@ -244,9 +213,7 @@ function borSammenMedValidering(formValues) {
             feilmelding += 'Vennligst velg hvem søker bor med';
         }
         if (feilmelding.length > 0) {
-            return [
-                { skjemaelementId: fields.borsammenmed.htmlId, feilmelding }
-            ];
+            return [{ skjemaelementId: fields.borsammenmed.htmlId, feilmelding }];
         }
     }
     return [];

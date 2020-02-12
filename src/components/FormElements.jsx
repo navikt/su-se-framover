@@ -1,14 +1,7 @@
 import React from 'react';
 import { Input } from 'nav-frontend-skjema';
 
-export const InputFields = ({
-    id,
-    style,
-    labelText: label,
-    value,
-    onChange,
-    bredde
-}) => (
+export const InputFields = ({ id, style, labelText: label, value, onChange, bredde }) => (
     <span style={InputFieldsStyle}>
         <Input
             style={style}

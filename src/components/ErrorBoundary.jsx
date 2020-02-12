@@ -18,15 +18,12 @@ class ErrorBoundary extends React.Component {
                 <div style={globalErrorPageStyle}>
                     <Feilmelding>En feil har oppstått.</Feilmelding>
                     <Normaltekst>
-                        Trykk <a href="/">her</a> for å komme tilbake til
-                        startsiden.
+                        Trykk <a href="/">her</a> for å komme tilbake til startsiden.
                     </Normaltekst>
                     <hr />
                     <div>
                         Informasjon for utviklere:
-                        <pre style={stackTraceStyle}>
-                            {this.state.error.stack}
-                        </pre>
+                        <pre style={stackTraceStyle}>{this.state.error.stack}</pre>
                     </div>
                 </div>
             );

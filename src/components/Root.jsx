@@ -16,14 +16,7 @@ import Beregning from './Beregning';
 import ErrorBoundary from './ErrorBoundary';
 import 'nav-frontend-tabell-style';
 import './Root.less';
-import {
-    BrowserRouter as Router,
-    Link,
-    Switch,
-    Route,
-    useLocation,
-    useHistory
-} from 'react-router-dom';
+import { BrowserRouter as Router, Link, Switch, Route, useLocation, useHistory } from 'react-router-dom';
 
 const Root = () => {
     const { config } = useConfig();
@@ -35,10 +28,7 @@ const Root = () => {
     const updateVilkårsvurdering = nyeVilkår => {
         setState(state => ({
             ...state,
-            vilkårsprøving:
-                typeof nyeVilkår === 'function'
-                    ? nyeVilkår(state.vilkårsprøving)
-                    : nyeVilkår
+            vilkårsprøving: typeof nyeVilkår === 'function' ? nyeVilkår(state.vilkårsprøving) : nyeVilkår
         }));
     };
 
@@ -49,10 +39,7 @@ const Root = () => {
     const updateBeregning = nyBeregning => {
         setState(state => ({
             ...state,
-            beregning:
-                typeof nyBeregning === 'function'
-                    ? nyBeregning(state.beregning)
-                    : nyBeregning
+            beregning: typeof nyBeregning === 'function' ? nyBeregning(state.beregning) : nyBeregning
         }));
     };
 
@@ -78,19 +65,13 @@ const Root = () => {
                                 <Saker />
                             </Route>
                             <Route path="/vilkarsprov">
-                                <Vilkarsprov
-                                    state={state.vilkårsprøving}
-                                    setState={updateVilkårsvurdering}
-                                />
+                                <Vilkarsprov state={state.vilkårsprøving} setState={updateVilkårsvurdering} />
                             </Route>
                             <Route path="/saksoversikt">
                                 <Saksoversikt />
                             </Route>
                             <Route path="/Beregning">
-                                <Beregning
-                                    state={state.beregning}
-                                    setState={updateBeregning}
-                                />
+                                <Beregning state={state.beregning} setState={updateBeregning} />
                             </Route>
                         </Switch>
                     </ContentWrapper>
@@ -141,8 +122,7 @@ function Inntekt({ config }) {
     const history = useHistory();
     const props = history.location.state;
     const url = config
-        ? config.suSeBakoverUrl +
-          `/inntekt?ident=${props.ident}&fomDato=${props.fomDato}&tomDato=${props.tomDato}`
+        ? config.suSeBakoverUrl + `/inntekt?ident=${props.ident}&fomDato=${props.fomDato}&tomDato=${props.tomDato}`
         : undefined;
     const { data } = useGet({ url });
     return (
@@ -171,25 +151,17 @@ function InntektsTabell({ inntekt }) {
                     var monthSum = 0;
                     return (
                         <tbody key={mndIndex}>
-                            {alleMnd.inntekter.map(
-                                (inntektMnd, inntektIndex) => {
-                                    monthSum += parseInt(inntektMnd.beloep);
-                                    return (
-                                        <tr key={inntektIndex}>
-                                            <td>
-                                                {inntektIndex === 0
-                                                    ? alleMnd.gjeldendeMaaned
-                                                    : ''}
-                                            </td>
-                                            <td>{inntektMnd.type}</td>
-                                            <td>
-                                                {inntektMnd.beskrivelse.toUpperCase()}
-                                            </td>
-                                            <td>{inntektMnd.beloep}</td>
-                                        </tr>
-                                    );
-                                }
-                            )}
+                            {alleMnd.inntekter.map((inntektMnd, inntektIndex) => {
+                                monthSum += parseInt(inntektMnd.beloep);
+                                return (
+                                    <tr key={inntektIndex}>
+                                        <td>{inntektIndex === 0 ? alleMnd.gjeldendeMaaned : ''}</td>
+                                        <td>{inntektMnd.type}</td>
+                                        <td>{inntektMnd.beskrivelse.toUpperCase()}</td>
+                                        <td>{inntektMnd.beloep}</td>
+                                    </tr>
+                                );
+                            })}
                             <tr>
                                 <td />
                                 <td />
@@ -225,9 +197,7 @@ function Søkeboks({ config }) {
                     data
                 });
             } else {
-                alert(
-                    `Kunne ikke finne noen person for fnr '${identSearch.current.value}'`
-                );
+                alert(`Kunne ikke finne noen person for fnr '${identSearch.current.value}'`);
             }
         }
     }, [data]);
@@ -245,12 +215,7 @@ function Søkeboks({ config }) {
 
     return (
         <>
-            <input
-                placeholder="FNR"
-                ref={identSearch}
-                type="text"
-                onKeyDown={keyTyped}
-            />
+            <input placeholder="FNR" ref={identSearch} type="text" onKeyDown={keyTyped} />
             <label style={{ marginLeft: '0.5em' }} htmlFor="fom">
                 FOM:
             </label>
@@ -258,26 +223,13 @@ function Søkeboks({ config }) {
                 type="date"
                 id="fom"
                 ref={fomDato}
-                defaultValue={new Date(
-                    new Date(new Date().setMonth(-4)).setDate(1)
-                )
-                    .toISOString()
-                    .slice(0, 10)}
+                defaultValue={new Date(new Date(new Date().setMonth(-4)).setDate(1)).toISOString().slice(0, 10)}
             />
             <label style={{ marginLeft: '0.5em' }} htmlFor="tom">
                 TOM:
             </label>
-            <input
-                type="date"
-                id="tom"
-                ref={tomDato}
-                defaultValue={new Date().toISOString().slice(0, 10)}
-            />
-            <Knapp
-                style={{ marginLeft: '1em' }}
-                spinner={isFetching}
-                onClick={() => search(identSearch.current.value)}
-            >
+            <input type="date" id="tom" ref={tomDato} defaultValue={new Date().toISOString().slice(0, 10)} />
+            <Knapp style={{ marginLeft: '1em' }} spinner={isFetching} onClick={() => search(identSearch.current.value)}>
                 Søk
             </Knapp>
         </>
@@ -327,55 +279,35 @@ function Venstremeny() {
                 <tbody>
                     <tr>
                         <td>
-                            <Link
-                                to="/"
-                                className="knapp"
-                                style={VenstremenyStyle}
-                            >
+                            <Link to="/" className="knapp" style={VenstremenyStyle}>
                                 Hjem
                             </Link>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <Link
-                                to="/soknad"
-                                className="knapp"
-                                style={VenstremenyStyle}
-                            >
+                            <Link to="/soknad" className="knapp" style={VenstremenyStyle}>
                                 Søknad
                             </Link>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <Link
-                                to="/saker"
-                                className="knapp"
-                                style={VenstremenyStyle}
-                            >
+                            <Link to="/saker" className="knapp" style={VenstremenyStyle}>
                                 Saker
                             </Link>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <Link
-                                to="/vilkarsprov"
-                                className="knapp"
-                                style={VenstremenyStyle}
-                            >
+                            <Link to="/vilkarsprov" className="knapp" style={VenstremenyStyle}>
                                 Vilkårsprøving
                             </Link>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <Link
-                                to="/Beregning"
-                                className="knapp"
-                                style={VenstremenyStyle}
-                            >
+                            <Link to="/Beregning" className="knapp" style={VenstremenyStyle}>
                                 Beregning
                             </Link>
                         </td>

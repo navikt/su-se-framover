@@ -21,8 +21,7 @@ function PersonInfoBar({ person }) {
                     <div style={bar}>
                         <EtikettSuksess>Kjønn-ikon</EtikettSuksess>
                         <Undertittel>
-                            {person.fnr} {person.fornavn} {person.etternavn}{' '}
-                            (45)
+                            {person.fnr} {person.fornavn} {person.etternavn} (45)
                         </Undertittel>
                     </div>
                 }
@@ -48,8 +47,7 @@ function PersonInfoBar({ person }) {
                         <Undertittel>Kontakt</Undertittel>
                         <Normaltekst>{person.telefon}</Normaltekst>
                         <Normaltekst>
-                            {person.epost.epost} ({person.epost.metadata.kilde}-
-                            {person.epost.metadata.oppdatert})
+                            {person.epost.epost} ({person.epost.metadata.kilde}-{person.epost.metadata.oppdatert})
                         </Normaltekst>
                     </div>
                     <div style={element}>
@@ -58,8 +56,7 @@ function PersonInfoBar({ person }) {
                             return (
                                 <>
                                     <Normaltekst>
-                                        {statsborgerskap.land} (
-                                        {statsborgerskap.fom})
+                                        {statsborgerskap.land} ({statsborgerskap.fom})
                                     </Normaltekst>
                                 </>
                             );
@@ -68,8 +65,7 @@ function PersonInfoBar({ person }) {
                     <div style={element}>
                         <Undertittel>Fødsel</Undertittel>
                         <Normaltekst>
-                            {person.foedsel.foedested},{' '}
-                            {person.foedsel.foedeland}
+                            {person.foedsel.foedested}, {person.foedsel.foedeland}
                         </Normaltekst>
                         <Normaltekst>{person.foedsel.fodselsedato}</Normaltekst>
                     </div>
@@ -79,8 +75,7 @@ function PersonInfoBar({ person }) {
                             return (
                                 <>
                                     <Normaltekst>
-                                        {opphold.type} ({opphold.fom}-
-                                        {opphold.tom})
+                                        {opphold.type} ({opphold.fom}-{opphold.tom})
                                     </Normaltekst>
                                 </>
                             );
@@ -92,8 +87,7 @@ function PersonInfoBar({ person }) {
                             return (
                                 <>
                                     <Normaltekst>
-                                        {status.status} ({status.fom}-
-                                        {status.tom})
+                                        {status.status} ({status.fom}-{status.tom})
                                     </Normaltekst>
                                 </>
                             );

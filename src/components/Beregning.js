@@ -48,8 +48,7 @@ function Beregning({ state = initialState, setState }) {
         <div>
             <Sidetittel style={BeregningTittelStyle}>Beregning</Sidetittel>
             <EtikettAdvarsel style={buttonPositonStyle} type="advarsel">
-                ADVARSEL - EKSPERIMENTELT DESIGN - IKKE REPRESENTATIVT FOR
-                ENDELIG UTSEENDE
+                ADVARSEL - EKSPERIMENTELT DESIGN - IKKE REPRESENTATIVT FOR ENDELIG UTSEENDE
             </EtikettAdvarsel>
 
             <form onSubmit={handleSubmit}>
@@ -75,20 +74,11 @@ function Beregning({ state = initialState, setState }) {
                     <div>
                         <Systemtittel>Sats:</Systemtittel>
                         <div>
-                            <InputFieldWithText
-                                text={'kr'}
-                                value={state.sats}
-                                onChange={updateFunction('sats')}
-                            />
+                            <InputFieldWithText text={'kr'} value={state.sats} onChange={updateFunction('sats')} />
                             <Textarea
                                 label={'Begrunnelse:'}
                                 value={state.begrunnelse}
-                                onChange={e =>
-                                    updateFieldInState(
-                                        'begrunnelse',
-                                        e.target.value
-                                    )
-                                }
+                                onChange={e => updateFieldInState('begrunnelse', e.target.value)}
                             />
                         </div>
                     </div>
@@ -99,10 +89,7 @@ function Beregning({ state = initialState, setState }) {
                         errorsCollector={errorsCollector}
                     />
                     {validationErrors.length > 0 && (
-                        <Feiloppsummering
-                            tittel={'Vennligst fyll ut mangler'}
-                            feil={validationErrors}
-                        />
+                        <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={validationErrors} />
                     )}
 
                     <hr />
@@ -111,14 +98,8 @@ function Beregning({ state = initialState, setState }) {
                     </Knapp>
                     {state.stønadsberegning !== undefined && (
                         <>
-                            <Element>
-                                Beregnet årlig stønad:{' '}
-                                {state.stønadsberegning.årsbeløp} kr
-                            </Element>
-                            <Element>
-                                Beregnet månedlig stønad:{' '}
-                                {state.stønadsberegning.årsbeløp / 12} kr
-                            </Element>
+                            <Element>Beregnet årlig stønad: {state.stønadsberegning.årsbeløp} kr</Element>
+                            <Element>Beregnet månedlig stønad: {state.stønadsberegning.årsbeløp / 12} kr</Element>
                         </>
                     )}
                 </Panel>
@@ -185,23 +166,13 @@ function Beregning({ state = initialState, setState }) {
                 feilmelding += 'År må være høyere enn 19';
             }
 
-            if (
-                parseInt(tilMåned.substring(3, 5), 10) <
-                parseInt(formValues.fraMåned.substring(3, 5), 10)
-            ) {
+            if (parseInt(tilMåned.substring(3, 5), 10) < parseInt(formValues.fraMåned.substring(3, 5), 10)) {
                 feilmelding += 'Til år må være høyere enn fra år';
             }
 
-            if (
-                parseInt(tilMåned.substring(3, 5), 10) ===
-                parseInt(formValues.fraMåned.substring(3, 5), 10)
-            ) {
-                if (
-                    parseInt(tilMåned.substring(0, 2), 10) <=
-                    parseInt(formValues.fraMåned.substring(0, 2), 10)
-                ) {
-                    feilmelding +=
-                        'til måned må være høyere enn fra måned siden år er lik';
+            if (parseInt(tilMåned.substring(3, 5), 10) === parseInt(formValues.fraMåned.substring(3, 5), 10)) {
+                if (parseInt(tilMåned.substring(0, 2), 10) <= parseInt(formValues.fraMåned.substring(0, 2), 10)) {
+                    feilmelding += 'til måned må være høyere enn fra måned siden år er lik';
                 }
             }
         }

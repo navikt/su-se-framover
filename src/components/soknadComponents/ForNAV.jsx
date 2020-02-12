@@ -21,9 +21,7 @@ const ForNAV = ({ state, updateField, onClick }) => {
                                 label="Bokmål"
                                 value="bokmål"
                                 checked={state.maalform === 'bokmål'}
-                                onChange={e =>
-                                    updateField('maalform', e.target.value)
-                                }
+                                onChange={e => updateField('maalform', e.target.value)}
                             />
                             &nbsp;
                             <Radio
@@ -31,9 +29,7 @@ const ForNAV = ({ state, updateField, onClick }) => {
                                 label="Nynorsk"
                                 value="nynorsk"
                                 checked={state.maalform === 'nynorsk'}
-                                onChange={e =>
-                                    updateField('maalform', e.target.value)
-                                }
+                                onChange={e => updateField('maalform', e.target.value)}
                             />
                         </div>
                     </RadioGruppe>
@@ -50,18 +46,14 @@ const ForNAV = ({ state, updateField, onClick }) => {
                                 label="Ja"
                                 value="ja"
                                 checked={state.personligmote === 'ja'}
-                                onChange={e =>
-                                    updateField('personligmote', e.target.value)
-                                }
+                                onChange={e => updateField('personligmote', e.target.value)}
                             />
                             <Radio
                                 name="personligmote"
                                 label="Nei"
                                 value="nei"
                                 checked={state.personligmote === 'nei'}
-                                onChange={e =>
-                                    updateField('personligmote', e.target.value)
-                                }
+                                onChange={e => updateField('personligmote', e.target.value)}
                             />
                         </RadioGruppe>
                     </div>
@@ -72,24 +64,14 @@ const ForNAV = ({ state, updateField, onClick }) => {
                                 label="Ja"
                                 value="ja"
                                 checked={state.fullmektigmote === 'ja'}
-                                onChange={e =>
-                                    updateField(
-                                        'fullmektigmote',
-                                        e.target.value
-                                    )
-                                }
+                                onChange={e => updateField('fullmektigmote', e.target.value)}
                             />
                             <Radio
                                 name="fullmektigmote"
                                 label="Nei"
                                 value="nei"
                                 checked={state.fullmektigmote === 'nei'}
-                                onChange={e =>
-                                    updateField(
-                                        'fullmektigmote',
-                                        e.target.value
-                                    )
-                                }
+                                onChange={e => updateField('fullmektigmote', e.target.value)}
                             />
                         </RadioGruppe>
                     </div>
@@ -100,18 +82,14 @@ const ForNAV = ({ state, updateField, onClick }) => {
                                 label="Ja"
                                 value="ja"
                                 checked={state.passsjekk === 'ja'}
-                                onChange={e =>
-                                    updateField('passsjekk', e.target.value)
-                                }
+                                onChange={e => updateField('passsjekk', e.target.value)}
                             />
                             <Radio
                                 name="passsjekk"
                                 label="Nei"
                                 value="nei"
                                 checked={state.passsjekk === 'nei'}
-                                onChange={e =>
-                                    updateField('passsjekk', e.target.value)
-                                }
+                                onChange={e => updateField('passsjekk', e.target.value)}
                             />
                         </RadioGruppe>
                     </div>
@@ -122,12 +100,7 @@ const ForNAV = ({ state, updateField, onClick }) => {
                 value={state.forNAVmerknader || ''}
                 onChange={updateFunction('forNAVmerknader')}
             />
-            {feilmeldinger.length > 0 && (
-                <Feiloppsummering
-                    tittel={'Vennligst fyll ut mangler'}
-                    feil={feilmeldinger}
-                />
-            )}
+            {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
@@ -183,9 +156,7 @@ function møttPersonligValidering(formValues) {
         feilmelding += 'Vennligst velg om søker har møtt personlig';
     }
     if (feilmelding.length > 0) {
-        return [
-            { skjemaelementId: fields.møttPersonlig.htmlId, feilmelding }
-        ];
+        return [{ skjemaelementId: fields.møttPersonlig.htmlId, feilmelding }];
     }
     return [];
 }
@@ -198,9 +169,7 @@ function fullmektigMøttValidering(formValues) {
         feilmelding += 'Vennligst velg om fullmektig har møtt';
     }
     if (feilmelding.length > 0) {
-        return [
-            { skjemaelementId: fields.fullmektigMøtt.htmlId, feilmelding }
-        ];
+        return [{ skjemaelementId: fields.fullmektigMøtt.htmlId, feilmelding }];
     }
     return [];
 }
@@ -213,9 +182,7 @@ function passSjekketValidering(formValues) {
         feilmelding += 'Vennligst velg om pass er sjekket';
     }
     if (feilmelding.length > 0) {
-        return [
-            { skjemaelementId: fields.passSjekket.htmlId, feilmelding }
-        ];
+        return [{ skjemaelementId: fields.passSjekket.htmlId, feilmelding }];
     }
     return [];
 }
@@ -226,6 +193,6 @@ const container = {
 
 export const validateForNAV = {
     validateFormValues
-}
+};
 
 export default ForNAV;

@@ -36,17 +36,12 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
                     .map((item, index) => ({ ...item, key: index }))
                     .map((item, index) => {
                         return (
-                            <div
-                                key={item.key}
-                                style={DivInputFieldsWrapperStyle}
-                            >
+                            <div key={item.key} style={DivInputFieldsWrapperStyle}>
                                 <InputFields
                                     id={`${item.key}-beløp`}
                                     labelText={'Beløp:'}
                                     value={item.beløp}
-                                    onChange={value =>
-                                        updateBeløp(value, index)
-                                    }
+                                    onChange={value => updateBeløp(value, index)}
                                 />
 
                                 <InputFields
@@ -60,18 +55,14 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
                                     id={`${item.key}-kilde`}
                                     labelText={'Kilde:'}
                                     value={item.kilde}
-                                    onChange={value =>
-                                        updateKilde(value, index)
-                                    }
+                                    onChange={value => updateKilde(value, index)}
                                 />
 
                                 {state.inntekter.length > 1 && (
                                     <Lenke
                                         type="button"
                                         style={fjernInnputKnappStyle}
-                                        onClick={() =>
-                                            fjernValgtInputFelt(index)
-                                        }
+                                        onClick={() => fjernValgtInputFelt(index)}
                                     >
                                         Fjern felt
                                     </Lenke>
@@ -90,11 +81,7 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
                 <br />
                 <Undertittel>
                     Sum Inntekt:{' '}
-                    {adderInntekter(
-                        state.inntekter
-                            .map(item => parseInt(item.beløp, 10))
-                            .filter(item => !isNaN(item))
-                    )}
+                    {adderInntekter(state.inntekter.map(item => parseInt(item.beløp, 10)).filter(item => !isNaN(item)))}
                 </Undertittel>
             </div>
         </>
@@ -107,10 +94,7 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
     }
 
     function fjernValgtInputFelt(index) {
-        const tempInntekter = [
-            ...state.inntekter.slice(0, index),
-            ...state.inntekter.slice(index + 1)
-        ];
+        const tempInntekter = [...state.inntekter.slice(0, index), ...state.inntekter.slice(index + 1)];
         setInntekter(tempInntekter);
     }
 
@@ -118,11 +102,7 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
         const inntekt = { ...state.inntekter[index] };
         inntekt.beløp = beløp;
 
-        const tempInntekter = [
-            ...state.inntekter.slice(0, index),
-            inntekt,
-            ...state.inntekter.slice(index + 1)
-        ];
+        const tempInntekter = [...state.inntekter.slice(0, index), inntekt, ...state.inntekter.slice(index + 1)];
         setInntekter(tempInntekter);
     }
 
@@ -130,11 +110,7 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
         const inntekt = { ...state.inntekter[index] };
         inntekt.type = type;
 
-        const tempInntekter = [
-            ...state.inntekter.slice(0, index),
-            inntekt,
-            ...state.inntekter.slice(index + 1)
-        ];
+        const tempInntekter = [...state.inntekter.slice(0, index), inntekt, ...state.inntekter.slice(index + 1)];
         setInntekter(tempInntekter);
     }
 
@@ -142,17 +118,12 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
         const inntekt = { ...state.inntekter[index] };
         inntekt.kilde = kilde;
 
-        const tempInntekter = [
-            ...state.inntekter.slice(0, index),
-            inntekt,
-            ...state.inntekter.slice(index + 1)
-        ];
+        const tempInntekter = [...state.inntekter.slice(0, index), inntekt, ...state.inntekter.slice(index + 1)];
         setInntekter(tempInntekter);
     }
 
     function adderInntekter(beløp) {
-        const reducer = (accumulator, currentValue) =>
-            accumulator + currentValue;
+        const reducer = (accumulator, currentValue) => accumulator + currentValue;
         return beløp.reduce(reducer, 0);
     }
 }

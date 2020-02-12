@@ -95,10 +95,7 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                 />
             </div>
             <div style={container}>
-                <RadioGruppe
-                    legend="Er du registrert som flyktning?"
-                    style={{ flexGrow: '1' }}
-                >
+                <RadioGruppe legend="Er du registrert som flyktning?" style={{ flexGrow: '1' }}>
                     <Radio
                         name="flyktning"
                         label={'Ja'}
@@ -115,36 +112,24 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                     />
                 </RadioGruppe>
 
-                <RadioGruppe
-                    legend="Bor du fast i Norge?"
-                    style={{ flexGrow: '5' }}
-                >
+                <RadioGruppe legend="Bor du fast i Norge?" style={{ flexGrow: '5' }}>
                     <Radio
                         name="bofastnorge"
                         label={'Ja'}
                         value="true"
                         checked={state.bofastnorge === 'true'}
-                        onChange={e =>
-                            updateField('bofastnorge', e.target.value)
-                        }
+                        onChange={e => updateField('bofastnorge', e.target.value)}
                     />
                     <Radio
                         name="bofastnorge"
                         label={'Nei'}
                         value="false"
                         checked={state.bofastnorge === 'false'}
-                        onChange={e =>
-                            updateField('bofastnorge', e.target.value)
-                        }
+                        onChange={e => updateField('bofastnorge', e.target.value)}
                     />
                 </RadioGruppe>
             </div>
-            {feilmeldinger.length > 0 && (
-                <Feiloppsummering
-                    tittel={'Vennligst fyll ut mangler'}
-                    feil={feilmeldinger}
-                />
-            )}
+            {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
@@ -208,8 +193,7 @@ function fnrValidation(formValues) {
         if (fnr === undefined || fnr === '') {
             feilmelding += 'Fødselsnummer kan ikke være tom';
         } else {
-            feilmelding +=
-                'Fødselsnummer må være 11 siffer. Lengde på fnr: ' + fnr.length;
+            feilmelding += 'Fødselsnummer må være 11 siffer. Lengde på fnr: ' + fnr.length;
         }
     }
     if (feilmelding.length > 0) {
@@ -221,9 +205,8 @@ function fnrValidation(formValues) {
 function fornavnValidering(formValues) {
     const fornavn = formValues.fornavn;
     let feilmelding = '';
-    if (!/^([a-øA-Ø.,]{1,255})$/.test(fornavn) || fornavn === undefined) {
-        feilmelding +=
-            'Fornavn kan ikke være tom. Navn ikke inneholde tall, eller spesial tegn';
+    if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(fornavn) || fornavn === undefined) {
+        feilmelding += 'Fornavn kan ikke være tom. Navn ikke inneholde tall, eller spesial tegn';
     }
     if (feilmelding.length > 0) {
         return [{ skjemaelementId: fields.fornavn.htmlId, feilmelding }];
@@ -234,9 +217,8 @@ function fornavnValidering(formValues) {
 function etternavnValidering(formValues) {
     const etternavn = formValues.etternavn;
     let feilmelding = '';
-    if (!/^([a-øA-Ø.,]{1,255})$/.test(etternavn) || etternavn === undefined) {
-        feilmelding +=
-            'Etternavn kan ikke være tom. Etternavn ikke inneholde tall, eller spesial tegn';
+    if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(etternavn) || etternavn === undefined) {
+        feilmelding += 'Etternavn kan ikke være tom. Etternavn ikke inneholde tall, eller spesial tegn';
     }
     if (feilmelding.length > 0) {
         return [{ skjemaelementId: fields.etternavn.htmlId, feilmelding }];
@@ -253,9 +235,7 @@ function telefonnummerValidering(formValues) {
         if (tlfNummer === undefined || tlfNummer === '') {
             feilmelding += 'Telefonnummer kan ikke være tom';
         } else {
-            feilmelding +=
-                'Telefonnummer må være 8 siffer. Lengde på nummer: ' +
-                tlfNummer.length;
+            feilmelding += 'Telefonnummer må være 8 siffer. Lengde på nummer: ' + tlfNummer.length;
         }
     }
     if (feilmelding.length > 0) {
@@ -267,7 +247,7 @@ function telefonnummerValidering(formValues) {
 function gateadresseValidering(formValues) {
     const gate = formValues.gateadresse;
     let feilmelding = '';
-    if (!/^([a-øA-Ø.\s\d-]{1,255})$/.test(gate) || gate === undefined) {
+    if (!/^([a-zæøåA-ZÆØÅ.\s\d-]{1,255})$/.test(gate) || gate === undefined) {
         feilmelding += 'Gateadresse kan ikke være tom';
     }
     if (feilmelding.length > 0) {
@@ -285,9 +265,7 @@ function postnummerValidering(formValues) {
         if (postnummer === undefined || postnummer === '') {
             feilmelding += 'Postnummer kan ikke være tom';
         } else {
-            feilmelding +=
-                'Postnummer må være 4 siffer. Lengde på nummer: ' +
-                postnummer.length;
+            feilmelding += 'Postnummer må være 4 siffer. Lengde på nummer: ' + postnummer.length;
         }
     }
     if (feilmelding.length > 0) {
@@ -299,7 +277,7 @@ function postnummerValidering(formValues) {
 function poststedValidering(formValues) {
     const poststed = formValues.poststed;
     let feilmelding = '';
-    if (!/^([a-øA-Ø]{1,255})$/.test(poststed) || poststed === undefined) {
+    if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(poststed) || poststed === undefined) {
         feilmelding += 'Poststed kan ikke være tom';
     }
     if (feilmelding.length > 0) {
@@ -311,7 +289,7 @@ function poststedValidering(formValues) {
 function bokommuneValidering(formValues) {
     const bokommune = formValues.bokommune;
     let feilmelding = '';
-    if (!/^([a-øA-Ø]{1,255})$/.test(bokommune) || bokommune === undefined) {
+    if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(bokommune) || bokommune === undefined) {
         feilmelding += 'Bokommune kan ikke være tom';
     }
     if (feilmelding.length > 0) {
@@ -327,9 +305,7 @@ function statsborgerskapValidering(formValues) {
         feilmelding += 'Vennligst tast inn statsborgerskap';
     }
     if (feilmelding.length > 0) {
-        return [
-            { skjemaelementId: fields.statsborgerskap.htmlId, feilmelding }
-        ];
+        return [{ skjemaelementId: fields.statsborgerskap.htmlId, feilmelding }];
     }
     return [];
 }

@@ -23,9 +23,7 @@ function Soknad({ config }) {
         },
         utenlandsopphold: {
             utenlandsoppholdArray: [{ utreisedato: '', innreisedato: '' }],
-            planlagtUtenlandsoppholdArray: [
-                { planlagtUtreisedato: '', planlagtInnreisedato: '' }
-            ]
+            planlagtUtenlandsoppholdArray: [{ planlagtUtreisedato: '', planlagtInnreisedato: '' }]
         },
         oppholdstillatelse: {},
         inntektPensjonFormue: {
@@ -44,10 +42,7 @@ function Soknad({ config }) {
     const updateField = updateFunction => (stateToChange, value) => {
         updateFunction(state => ({
             ...state,
-            [stateToChange]:
-                typeof value === 'function'
-                    ? value(state[stateToChange])
-                    : value
+            [stateToChange]: typeof value === 'function' ? value(state[stateToChange]) : value
         }));
     };
 
@@ -56,9 +51,7 @@ function Soknad({ config }) {
             return (
                 <Personopplysninger
                     state={state.personopplysninger}
-                    updateField={updateField(
-                        updateFunction('personopplysninger')
-                    )}
+                    updateField={updateField(updateFunction('personopplysninger'))}
                     onClick={addToStage}
                 />
             );
@@ -74,9 +67,7 @@ function Soknad({ config }) {
             return (
                 <Utenlandsopphold
                     state={state.utenlandsopphold}
-                    updateField={updateField(
-                        updateFunction('utenlandsopphold')
-                    )}
+                    updateField={updateField(updateFunction('utenlandsopphold'))}
                     onClick={addToStage}
                 />
             );
@@ -84,9 +75,7 @@ function Soknad({ config }) {
             return (
                 <Oppholdstillatelse
                     state={state.oppholdstillatelse}
-                    updateField={updateField(
-                        updateFunction('oppholdstillatelse')
-                    )}
+                    updateField={updateField(updateFunction('oppholdstillatelse'))}
                     onClick={addToStage}
                 />
             );
@@ -94,19 +83,13 @@ function Soknad({ config }) {
             return (
                 <InntektPensjonFormue
                     state={state.inntektPensjonFormue}
-                    updateField={updateField(
-                        updateFunction('inntektPensjonFormue')
-                    )}
+                    updateField={updateField(updateFunction('inntektPensjonFormue'))}
                     onClick={addToStage}
                 />
             );
         } else if (stage === 5) {
             return (
-                <ForNAV
-                    state={state.forNAV}
-                    updateField={updateField(updateFunction('forNAV'))}
-                    onClick={addToStage}
-                />
+                <ForNAV state={state.forNAV} updateField={updateField(updateFunction('forNAV'))} onClick={addToStage} />
             );
         } else if (stage === 6) {
             return <OppsumeringOgSend state={state} config={config} />;

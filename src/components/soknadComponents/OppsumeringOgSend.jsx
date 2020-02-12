@@ -10,7 +10,6 @@ import { validateOppholdstillatelse } from './Oppholdstillatelse';
 import { validateInntektPensjonFormue } from './InntektPensjonFormue';
 import { validateForNAV } from './ForNAV';
 
-
 const OppsumeringOgSend = ({ state, config }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
     const [postData, setPostData] = useState({ url: undefined });
@@ -26,48 +25,22 @@ const OppsumeringOgSend = ({ state, config }) => {
 
     function validerSøknad() {
         let errors = [];
-        if (
-            validatePersonopplysninger.validateFormValues(
-                state.personopplysninger
-            ).length > 0
-        ) {
-            errors.push(
-                'Det er feil i Personopplysninger (side 1)'
-            );
+        if (validatePersonopplysninger.validateFormValues(state.personopplysninger).length > 0) {
+            errors.push('Det er feil i Personopplysninger (side 1)');
         }
         if (validateBoforhold.validateFormValues(state.boforhold).length > 0) {
-            errors.push(
-                'Det er feil i Boforhold (side 2)'
-            );
+            errors.push('Det er feil i Boforhold (side 2)');
         }
-        if (
-            validateUtenlandsopphold.validateFormValues(state.utenlandsopphold)
-                .length > 0
-        ) {
-            errors.push(
-                'Det er feil i Utenlandsopphold (side 3)'
-            );
+        if (validateUtenlandsopphold.validateFormValues(state.utenlandsopphold).length > 0) {
+            errors.push('Det er feil i Utenlandsopphold (side 3)');
         }
-        if (
-            validateOppholdstillatelse.validateFormValues(
-                state.oppholdstillatelse
-            ).length > 0
-        ) {
-            errors.push(
-                'Det er feil i Oppholdstillatelse (side 4)'
-            );
+        if (validateOppholdstillatelse.validateFormValues(state.oppholdstillatelse).length > 0) {
+            errors.push('Det er feil i Oppholdstillatelse (side 4)');
         }
 
-        if (
-            validateInntektPensjonFormue.validateFormValues(
-                state.inntektPensjonFormue
-            ).length > 0
-        ) {
-            errors.push(
-                'Det er feil i Inntekt, pensjon, og formue (side 5)'
-            );
+        if (validateInntektPensjonFormue.validateFormValues(state.inntektPensjonFormue).length > 0) {
+            errors.push('Det er feil i Inntekt, pensjon, og formue (side 5)');
         }
-
         if (validateForNAV.validateFormValues(state.forNAV).length > 0) {
             errors.push('Det er feil i For NAV (side 6)');
         }
@@ -95,24 +68,11 @@ const OppsumeringOgSend = ({ state, config }) => {
             <p>Oppsumerings side</p>
             {feilmeldinger.length > 0 && SubmitFeilmeldinger(feilmeldinger)}
             <p>Trykk på send for å sende</p>
-            <Hovedknapp
-                onClick={sendSøknad}
-                disabled={postData.url !== undefined}
-            >
+            <Hovedknapp onClick={sendSøknad} disabled={postData.url !== undefined}>
                 Send søknad
             </Hovedknapp>
-            {(status === 201 && (
-                <Kvittering
-                    type={'suksess'}
-                    melding={'Søknad er sent! Takk!'}
-                />
-            )) ||
-                (status === 401 && (
-                    <Kvittering
-                        type="advarsel"
-                        melding="Du må logge inn på nytt!"
-                    />
-                )) ||
+            {(status === 201 && <Kvittering type={'suksess'} melding={'Søknad er sent! Takk!'} />) ||
+                (status === 401 && <Kvittering type="advarsel" melding="Du må logge inn på nytt!" />) ||
                 (failed && <Kvittering type="advarsel" melding={failed} />)}
         </div>
     );
@@ -120,9 +80,7 @@ const OppsumeringOgSend = ({ state, config }) => {
 
 const SubmitFeilmeldinger = feilmeldinger => (
     <div className={'feiloppsummering'}>
-        <Undertittel>
-            Følgende feil ble funnet. Vennligst rett dem :)
-        </Undertittel>
+        <Undertittel>Følgende feil ble funnet. Vennligst rett dem :)</Undertittel>
         <ul className="feiloppsummering__liste">
             {feilmeldinger.map(item => {
                 return <li key={item}>{item}</li>;
