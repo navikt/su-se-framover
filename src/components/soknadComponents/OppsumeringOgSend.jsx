@@ -7,7 +7,7 @@ import {validatePersonopplysninger} from "./Personopplysninger"
 import {validateBoforhold} from "./Boforhold";
 import {validateUtenlandsopphold} from "./Utenlandsopphold"
 import {validateOppholdstillatelse} from "./Oppholdstillatelse"
-
+import {validateInntektPensjonFormue} from "./InntektPensjonFormue"
 
 const OppsumeringOgSend = ({state, config}) => {
 
@@ -37,8 +37,9 @@ const OppsumeringOgSend = ({state, config}) => {
         if(validateOppholdstillatelse.validateFormValues(state.oppholdstillatelse).length > 0){
             errors.push("Det er feil i Oppholdstillatelse (side 4). Vennligst fiks feilen")
         }
-
-
+        if(validateInntektPensjonFormue.validateFormValues(state.inntektPensjonFormue).length > 0){
+            errors.push("Det er feil i Inntekt, pensjon, og formue (side 5). Vennligst fiks feilen")
+        }
 
         return errors;
     }
@@ -54,8 +55,6 @@ const OppsumeringOgSend = ({state, config}) => {
             setFeilmeldinger(errors)
             console.log(errors)
         }
-
-
     }
 
     return (
