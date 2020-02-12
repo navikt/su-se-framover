@@ -10,10 +10,6 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
 
     const [feilmeldinger, setFeilmeldinger] = useState([])
 
-    const fields= {utenlandsopphold: {label: 'utenlandsopphold', htmlId: 'utenlandsopphold'},
-                    planlagtUtenlandsopphold: {label: 'planlagtUtenlandsopphold', htmlId: 'planlagtUtenlandsopphold'}
-    }
-
     function addInputFields(){
         const values = state.utenlandsoppholdArray
         values.push({utreisedato:'', innreisedato:''})
@@ -217,113 +213,117 @@ const Utenlandsopphold = ({state, updateField, onClick}) =>{
             onClick()
         }
     }
+}
 
-    function validateFormValues(formValues){
-        const tempErrors = []
-        const utenlandsoppholdErrors = []
-        const planlagtUtenlandsoppholdErrors = []
-        tempErrors.push(...utenlandsoppholdValidering(formValues))
-        tempErrors.push(...utenlandsoppholdFelterValidering(formValues, utenlandsoppholdErrors))
-        tempErrors.push(...planlagtUtenlandsoppholdValidering(formValues))
-        tempErrors.push(...planlagtUtenlandsoppholdFelterValidering(formValues, planlagtUtenlandsoppholdErrors))
+const fields= {utenlandsopphold: {label: 'utenlandsopphold', htmlId: 'utenlandsopphold'},
+    planlagtUtenlandsopphold: {label: 'planlagtUtenlandsopphold', htmlId: 'planlagtUtenlandsopphold'}
+}
 
-        return tempErrors
+function validateFormValues(formValues){
+    const tempErrors = []
+    const utenlandsoppholdErrors = []
+    const planlagtUtenlandsoppholdErrors = []
+    tempErrors.push(...utenlandsoppholdValidering(formValues))
+    tempErrors.push(...utenlandsoppholdFelterValidering(formValues, utenlandsoppholdErrors))
+    tempErrors.push(...planlagtUtenlandsoppholdValidering(formValues))
+    tempErrors.push(...planlagtUtenlandsoppholdFelterValidering(formValues, planlagtUtenlandsoppholdErrors))
+
+    return tempErrors
+}
+
+function utenlandsoppholdValidering(formValues){
+    const utenlandsopphold = formValues.utenlandsopphold
+    let feilmelding = ""
+
+    if(utenlandsopphold === undefined){
+        feilmelding += "Vennligst velg utenlandsopphold"
     }
-
-    function utenlandsoppholdValidering(formValues){
-        const utenlandsopphold = formValues.utenlandsopphold
-        let feilmelding = ""
-
-        if(utenlandsopphold === undefined){
-            feilmelding += "Vennligst velg utenlandsopphold"
-        }
-        if(feilmelding.length > 0){
-            return [{skjemaelementId: fields.utenlandsopphold.htmlId, feilmelding}]
-        }
-        return []
+    if(feilmelding.length > 0){
+        return [{skjemaelementId: fields.utenlandsopphold.htmlId, feilmelding}]
     }
+    return []
+}
 
-    function utenlandsoppholdFelterValidering(formValues, errorsArray){
-        const tempUtenlandsoppholdArray = formValues.utenlandsoppholdArray
+function utenlandsoppholdFelterValidering(formValues, errorsArray){
+    const tempUtenlandsoppholdArray = formValues.utenlandsoppholdArray
 
-        if(formValues.utenlandsopphold === "true"){
-            tempUtenlandsoppholdArray.map((item, index) => {
-                if(!/^\d{4}\-\d{2}\-\d{2}$/.test(item.utreisedato)){
-                    if(item.utreisedato === "" || item.utreisedato === undefined){
-                        errorsArray.push({
-                            skjemaelementId: `${index}-utreisedato`,
-                            feilmelding: "Utreisedato må være ikke være tom. Den må være i formed dd/mm/yy"})
-                    }else{
-                        errorsArray.push({
-                            skjemaelementId: `${index}-utreisedato`,
-                            feilmelding: "Utreisedato må være en dato i formen dd/mm/yy"})
-                    }
+    if(formValues.utenlandsopphold === "true"){
+        tempUtenlandsoppholdArray.map((item, index) => {
+            if(!/^\d{4}\-\d{2}\-\d{2}$/.test(item.utreisedato)){
+                if(item.utreisedato === "" || item.utreisedato === undefined){
+                    errorsArray.push({
+                        skjemaelementId: `${index}-utreisedato`,
+                        feilmelding: "Utreisedato må være ikke være tom. Den må være i formed dd/mm/yy"})
+                }else{
+                    errorsArray.push({
+                        skjemaelementId: `${index}-utreisedato`,
+                        feilmelding: "Utreisedato må være en dato i formen dd/mm/yy"})
                 }
-                if(!/^\d{4}\-\d{2}\-\d{2}$/.test(item.innreisedato)) {
-                    if (item.innreisedato === "" || item.innreisedato === undefined) {
-                        errorsArray.push({
-                            skjemaelementId: `${index}-innreisedato`,
-                            feilmelding: "Innreisedato må være ikke være tom. Den må være i formed dd.mm.åååå"
-                        })
-                    } else {
-                        errorsArray.push({
-                            skjemaelementId: `${index}-innreisedato`,
-                            feilmelding: "Innreisedato må være en dato i formen dd.mm.åååå"
-                        })
-                    }
+            }
+            if(!/^\d{4}\-\d{2}\-\d{2}$/.test(item.innreisedato)) {
+                if (item.innreisedato === "" || item.innreisedato === undefined) {
+                    errorsArray.push({
+                        skjemaelementId: `${index}-innreisedato`,
+                        feilmelding: "Innreisedato må være ikke være tom. Den må være i formed dd.mm.åååå"
+                    })
+                } else {
+                    errorsArray.push({
+                        skjemaelementId: `${index}-innreisedato`,
+                        feilmelding: "Innreisedato må være en dato i formen dd.mm.åååå"
+                    })
                 }
-            })
-        }
-        return errorsArray
+            }
+        })
     }
+    return errorsArray
+}
 
 
-    function planlagtUtenlandsoppholdValidering(formValues){
-        const planlagtUtenlandsopphold = formValues.planlagtUtenlandsopphold
-        let feilmelding = ""
+function planlagtUtenlandsoppholdValidering(formValues){
+    const planlagtUtenlandsopphold = formValues.planlagtUtenlandsopphold
+    let feilmelding = ""
 
-        if(planlagtUtenlandsopphold === undefined){
-            feilmelding += "Vennligst velg planlagt utenlandsopphold"
-        }
-        if(feilmelding.length > 0){
-            return [{skjemaelementId: fields.planlagtUtenlandsopphold.htmlId, feilmelding}]
-        }
-        return []
+    if(planlagtUtenlandsopphold === undefined){
+        feilmelding += "Vennligst velg planlagt utenlandsopphold"
     }
+    if(feilmelding.length > 0){
+        return [{skjemaelementId: fields.planlagtUtenlandsopphold.htmlId, feilmelding}]
+    }
+    return []
+}
 
-    function planlagtUtenlandsoppholdFelterValidering(formValues, errorsArray){
-        const tempPlanlagtUtenlandsoppholdArray = formValues.planlagtUtenlandsoppholdArray
+function planlagtUtenlandsoppholdFelterValidering(formValues, errorsArray){
+    const tempPlanlagtUtenlandsoppholdArray = formValues.planlagtUtenlandsoppholdArray
 
-        if(formValues.planlagtUtenlandsopphold === "true"){
-            tempPlanlagtUtenlandsoppholdArray.map((item, index) => {
-                    if(!/^\d{4}\-\d{2}\-\d{2}$/.test(item.planlagtUtreisedato)){
-                        if(item.planlagtUtreisedato === "" || item.planlagtUtreisedato === undefined){
-                            errorsArray.push({
-                                skjemaelementId: `${index}-planlagtUtreisedato`,
-                                feilmelding: "Planlagt utreisedato må være ikke være tom. Den må være i formed dd.mm.åååå"})
-                        }else{
-                            errorsArray.push({
-                                skjemaelementId: `${index}-planlagtUtreisedato`,
-                                feilmelding: "Planlagt utreisedato må være en dato i formen dd/mm/yy"})
-                        }
-                    }
-                if(!/^\d{4}\-\d{2}\-\d{2}$/.test(item.planlagtInnreisedato)) {
-                    if (item.planlagtInnreisedato === "" || item.planlagtInnreisedato === undefined) {
-                        errorsArray.push({
-                            skjemaelementId: `${index}-planlagtInnreisedato`,
-                            feilmelding: "Planlagt Innreise må være ikke være tom. Den må være i formed dd.mm.åååå"
-                        })
-                    } else {
-                        errorsArray.push({
-                            skjemaelementId: `${index}-planlagtInnreisedato`,
-                            feilmelding: "Planlagt Innreise må være en dato i formen dd/mm/yy"
-                        })
-                    }
+    if(formValues.planlagtUtenlandsopphold === "true"){
+        tempPlanlagtUtenlandsoppholdArray.map((item, index) => {
+            if(!/^\d{4}\-\d{2}\-\d{2}$/.test(item.planlagtUtreisedato)){
+                if(item.planlagtUtreisedato === "" || item.planlagtUtreisedato === undefined){
+                    errorsArray.push({
+                        skjemaelementId: `${index}-planlagtUtreisedato`,
+                        feilmelding: "Planlagt utreisedato må være ikke være tom. Den må være i formed dd.mm.åååå"})
+                }else{
+                    errorsArray.push({
+                        skjemaelementId: `${index}-planlagtUtreisedato`,
+                        feilmelding: "Planlagt utreisedato må være en dato i formen dd/mm/yy"})
                 }
-            })
-        }
-        return errorsArray
+            }
+            if(!/^\d{4}\-\d{2}\-\d{2}$/.test(item.planlagtInnreisedato)) {
+                if (item.planlagtInnreisedato === "" || item.planlagtInnreisedato === undefined) {
+                    errorsArray.push({
+                        skjemaelementId: `${index}-planlagtInnreisedato`,
+                        feilmelding: "Planlagt Innreise må være ikke være tom. Den må være i formed dd.mm.åååå"
+                    })
+                } else {
+                    errorsArray.push({
+                        skjemaelementId: `${index}-planlagtInnreisedato`,
+                        feilmelding: "Planlagt Innreise må være en dato i formen dd/mm/yy"
+                    })
+                }
+            }
+        })
     }
+    return errorsArray
 }
 
 const container = {
@@ -333,6 +333,10 @@ const container = {
 
 const fjernInnputKnappStyle = {
     alignSelf: 'center'
+}
+
+export const validateUtenlandsopphold = {
+    validateFormValues
 }
 
 export default Utenlandsopphold;

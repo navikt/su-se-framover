@@ -11,12 +11,6 @@ const Boforhold = ({state, updateField, onClick}) =>{
 
     const [feilmeldinger, setFeilmeldinger] = useState([])
 
-
-    const fields = {delerdubolig: {label: 'delerdubolig', htmlId: 'delerdubolig'},
-                    borsammenmed: {label: 'borsammenmed', htmlId: 'borsammenmed'},
-                    delerboligmed: {label: 'delerboligmed', htmlId: 'delerboligmed'}
-    }
-
     function updatedArray(sourceArray, target){
         if(target.checked){
             return [...sourceArray, target.value]
@@ -170,65 +164,68 @@ const Boforhold = ({state, updateField, onClick}) =>{
         }
     }
 
-    function validateFormValues(formValues){
-        const tempErrors = []
-        const delerBoligMedErrors = []
-        tempErrors.push(...delerBoligValidering(formValues))
-        tempErrors.push(...borSammenMedValidering(formValues))
-        tempErrors.push(...delerBoligMedValidering(formValues, delerBoligMedErrors))
-
-        return tempErrors
-    }
-
-    function delerBoligValidering(formValues){
-        const delerDuBolig = formValues.delerDuBolig
-        let feilmelding = ""
-
-        if(delerDuBolig === undefined){
-            feilmelding += "Vennligst velg boforhold"
-        }
-        if(feilmelding.length > 0){
-            return [{skjemaelementId: fields.delerdubolig.htmlId, feilmelding}]
-        }
-        return []
-    }
-
-    function borSammenMedValidering(formValues){
-        const borSammenMed = formValues.borSammenMed
-        console.log(borSammenMed)
-        let feilmelding = ""
-
-        if(formValues.delerDuBolig === "true"){
-            if(!borSammenMed.includes("esp")
-                && !borSammenMed.includes("over18")
-                && !borSammenMed.includes("annenPerson")){
-                feilmelding += "Vennligst velg hvem søker bor med"
-            }
-            if(feilmelding.length > 0){
-                return [{skjemaelementId: fields.borsammenmed.htmlId, feilmelding}]
-            }
-        }
-        return []
-    }
-
-    function delerBoligMedValidering(formValues, errorsArray){
-        const delerBoligMedArray = formValues.delerBoligMed
-
-        if(formValues.delerDuBolig === "true"){
-            delerBoligMedArray.map((item, index) => {
-                if(item.navn.trim().length === 0){
-                    errorsArray.push({skjemaelementId: `${index}-navn`, feilmelding: "navn kan ikke være tom"})
-                }
-                if(item.fødselsnummer.trim().length === 0){
-                    errorsArray.push({skjemaelementId: `${index}-fødselsnummer`, feilmelding: "Fødselsnummer kan ikke være tom"})
-                }
-            })
-        }
-        return errorsArray
-    }
-
 }
 
+const fields = {delerdubolig: {label: 'delerdubolig', htmlId: 'delerdubolig'},
+    borsammenmed: {label: 'borsammenmed', htmlId: 'borsammenmed'},
+    delerboligmed: {label: 'delerboligmed', htmlId: 'delerboligmed'}
+}
+
+function validateFormValues(formValues){
+    const tempErrors = []
+    const delerBoligMedErrors = []
+    tempErrors.push(...delerBoligValidering(formValues))
+    tempErrors.push(...borSammenMedValidering(formValues))
+    tempErrors.push(...delerBoligMedValidering(formValues, delerBoligMedErrors))
+
+    return tempErrors
+}
+
+function delerBoligValidering(formValues){
+    const delerDuBolig = formValues.delerDuBolig
+    let feilmelding = ""
+
+    if(delerDuBolig === undefined){
+        feilmelding += "Vennligst velg boforhold"
+    }
+    if(feilmelding.length > 0){
+        return [{skjemaelementId: fields.delerdubolig.htmlId, feilmelding}]
+    }
+    return []
+}
+
+function borSammenMedValidering(formValues){
+    const borSammenMed = formValues.borSammenMed
+    let feilmelding = ""
+
+    if(formValues.delerDuBolig === "true"){
+        if(!borSammenMed.includes("esp")
+            && !borSammenMed.includes("over18")
+            && !borSammenMed.includes("annenPerson")){
+            feilmelding += "Vennligst velg hvem søker bor med"
+        }
+        if(feilmelding.length > 0){
+            return [{skjemaelementId: fields.borsammenmed.htmlId, feilmelding}]
+        }
+    }
+    return []
+}
+
+function delerBoligMedValidering(formValues, errorsArray){
+    const delerBoligMedArray = formValues.delerBoligMed
+
+    if(formValues.delerDuBolig === "true"){
+        delerBoligMedArray.map((item, index) => {
+            if(item.navn.trim().length === 0){
+                errorsArray.push({skjemaelementId: `${index}-navn`, feilmelding: "navn kan ikke være tom"})
+            }
+            if(item.fødselsnummer.trim().length === 0){
+                errorsArray.push({skjemaelementId: `${index}-fødselsnummer`, feilmelding: "Fødselsnummer kan ikke være tom"})
+            }
+        })
+    }
+    return errorsArray
+}
 
 const container = {
     display: 'flex'
@@ -238,5 +235,8 @@ const fjernInnputKnappStyle = {
     alignSelf: 'center'
 }
 
+export const validateBoforhold = {
+    validateFormValues
+}
 
 export default Boforhold
