@@ -419,7 +419,7 @@ const fields = {
 function validateFormValues(formValues) {
     const tempErrors = [];
     const pensjonsOrdningErrors = [];
-    const tempAnnenFormueEiendomArray = []
+    const tempAnnenFormueEiendomArray = [];
 
     tempErrors.push(...kravannenytelseValidering(formValues));
     tempErrors.push(...kravannenytelseBegrunnelseValidering(formValues));
@@ -603,7 +603,7 @@ function formueBeløpValidering(formValues) {
     return [];
 }
 
-function annenFormueEiendom(formValues){
+function annenFormueEiendom(formValues) {
     const annenFormueEiendom = formValues.harduannenformueeiendom;
     let feilmelding = '';
 

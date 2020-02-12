@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Systemtittel } from 'nav-frontend-typografi';
 import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
-import { InputFields } from '../FormElements';
 import { Hovedknapp } from 'nav-frontend-knapper';
+import Datovelger from 'nav-datovelger';
 
 const Oppholdstillatelse = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -13,13 +13,16 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
         if (state.varigopphold === 'false') {
             return (
                 <div style={{ display: 'flex' }}>
-                    <InputFields
-                        labelText="Oppholdstillatelsens utløpsdato"
-                        id={fields.oppholdstillatelseUtløpsdato.htmlId}
-                        bredde={'S'}
-                        value={state.oppholdstillatelseUtløpsdato || ''}
-                        onChange={updateFunction('oppholdstillatelseUtløpsdato')}
-                    />
+                    <div style={{ marginRight: '1em' }}>
+                        <label>Utløpsdato</label>
+                        <Datovelger.Datovelger
+                            input={{
+                                placeholder: 'dd.mm.åååå'
+                            }}
+                            valgtDato={state.oppholdstillatelseUtløpsdato}
+                            onChange={updateFunction('oppholdstillatelseUtløpsdato')}
+                        />
+                    </div>
                     <RadioGruppe legend="Har du søkt om forlengelse?">
                         <Radio
                             name="soektforlengelse"
@@ -119,7 +122,7 @@ function oppholdstillatelseUtløpsdatoValidering(formValues) {
     let feilmelding = '';
 
     if (formValues.varigopphold === 'false') {
-        if (!/^\d{2}\/\d{2}\/\d{2}$/.test(oppholdstillatelseUtløpsdato)) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(oppholdstillatelseUtløpsdato)) {
             if (oppholdstillatelseUtløpsdato === '' || oppholdstillatelseUtløpsdato === undefined) {
                 feilmelding += 'Oppholdstillatelsens utløpsdato kan ikke være tom. Den må være i formen dd/mm/yy';
             } else {

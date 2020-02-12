@@ -268,12 +268,52 @@ function validateFormValues(formValues) {
     const tempErrors = [];
     const utenlandsoppholdErrors = [];
     const planlagtUtenlandsoppholdErrors = [];
+    tempErrors.push(...validateDates(formValues));
     tempErrors.push(...utenlandsoppholdValidering(formValues));
     tempErrors.push(...utenlandsoppholdFelterValidering(formValues, utenlandsoppholdErrors));
+    tempErrors.push(...validatePlanlagtDates(formValues));
     tempErrors.push(...planlagtUtenlandsoppholdValidering(formValues));
     tempErrors.push(...planlagtUtenlandsoppholdFelterValidering(formValues, planlagtUtenlandsoppholdErrors));
 
     return tempErrors;
+}
+
+const makeDate = dateString => {
+    const dateParts = dateString.split('-');
+    const year = parseInt(dateParts[0], 10);
+    const month = parseInt(dateParts[1], 10) - 1;
+    const day = parseInt(dateParts[2], 10);
+    return new Date(year, month, day);
+};
+
+const dates = (utreiseDato, innreiseDato) => {
+    const aDate = makeDate(utreiseDato);
+    const bDate = makeDate(innreiseDato);
+    return aDate.getTime() > bDate.getTime();
+};
+
+function validateDates(formValues) {
+    const errorsArray = [];
+    const tempUtenlandsoppholdArray = formValues.utenlandsoppholdArray;
+
+    if (formValues.utenlandsopphold === 'true') {
+        const x = tempUtenlandsoppholdArray
+            .map(item => {
+                const utreise = item.utreisedato;
+                const innreise = item.innreisedato;
+
+                const result = dates(utreise, innreise);
+
+                if (result) {
+                    const feilmelding = 'Utreisedato kan ikke være før innreisedato';
+
+                    return { skjemaelementId: fields.utenlandsopphold.htmlId, feilmelding };
+                }
+            })
+            .filter(item => item !== undefined);
+        return x;
+    }
+    return errorsArray;
 }
 
 function utenlandsoppholdValidering(formValues) {
@@ -321,6 +361,28 @@ function utenlandsoppholdFelterValidering(formValues, errorsArray) {
                 }
             }
         });
+    }
+    return errorsArray;
+}
+
+function validatePlanlagtDates(formValues) {
+    const errorsArray = [];
+    const tempUtenlandsoppholdArray = formValues.planlagtUtenlandsoppholdArray;
+
+    if (formValues.planlagtUtenlandsopphold === 'true') {
+        const x = tempUtenlandsoppholdArray
+            .map(item => {
+                const utreise = item.planlagtUtreisedato;
+                const innreise = item.planlagtInnreisedato;
+                const result = dates(utreise, innreise);
+
+                if (result) {
+                    const feilmelding = 'Planlagt Utreisedato kan ikke være før planlagt innreisedato';
+                    return { skjemaelementId: fields.planlagtUtenlandsopphold.htmlId, feilmelding };
+                }
+            })
+            .filter(item => item !== undefined);
+        return x;
     }
     return errorsArray;
 }
