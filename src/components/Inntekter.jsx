@@ -16,13 +16,13 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
             if (item.type.trim().length === 0) {
                 errorsCollector.push({
                     skjemaelementId: `${index}-type`,
-                    feilmelding: 'Type kan ikke være tom'
+                    feilmelding: 'Type må fylles ut'
                 });
             }
             if (item.kilde.trim().length === 0) {
                 errorsCollector.push({
                     skjemaelementId: `${index}-kilde`,
-                    feilmelding: 'Kilde kan ikke være tom'
+                    feilmelding: 'Kilde må fylles ut'
                 });
             }
         });
@@ -80,7 +80,7 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
             <div>
                 <br />
                 <Undertittel>
-                    Sum Inntekt:{' '}
+                    Sum inntekt:{' '}
                     {adderInntekter(state.inntekter.map(item => parseInt(item.beløp, 10)).filter(item => !isNaN(item)))}
                 </Undertittel>
             </div>

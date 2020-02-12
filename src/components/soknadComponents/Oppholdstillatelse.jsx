@@ -124,9 +124,9 @@ function oppholdstillatelseUtløpsdatoValidering(formValues) {
     if (formValues.varigopphold === 'false') {
         if (!/^\d{4}-\d{2}-\d{2}$/.test(oppholdstillatelseUtløpsdato)) {
             if (oppholdstillatelseUtløpsdato === '' || oppholdstillatelseUtløpsdato === undefined) {
-                feilmelding += 'Oppholdstillatelsens utløpsdato kan ikke være tom. Den må være i formen dd/mm/yy';
+                feilmelding += 'Oppholdstillatelsens utløpsdato må oppgis. Den må være på format dd.mm.åååå';
             } else {
-                feilmelding += 'Oppholdstillatelsens utløpsdato må være i formen dd/mm/yy';
+                feilmelding += 'Oppholdstillatelsens utløpsdato må være på format dd.mm.åååå';
             }
             if (feilmelding.length > 0) {
                 return [

@@ -191,7 +191,7 @@ function fnrValidation(formValues) {
     let feilmelding = '';
     if (!/^\d{11}$/.test(fnr)) {
         if (fnr === undefined || fnr === '') {
-            feilmelding += 'Fødselsnummer kan ikke være tom';
+            feilmelding += 'Fødselsnummer må fylles ut';
         } else {
             feilmelding += 'Fødselsnummer må være 11 siffer. Lengde på fnr: ' + fnr.length;
         }
@@ -206,7 +206,7 @@ function fornavnValidering(formValues) {
     const fornavn = formValues.fornavn;
     let feilmelding = '';
     if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(fornavn) || fornavn === undefined) {
-        feilmelding += 'Fornavn kan ikke være tom. Navn ikke inneholde tall, eller spesial tegn';
+        feilmelding += 'Fornavn må fylles ut. Feltet kan ikke inneholde tall eller spesialtegn';
     }
     if (feilmelding.length > 0) {
         return [{ skjemaelementId: fields.fornavn.htmlId, feilmelding }];
@@ -218,7 +218,7 @@ function etternavnValidering(formValues) {
     const etternavn = formValues.etternavn;
     let feilmelding = '';
     if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(etternavn) || etternavn === undefined) {
-        feilmelding += 'Etternavn kan ikke være tom. Etternavn ikke inneholde tall, eller spesial tegn';
+        feilmelding += 'Etternavn må fylles ut. Etternavn kan ikke inneholde tall eller spesialtegn';
     }
     if (feilmelding.length > 0) {
         return [{ skjemaelementId: fields.etternavn.htmlId, feilmelding }];
@@ -233,7 +233,7 @@ function telefonnummerValidering(formValues) {
     // Regex for kun norske telefonnummer
     if (!/^\d{8}$/.test(tlfNummer)) {
         if (tlfNummer === undefined || tlfNummer === '') {
-            feilmelding += 'Telefonnummer kan ikke være tom';
+            feilmelding += 'Telefonnummer må fylles ut';
         } else {
             feilmelding += 'Telefonnummer må være 8 siffer. Lengde på nummer: ' + tlfNummer.length;
         }
@@ -248,7 +248,7 @@ function gateadresseValidering(formValues) {
     const gate = formValues.gateadresse;
     let feilmelding = '';
     if (!/^([a-zæøåA-ZÆØÅ.\s\d-]{1,255})$/.test(gate) || gate === undefined) {
-        feilmelding += 'Gateadresse kan ikke være tom';
+        feilmelding += 'Gateadresse må fylles ut';
     }
     if (feilmelding.length > 0) {
         return [{ skjemaelementId: fields.gateadresse.htmlId, feilmelding }];
@@ -263,7 +263,7 @@ function postnummerValidering(formValues) {
     // postnummer med 4 siffer.
     if (!/^\d{4}$/.test(postnummer)) {
         if (postnummer === undefined || postnummer === '') {
-            feilmelding += 'Postnummer kan ikke være tom';
+            feilmelding += 'Postnummer må fylles ut';
         } else {
             feilmelding += 'Postnummer må være 4 siffer. Lengde på nummer: ' + postnummer.length;
         }
@@ -278,7 +278,7 @@ function poststedValidering(formValues) {
     const poststed = formValues.poststed;
     let feilmelding = '';
     if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(poststed) || poststed === undefined) {
-        feilmelding += 'Poststed kan ikke være tom';
+        feilmelding += 'Poststed må fylles ut';
     }
     if (feilmelding.length > 0) {
         return [{ skjemaelementId: fields.poststed.htmlId, feilmelding }];
@@ -290,7 +290,7 @@ function bokommuneValidering(formValues) {
     const bokommune = formValues.bokommune;
     let feilmelding = '';
     if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(bokommune) || bokommune === undefined) {
-        feilmelding += 'Bokommune kan ikke være tom';
+        feilmelding += 'Bokommune må fylles ut';
     }
     if (feilmelding.length > 0) {
         return [{ skjemaelementId: fields.bokommune.htmlId, feilmelding }];

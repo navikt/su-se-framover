@@ -227,13 +227,13 @@ function delerBoligMedValidering(formValues, errorsArray) {
             if (item.navn.trim().length === 0) {
                 errorsArray.push({
                     skjemaelementId: `${index}-navn`,
-                    feilmelding: 'navn kan ikke være tom'
+                    feilmelding: 'Navn må fylles ut'
                 });
             }
             if (item.fødselsnummer.trim().length === 0) {
                 errorsArray.push({
                     skjemaelementId: `${index}-fødselsnummer`,
-                    feilmelding: 'Fødselsnummer kan ikke være tom'
+                    feilmelding: 'Fødselsnummer må fylles ut'
                 });
             }
         });

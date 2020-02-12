@@ -338,12 +338,12 @@ function utenlandsoppholdFelterValidering(formValues, errorsArray) {
                 if (item.utreisedato === '' || item.utreisedato === undefined) {
                     errorsArray.push({
                         skjemaelementId: `${index}-utreisedato`,
-                        feilmelding: 'Utreisedato må være ikke være tom. Den må være i formed dd/mm/yy'
+                        feilmelding: 'Utreisedato må fylles ut. Den må være på format dd.mm.åååå'
                     });
                 } else {
                     errorsArray.push({
                         skjemaelementId: `${index}-utreisedato`,
-                        feilmelding: 'Utreisedato må være en dato i formen dd/mm/yy'
+                        feilmelding: 'Utreisedato må være en dato på format dd.mm.åååå'
                     });
                 }
             }
@@ -351,12 +351,12 @@ function utenlandsoppholdFelterValidering(formValues, errorsArray) {
                 if (item.innreisedato === '' || item.innreisedato === undefined) {
                     errorsArray.push({
                         skjemaelementId: `${index}-innreisedato`,
-                        feilmelding: 'Innreisedato må være ikke være tom. Den må være i formed dd.mm.åååå'
+                        feilmelding: 'Innreisedato må fylles ut. Den må være på format dd.mm.åååå'
                     });
                 } else {
                     errorsArray.push({
                         skjemaelementId: `${index}-innreisedato`,
-                        feilmelding: 'Innreisedato må være en dato i formen dd.mm.åååå'
+                        feilmelding: 'Innreisedato må være en dato på format dd.mm.åååå'
                     });
                 }
             }
@@ -377,7 +377,7 @@ function validatePlanlagtDates(formValues) {
                 const result = dates(utreise, innreise);
 
                 if (result) {
-                    const feilmelding = 'Planlagt Utreisedato kan ikke være før planlagt innreisedato';
+                    const feilmelding = 'Planlagt utreisedato kan ikke være før planlagt innreisedato';
                     return { skjemaelementId: fields.planlagtUtenlandsopphold.htmlId, feilmelding };
                 }
             })
@@ -414,12 +414,12 @@ function planlagtUtenlandsoppholdFelterValidering(formValues, errorsArray) {
                 if (item.planlagtUtreisedato === '' || item.planlagtUtreisedato === undefined) {
                     errorsArray.push({
                         skjemaelementId: `${index}-planlagtUtreisedato`,
-                        feilmelding: 'Planlagt utreisedato må være ikke være tom. Den må være i formed dd.mm.åååå'
+                        feilmelding: 'Planlagt utreisedato må fylles ut. Den må være på format dd.mm.åååå'
                     });
                 } else {
                     errorsArray.push({
                         skjemaelementId: `${index}-planlagtUtreisedato`,
-                        feilmelding: 'Planlagt utreisedato må være en dato i formen dd/mm/yy'
+                        feilmelding: 'Planlagt utreisedato må være en dato på format dd.mm.åååå'
                     });
                 }
             }
@@ -427,12 +427,12 @@ function planlagtUtenlandsoppholdFelterValidering(formValues, errorsArray) {
                 if (item.planlagtInnreisedato === '' || item.planlagtInnreisedato === undefined) {
                     errorsArray.push({
                         skjemaelementId: `${index}-planlagtInnreisedato`,
-                        feilmelding: 'Planlagt Innreise må være ikke være tom. Den må være i formed dd.mm.åååå'
+                        feilmelding: 'Planlagt innreisedato kan ikke være tom. Den må være på format dd.mm.åååå'
                     });
                 } else {
                     errorsArray.push({
                         skjemaelementId: `${index}-planlagtInnreisedato`,
-                        feilmelding: 'Planlagt Innreise må være en dato i formen dd/mm/yy'
+                        feilmelding: 'Planlagt innreisedato må være en dato på format dd.mm.åååå'
                     });
                 }
             }

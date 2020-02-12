@@ -173,7 +173,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                                 <div key={item.key} style={container}>
                                     <InputFields
                                         id={`${item.key}-ordning`}
-                                        labelText={'Fra hvilken ordning mottar du pensjon?:'}
+                                        labelText={'Fra hvilken ordning mottar søker pensjon?'}
                                         value={item.ordning}
                                         onChange={value => updatePensjonsOrdning(value, index)}
                                     />
@@ -410,6 +410,7 @@ const fields = {
     pensjon: { label: 'pensjon', htmlId: 'pensjon' },
     formue: { label: 'formue', htmlId: 'formue' },
     finansformue: { label: 'finansformue', htmlId: 'finansformue' },
+    annenFormueEiendom: { label: 'annenFormueEiendom', htmlId: 'annenFormueEiendom' },
     formueBeløp: { label: 'formueBeløp', htmlId: 'formueBeløp' },
     typeFormue: { label: 'typeFormue', htmlId: 'typeFormue' },
     skattetakst: { label: 'skattetakst', htmlId: 'skattetakst' },
@@ -444,7 +445,7 @@ function kravannenytelseValidering(formValues) {
 
     if (krav === undefined) {
         feilmelding +=
-            'Vennligst velg om søker fremsatt krav om annen norsk eller utenlandsk ytelse/pensjon som ikke er avgjort';
+            'Vennligst velg om søker har fremsatt krav om annen norsk eller utenlandsk ytelse/pensjon som ikke er avgjort';
 
         if (feilmelding.length > 0) {
             return [{ skjemaelementId: fields.kravannenytelse.htmlId, feilmelding }];
@@ -460,7 +461,7 @@ function kravannenytelseBegrunnelseValidering(formValues) {
     if (formValues.kravannenytelse === 'true') {
         if (!/^([a-øA-Ø.,]{1,255})$/.test(begrunnelse) || begrunnelse === undefined) {
             feilmelding +=
-                'Vennligst fyll inn hva slags ytelse/pensjon søker får. Kan ikke inneholde tall, eller spesial tegn';
+                'Vennligst oppgi hva slags ytelse/pensjon søker mottar. Kan ikke inneholde tall eller spesialtegn';
         }
         if (feilmelding.length > 0) {
             return [
@@ -529,16 +530,15 @@ function pensjonsOrdningValidering(formValues, errorsArray) {
     if (formValues.hardupensjon === 'true') {
         tempPensjonsOrdningArray.map((item, index) => {
             if (!/^([a-øA-Ø.,]{1,255})$/.test(item.ordning)) {
-                console.log('hehe');
                 if (item.ordning === '' || item.ordning === undefined) {
                     errorsArray.push({
                         skjemaelementId: `${index}-ordning`,
-                        feilmelding: 'Ordning kan ikke være tom'
+                        feilmelding: 'Ordning må fylles ut'
                     });
                 } else {
                     errorsArray.push({
                         skjemaelementId: `${index}-ordning`,
-                        feilmelding: 'Ordning kan ikke inneholde tall eller spesial tegn'
+                        feilmelding: 'Ordning kan ikke inneholde tall eller spesialtegn'
                     });
                 }
             }
@@ -546,7 +546,7 @@ function pensjonsOrdningValidering(formValues, errorsArray) {
                 if (item.beløp === '' || item.beløp === undefined) {
                     errorsArray.push({
                         skjemaelementId: `${index}-beløp`,
-                        feilmelding: 'Beløp kan ikke være tom'
+                        feilmelding: 'Beløp må fylles ut'
                     });
                 } else {
                     errorsArray.push({
@@ -608,10 +608,10 @@ function annenFormueEiendom(formValues) {
     let feilmelding = '';
 
     if (annenFormueEiendom === undefined) {
-        feilmelding += 'Vennligst velg om søker har annen formue / eiendom';
+        feilmelding += 'Vennligst velg om søker har annen formue/eiendom';
 
         if (feilmelding.length > 0) {
-            return [{ skjemaelementId: fields.pensjon.htmlId, feilmelding }];
+            return [{ skjemaelementId: fields.annenFormueEiendom.htmlId, feilmelding }];
         }
     }
     return [];
@@ -625,13 +625,13 @@ function annenFormueEiendomArray(formValues, errorsArray) {
             if (!/^([a-øA-Ø0-9.,\s]{1,255})$/.test(item.typeFormue)) {
                 errorsArray.push({
                     skjemaelementId: `${index}-typeFormue`,
-                    feilmelding: 'type Formue kan ikke være tom,'
+                    feilmelding: 'Type formue må fylles ut'
                 });
             }
             if (!/^(\d{1,30})$/.test(item.skattetakst)) {
                 errorsArray.push({
                     skjemaelementId: `${index}-skattetakst`,
-                    feilmelding: 'skattetaksts kan ikke være tom, og kan kun inneholde tall'
+                    feilmelding: 'Skattetakst må fylles ut, og kan kun inneholde tall'
                 });
             }
         });
