@@ -1,9 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+import { ConfigContext } from './useConfig';
 
 export const usePost = ({ url, data }) => {
     const [state, setState] = useState({ data: undefined, isFetching: false });
     const { accessToken } = useContext(AuthContext);
+    console.log('accessToken', accessToken);
+    const config = useContext(ConfigContext);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,7 +27,7 @@ export const usePost = ({ url, data }) => {
                     Authorization: `Bearer ${accessToken}`
                 };
                 fetchConfig.headers['Content-Type'] = 'application/json';
-                const response = await fetch(url, fetchConfig);
+                const response = await fetch(config.suSeBakoverUrl + url, fetchConfig);
                 if (response.status == 401) {
                     setState({
                         isFetching: false,
@@ -43,9 +46,9 @@ export const usePost = ({ url, data }) => {
                 setState({ isFetching: false, failed: e });
             }
         };
-        if (url !== undefined) {
+        if (url !== undefined && config !== undefined) {
             fetchData();
         }
-    }, [url]);
+    }, [url, config]);
     return state;
 };

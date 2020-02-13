@@ -4,7 +4,7 @@
   "description": "Frontend for saksbehandlingsstøtteverktøy for supplerende stønad",
   "scripts": {
     "eslint": "eslint --fix src --ext .js --ext .jsx",
-    "eslint:commit-hook":  "eslint --quiet --fix src --ext .js --ext .jsx",
+    "eslint:commit-hook": "eslint --quiet --fix src --ext .js --ext .jsx",
     "test": "jest",
     "tdd": "jest --watch",
     "start-no-browser": "npm run inject_local_config && parcel src/index.html",
@@ -81,6 +81,7 @@
     "@babel/core": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.8.3",
     "@babel/preset-react": "^7.8.3",
+    "@testing-library/react": "^9.4.0",
     "@testing-library/react-hooks": "^3.2.1",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",

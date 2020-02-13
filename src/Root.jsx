@@ -1,6 +1,6 @@
 import { hot } from 'react-hot-loader';
 import React, { useContext, useEffect, useState } from 'react';
-import { useConfig } from './hooks/useConfig';
+import { ConfigProvider } from './hooks/useConfig';
 import { useAuthRedirect } from './hooks/useAuthRedirect';
 import { AuthContext, AuthContextProvider } from './contexts/AuthContext';
 import { Innholdstittel } from 'nav-frontend-typografi';
@@ -19,7 +19,6 @@ import './Root.less';
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory } from 'react-router-dom';
 
 const Root = () => {
-    const { config } = useConfig();
     const [state, setState] = useState({
         vilkårsprøving: undefined,
         beregning: undefined
@@ -46,45 +45,47 @@ const Root = () => {
     return (
         <ErrorBoundary>
             <AuthContextProvider>
-                <Router>
-                    <ContentWrapper config={config}>
-                        <Switch>
-                            <Route path="/" exact>
-                                <Main config={config} />
-                            </Route>
-                            <Route path="/person">
-                                <Personinfo config={config} />
-                            </Route>
-                            <Route path="/auth/complete">
-                                <AuthComplete />
-                            </Route>
-                            <Route path="/soknad">
-                                <Soknad config={config} />
-                            </Route>
-                            <Route path="/saker">
-                                <Saker />
-                            </Route>
-                            <Route path="/vilkarsprov">
-                                <Vilkarsprov state={state.vilkårsprøving} setState={updateVilkårsvurdering} />
-                            </Route>
-                            <Route path="/saksoversikt">
-                                <Saksoversikt />
-                            </Route>
-                            <Route path="/Beregning">
-                                <Beregning state={state.beregning} setState={updateBeregning} />
-                            </Route>
-                        </Switch>
-                    </ContentWrapper>
-                </Router>
+                <ConfigProvider>
+                    <Router>
+                        <ContentWrapper>
+                            <Switch>
+                                <Route path="/" exact>
+                                    <Main />
+                                </Route>
+                                <Route path="/person">
+                                    <Personinfo />
+                                </Route>
+                                <Route path="/auth/complete">
+                                    <AuthComplete />
+                                </Route>
+                                <Route path="/soknad">
+                                    <Soknad />
+                                </Route>
+                                <Route path="/saker">
+                                    <Saker />
+                                </Route>
+                                <Route path="/vilkarsprov">
+                                    <Vilkarsprov state={state.vilkårsprøving} setState={updateVilkårsvurdering} />
+                                </Route>
+                                <Route path="/saksoversikt">
+                                    <Saksoversikt />
+                                </Route>
+                                <Route path="/Beregning">
+                                    <Beregning state={state.beregning} setState={updateBeregning} />
+                                </Route>
+                            </Switch>
+                        </ContentWrapper>
+                    </Router>
+                </ConfigProvider>
             </AuthContextProvider>
         </ErrorBoundary>
     );
 };
 
-function Main({ config }) {
-    const url = config ? config.suSeBakoverUrl + '/authenticated' : undefined;
-    const loginUrl = config ? config.suSeBakoverUrl + '/login' : undefined;
-    const { data, isFetching } = useAuthRedirect({ url, loginUrl });
+function Main() {
+    const url = '/authenticated';
+    const loginPath = '/login';
+    const { data, isFetching } = useAuthRedirect({ url, loginPath });
     const message = data ? data.data : 'this message unreadable';
     return (
         <div>
@@ -95,12 +96,12 @@ function Main({ config }) {
     );
 }
 
-function ContentWrapper({ config, children }) {
+function ContentWrapper({ children }) {
     return (
         <div>
             <div style={ContentWrapperStyle}>
                 <Innholdstittel style={appNameStyle}>NAV Suse</Innholdstittel>
-                <Søkeboks config={config} />
+                <Søkeboks />
             </div>
             <div style={{ display: 'flex' }}>
                 <div>

@@ -12,7 +12,7 @@ import ForNAV from './steg/ForNAV';
 import OppsumeringOgSend from './steg/OppsumeringOgSend';
 import './soknad.less';
 
-function Soknad({ config }) {
+function Soknad() {
     const [stage, setStage] = useState(0);
 
     const [state, setState] = useState({
@@ -92,7 +92,7 @@ function Soknad({ config }) {
                 <ForNAV state={state.forNAV} updateField={updateField(updateFunction('forNAV'))} onClick={addToStage} />
             );
         } else if (stage === 6) {
-            return <OppsumeringOgSend state={state} config={config} />;
+            return <OppsumeringOgSend state={state} />;
         } else {
             return (
                 <div>

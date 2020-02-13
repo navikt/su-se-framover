@@ -3,7 +3,7 @@ import { useGet } from '../hooks/useGet';
 import { useHistory } from 'react-router-dom';
 import { Knapp } from 'nav-frontend-knapper';
 
-function Søkeboks({ config }) {
+function Søkeboks() {
     const identSearch = useRef(null);
     const fomDato = useRef(null);
     const tomDato = useRef(null);
@@ -28,7 +28,7 @@ function Søkeboks({ config }) {
     }, [data]);
 
     function search(value) {
-        const searchUrl = config.suSeBakoverUrl + '/person?ident=' + value;
+        const searchUrl = '/person?ident=' + value;
         setUrl(searchUrl);
     }
 

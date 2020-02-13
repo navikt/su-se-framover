@@ -10,7 +10,7 @@ import { validateOppholdstillatelse } from './Oppholdstillatelse';
 import { validateInntektPensjonFormue } from './InntektPensjonFormue';
 import { validateForNAV } from './ForNAV';
 
-const OppsumeringOgSend = ({ state, config }) => {
+const OppsumeringOgSend = ({ state }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
     const [postData, setPostData] = useState({ url: undefined });
     const { status, failed } = usePost(postData);
@@ -54,7 +54,7 @@ const OppsumeringOgSend = ({ state, config }) => {
         if (errors.length < 1) {
             console.log('Sender søknad');
             setPostData({
-                url: config.suSeBakoverUrl + '/soknad',
+                url: '/soknad',
                 data: state
             });
         } else {

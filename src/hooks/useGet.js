@@ -1,9 +1,11 @@
 import { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+import { ConfigContext } from './useConfig';
 
-export const useGet = ({ url }) => {
+export const useGet = ({ url, pathContainsHost = false }) => {
     const [data, setData] = useState({ data: undefined, isFetching: false });
     const { accessToken } = useContext(AuthContext);
+    const config = useContext(ConfigContext);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -15,7 +17,8 @@ export const useGet = ({ url }) => {
                         Authorization: `Bearer ${accessToken}`
                     };
                 }
-                const response = await fetch(url, fetchConfig);
+                const fetchUrl = pathContainsHost ? url : config.suSeBakoverUrl + url;
+                const response = await fetch(fetchUrl, fetchConfig);
                 if (response.status === 401 || response.status === 403) {
                     setData({
                         isFetching: false,
@@ -34,10 +37,10 @@ export const useGet = ({ url }) => {
                 setData({ isFetching: false, failed: e });
             }
         };
-        if (url !== undefined) {
+        if (url !== undefined && config !== undefined) {
             fetchData();
         }
-    }, [url]);
+    }, [url, config]);
     return data;
 };
 

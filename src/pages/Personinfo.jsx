@@ -4,7 +4,7 @@ import { useGet } from '../hooks/useGet';
 import React from 'react';
 import { Innholdstittel, Normaltekst } from 'nav-frontend-typografi';
 
-function Person({ config }) {
+function Person() {
     const history = useHistory();
     const { fornavn, etternavn } = history.location.state.data;
     return (
@@ -21,18 +21,16 @@ function Person({ config }) {
                         <Normaltekst tag="span">{etternavn}</Normaltekst>
                     </div>
                 </Panel>
-                <Inntekt config={config} />
+                <Inntekt />
             </Panel>
         </div>
     );
 }
 
-function Inntekt({ config }) {
+function Inntekt() {
     const history = useHistory();
     const props = history.location.state;
-    const url = config
-        ? config.suSeBakoverUrl + `/inntekt?ident=${props.ident}&fomDato=${props.fomDato}&tomDato=${props.tomDato}`
-        : undefined;
+    const url = `/inntekt?ident=${props.ident}&fomDato=${props.fomDato}&tomDato=${props.tomDato}`;
     const { data } = useGet({ url });
     return (
         <div>
