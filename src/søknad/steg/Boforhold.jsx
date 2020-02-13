@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Knapp } from 'nav-frontend-knapper';
-import { InputFields, JaNeiSpørsmål } from '../FormElements';
+import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
 import Lenke from 'nav-frontend-lenker';
 import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Checkbox, CheckboxGruppe } from 'nav-frontend-skjema';

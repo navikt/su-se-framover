@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import Stegindikator from 'nav-frontend-stegindikator';
 import { Panel } from 'nav-frontend-paneler';
 import { SkjemaGruppe } from 'nav-frontend-skjema';
-import Personopplysninger from './soknadComponents/Personopplysninger';
-import Boforhold from './soknadComponents/Boforhold';
-import Utenlandsopphold from './soknadComponents/Utenlandsopphold';
-import Oppholdstillatelse from './soknadComponents/Oppholdstillatelse';
-import InntektPensjonFormue from './soknadComponents/InntektPensjonFormue';
-import ForNAV from './soknadComponents/ForNAV';
-import OppsumeringOgSend from './soknadComponents/OppsumeringOgSend';
+import Personopplysninger from './steg/Personopplysninger';
+import Boforhold from './steg/Boforhold';
+import Utenlandsopphold from './steg/Utenlandsopphold';
+import Oppholdstillatelse from './steg/Oppholdstillatelse';
+import InntektPensjonFormue from './steg/InntektPensjonFormue';
+import ForNAV from './steg/ForNAV';
+import OppsumeringOgSend from './steg/OppsumeringOgSend';
 import './soknad.less';
 
 function Soknad({ config }) {

@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { AuthContext } from './AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 
 export const useGet = ({ url }) => {
     const [data, setData] = useState({ data: undefined, isFetching: false });

@@ -6,7 +6,7 @@ import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import { Panel } from 'nav-frontend-paneler';
 import 'nav-frontend-tabell-style';
 import { Undertittel } from 'nav-frontend-typografi';
-import PersonInfoBar from './PersonInfoBar';
+import PersonInfoBar from '../components/PersonInfoBar';
 
 function Saksoversikt() {
     const history = useHistory();

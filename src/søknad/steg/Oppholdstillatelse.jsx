@@ -3,7 +3,7 @@ import { Systemtittel } from 'nav-frontend-typografi';
 import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Datovelger from 'nav-datovelger';
-import { JaNeiSpørsmål } from '../FormElements';
+import { JaNeiSpørsmål } from '../../components/FormElements';
 
 const Oppholdstillatelse = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);

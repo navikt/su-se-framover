@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
-import { JaNeiSpørsmål } from '../FormElements.jsx';
+import { JaNeiSpørsmål } from '../../components/FormElements.jsx';
 import { Systemtittel } from 'nav-frontend-typografi';
 import { Feiloppsummering } from 'nav-frontend-skjema';
 import Datovelger from 'nav-datovelger';

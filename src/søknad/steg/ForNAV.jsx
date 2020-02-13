@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
 import { Systemtittel } from 'nav-frontend-typografi';
-import { InputFields, JaNeiSpørsmål } from '../FormElements';
+import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
 import { Hovedknapp } from 'nav-frontend-knapper';
 
 const ForNAV = ({ state, updateField, onClick }) => {

@@ -1,8 +1,8 @@
-import { useConfig } from './useConfig';
+import { useConfig } from '../useConfig';
 import { renderHook } from '@testing-library/react-hooks';
-import { useGet } from './useGet';
+import { useGet } from '../useGet';
 
-jest.mock('./useGet');
+jest.mock('../useGet');
 useGet.mockReturnValue({ data: { en: 'json' }, isFetching: false });
 
 test('fetch config', () => {

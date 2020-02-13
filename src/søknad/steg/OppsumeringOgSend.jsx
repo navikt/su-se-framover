@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { usePost } from '../usePost';
+import { usePost } from '../../hooks/usePost';
 import { Undertittel } from 'nav-frontend-typografi';
 import { validatePersonopplysninger } from './Personopplysninger';
 import { validateBoforhold } from './Boforhold';

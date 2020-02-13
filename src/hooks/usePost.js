@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from './AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 
 export const usePost = ({ url, data }) => {
     const [state, setState] = useState({ data: undefined, isFetching: false });

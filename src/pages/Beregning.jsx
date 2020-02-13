@@ -5,7 +5,7 @@ import { Label, Input, Textarea, Feiloppsummering } from 'nav-frontend-skjema';
 import Knapp from 'nav-frontend-knapper';
 import EtikettAdvarsel from 'nav-frontend-etiketter';
 import Inntekter from './Inntekter';
-import { InputFields } from './FormElements';
+import { InputFields } from '../components/FormElements';
 
 const initialState = {
     fraMåned: '',

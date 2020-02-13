@@ -1,7 +1,7 @@
 import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import Knapp from 'nav-frontend-knapper';
 import React, { useEffect } from 'react';
-import { InputFields } from './FormElements';
+import { InputFields } from '../components/FormElements';
 import Lenke from 'nav-frontend-lenker';
 
 function Inntekter({ state, setInntekter, errorsCollector }) {
