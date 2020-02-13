@@ -1,16 +1,20 @@
 import React, { createContext, useState } from 'react';
 
 export const AuthContext = createContext({
-    accessToken: undefined
+    accessToken: undefined,
+    refreshToken: undefined
 });
 
 export const AuthContextProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState(undefined);
+    const [refreshToken, setRefreshToken] = useState(undefined);
     return (
         <AuthContext.Provider
             value={{
                 accessToken,
-                setAccessToken
+                setAccessToken,
+                refreshToken,
+                setRefreshToken
             }}
         >
             {children}

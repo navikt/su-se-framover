@@ -114,15 +114,18 @@ function ContentWrapper({ config, children }) {
 
 function AuthComplete() {
     const location = useLocation();
-    const { accessToken, setAccessToken } = useContext(AuthContext);
-    const token = location.hash.replace('#', '');
+    const { accessToken, setAccessToken, refreshToken, setRefreshToken } = useContext(AuthContext);
+    const tokens = location.hash.split('#');
+    var access = tokens[1];
+    var refresh = tokens[2];
     const history = useHistory();
-    setAccessToken(token);
+    setAccessToken(access);
+    setRefreshToken(refresh);
     useEffect(() => {
         if (accessToken !== undefined) {
             history.push('/');
         }
-    }, [accessToken]);
+    }, [accessToken, refreshToken]);
     return null;
 }
 
