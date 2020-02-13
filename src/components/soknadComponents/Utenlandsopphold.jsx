@@ -9,10 +9,15 @@ import 'nav-datovelger/dist/datovelger/styles/datovelger.css';
 const Utenlandsopphold = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
 
-    function addInputFields() {
-        const values = state.utenlandsoppholdArray;
-        values.push({ utreisedato: '', innreisedato: '' });
-        updateField('utenlandsoppholdArray', values);
+    function addInputField(field){
+        const values = field
+        if(values === state.utenlandsoppholdArray){
+            values.push({ utreisedato: '', innreisedato: '' });
+            updateField(field, values);
+        }else if(values === state.planlagtUtenlandsoppholdArray){
+            values.push({ planlagtUtreisedato: '', planlagtInnreisedato: '' });
+            updateField('planlagtUtenlandsoppholdArray', values);
+        }
     }
 
     function utenlandsoppholdUtreisedato(dato, index) {
@@ -95,7 +100,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                 );
                             })}
                     </div>
-                    <Knapp style={{ marginTop: '1em' }} onClick={() => addInputFields(state.utenlandsoppholdArray)}>
+                    <Knapp style={{ marginTop: '1em' }} onClick={() => addInputField(state.utenlandsoppholdArray)}>
                         Legg til flere utenlandsopphold
                     </Knapp>
                 </div>
@@ -104,12 +109,6 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
     }
 
     //--------------------Planlagt utenlandsopphold ------------------------------
-    function addInputFieldsPlantlagt() {
-        const values = state.planlagtUtenlandsoppholdArray;
-        values.push({ planlagtUtreisedato: '', planlagtInnreisedato: '' });
-        updateField('planlagtUtenlandsoppholdArray', values);
-    }
-
     function planlagtUtenlandsoppholdUtreisedato(dato, index) {
         const planlagtUtenlandsopphold = {
             ...state.planlagtUtenlandsoppholdArray[index]
@@ -191,7 +190,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                     </div>
                     <Knapp
                         style={{ marginTop: '1em' }}
-                        onClick={() => addInputFieldsPlantlagt(state.planlagtUtenlandsoppholdArray)}
+                        onClick={() => addInputField(state.planlagtUtenlandsoppholdArray)}
                     >
                         Legg til flere planlagt utenlandsopphold
                     </Knapp>

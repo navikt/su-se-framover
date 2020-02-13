@@ -4,6 +4,7 @@
   "description": "Frontend for saksbehandlingsstøtteverktøy for supplerende stønad",
   "scripts": {
     "eslint": "eslint --fix src --ext .js --ext .jsx",
+    "eslint:commit-hook":  "eslint --quiet --fix src --ext .js --ext .jsx",
     "test": "jest",
     "tdd": "jest --watch",
     "start-no-browser": "npm run inject_local_config && parcel src/index.html",
@@ -15,7 +16,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run eslint"
+      "pre-commit": "npm run eslint:commit-hook"
     }
   },
   "repository": {
