@@ -3,7 +3,7 @@ import { Systemtittel } from 'nav-frontend-typografi';
 import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Datovelger from 'nav-datovelger';
-import {JaNeiSpørsmål} from "../FormElements";
+import { JaNeiSpørsmål } from '../FormElements';
 
 const Oppholdstillatelse = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -24,10 +24,11 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
                             onChange={updateFunction('oppholdstillatelseUtløpsdato')}
                         />
                     </div>
-                    <JaNeiSpørsmål fieldName="soektforlengelse"
-                                   legend="Har søker søkt om forlengelse?"
-                                   state={state.soektforlengelse}
-                                   onChange={e => updateField('soektforlengelse', e.target.value)}
+                    <JaNeiSpørsmål
+                        fieldName="soektforlengelse"
+                        legend="Har søker søkt om forlengelse?"
+                        state={state.soektforlengelse}
+                        onChange={e => updateField('soektforlengelse', e.target.value)}
                     />
                 </div>
             );
@@ -38,10 +39,11 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
         <div>
             <Systemtittel>Opplysninger om oppholdstillatelse</Systemtittel>
             <div>
-                <JaNeiSpørsmål fieldName="varigopphold"
-                               legend="Har søker varig oppholdstillatelse?"
-                               state={state.varigopphold}
-                               onChange={e => updateField('varigopphold', e.target.value)}
+                <JaNeiSpørsmål
+                    fieldName="varigopphold"
+                    legend="Har søker varig oppholdstillatelse?"
+                    state={state.varigopphold}
+                    onChange={e => updateField('varigopphold', e.target.value)}
                 />
                 <div>{midlertidigOppholdstillatelse()}</div>
             </div>

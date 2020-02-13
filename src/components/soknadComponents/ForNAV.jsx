@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
 import { Systemtittel } from 'nav-frontend-typografi';
-import { InputFields } from '../FormElements';
+import {InputFields, JaNeiSpørsmål} from '../FormElements';
 import { Hovedknapp } from 'nav-frontend-knapper';
 
 const ForNAV = ({ state, updateField, onClick }) => {
@@ -35,63 +35,29 @@ const ForNAV = ({ state, updateField, onClick }) => {
                     </RadioGruppe>
                 </div>
             </div>
-
             <div>
                 <Systemtittel>For NAV</Systemtittel>
                 <div style={container}>
                     <div style={{ marginRight: '2em' }}>
-                        <RadioGruppe legend="Har bruker møtt personlig?">
-                            <Radio
-                                name="personligmote"
-                                label="Ja"
-                                value="ja"
-                                checked={state.personligmote === 'ja'}
-                                onChange={e => updateField('personligmote', e.target.value)}
-                            />
-                            <Radio
-                                name="personligmote"
-                                label="Nei"
-                                value="nei"
-                                checked={state.personligmote === 'nei'}
-                                onChange={e => updateField('personligmote', e.target.value)}
-                            />
-                        </RadioGruppe>
+                        <JaNeiSpørsmål fieldName="personligmote"
+                                       legend="Har søker møtt personlig?"
+                                       state={state.personligmote}
+                                       onChange={e => updateField('personligmote', e.target.value)}
+                        />
                     </div>
                     <div style={{ marginRight: '2em' }}>
-                        <RadioGruppe legend="Har fullmektig møtt?">
-                            <Radio
-                                name="fullmektigmote"
-                                label="Ja"
-                                value="ja"
-                                checked={state.fullmektigmote === 'ja'}
-                                onChange={e => updateField('fullmektigmote', e.target.value)}
-                            />
-                            <Radio
-                                name="fullmektigmote"
-                                label="Nei"
-                                value="nei"
-                                checked={state.fullmektigmote === 'nei'}
-                                onChange={e => updateField('fullmektigmote', e.target.value)}
-                            />
-                        </RadioGruppe>
+                        <JaNeiSpørsmål fieldName="fullmektigmote"
+                                       legend="Har fullmektig møtt?"
+                                       state={state.fullmektigmote}
+                                       onChange={e => updateField('fullmektigmote', e.target.value)}
+                        />
                     </div>
                     <div>
-                        <RadioGruppe legend="Er originalt(e) pass sjekket for stempel?">
-                            <Radio
-                                name="passsjekk"
-                                label="Ja"
-                                value="ja"
-                                checked={state.passsjekk === 'ja'}
-                                onChange={e => updateField('passsjekk', e.target.value)}
-                            />
-                            <Radio
-                                name="passsjekk"
-                                label="Nei"
-                                value="nei"
-                                checked={state.passsjekk === 'nei'}
-                                onChange={e => updateField('passsjekk', e.target.value)}
-                            />
-                        </RadioGruppe>
+                        <JaNeiSpørsmål fieldName="passsjekk"
+                                       legend="Er originalt(e) pass sjekket for stempel?"
+                                       state={state.passsjekk}
+                                       onChange={e => updateField('passsjekk', e.target.value)}
+                        />
                     </div>
                 </div>
             </div>
