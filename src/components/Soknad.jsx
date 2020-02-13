@@ -23,7 +23,7 @@ function Soknad({ config }) {
         },
         utenlandsopphold: {
             utenlandsoppholdArray: [{ utreisedato: '', innreisedato: '' }],
-            planlagtUtenlandsoppholdArray: [{ planlagtUtreisedato: '', planlagtInnreisedato: '' }]
+            planlagtUtenlandsoppholdArray: [{ utreisedato: '', innreisedato: '' }]
         },
         oppholdstillatelse: {},
         inntektPensjonFormue: {
