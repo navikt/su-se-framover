@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Knapp } from 'nav-frontend-knapper';
-import {InputFields, JaNeiSpørsmål} from '../FormElements';
+import { InputFields, JaNeiSpørsmål } from '../FormElements';
 import Lenke from 'nav-frontend-lenker';
-import {Feiloppsummering } from 'nav-frontend-skjema';
+import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Checkbox, CheckboxGruppe } from 'nav-frontend-skjema';
 import { Systemtittel, Ingress } from 'nav-frontend-typografi';
 import { Hovedknapp } from 'nav-frontend-knapper';
@@ -133,11 +133,12 @@ const Boforhold = ({ state, updateField, onClick }) => {
             <Systemtittel>Boforhold</Systemtittel>
             <div>
                 <div style={container}>
-                    <span style={{marginRight: '1em'}}>
-                        <JaNeiSpørsmål fieldName="delerDuBolig"
-                                       legend="Deler søker bolig med en annen voksen?"
-                                       state={state.delerDuBolig}
-                                       onChange={e => updateField('delerDuBolig', e.target.value)}
+                    <span style={{ marginRight: '1em' }}>
+                        <JaNeiSpørsmål
+                            fieldName="delerDuBolig"
+                            legend="Deler søker bolig med en annen voksen?"
+                            state={state.delerDuBolig}
+                            onChange={e => updateField('delerDuBolig', e.target.value)}
                         />
                     </span>
                     {personDelerBolig()}

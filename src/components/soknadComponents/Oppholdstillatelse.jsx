@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Systemtittel } from 'nav-frontend-typografi';
-import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
+import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Datovelger from 'nav-datovelger';
+import {JaNeiSpørsmål} from "../FormElements";
 
 const Oppholdstillatelse = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -23,23 +24,11 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
                             onChange={updateFunction('oppholdstillatelseUtløpsdato')}
                         />
                     </div>
-                    <RadioGruppe legend="Har du søkt om forlengelse?">
-                        <Radio
-                            name="soektforlengelse"
-                            label="Ja"
-                            value="true"
-                            checked={state.soektforlengelse === 'true'}
-                            onChange={e => updateField('soektforlengelse', e.target.value)}
-                        />
-
-                        <Radio
-                            name="soektforlengelse"
-                            label="Nei"
-                            value="false"
-                            checked={state.soektforlengelse === 'false'}
-                            onChange={e => updateField('soektforlengelse', e.target.value)}
-                        />
-                    </RadioGruppe>
+                    <JaNeiSpørsmål fieldName="soektforlengelse"
+                                   legend="Har søker søkt om forlengelse?"
+                                   state={state.soektforlengelse}
+                                   onChange={e => updateField('soektforlengelse', e.target.value)}
+                    />
                 </div>
             );
         }
@@ -48,24 +37,12 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
     return (
         <div>
             <Systemtittel>Opplysninger om oppholdstillatelse</Systemtittel>
-
             <div>
-                <RadioGruppe legend="Har du varig oppholdstillatelse?">
-                    <Radio
-                        name="varigopphold"
-                        label="Ja"
-                        value="true"
-                        checked={state.varigopphold === 'true'}
-                        onChange={e => updateField('varigopphold', e.target.value)}
-                    />
-                    <Radio
-                        name="varigopphold"
-                        label="Nei"
-                        value="false"
-                        checked={state.varigopphold === 'false'}
-                        onChange={e => updateField('varigopphold', e.target.value)}
-                    />
-                </RadioGruppe>
+                <JaNeiSpørsmål fieldName="varigopphold"
+                               legend="Har søker varig oppholdstillatelse?"
+                               state={state.varigopphold}
+                               onChange={e => updateField('varigopphold', e.target.value)}
+                />
                 <div>{midlertidigOppholdstillatelse()}</div>
             </div>
             {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
