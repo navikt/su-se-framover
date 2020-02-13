@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Systemtittel } from 'nav-frontend-typografi';
-import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
-import { InputFields } from '../FormElements';
+import {Feiloppsummering } from 'nav-frontend-skjema';
+import {InputFields, JaNeiSpørsmål} from '../FormElements';
 import { Hovedknapp } from 'nav-frontend-knapper';
 
 const Personopplysninger = ({ state, updateField, onClick }) => {
@@ -95,39 +95,19 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                 />
             </div>
             <div style={container}>
-                <RadioGruppe legend="Er du registrert som flyktning?" style={{ flexGrow: '1' }}>
-                    <Radio
-                        name="flyktning"
-                        label={'Ja'}
-                        value="true"
-                        checked={state.flyktning === 'true'}
-                        onChange={e => updateField('flyktning', e.target.value)}
+                <span style={{marginRight: '3em'}}>
+                    <JaNeiSpørsmål fieldName="flyktning"
+                                   legend="Er søker registrert som flyktning?"
+                                   state={state.flyktning}
+                                   onChange={e => updateField('flyktning', e.target.value)}
                     />
-                    <Radio
-                        name="flyktning"
-                        label={'Nei'}
-                        value="false"
-                        checked={state.flyktning === 'false'}
-                        onChange={e => updateField('flyktning', e.target.value)}
-                    />
-                </RadioGruppe>
+                </span>
+                <JaNeiSpørsmål fieldName="bofastnorge"
+                               legend="Bor søker fast i Norge?"
+                               state={state.bofastnorge}
+                               onChange={e => updateField('bofastnorge', e.target.value)}
 
-                <RadioGruppe legend="Bor du fast i Norge?" style={{ flexGrow: '5' }}>
-                    <Radio
-                        name="bofastnorge"
-                        label={'Ja'}
-                        value="true"
-                        checked={state.bofastnorge === 'true'}
-                        onChange={e => updateField('bofastnorge', e.target.value)}
-                    />
-                    <Radio
-                        name="bofastnorge"
-                        label={'Nei'}
-                        value="false"
-                        checked={state.bofastnorge === 'false'}
-                        onChange={e => updateField('bofastnorge', e.target.value)}
-                    />
-                </RadioGruppe>
+                />
             </div>
             {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
