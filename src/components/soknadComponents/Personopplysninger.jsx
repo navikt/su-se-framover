@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Systemtittel } from 'nav-frontend-typografi';
-import {Feiloppsummering } from 'nav-frontend-skjema';
-import {InputFields, JaNeiSpørsmål} from '../FormElements';
+import { Feiloppsummering } from 'nav-frontend-skjema';
+import { InputFields, JaNeiSpørsmål } from '../FormElements';
 import { Hovedknapp } from 'nav-frontend-knapper';
 
 const Personopplysninger = ({ state, updateField, onClick }) => {
@@ -95,18 +95,19 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                 />
             </div>
             <div style={container}>
-                <span style={{marginRight: '3em'}}>
-                    <JaNeiSpørsmål fieldName="flyktning"
-                                   legend="Er søker registrert som flyktning?"
-                                   state={state.flyktning}
-                                   onChange={e => updateField('flyktning', e.target.value)}
+                <span style={{ marginRight: '3em' }}>
+                    <JaNeiSpørsmål
+                        fieldName="flyktning"
+                        legend="Er søker registrert som flyktning?"
+                        state={state.flyktning}
+                        onChange={e => updateField('flyktning', e.target.value)}
                     />
                 </span>
-                <JaNeiSpørsmål fieldName="bofastnorge"
-                               legend="Bor søker fast i Norge?"
-                               state={state.bofastnorge}
-                               onChange={e => updateField('bofastnorge', e.target.value)}
-
+                <JaNeiSpørsmål
+                    fieldName="bofastnorge"
+                    legend="Bor søker fast i Norge?"
+                    state={state.bofastnorge}
+                    onChange={e => updateField('bofastnorge', e.target.value)}
                 />
             </div>
             {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}

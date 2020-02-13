@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Knapp } from 'nav-frontend-knapper';
-import { InputFields } from '../FormElements';
+import {InputFields, JaNeiSpørsmål} from '../FormElements';
 import Lenke from 'nav-frontend-lenker';
-import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
+import {Feiloppsummering } from 'nav-frontend-skjema';
 import { Checkbox, CheckboxGruppe } from 'nav-frontend-skjema';
 import { Systemtittel, Ingress } from 'nav-frontend-typografi';
 import { Hovedknapp } from 'nav-frontend-knapper';
@@ -51,7 +51,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
     function personDelerBolig() {
         if (state.delerDuBolig === 'true') {
             return (
-                <CheckboxGruppe legend="Hvem deler du bolig med?">
+                <CheckboxGruppe legend="Hvem deler søker bolig med?">
                     <Checkbox
                         name="boligdeler"
                         label="Ektefelle/Partner/Samboer"
@@ -133,23 +133,13 @@ const Boforhold = ({ state, updateField, onClick }) => {
             <Systemtittel>Boforhold</Systemtittel>
             <div>
                 <div style={container}>
-                    <RadioGruppe legend="Deler du bolig med en annen voksen?" style={{ marginRight: '2em' }}>
-                        <Radio
-                            name="delerDubolig"
-                            label="Ja"
-                            value="true"
-                            checked={state.delerDuBolig === 'true'}
-                            onChange={e => updateField('delerDuBolig', e.target.value)}
+                    <span style={{marginRight: '1em'}}>
+                        <JaNeiSpørsmål fieldName="delerDuBolig"
+                                       legend="Deler søker bolig med en annen voksen?"
+                                       state={state.delerDuBolig}
+                                       onChange={e => updateField('delerDuBolig', e.target.value)}
                         />
-                        <Radio
-                            name="delerDubolig"
-                            label="Nei"
-                            value="false"
-                            checked={state.delerDuBolig === 'false'}
-                            onChange={e => updateField('delerDuBolig', e.target.value)}
-                        />
-                    </RadioGruppe>
-                    &nbsp;
+                    </span>
                     {personDelerBolig()}
                 </div>
                 {tillegsInfoESP()}
