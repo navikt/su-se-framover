@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
 import { Systemtittel } from 'nav-frontend-typografi';
-import {InputFields, JaNeiSpørsmål} from '../FormElements';
+import { InputFields, JaNeiSpørsmål } from '../FormElements';
 import { Hovedknapp } from 'nav-frontend-knapper';
 
 const ForNAV = ({ state, updateField, onClick }) => {
@@ -15,7 +15,7 @@ const ForNAV = ({ state, updateField, onClick }) => {
                 <Systemtittel>Språkform</Systemtittel>
                 <div>
                     <RadioGruppe legend="Hvilken målform ønsker du i svaret?">
-                        <div style={container}>
+                        <div>
                             <Radio
                                 name="maalform"
                                 label="Bokmål"
@@ -23,7 +23,6 @@ const ForNAV = ({ state, updateField, onClick }) => {
                                 checked={state.maalform === 'bokmål'}
                                 onChange={e => updateField('maalform', e.target.value)}
                             />
-                            &nbsp;
                             <Radio
                                 name="maalform"
                                 label="Nynorsk"
@@ -39,24 +38,27 @@ const ForNAV = ({ state, updateField, onClick }) => {
                 <Systemtittel>For NAV</Systemtittel>
                 <div style={container}>
                     <div style={{ marginRight: '2em' }}>
-                        <JaNeiSpørsmål fieldName="personligmote"
-                                       legend="Har søker møtt personlig?"
-                                       state={state.personligmote}
-                                       onChange={e => updateField('personligmote', e.target.value)}
+                        <JaNeiSpørsmål
+                            fieldName="personligmote"
+                            legend="Har søker møtt personlig?"
+                            state={state.personligmote}
+                            onChange={e => updateField('personligmote', e.target.value)}
                         />
                     </div>
                     <div style={{ marginRight: '2em' }}>
-                        <JaNeiSpørsmål fieldName="fullmektigmote"
-                                       legend="Har fullmektig møtt?"
-                                       state={state.fullmektigmote}
-                                       onChange={e => updateField('fullmektigmote', e.target.value)}
+                        <JaNeiSpørsmål
+                            fieldName="fullmektigmote"
+                            legend="Har fullmektig møtt?"
+                            state={state.fullmektigmote}
+                            onChange={e => updateField('fullmektigmote', e.target.value)}
                         />
                     </div>
                     <div>
-                        <JaNeiSpørsmål fieldName="passsjekk"
-                                       legend="Er originalt(e) pass sjekket for stempel?"
-                                       state={state.passsjekk}
-                                       onChange={e => updateField('passsjekk', e.target.value)}
+                        <JaNeiSpørsmål
+                            fieldName="passsjekk"
+                            legend="Er originalt(e) pass sjekket for stempel?"
+                            state={state.passsjekk}
+                            onChange={e => updateField('passsjekk', e.target.value)}
                         />
                     </div>
                 </div>
