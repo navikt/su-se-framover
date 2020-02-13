@@ -16,16 +16,13 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
         updateField(fieldName, values);
     }
 
-    function updateUtreisedato(localState, fieldName, date, index) {
-        const x = { ...localState[index] };
-        x.utreisedato = date;
-        const tempUtreiseDato = [...localState.slice(0, index), x, ...localState.slice(index + 1)];
-        updateField(fieldName, tempUtreiseDato);
-    }
+    const updateUtreisedato = ({ ...props }) => updateDate({ dateType: 'utreisedato', ...props });
 
-    function updateInnreiseDato(localState, fieldName, date, index) {
+    const updateInnreisedato = ({ ...props }) => updateDate({ dateType: 'innreisedato', ...props });
+
+    function updateDate({ localState, fieldName, date, dateType, index }) {
         const x = { ...localState[index] };
-        x.innreisedato = date;
+        x[dateType] = date;
         const tempUtreiseDato = [...localState.slice(0, index), x, ...localState.slice(index + 1)];
         updateField(fieldName, tempUtreiseDato);
     }
@@ -50,13 +47,13 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                             <Datovelger.Datovelger
                                                 input={{ placeholder: 'dd.mm.åååå', id: `${index}-utreisedato` }}
                                                 valgtDato={item.utreisedato}
-                                                onChange={value =>
-                                                    updateUtreisedato(
-                                                        state.utenlandsoppholdArray,
-                                                        'utenlandsoppholdArray',
-                                                        value,
+                                                onChange={date =>
+                                                    updateUtreisedato({
+                                                        localState: state.utenlandsoppholdArray,
+                                                        fieldName: 'utenlandsoppholdArray',
+                                                        date,
                                                         index
-                                                    )
+                                                    })
                                                 }
                                             />
                                         </div>
@@ -65,13 +62,13 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                             <Datovelger.Datovelger
                                                 input={{ placeholder: 'dd.mm.åååå', id: `${index}-innreisedato` }}
                                                 valgtDato={item.innreisedato}
-                                                onChange={value =>
-                                                    updateInnreiseDato(
-                                                        state.utenlandsoppholdArray,
-                                                        'utenlandsoppholdArray',
-                                                        value,
+                                                onChange={date =>
+                                                    updateInnreisedato({
+                                                        localState: state.utenlandsoppholdArray,
+                                                        fieldName: 'utenlandsoppholdArray',
+                                                        date,
                                                         index
-                                                    )
+                                                    })
                                                 }
                                             />
                                         </div>
@@ -121,16 +118,16 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                             <Datovelger.Datovelger
                                                 input={{
                                                     placeholder: 'dd.mm.åååå',
-                                                    id: `${index}-utreisedato`
+                                                    id: `${index}-utreisedato-planlagt`
                                                 }}
                                                 valgtDato={item.utreisedato}
-                                                onChange={value =>
-                                                    updateUtreisedato(
-                                                        state.planlagtUtenlandsoppholdArray,
-                                                        'planlagtUtenlandsoppholdArray',
-                                                        value,
+                                                onChange={date =>
+                                                    updateUtreisedato({
+                                                        localState: state.planlagtUtenlandsoppholdArray,
+                                                        fieldName: 'planlagtUtenlandsoppholdArray',
+                                                        date,
                                                         index
-                                                    )
+                                                    })
                                                 }
                                             />
                                         </div>
@@ -139,16 +136,16 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                             <Datovelger.Datovelger
                                                 input={{
                                                     placeholder: 'dd.mm.åååå',
-                                                    id: `${index}-innreisedato`
+                                                    id: `${index}-innreisedato-planlagt`
                                                 }}
                                                 valgtDato={item.innreisedato}
-                                                onChange={value =>
-                                                    updateInnreiseDato(
-                                                        state.planlagtUtenlandsoppholdArray,
-                                                        'planlagtUtenlandsoppholdArray',
-                                                        value,
+                                                onChange={date =>
+                                                    updateInnreisedato({
+                                                        localState: state.planlagtUtenlandsoppholdArray,
+                                                        fieldName: 'planlagtUtenlandsoppholdArray',
+                                                        date,
                                                         index
-                                                    )
+                                                    })
                                                 }
                                             />
                                         </div>
@@ -377,12 +374,12 @@ function planlagtUtenlandsoppholdFelterValidering(formValues, errorsArray) {
             if (!/^\d{4}-\d{2}-\d{2}$/.test(item.utreisedato)) {
                 if (item.utreisedato === '' || item.innreisedato === undefined) {
                     errorsArray.push({
-                        skjemaelementId: `${index}-utreisedato`,
+                        skjemaelementId: `${index}-utreisedato-planlagt`,
                         feilmelding: 'Planlagt utreisedato må fylles ut. Den må være på format dd.mm.åååå'
                     });
                 } else {
                     errorsArray.push({
-                        skjemaelementId: `${index}-utreisedato`,
+                        skjemaelementId: `${index}-utreisedato-planlagt`,
                         feilmelding: 'Planlagt utreisedato må være en dato på format dd.mm.åååå'
                     });
                 }
@@ -390,12 +387,12 @@ function planlagtUtenlandsoppholdFelterValidering(formValues, errorsArray) {
             if (!/^\d{4}-\d{2}-\d{2}$/.test(item.innreisedato)) {
                 if (item.innreisedato === '' || item.innreisedato === undefined) {
                     errorsArray.push({
-                        skjemaelementId: `${index}-innreisedato`,
+                        skjemaelementId: `${index}-innreisedato-planlagt`,
                         feilmelding: 'Planlagt innreisedato kan ikke være tom. Den må være på format dd.mm.åååå'
                     });
                 } else {
                     errorsArray.push({
-                        skjemaelementId: `${index}-innreisedato`,
+                        skjemaelementId: `${index}-innreisedato-planlagt`,
                         feilmelding: 'Planlagt innreisedato må være en dato på format dd.mm.åååå'
                     });
                 }
