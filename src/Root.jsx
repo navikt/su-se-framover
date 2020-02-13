@@ -5,10 +5,10 @@ import { useAuthRedirect } from './hooks/useAuthRedirect';
 import { AuthContext, AuthContextProvider } from './contexts/AuthContext';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import 'reset-css';
-import Personinfo from "./pages/Personinfo"
+import Personinfo from './pages/Personinfo';
 import Soknad from './søknad/Soknad';
-import Søkeboks from "./components/Søkeboks";
-import Venstremeny from "./components/Venstremeny";
+import Søkeboks from './components/Søkeboks';
+import Venstremeny from './components/Venstremeny';
 import Saker from './pages/Saker';
 import Saksoversikt from './pages/Saksoversikt';
 import Vilkarsprov from './pages/Vilkarsprov';
@@ -106,9 +106,7 @@ function ContentWrapper({ config, children }) {
                 <div>
                     <Venstremeny />
                 </div>
-                <div>
-                    {children}
-                </div>
+                <div>{children}</div>
             </div>
         </div>
     );
