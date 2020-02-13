@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
+import {JaNeiSpørsmål} from "../FormElements.jsx"
 import { Systemtittel } from 'nav-frontend-typografi';
-import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
+import {Feiloppsummering } from 'nav-frontend-skjema';
 import Datovelger from 'nav-datovelger';
 import 'nav-datovelger/dist/datovelger/styles/datovelger.css';
 
 const Utenlandsopphold = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
 
-    function addInputField(field){
-        const values = field
-        if(values === state.utenlandsoppholdArray){
+    function addInputField(field) {
+        const values = field;
+        if (values === state.utenlandsoppholdArray) {
             values.push({ utreisedato: '', innreisedato: '' });
             updateField(field, values);
-        }else if(values === state.planlagtUtenlandsoppholdArray){
+        } else if (values === state.planlagtUtenlandsoppholdArray) {
             values.push({ planlagtUtreisedato: '', planlagtInnreisedato: '' });
             updateField('planlagtUtenlandsoppholdArray', values);
         }
@@ -188,12 +189,9 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                 );
                             })}
                     </div>
-                    <Knapp
-                        style={{ marginTop: '1em' }}
+                    <Knapp style={{ marginTop: '1em' }}
                         onClick={() => addInputField(state.planlagtUtenlandsoppholdArray)}
-                    >
-                        Legg til flere planlagt utenlandsopphold
-                    </Knapp>
+                        >Legg til flere planlagt utenlandsopphold</Knapp>
                 </div>
             );
         }
@@ -202,40 +200,18 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
     return (
         <div>
             <Systemtittel>Utenlandsopphold</Systemtittel>
-            <RadioGruppe legend="Har du vært utenlands i løpet av de siste 3 månedene?">
-                <Radio
-                    name="utenlandsopphold"
-                    label="Ja"
-                    value="true"
-                    checked={state.utenlandsopphold === 'true'}
-                    onChange={e => updateField('utenlandsopphold', e.target.value)}
-                />
-
-                <Radio
-                    name="utenlandsopphold"
-                    label="Nei"
-                    value="false"
-                    checked={state.utenlandsopphold === 'false'}
-                    onChange={e => updateField('utenlandsopphold', e.target.value)}
-                />
-            </RadioGruppe>
+            <JaNeiSpørsmål fieldName="utenlandsopphold"
+                           legend="Har du vært i utlandet i løpet av de siste 3 måneder?"
+                           state={state.utenlandsopphold}
+                           onChange={e => updateField('utenlandsopphold', e.target.value)}
+            />
             <div style={{ marginBottom: '2em' }}>{utenlandsoppholdFelter()}</div>
-            <RadioGruppe legend="Har du planer om å reise utenlands?">
-                <Radio
-                    name="planlagtUtenlandsopphold"
-                    label="Ja"
-                    value="true"
-                    checked={state.planlagtUtenlandsopphold === 'true'}
-                    onChange={e => updateField('planlagtUtenlandsopphold', e.target.value)}
-                />
-                <Radio
-                    name="planlagtUtenlandsopphold"
-                    label="Nei"
-                    value="false"
-                    checked={state.planlagtUtenlandsopphold === 'false'}
-                    onChange={e => updateField('planlagtUtenlandsopphold', e.target.value)}
-                />
-            </RadioGruppe>
+
+            <JaNeiSpørsmål fieldName="planlagtUtenlandsopphold"
+                           legend="Har du planer å reise til utlandet?"
+                           state={state.planlagtUtenlandsopphold}
+                           onChange={e => updateField('planlagtUtenlandsopphold', e.target.value)}
+            />
             <div>{planlagtUtenlandsoppholdFelter()}</div>
             {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
