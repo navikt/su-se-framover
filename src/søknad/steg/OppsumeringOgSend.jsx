@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import AlertStripe from 'nav-frontend-alertstriper';
+import { AuthContext } from '../../contexts/AuthContext';
+import { useGet } from '../../hooks/useGet';
 import { usePost } from '../../hooks/usePost';
 import { Undertittel } from 'nav-frontend-typografi';
 import { validatePersonopplysninger } from './Personopplysninger';
@@ -14,6 +16,10 @@ const OppsumeringOgSend = ({ state }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
     const [postData, setPostData] = useState({ url: undefined });
     const { status, failed } = usePost(postData);
+    const [submitInProgress, setSubmitInProgress] = useState(false);
+    const [refreshTokenUrl, setRefreshTokenUrl] = useState(undefined);
+    const { refreshToken } = useContext(AuthContext);
+    const { data: updatedTokens } = useGet({ url: refreshTokenUrl, headers: { refresh_token: refreshToken } });
 
     const Kvittering = ({ type, melding }) => {
         return (
@@ -53,6 +59,7 @@ const OppsumeringOgSend = ({ state }) => {
         const errors = validerSøknad();
         if (errors.length < 1) {
             console.log('Sender søknad');
+            setSubmitInProgress(true);
             setPostData({
                 url: '/soknad',
                 data: state
@@ -63,17 +70,38 @@ const OppsumeringOgSend = ({ state }) => {
         }
     }
 
+    useEffect(() => {
+        if (status === 401) {
+            setPostData({ url: undefined });
+            setRefreshTokenUrl('/auth/refresh');
+        } else {
+            setSubmitInProgress(false);
+        }
+    }, [status, failed]);
+
+    useEffect(() => {
+        if (updatedTokens !== undefined) {
+            setSubmitInProgress(false);
+            setPostData({ url: '/soknad', data: state });
+        }
+    }, [updatedTokens]);
+
     return (
         <div>
-            <p>Oppsumerings side</p>
+            <p>Oppsummeringsside</p>
             {feilmeldinger.length > 0 && SubmitFeilmeldinger(feilmeldinger)}
             <p>Trykk på send for å sende</p>
-            <Hovedknapp onClick={sendSøknad} disabled={postData.url !== undefined}>
+            <Hovedknapp onClick={sendSøknad} disabled={postData.url !== undefined} spinner={submitInProgress}>
                 Send søknad
             </Hovedknapp>
             {(status === 201 && <Kvittering type={'suksess'} melding={'Søknad er sent! Takk!'} />) ||
-                (status === 401 && <Kvittering type="advarsel" melding="Du må logge inn på nytt!" />) ||
-                (failed && <Kvittering type="advarsel" melding={failed} />)}
+                (!submitInProgress && status === 401 && (
+                    <Kvittering type="advarsel" melding="Du må logge inn på nytt!" />
+                )) ||
+                (!submitInProgress && status > 400 && (
+                    <Kvittering type="advarsel" melding="Det oppsto en feil under lagring" />
+                )) ||
+                (!submitInProgress && failed && <Kvittering type="advarsel" melding={failed} />)}
         </div>
     );
 };
@@ -82,9 +110,9 @@ const SubmitFeilmeldinger = feilmeldinger => (
     <div className={'feiloppsummering'}>
         <Undertittel>Følgende feil ble funnet. Vennligst rett dem :)</Undertittel>
         <ul className="feiloppsummering__liste">
-            {feilmeldinger.map(item => {
-                return <li key={item}>{item}</li>;
-            })}
+            {feilmeldinger.map(item => (
+                <li key={item}>{item}</li>
+            ))}
         </ul>
     </div>
 );

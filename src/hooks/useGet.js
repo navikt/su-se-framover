@@ -2,21 +2,20 @@ import { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { ConfigContext } from './useConfig';
 
-export const useGet = ({ url, pathContainsHost = false }) => {
+export const useGet = ({ url, pathContainsHost = false, headers = {} }) => {
     const [data, setData] = useState({ data: undefined, isFetching: false });
-    const { accessToken } = useContext(AuthContext);
+    const { accessToken, setAccessToken, setRefreshToken } = useContext(AuthContext);
     const config = useContext(ConfigContext);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setData({ isFetching: true });
-                const fetchConfig = {};
+                const fetchConfig = { headers };
                 if (accessToken !== undefined) {
-                    fetchConfig.headers = {
-                        Authorization: `Bearer ${accessToken}`
-                    };
+                    fetchConfig.headers['Authorization'] = `Bearer ${accessToken}`;
                 }
+
                 const fetchUrl = pathContainsHost ? url : config.suSeBakoverUrl + url;
                 const response = await fetch(fetchUrl, fetchConfig);
                 if (response.status === 401 || response.status === 403) {
@@ -26,6 +25,14 @@ export const useGet = ({ url, pathContainsHost = false }) => {
                         headers: response.headers
                     });
                 } else {
+                    const headers = response.headers;
+                    if (headers.has('refresh_token')) {
+                        setRefreshToken(headers.get('refresh_token'));
+                    }
+                    if (headers.has('access_token')) {
+                        setAccessToken(headers.get('access_token'));
+                    }
+
                     setData({
                         data: await getData(response),
                         isFetching: false,
