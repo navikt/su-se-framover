@@ -34,7 +34,7 @@ export const usePost = ({ url, data, headers = {} }) => {
                     });
                 } else {
                     setState({
-                        data: await getData(),
+                        data: await getData(response),
                         isFetching: false,
                         status: response.status
                     });
@@ -59,7 +59,7 @@ const getData = async response => {
             return responseText;
         }
     } catch (error) {
-        console.error('Uventet feil ved henting av tekst fra response.');
+        console.error('Uventet feil ved henting av tekst fra response.', error);
         return { data: 'no data received' };
     }
 };

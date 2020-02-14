@@ -5,12 +5,13 @@ export const AuthContext = createContext({
     refreshToken: undefined
 });
 
-export const AuthContextProvider = ({ children }) => {
-    const [accessToken, setAccessToken] = useState(undefined);
-    const [refreshToken, setRefreshToken] = useState(undefined);
+export const AuthContextProvider = ({ children, value = {} }) => {
+    const [accessToken, setAccessToken] = useState(value.accessToken);
+    const [refreshToken, setRefreshToken] = useState(value.refreshToken);
     return (
         <AuthContext.Provider
             value={{
+                ...value,
                 accessToken,
                 setAccessToken,
                 refreshToken,
