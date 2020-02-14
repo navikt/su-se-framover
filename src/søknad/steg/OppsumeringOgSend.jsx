@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -70,25 +70,11 @@ const OppsumeringOgSend = ({ state }) => {
         }
     }
 
-    useEffect(() => {
-        if (status === 401) {
-            setPostData({ url: undefined });
-            setRefreshTokenUrl('/auth/refresh');
-        } else {
-            setSubmitInProgress(false);
-        }
-    }, [status, failed]);
-
-    useEffect(() => {
-        if (updatedTokens !== undefined) {
-            setSubmitInProgress(false);
-            setPostData({ url: '/soknad', data: state });
-        }
-    }, [updatedTokens]);
-
     return (
         <div>
-            <p>Oppsummeringsside</p>
+            <DisplayDataFromApplic state={state} />
+
+            <p>------------------------------------------------------------</p>
             {feilmeldinger.length > 0 && SubmitFeilmeldinger(feilmeldinger)}
             <p>Trykk på send for å sende</p>
             <Hovedknapp onClick={sendSøknad} disabled={postData.url !== undefined} spinner={submitInProgress}>

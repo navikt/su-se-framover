@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input, Radio, RadioGruppe } from 'nav-frontend-skjema';
 
-export const InputFields = ({ id, style, labelText: label, value, onChange, bredde }) => (
+export const InputFields = ({ id, style, labelText: label, value, onChange, bredde, disabled }) => (
     <span style={InputFieldsStyle}>
         <Input
             style={style}
@@ -9,6 +9,7 @@ export const InputFields = ({ id, style, labelText: label, value, onChange, bred
             label={label}
             value={value}
             bredde={bredde}
+            disabled={disabled}
             onChange={e => onChange(e.target.value)}
         />
     </span>

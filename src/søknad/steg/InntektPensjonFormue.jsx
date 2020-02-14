@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
@@ -37,16 +37,19 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
         }
     }
 
-    const TotalbeløpFormue = () =>
-        (state.harduformueeiendom === 'true' || state.hardufinansformue === 'true') && (
-            <InputFields
-                labelText="Totalbeløp formue: "
-                id={fields.formueBeløp.htmlId}
-                bredde="M"
-                value={state.formueBeløp || ''}
-                onChange={updateFunction('formueBeløp')}
-            />
-        );
+    function totalbeløpFormue() {
+        if (state.harduformueeiendom === 'true' || state.hardufinansformue === 'true') {
+            return (
+                <InputFields
+                    labelText="Totalbeløp formue: "
+                    id={fields.formueBeløp.htmlId}
+                    bredde="M"
+                    value={state.formueBeløp || ''}
+                    onChange={updateFunction('formueBeløp')}
+                />
+            );
+        }
+    }
 
     function harAnnenFormueEiendom() {
         if (state.harduannenformueeiendom === 'true') {
@@ -217,6 +220,10 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
             );
         }
 
+        useEffect(() => {
+            updateField('sumInntekt', beløp);
+        }, [beløp]);
+
         return (
             <Undertittel>
                 Sum Inntekt: {beløp}
@@ -282,7 +289,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     state={state.harduannenformueeiendom}
                 />
 
-                <TotalbeløpFormue />
+                {totalbeløpFormue()}
 
                 {harAnnenFormueEiendom()}
 

@@ -19,15 +19,15 @@ const ForNAV = ({ state, updateField, onClick }) => {
                             <Radio
                                 name="maalform"
                                 label="Bokmål"
-                                value="bokmål"
-                                checked={state.maalform === 'bokmål'}
+                                value="Bokmål"
+                                checked={state.maalform === 'Bokmål'}
                                 onChange={e => updateField('maalform', e.target.value)}
                             />
                             <Radio
                                 name="maalform"
                                 label="Nynorsk"
-                                value="nynorsk"
-                                checked={state.maalform === 'nynorsk'}
+                                value="Nynorsk"
+                                checked={state.maalform === 'Nynorsk'}
                                 onChange={e => updateField('maalform', e.target.value)}
                             />
                         </div>
