@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGet } from '../hooks/useGet';
 import Tekstomrade from 'nav-frontend-tekstomrade';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 
 function SoknadVis() {

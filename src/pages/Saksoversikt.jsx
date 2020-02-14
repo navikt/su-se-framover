@@ -2,10 +2,7 @@ import React from 'react';
 import 'nav-frontend-tabell-style';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { useHistory } from 'react-router-dom';
-import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
-import { Panel } from 'nav-frontend-paneler';
 import 'nav-frontend-tabell-style';
-import { Undertittel } from 'nav-frontend-typografi';
 import PersonInfoBar from '../components/PersonInfoBar';
 
 function Saksoversikt() {

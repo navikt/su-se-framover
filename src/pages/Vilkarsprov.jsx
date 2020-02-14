@@ -6,7 +6,6 @@ import { Panel } from 'nav-frontend-paneler';
 import Knapp from 'nav-frontend-knapper';
 import './vilkorsprov.less';
 import { useHistory } from 'react-router-dom';
-import { useGet } from '../hooks/useGet';
 import PersonInfoBar from '../components/PersonInfoBar';
 
 const initialState = {

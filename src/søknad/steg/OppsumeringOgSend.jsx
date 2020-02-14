@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -11,6 +11,7 @@ import { validateUtenlandsopphold } from './Utenlandsopphold';
 import { validateOppholdstillatelse } from './Oppholdstillatelse';
 import { validateInntektPensjonFormue } from './InntektPensjonFormue';
 import { validateForNAV } from './ForNAV';
+import DisplayDataFromApplic from '../../components/DisplayDataFromApplic';
 
 const OppsumeringOgSend = ({ state }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);

@@ -1,17 +1,13 @@
 import React from 'react';
 import { EtikettSuksess } from 'nav-frontend-etiketter';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
-import { Undertittel, Normaltekst } from 'nav-frontend-typografi';
+import { Undertittel } from 'nav-frontend-typografi';
 import { useGet } from '../hooks/useGet';
 
 const bar = {
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap'
-};
-
-const element = {
-    margin: '1%'
 };
 
 function PersonInfoBar({ fnr }) {

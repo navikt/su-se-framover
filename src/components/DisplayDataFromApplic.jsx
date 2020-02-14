@@ -322,10 +322,18 @@ const DisplayDataFromApplic = ({ state }) => {
                 </div>
                 <div style={{ marginBottom: '1em', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
                     <span style={{ marginBottom: '1em' }}>
-                        {state.forNAV.forNAVmerknader.length > 0 ? <span>Merknader:</span> : ''}
+                        {state.forNAV.forNAVmerknader !== undefined && state.forNAV.forNAVmerknader.length > 0 ? (
+                            <span>Merknader:</span>
+                        ) : (
+                            ''
+                        )}
                     </span>
                     <span>
-                        {state.forNAV.forNAVmerknader.length > 0 ? <span>{state.forNAV.forNAVmerknader}</span> : ''}
+                        {state.forNAV.forNAVmerknader !== undefined && state.forNAV.forNAVmerknader.length > 0 ? (
+                            <span>{state.forNAV.forNAVmerknader}</span>
+                        ) : (
+                            ''
+                        )}
                     </span>
                 </div>
             </div>
