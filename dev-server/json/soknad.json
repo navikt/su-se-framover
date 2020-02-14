@@ -1,0 +1,74 @@
+{
+  "forNAV": {
+    "maalform": "bokmål",
+    "passsjekk": "true",
+    "personligmote": "true",
+    "fullmektigmote": "false",
+    "forNAVmerknader": "Ikke noe nytt her"
+  },
+  "boforhold": {
+    "borSammenMed": [],
+    "delerDuBolig": "false",
+    "delerBoligMed": [
+      {
+        "navn": "",
+        "fødselsnummer": ""
+      }
+    ]
+  },
+  "utenlandsopphold": {
+    "utenlandsopphold": "false",
+    "utenlandsoppholdArray": [
+      {
+        "utreisedato": "",
+        "innreisedato": ""
+      }
+    ],
+    "planlagtUtenlandsopphold": "false",
+    "planlagtUtenlandsoppholdArray": [
+      {
+        "utreisedato": "",
+        "innreisedato": ""
+      }
+    ]
+  },
+  "oppholdstillatelse": {
+    "varigopphold": "true"
+  },
+  "personopplysninger": {
+    "fnr": "27088921696",
+    "fornavn": "TALANG",
+    "poststed": "Mo i Rana",
+    "bokommune": "Rana",
+    "etternavn": "POTET",
+    "flyktning": "true",
+    "bruksenhet": "N123",
+    "mellomnavn": "KARTOFFEL",
+    "postnummer": "8622",
+    "bofastnorge": "true",
+    "gateadresse": "Gata",
+    "telefonnummer": "12345678",
+    "statsborgerskap": "NOR,ESP"
+  },
+  "inntektPensjonFormue": {
+    "hardupensjon": "false",
+    "sosialstonad": "false",
+    "kravannenytelse": "false",
+    "pensjonsOrdning": [
+      {
+        "beløp": "",
+        "ordning": ""
+      }
+    ],
+    "hardufinansformue": "false",
+    "annenFormueEiendom": [
+      {
+        "typeFormue": "",
+        "skattetakst": ""
+      }
+    ],
+    "harduformueeiendom": "false",
+    "harduannenformueeiendom": "false",
+    "arbeidselleranneninntekt": "false"
+  }
+}

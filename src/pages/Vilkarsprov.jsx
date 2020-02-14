@@ -6,6 +6,8 @@ import { Panel } from 'nav-frontend-paneler';
 import Knapp from 'nav-frontend-knapper';
 import './vilkorsprov.less';
 import { useHistory } from 'react-router-dom';
+import { useGet } from '../hooks/useGet';
+import PersonInfoBar from '../components/PersonInfoBar';
 
 const initialState = {
     uførevilkår: { checked: false, begrunnelse: '' },
@@ -19,7 +21,7 @@ const initialState = {
 
 function Vilkarsprov({ state = initialState, setState }) {
     const history = useHistory();
-    const soknad = history.location.state ? history.location.state : {};
+    const sak = history.location.state ? history.location.state.sak : {};
     useEffect(() => {
         setState(initialState);
     }, []);
@@ -47,7 +49,11 @@ function Vilkarsprov({ state = initialState, setState }) {
 
     return (
         <div className="vilkårsprøving">
+            <PersonInfoBar fnr={sak.fnr} />
             <Innholdstittel>Vilkårsprøving</Innholdstittel>
+            <a href={`/soknad/vis?sak=${sak.id}`} target="_blank" className="knapp knapp--hoved">
+                Vis søknad
+            </a>
             <form onSubmit={handleSubmit}>
                 <Panel border>
                     <div>
@@ -76,7 +82,7 @@ function Vilkarsprov({ state = initialState, setState }) {
                                 <div style={faktasjekkstyle}>
                                     <Panel border style={{ width: '50%' }}>
                                         <Undertittel>Infomasjon fra søknad</Undertittel>
-                                        <Element>Fra søknad: {soknad.flyktning}</Element>
+                                        {/*                                         <Element>Fra søknad: {soknad.flyktning}</Element> */}
                                     </Panel>
                                     <Panel border style={{ width: '50%' }}>
                                         <Undertittel>Infomasjon fra UDI</Undertittel>

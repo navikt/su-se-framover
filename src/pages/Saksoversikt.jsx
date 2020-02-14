@@ -15,6 +15,9 @@ function Saksoversikt() {
     return (
         <>
             <PersonInfoBar fnr={sak.fnr} />
+            <Hovedknapp onClick={() => history.push('/vilkarsprov', (sak = { sak }))}>Behandle</Hovedknapp>
+            {/*                                                         Behandle krav */}
+            {/*                                                     </Hovedknapp> */}
             {/*             {sak.stonadsperioder.map((periode, index) => { */}
             {/*                 return ( */}
             {/*                     <Ekspanderbartpanel */}

@@ -69,6 +69,7 @@
     "nav-frontend-typografi": "^2.0.17",
     "nav-frontend-typografi-style": "^1.0.18",
     "prop-types": "^15.7.2",
+    "query-string": "^6.11.0",
     "react": "^16.12.0",
     "react-collapse": "^5.0.1",
     "react-day-picker": "^7.4.0",
