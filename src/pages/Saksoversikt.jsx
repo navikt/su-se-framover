@@ -14,75 +14,75 @@ function Saksoversikt() {
     console.log(sak);
     return (
         <>
-            <PersonInfoBar person={sak.person} />
-            {sak.stonadsperioder.map((periode, index) => {
-                return (
-                    <Ekspanderbartpanel
-                        tittel={
-                            <div>
-                                {periode.fom}-{periode.tom}
-                            </div>
-                        }
-                        border
-                        key={index}
-                        apen={index == 0}
-                    >
-                        <Panel border>
-                            <Undertittel>Krav</Undertittel>
-                            <table className="tabell">
-                                <thead>
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Dato</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {periode.krav.map((krav, i) => {
-                                        return (
-                                            <tr key={i}>
-                                                <td>{krav.type}</td>
-                                                <td>{krav.mottatt}</td>
-                                                <td>
-                                                    <Hovedknapp onClick={() => history.push('/vilkarsprov')}>
-                                                        Behandle krav
-                                                    </Hovedknapp>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
+            <PersonInfoBar fnr={sak.fnr} />
+            {/*             {sak.stonadsperioder.map((periode, index) => { */}
+            {/*                 return ( */}
+            {/*                     <Ekspanderbartpanel */}
+            {/*                         tittel={ */}
+            {/*                             <div> */}
+            {/*                                 {periode.fom}-{periode.tom} */}
+            {/*                             </div> */}
+            {/*                         } */}
+            {/*                         border */}
+            {/*                         key={index} */}
+            {/*                         apen={index == 0} */}
+            {/*                     > */}
+            {/*                         <Panel border> */}
+            {/*                             <Undertittel>Krav</Undertittel> */}
+            {/*                             <table className="tabell"> */}
+            {/*                                 <thead> */}
+            {/*                                     <tr> */}
+            {/*                                         <th>Type</th> */}
+            {/*                                         <th>Dato</th> */}
+            {/*                                         <th></th> */}
+            {/*                                     </tr> */}
+            {/*                                 </thead> */}
+            {/*                                 <tbody> */}
+            {/*                                     {periode.krav.map((krav, i) => { */}
+            {/*                                         return ( */}
+            {/*                                             <tr key={i}> */}
+            {/*                                                 <td>{krav.type}</td> */}
+            {/*                                                 <td>{krav.mottatt}</td> */}
+            {/*                                                 <td> */}
+            {/*                                                     <Hovedknapp onClick={() => history.push('/vilkarsprov')}> */}
+            {/*                                                         Behandle krav */}
+            {/*                                                     </Hovedknapp> */}
+            {/*                                                 </td> */}
+            {/*                                             </tr> */}
+            {/*                                         ); */}
+            {/*                                     })} */}
+            {/*                                 </tbody> */}
+            {/*                             </table> */}
 
-                            <Undertittel>Vedtak</Undertittel>
-                            <table className="tabell">
-                                <thead>
-                                    <tr>
-                                        <th>Status</th>
-                                        <th>Dato</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {periode.vedtak.map((vedtak, i) => {
-                                        return (
-                                            <tr key={i}>
-                                                <td>{vedtak.status}</td>
-                                                <td>{vedtak.årsak}</td>
-                                                <td>
-                                                    <Hovedknapp onClick={() => history.push('/vilkarsprov')}>
-                                                        Se vedtak
-                                                    </Hovedknapp>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </Panel>
-                    </Ekspanderbartpanel>
-                );
-            })}
+            {/*                             <Undertittel>Vedtak</Undertittel> */}
+            {/*                             <table className="tabell"> */}
+            {/*                                 <thead> */}
+            {/*                                     <tr> */}
+            {/*                                         <th>Status</th> */}
+            {/*                                         <th>Dato</th> */}
+            {/*                                         <th></th> */}
+            {/*                                     </tr> */}
+            {/*                                 </thead> */}
+            {/*                                 <tbody> */}
+            {/*                                     {periode.vedtak.map((vedtak, i) => { */}
+            {/*                                         return ( */}
+            {/*                                             <tr key={i}> */}
+            {/*                                                 <td>{vedtak.status}</td> */}
+            {/*                                                 <td>{vedtak.årsak}</td> */}
+            {/*                                                 <td> */}
+            {/*                                                     <Hovedknapp onClick={() => history.push('/vilkarsprov')}> */}
+            {/*                                                         Se vedtak */}
+            {/*                                                     </Hovedknapp> */}
+            {/*                                                 </td> */}
+            {/*                                             </tr> */}
+            {/*                                         ); */}
+            {/*                                     })} */}
+            {/*                                 </tbody> */}
+            {/*                             </table> */}
+            {/*                         </Panel> */}
+            {/*                     </Ekspanderbartpanel> */}
+            {/*                 ); */}
+            {/*             })} */}
         </>
     );
 }
