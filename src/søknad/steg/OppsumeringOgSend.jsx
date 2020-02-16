@@ -87,6 +87,7 @@ const OppsumeringOgSend = ({ state }) => {
         }
     }, [updatedTokens]);
 
+    
     return (
         <div>
             <DisplayDataFromApplic state={state} />
