@@ -112,6 +112,7 @@ const Personopplysninger = ({state}) => {
         </div>
     );
 };
+
 const sectionGridLayout = {
     marginBottom: '1em',
     display: 'grid',
