@@ -86,7 +86,7 @@ const OppsumeringOgSend = ({ state }) => {
             setPostData({ url: '/soknad', data: state });
         }
     }, [updatedTokens]);
-    
+
     return (
         <div>
             <DisplayDataFromApplic state={state} />
