@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect} from 'react';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -70,6 +70,22 @@ const OppsumeringOgSend = ({ state }) => {
             console.log(errors);
         }
     }
+
+    useEffect(() => {
+        if (status === 401) {
+            setPostData({ url: undefined });
+            setRefreshTokenUrl('/auth/refresh');
+        } else {
+            setSubmitInProgress(false);
+        }
+    }, [status, failed]);
+
+    useEffect(() => {
+        if (updatedTokens !== undefined) {
+            setSubmitInProgress(false);
+            setPostData({ url: '/soknad', data: state });
+        }
+    }, [updatedTokens]);
 
     return (
         <div>
