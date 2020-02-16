@@ -1,25 +1,18 @@
-import {Undertittel} from "nav-frontend-typografi";
-import {jaNeiSpørsmål} from "./HelperFunctions";
-import React from "react";
+import { Undertittel } from 'nav-frontend-typografi';
+import { jaNeiSpørsmål } from './HelperFunctions';
+import React from 'react';
 
-const InntektPensjonFormue = ({state}) => {
+const InntektPensjonFormue = ({ state }) => {
     return (
         <div style={headerSpacing}>
-
-            <Undertittel style={elementSpacing}>
-                Inntekt, pensjon, og formue
-            </Undertittel>
+            <Undertittel style={elementSpacing}>Inntekt, pensjon, og formue</Undertittel>
 
             <div style={sectionGridLayout}>
                 <span style={elementSpacing}>
                     Har søker fremsatt krav om annen norsk eller utenlandsk ytelse/pensjon som ikke er avgjort?
                 </span>
-                <span>
-                    {jaNeiSpørsmål(state.inntektPensjonFormue.kravannenytelse)}
-                </span>
-                <span>
-                    Hva slags ytelse/pensjon
-                </span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.kravannenytelse)}</span>
+                <span>Hva slags ytelse/pensjon</span>
                 <span>
                     {state.inntektPensjonFormue.kravannenytelse === 'true'
                         ? state.inntektPensjonFormue.kravannenytelseBegrunnelse
@@ -28,81 +21,49 @@ const InntektPensjonFormue = ({state}) => {
             </div>
 
             <div style={sectionGridLayout}>
+                <span style={elementSpacing}>Har du arbeidsinntekt/personinntekt?</span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.arbeidselleranneninntekt)}</span>
+                <span style={elementSpacing}>Brutto beløp per år:</span>
+                <span>{state.inntektPensjonFormue.arbeidselleranneninntektBegrunnelse}</span>
+                <span style={elementSpacing}>Har du pensjon?</span>
+                <span>{state.inntektPensjonFormue.hardupensjon === 'true' && søkerHarPensjon()}</span>
+                <span>Sum inntekt:</span>
+                <span>{state.inntektPensjonFormue.sumInntekt}</span>
+            </div>
+
+            <div style={sectionGridLayout}>
+                <span style={elementSpacing}>Har du formue/eiendom</span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.harduformueeiendom)}</span>
+                <span style={elementSpacing}>Har du finansformue?</span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.hardufinansformue)}</span>
                 <span style={elementSpacing}>
-                    Har du arbeidsinntekt/personinntekt?
+                    {state.inntektPensjonFormue.harduformueeiendom === 'true' ||
+                    state.inntektPensjonFormue.hardufinansformue === 'true' ? (
+                        <span>Totalbeløp formue:</span>
+                    ) : (
+                        ''
+                    )}
                 </span>
                 <span>
-                    {jaNeiSpørsmål(state.inntektPensjonFormue.arbeidselleranneninntekt)}
+                    {state.inntektPensjonFormue.harduformueeiendom === 'true' ||
+                    state.inntektPensjonFormue.hardufinansformue === 'true'
+                        ? state.inntektPensjonFormue.formueBeløp
+                        : ''}
                 </span>
-                <span style={elementSpacing}>
-                    Brutto beløp per år:
-                </span>
+                <span style={elementSpacing}>Har du annen formue/eiendom</span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.harduannenformueeiendom)}</span>
+                <span>{state.inntektPensjonFormue.harduannenformueeiendom === 'true' ? <span>-</span> : ''}</span>
                 <span>
-                    {state.inntektPensjonFormue.arbeidselleranneninntektBegrunnelse}
-                </span>
-                <span style={elementSpacing}
-                >Har du pensjon?
-                </span>
-                <span>
-                    {state.inntektPensjonFormue.hardupensjon === 'true' && søkerHarPensjon()}
-                </span>
-                <span>
-                    Sum inntekt:
-                </span>
-                <span>
-                    {state.inntektPensjonFormue.sumInntekt}
+                    {state.inntektPensjonFormue.harduannenformueeiendom === 'true' ? søkerHarAnnenFormueEiendom() : ''}
                 </span>
             </div>
 
             <div style={sectionGridLayout}>
-                <span style={elementSpacing}>
-                    Har du formue/eiendom
-                </span>
                 <span>
-                    {jaNeiSpørsmål(state.inntektPensjonFormue.harduformueeiendom)}
+                    Mottar du eller ektefellen/samboer, eller har du eller han/hun i løpet av de siste tre månedene
+                    mottatt sosialstønad til livsopphold?
                 </span>
-                <span style={elementSpacing}>
-                    Har du finansformue?
-                </span>
-                <span>
-                    {jaNeiSpørsmål(state.inntektPensjonFormue.hardufinansformue)}
-                </span>
-                <span style={elementSpacing}>
-                        {state.inntektPensjonFormue.harduformueeiendom === 'true' ||
-                        state.inntektPensjonFormue.hardufinansformue === 'true'
-                            ? <span>Totalbeløp formue:</span>
-                            : ''}
-                </span>
-                <span>
-                        {state.inntektPensjonFormue.harduformueeiendom === 'true' ||
-                        state.inntektPensjonFormue.hardufinansformue === 'true'
-                            ? state.inntektPensjonFormue.formueBeløp
-                            : ''}
-                </span>
-                <span style={elementSpacing}>
-                    Har du annen formue/eiendom
-                </span>
-                <span>
-                    {jaNeiSpørsmål(state.inntektPensjonFormue.harduannenformueeiendom)}
-                </span>
-                <span>
-                    {state.inntektPensjonFormue.harduannenformueeiendom === 'true' ? <span>-</span> : ''}
-                </span>
-                <span>
-                        {state.inntektPensjonFormue.harduannenformueeiendom === 'true'
-                            ? søkerHarAnnenFormueEiendom()
-                            : ''}
-                </span>
-            </div>
-
-            <div style={sectionGridLayout}>
-                    <span>
-                        Mottar du eller ektefellen/samboer, eller har du eller han/hun i løpet av de siste tre månedene
-                        mottatt sosialstønad til livsopphold?
-                    </span>
-                <span>
-                    {jaNeiSpørsmål(state.inntektPensjonFormue.sosialstonad)}
-                </span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.sosialstonad)}</span>
             </div>
         </div>
     );
@@ -139,14 +100,14 @@ const sectionGridLayout = {
     marginBottom: '1em',
     display: 'grid',
     gridTemplateColumns: '1fr 1fr'
-}
+};
 
 const headerSpacing = {
     marginBottom: '2em'
-}
+};
 
 const elementSpacing = {
     marginBottom: '1em'
-}
+};
 
 export default InntektPensjonFormue;

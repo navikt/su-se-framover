@@ -1,14 +1,11 @@
-import {Undertittel} from "nav-frontend-typografi";
-import React from "react";
-import {reverseString} from "./HelperFunctions";
+import { Undertittel } from 'nav-frontend-typografi';
+import React from 'react';
+import { reverseString } from './HelperFunctions';
 
-const Utenlandsopphold = ({state}) => {
+const Utenlandsopphold = ({ state }) => {
     return (
         <div style={headerSpacing}>
-
-            <Undertittel style={elementSpacing}>
-                Utenlandsopphold
-            </Undertittel>
+            <Undertittel style={elementSpacing}>Utenlandsopphold</Undertittel>
 
             <div style={sectionGridLayout}>
                 {state.utenlandsopphold.utenlandsopphold === 'true' && (
@@ -63,14 +60,14 @@ const sectionGridLayout = {
     marginBottom: '1em',
     display: 'grid',
     gridTemplateColumns: '1fr 1fr'
-}
+};
 
 const headerSpacing = {
     marginBottom: '2em'
-}
+};
 
 const elementSpacing = {
     marginBottom: '1em'
-}
+};
 
-export default Utenlandsopphold
+export default Utenlandsopphold;

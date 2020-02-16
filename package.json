@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Frontend for saksbehandlingsstøtteverktøy for supplerende stønad",
   "scripts": {
+    "eslint": "eslint --fix src --ext .js --ext .jsx",
+    "eslint:commit-hook": "eslint --quiet --fix src --ext .js --ext .jsx",
     "test": "jest",
     "tdd": "jest --watch",
     "start-no-browser": "npm run inject_local_config && parcel src/index.html",
@@ -11,6 +13,11 @@
     "inject_local_config": "cp config.dev.json dist/config.json",
     "clean:dist": "rimraf dist",
     "prettier": "prettier --write \"src/**/*.js*\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run eslint:commit-hook"
+    }
   },
   "repository": {
     "type": "git",

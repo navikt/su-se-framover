@@ -50,7 +50,7 @@ function Vilkarsprov({ state = initialState, setState }) {
         <div className="vilkårsprøving">
             <PersonInfoBar fnr={sak.fnr} />
             <Innholdstittel>Vilkårsprøving</Innholdstittel>
-            <a href={`/soknad/vis?sak=${sak.id}`} target="_blank" className="knapp knapp--hoved">
+            <a href={`/soknad/vis?sak=${sak.id}`} target="_blank" rel="noopener noreferrer" className="knapp knapp--hoved">
                 Vis søknad
             </a>
             <form onSubmit={handleSubmit}>

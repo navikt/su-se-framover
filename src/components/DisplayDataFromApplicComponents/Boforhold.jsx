@@ -1,22 +1,15 @@
-import {Undertittel} from "nav-frontend-typografi";
-import {jaNeiSpørsmål} from "./HelperFunctions";
-import React from "react";
+import { Undertittel } from 'nav-frontend-typografi';
+import { jaNeiSpørsmål } from './HelperFunctions';
+import React from 'react';
 
-const Boforhold = ({state}) => {
+const Boforhold = ({ state }) => {
     return (
         <div style={headerSpacing}>
-
-            <Undertittel style={elementSpacing}>
-                Boforhold
-            </Undertittel>
+            <Undertittel style={elementSpacing}>Boforhold</Undertittel>
 
             <div style={sectionGridLayout}>
-                <span style={elementSpacing}>
-                    Deler søker bolig med en annen voksen?
-                </span>
-                <span>
-                    {jaNeiSpørsmål(state.boforhold.delerDuBolig)}
-                </span>
+                <span style={elementSpacing}>Deler søker bolig med en annen voksen?</span>
+                <span>{jaNeiSpørsmål(state.boforhold.delerDuBolig)}</span>
             </div>
 
             <div style={sectionGridLayout}>
@@ -36,7 +29,6 @@ const Boforhold = ({state}) => {
                     </>
                 )}
             </div>
-
         </div>
     );
 
@@ -45,13 +37,13 @@ const Boforhold = ({state}) => {
         let string = '';
         for (let i = 0; i < array.length; i++) {
             if (i === array.length - 1) {
-                array[i] === 'esp' ? string += 'Ektefelle/Samboer/Partner' : string += '';
-                array[i] === 'over18' ? string += 'Barn over 18' :string += '';
-                array[i] === 'annenPerson' ? string += 'Andre personer over 18' : string += '';
+                array[i] === 'esp' ? (string += 'Ektefelle/Samboer/Partner') : (string += '');
+                array[i] === 'over18' ? (string += 'Barn over 18') : (string += '');
+                array[i] === 'annenPerson' ? (string += 'Andre personer over 18') : (string += '');
             } else {
-                array[i] === 'esp' ? string += 'Ektefelle/Samboer/Partner, ' : string += '';
-                array[i] === 'over18' ? string += 'Barn over 18, ' : string += '';
-                array[i] === 'annenPerson' ? string += 'Andre personer over 18, ' : string += '';
+                array[i] === 'esp' ? (string += 'Ektefelle/Samboer/Partner, ') : (string += '');
+                array[i] === 'over18' ? (string += 'Barn over 18, ') : (string += '');
+                array[i] === 'annenPerson' ? (string += 'Andre personer over 18, ') : (string += '');
             }
         }
         return string;
@@ -75,14 +67,14 @@ const sectionGridLayout = {
     marginBottom: '1em',
     display: 'grid',
     gridTemplateColumns: '1fr 1fr'
-}
+};
 
 const headerSpacing = {
     marginBottom: '2em'
-}
+};
 
 const elementSpacing = {
     marginBottom: '1em'
-}
+};
 
 export default Boforhold;

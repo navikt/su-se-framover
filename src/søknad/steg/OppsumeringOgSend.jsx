@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -70,7 +70,6 @@ const OppsumeringOgSend = ({ state }) => {
             console.log(errors);
         }
     }
-
 
     useEffect(() => {
         if (status === 401) {
