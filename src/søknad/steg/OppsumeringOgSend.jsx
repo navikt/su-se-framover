@@ -71,7 +71,7 @@ const OppsumeringOgSend = ({ state }) => {
         }
     }
 
-    
+
     useEffect(() => {
         if (status === 401) {
             setPostData({ url: undefined });
