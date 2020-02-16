@@ -7,27 +7,52 @@ describe('useReauthenticatingFetch hook', () => {
     it('defaults to doing a GET call when fetching', async () => {
         const responseData = { testKey: 'testValue' };
 
-        const fetchArgsExpections = (url, fetchArgs) => {
-            expect(fetchArgs.method).toMatch(/get/i);
+        const fetchArgsInspector = url => {
+            expect(url).toMatch(/.*get-url/);
         };
 
         fetchReturns({
             headers: {
                 has: () => false
             },
-            fetchArgsExpections,
+            fetchArgsInspector,
             responseData
         });
 
-        const { result, waitForNextUpdate } = renderHook(() => useReauthenticatingFetch({ url: 'url' }), { wrapper });
+        const { result, waitForNextUpdate } = renderWithAuthCtx(() => useReauthenticatingFetch({ url: '/get-url' }));
 
         await waitForNextUpdate();
 
         expect(result.current.data).toEqual(responseData);
     });
+
+    it('posts data using POST', async () => {
+        const fetchArgsInspector = (url, fetchArgs) => {
+            expect(url).toMatch(/.*post-url/);
+            expect(fetchArgs.method).toMatch(/post/i);
+            expect(fetchArgs.body).toEqual(JSON.stringify(testData));
+        };
+
+        const testData = { name: 'Geir' };
+        fetchReturns({
+            headers: {
+                has: () => false
+            },
+            status: 201,
+            fetchArgsInspector
+        });
+
+        const { result, waitForNextUpdate } = renderWithAuthCtx(() =>
+            useReauthenticatingFetch({ url: 'post-url', method: 'post', data: testData })
+        );
+
+        await waitForNextUpdate();
+
+        expect(result.current.status).toBe(201);
+    });
 });
 
-const fetchReturns = ({ status = 200, responseData = 'empty', headers, fetchArgsInspector }) => {
+const fetchReturns = ({ status = 200, responseData, headers, fetchArgsInspector }) => {
     window.fetch = jest.fn().mockImplementation((url, fetchArgs) => {
         fetchArgsInspector && fetchArgsInspector(url, fetchArgs);
 
@@ -39,11 +64,15 @@ const fetchReturns = ({ status = 200, responseData = 'empty', headers, fetchArgs
     });
 };
 
-const wrapper = ({ children }) => (
-    <AuthContextProvider value={{ accessToken: 'token' }}>{children}</AuthContextProvider>
-);
+const renderWithAuthCtx = hookFn =>
+    renderHook(hookFn, {
+        // eslint-disable-next-line react/display-name
+        wrapper: ({ children }) => (
+            <AuthContextProvider value={{ accessToken: 'token' }}>{children}</AuthContextProvider>
+        )
+    });
 
 afterEach(() => {
     window.fetch = undefined;
 });
-jest.setTimeout(300);
+jest.setTimeout(100);

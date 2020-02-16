@@ -1,21 +1,11 @@
-import { useEffect, useState } from 'react';
 import { useGet } from './useGet';
+import { usePost } from './usePost';
 
 const useReauthenticationgFetch = ({ method = 'get', ...args }) => {
-    const [getState, setGetState] = useState({});
-    const getData = useGet(getState);
+    const getData = useGet(args && /get/i.test(method) ? { ...args } : {});
+    const postData = usePost(args && /post/i.test(method) ? { ...args } : {});
 
-    useEffect(() => {
-        if (!args.url) {
-            return;
-        }
-
-        if (args && /get/i.test(method)) {
-            setGetState({ url: args.url });
-        }
-    }, []);
-
-    return { ...getData };
+    return method === 'get' ? { ...getData } : { ...postData };
 };
 
 export default useReauthenticationgFetch;
