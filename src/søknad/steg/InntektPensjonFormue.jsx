@@ -386,7 +386,7 @@ function kravannenytelseValidering(formValues) {
 function kravannenytelseBegrunnelseValidering(formValues) {
     const begrunnelse = formValues.kravannenytelseBegrunnelse;
     let feilmelding = '';
-    console.log(begrunnelse);
+
     if (formValues.kravannenytelse === 'true') {
         if (!/^([a-øA-Ø.,]{1,255})$/.test(begrunnelse) || begrunnelse === undefined) {
             feilmelding +=
