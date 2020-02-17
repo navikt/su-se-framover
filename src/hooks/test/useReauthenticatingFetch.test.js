@@ -8,7 +8,7 @@ describe('useReauthenticatingFetch hook', () => {
         const responseData = { testKey: 'testValue' };
 
         const fetchArgsInspector = url => {
-            expect(url).toMatch(/.*get-url/);
+            expect(url).toMatch(/get-url/);
         };
 
         fetchReturns({
@@ -27,13 +27,14 @@ describe('useReauthenticatingFetch hook', () => {
     });
 
     it('posts data using POST', async () => {
+        const testData = { name: 'Geir' };
+
         const fetchArgsInspector = (url, fetchArgs) => {
-            expect(url).toMatch(/.*post-url/);
+            expect(url).toMatch(/post-url/);
             expect(fetchArgs.method).toMatch(/post/i);
             expect(fetchArgs.body).toEqual(JSON.stringify(testData));
         };
 
-        const testData = { name: 'Geir' };
         fetchReturns({
             headers: {
                 has: () => false
@@ -54,8 +55,10 @@ describe('useReauthenticatingFetch hook', () => {
     it('calls refresh endpoint on 401', async () => {
         const dataToPost = { name: 'Geir' };
         const responseData = { id: 1337 };
+
         const fetchArgsInspector = (url, fetchArgs) => {
-            expect(url).toMatch(/.*post-url/);
+            expect(fetchArgs.headers.Authorization).toMatch('nytt-token');
+            expect(url).toMatch(/post-url/);
             expect(fetchArgs.method).toMatch(/post/i);
             expect(fetchArgs.body).toEqual(JSON.stringify(dataToPost));
         };
@@ -74,16 +77,17 @@ describe('useReauthenticatingFetch hook', () => {
             // first response
             .mockImplementationOnce(() => Promise.resolve({ status: 401 }))
             // second response
-            .mockImplementationOnce(() =>
-                Promise.resolve({
+            .mockImplementationOnce((_, args) => {
+                expect(args.headers.refresh_token).toMatch(/refreshing/);
+                return Promise.resolve({
                     status: 200,
                     headers: {
                         has: () => true,
                         get: () => 'nytt-token'
                     },
                     text: () => 'Updated tokens here you go sir'
-                })
-            );
+                });
+            });
 
         const { result, waitForNextUpdate } = renderWithAuthCtx(() =>
             useReauthenticatingFetch({ url: 'post-url', method: 'post', data: dataToPost })
@@ -111,7 +115,9 @@ const renderWithAuthCtx = hookFn =>
     renderHook(hookFn, {
         // eslint-disable-next-line react/display-name
         wrapper: ({ children }) => (
-            <AuthContextProvider value={{ accessToken: 'token' }}>{children}</AuthContextProvider>
+            <AuthContextProvider value={{ accessToken: 'token', refreshToken: 'refreshing' }}>
+                {children}
+            </AuthContextProvider>
         )
     });
 

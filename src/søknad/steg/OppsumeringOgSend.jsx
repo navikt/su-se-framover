@@ -75,9 +75,7 @@ const OppsumeringOgSend = ({ state }) => {
                 Send søknad
             </Hovedknapp>
             {(status === 201 && <Kvittering type={'suksess'} melding={'Søknad er sendt! Takk!'} />) ||
-                (!isFetching && status === 401 && (
-                    <Kvittering type="advarsel" melding="Du må logge inn på nytt!" />
-                )) ||
+                (!isFetching && status === 401 && <Kvittering type="advarsel" melding="Du må logge inn på nytt!" />) ||
                 (!isFetching && status > 400 && (
                     <Kvittering type="advarsel" melding="Det oppsto en feil under lagring" />
                 )) ||
