@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Tekstomrade from 'nav-frontend-tekstomrade';
 import { Checkbox, Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel, Undertittel, Element } from 'nav-frontend-typografi';
@@ -7,6 +7,9 @@ import Knapp from 'nav-frontend-knapper';
 import './vilkorsprov.less';
 import { useHistory } from 'react-router-dom';
 import PersonInfoBar from '../components/PersonInfoBar';
+import DisplayDataFromApplic from '../components/DisplayDataFromApplic';
+import { useGet } from '../hooks/useGet';
+import { ToggleKnapp } from 'nav-frontend-toggle';
 
 const initialState = {
     uførevilkår: { checked: false, begrunnelse: '' },
@@ -18,9 +21,19 @@ const initialState = {
     formue: { checked: false, begrunnelse: '' }
 };
 
+
+
 function Vilkarsprov({ state = initialState, setState }) {
     const history = useHistory();
     const sak = history.location.state ? history.location.state.sak : {};
+    const url = sak ? '/sak/' + sak.id + '/soknad' : null;
+    const { data } = url ? useGet({ url }) : {};
+    const soknad = data ? data : '';
+
+	const [displayState, setDisplayState] = useState({
+		vissøknad: false
+	});
+
     useEffect(() => {
         setState(initialState);
     }, []);
@@ -43,19 +56,18 @@ function Vilkarsprov({ state = initialState, setState }) {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'stretch',
-        justifyContent: 'center'
+        justifyContent: 'left'
     };
 
     return (
         <div className="vilkårsprøving">
             <PersonInfoBar fnr={sak.fnr} />
             <Innholdstittel>Vilkårsprøving</Innholdstittel>
-            <a href={`/soknad/vis?sak=${sak.id}`} target="_blank" rel="noopener noreferrer" className="knapp knapp--hoved">
-                Vis søknad
-            </a>
+            <ToggleKnapp onClick={(event, pressed) => {setDisplayState({vissøknad:pressed})}}>Vis søknad</ToggleKnapp>
             <form onSubmit={handleSubmit}>
-                <Panel border>
-                    <div>
+            	<div style={faktasjekkstyle}>
+				<div>
+                	<Panel border>
                         <Section
                             checkboxLabel={'§12-4 - §12-8 Uførhet'}
                             sectionText={
@@ -139,8 +151,14 @@ function Vilkarsprov({ state = initialState, setState }) {
                             textAreaValue={state.formue.begrunnelse}
                             onChange={updateField}
                         />
-                    </div>
-                </Panel>
+                	</Panel>
+                </div>
+                <div className={displayState.vissøknad ? '' : 'hidden'} style={{width: '75%'}}>
+						<Panel border>
+                        	<DisplayDataFromApplic state={soknad}/>
+                        </Panel>
+                </div>
+                </div>
                 <div>
                     <Knapp htmlType="submit">Lagre</Knapp>
                     <Knapp onClick={() => history.push('/beregning')}>Neste</Knapp>

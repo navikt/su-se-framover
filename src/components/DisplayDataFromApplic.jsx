@@ -9,7 +9,7 @@ import ForNAV from './DisplayDataFromApplicComponents/ForNAV';
 
 const DisplayDataFromApplic = ({ state }) => {
     console.log(state);
-
+	if(Object.keys(state).length == 0) return null;
     return (
         <div>
             <Systemtittel style={{ marginBottom: '1em' }}>Oppsumerings side</Systemtittel>

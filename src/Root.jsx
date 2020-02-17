@@ -13,7 +13,6 @@ import Saker from './pages/Saker';
 import Saksoversikt from './pages/Saksoversikt';
 import Vilkarsprov from './pages/Vilkarsprov';
 import Beregning from './pages/Beregning';
-import SoknadVis from './pages/SoknadVis';
 import ErrorBoundary from './components/ErrorBoundary';
 import 'nav-frontend-tabell-style';
 import './Root.less';
@@ -73,9 +72,6 @@ const Root = () => {
                                 </Route>
                                 <Route path="/Beregning">
                                     <Beregning state={state.beregning} setState={updateBeregning} />
-                                </Route>
-                                <Route path="/soknad/vis">
-                                    <SoknadVis />
                                 </Route>
                             </Switch>
                         </ContentWrapper>
