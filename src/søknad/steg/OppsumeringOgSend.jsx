@@ -58,13 +58,13 @@ const OppsumeringOgSend = ({ state }) => {
         console.log('state: ', state);
 
         const errors = validerSøknad();
+        setSubmitInProgress(true);
+        setPostData({
+            url: '/soknad',
+            data: state
+        });
         if (errors.length < 1) {
             console.log('Sender søknad');
-            setSubmitInProgress(true);
-            setPostData({
-                url: '/soknad',
-                data: state
-            });
         } else {
             setFeilmeldinger(errors);
             console.log(errors);
@@ -93,11 +93,10 @@ const OppsumeringOgSend = ({ state }) => {
 
             <p>------------------------------------------------------------</p>
             {feilmeldinger.length > 0 && SubmitFeilmeldinger(feilmeldinger)}
-            <p>Trykk på send for å sende</p>
             <Hovedknapp onClick={sendSøknad} disabled={postData.url !== undefined} spinner={submitInProgress}>
                 Send søknad
             </Hovedknapp>
-            {(status === 201 && <Kvittering type={'suksess'} melding={'Søknad er sent! Takk!'} />) ||
+            {(status === 201 && <Kvittering type={'suksess'} melding={'Søknad er sendt! Takk!'} />) ||
                 (!submitInProgress && status === 401 && (
                     <Kvittering type="advarsel" melding="Du må logge inn på nytt!" />
                 )) ||

@@ -74,7 +74,7 @@ const InntektPensjonFormue = ({ state }) => {
             <ol>
                 {array.map((pensjonsOrdningRow, index) => (
                     <li style={elementSpacing} key={index}>
-                        Ordning: {pensjonsOrdningRow.ordning}, Beløp: {pensjonsOrdningRow.beløp}
+                        {pensjonsOrdningRow.ordning}, {pensjonsOrdningRow.beløp}
                     </li>
                 ))}
             </ol>

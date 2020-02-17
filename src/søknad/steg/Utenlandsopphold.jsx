@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
 import { JaNeiSpørsmål } from '../../components/FormElements.jsx';
-import { Systemtittel } from 'nav-frontend-typografi';
+import { Systemtittel, Element } from 'nav-frontend-typografi';
 import { Feiloppsummering } from 'nav-frontend-skjema';
 import Datovelger from 'nav-datovelger';
 import 'nav-datovelger/dist/datovelger/styles/datovelger.css';
@@ -91,6 +91,10 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                 );
                             })}
                     </div>
+                    <div style={{ display: 'flex' }}>
+                        <Element>Antall dager: &nbsp;</Element>
+                        <Element>{addDaysBetweenTwoDates(state.utenlandsoppholdArray)}</Element>
+                    </div>
                     <Knapp
                         style={{ marginTop: '1em' }}
                         onClick={() => addInputField(state.utenlandsoppholdArray, 'utenlandsoppholdArray')}
@@ -168,6 +172,10 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                 );
                             })}
                     </div>
+                    <div style={{ display: 'flex' }}>
+                        <Element>Antall dager: &nbsp;</Element>
+                        <Element>{addDaysBetweenTwoDates(state.planlagtUtenlandsoppholdArray)}</Element>
+                    </div>
                     <Knapp
                         style={{ marginTop: '1em' }}
                         onClick={() =>
@@ -215,6 +223,27 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
             onClick();
         }
     }
+};
+
+const addDaysBetweenTwoDates = state => {
+    let x = 0;
+    state.map(item => {
+        const utreisedato = item.utreisedato;
+        const innreisedato = item.innreisedato;
+
+        x += numberOfDaysBetweeenTwoDates(utreisedato, innreisedato);
+    });
+    if (isNaN(x)) {
+        return 'Fyll ut alle dato-felter for å regne antall dager';
+    } else {
+        return x;
+    }
+};
+
+const numberOfDaysBetweeenTwoDates = (date1, date2) => {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const diffDays = Math.round(Math.abs((makeDate(date1) - makeDate(date2)) / oneDay));
+    return diffDays;
 };
 
 const fields = {
