@@ -12,6 +12,8 @@ import DisplayDataFromApplic from '../../components/DisplayDataFromApplic';
 import useFetch from '../../hooks/useFetch';
 
 const OppsumeringOgSend = ({ state }) => {
+    console.log(state);
+
     const [feilmeldinger, setFeilmeldinger] = useState([]);
     const [postData, setPostData] = useState({ url: undefined, method: 'post' });
     const { status, isFetching, failed } = useFetch(postData);

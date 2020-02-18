@@ -51,6 +51,19 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
         }
     }
 
+    function depositumBeløp() {
+        if (state.søkerHarDepositumskonto === 'true') {
+            return (
+                <InputFields
+                    labelText="Beløp:"
+                    value={state.depositumBeløp || ''}
+                    bredde={'M'}
+                    onChange={updateFunction('depositumBeløp')}
+                />
+            );
+        }
+    }
+
     function harAnnenFormueEiendom() {
         if (state.harduannenformueeiendom === 'true') {
             return (
@@ -300,7 +313,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                         state={state.søkerHarDepositumskonto}
                     />
 
-                    <InputFields labelText="Beløp:" value={state.søkerHarDepositumskonto || ''} bredde={'M'} />
+                    {depositumBeløp()}
                 </div>
 
                 {/*tilsvarende spørsmål for ektefelle/samboer/partner/etc. */}
@@ -335,6 +348,9 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     }
 };
 
+//----------------------------------------------------------------------------------
+//---------------------Validering
+//----------------------------------------------------------------------------------
 const fields = {
     kravannenytelse: { label: 'kravannenytelse', htmlId: 'kravannenytelse' },
     kravannenytelseBegrunnelse: {
@@ -353,6 +369,8 @@ const fields = {
     formueBeløp: { label: 'formueBeløp', htmlId: 'formueBeløp' },
     typeFormue: { label: 'typeFormue', htmlId: 'typeFormue' },
     skattetakst: { label: 'skattetakst', htmlId: 'skattetakst' },
+    søkerHarDepositumsKonto: { label: 'søkerHarDepositumsKonto', htmlId: 'søkerHarDepositumsKonto' },
+    depositumBeløp: { label: 'depositumBeløp', htmlId: 'depositumBeløp' },
     sosialstonad: { label: 'sosialstonad', htmlId: 'sosialstonad' }
 };
 
@@ -372,7 +390,8 @@ function validateFormValues(formValues) {
     tempErrors.push(...formueBeløpValidering(formValues));
     tempErrors.push(...annenFormueEiendom(formValues));
     tempErrors.push(...annenFormueEiendomArray(formValues, tempAnnenFormueEiendomArray));
-
+    tempErrors.push(...harSøkerDepositumskontoValidering(formValues));
+    tempErrors.push(...depositumsBeløpValidering(formValues));
     tempErrors.push(...sosialStønadValidering(formValues));
 
     return tempErrors;
@@ -576,6 +595,38 @@ function annenFormueEiendomArray(formValues, errorsArray) {
         });
     }
     return errorsArray;
+}
+
+function harSøkerDepositumskontoValidering(formValues) {
+    const depositumskonto = formValues.søkerHarDepositumskonto;
+    let feilmelding = '';
+
+    if (depositumskonto === undefined) {
+        feilmelding += 'Vennligst velg om søker har depositumskonto';
+
+        if (feilmelding.length > 0) {
+            return [{ skjemaelementId: fields.søkerHarDepositumsKonto.htmlId, feilmelding }];
+        }
+    }
+
+    return [];
+}
+
+function depositumsBeløpValidering(formValues) {
+    const søkerHarDepositumskonto = formValues.søkerHarDepositumskonto;
+    let feilmelding = '';
+
+    if (søkerHarDepositumskonto === 'true') {
+        const beløp = formValues.depositumBeløp;
+
+        if (!/^(\d{1,30})$/.test(beløp)) {
+            feilmelding += 'Feltet kan ikke være tom, og kan kun inneholde tall';
+        }
+        if (feilmelding.length > 0) {
+            return [{ skjemaelementId: fields.depositumBeløp.htmlId, feilmelding }];
+        }
+    }
+    return [];
 }
 
 function sosialStønadValidering(formValues) {

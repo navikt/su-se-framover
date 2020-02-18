@@ -59,6 +59,19 @@ const InntektPensjonFormue = ({ state }) => {
             </div>
 
             <div style={sectionGridLayout}>
+                <span style={elementSpacing}>Har søker Depositumskonto?</span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.søkerHarDepositumskonto)}</span>
+                <span>
+                    {state.inntektPensjonFormue.søkerHarDepositumskonto === 'true' && <span>depositum-beløp:</span>}
+                </span>
+                <span>
+                    {state.inntektPensjonFormue.søkerHarDepositumskonto === 'true' && (
+                        <span>{state.inntektPensjonFormue.depositumBeløp}</span>
+                    )}
+                </span>
+            </div>
+
+            <div style={sectionGridLayout}>
                 <span>
                     Mottar du eller ektefellen/samboer, eller har du eller han/hun i løpet av de siste tre månedene
                     mottatt sosialstønad til livsopphold?
