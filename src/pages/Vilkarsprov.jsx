@@ -8,7 +8,7 @@ import './vilkorsprov.less';
 import { useHistory } from 'react-router-dom';
 import PersonInfoBar from '../components/PersonInfoBar';
 import DisplayDataFromApplic from '../components/DisplayDataFromApplic';
-import { useGet } from '../hooks/useGet';
+import useFetch from '../hooks/useFetch';
 import { ToggleKnapp } from 'nav-frontend-toggle';
 
 const initialState = {
@@ -25,7 +25,7 @@ function Vilkarsprov({ state = initialState, setState }) {
     const history = useHistory();
     const sak = history.location.state ? history.location.state.sak : {};
     const url = sak ? '/sak/' + sak.id + '/soknad' : null;
-    const { data } = url ? useGet({ url }) : {};
+    const { data } = url ? useFetch({ url }) : {};
     const soknad = data ? data : '';
 
     const [displayState, setDisplayState] = useState({
@@ -158,9 +158,12 @@ function Vilkarsprov({ state = initialState, setState }) {
                         </Panel>
                     </div>
                     <div className={displayState.vissøknad ? '' : 'hidden'} style={{ width: '75%' }}>
-                        <Panel border>
-                            <DisplayDataFromApplic state={soknad} />
-                        </Panel>
+                    	{ soknad !== undefined && soknad[0] !== undefined && (
+                    		<Panel border>
+                            	<DisplayDataFromApplic state={JSON.parse(soknad[0].søknadJson)} />
+                            </Panel>
+                    	)}
+
                     </div>
                 </div>
                 <div>
