@@ -1,3 +1,4 @@
+// endrer på tekstinnholdet for oppsumerings-siden
 export const jaNeiSpørsmål = state => {
     if (state === 'true') {
         return 'Ja';
@@ -8,6 +9,7 @@ export const jaNeiSpørsmål = state => {
     }
 };
 
+//Dato input fra state "2020-12-25" -> "25-12-2020"
 export const reverseString = str => {
     const splitString = str.split('-');
     const reverseArray = splitString.reverse();

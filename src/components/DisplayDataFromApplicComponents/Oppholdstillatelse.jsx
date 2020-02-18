@@ -22,8 +22,12 @@ const Oppholdstillatelse = ({ state }) => {
             </div>
 
             <div style={sectionGridLayout}>
-                <span>Har søker søkt om forlengelse?</span>
-                <span>{jaNeiSpørsmål(state.oppholdstillatelse.soektforlengelse)}</span>
+                {state.oppholdstillatelse.varigopphold === 'false' && (
+                    <>
+                        <span>Har søker søkt om forlengelse?</span>
+                        <span>{jaNeiSpørsmål(state.oppholdstillatelse.soektforlengelse)}</span>
+                    </>
+                )}
             </div>
         </div>
     );

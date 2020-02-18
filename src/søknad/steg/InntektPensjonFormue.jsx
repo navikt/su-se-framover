@@ -282,16 +282,26 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                         state={state.hardufinansformue}
                     />
                 </div>
+                {totalbeløpFormue()}
                 <JaNeiSpørsmål
                     legend="Har du annen formue/eiendom?"
                     fieldName="harduannenformueeiendom"
                     onChange={e => updateField('harduannenformueeiendom', e.target.value)}
                     state={state.harduannenformueeiendom}
                 />
-
-                {totalbeløpFormue()}
-
                 {harAnnenFormueEiendom()}
+
+                <div>
+                    <Systemtittel>Depositumskonto</Systemtittel>
+                    <JaNeiSpørsmål
+                        legend="Har søker depositumskonto?"
+                        fieldName="søkerHarDepositumskonto"
+                        onChange={e => updateField('søkerHarDepositumskonto', e.target.value)}
+                        state={state.søkerHarDepositumskonto}
+                    />
+
+                    <InputFields labelText="Beløp:" value={state.søkerHarDepositumskonto || ''} bredde={'M'} />
+                </div>
 
                 {/*tilsvarende spørsmål for ektefelle/samboer/partner/etc. */}
             </div>

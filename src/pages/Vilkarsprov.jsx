@@ -32,6 +32,13 @@ function Vilkarsprov({ state = initialState, setState }) {
         vissøknad: false
     });
 
+    const updateDisplayState = () => {
+        setDisplayState(displayState => ({
+            ...displayState,
+            vissøknad: displayState.vissøknad ? false : true
+        }));
+    };
+
     useEffect(() => {
         setState(initialState);
     }, []);
@@ -61,13 +68,7 @@ function Vilkarsprov({ state = initialState, setState }) {
         <div className="vilkårsprøving">
             <PersonInfoBar fnr={sak.fnr} />
             <Innholdstittel>Vilkårsprøving</Innholdstittel>
-            <ToggleKnapp
-                onClick={(event, pressed) => {
-                    setDisplayState({ vissøknad: pressed });
-                }}
-            >
-                Vis søknad
-            </ToggleKnapp>
+            <ToggleKnapp onClick={() => updateDisplayState()}>Vis søknad</ToggleKnapp>
             <form onSubmit={handleSubmit}>
                 <div style={faktasjekkstyle}>
                     <div>
@@ -157,13 +158,15 @@ function Vilkarsprov({ state = initialState, setState }) {
                             />
                         </Panel>
                     </div>
-                    <div className={displayState.vissøknad ? '' : 'hidden'} style={{ width: '75%' }}>
-                        {soknad !== undefined && soknad[0] !== undefined && (
-                            <Panel border>
-                                <DisplayDataFromApplic state={JSON.parse(soknad[0].søknadJson)} />
-                            </Panel>
-                        )}
-                    </div>
+                    {displayState.vissøknad && (
+                        <div style={{ width: '75%' }}>
+                            {soknad !== undefined && soknad[0] !== undefined && (
+                                <Panel border>
+                                    <DisplayDataFromApplic state={JSON.parse(soknad[0].søknadJson)} />
+                                </Panel>
+                            )}
+                        </div>
+                    )}
                 </div>
                 <div>
                     <Knapp htmlType="submit">Lagre</Knapp>
