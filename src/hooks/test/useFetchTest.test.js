@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderHook } from '@testing-library/react-hooks';
-import useReauthenticatingFetch from '../../hooks/useReauthenticatingFetch';
+import useFetch from '../useFetch';
 import { AuthContextProvider } from '../../contexts/AuthContext';
 
 describe('useReauthenticatingFetch hook', () => {
@@ -19,7 +19,7 @@ describe('useReauthenticatingFetch hook', () => {
             responseData
         });
 
-        const { result, waitForNextUpdate } = renderWithAuthCtx(() => useReauthenticatingFetch({ url: '/get-url' }));
+        const { result, waitForNextUpdate } = renderWithAuthCtx(() => useFetch({ url: '/get-url' }));
 
         await waitForNextUpdate();
 
@@ -44,7 +44,7 @@ describe('useReauthenticatingFetch hook', () => {
         });
 
         const { result, waitForNextUpdate } = renderWithAuthCtx(() =>
-            useReauthenticatingFetch({ url: 'post-url', method: 'post', data: testData })
+            useFetch({ url: 'post-url', method: 'post', data: testData })
         );
 
         await waitForNextUpdate();
@@ -90,7 +90,7 @@ describe('useReauthenticatingFetch hook', () => {
             });
 
         const { result, waitForNextUpdate } = renderWithAuthCtx(() =>
-            useReauthenticatingFetch({ url: 'post-url', method: 'post', data: dataToPost })
+            useFetch({ url: 'post-url', method: 'post', data: dataToPost })
         );
 
         await waitForNextUpdate();

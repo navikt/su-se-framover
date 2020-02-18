@@ -1,9 +1,9 @@
 import React, { createContext, useState } from 'react';
-import { useGet } from './useGet';
+import useFetch from './useFetch';
 
 const useConfig = () => {
     const [url, setUrl] = useState(undefined);
-    const data = useGet({ url, pathContainsHost: true });
+    const data = useFetch({ url, pathContainsHost: true });
     let config;
     if (data.data && data.isFetching == false) {
         config = data.data;

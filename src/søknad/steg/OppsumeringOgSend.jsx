@@ -9,12 +9,12 @@ import { validateOppholdstillatelse } from './Oppholdstillatelse';
 import { validateInntektPensjonFormue } from './InntektPensjonFormue';
 import { validateForNAV } from './ForNAV';
 import DisplayDataFromApplic from '../../components/DisplayDataFromApplic';
-import useReauthenticationgFetch from '../../hooks/useReauthenticatingFetch';
+import useFetch from '../../hooks/useFetch';
 
 const OppsumeringOgSend = ({ state }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
     const [postData, setPostData] = useState({ url: undefined, method: 'post' });
-    const { status, isFetching, failed } = useReauthenticationgFetch(postData);
+    const { status, isFetching, failed } = useFetch(postData);
 
     const Kvittering = ({ type, melding }) => {
         return (
