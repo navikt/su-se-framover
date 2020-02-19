@@ -13,6 +13,7 @@ import Saker from './pages/Saker';
 import Saksoversikt from './pages/Saksoversikt';
 import Vilkarsprov from './pages/Vilkarsprov';
 import Beregning from './pages/Beregning';
+import ComponentErrorBoundary from './components/ComponentErrorBoundary';
 import ErrorBoundary from './components/ErrorBoundary';
 import 'nav-frontend-tabell-style';
 import './Root.less';
@@ -50,28 +51,44 @@ const Root = () => {
                         <ContentWrapper>
                             <Switch>
                                 <Route path="/" exact>
-                                    <Main />
+                                    <ComponentErrorBoundary>
+                                        <Main />
+                                    </ComponentErrorBoundary>
                                 </Route>
                                 <Route path="/person">
-                                    <Personinfo />
+                                    <ComponentErrorBoundary>
+                                        <Personinfo />
+                                    </ComponentErrorBoundary>
                                 </Route>
                                 <Route path="/auth/complete">
-                                    <AuthComplete />
+                                    <ComponentErrorBoundary>
+                                        <AuthComplete />
+                                    </ComponentErrorBoundary>
                                 </Route>
                                 <Route path="/soknad" exact>
-                                    <Soknad />
+                                    <ComponentErrorBoundary>
+                                        <Soknad />
+                                    </ComponentErrorBoundary>
                                 </Route>
                                 <Route path="/saker">
-                                    <Saker />
+                                    <ComponentErrorBoundary>
+                                        <Saker />
+                                    </ComponentErrorBoundary>
                                 </Route>
                                 <Route path="/vilkarsprov">
-                                    <Vilkarsprov state={state.vilkårsprøving} setState={updateVilkårsvurdering} />
+                                    <ComponentErrorBoundary>
+                                        <Vilkarsprov state={state.vilkårsprøving} setState={updateVilkårsvurdering} />
+                                    </ComponentErrorBoundary>
                                 </Route>
                                 <Route path="/saksoversikt">
-                                    <Saksoversikt />
+                                    <ComponentErrorBoundary>
+                                        <Saksoversikt />
+                                    </ComponentErrorBoundary>
                                 </Route>
                                 <Route path="/Beregning">
-                                    <Beregning state={state.beregning} setState={updateBeregning} />
+                                    <ComponentErrorBoundary>
+                                        <Beregning state={state.beregning} setState={updateBeregning} />
+                                    </ComponentErrorBoundary>
                                 </Route>
                             </Switch>
                         </ContentWrapper>

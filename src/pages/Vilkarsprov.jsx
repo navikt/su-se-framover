@@ -162,7 +162,7 @@ function Vilkarsprov({ state = initialState, setState }) {
                         <div style={{ width: '75%' }}>
                             {soknad !== undefined && soknad[0] !== undefined && (
                                 <Panel border>
-                                    <DisplayDataFromApplic state={soknad[0].json} />
+                                    <DisplayDataFromApplic state={soknad[0].kebab} />
                                 </Panel>
                             )}
                         </div>

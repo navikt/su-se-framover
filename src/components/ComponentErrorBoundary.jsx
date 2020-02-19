@@ -1,7 +1,8 @@
 import React from 'react';
 import { Feilmelding } from 'nav-frontend-typografi';
+import RouteErrors from './RouteErrors';
 
-class ErrorBoundary extends React.Component {
+class ComponentErrorBoundary extends React.Component {
     constructor(props) {
         super(props);
         this.state = { hasError: false };
@@ -13,13 +14,12 @@ class ErrorBoundary extends React.Component {
     }
 
     render() {
+        console.log(this.state.hasError);
         if (this.state.hasError) {
             return (
                 <div style={globalErrorPageStyle}>
                     <Feilmelding>En feil har oppstått.</Feilmelding>
-                    <a href="/" className="knapp knapp--hoved">
-                        Tilbake
-                    </a>
+                    <RouteErrors state={this.state} />
                     <hr />
                     <div>
                         Informasjon for utviklere:
@@ -40,4 +40,4 @@ const stackTraceStyle = {
     fontFamily: 'Consolas, monospace'
 };
 
-export default ErrorBoundary;
+export default ComponentErrorBoundary;
