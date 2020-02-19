@@ -11,13 +11,14 @@ import { validateForNAV } from './ForNAV';
 import DisplayDataFromApplic from '../../components/DisplayDataFromApplic';
 import useFetch from '../../hooks/useFetch';
 import { useHistory } from 'react-router-dom';
+import { getNorwegianNationalFlag, getRandomSmiley } from '../../hooks/getRandomEmoji';
 
 const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
     console.log(state);
 
     const [feilmeldinger, setFeilmeldinger] = useState([]);
     const [postData, setPostData] = useState({ url: undefined, method: 'post' });
-    const { status, isFetching, failed } = useFetch(postData);
+    let { status, isFetching, failed } = useFetch(postData);
     const history = useHistory();
 
     const Kvittering = ({ type, melding }) => {
@@ -86,11 +87,22 @@ const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
             <Hovedknapp onClick={sendSøknad} disabled={postData.url !== undefined} spinner={isFetching}>
                 Send søknad
             </Hovedknapp>
+
             {(status === 201 &&
-                (disableStegIndikator(), (<Kvittering type={'suksess'} melding={'Søknad er sendt! Takk!'} />))) ||
+                (disableStegIndikator(),
+                (
+                    <Kvittering
+                        type={'suksess'}
+                        melding={`Søknad er sendt! Takk! ${getRandomSmiley()} 
+                                                      ${getNorwegianNationalFlag()}`}
+                    />
+                ))) ||
                 (!isFetching && status === 401 && <Kvittering type="advarsel" melding="Du må logge inn på nytt!" />) ||
+                (!isFetching && status === 400 && (
+                    <Kvittering type="advarsel" melding="Det har blitt opgitt feil info. se gjennom søknad" />
+                )) ||
                 (!isFetching && status > 400 && (
-                    <Kvittering type="advarsel" melding="Det oppsto en feil under sending." />
+                    <Kvittering type="advarsel" melding="Det oppsto en feil under sending. Prøv igjen senere" />
                 )) ||
                 (!isFetching && failed && <Kvittering type="advarsel" melding={failed} />)}
         </div>
@@ -99,7 +111,7 @@ const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
 
 const SubmitFeilmeldinger = feilmeldinger => (
     <div className={'feiloppsummering'}>
-        <Undertittel>Følgende feil ble funnet. Vennligst rett dem :)</Undertittel>
+        <Undertittel>Følgende feil ble funnet. Vennligst rett dem {getRandomSmiley()}</Undertittel>
         <ul className="feiloppsummering__liste">
             {feilmeldinger.map(item => (
                 <li key={item}>{item}</li>

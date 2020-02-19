@@ -1,14 +1,8 @@
 import React from 'react';
 import { EtikettSuksess } from 'nav-frontend-etiketter';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
-import { Undertittel } from 'nav-frontend-typografi';
+import { Undertittel, Normaltekst } from 'nav-frontend-typografi';
 import useFetch from '../hooks/useFetch';
-
-const bar = {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap'
-};
 
 function PersonInfoBar({ fnr }) {
     const url = '/person?ident=' + fnr;
@@ -16,88 +10,83 @@ function PersonInfoBar({ fnr }) {
     const person = data ? data : {};
     console.log('person', person);
     return (
-        <>
+        <div>
             <Ekspanderbartpanel
                 tittel={
-                    <div style={bar}>
-                        <EtikettSuksess>Kjønn-ikon</EtikettSuksess>
-                        <Undertittel>
-                            {fnr} {person ? (person.fornavn, person.mellomnavn, person.etternavn) : ''} (45)
-                        </Undertittel>
+                    <div style={{ display: 'flex' }}>
+                        <div>
+                            <EtikettSuksess>Kjønn-ikon</EtikettSuksess>
+                        </div>
+                        &nbsp; &nbsp; &nbsp; &nbsp;
+                        <div style={{ display: 'flex' }}>
+                            <div>
+                                <Undertittel>
+                                    {person ? (person.fornavn, person.mellomnavn, person.etternavn) : ''} (45)
+                                </Undertittel>
+                                <Normaltekst>12345678901</Normaltekst>
+                            </div>
+                        </div>
+                        <div>heiehi</div>
                     </div>
                 }
                 tittelProps="normaltekst"
                 border
             >
-                {/*                 <div className="flex-container" style={bar}> */}
-                {/*                     <div style={element}> */}
-                {/*                         <Undertittel>Bostedsadresse</Undertittel> */}
-                {/*                         <Normaltekst> */}
-                {/*                             {person.adresse.gatenavn} {person.adresse.gatenr} */}
-                {/*                         </Normaltekst> */}
-                {/*                         <Normaltekst> */}
-                {/*                             {person.adresse.postnr} {person.adresse.poststed} */}
-                {/*                         </Normaltekst> */}
-                {/*                     </div> */}
-                {/*                     <div style={element}> */}
-                {/*                         <Undertittel>Sivilstand</Undertittel> */}
-                {/*                         <Normaltekst>{person.sivilstand.status}</Normaltekst> */}
-                {/*                         <Normaltekst>{person.sivilstand.partner}</Normaltekst> */}
-                {/*                     </div> */}
-                {/*                     <div style={element}> */}
-                {/*                         <Undertittel>Kontakt</Undertittel> */}
-                {/*                         <Normaltekst>{person.telefon}</Normaltekst> */}
-                {/*                         <Normaltekst> */}
-                {/*                             {person.epost.epost} ({person.epost.metadata.kilde}-{person.epost.metadata.oppdatert}) */}
-                {/*                         </Normaltekst> */}
-                {/*                     </div> */}
-                {/*                     <div style={element}> */}
-                {/*                         <Undertittel>Statsborgerskap</Undertittel> */}
-                {/*                         {person.statsborgerskap.map(statsborgerskap => { */}
-                {/*                             return ( */}
-                {/*                                 <> */}
-                {/*                                     <Normaltekst> */}
-                {/*                                         {statsborgerskap.land} ({statsborgerskap.fom}) */}
-                {/*                                     </Normaltekst> */}
-                {/*                                 </> */}
-                {/*                             ); */}
-                {/*                         })} */}
-                {/*                     </div> */}
-                {/*                     <div style={element}> */}
-                {/*                         <Undertittel>Fødsel</Undertittel> */}
-                {/*                         <Normaltekst> */}
-                {/*                             {person.foedsel.foedested}, {person.foedsel.foedeland} */}
-                {/*                         </Normaltekst> */}
-                {/*                         <Normaltekst>{person.foedsel.fodselsedato}</Normaltekst> */}
-                {/*                     </div> */}
-                {/*                     <div style={element}> */}
-                {/*                         <Undertittel>Oppholdstillatelse</Undertittel> */}
-                {/*                         {person.opphold.map(opphold => { */}
-                {/*                             return ( */}
-                {/*                                 <> */}
-                {/*                                     <Normaltekst> */}
-                {/*                                         {opphold.type} ({opphold.fom}-{opphold.tom}) */}
-                {/*                                     </Normaltekst> */}
-                {/*                                 </> */}
-                {/*                             ); */}
-                {/*                         })} */}
-                {/*                     </div> */}
-                {/*                     <div style={element}> */}
-                {/*                         <Undertittel>Personstatus</Undertittel> */}
-                {/*                         {person.folkeregisterpersonstatus.map(status => { */}
-                {/*                             return ( */}
-                {/*                                 <> */}
-                {/*                                     <Normaltekst> */}
-                {/*                                         {status.status} ({status.fom}-{status.tom}) */}
-                {/*                                     </Normaltekst> */}
-                {/*                                 </> */}
-                {/*                             ); */}
-                {/*                         })} */}
-                {/*                     </div> */}
-                {/*                 </div> */}
+{/*                <div>
+                    <div>
+                        <Undertittel>Bostedsadresse</Undertittel>
+                        <Normaltekst>Gatenavn 5</Normaltekst>
+                        <Normaltekst>0697 Oslo</Normaltekst>
+                    </div>
+
+                    <div>
+                        <Undertittel>Sivilstand</Undertittel>
+                        <Normaltekst>Gift</Normaltekst>
+                    </div>
+
+                    <div>
+                        <Undertittel>Kontakt</Undertittel>
+                        <Normaltekst>12345678</Normaltekst>
+                        <Normaltekst>epost@epost.no (epost-metadata-kilde-epost-metadata-oppdatert)</Normaltekst>
+                    </div>
+
+                    <div>
+                        <Undertittel>Statsborgerskap</Undertittel>
+                        <Normaltekst>Norsk, engelsk, Svensk</Normaltekst>
+                    </div>
+
+                    <div>
+                        <Undertittel>Fødsel</Undertittel>
+                        <Normaltekst>Oslo, Norge</Normaltekst>
+                        <Normaltekst>08.05.2020</Normaltekst>
+                    </div>
+
+                    <div>
+                        <Undertittel>Oppholdstillatelse</Undertittel>
+                        <Normaltekst>01.01.2020 - 31.12.2020</Normaltekst>
+                    </div>
+
+                    <div>
+                        <Undertittel>Personstatus</Undertittel>
+                        <Normaltekst>Jeg er en status</Normaltekst>
+                    </div>
+                </div>
+                    */}
             </Ekspanderbartpanel>
-        </>
+        </div>
     );
+
 }
+
+
+                {/*
+const bar = {
+    display: 'flex',
+    flexDirection: 'row'
+};
+
+const element = {
+    margin: '1%'
+};*/}
 
 export default PersonInfoBar;

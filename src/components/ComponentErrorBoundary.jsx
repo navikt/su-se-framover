@@ -9,12 +9,10 @@ class ComponentErrorBoundary extends React.Component {
     }
 
     static getDerivedStateFromError(error) {
-        console.log(error);
         return { hasError: true, error };
     }
 
     render() {
-        console.log(this.state.hasError);
         if (this.state.hasError) {
             return (
                 <div style={globalErrorPageStyle}>
