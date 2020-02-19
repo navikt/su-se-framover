@@ -15,6 +15,8 @@ import './soknad.less';
 function Soknad() {
     const [stage, setStage] = useState(0);
 
+    const [stegIndikatorDisabled, setStegIndikatorDisabled] = useState(false);
+
     const [state, setState] = useState({
         personopplysninger: {},
         boforhold: {
@@ -35,6 +37,10 @@ function Soknad() {
 
     function addToStage() {
         setStage(stage => stage + 1);
+    }
+
+    function disableStegIndikator() {
+        setStegIndikatorDisabled(true);
     }
 
     const updateFunction = name => value => updateField(setState)(name, value);
@@ -92,7 +98,7 @@ function Soknad() {
                 <ForNAV state={state.forNAV} updateField={updateField(updateFunction('forNAV'))} onClick={addToStage} />
             );
         } else if (stage === 6) {
-            return <OppsumeringOgSend state={state} />;
+            return <OppsumeringOgSend state={state} disableStegIndikator={disableStegIndikator} />;
         } else {
             return (
                 <div>
@@ -108,13 +114,13 @@ function Soknad() {
                 <Stegindikator
                     style={{ marginBottom: '1em' }}
                     steg={[
-                        { label: 'Personopplysninger' },
-                        { label: 'Boforhold' },
-                        { label: 'Utenlandsopphold' },
-                        { label: 'Oppholdstillatelse' },
-                        { label: 'Inntekt, pensjon og formue' },
-                        { label: 'For NAV' },
-                        { label: 'Send søknad' }
+                        { label: 'Personopplysninger', disabled: stegIndikatorDisabled },
+                        { label: 'Boforhold', disabled: stegIndikatorDisabled },
+                        { label: 'Utenlandsopphold', disabled: stegIndikatorDisabled },
+                        { label: 'Oppholdstillatelse', disabled: stegIndikatorDisabled },
+                        { label: 'Inntekt, pensjon og formue', disabled: stegIndikatorDisabled },
+                        { label: 'For NAV', disabled: stegIndikatorDisabled },
+                        { label: 'Send søknad', disabled: stegIndikatorDisabled }
                     ]}
                     onChange={index => setStage(index)}
                     aktivtSteg={stage}

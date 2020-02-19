@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Undertittel } from 'nav-frontend-typografi';
@@ -10,13 +10,15 @@ import { validateInntektPensjonFormue } from './InntektPensjonFormue';
 import { validateForNAV } from './ForNAV';
 import DisplayDataFromApplic from '../../components/DisplayDataFromApplic';
 import useFetch from '../../hooks/useFetch';
+import { useHistory } from 'react-router-dom';
 
-const OppsumeringOgSend = ({ state }) => {
+const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
     console.log(state);
 
     const [feilmeldinger, setFeilmeldinger] = useState([]);
     const [postData, setPostData] = useState({ url: undefined, method: 'post' });
     const { status, isFetching, failed } = useFetch(postData);
+    const history = useHistory();
 
     const Kvittering = ({ type, melding }) => {
         return (
@@ -25,6 +27,14 @@ const OppsumeringOgSend = ({ state }) => {
             </div>
         );
     };
+
+    useEffect(() => {
+        if (status === 201 && status !== undefined) {
+            setTimeout(() => {
+                history.push('/');
+            }, 5000);
+        }
+    }, [status]);
 
     function validerSøknad() {
         let errors = [];
@@ -54,13 +64,14 @@ const OppsumeringOgSend = ({ state }) => {
         console.log('state: ', state);
 
         const errors = validerSøknad();
-        setPostData({
-            url: '/soknad',
-            data: state,
-            method: 'post'
-        });
+
         if (errors.length < 1) {
             console.log('Sender søknad');
+            setPostData({
+                url: '/soknad',
+                data: state,
+                method: 'post'
+            });
         } else {
             setFeilmeldinger(errors);
             console.log(errors);
@@ -71,15 +82,15 @@ const OppsumeringOgSend = ({ state }) => {
         <div>
             <DisplayDataFromApplic state={state} />
 
-            <p>------------------------------------------------------------</p>
             {feilmeldinger.length > 0 && SubmitFeilmeldinger(feilmeldinger)}
             <Hovedknapp onClick={sendSøknad} disabled={postData.url !== undefined} spinner={isFetching}>
                 Send søknad
             </Hovedknapp>
-            {(status === 201 && <Kvittering type={'suksess'} melding={'Søknad er sendt! Takk!'} />) ||
+            {(status === 201 &&
+                (disableStegIndikator(), (<Kvittering type={'suksess'} melding={'Søknad er sendt! Takk!'} />))) ||
                 (!isFetching && status === 401 && <Kvittering type="advarsel" melding="Du må logge inn på nytt!" />) ||
                 (!isFetching && status > 400 && (
-                    <Kvittering type="advarsel" melding="Det oppsto en feil under lagring" />
+                    <Kvittering type="advarsel" melding="Det oppsto en feil under sending." />
                 )) ||
                 (!isFetching && failed && <Kvittering type="advarsel" melding={failed} />)}
         </div>
