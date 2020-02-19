@@ -2,7 +2,7 @@ import React from 'react';
 import { EtikettSuksess } from 'nav-frontend-etiketter';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import { Undertittel } from 'nav-frontend-typografi';
-import { useGet } from '../hooks/useGet';
+import useFetch from '../hooks/useFetch';
 
 const bar = {
     display: 'flex',
@@ -12,8 +12,9 @@ const bar = {
 
 function PersonInfoBar({ fnr }) {
     const url = '/person?ident=' + fnr;
-    const { data } = useGet({ url });
+    const { data } = useFetch({ url });
     const person = data ? data : {};
+    console.log('person', person);
     return (
         <>
             <Ekspanderbartpanel
@@ -21,7 +22,7 @@ function PersonInfoBar({ fnr }) {
                     <div style={bar}>
                         <EtikettSuksess>Kjønn-ikon</EtikettSuksess>
                         <Undertittel>
-                            {fnr} {person.fornavn} {person.mellomnavn} {person.etternavn} (45)
+                            {fnr} {person ? (person.fornavn, person.mellomnavn, person.etternavn) : ''} (45)
                         </Undertittel>
                     </div>
                 }
