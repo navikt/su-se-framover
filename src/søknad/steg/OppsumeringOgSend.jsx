@@ -21,6 +21,20 @@ const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
     let { status, isFetching, failed } = useFetch(postData);
     const history = useHistory();
 
+    const trimEndsOfState = state => {
+        if (!Array.isArray(state) && typeof state != 'object') return state;
+        return Object.keys(state).reduce(
+            function(acc, key) {
+                acc[key.trim()] = typeof state[key] == 'string' ? state[key].trim() : trimEndsOfState(state[key]);
+                return acc;
+            },
+            Array.isArray(state) ? [] : {}
+        );
+    };
+
+    state = trimEndsOfState(state);
+    console.log('aftrer trimming: ', state);
+
     const Kvittering = ({ type, melding }) => {
         return (
             <div style={{ margin: '0.5em 0', display: 'flex' }}>

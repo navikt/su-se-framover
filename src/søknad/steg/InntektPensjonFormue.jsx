@@ -623,7 +623,7 @@ function depositumsBeløpValidering(formValues) {
         const beløp = formValues.depositumBeløp;
 
         if (!/^(\d{1,30})$/.test(beløp)) {
-            feilmelding += 'Feltet kan ikke være tom, og kan kun inneholde tall';
+            feilmelding += 'Depositum beløp kan ikke være tom, og kan kun inneholde tall';
         }
         if (feilmelding.length > 0) {
             return [{ skjemaelementId: fields.depositumBeløp.htmlId, feilmelding }];

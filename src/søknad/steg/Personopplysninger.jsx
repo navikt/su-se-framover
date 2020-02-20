@@ -176,23 +176,24 @@ function validateFormValues(formValues) {
 function fnrValidation(formValues) {
     const fnr = formValues.fnr;
     let feilmelding = '';
-    if (!/^\d{11}$/.test(fnr)) {
-        if (fnr === undefined || fnr === '') {
-            feilmelding += 'Fødselsnummer må fylles ut';
-        } else {
-            feilmelding += 'Fødselsnummer må være 11 siffer. Lengde på fnr: ' + fnr.length;
-        }
+
+    if (fnr === undefined || fnr === '') {
+        feilmelding += 'Fødselsnummer må fylles ut';
+    } else if (!/^\d{11}$/.test(fnr.trim())) {
+        feilmelding += 'Fødselsnummer må være 11 siffer. Lengde på fnr: ' + fnr.trim().length;
     }
+
     if (feilmelding.length > 0) {
         return [{ skjemaelementId: fields.fnr.htmlId, feilmelding }];
     }
+
     return [];
 }
 
 function fornavnValidering(formValues) {
     const fornavn = formValues.fornavn;
     let feilmelding = '';
-    if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(fornavn) || fornavn === undefined) {
+    if (fornavn === undefined || !/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(fornavn.trim())) {
         feilmelding += 'Fornavn må fylles ut. Feltet kan ikke inneholde tall eller spesialtegn';
     }
     if (feilmelding.length > 0) {
@@ -204,7 +205,7 @@ function fornavnValidering(formValues) {
 function etternavnValidering(formValues) {
     const etternavn = formValues.etternavn;
     let feilmelding = '';
-    if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(etternavn) || etternavn === undefined) {
+    if (etternavn === undefined || !/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(etternavn.trim())) {
         feilmelding += 'Etternavn må fylles ut. Etternavn kan ikke inneholde tall eller spesialtegn';
     }
     if (feilmelding.length > 0) {
@@ -218,11 +219,11 @@ function telefonnummerValidering(formValues) {
     let feilmelding = '';
 
     // Regex for kun norske telefonnummer
-    if (!/^\d{8}$/.test(tlfNummer)) {
-        if (tlfNummer === undefined || tlfNummer === '') {
-            feilmelding += 'Telefonnummer må fylles ut';
-        } else {
-            feilmelding += 'Telefonnummer må være 8 siffer. Lengde på nummer: ' + tlfNummer.length;
+    if (tlfNummer === undefined || tlfNummer === '') {
+        feilmelding += 'Telefonnummer må fylles ut';
+    } else if (!/^\d{8}$/.test(tlfNummer.trim())) {
+        {
+            feilmelding += 'Telefonnummer må være 8 siffer. Lengde på nummer: ' + tlfNummer.trim().length;
         }
     }
     if (feilmelding.length > 0) {
@@ -248,11 +249,11 @@ function postnummerValidering(formValues) {
     let feilmelding = '';
 
     // postnummer med 4 siffer.
-    if (!/^\d{4}$/.test(postnummer)) {
-        if (postnummer === undefined || postnummer === '') {
-            feilmelding += 'Postnummer må fylles ut';
-        } else {
-            feilmelding += 'Postnummer må være 4 siffer. Lengde på nummer: ' + postnummer.length;
+    if (postnummer === undefined || postnummer === '') {
+        feilmelding += 'Postnummer må fylles ut';
+    } else if (!/^\d{4}$/.test(postnummer.trim())) {
+        {
+            feilmelding += 'Postnummer må være 4 siffer. Lengde på nummer: ' + postnummer.trim().length;
         }
     }
     if (feilmelding.length > 0) {
