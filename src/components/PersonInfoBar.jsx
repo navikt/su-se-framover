@@ -32,7 +32,7 @@ function PersonInfoBar({ fnr }) {
                 tittelProps="normaltekst"
                 border
             >
-{/*                <div>
+                {/*                <div>
                     <div>
                         <Undertittel>Bostedsadresse</Undertittel>
                         <Normaltekst>Gatenavn 5</Normaltekst>
@@ -75,11 +75,10 @@ function PersonInfoBar({ fnr }) {
             </Ekspanderbartpanel>
         </div>
     );
-
 }
 
-
-                {/*
+{
+    /*
 const bar = {
     display: 'flex',
     flexDirection: 'row'
@@ -87,6 +86,7 @@ const bar = {
 
 const element = {
     margin: '1%'
-};*/}
+};*/
+}
 
 export default PersonInfoBar;

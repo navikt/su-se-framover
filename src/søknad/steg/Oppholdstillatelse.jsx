@@ -4,6 +4,7 @@ import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Datovelger from 'nav-datovelger';
 import { JaNeiSpørsmål } from '../../components/FormElements';
+import { getRandomSmiley } from '../../hooks/getRandomEmoji';
 
 const Oppholdstillatelse = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -47,7 +48,9 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
                 />
                 <div>{midlertidigOppholdstillatelse()}</div>
             </div>
-            {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
+            {feilmeldinger.length > 0 && (
+                <Feiloppsummering tittel={`Vennligst fyll ut mangler ${getRandomSmiley()}`} feil={feilmeldinger} />
+            )}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
@@ -64,6 +67,9 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
     }
 };
 
+//----------------------------------------------------------------------------------
+//---------------------Validering
+//----------------------------------------------------------------------------------
 const fields = {
     varigopphold: { label: 'varigopphold', htmlId: 'varigopphold' },
     oppholdstillatelseUtløpsdato: {

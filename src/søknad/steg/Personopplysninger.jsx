@@ -3,6 +3,7 @@ import { Systemtittel } from 'nav-frontend-typografi';
 import { Feiloppsummering } from 'nav-frontend-skjema';
 import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
 import { Hovedknapp } from 'nav-frontend-knapper';
+import { getRandomSmiley } from '../../hooks/getRandomEmoji';
 
 const Personopplysninger = ({ state, updateField, onClick }) => {
     const updateFunction = name => value => updateField(name, value);
@@ -110,7 +111,9 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                     onChange={e => updateField('bofastnorge', e.target.value)}
                 />
             </div>
-            {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
+            {feilmeldinger.length > 0 && (
+                <Feiloppsummering tittel={`Vennligst fyll ut mangler ${getRandomSmiley()}`} feil={feilmeldinger} />
+            )}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
@@ -127,6 +130,9 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
     }
 };
 
+//----------------------------------------------------------------------------------
+//---------------------Validering
+//----------------------------------------------------------------------------------
 const inputFieldsStyle = {
     display: 'flex',
     justifyContent: 'space-between'
