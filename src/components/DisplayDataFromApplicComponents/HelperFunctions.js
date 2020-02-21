@@ -11,8 +11,10 @@ export const jaNeiSpørsmål = state => {
 
 //Dato input fra state "2020-12-25" -> "25-12-2020"
 export const reverseString = str => {
-    const splitString = str.split('-');
-    const reverseArray = splitString.reverse();
-    const joinedString = reverseArray.join('-');
-    return joinedString;
+    if (str !== undefined) {
+        const splitString = str.split('-');
+        const reverseArray = splitString.reverse();
+        const joinedString = reverseArray.join('-');
+        return joinedString;
+    }
 };

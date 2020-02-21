@@ -6,6 +6,7 @@ import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Checkbox, CheckboxGruppe } from 'nav-frontend-skjema';
 import { Systemtittel, Ingress } from 'nav-frontend-typografi';
 import { Hovedknapp } from 'nav-frontend-knapper';
+import { getRandomSmiley } from '../../hooks/getRandomEmoji';
 
 const Boforhold = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -145,7 +146,9 @@ const Boforhold = ({ state, updateField, onClick }) => {
                 </div>
                 {tillegsInfoESP()}
             </div>
-            {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
+            {feilmeldinger.length > 0 && (
+                <Feiloppsummering tittel={`Vennligst fyll ut mangler ${getRandomSmiley()}`} feil={feilmeldinger} />
+            )}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
@@ -162,6 +165,9 @@ const Boforhold = ({ state, updateField, onClick }) => {
     }
 };
 
+//----------------------------------------------------------------------------------
+//---------------------Validering
+//----------------------------------------------------------------------------------
 const fields = {
     delerdubolig: { label: 'delerdubolig', htmlId: 'delerdubolig' },
     borsammenmed: { label: 'borsammenmed', htmlId: 'borsammenmed' },
@@ -225,6 +231,12 @@ function delerBoligMedValidering(formValues, errorsArray) {
                 errorsArray.push({
                     skjemaelementId: `${index}-fødselsnummer`,
                     feilmelding: 'Fødselsnummer må fylles ut'
+                });
+            } else if (item.fødselsnummer.trim().length > 11) {
+                errorsArray.push({
+                    skjemaelementId: `${index}-fødselsnummer`,
+                    feilmelding:
+                        'Fødselsnummer må være 11 siffer. Lenge på fødselsnummer: ' + item.fødselsnummer.trim().length
                 });
             }
         });

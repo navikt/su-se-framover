@@ -3,6 +3,7 @@ import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
 import { Systemtittel } from 'nav-frontend-typografi';
 import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
 import { Hovedknapp } from 'nav-frontend-knapper';
+import { getRandomSmiley } from '../../hooks/getRandomEmoji';
 
 const ForNAV = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -68,7 +69,9 @@ const ForNAV = ({ state, updateField, onClick }) => {
                 value={state.forNAVmerknader || ''}
                 onChange={updateFunction('forNAVmerknader')}
             />
-            {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
+            {feilmeldinger.length > 0 && (
+                <Feiloppsummering tittel={`Vennligst fyll ut mangler ${getRandomSmiley()}`} feil={feilmeldinger} />
+            )}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
@@ -85,6 +88,9 @@ const ForNAV = ({ state, updateField, onClick }) => {
     }
 };
 
+//----------------------------------------------------------------------------------
+//---------------------Validering
+//----------------------------------------------------------------------------------
 const fields = {
     målform: { label: 'målform', htmlId: 'målform' },
     møttPersonlig: { label: 'møttPersonlig', htmlId: 'møttPersonlig' },

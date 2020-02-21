@@ -6,6 +6,7 @@ import { Systemtittel, Element } from 'nav-frontend-typografi';
 import { Feiloppsummering } from 'nav-frontend-skjema';
 import Datovelger from 'nav-datovelger';
 import 'nav-datovelger/dist/datovelger/styles/datovelger.css';
+import { getRandomSmiley } from '../../hooks/getRandomEmoji';
 
 const Utenlandsopphold = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -207,7 +208,9 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                 onChange={e => updateField('planlagtUtenlandsopphold', e.target.value)}
             />
             <div>{planlagtUtenlandsoppholdFelter()}</div>
-            {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
+            {feilmeldinger.length > 0 && (
+                <Feiloppsummering tittel={`Vennligst fyll ut mangler ${getRandomSmiley()}`} feil={feilmeldinger} />
+            )}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
@@ -246,6 +249,9 @@ const numberOfDaysBetweeenTwoDates = (date1, date2) => {
     return diffDays;
 };
 
+//----------------------------------------------------------------------------------
+//---------------------Validering
+//----------------------------------------------------------------------------------
 const fields = {
     utenlandsopphold: { label: 'utenlandsopphold', htmlId: 'utenlandsopphold' },
     planlagtUtenlandsopphold: {

@@ -4,6 +4,7 @@ import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
 import Lenke from 'nav-frontend-lenker';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import { getRandomSmiley } from '../../hooks/getRandomEmoji';
 
 const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -326,7 +327,9 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                 state={state.sosialstonad}
             />
 
-            {feilmeldinger.length > 0 && <Feiloppsummering tittel={'Vennligst fyll ut mangler'} feil={feilmeldinger} />}
+            {feilmeldinger.length > 0 && (
+                <Feiloppsummering tittel={`Vennligst fyll ut mangler ${getRandomSmiley()}`} feil={feilmeldinger} />
+            )}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
@@ -620,7 +623,7 @@ function depositumsBeløpValidering(formValues) {
         const beløp = formValues.depositumBeløp;
 
         if (!/^(\d{1,30})$/.test(beløp)) {
-            feilmelding += 'Feltet kan ikke være tom, og kan kun inneholde tall';
+            feilmelding += 'Depositum beløp kan ikke være tom, og kan kun inneholde tall';
         }
         if (feilmelding.length > 0) {
             return [{ skjemaelementId: fields.depositumBeløp.htmlId, feilmelding }];
