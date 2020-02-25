@@ -239,7 +239,7 @@ const addDaysBetweenTwoDates = state => {
     if (isNaN(x)) {
         return 'Fyll ut alle dato-felter for å regne antall dager';
     } else {
-        return x;
+        return x - state.length;
     }
 };
 

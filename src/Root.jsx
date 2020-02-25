@@ -18,7 +18,6 @@ import ErrorBoundary from './components/ErrorBoundary';
 import 'nav-frontend-tabell-style';
 import './Root.less';
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory } from 'react-router-dom';
-import { getNorwegianNationalFlag } from './hooks/getRandomEmoji';
 
 const Root = () => {
     const [state, setState] = useState({
@@ -118,7 +117,7 @@ function ContentWrapper({ children }) {
     return (
         <div>
             <div style={ContentWrapperStyle}>
-                <Innholdstittel style={appNameStyle}>NAV Suse {getNorwegianNationalFlag()}</Innholdstittel>
+                <Innholdstittel style={appNameStyle}>NAV Suse</Innholdstittel>
                 <Søkeboks />
             </div>
             <div style={{ display: 'flex' }}>
