@@ -11,7 +11,7 @@ import { validateForNAV } from './ForNAV';
 import DisplayDataFromApplic from '../../components/DisplayDataFromApplic';
 import useFetch from '../../hooks/useFetch';
 import { useHistory } from 'react-router-dom';
-import { getNorwegianNationalFlag, getRandomSmiley } from '../../hooks/getRandomEmoji';
+import { getRandomSmiley } from '../../hooks/getRandomEmoji';
 
 const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
     console.log(state);
@@ -33,7 +33,6 @@ const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
     };
 
     state = trimEndsOfState(state);
-    console.log('aftrer trimming: ', state);
 
     const Kvittering = ({ type, melding }) => {
         return (
@@ -104,17 +103,8 @@ const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
 
             {(status === 201 &&
                 (disableStegIndikator(),
-                (
-                    <Kvittering
-                        type={'suksess'}
-                        melding={`Søknad er sendt! Takk! ${getRandomSmiley()} 
-                                                      ${getNorwegianNationalFlag()}`}
-                    />
-                ))) ||
+                (<Kvittering type={'suksess'} melding={`Søknad er sendt! Takk! ${getRandomSmiley()}`} />))) ||
                 (!isFetching && status === 401 && <Kvittering type="advarsel" melding="Du må logge inn på nytt!" />) ||
-                (!isFetching && status === 400 && (
-                    <Kvittering type="advarsel" melding="Det har blitt opgitt feil info. se gjennom søknad" />
-                )) ||
                 (!isFetching && status > 400 && (
                     <Kvittering type="advarsel" melding="Det oppsto en feil under sending. Prøv igjen senere" />
                 )) ||

@@ -80,7 +80,8 @@ export const CollapsiblePanel = ({ ...props }) => {
     const sectionStyle = {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '30%'
     };
 
     const subSectionStyle = {
@@ -97,8 +98,8 @@ export const CollapsiblePanel = ({ ...props }) => {
     return (
         <div>
             <div style={headerStyle} onClick={e => togglePanel()}>
-                <div style={{ display: 'flex', flexFlow: 'row wrap' }}>
-                    <div style={{ marginRight: '1em' }}>{getRandomSmiley()}</div>
+                <div style={{ display: 'flex' }}>
+                    <div style={{ marginRight: '0.5em' }}>{getRandomSmiley()}</div>
 
                     <div
                         style={{
@@ -108,8 +109,8 @@ export const CollapsiblePanel = ({ ...props }) => {
                             marginRight: '1em'
                         }}
                     >
-                        <div style={{ marginBottom: '1em' }}>
-                            <span style={{ marginRight: '1em' }}>{props.navn}</span>
+                        <div>
+                            <span style={{ marginRight: '0.5em' }}>{props.navn}</span>
                             <span>({props.alder})</span>
                         </div>
 
@@ -121,7 +122,9 @@ export const CollapsiblePanel = ({ ...props }) => {
                             <div>{props.infoTexts}</div>
                         </div>
                     </div>
+                </div>
 
+                <div style={{ display: 'flex' }}>
                     <div
                         style={{
                             display: 'flex',
@@ -135,24 +138,31 @@ export const CollapsiblePanel = ({ ...props }) => {
                                 ? props.etikett.map(item => {
                                       return (
                                           <span key={item}>
-                                              <Etikett type="fokus">{item}</Etikett>
-                                              &nbsp;
+                                              <Etikett type="fokus" style={{ marginRight: '0.5em' }}>
+                                                  {item}
+                                              </Etikett>
                                           </span>
                                       );
                                   })
                                 : ''}
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                            <p>Nav-kontor / ingen. personen dør snart :(</p>
+                            <p>Nav-kontor / ingen</p>
                         </div>
                     </div>
+                    {state ? (
+                        <NavFrontendChevron type={'ned'} style={{ alignSelf: 'center' }} />
+                    ) : (
+                        <NavFrontendChevron type={'opp'} style={{ alignSelf: 'center' }} />
+                    )}
                 </div>
-                {state ? (
-                    <NavFrontendChevron type={'ned'} style={{ alignSelf: 'center' }} />
-                ) : (
-                    <NavFrontendChevron type={'opp'} style={{ alignSelf: 'center' }} />
-                )}
             </div>
+            {/*
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            */}
             {state ? (
                 <div style={contentStyle}>
                     <div style={sectionStyle}>

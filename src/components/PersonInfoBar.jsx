@@ -9,15 +9,13 @@ function PersonInfoBar({ fnr }) {
     const person = data ? data : {};
     // console.log('person', person);
     return (
-        <div>
-            <CollapsiblePanel
-                navn={'Planet Planetus Planetetus'}
-                alder={'56'}
-                fødselsnummer={'12345678901'}
-                infoTexts={'jeg er ekstra tekst. jeg bruker masse plass her. klikk på meg for å se mer'}
-                etikett={['hjelp meg', 'jeg dør snart', 'ikke la barna mine ta formuen min']}
-            />
-        </div>
+        <CollapsiblePanel
+            navn={'Planet Planetus Planetetus'}
+            alder={'56'}
+            fødselsnummer={'12345678901'}
+            infoTexts={'klikk på meg for å se mer'}
+            etikett={['Info', 'mer info', 'enda mer info']}
+        />
     );
 }
 
