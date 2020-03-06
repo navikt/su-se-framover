@@ -8,11 +8,11 @@ import { getRandomSmiley } from '../../hooks/getRandomEmoji';
 
 const Oppholdstillatelse = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
-
+    console.log(state);
     const updateFunction = name => value => updateField(name, value);
 
     function midlertidigOppholdstillatelse() {
-        if (state.varigopphold === 'false') {
+        if (!state.varigopphold) {
             return (
                 <div style={{ display: 'flex' }}>
                     <div style={{ marginRight: '1em' }}>
@@ -106,7 +106,7 @@ function oppholdstillatelseUtløpsdatoValidering(formValues) {
     const oppholdstillatelseUtløpsdato = formValues.oppholdstillatelseUtløpsdato;
     let feilmelding = '';
 
-    if (formValues.varigopphold === 'false') {
+    if (!formValues.varigopphold) {
         if (!/^\d{4}-\d{2}-\d{2}$/.test(oppholdstillatelseUtløpsdato)) {
             if (oppholdstillatelseUtløpsdato === '' || oppholdstillatelseUtløpsdato === undefined) {
                 feilmelding += 'Oppholdstillatelsens utløpsdato må oppgis. Den må være på format dd.mm.åååå';
@@ -130,7 +130,7 @@ function søktforlengelseValidering(formValues) {
     const soektforlengelse = formValues.soektforlengelse;
     let feilmelding = '';
 
-    if (formValues.varigopphold === 'false') {
+    if (!formValues.varigopphold) {
         if (soektforlengelse === undefined) {
             feilmelding += 'Vennligst velg om søker har søkt om forlengelse';
         }

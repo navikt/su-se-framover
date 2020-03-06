@@ -8,7 +8,7 @@ const Utenlandsopphold = ({ state }) => {
             <Undertittel style={elementSpacing}>Utenlandsopphold</Undertittel>
 
             <div style={sectionGridLayout}>
-                {state.utenlandsopphold.utenlandsopphold === 'true' && (
+                {state.utenlandsopphold.utenlandsopphold && (
                     <>
                         <label>Utenlandsopphold:</label>
                         <label> {utenlandsopphold()}</label>
@@ -17,7 +17,7 @@ const Utenlandsopphold = ({ state }) => {
             </div>
 
             <div style={sectionGridLayout}>
-                {state.utenlandsopphold.planlagtUtenlandsopphold === 'true' && (
+                {state.utenlandsopphold.planlagtUtenlandsopphold && (
                     <>
                         <span>Planlagt utenlandsopphold:</span>
                         <span>{planlagtUtenlandsopphold()}</span>

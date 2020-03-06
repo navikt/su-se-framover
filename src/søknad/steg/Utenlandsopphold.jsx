@@ -34,7 +34,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
     }
 
     function utenlandsoppholdFelter() {
-        if (state.utenlandsopphold === 'true') {
+        if (state.utenlandsopphold) {
             return (
                 <div>
                     <div>
@@ -109,7 +109,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
 
     //--------------------Planlagt utenlandsopphold ------------------------------
     function planlagtUtenlandsoppholdFelter() {
-        if (state.planlagtUtenlandsopphold === 'true') {
+        if (state.planlagtUtenlandsopphold) {
             return (
                 <div style={{ marginBottom: '2em' }}>
                     <div>
@@ -292,7 +292,7 @@ function validateDates(formValues) {
     const errorsArray = [];
     const tempUtenlandsoppholdArray = formValues.utenlandsoppholdArray;
 
-    if (formValues.utenlandsopphold === 'true') {
+    if (formValues.utenlandsopphold) {
         const x = tempUtenlandsoppholdArray
             .map(item => {
                 const utreise = item.utreisedato;
@@ -328,7 +328,7 @@ function utenlandsoppholdValidering(formValues) {
 function utenlandsoppholdFelterValidering(formValues, errorsArray) {
     const tempUtenlandsoppholdArray = formValues.utenlandsoppholdArray;
 
-    if (formValues.utenlandsopphold === 'true') {
+    if (formValues.utenlandsopphold) {
         tempUtenlandsoppholdArray.map((item, index) => {
             if (!/^\d{4}-\d{2}-\d{2}$/.test(item.utreisedato)) {
                 if (item.utreisedato === '' || item.utreisedato === undefined) {
@@ -365,7 +365,7 @@ function validatePlanlagtDates(formValues) {
     const errorsArray = [];
     const tempUtenlandsoppholdArray = formValues.planlagtUtenlandsoppholdArray;
 
-    if (formValues.planlagtUtenlandsopphold === 'true') {
+    if (formValues.planlagtUtenlandsopphold) {
         const x = tempUtenlandsoppholdArray
             .map(item => {
                 const utreise = item.utreisedato;
@@ -404,7 +404,7 @@ function planlagtUtenlandsoppholdValidering(formValues) {
 function planlagtUtenlandsoppholdFelterValidering(formValues, errorsArray) {
     const tempPlanlagtUtenlandsoppholdArray = formValues.planlagtUtenlandsoppholdArray;
 
-    if (formValues.planlagtUtenlandsopphold === 'true') {
+    if (formValues.planlagtUtenlandsopphold) {
         tempPlanlagtUtenlandsoppholdArray.map((item, index) => {
             if (!/^\d{4}-\d{2}-\d{2}$/.test(item.utreisedato)) {
                 if (item.utreisedato === '' || item.innreisedato === undefined) {

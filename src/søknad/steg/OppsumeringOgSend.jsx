@@ -105,6 +105,9 @@ const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
                 (disableStegIndikator(),
                 (<Kvittering type={'suksess'} melding={`Søknad er sendt! Takk! ${getRandomSmiley()}`} />))) ||
                 (!isFetching && status === 401 && <Kvittering type="advarsel" melding="Du må logge inn på nytt!" />) ||
+                (!isFetching && status === 400 && (
+                    <Kvittering type="advarsel" melding="Det har blitt opgitt feil info. se gjennom søknad" />
+                )) ||
                 (!isFetching && status > 400 && (
                     <Kvittering type="advarsel" melding="Det oppsto en feil under sending. Prøv igjen senere" />
                 )) ||

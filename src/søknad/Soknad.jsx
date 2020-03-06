@@ -11,6 +11,7 @@ import InntektPensjonFormue from './steg/InntektPensjonFormue';
 import ForNAV from './steg/ForNAV';
 import OppsumeringOgSend from './steg/OppsumeringOgSend';
 import './soknad.less';
+import { stringToBoolean, isStringBoolean } from '../components/FormElements';
 
 function Soknad() {
     const [stage, setStage] = useState(0);
@@ -48,7 +49,12 @@ function Soknad() {
     const updateField = updateFunction => (stateToChange, value) => {
         updateFunction(state => ({
             ...state,
-            [stateToChange]: typeof value === 'function' ? value(state[stateToChange]) : value
+            [stateToChange]:
+                typeof value === 'function'
+                    ? value(state[stateToChange])
+                    : isStringBoolean(value)
+                    ? stringToBoolean(value)
+                    : value
         }));
     };
 

@@ -12,7 +12,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     const updateFunction = name => value => updateField(name, value);
 
     function kravannenytelseInput() {
-        if (state.kravannenytelse === 'true') {
+        if (state.kravannenytelse) {
             return (
                 <InputFields
                     labelText="Hva slags ytelse/pensjon?"
@@ -25,7 +25,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     }
 
     function arbeidselleranneninntektInput() {
-        if (state.arbeidselleranneninntekt === 'true') {
+        if (state.arbeidselleranneninntekt) {
             return (
                 <InputFields
                     labelText="Brutto beløp per år:"
@@ -39,7 +39,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     }
 
     function totalbeløpFormue() {
-        if (state.harduformueeiendom === 'true' || state.hardufinansformue === 'true') {
+        if (state.harduformueeiendom || state.hardufinansformue) {
             return (
                 <InputFields
                     labelText="Totalbeløp formue: "
@@ -53,7 +53,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     }
 
     function depositumBeløp() {
-        if (state.søkerHarDepositumskonto === 'true') {
+        if (state.søkerHarDepositumskonto) {
             return (
                 <InputFields
                     labelText="Beløp:"
@@ -66,7 +66,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     }
 
     function harAnnenFormueEiendom() {
-        if (state.harduannenformueeiendom === 'true') {
+        if (state.harduannenformueeiendom) {
             return (
                 <div style={{ marginBottom: '1em' }}>
                     {state.annenFormueEiendom
@@ -177,7 +177,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     }
 
     function søkerHarPensjon() {
-        if (state.hardupensjon === 'true') {
+        if (state.hardupensjon) {
             return (
                 <div style={{ marginBottom: '1em' }}>
                     {state.pensjonsOrdning
@@ -219,7 +219,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     function søkerHarInntekt() {
         let beløp = 0;
 
-        if (state.arbeidselleranneninntekt === 'true') {
+        if (state.arbeidselleranneninntekt) {
             if (
                 state.arbeidselleranneninntektBegrunnelse !== undefined &&
                 state.arbeidselleranneninntektBegrunnelse.length >= 1
@@ -228,7 +228,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
             }
         }
 
-        if (state.hardupensjon === 'true') {
+        if (state.hardupensjon) {
             beløp += adderInntekter(
                 state.pensjonsOrdning.map(item => parseInt(item.beløp, 10)).filter(item => !isNaN(item))
             );
@@ -419,8 +419,8 @@ function kravannenytelseBegrunnelseValidering(formValues) {
     const begrunnelse = formValues.kravannenytelseBegrunnelse;
     let feilmelding = '';
 
-    if (formValues.kravannenytelse === 'true') {
-        if (!/^([a-øA-Ø.,]{1,255})$/.test(begrunnelse) || begrunnelse === undefined) {
+    if (formValues.kravannenytelse) {
+        if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(begrunnelse) || begrunnelse === undefined) {
             feilmelding +=
                 'Vennligst oppgi hva slags ytelse/pensjon søker mottar. Kan ikke inneholde tall eller spesialtegn';
         }
@@ -459,7 +459,7 @@ function arbeidsBeløpValidering(formValues) {
     const arbeidsBeløp = formValues.arbeidselleranneninntektBegrunnelse;
     let feilmelding = '';
 
-    if (formValues.arbeidselleranneninntekt === 'true') {
+    if (formValues.arbeidselleranneninntekt) {
         if (!/^(\d{1,30})$/.test(arbeidsBeløp) || arbeidsBeløp === undefined) {
             feilmelding += 'Vennligst tast inn arbeids/pensjon-inntekt beløp';
 
@@ -488,9 +488,9 @@ function pensjonValidering(formValues) {
 function pensjonsOrdningValidering(formValues, errorsArray) {
     const tempPensjonsOrdningArray = formValues.pensjonsOrdning;
 
-    if (formValues.hardupensjon === 'true') {
+    if (formValues.hardupensjon === true) {
         tempPensjonsOrdningArray.map((item, index) => {
-            if (!/^([a-øA-Ø.,]{1,255})$/.test(item.ordning)) {
+            if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(item.ordning)) {
                 if (item.ordning === '' || item.ordning === undefined) {
                     errorsArray.push({
                         skjemaelementId: `${index}-ordning`,
@@ -552,7 +552,7 @@ function formueBeløpValidering(formValues) {
     const formueBeløp = formValues.formueBeløp;
     let feilmelding = '';
 
-    if (formValues.harduformueeiendom === 'true' || formValues.hardufinansformue === 'true') {
+    if (formValues.harduformueeiendom === true || formValues.hardufinansformue === true) {
         if (!/^(\d{1,30})$/.test(formueBeløp) || formueBeløp === undefined) {
             feilmelding += 'Vennligst tast inn totalbeløp for formue';
 
@@ -581,9 +581,9 @@ function annenFormueEiendom(formValues) {
 function annenFormueEiendomArray(formValues, errorsArray) {
     const annenFormueEiendom = formValues.annenFormueEiendom;
 
-    if (formValues.harduannenformueeiendom === 'true') {
+    if (formValues.harduannenformueeiendom === true) {
         annenFormueEiendom.map((item, index) => {
-            if (!/^([a-øA-Ø0-9.,\s]{1,255})$/.test(item.typeFormue)) {
+            if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(item.typeFormue)) {
                 errorsArray.push({
                     skjemaelementId: `${index}-typeFormue`,
                     feilmelding: 'Type formue må fylles ut'
@@ -619,7 +619,7 @@ function depositumsBeløpValidering(formValues) {
     const søkerHarDepositumskonto = formValues.søkerHarDepositumskonto;
     let feilmelding = '';
 
-    if (søkerHarDepositumskonto === 'true') {
+    if (søkerHarDepositumskonto === true) {
         const beløp = formValues.depositumBeløp;
 
         if (!/^(\d{1,30})$/.test(beløp)) {

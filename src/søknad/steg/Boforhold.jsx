@@ -50,7 +50,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
     }
 
     function personDelerBolig() {
-        if (state.delerDuBolig === 'true') {
+        if (state.delerDuBolig) {
             return (
                 <CheckboxGruppe legend="Hvem deler søker bolig med?">
                     <Checkbox
@@ -80,7 +80,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
     }
 
     function tillegsInfoESP() {
-        if (state.delerDuBolig === 'true') {
+        if (state.delerDuBolig) {
             return (
                 <div style={{ marginBottom: '2em' }}>
                     <Ingress>Opplysninger om ektefellen/samboer/annen voksen person hvis dere bor sammen</Ingress>
@@ -201,7 +201,7 @@ function borSammenMedValidering(formValues) {
     const borSammenMed = formValues.borSammenMed;
     let feilmelding = '';
 
-    if (formValues.delerDuBolig === 'true') {
+    if (formValues.delerDuBolig) {
         if (
             !borSammenMed.includes('esp') &&
             !borSammenMed.includes('over18') &&
@@ -219,7 +219,7 @@ function borSammenMedValidering(formValues) {
 function delerBoligMedValidering(formValues, errorsArray) {
     const delerBoligMedArray = formValues.delerBoligMed;
 
-    if (formValues.delerDuBolig === 'true') {
+    if (formValues.delerDuBolig) {
         delerBoligMedArray.map((item, index) => {
             if (item.navn.trim().length === 0) {
                 errorsArray.push({

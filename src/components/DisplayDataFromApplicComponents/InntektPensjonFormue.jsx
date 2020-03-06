@@ -14,7 +14,7 @@ const InntektPensjonFormue = ({ state }) => {
                 <span>{jaNeiSpørsmål(state.inntektPensjonFormue.kravannenytelse)}</span>
                 <span>Hva slags ytelse/pensjon</span>
                 <span>
-                    {state.inntektPensjonFormue.kravannenytelse === 'true'
+                    {state.inntektPensjonFormue.kravannenytelse
                         ? state.inntektPensjonFormue.kravannenytelseBegrunnelse
                         : ''}
                 </span>
@@ -26,7 +26,7 @@ const InntektPensjonFormue = ({ state }) => {
                 <span style={elementSpacing}>Brutto beløp per år:</span>
                 <span>{state.inntektPensjonFormue.arbeidselleranneninntektBegrunnelse}</span>
                 <span style={elementSpacing}>Har du pensjon?</span>
-                <span>{state.inntektPensjonFormue.hardupensjon === 'true' && søkerHarPensjon()}</span>
+                <span>{state.inntektPensjonFormue.hardupensjon && søkerHarPensjon()}</span>
                 <span>Sum inntekt:</span>
                 <span>{state.inntektPensjonFormue.sumInntekt}</span>
             </div>
@@ -37,35 +37,29 @@ const InntektPensjonFormue = ({ state }) => {
                 <span style={elementSpacing}>Har du finansformue?</span>
                 <span>{jaNeiSpørsmål(state.inntektPensjonFormue.hardufinansformue)}</span>
                 <span style={elementSpacing}>
-                    {state.inntektPensjonFormue.harduformueeiendom === 'true' ||
-                    state.inntektPensjonFormue.hardufinansformue === 'true' ? (
+                    {state.inntektPensjonFormue.harduformueeiendom || state.inntektPensjonFormue.hardufinansformue ? (
                         <span>Totalbeløp formue:</span>
                     ) : (
                         ''
                     )}
                 </span>
                 <span>
-                    {state.inntektPensjonFormue.harduformueeiendom === 'true' ||
-                    state.inntektPensjonFormue.hardufinansformue === 'true'
+                    {state.inntektPensjonFormue.harduformueeiendom || state.inntektPensjonFormue.hardufinansformue
                         ? state.inntektPensjonFormue.formueBeløp
                         : ''}
                 </span>
                 <span style={elementSpacing}>Har du annen formue/eiendom</span>
                 <span>{jaNeiSpørsmål(state.inntektPensjonFormue.harduannenformueeiendom)}</span>
-                <span>{state.inntektPensjonFormue.harduannenformueeiendom === 'true' ? <span>-</span> : ''}</span>
-                <span>
-                    {state.inntektPensjonFormue.harduannenformueeiendom === 'true' ? søkerHarAnnenFormueEiendom() : ''}
-                </span>
+                <span>{state.inntektPensjonFormue.harduannenformueeiendom ? <span>-</span> : ''}</span>
+                <span>{state.inntektPensjonFormue.harduannenformueeiendom ? søkerHarAnnenFormueEiendom() : ''}</span>
             </div>
 
             <div style={sectionGridLayout}>
                 <span style={elementSpacing}>Har søker Depositumskonto?</span>
                 <span>{jaNeiSpørsmål(state.inntektPensjonFormue.søkerHarDepositumskonto)}</span>
+                <span>{state.inntektPensjonFormue.søkerHarDepositumskonto && <span>depositum-beløp:</span>}</span>
                 <span>
-                    {state.inntektPensjonFormue.søkerHarDepositumskonto === 'true' && <span>depositum-beløp:</span>}
-                </span>
-                <span>
-                    {state.inntektPensjonFormue.søkerHarDepositumskonto === 'true' && (
+                    {state.inntektPensjonFormue.søkerHarDepositumskonto && (
                         <span>{state.inntektPensjonFormue.depositumBeløp}</span>
                     )}
                 </span>

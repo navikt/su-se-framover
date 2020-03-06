@@ -1,8 +1,8 @@
 // endrer på tekstinnholdet for oppsumerings-siden
 export const jaNeiSpørsmål = state => {
-    if (state === 'true') {
+    if (state) {
         return 'Ja';
-    } else if (state === 'false') {
+    } else if (!state) {
         return 'Nei';
     } else {
         return '';

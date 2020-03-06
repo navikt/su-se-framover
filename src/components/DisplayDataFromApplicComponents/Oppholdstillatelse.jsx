@@ -13,7 +13,7 @@ const Oppholdstillatelse = ({ state }) => {
             </div>
 
             <div style={sectionGridLayout}>
-                {state.oppholdstillatelse.varigopphold === 'false' && (
+                {!state.oppholdstillatelse.varigopphold && (
                     <>
                         <span>Utløpsdato: </span>
                         <span>{reverseString(state.oppholdstillatelse.oppholdstillatelseUtløpsdato)}</span>
@@ -22,7 +22,7 @@ const Oppholdstillatelse = ({ state }) => {
             </div>
 
             <div style={sectionGridLayout}>
-                {state.oppholdstillatelse.varigopphold === 'false' && (
+                {!state.oppholdstillatelse.varigopphold && (
                     <>
                         <span>Har søker søkt om forlengelse?</span>
                         <span>{jaNeiSpørsmål(state.oppholdstillatelse.soektforlengelse)}</span>

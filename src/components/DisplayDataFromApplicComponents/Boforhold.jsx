@@ -22,7 +22,7 @@ const Boforhold = ({ state }) => {
             </div>
 
             <div style={sectionGridLayout}>
-                {state.boforhold.delerDuBolig === 'true' && (
+                {state.boforhold.delerDuBolig && (
                     <>
                         <span>Opplysninger:</span>
                         <span>{opplysningerOmAnnenVoksen()}</span>
