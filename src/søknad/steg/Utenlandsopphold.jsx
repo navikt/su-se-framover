@@ -38,7 +38,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
             return (
                 <div>
                     <div>
-                        {state.utenlandsoppholdArray
+                        {state.registrertePerioder
                             .map((item, index) => ({ ...item, key: index }))
                             .map((item, index) => {
                                 return (
@@ -50,8 +50,8 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                                 valgtDato={item.utreisedato}
                                                 onChange={date =>
                                                     updateUtreisedato({
-                                                        localState: state.utenlandsoppholdArray,
-                                                        fieldName: 'utenlandsoppholdArray',
+                                                        localState: state.registrertePerioder,
+                                                        fieldName: 'registrertePerioder',
                                                         date,
                                                         index
                                                     })
@@ -65,22 +65,22 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                                 valgtDato={item.innreisedato}
                                                 onChange={date =>
                                                     updateInnreisedato({
-                                                        localState: state.utenlandsoppholdArray,
-                                                        fieldName: 'utenlandsoppholdArray',
+                                                        localState: state.registrertePerioder,
+                                                        fieldName: 'registrertePerioder',
                                                         date,
                                                         index
                                                     })
                                                 }
                                             />
                                         </div>
-                                        {state.utenlandsoppholdArray.length > 1 && (
+                                        {state.registrertePerioder.length > 1 && (
                                             <Lenke
                                                 type="button"
                                                 style={fjernInnputKnappStyle}
                                                 onClick={() =>
                                                     fjernValgtInputFelt(
-                                                        state.utenlandsoppholdArray,
-                                                        'utenlandsoppholdArray',
+                                                        state.registrertePerioder,
+                                                        'registrertePerioder',
                                                         index
                                                     )
                                                 }
@@ -94,11 +94,11 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                     </div>
                     <div style={{ display: 'flex' }}>
                         <Element>Antall dager: &nbsp;</Element>
-                        <Element>{addDaysBetweenTwoDates(state.utenlandsoppholdArray)}</Element>
+                        <Element>{addDaysBetweenTwoDates(state.registrertePerioder)}</Element>
                     </div>
                     <Knapp
                         style={{ marginTop: '1em' }}
-                        onClick={() => addInputField(state.utenlandsoppholdArray, 'utenlandsoppholdArray')}
+                        onClick={() => addInputField(state.registrertePerioder, 'registrertePerioder')}
                     >
                         Legg til flere utenlandsopphold
                     </Knapp>
@@ -113,7 +113,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
             return (
                 <div style={{ marginBottom: '2em' }}>
                     <div>
-                        {state.planlagtUtenlandsoppholdArray
+                        {state.planlagtePerioder
                             .map((item, index) => ({ ...item, key: index }))
                             .map((item, index) => {
                                 return (
@@ -128,8 +128,8 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                                 valgtDato={item.utreisedato}
                                                 onChange={date =>
                                                     updateUtreisedato({
-                                                        localState: state.planlagtUtenlandsoppholdArray,
-                                                        fieldName: 'planlagtUtenlandsoppholdArray',
+                                                        localState: state.planlagtePerioder,
+                                                        fieldName: 'planlagtePerioder',
                                                         date,
                                                         index
                                                     })
@@ -146,22 +146,22 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                                 valgtDato={item.innreisedato}
                                                 onChange={date =>
                                                     updateInnreisedato({
-                                                        localState: state.planlagtUtenlandsoppholdArray,
-                                                        fieldName: 'planlagtUtenlandsoppholdArray',
+                                                        localState: state.planlagtePerioder,
+                                                        fieldName: 'planlagtePerioder',
                                                         date,
                                                         index
                                                     })
                                                 }
                                             />
                                         </div>
-                                        {state.planlagtUtenlandsoppholdArray.length > 1 && (
+                                        {state.planlagtePerioder.length > 1 && (
                                             <Lenke
                                                 type="button"
                                                 style={fjernInnputKnappStyle}
                                                 onClick={() =>
                                                     fjernValgtInputFelt(
-                                                        state.planlagtUtenlandsoppholdArray,
-                                                        'planlagtUtenlandsoppholdArray',
+                                                        state.planlagtePerioder,
+                                                        'planlagtePerioder',
                                                         index
                                                     )
                                                 }
@@ -175,12 +175,12 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                     </div>
                     <div style={{ display: 'flex' }}>
                         <Element>Antall dager: &nbsp;</Element>
-                        <Element>{addDaysBetweenTwoDates(state.planlagtUtenlandsoppholdArray)}</Element>
+                        <Element>{addDaysBetweenTwoDates(state.planlagtePerioder)}</Element>
                     </div>
                     <Knapp
                         style={{ marginTop: '1em' }}
                         onClick={() =>
-                            addInputField(state.planlagtUtenlandsoppholdArray, 'planlagtUtenlandsoppholdArray')
+                            addInputField(state.planlagtePerioder, 'planlagtePerioder')
                         }
                     >
                         Legg til flere planlagt utenlandsopphold
@@ -290,7 +290,7 @@ const dates = (utreiseDato, innreiseDato) => {
 
 function validateDates(formValues) {
     const errorsArray = [];
-    const tempUtenlandsoppholdArray = formValues.utenlandsoppholdArray;
+    const tempUtenlandsoppholdArray = formValues.registrertePerioder;
 
     if (formValues.utenlandsopphold) {
         const x = tempUtenlandsoppholdArray
@@ -326,7 +326,7 @@ function utenlandsoppholdValidering(formValues) {
 }
 
 function utenlandsoppholdFelterValidering(formValues, errorsArray) {
-    const tempUtenlandsoppholdArray = formValues.utenlandsoppholdArray;
+    const tempUtenlandsoppholdArray = formValues.registrertePerioder;
 
     if (formValues.utenlandsopphold) {
         tempUtenlandsoppholdArray.map((item, index) => {
@@ -363,7 +363,7 @@ function utenlandsoppholdFelterValidering(formValues, errorsArray) {
 
 function validatePlanlagtDates(formValues) {
     const errorsArray = [];
-    const tempUtenlandsoppholdArray = formValues.planlagtUtenlandsoppholdArray;
+    const tempUtenlandsoppholdArray = formValues.planlagtePerioder;
 
     if (formValues.planlagtUtenlandsopphold) {
         const x = tempUtenlandsoppholdArray
@@ -402,7 +402,7 @@ function planlagtUtenlandsoppholdValidering(formValues) {
 }
 
 function planlagtUtenlandsoppholdFelterValidering(formValues, errorsArray) {
-    const tempPlanlagtUtenlandsoppholdArray = formValues.planlagtUtenlandsoppholdArray;
+    const tempPlanlagtUtenlandsoppholdArray = formValues.planlagtePerioder;
 
     if (formValues.planlagtUtenlandsopphold) {
         tempPlanlagtUtenlandsoppholdArray.map((item, index) => {

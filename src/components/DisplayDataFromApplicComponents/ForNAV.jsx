@@ -8,16 +8,16 @@ const ForNAV = ({ state }) => {
             <Undertittel style={elementSpacing}>For NAV</Undertittel>
             <div style={sectionGridLayout}>
                 <span>Hvilket målform ønsker du svaret i?</span>
-                <span>{state.forNAV.maalform}</span>
+                <span>{state.forNAV.målform}</span>
             </div>
 
             <div style={sectionGridLayout}>
                 <span style={elementSpacing}>Har søker møtt personlig?</span>
-                <span>{jaNeiSpørsmål(state.forNAV.personligmote)}</span>
+                <span>{jaNeiSpørsmål(state.forNAV.søkerMøttPersonlig)}</span>
                 <span style={elementSpacing}>Har fullmektig møtt?</span>
-                <span>{jaNeiSpørsmål(state.forNAV.fullmektigmote)}</span>
+                <span>{jaNeiSpørsmål(state.forNAV.harFullmektigMøtt)}</span>
                 <span style={elementSpacing}>Er originalt(e) pass sjekket for stempel?</span>
-                <span>{jaNeiSpørsmål(state.forNAV.passsjekk)}</span>
+                <span>{jaNeiSpørsmål(state.forNAV.erPassSjekket)}</span>
             </div>
 
             <div style={sectionGridLayout}>

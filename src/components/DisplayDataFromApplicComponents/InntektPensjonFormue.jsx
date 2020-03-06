@@ -11,55 +11,55 @@ const InntektPensjonFormue = ({ state }) => {
                 <span style={elementSpacing}>
                     Har søker fremsatt krav om annen norsk eller utenlandsk ytelse/pensjon som ikke er avgjort?
                 </span>
-                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.kravannenytelse)}</span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.framsattKravAnnenYtelse)}</span>
                 <span>Hva slags ytelse/pensjon</span>
                 <span>
-                    {state.inntektPensjonFormue.kravannenytelse
-                        ? state.inntektPensjonFormue.kravannenytelseBegrunnelse
+                    {state.inntektPensjonFormue.framsattKravAnnenYtelse
+                        ? state.inntektPensjonFormue.framsattKravAnnenYtelseBegrunnelse
                         : ''}
                 </span>
             </div>
 
             <div style={sectionGridLayout}>
                 <span style={elementSpacing}>Har du arbeidsinntekt/personinntekt?</span>
-                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.arbeidselleranneninntekt)}</span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.harInntekt)}</span>
                 <span style={elementSpacing}>Brutto beløp per år:</span>
-                <span>{state.inntektPensjonFormue.arbeidselleranneninntektBegrunnelse}</span>
+                <span>{state.inntektPensjonFormue.inntektBeløp}</span>
                 <span style={elementSpacing}>Har du pensjon?</span>
-                <span>{state.inntektPensjonFormue.hardupensjon && søkerHarPensjon()}</span>
+                <span>{state.inntektPensjonFormue.harPensjon && søkerHarPensjon()}</span>
                 <span>Sum inntekt:</span>
-                <span>{state.inntektPensjonFormue.sumInntekt}</span>
+                <span>{state.inntektPensjonFormue.sumInntektOgPensjon}</span>
             </div>
 
             <div style={sectionGridLayout}>
                 <span style={elementSpacing}>Har du formue/eiendom</span>
-                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.harduformueeiendom)}</span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.harFormueEiendom)}</span>
                 <span style={elementSpacing}>Har du finansformue?</span>
-                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.hardufinansformue)}</span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.harFinansFormue)}</span>
                 <span style={elementSpacing}>
-                    {state.inntektPensjonFormue.harduformueeiendom || state.inntektPensjonFormue.hardufinansformue ? (
+                    {state.inntektPensjonFormue.harFormueEiendom || state.inntektPensjonFormue.harFinansFormue ? (
                         <span>Totalbeløp formue:</span>
                     ) : (
                         ''
                     )}
                 </span>
                 <span>
-                    {state.inntektPensjonFormue.harduformueeiendom || state.inntektPensjonFormue.hardufinansformue
+                    {state.inntektPensjonFormue.harFormueEiendom || state.inntektPensjonFormue.harFinansFormue
                         ? state.inntektPensjonFormue.formueBeløp
                         : ''}
                 </span>
                 <span style={elementSpacing}>Har du annen formue/eiendom</span>
-                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.harduannenformueeiendom)}</span>
-                <span>{state.inntektPensjonFormue.harduannenformueeiendom ? <span>-</span> : ''}</span>
-                <span>{state.inntektPensjonFormue.harduannenformueeiendom ? søkerHarAnnenFormueEiendom() : ''}</span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.harAnnenFormue)}</span>
+                <span>{state.inntektPensjonFormue.harAnnenFormue ? <span>-</span> : ''}</span>
+                <span>{state.inntektPensjonFormue.harAnnenFormue ? søkerHarAnnenFormueEiendom() : ''}</span>
             </div>
 
             <div style={sectionGridLayout}>
                 <span style={elementSpacing}>Har søker Depositumskonto?</span>
-                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.søkerHarDepositumskonto)}</span>
-                <span>{state.inntektPensjonFormue.søkerHarDepositumskonto && <span>depositum-beløp:</span>}</span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.harDepositumskonto)}</span>
+                <span>{state.inntektPensjonFormue.harDepositumskonto && <span>depositum-beløp:</span>}</span>
                 <span>
-                    {state.inntektPensjonFormue.søkerHarDepositumskonto && (
+                    {state.inntektPensjonFormue.harDepositumskonto && (
                         <span>{state.inntektPensjonFormue.depositumBeløp}</span>
                     )}
                 </span>
@@ -70,7 +70,7 @@ const InntektPensjonFormue = ({ state }) => {
                     Mottar du eller ektefellen/samboer, eller har du eller han/hun i løpet av de siste tre månedene
                     mottatt sosialstønad til livsopphold?
                 </span>
-                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.sosialstonad)}</span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.harSosialStønad)}</span>
             </div>
         </div>
     );

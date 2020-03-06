@@ -28,7 +28,7 @@ const Utenlandsopphold = ({ state }) => {
     );
 
     function utenlandsopphold() {
-        const array = state.utenlandsopphold.utenlandsoppholdArray;
+        const array = state.utenlandsopphold.registrertePerioder;
         return (
             <ol>
                 {array.map((utenlandsoppholdRow, index) => (
@@ -42,7 +42,7 @@ const Utenlandsopphold = ({ state }) => {
     }
 
     function planlagtUtenlandsopphold() {
-        const array = state.utenlandsopphold.planlagtUtenlandsoppholdArray;
+        const array = state.utenlandsopphold.planlagtePerioder;
         return (
             <ol>
                 {array.map((utenlandsoppholdRow, index) => (

@@ -50,7 +50,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
     }
 
     function personDelerBolig() {
-        if (state.delerDuBolig) {
+        if (state.delerBolig) {
             return (
                 <CheckboxGruppe legend="Hvem deler søker bolig med?">
                     <Checkbox
@@ -63,8 +63,8 @@ const Boforhold = ({ state, updateField, onClick }) => {
                     <Checkbox
                         name="boligdeler"
                         label="Barn over 18 år"
-                        value="over18"
-                        checked={state.borSammenMed.includes('over18')}
+                        value="barnOver18"
+                        checked={state.borSammenMed.includes('barnOver18')}
                         onChange={e => boSammenMedUpdate(e.target)}
                     />
                     <Checkbox
@@ -80,7 +80,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
     }
 
     function tillegsInfoESP() {
-        if (state.delerDuBolig) {
+        if (state.delerBolig) {
             return (
                 <div style={{ marginBottom: '2em' }}>
                     <Ingress>Opplysninger om ektefellen/samboer/annen voksen person hvis dere bor sammen</Ingress>
@@ -136,10 +136,10 @@ const Boforhold = ({ state, updateField, onClick }) => {
                 <div style={container}>
                     <span style={{ marginRight: '1em' }}>
                         <JaNeiSpørsmål
-                            fieldName="delerDuBolig"
+                            fieldName="delerBolig"
                             legend="Deler søker bolig med en annen voksen?"
-                            state={state.delerDuBolig}
-                            onChange={e => updateField('delerDuBolig', e.target.value)}
+                            state={state.delerBolig}
+                            onChange={e => updateField('delerBolig', e.target.value)}
                         />
                     </span>
                     {personDelerBolig()}
@@ -169,7 +169,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
 //---------------------Validering
 //----------------------------------------------------------------------------------
 const fields = {
-    delerdubolig: { label: 'delerdubolig', htmlId: 'delerdubolig' },
+    delerBolig: { label: 'delerBolig', htmlId: 'delerBolig' },
     borsammenmed: { label: 'borsammenmed', htmlId: 'borsammenmed' },
     delerboligmed: { label: 'delerboligmed', htmlId: 'delerboligmed' }
 };
@@ -185,14 +185,14 @@ function validateFormValues(formValues) {
 }
 
 function delerBoligValidering(formValues) {
-    const delerDuBolig = formValues.delerDuBolig;
+    const delerBolig = formValues.delerBolig;
     let feilmelding = '';
 
-    if (delerDuBolig === undefined) {
+    if (delerBolig === undefined) {
         feilmelding += 'Vennligst velg boforhold';
     }
     if (feilmelding.length > 0) {
-        return [{ skjemaelementId: fields.delerdubolig.htmlId, feilmelding }];
+        return [{ skjemaelementId: fields.delerBolig.htmlId, feilmelding }];
     }
     return [];
 }
@@ -201,7 +201,7 @@ function borSammenMedValidering(formValues) {
     const borSammenMed = formValues.borSammenMed;
     let feilmelding = '';
 
-    if (formValues.delerDuBolig) {
+    if (formValues.delerBolig) {
         if (
             !borSammenMed.includes('esp') &&
             !borSammenMed.includes('over18') &&
@@ -219,7 +219,7 @@ function borSammenMedValidering(formValues) {
 function delerBoligMedValidering(formValues, errorsArray) {
     const delerBoligMedArray = formValues.delerBoligMed;
 
-    if (formValues.delerDuBolig) {
+    if (formValues.delerBolig) {
         delerBoligMedArray.map((item, index) => {
             if (item.navn.trim().length === 0) {
                 errorsArray.push({

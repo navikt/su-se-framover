@@ -5,15 +5,15 @@ import Oppholdstillatelse from '../../søknad/steg/Oppholdstillatelse';
 
 const correctState = {
     forNAV: {
-        maalform: 'Bokmål',
-        passsjekk: true,
-        personligmote: true,
-        fullmektigmote: false,
+        målform: 'Bokmål',
+        erPassSjekket: true,
+        søkerMøttPersonlig: true,
+        harFullmektigMøtt: false,
         forNAVmerknader: 'Alt er fint'
     },
     boforhold: {
         borSammenMed: ['esp', 'over18'],
-        delerDuBolig: true,
+        delerBolig: true,
         delerBoligMed: [
             { navn: 'Pluto', fødselsnummer: '12345678901' },
             { navn: 'Jupiter', fødselsnummer: '10987654321' }
@@ -21,11 +21,11 @@ const correctState = {
     },
     utenlandsopphold: {
         utenlandsopphold: true,
-        utenlandsoppholdArray: [{ utreisedato: '2020-02-01', innreisedato: '2020-02-02' }],
+        registrertePerioder: [{ utreisedato: '2020-02-01', innreisedato: '2020-02-02' }],
         planlagtUtenlandsopphold: true,
-        planlagtUtenlandsoppholdArray: [{ utreisedato: '2020-02-04', innreisedato: '2020-02-06' }]
+        planlagtePerioder: [{ utreisedato: '2020-02-04', innreisedato: '2020-02-06' }]
     },
-    oppholdstillatelse: { varigopphold: false, soektforlengelse: true, oppholdstillatelseUtløpsdato: '2020-02-21' },
+    oppholdstillatelse: { harVarigOpphold: false, søktOmForlengelse: true, utløpsDato: '2020-02-21' },
     personopplysninger: {
         fnr: '12345678901',
         fornavn: 'Planet',
@@ -42,34 +42,34 @@ const correctState = {
         statsborgerskap: 'Solen, Uranus'
     },
     inntektPensjonFormue: {
-        sumInntekt: 750,
+        sumInntektOgPensjon: 750,
         formueBeløp: '100',
-        hardupensjon: true,
-        sosialstonad: false,
-        kravannenytelse: true,
+        harPensjon: true,
+        harSosialStønad: false,
+        framsattKravAnnenYtelse: true,
         pensjonsOrdning: [{ beløp: '250', ordning: 'PensjonsOrdningen' }],
-        hardufinansformue: false,
+        harFinansFormue: false,
         annenFormueEiendom: [{ typeFormue: 'Hytte', skattetakst: '50' }],
-        harduformueeiendom: true,
-        harduannenformueeiendom: true,
-        arbeidselleranneninntekt: true,
-        søkerHarDepositumskonto: false,
-        kravannenytelseBegrunnelse: 'penjon',
-        arbeidselleranneninntektBegrunnelse: '500'
+        harFormueEiendom: true,
+        harAnnenFormue: true,
+        harInntekt: true,
+        harDepositumskonto: false,
+        framsattKravAnnenYtelseBegrunnelse: 'penjon',
+        inntektBeløp: '500'
     }
 };
 
 const stateWithError = {
     forNAV: {
-        maalform: 'Nynorsk',
-        passsjekk: true,
-        personligmote: true,
-        fullmektigmote: false,
+        målform: 'Nynorsk',
+        erPassSjekket: true,
+        søkerMøttPersonlig: true,
+        harFullmektigMøtt: false,
         forNAVmerknader: 'Alt er fint'
     },
     boforhold: {
         borSammenMed: ['esp', 'over18'],
-        delerDuBolig: true,
+        delerBolig: true,
         delerBoligMed: [
             { navn: 'Pluto', fødselsnummer: '12345678901' },
             { navn: 'Jupiter', fødselsnummer: '10987654321' }
@@ -77,11 +77,11 @@ const stateWithError = {
     },
     utenlandsopphold: {
         utenlandsopphold: true,
-        utenlandsoppholdArray: [{ utreisedato: '2020-02-01', innreisedato: '2020-02-02' }],
+        registrertePerioder: [{ utreisedato: '2020-02-01', innreisedato: '2020-02-02' }],
         planlagtUtenlandsopphold: true,
-        planlagtUtenlandsoppholdArray: [{ utreisedato: '2020-02-04', innreisedato: '2020-02-06' }]
+        planlagtePerioder: [{ utreisedato: '2020-02-04', innreisedato: '2020-02-06' }]
     },
-    oppholdstillatelse: { varigopphold: false, soektforlengelse: true, oppholdstillatelseUtløpsdato: '2020-02-21' },
+    oppholdstillatelse: { harVarigOpphold: false, søktOmForlengelse: true, utløpsDato: '2020-02-21' },
     personopplysninger: {
         fnr: '12345678901',
         fornavn: 'Planet',
@@ -98,20 +98,20 @@ const stateWithError = {
         statsborgerskap: 'Solen, Uranus'
     },
     inntektPensjonFormue: {
-        sumInntekt: 750,
+        sumInntektOgPensjon: 750,
         formueBeløp: '100',
-        hardupensjon: true,
-        sosialstonad: false,
-        kravannenytelse: true,
+        harPensjon: true,
+        harSosialStønad: false,
+        framsattKravAnnenYtelse: true,
         pensjonsOrdning: [{ beløp: '250', ordning: 'PensjonsOrdningen' }],
-        hardufinansformue: false,
+        harFinansFormue: false,
         annenFormueEiendom: [{ typeFormue: 'Hytte', skattetakst: '50' }],
-        harduformueeiendom: true,
-        harduannenformueeiendom: true,
-        arbeidselleranneninntekt: true,
-        søkerHarDepositumskonto: false,
-        kravannenytelseBegrunnelse: 'penjon',
-        arbeidselleranneninntektBegrunnelse: '500'
+        harFormueEiendom: true,
+        harAnnenFormue: true,
+        harInntekt: true,
+        harDepositumskonto: false,
+        framsattKravAnnenYtelseBegrunnelse: 'penjon',
+        inntektBeløp: '500'
     }
 };
 
@@ -136,7 +136,7 @@ describe('Tests related to displaying data from a filled application', () => {
         expect(component.toJSON().children.length).toBe(7);
     });
 
-    test('Tests that two DisplayDataFromApplic components with a difference in maalform are not equal', () => {
+    test('Tests that two DisplayDataFromApplic components with a difference in målform are not equal', () => {
         const component = create(<DisplayDataFromApplic state={correctState} />);
         const component2 = create(<DisplayDataFromApplic state={stateWithError} />);
 
@@ -146,6 +146,6 @@ describe('Tests related to displaying data from a filled application', () => {
     test('tests that we use primitive booleans', () => {
         const component = create(<Oppholdstillatelse state={correctState} />);
 
-        expect(component.toTree().props.state.oppholdstillatelse.varigopphold).toBe(false);
+        expect(component.toTree().props.state.oppholdstillatelse.harVarigOpphold).toBe(false);
     });
 });

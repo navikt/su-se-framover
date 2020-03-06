@@ -3,15 +3,15 @@
     "id": "2",
     "json": {
       "forNAV": {
-        "maalform": "Bokmål",
-        "passsjekk": "true",
-        "personligmote": "true",
-        "fullmektigmote": "false",
+        "målform": "Bokmål",
+        "erPassSjekket": "true",
+        "søkerMøttPersonlig": "true",
+        "harFullmektigMøtt": "false",
         "forNAVmerknader": "kebab"
       },
       "boforhold": {
         "borSammenMed": [],
-        "delerDuBolig": "false",
+        "delerBolig": "false",
         "delerBoligMed": [
           {
             "navn": "",
@@ -21,14 +21,14 @@
       },
       "utenlandsopphold": {
         "utenlandsopphold": "false",
-        "utenlandsoppholdArray": [
+        "registrertePerioder": [
           {
             "utreisedato": "",
             "innreisedato": ""
           }
         ],
         "planlagtUtenlandsopphold": "false",
-        "planlagtUtenlandsoppholdArray": [
+        "planlagtePerioder": [
           {
             "utreisedato": "",
             "innreisedato": ""
@@ -36,7 +36,7 @@
         ]
       },
       "oppholdstillatelse": {
-        "varigopphold": "true"
+        "harVarigOpphold": "true"
       },
       "personopplysninger": {
         "fnr": "27088921696",
@@ -54,26 +54,26 @@
         "statsborgerskap": "NOR,ESP"
       },
       "inntektPensjonFormue": {
-        "sumInntekt": 0,
-        "hardupensjon": "false",
-        "sosialstonad": "false",
-        "kravannenytelse": "false",
+        "sumInntektOgPensjon": 0,
+        "harPensjon": "false",
+        "harSosialStønad": "false",
+        "framsattKravAnnenYtelse": "false",
         "pensjonsOrdning": [
           {
             "beløp": "",
             "ordning": ""
           }
         ],
-        "hardufinansformue": "false",
+        "harFinansFormue": "false",
         "annenFormueEiendom": [
           {
             "typeFormue": "",
             "skattetakst": ""
           }
         ],
-        "harduformueeiendom": "false",
-        "harduannenformueeiendom": "false",
-        "arbeidselleranneninntekt": "false"
+        "harFormueEiendom": "false",
+        "harAnnenFormue": "false",
+        "harInntekt": "false"
       }
     },
     "sakId": "1"

@@ -9,7 +9,7 @@ const Boforhold = ({ state }) => {
 
             <div style={sectionGridLayout}>
                 <span style={elementSpacing}>Deler søker bolig med en annen voksen?</span>
-                <span>{jaNeiSpørsmål(state.boforhold.delerDuBolig)}</span>
+                <span>{jaNeiSpørsmål(state.boforhold.delerBolig)}</span>
             </div>
 
             <div style={sectionGridLayout}>
@@ -22,7 +22,7 @@ const Boforhold = ({ state }) => {
             </div>
 
             <div style={sectionGridLayout}>
-                {state.boforhold.delerDuBolig && (
+                {state.boforhold.delerBolig && (
                     <>
                         <span>Opplysninger:</span>
                         <span>{opplysningerOmAnnenVoksen()}</span>

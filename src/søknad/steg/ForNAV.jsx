@@ -18,18 +18,18 @@ const ForNAV = ({ state, updateField, onClick }) => {
                     <RadioGruppe legend="Hvilken målform ønsker du i svaret?">
                         <div>
                             <Radio
-                                name="maalform"
+                                name="målform"
                                 label="Bokmål"
                                 value="Bokmål"
-                                checked={state.maalform === 'Bokmål'}
-                                onChange={e => updateField('maalform', e.target.value)}
+                                checked={state.målform === 'Bokmål'}
+                                onChange={e => updateField('målform', e.target.value)}
                             />
                             <Radio
-                                name="maalform"
+                                name="målform"
                                 label="Nynorsk"
                                 value="Nynorsk"
-                                checked={state.maalform === 'Nynorsk'}
-                                onChange={e => updateField('maalform', e.target.value)}
+                                checked={state.målform === 'Nynorsk'}
+                                onChange={e => updateField('målform', e.target.value)}
                             />
                         </div>
                     </RadioGruppe>
@@ -40,26 +40,26 @@ const ForNAV = ({ state, updateField, onClick }) => {
                 <div style={container}>
                     <div style={{ marginRight: '2em' }}>
                         <JaNeiSpørsmål
-                            fieldName="personligmote"
+                            fieldName="søkerMøttPersonlig"
                             legend="Har søker møtt personlig?"
-                            state={state.personligmote}
-                            onChange={e => updateField('personligmote', e.target.value)}
+                            state={state.søkerMøttPersonlig}
+                            onChange={e => updateField('søkerMøttPersonlig', e.target.value)}
                         />
                     </div>
                     <div style={{ marginRight: '2em' }}>
                         <JaNeiSpørsmål
-                            fieldName="fullmektigmote"
+                            fieldName="harFullmektigMøtt"
                             legend="Har fullmektig møtt?"
-                            state={state.fullmektigmote}
-                            onChange={e => updateField('fullmektigmote', e.target.value)}
+                            state={state.harFullmektigMøtt}
+                            onChange={e => updateField('harFullmektigMøtt', e.target.value)}
                         />
                     </div>
                     <div>
                         <JaNeiSpørsmål
-                            fieldName="passsjekk"
+                            fieldName="erPassSjekket"
                             legend="Er originalt(e) pass sjekket for stempel?"
-                            state={state.passsjekk}
-                            onChange={e => updateField('passsjekk', e.target.value)}
+                            state={state.erPassSjekket}
+                            onChange={e => updateField('erPassSjekket', e.target.value)}
                         />
                     </div>
                 </div>
@@ -110,7 +110,7 @@ function validateFormValues(formValues) {
 }
 
 function målformValidering(formValues) {
-    const målform = formValues.maalform;
+    const målform = formValues.målform;
     let feilmelding = '';
 
     if (målform === undefined) {
@@ -123,10 +123,10 @@ function målformValidering(formValues) {
 }
 
 function møttPersonligValidering(formValues) {
-    const personligmote = formValues.personligmote;
+    const søkerMøttPersonlig = formValues.søkerMøttPersonlig;
     let feilmelding = '';
 
-    if (personligmote === undefined) {
+    if (søkerMøttPersonlig === undefined) {
         feilmelding += 'Vennligst velg om søker har møtt personlig';
     }
     if (feilmelding.length > 0) {
@@ -136,10 +136,10 @@ function møttPersonligValidering(formValues) {
 }
 
 function fullmektigMøttValidering(formValues) {
-    const fullmektigmote = formValues.fullmektigmote;
+    const harFullmektigMøtt = formValues.harFullmektigMøtt;
     let feilmelding = '';
 
-    if (fullmektigmote === undefined) {
+    if (harFullmektigMøtt === undefined) {
         feilmelding += 'Vennligst velg om fullmektig har møtt';
     }
     if (feilmelding.length > 0) {
@@ -149,10 +149,10 @@ function fullmektigMøttValidering(formValues) {
 }
 
 function passSjekketValidering(formValues) {
-    const passsjekk = formValues.passsjekk;
+    const erPassSjekket = formValues.erPassSjekket;
     let feilmelding = '';
 
-    if (passsjekk === undefined) {
+    if (erPassSjekket === undefined) {
         feilmelding += 'Vennligst velg om pass er sjekket';
     }
     if (feilmelding.length > 0) {

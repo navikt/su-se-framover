@@ -12,7 +12,7 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
     const updateFunction = name => value => updateField(name, value);
 
     function midlertidigOppholdstillatelse() {
-        if (!state.varigopphold) {
+        if (!state.harVarigOpphold) {
             return (
                 <div style={{ display: 'flex' }}>
                     <div style={{ marginRight: '1em' }}>
@@ -21,15 +21,15 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
                             input={{
                                 placeholder: 'dd.mm.åååå'
                             }}
-                            valgtDato={state.oppholdstillatelseUtløpsdato}
-                            onChange={updateFunction('oppholdstillatelseUtløpsdato')}
+                            valgtDato={state.utløpsDato}
+                            onChange={updateFunction('utløpsDato')}
                         />
                     </div>
                     <JaNeiSpørsmål
-                        fieldName="soektforlengelse"
+                        fieldName="søktOmForlengelse"
                         legend="Har søker søkt om forlengelse?"
-                        state={state.soektforlengelse}
-                        onChange={e => updateField('soektforlengelse', e.target.value)}
+                        state={state.søktOmForlengelse}
+                        onChange={e => updateField('søktOmForlengelse', e.target.value)}
                     />
                 </div>
             );
@@ -41,10 +41,10 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
             <Systemtittel>Opplysninger om oppholdstillatelse</Systemtittel>
             <div>
                 <JaNeiSpørsmål
-                    fieldName="varigopphold"
+                    fieldName="harVarigOpphold"
                     legend="Har søker varig oppholdstillatelse?"
-                    state={state.varigopphold}
-                    onChange={e => updateField('varigopphold', e.target.value)}
+                    state={state.harVarigOpphold}
+                    onChange={e => updateField('harVarigOpphold', e.target.value)}
                 />
                 <div>{midlertidigOppholdstillatelse()}</div>
             </div>
@@ -71,12 +71,12 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
 //---------------------Validering
 //----------------------------------------------------------------------------------
 const fields = {
-    varigopphold: { label: 'varigopphold', htmlId: 'varigopphold' },
-    oppholdstillatelseUtløpsdato: {
-        label: 'oppholdstillatelseUtløpsdato',
-        htmlId: 'oppholdstillatelseUtløpsdato'
+    harVarigOpphold: { label: 'harVarigOpphold', htmlId: 'harVarigOpphold' },
+    utløpsDato: {
+        label: 'utløpsDato',
+        htmlId: 'utløpsDato'
     },
-    soektforlengelse: { label: 'soektforlengelse', htmlId: 'soektforlengelse' }
+    søktOmForlengelse: { label: 'søktOmForlengelse', htmlId: 'søktOmForlengelse' }
 };
 
 function validateFormValues(formValues) {
@@ -90,25 +90,25 @@ function validateFormValues(formValues) {
 }
 
 function varigOppholdstillatelseValidering(formValues) {
-    const varigOppholdstillatelse = formValues.varigopphold;
+    const varigOppholdstillatelse = formValues.harVarigOpphold;
     let feilmelding = '';
 
     if (varigOppholdstillatelse === undefined) {
         feilmelding += 'Vennligst velg varig-oppholdstillatelse';
     }
     if (feilmelding.length > 0) {
-        return [{ skjemaelementId: fields.varigopphold.htmlId, feilmelding }];
+        return [{ skjemaelementId: fields.harVarigOpphold.htmlId, feilmelding }];
     }
     return [];
 }
 
 function oppholdstillatelseUtløpsdatoValidering(formValues) {
-    const oppholdstillatelseUtløpsdato = formValues.oppholdstillatelseUtløpsdato;
+    const utløpsDato = formValues.utløpsDato;
     let feilmelding = '';
 
-    if (!formValues.varigopphold) {
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(oppholdstillatelseUtløpsdato)) {
-            if (oppholdstillatelseUtløpsdato === '' || oppholdstillatelseUtløpsdato === undefined) {
+    if (!formValues.harVarigOpphold) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(utløpsDato)) {
+            if (utløpsDato === '' || utløpsDato === undefined) {
                 feilmelding += 'Oppholdstillatelsens utløpsdato må oppgis. Den må være på format dd.mm.åååå';
             } else {
                 feilmelding += 'Oppholdstillatelsens utløpsdato må være på format dd.mm.åååå';
@@ -116,7 +116,7 @@ function oppholdstillatelseUtløpsdatoValidering(formValues) {
             if (feilmelding.length > 0) {
                 return [
                     {
-                        skjemaelementId: fields.oppholdstillatelseUtløpsdato.htmlId,
+                        skjemaelementId: fields.utløpsDato.htmlId,
                         feilmelding
                     }
                 ];
@@ -127,15 +127,15 @@ function oppholdstillatelseUtløpsdatoValidering(formValues) {
 }
 
 function søktforlengelseValidering(formValues) {
-    const soektforlengelse = formValues.soektforlengelse;
+    const søktOmForlengelse = formValues.søktOmForlengelse;
     let feilmelding = '';
 
-    if (!formValues.varigopphold) {
-        if (soektforlengelse === undefined) {
+    if (!formValues.harVarigOpphold) {
+        if (søktOmForlengelse === undefined) {
             feilmelding += 'Vennligst velg om søker har søkt om forlengelse';
         }
         if (feilmelding.length > 0) {
-            return [{ skjemaelementId: fields.soektforlengelse.htmlId, feilmelding }];
+            return [{ skjemaelementId: fields.søktOmForlengelse.htmlId, feilmelding }];
         }
     }
     return [];

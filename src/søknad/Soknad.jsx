@@ -25,8 +25,8 @@ function Soknad() {
             delerBoligMed: [{ navn: '', fødselsnummer: '' }]
         },
         utenlandsopphold: {
-            utenlandsoppholdArray: [{ utreisedato: '', innreisedato: '' }],
-            planlagtUtenlandsoppholdArray: [{ utreisedato: '', innreisedato: '' }]
+            registrertePerioder: [{ utreisedato: '', innreisedato: '' }],
+            planlagtePerioder: [{ utreisedato: '', innreisedato: '' }]
         },
         oppholdstillatelse: {},
         inntektPensjonFormue: {

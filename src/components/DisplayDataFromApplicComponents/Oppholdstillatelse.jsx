@@ -9,23 +9,23 @@ const Oppholdstillatelse = ({ state }) => {
 
             <div style={sectionGridLayout}>
                 <span>Har søker varig oppholdstillatelse:</span>
-                <span>{jaNeiSpørsmål(state.oppholdstillatelse.varigopphold)}</span>
+                <span>{jaNeiSpørsmål(state.oppholdstillatelse.harVarigOpphold)}</span>
             </div>
 
             <div style={sectionGridLayout}>
-                {!state.oppholdstillatelse.varigopphold && (
+                {!state.oppholdstillatelse.harVarigOpphold && (
                     <>
                         <span>Utløpsdato: </span>
-                        <span>{reverseString(state.oppholdstillatelse.oppholdstillatelseUtløpsdato)}</span>
+                        <span>{reverseString(state.oppholdstillatelse.utløpsDato)}</span>
                     </>
                 )}
             </div>
 
             <div style={sectionGridLayout}>
-                {!state.oppholdstillatelse.varigopphold && (
+                {!state.oppholdstillatelse.harVarigOpphold && (
                     <>
                         <span>Har søker søkt om forlengelse?</span>
-                        <span>{jaNeiSpørsmål(state.oppholdstillatelse.soektforlengelse)}</span>
+                        <span>{jaNeiSpørsmål(state.oppholdstillatelse.søktOmForlengelse)}</span>
                     </>
                 )}
             </div>
