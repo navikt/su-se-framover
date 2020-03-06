@@ -105,10 +105,10 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                     />
                 </span>
                 <JaNeiSpørsmål
-                    fieldName="bofastnorge"
+                    fieldName="borFastINorge"
                     legend="Bor søker fast i Norge?"
-                    state={state.bofastnorge}
-                    onChange={e => updateField('bofastnorge', e.target.value)}
+                    state={state.borFastINorge}
+                    onChange={e => updateField('borFastINorge', e.target.value)}
                 />
             </div>
             {feilmeldinger.length > 0 && (
@@ -153,7 +153,7 @@ const fields = {
     bokommune: { label: 'bokommune', htmlId: 'bokommune' },
     statsborgerskap: { label: 'statsborgerskap', htmlId: 'statsborgerskap' },
     flyktning: { label: 'flyktning', htmlId: 'flyktning' },
-    bofastnorge: { label: 'bofastnorge', htmlId: 'bofastnorge' }
+    borFastINorge: { label: 'borFastINorge', htmlId: 'borFastINorge' }
 };
 
 function validateFormValues(formValues) {
@@ -312,14 +312,14 @@ function flyktningValidering(formValues) {
 }
 
 function borFastNorgeValidering(formValues) {
-    const bofastnorge = formValues.bofastnorge;
+    const borFastINorge = formValues.borFastINorge;
     let feilmelding = '';
 
-    if (bofastnorge === undefined) {
+    if (borFastINorge === undefined) {
         feilmelding += 'Vennligst velg bo-status';
     }
     if (feilmelding.length > 0) {
-        return [{ skjemaelementId: fields.bofastnorge.htmlId, feilmelding }];
+        return [{ skjemaelementId: fields.borFastINorge.htmlId, feilmelding }];
     }
     return [];
 }

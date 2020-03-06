@@ -56,22 +56,22 @@ const Boforhold = ({ state, updateField, onClick }) => {
                     <Checkbox
                         name="boligdeler"
                         label="Ektefelle/Partner/Samboer"
-                        value="esp"
-                        checked={state.borSammenMed.includes('esp')}
+                        value="Ektefelle/Partner/Samboer"
+                        checked={state.borSammenMed.includes('Ektefelle/Partner/Samboer')}
                         onChange={e => boSammenMedUpdate(e.target)}
                     />
                     <Checkbox
                         name="boligdeler"
                         label="Barn over 18 år"
-                        value="barnOver18"
-                        checked={state.borSammenMed.includes('barnOver18')}
+                        value="Barn over 18"
+                        checked={state.borSammenMed.includes('Barn over 18')}
                         onChange={e => boSammenMedUpdate(e.target)}
                     />
                     <Checkbox
                         name="boligdeler"
                         label="Andre personer over 18 år"
-                        value="annenPerson"
-                        checked={state.borSammenMed.includes('annenPerson')}
+                        value="Andre personer over 18 år"
+                        checked={state.borSammenMed.includes('Andre personer over 18 år')}
                         onChange={e => boSammenMedUpdate(e.target)}
                     />
                 </CheckboxGruppe>

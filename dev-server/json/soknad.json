@@ -48,7 +48,7 @@
         "bruksenhet": "25",
         "mellomnavn": "Johansen",
         "postnummer": "0050",
-        "bofastnorge": "true",
+        "borFastINorge": "true",
         "gateadresse": "Nissegata",
         "telefonnummer": "95147896",
         "statsborgerskap": "NOR,ESP"

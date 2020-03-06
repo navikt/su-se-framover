@@ -36,7 +36,7 @@ const correctState = {
         bruksenhet: 'H105',
         mellomnavn: 'Planetus',
         postnummer: '0985',
-        bofastnorge: true,
+        borFastINorge: true,
         gateadresse: 'Melkeveien 5',
         telefonnummer: '12345678',
         statsborgerskap: 'Solen, Uranus'
@@ -92,7 +92,7 @@ const stateWithError = {
         bruksenhet: 'H105',
         mellomnavn: 'Planetus',
         postnummer: '0985',
-        bofastnorge: true,
+        borFastINorge: true,
         gateadresse: 'Melkeveien 5',
         telefonnummer: '12345678',
         statsborgerskap: 'Solen, Uranus'

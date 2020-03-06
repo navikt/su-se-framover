@@ -220,10 +220,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
         let beløp = 0;
 
         if (state.harInntekt) {
-            if (
-                state.inntektBeløp !== undefined &&
-                state.inntektBeløp.length >= 1
-            ) {
+            if (state.inntektBeløp !== undefined && state.inntektBeløp.length >= 1) {
                 beløp += parseInt(state.inntektBeløp);
             }
         }

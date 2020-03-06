@@ -179,9 +179,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                     </div>
                     <Knapp
                         style={{ marginTop: '1em' }}
-                        onClick={() =>
-                            addInputField(state.planlagtePerioder, 'planlagtePerioder')
-                        }
+                        onClick={() => addInputField(state.planlagtePerioder, 'planlagtePerioder')}
                     >
                         Legg til flere planlagt utenlandsopphold
                     </Knapp>

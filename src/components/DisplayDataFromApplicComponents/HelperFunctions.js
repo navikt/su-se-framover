@@ -2,7 +2,7 @@
 export const jaNeiSpørsmål = state => {
     if (state) {
         return 'Ja';
-    } else if (!state) {
+    } else if (state === false) {
         return 'Nei';
     } else {
         return '';

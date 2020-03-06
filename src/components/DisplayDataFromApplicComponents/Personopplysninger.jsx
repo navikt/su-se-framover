@@ -51,7 +51,7 @@ const Personopplysninger = ({ state }) => {
                 <span style={elementSpacing}>Er søker registrert som flyktning?</span>
                 <span>{jaNeiSpørsmål(state.personopplysninger.flyktning)}</span>
                 <span>Bor søker fast i Norge?</span>
-                <span>{jaNeiSpørsmål(state.personopplysninger.bofastnorge)}</span>
+                <span>{jaNeiSpørsmål(state.personopplysninger.borFastINorge)}</span>
             </div>
         </div>
     );
