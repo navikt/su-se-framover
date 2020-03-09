@@ -10,6 +10,10 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
 
     const updateFunction = name => value => updateField(name, value);
+    const parseIntsInState = (stateToChange ,value) => {
+        updateField(stateToChange, parseInt(value))
+    }
+
 
     function framsattKravAnnenYtelseInput() {
         if (state.framsattKravAnnenYtelse) {
@@ -31,8 +35,8 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     labelText="Brutto beløp per år:"
                     id={fields.inntektsBeløp.htmlId}
                     bredde="M"
-                    value={state.inntektBeløp || ''}
-                    onChange={updateFunction('inntektBeløp')}
+                    value={state.inntektBeløp || 0}
+                    onChange={ value => parseIntsInState('inntektBeløp', value)}
                 />
             );
         }
@@ -45,8 +49,8 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     labelText="Totalbeløp formue: "
                     id={fields.formueBeløp.htmlId}
                     bredde="M"
-                    value={state.formueBeløp || ''}
-                    onChange={updateFunction('formueBeløp')}
+                    value={state.formueBeløp || 0}
+                    onChange={ value =>parseIntsInState('formueBeløp', value)}
                 />
             );
         }
@@ -59,7 +63,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     labelText="Beløp:"
                     value={state.depositumBeløp || ''}
                     bredde={'M'}
-                    onChange={updateFunction('depositumBeløp')}
+                    onChange={e => parseIntsInState('depositumBeløp', e)}
                 />
             );
         }
@@ -83,7 +87,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                                     <InputFields
                                         labelText="Skattetakst"
                                         id={`${item.key}-skattetakst`}
-                                        value={item.skattetakst}
+                                        value={item.skattetakst || 0}
                                         onChange={value => updateFormueEiendomSkattetakst(value, index)}
                                     />
                                     {state.annenFormueEiendom.length > 1 && (
@@ -131,7 +135,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
 
     function updateFormueEiendomSkattetakst(kilde, index) {
         const skattetakst = { ...state.annenFormueEiendom[index] };
-        skattetakst.skattetakst = kilde;
+        skattetakst.skattetakst = parseInt(kilde);
 
         const tempSkattetakst = [
             ...state.annenFormueEiendom.slice(0, index),
@@ -155,7 +159,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
 
     function updatePensjonsOrdningsBeløp(kilde, index) {
         const beløp = { ...state.pensjonsOrdning[index] };
-        beløp.beløp = kilde;
+        beløp.beløp = parseInt(kilde);
 
         const tempPensjonsOrdning = [
             ...state.pensjonsOrdning.slice(0, index),
@@ -188,13 +192,13 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                                     <InputFields
                                         id={`${item.key}-ordning`}
                                         labelText={'Fra hvilken ordning mottar søker pensjon?'}
-                                        value={item.ordning}
+                                        value={item.ordning || ''}
                                         onChange={value => updatePensjonsOrdning(value, index)}
                                     />
                                     <InputFields
                                         id={`${item.key}-beløp`}
                                         labelText={'Brutto beløp per år'}
-                                        value={item.beløp}
+                                        value={item.beløp || 0}
                                         onChange={value => updatePensjonsOrdningsBeløp(value, index)}
                                     />
                                     {state.pensjonsOrdning.length > 1 && (
@@ -220,8 +224,8 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
         let beløp = 0;
 
         if (state.harInntekt) {
-            if (state.inntektBeløp !== undefined && state.inntektBeløp.length >= 1) {
-                beløp += parseInt(state.inntektBeløp);
+            if (state.inntektBeløp !== undefined) {
+                beløp += state.inntektBeløp;
             }
         }
 

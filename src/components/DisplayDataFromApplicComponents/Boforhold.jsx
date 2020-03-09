@@ -37,13 +37,13 @@ const Boforhold = ({ state }) => {
         let string = '';
         for (let i = 0; i < array.length; i++) {
             if (i === array.length - 1) {
-                array[i] === 'esp' ? (string += 'Ektefelle/Samboer/Partner') : (string += '');
-                array[i] === 'over18' ? (string += 'Barn over 18') : (string += '');
-                array[i] === 'annenPerson' ? (string += 'Andre personer over 18') : (string += '');
+                array[i] === 'Ektefelle/Partner/Samboer' ? (string += 'Ektefelle/Samboer/Partner') : (string += '');
+                array[i] === 'Barn over 18' ? (string += 'Barn over 18') : (string += '');
+                array[i] === 'Andre personer over 18 år' ? (string += 'Andre personer over 18') : (string += '');
             } else {
-                array[i] === 'esp' ? (string += 'Ektefelle/Samboer/Partner, ') : (string += '');
-                array[i] === 'over18' ? (string += 'Barn over 18, ') : (string += '');
-                array[i] === 'annenPerson' ? (string += 'Andre personer over 18, ') : (string += '');
+                array[i] === 'Ektefelle/Partner/Samboer' ? (string += 'Ektefelle/Samboer/Partner, ') : (string += '');
+                array[i] === 'Barn over 18' ? (string += 'Barn over 18, ') : (string += '');
+                array[i] === 'Andre personer over 18 år' ? (string += 'Andre personer over 18, ') : (string += '');
             }
         }
         return string;

@@ -241,6 +241,7 @@ const addDaysBetweenTwoDates = state => {
     }
 };
 
+//TODO - Ikke tillat negativ reise -
 const numberOfDaysBetweeenTwoDates = (date1, date2) => {
     const oneDay = 24 * 60 * 60 * 1000;
     const diffDays = Math.round(Math.abs((makeDate(date1) - makeDate(date2)) / oneDay));

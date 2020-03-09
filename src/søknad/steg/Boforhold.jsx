@@ -203,9 +203,9 @@ function borSammenMedValidering(formValues) {
 
     if (formValues.delerBolig) {
         if (
-            !borSammenMed.includes('esp') &&
-            !borSammenMed.includes('over18') &&
-            !borSammenMed.includes('annenPerson')
+            !borSammenMed.includes('Ektefelle/Partner/Samboer') &&
+            !borSammenMed.includes('Barn over 18') &&
+            !borSammenMed.includes('Andre personer over 18 år')
         ) {
             feilmelding += 'Vennligst velg hvem søker bor med';
         }

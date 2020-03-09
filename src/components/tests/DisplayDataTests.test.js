@@ -12,7 +12,7 @@ const correctState = {
         forNAVmerknader: 'Alt er fint'
     },
     boforhold: {
-        borSammenMed: ['esp', 'over18'],
+        borSammenMed: ['Ektefelle/Partner/Samboer', 'Barn over 18'],
         delerBolig: true,
         delerBoligMed: [
             { navn: 'Pluto', fødselsnummer: '12345678901' },
