@@ -59,25 +59,43 @@ function Vilkarsprov({ state = initialState, setState }) {
 
     const faktasjekkstyle = {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'stretch',
         justifyContent: 'left'
     };
+
+    function visSøknadFunction(){
+        return (
+            displayState.vissøknad ? (
+                <div style={{ width: '30%' }}>
+                    {soknad !== undefined &&
+                    soknad[0] !== undefined &&
+                    (console.log(JSON.stringify(soknad[0].json)),
+                        (
+                            <Panel border>
+                                <DisplayDataFromApplic state={soknad[0].json} />
+                            </Panel>
+                        ))}
+                </div>
+            ) : ""
+        )
+    }
 
     return (
         <div className="vilkårsprøving">
             <PersonInfoBar fnr={sak.fnr} />
             <Innholdstittel>Vilkårsprøving</Innholdstittel>
             <ToggleKnapp onClick={() => updateDisplayState()}>Vis søknad</ToggleKnapp>
-            <form onSubmit={handleSubmit}>
-                <div style={faktasjekkstyle}>
-                    <div>
+
+            <div style={{display:"flex"}}>
+                <form onSubmit={handleSubmit}>
+                    <div style={faktasjekkstyle}>
                         <Panel border>
                             <Section
                                 checkboxLabel={'§12-4 - §12-8 Uførhet'}
                                 sectionText={
-                                    'For å kunne motta Supplerende stønad for uføre, må brukeren oppfylle vilkårene ' +
-                                    '§12-4 til §12-8 i folketrygdloven'
+                                    'Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-8 i' +
+                                    ' folketrygdloven er oppfylt?'
                                 }
                                 stateToChange={'uførevilkår'}
                                 textAreaLabel={'Begrunnelse'}
@@ -87,18 +105,17 @@ function Vilkarsprov({ state = initialState, setState }) {
                             <Section
                                 checkboxLabel={'§28 Flyktning'}
                                 sectionText={
-                                    'For å kunne motta Supplerende stønad for uføre må brukeren ha status som flyktning.' +
-                                    ' Bla bla bla henhold til Utlendingsloven §28 blah blah'
+                                    'Har søker flyktningstatus etter Utl.l § 28?'
                                 }
                                 stateToChange={'flyktning'}
                                 textAreaLabel={'Begrunnelse'}
                                 textAreaValue={state.flyktning.begrunnelse}
                                 onChange={updateField}
                                 customizedDisplay={
-                                    <div style={faktasjekkstyle}>
+                                    <div style={{display:"flex", flexDirection: "row"}}>
                                         <Panel border style={{ width: '50%' }}>
                                             <Undertittel>Infomasjon fra søknad</Undertittel>
-                                            {/*                                         <Element>Fra søknad: {soknad.flyktning}</Element> */}
+                                            {/* <Element>Fra søknad: {soknad.flyktning}</Element> */}
                                         </Panel>
                                         <Panel border style={{ width: '50%' }}>
                                             <Undertittel>Infomasjon fra UDI</Undertittel>
@@ -109,11 +126,10 @@ function Vilkarsprov({ state = initialState, setState }) {
                                 }
                             />
                             <Section
-                                checkboxLabel={'§x-y Botid og opphold'}
+                                checkboxLabel={'§ 3 Oppholdstillatelse/Nordisk statsborger'}
                                 sectionText={
-                                    'For å kunne motta Supplerende stønad for uføre må brukeren være bosatt og oppholde' +
-                                    ' seg i Norge. Bla bla maksimal lengde på utlandsopphold ' +
-                                    '90 dager, bla bla mister retten til  motta bla bla'
+                                    'Er søker nordisk statsborger? Har søker varlig oppholdstillatelse? ' +
+                                    'Hvis tidsbegrenset oppholdstillatelse; skriv dato for gyldig til'
                                 }
                                 stateToChange={'boTidOgOpphold'}
                                 textAreaLabel={'Begrunnelse'}
@@ -121,9 +137,10 @@ function Vilkarsprov({ state = initialState, setState }) {
                                 onChange={updateField}
                             />
                             <Section
-                                checkboxLabel={'§x-y Personlig oppmøte'}
+                                checkboxLabel={'§17 Personlig oppmøte'}
                                 sectionText={
-                                    'For å kunne motta Supplerende stønad for uføre må brukeren ha møtt opp personlig'
+                                    'Har søker møtt personlig? Kopi av pass? Har bruker verge? ' +
+                                    'Har fullmektig har møtt; sjekk fullmakt og legeattest.'
                                 }
                                 stateToChange={'personligOppmøte'}
                                 textAreaLabel={'Begrunnelse'}
@@ -139,7 +156,7 @@ function Vilkarsprov({ state = initialState, setState }) {
                                 onChange={updateField}
                             />
                             <Section
-                                checkboxLabel={'§x-y Sivilstatus'}
+                                checkboxLabel={'§5 Boforhold, sivilstatus'}
                                 sectionText={'Søker er enslig.'}
                                 stateToChange={'sivilstatus'}
                                 textAreaLabel={'Begrunnelse'}
@@ -147,9 +164,9 @@ function Vilkarsprov({ state = initialState, setState }) {
                                 onChange={updateField}
                             />
                             <Section
-                                checkboxLabel={'§x-y Formue'}
+                                checkboxLabel={'§8 Formue'}
                                 sectionText={
-                                    'Brukeren må ha formue under 0,5G. Bla bla bla depositumskonto bla bla bla hytte og sånt'
+                                    'Er formue over ½ G? Kan ha primærbolig, eller depositumskonto, og en bil.'
                                 }
                                 stateToChange={'formue'}
                                 textAreaLabel={'Begrunnelse'}
@@ -158,37 +175,27 @@ function Vilkarsprov({ state = initialState, setState }) {
                             />
                         </Panel>
                     </div>
-                    {displayState.vissøknad && (
-                        <div style={{ width: '75%' }}>
-                            {soknad !== undefined &&
-                                soknad[0] !== undefined &&
-                                (console.log(JSON.stringify(soknad[0].json)),
-                                (
-                                    <Panel border>
-                                        <DisplayDataFromApplic state={soknad[0].json} />
-                                    </Panel>
-                                ))}
-                        </div>
-                    )}
-                </div>
-                <div>
-                    <Knapp htmlType="submit">Lagre</Knapp>
-                    <Knapp onClick={() => history.push('/beregning')}>Neste</Knapp>
-                </div>
-            </form>
+                    <div>
+                        <Knapp htmlType="submit">Lagre</Knapp>
+                        <Knapp onClick={() => history.push('/beregning')}>Neste</Knapp>
+                    </div>
+                </form>
+
+                {visSøknadFunction()}
+            </div>
         </div>
     );
 }
 
 const Section = ({
-    checkboxLabel,
-    stateToChange,
-    sectionText,
-    textAreaLabel,
-    textAreaValue,
-    onChange,
-    customizedDisplay
-}) => {
+                     checkboxLabel,
+                     stateToChange,
+                     sectionText,
+                     textAreaLabel,
+                     textAreaValue,
+                     onChange,
+                     customizedDisplay
+                 }) => {
     return (
         <div className="section">
             <Checkbox

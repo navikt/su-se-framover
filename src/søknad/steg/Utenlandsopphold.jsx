@@ -243,8 +243,7 @@ const addDaysBetweenTwoDates = state => {
 
 const numberOfDaysBetweeenTwoDates = (date1, date2) => {
     const oneDay = 24 * 60 * 60 * 1000;
-    const diffDays = Math.round((makeDate(date2) - makeDate(date1)) / oneDay);
-    return diffDays;
+    return Math.round((makeDate(date2) - makeDate(date1)) / oneDay);
 };
 
 //----------------------------------------------------------------------------------
