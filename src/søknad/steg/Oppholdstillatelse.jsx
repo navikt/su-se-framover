@@ -12,7 +12,7 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
     const updateFunction = name => value => updateField(name, value);
 
     function midlertidigOppholdstillatelse() {
-        if (!state.harVarigOpphold) {
+        if (!state.harVarigOpphold && state.harVarigOpphold !== undefined) {
             return (
                 <div style={{ display: 'flex' }}>
                     <div style={{ marginRight: '1em' }}>

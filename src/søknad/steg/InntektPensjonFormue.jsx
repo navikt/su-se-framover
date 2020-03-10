@@ -10,10 +10,9 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
 
     const updateFunction = name => value => updateField(name, value);
-    const parseIntsInState = (stateToChange ,value) => {
-        updateField(stateToChange, parseInt(value))
-    }
-
+    const parseIntsWhenUpdatingToState = (stateToChange, value) => {
+        updateField(stateToChange, parseInt(value));
+    };
 
     function framsattKravAnnenYtelseInput() {
         if (state.framsattKravAnnenYtelse) {
@@ -36,7 +35,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     id={fields.inntektsBeløp.htmlId}
                     bredde="M"
                     value={state.inntektBeløp || 0}
-                    onChange={ value => parseIntsInState('inntektBeløp', value)}
+                    onChange={value => parseIntsWhenUpdatingToState('inntektBeløp', value)}
                 />
             );
         }
@@ -50,7 +49,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     id={fields.formueBeløp.htmlId}
                     bredde="M"
                     value={state.formueBeløp || 0}
-                    onChange={ value =>parseIntsInState('formueBeløp', value)}
+                    onChange={value => parseIntsWhenUpdatingToState('formueBeløp', value)}
                 />
             );
         }
@@ -63,7 +62,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     labelText="Beløp:"
                     value={state.depositumBeløp || ''}
                     bredde={'M'}
-                    onChange={e => parseIntsInState('depositumBeløp', e)}
+                    onChange={e => parseIntsWhenUpdatingToState('depositumBeløp', e)}
                 />
             );
         }
