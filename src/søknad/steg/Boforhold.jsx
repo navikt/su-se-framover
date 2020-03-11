@@ -235,8 +235,7 @@ function delerBoligMedValidering(formValues, errorsArray) {
             } else if (item.fnr.trim().length > 11) {
                 errorsArray.push({
                     skjemaelementId: `${index}-fnr`,
-                    feilmelding:
-                        'Fødselsnummer må være 11 siffer. Lenge på fødselsnummer: ' + item.fnr.trim().length
+                    feilmelding: 'Fødselsnummer må være 11 siffer. Lenge på fødselsnummer: ' + item.fnr.trim().length
                 });
             }
         });

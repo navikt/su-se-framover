@@ -92,13 +92,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                                     {state.annenFormue.length > 1 && (
                                         <Lenke
                                             style={fjernInnputKnappStyle}
-                                            onClick={() =>
-                                                fjernValgtInputFelt(
-                                                    state.annenFormue,
-                                                    'annenFormue',
-                                                    index
-                                                )
-                                            }
+                                            onClick={() => fjernValgtInputFelt(state.annenFormue, 'annenFormue', index)}
                                         >
                                             Fjern felt
                                         </Lenke>
@@ -124,11 +118,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
         const type = { ...state.annenFormue[index] };
         type.typeFormue = kilde;
 
-        const tempType = [
-            ...state.annenFormue.slice(0, index),
-            type,
-            ...state.annenFormue.slice(index + 1)
-        ];
+        const tempType = [...state.annenFormue.slice(0, index), type, ...state.annenFormue.slice(index + 1)];
         updateField('annenFormue', tempType);
     }
 

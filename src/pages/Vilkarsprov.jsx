@@ -64,21 +64,21 @@ function Vilkarsprov({ state = initialState, setState }) {
         justifyContent: 'left'
     };
 
-    function visSøknadFunction(){
-        return (
-            displayState.vissøknad ? (
-                <div style={{ width: '30%' }}>
-                    {soknad !== undefined &&
+    function visSøknadFunction() {
+        return displayState.vissøknad ? (
+            <div style={{ width: '30%' }}>
+                {soknad !== undefined &&
                     soknad[0] !== undefined &&
                     (console.log(JSON.stringify(soknad[0].json)),
-                        (
-                            <Panel border>
-                                <DisplayDataFromApplic state={soknad[0].json} />
-                            </Panel>
-                        ))}
-                </div>
-            ) : ""
-        )
+                    (
+                        <Panel border>
+                            <DisplayDataFromApplic state={soknad[0].json} />
+                        </Panel>
+                    ))}
+            </div>
+        ) : (
+            ''
+        );
     }
 
     return (
@@ -87,7 +87,7 @@ function Vilkarsprov({ state = initialState, setState }) {
             <Innholdstittel>Vilkårsprøving</Innholdstittel>
             <ToggleKnapp onClick={() => updateDisplayState()}>Vis søknad</ToggleKnapp>
 
-            <div style={{display:"flex"}}>
+            <div style={{ display: 'flex' }}>
                 <form onSubmit={handleSubmit}>
                     <div style={faktasjekkstyle}>
                         <Panel border>
@@ -104,15 +104,13 @@ function Vilkarsprov({ state = initialState, setState }) {
                             />
                             <Section
                                 checkboxLabel={'§28 Flyktning'}
-                                sectionText={
-                                    'Har søker flyktningstatus etter Utl.l § 28?'
-                                }
+                                sectionText={'Har søker flyktningstatus etter Utl.l § 28?'}
                                 stateToChange={'flyktning'}
                                 textAreaLabel={'Begrunnelse'}
                                 textAreaValue={state.flyktning.begrunnelse}
                                 onChange={updateField}
                                 customizedDisplay={
-                                    <div style={{display:"flex", flexDirection: "row"}}>
+                                    <div style={{ display: 'flex', flexDirection: 'row' }}>
                                         <Panel border style={{ width: '50%' }}>
                                             <Undertittel>Infomasjon fra søknad</Undertittel>
                                             {/* <Element>Fra søknad: {soknad.flyktning}</Element> */}
@@ -188,14 +186,14 @@ function Vilkarsprov({ state = initialState, setState }) {
 }
 
 const Section = ({
-                     checkboxLabel,
-                     stateToChange,
-                     sectionText,
-                     textAreaLabel,
-                     textAreaValue,
-                     onChange,
-                     customizedDisplay
-                 }) => {
+    checkboxLabel,
+    stateToChange,
+    sectionText,
+    textAreaLabel,
+    textAreaValue,
+    onChange,
+    customizedDisplay
+}) => {
     return (
         <div className="section">
             <Checkbox
