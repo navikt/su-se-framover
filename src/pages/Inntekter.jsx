@@ -25,6 +25,12 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
                     feilmelding: 'Kilde må fylles ut'
                 });
             }
+            if (item.beløp.trim().length === 0) {
+                errorsCollector.push({
+                    skjemaelementId: `${index}-beløp`,
+                    feilmelding: 'beløp må fylles ut'
+                });
+            }
         });
     };
 
@@ -58,7 +64,7 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
                                     onChange={value => updateKilde(value, index)}
                                 />
 
-                                {state.inntekter.length > 1 && (
+                                {
                                     <Lenke
                                         type="button"
                                         style={fjernInnputKnappStyle}
@@ -66,7 +72,7 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
                                     >
                                         Fjern felt
                                     </Lenke>
-                                )}
+                                }
                             </div>
                         );
                     })}
@@ -79,13 +85,28 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
             </div>
             <div>
                 <br />
-                <Undertittel>
-                    Sum inntekt:{' '}
-                    {adderInntekter(state.inntekter.map(item => parseInt(item.beløp, 10)).filter(item => !isNaN(item)))}
-                </Undertittel>
+                <Undertittel>Sum inntekt: {sumInntekter()}</Undertittel>
             </div>
         </>
     );
+
+    //replaces white spaces and dots in an array with nothing
+    function replace(arr) {
+        const beløpsArray = [];
+        if (arr.length > 0) {
+            arr.forEach(obj => beløpsArray.push(obj.beløp.replace(/\s/g, '').replace(/\./g, '')));
+            return beløpsArray;
+        }
+    }
+
+    function sumInntekter() {
+        let inntekter = 0;
+        const arr = replace(state.inntekter);
+        if (arr !== undefined) {
+            inntekter += adderInntekter(arr.map(item => parseInt(item, 10)).filter(item => !isNaN(item)));
+        }
+        return inntekter;
+    }
 
     function addInntektsInput() {
         const values = [...state.inntekter];
