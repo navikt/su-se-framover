@@ -72,7 +72,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
         if (state.harAnnenFormue) {
             return (
                 <div style={{ marginBottom: '1em' }}>
-                    {state.annenFormueEiendom
+                    {state.annenFormue
                         .map((item, index) => ({ ...item, key: index }))
                         .map((item, index) => {
                             return (
@@ -89,13 +89,13 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                                         value={item.skattetakst || 0}
                                         onChange={value => updateFormueEiendomSkattetakst(value, index)}
                                     />
-                                    {state.annenFormueEiendom.length > 1 && (
+                                    {state.annenFormue.length > 1 && (
                                         <Lenke
                                             style={fjernInnputKnappStyle}
                                             onClick={() =>
                                                 fjernValgtInputFelt(
-                                                    state.annenFormueEiendom,
-                                                    'annenFormueEiendom',
+                                                    state.annenFormue,
+                                                    'annenFormue',
                                                     index
                                                 )
                                             }
@@ -115,33 +115,33 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     }
 
     function addInputFieldsAnnenFormueEiendom() {
-        const values = state.annenFormueEiendom;
+        const values = state.annenFormue;
         values.push({ typeFormue: '', skattetakst: '' });
-        updateField('annenFormueEiendom', values);
+        updateField('annenFormue', values);
     }
 
     function updateFormueEiendomType(kilde, index) {
-        const type = { ...state.annenFormueEiendom[index] };
+        const type = { ...state.annenFormue[index] };
         type.typeFormue = kilde;
 
         const tempType = [
-            ...state.annenFormueEiendom.slice(0, index),
+            ...state.annenFormue.slice(0, index),
             type,
-            ...state.annenFormueEiendom.slice(index + 1)
+            ...state.annenFormue.slice(index + 1)
         ];
-        updateField('annenFormueEiendom', tempType);
+        updateField('annenFormue', tempType);
     }
 
     function updateFormueEiendomSkattetakst(kilde, index) {
-        const skattetakst = { ...state.annenFormueEiendom[index] };
+        const skattetakst = { ...state.annenFormue[index] };
         skattetakst.skattetakst = parseInt(kilde);
 
         const tempSkattetakst = [
-            ...state.annenFormueEiendom.slice(0, index),
+            ...state.annenFormue.slice(0, index),
             skattetakst,
-            ...state.annenFormueEiendom.slice(index + 1)
+            ...state.annenFormue.slice(index + 1)
         ];
-        updateField('annenFormueEiendom', tempSkattetakst);
+        updateField('annenFormue', tempSkattetakst);
     }
 
     function updatePensjonsOrdning(kilde, index) {
@@ -368,7 +368,7 @@ const fields = {
     pensjon: { label: 'pensjon', htmlId: 'pensjon' },
     formue: { label: 'formue', htmlId: 'formue' },
     finansformue: { label: 'finansformue', htmlId: 'finansformue' },
-    annenFormueEiendom: { label: 'annenFormueEiendom', htmlId: 'annenFormueEiendom' },
+    annenFormue: { label: 'annenFormue', htmlId: 'annenFormue' },
     formueBeløp: { label: 'formueBeløp', htmlId: 'formueBeløp' },
     typeFormue: { label: 'typeFormue', htmlId: 'typeFormue' },
     skattetakst: { label: 'skattetakst', htmlId: 'skattetakst' },
@@ -391,7 +391,7 @@ function validateFormValues(formValues) {
     tempErrors.push(...finansformueValidering(formValues));
     tempErrors.push(...formueValidering(formValues));
     tempErrors.push(...formueBeløpValidering(formValues));
-    tempErrors.push(...annenFormueEiendom(formValues));
+    tempErrors.push(...annenFormue(formValues));
     tempErrors.push(...annenFormueEiendomArray(formValues, tempAnnenFormueEiendomArray));
     tempErrors.push(...harSøkerDepositumskontoValidering(formValues));
     tempErrors.push(...depositumsBeløpValidering(formValues));
@@ -564,25 +564,25 @@ function formueBeløpValidering(formValues) {
     return [];
 }
 
-function annenFormueEiendom(formValues) {
-    const annenFormueEiendom = formValues.harAnnenFormue;
+function annenFormue(formValues) {
+    const annenFormue = formValues.harAnnenFormue;
     let feilmelding = '';
 
-    if (annenFormueEiendom === undefined) {
+    if (annenFormue === undefined) {
         feilmelding += 'Vennligst velg om søker har annen formue/eiendom';
 
         if (feilmelding.length > 0) {
-            return [{ skjemaelementId: fields.annenFormueEiendom.htmlId, feilmelding }];
+            return [{ skjemaelementId: fields.annenFormue.htmlId, feilmelding }];
         }
     }
     return [];
 }
 
 function annenFormueEiendomArray(formValues, errorsArray) {
-    const annenFormueEiendom = formValues.annenFormueEiendom;
+    const annenFormue = formValues.annenFormue;
 
     if (formValues.harAnnenFormue === true) {
-        annenFormueEiendom.map((item, index) => {
+        annenFormue.map((item, index) => {
             if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(item.typeFormue)) {
                 errorsArray.push({
                     skjemaelementId: `${index}-typeFormue`,

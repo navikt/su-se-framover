@@ -55,7 +55,7 @@ const Boforhold = ({ state }) => {
             <ol>
                 {array.map((person, index) => (
                     <li style={elementSpacing} key={index}>
-                        {person.fødselsnummer} {person.navn}
+                        {person.fnr} {person.navn}
                     </li>
                 ))}
             </ol>

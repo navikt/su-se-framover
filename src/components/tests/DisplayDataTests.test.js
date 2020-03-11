@@ -4,19 +4,19 @@ import DisplayDataFromApplic from '../DisplayDataFromApplic.jsx';
 import Oppholdstillatelse from '../../søknad/steg/Oppholdstillatelse';
 
 const correctState = {
-    forNAV: {
+    forNav: {
         målform: 'Bokmål',
         erPassSjekket: true,
         søkerMøttPersonlig: true,
         harFullmektigMøtt: false,
-        forNAVmerknader: 'Alt er fint'
+        forNAVMerknader: 'Alt er fint'
     },
     boforhold: {
         borSammenMed: ['Ektefelle/Partner/Samboer', 'Barn over 18'],
         delerBolig: true,
         delerBoligMed: [
-            { navn: 'Pluto', fødselsnummer: '12345678901' },
-            { navn: 'Jupiter', fødselsnummer: '10987654321' }
+            { navn: 'Pluto', fnr: '12345678901' },
+            { navn: 'Jupiter', fnr: '10987654321' }
         ]
     },
     utenlandsopphold: {
@@ -25,7 +25,7 @@ const correctState = {
         planlagtUtenlandsopphold: true,
         planlagtePerioder: [{ utreisedato: '2020-02-04', innreisedato: '2020-02-06' }]
     },
-    oppholdstillatelse: { harVarigOpphold: false, søktOmForlengelse: true, utløpsDato: '2020-02-21' },
+    oppholdstillatelse: { harVarigOpphold: false, søktOmForlengelse: true, utløpsdato: '2020-02-21' },
     personopplysninger: {
         fnr: '12345678901',
         fornavn: 'Planet',
@@ -49,7 +49,7 @@ const correctState = {
         framsattKravAnnenYtelse: true,
         pensjonsOrdning: [{ beløp: '250', ordning: 'PensjonsOrdningen' }],
         harFinansFormue: false,
-        annenFormueEiendom: [{ typeFormue: 'Hytte', skattetakst: '50' }],
+        annenFormue: [{ typeFormue: 'Hytte', skattetakst: '50' }],
         harFormueEiendom: true,
         harAnnenFormue: true,
         harInntekt: true,
@@ -60,19 +60,19 @@ const correctState = {
 };
 
 const stateWithError = {
-    forNAV: {
+    forNav: {
         målform: 'Nynorsk',
         erPassSjekket: true,
         søkerMøttPersonlig: true,
         harFullmektigMøtt: false,
-        forNAVmerknader: 'Alt er fint'
+        forNAVMerknader: 'Alt er fint'
     },
     boforhold: {
         borSammenMed: ['esp', 'over18'],
         delerBolig: true,
         delerBoligMed: [
-            { navn: 'Pluto', fødselsnummer: '12345678901' },
-            { navn: 'Jupiter', fødselsnummer: '10987654321' }
+            { navn: 'Pluto', fnr: '12345678901' },
+            { navn: 'Jupiter', fnr: '10987654321' }
         ]
     },
     utenlandsopphold: {
@@ -81,7 +81,7 @@ const stateWithError = {
         planlagtUtenlandsopphold: true,
         planlagtePerioder: [{ utreisedato: '2020-02-04', innreisedato: '2020-02-06' }]
     },
-    oppholdstillatelse: { harVarigOpphold: false, søktOmForlengelse: true, utløpsDato: '2020-02-21' },
+    oppholdstillatelse: { harVarigOpphold: false, søktOmForlengelse: true, utløpsdato: '2020-02-21' },
     personopplysninger: {
         fnr: '12345678901',
         fornavn: 'Planet',
@@ -105,7 +105,7 @@ const stateWithError = {
         framsattKravAnnenYtelse: true,
         pensjonsOrdning: [{ beløp: '250', ordning: 'PensjonsOrdningen' }],
         harFinansFormue: false,
-        annenFormueEiendom: [{ typeFormue: 'Hytte', skattetakst: '50' }],
+        annenFormue: [{ typeFormue: 'Hytte', skattetakst: '50' }],
         harFormueEiendom: true,
         harAnnenFormue: true,
         harInntekt: true,
@@ -120,7 +120,7 @@ describe('Tests related to displaying data from a filled application', () => {
         const component = create(<DisplayDataFromApplic state={correctState} />);
 
         expect(component.toTree().props.state).toHaveProperty(
-            'forNAV' &&
+            'forNav' &&
                 'boforhold' &&
                 'inntektPensjonFormue' &&
                 'personopplysninger' &&

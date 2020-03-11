@@ -68,7 +68,7 @@ const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
         if (validateInntektPensjonFormue.validateFormValues(state.inntektPensjonFormue).length > 0) {
             errors.push('Det er feil i Inntekt, pensjon, og formue (side 5)');
         }
-        if (validateForNAV.validateFormValues(state.forNAV).length > 0) {
+        if (validateForNAV.validateFormValues(state.forNav).length > 0) {
             errors.push('Det er feil i For NAV (side 6)');
         }
         return errors;

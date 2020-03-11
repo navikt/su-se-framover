@@ -21,8 +21,8 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
                             input={{
                                 placeholder: 'dd.mm.åååå'
                             }}
-                            valgtDato={state.utløpsDato}
-                            onChange={updateFunction('utløpsDato')}
+                            valgtDato={state.utløpsdato}
+                            onChange={updateFunction('utløpsdato')}
                         />
                     </div>
                     <JaNeiSpørsmål
@@ -72,9 +72,9 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
 //----------------------------------------------------------------------------------
 const fields = {
     harVarigOpphold: { label: 'harVarigOpphold', htmlId: 'harVarigOpphold' },
-    utløpsDato: {
-        label: 'utløpsDato',
-        htmlId: 'utløpsDato'
+    utløpsdato: {
+        label: 'utløpsdato',
+        htmlId: 'utløpsdato'
     },
     søktOmForlengelse: { label: 'søktOmForlengelse', htmlId: 'søktOmForlengelse' }
 };
@@ -103,12 +103,12 @@ function varigOppholdstillatelseValidering(formValues) {
 }
 
 function oppholdstillatelseUtløpsdatoValidering(formValues) {
-    const utløpsDato = formValues.utløpsDato;
+    const utløpsdato = formValues.utløpsdato;
     let feilmelding = '';
 
     if (!formValues.harVarigOpphold) {
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(utløpsDato)) {
-            if (utløpsDato === '' || utløpsDato === undefined) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(utløpsdato)) {
+            if (utløpsdato === '' || utløpsdato === undefined) {
                 feilmelding += 'Oppholdstillatelsens utløpsdato må oppgis. Den må være på format dd.mm.åååå';
             } else {
                 feilmelding += 'Oppholdstillatelsens utløpsdato må være på format dd.mm.åååå';
@@ -116,7 +116,7 @@ function oppholdstillatelseUtløpsdatoValidering(formValues) {
             if (feilmelding.length > 0) {
                 return [
                     {
-                        skjemaelementId: fields.utløpsDato.htmlId,
+                        skjemaelementId: fields.utløpsdato.htmlId,
                         feilmelding
                     }
                 ];

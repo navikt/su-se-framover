@@ -1,81 +1,95 @@
 [
   {
-    "id": "2",
+    "id": 2,
     "json": {
-      "forNAV": {
-        "målform": "Bokmål",
-        "erPassSjekket": "true",
-        "søkerMøttPersonlig": "true",
-        "harFullmektigMøtt": "false",
-        "forNAVmerknader": "kebab"
+      "personopplysninger": {
+        "fnr": "12345678910",
+        "fornavn": "kake",
+        "mellomnavn": "kjeks",
+        "etternavn": "mannen",
+        "telefonnummer": "12345678",
+        "gateadresse": "gaten",
+        "postnummer": "0050",
+        "poststed": "Oslo",
+        "bruksenhet": "50",
+        "bokommune": "Oslo",
+        "flyktning": true,
+        "borFastINorge": true,
+        "statsborgerskap": "NOR"
       },
       "boforhold": {
-        "borSammenMed": [],
-        "delerBolig": "false",
+        "delerBolig": true,
+        "borSammenMed": [
+          "Ektefelle/Partner/Samboer",
+          "Andre personer over 18 år"
+        ],
         "delerBoligMed": [
           {
-            "navn": "",
-            "fødselsnummer": ""
+            "fnr": "12345678910",
+            "navn": "voksen jensen"
+          },
+          {
+            "fnr": "10987654321",
+            "navn": "voksen hansen"
           }
         ]
       },
       "utenlandsopphold": {
-        "utenlandsopphold": "false",
+        "utenlandsopphold": true,
         "registrertePerioder": [
           {
-            "utreisedato": "",
-            "innreisedato": ""
+            "utreisedato": "2020-03-10",
+            "innreisedato": "2020-03-10"
           }
         ],
-        "planlagtUtenlandsopphold": "false",
+        "planlagteUtenlandsopphold": true,
         "planlagtePerioder": [
           {
-            "utreisedato": "",
-            "innreisedato": ""
+            "utreisedato": "2020-06-01",
+            "innreisedato": "2020-06-20"
           }
         ]
       },
       "oppholdstillatelse": {
-        "harVarigOpphold": "true"
-      },
-      "personopplysninger": {
-        "fnr": "27088921696",
-        "fornavn": "Ole",
-        "poststed": "Oslo",
-        "bokommune": "Oslo",
-        "etternavn": "Johansen",
-        "flyktning": "true",
-        "bruksenhet": "25",
-        "mellomnavn": "Johansen",
-        "postnummer": "0050",
-        "borFastINorge": "true",
-        "gateadresse": "Nissegata",
-        "telefonnummer": "95147896",
-        "statsborgerskap": "NOR,ESP"
+        "harVarigOpphold": false,
+        "utløpsdato": "2020-03-10",
+        "søktOmForlengelse": true
       },
       "inntektPensjonFormue": {
-        "sumInntektOgPensjon": 0,
-        "harPensjon": "false",
-        "harSosialStønad": "false",
-        "framsattKravAnnenYtelse": "false",
+        "framsattKravAnnenYtelse": true,
+        "framsattKravAnnenYtelseBegrunnelse": "annen ytelse begrunnelse",
+        "harInntekt": true,
+        "inntektBeløp": 2500.0,
+        "harPensjon": true,
         "pensjonsOrdning": [
           {
-            "beløp": "",
-            "ordning": ""
-          }
-        ],
-        "harFinansFormue": "false",
-        "annenFormueEiendom": [
+            "ordning": "KLP",
+            "beløp": 2000.0
+          },
           {
-            "typeFormue": "",
-            "skattetakst": ""
+            "ordning": "SPK",
+            "beløp": 5000.0
           }
         ],
-        "harFormueEiendom": "false",
-        "harAnnenFormue": "false",
-        "harInntekt": "false"
+        "sumInntektOgPensjon": 7000.0,
+        "harFormueEiendom": true,
+        "harFinansFormue": true,
+        "formueBeløp": 1000.0,
+        "harAnnenFormue": true,
+        "annenFormue": [
+          {
+            "typeFormue": "juveler",
+            "skattetakst": 2000.0
+          }
+        ]
+      },
+      "forNav": {
+        "målform": "norsk",
+        "søkerMøttPersonlig": true,
+        "harFullmektigMøtt": false,
+        "erPassSjekket": true,
+        "forNAVMerknader": "intet å bemerke"
       }
-    },
-    "sakId": "1"
+    }
   }
 ]

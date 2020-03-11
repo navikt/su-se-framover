@@ -25,7 +25,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
 
     function addInputFields() {
         const values = state.delerBoligMed;
-        values.push({ navn: '', fødselsnummer: '' });
+        values.push({ navn: '', fnr: '' });
         updateField('delerBoligMed', values);
     }
 
@@ -37,9 +37,9 @@ const Boforhold = ({ state, updateField, onClick }) => {
         updateField('delerBoligMed', tempNavn);
     }
 
-    function oppdaterFødselsnummer(fødselsnummer, index) {
+    function oppdaterFødselsnummer(fnr, index) {
         const ESPfødselsnummer = { ...state.delerBoligMed[index] };
-        ESPfødselsnummer.fødselsnummer = fødselsnummer;
+        ESPfødselsnummer.fnr = fnr;
 
         const tempFødselsnummer = [
             ...state.delerBoligMed.slice(0, index),
@@ -90,9 +90,9 @@ const Boforhold = ({ state, updateField, onClick }) => {
                             return (
                                 <div key={item.key} style={container}>
                                     <InputFields
-                                        id={`${item.key}-fødselsnummer`}
+                                        id={`${item.key}-fnr`}
                                         labelText={'Fødselsnummer'}
-                                        value={item.fødselsnummer}
+                                        value={item.fnr}
                                         onChange={value => oppdaterFødselsnummer(value, index)}
                                     />
                                     <InputFields
@@ -227,16 +227,16 @@ function delerBoligMedValidering(formValues, errorsArray) {
                     feilmelding: 'Navn må fylles ut'
                 });
             }
-            if (item.fødselsnummer.trim().length === 0) {
+            if (item.fnr.trim().length === 0) {
                 errorsArray.push({
-                    skjemaelementId: `${index}-fødselsnummer`,
+                    skjemaelementId: `${index}-fnr`,
                     feilmelding: 'Fødselsnummer må fylles ut'
                 });
-            } else if (item.fødselsnummer.trim().length > 11) {
+            } else if (item.fnr.trim().length > 11) {
                 errorsArray.push({
-                    skjemaelementId: `${index}-fødselsnummer`,
+                    skjemaelementId: `${index}-fnr`,
                     feilmelding:
-                        'Fødselsnummer må være 11 siffer. Lenge på fødselsnummer: ' + item.fødselsnummer.trim().length
+                        'Fødselsnummer må være 11 siffer. Lenge på fødselsnummer: ' + item.fnr.trim().length
                 });
             }
         });

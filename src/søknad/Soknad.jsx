@@ -22,7 +22,7 @@ function Soknad() {
         personopplysninger: {},
         boforhold: {
             borSammenMed: [],
-            delerBoligMed: [{ navn: '', fødselsnummer: '' }]
+            delerBoligMed: [{ navn: '', fnr: '' }]
         },
         utenlandsopphold: {
             registrertePerioder: [{ utreisedato: '', innreisedato: '' }],
@@ -31,9 +31,9 @@ function Soknad() {
         oppholdstillatelse: {},
         inntektPensjonFormue: {
             pensjonsOrdning: [{ ordning: '', beløp: '' }],
-            annenFormueEiendom: [{ typeFormue: '', skattetakst: '' }]
+            annenFormue: [{ typeFormue: '', skattetakst: '' }]
         },
-        forNAV: {}
+        forNav: {}
     });
 
     function addToStage() {
@@ -101,7 +101,7 @@ function Soknad() {
             );
         } else if (stage === 5) {
             return (
-                <ForNAV state={state.forNAV} updateField={updateField(updateFunction('forNAV'))} onClick={addToStage} />
+                <ForNAV state={state.forNav} updateField={updateField(updateFunction('forNav'))} onClick={addToStage} />
             );
         } else if (stage === 6) {
             return <OppsumeringOgSend state={state} disableStegIndikator={disableStegIndikator} />;

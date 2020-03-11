@@ -26,8 +26,10 @@ const InntektPensjonFormue = ({ state }) => {
                 <span style={elementSpacing}>Brutto beløp per år:</span>
                 <span>{state.inntektPensjonFormue.inntektBeløp}</span>
                 <span style={elementSpacing}>Har du pensjon?</span>
+                <span>{jaNeiSpørsmål(state.inntektPensjonFormue.harPensjon)}</span>
+                <span></span>
                 <span>{state.inntektPensjonFormue.harPensjon && søkerHarPensjon()}</span>
-                <span>Sum inntekt:</span>
+                <span>Sum inntekt og pensjon:</span>
                 <span>{state.inntektPensjonFormue.sumInntektOgPensjon}</span>
             </div>
 
@@ -89,7 +91,7 @@ const InntektPensjonFormue = ({ state }) => {
     }
 
     function søkerHarAnnenFormueEiendom() {
-        const array = state.inntektPensjonFormue.annenFormueEiendom;
+        const array = state.inntektPensjonFormue.annenFormue;
         return (
             <ol>
                 {array.map((annenFormueEiendomRow, index) => (

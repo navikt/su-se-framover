@@ -16,7 +16,7 @@ const Oppholdstillatelse = ({ state }) => {
                 {!state.oppholdstillatelse.harVarigOpphold && (
                     <>
                         <span>Utløpsdato: </span>
-                        <span>{reverseString(state.oppholdstillatelse.utløpsDato)}</span>
+                        <span>{reverseString(state.oppholdstillatelse.utløpsdato)}</span>
                     </>
                 )}
             </div>

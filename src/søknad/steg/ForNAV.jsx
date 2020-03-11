@@ -66,8 +66,8 @@ const ForNAV = ({ state, updateField, onClick }) => {
             </div>
             <InputFields
                 labelText="Merknader"
-                value={state.forNAVmerknader || ''}
-                onChange={updateFunction('forNAVmerknader')}
+                value={state.forNAVMerknader || ''}
+                onChange={updateFunction('forNAVMerknader')}
             />
             {feilmeldinger.length > 0 && (
                 <Feiloppsummering tittel={`Vennligst fyll ut mangler ${getRandomSmiley()}`} feil={feilmeldinger} />
