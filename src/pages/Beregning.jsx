@@ -3,7 +3,6 @@ import { Sidetittel, Systemtittel, Element } from 'nav-frontend-typografi';
 import { Panel } from 'nav-frontend-paneler';
 import { Label, Input, Textarea, Feiloppsummering } from 'nav-frontend-skjema';
 import Knapp from 'nav-frontend-knapper';
-import EtikettAdvarsel from 'nav-frontend-etiketter';
 import Inntekter from './Inntekter';
 import { InputFields } from '../components/FormElements';
 
@@ -47,9 +46,6 @@ function Beregning({ state = initialState, setState }) {
     return (
         <div>
             <Sidetittel style={BeregningTittelStyle}>Beregning</Sidetittel>
-            <EtikettAdvarsel style={buttonPositonStyle} type="advarsel">
-                ADVARSEL - EKSPERIMENTELT DESIGN - IKKE REPRESENTATIVT FOR ENDELIG UTSEENDE
-            </EtikettAdvarsel>
 
             <form onSubmit={handleSubmit}>
                 <Panel border>
@@ -72,8 +68,8 @@ function Beregning({ state = initialState, setState }) {
                     </div>
 
                     <div>
-                        <Systemtittel>Sats:</Systemtittel>
-                        <div>
+                        <Systemtittel style={{ marginTop: '0.5em' }}>Sats:</Systemtittel>
+                        <div style={{ marginBottom: '1em' }}>
                             <InputFieldWithText text={'kr'} value={state.sats} onChange={updateFunction('sats')} />
                             <Textarea
                                 label={'Begrunnelse:'}
@@ -85,6 +81,7 @@ function Beregning({ state = initialState, setState }) {
 
                     <Inntekter
                         state={state}
+                        updateFieldInState={updateFieldInState}
                         setInntekter={updateFunction('inntekter')}
                         errorsCollector={errorsCollector}
                     />
@@ -99,7 +96,10 @@ function Beregning({ state = initialState, setState }) {
                     {state.stønadsberegning !== undefined && (
                         <>
                             <Element>Beregnet årlig stønad: {state.stønadsberegning.årsbeløp} kr</Element>
-                            <Element>Beregnet månedlig stønad: {state.stønadsberegning.årsbeløp / 12} kr</Element>
+                            <Element>
+                                Beregnet månedlig stønad:
+                                {(state.stønadsberegning.årsbeløp / 12).toFixed(2)} kr
+                            </Element>
                         </>
                     )}
                 </Panel>
@@ -111,26 +111,59 @@ function Beregning({ state = initialState, setState }) {
         </div>
     );
 
+    //replaces white spaces and dots in an array with nothing
+    function replace(arr) {
+        const kek = [];
+        if (arr.length > 0) {
+            arr.forEach(obj => kek.push(obj.beløp.replace(/\s/g, '').replace(/\./g, '')));
+            return kek;
+        }
+    }
+
     function beregnFunction() {
+        let beløp = 0;
+        let sats = parseInt(state.sats.replace(/\s/g, '').replace(/\./g, ''));
+        if (state.inntekter.length > 0) {
+            const arr = replace(state.inntekter);
+            beløp += adderInntekter(arr.map(obj => parseInt(obj, 10)).filter(obj => !isNaN(obj)));
+        }
         setState(state => ({
             ...state,
-            stønadsberegning: { årsbeløp: 92100 }
+            stønadsberegning: { årsbeløp: sats - beløp }
         }));
+    }
+
+    function updateInntekterArrayBeforeSubmit() {
+        const arr = [];
+
+        state.inntekter.map(obj => {
+            obj.beløp = obj.beløp.replace(/\s/g, '').replace(/\./g, '');
+            arr.push(obj);
+        });
+
+        setState(state => ({
+            ...state,
+            inntekter: arr
+        }));
+    }
+
+    function adderInntekter(beløp) {
+        const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        return beløp.reduce(reducer, 0);
     }
 
     function handleSubmit(event) {
         event.preventDefault();
         console.log('submitting');
+        updateInntekterArrayBeforeSubmit();
         const formValues = state;
         console.log(formValues);
-
         validateFormValues(formValues);
         setErrorsCollector([]);
     }
 
     function validateFormValues(formValues) {
         const errors = [];
-
         errors.push(...fraMånedValidation(formValues));
         errors.push(...tilMånedValidation(formValues));
         errors.push(...satsValidering(formValues));
@@ -199,14 +232,15 @@ function Beregning({ state = initialState, setState }) {
 function InputFieldWithText({ text, value, onChange }) {
     const divStyle = {
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: '1em'
     };
     const innerDivstyle = {
         flexGrow: '1'
     };
     const labelStyle = {
-        margin: '0',
-        marginRight: '1rem'
+        marginTop: '1em',
+        marginBottom: '0em'
     };
 
     return (
