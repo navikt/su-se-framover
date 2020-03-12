@@ -4,14 +4,14 @@
     "json": {
       "personopplysninger": {
         "fnr": "12345678910",
-        "fornavn": "kake",
-        "mellomnavn": "kjeks",
-        "etternavn": "mannen",
+        "fornavn": "Ola",
+        "mellomnavn": "Erik",
+        "etternavn": "Nordmann",
         "telefonnummer": "12345678",
-        "gateadresse": "gaten",
+        "gateadresse": "Oslogata 12",
         "postnummer": "0050",
         "poststed": "Oslo",
-        "bruksenhet": "50",
+        "bruksenhet": "U1H20",
         "bokommune": "Oslo",
         "flyktning": true,
         "borFastINorge": true,
@@ -25,12 +25,12 @@
         ],
         "delerBoligMed": [
           {
-            "fnr": "12345678910",
-            "navn": "voksen jensen"
+            "fnr": "12345678911",
+            "navn": "Kari Nordmann"
           },
           {
-            "fnr": "10987654321",
-            "navn": "voksen hansen"
+            "fnr": "12345678912",
+            "navn": "Per Nordmann"
           }
         ]
       },
@@ -38,26 +38,30 @@
         "utenlandsopphold": true,
         "registrertePerioder": [
           {
-            "utreisedato": "2020-03-10",
-            "innreisedato": "2020-03-10"
+            "utreisedato": "2020-01-01",
+            "innreisedato": "2020-01-31"
+          },
+          {
+            "utreisedato": "2020-02-01",
+            "innreisedato": "2020-02-05"
           }
         ],
         "planlagteUtenlandsopphold": true,
         "planlagtePerioder": [
           {
-            "utreisedato": "2020-06-01",
-            "innreisedato": "2020-06-20"
+            "utreisedato": "2020-07-01",
+            "innreisedato": "2020-07-31"
           }
         ]
       },
       "oppholdstillatelse": {
         "harVarigOpphold": false,
-        "utløpsdato": "2020-03-10",
+        "utløpsdato": "2020-12-31",
         "søktOmForlengelse": true
       },
       "inntektPensjonFormue": {
         "framsattKravAnnenYtelse": true,
-        "framsattKravAnnenYtelseBegrunnelse": "annen ytelse begrunnelse",
+        "framsattKravAnnenYtelseBegrunnelse": "Har søkt om foreldrepenger",
         "harInntekt": true,
         "inntektBeløp": 2500.0,
         "harPensjon": true,
@@ -78,17 +82,24 @@
         "harAnnenFormue": true,
         "annenFormue": [
           {
-            "typeFormue": "juveler",
+            "typeFormue": "Juveler",
             "skattetakst": 2000.0
+          },
+          {
+            "typeFormue": "Speedbåt",
+            "skattetakst": 200000.0
           }
-        ]
+        ],
+        "harDepositumskonto": true,
+        "depositumBeløp": 25000,
+        "harSosialStønad": true
       },
       "forNav": {
-        "målform": "norsk",
+        "målform": "Norsk",
         "søkerMøttPersonlig": true,
         "harFullmektigMøtt": false,
         "erPassSjekket": true,
-        "forNAVMerknader": "intet å bemerke"
+        "merknader": "Intet å bemerke"
       }
     }
   }
