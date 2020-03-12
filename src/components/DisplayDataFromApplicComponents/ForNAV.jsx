@@ -3,7 +3,7 @@ import { jaNeiSpørsmål } from './HelperFunctions';
 import React from 'react';
 
 const ForNAV = ({ state }) => {
-	console.log(state)
+    console.log(state);
     return (
         <div style={headerSpacing}>
             <Undertittel style={elementSpacing}>For NAV</Undertittel>
@@ -23,15 +23,15 @@ const ForNAV = ({ state }) => {
 
             <div style={sectionGridLayout}>
                 <span style={elementSpacing}>
-                    {state.forNav.forNAVMerknader !== undefined && state.forNav.forNAVMerknader.length > 0 ? (
+                    {state.forNav.merknader !== undefined && state.forNav.merknader.length > 0 ? (
                         <span>Merknader:</span>
                     ) : (
                         ''
                     )}
                 </span>
                 <span>
-                    {state.forNav.forNAVMerknader !== undefined && state.forNav.forNAVMerknader.length > 0 ? (
-                        <span>{state.forNav.forNAVMerknader}</span>
+                    {state.forNav.merknader !== undefined && state.forNav.merknader.length > 0 ? (
+                        <span>{state.forNav.merknader}</span>
                     ) : (
                         ''
                     )}
