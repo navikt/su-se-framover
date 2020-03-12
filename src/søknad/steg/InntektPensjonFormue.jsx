@@ -10,9 +10,6 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
 
     const updateFunction = name => value => updateField(name, value);
-    const parseIntsWhenUpdatingToState = (stateToChange, value) => {
-        updateField(stateToChange, parseInt(value));
-    };
 
     function framsattKravAnnenYtelseInput() {
         if (state.framsattKravAnnenYtelse) {
@@ -34,8 +31,8 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     labelText="Brutto beløp per år:"
                     id={fields.inntektsBeløp.htmlId}
                     bredde="M"
-                    value={state.inntektBeløp || 0}
-                    onChange={value => parseIntsWhenUpdatingToState('inntektBeløp', value)}
+                    value={state.inntektBeløp || ''}
+                    onChange={value => updateField('inntektBeløp', value)}
                 />
             );
         }
@@ -48,8 +45,8 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     labelText="Totalbeløp formue: "
                     id={fields.formueBeløp.htmlId}
                     bredde="M"
-                    value={state.formueBeløp || 0}
-                    onChange={value => parseIntsWhenUpdatingToState('formueBeløp', value)}
+                    value={state.formueBeløp || ''}
+                    onChange={value => updateField('formueBeløp', value)}
                 />
             );
         }
@@ -62,7 +59,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     labelText="Beløp:"
                     value={state.depositumBeløp || ''}
                     bredde={'M'}
-                    onChange={e => parseIntsWhenUpdatingToState('depositumBeløp', e)}
+                    onChange={e => updateField('depositumBeløp', e)}
                 />
             );
         }
@@ -86,7 +83,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                                     <InputFields
                                         labelText="Skattetakst"
                                         id={`${item.key}-skattetakst`}
-                                        value={item.skattetakst || 0}
+                                        value={item.skattetakst || ''}
                                         onChange={value => updateFormueEiendomSkattetakst(value, index)}
                                     />
                                     {state.annenFormue.length > 1 && (
@@ -124,7 +121,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
 
     function updateFormueEiendomSkattetakst(kilde, index) {
         const skattetakst = { ...state.annenFormue[index] };
-        skattetakst.skattetakst = parseInt(kilde);
+        skattetakst.skattetakst = kilde;
 
         const tempSkattetakst = [
             ...state.annenFormue.slice(0, index),
@@ -148,7 +145,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
 
     function updatePensjonsOrdningsBeløp(kilde, index) {
         const beløp = { ...state.pensjonsOrdning[index] };
-        beløp.beløp = parseInt(kilde);
+        beløp.beløp = kilde;
 
         const tempPensjonsOrdning = [
             ...state.pensjonsOrdning.slice(0, index),
@@ -187,7 +184,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                                     <InputFields
                                         id={`${item.key}-beløp`}
                                         labelText={'Brutto beløp per år'}
-                                        value={item.beløp || 0}
+                                        value={item.beløp || ''}
                                         onChange={value => updatePensjonsOrdningsBeløp(value, index)}
                                     />
                                     {state.pensjonsOrdning.length > 1 && (
@@ -214,13 +211,14 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
 
         if (state.harInntekt) {
             if (state.inntektBeløp !== undefined) {
-                beløp += state.inntektBeløp;
+                state.inntektBeløp = state.inntektBeløp.replace(/\s/g, '').replace(/\./g, '');
+                beløp += parseInt(state.inntektBeløp);
             }
         }
 
         if (state.harPensjon) {
             beløp += adderInntekter(
-                state.pensjonsOrdning.map(item => parseInt(item.beløp, 10)).filter(item => !isNaN(item))
+                state.pensjonsOrdning.map(item => parseInt(item.beløp.replace(/\s/g, '').replace(/\./g, ''), 10))
             );
         }
         state['sumInntektOgPensjon'] = beløp;

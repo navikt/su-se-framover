@@ -1,6 +1,6 @@
 import { Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
-import { jaNeiSpørsmål } from './HelperFunctions';
+import { jaNeiSpørsmål } from '../../HelperFunctions';
 
 const Personopplysninger = ({ state }) => {
     return (

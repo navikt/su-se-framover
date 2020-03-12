@@ -1,5 +1,5 @@
 import { Undertittel } from 'nav-frontend-typografi';
-import { jaNeiSpørsmål } from './HelperFunctions';
+import { jaNeiSpørsmål } from '../../HelperFunctions';
 import React from 'react';
 
 const InntektPensjonFormue = ({ state }) => {

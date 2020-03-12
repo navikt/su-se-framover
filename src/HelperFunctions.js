@@ -18,3 +18,14 @@ export const reverseString = str => {
         return joinedString;
     }
 };
+
+//replaces white spaces and dots in an array with nothing
+//only to be used for visual presentation for numbers.
+//array should contain and object with a field named 'beløp'
+export const replace = arr => {
+    const newArray = [];
+    if (arr.length > 0) {
+        arr.forEach(obj => newArray.push(obj.beløp.replace(/\s/g, '').replace(/\./g, '')));
+        return newArray;
+    }
+};

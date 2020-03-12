@@ -34,6 +34,36 @@ const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
 
     state = trimEndsOfState(state);
 
+    const parseIntsInState = state => {
+        Object.keys(state).map(obj => {
+            if (!isNaN(parseInt(state[obj]))) {
+                if (typeof state[obj] === 'number') {
+                    return;
+                } else {
+                    state[obj] = parseInt(state[obj].replace(/\s/g, '').replace(/\./g, ''), 10);
+                }
+            }
+
+            if (Array.isArray(state[obj])) {
+                state[obj] = state[obj].map(obj => {
+                    if (Object.prototype.hasOwnProperty.call(obj, 'beløp')) {
+                        obj.beløp = parseInt(obj.beløp.replace(/\s/g, '').replace(/\./g, ''), 10);
+                        return obj;
+                    }
+
+                    if (Object.prototype.hasOwnProperty.call(obj, 'skattetakst')) {
+                        obj.skattetakst = parseInt(obj.skattetakst.replace(/\s/g, '').replace(/\./g, ''), 10);
+                        return obj;
+                    }
+                });
+            }
+        });
+    };
+
+    parseIntsInState(state.inntektPensjonFormue);
+
+    console.log('after parse: ', state);
+
     const Kvittering = ({ type, melding }) => {
         return (
             <div style={{ margin: '0.5em 0', display: 'flex' }}>

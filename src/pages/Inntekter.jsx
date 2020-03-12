@@ -3,6 +3,7 @@ import Knapp from 'nav-frontend-knapper';
 import React, { useEffect } from 'react';
 import { InputFields } from '../components/FormElements';
 import Lenke from 'nav-frontend-lenker';
+import { replace } from '../HelperFunctions';
 
 function Inntekter({ state, setInntekter, errorsCollector }) {
     useEffect(() => {
@@ -89,15 +90,6 @@ function Inntekter({ state, setInntekter, errorsCollector }) {
             </div>
         </>
     );
-
-    //replaces white spaces and dots in an array with nothing
-    function replace(arr) {
-        const beløpsArray = [];
-        if (arr.length > 0) {
-            arr.forEach(obj => beløpsArray.push(obj.beløp.replace(/\s/g, '').replace(/\./g, '')));
-            return beløpsArray;
-        }
-    }
 
     function sumInntekter() {
         let inntekter = 0;

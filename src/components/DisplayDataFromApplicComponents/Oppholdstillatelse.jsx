@@ -1,5 +1,5 @@
 import { Undertittel } from 'nav-frontend-typografi';
-import { jaNeiSpørsmål, reverseString } from './HelperFunctions';
+import { jaNeiSpørsmål, reverseString } from '../../HelperFunctions';
 import React from 'react';
 
 const Oppholdstillatelse = ({ state }) => {

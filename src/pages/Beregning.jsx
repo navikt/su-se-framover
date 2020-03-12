@@ -5,6 +5,7 @@ import { Label, Input, Textarea, Feiloppsummering } from 'nav-frontend-skjema';
 import Knapp from 'nav-frontend-knapper';
 import Inntekter from './Inntekter';
 import { InputFields } from '../components/FormElements';
+import { replace } from '../HelperFunctions';
 
 const initialState = {
     fraMåned: '',
@@ -110,15 +111,6 @@ function Beregning({ state = initialState, setState }) {
             </form>
         </div>
     );
-
-    //replaces white spaces and dots in an array with nothing
-    function replace(arr) {
-        const kek = [];
-        if (arr.length > 0) {
-            arr.forEach(obj => kek.push(obj.beløp.replace(/\s/g, '').replace(/\./g, '')));
-            return kek;
-        }
-    }
 
     function beregnFunction() {
         let beløp = 0;

@@ -1,6 +1,6 @@
 import { Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
-import { reverseString } from './HelperFunctions';
+import { reverseString } from '../../HelperFunctions';
 
 const Utenlandsopphold = ({ state }) => {
     return (
