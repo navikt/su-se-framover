@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
@@ -223,10 +223,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                 state.pensjonsOrdning.map(item => parseInt(item.beløp, 10)).filter(item => !isNaN(item))
             );
         }
-
-        useEffect(() => {
-            updateField('sumInntektOgPensjon', beløp);
-        }, [beløp]);
+        state['sumInntektOgPensjon'] = beløp;
 
         return (
             <Undertittel>

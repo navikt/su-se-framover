@@ -17,7 +17,7 @@ const Utenlandsopphold = ({ state }) => {
             </div>
 
             <div style={sectionGridLayout}>
-                {state.utenlandsopphold.planlagteUtenlandsopphold && (
+                {state.utenlandsopphold.planlagtUtenlandsopphold && (
                     <>
                         <span>Planlagt utenlandsopphold:</span>
                         <span>{planlagtUtenlandsopphold()}</span>

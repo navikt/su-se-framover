@@ -48,7 +48,7 @@ exports[`Tests related to displaying data from a filled application Should match
         Fødselsnummer:
       </span>
       <span>
-        12345678901
+        12345678910
       </span>
     </div>
     <div
@@ -70,7 +70,7 @@ exports[`Tests related to displaying data from a filled application Should match
         Fornavn:
       </span>
       <span>
-        Planet
+        kake
       </span>
       <span
         style={
@@ -82,7 +82,7 @@ exports[`Tests related to displaying data from a filled application Should match
         Mellomnavn:
       </span>
       <span>
-        Planetus
+        kjeks
       </span>
       <span
         style={
@@ -94,7 +94,7 @@ exports[`Tests related to displaying data from a filled application Should match
         Etternavn:
       </span>
       <span>
-        Planetetus
+        mannen
       </span>
     </div>
     <div
@@ -132,13 +132,13 @@ exports[`Tests related to displaying data from a filled application Should match
         Gateadresse:
       </span>
       <span>
-        Melkeveien 5
+        gaten
       </span>
       <span>
         Bruksenhet:
       </span>
       <span>
-        H105
+        50
       </span>
     </div>
     <div
@@ -160,7 +160,7 @@ exports[`Tests related to displaying data from a filled application Should match
         Postnummer:
       </span>
       <span>
-        0985
+        0050
       </span>
       <span
         style={
@@ -172,13 +172,13 @@ exports[`Tests related to displaying data from a filled application Should match
         Poststed:
       </span>
       <span>
-        Melk
+        Oslo
       </span>
       <span>
         Bokommune:
       </span>
       <span>
-        Veien
+        Oslo
       </span>
     </div>
     <div
@@ -194,7 +194,7 @@ exports[`Tests related to displaying data from a filled application Should match
         Søkers statsborkerskap:
       </span>
       <span>
-        Solen, Uranus
+        NOR
       </span>
     </div>
     <div
@@ -278,7 +278,7 @@ exports[`Tests related to displaying data from a filled application Should match
         Søker deler bolig med:
       </span>
       <span>
-        Ektefelle/Samboer/Partner, Barn over 18
+        Ektefelle/Samboer/Partner, Andre personer over 18
       </span>
     </div>
     <div
@@ -302,9 +302,9 @@ exports[`Tests related to displaying data from a filled application Should match
               }
             }
           >
-            12345678901
+            12345678910
              
-            Pluto
+            voksen jensen
           </li>
           <li
             style={
@@ -315,7 +315,7 @@ exports[`Tests related to displaying data from a filled application Should match
           >
             10987654321
              
-            Jupiter
+            voksen hansen
           </li>
         </ol>
       </span>
@@ -360,9 +360,9 @@ exports[`Tests related to displaying data from a filled application Should match
               }
             }
           >
-            01-02-2020
+            10-03-2020
              -  
-            02-02-2020
+            10-03-2020
           </li>
         </ol>
       </label>
@@ -375,26 +375,7 @@ exports[`Tests related to displaying data from a filled application Should match
           "marginBottom": "1em",
         }
       }
-    >
-      <span>
-        Planlagt utenlandsopphold:
-      </span>
-      <span>
-        <ol>
-          <li
-            style={
-              Object {
-                "marginBottom": "1em",
-              }
-            }
-          >
-            04-02-2020
-             -  
-            06-02-2020
-          </li>
-        </ol>
-      </span>
-    </div>
+    />
   </div>
   <div
     style={
@@ -442,7 +423,7 @@ exports[`Tests related to displaying data from a filled application Should match
         Utløpsdato: 
       </span>
       <span>
-        21-02-2020
+        10-03-2020
       </span>
     </div>
     <div
@@ -504,7 +485,7 @@ exports[`Tests related to displaying data from a filled application Should match
         Hva slags ytelse/pensjon
       </span>
       <span>
-        penjon
+        annen ytelse begrunnelse
       </span>
     </div>
     <div
@@ -538,7 +519,7 @@ exports[`Tests related to displaying data from a filled application Should match
         Brutto beløp per år:
       </span>
       <span>
-        500
+        2500
       </span>
       <span
         style={
@@ -550,6 +531,10 @@ exports[`Tests related to displaying data from a filled application Should match
         Har du pensjon?
       </span>
       <span>
+        Ja
+      </span>
+      <span />
+      <span>
         <ol>
           <li
             style={
@@ -558,17 +543,28 @@ exports[`Tests related to displaying data from a filled application Should match
               }
             }
           >
-            PensjonsOrdningen
+            KLP
             , 
-            250
+            2000
+          </li>
+          <li
+            style={
+              Object {
+                "marginBottom": "1em",
+              }
+            }
+          >
+            SPK
+            , 
+            5000
           </li>
         </ol>
       </span>
       <span>
-        Sum inntekt:
+        Sum inntekt og pensjon:
       </span>
       <span>
-        750
+        7000
       </span>
     </div>
     <div
@@ -602,7 +598,7 @@ exports[`Tests related to displaying data from a filled application Should match
         Har du finansformue?
       </span>
       <span>
-        Nei
+        Ja
       </span>
       <span
         style={
@@ -616,7 +612,7 @@ exports[`Tests related to displaying data from a filled application Should match
         </span>
       </span>
       <span>
-        100
+        1000
       </span>
       <span
         style={
@@ -644,9 +640,9 @@ exports[`Tests related to displaying data from a filled application Should match
               }
             }
           >
-            Hytte
+            juveler
             ,
-            50
+            2000
           </li>
         </ol>
       </span>
@@ -670,7 +666,7 @@ exports[`Tests related to displaying data from a filled application Should match
         Har søker Depositumskonto?
       </span>
       <span>
-        Nei
+        
       </span>
       <span />
       <span />
@@ -688,7 +684,7 @@ exports[`Tests related to displaying data from a filled application Should match
         Mottar du eller ektefellen/samboer, eller har du eller han/hun i løpet av de siste tre månedene mottatt sosialstønad til livsopphold?
       </span>
       <span>
-        Nei
+        
       </span>
     </div>
   </div>
@@ -793,7 +789,7 @@ exports[`Tests related to displaying data from a filled application Should match
       </span>
       <span>
         <span>
-          Alt er fint
+          intet å bemerke
         </span>
       </span>
     </div>

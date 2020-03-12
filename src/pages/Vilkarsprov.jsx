@@ -26,7 +26,7 @@ function Vilkarsprov({ state = initialState, setState }) {
     const sak = history.location.state ? history.location.state.sak : {};
     const url = sak ? '/sak/' + sak.id + '/soknad' : null;
     const { data } = url ? useFetch({ url }) : {};
-    const soknad = data ? data : '';
+    const søknad = data ? data : '';
 
     const [displayState, setDisplayState] = useState({
         vissøknad: false
@@ -67,12 +67,12 @@ function Vilkarsprov({ state = initialState, setState }) {
     function visSøknadFunction() {
         return displayState.vissøknad ? (
             <div style={{ width: '30%' }}>
-                {soknad !== undefined &&
-                    soknad[0] !== undefined &&
-                    (console.log(JSON.stringify(soknad[0].json)),
+                {søknad !== undefined &&
+                    søknad[0] !== undefined &&
+                    (console.log(JSON.stringify(søknad[0].json)),
                     (
                         <Panel border>
-                            <DisplayDataFromApplic state={soknad[0].json} />
+                            <DisplayDataFromApplic state={søknad[0].json} />
                         </Panel>
                     ))}
             </div>
@@ -147,7 +147,10 @@ function Vilkarsprov({ state = initialState, setState }) {
                             />
                             <Section
                                 checkboxLabel={'§x-y Oppholdstillatelse'}
-                                sectionText={'Brukeren må ha gyldig oppholdstillatelse i riket. blah blah'}
+                                sectionText={
+                                    'Stønaden opphører hvis bruker er i utlandet i mer enn 90 dager,' +
+                                    'eller hvis summen av dager i utlandet blir over 90 dager i stønadsperioden'
+                                }
                                 stateToChange={'oppholdstillatelse'}
                                 textAreaLabel={'Begrunnelse'}
                                 textAreaValue={state.oppholdstillatelse.begrunnelse}
