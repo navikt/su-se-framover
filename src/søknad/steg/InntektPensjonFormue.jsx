@@ -5,7 +5,7 @@ import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
 import Lenke from 'nav-frontend-lenker';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { getRandomSmiley } from '../../hooks/getRandomEmoji';
-import { stringToBoolean } from '../../components/FormElements';
+import { stringToBoolean } from '../../HelperFunctions';
 
 const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);

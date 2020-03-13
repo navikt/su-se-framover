@@ -14,57 +14,13 @@ import { useHistory } from 'react-router-dom';
 import { getRandomSmiley } from '../../hooks/getRandomEmoji';
 
 const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
-    console.log(state);
-
     const [feilmeldinger, setFeilmeldinger] = useState([]);
     const [postData, setPostData] = useState({ url: undefined, method: 'post' });
     let { status, isFetching, failed } = useFetch(postData);
     const history = useHistory();
 
-    const trimEndsOfState = state => {
-        if (state !== null) {
-            if (!Array.isArray(state) && typeof state != 'object') return state;
-            return Object.keys(state).reduce(
-                function(acc, key) {
-                    acc[key.trim()] = typeof state[key] == 'string' ? state[key].trim() : trimEndsOfState(state[key]);
-                    return acc;
-                },
-                Array.isArray(state) ? [] : {}
-            );
-        }
-    };
-
     state = trimEndsOfState(state);
-
-    const parseIntsInState = state => {
-        Object.keys(state).map(obj => {
-            if (!isNaN(parseInt(state[obj]))) {
-                if (typeof state[obj] === 'number') {
-                    return;
-                } else {
-                    state[obj] = parseInt(state[obj].replace(/\s/g, '').replace(/\./g, ''), 10);
-                }
-            }
-
-            if (Array.isArray(state[obj])) {
-                state[obj] = state[obj].map(obj => {
-                    if (Object.prototype.hasOwnProperty.call(obj, 'beløp')) {
-                        obj.beløp = parseInt(obj.beløp.replace(/\s/g, '').replace(/\./g, ''), 10);
-                        return obj;
-                    }
-
-                    if (Object.prototype.hasOwnProperty.call(obj, 'skattetakst')) {
-                        obj.skattetakst = parseInt(obj.skattetakst.replace(/\s/g, '').replace(/\./g, ''), 10);
-                        return obj;
-                    }
-                });
-            }
-        });
-    };
-
     parseIntsInState(state.inntektPensjonFormue);
-
-    console.log('after parse: ', state);
 
     const Kvittering = ({ type, melding }) => {
         return (
@@ -96,7 +52,6 @@ const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
         if (validateOppholdstillatelse.validateFormValues(state.oppholdstillatelse).length > 0) {
             errors.push('Det er feil i Oppholdstillatelse (side 4)');
         }
-
         if (validateInntektPensjonFormue.validateFormValues(state.inntektPensjonFormue).length > 0) {
             errors.push('Det er feil i Inntekt, pensjon, og formue (side 5)');
         }
@@ -108,7 +63,6 @@ const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
 
     function sendSøknad() {
         console.log('state: ', state);
-
         const errors = validerSøknad();
 
         if (errors.length < 1) {
@@ -147,6 +101,45 @@ const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
         </div>
     );
 };
+
+function trimEndsOfState(state) {
+    if (state !== null) {
+        if (!Array.isArray(state) && typeof state != 'object') return state;
+        return Object.keys(state).reduce(
+            function(acc, key) {
+                acc[key.trim()] = typeof state[key] == 'string' ? state[key].trim() : trimEndsOfState(state[key]);
+                return acc;
+            },
+            Array.isArray(state) ? [] : {}
+        );
+    }
+}
+
+function parseIntsInState(state) {
+    Object.keys(state).map(obj => {
+        if (!isNaN(parseInt(state[obj]))) {
+            if (typeof state[obj] === 'number') {
+                return;
+            } else {
+                state[obj] = parseInt(state[obj].replace(/\s/g, '').replace(/\./g, ''), 10);
+            }
+        }
+
+        if (Array.isArray(state[obj])) {
+            state[obj] = state[obj].map(obj => {
+                if (Object.prototype.hasOwnProperty.call(obj, 'beløp')) {
+                    obj.beløp = parseInt(obj.beløp.replace(/\s/g, '').replace(/\./g, ''), 10);
+                    return obj;
+                }
+
+                if (Object.prototype.hasOwnProperty.call(obj, 'skattetakst')) {
+                    obj.skattetakst = parseInt(obj.skattetakst.replace(/\s/g, '').replace(/\./g, ''), 10);
+                    return obj;
+                }
+            });
+        }
+    });
+}
 
 const SubmitFeilmeldinger = feilmeldinger => (
     <div className={'feiloppsummering'}>

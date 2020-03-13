@@ -392,6 +392,29 @@ exports[`Tests related to displaying data from a filled application Should match
         }
       }
     >
+      <label
+        style={
+          Object {
+            "marginBottom": "1em",
+          }
+        }
+      >
+        Antall registrerte dager:
+      </label>
+      <label>
+         
+        11
+      </label>
+    </div>
+    <div
+      style={
+        Object {
+          "display": "grid",
+          "gridTemplateColumns": "1fr 1fr",
+          "marginBottom": "1em",
+        }
+      }
+    >
       <span>
         Planlagt utenlandsopphold:
       </span>
@@ -399,6 +422,15 @@ exports[`Tests related to displaying data from a filled application Should match
         
       </span>
     </div>
+    <div
+      style={
+        Object {
+          "display": "grid",
+          "gridTemplateColumns": "1fr 1fr",
+          "marginBottom": "1em",
+        }
+      }
+    />
     <div
       style={
         Object {

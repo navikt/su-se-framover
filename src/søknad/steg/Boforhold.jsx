@@ -7,7 +7,7 @@ import { Checkbox, CheckboxGruppe } from 'nav-frontend-skjema';
 import { Systemtittel, Ingress } from 'nav-frontend-typografi';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { getRandomSmiley } from '../../hooks/getRandomEmoji';
-import { stringToBoolean } from '../../components/FormElements';
+import { stringToBoolean } from '../../HelperFunctions';
 
 const Boforhold = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);

@@ -23,6 +23,15 @@ const Utenlandsopphold = ({ state }) => {
             </div>
 
             <div style={sectionGridLayout}>
+                {state.utenlandsopphold.utenlandsopphold && (
+                    <>
+                        <label style={{marginBottom: '1em'}}>Antall registrerte dager:</label>
+                        <label> {state.utenlandsopphold.antallRegistrerteDager}</label>
+                    </>
+                )}
+            </div>
+
+            <div style={sectionGridLayout}>
                 <span>Planlagt utenlandsopphold:</span>
                 <span>{jaNeiSpørsmål(state.utenlandsopphold.planlagtUtenlandsopphold)}</span>
             </div>
@@ -35,6 +44,16 @@ const Utenlandsopphold = ({ state }) => {
                     </>
                 )}
             </div>
+
+            <div style={sectionGridLayout}>
+                {state.utenlandsopphold.planlagtUtenlandsopphold && (
+                    <>
+                        <label style={{marginBottom: '1em'}}>Antall registrerte dager:</label>
+                        <label> {state.utenlandsopphold.antallPlanlagteDager}</label>
+                    </>
+                )}
+            </div>
+
         </div>
     );
 

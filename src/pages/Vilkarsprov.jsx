@@ -146,7 +146,7 @@ function Vilkarsprov({ state = initialState, setState }) {
                                 onChange={updateField}
                             />
                             <Section
-                                checkboxLabel={'§x-y Oppholdstillatelse'}
+                                checkboxLabel={'§4, Opphold i Utlandet'}
                                 sectionText={
                                     'Stønaden opphører hvis bruker er i utlandet i mer enn 90 dager,' +
                                     'eller hvis summen av dager i utlandet blir over 90 dager i stønadsperioden'

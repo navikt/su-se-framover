@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
 import { JaNeiSpørsmål } from '../../components/FormElements.jsx';
@@ -7,9 +7,10 @@ import { Feiloppsummering } from 'nav-frontend-skjema';
 import Datovelger from 'nav-datovelger';
 import 'nav-datovelger/dist/datovelger/styles/datovelger.css';
 import { getRandomSmiley } from '../../hooks/getRandomEmoji';
-import { stringToBoolean } from '../../components/FormElements';
+import { stringToBoolean } from '../../HelperFunctions';
 
 const Utenlandsopphold = ({ state, updateField, onClick }) => {
+    console.log(state)
     const [feilmeldinger, setFeilmeldinger] = useState([]);
 
     function addInputField(field, fieldName) {
@@ -33,6 +34,25 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
         const tempField = [...state.slice(0, index), ...state.slice(index + 1)];
         updateField(field, tempField);
     }
+
+    let x = undefined;
+    if(state.utenlandsopphold){
+         x = addDaysBetweenTwoDates(state.registrertePerioder)
+    }
+    let y = undefined;
+    if(state.planlagtUtenlandsopphold){
+         y = addDaysBetweenTwoDates(state.planlagtePerioder)
+    }
+
+    useEffect(() => {
+        if(x !== undefined){
+        updateField("antallRegistrerteDager", x)
+        }
+
+        if(y !== undefined){
+            updateField("antallPlanlagteDager", y)
+        }
+    }, [x, y])
 
     function utenlandsoppholdFelter() {
         if (state.utenlandsopphold) {
@@ -250,17 +270,20 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
 };
 
 const addDaysBetweenTwoDates = state => {
-    let x = 0;
-    state.map(item => {
-        const utreisedato = item.utreisedato;
-        const innreisedato = item.innreisedato;
+    let antallDager = 0;
 
-        x += numberOfDaysBetweeenTwoDates(utreisedato, innreisedato);
-    });
-    if (isNaN(x)) {
-        return 'Fyll ut alle dato-felter for å regne antall dager';
-    } else {
-        return x - state.length;
+    if(state !== undefined){
+        state.map(item => {
+            const utreisedato = item.utreisedato;
+            const innreisedato = item.innreisedato;
+
+            antallDager += numberOfDaysBetweeenTwoDates(utreisedato, innreisedato);
+        });
+        if (isNaN(antallDager)) {
+            return 'Fyll ut alle dato-felter for å regne antall dager';
+        } else {
+            return antallDager - state.length;
+        }
     }
 };
 

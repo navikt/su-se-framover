@@ -29,3 +29,11 @@ export const replace = arr => {
         return newArray;
     }
 };
+
+export const isStringBoolean = target => {
+    return typeof target === 'string' && (target.toLowerCase() === 'true' || target.toLowerCase() === 'false');
+};
+
+export const stringToBoolean = value => {
+    return value === 'true';
+};

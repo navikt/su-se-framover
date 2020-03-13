@@ -25,14 +25,6 @@ const InputFieldsStyle = {
     marginRight: '1em'
 };
 
-export const isStringBoolean = target => {
-    return typeof target === 'string' && (target.toLowerCase() === 'true' || target.toLowerCase() === 'false');
-};
-
-export const stringToBoolean = value => {
-    return value === 'true';
-};
-
 export const JaNeiSpørsmål = ({ fieldName, legend, onChange, state }) => {
     const options = [
         { label: 'Ja', value: true },
