@@ -7,6 +7,7 @@ import { Checkbox, CheckboxGruppe } from 'nav-frontend-skjema';
 import { Systemtittel, Ingress } from 'nav-frontend-typografi';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { getRandomSmiley } from '../../hooks/getRandomEmoji';
+import { stringToBoolean } from '../../components/FormElements';
 
 const Boforhold = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -139,7 +140,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
                             fieldName="delerBolig"
                             legend="Deler søker bolig med en annen voksen?"
                             state={state.delerBolig}
-                            onChange={e => updateField('delerBolig', e.target.value)}
+                            onChange={e => {updateField('delerBolig', e.target.value); prepareState(stringToBoolean(e.target.value)); }}
                         />
                     </span>
                     {personDelerBolig()}
@@ -152,6 +153,16 @@ const Boforhold = ({ state, updateField, onClick }) => {
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
+
+    function prepareState(delerBolig){
+		if(delerBolig){
+			updateField('borSammenMed', [])
+			updateField('delerBoligMed', [{ navn: '', fnr: '' }])
+		} else {
+			updateField('borSammenMed', null)
+			updateField('delerBoligMed', null)
+		}
+    }
 
     //------------Lett Validering-----------------------
     function validateForm() {

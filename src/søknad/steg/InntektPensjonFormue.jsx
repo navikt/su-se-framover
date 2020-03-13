@@ -5,6 +5,7 @@ import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
 import Lenke from 'nav-frontend-lenker';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { getRandomSmiley } from '../../hooks/getRandomEmoji';
+import { stringToBoolean } from '../../components/FormElements';
 
 const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -255,7 +256,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
             <JaNeiSpørsmål
                 fieldName="harPensjon"
                 legend="Har du pensjon?"
-                onChange={e => updateField('harPensjon', e.target.value)}
+                onChange={e => radioChanged('harPensjon', e.target.value)}
                 state={state.harPensjon}
             />
 
@@ -285,7 +286,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                 <JaNeiSpørsmål
                     legend="Har du annen formue/eiendom?"
                     fieldName="harAnnenFormue"
-                    onChange={e => updateField('harAnnenFormue', e.target.value)}
+                    onChange={e => radioChanged('harAnnenFormue', e.target.value)}
                     state={state.harAnnenFormue}
                 />
                 {harAnnenFormueEiendom()}
@@ -323,6 +324,28 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
         const reducer = (accumulator, currentValue) => accumulator + currentValue;
         return beløp.reduce(reducer, 0);
     }
+
+        function radioChanged(propName, value){
+        	updateField(propName, value)
+        	prepareState(stringToBoolean(value), propName)
+        }
+
+         function prepareState(value, propName){
+        		if(propName === 'harPensjon'){
+        			if(value){
+    					updateField('pensjonsOrdning', [{ ordning: '', beløp: '' }])
+        			} else {
+        				updateField('pensjonsOrdning', null)
+        			}
+        		}
+        		if(propName === 'harAnnenFormue'){
+    				if(value){
+    					updateField('annenFormue', [{ typeFormue: '', skattetakst: '' }])
+        			} else {
+        				updateField('annenFormue', null)
+        			}
+        		}
+            }
 
     //------------Lett Validering-----------------------
     function validateForm() {

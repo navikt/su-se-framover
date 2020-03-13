@@ -7,6 +7,7 @@ import { Feiloppsummering } from 'nav-frontend-skjema';
 import Datovelger from 'nav-datovelger';
 import 'nav-datovelger/dist/datovelger/styles/datovelger.css';
 import { getRandomSmiley } from '../../hooks/getRandomEmoji';
+import { stringToBoolean } from '../../components/FormElements';
 
 const Utenlandsopphold = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -195,7 +196,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                 fieldName="utenlandsopphold"
                 legend="Har du vært i utlandet i løpet av de siste 3 måneder?"
                 state={state.utenlandsopphold}
-                onChange={e => updateField('utenlandsopphold', e.target.value)}
+                onChange={e => radioChanged('utenlandsopphold', e.target.value)}
             />
             <div style={{ marginBottom: '2em' }}>{utenlandsoppholdFelter()}</div>
 
@@ -203,7 +204,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                 fieldName="planlagtUtenlandsopphold"
                 legend="Har du planer å reise til utlandet?"
                 state={state.planlagtUtenlandsopphold}
-                onChange={e => updateField('planlagtUtenlandsopphold', e.target.value)}
+                onChange={e => radioChanged('planlagtUtenlandsopphold', e.target.value)}
             />
             <div>{planlagtUtenlandsoppholdFelter()}</div>
             {feilmeldinger.length > 0 && (
@@ -212,6 +213,28 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
+
+    function radioChanged(propName, value){
+    	updateField(propName, value)
+    	prepareState(stringToBoolean(value), propName)
+    }
+
+     function prepareState(value, propName){
+    		if(propName === 'utenlandsopphold'){
+    			if(value){
+					updateField('registrertePerioder', [{ utreisedato: '', innreisedato: '' }])
+    			} else {
+    				updateField('registrertePerioder', null)
+    			}
+    		}
+    		if(propName === 'planlagtUtenlandsopphold'){
+				if(value){
+					updateField('planlagtePerioder', [{ utreisedato: '', innreisedato: '' }])
+    			} else {
+    				updateField('planlagtePerioder', null)
+    			}
+    		}
+        }
 
     //------------Lett Validering-----------------------
     function validateForm() {

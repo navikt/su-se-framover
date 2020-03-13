@@ -20,19 +20,10 @@ function Soknad() {
 
     const [state, setState] = useState({
         personopplysninger: {},
-        boforhold: {
-            borSammenMed: [],
-            delerBoligMed: [{ navn: '', fnr: '' }]
-        },
-        utenlandsopphold: {
-            registrertePerioder: [{ utreisedato: '', innreisedato: '' }],
-            planlagtePerioder: [{ utreisedato: '', innreisedato: '' }]
-        },
+        boforhold: {},
+        utenlandsopphold: {},
         oppholdstillatelse: {},
-        inntektPensjonFormue: {
-            pensjonsOrdning: [{ ordning: '', beløp: '' }],
-            annenFormue: [{ typeFormue: '', skattetakst: '' }]
-        },
+        inntektPensjonFormue: {},
         forNav: {}
     });
 

@@ -13,7 +13,7 @@ const Boforhold = ({ state }) => {
             </div>
 
             <div style={sectionGridLayout}>
-                {state.boforhold.borSammenMed.length > 0 && (
+                {state.boforhold.delerBolig && (
                     <>
                         <span>Søker deler bolig med:</span>
                         <span>{borSammenMed()}</span>
