@@ -325,27 +325,27 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
         return beløp.reduce(reducer, 0);
     }
 
-        function radioChanged(propName, value){
-        	updateField(propName, value)
-        	prepareState(stringToBoolean(value), propName)
-        }
+    function radioChanged(propName, value) {
+        updateField(propName, value);
+        prepareState(stringToBoolean(value), propName);
+    }
 
-         function prepareState(value, propName){
-        		if(propName === 'harPensjon'){
-        			if(value){
-    					updateField('pensjonsOrdning', [{ ordning: '', beløp: '' }])
-        			} else {
-        				updateField('pensjonsOrdning', null)
-        			}
-        		}
-        		if(propName === 'harAnnenFormue'){
-    				if(value){
-    					updateField('annenFormue', [{ typeFormue: '', skattetakst: '' }])
-        			} else {
-        				updateField('annenFormue', null)
-        			}
-        		}
+    function prepareState(value, propName) {
+        if (propName === 'harPensjon') {
+            if (value) {
+                updateField('pensjonsOrdning', [{ ordning: '', beløp: '' }]);
+            } else {
+                updateField('pensjonsOrdning', null);
             }
+        }
+        if (propName === 'harAnnenFormue') {
+            if (value) {
+                updateField('annenFormue', [{ typeFormue: '', skattetakst: '' }]);
+            } else {
+                updateField('annenFormue', null);
+            }
+        }
+    }
 
     //------------Lett Validering-----------------------
     function validateForm() {

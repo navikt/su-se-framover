@@ -214,27 +214,27 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
         </div>
     );
 
-    function radioChanged(propName, value){
-    	updateField(propName, value)
-    	prepareState(stringToBoolean(value), propName)
+    function radioChanged(propName, value) {
+        updateField(propName, value);
+        prepareState(stringToBoolean(value), propName);
     }
 
-     function prepareState(value, propName){
-    		if(propName === 'utenlandsopphold'){
-    			if(value){
-					updateField('registrertePerioder', [{ utreisedato: '', innreisedato: '' }])
-    			} else {
-    				updateField('registrertePerioder', null)
-    			}
-    		}
-    		if(propName === 'planlagtUtenlandsopphold'){
-				if(value){
-					updateField('planlagtePerioder', [{ utreisedato: '', innreisedato: '' }])
-    			} else {
-    				updateField('planlagtePerioder', null)
-    			}
-    		}
+    function prepareState(value, propName) {
+        if (propName === 'utenlandsopphold') {
+            if (value) {
+                updateField('registrertePerioder', [{ utreisedato: '', innreisedato: '' }]);
+            } else {
+                updateField('registrertePerioder', null);
+            }
         }
+        if (propName === 'planlagtUtenlandsopphold') {
+            if (value) {
+                updateField('planlagtePerioder', [{ utreisedato: '', innreisedato: '' }]);
+            } else {
+                updateField('planlagtePerioder', null);
+            }
+        }
+    }
 
     //------------Lett Validering-----------------------
     function validateForm() {

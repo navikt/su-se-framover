@@ -140,7 +140,10 @@ const Boforhold = ({ state, updateField, onClick }) => {
                             fieldName="delerBolig"
                             legend="Deler søker bolig med en annen voksen?"
                             state={state.delerBolig}
-                            onChange={e => {updateField('delerBolig', e.target.value); prepareState(stringToBoolean(e.target.value)); }}
+                            onChange={e => {
+                                updateField('delerBolig', e.target.value);
+                                prepareState(stringToBoolean(e.target.value));
+                            }}
                         />
                     </span>
                     {personDelerBolig()}
@@ -154,14 +157,14 @@ const Boforhold = ({ state, updateField, onClick }) => {
         </div>
     );
 
-    function prepareState(delerBolig){
-		if(delerBolig){
-			updateField('borSammenMed', [])
-			updateField('delerBoligMed', [{ navn: '', fnr: '' }])
-		} else {
-			updateField('borSammenMed', null)
-			updateField('delerBoligMed', null)
-		}
+    function prepareState(delerBolig) {
+        if (delerBolig) {
+            updateField('borSammenMed', []);
+            updateField('delerBoligMed', [{ navn: '', fnr: '' }]);
+        } else {
+            updateField('borSammenMed', null);
+            updateField('delerBoligMed', null);
+        }
     }
 
     //------------Lett Validering-----------------------
