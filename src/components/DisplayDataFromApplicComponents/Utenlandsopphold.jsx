@@ -8,8 +8,7 @@ const Utenlandsopphold = ({ state }) => {
         <div style={headerSpacing}>
             <Undertittel style={elementSpacing}>Utenlandsopphold</Undertittel>
 
-
-			<div style={sectionGridLayout}>
+            <div style={sectionGridLayout}>
                 <span>Registrert utenlandsopphold:</span>
                 <span>{jaNeiSpørsmål(state.utenlandsopphold.utenlandsopphold)}</span>
             </div>
@@ -23,7 +22,7 @@ const Utenlandsopphold = ({ state }) => {
                 )}
             </div>
 
-			<div style={sectionGridLayout}>
+            <div style={sectionGridLayout}>
                 <span>Planlagt utenlandsopphold:</span>
                 <span>{jaNeiSpørsmål(state.utenlandsopphold.planlagtUtenlandsopphold)}</span>
             </div>
