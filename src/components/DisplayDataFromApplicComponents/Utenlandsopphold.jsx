@@ -1,11 +1,18 @@
 import { Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { reverseString } from '../../HelperFunctions';
+import { jaNeiSpørsmål } from '../../HelperFunctions';
 
 const Utenlandsopphold = ({ state }) => {
     return (
         <div style={headerSpacing}>
             <Undertittel style={elementSpacing}>Utenlandsopphold</Undertittel>
+
+
+			<div style={sectionGridLayout}>
+                <span>Registrert utenlandsopphold:</span>
+                <span>{jaNeiSpørsmål(state.utenlandsopphold.utenlandsopphold)}</span>
+            </div>
 
             <div style={sectionGridLayout}>
                 {state.utenlandsopphold.utenlandsopphold && (
@@ -14,6 +21,11 @@ const Utenlandsopphold = ({ state }) => {
                         <label> {utenlandsopphold()}</label>
                     </>
                 )}
+            </div>
+
+			<div style={sectionGridLayout}>
+                <span>Planlagt utenlandsopphold:</span>
+                <span>{jaNeiSpørsmål(state.utenlandsopphold.planlagtUtenlandsopphold)}</span>
             </div>
 
             <div style={sectionGridLayout}>
