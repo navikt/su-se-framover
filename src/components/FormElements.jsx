@@ -7,12 +7,13 @@ import { Undertittel } from 'nav-frontend-typografi';
 
 /*eslint no-unused-vars: */
 
-export const InputFields = ({ id, style, labelText: label, value, onChange, bredde, disabled }) => (
+export const InputFields = ({ id, style, labelText: label, value, onChange, bredde, disabled, feil }) => (
     <span style={InputFieldsStyle}>
         <Input
             style={style}
             id={id}
             label={label}
+            feil={feil}
             value={value}
             bredde={bredde}
             disabled={disabled}
@@ -25,13 +26,13 @@ const InputFieldsStyle = {
     marginRight: '1em'
 };
 
-export const JaNeiSpørsmål = ({ fieldName, legend, onChange, state }) => {
+export const JaNeiSpørsmål = ({ fieldName, legend, onChange, state, feil }) => {
     const options = [
         { label: 'Ja', value: true },
         { label: 'Nei', value: false }
     ];
     return (
-        <RadioGruppe legend={legend}>
+        <RadioGruppe legend={legend} feil={feil}>
             {options.map(({ label, value }) => (
                 <Radio
                     key={label}

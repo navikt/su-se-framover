@@ -115,7 +115,7 @@ function Soknad() {
                         { label: 'Boforhold', disabled: stegIndikatorDisabled },
                         { label: 'Utenlandsopphold', disabled: stegIndikatorDisabled },
                         { label: 'Oppholdstillatelse', disabled: stegIndikatorDisabled },
-                        { label: 'Inntekt, pensjon og formue', disabled: stegIndikatorDisabled },
+                        { label: 'Inntekt, pensjon og harFormueEiendom', disabled: stegIndikatorDisabled },
                         { label: 'For NAV', disabled: stegIndikatorDisabled },
                         { label: 'Send søknad', disabled: stegIndikatorDisabled }
                     ]}

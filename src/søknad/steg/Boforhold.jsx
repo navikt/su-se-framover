@@ -6,8 +6,8 @@ import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Checkbox, CheckboxGruppe } from 'nav-frontend-skjema';
 import { Systemtittel, Ingress } from 'nav-frontend-typografi';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { getRandomSmiley } from '../../hooks/getRandomEmoji';
-import { stringToBoolean } from '../../HelperFunctions';
+import { stringToBoolean, displayErrorMessageOnInputField } from '../../HelperFunctions';
+import { validateBoforhold } from "../validering/BoforholdValidering";
 
 const Boforhold = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -53,7 +53,9 @@ const Boforhold = ({ state, updateField, onClick }) => {
     function personDelerBolig() {
         if (state.delerBolig) {
             return (
-                <CheckboxGruppe legend="Hvem deler søker bolig med?">
+                <CheckboxGruppe legend="Hvem deler søker bolig med?"
+                                feil={displayErrorMessageOnInputField(feilmeldinger,
+                                    "borSammenMed")}>
                     <Checkbox
                         name="boligdeler"
                         label="Ektefelle/Partner/Samboer"
@@ -94,12 +96,14 @@ const Boforhold = ({ state, updateField, onClick }) => {
                                         id={`${item.key}-fnr`}
                                         labelText={'Fødselsnummer'}
                                         value={item.fnr}
+                                        feil={displayErrorMessageOnInputField(feilmeldinger, `${item.key}-fnr`)}
                                         onChange={value => oppdaterFødselsnummer(value, index)}
                                     />
                                     <InputFields
                                         id={`${item.key}-navn`}
                                         labelText={'Navn'}
                                         value={item.navn}
+                                        feil={displayErrorMessageOnInputField(feilmeldinger, `${item.key}-navn`)}
                                         onChange={value => updateEPSnavn(value, index)}
                                     />
 
@@ -140,6 +144,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
                             fieldName="delerBolig"
                             legend="Deler søker bolig med en annen voksen?"
                             state={state.delerBolig}
+                            feil={displayErrorMessageOnInputField(feilmeldinger, "delerBolig")}
                             onChange={e => {
                                 updateField('delerBolig', e.target.value);
                                 prepareState(stringToBoolean(e.target.value));
@@ -150,9 +155,6 @@ const Boforhold = ({ state, updateField, onClick }) => {
                 </div>
                 {tillegsInfoESP()}
             </div>
-            {feilmeldinger.length > 0 && (
-                <Feiloppsummering tittel={`Vennligst fyll ut mangler ${getRandomSmiley()}`} feil={feilmeldinger} />
-            )}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
@@ -167,10 +169,8 @@ const Boforhold = ({ state, updateField, onClick }) => {
         }
     }
 
-    //------------Lett Validering-----------------------
     function validateForm() {
-        const formValues = state;
-        const errors = validateFormValues(formValues);
+        const errors = validateBoforhold.validateFormValues(state);
         console.log(errors);
         setFeilmeldinger(errors);
         if (errors.length === 0) {
@@ -179,94 +179,12 @@ const Boforhold = ({ state, updateField, onClick }) => {
     }
 };
 
-//----------------------------------------------------------------------------------
-//---------------------Validering
-//----------------------------------------------------------------------------------
-const fields = {
-    delerBolig: { label: 'delerBolig', htmlId: 'delerBolig' },
-    borsammenmed: { label: 'borsammenmed', htmlId: 'borsammenmed' },
-    delerboligmed: { label: 'delerboligmed', htmlId: 'delerboligmed' }
-};
-
-function validateFormValues(formValues) {
-    const tempErrors = [];
-    const delerBoligMedErrors = [];
-    tempErrors.push(...delerBoligValidering(formValues));
-    tempErrors.push(...borSammenMedValidering(formValues));
-    tempErrors.push(...delerBoligMedValidering(formValues, delerBoligMedErrors));
-
-    return tempErrors;
-}
-
-function delerBoligValidering(formValues) {
-    const delerBolig = formValues.delerBolig;
-    let feilmelding = '';
-
-    if (delerBolig === undefined) {
-        feilmelding += 'Vennligst velg boforhold';
-    }
-    if (feilmelding.length > 0) {
-        return [{ skjemaelementId: fields.delerBolig.htmlId, feilmelding }];
-    }
-    return [];
-}
-
-function borSammenMedValidering(formValues) {
-    const borSammenMed = formValues.borSammenMed;
-    let feilmelding = '';
-
-    if (formValues.delerBolig) {
-        if (
-            !borSammenMed.includes('Ektefelle/Partner/Samboer') &&
-            !borSammenMed.includes('Barn over 18') &&
-            !borSammenMed.includes('Andre personer over 18 år')
-        ) {
-            feilmelding += 'Vennligst velg hvem søker bor med';
-        }
-        if (feilmelding.length > 0) {
-            return [{ skjemaelementId: fields.borsammenmed.htmlId, feilmelding }];
-        }
-    }
-    return [];
-}
-
-function delerBoligMedValidering(formValues, errorsArray) {
-    const delerBoligMedArray = formValues.delerBoligMed;
-
-    if (formValues.delerBolig) {
-        delerBoligMedArray.map((item, index) => {
-            if (item.navn.trim().length === 0) {
-                errorsArray.push({
-                    skjemaelementId: `${index}-navn`,
-                    feilmelding: 'Navn må fylles ut'
-                });
-            }
-            if (item.fnr.trim().length === 0) {
-                errorsArray.push({
-                    skjemaelementId: `${index}-fnr`,
-                    feilmelding: 'Fødselsnummer må fylles ut'
-                });
-            } else if (item.fnr.trim().length > 11) {
-                errorsArray.push({
-                    skjemaelementId: `${index}-fnr`,
-                    feilmelding: 'Fødselsnummer må være 11 siffer. Lenge på fødselsnummer: ' + item.fnr.trim().length
-                });
-            }
-        });
-    }
-    return errorsArray;
-}
-
 const container = {
     display: 'flex'
 };
 
 const fjernInnputKnappStyle = {
     alignSelf: 'center'
-};
-
-export const validateBoforhold = {
-    validateFormValues
 };
 
 export default Boforhold;

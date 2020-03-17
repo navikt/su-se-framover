@@ -4,8 +4,9 @@ import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
 import Lenke from 'nav-frontend-lenker';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
-import { getRandomSmiley } from '../../hooks/getRandomEmoji';
 import { stringToBoolean } from '../../HelperFunctions';
+import {validateInntektPensjonFormue} from "../validering/InntektPensjonFormueValidering";
+import {displayErrorMessageOnInputField} from "../../HelperFunctions";
 
 const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -17,8 +18,8 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
             return (
                 <InputFields
                     labelText="Hva slags ytelse/pensjon?"
-                    id={fields.framsattKravAnnenYtelseBegrunnelse.htmlId}
                     value={state.framsattKravAnnenYtelseBegrunnelse || ''}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, "framsattKravAnnenYtelseBegrunnelse")}
                     onChange={updateFunction('framsattKravAnnenYtelseBegrunnelse')}
                 />
             );
@@ -30,8 +31,8 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
             return (
                 <InputFields
                     labelText="Brutto beløp per år:"
-                    id={fields.inntektsBeløp.htmlId}
                     bredde="M"
+                    feil={displayErrorMessageOnInputField(feilmeldinger, "inntektsBeløp")}
                     value={state.inntektBeløp || ''}
                     onChange={value => updateField('inntektBeløp', value)}
                 />
@@ -44,8 +45,8 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
             return (
                 <InputFields
                     labelText="Totalbeløp formue: "
-                    id={fields.formueBeløp.htmlId}
                     bredde="M"
+                    feil={displayErrorMessageOnInputField(feilmeldinger, "formueBeløp")}
                     value={state.formueBeløp || ''}
                     onChange={value => updateField('formueBeløp', value)}
                 />
@@ -60,6 +61,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     labelText="Beløp:"
                     value={state.depositumBeløp || ''}
                     bredde={'M'}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, "depositumBeløp")}
                     onChange={e => updateField('depositumBeløp', e)}
                 />
             );
@@ -79,12 +81,14 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                                         labelText="Type formue/eiendom"
                                         id={`${item.key}-typeFormue`}
                                         value={item.typeFormue}
+                                        feil={displayErrorMessageOnInputField(feilmeldinger, `${item.key}-typeFormue`)}
                                         onChange={value => updateFormueEiendomType(value, index)}
                                     />
                                     <InputFields
                                         labelText="Skattetakst"
                                         id={`${item.key}-skattetakst`}
                                         value={item.skattetakst || ''}
+                                        feil={displayErrorMessageOnInputField(feilmeldinger, `${item.key}-skattetakst`)}
                                         onChange={value => updateFormueEiendomSkattetakst(value, index)}
                                     />
                                     {state.annenFormue.length > 1 && (
@@ -180,12 +184,14 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                                         id={`${item.key}-ordning`}
                                         labelText={'Fra hvilken ordning mottar søker pensjon?'}
                                         value={item.ordning || ''}
+                                        feil={displayErrorMessageOnInputField(feilmeldinger, `${item.key}-ordning`)}
                                         onChange={value => updatePensjonsOrdning(value, index)}
                                     />
                                     <InputFields
                                         id={`${item.key}-beløp`}
                                         labelText={'Brutto beløp per år'}
                                         value={item.beløp || ''}
+                                        feil={displayErrorMessageOnInputField(feilmeldinger, `${item.key}-beløp`)}
                                         onChange={value => updatePensjonsOrdningsBeløp(value, index)}
                                     />
                                     {state.pensjonsOrdning.length > 1 && (
@@ -239,6 +245,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
             <JaNeiSpørsmål
                 fieldName="framsattKravAnnenYtelse"
                 legend="Har du fremsatt krav om annen norsk eller utenlandsk ytelse/pensjon som ikke er avgjort?"
+                feil={displayErrorMessageOnInputField(feilmeldinger, `framsattKravAnnenYtelse`)}
                 onChange={e => updateField('framsattKravAnnenYtelse', e.target.value)}
                 state={state.framsattKravAnnenYtelse}
             />
@@ -247,6 +254,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
             <JaNeiSpørsmål
                 fieldName="harInntekt"
                 legend="Har du arbeidsinntekt/personinntekt?"
+                feil={displayErrorMessageOnInputField(feilmeldinger, `harInntekt`)}
                 onChange={e => updateField('harInntekt', e.target.value)}
                 state={state.harInntekt}
             />
@@ -257,6 +265,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                 fieldName="harPensjon"
                 legend="Har du pensjon?"
                 onChange={e => radioChanged('harPensjon', e.target.value)}
+                feil={displayErrorMessageOnInputField(feilmeldinger, `harPensjon`)}
                 state={state.harPensjon}
             />
 
@@ -272,12 +281,14 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     <JaNeiSpørsmål
                         legend="Har du formue/eiendom?"
                         fieldName="harFormueEiendom"
+                        feil={displayErrorMessageOnInputField(feilmeldinger, `formue`)}
                         onChange={e => updateField('harFormueEiendom', e.target.value)}
                         state={state.harFormueEiendom}
                     />
                     <JaNeiSpørsmål
                         legend="Har du finansformue?"
                         fieldName="harFinansFormue"
+                        feil={displayErrorMessageOnInputField(feilmeldinger, `finansformue`)}
                         onChange={e => updateField('harFinansFormue', e.target.value)}
                         state={state.harFinansFormue}
                     />
@@ -286,6 +297,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                 <JaNeiSpørsmål
                     legend="Har du annen formue/eiendom?"
                     fieldName="harAnnenFormue"
+                    feil={displayErrorMessageOnInputField(feilmeldinger, `annenFormue`)}
                     onChange={e => radioChanged('harAnnenFormue', e.target.value)}
                     state={state.harAnnenFormue}
                 />
@@ -296,6 +308,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     <JaNeiSpørsmål
                         legend="Har søker depositumskonto?"
                         fieldName="harDepositumskonto"
+                        feil={displayErrorMessageOnInputField(feilmeldinger, `harDepositumskonto`)}
                         onChange={e => updateField('harDepositumskonto', e.target.value)}
                         state={state.harDepositumskonto}
                     />
@@ -309,13 +322,10 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
             <JaNeiSpørsmål
                 legend="Mottar du eller ektefellen/samboer eller har du eller han/hun i løpet av de siste tre månedene mottatt sosialstønad til livsopphold?"
                 fieldName="harSosialStønad"
+                feil={displayErrorMessageOnInputField(feilmeldinger, `harSosialStønad`)}
                 onChange={e => updateField('harSosialStønad', e.target.value)}
                 state={state.harSosialStønad}
             />
-
-            {feilmeldinger.length > 0 && (
-                <Feiloppsummering tittel={`Vennligst fyll ut mangler ${getRandomSmiley()}`} feil={feilmeldinger} />
-            )}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
@@ -347,10 +357,8 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
         }
     }
 
-    //------------Lett Validering-----------------------
     function validateForm() {
-        const formValues = state;
-        const errors = validateFormValues(formValues);
+        const errors = validateInntektPensjonFormue.validateFormValues(state);
         console.log(errors);
         setFeilmeldinger(errors);
         if (errors.length === 0) {
@@ -359,300 +367,6 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     }
 };
 
-//----------------------------------------------------------------------------------
-//---------------------Validering
-//----------------------------------------------------------------------------------
-const fields = {
-    framsattKravAnnenYtelse: { label: 'framsattKravAnnenYtelse', htmlId: 'framsattKravAnnenYtelse' },
-    framsattKravAnnenYtelseBegrunnelse: {
-        label: 'framsattKravAnnenYtelseBegrunnelse',
-        htmlId: 'framsattKravAnnenYtelseBegrunnelse'
-    },
-    harInntekt: {
-        label: 'harInntekt',
-        htmlId: 'harInntekt'
-    },
-    inntektsBeløp: { label: 'inntektsBeløp', htmlId: 'inntektsBeløp' },
-    pensjon: { label: 'pensjon', htmlId: 'pensjon' },
-    formue: { label: 'formue', htmlId: 'formue' },
-    finansformue: { label: 'finansformue', htmlId: 'finansformue' },
-    annenFormue: { label: 'annenFormue', htmlId: 'annenFormue' },
-    formueBeløp: { label: 'formueBeløp', htmlId: 'formueBeløp' },
-    typeFormue: { label: 'typeFormue', htmlId: 'typeFormue' },
-    skattetakst: { label: 'skattetakst', htmlId: 'skattetakst' },
-    harDepositumskonto: { label: 'harDepositumskonto', htmlId: 'harDepositumskonto' },
-    depositumBeløp: { label: 'depositumBeløp', htmlId: 'depositumBeløp' },
-    harSosialStønad: { label: 'harSosialStønad', htmlId: 'harSosialStønad' }
-};
-
-function validateFormValues(formValues) {
-    const tempErrors = [];
-    const pensjonsOrdningErrors = [];
-    const tempAnnenFormueEiendomArray = [];
-
-    tempErrors.push(...framsattKravAnnenYtelseValidering(formValues));
-    tempErrors.push(...framsattKravAnnenYtelseBegrunnelseValidering(formValues));
-    tempErrors.push(...arbeidsInntektValidering(formValues));
-    tempErrors.push(...arbeidsBeløpValidering(formValues));
-    tempErrors.push(...pensjonValidering(formValues));
-    tempErrors.push(...pensjonsOrdningValidering(formValues, pensjonsOrdningErrors));
-    tempErrors.push(...finansformueValidering(formValues));
-    tempErrors.push(...formueValidering(formValues));
-    tempErrors.push(...formueBeløpValidering(formValues));
-    tempErrors.push(...annenFormue(formValues));
-    tempErrors.push(...annenFormueEiendomArray(formValues, tempAnnenFormueEiendomArray));
-    tempErrors.push(...harSøkerDepositumskontoValidering(formValues));
-    tempErrors.push(...depositumsBeløpValidering(formValues));
-    tempErrors.push(...sosialStønadValidering(formValues));
-
-    return tempErrors;
-}
-
-function framsattKravAnnenYtelseValidering(formValues) {
-    const krav = formValues.framsattKravAnnenYtelse;
-    let feilmelding = '';
-
-    if (krav === undefined) {
-        feilmelding +=
-            'Vennligst velg om søker har fremsatt krav om annen norsk eller utenlandsk ytelse/pensjon som ikke er avgjort';
-
-        if (feilmelding.length > 0) {
-            return [{ skjemaelementId: fields.framsattKravAnnenYtelse.htmlId, feilmelding }];
-        }
-    }
-    return [];
-}
-
-function framsattKravAnnenYtelseBegrunnelseValidering(formValues) {
-    const begrunnelse = formValues.framsattKravAnnenYtelseBegrunnelse;
-    let feilmelding = '';
-
-    if (formValues.framsattKravAnnenYtelse) {
-        if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(begrunnelse) || begrunnelse === undefined) {
-            feilmelding +=
-                'Vennligst oppgi hva slags ytelse/pensjon søker mottar. Kan ikke inneholde tall eller spesialtegn';
-        }
-        if (feilmelding.length > 0) {
-            return [
-                {
-                    skjemaelementId: fields.framsattKravAnnenYtelseBegrunnelse.htmlId,
-                    feilmelding
-                }
-            ];
-        }
-    }
-    return [];
-}
-
-function arbeidsInntektValidering(formValues) {
-    const harInntekt = formValues.harInntekt;
-    let feilmelding = '';
-
-    if (harInntekt === undefined) {
-        feilmelding += 'Vennligst velg om søker har arbeids/person-inntekt';
-
-        if (feilmelding.length > 0) {
-            return [
-                {
-                    skjemaelementId: fields.harInntekt.htmlId,
-                    feilmelding
-                }
-            ];
-        }
-    }
-    return [];
-}
-
-function arbeidsBeløpValidering(formValues) {
-    const arbeidsBeløp = formValues.inntektBeløp;
-    let feilmelding = '';
-
-    if (formValues.harInntekt) {
-        if (!/^(\d{1,30})$/.test(arbeidsBeløp) || arbeidsBeløp === undefined) {
-            feilmelding += 'Vennligst tast inn arbeids/pensjon-inntekt beløp';
-
-            if (feilmelding.length > 0) {
-                return [{ skjemaelementId: fields.inntektsBeløp.htmlId, feilmelding }];
-            }
-        }
-    }
-    return [];
-}
-
-function pensjonValidering(formValues) {
-    const pensjon = formValues.harPensjon;
-    let feilmelding = '';
-
-    if (pensjon === undefined) {
-        feilmelding += 'Vennligst velg om søker har pensjon';
-
-        if (feilmelding.length > 0) {
-            return [{ skjemaelementId: fields.pensjon.htmlId, feilmelding }];
-        }
-    }
-    return [];
-}
-
-function pensjonsOrdningValidering(formValues, errorsArray) {
-    const tempPensjonsOrdningArray = formValues.pensjonsOrdning;
-
-    if (formValues.harPensjon === true) {
-        tempPensjonsOrdningArray.map((item, index) => {
-            if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(item.ordning)) {
-                if (item.ordning === '' || item.ordning === undefined) {
-                    errorsArray.push({
-                        skjemaelementId: `${index}-ordning`,
-                        feilmelding: 'Ordning må fylles ut'
-                    });
-                } else {
-                    errorsArray.push({
-                        skjemaelementId: `${index}-ordning`,
-                        feilmelding: 'Ordning kan ikke inneholde tall eller spesialtegn'
-                    });
-                }
-            }
-            if (!/^(\d{1,30})$/.test(item.beløp)) {
-                if (item.beløp === '' || item.beløp === undefined) {
-                    errorsArray.push({
-                        skjemaelementId: `${index}-beløp`,
-                        feilmelding: 'Beløp må fylles ut'
-                    });
-                } else {
-                    errorsArray.push({
-                        skjemaelementId: `${index}-beløp`,
-                        feilmelding: 'Beløp kan kun inneholde tall'
-                    });
-                }
-            }
-        });
-    }
-    return errorsArray;
-}
-
-function formueValidering(formValues) {
-    const formue = formValues.harFormueEiendom;
-    let feilmelding = '';
-
-    if (formue === undefined) {
-        feilmelding += 'Vennligst velg om søker har formue/eiendom';
-
-        if (feilmelding.length > 0) {
-            return [{ skjemaelementId: fields.formue.htmlId, feilmelding }];
-        }
-    }
-    return [];
-}
-
-function finansformueValidering(formValues) {
-    const finansformue = formValues.harFinansFormue;
-    let feilmelding = '';
-
-    if (finansformue === undefined) {
-        feilmelding += 'Vennligst velg om søker har finansformue';
-    }
-    if (feilmelding.length > 0) {
-        return [{ skjemaelementId: fields.finansformue.htmlId, feilmelding }];
-    }
-    return [];
-}
-
-function formueBeløpValidering(formValues) {
-    const formueBeløp = formValues.formueBeløp;
-    let feilmelding = '';
-
-    if (formValues.harFormueEiendom === true || formValues.harFinansFormue === true) {
-        if (!/^(\d{1,30})$/.test(formueBeløp) || formueBeløp === undefined) {
-            feilmelding += 'Vennligst tast inn totalbeløp for formue';
-
-            if (feilmelding.length > 0) {
-                return [{ skjemaelementId: fields.formueBeløp.htmlId, feilmelding }];
-            }
-        }
-    }
-    return [];
-}
-
-function annenFormue(formValues) {
-    const annenFormue = formValues.harAnnenFormue;
-    let feilmelding = '';
-
-    if (annenFormue === undefined) {
-        feilmelding += 'Vennligst velg om søker har annen formue/eiendom';
-
-        if (feilmelding.length > 0) {
-            return [{ skjemaelementId: fields.annenFormue.htmlId, feilmelding }];
-        }
-    }
-    return [];
-}
-
-function annenFormueEiendomArray(formValues, errorsArray) {
-    const annenFormue = formValues.annenFormue;
-
-    if (formValues.harAnnenFormue === true) {
-        annenFormue.map((item, index) => {
-            if (!/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(item.typeFormue)) {
-                errorsArray.push({
-                    skjemaelementId: `${index}-typeFormue`,
-                    feilmelding: 'Type formue må fylles ut'
-                });
-            }
-            if (!/^(\d{1,30})$/.test(item.skattetakst)) {
-                errorsArray.push({
-                    skjemaelementId: `${index}-skattetakst`,
-                    feilmelding: 'Skattetakst må fylles ut, og kan kun inneholde tall'
-                });
-            }
-        });
-    }
-    return errorsArray;
-}
-
-function harSøkerDepositumskontoValidering(formValues) {
-    const depositumskonto = formValues.harDepositumskonto;
-    let feilmelding = '';
-
-    if (depositumskonto === undefined) {
-        feilmelding += 'Vennligst velg om søker har depositumskonto';
-
-        if (feilmelding.length > 0) {
-            return [{ skjemaelementId: fields.harDepositumskonto.htmlId, feilmelding }];
-        }
-    }
-
-    return [];
-}
-
-function depositumsBeløpValidering(formValues) {
-    const harDepositumskonto = formValues.harDepositumskonto;
-    let feilmelding = '';
-
-    if (harDepositumskonto === true) {
-        const beløp = formValues.depositumBeløp;
-
-        if (!/^(\d{1,30})$/.test(beløp)) {
-            feilmelding += 'Depositum beløp kan ikke være tom, og kan kun inneholde tall';
-        }
-        if (feilmelding.length > 0) {
-            return [{ skjemaelementId: fields.depositumBeløp.htmlId, feilmelding }];
-        }
-    }
-    return [];
-}
-
-function sosialStønadValidering(formValues) {
-    const sosial = formValues.harSosialStønad;
-    let feilmelding = '';
-
-    if (sosial === undefined) {
-        feilmelding += 'Vennligst velg om søker mottar sosial stønad';
-    }
-    if (feilmelding.length > 0) {
-        return [{ skjemaelementId: fields.harSosialStønad.htmlId, feilmelding }];
-    }
-    return [];
-}
-
 const formueContainer = {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr'
@@ -660,10 +374,6 @@ const formueContainer = {
 
 const fjernInnputKnappStyle = {
     alignSelf: 'center'
-};
-
-export const validateInntektPensjonFormue = {
-    validateFormValues
 };
 
 export default InntektPensjonFormue;

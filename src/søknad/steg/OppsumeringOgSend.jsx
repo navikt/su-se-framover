@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Undertittel } from 'nav-frontend-typografi';
-import { validatePersonopplysninger } from './Personopplysninger';
-import { validateBoforhold } from './Boforhold';
-import { validateUtenlandsopphold } from './Utenlandsopphold';
-import { validateOppholdstillatelse } from './Oppholdstillatelse';
-import { validateInntektPensjonFormue } from './InntektPensjonFormue';
-import { validateForNAV } from './ForNAV';
+import {validatePersonopplysninger} from "../validering/PersonopplysningerValidering";
+import {validateBoforhold} from "../validering/BoforholdValidering";
+import {validateUtenlandsopphold} from "../validering/UtenlandsoppholdValidering";
+import {validateOppholdstillatelse} from "../validering/OppholdstillatelseValidering";
+import {validateInntektPensjonFormue} from "../validering/InntektPensjonFormueValidering";
+import {validateForNAV} from "../validering/ForNAVValidering";
 import DisplayDataFromApplic from '../../components/DisplayDataFromApplic';
 import useFetch from '../../hooks/useFetch';
 import { useHistory } from 'react-router-dom';
@@ -53,7 +53,7 @@ const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
             errors.push('Det er feil i Oppholdstillatelse (side 4)');
         }
         if (validateInntektPensjonFormue.validateFormValues(state.inntektPensjonFormue).length > 0) {
-            errors.push('Det er feil i Inntekt, pensjon, og formue (side 5)');
+            errors.push('Det er feil i Inntekt, pensjon, og harFormueEiendom (side 5)');
         }
         if (validateForNAV.validateFormValues(state.forNav).length > 0) {
             errors.push('Det er feil i For NAV (side 6)');

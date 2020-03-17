@@ -3,11 +3,11 @@ import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
 import { JaNeiSpørsmål } from '../../components/FormElements.jsx';
 import { Systemtittel, Element } from 'nav-frontend-typografi';
-import { Feiloppsummering } from 'nav-frontend-skjema';
 import Datovelger from 'nav-datovelger';
 import 'nav-datovelger/dist/datovelger/styles/datovelger.css';
-import { getRandomSmiley } from '../../hooks/getRandomEmoji';
 import { stringToBoolean } from '../../HelperFunctions';
+import { validateUtenlandsopphold } from "../validering/UtenlandsoppholdValidering";
+import { displayErrorMessageOnInputField } from "../../HelperFunctions";
 
 const Utenlandsopphold = ({ state, updateField, onClick }) => {
     console.log(state)
@@ -78,6 +78,9 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                                     })
                                                 }
                                             />
+                                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/{color: 'red'}}>
+                                                {displayErrorMessageOnInputField(feilmeldinger, `${index}-utreisedato`)}
+                                            </p>
                                         </div>
                                         <div style={{ marginRight: '1em' }}>
                                             <label className="skjemaelement__label">Innreisedato</label>
@@ -93,6 +96,9 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                                     })
                                                 }
                                             />
+                                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/{color: 'red'}}>
+                                                {displayErrorMessageOnInputField(feilmeldinger, `${index}-innreisedato`)}
+                                            </p>
                                         </div>
                                         {state.registrertePerioder.length > 1 && (
                                             <Lenke
@@ -112,6 +118,9 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                     </div>
                                 );
                             })}
+                        {<p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/{color: 'red'}}>
+                            {displayErrorMessageOnInputField(feilmeldinger, `utreiseFørInnreise`)}
+                        </p>}
                     </div>
                     <div style={{ display: 'flex' }}>
                         <Element>Antall dager: &nbsp;</Element>
@@ -156,6 +165,9 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                                     })
                                                 }
                                             />
+                                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/{color: 'red'}}>
+                                                {displayErrorMessageOnInputField(feilmeldinger, `${index}-utreisedato-planlagt`)}
+                                            </p>
                                         </div>
                                         <div style={{ marginRight: '1em' }}>
                                             <label className="skjemaelement__label">Innreisedato</label>
@@ -174,6 +186,9 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                                     })
                                                 }
                                             />
+                                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/{color: 'red'}}>
+                                                {displayErrorMessageOnInputField(feilmeldinger, `${index}-innreisedato-planlagt`)}
+                                            </p>
                                         </div>
                                         {state.planlagtePerioder.length > 1 && (
                                             <Lenke
@@ -193,6 +208,9 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                     </div>
                                 );
                             })}
+                        {<p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/{color: 'red'}}>
+                            {displayErrorMessageOnInputField(feilmeldinger, `planlagtUtreiseFørInnreise`)}
+                        </p>}
                     </div>
                     <div style={{ display: 'flex' }}>
                         <Element>Antall dager: &nbsp;</Element>
@@ -216,6 +234,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                 fieldName="utenlandsopphold"
                 legend="Har du vært i utlandet i løpet av de siste 3 måneder?"
                 state={state.utenlandsopphold}
+                feil={displayErrorMessageOnInputField(feilmeldinger, "utenlandsopphold")}
                 onChange={e => radioChanged('utenlandsopphold', e.target.value)}
             />
             <div style={{ marginBottom: '2em' }}>{utenlandsoppholdFelter()}</div>
@@ -224,12 +243,10 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                 fieldName="planlagtUtenlandsopphold"
                 legend="Har du planer å reise til utlandet?"
                 state={state.planlagtUtenlandsopphold}
+                feil={displayErrorMessageOnInputField(feilmeldinger, "planlagtUtenlandsopphold")}
                 onChange={e => radioChanged('planlagtUtenlandsopphold', e.target.value)}
             />
             <div>{planlagtUtenlandsoppholdFelter()}</div>
-            {feilmeldinger.length > 0 && (
-                <Feiloppsummering tittel={`Vennligst fyll ut mangler ${getRandomSmiley()}`} feil={feilmeldinger} />
-            )}
             <Hovedknapp onClick={validateForm}>Neste</Hovedknapp>
         </div>
     );
@@ -256,11 +273,9 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
         }
     }
 
-    //------------Lett Validering-----------------------
     function validateForm() {
-        const formValues = state;
         console.log(state);
-        const errors = validateFormValues(formValues);
+        const errors = validateUtenlandsopphold.validateFormValues(state);
         console.log(errors);
         setFeilmeldinger(errors);
         if (errors.length === 0) {
@@ -292,31 +307,6 @@ const numberOfDaysBetweeenTwoDates = (date1, date2) => {
     return Math.round((makeDate(date2) - makeDate(date1)) / oneDay);
 };
 
-//----------------------------------------------------------------------------------
-//---------------------Validering
-//----------------------------------------------------------------------------------
-const fields = {
-    utenlandsopphold: { label: 'utenlandsopphold', htmlId: 'utenlandsopphold' },
-    planlagtUtenlandsopphold: {
-        label: 'planlagtUtenlandsopphold',
-        htmlId: 'planlagtUtenlandsopphold'
-    }
-};
-
-function validateFormValues(formValues) {
-    const tempErrors = [];
-    const utenlandsoppholdErrors = [];
-    const planlagtUtenlandsoppholdErrors = [];
-    tempErrors.push(...validateDates(formValues));
-    tempErrors.push(...utenlandsoppholdValidering(formValues));
-    tempErrors.push(...utenlandsoppholdFelterValidering(formValues, utenlandsoppholdErrors));
-    tempErrors.push(...validatePlanlagtDates(formValues));
-    tempErrors.push(...planlagtUtenlandsoppholdValidering(formValues));
-    tempErrors.push(...planlagtUtenlandsoppholdFelterValidering(formValues, planlagtUtenlandsoppholdErrors));
-
-    return tempErrors;
-}
-
 const makeDate = dateString => {
     const dateParts = dateString.split('-');
     const year = parseInt(dateParts[0], 10);
@@ -325,161 +315,6 @@ const makeDate = dateString => {
     return new Date(year, month, day);
 };
 
-const dates = (utreiseDato, innreiseDato) => {
-    const aDate = makeDate(utreiseDato);
-    const bDate = makeDate(innreiseDato);
-    return aDate.getTime() > bDate.getTime();
-};
-
-function validateDates(formValues) {
-    const errorsArray = [];
-    const tempUtenlandsoppholdArray = formValues.registrertePerioder;
-
-    if (formValues.utenlandsopphold) {
-        const x = tempUtenlandsoppholdArray
-            .map(item => {
-                const utreise = item.utreisedato;
-                const innreise = item.innreisedato;
-
-                const result = dates(utreise, innreise);
-
-                if (result) {
-                    const feilmelding = 'Utreisedato kan ikke være før innreisedato';
-
-                    return { skjemaelementId: fields.utenlandsopphold.htmlId, feilmelding };
-                }
-            })
-            .filter(item => item !== undefined);
-        return x;
-    }
-    return errorsArray;
-}
-
-function utenlandsoppholdValidering(formValues) {
-    const utenlandsopphold = formValues.utenlandsopphold;
-    let feilmelding = '';
-
-    if (utenlandsopphold === undefined) {
-        feilmelding += 'Vennligst velg utenlandsopphold';
-    }
-    if (feilmelding.length > 0) {
-        return [{ skjemaelementId: fields.utenlandsopphold.htmlId, feilmelding }];
-    }
-    return [];
-}
-
-function utenlandsoppholdFelterValidering(formValues, errorsArray) {
-    const tempUtenlandsoppholdArray = formValues.registrertePerioder;
-
-    if (formValues.utenlandsopphold) {
-        tempUtenlandsoppholdArray.map((item, index) => {
-            if (!/^\d{4}-\d{2}-\d{2}$/.test(item.utreisedato)) {
-                if (item.utreisedato === '' || item.utreisedato === undefined) {
-                    errorsArray.push({
-                        skjemaelementId: `${index}-utreisedato`,
-                        feilmelding: 'Utreisedato må fylles ut. Den må være på format dd.mm.åååå'
-                    });
-                } else {
-                    errorsArray.push({
-                        skjemaelementId: `${index}-utreisedato`,
-                        feilmelding: 'Utreisedato må være en dato på format dd.mm.åååå'
-                    });
-                }
-            }
-            if (!/^\d{4}-\d{2}-\d{2}$/.test(item.innreisedato)) {
-                if (item.innreisedato === '' || item.innreisedato === undefined) {
-                    errorsArray.push({
-                        skjemaelementId: `${index}-innreisedato`,
-                        feilmelding: 'Innreisedato må fylles ut. Den må være på format dd.mm.åååå'
-                    });
-                } else {
-                    errorsArray.push({
-                        skjemaelementId: `${index}-innreisedato`,
-                        feilmelding: 'Innreisedato må være en dato på format dd.mm.åååå'
-                    });
-                }
-            }
-        });
-    }
-    return errorsArray;
-}
-
-function validatePlanlagtDates(formValues) {
-    const errorsArray = [];
-    const tempUtenlandsoppholdArray = formValues.planlagtePerioder;
-
-    if (formValues.planlagtUtenlandsopphold) {
-        const x = tempUtenlandsoppholdArray
-            .map(item => {
-                const utreise = item.utreisedato;
-                const innreise = item.innreisedato;
-                const result = dates(utreise, innreise);
-
-                if (result) {
-                    const feilmelding = 'Planlagt utreisedato kan ikke være før planlagt innreisedato';
-                    return { skjemaelementId: fields.planlagtUtenlandsopphold.htmlId, feilmelding };
-                }
-            })
-            .filter(item => item !== undefined);
-        return x;
-    }
-    return errorsArray;
-}
-
-function planlagtUtenlandsoppholdValidering(formValues) {
-    const planlagtUtenlandsopphold = formValues.planlagtUtenlandsopphold;
-    let feilmelding = '';
-
-    if (planlagtUtenlandsopphold === undefined) {
-        feilmelding += 'Vennligst velg planlagt utenlandsopphold';
-    }
-    if (feilmelding.length > 0) {
-        return [
-            {
-                skjemaelementId: fields.planlagtUtenlandsopphold.htmlId,
-                feilmelding
-            }
-        ];
-    }
-    return [];
-}
-
-function planlagtUtenlandsoppholdFelterValidering(formValues, errorsArray) {
-    const tempPlanlagtUtenlandsoppholdArray = formValues.planlagtePerioder;
-
-    if (formValues.planlagtUtenlandsopphold) {
-        tempPlanlagtUtenlandsoppholdArray.map((item, index) => {
-            if (!/^\d{4}-\d{2}-\d{2}$/.test(item.utreisedato)) {
-                if (item.utreisedato === '' || item.innreisedato === undefined) {
-                    errorsArray.push({
-                        skjemaelementId: `${index}-utreisedato-planlagt`,
-                        feilmelding: 'Planlagt utreisedato må fylles ut. Den må være på format dd.mm.åååå'
-                    });
-                } else {
-                    errorsArray.push({
-                        skjemaelementId: `${index}-utreisedato-planlagt`,
-                        feilmelding: 'Planlagt utreisedato må være en dato på format dd.mm.åååå'
-                    });
-                }
-            }
-            if (!/^\d{4}-\d{2}-\d{2}$/.test(item.innreisedato)) {
-                if (item.innreisedato === '' || item.innreisedato === undefined) {
-                    errorsArray.push({
-                        skjemaelementId: `${index}-innreisedato-planlagt`,
-                        feilmelding: 'Planlagt innreisedato kan ikke være tom. Den må være på format dd.mm.åååå'
-                    });
-                } else {
-                    errorsArray.push({
-                        skjemaelementId: `${index}-innreisedato-planlagt`,
-                        feilmelding: 'Planlagt innreisedato må være en dato på format dd.mm.åååå'
-                    });
-                }
-            }
-        });
-    }
-    return errorsArray;
-}
-
 const container = {
     display: 'flex',
     marginBottom: '1em'
@@ -487,10 +322,6 @@ const container = {
 
 const fjernInnputKnappStyle = {
     alignSelf: 'center'
-};
-
-export const validateUtenlandsopphold = {
-    validateFormValues
 };
 
 export default Utenlandsopphold;

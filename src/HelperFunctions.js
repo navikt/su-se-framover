@@ -37,3 +37,14 @@ export const isStringBoolean = target => {
 export const stringToBoolean = value => {
     return value === 'true';
 };
+
+
+export const displayErrorMessageOnInputField = (feilmeldinger, skjemaElementLabel) => {
+    let melding;
+    feilmeldinger.forEach(obj =>{
+        if(obj.skjemaelementId === skjemaElementLabel){
+            melding = obj.feilmelding
+        }
+    })
+    return melding
+}
