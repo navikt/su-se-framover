@@ -21,7 +21,7 @@ export const reverseString = str => {
 
 //replaces white spaces and dots in an array with nothing
 //only to be used for visual presentation for numbers.
-//array should contain and object with a field named 'beløp'
+//array should contain an object with a field named 'beløp'
 export const replace = arr => {
     const newArray = [];
     if (arr.length > 0) {
@@ -38,13 +38,12 @@ export const stringToBoolean = value => {
     return value === 'true';
 };
 
-
 export const displayErrorMessageOnInputField = (feilmeldinger, skjemaElementLabel) => {
-    let melding;
+    let melding = "";
     feilmeldinger.forEach(obj =>{
         if(obj.skjemaelementId === skjemaElementLabel){
-            melding = obj.feilmelding
+            melding = obj.feilmelding;
         }
-    })
-    return melding
-}
+    });
+    return melding;
+};

@@ -15,9 +15,7 @@ import { stringToBoolean, isStringBoolean } from '../HelperFunctions';
 
 function Soknad() {
     const [stage, setStage] = useState(0);
-
     const [stegIndikatorDisabled, setStegIndikatorDisabled] = useState(false);
-
     const [state, setState] = useState({
         personopplysninger: {},
         boforhold: {},

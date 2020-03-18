@@ -170,10 +170,10 @@ function formueValidering(formValues) {
     let feilmelding = '';
 
     if (formue === undefined) {
-        feilmelding += 'Vennligst velg om søker har harFormueEiendom/eiendom';
+        feilmelding += 'Vennligst velg om søker har formue/eiendom';
 
         if (feilmelding.length > 0) {
-            return [{ skjemaelementId: fields.harFormueEiendom.htmlId, feilmelding }];
+            return [{ skjemaelementId: fields.formue.htmlId, feilmelding }];
         }
     }
     return [];

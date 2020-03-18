@@ -1,8 +1,8 @@
 import React from 'react';
 import { create } from 'react-test-renderer';
 import DisplayDataFromApplic from '../../../../components/DisplayDataFromApplic.jsx';
-import Oppholdstillatelse from '../../../../søknad/steg/Oppholdstillatelse';
 import InntektPensjonFormue from '../../../../søknad/steg/InntektPensjonFormue';
+import {jaNeiSpørsmål} from "../../../../HelperFunctions";
 
 // prettier-ignore
 const correctState = { personopplysninger: { fnr: "12345678910",  fornavn: "kake",  mellomnavn: "kjeks", etternavn: "mannen", telefonnummer: "12345678", gateadresse: "gaten", postnummer: "0050", poststed: "Oslo", bruksenhet: "50", bokommune: "Oslo", flyktning: true, borFastINorge: true, statsborgerskap: "NOR"}, boforhold: {delerBolig: true, borSammenMed: ["Ektefelle/Partner/Samboer", "Andre personer over 18 år"], delerBoligMed: [{fnr: "12345678910", navn: "voksen jensen"}, {fnr: "10987654321", navn: "voksen hansen"}]}, utenlandsopphold: {utenlandsopphold: true, antallRegistrerteDager: 11, registrertePerioder: [{utreisedato: "2020-03-10", innreisedato: "2020-03-10"}], planlagteUtenlandsopphold: true, antallPlanlagteDager: 10, planlagtePerioder: [{utreisedato: "2020-06-01", innreisedato: "2020-06-20"}]}, oppholdstillatelse: {harVarigOpphold: false, utløpsdato: "2020-03-10", søktOmForlengelse: true}, inntektPensjonFormue: {framsattKravAnnenYtelse: true, framsattKravAnnenYtelseBegrunnelse: "annen ytelse begrunnelse", harInntekt: true, inntektBeløp: 2500, harPensjon: true, pensjonsOrdning: [{ordning: "KLP", beløp: 2000}, {ordning: "SPK", beløp: 5000}], sumInntektOgPensjon: 7000, harFormueEiendom: true, harFinansFormue: true, formueBeløp: 1000, harAnnenFormue: true, annenFormue: [{typeFormue: "juveler", skattetakst: 2000}]}, forNav: {målform: "Bokmål", søkerMøttPersonlig: true, harFullmektigMøtt: false, erPassSjekket: true, merknader: "intet å bemerke"}}
@@ -31,7 +31,7 @@ expect.extend({
 describe('Tests related to displaying data from a filled application', () => {
     test('Should match its snapshot', () => {
         const component = create(<DisplayDataFromApplic state={correctState} />);
-        expect(component).toMatchSnapshot();
+        expect(component.toJSON()).toMatchSnapshot();
     });
 
     //Tall som kan begynne med null, vil fortsatt bli behandlet som strings
@@ -76,7 +76,6 @@ describe('Tests related to displaying data from a filled application', () => {
 
     test('Tests that the incoming state has the correct properties', () => {
         const component = create(<DisplayDataFromApplic state={correctState} />);
-
         expect(component.toTree().props.state).toHaveProperty(
             'forNav' &&
                 'boforhold' &&
@@ -89,7 +88,6 @@ describe('Tests related to displaying data from a filled application', () => {
 
     test('Tests that the component has exactly 7 children', () => {
         const component = create(<DisplayDataFromApplic state={correctState} />);
-
         //the component should have 7 children.
         expect(component.toJSON().children.length).toBe(7);
     });
@@ -101,8 +99,17 @@ describe('Tests related to displaying data from a filled application', () => {
         expect(component.toJSON()).not.toEqual(component2.toJSON());
     });
 
-    test('tests that we use primitive booleans', () => {
-        const component = create(<Oppholdstillatelse state={correctState} />);
-        expect(component.toTree().props.state.oppholdstillatelse.harVarigOpphold).toBe(false);
+    test('jaNeiSpørsmål that changes Boolean to ja/nei, should return the correct results for the given Boolean', () => {
+        let state = {key: true};
+        let result = jaNeiSpørsmål(state.key);
+        expect(result).toBe("Ja");
+
+        state.key = false;
+        let nei = jaNeiSpørsmål(state.key);
+        expect(nei).toBe("Nei");
+
+        state.key = {};
+        result = jaNeiSpørsmål(state.key);
+        expect(result).toBeFalsy;
     });
 });

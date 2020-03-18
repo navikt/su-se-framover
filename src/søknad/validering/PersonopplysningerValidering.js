@@ -1,4 +1,3 @@
-
 const fields = {
     fnr: { label: 'fødselsnummer', htmlId: 'fødselsnummer' },
     fornavn: { label: 'fornavn', htmlId: 'fornavn' },
@@ -51,7 +50,7 @@ function fornavnValidering(formValues) {
     const fornavn = formValues.fornavn;
     let feilmelding = '';
     if (fornavn === undefined || !/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(fornavn.trim())) {
-        feilmelding += 'Fornavn må fylles ut. Feltet kan ikke inneholde tall eller spesialtegn';
+        feilmelding += 'Fornavn må fylles ut';
     }
     if (feilmelding.length > 0) {
         return [{ skjemaelementId: fields.fornavn.htmlId, feilmelding }];
@@ -63,7 +62,7 @@ function etternavnValidering(formValues) {
     const etternavn = formValues.etternavn;
     let feilmelding = '';
     if (etternavn === undefined || !/^([a-zæøåA-ZÆØÅ.,\s]{1,255})$/.test(etternavn.trim())) {
-        feilmelding += 'Etternavn må fylles ut. Etternavn kan ikke inneholde tall eller spesialtegn';
+        feilmelding += 'Etternavn må fylles ut';
     }
     if (feilmelding.length > 0) {
         return [{ skjemaelementId: fields.etternavn.htmlId, feilmelding }];
@@ -147,7 +146,7 @@ function statsborgerskapValidering(formValues) {
     const statsborgerskap = formValues.statsborgerskap;
     let feilmelding = '';
     if (statsborgerskap === '' || statsborgerskap === undefined) {
-        feilmelding += 'Vennligst tast inn statsborgerskap';
+        feilmelding += 'Vennligst fyll inn statsborgerskap';
     }
     if (feilmelding.length > 0) {
         return [{ skjemaelementId: fields.statsborgerskap.htmlId, feilmelding }];
