@@ -95,7 +95,7 @@ const InntektPensjonFormue = ({ state }) => {
             <ol>
                 {state.inntektPensjonFormue.annenFormue.map((annenFormueEiendomRow, index) => (
                     <li style={elementSpacing} key={index}>
-                        {annenFormueEiendomRow.typeFormue},{annenFormueEiendomRow.skattetakst}
+                        {annenFormueEiendomRow.typeFormue}, {annenFormueEiendomRow.skattetakst}
                     </li>
                 ))}
             </ol>

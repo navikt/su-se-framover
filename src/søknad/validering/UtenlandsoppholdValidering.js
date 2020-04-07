@@ -1,11 +1,11 @@
 const fields = {
     utenlandsopphold: { label: 'utenlandsopphold', htmlId: 'utenlandsopphold' },
-    utreiseFørInnreise: {label: "utreiseFørInnreise", htmlId: "utreiseFørInnreise"},
+    utreiseFørInnreise: { label: 'utreiseFørInnreise', htmlId: 'utreiseFørInnreise' },
     planlagtUtenlandsopphold: {
         label: 'planlagtUtenlandsopphold',
         htmlId: 'planlagtUtenlandsopphold'
     },
-    planlagtUtreiseFørInnreise: {label: "planlagtUtreiseFørInnreise", htmlId: "planlagtUtreiseFørInnreise" }
+    planlagtUtreiseFørInnreise: { label: 'planlagtUtreiseFørInnreise', htmlId: 'planlagtUtreiseFørInnreise' }
 };
 
 function validateFormValues(formValues) {

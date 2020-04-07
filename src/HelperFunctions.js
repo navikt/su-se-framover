@@ -39,9 +39,9 @@ export const stringToBoolean = value => {
 };
 
 export const displayErrorMessageOnInputField = (feilmeldinger, skjemaElementLabel) => {
-    let melding = "";
-    feilmeldinger.forEach(obj =>{
-        if(obj.skjemaelementId === skjemaElementLabel){
+    let melding = '';
+    feilmeldinger.forEach(obj => {
+        if (obj.skjemaelementId === skjemaElementLabel) {
             melding = obj.feilmelding;
         }
     });

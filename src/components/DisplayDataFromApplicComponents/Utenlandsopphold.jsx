@@ -25,7 +25,7 @@ const Utenlandsopphold = ({ state }) => {
             <div style={sectionGridLayout}>
                 {state.utenlandsopphold.utenlandsopphold && (
                     <>
-                        <label style={{marginBottom: '1em'}}>Antall registrerte dager:</label>
+                        <label style={{ marginBottom: '1em' }}>Antall registrerte dager:</label>
                         <label> {state.utenlandsopphold.antallRegistrerteDager}</label>
                     </>
                 )}
@@ -48,12 +48,11 @@ const Utenlandsopphold = ({ state }) => {
             <div style={sectionGridLayout}>
                 {state.utenlandsopphold.planlagtUtenlandsopphold && (
                     <>
-                        <label style={{marginBottom: '1em'}}>Antall registrerte dager:</label>
+                        <label style={{ marginBottom: '1em' }}>Antall registrerte dager:</label>
                         <label> {state.utenlandsopphold.antallPlanlagteDager}</label>
                     </>
                 )}
             </div>
-
         </div>
     );
 
