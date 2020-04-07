@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
 import Lenke from 'nav-frontend-lenker';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { stringToBoolean } from '../../HelperFunctions';
-import {validateInntektPensjonFormue} from "../validering/InntektPensjonFormueValidering";
-import {displayErrorMessageOnInputField} from "../../HelperFunctions";
+import { validateInntektPensjonFormue } from '../validering/InntektPensjonFormueValidering';
+import { displayErrorMessageOnInputField } from '../../HelperFunctions';
 
 const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -19,7 +18,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                 <InputFields
                     labelText="Hva slags ytelse/pensjon?"
                     value={state.framsattKravAnnenYtelseBegrunnelse || ''}
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "framsattKravAnnenYtelseBegrunnelse")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'framsattKravAnnenYtelseBegrunnelse')}
                     onChange={updateFunction('framsattKravAnnenYtelseBegrunnelse')}
                 />
             );
@@ -32,7 +31,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                 <InputFields
                     labelText="Brutto beløp per år:"
                     bredde="M"
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "inntektsBeløp")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'inntektsBeløp')}
                     value={state.inntektBeløp || ''}
                     onChange={value => updateField('inntektBeløp', value)}
                 />
@@ -46,7 +45,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                 <InputFields
                     labelText="Totalbeløp formue: "
                     bredde="M"
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "formueBeløp")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'formueBeløp')}
                     value={state.formueBeløp || ''}
                     onChange={value => updateField('formueBeløp', value)}
                 />
@@ -61,7 +60,7 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
                     labelText="Beløp:"
                     value={state.depositumBeløp || ''}
                     bredde={'M'}
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "depositumBeløp")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'depositumBeløp')}
                     onChange={e => updateField('depositumBeløp', e)}
                 />
             );

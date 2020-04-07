@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Systemtittel } from 'nav-frontend-typografi';
 import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { displayErrorMessageOnInputField } from "../../HelperFunctions";
-import { validatePersonopplysninger } from "../validering/PersonopplysningerValidering";
+import { displayErrorMessageOnInputField } from '../../HelperFunctions';
+import { validatePersonopplysninger } from '../validering/PersonopplysningerValidering';
 
 const Personopplysninger = ({ state, updateField, onClick }) => {
     const updateFunction = name => value => updateField(name, value);
@@ -17,7 +17,7 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                     labelText="Fødselsnummer"
                     value={state.fnr || ''}
                     bredde="S"
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "fødselsnummer")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'fødselsnummer')}
                     onChange={updateFunction('fnr')}
                 />
             </div>
@@ -26,7 +26,7 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                     labelText="Fornavn"
                     value={state.fornavn || ''}
                     style={{ minWidth: '13em' }}
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "fornavn")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'fornavn')}
                     onChange={updateFunction('fornavn')}
                 />
                 <InputFields
@@ -38,7 +38,7 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                 <InputFields
                     labelText="Etternavn"
                     value={state.etternavn || ''}
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "etternavn")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'etternavn')}
                     style={{ minWidth: '13em' }}
                     onChange={updateFunction('etternavn')}
                 />
@@ -48,7 +48,7 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                     labelText="Telefonnummer"
                     value={state.telefonnummer || ''}
                     bredde="S"
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "telefonnummer")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'telefonnummer')}
                     onChange={updateFunction('telefonnummer')}
                 />
             </div>
@@ -57,7 +57,7 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                     labelText="Gateadresse"
                     value={state.gateadresse || ''}
                     style={{ minWidth: '30em' }}
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "gateadresse")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'gateadresse')}
                     onChange={updateFunction('gateadresse')}
                 />
                 <InputFields
@@ -71,19 +71,19 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                     labelText="Postnummer"
                     value={state.postnummer || ''}
                     bredde="XS"
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "postnummer")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'postnummer')}
                     onChange={updateFunction('postnummer')}
                 />
                 <InputFields
                     labelText="Poststed"
                     value={state.poststed || ''}
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "poststed")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'poststed')}
                     onChange={updateFunction('poststed')}
                 />
                 <InputFields
                     labelText="Bokommune"
                     value={state.bokommune || ''}
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "bokommune")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'bokommune')}
                     onChange={updateFunction('bokommune')}
                 />
             </div>
@@ -92,7 +92,7 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                     labelText={'Søkers statsborgerskap (alle)'}
                     bredde={'M'}
                     value={state.statsborgerskap || ''}
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "statsborgerskap")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'statsborgerskap')}
                     onChange={updateFunction('statsborgerskap')}
                 />
             </div>
@@ -102,7 +102,7 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                         fieldName="flyktning"
                         legend="Er søker registrert som flyktning?"
                         state={state.flyktning}
-                        feil={displayErrorMessageOnInputField(feilmeldinger, "flyktning")}
+                        feil={displayErrorMessageOnInputField(feilmeldinger, 'flyktning')}
                         onChange={e => updateField('flyktning', e.target.value)}
                     />
                 </span>
@@ -110,7 +110,7 @@ const Personopplysninger = ({ state, updateField, onClick }) => {
                     fieldName="borFastINorge"
                     legend="Bor søker fast i Norge?"
                     state={state.borFastINorge}
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "borFastINorge")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'borFastINorge')}
                     onChange={e => updateField('borFastINorge', e.target.value)}
                 />
             </div>

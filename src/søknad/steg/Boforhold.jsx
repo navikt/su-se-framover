@@ -6,7 +6,7 @@ import { Checkbox, CheckboxGruppe } from 'nav-frontend-skjema';
 import { Systemtittel, Ingress } from 'nav-frontend-typografi';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { stringToBoolean, displayErrorMessageOnInputField } from '../../HelperFunctions';
-import { validateBoforhold } from "../validering/BoforholdValidering";
+import { validateBoforhold } from '../validering/BoforholdValidering';
 
 const Boforhold = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -52,9 +52,10 @@ const Boforhold = ({ state, updateField, onClick }) => {
     function personDelerBolig() {
         if (state.delerBolig) {
             return (
-                <CheckboxGruppe legend="Hvem deler søker bolig med?"
-                                feil={displayErrorMessageOnInputField(feilmeldinger,
-                                    "borSammenMed")}>
+                <CheckboxGruppe
+                    legend="Hvem deler søker bolig med?"
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'borSammenMed')}
+                >
                     <Checkbox
                         name="boligdeler"
                         label="Ektefelle/Partner/Samboer"
@@ -143,7 +144,7 @@ const Boforhold = ({ state, updateField, onClick }) => {
                             fieldName="delerBolig"
                             legend="Deler søker bolig med en annen voksen?"
                             state={state.delerBolig}
-                            feil={displayErrorMessageOnInputField(feilmeldinger, "delerBolig")}
+                            feil={displayErrorMessageOnInputField(feilmeldinger, 'delerBolig')}
                             onChange={e => {
                                 updateField('delerBolig', e.target.value);
                                 prepareState(stringToBoolean(e.target.value));

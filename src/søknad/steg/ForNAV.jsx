@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
+import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import { Systemtittel } from 'nav-frontend-typografi';
 import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import {validateForNAV} from "../validering/ForNAVValidering";
-import {displayErrorMessageOnInputField} from "../../HelperFunctions";
+import { validateForNAV } from '../validering/ForNAVValidering';
+import { displayErrorMessageOnInputField } from '../../HelperFunctions';
 
 const ForNAV = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -16,8 +16,9 @@ const ForNAV = ({ state, updateField, onClick }) => {
             <div>
                 <Systemtittel>Språkform</Systemtittel>
                 <div>
-                    <RadioGruppe legend="Hvilken målform ønsker du i svaret?"
-                                feil={displayErrorMessageOnInputField(feilmeldinger, "målform")}
+                    <RadioGruppe
+                        legend="Hvilken målform ønsker du i svaret?"
+                        feil={displayErrorMessageOnInputField(feilmeldinger, 'målform')}
                     >
                         <div>
                             <Radio
@@ -46,7 +47,7 @@ const ForNAV = ({ state, updateField, onClick }) => {
                             fieldName="søkerMøttPersonlig"
                             legend="Har søker møtt personlig?"
                             state={state.søkerMøttPersonlig}
-                            feil={displayErrorMessageOnInputField(feilmeldinger, "møttPersonlig")}
+                            feil={displayErrorMessageOnInputField(feilmeldinger, 'møttPersonlig')}
                             onChange={e => updateField('søkerMøttPersonlig', e.target.value)}
                         />
                     </div>
@@ -55,7 +56,7 @@ const ForNAV = ({ state, updateField, onClick }) => {
                             fieldName="harFullmektigMøtt"
                             legend="Har fullmektig møtt?"
                             state={state.harFullmektigMøtt}
-                            feil={displayErrorMessageOnInputField(feilmeldinger, "fullmektigMøtt")}
+                            feil={displayErrorMessageOnInputField(feilmeldinger, 'fullmektigMøtt')}
                             onChange={e => updateField('harFullmektigMøtt', e.target.value)}
                         />
                     </div>
@@ -64,7 +65,7 @@ const ForNAV = ({ state, updateField, onClick }) => {
                             fieldName="erPassSjekket"
                             legend="Er originalt(e) pass sjekket for stempel?"
                             state={state.erPassSjekket}
-                            feil={displayErrorMessageOnInputField(feilmeldinger, "passSjekket")}
+                            feil={displayErrorMessageOnInputField(feilmeldinger, 'passSjekket')}
                             onChange={e => updateField('erPassSjekket', e.target.value)}
                         />
                     </div>

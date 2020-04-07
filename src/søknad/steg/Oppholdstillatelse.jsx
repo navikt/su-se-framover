@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Systemtittel } from 'nav-frontend-typografi';
-import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Datovelger from 'nav-datovelger';
 import { JaNeiSpørsmål } from '../../components/FormElements';
-import { validateOppholdstillatelse } from "../validering/OppholdstillatelseValidering";
-import {displayErrorMessageOnInputField} from "../../HelperFunctions";
+import { validateOppholdstillatelse } from '../validering/OppholdstillatelseValidering';
+import { displayErrorMessageOnInputField } from '../../HelperFunctions';
 
 const Oppholdstillatelse = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -19,7 +18,6 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
                     <div style={{ marginRight: '1em' }}>
                         <label>Utløpsdato</label>
                         <Datovelger.Datovelger
-
                             input={{
                                 placeholder: 'dd.mm.åååå'
                             }}
@@ -27,15 +25,15 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
                             onChange={updateFunction('utløpsdato')}
                         />
 
-                        <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/{color: 'red'}}>
-                            {displayErrorMessageOnInputField(feilmeldinger, "utløpsdato")}
+                        <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/ { color: 'red' }}>
+                            {displayErrorMessageOnInputField(feilmeldinger, 'utløpsdato')}
                         </p>
                     </div>
                     <JaNeiSpørsmål
                         fieldName="søktOmForlengelse"
                         legend="Har søker søkt om forlengelse?"
                         state={state.søktOmForlengelse}
-                        feil={displayErrorMessageOnInputField(feilmeldinger, "søktOmForlengelse")}
+                        feil={displayErrorMessageOnInputField(feilmeldinger, 'søktOmForlengelse')}
                         onChange={e => updateField('søktOmForlengelse', e.target.value)}
                     />
                 </div>
@@ -51,7 +49,7 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
                     fieldName="harVarigOpphold"
                     legend="Har søker varig oppholdstillatelse?"
                     state={state.harVarigOpphold}
-                    feil={displayErrorMessageOnInputField(feilmeldinger, "harVarigOpphold")}
+                    feil={displayErrorMessageOnInputField(feilmeldinger, 'harVarigOpphold')}
                     onChange={e => updateField('harVarigOpphold', e.target.value)}
                 />
                 <div>{midlertidigOppholdstillatelse()}</div>
@@ -70,6 +68,5 @@ const Oppholdstillatelse = ({ state, updateField, onClick }) => {
         }
     }
 };
-
 
 export default Oppholdstillatelse;

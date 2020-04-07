@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
 import { JaNeiSpørsmål } from '../../components/FormElements.jsx';
@@ -6,11 +6,11 @@ import { Systemtittel, Element } from 'nav-frontend-typografi';
 import Datovelger from 'nav-datovelger';
 import 'nav-datovelger/dist/datovelger/styles/datovelger.css';
 import { stringToBoolean } from '../../HelperFunctions';
-import { validateUtenlandsopphold } from "../validering/UtenlandsoppholdValidering";
-import { displayErrorMessageOnInputField } from "../../HelperFunctions";
+import { validateUtenlandsopphold } from '../validering/UtenlandsoppholdValidering';
+import { displayErrorMessageOnInputField } from '../../HelperFunctions';
 
 const Utenlandsopphold = ({ state, updateField, onClick }) => {
-    console.log(state)
+    console.log(state);
     const [feilmeldinger, setFeilmeldinger] = useState([]);
 
     function addInputField(field, fieldName) {
@@ -36,23 +36,23 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
     }
 
     let x = undefined;
-    if(state.utenlandsopphold){
-         x = addDaysBetweenTwoDates(state.registrertePerioder)
+    if (state.utenlandsopphold) {
+        x = addDaysBetweenTwoDates(state.registrertePerioder);
     }
     let y = undefined;
-    if(state.planlagtUtenlandsopphold){
-         y = addDaysBetweenTwoDates(state.planlagtePerioder)
+    if (state.planlagtUtenlandsopphold) {
+        y = addDaysBetweenTwoDates(state.planlagtePerioder);
     }
 
     useEffect(() => {
-        if(x !== undefined){
-        updateField("antallRegistrerteDager", x)
+        if (x !== undefined) {
+            updateField('antallRegistrerteDager', x);
         }
 
-        if(y !== undefined){
-            updateField("antallPlanlagteDager", y)
+        if (y !== undefined) {
+            updateField('antallPlanlagteDager', y);
         }
-    }, [x, y])
+    }, [x, y]);
 
     function utenlandsoppholdFelter() {
         if (state.utenlandsopphold) {
@@ -78,7 +78,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                                     })
                                                 }
                                             />
-                                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/{color: 'red'}}>
+                                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/ { color: 'red' }}>
                                                 {displayErrorMessageOnInputField(feilmeldinger, `${index}-utreisedato`)}
                                             </p>
                                         </div>
@@ -96,8 +96,11 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                                     })
                                                 }
                                             />
-                                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/{color: 'red'}}>
-                                                {displayErrorMessageOnInputField(feilmeldinger, `${index}-innreisedato`)}
+                                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/ { color: 'red' }}>
+                                                {displayErrorMessageOnInputField(
+                                                    feilmeldinger,
+                                                    `${index}-innreisedato`
+                                                )}
                                             </p>
                                         </div>
                                         {state.registrertePerioder.length > 1 && (
@@ -118,9 +121,11 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                     </div>
                                 );
                             })}
-                        {<p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/{color: 'red'}}>
-                            {displayErrorMessageOnInputField(feilmeldinger, `utreiseFørInnreise`)}
-                        </p>}
+                        {
+                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/ { color: 'red' }}>
+                                {displayErrorMessageOnInputField(feilmeldinger, `utreiseFørInnreise`)}
+                            </p>
+                        }
                     </div>
                     <div style={{ display: 'flex' }}>
                         <Element>Antall dager: &nbsp;</Element>
@@ -165,8 +170,11 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                                     })
                                                 }
                                             />
-                                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/{color: 'red'}}>
-                                                {displayErrorMessageOnInputField(feilmeldinger, `${index}-utreisedato-planlagt`)}
+                                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/ { color: 'red' }}>
+                                                {displayErrorMessageOnInputField(
+                                                    feilmeldinger,
+                                                    `${index}-utreisedato-planlagt`
+                                                )}
                                             </p>
                                         </div>
                                         <div style={{ marginRight: '1em' }}>
@@ -186,8 +194,11 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                                     })
                                                 }
                                             />
-                                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/{color: 'red'}}>
-                                                {displayErrorMessageOnInputField(feilmeldinger, `${index}-innreisedato-planlagt`)}
+                                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/ { color: 'red' }}>
+                                                {displayErrorMessageOnInputField(
+                                                    feilmeldinger,
+                                                    `${index}-innreisedato-planlagt`
+                                                )}
                                             </p>
                                         </div>
                                         {state.planlagtePerioder.length > 1 && (
@@ -208,9 +219,11 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                                     </div>
                                 );
                             })}
-                        {<p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/{color: 'red'}}>
-                            {displayErrorMessageOnInputField(feilmeldinger, `planlagtUtreiseFørInnreise`)}
-                        </p>}
+                        {
+                            <p style={/*TODO:RIKTIG FARGE PÅ FEILMELDING*/ { color: 'red' }}>
+                                {displayErrorMessageOnInputField(feilmeldinger, `planlagtUtreiseFørInnreise`)}
+                            </p>
+                        }
                     </div>
                     <div style={{ display: 'flex' }}>
                         <Element>Antall dager: &nbsp;</Element>
@@ -234,7 +247,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                 fieldName="utenlandsopphold"
                 legend="Har du vært i utlandet i løpet av de siste 3 måneder?"
                 state={state.utenlandsopphold}
-                feil={displayErrorMessageOnInputField(feilmeldinger, "utenlandsopphold")}
+                feil={displayErrorMessageOnInputField(feilmeldinger, 'utenlandsopphold')}
                 onChange={e => radioChanged('utenlandsopphold', e.target.value)}
             />
             <div style={{ marginBottom: '2em' }}>{utenlandsoppholdFelter()}</div>
@@ -243,7 +256,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
                 fieldName="planlagtUtenlandsopphold"
                 legend="Har du planer å reise til utlandet?"
                 state={state.planlagtUtenlandsopphold}
-                feil={displayErrorMessageOnInputField(feilmeldinger, "planlagtUtenlandsopphold")}
+                feil={displayErrorMessageOnInputField(feilmeldinger, 'planlagtUtenlandsopphold')}
                 onChange={e => radioChanged('planlagtUtenlandsopphold', e.target.value)}
             />
             <div>{planlagtUtenlandsoppholdFelter()}</div>
@@ -287,7 +300,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
 const addDaysBetweenTwoDates = state => {
     let antallDager = 0;
 
-    if(state !== undefined){
+    if (state !== undefined) {
         state.map(item => {
             const utreisedato = item.utreisedato;
             const innreisedato = item.innreisedato;
