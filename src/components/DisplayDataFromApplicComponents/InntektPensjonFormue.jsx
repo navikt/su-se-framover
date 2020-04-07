@@ -91,10 +91,9 @@ const InntektPensjonFormue = ({ state }) => {
     }
 
     function søkerHarAnnenFormueEiendom() {
-        const array = state.inntektPensjonFormue.annenFormue;
         return (
             <ol>
-                {array.map((annenFormueEiendomRow, index) => (
+                {state.inntektPensjonFormue.annenFormue.map((annenFormueEiendomRow, index) => (
                     <li style={elementSpacing} key={index}>
                         {annenFormueEiendomRow.typeFormue},{annenFormueEiendomRow.skattetakst}
                     </li>
