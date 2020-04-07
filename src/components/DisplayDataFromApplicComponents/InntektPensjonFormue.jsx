@@ -1,5 +1,5 @@
 import { Undertittel } from 'nav-frontend-typografi';
-import { jaNeiSpørsmål } from '../../HelperFunctions';
+import { jaNeiSpørsmål } from "../../HelperFunctions";
 import React from 'react';
 
 const InntektPensjonFormue = ({ state }) => {
@@ -91,11 +91,12 @@ const InntektPensjonFormue = ({ state }) => {
     }
 
     function søkerHarAnnenFormueEiendom() {
+        const array = state.inntektPensjonFormue.annenFormue;
         return (
             <ol>
-                {state.inntektPensjonFormue.annenFormue.map((annenFormueEiendomRow, index) => (
+                {array.map((annenFormueEiendomRow, index) => (
                     <li style={elementSpacing} key={index}>
-                        {annenFormueEiendomRow.typeFormue}, {annenFormueEiendomRow.skattetakst}
+                        {annenFormueEiendomRow.typeFormue},{annenFormueEiendomRow.skattetakst}
                     </li>
                 ))}
             </ol>

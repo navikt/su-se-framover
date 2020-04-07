@@ -705,7 +705,7 @@ exports[`Tests related to displaying data from a filled application Should match
             }
           >
             juveler
-            , 
+            ,
             2000
           </li>
         </ol>
