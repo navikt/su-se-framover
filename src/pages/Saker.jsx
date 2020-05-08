@@ -12,7 +12,7 @@ function Saker() {
     const { data } = useGet({ url });
     const saker = data ? data : [];
     return (
-        <>
+        <div style={{width: '40%'}}>
             <table className="tabell">
                 <thead>
                     <tr>
@@ -41,7 +41,7 @@ function Saker() {
                     })}
                 </tbody>
             </table>
-        </>
+        </div>
     );
 }
 

@@ -35,7 +35,7 @@ function Vilkarsprov({ state = initialState, setState }) {
     const updateDisplayState = () => {
         setDisplayState(displayState => ({
             ...displayState,
-            vissøknad: displayState.vissøknad ? false : true
+            vissøknad: !displayState.vissøknad
         }));
     };
 
@@ -82,8 +82,8 @@ function Vilkarsprov({ state = initialState, setState }) {
     }
 
     return (
-        <div className="vilkårsprøving">
-            <PersonInfoBar fnr={sak.fnr} />
+        <div className="vilkårsprøving" style={{width: '65%'}}>
+            <PersonInfoBar />
             <Innholdstittel>Vilkårsprøving</Innholdstittel>
             <ToggleKnapp onClick={() => updateDisplayState()}>Vis søknad</ToggleKnapp>
 
