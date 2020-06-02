@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import { Systemtittel } from 'nav-frontend-typografi';
-import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
+import { InputFields, JaNeiSpørsmål } from '../../../components/FormElements';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { validateForNAV } from '../validering/ForNAVValidering';
-import { displayErrorMessageOnInputField } from '../../HelperFunctions';
+import { displayErrorMessageOnInputField } from '../../../HelperFunctions';
 
 const ForNAV = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);

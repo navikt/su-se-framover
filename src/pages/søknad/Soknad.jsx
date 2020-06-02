@@ -11,7 +11,7 @@ import InntektPensjonFormue from './steg/InntektPensjonFormue';
 import ForNAV from './steg/ForNAV';
 import OppsumeringOgSend from './steg/OppsumeringOgSend';
 import './soknad.less';
-import { stringToBoolean, isStringBoolean } from '../HelperFunctions';
+import { stringToBoolean, isStringBoolean } from '../../HelperFunctions';
 
 function Soknad() {
     const [stage, setStage] = useState(0);

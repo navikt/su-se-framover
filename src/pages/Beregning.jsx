@@ -45,7 +45,7 @@ function Beregning({ state = initialState, setState }) {
     }, [errorsCollector]);
 
     return (
-        <div>
+        <div style={{width: '40%'}}>
             <Sidetittel style={BeregningTittelStyle}>Beregning</Sidetittel>
 
             <form onSubmit={handleSubmit}>
@@ -70,7 +70,7 @@ function Beregning({ state = initialState, setState }) {
 
                     <div>
                         <Systemtittel style={{ marginTop: '0.5em' }}>Sats:</Systemtittel>
-                        <div style={{ marginBottom: '1em' }}>
+                        <div style={{ marginBottom: '1em'}}>
                             <InputFieldWithText text={'kr'} value={state.sats} onChange={updateFunction('sats')} />
                             <Textarea
                                 label={'Begrunnelse:'}

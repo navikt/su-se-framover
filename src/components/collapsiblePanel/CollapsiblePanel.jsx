@@ -2,7 +2,13 @@ import React, {useState} from "react";
 import {getRandomSmiley} from "../../hooks/getRandomEmoji";
 import NavFrontendChevron from "nav-frontend-chevron";
 import classNames from "classnames";
-import {Section, StyledDiv, TextHeader, FlexDiv, MarginBottomDiv, HeaderRow, HeaderDiv, UndertittelStyled} from "./StyledComponents";
+import {
+    Section, StyledDiv, TextHeader, FlexDiv, MarginBottomDiv,
+    HeaderRow, HeaderDiv, UndertittelStyled, MarginRightDiv
+} from "./StyledComponents";
+import {
+    AirplaneIcon, EmailIcon, FemaleIcon, HeartIcon, HomeIcon, IDCard,
+    PhoneIcon, StackedCoinsIcon, WorldIcon, LocationPinIcon, PersonIcon} from "../../assets/Icons";
 
 export const CollapsiblePanel = ({ personInfo }) => {
     const [state, setState] = useState(false);
@@ -18,7 +24,7 @@ export const CollapsiblePanel = ({ personInfo }) => {
     };
 
     function displayKjønn(){
-        return getRandomSmiley();
+        return FemaleIcon();
     }
 
     function displayFullName(){
@@ -47,7 +53,7 @@ export const CollapsiblePanel = ({ personInfo }) => {
     function displayFødselsnummer(){
         return (
             <span>
-               {getRandomSmiley()} {personInfo.personopplysninger.fnr}
+               {IDCard()} {personInfo.personopplysninger.fnr}
            </span>
         )
     }
@@ -156,9 +162,9 @@ export const CollapsiblePanel = ({ personInfo }) => {
                     <UndertittelStyled>Kontaktinformasjon</UndertittelStyled>
 
                     <FlexDiv>
-                        <div>
-                            {getRandomSmiley()}
-                        </div>
+                        <MarginRightDiv>
+                            {HomeIcon(24)}
+                        </MarginRightDiv>
                         <MarginBottomDiv>
                             <div>
                                 <TextHeader>bostedsadresse</TextHeader>
@@ -170,9 +176,9 @@ export const CollapsiblePanel = ({ personInfo }) => {
                     </FlexDiv>
 
                     <FlexDiv>
-                        <div>
-                            {getRandomSmiley()}
-                        </div>
+                        <MarginRightDiv>
+                            {EmailIcon()}
+                        </MarginRightDiv>
                         <div>
                             <div>
                                 <TextHeader>E-post</TextHeader>
@@ -184,9 +190,9 @@ export const CollapsiblePanel = ({ personInfo }) => {
                     </FlexDiv>
 
                     <FlexDiv>
-                        <div>
-                            {getRandomSmiley()}
-                        </div>
+                        <MarginRightDiv>
+                            {PhoneIcon()}
+                        </MarginRightDiv>
                         <div>
                             <div>
                                 <TextHeader>Telefon</TextHeader>
@@ -198,9 +204,9 @@ export const CollapsiblePanel = ({ personInfo }) => {
                     </FlexDiv>
 
                     <FlexDiv>
-                        <div>
-                            {getRandomSmiley()}
-                        </div>
+                        <MarginRightDiv>
+                            {PhoneIcon()}
+                        </MarginRightDiv>
                         <div>
                             <div>
                                 <TextHeader>Telefon til bruk for NAV</TextHeader>
@@ -220,9 +226,9 @@ export const CollapsiblePanel = ({ personInfo }) => {
                     </FlexDiv>
 
                     <FlexDiv>
-                        <div>
-                            {getRandomSmiley()}
-                        </div>
+                        <MarginRightDiv>
+                            {StackedCoinsIcon()}
+                        </MarginRightDiv>
                         <div>
                             <div>
                                 <TextHeader>Kontonummer</TextHeader>
@@ -238,9 +244,9 @@ export const CollapsiblePanel = ({ personInfo }) => {
                 <Section>
                     <UndertittelStyled>Familie</UndertittelStyled>
                     <FlexDiv>
-                        <div>
-                            {getRandomSmiley()}
-                        </div>
+                        <MarginRightDiv>
+                            {HeartIcon()}
+                        </MarginRightDiv>
                         <div>
                             <div>
                                 <TextHeader>Sivilstand</TextHeader>
@@ -252,9 +258,9 @@ export const CollapsiblePanel = ({ personInfo }) => {
                     </FlexDiv>
 
                     <FlexDiv>
-                        <div>
-                            {getRandomSmiley()}
-                        </div>
+                        <MarginRightDiv>
+                            {WorldIcon()}
+                        </MarginRightDiv>
                         <div>
                             <div>
                                 <TextHeader>Fødeland</TextHeader>
@@ -266,9 +272,9 @@ export const CollapsiblePanel = ({ personInfo }) => {
                     </FlexDiv>
 
                     <FlexDiv>
-                        <div>
-                            {getRandomSmiley()}
-                        </div>
+                        <MarginRightDiv>
+                            {PersonIcon()}
+                        </MarginRightDiv>
                         <div>
                             <div>
                                 <TextHeader>Personstatus</TextHeader>
@@ -280,9 +286,9 @@ export const CollapsiblePanel = ({ personInfo }) => {
                     </FlexDiv>
 
                     <FlexDiv>
-                        <div>
-                            {getRandomSmiley()}
-                        </div>
+                        <MarginRightDiv>
+                            {LocationPinIcon()}
+                        </MarginRightDiv>
                         <div>
                             <div>
                                 <TextHeader>Oppholdstillatelse(r), historikk</TextHeader>
@@ -294,9 +300,9 @@ export const CollapsiblePanel = ({ personInfo }) => {
                     </FlexDiv>
 
                     <FlexDiv>
-                        <div>
-                            {getRandomSmiley()}
-                        </div>
+                        <MarginRightDiv>
+                            {AirplaneIcon()}
+                        </MarginRightDiv>
                         <div>
                             <div>
                                 <TextHeader>Inn- og utvandring</TextHeader>
@@ -316,15 +322,14 @@ export const CollapsiblePanel = ({ personInfo }) => {
         <div>
             <HeaderDiv onClick={() => togglePanel()}>
                 <FlexDiv>
-                    <div style={{ marginRight: '0.5em' }}>
+                    <div style={{ marginRight: '0.5em', display: 'flex', alignItems: 'center' }}>
                         {displayKjønn()}
                     </div>
                     <HeaderRow>
-                        <div>
+                        <div style={{ marginRight: '0.5em', display: 'flex', alignItems: 'center' }}>
                             {displayFullName()}
                             {displayAlder()}
                             {displayFødselsnummer()}
-
                         </div>
 
                         <div style={{ display: 'flex', flexFlow: 'row wrap' }}>

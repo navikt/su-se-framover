@@ -1,12 +1,5 @@
-import React, {useState} from 'react';
-import {Input, Radio, RadioGruppe, Textarea} from 'nav-frontend-skjema';
-import { getRandomSmiley } from '../hooks/getRandomEmoji';
-import NavFrontendChevron from 'nav-frontend-chevron';
-import { Undertittel } from 'nav-frontend-typografi';
-import "./collapsiblePanel/CollapsiblePanel.less"
-import classNames from "classnames";
-import styled, {keyframes} from "styled-components";
-/*eslint no-unused-vars: */
+import React from 'react';
+import {Input, Radio, RadioGruppe} from 'nav-frontend-skjema';
 
 export const InputFields = ({ id, style, labelText: label, value, onChange, bredde, disabled, feil }) => (
     <span style={InputFieldsStyle}>
@@ -26,14 +19,6 @@ export const InputFields = ({ id, style, labelText: label, value, onChange, bred
 const InputFieldsStyle = {
     marginRight: '1em'
 };
-
-
-export const SUTextArea = ({style, label, value, onChange}) => {
-    return <Textarea style={style}
-                     label={label} value={value}
-                     onChange={e => {onChange(e.target.value)}}/>
-};
-
 
 export const JaNeiSpørsmål = ({ fieldName, legend, onChange, state, feil }) => {
     const options = [

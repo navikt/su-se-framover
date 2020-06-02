@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
-import { JaNeiSpørsmål } from '../../components/FormElements.jsx';
+import { JaNeiSpørsmål } from '../../../components/FormElements.jsx';
 import { Systemtittel, Element } from 'nav-frontend-typografi';
 import Datovelger from 'nav-datovelger';
 import 'nav-datovelger/dist/datovelger/styles/datovelger.css';
-import { stringToBoolean } from '../../HelperFunctions';
+import { stringToBoolean } from '../../../HelperFunctions';
 import { validateUtenlandsopphold } from '../validering/UtenlandsoppholdValidering';
-import { displayErrorMessageOnInputField } from '../../HelperFunctions';
+import { displayErrorMessageOnInputField } from '../../../HelperFunctions';
 
 const Utenlandsopphold = ({ state, updateField, onClick }) => {
     console.log(state);
@@ -287,9 +287,7 @@ const Utenlandsopphold = ({ state, updateField, onClick }) => {
     }
 
     function validateForm() {
-        console.log(state);
         const errors = validateUtenlandsopphold.validateFormValues(state);
-        console.log(errors);
         setFeilmeldinger(errors);
         if (errors.length === 0) {
             onClick();

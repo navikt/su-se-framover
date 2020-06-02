@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { Knapp } from 'nav-frontend-knapper';
-import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
+import { InputFields, JaNeiSpørsmål } from '../../../components/FormElements';
 import Lenke from 'nav-frontend-lenker';
 import { Checkbox, CheckboxGruppe } from 'nav-frontend-skjema';
 import { Systemtittel, Ingress } from 'nav-frontend-typografi';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { stringToBoolean, displayErrorMessageOnInputField } from '../../HelperFunctions';
+import { stringToBoolean, displayErrorMessageOnInputField } from '../../../HelperFunctions';
 import { validateBoforhold } from '../validering/BoforholdValidering';
 
 const Boforhold = ({ state, updateField, onClick }) => {
+    console.log(state)
     const [feilmeldinger, setFeilmeldinger] = useState([]);
 
     function updatedArray(sourceArray, target) {

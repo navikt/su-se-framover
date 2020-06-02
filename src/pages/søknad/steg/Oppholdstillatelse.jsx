@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Systemtittel } from 'nav-frontend-typografi';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Datovelger from 'nav-datovelger';
-import { JaNeiSpørsmål } from '../../components/FormElements';
+import { JaNeiSpørsmål } from '../../../components/FormElements';
 import { validateOppholdstillatelse } from '../validering/OppholdstillatelseValidering';
-import { displayErrorMessageOnInputField } from '../../HelperFunctions';
+import { displayErrorMessageOnInputField } from '../../../HelperFunctions';
 
 const Oppholdstillatelse = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);

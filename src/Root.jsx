@@ -6,11 +6,11 @@ import { AuthContext, AuthContextProvider } from './contexts/AuthContext';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import 'reset-css';
 import Personinfo from './pages/Personinfo';
-import Soknad from './søknad/Soknad';
+import Soknad from './pages/søknad/Soknad';
 import Søkeboks from './components/Søkeboks';
-import Venstremeny from './components/Venstremeny';
+import Venstremeny from './components/venstreMeny/Venstremeny';
 import Saker from './pages/Saker';
-import Saksoversikt from './pages/Saksoversikt';
+import Saksoversikt from './pages/saksoversikt/Saksoversikt';
 import Vilkarsprov from './pages/Vilkarsprov';
 import Beregning from './pages/Beregning';
 import ComponentErrorBoundary from './components/ComponentErrorBoundary';
@@ -18,6 +18,8 @@ import ErrorBoundary from './components/ErrorBoundary';
 import 'nav-frontend-tabell-style';
 import './Root.less';
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory } from 'react-router-dom';
+import { Provider } from 'react-redux'
+import Store from "./redux/Store";
 
 const Root = () => {
     const [state, setState] = useState({
@@ -44,58 +46,60 @@ const Root = () => {
     };
 
     return (
-        <ErrorBoundary>
-            <AuthContextProvider>
-                <ConfigProvider>
-                    <Router>
-                        <ContentWrapper>
-                            <Switch>
-                                <Route path="/" exact>
-                                    <ComponentErrorBoundary>
-                                        <Main />
-                                    </ComponentErrorBoundary>
-                                </Route>
-                                <Route path="/person">
-                                    <ComponentErrorBoundary>
-                                        <Personinfo />
-                                    </ComponentErrorBoundary>
-                                </Route>
-                                <Route path="/auth/complete">
-                                    <ComponentErrorBoundary>
-                                        <AuthComplete />
-                                    </ComponentErrorBoundary>
-                                </Route>
-                                <Route path="/soknad" exact>
-                                    <ComponentErrorBoundary>
-                                        <Soknad />
-                                    </ComponentErrorBoundary>
-                                </Route>
-                                <Route path="/saker">
-                                    <ComponentErrorBoundary>
-                                        <Saker />
-                                    </ComponentErrorBoundary>
-                                </Route>
-                                <Route path="/vilkarsprov">
+        <Provider store={Store}>
+            <ErrorBoundary>
+                <AuthContextProvider>
+                    <ConfigProvider>
+                        <Router>
+                            <ContentWrapper>
+                                <Switch>
+                                    <Route path="/" exact>
+                                        <ComponentErrorBoundary>
+                                            <Main />
+                                        </ComponentErrorBoundary>
+                                    </Route>
+                                    <Route path="/person">
+                                        <ComponentErrorBoundary>
+                                            <Personinfo />
+                                        </ComponentErrorBoundary>
+                                    </Route>
+                                    <Route path="/auth/complete">
+                                        <ComponentErrorBoundary>
+                                            <AuthComplete />
+                                        </ComponentErrorBoundary>
+                                    </Route>
+                                    <Route path="/soknad" exact>
+                                        <ComponentErrorBoundary>
+                                            <Soknad />
+                                        </ComponentErrorBoundary>
+                                    </Route>
+                                    <Route path="/saker">
+                                        <ComponentErrorBoundary>
+                                            <Saker />
+                                        </ComponentErrorBoundary>
+                                    </Route>
+                                    <Route path="/vilkarsprov">
                                     <ComponentErrorBoundary>
                                         <Vilkarsprov state={state.vilkårsprøving} setState={updateVilkårsvurdering} />
                                     </ComponentErrorBoundary>
-                                </Route>
-                                <Route path="/saksoversikt">
-                                    <ComponentErrorBoundary>
-                                        <Saksoversikt />
-                                    </ComponentErrorBoundary>
-                                </Route>
-                                <Route path="/Beregning">
-                                    <ComponentErrorBoundary>
-                                        <Beregning state={state.beregning} setState={updateBeregning} />
-                                    </ComponentErrorBoundary>
-                                </Route>
-                            </Switch>
-                        </ContentWrapper>
-                    </Router>
-                </ConfigProvider>
-            </AuthContextProvider>
-        </ErrorBoundary>
+                                    </Route>
+                                    <Route path="/saksoversikt">
+                                       <ComponentErrorBoundary>
+                                            <Saksoversikt />
+                                     </ComponentErrorBoundary>
+                                    </Route>
+                                    <Route path="/Beregning">
+                                        <ComponentErrorBoundary>
+                                            <Beregning state={state.beregning} setState={updateBeregning} />
+                                        </ComponentErrorBoundary>
+                                    </Route>
+                                </Switch>
+                            </ContentWrapper>
+                        </Router>
+                    </ConfigProvider>
+                </AuthContextProvider>
+            </ErrorBoundary>
+        </Provider>
     );
 };
 
@@ -124,7 +128,7 @@ function ContentWrapper({ children }) {
                 <div>
                     <Venstremeny />
                 </div>
-                <div>{children}</div>
+                <div style={{width: '100%'}}>{children}</div>
             </div>
         </div>
     );

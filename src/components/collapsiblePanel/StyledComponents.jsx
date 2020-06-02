@@ -68,6 +68,9 @@ export const FlexDiv = styled.div`
 export const MarginBottomDiv = styled.div`
     margin-bottom: 1em;
 `
+export const MarginRightDiv = styled.div`
+    margin-right: 0.5em;
+`
 export const TextHeader = styled.p`
     font-size: 14px;
      font-weight: bold;

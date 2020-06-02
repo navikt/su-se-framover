@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Systemtittel } from 'nav-frontend-typografi';
-import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
+import { InputFields, JaNeiSpørsmål } from '../../../components/FormElements';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { displayErrorMessageOnInputField } from '../../HelperFunctions';
+import { displayErrorMessageOnInputField } from '../../../HelperFunctions';
 import { validatePersonopplysninger } from '../validering/PersonopplysningerValidering';
 
 const Personopplysninger = ({ state, updateField, onClick }) => {
+    console.log(state)
     const updateFunction = name => value => updateField(name, value);
     const [feilmeldinger, setFeilmeldinger] = useState([]);
 

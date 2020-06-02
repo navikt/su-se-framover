@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
-import { InputFields, JaNeiSpørsmål } from '../../components/FormElements';
+import { InputFields, JaNeiSpørsmål } from '../../../components/FormElements';
 import Lenke from 'nav-frontend-lenker';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
-import { stringToBoolean } from '../../HelperFunctions';
+import { stringToBoolean } from '../../../HelperFunctions';
 import { validateInntektPensjonFormue } from '../validering/InntektPensjonFormueValidering';
-import { displayErrorMessageOnInputField } from '../../HelperFunctions';
+import { displayErrorMessageOnInputField } from '../../../HelperFunctions';
 
 const InntektPensjonFormue = ({ state, updateField, onClick }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);
@@ -358,7 +358,6 @@ const InntektPensjonFormue = ({ state, updateField, onClick }) => {
 
     function validateForm() {
         const errors = validateInntektPensjonFormue.validateFormValues(state);
-        console.log(errors);
         setFeilmeldinger(errors);
         if (errors.length === 0) {
             onClick();

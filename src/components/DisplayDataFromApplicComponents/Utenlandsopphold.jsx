@@ -1,6 +1,6 @@
 import { Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
-import { reverseString } from '../../HelperFunctions';
+import { reverseDateString } from '../../HelperFunctions';
 import { jaNeiSpørsmål } from '../../HelperFunctions';
 
 const Utenlandsopphold = ({ state }) => {
@@ -62,8 +62,8 @@ const Utenlandsopphold = ({ state }) => {
             <ol>
                 {array.map((utenlandsoppholdRow, index) => (
                     <li style={elementSpacing} key={index}>
-                        {reverseString(utenlandsoppholdRow.utreisedato)}&nbsp;- &nbsp;
-                        {reverseString(utenlandsoppholdRow.innreisedato)}
+                        {reverseDateString(utenlandsoppholdRow.utreisedato)}&nbsp;- &nbsp;
+                        {reverseDateString(utenlandsoppholdRow.innreisedato)}
                     </li>
                 ))}
             </ol>
@@ -76,8 +76,8 @@ const Utenlandsopphold = ({ state }) => {
             <ol>
                 {array.map((utenlandsoppholdRow, index) => (
                     <li style={elementSpacing} key={index}>
-                        {reverseString(utenlandsoppholdRow.utreisedato)}&nbsp;- &nbsp;
-                        {reverseString(utenlandsoppholdRow.innreisedato)}
+                        {reverseDateString(utenlandsoppholdRow.utreisedato)}&nbsp;- &nbsp;
+                        {reverseDateString(utenlandsoppholdRow.innreisedato)}
                     </li>
                 ))}
             </ol>

@@ -8,10 +8,10 @@ import { validateUtenlandsopphold } from '../validering/UtenlandsoppholdValideri
 import { validateOppholdstillatelse } from '../validering/OppholdstillatelseValidering';
 import { validateInntektPensjonFormue } from '../validering/InntektPensjonFormueValidering';
 import { validateForNAV } from '../validering/ForNAVValidering';
-import DisplayDataFromApplic from '../../components/DisplayDataFromApplic';
-import useFetch from '../../hooks/useFetch';
+import DisplayDataFromApplic from '../../../components/DisplayDataFromApplic';
+import useFetch from '../../../hooks/useFetch';
 import { useHistory } from 'react-router-dom';
-import { getRandomSmiley } from '../../hooks/getRandomEmoji';
+import { getRandomSmiley } from '../../../hooks/getRandomEmoji';
 
 const OppsumeringOgSend = ({ state, disableStegIndikator }) => {
     const [feilmeldinger, setFeilmeldinger] = useState([]);

@@ -1,5 +1,5 @@
 import { Undertittel } from 'nav-frontend-typografi';
-import { jaNeiSpørsmål, reverseString } from '../../HelperFunctions';
+import { jaNeiSpørsmål, reverseDateString } from '../../HelperFunctions';
 import React from 'react';
 
 const Oppholdstillatelse = ({ state }) => {
@@ -16,7 +16,7 @@ const Oppholdstillatelse = ({ state }) => {
                 {!state.oppholdstillatelse.harVarigOpphold && (
                     <>
                         <span>Utløpsdato: </span>
-                        <span>{reverseString(state.oppholdstillatelse.utløpsdato)}</span>
+                        <span>{reverseDateString(state.oppholdstillatelse.utløpsdato)}</span>
                     </>
                 )}
             </div>
