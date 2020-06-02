@@ -1,5 +1,5 @@
 import React from 'react';
-import {Input, Radio, RadioGruppe} from 'nav-frontend-skjema';
+import { Input, Radio, RadioGruppe } from 'nav-frontend-skjema';
 
 export const InputFields = ({ id, style, labelText: label, value, onChange, bredde, disabled, feil }) => (
     <span style={InputFieldsStyle}>
@@ -40,6 +40,3 @@ export const JaNeiSpørsmål = ({ fieldName, legend, onChange, state, feil }) =>
         </RadioGruppe>
     );
 };
-
-
-

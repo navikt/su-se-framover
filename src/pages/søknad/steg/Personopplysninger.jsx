@@ -6,7 +6,7 @@ import { displayErrorMessageOnInputField } from '../../../HelperFunctions';
 import { validatePersonopplysninger } from '../validering/PersonopplysningerValidering';
 
 const Personopplysninger = ({ state, updateField, onClick }) => {
-    console.log(state)
+    console.log(state);
     const updateFunction = name => value => updateField(name, value);
     const [feilmeldinger, setFeilmeldinger] = useState([]);
 

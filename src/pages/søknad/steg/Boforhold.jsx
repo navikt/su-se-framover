@@ -9,7 +9,7 @@ import { stringToBoolean, displayErrorMessageOnInputField } from '../../../Helpe
 import { validateBoforhold } from '../validering/BoforholdValidering';
 
 const Boforhold = ({ state, updateField, onClick }) => {
-    console.log(state)
+    console.log(state);
     const [feilmeldinger, setFeilmeldinger] = useState([]);
 
     function updatedArray(sourceArray, target) {

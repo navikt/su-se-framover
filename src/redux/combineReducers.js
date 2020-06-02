@@ -1,7 +1,6 @@
-import {combineReducers} from "redux";
-import saksoversiktReducer from "./saksoversikt/saksoversiktReducer";
+import { combineReducers } from 'redux';
+import saksoversiktReducer from './saksoversikt/saksoversiktReducer';
 
 export default combineReducers({
     saksoversiktReducer: saksoversiktReducer
-})
-
+});

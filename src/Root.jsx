@@ -18,8 +18,8 @@ import ErrorBoundary from './components/ErrorBoundary';
 import 'nav-frontend-tabell-style';
 import './Root.less';
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory } from 'react-router-dom';
-import { Provider } from 'react-redux'
-import Store from "./redux/Store";
+import { Provider } from 'react-redux';
+import Store from './redux/Store';
 
 const Root = () => {
     const [state, setState] = useState({
@@ -79,14 +79,17 @@ const Root = () => {
                                         </ComponentErrorBoundary>
                                     </Route>
                                     <Route path="/vilkarsprov">
-                                    <ComponentErrorBoundary>
-                                        <Vilkarsprov state={state.vilkårsprøving} setState={updateVilkårsvurdering} />
-                                    </ComponentErrorBoundary>
+                                        <ComponentErrorBoundary>
+                                            <Vilkarsprov
+                                                state={state.vilkårsprøving}
+                                                setState={updateVilkårsvurdering}
+                                            />
+                                        </ComponentErrorBoundary>
                                     </Route>
                                     <Route path="/saksoversikt">
-                                       <ComponentErrorBoundary>
+                                        <ComponentErrorBoundary>
                                             <Saksoversikt />
-                                     </ComponentErrorBoundary>
+                                        </ComponentErrorBoundary>
                                     </Route>
                                     <Route path="/Beregning">
                                         <ComponentErrorBoundary>
@@ -128,7 +131,7 @@ function ContentWrapper({ children }) {
                 <div>
                     <Venstremeny />
                 </div>
-                <div style={{width: '100%'}}>{children}</div>
+                <div style={{ width: '100%' }}>{children}</div>
             </div>
         </div>
     );

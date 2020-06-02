@@ -82,7 +82,7 @@ function Vilkarsprov({ state = initialState, setState }) {
     }
 
     return (
-        <div className="vilkårsprøving" style={{width: '65%'}}>
+        <div className="vilkårsprøving" style={{ width: '65%' }}>
             <PersonInfoBar />
             <Innholdstittel>Vilkårsprøving</Innholdstittel>
             <ToggleKnapp onClick={() => updateDisplayState()}>Vis søknad</ToggleKnapp>

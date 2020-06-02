@@ -48,19 +48,18 @@ export const displayErrorMessageOnInputField = (feilmeldinger, skjemaElementLabe
     return melding;
 };
 
-
 export const isJsonObject = str => {
     str = JSON.stringify(str);
-    try{
+    try {
         const obj = JSON.parse(str);
-        if(typeof obj !== 'object'){
+        if (typeof obj !== 'object') {
             return false;
         }
-    }catch (e) {
-        console.log("ERROR");
+    } catch (e) {
+        console.log('ERROR');
         return false;
     }
-    console.log("returning true");
+    console.log('returning true');
     return true;
 };
 

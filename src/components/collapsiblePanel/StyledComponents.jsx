@@ -1,5 +1,5 @@
-import styled, {keyframes} from "styled-components";
-import Undertittel from "nav-frontend-typografi/lib/undertittel";
+import styled, { keyframes } from 'styled-components';
+import Undertittel from 'nav-frontend-typografi/lib/undertittel';
 
 const animationOpen = keyframes`
   0% {
@@ -10,7 +10,7 @@ const animationOpen = keyframes`
     max-height: 20em;
     height: 100%;
   }
-`
+`;
 const animationClose = keyframes`
   0% {
     max-height: 20em;
@@ -20,27 +20,27 @@ const animationClose = keyframes`
     max-height: 0;
     height: 0%;
   }
-`
+`;
 export const StyledDiv = styled.div`
     display: flex;
     justify-content: space-around;
     overflow: hidden;
-    &.open{
+    &.open {
         will-change: height;
         height: 100%;
         animation: ${animationOpen} 1s ease;
     }
-    &.closing{
+    &.closing {
         will-change: max-height, height;
         max-height: 0;
         height: 0%;
         animation: ${animationClose} 1s ease;
     }
-    &.closed{
+    &.closed {
         height: 0;
         max-height: 0;
     }
-`
+`;
 export const HeaderDiv = styled.div`
     display: flex;
     justify-content: space-between;
@@ -50,33 +50,32 @@ export const HeaderDiv = styled.div`
     background-color: lightgrey;
     color: black;
     font-family: verdana;
-`
+`;
 export const HeaderRow = styled.div`
     display: flex;
     justify-content: space-between;
     flex-direction: column;
     margin-right: 1em;
-`
+`;
 export const Section = styled.div`
-    display: flex; 
-    justify-content: flex-start; 
+    display: flex;
+    justify-content: flex-start;
     flex-direction: column;
-`
+`;
 export const FlexDiv = styled.div`
     display: flex;
-`
+`;
 export const MarginBottomDiv = styled.div`
     margin-bottom: 1em;
-`
+`;
 export const MarginRightDiv = styled.div`
     margin-right: 0.5em;
-`
+`;
 export const TextHeader = styled.p`
     font-size: 14px;
-     font-weight: bold;
-`
+    font-weight: bold;
+`;
 export const UndertittelStyled = styled(Undertittel)`
     margin-bottom: 0.5em;
-     align-self: center;
-`
-
+    align-self: center;
+`;

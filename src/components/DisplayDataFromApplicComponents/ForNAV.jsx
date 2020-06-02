@@ -3,7 +3,6 @@ import { jaNeiSpørsmål } from '../../HelperFunctions';
 import React from 'react';
 
 const ForNAV = ({ state }) => {
-
     return (
         <div style={headerSpacing}>
             <Undertittel style={elementSpacing}>For NAV</Undertittel>

@@ -1,13 +1,12 @@
-import React from "react";
+import React from 'react';
 
-const Oversikt = ({state}) => {
-
+const Oversikt = () => {
     return (
         <div>
-            <div style={{display: 'flex', justifyContent: 'center'}}>
-                <p style={{fontSize: '18px', fontWeight: 'bold', marginBottom:'1em'}}>Sak-id: 555 088 322</p>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <p style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '1em' }}>Sak-id: 555 088 322</p>
             </div>
-            <div style={{display: 'flex', justifyContent: 'space-around'}}>
+            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <div style={boksStyle}>
                     <p>Neste kontrollsamtale:</p>
                     <p>22-08-2020</p>
@@ -24,19 +23,18 @@ const Oversikt = ({state}) => {
                 </div>
             </div>
         </div>
-    )
+    );
 };
 
 const boksStyle = {
     backgroundColor: 'lightgrey',
     width: '175px',
     height: '100px',
-    display:'flex',
+    display: 'flex',
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
     margin: '2em'
-}
-
+};
 
 export default Oversikt;
