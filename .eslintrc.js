@@ -1,40 +1,45 @@
 module.exports = {
-    "env": {
-        "browser": true,
-        "es6": true
+    root: true,
+    parser: '@typescript-eslint/parser',
+    env: {
+        browser: true,
+        es6: true
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:prettier/recommended"
+    extends: [
+        'eslint:recommended',
+        'plugin:react/recommended',
+        'plugin:prettier/recommended',
+        'eslint:recommended',
+        'plugin:@typescript-eslint/recommended',
+        'prettier/@typescript-eslint'
     ],
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
+    globals: {
+        Atomics: 'readonly',
+        SharedArrayBuffer: 'readonly'
     },
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
+    parserOptions: {
+        ecmaFeatures: {
+            jsx: true
         },
-        "ecmaVersion": 2018,
-        "sourceType": "module"
+        ecmaVersion: 2018,
+        sourceType: 'module'
     },
-    "settings": {
-        "react": {
-           "version": "16.0"
+    settings: {
+        react: {
+            version: '16.0'
         }
-     },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
-        "react/prop-types" : ["warn"]
     },
-    "overrides":[
+    plugins: ['react', '@typescript-eslint'],
+    rules: {
+        'react/prop-types': ['warn'],
+        '@typescript-eslint/no-unused-vars': ['error', { "argsIgnorePattern": "^_"}],
+        '@typescript-eslint/explicit-module-boundary-types': "off"
+    },
+    overrides: [
         {
-            "files": ["**/*.test.js"],
-            "env": {
-                "jest": true
+            files: ['**/*.test.js', '**/*.test.jsx'],
+            env: {
+                jest: true
             }
         }
     ]
