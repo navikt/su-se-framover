@@ -1,5 +1,6 @@
 import React from 'react';
 import { Feilmelding } from 'nav-frontend-typografi';
+import Sentry from '@sentry/browser';
 
 class ErrorBoundary extends React.Component {
     constructor(props) {
@@ -10,6 +11,15 @@ class ErrorBoundary extends React.Component {
     static getDerivedStateFromError(error) {
         console.log(error);
         return { hasError: true, error };
+    }
+
+
+    componentDidCatch(error, errorInfo) {
+        Sentry.withScope(scope => {
+            scope.setExtras(errorInfo);
+            const eventId = Sentry.captureException(error);
+            this.setState({ eventId });
+        }); 
     }
 
     render() {
