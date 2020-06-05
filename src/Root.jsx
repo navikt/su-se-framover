@@ -6,7 +6,7 @@ import { AuthContext, AuthContextProvider } from './contexts/AuthContext';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import 'reset-css';
 import Personinfo from './pages/Personinfo';
-import Soknad from './pages/søknad-owned/Soknad';
+import SoknadOwned from './pages/søknad-owned/Soknad';
 import Søkeboks from './components/Søkeboks';
 import Venstremeny from './components/venstreMeny/Venstremeny';
 import Saker from './pages/Saker';
@@ -20,6 +20,7 @@ import './Root.less';
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Store from './redux/Store';
+import Soknad from './pages/søknad';
 
 const Root = () => {
     const [state, setState] = useState({
@@ -68,7 +69,12 @@ const Root = () => {
                                             <AuthComplete />
                                         </ComponentErrorBoundary>
                                     </Route>
-                                    <Route path="/soknad" exact>
+                                    <Route path="/soknad-owned" exact>
+                                        <ComponentErrorBoundary>
+                                            <SoknadOwned />
+                                        </ComponentErrorBoundary>
+                                    </Route>
+                                    <Route path="/soknad">
                                         <ComponentErrorBoundary>
                                             <Soknad />
                                         </ComponentErrorBoundary>
