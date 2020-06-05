@@ -1,5 +1,5 @@
 import React from 'react';
-import Boforhold from '../../pages/søknad/steg/Boforhold';
+import Boforhold from '../../pages/søknad-owned/steg/Boforhold';
 import Adapter from 'enzyme-adapter-react-16';
 import { configure } from 'enzyme';
 import { mount } from 'enzyme';

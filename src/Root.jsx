@@ -6,7 +6,7 @@ import { AuthContext, AuthContextProvider } from './contexts/AuthContext';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import 'reset-css';
 import Personinfo from './pages/Personinfo';
-import Soknad from './pages/søknad/Soknad';
+import Soknad from './pages/søknad-owned/Soknad';
 import Søkeboks from './components/Søkeboks';
 import Venstremeny from './components/venstreMeny/Venstremeny';
 import Saker from './pages/Saker';

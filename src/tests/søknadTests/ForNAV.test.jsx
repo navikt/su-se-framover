@@ -2,7 +2,7 @@ import { configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import React from 'react';
-import ForNAV from '../../pages/søknad/steg/ForNAV';
+import ForNAV from '../../pages/søknad-owned/steg/ForNAV';
 
 configure({ adapter: new Adapter() });
 

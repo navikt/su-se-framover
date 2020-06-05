@@ -2,7 +2,7 @@ import { configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { JaNeiSpørsmål } from '../../components/FormElements';
 import React from 'react';
-import Oppholdstillatelse from '../../pages/søknad/steg/Oppholdstillatelse';
+import Oppholdstillatelse from '../../pages/søknad-owned/steg/Oppholdstillatelse';
 
 import Hovedknapp from 'nav-frontend-knapper/lib/hovedknapp';
 

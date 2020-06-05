@@ -2,7 +2,7 @@ import { configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import React from 'react';
-import Utenlandsopphold from '../../pages/søknad/steg/Utenlandsopphold';
+import Utenlandsopphold from '../../pages/søknad-owned/steg/Utenlandsopphold';
 import { JaNeiSpørsmål } from '../../components/FormElements';
 
 configure({ adapter: new Adapter() });

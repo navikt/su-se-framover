@@ -1,7 +1,7 @@
 import React from 'react';
 import Adapter from 'enzyme-adapter-react-16';
 import { configure, mount } from 'enzyme';
-import Personopplysninger from '../../pages/søknad/steg/Personopplysninger';
+import Personopplysninger from '../../pages/søknad-owned/steg/Personopplysninger';
 import { Hovedknapp } from 'nav-frontend-knapper';
 
 configure({ adapter: new Adapter() });

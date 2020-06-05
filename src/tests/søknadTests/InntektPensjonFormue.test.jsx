@@ -2,7 +2,7 @@ import { configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import React from 'react';
-import InntektPensjonFormue from '../../pages/søknad/steg/InntektPensjonFormue';
+import InntektPensjonFormue from '../../pages/søknad-owned/steg/InntektPensjonFormue';
 
 configure({ adapter: new Adapter() });
 
