@@ -7,32 +7,26 @@ import nb from './nb';
 import * as saksoversiktSlice from '../../../features/saksoversikt/saksoversikt.slice';
 import { IntlProvider } from 'react-intl';
 import styles from './inngang.module.less';
+import { useHistory } from 'react-router-dom';
+import { Søknadsteg } from '../types';
 
 const index = () => {
-    const [søknad, setSøknad] = React.useState({ navn: '' });
-    console.log(søknad);
-    const [input, setInput] = React.useState('');
+    const [, setNavn] = React.useState('');
+    const [fnr, setFnr] = React.useState('');
     const dispatch = useAppDispatch();
+    const history = useHistory();
 
-    console.log('styles: ', styles);
     return (
         <IntlProvider locale={'nb-NO'} messages={nb}>
             <div className={styles.container}>
                 <div className={styles.inputs}>
-                    <Input label={<FormattedMessage id={'label.fnr'} />} onChange={e => setInput(e.target.value)} />
-                    <Input
-                        label={<FormattedMessage id={'label.navn'} />}
-                        onChange={e =>
-                            setSøknad(state => ({
-                                ...state,
-                                navn: e.target.value
-                            }))
-                        }
-                    />
+                    <Input label={<FormattedMessage id={'label.fnr'} />} onChange={e => setFnr(e.target.value)} />
+                    <Input label={<FormattedMessage id={'label.navn'} />} onChange={e => setNavn(e.target.value)} />
                 </div>
                 <Knapp
                     onClick={() => {
-                        dispatch(saksoversiktSlice.fetchSøker({ fnr: input, access_token: '123' }));
+                        dispatch(saksoversiktSlice.fetchSøker({ fnr, access_token: '123' }));
+                        history.push(`/soknad/${Søknadsteg.Uførevedtak}`);
                     }}
                 >
                     <FormattedMessage id={'knapp.neste'} />

@@ -11,7 +11,6 @@ import {
 } from '../../assets/Icons';
 import { ExpandableDiv, LinkStyled, MarginRightSpan } from './StyledComponents';
 
-
 export const Venstremeny = () => {
     const [expand, setExpand] = useState(false);
     const [firstRender, setFirstRender] = useState(true);

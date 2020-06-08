@@ -25,7 +25,7 @@ export const ExpandableDiv = styled.div`
     display: flex;
     overflow: hidden;
     height: 45em;
-    &.open{
+    &.open {
         will-change: max-width, width;
         width: 40%;
         max-width: 40%;

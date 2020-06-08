@@ -9,7 +9,7 @@ export const fetchSøker = createAsyncThunk<unknown, { fnr: string; access_token
                 Authorization: `Bearer ${access_token}`
             }
         });
-        return response;
+        return response.json();
     }
 );
 

@@ -20,28 +20,28 @@ export const submitSaksoversikt = () => {
 
 export const updateKontrollsamtaleAndLog = newDateObject => {
     return (dispatch, getState) => {
-        const currentKontrollSamtaler = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode.kontrollsamtaler
-        const currentHendelser = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode.hendelser
+        const currentKontrollSamtaler = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode
+            .kontrollsamtaler;
+        const currentHendelser = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode.hendelser;
 
         let oldDate;
         let newDate;
 
-        const updatedKontrollsamtaler = currentKontrollSamtaler
-            .map((n, idx) =>{
-                if(idx === newDateObject.index){
-                    oldDate = n;
-                    newDate = newDateObject.value
-                    return newDateObject.value
-                }
-                return n;
-            })
+        const updatedKontrollsamtaler = currentKontrollSamtaler.map((n, idx) => {
+            if (idx === newDateObject.index) {
+                oldDate = n;
+                newDate = newDateObject.value;
+                return newDateObject.value;
+            }
+            return n;
+        });
 
-            //TODO: legge til index for gammel dato så det blir mer oversiktlig over
-            // hvilke datoer som har blitt oppdatert for hendelser?
-            const updatedHendelser = [
-                `${new Date().toString()}: Agent Smith endret kontrollsamtale for ${oldDate} til ${newDate} `,
-                ...currentHendelser
-            ]
+        //TODO: legge til index for gammel dato så det blir mer oversiktlig over
+        // hvilke datoer som har blitt oppdatert for hendelser?
+        const updatedHendelser = [
+            `${new Date().toString()}: Agent Smith endret kontrollsamtale for ${oldDate} til ${newDate} `,
+            ...currentHendelser
+        ];
 
         const updatedSaksoversikt = {
             ...saksoversikt,
@@ -50,14 +50,14 @@ export const updateKontrollsamtaleAndLog = newDateObject => {
                 kontrollsamtaler: updatedKontrollsamtaler,
                 hendelser: updatedHendelser
             }
-        }
+        };
 
         return dispatch({
             type: types.KONTROLLSAMTALE_UPDATED,
             payload: updatedSaksoversikt
-        })
-    }
-}
+        });
+    };
+};
 
 /*
  if logging is bad idea.. ?
@@ -110,23 +110,24 @@ export const kontrollSamtaleUpdated = newDateObject => {
 export const updateUtbetalingAndLog = newStatusObject => {
     return (dispatch, getState) => {
         const currentUtbetalinger = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode.utbetalinger;
-        const currentHendelser = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode.hendelser
-        const textStatus = newStatusObject.newStatus === "stoppet" ? "stoppet" : "aktiverte"
+        const currentHendelser = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode.hendelser;
+        const textStatus = newStatusObject.newStatus === 'stoppet' ? 'stoppet' : 'aktiverte';
 
         let utbetalingThatWasUpdated;
-        const updatedUtbetalinger = currentUtbetalinger
-            .map((n, idx) => {
-                if(idx === newStatusObject.index){
-                    utbetalingThatWasUpdated = n;
-                    return {...n, status: newStatusObject.newStatus}
-                }
-                return n;
-            })
+        const updatedUtbetalinger = currentUtbetalinger.map((n, idx) => {
+            if (idx === newStatusObject.index) {
+                utbetalingThatWasUpdated = n;
+                return { ...n, status: newStatusObject.newStatus };
+            }
+            return n;
+        });
 
         const updatedHendelser = [
-            `${new Date().toString()}: Agent Smith ${textStatus} utbetaling for ${utbetalingThatWasUpdated.datoForUtbetaling}`,
+            `${new Date().toString()}: Agent Smith ${textStatus} utbetaling for ${
+                utbetalingThatWasUpdated.datoForUtbetaling
+            }`,
             ...currentHendelser
-        ]
+        ];
 
         const updatedSaksoversikt = {
             ...saksoversikt,
@@ -135,7 +136,7 @@ export const updateUtbetalingAndLog = newStatusObject => {
                 utbetalinger: updatedUtbetalinger,
                 hendelser: updatedHendelser
             }
-        }
+        };
 
         return dispatch({
             type: types.UTBETALING_UPDATED,
@@ -161,8 +162,64 @@ export const saksnotaterUpdated = value => {
     };
 };
 
-
-const jsonSøknad = { personopplysninger: { fnr: "12345678910",  fornavn: "kake",  mellomnavn: "kjeks", etternavn: "mannen", telefonnummer: "12345678", gateadresse: "gaten", postnummer: "0050", poststed: "Oslo", bruksenhet: "50", bokommune: "Oslo", flyktning: true, borFastINorge: true, statsborgerskap: "NOR"}, boforhold: {delerBolig: true, borSammenMed: ["Ektefelle/Partner/Samboer", "Andre personer over 18 år"], delerBoligMed: [{fnr: "12345678910", navn: "voksen jensen"}, {fnr: "10987654321", navn: "voksen hansen"}]}, utenlandsopphold: {utenlandsopphold: true, antallRegistrerteDager: 11, registrertePerioder: [{utreisedato: "2020-03-10", innreisedato: "2020-03-10"}], planlagteUtenlandsopphold: true, antallPlanlagteDager: 10, planlagtePerioder: [{utreisedato: "2020-06-01", innreisedato: "2020-06-20"}]}, oppholdstillatelse: {harVarigOpphold: false, utløpsdato: "2020-03-10", søktOmForlengelse: true}, inntektPensjonFormue: {framsattKravAnnenYtelse: true, framsattKravAnnenYtelseBegrunnelse: "annen ytelse begrunnelse", harInntekt: true, inntektBeløp: 2500, harPensjon: true, pensjonsOrdning: [{ordning: "KLP", beløp: 2000}, {ordning: "SPK", beløp: 5000}], sumInntektOgPensjon: 7000, harFormueEiendom: true, harFinansFormue: true, formueBeløp: 1000, harAnnenFormue: true, annenFormue: [{typeFormue: "juveler", skattetakst: 2000}]}, forNav: {målform: "Bokmål", søkerMøttPersonlig: true, harFullmektigMøtt: false, erPassSjekket: true, merknader: "intet å bemerke"}};
+const jsonSøknad = {
+    personopplysninger: {
+        fnr: '12345678910',
+        fornavn: 'kake',
+        mellomnavn: 'kjeks',
+        etternavn: 'mannen',
+        telefonnummer: '12345678',
+        gateadresse: 'gaten',
+        postnummer: '0050',
+        poststed: 'Oslo',
+        bruksenhet: '50',
+        bokommune: 'Oslo',
+        flyktning: true,
+        borFastINorge: true,
+        statsborgerskap: 'NOR'
+    },
+    boforhold: {
+        delerBolig: true,
+        borSammenMed: ['Ektefelle/Partner/Samboer', 'Andre personer over 18 år'],
+        delerBoligMed: [
+            { fnr: '12345678910', navn: 'voksen jensen' },
+            { fnr: '10987654321', navn: 'voksen hansen' }
+        ]
+    },
+    utenlandsopphold: {
+        utenlandsopphold: true,
+        antallRegistrerteDager: 11,
+        registrertePerioder: [{ utreisedato: '2020-03-10', innreisedato: '2020-03-10' }],
+        planlagteUtenlandsopphold: true,
+        antallPlanlagteDager: 10,
+        planlagtePerioder: [{ utreisedato: '2020-06-01', innreisedato: '2020-06-20' }]
+    },
+    oppholdstillatelse: { harVarigOpphold: false, utløpsdato: '2020-03-10', søktOmForlengelse: true },
+    inntektPensjonFormue: {
+        framsattKravAnnenYtelse: true,
+        framsattKravAnnenYtelseBegrunnelse: 'annen ytelse begrunnelse',
+        harInntekt: true,
+        inntektBeløp: 2500,
+        harPensjon: true,
+        pensjonsOrdning: [
+            { ordning: 'KLP', beløp: 2000 },
+            { ordning: 'SPK', beløp: 5000 }
+        ],
+        sumInntektOgPensjon: 7000,
+        harFormueEiendom: true,
+        harFinansFormue: true,
+        formueBeløp: 1000,
+        harAnnenFormue: true,
+        annenFormue: [{ typeFormue: 'juveler', skattetakst: 2000 }]
+    },
+    forNav: {
+        målform: 'Bokmål',
+        søkerMøttPersonlig: true,
+        harFullmektigMøtt: false,
+        erPassSjekket: true,
+        merknader: 'intet å bemerke'
+    }
+};
 
 const saksoversikt = {
     aktivStønadsperiode: {

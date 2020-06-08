@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
-import { JaNeiSpørsmål } from '../../../components/FormElements.jsx';
+import { JaNeiSpørsmål } from '../../../components/FormElements';
 import { Systemtittel, Element } from 'nav-frontend-typografi';
 import Datovelger from 'nav-datovelger';
 import 'nav-datovelger/dist/datovelger/styles/datovelger.css';

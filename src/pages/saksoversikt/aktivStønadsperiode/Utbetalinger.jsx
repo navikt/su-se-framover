@@ -49,8 +49,8 @@ const Utbetalinger = () => {
         ];
 
         const handleActions = (e, index) => {
-            dispatch(updateUtbetalingAndLog({newStatus: e.target.value, index: index}))
-        }
+            dispatch(updateUtbetalingAndLog({ newStatus: e.target.value, index: index }));
+        };
 
         return (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', marginBottom: '1em' }}>
