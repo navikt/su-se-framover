@@ -8,7 +8,7 @@ import Bunnknapper from '../Bunnknapper';
 import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import { Bosituasjon } from '~features/søknad/types';
 
-const FlyktningstatusOppholdstillatelse = () => {
+const BoOgOppholdINorge = () => {
     const boOgOppholdFraStore = useAppSelector(s => s.soknad.boOgOpphold);
 
     const [borOgOppholderSegINorge, setBorOgOppholderSegINorge] = React.useState(
@@ -29,20 +29,16 @@ const FlyktningstatusOppholdstillatelse = () => {
             <JaNeiSpørsmål
                 legend={'Bor og oppholder i Norge?'}
                 feil={null}
-                fieldName={'fieldname'}
+                fieldName={'opphold-i-norge'}
                 state={borOgOppholderSegINorge}
-                onChange={val => {
-                    setBorOgOppholderSegINorge(val);
-                }}
+                onChange={setBorOgOppholderSegINorge}
             />
             <JaNeiSpørsmål
                 legend={'Bor på folkereg adresse?'}
                 feil={null}
-                fieldName={'fieldname'}
+                fieldName={'folkereg-adresse'}
                 state={borPåFolkeregistrertAdresse}
-                onChange={val => {
-                    setBorPåFolkeregistrertAdresse(val);
-                }}
+                onChange={setBorPåFolkeregistrertAdresse}
             />
             <RadioGruppe legend={'bosituasjon'} feil={null}>
                 <Radio
@@ -69,9 +65,7 @@ const FlyktningstatusOppholdstillatelse = () => {
                 feil={null}
                 fieldName={'fieldname'}
                 state={delerBoligMedAndreVoksne}
-                onChange={val => {
-                    setDelerBoligMedAndreVoksne(val);
-                }}
+                onChange={setDelerBoligMedAndreVoksne}
             />
 
             <Bunnknapper
@@ -101,11 +95,11 @@ const FlyktningstatusOppholdstillatelse = () => {
                             })
                         );
                     },
-                    steg: Søknadsteg.BoOgOppholdINorge
+                    steg: Søknadsteg.DinFormue
                 }}
             />
         </div>
     );
 };
 
-export default FlyktningstatusOppholdstillatelse;
+export default BoOgOppholdINorge;

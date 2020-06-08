@@ -13,6 +13,21 @@ interface SøknadState {
         bosituasjon: Bosituasjon | null;
         delerBoligMedAndreVoksne: boolean | null;
     };
+    formue: {
+        harFomue: boolean | null;
+        belopFormue: string | null;
+        eierBolig: boolean | null;
+        harDepositumskonto: boolean | null;
+    };
+    inntekt: {
+        harInntekt: boolean | null;
+        mottarPensjon: boolean | null;
+        harMottattSosialstønad: boolean | null;
+    };
+    utenlandsopphold: {
+        harReistTilUtlandetSiste90dager: boolean | null;
+        skalReiseTilUtlandetNeste12Måneder: boolean | null;
+    };
 }
 
 const initialState: SøknadState = {
@@ -26,6 +41,21 @@ const initialState: SøknadState = {
         borPåFolkeregistrertAdresse: null,
         bosituasjon: null,
         delerBoligMedAndreVoksne: null
+    },
+    formue: {
+        harFomue: null,
+        belopFormue: null,
+        eierBolig: null,
+        harDepositumskonto: null
+    },
+    inntekt: {
+        harInntekt: null,
+        harMottattSosialstønad: null,
+        mottarPensjon: null
+    },
+    utenlandsopphold: {
+        harReistTilUtlandetSiste90dager: null,
+        skalReiseTilUtlandetNeste12Måneder: null
     }
 };
 
@@ -36,22 +66,20 @@ export default createSlice({
         harUførevedtakUpdated(state, action: PayloadAction<boolean | null>) {
             state.harUførevedtak = action.payload;
         },
-        flyktningstatusUpdated(
-            state,
-            action: PayloadAction<{ harOppholdstillatelse: boolean | null; erFlyktning: boolean | null }>
-        ) {
+        flyktningstatusUpdated(state, action: PayloadAction<SøknadState['flyktningstatus']>) {
             state.flyktningstatus = action.payload;
         },
-        boOgOppholdUpdated(
-            state,
-            action: PayloadAction<{
-                borOgOppholderSegINorge: boolean | null;
-                borPåFolkeregistrertAdresse: boolean | null;
-                bosituasjon: Bosituasjon | null;
-                delerBoligMedAndreVoksne: boolean | null;
-            }>
-        ) {
+        boOgOppholdUpdated(state, action: PayloadAction<SøknadState['boOgOpphold']>) {
             state.boOgOpphold = action.payload;
+        },
+        formueUpdated(state, action: PayloadAction<SøknadState['formue']>) {
+            state.formue = action.payload;
+        },
+        inntektUpdated(state, action: PayloadAction<SøknadState['inntekt']>) {
+            state.inntekt = action.payload;
+        },
+        utenlandsoppholdUpdated(state, action: PayloadAction<SøknadState['utenlandsopphold']>) {
+            state.utenlandsopphold = action.payload;
         }
     }
 });
