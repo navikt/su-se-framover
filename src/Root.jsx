@@ -21,6 +21,7 @@ import { BrowserRouter as Router, Switch, Route, useLocation, useHistory } from 
 import { Provider } from 'react-redux';
 import Store from './redux/Store';
 import Soknad from './pages/søknad';
+import { IntlProvider } from "react-intl";
 
 const Root = () => {
     const [state, setState] = useState({

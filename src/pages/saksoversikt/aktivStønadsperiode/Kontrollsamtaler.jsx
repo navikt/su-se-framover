@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { reverseDateString } from '../../../HelperFunctions';
-import ModalWrapper from 'nav-frontend-modal';
-import { useDispatch } from 'react-redux';
-import { kontrollSamtaleUpdated } from '../../../redux/saksoversikt/saksoversiktActions';
-import { DialogIcon, PencilIcon } from '../../../assets/Icons';
-import { useSelector } from 'react-redux';
-import { BoldP, FlexDiv, FlexColumnDiv } from './StyledComponents';
+import React, {useState} from "react";
+import {reverseDateString} from "../../../HelperFunctions";
+import ModalWrapper from "nav-frontend-modal";
+import {useDispatch} from "react-redux";
+import {updateKontrollsamtaleAndLog} from "../../../redux/saksoversikt/saksoversiktActions";
+import {DialogIcon, PencilIcon} from "../../../assets/Icons";
+import {useSelector} from "react-redux";
+import {BoldP, FlexDiv, FlexColumnDiv} from "./StyledComponents"
 
 const Kontrollsamtaler = () => {
     const { saksoversiktReducer } = useSelector(state => state);
@@ -40,8 +40,8 @@ const Kontrollsamtaler = () => {
             setModalOpen(true);
         };
         const closeModal = () => {
-            setModalOpen(false);
-            dispatch(kontrollSamtaleUpdated(tempDate));
+            setModalOpen(false)
+            dispatch(updateKontrollsamtaleAndLog(tempDate))
         };
         const updateDate = (value, index) => {
             tempDate = { index: index, value: value };

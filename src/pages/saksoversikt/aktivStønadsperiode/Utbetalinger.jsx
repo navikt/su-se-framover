@@ -3,7 +3,7 @@ import { reverseDateString } from '../../../HelperFunctions';
 import ModalWrapper from 'nav-frontend-modal';
 import { Radio, RadioGruppe } from 'nav-frontend-skjema';
 import { PencilIcon, BankNote } from '../../../assets/Icons';
-import { utbetalingUpdated } from '../../../redux/saksoversikt/saksoversiktActions';
+import { updateUtbetalingAndLog } from '../../../redux/saksoversikt/saksoversiktActions';
 import { useSelector, useDispatch } from 'react-redux';
 import { BoldP, MarginRightBoldP, FlexDiv } from './StyledComponents';
 
@@ -49,9 +49,8 @@ const Utbetalinger = () => {
         ];
 
         const handleActions = (e, index) => {
-            dispatch(utbetalingUpdated({ status: e.target.value, index: index })); //.then(() =>
-            //dispatch(hendelseUpdated({typeOfHendelse: "utbetalingUpdated", newStatus: e.target.value, index: index})))
-        };
+            dispatch(updateUtbetalingAndLog({newStatus: e.target.value, index: index}))
+        }
 
         return (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', marginBottom: '1em' }}>

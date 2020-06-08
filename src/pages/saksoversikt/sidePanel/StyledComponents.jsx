@@ -24,8 +24,8 @@ const animationClose = keyframes`
 export const ExpandableDiv = styled.div`
     display: flex;
     overflow: hidden;
-    height: 40em;
-    &.open {
+    height: 45em;
+    &.open{
         will-change: max-width, width;
         width: 40%;
         max-width: 40%;
@@ -41,6 +41,7 @@ export const ExpandableDiv = styled.div`
 export const ElementsContainer = styled.div`
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
     width: 90%;
     background-color: rgb(233, 231, 231);
 `;

@@ -11,7 +11,7 @@ import {
 } from '../../assets/Icons';
 import { ExpandableDiv, LinkStyled, MarginRightSpan } from './StyledComponents';
 
-//TODO: Fiks størrelse på ikoner. må graves litt dypere inn i
+
 export const Venstremeny = () => {
     const [expand, setExpand] = useState(false);
     const [firstRender, setFirstRender] = useState(true);

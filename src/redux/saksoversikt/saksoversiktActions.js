@@ -18,19 +18,61 @@ export const submitSaksoversikt = () => {
     };
 };
 
-export const kontrollSamtaleUpdated = newDateObject => {
+export const updateKontrollsamtaleAndLog = newDateObject => {
     return (dispatch, getState) => {
-        const currentKontrollSamtaler = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode
-            .kontrollsamtaler;
-        const updatedKontrollsamtaler = currentKontrollSamtaler.map((n, idx) =>
-            idx === newDateObject.index ? newDateObject.value : n
-        );
+        const currentKontrollSamtaler = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode.kontrollsamtaler
+        const currentHendelser = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode.hendelser
+
+        let oldDate;
+        let newDate;
+
+        const updatedKontrollsamtaler = currentKontrollSamtaler
+            .map((n, idx) =>{
+                if(idx === newDateObject.index){
+                    oldDate = n;
+                    newDate = newDateObject.value
+                    return newDateObject.value
+                }
+                return n;
+            })
+
+            //TODO: legge til index for gammel dato så det blir mer oversiktlig over
+            // hvilke datoer som har blitt oppdatert for hendelser?
+            const updatedHendelser = [
+                `${new Date().toString()}: Agent Smith endret kontrollsamtale for ${oldDate} til ${newDate} `,
+                ...currentHendelser
+            ]
 
         const updatedSaksoversikt = {
             ...saksoversikt,
             aktivStønadsperiode: {
                 ...saksoversikt.aktivStønadsperiode,
-                kontrollsamtaler: updatedKontrollsamtaler
+                kontrollsamtaler: updatedKontrollsamtaler,
+                hendelser: updatedHendelser
+            }
+        }
+
+        return dispatch({
+            type: types.KONTROLLSAMTALE_UPDATED,
+            payload: updatedSaksoversikt
+        })
+    }
+}
+
+/*
+ if logging is bad idea.. ?
+export const kontrollSamtaleUpdated = newDateObject => {
+    return (dispatch, getState) => {
+        const currentKontrollSamtaler = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode.kontrollsamtaler
+
+        const updatedKontrollsamtaler = currentKontrollSamtaler
+            .map((n, idx) => idx === newDateObject.index ? newDateObject.value : n)
+
+        const updatedSaksoversikt = {
+            ...saksoversikt,
+            aktivStønadsperiode: {
+                ...saksoversikt.aktivStønadsperiode,
+                kontrollsamtaler: updatedKontrollsamtaler,
             }
         };
 
@@ -39,25 +81,61 @@ export const kontrollSamtaleUpdated = newDateObject => {
             payload: updatedSaksoversikt
         });
     };
-};
+}; */
 
-export const utbetalingUpdated = newStatusObject => {
+// if logging is bad idea.. ?
+// export const utbetalingUpdated = newStatusObject => {
+//     return (dispatch, getState) => {
+//         const currentUtbetalinger = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode.utbetalinger;
+//
+//         const updatedUtbetalinger = currentUtbetalinger
+//             .map((n, idx) => idx === newStatusObject.index ? {...n, status: newStatusObject.status} : n)
+//
+//         const updatedSaksoversikt = {
+//             ...saksoversikt,
+//             aktivStønadsperiode: {
+//                 ...saksoversikt.aktivStønadsperiode,
+//                 utbetalinger: updatedUtbetalinger
+//             }
+//         }
+//
+//
+//         return dispatch({
+//             type: types.UTBETALING_UPDATED,
+//             payload: updatedSaksoversikt
+//         })
+//     }
+// }
+
+export const updateUtbetalingAndLog = newStatusObject => {
     return (dispatch, getState) => {
         const currentUtbetalinger = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode.utbetalinger;
+        const currentHendelser = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode.hendelser
+        const textStatus = newStatusObject.newStatus === "stoppet" ? "stoppet" : "aktiverte"
 
-        const updatedUtbetalinger = currentUtbetalinger.map((n, idx) =>
-            idx === newStatusObject.index ? { ...n, status: newStatusObject.status } : n
-        );
+        let utbetalingThatWasUpdated;
+        const updatedUtbetalinger = currentUtbetalinger
+            .map((n, idx) => {
+                if(idx === newStatusObject.index){
+                    utbetalingThatWasUpdated = n;
+                    return {...n, status: newStatusObject.newStatus}
+                }
+                return n;
+            })
+
+        const updatedHendelser = [
+            `${new Date().toString()}: Agent Smith ${textStatus} utbetaling for ${utbetalingThatWasUpdated.datoForUtbetaling}`,
+            ...currentHendelser
+        ]
 
         const updatedSaksoversikt = {
             ...saksoversikt,
             aktivStønadsperiode: {
                 ...saksoversikt.aktivStønadsperiode,
-                utbetalinger: updatedUtbetalinger
+                utbetalinger: updatedUtbetalinger,
+                hendelser: updatedHendelser
             }
-        };
-
-        console.log('Fra utbetaling', updatedSaksoversikt);
+        }
 
         return dispatch({
             type: types.UTBETALING_UPDATED,
@@ -83,106 +161,8 @@ export const saksnotaterUpdated = value => {
     };
 };
 
-// ex: {typeOfHendelse: "utbetalingUpdated", newStatus: status, index: index }
-// ex: {typeOfHendelse: "kontrollSamtaleUpdated", previousDate: '...', newDate: '...' }
-export const hendelseUpdated = hendelseObject => {
-    return (dispatch, getState) => {
-        const saksoversikt = getState().saksoversiktReducer.saksoversikt;
 
-        if (hendelseObject.typeOfHendelse === 'utbetalingUpdated') {
-            const currentHendelser = getState().saksoversiktReducer.saksoversikt.aktivStønadsperiode.hendelser;
-
-            const textStatus = hendelseObject.newStatus === 'stoppet' ? 'stoppet' : 'aktiverte';
-
-            const utbetalingThatWasUpdated = currentHendelser.filter((n, idx) => idx === hendelseObject.index);
-
-            const updatedHendelser = [
-                `${new Date().toString()}: Agent Smith ${textStatus} utbetaling for ${utbetalingThatWasUpdated}`,
-                ...currentHendelser
-            ];
-
-            const updatedSaksoversikt = {
-                ...saksoversikt,
-                aktivStønadsperiode: {
-                    ...saksoversikt.aktivStønadsperiode,
-                    hendelser: updatedHendelser
-                }
-            };
-
-            console.log('Fra hendelser', updatedSaksoversikt);
-            return dispatch({
-                type: types.HENDELSE_UPDATED,
-                payload: updatedSaksoversikt
-            });
-        } else if (hendelseObject.typeOfHendelse === 'kontrollSamtaleUpdated') {
-            console.log('kontrollsamtale hendelse');
-        }
-        console.log('default hendelse');
-        return dispatch({
-            type: types.HENDELSE_UPDATED,
-            payload: saksoversikt
-        });
-    };
-};
-
-const jsonSøknad = {
-    personopplysninger: {
-        fnr: '12345678910',
-        fornavn: 'kake',
-        mellomnavn: 'kjeks',
-        etternavn: 'mannen',
-        telefonnummer: '12345678',
-        gateadresse: 'gaten',
-        postnummer: '0050',
-        poststed: 'Oslo',
-        bruksenhet: '50',
-        bokommune: 'Oslo',
-        flyktning: true,
-        borFastINorge: true,
-        statsborgerskap: 'NOR'
-    },
-    boforhold: {
-        delerBolig: true,
-        borSammenMed: ['Ektefelle/Partner/Samboer', 'Andre personer over 18 år'],
-        delerBoligMed: [
-            { fnr: '12345678910', navn: 'voksen jensen' },
-            { fnr: '10987654321', navn: 'voksen hansen' }
-        ]
-    },
-    utenlandsopphold: {
-        utenlandsopphold: true,
-        antallRegistrerteDager: 11,
-        registrertePerioder: [{ utreisedato: '2020-03-10', innreisedato: '2020-03-10' }],
-        planlagteUtenlandsopphold: true,
-        antallPlanlagteDager: 10,
-        planlagtePerioder: [{ utreisedato: '2020-06-01', innreisedato: '2020-06-20' }]
-    },
-    oppholdstillatelse: { harVarigOpphold: false, utløpsdato: '2020-03-10', søktOmForlengelse: true },
-    inntektPensjonFormue: {
-        framsattKravAnnenYtelse: true,
-        framsattKravAnnenYtelseBegrunnelse: 'annen ytelse begrunnelse',
-        harInntekt: true,
-        inntektBeløp: 2500,
-        harPensjon: true,
-        pensjonsOrdning: [
-            { ordning: 'KLP', beløp: 2000 },
-            { ordning: 'SPK', beløp: 5000 }
-        ],
-        sumInntektOgPensjon: 7000,
-        harFormueEiendom: true,
-        harFinansFormue: true,
-        formueBeløp: 1000,
-        harAnnenFormue: true,
-        annenFormue: [{ typeFormue: 'juveler', skattetakst: 2000 }]
-    },
-    forNav: {
-        målform: 'Bokmål',
-        søkerMøttPersonlig: true,
-        harFullmektigMøtt: false,
-        erPassSjekket: true,
-        merknader: 'intet å bemerke'
-    }
-};
+const jsonSøknad = { personopplysninger: { fnr: "12345678910",  fornavn: "kake",  mellomnavn: "kjeks", etternavn: "mannen", telefonnummer: "12345678", gateadresse: "gaten", postnummer: "0050", poststed: "Oslo", bruksenhet: "50", bokommune: "Oslo", flyktning: true, borFastINorge: true, statsborgerskap: "NOR"}, boforhold: {delerBolig: true, borSammenMed: ["Ektefelle/Partner/Samboer", "Andre personer over 18 år"], delerBoligMed: [{fnr: "12345678910", navn: "voksen jensen"}, {fnr: "10987654321", navn: "voksen hansen"}]}, utenlandsopphold: {utenlandsopphold: true, antallRegistrerteDager: 11, registrertePerioder: [{utreisedato: "2020-03-10", innreisedato: "2020-03-10"}], planlagteUtenlandsopphold: true, antallPlanlagteDager: 10, planlagtePerioder: [{utreisedato: "2020-06-01", innreisedato: "2020-06-20"}]}, oppholdstillatelse: {harVarigOpphold: false, utløpsdato: "2020-03-10", søktOmForlengelse: true}, inntektPensjonFormue: {framsattKravAnnenYtelse: true, framsattKravAnnenYtelseBegrunnelse: "annen ytelse begrunnelse", harInntekt: true, inntektBeløp: 2500, harPensjon: true, pensjonsOrdning: [{ordning: "KLP", beløp: 2000}, {ordning: "SPK", beløp: 5000}], sumInntektOgPensjon: 7000, harFormueEiendom: true, harFinansFormue: true, formueBeløp: 1000, harAnnenFormue: true, annenFormue: [{typeFormue: "juveler", skattetakst: 2000}]}, forNav: {målform: "Bokmål", søkerMøttPersonlig: true, harFullmektigMøtt: false, erPassSjekket: true, merknader: "intet å bemerke"}};
 
 const saksoversikt = {
     aktivStønadsperiode: {
