@@ -21,7 +21,10 @@ interface SøknadState {
     };
     inntekt: {
         harInntekt: boolean | null;
+        inntektBeløp: string | null;
         mottarPensjon: boolean | null;
+        //TODO: bedre navn
+        pensjon: [{ ordning: "", beløp: "" }],
         harMottattSosialstønad: boolean | null;
     };
     utenlandsopphold: {
@@ -50,7 +53,9 @@ const initialState: SøknadState = {
     },
     inntekt: {
         harInntekt: null,
+        inntektBeløp: null,
         harMottattSosialstønad: null,
+        pensjon: [{ ordning: "", beløp: "" }],
         mottarPensjon: null
     },
     utenlandsopphold: {

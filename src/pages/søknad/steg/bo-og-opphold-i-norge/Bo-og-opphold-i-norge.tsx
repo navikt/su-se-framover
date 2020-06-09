@@ -3,10 +3,11 @@ import * as React from 'react';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknadSlice';
-import { Søknadsteg } from '../types';
-import Bunnknapper from '../Bunnknapper';
+import { Søknadsteg } from '../../types';
+import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import { Bosituasjon } from '~features/søknad/types';
+import sharedStyles from '../../steg-shared.module.less';
 
 const BoOgOppholdINorge = () => {
     const boOgOppholdFraStore = useAppSelector(s => s.soknad.boOgOpphold);
@@ -26,47 +27,49 @@ const BoOgOppholdINorge = () => {
 
     return (
         <div>
-            <JaNeiSpørsmål
-                legend={'Bor og oppholder i Norge?'}
-                feil={null}
-                fieldName={'opphold-i-norge'}
-                state={borOgOppholderSegINorge}
-                onChange={setBorOgOppholderSegINorge}
-            />
-            <JaNeiSpørsmål
-                legend={'Bor på folkereg adresse?'}
-                feil={null}
-                fieldName={'folkereg-adresse'}
-                state={borPåFolkeregistrertAdresse}
-                onChange={setBorPåFolkeregistrertAdresse}
-            />
-            <RadioGruppe legend={'bosituasjon'} feil={null}>
-                <Radio
-                    name={'bosituasjon'}
-                    label={'Alene eller med barn under 18'}
-                    value={Bosituasjon.BorAleneEllerMedBarnUnder18}
-                    checked={bosituasjon === Bosituasjon.BorAleneEllerMedBarnUnder18}
-                    onChange={() => {
-                        setBosituasjon(Bosituasjon.BorAleneEllerMedBarnUnder18);
-                    }}
+            <div className={sharedStyles.formContainer}>
+                <JaNeiSpørsmål
+                    legend={'Bor og oppholder i Norge?'}
+                    feil={null}
+                    fieldName={'opphold-i-norge'}
+                    state={borOgOppholderSegINorge}
+                    onChange={setBorOgOppholderSegINorge}
                 />
-                <Radio
-                    name={'bosituasjon'}
-                    label={'Bor med noen over 18?'}
-                    value={Bosituasjon.BorMedNoenOver18}
-                    checked={bosituasjon === Bosituasjon.BorMedNoenOver18}
-                    onChange={() => {
-                        setBosituasjon(Bosituasjon.BorMedNoenOver18);
-                    }}
+                <JaNeiSpørsmål
+                    legend={'Bor på folkereg adresse?'}
+                    feil={null}
+                    fieldName={'folkereg-adresse'}
+                    state={borPåFolkeregistrertAdresse}
+                    onChange={setBorPåFolkeregistrertAdresse}
                 />
-            </RadioGruppe>
-            <JaNeiSpørsmål
-                legend={'Deler bolig med andre voksne?'}
-                feil={null}
-                fieldName={'fieldname'}
-                state={delerBoligMedAndreVoksne}
-                onChange={setDelerBoligMedAndreVoksne}
-            />
+                <RadioGruppe legend={'bosituasjon'} feil={null}>
+                    <Radio
+                        name={'bosituasjon'}
+                        label={'Alene eller med barn under 18'}
+                        value={Bosituasjon.BorAleneEllerMedBarnUnder18}
+                        checked={bosituasjon === Bosituasjon.BorAleneEllerMedBarnUnder18}
+                        onChange={() => {
+                            setBosituasjon(Bosituasjon.BorAleneEllerMedBarnUnder18);
+                        }}
+                    />
+                    <Radio
+                        name={'bosituasjon'}
+                        label={'Bor med noen over 18?'}
+                        value={Bosituasjon.BorMedNoenOver18}
+                        checked={bosituasjon === Bosituasjon.BorMedNoenOver18}
+                        onChange={() => {
+                            setBosituasjon(Bosituasjon.BorMedNoenOver18);
+                        }}
+                    />
+                </RadioGruppe>
+                <JaNeiSpørsmål
+                    legend={'Deler bolig med andre voksne?'}
+                    feil={null}
+                    fieldName={'fieldname'}
+                    state={delerBoligMedAndreVoksne}
+                    onChange={setDelerBoligMedAndreVoksne}
+                />
+            </div>
 
             <Bunnknapper
                 previous={{

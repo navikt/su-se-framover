@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { Søknadsteg } from '../types';
-import Bunnknapper from '../Bunnknapper';
+import { Søknadsteg } from '../../types';
+import Bunnknapper from '../../bunnknapper/Bunnknapper';
 
 const Oppsummering = () => {
     return (

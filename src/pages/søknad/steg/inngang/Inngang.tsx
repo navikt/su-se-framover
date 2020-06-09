@@ -3,12 +3,12 @@ import { Input } from 'nav-frontend-skjema';
 import { Knapp } from 'nav-frontend-knapper';
 import { useAppDispatch } from '~redux/Store';
 import { FormattedMessage } from 'react-intl';
-import nb from './nb';
-import * as saksoversiktSlice from '../../../features/saksoversikt/saksoversikt.slice';
+import nb from './inngang-nb';
+import * as saksoversiktSlice from '../../../../features/saksoversikt/saksoversikt.slice';
 import { IntlProvider } from 'react-intl';
 import styles from './inngang.module.less';
 import { useHistory } from 'react-router-dom';
-import { Søknadsteg } from '../types';
+import { Søknadsteg } from '../../types';
 
 const index = () => {
     const [, setNavn] = React.useState('');

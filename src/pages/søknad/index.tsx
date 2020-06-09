@@ -1,19 +1,19 @@
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import Stegindikator from 'nav-frontend-stegindikator';
 import { createIntl, createIntlCache, RawIntlProvider } from 'react-intl';
 
 import styles from './index.module.less';
-import Inngang from './inngang';
+import Inngang from './steg/inngang/Inngang';
 import { Søknadsteg } from './types';
-import Uførevedtak from './uførevedtak';
-import FlyktningstatusOppholdstillatelse from './flyktningstatus-oppholdstillatelse';
-import BoOgOppholdINorge from './bo-og-opphold-i-norge';
-import Formue from './formue';
-import Inntekt from './inntekt';
-import Utenlandsopphold from './utenlandsopphold';
-import Kontakt from './kontakt';
-import Oppsummering from './oppsummering';
+import Uførevedtak from './steg/uførevedtak/Uførevedtak';
+import FlyktningstatusOppholdstillatelse from './steg/flyktningstatus-oppholdstillatelse/Flyktningstatus-oppholdstillatelse';
+import BoOgOppholdINorge from './steg/bo-og-opphold-i-norge/Bo-og-opphold-i-norge';
+import Formue from './steg/formue/DinFormue';
+import Inntekt from './steg/inntekt/Inntekt';
+import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
+import Kontakt from './steg/kontakt/Kontakt';
+import Oppsummering from './steg/oppsummering/Oppsumering';
 
 const cache = createIntlCache();
 const intl = createIntl(
@@ -27,7 +27,9 @@ const intl = createIntl(
             'steg.inntekt': 'Din inntekt',
             'steg.utenlandsopphold': 'Reise til utlandet',
             'steg.kontakt': 'Kontakt',
-            'steg.oppsummering': 'Oppsummering'
+            'steg.oppsummering': 'Oppsummering',
+            'steg.neste': 'Neste',
+            'steg.forrige': 'Forrige'
         }
     },
     cache
@@ -35,57 +37,73 @@ const intl = createIntl(
 
 const index = () => {
     const { step } = useParams<{ step: Søknadsteg }>();
+    const history = useHistory();
+
+    const steg = [
+        {
+            index: 0,
+            label: intl.formatMessage({ id: 'steg.uforevedtak' }),
+            step: Søknadsteg.Uførevedtak
+        },
+        {
+            index: 1,
+            label: intl.formatMessage({ id: 'steg.flyktningstatus' }),
+            step: Søknadsteg.FlyktningstatusOppholdstillatelse
+        },
+        {
+            index: 2,
+            label: intl.formatMessage({ id: 'steg.boOgOppholdINorge' }),
+            step: Søknadsteg.BoOgOppholdINorge
+        },
+        {
+            index: 3,
+            label: intl.formatMessage({ id: 'steg.formue' }),
+            step: Søknadsteg.DinFormue
+        },
+        {
+            index: 4,
+            label: intl.formatMessage({ id: 'steg.inntekt' }),
+            step: Søknadsteg.DinInntekt
+        },
+        {
+            index: 5,
+            label: intl.formatMessage({ id: 'steg.utenlandsopphold' }),
+            step: Søknadsteg.ReiseTilUtlandet
+        },
+        {
+            index: 6,
+            label: intl.formatMessage({ id: 'steg.kontakt' }),
+            step: Søknadsteg.Kontakt
+        },
+        {
+            index: 7,
+            label: intl.formatMessage({ id: 'steg.oppsummering' }),
+            step: Søknadsteg.Oppsummering
+        }
+    ];
+
     return (
         <RawIntlProvider value={intl}>
             <div className={styles.container}>
-                <div>
-                    <h1>Søknad</h1>
+                <div className={styles.headerContainer}>
+                    <div>
+                        <h1>Søknad</h1>
+                    </div>
+                    <Stegindikator
+                        steg={steg.map(s => ({
+                            index: s.index,
+                            label: s.label,
+                            aktiv: s.step === step
+                        }))}
+                        visLabel={true}
+                        onChange={index => {
+                            const nyttSteg = steg[index];
+                            if (nyttSteg) {
+                                history.push(`/soknad/${nyttSteg.step}`);
+                            }
+                        }}
+                    />
                 </div>
-                <Stegindikator
-                    steg={[
-                        {
-                            index: 1,
-                            label: intl.formatMessage({ id: 'steg.uforevedtak' }),
-                            aktiv: step === Søknadsteg.Uførevedtak
-                        },
-                        {
-                            index: 2,
-                            label: intl.formatMessage({ id: 'steg.flyktningstatus' }),
-                            aktiv: step === Søknadsteg.FlyktningstatusOppholdstillatelse
-                        },
-                        {
-                            index: 3,
-                            label: intl.formatMessage({ id: 'steg.boOgOppholdINorge' }),
-                            aktiv: step === Søknadsteg.BoOgOppholdINorge
-                        },
-                        {
-                            index: 4,
-                            label: intl.formatMessage({ id: 'steg.formue' }),
-                            aktiv: step === Søknadsteg.DinFormue
-                        },
-                        {
-                            index: 5,
-                            label: intl.formatMessage({ id: 'steg.inntekt' }),
-                            aktiv: step === Søknadsteg.DinInntekt
-                        },
-                        {
-                            index: 6,
-                            label: intl.formatMessage({ id: 'steg.utenlandsopphold' }),
-                            aktiv: step === Søknadsteg.ReiseTilUtlandet
-                        },
-                        {
-                            index: 7,
-                            label: intl.formatMessage({ id: 'steg.kontakt' }),
-                            aktiv: step === Søknadsteg.Kontakt
-                        },
-                        {
-                            index: 8,
-                            label: intl.formatMessage({ id: 'steg.oppsummering' }),
-                            aktiv: step === Søknadsteg.Oppsummering
-                        }
-                    ]}
-                    visLabel={true}
-                />
                 {step === Søknadsteg.Inngang ? (
                     <Inngang />
                 ) : step === Søknadsteg.Uførevedtak ? (
@@ -105,8 +123,8 @@ const index = () => {
                 ) : step === Søknadsteg.Oppsummering ? (
                     <Oppsummering />
                 ) : (
-                    '404'
-                )}
+                                                        '404'
+                                                    )}
             </div>
         </RawIntlProvider>
     );
