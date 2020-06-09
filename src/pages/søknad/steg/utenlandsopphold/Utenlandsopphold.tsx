@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
@@ -7,7 +8,6 @@ import { Søknadsteg } from '../../types';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import TextProvider, { Languages } from '~components/TextProvider';
-import { FormattedMessage } from 'react-intl';
 import messages from './utenlandsopphold-nb';
 
 const Utenlandsopphold = () => {
@@ -23,9 +23,10 @@ const Utenlandsopphold = () => {
 
     return (
         <TextProvider messages={{ [Languages.nb]: messages }}>
-            <div>
+            <div className={sharedStyles.container}>
                 <div className={sharedStyles.formContainer}>
                     <JaNeiSpørsmål
+                        className={sharedStyles.sporsmal}
                         legend={<FormattedMessage id="input.harReistSiste90.label" />}
                         feil={null}
                         fieldName={'harreist'}
@@ -34,6 +35,7 @@ const Utenlandsopphold = () => {
                     />
 
                     <JaNeiSpørsmål
+                        className={sharedStyles.sporsmal}
                         legend={<FormattedMessage id="input.skalReiseNeste12.label" />}
                         feil={null}
                         fieldName={'skalreise'}

@@ -1,6 +1,6 @@
 export default {
     'tittel': 'Søknad om supplerende stønad ufør',
-    'label.fnr': 'fnr',
-    'label.navn': 'navn',
+    'input.fnr.label': 'fnr',
+    'input.navn.label': 'navn',
     'knapp.neste': 'Neste'
 };

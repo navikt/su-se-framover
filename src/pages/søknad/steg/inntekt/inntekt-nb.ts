@@ -5,6 +5,4 @@ export default {
     'input.pensjonsOrdning.label': 'Fra hvilken ordning mottar du pensjon?',
     'input.pensjonsBeløp.label': 'Brutto beløp per år',
     'input.harMottattSosialstønad.label': 'Har du mottatt sosialstønad i løpet av de siste tre månedene?',
-    'steg.neste': 'Neste',
-    'steg.tilbake': 'Tilbake'
 }

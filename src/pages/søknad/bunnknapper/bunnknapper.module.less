@@ -1,4 +1,14 @@
+@import '~/styles/variables.less';
+
 .container {
     display: flex;
     align-items: center;
+    
+    .navKnapp {
+        flex: 1;
+        
+        &:first-child:not(:last-child) {
+            margin-right: @spacing-s;
+        }
+    }
 }

@@ -22,9 +22,10 @@ const DinInntekt = () => {
 
     return (
         <TextProvider messages={{ [Languages.nb]: messages }}>
-            <div>
+            <div className={sharedStyles.container}>
                 <div className={sharedStyles.formContainer}>
                     <JaNeiSpørsmål
+                        className={sharedStyles.sporsmal}
                         legend={<FormattedMessage id="input.harInntekt.label" />}
                         feil={null}
                         fieldName={'inntekt'}
@@ -34,6 +35,7 @@ const DinInntekt = () => {
 
                     {harInntekt && (
                         <Input
+                            className={sharedStyles.sporsmal}
                             value={inntektBeløp || ""}
                             label={<FormattedMessage id="input.inntekt.inntektBeløp" />}
                             onChange={e => setinntektBeløp(e.target.value)}
@@ -41,6 +43,7 @@ const DinInntekt = () => {
                     }
 
                     <JaNeiSpørsmål
+                        className={sharedStyles.sporsmal}
                         legend={<FormattedMessage id="input.mottarPensjon.label" />}
                         feil={null}
                         fieldName={'pensjon'}
@@ -67,6 +70,7 @@ const DinInntekt = () => {
                     }
 
                     <JaNeiSpørsmål
+                        className={sharedStyles.sporsmal}
                         legend={<FormattedMessage id="input.harMottattSosialstønad.label" />}
                         feil={null}
                         fieldName={'sosialstonad'}
@@ -77,7 +81,6 @@ const DinInntekt = () => {
 
                 <Bunnknapper
                     previous={{
-                        label: <FormattedMessage id="steg.tilbake" />,
                         onClick: () => {
                             dispatch(
                                 søknadSlice.actions.inntektUpdated({
@@ -92,7 +95,6 @@ const DinInntekt = () => {
                         steg: Søknadsteg.DinFormue
                     }}
                     next={{
-                        label: <FormattedMessage id="steg.neste" />,
                         onClick: () => {
                             dispatch(
                                 søknadSlice.actions.inntektUpdated({

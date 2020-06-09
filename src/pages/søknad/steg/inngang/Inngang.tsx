@@ -9,6 +9,7 @@ import { IntlProvider } from 'react-intl';
 import styles from './inngang.module.less';
 import { useHistory } from 'react-router-dom';
 import { Søknadsteg } from '../../types';
+import { Languages } from '~components/TextProvider';
 
 const index = () => {
     const [, setNavn] = React.useState('');
@@ -17,11 +18,11 @@ const index = () => {
     const history = useHistory();
 
     return (
-        <IntlProvider locale={'nb-NO'} messages={nb}>
+        <IntlProvider locale={Languages.nb} messages={nb}>
             <div className={styles.container}>
                 <div className={styles.inputs}>
-                    <Input label={<FormattedMessage id={'label.fnr'} />} onChange={e => setFnr(e.target.value)} />
-                    <Input label={<FormattedMessage id={'label.navn'} />} onChange={e => setNavn(e.target.value)} />
+                    <Input label={<FormattedMessage id={'input.fnr.label'} />} onChange={e => setFnr(e.target.value)} />
+                    <Input label={<FormattedMessage id={'input.navn.label'} />} onChange={e => setNavn(e.target.value)} />
                 </div>
                 <Knapp
                     onClick={() => {

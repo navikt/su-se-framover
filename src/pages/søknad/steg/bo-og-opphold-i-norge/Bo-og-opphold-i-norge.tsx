@@ -8,7 +8,9 @@ import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import { Bosituasjon } from '~features/søknad/types';
 import sharedStyles from '../../steg-shared.module.less';
-
+import { FormattedMessage } from 'react-intl';
+import messages from './bo-og-opphold-i-norge-nb'
+import TextProvider, { Languages } from '~components/TextProvider';
 const BoOgOppholdINorge = () => {
     const boOgOppholdFraStore = useAppSelector(s => s.soknad.boOgOpphold);
 
@@ -26,82 +28,90 @@ const BoOgOppholdINorge = () => {
     const dispatch = useAppDispatch();
 
     return (
-        <div>
-            <div className={sharedStyles.formContainer}>
-                <JaNeiSpørsmål
-                    legend={'Bor og oppholder i Norge?'}
-                    feil={null}
-                    fieldName={'opphold-i-norge'}
-                    state={borOgOppholderSegINorge}
-                    onChange={setBorOgOppholderSegINorge}
-                />
-                <JaNeiSpørsmål
-                    legend={'Bor på folkereg adresse?'}
-                    feil={null}
-                    fieldName={'folkereg-adresse'}
-                    state={borPåFolkeregistrertAdresse}
-                    onChange={setBorPåFolkeregistrertAdresse}
-                />
-                <RadioGruppe legend={'bosituasjon'} feil={null}>
-                    <Radio
-                        name={'bosituasjon'}
-                        label={'Alene eller med barn under 18'}
-                        value={Bosituasjon.BorAleneEllerMedBarnUnder18}
-                        checked={bosituasjon === Bosituasjon.BorAleneEllerMedBarnUnder18}
-                        onChange={() => {
-                            setBosituasjon(Bosituasjon.BorAleneEllerMedBarnUnder18);
-                        }}
+        <TextProvider messages={{ [Languages.nb]: messages }}>
+
+            <div className={sharedStyles.container}>
+                <div className={sharedStyles.formContainer}>
+                    <JaNeiSpørsmål
+                        className={sharedStyles.sporsmal}
+                        legend={<FormattedMessage id="input.opphold-i-norge.label" />}
+                        feil={null}
+                        fieldName={'opphold-i-norge'}
+                        state={borOgOppholderSegINorge}
+                        onChange={setBorOgOppholderSegINorge}
                     />
-                    <Radio
-                        name={'bosituasjon'}
-                        label={'Bor med noen over 18?'}
-                        value={Bosituasjon.BorMedNoenOver18}
-                        checked={bosituasjon === Bosituasjon.BorMedNoenOver18}
-                        onChange={() => {
-                            setBosituasjon(Bosituasjon.BorMedNoenOver18);
-                        }}
+                    <JaNeiSpørsmål
+                        className={sharedStyles.sporsmal}
+                        legend={<FormattedMessage id="input.folkereg-adresse.label" />}
+                        feil={null}
+                        fieldName={'folkereg-adresse'}
+                        state={borPåFolkeregistrertAdresse}
+                        onChange={setBorPåFolkeregistrertAdresse}
                     />
-                </RadioGruppe>
-                <JaNeiSpørsmål
-                    legend={'Deler bolig med andre voksne?'}
-                    feil={null}
-                    fieldName={'fieldname'}
-                    state={delerBoligMedAndreVoksne}
-                    onChange={setDelerBoligMedAndreVoksne}
+                    <RadioGruppe
+                        className={sharedStyles.sporsmal}
+                        legend={<FormattedMessage id={"input.bosituasjon.label"} />}
+                        feil={null}
+                    >
+                        <Radio
+                            name={'bosituasjon'}
+                            label={<FormattedMessage id={"input.bosituasjon.alene.label"} />}
+                            value={Bosituasjon.BorAleneEllerMedBarnUnder18}
+                            checked={bosituasjon === Bosituasjon.BorAleneEllerMedBarnUnder18}
+                            onChange={() => {
+                                setBosituasjon(Bosituasjon.BorAleneEllerMedBarnUnder18);
+                            }}
+                        />
+                        <Radio
+                            name={'bosituasjon'}
+                            label={<FormattedMessage id={"input.bosituasjon.medNoenOver18.label"} />}
+                            value={Bosituasjon.BorMedNoenOver18}
+                            checked={bosituasjon === Bosituasjon.BorMedNoenOver18}
+                            onChange={() => {
+                                setBosituasjon(Bosituasjon.BorMedNoenOver18);
+                            }}
+                        />
+                    </RadioGruppe>
+                    <JaNeiSpørsmål
+                        className={sharedStyles.sporsmal}
+                        legend={<FormattedMessage id={"input.delerBoligMedAndreVoksne.label"} />}
+                        feil={null}
+                        fieldName={'delerBoligMedAndreVoksne'}
+                        state={delerBoligMedAndreVoksne}
+                        onChange={setDelerBoligMedAndreVoksne}
+                    />
+                </div>
+
+                <Bunnknapper
+                    previous={{
+                        onClick: () => {
+                            dispatch(
+                                søknadSlice.actions.boOgOppholdUpdated({
+                                    borOgOppholderSegINorge,
+                                    borPåFolkeregistrertAdresse,
+                                    bosituasjon,
+                                    delerBoligMedAndreVoksne
+                                })
+                            );
+                        },
+                        steg: Søknadsteg.FlyktningstatusOppholdstillatelse
+                    }}
+                    next={{
+                        onClick: () => {
+                            dispatch(
+                                søknadSlice.actions.boOgOppholdUpdated({
+                                    borOgOppholderSegINorge,
+                                    borPåFolkeregistrertAdresse,
+                                    bosituasjon,
+                                    delerBoligMedAndreVoksne
+                                })
+                            );
+                        },
+                        steg: Søknadsteg.DinFormue
+                    }}
                 />
             </div>
-
-            <Bunnknapper
-                previous={{
-                    label: 'forrige steg',
-                    onClick: () => {
-                        dispatch(
-                            søknadSlice.actions.boOgOppholdUpdated({
-                                borOgOppholderSegINorge,
-                                borPåFolkeregistrertAdresse,
-                                bosituasjon,
-                                delerBoligMedAndreVoksne
-                            })
-                        );
-                    },
-                    steg: Søknadsteg.FlyktningstatusOppholdstillatelse
-                }}
-                next={{
-                    label: 'neste steg',
-                    onClick: () => {
-                        dispatch(
-                            søknadSlice.actions.boOgOppholdUpdated({
-                                borOgOppholderSegINorge,
-                                borPåFolkeregistrertAdresse,
-                                bosituasjon,
-                                delerBoligMedAndreVoksne
-                            })
-                        );
-                    },
-                    steg: Søknadsteg.DinFormue
-                }}
-            />
-        </div>
+        </TextProvider>
     );
 };
 

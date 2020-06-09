@@ -8,12 +8,10 @@ const Oppsummering = () => {
         <div>
             <Bunnknapper
                 previous={{
-                    label: 'forrige steg',
                     onClick: () => { console.log('previous') },
                     steg: Søknadsteg.Kontakt
                 }}
                 next={{
-                    label: 'neste steg',
                     onClick: () => { console.log('next') },
                     steg: Søknadsteg.LastOppDokumentasjon
                 }}

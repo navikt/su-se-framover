@@ -16,7 +16,7 @@ const Uførevedtak = () => {
     const dispatch = useAppDispatch();
 
     return (
-        <div>
+        <div className={sharedStyles.container}>
             <TextProvider messages={{ [Languages.nb]: messages }}>
                 <div className={sharedStyles.formContainer}>
                     <JaNeiSpørsmål

@@ -26,6 +26,7 @@ const Bunnknapper = (props: {
             <div className={styles.container}>
                 {props.previous && (
                     <Knapp
+                        className={styles.navKnapp}
                         onClick={() => {
                             props.previous?.onClick();
                             history.push(`/soknad/${props.previous?.steg}`);
@@ -36,6 +37,7 @@ const Bunnknapper = (props: {
                 )}
                 {props.next && (
                     <Hovedknapp
+                        className={styles.navKnapp}
                         onClick={() => {
                             props.next?.onClick();
                             history.push(`/soknad/${props.next?.steg}`);

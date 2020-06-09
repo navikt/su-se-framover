@@ -20,10 +20,11 @@ const FlyktningstatusOppholdstillatelse = () => {
     const dispatch = useAppDispatch();
 
     return (
-        <div>
+        <div className={sharedStyles.container}>
             <TextProvider messages={{ [Languages.nb]: messages }}>
                 <div className={sharedStyles.formContainer}>
                     <JaNeiSpørsmål
+                        className={sharedStyles.sporsmal}
                         legend={<FormattedMessage id="input.flyktning.label" />}
                         feil={null}
                         fieldName={'flyktning'}
@@ -33,6 +34,7 @@ const FlyktningstatusOppholdstillatelse = () => {
                         }}
                     />
                     <JaNeiSpørsmål
+                        className={sharedStyles.sporsmal}
                         legend={<FormattedMessage id="input.oppholdstillatelse.label" />}
                         feil={null}
                         fieldName={'oppholdstillatelse'}
@@ -44,7 +46,6 @@ const FlyktningstatusOppholdstillatelse = () => {
                 </div>
                 <Bunnknapper
                     previous={{
-                        label: 'forrige steg',
                         onClick: () => {
                             dispatch(
                                 søknadSlice.actions.flyktningstatusUpdated({
@@ -56,7 +57,6 @@ const FlyktningstatusOppholdstillatelse = () => {
                         steg: Søknadsteg.Uførevedtak
                     }}
                     next={{
-                        label: 'neste steg',
                         onClick: () => {
                             dispatch(
                                 søknadSlice.actions.flyktningstatusUpdated({

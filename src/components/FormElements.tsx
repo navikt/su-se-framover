@@ -35,9 +35,11 @@ export const JaNeiSpørsmål = (props: {
     fieldName: string;
     state: boolean | null;
     onChange: (value: boolean) => void;
+    className?: string;
 }) => {
     return (
         <RadioPanelGruppe
+            className={props.className}
             legend={props.legend}
             name={props.fieldName}
             radios={[{ label: "Ja", value: "true" }, { label: "Nei", value: 'false' }]}
