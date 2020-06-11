@@ -30,13 +30,15 @@ const DinInntekt = () => {
         return (
             <div>
                 {pensjonsInntekt.map((item: { ordning: string; beløp: string }, index: number) => (
-                    <div className={sharedStyles.pensjonsInntekt} key={guid()}>
+                    <div className={sharedStyles.inputFelterDiv} key={guid()}>
                         <Input
+                            className={sharedStyles.inputFelt}
                             label={<FormattedMessage id="input.pensjonsOrdning.label" />}
                             value={item.ordning || ''}
                             onChange={e => updatePensjonsOrdning(e.target.value, index)}
                         />
                         <Input
+                            className={sharedStyles.inputFelt}
                             label={<FormattedMessage id="input.pensjonsBeløp.label" />}
                             value={item.beløp || ''}
                             onChange={e => updatePensjonsBeløp(e.target.value, index)}
@@ -44,7 +46,7 @@ const DinInntekt = () => {
                         {pensjonsInntekt.length > 1 && (
                             <Lenke
                                 href="#"
-                                className={sharedStyles.pensjonsInntektLink}
+                                className={sharedStyles.fjernFeltLink}
                                 onClick={() => fjernValgtInputFelt(index)}
                             >
                                 Fjern felt
@@ -52,7 +54,7 @@ const DinInntekt = () => {
                         )}
                     </div>
                 ))}
-                <div className={sharedStyles.pensjonsInntektKnapp}>
+                <div className={sharedStyles.leggTilFeltKnapp}>
                     <Knapp onClick={() => addInputFelt()}>Legg til felt</Knapp>
                 </div>
             </div>

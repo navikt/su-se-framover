@@ -64,7 +64,7 @@ function PersonInfoBar() {
     //  const url = '/person?ident=' + fnr;
     // const { data } = useFetch({ url });
     //eslint-disable-next-line
- //   const person = data ? data : {};
+    //   const person = data ? data : {};
     // console.log('person', person);
     return (
         <div>
