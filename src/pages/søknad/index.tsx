@@ -95,7 +95,7 @@ const index = () => {
                             label: s.label,
                             aktiv: s.step === step
                         }))}
-                        visLabel={true}
+                        visLabel={false}
                         onChange={index => {
                             const nyttSteg = steg[index];
                             if (nyttSteg) {
@@ -103,6 +103,9 @@ const index = () => {
                             }
                         }}
                     />
+                    <h2>
+                        {steg.find((s => s.step === step))?.label}
+                    </h2>
                 </div>
                 {step === Søknadsteg.Inngang ? (
                     <Inngang />

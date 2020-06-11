@@ -10,6 +10,8 @@ import messages from './inntekt-nb';
 import { FormattedMessage } from 'react-intl';
 import { Input } from 'nav-frontend-skjema';
 import sharedStyles from '../../steg-shared.module.less';
+import { Knapp } from 'nav-frontend-knapper';
+import Lenke from 'nav-frontend-lenker';
 
 const DinInntekt = () => {
     const inntektFraStore = useAppSelector(s => s.soknad.inntekt);
@@ -17,8 +19,84 @@ const DinInntekt = () => {
     const [inntektBeløp, setinntektBeløp] = React.useState(inntektFraStore.inntektBeløp);
     const [harMottattSosialstønad, setHarMottattSosialstønad] = React.useState(inntektFraStore.harMottattSosialstønad);
     const [mottarPensjon, setMottarPensjon] = React.useState(inntektFraStore.mottarPensjon);
-    const [pensjon, setPensjon] = React.useState(inntektFraStore.pensjon)
+    const [pensjonsInntekt, setPensjonsInntekt] = React.useState<Array<{ ordning: string, beløp: string }>>(inntektFraStore.pensjonsInntekt)
     const dispatch = useAppDispatch();
+
+    const pensjonsInntekter = () => {
+        return (
+            <div>
+                {
+                    pensjonsInntekt.map((item: { ordning: string, beløp: string }, index: number) => (
+                        <div className={sharedStyles.pensjonsInntekt}>
+                            <Input
+                                label={<FormattedMessage id="input.pensjonsOrdning.label" />}
+                                value={item.ordning || ''}
+                                onChange={e => updatePensjonsOrdning(e.target.value, index)}
+                            />
+                            <Input
+                                label={<FormattedMessage id="input.pensjonsBeløp.label" />}
+                                value={item.beløp || ''}
+                                onChange={e => updatePensjonsBeløp(e.target.value, index)}
+                            />
+                            {
+                                pensjonsInntekt.length > 1 && (
+                                    <Lenke
+                                        href="#"
+                                        className={sharedStyles.pensjonsInntektLink}
+                                        onClick={() => fjernValgtInputFelt(index)}
+                                    >
+                                        Fjern felt
+                                    </Lenke>
+                                )
+                            }
+                        </div>
+                    ))
+                }
+                <div className={sharedStyles.pensjonsInntektKnapp}>
+                    <Knapp onClick={() => addInputFelt()}>
+                        Legg til felt
+                    </Knapp>
+                </div>
+            </div>
+        )
+    }
+
+    const updatePensjonsOrdning = (value: string, index: number) => {
+        const pensjonsInntektItem = pensjonsInntekt[index];
+        pensjonsInntektItem.ordning = value;
+
+        const tempPensjonsOrdning = [
+            ...pensjonsInntekt.slice(0, index),
+            pensjonsInntektItem,
+            ...pensjonsInntekt.slice(index + 1)
+        ];
+        setPensjonsInntekt(tempPensjonsOrdning)
+    }
+
+    const updatePensjonsBeløp = (value: string, index: number) => {
+        const pensjonsInntektItem = { ...pensjonsInntekt[index] };
+        pensjonsInntektItem.beløp = value;
+
+        const tempPensjonsOrdning = [
+            ...pensjonsInntekt.slice(0, index),
+            pensjonsInntektItem,
+            ...pensjonsInntekt.slice(index + 1)
+        ];
+        setPensjonsInntekt(tempPensjonsOrdning)
+    }
+
+    const addInputFelt = () => {
+        const added = [...pensjonsInntekt];
+        added.push({ ordning: '', beløp: '' })
+        setPensjonsInntekt(added)
+    }
+
+    const fjernValgtInputFelt = (index: number) => {
+        const tempField = [...pensjonsInntekt.slice(0, index), ...pensjonsInntekt.slice(index + 1)];
+        setPensjonsInntekt(tempField)
+    }
+
+
 
     return (
         <TextProvider messages={{ [Languages.nb]: messages }}>
@@ -49,25 +127,9 @@ const DinInntekt = () => {
                         fieldName={'pensjon'}
                         state={mottarPensjon}
                         onChange={setMottarPensjon}
+
                     />
-
-                    {mottarPensjon && (
-                        pensjon.map((input, index) => (
-                            <div>
-                                <Input value={input.ordning}
-                                    label={<FormattedMessage id="input.pensjonsOrdning.label" />}
-                                    onChange={e => console.log("Pensjons ordning: ", e.target.value)}
-                                />
-                                <Input value={input.beløp}
-                                    label={<FormattedMessage id="input.pensjonsBeløp.label" />}
-                                    onChange={e => console.log("Pensjons ordning: ", e.target.value)}
-                                />
-
-                            </div>
-                        ))
-                    )
-
-                    }
+                    {mottarPensjon && pensjonsInntekter()}
 
                     <JaNeiSpørsmål
                         className={sharedStyles.sporsmal}
@@ -87,7 +149,7 @@ const DinInntekt = () => {
                                     harInntekt,
                                     inntektBeløp,
                                     harMottattSosialstønad,
-                                    pensjon,
+                                    pensjonsInntekt,
                                     mottarPensjon
                                 })
                             );
@@ -101,7 +163,7 @@ const DinInntekt = () => {
                                     harInntekt,
                                     inntektBeløp,
                                     harMottattSosialstønad,
-                                    pensjon,
+                                    pensjonsInntekt,
                                     mottarPensjon
                                 })
                             );

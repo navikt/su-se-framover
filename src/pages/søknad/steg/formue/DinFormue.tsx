@@ -37,7 +37,7 @@ const DinFormue = () => {
                         <Input
                             className={sharedStyles.sporsmal}
                             value={belopFormue ?? ''}
-                            label="Oppgi beløp"
+                            label={<FormattedMessage id="input.oppgiBeløp.label" />}
                             onChange={e => {
                                 setBelopFormue(e.target.value);
                             }}
