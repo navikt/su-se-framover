@@ -6,7 +6,7 @@ import { Hovedknapp } from 'nav-frontend-knapper';
 
 configure({ adapter: new Adapter() });
 
-describe('Tests for the application', () => {
+describe.skip('Tests for the application', () => {
     //expect(wrapper.render().html()).toEqual('eqweewewqeqw')
     //console.log(wrapper.debug())
 
