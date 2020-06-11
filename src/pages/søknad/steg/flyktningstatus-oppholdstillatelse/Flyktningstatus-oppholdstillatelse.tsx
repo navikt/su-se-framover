@@ -6,10 +6,9 @@ import søknadSlice from '~/features/søknad/søknadSlice';
 import { Søknadsteg } from '../../types';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import TextProvider, { Languages } from '~components/TextProvider';
-import messages from "./flyktningstatus-oppholdstillatelse-nb"
+import messages from './flyktningstatus-oppholdstillatelse-nb';
 import { FormattedMessage } from 'react-intl';
-import sharedStyles from '../../steg-shared.module.less'
-
+import sharedStyles from '../../steg-shared.module.less';
 
 const FlyktningstatusOppholdstillatelse = () => {
     const flyktningstatusFraStore = useAppSelector(s => s.soknad.flyktningstatus);

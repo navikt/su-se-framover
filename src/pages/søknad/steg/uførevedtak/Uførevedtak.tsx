@@ -6,7 +6,7 @@ import { Søknadsteg } from '../../types';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknadSlice';
-import messages from './uførevedtak-nb'
+import messages from './uførevedtak-nb';
 import TextProvider, { Languages } from '~components/TextProvider';
 import sharedStyles from '../../steg-shared.module.less';
 

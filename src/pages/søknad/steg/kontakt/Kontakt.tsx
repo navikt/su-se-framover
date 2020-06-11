@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Søknadsteg } from '../../types';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import messages from './kontakt-nb'
+import messages from './kontakt-nb';
 import TextProvider, { Languages } from '~components/TextProvider';
 
 const Kontakt = () => {

@@ -103,9 +103,7 @@ const index = () => {
                             }
                         }}
                     />
-                    <h2>
-                        {steg.find((s => s.step === step))?.label}
-                    </h2>
+                    <h2>{steg.find(s => s.step === step)?.label}</h2>
                 </div>
                 {step === Søknadsteg.Inngang ? (
                     <Inngang />
@@ -126,8 +124,8 @@ const index = () => {
                 ) : step === Søknadsteg.Oppsummering ? (
                     <Oppsummering />
                 ) : (
-                                                        '404'
-                                                    )}
+                    '404'
+                )}
             </div>
         </RawIntlProvider>
     );

@@ -11,19 +11,19 @@ export const InputFields = (props: {
     disabled: boolean;
     feil?: React.ReactNode;
 }) => (
-        <span style={InputFieldsStyle}>
-            <Input
-                style={props.style}
-                id={props.id}
-                label={props.labelText}
-                feil={props.feil}
-                value={props.value}
-                bredde={props.bredde}
-                disabled={props.disabled}
-                onChange={e => props.onChange(e.target.value)}
-            />
-        </span>
-    );
+    <span style={InputFieldsStyle}>
+        <Input
+            style={props.style}
+            id={props.id}
+            label={props.labelText}
+            feil={props.feil}
+            value={props.value}
+            bredde={props.bredde}
+            disabled={props.disabled}
+            onChange={e => props.onChange(e.target.value)}
+        />
+    </span>
+);
 
 const InputFieldsStyle = {
     marginRight: '1em'
@@ -42,9 +42,12 @@ export const JaNeiSpørsmål = (props: {
             className={props.className}
             legend={props.legend}
             name={props.fieldName}
-            radios={[{ label: "Ja", value: "true" }, { label: "Nei", value: 'false' }]}
-            onChange={(_e, value) => props.onChange(value === "true")}
+            radios={[
+                { label: 'Ja', value: 'true' },
+                { label: 'Nei', value: 'false' }
+            ]}
+            onChange={(_e, value) => props.onChange(value === 'true')}
             checked={props.state?.toString()}
         />
-    )
+    );
 };

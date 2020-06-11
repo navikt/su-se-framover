@@ -22,7 +22,10 @@ const index = () => {
             <div className={styles.container}>
                 <div className={styles.inputs}>
                     <Input label={<FormattedMessage id={'input.fnr.label'} />} onChange={e => setFnr(e.target.value)} />
-                    <Input label={<FormattedMessage id={'input.navn.label'} />} onChange={e => setNavn(e.target.value)} />
+                    <Input
+                        label={<FormattedMessage id={'input.navn.label'} />}
+                        onChange={e => setNavn(e.target.value)}
+                    />
                 </div>
                 <Knapp
                     onClick={() => {

@@ -9,7 +9,7 @@ import søknadSlice from '~/features/søknad/søknadSlice';
 import { Søknadsteg } from '../../types';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
-import messages from './dinformue-nb'
+import messages from './dinformue-nb';
 
 const DinFormue = () => {
     const formueFraStore = useAppSelector(s => s.soknad.formue);
@@ -22,7 +22,7 @@ const DinFormue = () => {
 
     return (
         <div className={sharedStyles.container}>
-            <TextProvider messages={{ [Languages.nb]: messages }} >
+            <TextProvider messages={{ [Languages.nb]: messages }}>
                 <div className={sharedStyles.formContainer}>
                     <JaNeiSpørsmål
                         className={sharedStyles.sporsmal}

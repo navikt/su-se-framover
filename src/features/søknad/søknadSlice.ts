@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Bosituasjon } from './types';
-import { string } from 'prop-types';
 
 interface SøknadState {
     harUførevedtak: boolean | null;
@@ -24,7 +23,7 @@ interface SøknadState {
         harInntekt: boolean | null;
         inntektBeløp: string | null;
         mottarPensjon: boolean | null;
-        pensjonsInntekt: Array<{ ordning: string, beløp: string }>,
+        pensjonsInntekt: Array<{ ordning: string; beløp: string }>;
         harMottattSosialstønad: boolean | null;
     };
     utenlandsopphold: {

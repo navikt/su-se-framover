@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { guid } from 'nav-frontend-js-utils';
+
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknadSlice';
@@ -19,47 +21,43 @@ const DinInntekt = () => {
     const [inntektBeløp, setinntektBeløp] = React.useState(inntektFraStore.inntektBeløp);
     const [harMottattSosialstønad, setHarMottattSosialstønad] = React.useState(inntektFraStore.harMottattSosialstønad);
     const [mottarPensjon, setMottarPensjon] = React.useState(inntektFraStore.mottarPensjon);
-    const [pensjonsInntekt, setPensjonsInntekt] = React.useState<Array<{ ordning: string, beløp: string }>>(inntektFraStore.pensjonsInntekt)
+    const [pensjonsInntekt, setPensjonsInntekt] = React.useState<Array<{ ordning: string; beløp: string }>>(
+        inntektFraStore.pensjonsInntekt
+    );
     const dispatch = useAppDispatch();
 
     const pensjonsInntekter = () => {
         return (
             <div>
-                {
-                    pensjonsInntekt.map((item: { ordning: string, beløp: string }, index: number) => (
-                        <div className={sharedStyles.pensjonsInntekt}>
-                            <Input
-                                label={<FormattedMessage id="input.pensjonsOrdning.label" />}
-                                value={item.ordning || ''}
-                                onChange={e => updatePensjonsOrdning(e.target.value, index)}
-                            />
-                            <Input
-                                label={<FormattedMessage id="input.pensjonsBeløp.label" />}
-                                value={item.beløp || ''}
-                                onChange={e => updatePensjonsBeløp(e.target.value, index)}
-                            />
-                            {
-                                pensjonsInntekt.length > 1 && (
-                                    <Lenke
-                                        href="#"
-                                        className={sharedStyles.pensjonsInntektLink}
-                                        onClick={() => fjernValgtInputFelt(index)}
-                                    >
-                                        Fjern felt
-                                    </Lenke>
-                                )
-                            }
-                        </div>
-                    ))
-                }
+                {pensjonsInntekt.map((item: { ordning: string; beløp: string }, index: number) => (
+                    <div className={sharedStyles.pensjonsInntekt} key={guid()}>
+                        <Input
+                            label={<FormattedMessage id="input.pensjonsOrdning.label" />}
+                            value={item.ordning || ''}
+                            onChange={e => updatePensjonsOrdning(e.target.value, index)}
+                        />
+                        <Input
+                            label={<FormattedMessage id="input.pensjonsBeløp.label" />}
+                            value={item.beløp || ''}
+                            onChange={e => updatePensjonsBeløp(e.target.value, index)}
+                        />
+                        {pensjonsInntekt.length > 1 && (
+                            <Lenke
+                                href="#"
+                                className={sharedStyles.pensjonsInntektLink}
+                                onClick={() => fjernValgtInputFelt(index)}
+                            >
+                                Fjern felt
+                            </Lenke>
+                        )}
+                    </div>
+                ))}
                 <div className={sharedStyles.pensjonsInntektKnapp}>
-                    <Knapp onClick={() => addInputFelt()}>
-                        Legg til felt
-                    </Knapp>
+                    <Knapp onClick={() => addInputFelt()}>Legg til felt</Knapp>
                 </div>
             </div>
-        )
-    }
+        );
+    };
 
     const updatePensjonsOrdning = (value: string, index: number) => {
         const pensjonsInntektItem = pensjonsInntekt[index];
@@ -70,8 +68,8 @@ const DinInntekt = () => {
             pensjonsInntektItem,
             ...pensjonsInntekt.slice(index + 1)
         ];
-        setPensjonsInntekt(tempPensjonsOrdning)
-    }
+        setPensjonsInntekt(tempPensjonsOrdning);
+    };
 
     const updatePensjonsBeløp = (value: string, index: number) => {
         const pensjonsInntektItem = { ...pensjonsInntekt[index] };
@@ -82,21 +80,19 @@ const DinInntekt = () => {
             pensjonsInntektItem,
             ...pensjonsInntekt.slice(index + 1)
         ];
-        setPensjonsInntekt(tempPensjonsOrdning)
-    }
+        setPensjonsInntekt(tempPensjonsOrdning);
+    };
 
     const addInputFelt = () => {
         const added = [...pensjonsInntekt];
-        added.push({ ordning: '', beløp: '' })
-        setPensjonsInntekt(added)
-    }
+        added.push({ ordning: '', beløp: '' });
+        setPensjonsInntekt(added);
+    };
 
     const fjernValgtInputFelt = (index: number) => {
         const tempField = [...pensjonsInntekt.slice(0, index), ...pensjonsInntekt.slice(index + 1)];
-        setPensjonsInntekt(tempField)
-    }
-
-
+        setPensjonsInntekt(tempField);
+    };
 
     return (
         <TextProvider messages={{ [Languages.nb]: messages }}>
@@ -114,11 +110,11 @@ const DinInntekt = () => {
                     {harInntekt && (
                         <Input
                             className={sharedStyles.sporsmal}
-                            value={inntektBeløp || ""}
+                            value={inntektBeløp || ''}
                             label={<FormattedMessage id="input.inntekt.inntektBeløp" />}
                             onChange={e => setinntektBeløp(e.target.value)}
-                        />)
-                    }
+                        />
+                    )}
 
                     <JaNeiSpørsmål
                         className={sharedStyles.sporsmal}
@@ -127,7 +123,6 @@ const DinInntekt = () => {
                         fieldName={'pensjon'}
                         state={mottarPensjon}
                         onChange={setMottarPensjon}
-
                     />
                     {mottarPensjon && pensjonsInntekter()}
 

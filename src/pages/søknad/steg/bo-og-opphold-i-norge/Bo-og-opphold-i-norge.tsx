@@ -9,7 +9,7 @@ import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import { Bosituasjon } from '~features/søknad/types';
 import sharedStyles from '../../steg-shared.module.less';
 import { FormattedMessage } from 'react-intl';
-import messages from './bo-og-opphold-i-norge-nb'
+import messages from './bo-og-opphold-i-norge-nb';
 import TextProvider, { Languages } from '~components/TextProvider';
 const BoOgOppholdINorge = () => {
     const boOgOppholdFraStore = useAppSelector(s => s.soknad.boOgOpphold);
@@ -29,7 +29,6 @@ const BoOgOppholdINorge = () => {
 
     return (
         <TextProvider messages={{ [Languages.nb]: messages }}>
-
             <div className={sharedStyles.container}>
                 <div className={sharedStyles.formContainer}>
                     <JaNeiSpørsmål
@@ -50,12 +49,12 @@ const BoOgOppholdINorge = () => {
                     />
                     <RadioGruppe
                         className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id={"input.bosituasjon.label"} />}
+                        legend={<FormattedMessage id={'input.bosituasjon.label'} />}
                         feil={null}
                     >
                         <Radio
                             name={'bosituasjon'}
-                            label={<FormattedMessage id={"input.bosituasjon.alene.label"} />}
+                            label={<FormattedMessage id={'input.bosituasjon.alene.label'} />}
                             value={Bosituasjon.BorAleneEllerMedBarnUnder18}
                             checked={bosituasjon === Bosituasjon.BorAleneEllerMedBarnUnder18}
                             onChange={() => {
@@ -64,7 +63,7 @@ const BoOgOppholdINorge = () => {
                         />
                         <Radio
                             name={'bosituasjon'}
-                            label={<FormattedMessage id={"input.bosituasjon.medNoenOver18.label"} />}
+                            label={<FormattedMessage id={'input.bosituasjon.medNoenOver18.label'} />}
                             value={Bosituasjon.BorMedNoenOver18}
                             checked={bosituasjon === Bosituasjon.BorMedNoenOver18}
                             onChange={() => {
@@ -74,7 +73,7 @@ const BoOgOppholdINorge = () => {
                     </RadioGruppe>
                     <JaNeiSpørsmål
                         className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id={"input.delerBoligMedAndreVoksne.label"} />}
+                        legend={<FormattedMessage id={'input.delerBoligMedAndreVoksne.label'} />}
                         feil={null}
                         fieldName={'delerBoligMedAndreVoksne'}
                         state={delerBoligMedAndreVoksne}
