@@ -29,8 +29,6 @@ const Utenlandsopphold = () => {
         React.useState<Array<{ utreisedato: string, innreisedato: string }>>(utenlandsopphold.skalReiseDatoer)
     const dispatch = useAppDispatch();
 
-
-
     const updateDate = (arrayToUpdate: Array<{ utreisedato: string, innreisedato: string }>,
         index: number, value: string, dateType: "utreisedato" | "innreisedato") => {
 
@@ -45,7 +43,6 @@ const Utenlandsopphold = () => {
             setSkalReiseDatoer(tempArr)
         }
     }
-
 
     const addInputFelt = (arrayToAdd: Array<{ utreisedato: string, innreisedato: string }>) => {
         const tempArr = [...arrayToAdd];

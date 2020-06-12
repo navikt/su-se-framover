@@ -21,6 +21,7 @@ import { BrowserRouter as Router, Switch, Route, useLocation, useHistory } from 
 import { Provider } from 'react-redux';
 import Store from './redux/Store';
 import Soknad from './pages/søknad';
+import apiClient from '~/api/apiClient';
 
 const Root = () => {
     const [state, setState] = useState({
@@ -45,6 +46,30 @@ const Root = () => {
             beregning: typeof nyBeregning === 'function' ? nyBeregning(state.beregning) : nyBeregning
         }));
     };
+
+    useEffect(() => {
+        if (!window.BASE_URL || typeof window.BASE_URL !== 'string') {
+            fetch('/config.json')
+                .then(res => {
+                    if (res.ok) {
+                        res
+                            .json()
+                            .then(config => {
+                                window.BASE_URL = config.suSeBakoverUrl;
+                            });
+                    } else {
+                        console.error('could not get config', res.statusText);
+                    }
+                });
+        }
+    }, [window.BASE_URL]);
+
+    useEffect(() => {
+        if (!window.BASE_URL || typeof window.BASE_URL !== 'string') {
+            return;
+        }
+        apiClient('/authenticated', { method: 'GET' });
+    }, [window.BASE_URL]);
 
     return (
         <Provider store={Store}>
@@ -117,6 +142,7 @@ function Main() {
     const loginPath = '/login';
     const { data, isFetching } = useAuthRedirect({ url, loginPath });
     const message = data ? data.data : 'this message unreadable';
+
     return (
         <div>
             <h1>Hello world!</h1>
