@@ -5,7 +5,7 @@
     "scripts": {
         "lint": "tsc --noEmit && npm run eslint",
         "eslint": "eslint src --ext .tsx,.ts,.jsx,.js",
-        "test": "jest",
+        "test": "jest --passWithNoTests",
         "tdd": "jest --watch",
         "start-no-browser": "npm run inject_local_config && parcel src/index.html",
         "start": "npm run start-no-browser -- --open",
