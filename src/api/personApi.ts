@@ -9,7 +9,7 @@ export interface Person {
 }
 
 export async function fetchPerson(fnr: string): Promise<ApiClientResult<Person>> {
-    return apiClient(`http://localhost:8080/person?ident=${fnr}`, {
+    return apiClient(`${window.BASE_URL}/person?ident=${fnr}`, {
         method: 'GET'
     });
 }
