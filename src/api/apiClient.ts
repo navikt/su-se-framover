@@ -1,5 +1,6 @@
 import { guid } from 'nav-frontend-js-utils';
-import Cookies from 'js-cookie';
+import * as Cookies from '~lib/cookies';
+import { CookieName } from '~lib/cookies';
 
 export enum ErrorCode {
     Unauthorized = 'unauthorized',
@@ -16,13 +17,6 @@ export interface ApiError {
 
 export type ApiClientResult<T> = { status: 'ok'; data: T; statusCode: number } | { status: 'error'; error: ApiError };
 
-const defaultCookieOptions: Cookies.CookieAttributes = {
-    secure: true,
-    domain: 'su-se.no',
-    path: '/su-se',
-    sameSite: 'strict'
-};
-
 function error<T = unknown>(e: ApiError): ApiClientResult<T> {
     return {
         status: 'error',
@@ -38,19 +32,14 @@ function success<T>(data: T, statusCode: number): ApiClientResult<T> {
     };
 }
 
-enum CookieName {
-    AccessToken = 'access_token',
-    RefreshToken = 'refresh_token'
-}
-
 export default async function apiClient<T>(
     url: string,
     request: Partial<Request>,
     successStatusCodes?: number[],
     extraData?: { accessToken: string; correlationId: string; numAttempts: number }
 ): Promise<ApiClientResult<T>> {
-    const accessToken = extraData?.accessToken ?? Cookies.get(CookieName.AccessToken);
-    const refreshToken = Cookies.get(CookieName.RefreshToken);
+    const accessToken = extraData?.accessToken ?? Cookies.get(Cookies.CookieName.AccessToken);
+    const refreshToken = Cookies.get(Cookies.CookieName.RefreshToken);
     const correlationId = extraData?.correlationId ?? guid();
 
     if (extraData?.numAttempts ?? 0 > 1) {
@@ -93,10 +82,10 @@ export default async function apiClient<T>(
             const nyttRefreshToken = refreshRes.headers.get('refresh_token');
 
             if (nyttRefreshToken) {
-                Cookies.set(CookieName.RefreshToken, nyttRefreshToken, defaultCookieOptions);
+                Cookies.set(CookieName.RefreshToken, nyttRefreshToken);
             }
             if (nyttAccessToken) {
-                Cookies.set(CookieName.AccessToken, nyttAccessToken, defaultCookieOptions);
+                Cookies.set(CookieName.AccessToken, nyttAccessToken);
 
                 return apiClient(`${window.BASE_URL}${url}`, request, successStatusCodes, {
                     accessToken: nyttAccessToken,

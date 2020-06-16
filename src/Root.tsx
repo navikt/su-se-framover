@@ -5,11 +5,13 @@ import 'reset-css';
 import ErrorBoundary from './components/ErrorBoundary';
 import 'nav-frontend-tabell-style';
 import './Root.less';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, useLocation, useHistory } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Store from './redux/Store';
 import Soknad from './pages/søknad';
 import apiClient from '~/api/apiClient';
+import * as Cookies from './lib/cookies';
+import HomePage from '~pages/HomePage';
 
 const Root = () => {
     useEffect(() => {
@@ -39,8 +41,8 @@ const Root = () => {
                 <Router>
                     <ContentWrapper>
                         <Switch>
-                            <Route path="/">
-                                <div>Velkommen</div>
+                            <Route path="/" exact>
+                                <HomePage />
                             </Route>
                             <Route path="/soknad/:step">
                                 <Soknad />
@@ -48,6 +50,7 @@ const Root = () => {
                             <Route path="/auth/complete">
                                 <AuthComplete />
                             </Route>
+                            <Route>404</Route>
                         </Switch>
                     </ContentWrapper>
                 </Router>
@@ -63,27 +66,27 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
                 <Innholdstittel style={appNameStyle}>NAV Suse</Innholdstittel>
             </div>
             <div style={{ display: 'flex' }}>
-                <div style={{ width: '100%' }}>{children}</div>
+                <div style={{ width: '100%', minHeight: '100vh' }}>{children}</div>
             </div>
         </div>
     );
 }
 
 function AuthComplete() {
-    // const location = useLocation();
-    // const tokens = location.hash.split('#');
-    // const access = tokens[1];
-    // const refresh = tokens[2];
-    // const history = useHistory();
+    const location = useLocation();
+    const tokens = location.hash.split('#');
+    const accessToken = tokens[1];
+    const refreshToken = tokens[2];
+    const history = useHistory();
 
-    // setAccessToken(access);
-    // setRefreshToken(refresh);
+    Cookies.set(Cookies.CookieName.AccessToken, accessToken);
+    Cookies.set(Cookies.CookieName.RefreshToken, refreshToken);
 
-    // useEffect(() => {
-    //     if (accessToken !== undefined) {
-    //         history.push('/');
-    //     }
-    // }, [accessToken, refreshToken]);
+    useEffect(() => {
+        if (accessToken !== undefined) {
+            history.push('/');
+        }
+    }, [accessToken, refreshToken]);
     return null;
 }
 
