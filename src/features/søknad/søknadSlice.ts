@@ -28,9 +28,9 @@ interface SøknadState {
     };
     utenlandsopphold: {
         harReistTilUtlandetSiste90dager: boolean | null;
-        harReistDatoer: Array<{ utreisedato: string, innreisedato: string }>;
+        harReistDatoer: Array<{ utreisedato: string; innreisedato: string }>;
         skalReiseTilUtlandetNeste12Måneder: boolean | null;
-        skalReiseDatoer: Array<{ utreisedato: string, innreisedato: string }>;
+        skalReiseDatoer: Array<{ utreisedato: string; innreisedato: string }>;
     };
 }
 

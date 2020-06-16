@@ -49,18 +49,15 @@ const Root = () => {
 
     useEffect(() => {
         if (!window.BASE_URL || typeof window.BASE_URL !== 'string') {
-            fetch('/config.json')
-                .then(res => {
-                    if (res.ok) {
-                        res
-                            .json()
-                            .then(config => {
-                                window.BASE_URL = config.suSeBakoverUrl;
-                            });
-                    } else {
-                        console.error('could not get config', res.statusText);
-                    }
-                });
+            fetch('/config.json').then(res => {
+                if (res.ok) {
+                    res.json().then(config => {
+                        window.BASE_URL = config.suSeBakoverUrl;
+                    });
+                } else {
+                    console.error('could not get config', res.statusText);
+                }
+            });
         }
     }, [window.BASE_URL]);
 
