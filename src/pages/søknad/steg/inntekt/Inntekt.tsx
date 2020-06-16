@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { guid } from 'nav-frontend-js-utils';
-
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknadSlice';
@@ -30,17 +28,17 @@ const DinInntekt = () => {
         return (
             <div>
                 {pensjonsInntekt.map((item: { ordning: string; beløp: string }, index: number) => (
-                    <div className={sharedStyles.inputFelterDiv} key={guid()}>
+                    <div className={sharedStyles.inputFelterDiv} key={index}>
                         <Input
                             className={sharedStyles.inputFelt}
                             label={<FormattedMessage id="input.pensjonsOrdning.label" />}
-                            value={item.ordning || ''}
+                            value={item.ordning}
                             onChange={e => updatePensjonsOrdning(e.target.value, index)}
                         />
                         <Input
                             className={sharedStyles.inputFelt}
                             label={<FormattedMessage id="input.pensjonsBeløp.label" />}
-                            value={item.beløp || ''}
+                            value={item.beløp}
                             onChange={e => updatePensjonsBeløp(e.target.value, index)}
                         />
                         {pensjonsInntekt.length > 1 && (
@@ -62,8 +60,8 @@ const DinInntekt = () => {
     };
 
     const updatePensjonsOrdning = (value: string, index: number) => {
-        const pensjonsInntektItem = pensjonsInntekt[index];
-        pensjonsInntektItem.ordning = value;
+        const pensjonsInntektItem = { ordning: value, beløp: pensjonsInntekt[index].beløp }
+
 
         const tempPensjonsOrdning = [
             ...pensjonsInntekt.slice(0, index),
@@ -74,8 +72,7 @@ const DinInntekt = () => {
     };
 
     const updatePensjonsBeløp = (value: string, index: number) => {
-        const pensjonsInntektItem = { ...pensjonsInntekt[index] };
-        pensjonsInntektItem.beløp = value;
+        const pensjonsInntektItem = { ordning: pensjonsInntekt[index].ordning, beløp: value }
 
         const tempPensjonsOrdning = [
             ...pensjonsInntekt.slice(0, index),
