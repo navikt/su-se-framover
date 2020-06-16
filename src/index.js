@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import Root from './Root.jsx';
+import Root from './Root';
 import * as Sentry from '@sentry/browser';
 
 Sentry.init({

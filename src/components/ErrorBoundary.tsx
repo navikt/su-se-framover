@@ -1,19 +1,20 @@
-import React from 'react';
+import React, { ErrorInfo } from 'react';
 import { Feilmelding } from 'nav-frontend-typografi';
 import Sentry from '@sentry/browser';
+import styles from './errorBoundary.module.less';
 
-class ErrorBoundary extends React.Component {
-    constructor(props) {
+class ErrorBoundary extends React.Component<unknown, { hasError: boolean; error?: Error; eventId?: string }> {
+    constructor(props: unknown) {
         super(props);
         this.state = { hasError: false };
     }
 
-    static getDerivedStateFromError(error) {
+    static getDerivedStateFromError(error: Error) {
         console.log(error);
         return { hasError: true, error };
     }
 
-    componentDidCatch(error, errorInfo) {
+    componentDidCatch(error: Error | null, errorInfo: ErrorInfo) {
         Sentry.withScope(scope => {
             scope.setExtras(errorInfo);
             const eventId = Sentry.captureException(error);
@@ -24,7 +25,7 @@ class ErrorBoundary extends React.Component {
     render() {
         if (this.state.hasError) {
             return (
-                <div style={globalErrorPageStyle}>
+                <div className={styles.container}>
                     <Feilmelding>En feil har oppstått.</Feilmelding>
                     <a href="/" className="knapp knapp--hoved">
                         Tilbake
@@ -32,7 +33,7 @@ class ErrorBoundary extends React.Component {
                     <hr />
                     <div>
                         Informasjon for utviklere:
-                        <pre style={stackTraceStyle}>{this.state.error.stack}</pre>
+                        <pre className={styles.stackTrace}>{this.state.error?.stack}</pre>
                     </div>
                 </div>
             );
@@ -40,13 +41,5 @@ class ErrorBoundary extends React.Component {
         return this.props.children;
     }
 }
-
-const globalErrorPageStyle = {
-    margin: '4em 3em'
-};
-const stackTraceStyle = {
-    marginTop: '1em',
-    fontFamily: 'Consolas, monospace'
-};
 
 export default ErrorBoundary;
