@@ -14,6 +14,7 @@ import Inntekt from './steg/inntekt/Inntekt';
 import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
 import Kontakt from './steg/kontakt/Kontakt';
 import Oppsummering from './steg/oppsummering/Oppsumering';
+import { Innholdstittel, Sidetittel } from 'nav-frontend-typografi';
 
 const cache = createIntlCache();
 const intl = createIntl(
@@ -86,24 +87,26 @@ const index = () => {
         <RawIntlProvider value={intl}>
             <div className={styles.container}>
                 <div className={styles.headerContainer}>
-                    <div>
-                        <h1>Søknad</h1>
+                    <div className={styles.sidetittelContainer}>
+                        <Sidetittel>Søknad</Sidetittel>
                     </div>
-                    <Stegindikator
-                        steg={steg.map(s => ({
-                            index: s.index,
-                            label: s.label,
-                            aktiv: s.step === step
-                        }))}
-                        visLabel={false}
-                        onChange={index => {
-                            const nyttSteg = steg[index];
-                            if (nyttSteg) {
-                                history.push(`/soknad/${nyttSteg.step}`);
-                            }
-                        }}
-                    />
-                    <h2>{steg.find(s => s.step === step)?.label}</h2>
+                    <div className={styles.stegindikatorContainer}>
+                        <Stegindikator
+                            steg={steg.map(s => ({
+                                index: s.index,
+                                label: s.label,
+                                aktiv: s.step === step
+                            }))}
+                            visLabel={false}
+                            onChange={index => {
+                                const nyttSteg = steg[index];
+                                if (nyttSteg) {
+                                    history.push(`/soknad/${nyttSteg.step}`);
+                                }
+                            }}
+                        />
+                    </div>
+                    <Innholdstittel>{steg.find(s => s.step === step)?.label}</Innholdstittel>
                 </div>
                 {step === Søknadsteg.Inngang ? (
                     <Inngang />

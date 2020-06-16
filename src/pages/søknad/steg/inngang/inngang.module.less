@@ -1,9 +1,16 @@
+@import '~/styles/variables.less';
+
 .container {
     display: flex;
     align-items: center;
     flex-direction: column;
+    width: 100%;
 }
 
 .inputs {
-    margin-bottom: 2em;
+    margin-bottom: @spacing-l;
+}
+
+.tekstinput:not(:last-child) {
+    margin-bottom: @spacing-s;
 }

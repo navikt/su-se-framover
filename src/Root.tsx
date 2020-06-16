@@ -68,7 +68,17 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
                 <Innholdstittel style={appNameStyle}>NAV Suse</Innholdstittel>
             </div>
             <div style={{ display: 'flex' }}>
-                <div style={{ width: '100%', minHeight: '100vh' }}>{children}</div>
+                <div
+                    style={{
+                        width: '100%',
+                        minHeight: '100vh',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                    }}
+                >
+                    {children}
+                </div>
             </div>
         </div>
     );

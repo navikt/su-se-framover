@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Input } from 'nav-frontend-skjema';
-import { Knapp } from 'nav-frontend-knapper';
+import { Hovedknapp } from 'nav-frontend-knapper';
 import { useAppDispatch } from '~redux/Store';
 import { FormattedMessage } from 'react-intl';
 import nb from './inngang-nb';
@@ -21,20 +21,25 @@ const index = () => {
         <IntlProvider locale={Languages.nb} messages={nb}>
             <div className={styles.container}>
                 <div className={styles.inputs}>
-                    <Input label={<FormattedMessage id={'input.fnr.label'} />} onChange={e => setFnr(e.target.value)} />
                     <Input
+                        className={styles.tekstinput}
+                        label={<FormattedMessage id={'input.fnr.label'} />}
+                        onChange={e => setFnr(e.target.value)}
+                    />
+                    <Input
+                        className={styles.tekstinput}
                         label={<FormattedMessage id={'input.navn.label'} />}
                         onChange={e => setNavn(e.target.value)}
                     />
                 </div>
-                <Knapp
+                <Hovedknapp
                     onClick={() => {
                         dispatch(saksoversiktSlice.fetchSøker({ fnr, access_token: '123' }));
                         history.push(`/soknad/${Søknadsteg.Uførevedtak}`);
                     }}
                 >
                     <FormattedMessage id={'knapp.neste'} />
-                </Knapp>
+                </Hovedknapp>
             </div>
         </IntlProvider>
     );

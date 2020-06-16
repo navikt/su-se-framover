@@ -1,14 +1,27 @@
+@import '~/styles/variables.less';
 @import '~nav-frontend-core/less/core';
 
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    width: 100%;
+    max-width: @container-sm;
+    padding: @spacing-s @spacing-l;
 }
 
 .headerContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    .blokk()
+    margin-bottom: @spacing;
+}
+
+.sidetittelContainer {
+    margin-bottom: @spacing-l;
+}
+
+.stegindikatorContainer {
+    margin-bottom: @spacing-xs;
 }
