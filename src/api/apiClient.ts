@@ -1,10 +1,10 @@
-import { guid } from 'nav-frontend-js-utils'
+import { guid } from 'nav-frontend-js-utils';
 import Cookies from 'js-cookie';
 
 export enum ErrorCode {
-    Unauthorized = "unauthorized",
+    Unauthorized = 'unauthorized',
     NotAuthenticated = 'not-authenticated',
-    Unknown = "unknown"
+    Unknown = 'unknown'
 }
 
 export interface ApiError {
@@ -14,9 +14,14 @@ export interface ApiError {
     body: unknown;
 }
 
-export type ApiClientResult<T> = { status: 'ok', data: T, statusCode: number } | { status: 'error', error: ApiError };
+export type ApiClientResult<T> = { status: 'ok'; data: T; statusCode: number } | { status: 'error'; error: ApiError };
 
-const defaultCookieOptions: Cookies.CookieAttributes = { secure: true, domain: 'su-se.no', path: '/su-se', sameSite: 'strict' };
+const defaultCookieOptions: Cookies.CookieAttributes = {
+    secure: true,
+    domain: 'su-se.no',
+    path: '/su-se',
+    sameSite: 'strict'
+};
 
 function error<T = unknown>(e: ApiError): ApiClientResult<T> {
     return {
@@ -66,26 +71,23 @@ export default async function apiClient<T>(
         });
     }
 
-    const res = await fetch(
-        `${window.BASE_URL}${url}`,
-        {
-            ...request,
-            headers: {
-                ...request.headers,
-                'Authorization': `Bearer ${accessToken}`,
-                'X-Correlation-ID': correlationId
-            },
-        },
-    );
+    const res = await fetch(`${window.BASE_URL}${url}`, {
+        ...request,
+        headers: {
+            ...request.headers,
+            Authorization: `Bearer ${accessToken}`,
+            'X-Correlation-ID': correlationId
+        }
+    });
 
     if (res.status === 401) {
         if (refreshToken) {
             const refreshRes = await fetch('/auth/refresh', {
                 headers: {
-                    'refresh_token': refreshToken,
+                    refresh_token: refreshToken,
                     'X-Correlation-ID': correlationId
                 }
-            })
+            });
 
             const nyttAccessToken = refreshRes.headers.get('access_token');
             const nyttRefreshToken = refreshRes.headers.get('refresh_token');
@@ -96,12 +98,11 @@ export default async function apiClient<T>(
             if (nyttAccessToken) {
                 Cookies.set(CookieName.AccessToken, nyttAccessToken, defaultCookieOptions);
 
-                return apiClient(
-                    `${window.BASE_URL}${url}`,
-                    request,
-                    successStatusCodes,
-                    { accessToken: nyttAccessToken, correlationId, numAttempts: 1 }
-                );
+                return apiClient(`${window.BASE_URL}${url}`, request, successStatusCodes, {
+                    accessToken: nyttAccessToken,
+                    correlationId,
+                    numAttempts: 1
+                });
             }
         }
 
@@ -120,7 +121,7 @@ export default async function apiClient<T>(
         });
     }
 
-    if (res.ok || (successStatusCodes?.includes(res.status))) {
+    if (res.ok || successStatusCodes?.includes(res.status)) {
         return success<T>(await res.json(), res.status);
     }
 

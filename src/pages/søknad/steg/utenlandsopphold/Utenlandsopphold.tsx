@@ -19,139 +19,156 @@ const Utenlandsopphold = () => {
     const [harReistTilUtlandetSiste90dager, setHarReistTilUtlandetSiste90dager] = React.useState(
         utenlandsopphold.harReistTilUtlandetSiste90dager
     );
-    const [harReistDatoer, setHarReistDatoer] =
-        React.useState<Array<{ utreisedato: string, innreisedato: string }>>(utenlandsopphold.harReistDatoer)
+    const [harReistDatoer, setHarReistDatoer] = React.useState<Array<{ utreisedato: string; innreisedato: string }>>(
+        utenlandsopphold.harReistDatoer
+    );
 
     const [skalReiseTilUtlandetNeste12Måneder, setSkalReiseTilUtlandetNeste12Måneder] = React.useState(
         utenlandsopphold.skalReiseTilUtlandetNeste12Måneder
     );
-    const [skalReiseDatoer, setSkalReiseDatoer] =
-        React.useState<Array<{ utreisedato: string, innreisedato: string }>>(utenlandsopphold.skalReiseDatoer)
+    const [skalReiseDatoer, setSkalReiseDatoer] = React.useState<Array<{ utreisedato: string; innreisedato: string }>>(
+        utenlandsopphold.skalReiseDatoer
+    );
     const dispatch = useAppDispatch();
 
-    const updateDate = (arrayToUpdate: Array<{ utreisedato: string, innreisedato: string }>,
-        index: number, value: string, dateType: "utreisedato" | "innreisedato") => {
-
-        const x = { ...arrayToUpdate[index] }
-        x[dateType] = value
+    const updateDate = (
+        arrayToUpdate: Array<{ utreisedato: string; innreisedato: string }>,
+        index: number,
+        value: string,
+        dateType: 'utreisedato' | 'innreisedato'
+    ) => {
+        const x = { ...arrayToUpdate[index] };
+        x[dateType] = value;
         const tempArr = [...arrayToUpdate.slice(0, index), x, ...arrayToUpdate.slice(index + 1)];
 
-
         if (arrayToUpdate === harReistDatoer) {
-            setHarReistDatoer(tempArr)
+            setHarReistDatoer(tempArr);
         } else if (arrayToUpdate === skalReiseDatoer) {
-            setSkalReiseDatoer(tempArr)
+            setSkalReiseDatoer(tempArr);
         }
-    }
+    };
 
-    const addInputFelt = (arrayToAdd: Array<{ utreisedato: string, innreisedato: string }>) => {
+    const addInputFelt = (arrayToAdd: Array<{ utreisedato: string; innreisedato: string }>) => {
         const tempArr = [...arrayToAdd];
         tempArr.push({ utreisedato: '', innreisedato: '' });
         if (arrayToAdd === harReistDatoer) {
-            setHarReistDatoer(tempArr)
+            setHarReistDatoer(tempArr);
         } else if (arrayToAdd === skalReiseDatoer) {
-            setSkalReiseDatoer(tempArr)
+            setSkalReiseDatoer(tempArr);
         }
-    }
+    };
 
-    const fjernValgtInputFelt = (arrayToRemoveFrom: Array<{ utreisedato: string, innreisedato: string }>, index: number) => {
+    const fjernValgtInputFelt = (
+        arrayToRemoveFrom: Array<{ utreisedato: string; innreisedato: string }>,
+        index: number
+    ) => {
         const tempArr = [...arrayToRemoveFrom.slice(0, index), ...arrayToRemoveFrom.slice(index + 1)];
         if (arrayToRemoveFrom === harReistDatoer) {
-            setHarReistDatoer(tempArr)
+            setHarReistDatoer(tempArr);
         } else if (arrayToRemoveFrom === skalReiseDatoer) {
-            setSkalReiseDatoer(tempArr)
+            setSkalReiseDatoer(tempArr);
         }
-    }
+    };
 
     const harReistInputs = () => {
         return (
             <div>
-                {
-                    harReistDatoer.map((item, index) => (
-                        <div className={sharedStyles.inputFelterDiv} key={guid()}>
-                            <div className={sharedStyles.inputFelt}>
-                                <label>Utreisedato</label>
-                                <Datovelger
-                                    input={{ name: 'utreisedato', placeholder: 'dd.mm.åååå', id: `${index}-harReist-utreisedato` }}
-                                    valgtDato={item.utreisedato}
-                                    id={`${index}-harReist-utreisedato`}
-                                    onChange={value => updateDate(harReistDatoer, index, value, "utreisedato")}
-                                />
-                            </div>
-
-                            <div className={sharedStyles.inputFelt}>
-                                <label>Innreisedato</label>
-                                <Datovelger
-                                    input={{ name: 'innreisedato', placeholder: 'dd.mm.åååå', id: `${index}-harReist-innreisedato` }}
-                                    valgtDato={item.innreisedato}
-                                    id={`${index}-harReist-innreisedato`}
-                                    onChange={value => updateDate(harReistDatoer, index, value, "innreisedato")}
-                                />
-                            </div>
-                            {harReistDatoer.length > 1 && (
-                                <Lenke
-                                    href="#"
-                                    className={sharedStyles.fjernFeltLink}
-                                    onClick={() => fjernValgtInputFelt(harReistDatoer, index)}
-                                >
-                                    Fjern felt
-                                </Lenke>
-                            )}
-
+                {harReistDatoer.map((item, index) => (
+                    <div className={sharedStyles.inputFelterDiv} key={guid()}>
+                        <div className={sharedStyles.inputFelt}>
+                            <label>Utreisedato</label>
+                            <Datovelger
+                                input={{
+                                    name: 'utreisedato',
+                                    placeholder: 'dd.mm.åååå',
+                                    id: `${index}-harReist-utreisedato`
+                                }}
+                                valgtDato={item.utreisedato}
+                                id={`${index}-harReist-utreisedato`}
+                                onChange={value => updateDate(harReistDatoer, index, value, 'utreisedato')}
+                            />
                         </div>
-                    ))
-                }
+
+                        <div className={sharedStyles.inputFelt}>
+                            <label>Innreisedato</label>
+                            <Datovelger
+                                input={{
+                                    name: 'innreisedato',
+                                    placeholder: 'dd.mm.åååå',
+                                    id: `${index}-harReist-innreisedato`
+                                }}
+                                valgtDato={item.innreisedato}
+                                id={`${index}-harReist-innreisedato`}
+                                onChange={value => updateDate(harReistDatoer, index, value, 'innreisedato')}
+                            />
+                        </div>
+                        {harReistDatoer.length > 1 && (
+                            <Lenke
+                                href="#"
+                                className={sharedStyles.fjernFeltLink}
+                                onClick={() => fjernValgtInputFelt(harReistDatoer, index)}
+                            >
+                                Fjern felt
+                            </Lenke>
+                        )}
+                    </div>
+                ))}
                 <div className={sharedStyles.leggTilFeltKnapp}>
                     <Knapp onClick={() => addInputFelt(harReistDatoer)}>Legg til felt</Knapp>
                 </div>
             </div>
-        )
-    }
+        );
+    };
 
     const skalReiseInputs = () => {
         return (
             <div>
-                {
-                    skalReiseDatoer.map((item, index) => (
-                        <div className={sharedStyles.inputFelterDiv} key={guid()}>
-                            <div className={sharedStyles.inputFelt}>
-                                <label>Utreisedato</label>
-                                <Datovelger
-                                    input={{ name: 'utreisedato', placeholder: 'dd.mm.åååå', id: `${index}-skalReise-utreisedato` }}
-                                    valgtDato={item.utreisedato}
-                                    id={`${index}-skalReise-utreisedato`}
-                                    onChange={value => updateDate(skalReiseDatoer, index, value, "utreisedato")}
-                                />
-                            </div>
-
-                            <div className={sharedStyles.inputFelt}>
-                                <label>Innreisedato</label>
-                                <Datovelger
-                                    input={{ name: 'innreisedato', placeholder: 'dd.mm.åååå', id: `${index}-skalReise-innreisedato` }}
-                                    valgtDato={item.innreisedato}
-                                    id={`${index}-skalReise-innreisedato`}
-                                    onChange={value => updateDate(skalReiseDatoer, index, value, "innreisedato")}
-                                />
-                            </div>
-                            {skalReiseDatoer.length > 1 && (
-                                <Lenke
-                                    href="#"
-                                    className={sharedStyles.fjernFeltLink}
-                                    onClick={() => fjernValgtInputFelt(skalReiseDatoer, index)}
-                                >
-                                    Fjern felt
-                                </Lenke>
-                            )}
-
+                {skalReiseDatoer.map((item, index) => (
+                    <div className={sharedStyles.inputFelterDiv} key={guid()}>
+                        <div className={sharedStyles.inputFelt}>
+                            <label>Utreisedato</label>
+                            <Datovelger
+                                input={{
+                                    name: 'utreisedato',
+                                    placeholder: 'dd.mm.åååå',
+                                    id: `${index}-skalReise-utreisedato`
+                                }}
+                                valgtDato={item.utreisedato}
+                                id={`${index}-skalReise-utreisedato`}
+                                onChange={value => updateDate(skalReiseDatoer, index, value, 'utreisedato')}
+                            />
                         </div>
-                    ))
-                }
+
+                        <div className={sharedStyles.inputFelt}>
+                            <label>Innreisedato</label>
+                            <Datovelger
+                                input={{
+                                    name: 'innreisedato',
+                                    placeholder: 'dd.mm.åååå',
+                                    id: `${index}-skalReise-innreisedato`
+                                }}
+                                valgtDato={item.innreisedato}
+                                id={`${index}-skalReise-innreisedato`}
+                                onChange={value => updateDate(skalReiseDatoer, index, value, 'innreisedato')}
+                            />
+                        </div>
+                        {skalReiseDatoer.length > 1 && (
+                            <Lenke
+                                href="#"
+                                className={sharedStyles.fjernFeltLink}
+                                onClick={() => fjernValgtInputFelt(skalReiseDatoer, index)}
+                            >
+                                Fjern felt
+                            </Lenke>
+                        )}
+                    </div>
+                ))}
                 <div className={sharedStyles.leggTilFeltKnapp}>
                     <Knapp onClick={() => addInputFelt(skalReiseDatoer)}>Legg til felt</Knapp>
                 </div>
             </div>
-        )
-    }
+        );
+    };
 
     return (
         <TextProvider messages={{ [Languages.nb]: messages }}>
@@ -178,7 +195,6 @@ const Utenlandsopphold = () => {
                     />
 
                     {skalReiseTilUtlandetNeste12Måneder && skalReiseInputs()}
-
                 </div>
 
                 <Bunnknapper
