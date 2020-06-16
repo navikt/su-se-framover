@@ -42,18 +42,9 @@ export default async function apiClient<T>(
     const refreshToken = Cookies.get(Cookies.CookieName.RefreshToken);
     const correlationId = extraData?.correlationId ?? guid();
 
-    if (extraData?.numAttempts ?? 0 > 1) {
+    if ((extraData?.numAttempts ?? 0) > 1) {
         return error({
             code: ErrorCode.Unknown,
-            body: null,
-            correlationId,
-            statusCode: 0
-        });
-    }
-
-    if (!accessToken) {
-        return error({
-            code: ErrorCode.NotAuthenticated,
             body: null,
             correlationId,
             statusCode: 0
@@ -64,7 +55,7 @@ export default async function apiClient<T>(
         ...request,
         headers: {
             ...request.headers,
-            Authorization: `Bearer ${accessToken}`,
+            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
             'X-Correlation-ID': correlationId
         }
     });

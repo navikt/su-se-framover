@@ -1,5 +1,5 @@
 import { hot } from 'react-hot-loader';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import 'reset-css';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -14,26 +14,28 @@ import * as Cookies from './lib/cookies';
 import HomePage from '~pages/HomePage';
 
 const Root = () => {
+    const [configLoaded, setConfigLoaded] = useState(false);
     useEffect(() => {
         if (!window.BASE_URL || typeof window.BASE_URL !== 'string') {
             fetch('/config.json').then(res => {
                 if (res.ok) {
                     res.json().then(config => {
                         window.BASE_URL = config.suSeBakoverUrl;
+                        setConfigLoaded(true);
                     });
                 } else {
-                    console.error('could not get config', res.statusText);
+                    console.error('klarte ikke hente config.json', res.statusText);
                 }
             });
         }
     }, [window.BASE_URL]);
 
     useEffect(() => {
-        if (!window.BASE_URL || typeof window.BASE_URL !== 'string') {
+        if (!configLoaded || !window.BASE_URL || typeof window.BASE_URL !== 'string') {
             return;
         }
         apiClient('/authenticated', { method: 'GET' });
-    }, [window.BASE_URL]);
+    }, [configLoaded]);
 
     return (
         <Provider store={Store}>
