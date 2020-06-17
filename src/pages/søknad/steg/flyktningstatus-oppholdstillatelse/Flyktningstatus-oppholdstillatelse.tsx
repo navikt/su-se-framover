@@ -81,6 +81,9 @@ const FlyktningstatusOppholdstillatelse = () => {
                             steg: Søknadsteg.Uførevedtak
                         }}
                         next={{
+                            onClick: () => {
+                                save(formik.values);
+                            },
                             steg: Søknadsteg.BoOgOppholdINorge
                         }}
                     />

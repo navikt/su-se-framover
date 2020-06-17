@@ -186,6 +186,9 @@ const DinInntekt = () => {
                         steg: Søknadsteg.DinFormue
                     }}
                     next={{
+                        onClick: () => {
+                            save(formik.values);
+                        },
                         steg: Søknadsteg.ReiseTilUtlandet
                     }}
                 />

@@ -127,6 +127,9 @@ const BoOgOppholdINorge = () => {
                             steg: Søknadsteg.FlyktningstatusOppholdstillatelse
                         }}
                         next={{
+                            onClick: () => {
+                                save(formik.values);
+                            },
                             steg: Søknadsteg.DinFormue
                         }}
                     />

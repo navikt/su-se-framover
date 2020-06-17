@@ -63,6 +63,7 @@ const DinFormue = () => {
 
                         {formik.values.harFormue && (
                             <Input
+                                id="beløpFormue"
                                 className={sharedStyles.sporsmal}
                                 value={formik.values.beløpFormue ?? ''}
                                 label={<FormattedMessage id="input.oppgiBeløp.label" />}
