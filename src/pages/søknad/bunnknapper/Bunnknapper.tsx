@@ -14,9 +14,9 @@ const Bunnknapper = (props: {
         onClick: () => void;
     };
     next?: {
-        label?: React.ReactNode;
         steg: Søknadsteg;
-        onClick: () => void;
+        label?: React.ReactNode;
+        onClick?: () => void;
     };
 }) => {
     const history = useHistory();
@@ -39,7 +39,10 @@ const Bunnknapper = (props: {
                     <Hovedknapp
                         className={styles.navKnapp}
                         onClick={() => {
-                            props.next?.onClick();
+                            if (props.next?.onClick) {
+                                props.next.onClick();
+                            }
+
                             history.push(`/soknad/${props.next?.steg}`);
                         }}
                     >

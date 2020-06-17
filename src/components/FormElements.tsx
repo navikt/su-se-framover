@@ -30,24 +30,26 @@ const InputFieldsStyle = {
 };
 
 export const JaNeiSpørsmål = (props: {
+    id: string;
     legend: React.ReactNode;
     feil?: React.ReactNode;
-    fieldName: string;
     state: boolean | null;
     onChange: (value: boolean) => void;
     className?: string;
 }) => {
     return (
-        <RadioPanelGruppe
-            className={props.className}
-            legend={props.legend}
-            name={props.fieldName}
-            radios={[
-                { label: 'Ja', value: 'true' },
-                { label: 'Nei', value: 'false' }
-            ]}
-            onChange={(_e, value) => props.onChange(value === 'true')}
-            checked={props.state?.toString()}
-        />
+        <div id={props.id}>
+            <RadioPanelGruppe
+                className={props.className}
+                legend={props.legend}
+                name={props.id}
+                radios={[
+                    { label: 'Ja', value: 'true' },
+                    { label: 'Nei', value: 'false' }
+                ]}
+                onChange={(_e, value) => props.onChange(value === 'true')}
+                checked={props.state?.toString()}
+            />
+        </div>
     );
 };

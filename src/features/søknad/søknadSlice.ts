@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Bosituasjon } from './types';
+import { Nullable } from '~lib/types';
 
 interface SøknadState {
-    harUførevedtak: boolean | null;
+    harUførevedtak: Nullable<boolean>;
     flyktningstatus: {
         harOppholdstillatelse: boolean | null;
         erFlyktning: boolean | null;
@@ -14,8 +15,8 @@ interface SøknadState {
         delerBoligMedAndreVoksne: boolean | null;
     };
     formue: {
-        harFomue: boolean | null;
-        belopFormue: string | null;
+        harFormue: boolean | null;
+        beløpFormue: string | null;
         eierBolig: boolean | null;
         harDepositumskonto: boolean | null;
     };
@@ -47,8 +48,8 @@ const initialState: SøknadState = {
         delerBoligMedAndreVoksne: null
     },
     formue: {
-        harFomue: null,
-        belopFormue: null,
+        harFormue: null,
+        beløpFormue: null,
         eierBolig: null,
         harDepositumskonto: null
     },

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Input } from 'nav-frontend-skjema';
 import { FormattedMessage } from 'react-intl';
-
+import { useFormik } from 'formik';
 import TextProvider, { Languages } from '~components/TextProvider';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
@@ -10,86 +10,123 @@ import { Søknadsteg } from '../../types';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import messages from './dinformue-nb';
+import { Nullable } from '~lib/types';
+
+interface FormData {
+    harFormue: Nullable<boolean>;
+    beløpFormue: Nullable<string>;
+    eierBolig: Nullable<boolean>;
+    harDepositumskonto: Nullable<boolean>;
+}
 
 const DinFormue = () => {
     const formueFraStore = useAppSelector(s => s.soknad.formue);
-    const [harFormue, setHarFormue] = React.useState(formueFraStore.harFomue);
-    const [belopFormue, setBelopFormue] = React.useState(formueFraStore.belopFormue);
-    const [eierBolig, setEierBolig] = React.useState(formueFraStore.eierBolig);
-    const [harDepositumskonto, setHarDepositumskonto] = React.useState(formueFraStore.harDepositumskonto);
-
     const dispatch = useAppDispatch();
+
+    const formik = useFormik<FormData>({
+        initialValues: {
+            harFormue: formueFraStore.harFormue,
+            beløpFormue: formueFraStore.beløpFormue,
+            eierBolig: formueFraStore.eierBolig,
+            harDepositumskonto: formueFraStore.harDepositumskonto
+        },
+        onSubmit: values => {
+            dispatch(
+                søknadSlice.actions.formueUpdated({
+                    harFormue: values.harFormue,
+                    beløpFormue: values.harFormue ? values.beløpFormue : null,
+                    eierBolig: values.eierBolig,
+                    harDepositumskonto: values.harDepositumskonto
+                })
+            );
+        }
+    });
 
     return (
         <div className={sharedStyles.container}>
             <TextProvider messages={{ [Languages.nb]: messages }}>
-                <div className={sharedStyles.formContainer}>
-                    <JaNeiSpørsmål
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="input.harFormue.label" />}
-                        feil={null}
-                        fieldName={'formue'}
-                        state={harFormue}
-                        onChange={setHarFormue}
-                    />
-
-                    {harFormue && (
-                        <Input
+                <form onSubmit={formik.handleSubmit}>
+                    <div className={sharedStyles.formContainer}>
+                        <JaNeiSpørsmål
+                            id="harFomue"
                             className={sharedStyles.sporsmal}
-                            value={belopFormue ?? ''}
-                            label={<FormattedMessage id="input.oppgiBeløp.label" />}
-                            onChange={e => {
-                                setBelopFormue(e.target.value);
-                            }}
+                            legend={<FormattedMessage id="input.harFormue.label" />}
+                            feil={null}
+                            state={formik.values.harFormue}
+                            onChange={e =>
+                                formik.setValues({
+                                    ...formik.values,
+                                    harFormue: e
+                                })
+                            }
                         />
-                    )}
 
-                    <JaNeiSpørsmål
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="input.eierDuBolig.label" />}
-                        feil={null}
-                        fieldName={'eierbolig'}
-                        state={eierBolig}
-                        onChange={setEierBolig}
-                    />
-                    <JaNeiSpørsmål
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="input.depositumskonto.label" />}
-                        feil={null}
-                        fieldName={'depositumskonto'}
-                        state={harDepositumskonto}
-                        onChange={setHarDepositumskonto}
-                    />
-                </div>
+                        {formik.values.harFormue && (
+                            <Input
+                                className={sharedStyles.sporsmal}
+                                value={formik.values.beløpFormue ?? ''}
+                                label={<FormattedMessage id="input.oppgiBeløp.label" />}
+                                onChange={formik.handleChange}
+                            />
+                        )}
 
-                <Bunnknapper
-                    previous={{
-                        onClick: () => {
-                            dispatch(
-                                søknadSlice.actions.formueUpdated({
-                                    harFomue: harFormue,
-                                    belopFormue,
-                                    eierBolig,
-                                    harDepositumskonto
+                        <JaNeiSpørsmål
+                            id="eierBolig"
+                            className={sharedStyles.sporsmal}
+                            legend={<FormattedMessage id="input.eierDuBolig.label" />}
+                            feil={null}
+                            state={formik.values.eierBolig}
+                            onChange={e =>
+                                formik.setValues({
+                                    ...formik.values,
+                                    eierBolig: e
                                 })
-                            );
-                        },
-                        steg: Søknadsteg.BoOgOppholdINorge
-                    }}
-                    next={{
-                        onClick: () => {
-                            dispatch(
-                                søknadSlice.actions.formueUpdated({
-                                    harFomue: harFormue,
-                                    belopFormue: harFormue ? belopFormue : null,
-                                    eierBolig,
-                                    harDepositumskonto
+                            }
+                        />
+                        <JaNeiSpørsmål
+                            id="depositumskonto"
+                            className={sharedStyles.sporsmal}
+                            legend={<FormattedMessage id="input.depositumskonto.label" />}
+                            feil={null}
+                            state={formik.values.harDepositumskonto}
+                            onChange={e =>
+                                formik.setValues({
+                                    ...formik.values,
+                                    harDepositumskonto: e
                                 })
-                            );
-                        },
-                        steg: Søknadsteg.DinInntekt
-                    }}
-                />
+                            }
+                        />
+                    </div>
+
+                    <Bunnknapper
+                        previous={{
+                            onClick: () => {
+                                dispatch(
+                                    søknadSlice.actions.formueUpdated({
+                                        harFormue: formik.values.harFormue,
+                                        beløpFormue: formik.values.harFormue ? formik.values.beløpFormue : null,
+                                        eierBolig: formik.values.eierBolig,
+                                        harDepositumskonto: formik.values.harDepositumskonto
+                                    })
+                                );
+                            },
+                            steg: Søknadsteg.BoOgOppholdINorge
+                        }}
+                        next={{
+                            onClick: () => {
+                                dispatch(
+                                    søknadSlice.actions.formueUpdated({
+                                        harFormue: formik.values.harFormue,
+                                        beløpFormue: formik.values.harFormue ? formik.values.beløpFormue : null,
+                                        eierBolig: formik.values.eierBolig,
+                                        harDepositumskonto: formik.values.harDepositumskonto
+                                    })
+                                );
+                            },
+                            steg: Søknadsteg.DinInntekt
+                        }}
+                    />
+                </form>
             </TextProvider>
         </div>
     );
