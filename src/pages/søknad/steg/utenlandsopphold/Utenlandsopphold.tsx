@@ -152,9 +152,9 @@ const Utenlandsopphold = () => {
                                         harReistDatoer: formik.values.harReistDatoer.map((periode, i) =>
                                             val.index === i
                                                 ? {
-                                                    innreisedato: val.innreisedato,
-                                                    utreisedato: val.utreisedato
-                                                }
+                                                      innreisedato: val.innreisedato,
+                                                      utreisedato: val.utreisedato
+                                                  }
                                                 : periode
                                         )
                                     });
@@ -200,9 +200,9 @@ const Utenlandsopphold = () => {
                                         skalReiseDatoer: formik.values.skalReiseDatoer.map((periode, i) =>
                                             val.index === i
                                                 ? {
-                                                    innreisedato: val.innreisedato,
-                                                    utreisedato: val.utreisedato
-                                                }
+                                                      innreisedato: val.innreisedato,
+                                                      utreisedato: val.utreisedato
+                                                  }
                                                 : periode
                                         )
                                     });
