@@ -3,11 +3,13 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import saksoversiktSlice from '../features/saksoversikt/saksoversikt.slice';
 import søknadSlice from '~/features/søknad/søknadSlice';
+import sakSlice from '~features/saksoversikt/sak.slice';
 
 const store = configureStore({
     reducer: {
         saksoversikt: saksoversiktSlice.reducer,
-        soknad: søknadSlice.reducer
+        soknad: søknadSlice.reducer,
+        sak: sakSlice.reducer
     }
 });
 
