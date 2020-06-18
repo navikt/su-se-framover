@@ -12,6 +12,7 @@ import Soknad from './pages/søknad';
 import apiClient from '~/api/apiClient';
 import * as Cookies from './lib/cookies';
 import HomePage from '~pages/HomePage';
+import Saksoversikt from '~pages/saksoversikt/Saksoversikt';
 
 const Root = () => {
     const [configLoaded, setConfigLoaded] = useState(false);
@@ -48,6 +49,9 @@ const Root = () => {
                             </Route>
                             <Route path="/soknad/:step">
                                 <Soknad />
+                            </Route>
+                            <Route path="/saksoversikt">
+                                <Saksoversikt />
                             </Route>
                             <Route path="/auth/complete">
                                 <AuthComplete />
