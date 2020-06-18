@@ -5,12 +5,15 @@ export enum CookieName {
     RefreshToken = 'refresh_token'
 }
 
-const defaultCookieOptions: Cookies.CookieAttributes = {
-    secure: true,
-    domain: 'su-se.no',
-    path: '/su-se',
-    sameSite: 'strict'
-};
+const defaultCookieOptions: Cookies.CookieAttributes =
+    process.env.NODE_ENV !== 'development'
+        ? {
+              secure: true,
+              domain: window.location.host,
+              path: '/',
+              sameSite: 'strict'
+          }
+        : { path: '/', sameSite: 'strict' };
 
 export function get(name: CookieName) {
     return Cookies.get(name);
