@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { Input } from 'nav-frontend-skjema';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useFormik } from 'formik';
-import TextProvider, { Languages } from '~components/TextProvider';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknadSlice';
-import { Søknadsteg } from '../../types';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import messages from './dinformue-nb';
 import { Nullable } from '~lib/types';
+import { useHistory } from 'react-router-dom';
+import { Feiloppsummering } from 'nav-frontend-skjema';
+import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
+import { useI18n } from '~lib/hooks';
+import sharedI18n from '../steg-shared-i18n';
 
 interface FormData {
     harFormue: Nullable<boolean>;
@@ -19,33 +22,85 @@ interface FormData {
     harDepositumskonto: Nullable<boolean>;
 }
 
-const DinFormue = () => {
+const schema = yup.object<FormData>({
+    harFormue: yup
+        .boolean()
+        .nullable()
+        .required(),
+    beløpFormue: yup
+        .number()
+        .nullable()
+        .defined()
+        .when('harFormue', {
+            is: true,
+            then: yup
+                .number()
+                .typeError('Formue beløp må være et tall')
+                .label('Formue beløp')
+                .nullable(false)
+                .positive(),
+            otherwise: yup.number()
+        }) as yup.Schema<Nullable<string>>,
+    eierBolig: yup
+        .boolean()
+        .nullable()
+        .required(),
+    harDepositumskonto: yup
+        .boolean()
+        .nullable()
+        .required()
+});
+
+const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const formueFraStore = useAppSelector(s => s.soknad.formue);
     const dispatch = useAppDispatch();
+    const history = useHistory();
+    const [hasSubmitted, setHasSubmitted] = React.useState(false);
+
+    const save = (values: FormData) => {
+        dispatch(
+            søknadSlice.actions.formueUpdated({
+                harFormue: values.harFormue,
+                beløpFormue: values.harFormue && values.beløpFormue ? Number.parseFloat(values.beløpFormue) : null,
+                eierBolig: values.eierBolig,
+                harDepositumskonto: values.harDepositumskonto
+            })
+        );
+    };
 
     const formik = useFormik<FormData>({
         initialValues: {
             harFormue: formueFraStore.harFormue,
-            beløpFormue: formueFraStore.beløpFormue,
+            beløpFormue: formueFraStore.beløpFormue?.toString() ?? '',
             eierBolig: formueFraStore.eierBolig,
             harDepositumskonto: formueFraStore.harDepositumskonto
         },
         onSubmit: values => {
-            dispatch(
-                søknadSlice.actions.formueUpdated({
-                    harFormue: values.harFormue,
-                    beløpFormue: values.harFormue ? values.beløpFormue : null,
-                    eierBolig: values.eierBolig,
-                    harDepositumskonto: values.harDepositumskonto
-                })
-            );
-        }
+            save(values);
+            history.push(props.nesteUrl);
+        },
+        validationSchema: schema,
+        validateOnChange: hasSubmitted
     });
+
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+
+    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
     return (
         <div className={sharedStyles.container}>
-            <TextProvider messages={{ [Languages.nb]: messages }}>
-                <form onSubmit={formik.handleSubmit}>
+            <RawIntlProvider value={intl}>
+                <form
+                    onSubmit={e => {
+                        setHasSubmitted(true);
+                        formik.handleSubmit(e);
+                        setTimeout(() => {
+                            if (feiloppsummeringref.current) {
+                                feiloppsummeringref.current.focus();
+                            }
+                        }, 0);
+                    }}
+                >
                     <div className={sharedStyles.formContainer}>
                         <JaNeiSpørsmål
                             id="harFomue"
@@ -98,37 +153,23 @@ const DinFormue = () => {
                             }
                         />
                     </div>
-
+                    <Feiloppsummering
+                        className={sharedStyles.feiloppsummering}
+                        tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                        feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                        hidden={!formikErrorsHarFeil(formik.errors)}
+                        innerRef={feiloppsummeringref}
+                    />
                     <Bunnknapper
                         previous={{
                             onClick: () => {
-                                dispatch(
-                                    søknadSlice.actions.formueUpdated({
-                                        harFormue: formik.values.harFormue,
-                                        beløpFormue: formik.values.harFormue ? formik.values.beløpFormue : null,
-                                        eierBolig: formik.values.eierBolig,
-                                        harDepositumskonto: formik.values.harDepositumskonto
-                                    })
-                                );
-                            },
-                            steg: Søknadsteg.BoOgOppholdINorge
-                        }}
-                        next={{
-                            onClick: () => {
-                                dispatch(
-                                    søknadSlice.actions.formueUpdated({
-                                        harFormue: formik.values.harFormue,
-                                        beløpFormue: formik.values.harFormue ? formik.values.beløpFormue : null,
-                                        eierBolig: formik.values.eierBolig,
-                                        harDepositumskonto: formik.values.harDepositumskonto
-                                    })
-                                );
-                            },
-                            steg: Søknadsteg.DinInntekt
+                                save(formik.values);
+                                history.push(props.forrigeUrl);
+                            }
                         }}
                     />
                 </form>
-            </TextProvider>
+            </RawIntlProvider>
         </div>
     );
 };
