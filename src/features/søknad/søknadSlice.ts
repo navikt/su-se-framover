@@ -5,32 +5,32 @@ import { Nullable } from '~lib/types';
 interface SøknadState {
     harUførevedtak: Nullable<boolean>;
     flyktningstatus: {
-        harOppholdstillatelse: boolean | null;
-        erFlyktning: boolean | null;
+        harOppholdstillatelse: Nullable<boolean>;
+        erFlyktning: Nullable<boolean>;
     };
     boOgOpphold: {
-        borOgOppholderSegINorge: boolean | null;
-        borPåFolkeregistrertAdresse: boolean | null;
+        borOgOppholderSegINorge: Nullable<boolean>;
+        borPåFolkeregistrertAdresse: Nullable<boolean>;
         bosituasjon: Bosituasjon | null;
-        delerBoligMedAndreVoksne: boolean | null;
+        delerBoligMedAndreVoksne: Nullable<boolean>;
     };
     formue: {
-        harFormue: boolean | null;
-        beløpFormue: string | null;
-        eierBolig: boolean | null;
-        harDepositumskonto: boolean | null;
+        harFormue: Nullable<boolean>;
+        beløpFormue: Nullable<number>;
+        eierBolig: Nullable<boolean>;
+        harDepositumskonto: Nullable<boolean>;
     };
     inntekt: {
-        harInntekt: boolean | null;
-        inntektBeløp: string | null;
-        mottarPensjon: boolean | null;
+        harInntekt: Nullable<boolean>;
+        inntektBeløp: Nullable<number>;
+        mottarPensjon: Nullable<boolean>;
         pensjonsInntekt: Array<{ ordning: string; beløp: string }>;
-        harMottattSosialstønad: boolean | null;
+        harMottattSosialstønad: Nullable<boolean>;
     };
     utenlandsopphold: {
-        harReistTilUtlandetSiste90dager: boolean | null;
+        harReistTilUtlandetSiste90dager: Nullable<boolean>;
         harReistDatoer: Array<{ utreisedato: string; innreisedato: string }>;
-        skalReiseTilUtlandetNeste12Måneder: boolean | null;
+        skalReiseTilUtlandetNeste12Måneder: Nullable<boolean>;
         skalReiseDatoer: Array<{ utreisedato: string; innreisedato: string }>;
     };
 }
@@ -57,14 +57,14 @@ const initialState: SøknadState = {
         harInntekt: null,
         inntektBeløp: null,
         harMottattSosialstønad: null,
-        pensjonsInntekt: [{ ordning: '', beløp: '' }],
+        pensjonsInntekt: [],
         mottarPensjon: null
     },
     utenlandsopphold: {
         harReistTilUtlandetSiste90dager: null,
-        harReistDatoer: [{ utreisedato: '', innreisedato: '' }],
+        harReistDatoer: [],
         skalReiseTilUtlandetNeste12Måneder: null,
-        skalReiseDatoer: [{ utreisedato: '', innreisedato: '' }]
+        skalReiseDatoer: []
     }
 };
 
