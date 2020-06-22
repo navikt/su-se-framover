@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import Stegindikator from 'nav-frontend-stegindikator';
-import { createIntl, createIntlCache, RawIntlProvider } from 'react-intl';
 
 import styles from './index.module.less';
 import Inngang from './steg/inngang/Inngang';
@@ -15,30 +14,26 @@ import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
 import Kontakt from './steg/kontakt/Kontakt';
 import Oppsummering from './steg/oppsummering/Oppsumering';
 import { Innholdstittel, Sidetittel } from 'nav-frontend-typografi';
+import { useI18n } from '../../lib/hooks';
 
-const cache = createIntlCache();
-const intl = createIntl(
-    {
-        locale: 'nb-NO',
-        messages: {
-            'steg.uforevedtak': 'Uførevedtak',
-            'steg.flyktningstatus': 'Flyktningstatus',
-            'steg.boOgOppholdINorge': 'Bo og opphold i Norge',
-            'steg.formue': 'Din formue',
-            'steg.inntekt': 'Din inntekt',
-            'steg.utenlandsopphold': 'Reise til utlandet',
-            'steg.kontakt': 'Kontakt',
-            'steg.oppsummering': 'Oppsummering',
-            'steg.neste': 'Neste',
-            'steg.forrige': 'Forrige'
-        }
-    },
-    cache
-);
+const messages = {
+    'steg.uforevedtak': 'Uførevedtak',
+    'steg.flyktningstatus': 'Flyktningstatus',
+    'steg.boOgOppholdINorge': 'Bo og opphold i Norge',
+    'steg.formue': 'Din formue',
+    'steg.inntekt': 'Din inntekt',
+    'steg.utenlandsopphold': 'Reise til utlandet',
+    'steg.kontakt': 'Kontakt',
+    'steg.oppsummering': 'Oppsummering',
+    'steg.neste': 'Neste',
+    'steg.forrige': 'Forrige'
+};
 
 const index = () => {
     const { step } = useParams<{ step: Søknadsteg }>();
     const history = useHistory();
+
+    const intl = useI18n({ messages });
 
     const steg = [
         {
@@ -84,7 +79,6 @@ const index = () => {
     ];
 
     return (
-        <RawIntlProvider value={intl}>
             <div className={styles.container}>
                 <div className={styles.headerContainer}>
                     <div className={styles.sidetittelContainer}>
@@ -130,7 +124,6 @@ const index = () => {
                     '404'
                 )}
             </div>
-        </RawIntlProvider>
     );
 };
 
