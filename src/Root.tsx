@@ -15,6 +15,7 @@ import HomePage from '~pages/HomePage';
 
 const Root = () => {
     const [configLoaded, setConfigLoaded] = useState(false);
+
     useEffect(() => {
         if (!window.BASE_URL || typeof window.BASE_URL !== 'string') {
             fetch('/config.json').then(res => {
@@ -34,7 +35,11 @@ const Root = () => {
         if (!configLoaded || !window.BASE_URL || typeof window.BASE_URL !== 'string') {
             return;
         }
-        apiClient('/authenticated', { method: 'GET' });
+        apiClient('/authenticated', { method: 'GET' }).then(res => {
+            if (res.status === 'error' && res.error.statusCode === 401) {
+                window.location.href = `${window.BASE_URL}/login`;
+            }
+        });
     }, [configLoaded]);
 
     return (
