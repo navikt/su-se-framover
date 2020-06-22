@@ -1,23 +1,15 @@
 import * as React from 'react';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
-import { Søknadsteg } from '../../types';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import { useAppSelector } from '~redux/Store';
 import messages from './oppsumering-nb';
 import styles from './oppsummering.module.less';
 import sharedStyles from '../../steg-shared.module.less';
-import { FormattedMessage, createIntlCache, createIntl, RawIntlProvider } from 'react-intl';
+import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { Bosituasjon } from '~features/søknad/types';
-
-const cache = createIntlCache();
-const intl = createIntl(
-    {
-        locale: 'nb-NO',
-        messages
-    },
-    cache
-);
+import { useHistory } from 'react-router-dom';
+import { useI18n } from '~lib/hooks';
 
 const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | React.ReactNode }) => (
     <div className={styles.oppsummeringsfelt}>
@@ -26,9 +18,12 @@ const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | Reac
     </div>
 );
 
-const Oppsummering = () => {
+const Oppsummering = (props: { forrigeUrl: string }) => {
+    const history = useHistory();
     const søknadFraStore = useAppSelector(s => s.soknad);
-    console.log(søknadFraStore);
+
+    const intl = useI18n({ messages });
+
     return (
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
@@ -285,15 +280,8 @@ const Oppsummering = () => {
                 <Bunnknapper
                     previous={{
                         onClick: () => {
-                            console.log('previous');
-                        },
-                        steg: Søknadsteg.ReiseTilUtlandet
-                    }}
-                    next={{
-                        onClick: () => {
-                            console.log('next');
-                        },
-                        steg: Søknadsteg.Oppsummering
+                            history.push(props.forrigeUrl);
+                        }
                     }}
                 />
             </div>
