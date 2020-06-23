@@ -4,7 +4,7 @@ import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useFormik } from 'formik';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
-import søknadSlice from '~/features/søknad/søknadSlice';
+import søknadSlice from '~/features/søknad/søknad.slice';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import messages from './dinformue-nb';
