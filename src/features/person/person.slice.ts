@@ -2,18 +2,17 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ErrorCode, ApiError } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 
-export const fetchPerson = createAsyncThunk<
-    personApi.Person,
-    { fnr: string; access_token: string },
-    { rejectValue: ApiError }
->('person/fetch', async ({ fnr }, thunkApi) => {
-    const res = await personApi.fetchPerson(fnr);
+export const fetchPerson = createAsyncThunk<personApi.Person, { fnr: string }, { rejectValue: ApiError }>(
+    'person/fetch',
+    async ({ fnr }, thunkApi) => {
+        const res = await personApi.fetchPerson(fnr);
 
-    if (res.status === 'ok') {
-        return res.data;
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
     }
-    return thunkApi.rejectWithValue(res.error);
-});
+);
 
 interface PersonState {
     søker: personApi.Person | undefined;

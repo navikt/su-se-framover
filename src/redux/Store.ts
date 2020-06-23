@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 
 import saksoversiktSlice from '../features/saksoversikt/saksoversikt.slice';
-import søknadSlice from '~/features/søknad/søknadSlice';
+import søknadSlice from '~/features/søknad/søknad.slice';
 import sakSlice from '~features/saksoversikt/sak.slice';
 
 const store = configureStore({
