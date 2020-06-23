@@ -1,13 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Bosituasjon } from './types';
+import { Bosituasjon, TypeOppholdstillatelse } from './types';
 import { Nullable } from '~lib/types';
 
 export interface SøknadState {
     harUførevedtak: Nullable<boolean>;
     flyktningstatus: {
         harOppholdstillatelse: Nullable<boolean>;
+        typeOppholdstillatelse: Nullable<TypeOppholdstillatelse>;
+        oppholdstillatelseMindreEnnTreMåneder: Nullable<boolean>;
         erFlyktning: Nullable<boolean>;
         erNorskStatsborger: Nullable<boolean>;
+        oppholdstillatelseForlengelse: Nullable<boolean>;
     };
 
     boOgOpphold: {
@@ -42,7 +45,10 @@ const initialState: SøknadState = {
     flyktningstatus: {
         erFlyktning: null,
         harOppholdstillatelse: null,
+        typeOppholdstillatelse: null,
         erNorskStatsborger: null,
+        oppholdstillatelseMindreEnnTreMåneder: null,
+        oppholdstillatelseForlengelse: null,
     },
     boOgOpphold: {
         borOgOppholderSegINorge: null,

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Input, RadioPanelGruppe } from 'nav-frontend-skjema';
+import AlertStripe from 'nav-frontend-alertstriper';
 
 export const InputFields = (props: {
     id: string;
@@ -54,3 +55,7 @@ export const JaNeiSpørsmål = (props: {
         </div>
     );
 };
+
+export const AnbefalerIkkeSøke = () => (
+    <AlertStripe type="advarsel">Du kan fremdeles søke, men du vil sannsynligvis få avslag.</AlertStripe>
+);
