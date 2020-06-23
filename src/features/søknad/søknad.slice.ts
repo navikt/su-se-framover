@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Bosituasjon, TypeOppholdstillatelse } from './types';
+import { DelerBoligMed, TypeOppholdstillatelse } from './types';
 import { Nullable } from '~lib/types';
 
 export interface SøknadState {
@@ -18,8 +18,10 @@ export interface SøknadState {
     boOgOpphold: {
         borOgOppholderSegINorge: Nullable<boolean>;
         borPåFolkeregistrertAdresse: Nullable<boolean>;
-        bosituasjon: Bosituasjon | null;
-        delerBoligMedAndreVoksne: Nullable<boolean>;
+        delerBoligMedPersonOver18: Nullable<boolean>;
+        delerBoligMed: Nullable<DelerBoligMed>;
+        ektemakeEllerSamboerUnder67År: Nullable<boolean>;
+        ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
     };
     formue: {
         harFormue: Nullable<boolean>;
@@ -57,8 +59,10 @@ const initialState: SøknadState = {
     boOgOpphold: {
         borOgOppholderSegINorge: null,
         borPåFolkeregistrertAdresse: null,
-        bosituasjon: null,
-        delerBoligMedAndreVoksne: null,
+        delerBoligMedPersonOver18: null,
+        delerBoligMed: null,
+        ektemakeEllerSamboerUnder67År: null,
+        ektemakeEllerSamboerUførFlyktning: null,
     },
     formue: {
         harFormue: null,

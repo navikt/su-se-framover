@@ -1,41 +1,52 @@
 import * as React from 'react';
 import { useFormik } from 'formik';
-import { JaNeiSpørsmål } from '~/components/FormElements';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
+import { AnbefalerIkkeSøke, JaNeiSpørsmål } from '~/components/FormElements';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknad.slice';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import { RadioGruppe, Radio } from 'nav-frontend-skjema';
-import { Bosituasjon } from '~features/søknad/types';
+import { Feiloppsummering, Radio, RadioGruppe } from 'nav-frontend-skjema';
+import { DelerBoligMed } from '~features/søknad/types';
 import sharedStyles from '../../steg-shared.module.less';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import messages from './bo-og-opphold-i-norge-nb';
 import { Nullable } from '~lib/types';
 import { useHistory } from 'react-router-dom';
-import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
-import { Feiloppsummering } from 'nav-frontend-skjema';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import sharedI18n from '../steg-shared-i18n';
 import { useI18n } from '../../../../lib/hooks';
 
 interface FormData {
     borOgOppholderSegINorge: Nullable<boolean>;
     borPåFolkeregistrertAdresse: Nullable<boolean>;
-    bosituasjon: Nullable<Bosituasjon>;
-    delerBoligMedAndreVoksne: Nullable<boolean>;
+    delerBoligMedPersonOver18: Nullable<boolean>;
+    delerBoligMed: Nullable<DelerBoligMed>;
+    ektemakeEllerSamboerUnder67År: Nullable<boolean>;
+    ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
 }
 
 const schema = yup.object<FormData>({
     borOgOppholderSegINorge: yup.boolean().nullable().required(),
     borPåFolkeregistrertAdresse: yup.boolean().nullable().required(),
-    //TODO: fix
-    bosituasjon: yup
-        .mixed()
+    delerBoligMedPersonOver18: yup.boolean().nullable().required(),
+    delerBoligMed: yup
+        .mixed<DelerBoligMed>()
         .nullable()
-        .oneOf(
-            [Bosituasjon.BorAleneEllerMedBarnUnder18, Bosituasjon.BorMedNoenOver18],
-            'Bosituasjon må være èn av disse verdiene: Alene eller med barn under 18, Bor med noen over 18 '
-        )
-        .required(),
-    delerBoligMedAndreVoksne: yup.boolean().nullable().required(),
+        .when('delerBoligMedPersonOver18', {
+            is: true,
+            then: yup
+                .mixed<DelerBoligMed>()
+                .nullable()
+                .oneOf<DelerBoligMed>(['ektemake-eller-samboer', 'barn-over-18', 'andre'])
+                .required(),
+        }),
+    ektemakeEllerSamboerUnder67År: yup.boolean().nullable().defined().when('delerBoligMed', {
+        is: 'ektemake-eller-samboer',
+        then: yup.boolean().nullable().required(),
+    }),
+    ektemakeEllerSamboerUførFlyktning: yup.boolean().nullable().defined().when('ektemakeEllerSamboerUnder67År', {
+        is: false,
+        then: yup.boolean().nullable().required(),
+    }),
 });
 
 const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
@@ -49,8 +60,10 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
             søknadSlice.actions.boOgOppholdUpdated({
                 borOgOppholderSegINorge: values.borOgOppholderSegINorge,
                 borPåFolkeregistrertAdresse: values.borPåFolkeregistrertAdresse,
-                bosituasjon: values.bosituasjon,
-                delerBoligMedAndreVoksne: values.delerBoligMedAndreVoksne,
+                delerBoligMedPersonOver18: values.delerBoligMedPersonOver18,
+                delerBoligMed: values.delerBoligMed,
+                ektemakeEllerSamboerUnder67År: values.ektemakeEllerSamboerUnder67År,
+                ektemakeEllerSamboerUførFlyktning: values.ektemakeEllerSamboerUførFlyktning,
             })
         );
 
@@ -58,8 +71,10 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
         initialValues: {
             borOgOppholderSegINorge: boOgOppholdFraStore.borOgOppholderSegINorge,
             borPåFolkeregistrertAdresse: boOgOppholdFraStore.borPåFolkeregistrertAdresse,
-            bosituasjon: boOgOppholdFraStore.bosituasjon,
-            delerBoligMedAndreVoksne: boOgOppholdFraStore.delerBoligMedAndreVoksne,
+            delerBoligMedPersonOver18: boOgOppholdFraStore.delerBoligMedPersonOver18,
+            delerBoligMed: boOgOppholdFraStore.delerBoligMed,
+            ektemakeEllerSamboerUnder67År: boOgOppholdFraStore.ektemakeEllerSamboerUnder67År,
+            ektemakeEllerSamboerUførFlyktning: boOgOppholdFraStore.ektemakeEllerSamboerUførFlyktning,
         },
         onSubmit: (values) => {
             save(values);
@@ -91,6 +106,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({ ...formik.values, borOgOppholderSegINorge: val });
                             }}
                         />
+                        {formik.values.borOgOppholderSegINorge === false && <AnbefalerIkkeSøke />}
                         <JaNeiSpørsmål
                             id="borPåFolkeregistrertAdresse"
                             className={sharedStyles.sporsmal}
@@ -104,49 +120,93 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 });
                             }}
                         />
-                        <RadioGruppe
-                            className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id={'input.bosituasjon.label'} />}
-                            feil={null}
-                        >
-                            <Radio
-                                name="bosituasjon"
-                                label={<FormattedMessage id={'input.bosituasjon.alene.label'} />}
-                                value={Bosituasjon.BorAleneEllerMedBarnUnder18}
-                                checked={formik.values.bosituasjon === Bosituasjon.BorAleneEllerMedBarnUnder18}
-                                onChange={(_) => {
-                                    formik.setValues({
-                                        ...formik.values,
-                                        bosituasjon: Bosituasjon.BorAleneEllerMedBarnUnder18,
-                                    });
-                                }}
-                            />
-                            <Radio
-                                name={'bosituasjon'}
-                                label={<FormattedMessage id={'input.bosituasjon.medNoenOver18.label'} />}
-                                value={Bosituasjon.BorMedNoenOver18}
-                                checked={formik.values.bosituasjon === Bosituasjon.BorMedNoenOver18}
-                                onChange={(_) => {
-                                    formik.setValues({
-                                        ...formik.values,
-                                        bosituasjon: Bosituasjon.BorMedNoenOver18,
-                                    });
-                                }}
-                            />
-                        </RadioGruppe>
                         <JaNeiSpørsmål
-                            id="delerBoligMedAndreVoksne"
+                            id="delerBoligMedPersonOver18"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id={'input.delerBoligMedAndreVoksne.label'} />}
+                            legend={<FormattedMessage id="input.delerBoligMedPersonOver18.label" />}
                             feil={null}
-                            state={formik.values.delerBoligMedAndreVoksne}
-                            onChange={(val) =>
+                            state={formik.values.delerBoligMedPersonOver18}
+                            onChange={(val) => {
                                 formik.setValues({
                                     ...formik.values,
-                                    delerBoligMedAndreVoksne: val,
-                                })
-                            }
+                                    delerBoligMedPersonOver18: val,
+                                });
+                            }}
                         />
+                        {formik.values.delerBoligMedPersonOver18 && (
+                            <RadioGruppe
+                                className={sharedStyles.sporsmal}
+                                legend={<FormattedMessage id={'input.delerBoligMed.label'} />}
+                                feil={null}
+                            >
+                                <Radio
+                                    name={'delerBoligMed'}
+                                    label={<FormattedMessage id={'input.delerBoligMedEktemakeEllerSamboer.label'} />}
+                                    value={'ektemake-eller-samboer'}
+                                    checked={formik.values.delerBoligMed === 'ektemake-eller-samboer'}
+                                    onChange={(_) => {
+                                        formik.setValues({
+                                            ...formik.values,
+                                            delerBoligMed: 'ektemake-eller-samboer',
+                                        });
+                                    }}
+                                />
+                                <Radio
+                                    name="delerBoligMed"
+                                    label={<FormattedMessage id={'input.delerBoligMedBarnOver18.label'} />}
+                                    value={'barn-over-18'}
+                                    checked={formik.values.delerBoligMed === 'barn-over-18'}
+                                    onChange={(_) => {
+                                        formik.setValues({
+                                            ...formik.values,
+                                            delerBoligMed: 'barn-over-18',
+                                        });
+                                    }}
+                                />
+                                <Radio
+                                    name={'delerBoligMed'}
+                                    label={<FormattedMessage id={'input.delerBoligMedAndreVoksne.label'} />}
+                                    value={'andre'}
+                                    checked={formik.values.delerBoligMed === 'andre'}
+                                    onChange={(_) => {
+                                        formik.setValues({
+                                            ...formik.values,
+                                            delerBoligMed: 'andre',
+                                        });
+                                    }}
+                                />
+                            </RadioGruppe>
+                        )}
+                        {formik.values.delerBoligMed === 'ektemake-eller-samboer' && (
+                            <JaNeiSpørsmål
+                                id="ektemakeEllerSamboerUnder67År"
+                                className={sharedStyles.sporsmal}
+                                legend={<FormattedMessage id="input.ektemakeEllerSamboerUnder67År.label" />}
+                                feil={null}
+                                state={formik.values.ektemakeEllerSamboerUnder67År}
+                                onChange={(val) => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        ektemakeEllerSamboerUnder67År: val,
+                                    });
+                                }}
+                            />
+                        )}
+                        {formik.values.ektemakeEllerSamboerUnder67År && (
+                            <JaNeiSpørsmål
+                                id="ektemakeEllerSamboerUførFlyktning"
+                                className={sharedStyles.sporsmal}
+                                legend={<FormattedMessage id="input.ektemakeEllerSamboerUførFlyktning.label" />}
+                                feil={null}
+                                state={formik.values.ektemakeEllerSamboerUførFlyktning}
+                                onChange={(val) => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        ektemakeEllerSamboerUførFlyktning: val,
+                                    });
+                                }}
+                            />
+                        )}
                     </div>
                     <Feiloppsummering
                         className={sharedStyles.feiloppsummering}

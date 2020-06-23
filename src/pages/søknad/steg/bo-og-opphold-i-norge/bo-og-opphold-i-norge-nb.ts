@@ -1,8 +1,11 @@
 export default {
     'input.opphold-i-norge.label': 'Bor og oppholder i Norge?',
     'input.folkereg-adresse.label': 'Bor på folkereg adresse?',
-    'input.bosituasjon.label': 'Bosituasjon',
-    'input.bosituasjon.alene.label': 'Alene eller med barn under 18',
-    'input.bosituasjon.medNoenOver18.label': 'Bor med noen over 18',
-    'input.delerBoligMedAndreVoksne.label': 'Deler du bolig med andre voksne?',
+    'input.delerBoligMedPersonOver18.label': 'Deler du bolig med noen over 18 år?',
+    'input.delerBoligMed.label': 'Hvem deler du bolig med?',
+    'input.delerBoligMedEktemakeEllerSamboer.label': 'Ektemake eller samboer',
+    'input.delerBoligMedBarnOver18.label': 'Barn over 18',
+    'input.delerBoligMedAndreVoksne.label': 'Andre voksne',
+    'input.ektemakeEllerSamboerUnder67År.label': 'Er ektemake eller samboer under 67 år?',
+    'input.ektemakeEllerSamboerUførFlyktning.label': 'Er ektemake eller samboer ufør flyktning?',
 };

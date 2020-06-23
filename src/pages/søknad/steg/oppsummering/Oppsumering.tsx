@@ -7,7 +7,6 @@ import messages from './oppsumering-nb';
 import styles from './oppsummering.module.less';
 import sharedStyles from '../../steg-shared.module.less';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
-import { Bosituasjon } from '~features/søknad/types';
 import { useHistory } from 'react-router-dom';
 import { useI18n } from '~lib/hooks';
 import * as innsendingSlice from '~features/søknad/innsending.slice';
@@ -97,28 +96,6 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                 søknadFraStore.boOgOpphold.borPåFolkeregistrertAdresse
                                     ? 'Ja'
                                     : søknadFraStore.boOgOpphold.borPåFolkeregistrertAdresse === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
-                        />
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.bosituasjon.label" />}
-                            verdi={
-                                søknadFraStore.boOgOpphold.bosituasjon === Bosituasjon.BorAleneEllerMedBarnUnder18 ? (
-                                    <FormattedMessage id="input.bosituasjon.alene.label" />
-                                ) : søknadFraStore.boOgOpphold.bosituasjon === Bosituasjon.BorMedNoenOver18 ? (
-                                    <FormattedMessage id="input.bosituasjon.medNoenOver18.label" />
-                                ) : (
-                                    'Ubesvart'
-                                )
-                            }
-                        />
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.delerBoligMedAndreVoksne.label" />}
-                            verdi={
-                                søknadFraStore.boOgOpphold.delerBoligMedAndreVoksne
-                                    ? 'Ja'
-                                    : søknadFraStore.boOgOpphold.delerBoligMedAndreVoksne === false
                                     ? 'Nei'
                                     : 'Ubesvart'
                             }

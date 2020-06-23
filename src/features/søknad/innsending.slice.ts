@@ -36,7 +36,8 @@ export const sendSøknad = createAsyncThunk<søknadApi.Søknad, { søknad: Søkn
             boforhold: {
                 borFastINorge: søknad.boOgOpphold.borOgOppholderSegINorge!,
                 borPåFolkeregistrertAdresse: søknad.boOgOpphold.borPåFolkeregistrertAdresse!,
-                delerBolig: søknad.boOgOpphold.delerBoligMedAndreVoksne!,
+                // TODO: Legg til/ferdigstill boforhold
+                delerBolig: søknad.boOgOpphold.delerBoligMedPersonOver18!,
                 borSammenMed: [],
                 delerBoligMed: [],
             },

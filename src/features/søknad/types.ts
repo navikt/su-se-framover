@@ -4,3 +4,5 @@ export enum Bosituasjon {
 }
 
 export type TypeOppholdstillatelse = 'permanent' | 'midlertidig';
+
+export type DelerBoligMed = 'ektemake-eller-samboer' | 'barn-over-18' | 'andre';
