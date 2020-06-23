@@ -3,7 +3,7 @@ import { IntlProvider, FormattedMessage } from 'react-intl';
 import { useFormik } from 'formik';
 import { Input, SkjemaGruppe } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { Panel } from 'nav-frontend-paneler';
+import Panel from 'nav-frontend-paneler';
 
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Languages } from '~components/TextProvider';
