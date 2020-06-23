@@ -120,6 +120,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 })
                             }
                         />
+                        {formik.values.erFlyktning === false && <AnbefalerIkkeSøke />}
                         <JaNeiSpørsmål
                             id={'erNorskStatsborger'}
                             className={sharedStyles.sporsmal}
