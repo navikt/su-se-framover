@@ -15,6 +15,7 @@ import sharedI18n from '../steg-shared-i18n';
 import { useI18n } from '../../../../lib/hooks';
 import { TypeOppholdstillatelse } from '~features/søknad/types';
 import AlertStripe from 'nav-frontend-alertstriper';
+import Input from 'nav-frontend-skjema/lib/input';
 
 interface FormData {
     erFlyktning: Nullable<boolean>;
@@ -23,6 +24,8 @@ interface FormData {
     typeOppholdstillatelse: Nullable<TypeOppholdstillatelse>;
     oppholdstillatelseMindreEnnTreMåneder: Nullable<boolean>;
     oppholdstillatelseForlengelse: Nullable<boolean>;
+    statsborgerskapAndreLand: Nullable<boolean>;
+    statsborgerskapAndreLandFritekst: Nullable<string>;
 }
 
 const schema = yup.object<FormData>({
@@ -52,6 +55,15 @@ const schema = yup.object<FormData>({
             is: true,
             then: yup.boolean().nullable().required(),
         }),
+    statsborgerskapAndreLand: yup.boolean().nullable().required(),
+    statsborgerskapAndreLandFritekst: yup
+        .string()
+        .nullable(true)
+        .defined()
+        .when('statsborgerskapAndreLand', {
+            is: true,
+            then: yup.string().nullable().min(1).required(),
+        }),
 });
 
 const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl: string }) => {
@@ -69,6 +81,8 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                 typeOppholdstillatelse: values.typeOppholdstillatelse,
                 oppholdstillatelseMindreEnnTreMåneder: values.oppholdstillatelseMindreEnnTreMåneder,
                 oppholdstillatelseForlengelse: values.oppholdstillatelseForlengelse,
+                statsborgerskapAndreLand: values.statsborgerskapAndreLand,
+                statsborgerskapAndreLandFritekst: values.statsborgerskapAndreLandFritekst,
             })
         );
 
@@ -80,6 +94,8 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
             typeOppholdstillatelse: flyktningstatusFraStore.typeOppholdstillatelse,
             oppholdstillatelseMindreEnnTreMåneder: flyktningstatusFraStore.oppholdstillatelseMindreEnnTreMåneder,
             oppholdstillatelseForlengelse: flyktningstatusFraStore.oppholdstillatelseForlengelse,
+            statsborgerskapAndreLand: flyktningstatusFraStore.statsborgerskapAndreLand,
+            statsborgerskapAndreLandFritekst: flyktningstatusFraStore.statsborgerskapAndreLandFritekst,
         },
         onSubmit: (values) => {
             save(values);
@@ -216,6 +232,28 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             <AlertStripe type="advarsel">
                                 Du kan fremdeles søke, men du bør søke om forlengelse så snart som mulig.
                             </AlertStripe>
+                        )}
+                        <JaNeiSpørsmål
+                            id={'statsborgerskapAndreLand'}
+                            className={sharedStyles.sporsmal}
+                            legend={<FormattedMessage id="input.statsborger.andre.land.label" />}
+                            feil={formik.errors.statsborgerskapAndreLand}
+                            state={formik.values.statsborgerskapAndreLand}
+                            onChange={(val) =>
+                                formik.setValues({
+                                    ...formik.values,
+                                    statsborgerskapAndreLand: val,
+                                })
+                            }
+                        />
+                        {formik.values.statsborgerskapAndreLand && (
+                            <Input
+                                id="statsborgerskapAndreLandFritekst"
+                                name="statsborgerskapAndreLandFritekst"
+                                label={<FormattedMessage id="input.statsborger.andre.land.fritekst.label" />}
+                                value={formik.values.statsborgerskapAndreLandFritekst || ''}
+                                onChange={formik.handleChange}
+                            />
                         )}
                     </div>
                     <Feiloppsummering

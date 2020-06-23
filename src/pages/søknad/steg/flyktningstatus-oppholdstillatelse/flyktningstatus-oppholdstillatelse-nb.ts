@@ -10,4 +10,7 @@ export default {
     'input.midlertidig.oppholdstillatelse.opphører.label':
         'Er det mindre enn tre måneder til oppholdstillatelsen opphører?',
     'input.oppholdtillatelse.forlengelse.label': 'Har du søkt forlengelse?',
+
+    'input.statsborger.andre.land.label': 'Har du statsborgerskap i andre land enn Norge?',
+    'input.statsborger.andre.land.fritekst.label': 'Hvilke land?',
 };
