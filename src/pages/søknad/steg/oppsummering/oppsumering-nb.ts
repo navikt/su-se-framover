@@ -34,5 +34,5 @@ export default {
     'input.utreisedato': 'Utreisedato',
     'input.innreisedato': 'innreisedato',
 
-    'panel.tittel.kontakt': 'kontakt'
+    'panel.tittel.kontakt': 'kontakt',
 };

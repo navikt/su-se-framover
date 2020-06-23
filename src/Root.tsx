@@ -19,9 +19,9 @@ const Root = () => {
 
     useEffect(() => {
         if (!window.BASE_URL || typeof window.BASE_URL !== 'string') {
-            fetch('/config.json').then(res => {
+            fetch('/config.json').then((res) => {
                 if (res.ok) {
-                    res.json().then(config => {
+                    res.json().then((config) => {
                         window.BASE_URL = config.suSeBakoverUrl;
                         setConfigLoaded(true);
                     });
@@ -36,7 +36,7 @@ const Root = () => {
         if (!configLoaded || !window.BASE_URL || typeof window.BASE_URL !== 'string') {
             return;
         }
-        apiClient('/authenticated', { method: 'GET' }).then(res => {
+        apiClient('/authenticated', { method: 'GET' }).then((res) => {
             if (res.status === 'error' && res.error.statusCode === 401) {
                 window.location.href = `${window.BASE_URL}/login`;
             }
@@ -83,7 +83,7 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
                         minHeight: '100vh',
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center'
+                        alignItems: 'center',
                     }}
                 >
                     {children}
@@ -116,12 +116,12 @@ const ContentWrapperStyle = {
     color: 'white',
     height: '3em',
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
 };
 
 const appNameStyle = {
     marginRight: '2em',
-    marginLeft: '1em'
+    marginLeft: '1em',
 };
 
 /* eslint-disable-next-line no-undef */

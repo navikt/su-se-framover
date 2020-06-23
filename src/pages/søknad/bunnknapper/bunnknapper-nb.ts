@@ -1,4 +1,4 @@
 export default {
     'steg.neste': 'Neste',
-    'steg.forrige': 'Forrige'
+    'steg.forrige': 'Forrige',
 };

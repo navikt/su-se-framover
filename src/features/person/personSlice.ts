@@ -29,10 +29,10 @@ export default createSlice({
     name: 'søker',
     initialState: {
         søker: undefined,
-        error: undefined
+        error: undefined,
     } as PersonState,
     reducers: {},
-    extraReducers: builder => {
+    extraReducers: (builder) => {
         builder.addCase(fetchPerson.fulfilled, (state, action) => {
             state.søker = action.payload;
         });
@@ -40,11 +40,11 @@ export default createSlice({
             if (action.payload) {
                 state.error = {
                     code: action.payload.code,
-                    message: `Feilet med status ${action.payload.statusCode}`
+                    message: `Feilet med status ${action.payload.statusCode}`,
                 };
             } else {
                 state.error = { code: ErrorCode.Unknown, message: 'Ukjent feil' };
             }
         });
-    }
+    },
 });

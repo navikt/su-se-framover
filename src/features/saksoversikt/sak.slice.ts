@@ -24,10 +24,10 @@ export default createSlice({
     name: 'sak',
     initialState: {
         sak: undefined,
-        error: undefined
+        error: undefined,
     } as SakState,
     reducers: {},
-    extraReducers: builder => {
+    extraReducers: (builder) => {
         builder.addCase(fetchSak.fulfilled, (state, action) => {
             state.sak = action.payload;
         });
@@ -41,5 +41,5 @@ export default createSlice({
         //         state.error = { code: ErrorCode.Unknown, message: 'Ukjent feil' };
         //     }
         // });
-    }
+    },
 });

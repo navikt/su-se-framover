@@ -9,5 +9,5 @@ export enum Søknadsteg {
     Kontakt = 'kontaktinformasjon',
     Oppsummering = 'oppsummering',
     LastOppDokumentasjon = 'dokumentasjon',
-    Kvittering = 'kvittering'
+    Kvittering = 'kvittering',
 }

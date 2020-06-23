@@ -20,7 +20,7 @@ const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | Reac
 
 const Oppsummering = (props: { forrigeUrl: string }) => {
     const history = useHistory();
-    const søknadFraStore = useAppSelector(s => s.soknad);
+    const søknadFraStore = useAppSelector((s) => s.soknad);
 
     const intl = useI18n({ messages });
 
@@ -281,7 +281,7 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                     previous={{
                         onClick: () => {
                             history.push(props.forrigeUrl);
-                        }
+                        },
                     }}
                 />
             </div>

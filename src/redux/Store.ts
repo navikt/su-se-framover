@@ -9,8 +9,8 @@ const store = configureStore({
     reducer: {
         saksoversikt: saksoversiktSlice.reducer,
         soknad: søknadSlice.reducer,
-        sak: sakSlice.reducer
-    }
+        sak: sakSlice.reducer,
+    },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

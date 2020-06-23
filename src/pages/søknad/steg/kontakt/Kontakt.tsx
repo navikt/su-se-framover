@@ -20,7 +20,7 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         previous={{
                             onClick: () => {
                                 history.push(props.forrigeUrl);
-                            }
+                            },
                         }}
                     />
                 </form>

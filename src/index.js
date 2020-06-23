@@ -6,7 +6,7 @@ import * as Sentry from '@sentry/browser';
 Sentry.init({
     dsn: 'https://86e03156def1405889ca142c2f08bdd8@sentry.gc.nav.no/34',
     environment: window.location.hostname,
-    integrations: [new Sentry.Integrations.Breadcrumbs({ console: false })]
+    integrations: [new Sentry.Integrations.Breadcrumbs({ console: false })],
 });
 
 render(<Root />, document.getElementById('root'));
