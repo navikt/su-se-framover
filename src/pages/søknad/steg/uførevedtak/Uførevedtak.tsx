@@ -13,6 +13,7 @@ import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/
 import { useHistory } from 'react-router-dom';
 import sharedI18n from '../steg-shared-i18n';
 import { useI18n } from '../../../../lib/hooks';
+import AlertStripe from 'nav-frontend-alertstriper';
 
 interface FormData {
     harUførevedtak: Nullable<boolean>;
@@ -68,6 +69,12 @@ const Uførevedtak = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             }
                         />
                     </div>
+                    {formik.values.harUførevedtak === false && (
+                        <AlertStripe type="advarsel">
+                            Du kan fremdeles søke, men du vil sannsynligvis få avslag. Du må søke om uføre og motta
+                            vedtak før du kan søke om supplerende stønad for uføre
+                        </AlertStripe>
+                    )}
                     <div>
                         <Feiloppsummering
                             className={sharedStyles.feiloppsummering}
