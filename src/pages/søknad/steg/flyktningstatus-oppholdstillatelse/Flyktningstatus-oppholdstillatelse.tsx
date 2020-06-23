@@ -16,12 +16,17 @@ import { useI18n } from '../../../../lib/hooks';
 
 interface FormData {
     erFlyktning: Nullable<boolean>;
+    erNorskStatsborger: Nullable<boolean>;
     harOppholdstillatelse: Nullable<boolean>;
 }
 
 const schema = yup.object<FormData>({
     erFlyktning: yup.boolean().nullable().required(),
-    harOppholdstillatelse: yup.boolean().nullable().required(),
+    erNorskStatsborger: yup.boolean().nullable().required(),
+    harOppholdstillatelse: yup.boolean().nullable(true).defined().when('erNorskStatsborger', {
+        is: false,
+        then: yup.boolean().nullable().required(),
+    }),
 });
 
 const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl: string }) => {
@@ -34,6 +39,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
         dispatch(
             søknadSlice.actions.flyktningstatusUpdated({
                 erFlyktning: values.erFlyktning,
+                erNorskStatsborger: values.erNorskStatsborger,
                 harOppholdstillatelse: values.harOppholdstillatelse,
             })
         );
@@ -41,6 +47,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
     const formik = useFormik<FormData>({
         initialValues: {
             erFlyktning: flyktningstatusFraStore.erFlyktning,
+            erNorskStatsborger: flyktningstatusFraStore.erNorskStatsborger,
             harOppholdstillatelse: flyktningstatusFraStore.harOppholdstillatelse,
         },
         onSubmit: (values) => {
@@ -84,18 +91,33 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             }
                         />
                         <JaNeiSpørsmål
-                            id={'harOppholdstillatelse'}
+                            id={'erNorskStatsborger'}
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.oppholdstillatelse.label" />}
-                            feil={formik.errors.harOppholdstillatelse}
-                            state={formik.values.harOppholdstillatelse}
+                            legend={<FormattedMessage id="input.norsk.statsborger.label" />}
+                            feil={formik.errors.erNorskStatsborger}
+                            state={formik.values.erNorskStatsborger}
                             onChange={(val) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    harOppholdstillatelse: val,
+                                    erNorskStatsborger: val,
                                 })
                             }
                         />
+                        {formik.values.erNorskStatsborger === false && (
+                            <JaNeiSpørsmål
+                                id={'harOppholdstillatelse'}
+                                className={sharedStyles.sporsmal}
+                                legend={<FormattedMessage id="input.oppholdstillatelse.label" />}
+                                feil={formik.errors.harOppholdstillatelse}
+                                state={formik.values.harOppholdstillatelse}
+                                onChange={(val) =>
+                                    formik.setValues({
+                                        ...formik.values,
+                                        harOppholdstillatelse: val,
+                                    })
+                                }
+                            />
+                        )}
                     </div>
                     <Feiloppsummering
                         className={sharedStyles.feiloppsummering}
