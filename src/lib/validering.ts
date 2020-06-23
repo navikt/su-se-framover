@@ -8,50 +8,50 @@ function label(data: Partial<yup.TestMessageParams>) {
 
 const norskLocale: yup.LocaleObject = {
     mixed: {
-        default: data => `${label(data)} er ugyldig`,
-        required: data => `${label(data)} må fylles ut`,
-        oneOf: data => `${data.label ?? 'Feltet'} må være én av disse verdiene: ${data.values}`,
-        notOneOf: data => `${data.label} kan ikke være en av disse verdiene: ${data.values}`,
+        default: (data) => `${label(data)} er ugyldig`,
+        required: (data) => `${label(data)} må fylles ut`,
+        oneOf: (data) => `${data.label ?? 'Feltet'} må være én av disse verdiene: ${data.values}`,
+        notOneOf: (data) => `${data.label} kan ikke være en av disse verdiene: ${data.values}`,
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         // Denne mangler i typedefinisjonen
-        defined: data => `${data.label} må være satt`
+        defined: (data) => `${data.label} må være satt`,
         // notType: _data => {
         //     throw new Error('Ikke bruk denne regelen pls');
         // }
     },
     string: {
-        min: data => `${data.label} kan ikke være kortere enn ${data.min} tegn`,
-        max: data => `${data.label} kan ikke være lenger enn ${data.max} tegn`,
-        length: data => `${data.label} må være ${data.length} tegn`,
-        email: data => `${data.label} må være en gyldig epostadresse`,
-        url: data => `${data.label} må være en gyldig URL`,
-        lowercase: data => `${data.label} kan kun ha små bokstaver`,
-        uppercase: data => `${data.label} kan kun ha store bokstaver`,
-        matches: data => `${data.label} må matche dette formatet: ${data.regex}`,
-        trim: data => `${data.label} kan ikke inneholde mellomrom på starten eller slutten`
+        min: (data) => `${data.label} kan ikke være kortere enn ${data.min} tegn`,
+        max: (data) => `${data.label} kan ikke være lenger enn ${data.max} tegn`,
+        length: (data) => `${data.label} må være ${data.length} tegn`,
+        email: (data) => `${data.label} må være en gyldig epostadresse`,
+        url: (data) => `${data.label} må være en gyldig URL`,
+        lowercase: (data) => `${data.label} kan kun ha små bokstaver`,
+        uppercase: (data) => `${data.label} kan kun ha store bokstaver`,
+        matches: (data) => `${data.label} må matche dette formatet: ${data.regex}`,
+        trim: (data) => `${data.label} kan ikke inneholde mellomrom på starten eller slutten`,
     },
     number: {
-        min: data => `${data.label} kan ikke være mindre enn ${data.min}`,
-        max: data => `${data.label} kan ikke være mer enn ${data.max}`,
-        integer: data => `${data.label} må være et heltall`,
-        negative: data => `${data.label} må være mindre enn 0`,
-        positive: data => `${data.label} må være større enn 0`,
-        lessThan: data => `${data.label} må være mindre enn ${data.less}`,
-        moreThan: data => `${data.label} må være større enn ${data.more}`
+        min: (data) => `${data.label} kan ikke være mindre enn ${data.min}`,
+        max: (data) => `${data.label} kan ikke være mer enn ${data.max}`,
+        integer: (data) => `${data.label} må være et heltall`,
+        negative: (data) => `${data.label} må være mindre enn 0`,
+        positive: (data) => `${data.label} må være større enn 0`,
+        lessThan: (data) => `${data.label} må være mindre enn ${data.less}`,
+        moreThan: (data) => `${data.label} må være større enn ${data.more}`,
     },
     array: {
-        max: data => `${data.label} kan ikke ha flere enn ${data.max} elementer`,
-        min: data => `${data.label} må ha minst ${data.min} elementer`
+        max: (data) => `${data.label} kan ikke ha flere enn ${data.max} elementer`,
+        min: (data) => `${data.label} må ha minst ${data.min} elementer`,
     },
     boolean: {},
     date: {
-        min: data => `${data.label} må være etter ${data.min}`,
-        max: data => `${data.label} må være før ${data.max}`
+        min: (data) => `${data.label} må være etter ${data.min}`,
+        max: (data) => `${data.label} må være før ${data.max}`,
     },
     object: {
-        noUnknown: data => `${data.label} har ukjente felter`
-    }
+        noUnknown: (data) => `${data.label} har ukjente felter`,
+    },
 };
 
 yup.setLocale(norskLocale);
@@ -67,13 +67,13 @@ export function formikErrorsTilFeiloppsummering<T extends Record<string, any>>(
             return val.flatMap((x, index) =>
                 Object.entries(x).map(([k, v]) => ({
                     skjemaelementId: `${key}[${index}].${k}`,
-                    feilmelding: v
+                    feilmelding: v,
                 }))
             );
         }
         return {
             skjemaelementId: key,
-            feilmelding: val ?? ''
+            feilmelding: val ?? '',
         };
     });
 }

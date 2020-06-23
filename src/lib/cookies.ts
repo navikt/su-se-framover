@@ -2,7 +2,7 @@ import Cookies from 'js-cookie';
 
 export enum CookieName {
     AccessToken = 'access_token',
-    RefreshToken = 'refresh_token'
+    RefreshToken = 'refresh_token',
 }
 
 const defaultCookieOptions: Cookies.CookieAttributes =
@@ -11,7 +11,7 @@ const defaultCookieOptions: Cookies.CookieAttributes =
               secure: true,
               domain: window.location.host,
               path: '/',
-              sameSite: 'strict'
+              sameSite: 'strict',
           }
         : { path: '/', sameSite: 'strict' };
 

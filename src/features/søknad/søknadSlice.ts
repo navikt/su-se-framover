@@ -39,33 +39,33 @@ const initialState: SøknadState = {
     harUførevedtak: null,
     flyktningstatus: {
         erFlyktning: null,
-        harOppholdstillatelse: null
+        harOppholdstillatelse: null,
     },
     boOgOpphold: {
         borOgOppholderSegINorge: null,
         borPåFolkeregistrertAdresse: null,
         bosituasjon: null,
-        delerBoligMedAndreVoksne: null
+        delerBoligMedAndreVoksne: null,
     },
     formue: {
         harFormue: null,
         beløpFormue: null,
         eierBolig: null,
-        harDepositumskonto: null
+        harDepositumskonto: null,
     },
     inntekt: {
         harInntekt: null,
         inntektBeløp: null,
         harMottattSosialstønad: null,
         pensjonsInntekt: [],
-        mottarPensjon: null
+        mottarPensjon: null,
     },
     utenlandsopphold: {
         harReistTilUtlandetSiste90dager: null,
         harReistDatoer: [],
         skalReiseTilUtlandetNeste12Måneder: null,
-        skalReiseDatoer: []
-    }
+        skalReiseDatoer: [],
+    },
 };
 
 export default createSlice({
@@ -89,6 +89,6 @@ export default createSlice({
         },
         utenlandsoppholdUpdated(state, action: PayloadAction<SøknadState['utenlandsopphold']>) {
             state.utenlandsopphold = action.payload;
-        }
-    }
+        },
+    },
 });

@@ -35,20 +35,20 @@ const index = (props: { nesteUrl: string }) => {
             .string()
             .min(1)
             .label(intl.formatMessage({ id: 'input.navn.label' }))
-            .required()
+            .required(),
     });
 
     const formik = useFormik<FormData>({
         initialValues: {
             fnr: '',
-            navn: ''
+            navn: '',
         },
-        onSubmit: async values => {
+        onSubmit: async (values) => {
             await dispatch(saksoversiktSlice.fetchSøker({ fnr: values.fnr, access_token: '123' }));
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
-        validateOnChange: hasSubmitted
+        validateOnChange: hasSubmitted,
     });
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
@@ -57,7 +57,7 @@ const index = (props: { nesteUrl: string }) => {
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
                 <form
-                    onSubmit={e => {
+                    onSubmit={(e) => {
                         setHasSubmitted(true);
                         formik.handleSubmit(e);
                         setTimeout(() => {

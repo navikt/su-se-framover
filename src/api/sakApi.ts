@@ -6,6 +6,6 @@ export interface Sak {
 
 export async function fetchSak(fnr: string): Promise<ApiClientResult<Sak>> {
     return apiClient(`/person/${fnr}/sak`, {
-        method: 'GET'
+        method: 'GET',
     });
 }

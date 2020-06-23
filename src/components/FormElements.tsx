@@ -20,13 +20,13 @@ export const InputFields = (props: {
             value={props.value}
             bredde={props.bredde}
             disabled={props.disabled}
-            onChange={e => props.onChange(e.target.value)}
+            onChange={(e) => props.onChange(e.target.value)}
         />
     </span>
 );
 
 const InputFieldsStyle = {
-    marginRight: '1em'
+    marginRight: '1em',
 };
 
 export const JaNeiSpørsmål = (props: {
@@ -46,7 +46,7 @@ export const JaNeiSpørsmål = (props: {
                 name={props.id}
                 radios={[
                     { label: 'Ja', value: 'true' },
-                    { label: 'Nei', value: 'false' }
+                    { label: 'Nei', value: 'false' },
                 ]}
                 onChange={(_e, value) => props.onChange(value === 'true')}
                 checked={props.state?.toString()}

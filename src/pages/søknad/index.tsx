@@ -26,7 +26,7 @@ const messages = {
     'steg.kontakt': 'Kontakt',
     'steg.oppsummering': 'Oppsummering',
     'steg.neste': 'Neste',
-    'steg.forrige': 'Forrige'
+    'steg.forrige': 'Forrige',
 };
 
 const index = () => {
@@ -39,43 +39,43 @@ const index = () => {
         {
             index: 0,
             label: intl.formatMessage({ id: 'steg.uforevedtak' }),
-            step: Søknadsteg.Uførevedtak
+            step: Søknadsteg.Uførevedtak,
         },
         {
             index: 1,
             label: intl.formatMessage({ id: 'steg.flyktningstatus' }),
-            step: Søknadsteg.FlyktningstatusOppholdstillatelse
+            step: Søknadsteg.FlyktningstatusOppholdstillatelse,
         },
         {
             index: 2,
             label: intl.formatMessage({ id: 'steg.boOgOppholdINorge' }),
-            step: Søknadsteg.BoOgOppholdINorge
+            step: Søknadsteg.BoOgOppholdINorge,
         },
         {
             index: 3,
             label: intl.formatMessage({ id: 'steg.formue' }),
-            step: Søknadsteg.DinFormue
+            step: Søknadsteg.DinFormue,
         },
         {
             index: 4,
             label: intl.formatMessage({ id: 'steg.inntekt' }),
-            step: Søknadsteg.DinInntekt
+            step: Søknadsteg.DinInntekt,
         },
         {
             index: 5,
             label: intl.formatMessage({ id: 'steg.utenlandsopphold' }),
-            step: Søknadsteg.ReiseTilUtlandet
+            step: Søknadsteg.ReiseTilUtlandet,
         },
         {
             index: 6,
             label: intl.formatMessage({ id: 'steg.kontakt' }),
-            step: Søknadsteg.Kontakt
+            step: Søknadsteg.Kontakt,
         },
         {
             index: 7,
             label: intl.formatMessage({ id: 'steg.oppsummering' }),
-            step: Søknadsteg.Oppsummering
-        }
+            step: Søknadsteg.Oppsummering,
+        },
     ];
 
     return (
@@ -86,13 +86,13 @@ const index = () => {
                 </div>
                 <div className={styles.stegindikatorContainer}>
                     <Stegindikator
-                        steg={steg.map(s => ({
+                        steg={steg.map((s) => ({
                             index: s.index,
                             label: s.label,
-                            aktiv: s.step === step
+                            aktiv: s.step === step,
                         }))}
                         visLabel={false}
-                        onChange={index => {
+                        onChange={(index) => {
                             const nyttSteg = steg[index];
                             if (nyttSteg) {
                                 history.push(`/soknad/${nyttSteg.step}`);
@@ -100,7 +100,7 @@ const index = () => {
                         }}
                     />
                 </div>
-                <Innholdstittel>{steg.find(s => s.step === step)?.label}</Innholdstittel>
+                <Innholdstittel>{steg.find((s) => s.step === step)?.label}</Innholdstittel>
             </div>
             {step === Søknadsteg.Inngang ? (
                 <Inngang nesteUrl={`/soknad/${Søknadsteg.Uførevedtak}`} />

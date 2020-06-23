@@ -31,9 +31,8 @@ module.exports = {
     },
     plugins: ['react', '@typescript-eslint'],
     rules: {
-        'react/prop-types': ['warn'],
-        '@typescript-eslint/no-unused-vars': ['error', { "argsIgnorePattern": "^_"}],
-        '@typescript-eslint/explicit-module-boundary-types': "off"
+        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+        '@typescript-eslint/explicit-module-boundary-types': 'off'
     },
     overrides: [
         {

@@ -24,14 +24,8 @@ interface FormData {
 }
 
 const schema = yup.object<FormData>({
-    borOgOppholderSegINorge: yup
-        .boolean()
-        .nullable()
-        .required(),
-    borPåFolkeregistrertAdresse: yup
-        .boolean()
-        .nullable()
-        .required(),
+    borOgOppholderSegINorge: yup.boolean().nullable().required(),
+    borPåFolkeregistrertAdresse: yup.boolean().nullable().required(),
     //TODO: fix
     bosituasjon: yup
         .mixed()
@@ -41,14 +35,11 @@ const schema = yup.object<FormData>({
             'Bosituasjon må være èn av disse verdiene: Alene eller med barn under 18, Bor med noen over 18 '
         )
         .required(),
-    delerBoligMedAndreVoksne: yup
-        .boolean()
-        .nullable()
-        .required()
+    delerBoligMedAndreVoksne: yup.boolean().nullable().required(),
 });
 
 const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
-    const boOgOppholdFraStore = useAppSelector(s => s.soknad.boOgOpphold);
+    const boOgOppholdFraStore = useAppSelector((s) => s.soknad.boOgOpphold);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -59,7 +50,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 borOgOppholderSegINorge: values.borOgOppholderSegINorge,
                 borPåFolkeregistrertAdresse: values.borPåFolkeregistrertAdresse,
                 bosituasjon: values.bosituasjon,
-                delerBoligMedAndreVoksne: values.delerBoligMedAndreVoksne
+                delerBoligMedAndreVoksne: values.delerBoligMedAndreVoksne,
             })
         );
 
@@ -68,14 +59,14 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
             borOgOppholderSegINorge: boOgOppholdFraStore.borOgOppholderSegINorge,
             borPåFolkeregistrertAdresse: boOgOppholdFraStore.borPåFolkeregistrertAdresse,
             bosituasjon: boOgOppholdFraStore.bosituasjon,
-            delerBoligMedAndreVoksne: boOgOppholdFraStore.delerBoligMedAndreVoksne
+            delerBoligMedAndreVoksne: boOgOppholdFraStore.delerBoligMedAndreVoksne,
         },
-        onSubmit: values => {
+        onSubmit: (values) => {
             save(values);
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
-        validateOnChange: hasSubmitted
+        validateOnChange: hasSubmitted,
     });
 
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
@@ -84,7 +75,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
                 <form
-                    onSubmit={e => {
+                    onSubmit={(e) => {
                         setHasSubmitted(true);
                         formik.handleSubmit(e);
                     }}
@@ -96,7 +87,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.opphold-i-norge.label" />}
                             feil={null}
                             state={formik.values.borOgOppholderSegINorge}
-                            onChange={val => {
+                            onChange={(val) => {
                                 formik.setValues({ ...formik.values, borOgOppholderSegINorge: val });
                             }}
                         />
@@ -106,10 +97,10 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.folkereg-adresse.label" />}
                             feil={null}
                             state={formik.values.borPåFolkeregistrertAdresse}
-                            onChange={val => {
+                            onChange={(val) => {
                                 formik.setValues({
                                     ...formik.values,
-                                    borPåFolkeregistrertAdresse: val
+                                    borPåFolkeregistrertAdresse: val,
                                 });
                             }}
                         />
@@ -123,10 +114,10 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 label={<FormattedMessage id={'input.bosituasjon.alene.label'} />}
                                 value={Bosituasjon.BorAleneEllerMedBarnUnder18}
                                 checked={formik.values.bosituasjon === Bosituasjon.BorAleneEllerMedBarnUnder18}
-                                onChange={_ => {
+                                onChange={(_) => {
                                     formik.setValues({
                                         ...formik.values,
-                                        bosituasjon: Bosituasjon.BorAleneEllerMedBarnUnder18
+                                        bosituasjon: Bosituasjon.BorAleneEllerMedBarnUnder18,
                                     });
                                 }}
                             />
@@ -135,10 +126,10 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 label={<FormattedMessage id={'input.bosituasjon.medNoenOver18.label'} />}
                                 value={Bosituasjon.BorMedNoenOver18}
                                 checked={formik.values.bosituasjon === Bosituasjon.BorMedNoenOver18}
-                                onChange={_ => {
+                                onChange={(_) => {
                                     formik.setValues({
                                         ...formik.values,
-                                        bosituasjon: Bosituasjon.BorMedNoenOver18
+                                        bosituasjon: Bosituasjon.BorMedNoenOver18,
                                     });
                                 }}
                             />
@@ -149,10 +140,10 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id={'input.delerBoligMedAndreVoksne.label'} />}
                             feil={null}
                             state={formik.values.delerBoligMedAndreVoksne}
-                            onChange={val =>
+                            onChange={(val) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    delerBoligMedAndreVoksne: val
+                                    delerBoligMedAndreVoksne: val,
                                 })
                             }
                         />
@@ -168,7 +159,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             onClick: () => {
                                 save(formik.values);
                                 history.push(props.forrigeUrl);
-                            }
+                            },
                         }}
                     />
                 </form>

@@ -20,18 +20,12 @@ interface FormData {
 }
 
 const schema = yup.object<FormData>({
-    erFlyktning: yup
-        .boolean()
-        .nullable()
-        .required(),
-    harOppholdstillatelse: yup
-        .boolean()
-        .nullable()
-        .required()
+    erFlyktning: yup.boolean().nullable().required(),
+    harOppholdstillatelse: yup.boolean().nullable().required(),
 });
 
 const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl: string }) => {
-    const flyktningstatusFraStore = useAppSelector(s => s.soknad.flyktningstatus);
+    const flyktningstatusFraStore = useAppSelector((s) => s.soknad.flyktningstatus);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -40,21 +34,21 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
         dispatch(
             søknadSlice.actions.flyktningstatusUpdated({
                 erFlyktning: values.erFlyktning,
-                harOppholdstillatelse: values.harOppholdstillatelse
+                harOppholdstillatelse: values.harOppholdstillatelse,
             })
         );
 
     const formik = useFormik<FormData>({
         initialValues: {
             erFlyktning: flyktningstatusFraStore.erFlyktning,
-            harOppholdstillatelse: flyktningstatusFraStore.harOppholdstillatelse
+            harOppholdstillatelse: flyktningstatusFraStore.harOppholdstillatelse,
         },
-        onSubmit: values => {
+        onSubmit: (values) => {
             save(values);
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
-        validateOnChange: hasSubmitted
+        validateOnChange: hasSubmitted,
     });
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
@@ -65,7 +59,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
                 <form
-                    onSubmit={e => {
+                    onSubmit={(e) => {
                         setHasSubmitted(true);
                         formik.handleSubmit(e);
                         setTimeout(() => {
@@ -82,10 +76,10 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             legend={<FormattedMessage id="input.flyktning.label" />}
                             feil={formik.errors.erFlyktning}
                             state={formik.values.erFlyktning}
-                            onChange={val =>
+                            onChange={(val) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    erFlyktning: val
+                                    erFlyktning: val,
                                 })
                             }
                         />
@@ -95,10 +89,10 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             legend={<FormattedMessage id="input.oppholdstillatelse.label" />}
                             feil={formik.errors.harOppholdstillatelse}
                             state={formik.values.harOppholdstillatelse}
-                            onChange={val =>
+                            onChange={(val) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    harOppholdstillatelse: val
+                                    harOppholdstillatelse: val,
                                 })
                             }
                         />
@@ -116,7 +110,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             onClick: () => {
                                 save(formik.values);
                                 history.push(props.forrigeUrl);
-                            }
+                            },
                         }}
                     />
                 </form>

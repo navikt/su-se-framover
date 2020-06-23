@@ -19,25 +19,22 @@ interface FormData {
 }
 
 const schema = yup.object<FormData>({
-    harUførevedtak: yup
-        .boolean()
-        .nullable()
-        .required()
+    harUførevedtak: yup.boolean().nullable().required(),
 });
 
 const Uførevedtak = (props: { forrigeUrl: string; nesteUrl: string }) => {
-    const harVedtakFraStore = useAppSelector(s => s.soknad.harUførevedtak);
+    const harVedtakFraStore = useAppSelector((s) => s.soknad.harUførevedtak);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const formik = useFormik<FormData>({
         initialValues: {
-            harUførevedtak: harVedtakFraStore
+            harUførevedtak: harVedtakFraStore,
         },
-        onSubmit: values => {
+        onSubmit: (values) => {
             dispatch(søknadSlice.actions.harUførevedtakUpdated(values.harUførevedtak));
             history.push(props.nesteUrl);
         },
-        validationSchema: schema
+        validationSchema: schema,
     });
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
@@ -48,7 +45,7 @@ const Uførevedtak = (props: { forrigeUrl: string; nesteUrl: string }) => {
         <div className={sharedStyles.container}>
             <RawIntlProvider value={intl}>
                 <form
-                    onSubmit={e => {
+                    onSubmit={(e) => {
                         formik.handleSubmit(e);
                         setTimeout(() => {
                             if (feiloppsummeringref.current) {
@@ -63,10 +60,10 @@ const Uførevedtak = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.uforevedtak.label" />}
                             feil={formik.errors.harUførevedtak}
                             state={formik.values.harUførevedtak}
-                            onChange={e =>
+                            onChange={(e) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    harUførevedtak: e
+                                    harUførevedtak: e,
                                 })
                             }
                         />
@@ -86,7 +83,7 @@ const Uførevedtak = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             onClick: () => {
                                 dispatch(søknadSlice.actions.harUførevedtakUpdated(formik.values.harUførevedtak));
                                 history.push(props.forrigeUrl);
-                            }
+                            },
                         }}
                     />
                 </form>

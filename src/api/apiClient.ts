@@ -5,7 +5,7 @@ import { CookieName } from '~lib/cookies';
 export enum ErrorCode {
     Unauthorized = 'unauthorized',
     NotAuthenticated = 'not-authenticated',
-    Unknown = 'unknown'
+    Unknown = 'unknown',
 }
 
 export interface ApiError {
@@ -20,7 +20,7 @@ export type ApiClientResult<T> = { status: 'ok'; data: T; statusCode: number } |
 function error<T = unknown>(e: ApiError): ApiClientResult<T> {
     return {
         status: 'error',
-        error: e
+        error: e,
     };
 }
 
@@ -28,7 +28,7 @@ function success<T>(data: T, statusCode: number): ApiClientResult<T> {
     return {
         status: 'ok',
         data,
-        statusCode
+        statusCode,
     };
 }
 
@@ -47,7 +47,7 @@ export default async function apiClient<T>(
             code: ErrorCode.Unknown,
             body: null,
             correlationId,
-            statusCode: 0
+            statusCode: 0,
         });
     }
 
@@ -56,8 +56,8 @@ export default async function apiClient<T>(
         headers: {
             ...request.headers,
             ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-            'X-Correlation-ID': correlationId
-        }
+            'X-Correlation-ID': correlationId,
+        },
     });
 
     if (res.status === 401) {
@@ -65,8 +65,8 @@ export default async function apiClient<T>(
             const refreshRes = await fetch('/auth/refresh', {
                 headers: {
                     refresh_token: refreshToken,
-                    'X-Correlation-ID': correlationId
-                }
+                    'X-Correlation-ID': correlationId,
+                },
             });
 
             const nyttAccessToken = refreshRes.headers.get('access_token');
@@ -81,7 +81,7 @@ export default async function apiClient<T>(
                 return apiClient(`${window.BASE_URL}${url}`, request, successStatusCodes, {
                     accessToken: nyttAccessToken,
                     correlationId,
-                    numAttempts: 1
+                    numAttempts: 1,
                 });
             }
         }
@@ -90,14 +90,14 @@ export default async function apiClient<T>(
             code: ErrorCode.NotAuthenticated,
             statusCode: res.status,
             correlationId,
-            body: null
+            body: null,
         });
     } else if (res.status === 403) {
         return error({
             code: ErrorCode.Unauthorized,
             statusCode: res.status,
             correlationId,
-            body: null
+            body: null,
         });
     }
 
@@ -109,6 +109,6 @@ export default async function apiClient<T>(
         code: ErrorCode.Unknown,
         statusCode: res.status,
         correlationId,
-        body: await res.json()
+        body: await res.json(),
     });
 }

@@ -4,5 +4,5 @@ export default {
     'input.innreisedato.label': 'Innreisedato',
     'input.utreisedato.label': 'Utreisedato',
     'button.fjernReiserad.label': 'Fjern rad',
-    'button.leggTilReiserad.label': 'Legg til'
+    'button.leggTilReiserad.label': 'Legg til',
 };

@@ -3,7 +3,7 @@ import { IntlProvider, FormattedMessage } from 'react-intl';
 import { useFormik } from 'formik';
 import { Input, SkjemaGruppe } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { Panel } from 'nav-frontend-paneler';
+import Panel from 'nav-frontend-paneler';
 
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Languages } from '~components/TextProvider';
@@ -26,16 +26,16 @@ const Felt = (props: { label: React.ReactNode; verdi: string | React.ReactNode }
 );
 
 const Saksoversikt = () => {
-    const sakFraStore = useAppSelector(s => s.sak.sak);
+    const sakFraStore = useAppSelector((s) => s.sak.sak);
     const dispatch = useAppDispatch();
 
     const formik = useFormik<FormData>({
         initialValues: {
-            fnr: ''
+            fnr: '',
         },
-        onSubmit: async values => {
+        onSubmit: async (values) => {
             await dispatch(sakSlice.fetchSak({ fnr: values.fnr }));
-        }
+        },
     });
 
     console.log({ sakFraStore });
@@ -44,7 +44,7 @@ const Saksoversikt = () => {
         <IntlProvider locale={Languages.nb} messages={messages}>
             <div>
                 <form
-                    onSubmit={e => {
+                    onSubmit={(e) => {
                         e.preventDefault();
                         formik.handleSubmit();
                     }}

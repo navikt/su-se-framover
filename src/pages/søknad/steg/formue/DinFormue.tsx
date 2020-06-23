@@ -23,10 +23,7 @@ interface FormData {
 }
 
 const schema = yup.object<FormData>({
-    harFormue: yup
-        .boolean()
-        .nullable()
-        .required(),
+    harFormue: yup.boolean().nullable().required(),
     beløpFormue: yup
         .number()
         .nullable()
@@ -39,20 +36,14 @@ const schema = yup.object<FormData>({
                 .label('Formue beløp')
                 .nullable(false)
                 .positive(),
-            otherwise: yup.number()
+            otherwise: yup.number(),
         }) as yup.Schema<Nullable<string>>,
-    eierBolig: yup
-        .boolean()
-        .nullable()
-        .required(),
-    harDepositumskonto: yup
-        .boolean()
-        .nullable()
-        .required()
+    eierBolig: yup.boolean().nullable().required(),
+    harDepositumskonto: yup.boolean().nullable().required(),
 });
 
 const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
-    const formueFraStore = useAppSelector(s => s.soknad.formue);
+    const formueFraStore = useAppSelector((s) => s.soknad.formue);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -63,7 +54,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 harFormue: values.harFormue,
                 beløpFormue: values.harFormue && values.beløpFormue ? Number.parseFloat(values.beløpFormue) : null,
                 eierBolig: values.eierBolig,
-                harDepositumskonto: values.harDepositumskonto
+                harDepositumskonto: values.harDepositumskonto,
             })
         );
     };
@@ -73,14 +64,14 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
             harFormue: formueFraStore.harFormue,
             beløpFormue: formueFraStore.beløpFormue?.toString() ?? '',
             eierBolig: formueFraStore.eierBolig,
-            harDepositumskonto: formueFraStore.harDepositumskonto
+            harDepositumskonto: formueFraStore.harDepositumskonto,
         },
-        onSubmit: values => {
+        onSubmit: (values) => {
             save(values);
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
-        validateOnChange: hasSubmitted
+        validateOnChange: hasSubmitted,
     });
 
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
@@ -91,7 +82,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
         <div className={sharedStyles.container}>
             <RawIntlProvider value={intl}>
                 <form
-                    onSubmit={e => {
+                    onSubmit={(e) => {
                         setHasSubmitted(true);
                         formik.handleSubmit(e);
                         setTimeout(() => {
@@ -108,10 +99,10 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.harFormue.label" />}
                             feil={null}
                             state={formik.values.harFormue}
-                            onChange={e =>
+                            onChange={(e) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    harFormue: e
+                                    harFormue: e,
                                 })
                             }
                         />
@@ -132,10 +123,10 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.eierDuBolig.label" />}
                             feil={null}
                             state={formik.values.eierBolig}
-                            onChange={e =>
+                            onChange={(e) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    eierBolig: e
+                                    eierBolig: e,
                                 })
                             }
                         />
@@ -145,10 +136,10 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.depositumskonto.label" />}
                             feil={null}
                             state={formik.values.harDepositumskonto}
-                            onChange={e =>
+                            onChange={(e) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    harDepositumskonto: e
+                                    harDepositumskonto: e,
                                 })
                             }
                         />
@@ -165,7 +156,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             onClick: () => {
                                 save(formik.values);
                                 history.push(props.forrigeUrl);
-                            }
+                            },
                         }}
                     />
                 </form>

@@ -3,7 +3,7 @@ import { IntlProvider } from 'react-intl';
 import { MessageFormatElement } from 'intl-messageformat-parser';
 
 export enum Languages {
-    nb = 'nb-NO'
+    nb = 'nb-NO',
 }
 
 const TextProvider = <T extends Record<string, string> | Record<string, MessageFormatElement[]>>(props: {
