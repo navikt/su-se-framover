@@ -3,15 +3,18 @@ import { useFormik } from 'formik';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknadSlice';
-import { Søknadsteg } from '../../types';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import { RadioGruppe, Radio } from 'nav-frontend-skjema';
 import { Bosituasjon } from '~features/søknad/types';
 import sharedStyles from '../../steg-shared.module.less';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import messages from './bo-og-opphold-i-norge-nb';
-import TextProvider, { Languages } from '~components/TextProvider';
 import { Nullable } from '~lib/types';
+import { useHistory } from 'react-router-dom';
+import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
+import { Feiloppsummering } from 'nav-frontend-skjema';
+import sharedI18n from '../steg-shared-i18n';
+import { useI18n } from '../../../../lib/hooks';
 
 interface FormData {
     borOgOppholderSegINorge: Nullable<boolean>;
@@ -20,9 +23,35 @@ interface FormData {
     delerBoligMedAndreVoksne: Nullable<boolean>;
 }
 
-const BoOgOppholdINorge = () => {
+const schema = yup.object<FormData>({
+    borOgOppholderSegINorge: yup
+        .boolean()
+        .nullable()
+        .required(),
+    borPåFolkeregistrertAdresse: yup
+        .boolean()
+        .nullable()
+        .required(),
+    //TODO: fix
+    bosituasjon: yup
+        .mixed()
+        .nullable()
+        .oneOf(
+            [Bosituasjon.BorAleneEllerMedBarnUnder18, Bosituasjon.BorMedNoenOver18],
+            'Bosituasjon må være èn av disse verdiene: Alene eller med barn under 18, Bor med noen over 18 '
+        )
+        .required(),
+    delerBoligMedAndreVoksne: yup
+        .boolean()
+        .nullable()
+        .required()
+});
+
+const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const boOgOppholdFraStore = useAppSelector(s => s.soknad.boOgOpphold);
     const dispatch = useAppDispatch();
+    const history = useHistory();
+    const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
     const save = (values: FormData) =>
         dispatch(
@@ -43,13 +72,23 @@ const BoOgOppholdINorge = () => {
         },
         onSubmit: values => {
             save(values);
-        }
+            history.push(props.nesteUrl);
+        },
+        validationSchema: schema,
+        validateOnChange: hasSubmitted
     });
 
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+
     return (
-        <TextProvider messages={{ [Languages.nb]: messages }}>
+        <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
-                <form onSubmit={formik.handleSubmit}>
+                <form
+                    onSubmit={e => {
+                        setHasSubmitted(true);
+                        formik.handleSubmit(e);
+                    }}
+                >
                     <div className={sharedStyles.formContainer}>
                         <JaNeiSpørsmål
                             id="borOgOppholderSegINorge"
@@ -118,24 +157,23 @@ const BoOgOppholdINorge = () => {
                             }
                         />
                     </div>
-
+                    <Feiloppsummering
+                        className={sharedStyles.feiloppsummering}
+                        tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                        feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                        hidden={!formikErrorsHarFeil(formik.errors)}
+                    />
                     <Bunnknapper
                         previous={{
                             onClick: () => {
                                 save(formik.values);
-                            },
-                            steg: Søknadsteg.FlyktningstatusOppholdstillatelse
-                        }}
-                        next={{
-                            onClick: () => {
-                                save(formik.values);
-                            },
-                            steg: Søknadsteg.DinFormue
+                                history.push(props.forrigeUrl);
+                            }
                         }}
                     />
                 </form>
             </div>
-        </TextProvider>
+        </RawIntlProvider>
     );
 };
 

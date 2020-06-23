@@ -1,26 +1,40 @@
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useFormik } from 'formik';
-
-import TextProvider, { Languages } from '~components/TextProvider';
+import { Feiloppsummering } from 'nav-frontend-skjema';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknadSlice';
-
 import messages from './flyktningstatus-oppholdstillatelse-nb';
-import { Søknadsteg } from '../../types';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
-import { Nullable } from '../../../../lib/types';
+import { Nullable } from '~lib/types';
+import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
+import { useHistory } from 'react-router-dom';
+import sharedI18n from '../steg-shared-i18n';
+import { useI18n } from '../../../../lib/hooks';
 
 interface FormData {
     erFlyktning: Nullable<boolean>;
     harOppholdstillatelse: Nullable<boolean>;
 }
 
-const FlyktningstatusOppholdstillatelse = () => {
+const schema = yup.object<FormData>({
+    erFlyktning: yup
+        .boolean()
+        .nullable()
+        .required(),
+    harOppholdstillatelse: yup
+        .boolean()
+        .nullable()
+        .required()
+});
+
+const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const flyktningstatusFraStore = useAppSelector(s => s.soknad.flyktningstatus);
     const dispatch = useAppDispatch();
+    const history = useHistory();
+    const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
     const save = (values: FormData) =>
         dispatch(
@@ -37,19 +51,36 @@ const FlyktningstatusOppholdstillatelse = () => {
         },
         onSubmit: values => {
             save(values);
-        }
+            history.push(props.nesteUrl);
+        },
+        validationSchema: schema,
+        validateOnChange: hasSubmitted
     });
 
+    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
+
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+
     return (
-        <TextProvider messages={{ [Languages.nb]: messages }}>
+        <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
-                <form onSubmit={formik.handleSubmit}>
+                <form
+                    onSubmit={e => {
+                        setHasSubmitted(true);
+                        formik.handleSubmit(e);
+                        setTimeout(() => {
+                            if (feiloppsummeringref.current) {
+                                feiloppsummeringref.current.focus();
+                            }
+                        }, 0);
+                    }}
+                >
                     <div className={sharedStyles.formContainer}>
                         <JaNeiSpørsmål
                             id={'erFlyktning'}
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.flyktning.label" />}
-                            feil={null}
+                            feil={formik.errors.erFlyktning}
                             state={formik.values.erFlyktning}
                             onChange={val =>
                                 formik.setValues({
@@ -62,7 +93,7 @@ const FlyktningstatusOppholdstillatelse = () => {
                             id={'harOppholdstillatelse'}
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.oppholdstillatelse.label" />}
-                            feil={null}
+                            feil={formik.errors.harOppholdstillatelse}
                             state={formik.values.harOppholdstillatelse}
                             onChange={val =>
                                 formik.setValues({
@@ -72,24 +103,25 @@ const FlyktningstatusOppholdstillatelse = () => {
                             }
                         />
                     </div>
+                    <Feiloppsummering
+                        className={sharedStyles.feiloppsummering}
+                        tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                        feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                        hidden={!formikErrorsHarFeil(formik.errors)}
+                        innerRef={feiloppsummeringref}
+                    />
 
                     <Bunnknapper
                         previous={{
                             onClick: () => {
                                 save(formik.values);
-                            },
-                            steg: Søknadsteg.Uførevedtak
-                        }}
-                        next={{
-                            onClick: () => {
-                                save(formik.values);
-                            },
-                            steg: Søknadsteg.BoOgOppholdINorge
+                                history.push(props.forrigeUrl);
+                            }
                         }}
                     />
                 </form>
             </div>
-        </TextProvider>
+        </RawIntlProvider>
     );
 };
 

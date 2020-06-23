@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import Stegindikator from 'nav-frontend-stegindikator';
-import { createIntl, createIntlCache, RawIntlProvider } from 'react-intl';
 
 import styles from './index.module.less';
 import Inngang from './steg/inngang/Inngang';
@@ -15,30 +14,26 @@ import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
 import Kontakt from './steg/kontakt/Kontakt';
 import Oppsummering from './steg/oppsummering/Oppsumering';
 import { Innholdstittel, Sidetittel } from 'nav-frontend-typografi';
+import { useI18n } from '../../lib/hooks';
 
-const cache = createIntlCache();
-const intl = createIntl(
-    {
-        locale: 'nb-NO',
-        messages: {
-            'steg.uforevedtak': 'Uførevedtak',
-            'steg.flyktningstatus': 'Flyktningstatus',
-            'steg.boOgOppholdINorge': 'Bo og opphold i Norge',
-            'steg.formue': 'Din formue',
-            'steg.inntekt': 'Din inntekt',
-            'steg.utenlandsopphold': 'Reise til utlandet',
-            'steg.kontakt': 'Kontakt',
-            'steg.oppsummering': 'Oppsummering',
-            'steg.neste': 'Neste',
-            'steg.forrige': 'Forrige'
-        }
-    },
-    cache
-);
+const messages = {
+    'steg.uforevedtak': 'Uførevedtak',
+    'steg.flyktningstatus': 'Flyktningstatus',
+    'steg.boOgOppholdINorge': 'Bo og opphold i Norge',
+    'steg.formue': 'Din formue',
+    'steg.inntekt': 'Din inntekt',
+    'steg.utenlandsopphold': 'Reise til utlandet',
+    'steg.kontakt': 'Kontakt',
+    'steg.oppsummering': 'Oppsummering',
+    'steg.neste': 'Neste',
+    'steg.forrige': 'Forrige'
+};
 
 const index = () => {
     const { step } = useParams<{ step: Søknadsteg }>();
     const history = useHistory();
+
+    const intl = useI18n({ messages });
 
     const steg = [
         {
@@ -84,53 +79,72 @@ const index = () => {
     ];
 
     return (
-        <RawIntlProvider value={intl}>
-            <div className={styles.container}>
-                <div className={styles.headerContainer}>
-                    <div className={styles.sidetittelContainer}>
-                        <Sidetittel>Søknad</Sidetittel>
-                    </div>
-                    <div className={styles.stegindikatorContainer}>
-                        <Stegindikator
-                            steg={steg.map(s => ({
-                                index: s.index,
-                                label: s.label,
-                                aktiv: s.step === step
-                            }))}
-                            visLabel={false}
-                            onChange={index => {
-                                const nyttSteg = steg[index];
-                                if (nyttSteg) {
-                                    history.push(`/soknad/${nyttSteg.step}`);
-                                }
-                            }}
-                        />
-                    </div>
-                    <Innholdstittel>{steg.find(s => s.step === step)?.label}</Innholdstittel>
+        <div className={styles.container}>
+            <div className={styles.headerContainer}>
+                <div className={styles.sidetittelContainer}>
+                    <Sidetittel>Søknad</Sidetittel>
                 </div>
-                {step === Søknadsteg.Inngang ? (
-                    <Inngang />
-                ) : step === Søknadsteg.Uførevedtak ? (
-                    <Uførevedtak />
-                ) : step === Søknadsteg.FlyktningstatusOppholdstillatelse ? (
-                    <FlyktningstatusOppholdstillatelse />
-                ) : step === Søknadsteg.BoOgOppholdINorge ? (
-                    <BoOgOppholdINorge />
-                ) : step === Søknadsteg.DinFormue ? (
-                    <Formue />
-                ) : step === Søknadsteg.DinInntekt ? (
-                    <Inntekt />
-                ) : step === Søknadsteg.ReiseTilUtlandet ? (
-                    <Utenlandsopphold />
-                ) : step === Søknadsteg.Kontakt ? (
-                    <Kontakt />
-                ) : step === Søknadsteg.Oppsummering ? (
-                    <Oppsummering />
-                ) : (
-                    '404'
-                )}
+                <div className={styles.stegindikatorContainer}>
+                    <Stegindikator
+                        steg={steg.map(s => ({
+                            index: s.index,
+                            label: s.label,
+                            aktiv: s.step === step
+                        }))}
+                        visLabel={false}
+                        onChange={index => {
+                            const nyttSteg = steg[index];
+                            if (nyttSteg) {
+                                history.push(`/soknad/${nyttSteg.step}`);
+                            }
+                        }}
+                    />
+                </div>
+                <Innholdstittel>{steg.find(s => s.step === step)?.label}</Innholdstittel>
             </div>
-        </RawIntlProvider>
+            {step === Søknadsteg.Inngang ? (
+                <Inngang nesteUrl={`/soknad/${Søknadsteg.Uførevedtak}`} />
+            ) : step === Søknadsteg.Uførevedtak ? (
+                <Uførevedtak
+                    forrigeUrl={`/soknad/${Søknadsteg.Inngang}`}
+                    nesteUrl={`/soknad/${Søknadsteg.FlyktningstatusOppholdstillatelse}`}
+                />
+            ) : step === Søknadsteg.FlyktningstatusOppholdstillatelse ? (
+                <FlyktningstatusOppholdstillatelse
+                    forrigeUrl={`/soknad/${Søknadsteg.Uførevedtak}`}
+                    nesteUrl={`/soknad/${Søknadsteg.BoOgOppholdINorge}`}
+                />
+            ) : step === Søknadsteg.BoOgOppholdINorge ? (
+                <BoOgOppholdINorge
+                    forrigeUrl={`/soknad/${Søknadsteg.FlyktningstatusOppholdstillatelse}`}
+                    nesteUrl={`/soknad/${Søknadsteg.DinFormue}`}
+                />
+            ) : step === Søknadsteg.DinFormue ? (
+                <Formue
+                    forrigeUrl={`/soknad/${Søknadsteg.BoOgOppholdINorge}`}
+                    nesteUrl={`/soknad/${Søknadsteg.DinInntekt}`}
+                />
+            ) : step === Søknadsteg.DinInntekt ? (
+                <Inntekt
+                    forrigeUrl={`/soknad/${Søknadsteg.DinFormue}`}
+                    nesteUrl={`/soknad/${Søknadsteg.ReiseTilUtlandet}`}
+                />
+            ) : step === Søknadsteg.ReiseTilUtlandet ? (
+                <Utenlandsopphold
+                    forrigeUrl={`/soknad/${Søknadsteg.DinInntekt}`}
+                    nesteUrl={`/soknad/${Søknadsteg.Kontakt}`}
+                />
+            ) : step === Søknadsteg.Kontakt ? (
+                <Kontakt
+                    forrigeUrl={`/soknad/${Søknadsteg.ReiseTilUtlandet}`}
+                    nesteUrl={`/soknad/${Søknadsteg.Oppsummering}`}
+                />
+            ) : step === Søknadsteg.Oppsummering ? (
+                <Oppsummering forrigeUrl={`/soknad/${Søknadsteg.Kontakt}`} />
+            ) : (
+                '404'
+            )}
+        </div>
     );
 };
 

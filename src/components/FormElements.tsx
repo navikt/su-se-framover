@@ -41,6 +41,7 @@ export const JaNeiSpørsmål = (props: {
         <div id={props.id}>
             <RadioPanelGruppe
                 className={props.className}
+                feil={props.feil}
                 legend={props.legend}
                 name={props.id}
                 radios={[

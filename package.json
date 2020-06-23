@@ -12,7 +12,8 @@
         "build": "npm run clean:dist && npm run lint && npm run test && parcel build src/index.html --out-dir dist/ --no-source-maps",
         "inject_local_config": "cp config.dev.json dist/config.json || echo \"Kjør 'npm run build' en gang først for å fikse serveroppsettet.\"",
         "clean:dist": "rimraf dist",
-        "prettier": "prettier --write src/**/*.{ts,tsx,scss,css,json,less}"
+        "prettier": "prettier --write src/**/*.{ts,tsx,scss,css,json,less}",
+        "tsc:watch": "tsc --watch --noEmit --project './tsconfig.json'"
     },
     "husky": {
         "hooks": {
@@ -40,6 +41,7 @@
         "@reduxjs/toolkit": "^1.3.6",
         "@sentry/browser": "^5.16.1",
         "@types/js-cookie": "^2.2.6",
+        "@types/yup": "^0.29.3",
         "acorn": "^7.1.1",
         "autoprefixer": "^9.8.0",
         "babel-polyfill": "^6.26.0",
@@ -105,7 +107,8 @@
         "redux": "^4.0.5",
         "redux-thunk": "^2.3.0",
         "reset-css": "^5.0.1",
-        "styled-components": "^5.1.0"
+        "styled-components": "^5.1.0",
+        "yup": "^0.29.1"
     },
     "devDependencies": {
         "@babel/core": "^7.10.2",
