@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
-import søknadSlice from '~/features/søknad/søknadSlice';
+import søknadSlice from '~/features/søknad/søknad.slice';
 import messages from './uførevedtak-nb';
 import sharedStyles from '../../steg-shared.module.less';
 import { Nullable } from '~lib/types';

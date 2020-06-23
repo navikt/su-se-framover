@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Bosituasjon } from './types';
 import { Nullable } from '~lib/types';
 
-interface SøknadState {
+export interface SøknadState {
     harUførevedtak: Nullable<boolean>;
     flyktningstatus: {
         harOppholdstillatelse: Nullable<boolean>;

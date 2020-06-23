@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { Feiloppsummering } from 'nav-frontend-skjema';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
-import søknadSlice from '~/features/søknad/søknadSlice';
+import søknadSlice from '~/features/søknad/søknad.slice';
 import messages from './flyktningstatus-oppholdstillatelse-nb';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
