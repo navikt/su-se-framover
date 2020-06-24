@@ -2,10 +2,10 @@ import * as React from 'react';
 import { useFormik } from 'formik';
 import { Input, SkjemaGruppe, Feiloppsummering } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import nb from './inngang-nb';
-import * as saksoversiktSlice from '../../../../features/saksoversikt/saksoversikt.slice';
+import * as personSlice from '../../../../features/person/person.slice';
 import styles from './inngang.module.less';
 import { useHistory } from 'react-router-dom';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
@@ -14,11 +14,11 @@ import { useI18n } from '../../../../lib/hooks';
 import sharedStyles from '../../steg-shared.module.less';
 
 interface FormData {
-    navn: string;
     fnr: string;
 }
 
 const index = (props: { nesteUrl: string }) => {
+    const { søker } = useAppSelector((s) => s.søker);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -31,27 +31,26 @@ const index = (props: { nesteUrl: string }) => {
             .length(11)
             .label(intl.formatMessage({ id: 'input.fnr.label' }))
             .required(),
-        navn: yup
-            .string()
-            .min(1)
-            .label(intl.formatMessage({ id: 'input.navn.label' }))
-            .required(),
     });
 
     const formik = useFormik<FormData>({
         initialValues: {
             fnr: '',
-            navn: '',
         },
-        onSubmit: async (values) => {
-            await dispatch(saksoversiktSlice.fetchSøker({ fnr: values.fnr, access_token: '123' }));
-            history.push(props.nesteUrl);
+        onSubmit: async () => {
+            if (søker) {
+                history.push(props.nesteUrl);
+            }
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
     });
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
+
+    const fetchSøker = () => {
+        dispatch(personSlice.fetchPerson({ fnr: formik.values.fnr }));
+    };
 
     return (
         <RawIntlProvider value={intl}>
@@ -76,13 +75,7 @@ const index = (props: { nesteUrl: string }) => {
                             value={formik.values.fnr}
                             feil={formik.errors.fnr}
                         />
-                        <Input
-                            id="navn"
-                            name="navn"
-                            label={<FormattedMessage id={'input.navn.label'} />}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.navn}
-                        />
+                        {JSON.stringify(søker)}
                     </SkjemaGruppe>
 
                     <Feiloppsummering
@@ -93,7 +86,15 @@ const index = (props: { nesteUrl: string }) => {
                         innerRef={feiloppsummeringref}
                     />
 
-                    <Hovedknapp htmlType="submit" disabled={formik.isSubmitting} className={styles.submitknapp}>
+                    <Hovedknapp htmlType="button" onClick={fetchSøker}>
+                        <FormattedMessage id={'knapp.hentSøker'} />
+                    </Hovedknapp>
+
+                    <Hovedknapp
+                        htmlType="submit"
+                        disabled={formik.isSubmitting || !søker}
+                        className={styles.submitknapp}
+                    >
                         <FormattedMessage id={'knapp.neste'} />
                     </Hovedknapp>
                 </form>

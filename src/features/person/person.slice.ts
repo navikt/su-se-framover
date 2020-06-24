@@ -14,7 +14,7 @@ export const fetchPerson = createAsyncThunk<personApi.Person, { fnr: string }, {
     }
 );
 
-interface PersonState {
+export interface PersonState {
     søker: personApi.Person | undefined;
     error:
         | {

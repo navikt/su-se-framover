@@ -21,8 +21,7 @@ const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | Reac
 const Oppsummering = (props: { forrigeUrl: string }) => {
     const history = useHistory();
     const søknadFraStore = useAppSelector((s) => s.soknad);
-    const { søker } = useAppSelector((s) => s.søker);
-
+    const søkerFraStore = useAppSelector((s) => s.søker.søker);
     const dispatch = useAppDispatch();
 
     const intl = useI18n({ messages });
@@ -33,7 +32,9 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
-                        dispatch(innsendingSlice.sendSøknad({ søknad: søknadFraStore, søker: søker! }));
+                        if (søkerFraStore) {
+                            dispatch(innsendingSlice.sendSøknad({ søknad: søknadFraStore, søker: søkerFraStore }));
+                        }
                     }}
                 >
                     <Ekspanderbartpanel

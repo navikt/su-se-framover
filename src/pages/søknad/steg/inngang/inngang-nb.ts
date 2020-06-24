@@ -3,4 +3,5 @@ export default {
     'input.fnr.label': 'Fødselsnummer',
     'input.navn.label': 'Navn',
     'knapp.neste': 'Neste',
+    'knapp.hentSøker': 'Hent søker',
 };
