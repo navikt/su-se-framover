@@ -47,11 +47,22 @@ export interface SøknadState {
         kontanterBeløp: Nullable<string>;
     };
     inntekt: {
-        harInntekt: Nullable<boolean>;
-        inntektBeløp: Nullable<number>;
+        forventetInntekt: Nullable<string>;
+        tjenerPengerIUtlandet: Nullable<boolean>;
+        tjenerPengerIUtlandetBeløp: Nullable<string>;
+        andreYtelserINav: Nullable<boolean>;
+        andreYtelserINavYtelse: Nullable<string>;
+        andreYtelserINavBeløp: Nullable<string>;
+        søktAndreYtelserIkkeBehandlet: Nullable<boolean>;
+        søktAndreYtelserIkkeBehandletBegrunnelse: Nullable<string>;
+        harMottattSosialstønad: Nullable<boolean>;
+        sosialStønadBeløp: Nullable<string>;
+        trygdeytelserIUtlandet: Nullable<boolean>;
+        trygdeytelserIUtlandetBeløp: Nullable<string>;
+        trygdeytelserIUtlandetType: Nullable<string>;
+        trygdeytelserIUtlandetFraHvem: Nullable<string>;
         mottarPensjon: Nullable<boolean>;
         pensjonsInntekt: Array<{ ordning: string; beløp: string }>;
-        harMottattSosialstønad: Nullable<boolean>;
     };
     utenlandsopphold: {
         harReistTilUtlandetSiste90dager: Nullable<boolean>;
@@ -71,7 +82,7 @@ const initialState: SøknadState = {
         oppholdstillatelseMindreEnnTreMåneder: null,
         oppholdstillatelseForlengelse: null,
         statsborgerskapAndreLand: null,
-        statsborgerskapAndreLandFritekst: null
+        statsborgerskapAndreLandFritekst: null,
     },
     boOgOpphold: {
         borOgOppholderSegINorge: null,
@@ -79,7 +90,7 @@ const initialState: SøknadState = {
         delerBoligMedPersonOver18: null,
         delerBoligMed: null,
         ektemakeEllerSamboerUnder67År: null,
-        ektemakeEllerSamboerUførFlyktning: null
+        ektemakeEllerSamboerUførFlyktning: null,
     },
     formue: {
         eierBolig: null,
@@ -105,18 +116,31 @@ const initialState: SøknadState = {
         kontanterBeløp: null,
     },
     inntekt: {
-        harInntekt: null,
-        inntektBeløp: null,
+        // harInntekt: null
+        forventetInntekt: null,
+        tjenerPengerIUtlandet: null,
+        tjenerPengerIUtlandetBeløp: null,
+        andreYtelserINav: null,
+        andreYtelserINavYtelse: null,
+        andreYtelserINavBeløp: null,
+        søktAndreYtelserIkkeBehandlet: null,
+        søktAndreYtelserIkkeBehandletBegrunnelse: null,
         harMottattSosialstønad: null,
+        sosialStønadBeløp: null,
+        trygdeytelserIUtlandet: null,
+        trygdeytelserIUtlandetBeløp: null,
+        trygdeytelserIUtlandetType: null,
+        trygdeytelserIUtlandetFraHvem: null,
+
         pensjonsInntekt: [],
-        mottarPensjon: null
+        mottarPensjon: null,
     },
     utenlandsopphold: {
         harReistTilUtlandetSiste90dager: null,
         harReistDatoer: [],
         skalReiseTilUtlandetNeste12Måneder: null,
-        skalReiseDatoer: []
-    }
+        skalReiseDatoer: [],
+    },
 };
 
 export default createSlice({
@@ -140,6 +164,6 @@ export default createSlice({
         },
         utenlandsoppholdUpdated(state, action: PayloadAction<SøknadState['utenlandsopphold']>) {
             state.utenlandsopphold = action.payload;
-        }
-    }
+        },
+    },
 });
