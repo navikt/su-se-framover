@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useFormik } from 'formik';
-import { Feiloppsummering, Radio, RadioGruppe } from 'nav-frontend-skjema';
+import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
 import { AnbefalerIkkeSøke, JaNeiSpørsmål } from '~/components/FormElements';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknad.slice';
 import messages from './flyktningstatus-oppholdstillatelse-nb';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import { Nullable } from '~lib/types';
-import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useHistory } from 'react-router-dom';
 import sharedI18n from '../steg-shared-i18n';
 import { useI18n } from '../../../../lib/hooks';
@@ -29,79 +29,45 @@ interface FormData {
 }
 
 const schema = yup.object<FormData>({
-    erFlyktning: yup
-        .boolean()
-        .nullable()
-        .required(),
-    erNorskStatsborger: yup
-        .boolean()
-        .nullable()
-        .required(),
-    harOppholdstillatelse: yup
-        .boolean()
-        .nullable(true)
-        .defined()
-        .when('erNorskStatsborger', {
-            is: false,
-            then: yup
-                .boolean()
-                .nullable()
-                .required()
-        }),
+    erFlyktning: yup.boolean().nullable().required(),
+    erNorskStatsborger: yup.boolean().nullable().required(),
+    harOppholdstillatelse: yup.boolean().nullable(true).defined().when('erNorskStatsborger', {
+        is: false,
+        then: yup.boolean().nullable().required(),
+    }),
     typeOppholdstillatelse: yup
         .mixed<Nullable<TypeOppholdstillatelse>>()
         .nullable(true)
         .defined()
         .when('harOppholdstillatelse', {
             is: true,
-            then: yup
-                .mixed()
-                .nullable()
-                .oneOf(['permanent', 'midlertidig'])
-                .required()
+            then: yup.mixed().nullable().oneOf(['permanent', 'midlertidig']).required(),
         }),
-    oppholdstillatelseMindreEnnTreMåneder: yup
-        .boolean()
-        .nullable(true)
-        .defined()
-        .when('typeOppholdstillatelse', {
-            is: 'midlertidig',
-            then: yup
-                .boolean()
-                .nullable()
-                .required()
-        }),
+    oppholdstillatelseMindreEnnTreMåneder: yup.boolean().nullable(true).defined().when('typeOppholdstillatelse', {
+        is: 'midlertidig',
+        then: yup.boolean().nullable().required(),
+    }),
     oppholdstillatelseForlengelse: yup
         .boolean()
         .nullable(true)
         .defined()
         .when('oppholdstillatelseMindreEnnTreMåneder', {
             is: true,
-            then: yup
-                .boolean()
-                .nullable()
-                .required()
+            then: yup.boolean().nullable().required(),
         }),
-    statsborgerskapAndreLand: yup
-        .boolean()
-        .nullable()
-        .required(),
+    statsborgerskapAndreLand: yup.boolean().nullable().required(),
     statsborgerskapAndreLandFritekst: yup
         .string()
         .nullable(true)
         .defined()
         .when('statsborgerskapAndreLand', {
             is: true,
-            then: yup
-                .string()
-                .nullable()
-                .min(1)
-                .required()
-        })
+            then: yup.string().nullable().min(1).required(),
+        }),
 });
 
 const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl: string }) => {
-    const flyktningstatusFraStore = useAppSelector(s => s.soknad.flyktningstatus);
+    const flyktningstatusFraStore = useAppSelector((s) => s.soknad.flyktningstatus);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -116,7 +82,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                 oppholdstillatelseMindreEnnTreMåneder: values.oppholdstillatelseMindreEnnTreMåneder,
                 oppholdstillatelseForlengelse: values.oppholdstillatelseForlengelse,
                 statsborgerskapAndreLand: values.statsborgerskapAndreLand,
-                statsborgerskapAndreLandFritekst: values.statsborgerskapAndreLandFritekst
+                statsborgerskapAndreLandFritekst: values.statsborgerskapAndreLandFritekst,
             })
         );
 
@@ -129,14 +95,14 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
             oppholdstillatelseMindreEnnTreMåneder: flyktningstatusFraStore.oppholdstillatelseMindreEnnTreMåneder,
             oppholdstillatelseForlengelse: flyktningstatusFraStore.oppholdstillatelseForlengelse,
             statsborgerskapAndreLand: flyktningstatusFraStore.statsborgerskapAndreLand,
-            statsborgerskapAndreLandFritekst: flyktningstatusFraStore.statsborgerskapAndreLandFritekst
+            statsborgerskapAndreLandFritekst: flyktningstatusFraStore.statsborgerskapAndreLandFritekst,
         },
-        onSubmit: values => {
+        onSubmit: (values) => {
             save(values);
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
-        validateOnChange: hasSubmitted
+        validateOnChange: hasSubmitted,
     });
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
@@ -146,7 +112,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
                 <form
-                    onSubmit={e => {
+                    onSubmit={(e) => {
                         setHasSubmitted(true);
                         formik.handleSubmit(e);
                         setTimeout(() => {
@@ -163,10 +129,10 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             legend={<FormattedMessage id="input.flyktning.label" />}
                             feil={formik.errors.erFlyktning}
                             state={formik.values.erFlyktning}
-                            onChange={val =>
+                            onChange={(val) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    erFlyktning: val
+                                    erFlyktning: val,
                                 })
                             }
                         />
@@ -177,10 +143,10 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             legend={<FormattedMessage id="input.norsk.statsborger.label" />}
                             feil={formik.errors.erNorskStatsborger}
                             state={formik.values.erNorskStatsborger}
-                            onChange={val =>
+                            onChange={(val) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    erNorskStatsborger: val
+                                    erNorskStatsborger: val,
                                 })
                             }
                         />
@@ -191,45 +157,38 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 legend={<FormattedMessage id="input.oppholdstillatelse.label" />}
                                 feil={formik.errors.harOppholdstillatelse}
                                 state={formik.values.harOppholdstillatelse}
-                                onChange={val =>
+                                onChange={(val) =>
                                     formik.setValues({
                                         ...formik.values,
-                                        harOppholdstillatelse: val
+                                        harOppholdstillatelse: val,
                                     })
                                 }
                             />
                         )}
                         {formik.values.harOppholdstillatelse === true && (
-                            <RadioGruppe
+                            <RadioPanelGruppe
                                 className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id={'input.hvilken.oppholdstillatelse.label'} />}
                                 feil={null}
-                            >
-                                <Radio
-                                    name="typeOppholdstillatelse"
-                                    label={<FormattedMessage id={'input.permanent.oppholdstillatelse.label'} />}
-                                    value={'permanent'}
-                                    checked={formik.values.typeOppholdstillatelse === 'permanent'}
-                                    onChange={_ => {
-                                        formik.setValues({
-                                            ...formik.values,
-                                            typeOppholdstillatelse: 'permanent'
-                                        });
-                                    }}
-                                />
-                                <Radio
-                                    name={'typeOppholdstillatelse'}
-                                    label={<FormattedMessage id={'input.midlertidig.oppholdstillatelse.label'} />}
-                                    value={'midlertidig'}
-                                    checked={formik.values.typeOppholdstillatelse === 'midlertidig'}
-                                    onChange={_ => {
-                                        formik.setValues({
-                                            ...formik.values,
-                                            typeOppholdstillatelse: 'midlertidig'
-                                        });
-                                    }}
-                                />
-                            </RadioGruppe>
+                                legend={<FormattedMessage id={'input.hvilken.oppholdstillatelse.label'} />}
+                                name="typeOppholdstillatelse"
+                                radios={[
+                                    {
+                                        label: <FormattedMessage id={'input.permanent.oppholdstillatelse.label'} />,
+                                        value: 'permanent',
+                                    },
+                                    {
+                                        label: <FormattedMessage id={'input.midlertidig.oppholdstillatelse.label'} />,
+                                        value: 'midlertidig',
+                                    },
+                                ]}
+                                onChange={(_, value) => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        typeOppholdstillatelse: value,
+                                    });
+                                }}
+                                checked={formik.values.typeOppholdstillatelse?.toString()}
+                            />
                         )}
                         {formik.values.harOppholdstillatelse === false && <AnbefalerIkkeSøke />}
                         {formik.values.typeOppholdstillatelse === 'midlertidig' && (
@@ -239,10 +198,10 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 legend={<FormattedMessage id="input.midlertidig.oppholdstillatelse.opphører.label" />}
                                 feil={formik.errors.oppholdstillatelseMindreEnnTreMåneder}
                                 state={formik.values.oppholdstillatelseMindreEnnTreMåneder}
-                                onChange={val =>
+                                onChange={(val) =>
                                     formik.setValues({
                                         ...formik.values,
-                                        oppholdstillatelseMindreEnnTreMåneder: val
+                                        oppholdstillatelseMindreEnnTreMåneder: val,
                                     })
                                 }
                             />
@@ -254,10 +213,10 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 legend={<FormattedMessage id="input.oppholdtillatelse.forlengelse.label" />}
                                 feil={formik.errors.oppholdstillatelseForlengelse}
                                 state={formik.values.oppholdstillatelseForlengelse}
-                                onChange={val =>
+                                onChange={(val) =>
                                     formik.setValues({
                                         ...formik.values,
-                                        oppholdstillatelseForlengelse: val
+                                        oppholdstillatelseForlengelse: val,
                                     })
                                 }
                             />
@@ -273,10 +232,10 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             legend={<FormattedMessage id="input.statsborger.andre.land.label" />}
                             feil={formik.errors.statsborgerskapAndreLand}
                             state={formik.values.statsborgerskapAndreLand}
-                            onChange={val =>
+                            onChange={(val) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    statsborgerskapAndreLand: val
+                                    statsborgerskapAndreLand: val,
                                 })
                             }
                         />
@@ -303,7 +262,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             onClick: () => {
                                 save(formik.values);
                                 history.push(props.forrigeUrl);
-                            }
+                            },
                         }}
                     />
                 </form>
