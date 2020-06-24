@@ -21,6 +21,8 @@ const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | Reac
 const Oppsummering = (props: { forrigeUrl: string }) => {
     const history = useHistory();
     const søknadFraStore = useAppSelector((s) => s.soknad);
+    const { søker } = useAppSelector((s) => s.søker);
+
     const dispatch = useAppDispatch();
 
     const intl = useI18n({ messages });
@@ -31,7 +33,7 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
-                        dispatch(innsendingSlice.sendSøknad({ søknad: søknadFraStore }));
+                        dispatch(innsendingSlice.sendSøknad({ søknad: søknadFraStore, søker: søker! }));
                     }}
                 >
                     <Ekspanderbartpanel
@@ -106,27 +108,6 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                         className={styles.ekspanderbarOppsumeringSeksjon}
                         tittel={intl.formatMessage({ id: 'panel.tittel.dinFormue' })}
                     >
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.harFormue.label" />}
-                            verdi={
-                                søknadFraStore.formue.harFormue
-                                    ? 'Ja'
-                                    : søknadFraStore.formue.harFormue === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
-                        />
-                        {søknadFraStore.formue.harFormue ? (
-                            <OppsummeringsFelt
-                                label={<FormattedMessage id="input.oppgiBeløp.label" />}
-                                verdi={
-                                    søknadFraStore.formue.beløpFormue ? søknadFraStore.formue.beløpFormue : 'Ubesvart'
-                                }
-                            />
-                        ) : (
-                            ''
-                        )}
-
                         <OppsummeringsFelt
                             label={<FormattedMessage id="input.eierDuBolig.label" />}
                             verdi={
