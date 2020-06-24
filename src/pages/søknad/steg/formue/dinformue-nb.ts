@@ -28,5 +28,5 @@ export default {
     'input.skylderNoenMegPengerBeløp.label': 'Hvor mye i kroner?',
 
     'input.harKontanterOver1000.label': 'Har du kontanter over 1000kr?',
-    'input.kontanterBeløp.label': 'Hvor mye i kroner?'
+    'input.kontanterBeløp.label': 'Hvor mye i kroner?',
 };
