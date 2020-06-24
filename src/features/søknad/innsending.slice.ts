@@ -51,8 +51,8 @@ export const sendSøknad = createAsyncThunk<
         inntektOgPensjon: {
             framsattKravAnnenYtelse: true,
             framsattKravAnnenYtelseBegrunnelse: 'begrunnelse',
-            harInntekt: søknad.inntekt.harInntekt!,
-            inntektBeløp: Number(søknad.inntekt.inntektBeløp),
+            harInntekt: søknad.inntekt.forventetInntekt !== null,
+            inntektBeløp: søknad.inntekt.forventetInntekt === null ? null : Number(søknad.inntekt.forventetInntekt),
             harPensjon: søknad.inntekt.mottarPensjon!,
             pensjonsordning: søknad.inntekt.pensjonsInntekt.map((p) => ({ ...p, beløp: Number(p.beløp) })),
             sumInntektOgPensjon: 1000.5,
@@ -130,27 +130,27 @@ export default createSlice({
     name: 'innsending',
     initialState: {
         sendingInProgress: false,
-        error: undefined
+        error: undefined,
     } as InnsendingState,
     reducers: {},
-    extraReducers: builder => {
-        builder.addCase(sendSøknad.pending, state => {
+    extraReducers: (builder) => {
+        builder.addCase(sendSøknad.pending, (state) => {
             state.sendingInProgress = true;
         });
 
-        builder.addCase(sendSøknad.fulfilled, state => {
+        builder.addCase(sendSøknad.fulfilled, (state) => {
             state.sendingInProgress = false;
         });
         builder.addCase(sendSøknad.rejected, (state, action) => {
             if (action.payload) {
                 state.error = {
                     code: action.payload.code,
-                    message: `Feilet med status ${action.payload.statusCode}`
+                    message: `Feilet med status ${action.payload.statusCode}`,
                 };
             } else {
                 state.error = { code: ErrorCode.Unknown, message: 'Ukjent feil' };
             }
             state.sendingInProgress = false;
         });
-    }
+    },
 });

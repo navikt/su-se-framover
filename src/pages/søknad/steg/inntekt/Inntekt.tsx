@@ -39,10 +39,10 @@ interface FormData {
 
 const schema = yup.object<FormData>({
     /* harInntekt: yup.boolean().nullable().required(), */
-    forventetInntekt: yup.string().nullable(true).defined().label('Inntekt'),
+    forventetInntekt: yup.number().nullable().defined().min(0).label('Inntekt') as yup.Schema<Nullable<string>>, //TODO add required
     harMottattSosialstønad: yup.boolean().nullable().required(),
     sosialStønadBeløp: yup
-        .string()
+        .number()
         .nullable()
         .defined()
         .when('harMottattSosialstønad', {
@@ -121,7 +121,7 @@ const schema = yup.object<FormData>({
         }),
     trygdeytelserIUtlandet: yup.boolean().nullable().required(),
     trygdeytelserIUtlandetBeløp: yup
-        .string()
+        .number()
         .nullable()
         .defined()
         .when('trygdeytelserIUtlandet', {

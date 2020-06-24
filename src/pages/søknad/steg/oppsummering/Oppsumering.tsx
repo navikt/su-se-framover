@@ -2,7 +2,7 @@ import * as React from 'react';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import messages from './oppsumering-nb';
 import styles from './oppsummering.module.less';
 import sharedStyles from '../../steg-shared.module.less';
@@ -138,22 +138,21 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                         <OppsummeringsFelt
                             label={<FormattedMessage id="input.harInntekt.label" />}
                             verdi={
-                                søknadFraStore.inntekt.harInntekt
+                                søknadFraStore.inntekt.forventetInntekt === null
+                                    ? 'Ubesvart'
+                                    : Number(søknadFraStore.inntekt.forventetInntekt) > 0
                                     ? 'Ja'
-                                    : søknadFraStore.inntekt.harInntekt === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
+                                    : 'Nei'
                             }
                         />
 
-                        {søknadFraStore.inntekt.harInntekt && (
-                            <OppsummeringsFelt
-                                label={<FormattedMessage id="input.inntekt.inntektBeløp" />}
-                                verdi={
-                                    søknadFraStore.inntekt.harInntekt ? søknadFraStore.inntekt.inntektBeløp : 'Ubesvart'
-                                }
-                            />
-                        )}
+                        {søknadFraStore.inntekt.forventetInntekt &&
+                            Number(søknadFraStore.inntekt.forventetInntekt) > 0 && (
+                                <OppsummeringsFelt
+                                    label={<FormattedMessage id="input.inntekt.inntektBeløp" />}
+                                    verdi={søknadFraStore.inntekt.forventetInntekt}
+                                />
+                            )}
 
                         <OppsummeringsFelt
                             label={<FormattedMessage id="input.mottarPensjon.label" />}
