@@ -84,7 +84,7 @@ const schema = yup.object<FormData>({
                 .label('Depositumsbeløpet')
                 .nullable(false)
                 .positive(),
-            otherwise: yup.number(),
+            otherwise: yup.number()
         }) as yup.Schema<Nullable<string>>,
     //TODO: andre typer kontonummer ?
     kontonummer: yup
@@ -106,6 +106,83 @@ const schema = yup.object<FormData>({
                 .number()
                 .typeError('Verdi på eiendom må være et tall')
                 .label('Verdi på eiendom')
+                .nullable(false)
+                .positive(),
+            otherwise: yup.number(),
+        }) as yup.Schema<Nullable<string>>,
+    eiendomBrukesTil: yup
+        .string()
+        .nullable()
+        .defined()
+        .when('eierMerEnnEnBolig', {
+            is: true,
+            then: yup.string().nullable().min(1).required(),
+        }),
+    eierKjøretøy: yup.boolean().nullable().required(),
+    verdiPåKjøretøy: yup
+        .number()
+        .nullable()
+        .defined()
+        .when('eierKjøretøy', {
+            is: true,
+            then: yup
+                .number()
+                .typeError('Verdi på kjøretøyet må være et tall')
+                .label('Verdi på kjøretøyet')
+                .nullable(false)
+                .positive(),
+            otherwise: yup.number(),
+        }) as yup.Schema<Nullable<string>>,
+    kjøretøyDeEier: yup
+        .string()
+        .nullable()
+        .defined()
+        .when('eierKjøretøy', {
+            is: true,
+            then: yup.string().nullable().min(1).required(),
+        }),
+    harInnskuddPåKonto: yup.boolean().nullable().required(),
+    innskuddsBeløp: yup
+        .number()
+        .nullable()
+        .label('Beløp på innskuddet')
+        .defined()
+        .when('harDepositumskonto', {
+            is: true,
+            then: yup.number().typeError('Beløp på innskuddet må være et tall').nullable(false).positive().required(),
+            otherwise: yup.number(),
+        }) as yup.Schema<Nullable<string>>,
+    harVerdipapir: yup.boolean().nullable().required(),
+    verdipapirBeløp: yup
+        .number()
+        .nullable()
+        .defined()
+        .label('Beløp på verdipapir')
+        .when('harVerdipapir', {
+            is: true,
+            then: yup.number().typeError('Beløp på verdipapir må være et tall').nullable(false).positive(),
+        }) as yup.Schema<Nullable<string>>,
+    skylderNoenMegPenger: yup.boolean().nullable().required(),
+    skylderNoenMegPengerBeløp: yup
+        .number()
+        .nullable()
+        .label('skylderNoenMegPenger beløp')
+        .defined()
+        .when('skylderNoenMegPenger', {
+            is: true,
+            then: yup.number().typeError('skylderNoenMegPenger beløp må være et tall').nullable(false).positive(),
+        }) as yup.Schema<Nullable<string>>,
+    harKontanterOver1000: yup.boolean().nullable().required(),
+    kontanterBeløp: yup
+        .number()
+        .nullable()
+        .defined()
+        .when('harKontanterOver1000', {
+            is: true,
+            then: yup
+                .number()
+                .typeError('Beløp på kontanter må være et tall')
+                .label('Beløp på kontanter')
                 .nullable(false)
                 .positive(),
             otherwise: yup.number(),
@@ -219,7 +296,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 skylderNoenMegPenger: values.skylderNoenMegPenger,
                 skylderNoenMegPengerBeløp: values.skylderNoenMegPengerBeløp,
                 harKontanterOver1000: values.harKontanterOver1000,
-                kontanterBeløp: values.kontanterBeløp,
+                kontanterBeløp: values.kontanterBeløp
             })
         );
     };
@@ -246,7 +323,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
             skylderNoenMegPenger: formueFraStore.skylderNoenMegPenger,
             skylderNoenMegPengerBeløp: formueFraStore.skylderNoenMegPengerBeløp,
             harKontanterOver1000: formueFraStore.harKontanterOver1000,
-            kontanterBeløp: formueFraStore.kontanterBeløp,
+            kontanterBeløp: formueFraStore.kontanterBeløp
         },
         onSubmit: values => {
             save(values);
@@ -282,10 +359,10 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.eierDuBolig.label" />}
                             feil={null}
                             state={formik.values.eierBolig}
-                            onChange={(e) =>
+                            onChange={e =>
                                 formik.setValues({
                                     ...formik.values,
-                                    eierBolig: e,
+                                    eierBolig: e
                                 })
                             }
                         />
@@ -296,10 +373,10 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 legend={<FormattedMessage id="input.borIBolig.label" />}
                                 feil={null}
                                 state={formik.values.borIBolig}
-                                onChange={(e) =>
+                                onChange={e =>
                                     formik.setValues({
                                         ...formik.values,
-                                        borIBolig: e,
+                                        borIBolig: e
                                     })
                                 }
                             />
@@ -331,10 +408,10 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 legend={<FormattedMessage id="input.depositumskonto.label" />}
                                 feil={null}
                                 state={formik.values.harDepositumskonto}
-                                onChange={(e) =>
+                                onChange={e =>
                                     formik.setValues({
                                         ...formik.values,
-                                        harDepositumskonto: e,
+                                        harDepositumskonto: e
                                     })
                                 }
                             />
@@ -400,10 +477,10 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.eierKjøretøy.label" />}
                             feil={null}
                             state={formik.values.eierKjøretøy}
-                            onChange={(e) =>
+                            onChange={e =>
                                 formik.setValues({
                                     ...formik.values,
-                                    eierKjøretøy: e,
+                                    eierKjøretøy: e
                                 })
                             }
                         />
@@ -433,10 +510,10 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.harInnskudPåKonto.label" />}
                             feil={null}
                             state={formik.values.harInnskuddPåKonto}
-                            onChange={(e) =>
+                            onChange={e =>
                                 formik.setValues({
                                     ...formik.values,
-                                    harInnskuddPåKonto: e,
+                                    harInnskuddPåKonto: e
                                 })
                             }
                         />
@@ -457,10 +534,10 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.harVerdipapir.label" />}
                             feil={null}
                             state={formik.values.harVerdipapir}
-                            onChange={(e) =>
+                            onChange={e =>
                                 formik.setValues({
                                     ...formik.values,
-                                    harVerdipapir: e,
+                                    harVerdipapir: e
                                 })
                             }
                         />
@@ -481,10 +558,10 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.skylderNoenMegPenger.label" />}
                             feil={null}
                             state={formik.values.skylderNoenMegPenger}
-                            onChange={(e) =>
+                            onChange={e =>
                                 formik.setValues({
                                     ...formik.values,
-                                    skylderNoenMegPenger: e,
+                                    skylderNoenMegPenger: e
                                 })
                             }
                         />
@@ -505,10 +582,10 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.harKontanterOver1000.label" />}
                             feil={null}
                             state={formik.values.harKontanterOver1000}
-                            onChange={(e) =>
+                            onChange={e =>
                                 formik.setValues({
                                     ...formik.values,
-                                    harKontanterOver1000: e,
+                                    harKontanterOver1000: e
                                 })
                             }
                         />
