@@ -29,24 +29,33 @@ interface FormData {
 const reiseSchema = yup.object({ utreisedato: yup.string().required(), innreisedato: yup.string().required() });
 
 const schema = yup.object<FormData>({
-    harReistTilUtlandetSiste90dager: yup.boolean().nullable().required(),
+    harReistTilUtlandetSiste90dager: yup
+        .boolean()
+        .nullable()
+        .required(),
     harReistDatoer: yup
         .array(reiseSchema.required())
         .defined()
         .when('harReistTilUtlandetSiste90dager', {
             is: true,
-            then: yup.array().min(1, 'Legg til felt hvis det er utenlandsopphold').required(),
-            otherwise: yup.array().max(0),
+            then: yup
+                .array()
+                .min(1, 'Legg til felt hvis det er utenlandsopphold')
+                .required(),
+            otherwise: yup.array().max(0)
         }),
-    skalReiseTilUtlandetNeste12Måneder: yup.boolean().nullable().required(),
+    skalReiseTilUtlandetNeste12Måneder: yup
+        .boolean()
+        .nullable()
+        .required(),
     skalReiseDatoer: yup
         .array(reiseSchema.required())
         .defined()
         .when('skalReiseTilUtlandetNeste12Måneder', {
             is: true,
             then: yup.array().min(1),
-            otherwise: yup.array().nullable(),
-        }),
+            otherwise: yup.array().nullable()
+        })
 });
 
 const MultiTidsperiodevelger = (props: {
@@ -70,18 +79,18 @@ const MultiTidsperiodevelger = (props: {
                                 input={{
                                     name: 'utreisedato',
                                     placeholder: 'dd.mm.åååå',
-                                    id: `${props.feltnavn}[${index}].utreisedato`,
+                                    id: `${props.feltnavn}[${index}].utreisedato`
                                 }}
                                 valgtDato={periode.utreisedato}
                                 id={`harReistDatoer[${index}].utreisedato`}
-                                onChange={(value) => {
+                                onChange={value => {
                                     if (!value) {
                                         return;
                                     }
                                     props.onChange({
                                         index,
                                         utreisedato: value,
-                                        innreisedato: periode.innreisedato,
+                                        innreisedato: periode.innreisedato
                                     });
                                 }}
                             />
@@ -96,11 +105,11 @@ const MultiTidsperiodevelger = (props: {
                                 input={{
                                     name: 'innreisedato',
                                     placeholder: 'dd.mm.åååå',
-                                    id: `${props.feltnavn}[${index}].innreisedato`,
+                                    id: `${props.feltnavn}[${index}].innreisedato`
                                 }}
                                 valgtDato={periode.innreisedato}
                                 id={`harReistDatoer[${index}].innreisedato`}
-                                onChange={(value) => {
+                                onChange={value => {
                                     if (!value) {
                                         return;
                                     }
@@ -132,7 +141,7 @@ const MultiTidsperiodevelger = (props: {
 );
 
 const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
-    const utenlandsopphold = useAppSelector((s) => s.soknad.utenlandsopphold);
+    const utenlandsopphold = useAppSelector(s => s.soknad.utenlandsopphold);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -143,7 +152,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 harReistTilUtlandetSiste90dager: values.harReistTilUtlandetSiste90dager,
                 harReistDatoer: values.harReistTilUtlandetSiste90dager ? values.harReistDatoer : [],
                 skalReiseTilUtlandetNeste12Måneder: values.skalReiseTilUtlandetNeste12Måneder,
-                skalReiseDatoer: values.skalReiseTilUtlandetNeste12Måneder ? values.skalReiseDatoer : [],
+                skalReiseDatoer: values.skalReiseTilUtlandetNeste12Måneder ? values.skalReiseDatoer : []
             })
         );
     };
@@ -153,14 +162,14 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
             harReistTilUtlandetSiste90dager: utenlandsopphold.harReistTilUtlandetSiste90dager,
             harReistDatoer: utenlandsopphold.harReistDatoer,
             skalReiseTilUtlandetNeste12Måneder: utenlandsopphold.skalReiseTilUtlandetNeste12Måneder,
-            skalReiseDatoer: utenlandsopphold.skalReiseDatoer,
+            skalReiseDatoer: utenlandsopphold.skalReiseDatoer
         },
-        onSubmit: (values) => {
+        onSubmit: values => {
             save(values);
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
-        validateOnChange: hasSubmitted,
+        validateOnChange: hasSubmitted
     });
 
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
@@ -171,7 +180,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
                 <form
-                    onSubmit={(e) => {
+                    onSubmit={e => {
                         setHasSubmitted(true);
                         formik.handleSubmit(e);
                         setTimeout(() => {
@@ -188,7 +197,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.harReistSiste90.label" />}
                             feil={formik.errors.harReistTilUtlandetSiste90dager}
                             state={formik.values.harReistTilUtlandetSiste90dager}
-                            onChange={(val) => {
+                            onChange={val => {
                                 formik.setValues({
                                     ...formik.values,
                                     harReistTilUtlandetSiste90dager: val,
@@ -196,7 +205,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                         ? formik.values.harReistDatoer.length === 0
                                             ? [{ innreisedato: '', utreisedato: '' }]
                                             : formik.values.harReistDatoer
-                                        : [],
+                                        : []
                                 });
                             }}
                         />
@@ -213,28 +222,28 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                             ...formik.values.harReistDatoer,
                                             {
                                                 innreisedato: '',
-                                                utreisedato: '',
-                                            },
-                                        ],
+                                                utreisedato: ''
+                                            }
+                                        ]
                                     });
                                 }}
-                                onFjernClick={(index) => {
+                                onFjernClick={index => {
                                     formik.setValues({
                                         ...formik.values,
-                                        harReistDatoer: formik.values.harReistDatoer.filter((_, i) => index !== i),
+                                        harReistDatoer: formik.values.harReistDatoer.filter((_, i) => index !== i)
                                     });
                                 }}
-                                onChange={(val) => {
+                                onChange={val => {
                                     formik.setValues({
                                         ...formik.values,
                                         harReistDatoer: formik.values.harReistDatoer.map((periode, i) =>
                                             val.index === i
                                                 ? {
                                                       innreisedato: val.innreisedato,
-                                                      utreisedato: val.utreisedato,
+                                                      utreisedato: val.utreisedato
                                                   }
                                                 : periode
-                                        ),
+                                        )
                                     });
                                 }}
                             />
@@ -246,7 +255,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.skalReiseNeste12.label" />}
                             feil={formik.errors.skalReiseTilUtlandetNeste12Måneder}
                             state={formik.values.skalReiseTilUtlandetNeste12Måneder}
-                            onChange={(val) => {
+                            onChange={val => {
                                 formik.setValues({
                                     ...formik.values,
                                     skalReiseTilUtlandetNeste12Måneder: val,
@@ -254,7 +263,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                         ? formik.values.skalReiseDatoer.length === 0
                                             ? [{ innreisedato: '', utreisedato: '' }]
                                             : formik.values.skalReiseDatoer
-                                        : [],
+                                        : []
                                 });
                             }}
                         />
@@ -270,28 +279,28 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                             ...formik.values.skalReiseDatoer,
                                             {
                                                 innreisedato: '',
-                                                utreisedato: '',
-                                            },
-                                        ],
+                                                utreisedato: ''
+                                            }
+                                        ]
                                     });
                                 }}
-                                onFjernClick={(index) => {
+                                onFjernClick={index => {
                                     formik.setValues({
                                         ...formik.values,
-                                        skalReiseDatoer: formik.values.skalReiseDatoer.filter((_, i) => index !== i),
+                                        skalReiseDatoer: formik.values.skalReiseDatoer.filter((_, i) => index !== i)
                                     });
                                 }}
-                                onChange={(val) => {
+                                onChange={val => {
                                     formik.setValues({
                                         ...formik.values,
                                         skalReiseDatoer: formik.values.skalReiseDatoer.map((periode, i) =>
                                             val.index === i
                                                 ? {
                                                       innreisedato: val.innreisedato,
-                                                      utreisedato: val.utreisedato,
+                                                      utreisedato: val.utreisedato
                                                   }
                                                 : periode
-                                        ),
+                                        )
                                     });
                                 }}
                             />
@@ -311,7 +320,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             onClick: () => {
                                 save(formik.values);
                                 history.push(props.forrigeUrl);
-                            },
+                            }
                         }}
                     />
                 </form>

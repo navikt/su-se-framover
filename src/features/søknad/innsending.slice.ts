@@ -20,18 +20,18 @@ export const sendSøknad = createAsyncThunk<søknadApi.Søknad, { søknad: Søkn
                 poststed: 'Oslo',
                 bruksenhet: '102',
                 bokommune: 'Oslo',
-                statsborgerskap: 'sverige',
+                statsborgerskap: 'sverige'
             },
             uførevedtak: {
-                harUførevedtak: søknad.harUførevedtak!,
+                harUførevedtak: søknad.harUførevedtak!
             },
             flyktningsstatus: {
-                registrertFlyktning: søknad.flyktningstatus.erFlyktning!,
+                registrertFlyktning: søknad.flyktningstatus.erFlyktning!
             },
             oppholdstillatelse: {
                 harVarigOpphold: søknad.flyktningstatus.harOppholdstillatelse!,
                 utløpsdato: null,
-                søktOmForlengelse: false,
+                søktOmForlengelse: false
             },
             boforhold: {
                 borFastINorge: søknad.boOgOpphold.borOgOppholderSegINorge!,
@@ -39,11 +39,11 @@ export const sendSøknad = createAsyncThunk<søknadApi.Søknad, { søknad: Søkn
                 // TODO: Legg til/ferdigstill boforhold
                 delerBolig: søknad.boOgOpphold.delerBoligMedPersonOver18!,
                 borSammenMed: [],
-                delerBoligMed: [],
+                delerBoligMed: []
             },
             utenlandsopphold: {
                 registrertePerioder: søknad.utenlandsopphold.harReistDatoer,
-                planlagtePerioder: søknad.utenlandsopphold.skalReiseDatoer,
+                planlagtePerioder: søknad.utenlandsopphold.skalReiseDatoer
             },
             inntektOgPensjon: {
                 framsattKravAnnenYtelse: true,
@@ -51,9 +51,9 @@ export const sendSøknad = createAsyncThunk<søknadApi.Søknad, { søknad: Søkn
                 harInntekt: søknad.inntekt.harInntekt!,
                 inntektBeløp: Number(søknad.inntekt.inntektBeløp),
                 harPensjon: søknad.inntekt.mottarPensjon!,
-                pensjonsordning: søknad.inntekt.pensjonsInntekt.map((p) => ({ ...p, beløp: Number(p.beløp) })),
+                pensjonsordning: søknad.inntekt.pensjonsInntekt.map(p => ({ ...p, beløp: Number(p.beløp) })),
                 sumInntektOgPensjon: 1000.5,
-                harSosialStønad: søknad.inntekt.harMottattSosialstønad!,
+                harSosialStønad: søknad.inntekt.harMottattSosialstønad!
             },
             formue: {
                 harFormueEiendom: søknad.formue.harFormue!, // Legg til felt
@@ -62,15 +62,15 @@ export const sendSøknad = createAsyncThunk<søknadApi.Søknad, { søknad: Søkn
                 harAnnenFormue: søknad.formue.harFormue!, // Legg til felt
                 annenFormue: [{ typeFormue: 'type', skattetakst: 2.2 }], // Legg til felt
                 harDepositumskonto: søknad.formue.harDepositumskonto!,
-                depositumBeløp: 100, // Legg til felt
+                depositumBeløp: 100 // Legg til felt
             },
             forNav: {
                 målform: 'bokmål',
                 søkerMøttPersonlig: true,
                 harFullmektigMøtt: true,
                 erPassSjekket: true,
-                merknader: 'merknad',
-            },
+                merknader: 'merknad'
+            }
         };
 
         const res = await søknadApi.sendSøknad(søknadDto);
@@ -95,27 +95,27 @@ export default createSlice({
     name: 'innsending',
     initialState: {
         sendingInProgress: false,
-        error: undefined,
+        error: undefined
     } as InnsendingState,
     reducers: {},
-    extraReducers: (builder) => {
-        builder.addCase(sendSøknad.pending, (state) => {
+    extraReducers: builder => {
+        builder.addCase(sendSøknad.pending, state => {
             state.sendingInProgress = true;
         });
 
-        builder.addCase(sendSøknad.fulfilled, (state) => {
+        builder.addCase(sendSøknad.fulfilled, state => {
             state.sendingInProgress = false;
         });
         builder.addCase(sendSøknad.rejected, (state, action) => {
             if (action.payload) {
                 state.error = {
                     code: action.payload.code,
-                    message: `Feilet med status ${action.payload.statusCode}`,
+                    message: `Feilet med status ${action.payload.statusCode}`
                 };
             } else {
                 state.error = { code: ErrorCode.Unknown, message: 'Ukjent feil' };
             }
             state.sendingInProgress = false;
         });
-    },
+    }
 });

@@ -24,10 +24,27 @@ export interface SøknadState {
         ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
     };
     formue: {
-        harFormue: Nullable<boolean>;
-        beløpFormue: Nullable<number>;
         eierBolig: Nullable<boolean>;
+        borIBolig: Nullable<boolean>;
+        verdiPåBolig: Nullable<string>;
+        boligBrukesTil: Nullable<string>;
+        eierMerEnnEnBolig: Nullable<boolean>;
         harDepositumskonto: Nullable<boolean>;
+        depositumsBeløp: Nullable<string>;
+        kontonummer: Nullable<string>;
+        verdiPåEiendom: Nullable<string>;
+        eiendomBrukesTil: Nullable<string>;
+        eierKjøretøy: Nullable<boolean>;
+        verdiPåKjøretøy: Nullable<string>;
+        kjøretøyDeEier: Nullable<string>;
+        harInnskuddPåKonto: Nullable<boolean>;
+        innskuddsBeløp: Nullable<string>;
+        harVerdipapir: Nullable<boolean>;
+        verdipapirBeløp: Nullable<string>;
+        skylderNoenMegPenger: Nullable<boolean>;
+        skylderNoenMegPengerBeløp: Nullable<string>;
+        harKontanterOver1000: Nullable<boolean>;
+        kontanterBeløp: Nullable<string>;
     };
     inntekt: {
         harInntekt: Nullable<boolean>;
@@ -54,7 +71,7 @@ const initialState: SøknadState = {
         oppholdstillatelseMindreEnnTreMåneder: null,
         oppholdstillatelseForlengelse: null,
         statsborgerskapAndreLand: null,
-        statsborgerskapAndreLandFritekst: null,
+        statsborgerskapAndreLandFritekst: null
     },
     boOgOpphold: {
         borOgOppholderSegINorge: null,
@@ -62,27 +79,44 @@ const initialState: SøknadState = {
         delerBoligMedPersonOver18: null,
         delerBoligMed: null,
         ektemakeEllerSamboerUnder67År: null,
-        ektemakeEllerSamboerUførFlyktning: null,
+        ektemakeEllerSamboerUførFlyktning: null
     },
     formue: {
-        harFormue: null,
-        beløpFormue: null,
         eierBolig: null,
+        borIBolig: null,
+        verdiPåBolig: null,
+        boligBrukesTil: null,
+        eierMerEnnEnBolig: null,
         harDepositumskonto: null,
+        depositumsBeløp: null,
+        kontonummer: null,
+        verdiPåEiendom: null,
+        eiendomBrukesTil: null,
+        eierKjøretøy: null,
+        verdiPåKjøretøy: null,
+        kjøretøyDeEier: null,
+        harInnskuddPåKonto: null,
+        innskuddsBeløp: null,
+        harVerdipapir: null,
+        verdipapirBeløp: null,
+        skylderNoenMegPenger: null,
+        skylderNoenMegPengerBeløp: null,
+        harKontanterOver1000: null,
+        kontanterBeløp: null
     },
     inntekt: {
         harInntekt: null,
         inntektBeløp: null,
         harMottattSosialstønad: null,
         pensjonsInntekt: [],
-        mottarPensjon: null,
+        mottarPensjon: null
     },
     utenlandsopphold: {
         harReistTilUtlandetSiste90dager: null,
         harReistDatoer: [],
         skalReiseTilUtlandetNeste12Måneder: null,
-        skalReiseDatoer: [],
-    },
+        skalReiseDatoer: []
+    }
 };
 
 export default createSlice({
@@ -106,6 +140,6 @@ export default createSlice({
         },
         utenlandsoppholdUpdated(state, action: PayloadAction<SøknadState['utenlandsopphold']>) {
             state.utenlandsopphold = action.payload;
-        },
-    },
+        }
+    }
 });

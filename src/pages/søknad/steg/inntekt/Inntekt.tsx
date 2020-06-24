@@ -26,7 +26,10 @@ interface FormData {
 }
 
 const schema = yup.object<FormData>({
-    harInntekt: yup.boolean().nullable().required(),
+    harInntekt: yup
+        .boolean()
+        .nullable()
+        .required(),
     inntektBeløp: yup
         .number()
         .nullable(true)
@@ -34,11 +37,24 @@ const schema = yup.object<FormData>({
         .label('Inntekt')
         .when('harInntekt', {
             is: true,
-            then: yup.number().typeError('Inntekt må være et tall').positive().required(),
-            otherwise: yup.number().nullable().default(null),
+            then: yup
+                .number()
+                .typeError('Inntekt må være et tall')
+                .positive()
+                .required(),
+            otherwise: yup
+                .number()
+                .nullable()
+                .default(null)
         }),
-    harMottattSosialstønad: yup.boolean().nullable().required(),
-    mottarPensjon: yup.boolean().nullable().required(),
+    harMottattSosialstønad: yup
+        .boolean()
+        .nullable()
+        .required(),
+    mottarPensjon: yup
+        .boolean()
+        .nullable()
+        .required(),
     pensjonsInntekt: yup
         .array(
             yup
@@ -51,20 +67,23 @@ const schema = yup.object<FormData>({
                         .typeError('Pensjonsinntekt må et være tall')
                         .positive()
                         .required()
-                        .moreThan(0) as unknown) as yup.Schema<string>,
+                        .moreThan(0) as unknown) as yup.Schema<string>
                 })
                 .required()
         )
         .defined()
         .when('mottarPensjon', {
             is: true,
-            then: yup.array().min(0).required(),
-            otherwise: yup.array().max(0),
-        }),
+            then: yup
+                .array()
+                .min(0)
+                .required(),
+            otherwise: yup.array().max(0)
+        })
 });
 
 const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
-    const inntektFraStore = useAppSelector((s) => s.soknad.inntekt);
+    const inntektFraStore = useAppSelector(s => s.soknad.inntekt);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -75,14 +94,14 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
             inntektBeløp: inntektFraStore.inntektBeløp,
             harMottattSosialstønad: inntektFraStore.harMottattSosialstønad,
             mottarPensjon: inntektFraStore.mottarPensjon,
-            pensjonsInntekt: inntektFraStore.pensjonsInntekt,
+            pensjonsInntekt: inntektFraStore.pensjonsInntekt
         },
-        onSubmit: (values) => {
+        onSubmit: values => {
             save(values);
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
-        validateOnChange: hasSubmitted,
+        validateOnChange: hasSubmitted
     });
 
     const save = (values: FormData) =>
@@ -92,7 +111,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 inntektBeløp: values.inntektBeløp,
                 harMottattSosialstønad: values.harMottattSosialstønad,
                 mottarPensjon: values.mottarPensjon,
-                pensjonsInntekt: values.pensjonsInntekt,
+                pensjonsInntekt: values.pensjonsInntekt
             })
         );
 
@@ -105,12 +124,12 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             className={sharedStyles.inputFelt}
                             label={<FormattedMessage id="input.pensjonsOrdning.label" />}
                             value={item.ordning}
-                            onChange={(e) =>
+                            onChange={e =>
                                 formik.setValues({
                                     ...formik.values,
                                     pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
                                         idx === index ? { ordning: e.target.value, beløp: item.beløp } : i
-                                    ),
+                                    )
                                 })
                             }
                         />
@@ -118,12 +137,12 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             className={sharedStyles.inputFelt}
                             label={<FormattedMessage id="input.pensjonsBeløp.label" />}
                             value={item.beløp}
-                            onChange={(e) =>
+                            onChange={e =>
                                 formik.setValues({
                                     ...formik.values,
                                     pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
                                         idx === index ? { ordning: item.ordning, beløp: e.target.value } : i
-                                    ),
+                                    )
                                 })
                             }
                         />
@@ -131,14 +150,14 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             <Lenke
                                 href="#"
                                 className={sharedStyles.fjernFeltLink}
-                                onClick={(e) => {
+                                onClick={e => {
                                     e.preventDefault();
                                     formik.setValues({
                                         ...formik.values,
                                         pensjonsInntekt: [
                                             ...formik.values.pensjonsInntekt.slice(0, index),
-                                            ...formik.values.pensjonsInntekt.slice(index + 1),
-                                        ],
+                                            ...formik.values.pensjonsInntekt.slice(index + 1)
+                                        ]
                                     });
                                 }}
                             >
@@ -149,11 +168,11 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 ))}
                 <div className={sharedStyles.leggTilFeltKnapp}>
                     <Knapp
-                        onClick={(e) => {
+                        onClick={e => {
                             e.preventDefault();
                             formik.setValues({
                                 ...formik.values,
-                                pensjonsInntekt: [...formik.values.pensjonsInntekt, { ordning: '', beløp: '' }],
+                                pensjonsInntekt: [...formik.values.pensjonsInntekt, { ordning: '', beløp: '' }]
                             });
                         }}
                     >
@@ -170,7 +189,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
                 <form
-                    onSubmit={(e) => {
+                    onSubmit={e => {
                         setHasSubmitted(true);
                         formik.handleSubmit(e);
                     }}
@@ -182,10 +201,10 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.harInntekt.label" />}
                             feil={formik.errors.harInntekt}
                             state={formik.values.harInntekt}
-                            onChange={(val) =>
+                            onChange={val =>
                                 formik.setValues({
                                     ...formik.values,
-                                    harInntekt: val,
+                                    harInntekt: val
                                 })
                             }
                         />
@@ -207,7 +226,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.mottarPensjon.label" />}
                             feil={formik.errors.mottarPensjon}
                             state={formik.values.mottarPensjon}
-                            onChange={(val) =>
+                            onChange={val =>
                                 formik.setValues({
                                     ...formik.values,
                                     mottarPensjon: val,
@@ -215,7 +234,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                         ? formik.values.pensjonsInntekt.length === 0
                                             ? [{ ordning: '', beløp: '' }]
                                             : formik.values.pensjonsInntekt
-                                        : [],
+                                        : []
                                 })
                             }
                         />
@@ -227,10 +246,10 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.harMottattSosialstønad.label" />}
                             feil={formik.errors.harMottattSosialstønad}
                             state={formik.values.harMottattSosialstønad}
-                            onChange={(val) =>
+                            onChange={val =>
                                 formik.setValues({
                                     ...formik.values,
-                                    harMottattSosialstønad: val,
+                                    harMottattSosialstønad: val
                                 })
                             }
                         />
@@ -247,7 +266,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             onClick: () => {
                                 save(formik.values);
                                 history.push(props.forrigeUrl);
-                            },
+                            }
                         }}
                     />
                 </form>
