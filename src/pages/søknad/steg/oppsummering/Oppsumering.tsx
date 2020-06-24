@@ -110,27 +110,6 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                         tittel={intl.formatMessage({ id: 'panel.tittel.dinFormue' })}
                     >
                         <OppsummeringsFelt
-                            label={<FormattedMessage id="input.harFormue.label" />}
-                            verdi={
-                                søknadFraStore.formue.harFormue
-                                    ? 'Ja'
-                                    : søknadFraStore.formue.harFormue === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
-                        />
-                        {søknadFraStore.formue.harFormue ? (
-                            <OppsummeringsFelt
-                                label={<FormattedMessage id="input.oppgiBeløp.label" />}
-                                verdi={
-                                    søknadFraStore.formue.beløpFormue ? søknadFraStore.formue.beløpFormue : 'Ubesvart'
-                                }
-                            />
-                        ) : (
-                            ''
-                        )}
-
-                        <OppsummeringsFelt
                             label={<FormattedMessage id="input.eierDuBolig.label" />}
                             verdi={
                                 søknadFraStore.formue.eierBolig

@@ -59,13 +59,46 @@ export const sendSøknad = createAsyncThunk<
             harSosialStønad: søknad.inntekt.harMottattSosialstønad!,
         },
         formue: {
+            //TODO: Må endres en god del
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             harFormueEiendom: søknad.formue.harFormue!, // Legg til felt
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             harFinansformue: søknad.formue.harFormue!, // Legg til felt
-            formueBeløp: Number(søknad.formue.beløpFormue),
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            formueBeløp: Number(søknad.formue.beløpFormue!),
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             harAnnenFormue: søknad.formue.harFormue!, // Legg til felt
             annenFormue: [{ typeFormue: 'type', skattetakst: 2.2 }], // Legg til felt
             harDepositumskonto: søknad.formue.harDepositumskonto!,
+
             depositumBeløp: 100, // Legg til felt
+            /*
+            Nye: 
+            eierBolig: true,
+            borIBolig: null,
+            verdiPåBolig: null,
+            boligBrukesTil: null,
+            eierMerEnnEnBolig: null,
+            harDepositumskonto: søknad.formue.harDepositumskonto!,
+            depositumsBeløp: null,
+            kontonummer: null,
+            verdiPåEiendom: null,
+            eiendomBrukesTil: null,
+            eierKjøretøy: null,
+            verdiPåKjøretøy: null,
+            kjøretøyDeEier: null,
+            harInnskuddPåKonto: null,
+            innskuddsBeløp: null,
+            harVerdipapir: null,
+            verdipapirBeløp: null,
+            skylderNoenMegPenger: null,
+            skylderNoenMegPengerBeløp: null,
+            harKontanterOver1000: null,
+            kontanterBeløp: null*/
         },
         forNav: {
             målform: 'bokmål',
