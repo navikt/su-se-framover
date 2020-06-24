@@ -77,7 +77,7 @@ export const sendSøknad = createAsyncThunk<
 
             depositumBeløp: 100, // Legg til felt
             /*
-            Nye: 
+            Nye:
             eierBolig: true,
             borIBolig: null,
             verdiPåBolig: null,
@@ -130,27 +130,27 @@ export default createSlice({
     name: 'innsending',
     initialState: {
         sendingInProgress: false,
-        error: undefined,
+        error: undefined
     } as InnsendingState,
     reducers: {},
-    extraReducers: (builder) => {
-        builder.addCase(sendSøknad.pending, (state) => {
+    extraReducers: builder => {
+        builder.addCase(sendSøknad.pending, state => {
             state.sendingInProgress = true;
         });
 
-        builder.addCase(sendSøknad.fulfilled, (state) => {
+        builder.addCase(sendSøknad.fulfilled, state => {
             state.sendingInProgress = false;
         });
         builder.addCase(sendSøknad.rejected, (state, action) => {
             if (action.payload) {
                 state.error = {
                     code: action.payload.code,
-                    message: `Feilet med status ${action.payload.statusCode}`,
+                    message: `Feilet med status ${action.payload.statusCode}`
                 };
             } else {
                 state.error = { code: ErrorCode.Unknown, message: 'Ukjent feil' };
             }
             state.sendingInProgress = false;
         });
-    },
+    }
 });

@@ -57,7 +57,7 @@ const schema = yup.object<FormData>({
                 .label('Verdi på bolig')
                 .nullable(false)
                 .positive(),
-            otherwise: yup.number(),
+            otherwise: yup.number()
         }) as yup.Schema<Nullable<string>>,
     boligBrukesTil: yup
         .string()
@@ -190,7 +190,7 @@ const schema = yup.object<FormData>({
 });
 
 const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
-    const formueFraStore = useAppSelector((s) => s.soknad.formue);
+    const formueFraStore = useAppSelector(s => s.soknad.formue);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -248,12 +248,12 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
             harKontanterOver1000: formueFraStore.harKontanterOver1000,
             kontanterBeløp: formueFraStore.kontanterBeløp,
         },
-        onSubmit: (values) => {
+        onSubmit: values => {
             save(values);
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
-        validateOnChange: hasSubmitted,
+        validateOnChange: hasSubmitted
     });
 
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
@@ -265,7 +265,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
         <div className={sharedStyles.container}>
             <RawIntlProvider value={intl}>
                 <form
-                    onSubmit={(e) => {
+                    onSubmit={e => {
                         setHasSubmitted(true);
                         formik.handleSubmit(e);
                         setTimeout(() => {
@@ -535,7 +535,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             onClick: () => {
                                 save(formik.values);
                                 history.push(props.forrigeUrl);
-                            },
+                            }
                         }}
                     />
                 </form>
