@@ -38,8 +38,6 @@ const Saksoversikt = () => {
         },
     });
 
-    console.log({ sakFraStore });
-
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
             <div>

@@ -1,24 +1,22 @@
 import * as React from 'react';
-import { Input } from 'nav-frontend-skjema';
+import { Feiloppsummering, Input } from 'nav-frontend-skjema';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useFormik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { JaNeiSpørsmål } from '~/components/FormElements';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknad.slice';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import { Nullable } from '../../../../lib/types';
 import messages from './inntekt-nb';
-import { Feiloppsummering } from 'nav-frontend-skjema';
-import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import sharedI18n from '../steg-shared-i18n';
 import { useI18n } from '../../../../lib/hooks';
 import { Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
 
 interface FormData {
-    //harInntekt: Nullable<boolean>;
     forventetInntekt: Nullable<string>;
     harMottattSosialstønad: Nullable<boolean>;
     mottarPensjon: Nullable<boolean>;
@@ -38,8 +36,9 @@ interface FormData {
 }
 
 const schema = yup.object<FormData>({
-    /* harInntekt: yup.boolean().nullable().required(), */
-    forventetInntekt: yup.number().nullable().defined().min(0).label('Inntekt') as yup.Schema<Nullable<string>>, //TODO add required
+    forventetInntekt: (yup.number().nullable().integer().min(0).label('Inntekt').required() as unknown) as yup.Schema<
+        Nullable<string>
+    >,
     harMottattSosialstønad: yup.boolean().nullable().required(),
     sosialStønadBeløp: yup
         .number()
@@ -67,15 +66,14 @@ const schema = yup.object<FormData>({
                         .label('Pensjonsinntekt')
                         .typeError('Pensjonsinntekt må et være tall')
                         .positive()
-                        .required()
-                        .moreThan(0) as unknown) as yup.Schema<string>,
+                        .required() as unknown) as yup.Schema<string>,
                 })
                 .required()
         )
         .defined()
         .when('mottarPensjon', {
             is: true,
-            then: yup.array().min(0).required(),
+            then: yup.array().min(1).required(),
             otherwise: yup.array().max(0),
         }),
     tjenerPengerIUtlandet: yup.boolean().nullable().required(),
@@ -160,7 +158,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            //harInntekt: inntektFraStore.harInntekt,
             forventetInntekt: inntektFraStore.forventetInntekt,
             harMottattSosialstønad: inntektFraStore.harMottattSosialstønad,
             mottarPensjon: inntektFraStore.mottarPensjon,
@@ -189,7 +186,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const save = (values: FormData) =>
         dispatch(
             søknadSlice.actions.inntektUpdated({
-                //harInntekt: values.harInntekt,
                 forventetInntekt: values.forventetInntekt,
                 harMottattSosialstønad: values.harMottattSosialstønad,
                 mottarPensjon: values.mottarPensjon,
@@ -278,7 +274,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
     };
 
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-
     return (
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
@@ -289,20 +284,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                     }}
                 >
                     <div className={sharedStyles.formContainer}>
-                        {/* <JaNeiSpørsmål
-                            id="harInntekt"
-                            className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.harInntekt.label" />}
-                            feil={formik.errors.harInntekt}
-                            state={formik.values.harInntekt}
-                            onChange={(val) =>
-                                formik.setValues({
-                                    ...formik.values,
-                                    harInntekt: val,
-                                })
-                            }
-                        />*/}
-
                         <Input
                             id="forventetInntekt"
                             feil={formik.errors.forventetInntekt}
@@ -333,6 +314,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 label={<FormattedMessage id="input.tjenerPengerIUtlandetBeløp.label" />}
                                 value={formik.values.tjenerPengerIUtlandetBeløp || ''}
                                 onChange={formik.handleChange}
+                                feil={formik.errors.tjenerPengerIUtlandetBeløp}
                             />
                         )}
 
@@ -359,6 +341,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     label={<FormattedMessage id="input.andreYtelserINavYtelse.label" />}
                                     value={formik.values.andreYtelserINavYtelse || ''}
                                     onChange={formik.handleChange}
+                                    feil={formik.errors.andreYtelserINavYtelse}
                                 />
                                 <Input
                                     id="andreYtelserINavBeløp"
@@ -366,6 +349,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     label={<FormattedMessage id="input.andreYtelserINavBeløp.label" />}
                                     value={formik.values.andreYtelserINavBeløp || ''}
                                     onChange={formik.handleChange}
+                                    feil={formik.errors.andreYtelserINavBeløp}
                                 />
                             </div>
                         )}
@@ -391,6 +375,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 label={<FormattedMessage id="input.søktAndreYtelserIkkeBehandletBegrunnelse.label" />}
                                 value={formik.values.søktAndreYtelserIkkeBehandletBegrunnelse || ''}
                                 onChange={formik.handleChange}
+                                feil={formik.errors.søktAndreYtelserIkkeBehandletBegrunnelse}
                             />
                         )}
 
@@ -414,6 +399,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 label={<FormattedMessage id="input.sosialStønadBeløp.label" />}
                                 value={formik.values.sosialStønadBeløp || ''}
                                 onChange={formik.handleChange}
+                                feil={formik.errors.sosialStønadBeløp}
                             />
                         )}
 
@@ -430,8 +416,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 })
                             }
                         />
-
-                        {/*Flere inputs? */}
                         {formik.values.trygdeytelserIUtlandet && (
                             <div>
                                 <Input
@@ -440,6 +424,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     label={<FormattedMessage id="input.trygdeytelserIUtlandetBeløp.label" />}
                                     value={formik.values.trygdeytelserIUtlandetBeløp || ''}
                                     onChange={formik.handleChange}
+                                    feil={formik.errors.trygdeytelserIUtlandetBeløp}
                                 />
                                 <Input
                                     id="trygdeytelserIUtlandetType"
@@ -447,6 +432,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     label={<FormattedMessage id="input.trygdeytelserIUtlandetType.label" />}
                                     value={formik.values.trygdeytelserIUtlandetType || ''}
                                     onChange={formik.handleChange}
+                                    feil={formik.errors.trygdeytelserIUtlandetType}
                                 />
 
                                 <Input
@@ -455,6 +441,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     label={<FormattedMessage id="input.trygdeytelserIUtlandetFraHvem.label" />}
                                     value={formik.values.trygdeytelserIUtlandetFraHvem || ''}
                                     onChange={formik.handleChange}
+                                    feil={formik.errors.trygdeytelserIUtlandetFraHvem}
                                 />
                             </div>
                         )}

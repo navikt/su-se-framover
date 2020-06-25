@@ -116,7 +116,6 @@ const initialState: SøknadState = {
         kontanterBeløp: null,
     },
     inntekt: {
-        // harInntekt: null
         forventetInntekt: null,
         tjenerPengerIUtlandet: null,
         tjenerPengerIUtlandetBeløp: null,
