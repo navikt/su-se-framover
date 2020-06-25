@@ -1,13 +1,16 @@
-import React from 'react';
+import * as React from 'react';
 import { render } from 'react-dom';
 import Root from './Root';
 import * as Sentry from '@sentry/browser';
 
-Sentry.init({
-    dsn: 'https://86e03156def1405889ca142c2f08bdd8@sentry.gc.nav.no/34',
-    environment: window.location.hostname,
-    integrations: [new Sentry.Integrations.Breadcrumbs({ console: false })],
-});
+// eslint-disable-next-line no-undef
+if (process.env.NODE_ENV !== 'development') {
+    Sentry.init({
+        dsn: 'https://86e03156def1405889ca142c2f08bdd8@sentry.gc.nav.no/34',
+        environment: window.location.hostname,
+        integrations: [new Sentry.Integrations.Breadcrumbs({ console: false })],
+    });
+}
 
 render(<Root />, document.getElementById('root'));
 
