@@ -70,8 +70,6 @@ export interface SøknadState {
         skalReiseDatoer: Array<{ utreisedato: string; innreisedato: string }>;
     };
     kontaktOgForNav: {
-        erTelefonnummerKorrekt: Nullable<boolean>;
-        nyttTelefonnummer: Nullable<string>;
         harSøkerMøttPersonlig: Nullable<boolean>;
         harFullmektigEllerVerge: Nullable<Vergemål>;
     };
@@ -145,8 +143,6 @@ const initialState: SøknadState = {
         skalReiseDatoer: [],
     },
     kontaktOgForNav: {
-        erTelefonnummerKorrekt: null,
-        nyttTelefonnummer: null,
         harSøkerMøttPersonlig: null,
         harFullmektigEllerVerge: null,
     },

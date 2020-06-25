@@ -4,7 +4,7 @@ import { JaNeiSpørsmål } from '~/components/FormElements';
 import { FormattedMessage } from 'react-intl';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { Nullable } from '~lib/types';
-import { Feiloppsummering, RadioPanelGruppe, Input } from 'nav-frontend-skjema';
+import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
 import { useFormik } from 'formik';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import messages from './kontakt-nb';
@@ -18,18 +18,11 @@ import sharedI18n from '../steg-shared-i18n';
 import { useI18n } from '../../../../lib/hooks';
 
 interface FormData {
-    erTelefonnummerKorrekt: Nullable<boolean>;
-    nyttTelefonnummer: Nullable<string>;
     harSøkerMøttPersonlig: Nullable<boolean>;
     harFullmektigEllerVerge: Nullable<Vergemål>;
 }
 
 const schema = yup.object<FormData>({
-    erTelefonnummerKorrekt: yup.boolean().nullable().required(),
-    nyttTelefonnummer: yup.string().nullable().defined().when('erTelefonnummerKorrekt', {
-        is: false,
-        then: yup.string().nullable().required(),
-    }),
     harSøkerMøttPersonlig: yup.boolean().nullable().required(),
     harFullmektigEllerVerge: yup.mixed<Nullable<Vergemål>>().nullable().defined().when('harSøkerMøttPersonlig', {
         is: false,
@@ -42,13 +35,11 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const kontaktOgForNavFraStore = useAppSelector((s) => s.soknad.kontaktOgForNav);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
-    const [passSjekket, setPassSjekket] = React.useState();
+    const [passSjekket, setPassSjekket] = React.useState<null | boolean>(null);
 
     const save = (values: FormData) =>
         dispatch(
             søknadSlice.actions.kontaktOgForNav({
-                erTelefonnummerKorrekt: values.erTelefonnummerKorrekt,
-                nyttTelefonnummer: values.nyttTelefonnummer,
                 harSøkerMøttPersonlig: values.harSøkerMøttPersonlig,
                 harFullmektigEllerVerge: values.harFullmektigEllerVerge,
             })
@@ -56,8 +47,6 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            erTelefonnummerKorrekt: kontaktOgForNavFraStore.erTelefonnummerKorrekt,
-            nyttTelefonnummer: kontaktOgForNavFraStore.nyttTelefonnummer,
             harSøkerMøttPersonlig: kontaktOgForNavFraStore.harSøkerMøttPersonlig,
             harFullmektigEllerVerge: kontaktOgForNavFraStore.harFullmektigEllerVerge,
         },
@@ -80,30 +69,7 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                     }}
                 >
                     <p>12345678</p>
-                    <JaNeiSpørsmål
-                        id="erTelefonnummerKorrekt"
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="input.erTelefonnummerKorrekt.label" />}
-                        feil={null}
-                        state={formik.values.erTelefonnummerKorrekt}
-                        onChange={(val) => {
-                            formik.setValues({
-                                ...formik.values,
-                                erTelefonnummerKorrekt: val,
-                            });
-                        }}
-                    />
-
-                    {formik.values.erTelefonnummerKorrekt === false && (
-                        <Input
-                            id="nyttTelefonnummer"
-                            name="nyttTelefonnummer"
-                            className={sharedStyles.inputFelt}
-                            label={<FormattedMessage id="input.nyttTelefonnummer.label" />}
-                            value={formik.values.nyttTelefonnummer || ''}
-                            onChange={formik.handleChange}
-                        />
-                    )}
+                    <p>Er dette feil, så fiks</p>
 
                     <p>______________________</p>
                     <h1>Søker er digital</h1>
