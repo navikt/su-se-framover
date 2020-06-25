@@ -25,23 +25,30 @@ export interface PersonState {
         | undefined;
 }
 
+const initialState: PersonState = {
+    søker: undefined,
+    pending: false,
+    error: undefined,
+};
+
 export default createSlice({
     name: 'søker',
-    initialState: {
-        søker: undefined,
-        pending: false,
-        error: undefined,
-    } as PersonState,
+    initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(fetchPerson.pending, (state) => {
             state.pending = true;
+            state.søker = undefined;
+            state.error = undefined;
         });
         builder.addCase(fetchPerson.fulfilled, (state, action) => {
             state.søker = action.payload;
             state.pending = false;
+            state.error = undefined;
         });
         builder.addCase(fetchPerson.rejected, (state, action) => {
+            state.søker = undefined;
+            state.pending = false;
             if (action.payload) {
                 state.error = {
                     code: action.payload.code,
@@ -50,7 +57,6 @@ export default createSlice({
             } else {
                 state.error = { code: ErrorCode.Unknown, message: 'Ukjent feil' };
             }
-            state.pending = false;
         });
     },
 });

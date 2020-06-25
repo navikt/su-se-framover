@@ -48,7 +48,7 @@ const Root = () => {
             <ErrorBoundary>
                 <Router>
                     <Switch>
-                        <Route path="/" exact>
+                        <Route exact path="/">
                             <ContentWrapper>
                                 <HomePage />
                             </ContentWrapper>
@@ -58,7 +58,8 @@ const Root = () => {
                                 <Soknad />
                             </ContentWrapper>
                         </Route>
-                        <Route path="/saksoversikt">
+
+                        <Route path="/saksoversikt/:meny?">
                             <Saksoversikt />
                         </Route>
                         <Route path="/auth/complete">
