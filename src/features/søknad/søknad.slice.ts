@@ -74,7 +74,6 @@ export interface SøknadState {
         nyttTelefonnummer: Nullable<string>;
         harSøkerMøttPersonlig: Nullable<boolean>;
         harFullmektigEllerVerge: Nullable<Vergemål>;
-        erPassSjekket: Nullable<boolean>;
     };
 }
 
@@ -150,7 +149,6 @@ const initialState: SøknadState = {
         nyttTelefonnummer: null,
         harSøkerMøttPersonlig: null,
         harFullmektigEllerVerge: null,
-        erPassSjekket: null,
     },
 };
 

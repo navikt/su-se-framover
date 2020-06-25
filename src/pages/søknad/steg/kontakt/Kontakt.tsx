@@ -16,12 +16,12 @@ import { Vergemål } from '~features/søknad/types';
 import AlertStripe from 'nav-frontend-alertstriper';
 import sharedI18n from '../steg-shared-i18n';
 import { useI18n } from '../../../../lib/hooks';
+
 interface FormData {
     erTelefonnummerKorrekt: Nullable<boolean>;
     nyttTelefonnummer: Nullable<string>;
     harSøkerMøttPersonlig: Nullable<boolean>;
     harFullmektigEllerVerge: Nullable<Vergemål>;
-    erPassSjekket: Nullable<boolean>;
 }
 
 const schema = yup.object<FormData>({
@@ -35,8 +35,6 @@ const schema = yup.object<FormData>({
         is: false,
         then: yup.string().nullable().required(),
     }),
-
-    erPassSjekket: yup.boolean().nullable().required(),
 });
 
 const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
@@ -44,6 +42,8 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const kontaktOgForNavFraStore = useAppSelector((s) => s.soknad.kontaktOgForNav);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
+    const [passSjekket, setPassSjekket] = React.useState();
+
     const save = (values: FormData) =>
         dispatch(
             søknadSlice.actions.kontaktOgForNav({
@@ -51,7 +51,6 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 nyttTelefonnummer: values.nyttTelefonnummer,
                 harSøkerMøttPersonlig: values.harSøkerMøttPersonlig,
                 harFullmektigEllerVerge: values.harFullmektigEllerVerge,
-                erPassSjekket: values.erPassSjekket,
             })
         );
 
@@ -61,7 +60,6 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
             nyttTelefonnummer: kontaktOgForNavFraStore.nyttTelefonnummer,
             harSøkerMøttPersonlig: kontaktOgForNavFraStore.harSøkerMøttPersonlig,
             harFullmektigEllerVerge: kontaktOgForNavFraStore.harFullmektigEllerVerge,
-            erPassSjekket: kontaktOgForNavFraStore.erPassSjekket,
         },
         onSubmit: (values) => {
             save(values);
@@ -160,13 +158,8 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         className={sharedStyles.sporsmal}
                         legend={<FormattedMessage id="input.erPassSjekket.label" />}
                         feil={null}
-                        state={formik.values.erPassSjekket}
-                        onChange={(val) => {
-                            formik.setValues({
-                                ...formik.values,
-                                erPassSjekket: val,
-                            });
-                        }}
+                        state={passSjekket}
+                        onChange={(val) => setPassSjekket(val)}
                     />
 
                     <Feiloppsummering
