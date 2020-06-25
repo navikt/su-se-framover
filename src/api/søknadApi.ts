@@ -23,16 +23,21 @@ export interface Søknad {
         registrertFlyktning: boolean;
     };
     oppholdstillatelse: {
-        harVarigOpphold: boolean;
-        utløpsdato: Nullable<string>;
-        søktOmForlengelse: boolean;
+        erNorskStatsborger: boolean;
+        harOppholdstillatelse: Nullable<boolean>;
+        typeOppholdstillatelse: Nullable<string>;
+        oppholdstillatelseMindreEnnTreMåneder: Nullable<boolean>;
+        oppholdstillatelseForlengelse: Nullable<boolean>;
+        statsborgerskapAndreLand: boolean;
+        statsborgerskapAndreLandFritekst: Nullable<string>;
     };
     boforhold: {
-        borFastINorge: boolean;
+        borOgOppholderSegINorge: boolean;
         borPåFolkeregistrertAdresse: boolean;
-        delerBolig: boolean;
-        borSammenMed: Nullable<Array<{ fnr: string; navn: string }>>;
-        delerBoligMed: Nullable<Array<{ fnr: string; navn: string }>>;
+        delerBoligMedVoksne: boolean;
+        delerBoligMed: Nullable<string>;
+        ektemakeEllerSamboerUnder67År: Nullable<boolean>;
+        ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
     };
     utenlandsopphold: {
         registrertePerioder: Nullable<Array<{ utreisedato: string; innreisedato: string }>>;

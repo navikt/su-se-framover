@@ -36,7 +36,7 @@ const schema = yup.object<FormData>({
             then: yup
                 .mixed<DelerBoligMed>()
                 .nullable()
-                .oneOf<DelerBoligMed>(['ektemake-eller-samboer', 'barn-over-18', 'andre'])
+                .oneOf<DelerBoligMed>(['ektemake-eller-samboer', 'voksne-barn', 'andre'])
                 .required(),
         }),
     ektemakeEllerSamboerUnder67År: yup.boolean().nullable().defined().when('delerBoligMed', {
@@ -148,7 +148,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     },
                                     {
                                         label: <FormattedMessage id={'input.delerBoligMedBarnOver18.label'} />,
-                                        value: 'barn-over-18',
+                                        value: 'voksne-barn',
                                     },
                                     {
                                         label: <FormattedMessage id={'input.delerBoligMedAndreVoksne.label'} />,

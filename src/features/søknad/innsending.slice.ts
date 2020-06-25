@@ -32,17 +32,21 @@ export const sendSøknad = createAsyncThunk<
             registrertFlyktning: søknad.flyktningstatus.erFlyktning!,
         },
         oppholdstillatelse: {
-            harVarigOpphold: søknad.flyktningstatus.harOppholdstillatelse!,
-            utløpsdato: null,
-            søktOmForlengelse: false,
+            erNorskStatsborger: søknad.flyktningstatus.erNorskStatsborger!,
+            harOppholdstillatelse: søknad.flyktningstatus.harOppholdstillatelse,
+            typeOppholdstillatelse: søknad.flyktningstatus.typeOppholdstillatelse,
+            oppholdstillatelseMindreEnnTreMåneder: søknad.flyktningstatus.oppholdstillatelseMindreEnnTreMåneder,
+            oppholdstillatelseForlengelse: søknad.flyktningstatus.oppholdstillatelseForlengelse,
+            statsborgerskapAndreLand: søknad.flyktningstatus.statsborgerskapAndreLand!,
+            statsborgerskapAndreLandFritekst: søknad.flyktningstatus.statsborgerskapAndreLandFritekst,
         },
         boforhold: {
-            borFastINorge: søknad.boOgOpphold.borOgOppholderSegINorge!,
+            borOgOppholderSegINorge: søknad.boOgOpphold.borOgOppholderSegINorge!,
             borPåFolkeregistrertAdresse: søknad.boOgOpphold.borPåFolkeregistrertAdresse!,
-            // TODO: Legg til/ferdigstill boforhold
-            delerBolig: søknad.boOgOpphold.delerBoligMedPersonOver18!,
-            borSammenMed: [],
-            delerBoligMed: [],
+            delerBoligMedVoksne: søknad.boOgOpphold.delerBoligMedPersonOver18!,
+            delerBoligMed: søknad.boOgOpphold.delerBoligMed,
+            ektemakeEllerSamboerUnder67År: søknad.boOgOpphold.ektemakeEllerSamboerUnder67År,
+            ektemakeEllerSamboerUførFlyktning: søknad.boOgOpphold.ektemakeEllerSamboerUførFlyktning,
         },
         utenlandsopphold: {
             registrertePerioder: søknad.utenlandsopphold.harReistDatoer,
@@ -132,11 +136,9 @@ export const sendSøknad = createAsyncThunk<
             /*
             kontaktOgForNav
             nye:
-            erTelefonnummerKorrekt: Nullable<boolean>;
-            nyttTelefonnummer: Nullable<string>;
             harSøkerMøttPersonlig: Nullable<boolean>;
             harFullmektigEllerVerge: Nullable<Vergemål>;
-            erPassSjekket: Nullable<boolean>;*/
+            */
         },
     };
 
