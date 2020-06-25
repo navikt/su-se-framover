@@ -16,6 +16,7 @@ export const fetchPerson = createAsyncThunk<personApi.Person, { fnr: string }, {
 
 export interface PersonState {
     søker: personApi.Person | undefined;
+    pending: boolean;
     error:
         | {
               code: ErrorCode;
@@ -28,12 +29,17 @@ export default createSlice({
     name: 'søker',
     initialState: {
         søker: undefined,
+        pending: false,
         error: undefined,
     } as PersonState,
     reducers: {},
     extraReducers: (builder) => {
+        builder.addCase(fetchPerson.pending, (state) => {
+            state.pending = true;
+        });
         builder.addCase(fetchPerson.fulfilled, (state, action) => {
             state.søker = action.payload;
+            state.pending = false;
         });
         builder.addCase(fetchPerson.rejected, (state, action) => {
             if (action.payload) {
@@ -44,6 +50,7 @@ export default createSlice({
             } else {
                 state.error = { code: ErrorCode.Unknown, message: 'Ukjent feil' };
             }
+            state.pending = false;
         });
     },
 });
