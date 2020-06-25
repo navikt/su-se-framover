@@ -12,14 +12,13 @@ import TextProvider, { Languages } from '~components/TextProvider';
 import { useHistory } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknad.slice';
-import { Svarform, Vergemål } from '~features/søknad/types';
+import { Vergemål } from '~features/søknad/types';
 import AlertStripe from 'nav-frontend-alertstriper';
 import sharedI18n from '../steg-shared-i18n';
 import { useI18n } from '../../../../lib/hooks';
 interface FormData {
     erTelefonnummerKorrekt: Nullable<boolean>;
     nyttTelefonnummer: Nullable<string>;
-    svarform: Nullable<Svarform>;
     harSøkerMøttPersonlig: Nullable<boolean>;
     harFullmektigEllerVerge: Nullable<Vergemål>;
     erPassSjekket: Nullable<boolean>;
@@ -31,7 +30,6 @@ const schema = yup.object<FormData>({
         is: false,
         then: yup.string().nullable().required(),
     }),
-    svarform: yup.mixed<Nullable<Svarform>>().nullable().defined().required(),
     harSøkerMøttPersonlig: yup.boolean().nullable().required(),
     harFullmektigEllerVerge: yup.mixed<Nullable<Vergemål>>().nullable().defined().when('harSøkerMøttPersonlig', {
         is: false,
@@ -51,7 +49,6 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
             søknadSlice.actions.kontaktOgForNav({
                 erTelefonnummerKorrekt: values.erTelefonnummerKorrekt,
                 nyttTelefonnummer: values.nyttTelefonnummer,
-                svarform: values.svarform,
                 harSøkerMøttPersonlig: values.harSøkerMøttPersonlig,
                 harFullmektigEllerVerge: values.harFullmektigEllerVerge,
                 erPassSjekket: values.erPassSjekket,
@@ -62,7 +59,6 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
         initialValues: {
             erTelefonnummerKorrekt: kontaktOgForNavFraStore.erTelefonnummerKorrekt,
             nyttTelefonnummer: kontaktOgForNavFraStore.nyttTelefonnummer,
-            svarform: kontaktOgForNavFraStore.svarform,
             harSøkerMøttPersonlig: kontaktOgForNavFraStore.harSøkerMøttPersonlig,
             harFullmektigEllerVerge: kontaktOgForNavFraStore.harFullmektigEllerVerge,
             erPassSjekket: kontaktOgForNavFraStore.erPassSjekket,
@@ -74,7 +70,6 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
         validationSchema: schema,
         validateOnChange: hasSubmitted,
     });
-    console.log(formik.values);
 
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     return (
@@ -112,29 +107,9 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         />
                     )}
 
-                    <RadioPanelGruppe
-                        className={sharedStyles.sporsmal}
-                        feil={null}
-                        legend={<FormattedMessage id={'input.svarform.label'} />}
-                        name="svarform"
-                        radios={[
-                            {
-                                label: <FormattedMessage id={'input.svarform.brev.label'} />,
-                                value: 'brev',
-                            },
-                            {
-                                label: <FormattedMessage id={'input.svarform.digitalt.label'} />,
-                                value: 'digitalt',
-                            },
-                        ]}
-                        onChange={(_, value) => {
-                            formik.setValues({
-                                ...formik.values,
-                                svarform: value,
-                            });
-                        }}
-                        checked={formik.values.svarform?.toString()}
-                    />
+                    <p>______________________</p>
+                    <h1>Søker er digital</h1>
+                    <p>----------------------</p>
 
                     <JaNeiSpørsmål
                         id="harSøkerMøttPersonlig"

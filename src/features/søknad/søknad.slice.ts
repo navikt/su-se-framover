@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { DelerBoligMed, TypeOppholdstillatelse, Svarform, Vergemål } from './types';
+import { DelerBoligMed, TypeOppholdstillatelse, Vergemål } from './types';
 import { Nullable } from '~lib/types';
 
 export interface SøknadState {
@@ -72,7 +72,6 @@ export interface SøknadState {
     kontaktOgForNav: {
         erTelefonnummerKorrekt: Nullable<boolean>;
         nyttTelefonnummer: Nullable<string>;
-        svarform: Nullable<Svarform>;
         harSøkerMøttPersonlig: Nullable<boolean>;
         harFullmektigEllerVerge: Nullable<Vergemål>;
         erPassSjekket: Nullable<boolean>;
@@ -149,7 +148,6 @@ const initialState: SøknadState = {
     kontaktOgForNav: {
         erTelefonnummerKorrekt: null,
         nyttTelefonnummer: null,
-        svarform: null,
         harSøkerMøttPersonlig: null,
         harFullmektigEllerVerge: null,
         erPassSjekket: null,

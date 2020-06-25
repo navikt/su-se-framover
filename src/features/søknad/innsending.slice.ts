@@ -59,6 +59,7 @@ export const sendSøknad = createAsyncThunk<
             harSosialStønad: søknad.inntekt.harMottattSosialstønad!,
 
             /* 
+            inntekt:
             nye:
                 forventetInntekt: null,
                 tjenerPengerIUtlandet: null,
@@ -97,6 +98,7 @@ export const sendSøknad = createAsyncThunk<
 
             depositumBeløp: 100, // Legg til felt
             /*
+            formue:
             Nye:
             eierBolig: true,
             borIBolig: null,
@@ -128,10 +130,10 @@ export const sendSøknad = createAsyncThunk<
             merknader: 'merknad',
 
             /*
+            kontaktOgForNav
             nye:
             erTelefonnummerKorrekt: Nullable<boolean>;
             nyttTelefonnummer: Nullable<string>;
-            svarform: Nullable<Svarform>;
             harSøkerMøttPersonlig: Nullable<boolean>;
             harFullmektigEllerVerge: Nullable<Vergemål>;
             erPassSjekket: Nullable<boolean>;*/

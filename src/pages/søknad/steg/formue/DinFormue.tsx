@@ -147,7 +147,7 @@ const schema = yup.object<FormData>({
         .nullable()
         .label('Beløp på innskuddet')
         .defined()
-        .when('harDepositumskonto', {
+        .when('harInnskuddPåKonto', {
             is: true,
             then: yup.number().typeError('Beløp på innskuddet må være et tall').nullable(false).positive().required(),
             otherwise: yup.number(),
