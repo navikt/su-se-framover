@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { DelerBoligMed, TypeOppholdstillatelse } from './types';
+import { DelerBoligMed, TypeOppholdstillatelse, Svarform, Vergemål } from './types';
 import { Nullable } from '~lib/types';
 
 export interface SøknadState {
@@ -14,7 +14,6 @@ export interface SøknadState {
         statsborgerskapAndreLand: Nullable<boolean>;
         statsborgerskapAndreLandFritekst: Nullable<string>;
     };
-
     boOgOpphold: {
         borOgOppholderSegINorge: Nullable<boolean>;
         borPåFolkeregistrertAdresse: Nullable<boolean>;
@@ -69,6 +68,14 @@ export interface SøknadState {
         harReistDatoer: Array<{ utreisedato: string; innreisedato: string }>;
         skalReiseTilUtlandetNeste12Måneder: Nullable<boolean>;
         skalReiseDatoer: Array<{ utreisedato: string; innreisedato: string }>;
+    };
+    kontaktOgForNav: {
+        erTelefonnummerKorrekt: Nullable<boolean>;
+        nyttTelefonnummer: Nullable<string>;
+        svarform: Nullable<Svarform>;
+        harSøkerMøttPersonlig: Nullable<boolean>;
+        harFullmektigEllerVerge: Nullable<Vergemål>;
+        erPassSjekket: Nullable<boolean>;
     };
 }
 
@@ -130,7 +137,6 @@ const initialState: SøknadState = {
         trygdeytelserIUtlandetBeløp: null,
         trygdeytelserIUtlandetType: null,
         trygdeytelserIUtlandetFraHvem: null,
-
         pensjonsInntekt: [],
         mottarPensjon: null,
     },
@@ -139,6 +145,14 @@ const initialState: SøknadState = {
         harReistDatoer: [],
         skalReiseTilUtlandetNeste12Måneder: null,
         skalReiseDatoer: [],
+    },
+    kontaktOgForNav: {
+        erTelefonnummerKorrekt: null,
+        nyttTelefonnummer: null,
+        svarform: null,
+        harSøkerMøttPersonlig: null,
+        harFullmektigEllerVerge: null,
+        erPassSjekket: null,
     },
 };
 
@@ -163,6 +177,9 @@ export default createSlice({
         },
         utenlandsoppholdUpdated(state, action: PayloadAction<SøknadState['utenlandsopphold']>) {
             state.utenlandsopphold = action.payload;
+        },
+        kontaktOgForNav(state, action: PayloadAction<SøknadState['kontaktOgForNav']>) {
+            state.kontaktOgForNav = action.payload;
         },
     },
 });

@@ -57,6 +57,26 @@ export const sendSøknad = createAsyncThunk<
             pensjonsordning: søknad.inntekt.pensjonsInntekt.map((p) => ({ ...p, beløp: Number(p.beløp) })),
             sumInntektOgPensjon: 1000.5,
             harSosialStønad: søknad.inntekt.harMottattSosialstønad!,
+
+            /* 
+            nye:
+                forventetInntekt: null,
+                tjenerPengerIUtlandet: null,
+                tjenerPengerIUtlandetBeløp: null,
+                andreYtelserINav: null,
+                andreYtelserINavYtelse: null,
+                andreYtelserINavBeløp: null,
+                søktAndreYtelserIkkeBehandlet: null,
+                søktAndreYtelserIkkeBehandletBegrunnelse: null,
+                harMottattSosialstønad: null,
+                sosialStønadBeløp: null,
+                trygdeytelserIUtlandet: null,
+                trygdeytelserIUtlandetBeløp: null,
+                trygdeytelserIUtlandetType: null,
+                trygdeytelserIUtlandetFraHvem: null,
+                pensjonsInntekt: [],
+                mottarPensjon: null,
+            */
         },
         formue: {
             //TODO: Må endres en god del
@@ -106,6 +126,15 @@ export const sendSøknad = createAsyncThunk<
             harFullmektigMøtt: true,
             erPassSjekket: true,
             merknader: 'merknad',
+
+            /*
+            nye:
+            erTelefonnummerKorrekt: Nullable<boolean>;
+            nyttTelefonnummer: Nullable<string>;
+            svarform: Nullable<Svarform>;
+            harSøkerMøttPersonlig: Nullable<boolean>;
+            harFullmektigEllerVerge: Nullable<Vergemål>;
+            erPassSjekket: Nullable<boolean>;*/
         },
     };
 
