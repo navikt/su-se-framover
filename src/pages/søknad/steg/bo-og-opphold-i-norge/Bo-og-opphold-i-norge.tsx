@@ -114,6 +114,9 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     delerBoligMedPersonOver18: val,
+                                    delerBoligMed: null,
+                                    ektemakeEllerSamboerUnder67År: null,
+                                    ektemakeEllerSamboerUførFlyktning: null,
                                 });
                             }}
                         />

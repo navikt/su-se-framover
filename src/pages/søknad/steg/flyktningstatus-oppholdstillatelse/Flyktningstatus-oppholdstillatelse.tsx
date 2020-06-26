@@ -147,6 +147,10 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 formik.setValues({
                                     ...formik.values,
                                     erNorskStatsborger: val,
+                                    harOppholdstillatelse: null,
+                                    typeOppholdstillatelse: null,
+                                    oppholdstillatelseMindreEnnTreMåneder: null,
+                                    oppholdstillatelseForlengelse: null,
                                 })
                             }
                         />
@@ -161,6 +165,9 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                     formik.setValues({
                                         ...formik.values,
                                         harOppholdstillatelse: val,
+                                        typeOppholdstillatelse: null,
+                                        oppholdstillatelseMindreEnnTreMåneder: null,
+                                        oppholdstillatelseForlengelse: null,
                                     })
                                 }
                             />
@@ -185,6 +192,8 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                     formik.setValues({
                                         ...formik.values,
                                         typeOppholdstillatelse: value,
+                                        oppholdstillatelseMindreEnnTreMåneder: null,
+                                        oppholdstillatelseForlengelse: null,
                                     });
                                 }}
                                 checked={formik.values.typeOppholdstillatelse?.toString()}
@@ -202,6 +211,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                     formik.setValues({
                                         ...formik.values,
                                         oppholdstillatelseMindreEnnTreMåneder: val,
+                                        oppholdstillatelseForlengelse: null,
                                     })
                                 }
                             />
@@ -236,6 +246,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 formik.setValues({
                                     ...formik.values,
                                     statsborgerskapAndreLand: val,
+                                    statsborgerskapAndreLandFritekst: null,
                                 })
                             }
                         />
@@ -244,6 +255,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 id="statsborgerskapAndreLandFritekst"
                                 name="statsborgerskapAndreLandFritekst"
                                 label={<FormattedMessage id="input.statsborger.andre.land.fritekst.label" />}
+                                feil={formik.errors.statsborgerskapAndreLandFritekst}
                                 value={formik.values.statsborgerskapAndreLandFritekst || ''}
                                 onChange={formik.handleChange}
                             />
