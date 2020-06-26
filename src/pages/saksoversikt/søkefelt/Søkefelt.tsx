@@ -1,9 +1,9 @@
 import React from 'react';
-import { Input } from 'nav-frontend-skjema';
-import styles from '*.module.less';
-import * as personSlice from '~features/person/person.slice';
-import { useAppDispatch } from '~redux/Store';
 import { useHistory } from 'react-router-dom';
+import { Input } from 'nav-frontend-skjema';
+
+import { useAppDispatch } from '~redux/Store';
+import * as personSlice from '~features/person/person.slice';
 
 const Søkefelt = () => {
     const dispatch = useAppDispatch();
@@ -12,7 +12,6 @@ const Søkefelt = () => {
 
     return (
         <Input
-            className={styles.search}
             name="fnr"
             placeholder="Fødselsnummer"
             maxLength={11}
