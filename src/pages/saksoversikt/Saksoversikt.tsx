@@ -1,6 +1,6 @@
 import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { Route, useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import { Route, useHistory, useParams, useRouteMatch, Switch } from 'react-router-dom';
 import AlertStripe from 'nav-frontend-alertstriper';
 
 import { PersonCard } from '@navikt/nap-person-card';
@@ -14,10 +14,12 @@ import { useAppSelector } from '~redux/Store';
 
 import messages from './saksoversikt-nb';
 import Søkefelt from './søkefelt/Søkefelt';
+import Vilkår from './vilkår/Vilkår';
+import { SaksbehandligMenyValg } from './types';
 import styles from './saksoversikt.module.less';
 
 const Saksoversikt = () => {
-    const { meny } = useParams<{ meny: string }>();
+    const { meny } = useParams<{ meny: SaksbehandligMenyValg }>();
     const { path } = useRouteMatch();
     const { pending, søker, error } = useAppSelector((s) => s.søker);
     const history = useHistory();
@@ -61,19 +63,19 @@ const Saksoversikt = () => {
                                 },
                                 {
                                     label: 'Søknad',
-                                    active: meny === 'soknad',
+                                    active: meny === SaksbehandligMenyValg.Søknad,
                                 },
                                 {
                                     label: 'Vilkår',
-                                    active: meny === 'vilkar',
+                                    active: meny === SaksbehandligMenyValg.Vilkår,
                                 },
                                 {
                                     label: 'Behandlig',
-                                    active: meny === 'behandlig',
+                                    active: meny === SaksbehandligMenyValg.Behandlig,
                                 },
                                 {
                                     label: 'Vedtak',
-                                    active: meny === 'vedtak',
+                                    active: meny === SaksbehandligMenyValg.Vedtak,
                                 },
                             ]}
                             onClick={(index) => {
@@ -97,11 +99,15 @@ const Saksoversikt = () => {
                             }}
                         />
                         <div>
-                            <Route path={path}>Sak</Route>
-                            <Route path={`${path}/soknad`}>soknad</Route>
-                            <Route path={`${path}/vilkar`}>vilkår</Route>
-                            <Route path={`${path}/behandling`}>behandling</Route>
-                            <Route path={`${path}/vedtak`}>vedtak</Route>
+                            <Switch>
+                                <Route path={`${path}/${SaksbehandligMenyValg.Søknad}`}>soknad</Route>
+                                <Route path={`${path}/${SaksbehandligMenyValg.Vilkår}`}>
+                                    <Vilkår />
+                                </Route>
+                                <Route path={`${path}/${SaksbehandligMenyValg.Behandlig}`}>behandling</Route>
+                                <Route path={`${path}/${SaksbehandligMenyValg.Vedtak}`}>vedtak</Route>
+                                <Route path={path}>Sak</Route>
+                            </Switch>
                         </div>
                     </div>
                 </>
