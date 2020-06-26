@@ -93,16 +93,6 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                     : 'Ubesvart'
                             }
                         />
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.folkereg-adresse.label" />}
-                            verdi={
-                                søknadFraStore.boOgOpphold.borPåFolkeregistrertAdresse
-                                    ? 'Ja'
-                                    : søknadFraStore.boOgOpphold.borPåFolkeregistrertAdresse === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
-                        />
                     </Ekspanderbartpanel>
 
                     <Ekspanderbartpanel

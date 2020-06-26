@@ -84,6 +84,7 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             formik.setValues({
                                 ...formik.values,
                                 harSøkerMøttPersonlig: val,
+                                harFullmektigEllerVerge: null,
                             });
                         }}
                     />
