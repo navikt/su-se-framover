@@ -163,6 +163,56 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                     : 'Ubesvart'
                             }
                         />
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.delerBoligMedPersonOver18.label" />}
+                            verdi={
+                                søknadFraStore.boOgOpphold.borOgOppholderSegINorge
+                                    ? 'Ja'
+                                    : søknadFraStore.boOgOpphold.borOgOppholderSegINorge === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+
+                        {søknadFraStore.boOgOpphold.delerBoligMedPersonOver18 && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.delerBoligMed.label" />}
+                                verdi={
+                                    søknadFraStore.boOgOpphold.delerBoligMed === 'ektemake-eller-samboer'
+                                        ? 'Ektemake eller samboer'
+                                        : søknadFraStore.boOgOpphold.delerBoligMed === 'voksne-barn'
+                                        ? 'Voksne barn'
+                                        : søknadFraStore.boOgOpphold.delerBoligMed === 'andre'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.boOgOpphold.delerBoligMed === 'ektemake-eller-samboer' && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.ektemakeEllerSamboerUnder67År.label" />}
+                                verdi={
+                                    søknadFraStore.boOgOpphold.ektemakeEllerSamboerUnder67År
+                                        ? 'Ja'
+                                        : søknadFraStore.boOgOpphold.ektemakeEllerSamboerUnder67År
+                                        ? 'Nei'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.boOgOpphold.ektemakeEllerSamboerUnder67År && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.ektemakeEllerSamboerUførFlyktning.label" />}
+                                verdi={
+                                    søknadFraStore.boOgOpphold.ektemakeEllerSamboerUførFlyktning
+                                        ? 'Ja'
+                                        : søknadFraStore.boOgOpphold.ektemakeEllerSamboerUførFlyktning
+                                        ? 'Nei'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
                     </Ekspanderbartpanel>
 
                     <Ekspanderbartpanel
