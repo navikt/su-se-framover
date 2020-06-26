@@ -197,8 +197,6 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const save = (values: FormData) => {
         dispatch(
             søknadSlice.actions.formueUpdated({
-                // harFormue: values.harFormue,
-                //beløpFormue: values.harFormue && values.beløpFormue ? Number.parseFloat(values.beløpFormue) : null,
                 eierBolig: values.eierBolig,
                 borIBolig: values.borIBolig,
                 verdiPåBolig: values.verdiPåBolig,
@@ -259,7 +257,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
-
+    console.log(formik.values);
     return (
         <div className={sharedStyles.container}>
             <RawIntlProvider value={intl}>
@@ -285,6 +283,12 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     eierBolig: e,
+                                    borIBolig: null,
+                                    verdiPåBolig: null,
+                                    boligBrukesTil: null,
+                                    harDepositumskonto: null,
+                                    depositumsBeløp: null,
+                                    kontonummer: null,
                                 })
                             }
                         />
@@ -299,6 +303,8 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     formik.setValues({
                                         ...formik.values,
                                         borIBolig: e,
+                                        verdiPåBolig: null,
+                                        boligBrukesTil: null,
                                     })
                                 }
                             />
@@ -334,6 +340,8 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     formik.setValues({
                                         ...formik.values,
                                         harDepositumskonto: e,
+                                        depositumsBeløp: null,
+                                        kontonummer: null,
                                     })
                                 }
                             />
@@ -369,6 +377,8 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     formik.setValues({
                                         ...formik.values,
                                         eierMerEnnEnBolig: e,
+                                        verdiPåEiendom: null,
+                                        eiendomBrukesTil: null,
                                     })
                                 }
                             />
@@ -403,6 +413,8 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     eierKjøretøy: e,
+                                    verdiPåKjøretøy: null,
+                                    kjøretøyDeEier: null,
                                 })
                             }
                         />
@@ -436,6 +448,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     harInnskuddPåKonto: e,
+                                    innskuddsBeløp: null,
                                 })
                             }
                         />
@@ -460,6 +473,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     harVerdipapir: e,
+                                    verdipapirBeløp: null,
                                 })
                             }
                         />
@@ -484,6 +498,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     skylderNoenMegPenger: e,
+                                    skylderNoenMegPengerBeløp: null,
                                 })
                             }
                         />
@@ -508,6 +523,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     harKontanterOver1000: e,
+                                    kontanterBeløp: null,
                                 })
                             }
                         />
