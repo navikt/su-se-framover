@@ -34,7 +34,6 @@ export interface Søknad {
     };
     boforhold: {
         borOgOppholderSegINorge: boolean;
-        borPåFolkeregistrertAdresse: boolean;
         delerBoligMedVoksne: boolean;
         delerBoligMed: Nullable<string>;
         ektemakeEllerSamboerUnder67År: Nullable<boolean>;

@@ -42,7 +42,6 @@ export const sendSøknad = createAsyncThunk<
         },
         boforhold: {
             borOgOppholderSegINorge: søknad.boOgOpphold.borOgOppholderSegINorge!,
-            borPåFolkeregistrertAdresse: søknad.boOgOpphold.borPåFolkeregistrertAdresse!,
             delerBoligMedVoksne: søknad.boOgOpphold.delerBoligMedPersonOver18!,
             delerBoligMed: søknad.boOgOpphold.delerBoligMed,
             ektemakeEllerSamboerUnder67År: søknad.boOgOpphold.ektemakeEllerSamboerUnder67År,
