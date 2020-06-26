@@ -53,7 +53,7 @@ export const sendSøknad = createAsyncThunk<
             planlagtePerioder: søknad.utenlandsopphold.skalReiseDatoer,
         },
         inntektOgPensjon: {
-            forventetInntekt: Number(søknad.inntekt.forventetInntekt!),
+            forventetInntekt: søknad.inntekt.harForventetInntekt ? Number(søknad.inntekt.forventetInntekt) : null,
             tjenerPengerIUtlandetBeløp: søknad.inntekt.tjenerPengerIUtlandet
                 ? Number(søknad.inntekt.tjenerPengerIUtlandetBeløp)
                 : null,
@@ -77,6 +77,7 @@ export const sendSøknad = createAsyncThunk<
             pensjon: søknad.inntekt.pensjonsInntekt.map((p) => ({ ...p, beløp: Number(p.beløp) })),
         },
         formue: {
+            borIBolig: søknad.formue.eierBolig ? søknad.formue.borIBolig : null,
             verdiPåBolig: søknad.formue.borIBolig ? null : Number(søknad.formue.verdiPåBolig),
             boligBrukesTil: søknad.formue.borIBolig ? null : søknad.formue.boligBrukesTil,
 

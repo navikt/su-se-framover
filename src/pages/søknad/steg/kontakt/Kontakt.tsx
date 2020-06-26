@@ -35,7 +35,6 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const kontaktOgForNavFraStore = useAppSelector((s) => s.soknad.kontaktOgForNav);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
-    const [passSjekket, setPassSjekket] = React.useState<null | boolean>(null);
 
     const save = (values: FormData) =>
         dispatch(
@@ -118,15 +117,6 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                     {formik.values.harFullmektigEllerVerge === 'fullmektig' && (
                         <AlertStripe type="advarsel">Husk å legge ved legeattest/legeerklæring</AlertStripe>
                     )}
-
-                    <JaNeiSpørsmål
-                        id="erPassSjekket"
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="input.erPassSjekket.label" />}
-                        feil={null}
-                        state={passSjekket}
-                        onChange={(val) => setPassSjekket(val)}
-                    />
 
                     <Feiloppsummering
                         className={sharedStyles.feiloppsummering}

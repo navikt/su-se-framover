@@ -16,7 +16,6 @@ export interface SøknadState {
     };
     boOgOpphold: {
         borOgOppholderSegINorge: Nullable<boolean>;
-        borPåFolkeregistrertAdresse: Nullable<boolean>;
         delerBoligMedPersonOver18: Nullable<boolean>;
         delerBoligMed: Nullable<DelerBoligMed>;
         ektemakeEllerSamboerUnder67År: Nullable<boolean>;
@@ -46,6 +45,7 @@ export interface SøknadState {
         kontanterBeløp: Nullable<string>;
     };
     inntekt: {
+        harForventetInntekt: Nullable<boolean>;
         forventetInntekt: Nullable<string>;
         tjenerPengerIUtlandet: Nullable<boolean>;
         tjenerPengerIUtlandetBeløp: Nullable<string>;
@@ -89,7 +89,6 @@ const initialState: SøknadState = {
     },
     boOgOpphold: {
         borOgOppholderSegINorge: null,
-        borPåFolkeregistrertAdresse: null,
         delerBoligMedPersonOver18: null,
         delerBoligMed: null,
         ektemakeEllerSamboerUnder67År: null,
@@ -119,6 +118,7 @@ const initialState: SøknadState = {
         kontanterBeløp: null,
     },
     inntekt: {
+        harForventetInntekt: null,
         forventetInntekt: null,
         tjenerPengerIUtlandet: null,
         tjenerPengerIUtlandetBeløp: null,

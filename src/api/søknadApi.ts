@@ -45,7 +45,7 @@ export interface Søknad {
         planlagtePerioder: Nullable<Array<{ utreisedato: string; innreisedato: string }>>;
     };
     inntektOgPensjon: {
-        forventetInntekt: number;
+        forventetInntekt: Nullable<number>;
         tjenerPengerIUtlandetBeløp: Nullable<number>;
         andreYtelserINav: Nullable<string>;
         andreYtelserINavBeløp: Nullable<number>;
@@ -57,6 +57,7 @@ export interface Søknad {
         pensjon: Nullable<Array<{ ordning: string; beløp: number }>>;
     };
     formue: {
+        borIBolig: Nullable<boolean>;
         verdiPåBolig: Nullable<number>;
         boligBrukesTil: Nullable<string>;
         depositumsBeløp: Nullable<number>;
