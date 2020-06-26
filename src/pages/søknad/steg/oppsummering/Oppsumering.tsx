@@ -68,15 +68,85 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                             }
                         />
                         <OppsummeringsFelt
-                            label={<FormattedMessage id="input.oppholdstillatelse.label" />}
+                            label={<FormattedMessage id="input.norsk.statsborger.label" />}
                             verdi={
-                                søknadFraStore.flyktningstatus.harOppholdstillatelse
+                                søknadFraStore.flyktningstatus.erNorskStatsborger
                                     ? 'Ja'
-                                    : søknadFraStore.flyktningstatus.harOppholdstillatelse === false
+                                    : søknadFraStore.flyktningstatus.erNorskStatsborger === false
                                     ? 'Nei'
                                     : 'Ubesvart'
                             }
                         />
+
+                        {søknadFraStore.flyktningstatus.erNorskStatsborger === false && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.oppholdstillatelse.label" />}
+                                verdi={
+                                    søknadFraStore.flyktningstatus.harOppholdstillatelse
+                                        ? 'Ja'
+                                        : søknadFraStore.flyktningstatus.harOppholdstillatelse === false
+                                        ? 'Nei'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.flyktningstatus.harOppholdstillatelse && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.hvilken.oppholdstillatelse.label" />}
+                                verdi={
+                                    søknadFraStore.flyktningstatus.typeOppholdstillatelse === 'permanent'
+                                        ? 'Permanent'
+                                        : søknadFraStore.flyktningstatus.typeOppholdstillatelse === 'midlertidig'
+                                        ? 'Midlertidig'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.flyktningstatus.typeOppholdstillatelse === 'midlertidig' && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.midlertidig.oppholdstillatelse.opphører.label" />}
+                                verdi={
+                                    søknadFraStore.flyktningstatus.oppholdstillatelseMindreEnnTreMåneder
+                                        ? 'Ja'
+                                        : søknadFraStore.flyktningstatus.oppholdstillatelseMindreEnnTreMåneder === false
+                                        ? 'Nei'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.flyktningstatus.oppholdstillatelseMindreEnnTreMåneder && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.oppholdtillatelse.forlengelse.label" />}
+                                verdi={
+                                    søknadFraStore.flyktningstatus.oppholdstillatelseForlengelse
+                                        ? 'Ja'
+                                        : søknadFraStore.flyktningstatus.oppholdstillatelseForlengelse === false
+                                        ? 'Nei'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.statsborger.andre.land.label" />}
+                            verdi={
+                                søknadFraStore.flyktningstatus.statsborgerskapAndreLand
+                                    ? 'Ja'
+                                    : søknadFraStore.flyktningstatus.statsborgerskapAndreLand === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+
+                        {søknadFraStore.flyktningstatus.statsborgerskapAndreLand && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.statsborger.andre.land.fritekst.label" />}
+                                verdi={søknadFraStore.flyktningstatus.statsborgerskapAndreLandFritekst}
+                            />
+                        )}
                     </Ekspanderbartpanel>
 
                     <Ekspanderbartpanel
