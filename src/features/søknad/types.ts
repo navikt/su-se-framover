@@ -7,4 +7,4 @@ export type TypeOppholdstillatelse = 'permanent' | 'midlertidig';
 
 export type Vergemål = 'fullmektig' | 'verge';
 
-export type DelerBoligMed = 'ektemake-eller-samboer' | 'barn-over-18' | 'andre';
+export type DelerBoligMed = 'ektemake-eller-samboer' | 'voksne-barn' | 'andre';

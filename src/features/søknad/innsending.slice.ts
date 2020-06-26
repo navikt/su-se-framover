@@ -32,111 +32,78 @@ export const sendSøknad = createAsyncThunk<
             registrertFlyktning: søknad.flyktningstatus.erFlyktning!,
         },
         oppholdstillatelse: {
-            harVarigOpphold: søknad.flyktningstatus.harOppholdstillatelse!,
-            utløpsdato: null,
-            søktOmForlengelse: false,
+            erNorskStatsborger: søknad.flyktningstatus.erNorskStatsborger!,
+            harOppholdstillatelse: søknad.flyktningstatus.harOppholdstillatelse,
+            typeOppholdstillatelse: søknad.flyktningstatus.typeOppholdstillatelse,
+            oppholdstillatelseMindreEnnTreMåneder: søknad.flyktningstatus.oppholdstillatelseMindreEnnTreMåneder,
+            oppholdstillatelseForlengelse: søknad.flyktningstatus.oppholdstillatelseForlengelse,
+            statsborgerskapAndreLand: søknad.flyktningstatus.statsborgerskapAndreLand!,
+            statsborgerskapAndreLandFritekst: søknad.flyktningstatus.statsborgerskapAndreLandFritekst,
         },
         boforhold: {
-            borFastINorge: søknad.boOgOpphold.borOgOppholderSegINorge!,
-            borPåFolkeregistrertAdresse: søknad.boOgOpphold.borPåFolkeregistrertAdresse!,
-            // TODO: Legg til/ferdigstill boforhold
-            delerBolig: søknad.boOgOpphold.delerBoligMedPersonOver18!,
-            borSammenMed: [],
-            delerBoligMed: [],
+            borOgOppholderSegINorge: søknad.boOgOpphold.borOgOppholderSegINorge!,
+            delerBoligMedVoksne: søknad.boOgOpphold.delerBoligMedPersonOver18!,
+            delerBoligMed: søknad.boOgOpphold.delerBoligMed,
+            ektemakeEllerSamboerUnder67År: søknad.boOgOpphold.ektemakeEllerSamboerUnder67År,
+            ektemakeEllerSamboerUførFlyktning: søknad.boOgOpphold.ektemakeEllerSamboerUførFlyktning,
         },
         utenlandsopphold: {
             registrertePerioder: søknad.utenlandsopphold.harReistDatoer,
             planlagtePerioder: søknad.utenlandsopphold.skalReiseDatoer,
         },
         inntektOgPensjon: {
-            framsattKravAnnenYtelse: true,
-            framsattKravAnnenYtelseBegrunnelse: 'begrunnelse',
-            harInntekt: søknad.inntekt.forventetInntekt !== null,
-            inntektBeløp: søknad.inntekt.forventetInntekt === null ? null : Number(søknad.inntekt.forventetInntekt),
-            harPensjon: søknad.inntekt.mottarPensjon!,
-            pensjonsordning: søknad.inntekt.pensjonsInntekt.map((p) => ({ ...p, beløp: Number(p.beløp) })),
-            sumInntektOgPensjon: 1000.5,
-            harSosialStønad: søknad.inntekt.harMottattSosialstønad!,
-
-            /* 
-            inntekt:
-            nye:
-                forventetInntekt: null,
-                tjenerPengerIUtlandet: null,
-                tjenerPengerIUtlandetBeløp: null,
-                andreYtelserINav: null,
-                andreYtelserINavYtelse: null,
-                andreYtelserINavBeløp: null,
-                søktAndreYtelserIkkeBehandlet: null,
-                søktAndreYtelserIkkeBehandletBegrunnelse: null,
-                harMottattSosialstønad: null,
-                sosialStønadBeløp: null,
-                trygdeytelserIUtlandet: null,
-                trygdeytelserIUtlandetBeløp: null,
-                trygdeytelserIUtlandetType: null,
-                trygdeytelserIUtlandetFraHvem: null,
-                pensjonsInntekt: [],
-                mottarPensjon: null,
-            */
+            forventetInntekt: søknad.inntekt.harForventetInntekt ? Number(søknad.inntekt.forventetInntekt) : null,
+            tjenerPengerIUtlandetBeløp: søknad.inntekt.tjenerPengerIUtlandet
+                ? Number(søknad.inntekt.tjenerPengerIUtlandetBeløp)
+                : null,
+            andreYtelserINav: søknad.inntekt.andreYtelserINav ? søknad.inntekt.andreYtelserINavYtelse : null,
+            andreYtelserINavBeløp: søknad.inntekt.andreYtelserINav
+                ? Number(søknad.inntekt.andreYtelserINavBeløp)
+                : null,
+            søktAndreYtelserIkkeBehandletBegrunnelse: søknad.inntekt.søktAndreYtelserIkkeBehandlet
+                ? søknad.inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
+                : null,
+            sosialstønadBeløp: søknad.inntekt.harMottattSosialstønad ? Number(søknad.inntekt.sosialStønadBeløp) : null,
+            trygdeytelserIUtlandetBeløp: søknad.inntekt.trygdeytelserIUtlandet
+                ? Number(søknad.inntekt.trygdeytelserIUtlandetBeløp)
+                : null,
+            trygdeytelserIUtlandet: søknad.inntekt.trygdeytelserIUtlandet
+                ? søknad.inntekt.trygdeytelserIUtlandetType
+                : null,
+            trygdeytelserIUtlandetFra: søknad.inntekt.trygdeytelserIUtlandet
+                ? søknad.inntekt.trygdeytelserIUtlandetFraHvem
+                : null,
+            pensjon: søknad.inntekt.pensjonsInntekt.map((p) => ({ ...p, beløp: Number(p.beløp) })),
         },
         formue: {
-            //TODO: Må endres en god del
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            harFormueEiendom: søknad.formue.harFormue!, // Legg til felt
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            harFinansformue: søknad.formue.harFormue!, // Legg til felt
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            formueBeløp: Number(søknad.formue.beløpFormue!),
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            harAnnenFormue: søknad.formue.harFormue!, // Legg til felt
-            annenFormue: [{ typeFormue: 'type', skattetakst: 2.2 }], // Legg til felt
-            harDepositumskonto: søknad.formue.harDepositumskonto!,
+            borIBolig: søknad.formue.eierBolig ? søknad.formue.borIBolig : null,
+            verdiPåBolig: søknad.formue.borIBolig ? null : Number(søknad.formue.verdiPåBolig),
+            boligBrukesTil: søknad.formue.borIBolig ? null : søknad.formue.boligBrukesTil,
 
-            depositumBeløp: 100, // Legg til felt
-            /*
-            formue:
-            Nye:
-            eierBolig: true,
-            borIBolig: null,
-            verdiPåBolig: null,
-            boligBrukesTil: null,
-            eierMerEnnEnBolig: null,
-            harDepositumskonto: søknad.formue.harDepositumskonto!,
-            depositumsBeløp: null,
-            kontonummer: null,
-            verdiPåEiendom: null,
-            eiendomBrukesTil: null,
-            eierKjøretøy: null,
-            verdiPåKjøretøy: null,
-            kjøretøyDeEier: null,
-            harInnskuddPåKonto: null,
-            innskuddsBeløp: null,
-            harVerdipapir: null,
-            verdipapirBeløp: null,
-            skylderNoenMegPenger: null,
-            skylderNoenMegPengerBeløp: null,
-            harKontanterOver1000: null,
-            kontanterBeløp: null*/
+            depositumsBeløp: søknad.formue.harDepositumskonto ? Number(søknad.formue.depositumsBeløp) : null,
+            kontonummer: søknad.formue.harDepositumskonto ? søknad.formue.kontonummer : null,
+
+            verdiPåEiendom: søknad.formue.eierMerEnnEnBolig ? Number(søknad.formue.verdiPåEiendom) : null,
+            eiendomBrukesTil: søknad.formue.eierMerEnnEnBolig ? søknad.formue.eiendomBrukesTil : null,
+
+            verdiPåKjøretøy: søknad.formue.eierKjøretøy ? Number(søknad.formue.verdiPåEiendom) : null,
+            kjøretøyDeEier: søknad.formue.eierKjøretøy ? søknad.formue.kjøretøyDeEier : null,
+
+            innskuddsBeløp: søknad.formue.harInnskuddPåKonto ? Number(søknad.formue.innskuddsBeløp) : null,
+            verdipapirBeløp: søknad.formue.harVerdipapir ? Number(søknad.formue.verdipapirBeløp) : null,
+
+            skylderNoenMegPengerBeløp: søknad.formue.skylderNoenMegPenger
+                ? Number(søknad.formue.skylderNoenMegPengerBeløp)
+                : null,
+            kontanterBeløp: søknad.formue.harKontanterOver1000 ? Number(søknad.formue.kontanterBeløp) : null,
         },
         forNav: {
-            målform: 'bokmål',
-            søkerMøttPersonlig: true,
-            harFullmektigMøtt: true,
-            erPassSjekket: true,
-            merknader: 'merknad',
-
-            /*
-            kontaktOgForNav
-            nye:
-            erTelefonnummerKorrekt: Nullable<boolean>;
-            nyttTelefonnummer: Nullable<string>;
-            harSøkerMøttPersonlig: Nullable<boolean>;
-            harFullmektigEllerVerge: Nullable<Vergemål>;
-            erPassSjekket: Nullable<boolean>;*/
+            harFullmektigEllerVerge:
+                søknad.kontaktOgForNav.harFullmektigEllerVerge === 'fullmektig'
+                    ? 'fullmektig'
+                    : søknad.kontaktOgForNav.harFullmektigEllerVerge === 'verge'
+                    ? 'verge'
+                    : null,
         },
     };
 

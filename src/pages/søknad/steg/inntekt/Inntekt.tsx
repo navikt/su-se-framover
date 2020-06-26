@@ -17,6 +17,7 @@ import { Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
 
 interface FormData {
+    harForventetInntekt: Nullable<boolean>;
     forventetInntekt: Nullable<string>;
     harMottattSosialstønad: Nullable<boolean>;
     mottarPensjon: Nullable<boolean>;
@@ -36,9 +37,21 @@ interface FormData {
 }
 
 const schema = yup.object<FormData>({
-    forventetInntekt: (yup.number().nullable().integer().min(0).label('Inntekt').required() as unknown) as yup.Schema<
-        Nullable<string>
-    >,
+    harForventetInntekt: yup.boolean().nullable().required(),
+    forventetInntekt: yup
+        .number()
+        .nullable()
+        .defined()
+        .when('harForventetInntekt', {
+            is: true,
+            then: yup
+                .number()
+                .typeError('Forventet inntekt må være et tall')
+                .label('Forventet inntekt')
+                .nullable(false)
+                .positive(),
+            otherwise: yup.number(),
+        }) as yup.Schema<Nullable<string>>,
     harMottattSosialstønad: yup.boolean().nullable().required(),
     sosialStønadBeløp: yup
         .number()
@@ -158,6 +171,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
+            harForventetInntekt: inntektFraStore.harForventetInntekt,
             forventetInntekt: inntektFraStore.forventetInntekt,
             harMottattSosialstønad: inntektFraStore.harMottattSosialstønad,
             mottarPensjon: inntektFraStore.mottarPensjon,
@@ -186,6 +200,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const save = (values: FormData) =>
         dispatch(
             søknadSlice.actions.inntektUpdated({
+                harForventetInntekt: values.harForventetInntekt,
                 forventetInntekt: values.forventetInntekt,
                 harMottattSosialstønad: values.harMottattSosialstønad,
                 mottarPensjon: values.mottarPensjon,
@@ -284,14 +299,31 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                     }}
                 >
                     <div className={sharedStyles.formContainer}>
-                        <Input
-                            id="forventetInntekt"
-                            feil={formik.errors.forventetInntekt}
+                        <JaNeiSpørsmål
+                            id="harForventetInntekt"
                             className={sharedStyles.sporsmal}
-                            value={formik.values.forventetInntekt || ''}
-                            label={<FormattedMessage id="input.inntekt.forventetInntekt" />}
-                            onChange={formik.handleChange}
+                            legend={<FormattedMessage id="input.harForventetInntekt.label" />}
+                            feil={formik.errors.harForventetInntekt}
+                            state={formik.values.harForventetInntekt}
+                            onChange={(val) =>
+                                formik.setValues({
+                                    ...formik.values,
+                                    harForventetInntekt: val,
+                                    forventetInntekt: null,
+                                })
+                            }
                         />
+
+                        {formik.values.harForventetInntekt && (
+                            <Input
+                                id="forventetInntekt"
+                                feil={formik.errors.forventetInntekt}
+                                className={sharedStyles.sporsmal}
+                                value={formik.values.forventetInntekt || ''}
+                                label={<FormattedMessage id="input.forventetInntekt.label" />}
+                                onChange={formik.handleChange}
+                            />
+                        )}
 
                         <JaNeiSpørsmål
                             id="tjenerPengerIUtlandet"
@@ -303,6 +335,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     tjenerPengerIUtlandet: val,
+                                    tjenerPengerIUtlandetBeløp: null,
                                 })
                             }
                         />
@@ -328,6 +361,8 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     andreYtelserINav: val,
+                                    andreYtelserINavYtelse: null,
+                                    andreYtelserINavBeløp: null,
                                 })
                             }
                         />
@@ -364,6 +399,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     søktAndreYtelserIkkeBehandlet: val,
+                                    søktAndreYtelserIkkeBehandletBegrunnelse: null,
                                 })
                             }
                         />
@@ -389,6 +425,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     harMottattSosialstønad: val,
+                                    sosialStønadBeløp: null,
                                 })
                             }
                         />
@@ -413,6 +450,9 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     trygdeytelserIUtlandet: val,
+                                    trygdeytelserIUtlandetBeløp: null,
+                                    trygdeytelserIUtlandetType: null,
+                                    trygdeytelserIUtlandetFraHvem: null,
                                 })
                             }
                         />

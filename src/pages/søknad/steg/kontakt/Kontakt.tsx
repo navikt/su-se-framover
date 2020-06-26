@@ -35,7 +35,6 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const kontaktOgForNavFraStore = useAppSelector((s) => s.soknad.kontaktOgForNav);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
-    const [passSjekket, setPassSjekket] = React.useState<null | boolean>(null);
 
     const save = (values: FormData) =>
         dispatch(
@@ -68,8 +67,8 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         formik.handleSubmit(e);
                     }}
                 >
-                    <p>12345678</p>
-                    <p>Er dette feil, så fiks</p>
+                    <p>______________________</p>
+                    <h1>tlf nummer: 12345678</h1>
 
                     <p>______________________</p>
                     <h1>Søker er digital</h1>
@@ -85,6 +84,7 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             formik.setValues({
                                 ...formik.values,
                                 harSøkerMøttPersonlig: val,
+                                harFullmektigEllerVerge: null,
                             });
                         }}
                     />
@@ -118,15 +118,6 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                     {formik.values.harFullmektigEllerVerge === 'fullmektig' && (
                         <AlertStripe type="advarsel">Husk å legge ved legeattest/legeerklæring</AlertStripe>
                     )}
-
-                    <JaNeiSpørsmål
-                        id="erPassSjekket"
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="input.erPassSjekket.label" />}
-                        feil={null}
-                        state={passSjekket}
-                        onChange={(val) => setPassSjekket(val)}
-                    />
 
                     <Feiloppsummering
                         className={sharedStyles.feiloppsummering}

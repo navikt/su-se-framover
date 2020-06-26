@@ -1,5 +1,6 @@
 export default {
-    'input.inntekt.forventetInntekt': 'Forventet inntekt (arbeidsinntekt)',
+    'input.harForventetInntekt.label': 'Forventer du å ha arbeidsinntekt fremover?',
+    'input.forventetInntekt.label': 'Forventet arbeidsinntekt i kroner',
     'input.mottarPensjon.label': 'Har du tjenestepensjon og/eller pensjonssparing?',
     'input.pensjonsOrdning.label': 'Pensjonsgiver',
     'input.pensjonsBeløp.label': 'Beløp',

@@ -17,7 +17,6 @@ import { useI18n } from '../../../../lib/hooks';
 
 interface FormData {
     borOgOppholderSegINorge: Nullable<boolean>;
-    borPåFolkeregistrertAdresse: Nullable<boolean>;
     delerBoligMedPersonOver18: Nullable<boolean>;
     delerBoligMed: Nullable<DelerBoligMed>;
     ektemakeEllerSamboerUnder67År: Nullable<boolean>;
@@ -26,7 +25,6 @@ interface FormData {
 
 const schema = yup.object<FormData>({
     borOgOppholderSegINorge: yup.boolean().nullable().required(),
-    borPåFolkeregistrertAdresse: yup.boolean().nullable().required(),
     delerBoligMedPersonOver18: yup.boolean().nullable().required(),
     delerBoligMed: yup
         .mixed<DelerBoligMed>()
@@ -36,7 +34,7 @@ const schema = yup.object<FormData>({
             then: yup
                 .mixed<DelerBoligMed>()
                 .nullable()
-                .oneOf<DelerBoligMed>(['ektemake-eller-samboer', 'barn-over-18', 'andre'])
+                .oneOf<DelerBoligMed>(['ektemake-eller-samboer', 'voksne-barn', 'andre'])
                 .required(),
         }),
     ektemakeEllerSamboerUnder67År: yup.boolean().nullable().defined().when('delerBoligMed', {
@@ -59,7 +57,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
         dispatch(
             søknadSlice.actions.boOgOppholdUpdated({
                 borOgOppholderSegINorge: values.borOgOppholderSegINorge,
-                borPåFolkeregistrertAdresse: values.borPåFolkeregistrertAdresse,
                 delerBoligMedPersonOver18: values.delerBoligMedPersonOver18,
                 delerBoligMed: values.delerBoligMed,
                 ektemakeEllerSamboerUnder67År: values.ektemakeEllerSamboerUnder67År,
@@ -70,7 +67,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const formik = useFormik<FormData>({
         initialValues: {
             borOgOppholderSegINorge: boOgOppholdFraStore.borOgOppholderSegINorge,
-            borPåFolkeregistrertAdresse: boOgOppholdFraStore.borPåFolkeregistrertAdresse,
             delerBoligMedPersonOver18: boOgOppholdFraStore.delerBoligMedPersonOver18,
             delerBoligMed: boOgOppholdFraStore.delerBoligMed,
             ektemakeEllerSamboerUnder67År: boOgOppholdFraStore.ektemakeEllerSamboerUnder67År,
@@ -107,19 +103,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             }}
                         />
                         {formik.values.borOgOppholderSegINorge === false && <AnbefalerIkkeSøke />}
-                        <JaNeiSpørsmål
-                            id="borPåFolkeregistrertAdresse"
-                            className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.folkereg-adresse.label" />}
-                            feil={null}
-                            state={formik.values.borPåFolkeregistrertAdresse}
-                            onChange={(val) => {
-                                formik.setValues({
-                                    ...formik.values,
-                                    borPåFolkeregistrertAdresse: val,
-                                });
-                            }}
-                        />
+
                         <JaNeiSpørsmål
                             id="delerBoligMedPersonOver18"
                             className={sharedStyles.sporsmal}
@@ -130,6 +114,9 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     delerBoligMedPersonOver18: val,
+                                    delerBoligMed: null,
+                                    ektemakeEllerSamboerUnder67År: null,
+                                    ektemakeEllerSamboerUførFlyktning: null,
                                 });
                             }}
                         />
@@ -148,7 +135,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     },
                                     {
                                         label: <FormattedMessage id={'input.delerBoligMedBarnOver18.label'} />,
-                                        value: 'barn-over-18',
+                                        value: 'voksne-barn',
                                     },
                                     {
                                         label: <FormattedMessage id={'input.delerBoligMedAndreVoksne.label'} />,
@@ -159,6 +146,8 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     formik.setValues({
                                         ...formik.values,
                                         delerBoligMed: value,
+                                        ektemakeEllerSamboerUnder67År: null,
+                                        ektemakeEllerSamboerUførFlyktning: null,
                                     });
                                 }}
                                 checked={formik.values.delerBoligMed?.toString()}
@@ -175,6 +164,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     formik.setValues({
                                         ...formik.values,
                                         ektemakeEllerSamboerUnder67År: val,
+                                        ektemakeEllerSamboerUførFlyktning: null,
                                     });
                                 }}
                             />
