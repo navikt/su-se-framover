@@ -309,6 +309,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     harForventetInntekt: val,
+                                    forventetInntekt: null,
                                 })
                             }
                         />
@@ -334,6 +335,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     tjenerPengerIUtlandet: val,
+                                    tjenerPengerIUtlandetBeløp: null,
                                 })
                             }
                         />
@@ -359,6 +361,8 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     andreYtelserINav: val,
+                                    andreYtelserINavYtelse: null,
+                                    andreYtelserINavBeløp: null,
                                 })
                             }
                         />
@@ -395,6 +399,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     søktAndreYtelserIkkeBehandlet: val,
+                                    søktAndreYtelserIkkeBehandletBegrunnelse: null,
                                 })
                             }
                         />
@@ -420,6 +425,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     harMottattSosialstønad: val,
+                                    sosialStønadBeløp: null,
                                 })
                             }
                         />
@@ -444,6 +450,9 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     trygdeytelserIUtlandet: val,
+                                    trygdeytelserIUtlandetBeløp: null,
+                                    trygdeytelserIUtlandetType: null,
+                                    trygdeytelserIUtlandetFraHvem: null,
                                 })
                             }
                         />
