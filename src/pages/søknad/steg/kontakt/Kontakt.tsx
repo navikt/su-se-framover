@@ -68,8 +68,8 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         formik.handleSubmit(e);
                     }}
                 >
-                    <p>12345678</p>
-                    <p>Er dette feil, så fiks</p>
+                    <p>______________________</p>
+                    <h1>tlf nummer: 12345678</h1>
 
                     <p>______________________</p>
                     <h1>Søker er digital</h1>
