@@ -1,3 +1,4 @@
+import { Vergemål } from '~features/søknad/types';
 import apiClient, { ApiClientResult } from './apiClient';
 import { Nullable } from '~lib/types';
 
@@ -44,30 +45,33 @@ export interface Søknad {
         planlagtePerioder: Nullable<Array<{ utreisedato: string; innreisedato: string }>>;
     };
     inntektOgPensjon: {
-        framsattKravAnnenYtelse: boolean;
-        framsattKravAnnenYtelseBegrunnelse: string;
-        harInntekt: boolean;
-        inntektBeløp: Nullable<number>;
-        harPensjon: boolean;
-        pensjonsordning: Nullable<Array<{ ordning: string; beløp: number }>>;
-        sumInntektOgPensjon: Nullable<number>;
-        harSosialStønad: boolean;
+        forventetInntekt: number;
+        tjenerPengerIUtlandetBeløp: Nullable<number>;
+        andreYtelserINav: Nullable<string>;
+        andreYtelserINavBeløp: Nullable<number>;
+        søktAndreYtelserIkkeBehandletBegrunnelse: Nullable<string>;
+        sosialstønadBeløp: Nullable<number>;
+        trygdeytelserIUtlandetBeløp: Nullable<number>;
+        trygdeytelserIUtlandet: Nullable<string>;
+        trygdeytelserIUtlandetFra: Nullable<string>;
+        pensjon: Nullable<Array<{ ordning: string; beløp: number }>>;
     };
     formue: {
-        harFormueEiendom: boolean;
-        harFinansformue: boolean;
-        formueBeløp: number;
-        harAnnenFormue: boolean;
-        annenFormue: Array<{ typeFormue: string; skattetakst: number }>;
-        harDepositumskonto: boolean;
-        depositumBeløp: number;
+        verdiPåBolig: Nullable<number>;
+        boligBrukesTil: Nullable<string>;
+        depositumsBeløp: Nullable<number>;
+        kontonummer: Nullable<string>;
+        verdiPåEiendom: Nullable<number>;
+        eiendomBrukesTil: Nullable<string>;
+        verdiPåKjøretøy: Nullable<number>;
+        kjøretøyDeEier: Nullable<string>;
+        innskuddsBeløp: Nullable<number>;
+        verdipapirBeløp: Nullable<number>;
+        skylderNoenMegPengerBeløp: Nullable<number>;
+        kontanterBeløp: Nullable<number>;
     };
     forNav: {
-        målform: string;
-        søkerMøttPersonlig: boolean;
-        harFullmektigMøtt: boolean;
-        erPassSjekket: boolean;
-        merknader: Nullable<string>;
+        harFullmektigEllerVerge: Nullable<Vergemål>;
     };
 }
 
