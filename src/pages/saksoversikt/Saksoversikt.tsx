@@ -23,7 +23,8 @@ import styles from './saksoversikt.module.less';
 const Saksoversikt = () => {
     const { meny } = useParams<{ meny: SaksbehandligMenyValg }>();
     const { path } = useRouteMatch();
-    const søker = useAppSelector((s) => s.søker.søker);
+    const søkerFraStore = useAppSelector((s) => s.søker.søker);
+    const sakFraStore = useAppSelector((s) => s.sak.sak);
     const history = useHistory();
 
     return (
@@ -35,12 +36,12 @@ const Saksoversikt = () => {
             </Header>
 
             {pipe(
-                søker,
+                RemoteData.combine(søkerFraStore, sakFraStore),
                 RemoteData.fold(
                     () => <NavFrontendSpinner />,
                     () => <NavFrontendSpinner />,
-                    (error) => <AlertStripe type="feil">{error}</AlertStripe>,
-                    (data) => (
+                    (error) => <AlertStripe type="feil">{error.message}</AlertStripe>,
+                    ([data, sak]) => (
                         <>
                             <PersonCard
                                 fodselsnummer={data.fnr}
@@ -98,7 +99,7 @@ const Saksoversikt = () => {
                                         <Route path={`${path}/${SaksbehandligMenyValg.Vilkår}`}>vilkår</Route>
                                         <Route path={`${path}/${SaksbehandligMenyValg.Behandlig}`}>behandling</Route>
                                         <Route path={`${path}/${SaksbehandligMenyValg.Vedtak}`}>vedtak</Route>
-                                        <Route path={path}>Sak</Route>
+                                        <Route path={path}>{JSON.stringify(sak, undefined, 4)}</Route>
                                     </Switch>
                                 </div>
                             </div>
