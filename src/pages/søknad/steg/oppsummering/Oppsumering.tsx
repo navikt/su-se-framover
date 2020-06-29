@@ -20,6 +20,10 @@ const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | Reac
     </div>
 );
 
+const reverseStr = (str: string) => {
+    return str.split('-').reverse().join('-');
+};
+
 const Oppsummering = (props: { forrigeUrl: string }) => {
     const history = useHistory();
     const søknadFraStore = useAppSelector((s) => s.soknad);
@@ -75,15 +79,85 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                             }
                         />
                         <OppsummeringsFelt
-                            label={<FormattedMessage id="input.oppholdstillatelse.label" />}
+                            label={<FormattedMessage id="input.norsk.statsborger.label" />}
                             verdi={
-                                søknadFraStore.flyktningstatus.harOppholdstillatelse
+                                søknadFraStore.flyktningstatus.erNorskStatsborger
                                     ? 'Ja'
-                                    : søknadFraStore.flyktningstatus.harOppholdstillatelse === false
+                                    : søknadFraStore.flyktningstatus.erNorskStatsborger === false
                                     ? 'Nei'
                                     : 'Ubesvart'
                             }
                         />
+
+                        {søknadFraStore.flyktningstatus.erNorskStatsborger === false && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.oppholdstillatelse.label" />}
+                                verdi={
+                                    søknadFraStore.flyktningstatus.harOppholdstillatelse
+                                        ? 'Ja'
+                                        : søknadFraStore.flyktningstatus.harOppholdstillatelse === false
+                                        ? 'Nei'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.flyktningstatus.harOppholdstillatelse && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.hvilken.oppholdstillatelse.label" />}
+                                verdi={
+                                    søknadFraStore.flyktningstatus.typeOppholdstillatelse === 'permanent'
+                                        ? 'Permanent'
+                                        : søknadFraStore.flyktningstatus.typeOppholdstillatelse === 'midlertidig'
+                                        ? 'Midlertidig'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.flyktningstatus.typeOppholdstillatelse === 'midlertidig' && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.midlertidig.oppholdstillatelse.opphører.label" />}
+                                verdi={
+                                    søknadFraStore.flyktningstatus.oppholdstillatelseMindreEnnTreMåneder
+                                        ? 'Ja'
+                                        : søknadFraStore.flyktningstatus.oppholdstillatelseMindreEnnTreMåneder === false
+                                        ? 'Nei'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.flyktningstatus.oppholdstillatelseMindreEnnTreMåneder && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.oppholdtillatelse.forlengelse.label" />}
+                                verdi={
+                                    søknadFraStore.flyktningstatus.oppholdstillatelseForlengelse
+                                        ? 'Ja'
+                                        : søknadFraStore.flyktningstatus.oppholdstillatelseForlengelse === false
+                                        ? 'Nei'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.statsborger.andre.land.label" />}
+                            verdi={
+                                søknadFraStore.flyktningstatus.statsborgerskapAndreLand
+                                    ? 'Ja'
+                                    : søknadFraStore.flyktningstatus.statsborgerskapAndreLand === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+
+                        {søknadFraStore.flyktningstatus.statsborgerskapAndreLand && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.statsborger.andre.land.fritekst.label" />}
+                                verdi={søknadFraStore.flyktningstatus.statsborgerskapAndreLandFritekst}
+                            />
+                        )}
                     </Ekspanderbartpanel>
 
                     <Ekspanderbartpanel
@@ -100,6 +174,56 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                     : 'Ubesvart'
                             }
                         />
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.delerBoligMedPersonOver18.label" />}
+                            verdi={
+                                søknadFraStore.boOgOpphold.borOgOppholderSegINorge
+                                    ? 'Ja'
+                                    : søknadFraStore.boOgOpphold.borOgOppholderSegINorge === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+
+                        {søknadFraStore.boOgOpphold.delerBoligMedPersonOver18 && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.delerBoligMed.label" />}
+                                verdi={
+                                    søknadFraStore.boOgOpphold.delerBoligMed === 'ektemake-eller-samboer'
+                                        ? 'Ektemake eller samboer'
+                                        : søknadFraStore.boOgOpphold.delerBoligMed === 'voksne-barn'
+                                        ? 'Voksne barn'
+                                        : søknadFraStore.boOgOpphold.delerBoligMed === 'andre'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.boOgOpphold.delerBoligMed === 'ektemake-eller-samboer' && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.ektemakeEllerSamboerUnder67År.label" />}
+                                verdi={
+                                    søknadFraStore.boOgOpphold.ektemakeEllerSamboerUnder67År
+                                        ? 'Ja'
+                                        : søknadFraStore.boOgOpphold.ektemakeEllerSamboerUnder67År
+                                        ? 'Nei'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.boOgOpphold.ektemakeEllerSamboerUnder67År && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.ektemakeEllerSamboerUførFlyktning.label" />}
+                                verdi={
+                                    søknadFraStore.boOgOpphold.ektemakeEllerSamboerUførFlyktning
+                                        ? 'Ja'
+                                        : søknadFraStore.boOgOpphold.ektemakeEllerSamboerUførFlyktning
+                                        ? 'Nei'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
                     </Ekspanderbartpanel>
 
                     <Ekspanderbartpanel
@@ -116,16 +240,217 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                     : 'Ubesvart'
                             }
                         />
+
+                        {søknadFraStore.formue.eierBolig === false && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.depositumskonto.label" />}
+                                verdi={
+                                    søknadFraStore.formue.harDepositumskonto
+                                        ? 'Ja'
+                                        : søknadFraStore.formue.harDepositumskonto === false
+                                        ? 'Nei'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.formue.harDepositumskonto && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.depositumskonto.label" />}
+                                verdi={
+                                    søknadFraStore.formue.depositumsBeløp
+                                        ? søknadFraStore.formue.depositumsBeløp
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+                        {søknadFraStore.formue.harDepositumskonto && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.depositumskonto.label" />}
+                                verdi={
+                                    søknadFraStore.formue.kontonummer ? søknadFraStore.formue.kontonummer : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.formue.eierBolig && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.borIBolig.label" />}
+                                verdi={
+                                    søknadFraStore.formue.borIBolig
+                                        ? 'Ja'
+                                        : søknadFraStore.formue.borIBolig === false
+                                        ? 'Nei'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.formue.borIBolig === false && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.verdiPåBolig.label" />}
+                                verdi={
+                                    søknadFraStore.formue.verdiPåBolig ? søknadFraStore.formue.verdiPåBolig : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.formue.borIBolig === false && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.boligBrukesTil.label" />}
+                                verdi={
+                                    søknadFraStore.formue.boligBrukesTil
+                                        ? søknadFraStore.formue.boligBrukesTil
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.formue.eierBolig && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.eierMerEnnEnBolig.label" />}
+                                verdi={
+                                    søknadFraStore.formue.eierMerEnnEnBolig
+                                        ? 'Ja'
+                                        : søknadFraStore.formue.eierMerEnnEnBolig === false
+                                        ? 'Nei'
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.formue.eierMerEnnEnBolig && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.verdiPåEiendom.label" />}
+                                verdi={
+                                    søknadFraStore.formue.verdiPåEiendom
+                                        ? søknadFraStore.formue.verdiPåEiendom
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        {søknadFraStore.formue.eierMerEnnEnBolig && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.eiendomBrukesTil.label" />}
+                                verdi={
+                                    søknadFraStore.formue.eiendomBrukesTil
+                                        ? søknadFraStore.formue.eiendomBrukesTil
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
                         <OppsummeringsFelt
-                            label={<FormattedMessage id="input.depositumskonto.label" />}
+                            label={<FormattedMessage id="input.eierKjøretøy.label" />}
                             verdi={
-                                søknadFraStore.formue.harDepositumskonto
+                                søknadFraStore.formue.eierKjøretøy
                                     ? 'Ja'
-                                    : søknadFraStore.formue.harDepositumskonto === false
+                                    : søknadFraStore.formue.eierKjøretøy === false
                                     ? 'Nei'
                                     : 'Ubesvart'
                             }
                         />
+                        {søknadFraStore.formue.eierKjøretøy && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
+                                verdi={
+                                    søknadFraStore.formue.verdiPåKjøretøy
+                                        ? søknadFraStore.formue.verdiPåKjøretøy
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+                        {søknadFraStore.formue.eierKjøretøy && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.kjøretøyDeEier.label" />}
+                                verdi={
+                                    søknadFraStore.formue.kjøretøyDeEier
+                                        ? søknadFraStore.formue.kjøretøyDeEier
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.harInnskudPåKonto.label" />}
+                            verdi={
+                                søknadFraStore.formue.harInnskuddPåKonto
+                                    ? 'Ja'
+                                    : søknadFraStore.formue.harInnskuddPåKonto === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+                        {søknadFraStore.formue.harInnskuddPåKonto && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.innskuddsBeløp.label" />}
+                                verdi={
+                                    søknadFraStore.formue.innskuddsBeløp
+                                        ? søknadFraStore.formue.innskuddsBeløp
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.harVerdipapir.label" />}
+                            verdi={
+                                søknadFraStore.formue.harVerdipapir
+                                    ? 'Ja'
+                                    : søknadFraStore.formue.harVerdipapir === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+                        {søknadFraStore.formue.verdipapirBeløp && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.verdipapirBeløp.label" />}
+                                verdi={
+                                    søknadFraStore.formue.verdipapirBeløp
+                                        ? søknadFraStore.formue.verdipapirBeløp
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.skylderNoenMegPenger.label" />}
+                            verdi={
+                                søknadFraStore.formue.skylderNoenMegPenger
+                                    ? 'Ja'
+                                    : søknadFraStore.formue.skylderNoenMegPenger === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+                        {søknadFraStore.formue.skylderNoenMegPenger && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.skylderNoenMegPengerBeløp.label" />}
+                                verdi={
+                                    søknadFraStore.formue.skylderNoenMegPengerBeløp
+                                        ? søknadFraStore.formue.skylderNoenMegPengerBeløp
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.harKontanterOver1000.label" />}
+                            verdi={
+                                søknadFraStore.formue.harKontanterOver1000
+                                    ? 'Ja'
+                                    : søknadFraStore.formue.harKontanterOver1000 === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+                        {søknadFraStore.formue.harKontanterOver1000 && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.kontanterBeløp.label" />}
+                                verdi={
+                                    søknadFraStore.formue.kontanterBeløp
+                                        ? søknadFraStore.formue.kontanterBeløp
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
                     </Ekspanderbartpanel>
 
                     <Ekspanderbartpanel
@@ -133,23 +458,159 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                         tittel={intl.formatMessage({ id: 'panel.tittel.dinInntekt' })}
                     >
                         <OppsummeringsFelt
-                            label={<FormattedMessage id="input.harInntekt.label" />}
+                            label={<FormattedMessage id="input.harForventetInntekt.label" />}
                             verdi={
-                                søknadFraStore.inntekt.forventetInntekt === null
-                                    ? 'Ubesvart'
-                                    : Number(søknadFraStore.inntekt.forventetInntekt) > 0
+                                søknadFraStore.inntekt.harForventetInntekt
                                     ? 'Ja'
-                                    : 'Nei'
+                                    : søknadFraStore.inntekt.harForventetInntekt === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
                             }
                         />
 
                         {søknadFraStore.inntekt.forventetInntekt &&
                             Number(søknadFraStore.inntekt.forventetInntekt) > 0 && (
                                 <OppsummeringsFelt
-                                    label={<FormattedMessage id="input.inntekt.inntektBeløp" />}
+                                    label={<FormattedMessage id="input.forventetInntekt.label" />}
                                     verdi={søknadFraStore.inntekt.forventetInntekt}
                                 />
                             )}
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.tjenerPengerIUtlandet.label" />}
+                            verdi={
+                                søknadFraStore.inntekt.tjenerPengerIUtlandet
+                                    ? 'Ja'
+                                    : søknadFraStore.inntekt.tjenerPengerIUtlandet === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+                        {søknadFraStore.inntekt.tjenerPengerIUtlandet && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.tjenerPengerIUtlandetBeløp.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.tjenerPengerIUtlandetBeløp
+                                        ? søknadFraStore.inntekt.tjenerPengerIUtlandetBeløp
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.andreYtelserINAV.label" />}
+                            verdi={
+                                søknadFraStore.inntekt.andreYtelserINav
+                                    ? 'Ja'
+                                    : søknadFraStore.inntekt.andreYtelserINav === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+                        {søknadFraStore.inntekt.andreYtelserINav && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.andreYtelserINavYtelse.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.andreYtelserINavYtelse
+                                        ? søknadFraStore.inntekt.andreYtelserINavYtelse
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+                        {søknadFraStore.inntekt.andreYtelserINav && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.andreYtelserINavBeløp.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.andreYtelserINavBeløp
+                                        ? søknadFraStore.inntekt.andreYtelserINavBeløp
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.søktAndreYtelserIkkeBehandlet.label" />}
+                            verdi={
+                                søknadFraStore.inntekt.søktAndreYtelserIkkeBehandlet
+                                    ? 'Ja'
+                                    : søknadFraStore.inntekt.søktAndreYtelserIkkeBehandlet === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+
+                        {søknadFraStore.inntekt.søktAndreYtelserIkkeBehandlet && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.søktAndreYtelserIkkeBehandletBegrunnelse.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
+                                        ? søknadFraStore.inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.harMottattSosialstønad.label" />}
+                            verdi={
+                                søknadFraStore.inntekt.harMottattSosialstønad
+                                    ? 'Ja'
+                                    : søknadFraStore.inntekt.harMottattSosialstønad === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+                        {søknadFraStore.inntekt.harMottattSosialstønad && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.sosialStønadBeløp.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.sosialStønadBeløp
+                                        ? søknadFraStore.inntekt.sosialStønadBeløp
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.trygdeytelserIUtlandet.label" />}
+                            verdi={
+                                søknadFraStore.inntekt.trygdeytelserIUtlandet
+                                    ? 'Ja'
+                                    : søknadFraStore.inntekt.trygdeytelserIUtlandet === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+                        {søknadFraStore.inntekt.trygdeytelserIUtlandet && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.trygdeytelserIUtlandetBeløp.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.trygdeytelserIUtlandetBeløp
+                                        ? søknadFraStore.inntekt.trygdeytelserIUtlandetBeløp
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+                        {søknadFraStore.inntekt.trygdeytelserIUtlandet && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.trygdeytelserIUtlandetType.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.trygdeytelserIUtlandetType
+                                        ? søknadFraStore.inntekt.trygdeytelserIUtlandetType
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+                        {søknadFraStore.inntekt.trygdeytelserIUtlandet && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.trygdeytelserIUtlandetFraHvem.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.trygdeytelserIUtlandetFraHvem
+                                        ? søknadFraStore.inntekt.trygdeytelserIUtlandetFraHvem
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
 
                         <OppsummeringsFelt
                             label={<FormattedMessage id="input.mottarPensjon.label" />}
@@ -161,7 +622,6 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                     : 'Ubesvart'
                             }
                         />
-
                         {søknadFraStore.inntekt.mottarPensjon &&
                             søknadFraStore.inntekt.pensjonsInntekt.map((item, index) => (
                                 <div className={sharedStyles.inputFelterDiv} key={index}>
@@ -175,17 +635,6 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                     />
                                 </div>
                             ))}
-
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.harMottattSosialstønad.label" />}
-                            verdi={
-                                søknadFraStore.inntekt.harMottattSosialstønad
-                                    ? 'Ja'
-                                    : søknadFraStore.inntekt.harMottattSosialstønad === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
-                        />
                     </Ekspanderbartpanel>
 
                     <Ekspanderbartpanel
@@ -207,11 +656,11 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                 <div className={sharedStyles.inputFelterDiv} key={index}>
                                     <OppsummeringsFelt
                                         label={<FormattedMessage id="input.utreisedato" />}
-                                        verdi={item.utreisedato ? item.utreisedato : 'Ubesvart'}
+                                        verdi={item.utreisedato ? reverseStr(item.utreisedato) : 'Ubesvart'}
                                     />
                                     <OppsummeringsFelt
                                         label={<FormattedMessage id="input.innreisedato" />}
-                                        verdi={item.innreisedato ? item.innreisedato : 'Ubesvart'}
+                                        verdi={item.innreisedato ? reverseStr(item.innreisedato) : 'Ubesvart'}
                                     />
                                 </div>
                             ))}
@@ -231,11 +680,11 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                 <div className={sharedStyles.inputFelterDiv} key={index}>
                                     <OppsummeringsFelt
                                         label={<FormattedMessage id="input.utreisedato" />}
-                                        verdi={item.utreisedato ? item.utreisedato : 'Ubesvart'}
+                                        verdi={item.utreisedato ? reverseStr(item.utreisedato) : 'Ubesvart'}
                                     />
                                     <OppsummeringsFelt
                                         label={<FormattedMessage id="input.innreisedato" />}
-                                        verdi={item.innreisedato ? item.innreisedato : 'Ubesvart'}
+                                        verdi={item.innreisedato ? reverseStr(item.innreisedato) : 'Ubesvart'}
                                     />
                                 </div>
                             ))}

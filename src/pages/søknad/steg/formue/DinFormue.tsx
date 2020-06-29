@@ -64,14 +64,18 @@ const schema = yup.object<FormData>({
         .nullable()
         .defined()
         .when('borIBolig', {
-            is: true,
+            is: false,
             then: yup.string().nullable().min(1).required(),
         }),
     eierMerEnnEnBolig: yup.boolean().nullable().defined().when('eierBolig', {
         is: true,
         then: yup.boolean().nullable().required(),
     }),
-    harDepositumskonto: yup.boolean().nullable().required(),
+    harDepositumskonto: yup
+        .boolean()
+        .nullable()
+        .defined()
+        .when('eierBolig', { is: false, then: yup.boolean().nullable().required() }),
     depositumsBeløp: yup
         .number()
         .nullable()
