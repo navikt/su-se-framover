@@ -18,6 +18,10 @@ const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | Reac
     </div>
 );
 
+const reverseStr = (str: string) => {
+    return str.split('-').reverse().join('-');
+};
+
 const Oppsummering = (props: { forrigeUrl: string }) => {
     const history = useHistory();
     const søknadFraStore = useAppSelector((s) => s.soknad);
@@ -645,11 +649,11 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                 <div className={sharedStyles.inputFelterDiv} key={index}>
                                     <OppsummeringsFelt
                                         label={<FormattedMessage id="input.utreisedato" />}
-                                        verdi={item.utreisedato ? item.utreisedato : 'Ubesvart'}
+                                        verdi={item.utreisedato ? reverseStr(item.utreisedato) : 'Ubesvart'}
                                     />
                                     <OppsummeringsFelt
                                         label={<FormattedMessage id="input.innreisedato" />}
-                                        verdi={item.innreisedato ? item.innreisedato : 'Ubesvart'}
+                                        verdi={item.innreisedato ? reverseStr(item.innreisedato) : 'Ubesvart'}
                                     />
                                 </div>
                             ))}
@@ -669,11 +673,11 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                 <div className={sharedStyles.inputFelterDiv} key={index}>
                                     <OppsummeringsFelt
                                         label={<FormattedMessage id="input.utreisedato" />}
-                                        verdi={item.utreisedato ? item.utreisedato : 'Ubesvart'}
+                                        verdi={item.utreisedato ? reverseStr(item.utreisedato) : 'Ubesvart'}
                                     />
                                     <OppsummeringsFelt
                                         label={<FormattedMessage id="input.innreisedato" />}
-                                        verdi={item.innreisedato ? item.innreisedato : 'Ubesvart'}
+                                        verdi={item.innreisedato ? reverseStr(item.innreisedato) : 'Ubesvart'}
                                     />
                                 </div>
                             ))}
