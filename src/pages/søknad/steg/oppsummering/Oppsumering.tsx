@@ -447,23 +447,159 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                         tittel={intl.formatMessage({ id: 'panel.tittel.dinInntekt' })}
                     >
                         <OppsummeringsFelt
-                            label={<FormattedMessage id="input.harInntekt.label" />}
+                            label={<FormattedMessage id="input.harForventetInntekt.label" />}
                             verdi={
-                                søknadFraStore.inntekt.forventetInntekt === null
-                                    ? 'Ubesvart'
-                                    : Number(søknadFraStore.inntekt.forventetInntekt) > 0
+                                søknadFraStore.inntekt.harForventetInntekt
                                     ? 'Ja'
-                                    : 'Nei'
+                                    : søknadFraStore.inntekt.harForventetInntekt === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
                             }
                         />
 
                         {søknadFraStore.inntekt.forventetInntekt &&
                             Number(søknadFraStore.inntekt.forventetInntekt) > 0 && (
                                 <OppsummeringsFelt
-                                    label={<FormattedMessage id="input.inntekt.inntektBeløp" />}
+                                    label={<FormattedMessage id="input.forventetInntekt.label" />}
                                     verdi={søknadFraStore.inntekt.forventetInntekt}
                                 />
                             )}
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.tjenerPengerIUtlandet.label" />}
+                            verdi={
+                                søknadFraStore.inntekt.tjenerPengerIUtlandet
+                                    ? 'Ja'
+                                    : søknadFraStore.inntekt.tjenerPengerIUtlandet === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+                        {søknadFraStore.inntekt.tjenerPengerIUtlandet && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.tjenerPengerIUtlandetBeløp.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.tjenerPengerIUtlandetBeløp
+                                        ? søknadFraStore.inntekt.tjenerPengerIUtlandetBeløp
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.andreYtelserINAV.label" />}
+                            verdi={
+                                søknadFraStore.inntekt.andreYtelserINav
+                                    ? 'Ja'
+                                    : søknadFraStore.inntekt.andreYtelserINav === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+                        {søknadFraStore.inntekt.andreYtelserINav && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.andreYtelserINavYtelse.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.andreYtelserINavYtelse
+                                        ? søknadFraStore.inntekt.andreYtelserINavYtelse
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+                        {søknadFraStore.inntekt.andreYtelserINav && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.andreYtelserINavBeløp.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.andreYtelserINavBeløp
+                                        ? søknadFraStore.inntekt.andreYtelserINavBeløp
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.søktAndreYtelserIkkeBehandlet.label" />}
+                            verdi={
+                                søknadFraStore.inntekt.søktAndreYtelserIkkeBehandlet
+                                    ? 'Ja'
+                                    : søknadFraStore.inntekt.søktAndreYtelserIkkeBehandlet === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+
+                        {søknadFraStore.inntekt.søktAndreYtelserIkkeBehandlet && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.søktAndreYtelserIkkeBehandletBegrunnelse.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
+                                        ? søknadFraStore.inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.harMottattSosialstønad.label" />}
+                            verdi={
+                                søknadFraStore.inntekt.harMottattSosialstønad
+                                    ? 'Ja'
+                                    : søknadFraStore.inntekt.harMottattSosialstønad === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+                        {søknadFraStore.inntekt.harMottattSosialstønad && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.sosialStønadBeløp.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.sosialStønadBeløp
+                                        ? søknadFraStore.inntekt.sosialStønadBeløp
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+
+                        <OppsummeringsFelt
+                            label={<FormattedMessage id="input.trygdeytelserIUtlandet.label" />}
+                            verdi={
+                                søknadFraStore.inntekt.trygdeytelserIUtlandet
+                                    ? 'Ja'
+                                    : søknadFraStore.inntekt.trygdeytelserIUtlandet === false
+                                    ? 'Nei'
+                                    : 'Ubesvart'
+                            }
+                        />
+                        {søknadFraStore.inntekt.trygdeytelserIUtlandet && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.trygdeytelserIUtlandetBeløp.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.trygdeytelserIUtlandetBeløp
+                                        ? søknadFraStore.inntekt.trygdeytelserIUtlandetBeløp
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+                        {søknadFraStore.inntekt.trygdeytelserIUtlandet && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.trygdeytelserIUtlandetType.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.trygdeytelserIUtlandetType
+                                        ? søknadFraStore.inntekt.trygdeytelserIUtlandetType
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
+                        {søknadFraStore.inntekt.trygdeytelserIUtlandet && (
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.trygdeytelserIUtlandetFraHvem.label" />}
+                                verdi={
+                                    søknadFraStore.inntekt.trygdeytelserIUtlandetFraHvem
+                                        ? søknadFraStore.inntekt.trygdeytelserIUtlandetFraHvem
+                                        : 'Ubesvart'
+                                }
+                            />
+                        )}
 
                         <OppsummeringsFelt
                             label={<FormattedMessage id="input.mottarPensjon.label" />}
@@ -475,7 +611,6 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                     : 'Ubesvart'
                             }
                         />
-
                         {søknadFraStore.inntekt.mottarPensjon &&
                             søknadFraStore.inntekt.pensjonsInntekt.map((item, index) => (
                                 <div className={sharedStyles.inputFelterDiv} key={index}>
@@ -489,17 +624,6 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                     />
                                 </div>
                             ))}
-
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.harMottattSosialstønad.label" />}
-                            verdi={
-                                søknadFraStore.inntekt.harMottattSosialstønad
-                                    ? 'Ja'
-                                    : søknadFraStore.inntekt.harMottattSosialstønad === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
-                        />
                     </Ekspanderbartpanel>
 
                     <Ekspanderbartpanel
