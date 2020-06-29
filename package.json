@@ -37,6 +37,7 @@
     "homepage": "https://github.com/navikt/su-se-framover#readme",
     "dependencies": {
         "@babel/runtime": "^7.10.3",
+        "@devexperts/remote-data-ts": "^2.0.3",
         "@navikt/fnrvalidator": "^1.1.2",
         "@navikt/nap-bem-utils": "^1.0.1",
         "@navikt/nap-header": "^1.0.10",
@@ -49,6 +50,7 @@
         "babel-runtime": "^6.26.0",
         "classnames": "^2.2.6",
         "formik": "^2.1.4",
+        "fp-ts": "^2.6.7",
         "js-cookie": "^2.2.1",
         "less": "^3.11.3",
         "lodash.throttle": "^4.1.1",
