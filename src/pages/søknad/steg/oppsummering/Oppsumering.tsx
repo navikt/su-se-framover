@@ -11,6 +11,8 @@ import { useHistory } from 'react-router-dom';
 import { useI18n } from '~lib/hooks';
 import * as innsendingSlice from '~features/søknad/innsending.slice';
 
+import * as RemoteData from '@devexperts/remote-data-ts';
+
 const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | React.ReactNode }) => (
     <div className={styles.oppsummeringsfelt}>
         <Element>{props.label}</Element>
@@ -32,8 +34,13 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
-                        if (søkerFraStore) {
-                            dispatch(innsendingSlice.sendSøknad({ søknad: søknadFraStore, søker: søkerFraStore }));
+                        if (RemoteData.isSuccess(søkerFraStore)) {
+                            dispatch(
+                                innsendingSlice.sendSøknad({
+                                    søknad: søknadFraStore,
+                                    søker: søkerFraStore.value,
+                                })
+                            );
                         }
                     }}
                 >
