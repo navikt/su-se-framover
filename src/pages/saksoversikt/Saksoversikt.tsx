@@ -19,6 +19,8 @@ import Søkefelt from './søkefelt/Søkefelt';
 import { SaksbehandligMenyValg } from './types';
 
 import styles from './saksoversikt.module.less';
+import Sakintro from './sakintro/Sakintro';
+import Vilkår from './vilkår/Vilkår';
 
 const Saksoversikt = () => {
     const { meny } = useParams<{ meny: SaksbehandligMenyValg }>();
@@ -96,10 +98,14 @@ const Saksoversikt = () => {
                                 <div className={styles.mainContent}>
                                     <Switch>
                                         <Route path={`${path}/${SaksbehandligMenyValg.Søknad}`}>soknad</Route>
-                                        <Route path={`${path}/${SaksbehandligMenyValg.Vilkår}`}>vilkår</Route>
+                                        <Route path={`${path}/${SaksbehandligMenyValg.Vilkår}`}>
+                                            <Vilkår />
+                                        </Route>
                                         <Route path={`${path}/${SaksbehandligMenyValg.Behandlig}`}>behandling</Route>
                                         <Route path={`${path}/${SaksbehandligMenyValg.Vedtak}`}>vedtak</Route>
-                                        <Route path={path}>{JSON.stringify(sak, undefined, 4)}</Route>
+                                        <Route path={path}>
+                                            <Sakintro sak={sak} />
+                                        </Route>
                                     </Switch>
                                 </div>
                             </div>
