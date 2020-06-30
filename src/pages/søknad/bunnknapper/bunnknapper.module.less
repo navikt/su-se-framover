@@ -3,12 +3,13 @@
 .container {
     display: flex;
     align-items: center;
+    flex-direction: row-reverse;
 
     .navKnapp {
         flex: 1;
 
         &:first-child:not(:last-child) {
-            margin-right: @spacing-s;
+            margin-left: @spacing-s;
         }
     }
 }
