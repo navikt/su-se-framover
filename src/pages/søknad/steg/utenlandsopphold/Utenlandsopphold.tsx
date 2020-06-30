@@ -13,7 +13,7 @@ import { Datovelger } from 'nav-datovelger';
 import { Knapp } from 'nav-frontend-knapper';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
-import { Feiloppsummering } from 'nav-frontend-skjema';
+import { Feiloppsummering, Label, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import { useI18n } from '~lib/hooks';
 import sharedI18n from '../steg-shared-i18n';
 import styles from './utenlandsopphold.module.less';
@@ -44,14 +44,14 @@ const schema = yup.object<FormData>({
         .defined()
         .when('skalReiseTilUtlandetNeste12Måneder', {
             is: true,
-            then: yup.array().min(1),
-            otherwise: yup.array().nullable(),
+            then: yup.array().min(1).required(),
+            otherwise: yup.array().max(0),
         }),
 });
 
 const MultiTidsperiodevelger = (props: {
     perioder: Array<{ utreisedato: string; innreisedato: string }>;
-    errors?: string | string[] | FormikErrors<{ utreisedato: string; innreisedato: string }>[];
+    errors: string | string[] | FormikErrors<{ utreisedato: string; innreisedato: string }>[] | undefined;
     feltnavn: string;
     onChange: (element: { index: number; utreisedato: string; innreisedato: string }) => void;
     onLeggTilClick: () => void;
@@ -61,54 +61,61 @@ const MultiTidsperiodevelger = (props: {
         {typeof props.errors === 'string' && props.errors}
         {props.perioder.map((periode, index) => {
             const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : null;
+            const utreisedatoId = `${props.feltnavn}[${index}].utreisedato`;
+            const innreisedatoId = `${props.feltnavn}[${index}].innreisedato`;
             return (
                 <div className={styles.reiserad} key={guid()}>
                     <div>
-                        <label>
+                        <Label htmlFor={utreisedatoId}>
                             <FormattedMessage id="input.utreisedato.label" />
-                            <Datovelger
-                                input={{
-                                    name: 'utreisedato',
-                                    placeholder: 'dd.mm.åååå',
-                                    id: `${props.feltnavn}[${index}].utreisedato`,
-                                }}
-                                valgtDato={periode.utreisedato}
-                                id={`harReistDatoer[${index}].utreisedato`}
-                                onChange={(value) => {
-                                    if (!value) {
-                                        return;
-                                    }
-                                    props.onChange({
-                                        index,
-                                        utreisedato: value,
-                                        innreisedato: periode.innreisedato,
-                                    });
-                                }}
-                            />
-                        </label>
-                        {errorForLinje && typeof errorForLinje !== 'string' && errorForLinje.utreisedato}
+                        </Label>
+                        <Datovelger
+                            input={{
+                                name: 'utreisedato',
+                                placeholder: 'dd.mm.åååå',
+                                id: utreisedatoId,
+                            }}
+                            valgtDato={periode.utreisedato}
+                            id={utreisedatoId}
+                            onChange={(value) => {
+                                if (!value) {
+                                    return;
+                                }
+                                props.onChange({
+                                    index,
+                                    utreisedato: value,
+                                    innreisedato: periode.innreisedato,
+                                });
+                            }}
+                        />
+                        {errorForLinje && typeof errorForLinje === 'object' && (
+                            <SkjemaelementFeilmelding>{errorForLinje.utreisedato}</SkjemaelementFeilmelding>
+                        )}
                     </div>
 
                     <div>
-                        <label>
+                        <Label htmlFor={innreisedatoId}>
                             <FormattedMessage id="input.innreisedato.label" />
-                            <Datovelger
-                                input={{
-                                    name: 'innreisedato',
-                                    placeholder: 'dd.mm.åååå',
-                                    id: `${props.feltnavn}[${index}].innreisedato`,
-                                }}
-                                valgtDato={periode.innreisedato}
-                                id={`harReistDatoer[${index}].innreisedato`}
-                                onChange={(value) => {
-                                    if (!value) {
-                                        return;
-                                    }
-                                    props.onChange({ index, utreisedato: periode.utreisedato, innreisedato: value });
-                                }}
-                            />
-                        </label>
-                        {errorForLinje && typeof errorForLinje !== 'string' && errorForLinje.innreisedato}
+                        </Label>
+                        <Datovelger
+                            input={{
+                                name: 'innreisedato',
+                                placeholder: 'dd.mm.åååå',
+                                id: innreisedatoId,
+                            }}
+                            valgtDato={periode.innreisedato}
+                            avgrensninger={{ minDato: periode.utreisedato }}
+                            id={innreisedatoId}
+                            onChange={(value) => {
+                                if (!value) {
+                                    return;
+                                }
+                                props.onChange({ index, utreisedato: periode.utreisedato, innreisedato: value });
+                            }}
+                        />
+                        {errorForLinje && typeof errorForLinje === 'object' && (
+                            <SkjemaelementFeilmelding>{errorForLinje.innreisedato}</SkjemaelementFeilmelding>
+                        )}
                     </div>
                     {props.perioder.length > 1 && (
                         <Knapp
@@ -263,6 +270,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             <MultiTidsperiodevelger
                                 feltnavn="skalReiseDatoer"
                                 perioder={formik.values.skalReiseDatoer}
+                                errors={formik.errors.skalReiseDatoer}
                                 onLeggTilClick={() => {
                                     formik.setValues({
                                         ...formik.values,
