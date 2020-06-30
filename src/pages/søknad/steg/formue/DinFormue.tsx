@@ -445,7 +445,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         <JaNeiSpørsmål
                             id="harInnskudPåKonto"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.harInnskudPåKonto.label" />}
+                            legend={<FormattedMessage id="input.harInnskuddPåKonto.label" />}
                             feil={null}
                             state={formik.values.harInnskuddPåKonto}
                             onChange={(e) =>

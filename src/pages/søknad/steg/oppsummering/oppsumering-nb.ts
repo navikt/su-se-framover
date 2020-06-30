@@ -42,7 +42,7 @@ export default {
     'input.eierKjøretøy.label': 'Eier du bil, campingvogn eller kjøretøy?',
     'input.verdiPåKjøretøyTotal.label': 'Hva er samlet verdi av kjøretøyene?',
     'input.kjøretøyDeEier.label': 'Hvilke kjøretøy eier du?',
-    'input.harInnskudPåKonto.label': 'Har du innskudd stående på konto?',
+    'input.harInnskuddPåKonto.label': 'Har du innskudd stående på konto?',
     'input.innskuddsBeløp.label': 'Hva er beløpet på innskuddet?',
     'input.harVerdipapir.label': 'Har du verdipapirer, aksjefond ++?',
     'input.verdipapirBeløp.label': 'Oppgi beløp i kroner',

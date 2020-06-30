@@ -178,9 +178,9 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                         <OppsummeringsFelt
                             label={<FormattedMessage id="input.delerBoligMedPersonOver18.label" />}
                             verdi={
-                                søknadFraStore.boOgOpphold.borOgOppholderSegINorge
+                                søknadFraStore.boOgOpphold.delerBoligMedPersonOver18
                                     ? 'Ja'
-                                    : søknadFraStore.boOgOpphold.borOgOppholderSegINorge === false
+                                    : søknadFraStore.boOgOpphold.delerBoligMedPersonOver18 === false
                                     ? 'Nei'
                                     : 'Ubesvart'
                             }
@@ -205,7 +205,7 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                 verdi={
                                     søknadFraStore.boOgOpphold.ektemakeEllerSamboerUnder67År
                                         ? 'Ja'
-                                        : søknadFraStore.boOgOpphold.ektemakeEllerSamboerUnder67År
+                                        : søknadFraStore.boOgOpphold.ektemakeEllerSamboerUnder67År === false
                                         ? 'Nei'
                                         : 'Ubesvart'
                                 }
@@ -218,7 +218,7 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                 verdi={
                                     søknadFraStore.boOgOpphold.ektemakeEllerSamboerUførFlyktning
                                         ? 'Ja'
-                                        : søknadFraStore.boOgOpphold.ektemakeEllerSamboerUførFlyktning
+                                        : søknadFraStore.boOgOpphold.ektemakeEllerSamboerUførFlyktning === false
                                         ? 'Nei'
                                         : 'Ubesvart'
                                 }
@@ -256,7 +256,7 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
 
                         {søknadFraStore.formue.harDepositumskonto && (
                             <OppsummeringsFelt
-                                label={<FormattedMessage id="input.depositumskonto.label" />}
+                                label={<FormattedMessage id="input.depositumsBeløp.label" />}
                                 verdi={
                                     søknadFraStore.formue.depositumsBeløp
                                         ? søknadFraStore.formue.depositumsBeløp
@@ -266,7 +266,7 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                         )}
                         {søknadFraStore.formue.harDepositumskonto && (
                             <OppsummeringsFelt
-                                label={<FormattedMessage id="input.depositumskonto.label" />}
+                                label={<FormattedMessage id="input.kontonummer.label" />}
                                 verdi={
                                     søknadFraStore.formue.kontonummer ? søknadFraStore.formue.kontonummer : 'Ubesvart'
                                 }
@@ -372,7 +372,7 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                             />
                         )}
                         <OppsummeringsFelt
-                            label={<FormattedMessage id="input.harInnskudPåKonto.label" />}
+                            label={<FormattedMessage id="input.harInnskuddPåKonto.label" />}
                             verdi={
                                 søknadFraStore.formue.harInnskuddPåKonto
                                     ? 'Ja'
