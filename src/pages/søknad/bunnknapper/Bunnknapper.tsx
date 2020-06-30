@@ -16,6 +16,9 @@ const Bunnknapper = (props: {
 }) => (
     <TextProvider messages={{ [Languages.nb]: messages }}>
         <div className={styles.container}>
+            <Hovedknapp htmlType="submit" className={styles.navKnapp}>
+                {props.next?.label ?? <FormattedMessage id="steg.neste" />}
+            </Hovedknapp>
             {props.previous && (
                 <Knapp
                     htmlType="button"
@@ -27,10 +30,6 @@ const Bunnknapper = (props: {
                     {props.previous.label ?? <FormattedMessage id="steg.forrige" />}
                 </Knapp>
             )}
-
-            <Hovedknapp htmlType="submit" className={styles.navKnapp}>
-                {props.next?.label ?? <FormattedMessage id="steg.neste" />}
-            </Hovedknapp>
         </div>
     </TextProvider>
 );

@@ -8,9 +8,31 @@
 }
 
 .inputs {
-    margin-bottom: @spacing-l;
+    margin-bottom: @spacing-s;
 }
 
 .submitknapp {
     width: 100%;
+}
+
+.sokerinfo {
+    margin-bottom: @spacing-l;
+
+    > div {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .sokerinfoLabel {
+        font-weight: 700;
+        margin-right: @spacing-s;
+    }
+}
+
+.successknapper {
+    display: flex;
+
+    > :not(:last-child) {
+        margin-right: @spacing-s;
+    }
 }

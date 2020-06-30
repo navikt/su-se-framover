@@ -13,7 +13,7 @@ import Inntekt from './steg/inntekt/Inntekt';
 import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
 import Kontakt from './steg/kontakt/Kontakt';
 import Oppsummering from './steg/oppsummering/Oppsumering';
-import { Innholdstittel, Sidetittel } from 'nav-frontend-typografi';
+import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import { useI18n } from '../../lib/hooks';
 
 const messages = {
@@ -82,7 +82,7 @@ const index = () => {
         <div className={styles.container}>
             <div className={styles.headerContainer}>
                 <div className={styles.sidetittelContainer}>
-                    <Sidetittel>Søknad</Sidetittel>
+                    <Innholdstittel>Søknad</Innholdstittel>
                 </div>
                 {step !== Søknadsteg.Inngang && (
                     <>
@@ -102,7 +102,7 @@ const index = () => {
                                 }}
                             />
                         </div>
-                        <Innholdstittel>{steg.find((s) => s.step === step)?.label}</Innholdstittel>
+                        <Undertittel>{steg.find((s) => s.step === step)?.label}</Undertittel>
                     </>
                 )}
             </div>
