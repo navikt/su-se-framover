@@ -16,6 +16,7 @@ import Saksoversikt from '~pages/saksoversikt/Saksoversikt';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import Lenke from 'nav-frontend-lenker';
 import styles from './root.module.less';
+import Header from '@navikt/nap-header';
 
 const Root = () => {
     return (
@@ -88,9 +89,7 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
 
     return (
         <div>
-            <div className={styles.headerContainer}>
-                <Innholdstittel className={styles.appName}>NAV Suse</Innholdstittel>
-            </div>
+            <Header title="Supplerende stønad Ufør" titleHref={'/'} />
             <div className={styles.contentContainer}>
                 {loginState === 'logging-in' ? (
                     <NavFrontendSpinner />
