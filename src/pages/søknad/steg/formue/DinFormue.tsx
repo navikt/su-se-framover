@@ -443,7 +443,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
 
                         <JaNeiSpørsmål
-                            id="harInnskudPåKonto"
+                            id="harInnskuddPåKonto"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.harInnskuddPåKonto.label" />}
                             feil={null}
