@@ -315,7 +315,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
 
                         {formik.values.borIBolig === false && (
-                            <div>
+                            <div className={sharedStyles.inputFelterDiv}>
                                 <Input
                                     id="verdiPåBolig"
                                     name="verdiPåBolig"
@@ -352,7 +352,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
 
                         {formik.values.harDepositumskonto && (
-                            <div>
+                            <div className={sharedStyles.inputFelterDiv}>
                                 <Input
                                     id="depositumsBeløp"
                                     name="depositumsBeløp"
@@ -389,7 +389,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
 
                         {formik.values.eierMerEnnEnBolig && (
-                            <div>
+                            <div className={sharedStyles.inputFelterDiv}>
                                 <Input
                                     id="verdiPåEiendom"
                                     name="verdiPåEiendom"
@@ -424,7 +424,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         />
 
                         {formik.values.eierKjøretøy && (
-                            <div>
+                            <div className={sharedStyles.inputFelterDiv}>
                                 <Input
                                     id="verdiPåKjøretøy"
                                     name="verdiPåKjøretøy"
@@ -459,6 +459,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         {formik.values.harInnskuddPåKonto && (
                             <Input
+                                className={sharedStyles.marginBottom}
                                 id="innskuddsBeløp"
                                 name="innskuddsBeløp"
                                 label={<FormattedMessage id="input.innskuddsBeløp.label" />}
@@ -484,6 +485,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         {formik.values.harVerdipapir && (
                             <Input
+                                className={sharedStyles.marginBottom}
                                 id="verdipapirBeløp"
                                 name="verdipapirBeløp"
                                 label={<FormattedMessage id="input.verdipapirBeløp.label" />}
@@ -509,6 +511,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         {formik.values.skylderNoenMegPenger && (
                             <Input
+                                className={sharedStyles.marginBottom}
                                 id="skylderNoenMegPengerBeløp"
                                 name="skylderNoenMegPengerBeløp"
                                 label={<FormattedMessage id="input.skylderNoenMegPengerBeløp.label" />}
@@ -534,6 +537,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         {formik.values.harKontanterOver1000 && (
                             <Input
+                                className={sharedStyles.marginBottom}
                                 id="kontanterBeløp"
                                 name="kontanterBeløp"
                                 label={<FormattedMessage id="input.kontanterBeløp.label" />}

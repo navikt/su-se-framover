@@ -318,7 +318,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             <Input
                                 id="forventetInntekt"
                                 feil={formik.errors.forventetInntekt}
-                                className={sharedStyles.sporsmal}
+                                className={sharedStyles.marginBottom}
                                 value={formik.values.forventetInntekt || ''}
                                 label={<FormattedMessage id="input.forventetInntekt.label" />}
                                 onChange={formik.handleChange}
@@ -342,6 +342,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         {formik.values.tjenerPengerIUtlandet && (
                             <Input
+                                className={sharedStyles.marginBottom}
                                 id="tjenerPengerIUtlandetBeløp"
                                 name="tjenerPengerIUtlandetBeløp"
                                 label={<FormattedMessage id="input.tjenerPengerIUtlandetBeløp.label" />}
@@ -369,7 +370,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         {/*Flere inputs? */}
                         {formik.values.andreYtelserINav && (
-                            <div>
+                            <div className={sharedStyles.inputFelterDiv}>
                                 <Input
                                     id="andreYtelserINavYtelse"
                                     name="andreYtelserINavYtelse"
@@ -406,6 +407,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         {formik.values.søktAndreYtelserIkkeBehandlet && (
                             <Input
+                                className={sharedStyles.marginBottom}
                                 id="søktAndreYtelserIkkeBehandletBegrunnelse"
                                 name="søktAndreYtelserIkkeBehandletBegrunnelse"
                                 label={<FormattedMessage id="input.søktAndreYtelserIkkeBehandletBegrunnelse.label" />}
@@ -431,6 +433,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         />
                         {formik.values.harMottattSosialstønad && (
                             <Input
+                                className={sharedStyles.marginBottom}
                                 id="sosialStønadBeløp"
                                 name="sosialStønadBeløp"
                                 label={<FormattedMessage id="input.sosialStønadBeløp.label" />}
@@ -457,7 +460,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             }
                         />
                         {formik.values.trygdeytelserIUtlandet && (
-                            <div>
+                            <div className={sharedStyles.inputFelterDiv}>
                                 <Input
                                     id="trygdeytelserIUtlandetBeløp"
                                     name="trygdeytelserIUtlandetBeløp"
