@@ -116,11 +116,13 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                     )}
 
                     {formik.values.harFullmektigEllerVerge === 'fullmektig' && (
-                        <AlertStripe type="advarsel">Husk å legge ved legeattest/legeerklæring</AlertStripe>
+                        <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
+                            Husk å legge ved legeattest/legeerklæring
+                        </AlertStripe>
                     )}
 
                     <Feiloppsummering
-                        className={sharedStyles.feiloppsummering}
+                        className={sharedStyles.marginBottom}
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
                         hidden={!formikErrorsHarFeil(formik.errors)}

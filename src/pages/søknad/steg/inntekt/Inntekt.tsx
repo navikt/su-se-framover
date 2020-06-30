@@ -507,7 +507,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         {formik.values.mottarPensjon && pensjonsInntekter()}
                     </div>
                     <Feiloppsummering
-                        className={sharedStyles.feiloppsummering}
+                        className={sharedStyles.marginBottom}
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
                         hidden={!formikErrorsHarFeil(formik.errors)}

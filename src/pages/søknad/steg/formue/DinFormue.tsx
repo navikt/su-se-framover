@@ -543,7 +543,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
                     </div>
                     <Feiloppsummering
-                        className={sharedStyles.feiloppsummering}
+                        className={sharedStyles.marginBottom}
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
                         hidden={!formikErrorsHarFeil(formik.errors)}

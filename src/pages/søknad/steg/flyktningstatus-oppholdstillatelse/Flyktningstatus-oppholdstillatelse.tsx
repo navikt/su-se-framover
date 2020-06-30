@@ -136,7 +136,9 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 })
                             }
                         />
-                        {formik.values.erFlyktning === false && <AnbefalerIkkeSøke />}
+                        {formik.values.erFlyktning === false && (
+                            <AnbefalerIkkeSøke className={sharedStyles.marginBottom} />
+                        )}
                         <JaNeiSpørsmål
                             id={'erNorskStatsborger'}
                             className={sharedStyles.sporsmal}
@@ -199,7 +201,9 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 checked={formik.values.typeOppholdstillatelse?.toString()}
                             />
                         )}
-                        {formik.values.harOppholdstillatelse === false && <AnbefalerIkkeSøke />}
+                        {formik.values.harOppholdstillatelse === false && (
+                            <AnbefalerIkkeSøke className={sharedStyles.marginBottom} />
+                        )}
                         {formik.values.typeOppholdstillatelse === 'midlertidig' && (
                             <JaNeiSpørsmål
                                 id={'oppholdstillatelseMindreEnnTreMåneder'}
@@ -232,7 +236,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             />
                         )}
                         {formik.values.oppholdstillatelseForlengelse === false && (
-                            <AlertStripe type="advarsel">
+                            <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
                                 Du kan fremdeles søke, men du bør søke om forlengelse så snart som mulig.
                             </AlertStripe>
                         )}
@@ -262,7 +266,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                         )}
                     </div>
                     <Feiloppsummering
-                        className={sharedStyles.feiloppsummering}
+                        className={sharedStyles.marginBottom}
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
                         hidden={!formikErrorsHarFeil(formik.errors)}

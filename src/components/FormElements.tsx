@@ -56,6 +56,8 @@ export const JaNeiSpørsmål = (props: {
     );
 };
 
-export const AnbefalerIkkeSøke = () => (
-    <AlertStripe type="advarsel">Du kan fremdeles søke, men du vil sannsynligvis få avslag.</AlertStripe>
+export const AnbefalerIkkeSøke = (props: { className?: string }) => (
+    <AlertStripe type="advarsel" className={props.className}>
+        Du kan fremdeles søke, men du vil sannsynligvis få avslag.
+    </AlertStripe>
 );

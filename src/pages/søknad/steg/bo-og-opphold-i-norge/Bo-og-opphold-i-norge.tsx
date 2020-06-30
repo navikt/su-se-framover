@@ -102,7 +102,9 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({ ...formik.values, borOgOppholderSegINorge: val });
                             }}
                         />
-                        {formik.values.borOgOppholderSegINorge === false && <AnbefalerIkkeSøke />}
+                        {formik.values.borOgOppholderSegINorge === false && (
+                            <AnbefalerIkkeSøke className={sharedStyles.marginBottom} />
+                        )}
 
                         <JaNeiSpørsmål
                             id="delerBoligMedPersonOver18"
@@ -186,7 +188,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
                     </div>
                     <Feiloppsummering
-                        className={sharedStyles.feiloppsummering}
+                        className={sharedStyles.marginBottom}
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
                         hidden={!formikErrorsHarFeil(formik.errors)}

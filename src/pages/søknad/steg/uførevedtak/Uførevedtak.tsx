@@ -70,14 +70,14 @@ const Uførevedtak = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         />
                     </div>
                     {formik.values.harUførevedtak === false && (
-                        <AlertStripe type="advarsel">
+                        <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
                             Du kan fremdeles søke, men du vil sannsynligvis få avslag. Du må søke om uføre og motta
                             vedtak før du kan søke om supplerende stønad for uføre
                         </AlertStripe>
                     )}
                     <div>
                         <Feiloppsummering
-                            className={sharedStyles.feiloppsummering}
+                            className={sharedStyles.marginBottom}
                             tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                             feil={formikErrorsTilFeiloppsummering(formik.errors)}
                             hidden={!formikErrorsHarFeil(formik.errors)}

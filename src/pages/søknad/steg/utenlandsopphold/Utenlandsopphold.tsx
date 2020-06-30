@@ -307,7 +307,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                     </div>
 
                     <Feiloppsummering
-                        className={sharedStyles.feiloppsummering}
+                        className={sharedStyles.marginBottom}
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                         hidden={!formikErrorsHarFeil(formik.errors)}
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
