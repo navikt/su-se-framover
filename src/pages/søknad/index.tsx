@@ -84,23 +84,27 @@ const index = () => {
                 <div className={styles.sidetittelContainer}>
                     <Sidetittel>Søknad</Sidetittel>
                 </div>
-                <div className={styles.stegindikatorContainer}>
-                    <Stegindikator
-                        steg={steg.map((s) => ({
-                            index: s.index,
-                            label: s.label,
-                            aktiv: s.step === step,
-                        }))}
-                        visLabel={false}
-                        onChange={(index) => {
-                            const nyttSteg = steg[index];
-                            if (nyttSteg) {
-                                history.push(`/soknad/${nyttSteg.step}`);
-                            }
-                        }}
-                    />
-                </div>
-                <Innholdstittel>{steg.find((s) => s.step === step)?.label}</Innholdstittel>
+                {step !== Søknadsteg.Inngang && (
+                    <>
+                        <div className={styles.stegindikatorContainer}>
+                            <Stegindikator
+                                steg={steg.map((s) => ({
+                                    index: s.index,
+                                    label: s.label,
+                                    aktiv: s.step === step,
+                                }))}
+                                visLabel={false}
+                                onChange={(index) => {
+                                    const nyttSteg = steg[index];
+                                    if (nyttSteg) {
+                                        history.push(`/soknad/${nyttSteg.step}`);
+                                    }
+                                }}
+                            />
+                        </div>
+                        <Innholdstittel>{steg.find((s) => s.step === step)?.label}</Innholdstittel>
+                    </>
+                )}
             </div>
             {step === Søknadsteg.Inngang ? (
                 <Inngang nesteUrl={`/soknad/${Søknadsteg.Uførevedtak}`} />

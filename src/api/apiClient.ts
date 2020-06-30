@@ -62,7 +62,7 @@ export default async function apiClient<T>(
 
     if (res.status === 401) {
         if (refreshToken) {
-            const refreshRes = await fetch('/auth/refresh', {
+            const refreshRes = await fetch(`${window.BASE_URL}/auth/refresh`, {
                 headers: {
                     refresh_token: refreshToken,
                     'X-Correlation-ID': correlationId,
@@ -78,10 +78,10 @@ export default async function apiClient<T>(
             if (nyttAccessToken) {
                 Cookies.set(CookieName.AccessToken, nyttAccessToken);
 
-                return apiClient(`${window.BASE_URL}${url}`, request, successStatusCodes, {
+                return apiClient(url, request, successStatusCodes, {
                     accessToken: nyttAccessToken,
                     correlationId,
-                    numAttempts: 1,
+                    numAttempts: (extraData?.numAttempts ?? 0) + 1,
                 });
             }
         }
