@@ -32,7 +32,11 @@ const initialState: PersonState = {
 export default createSlice({
     name: 'søker',
     initialState,
-    reducers: {},
+    reducers: {
+        resetSøker(state) {
+            state.søker = RemoteData.initial;
+        },
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchPerson.pending, (state) => {
             state.søker = RemoteData.pending;
