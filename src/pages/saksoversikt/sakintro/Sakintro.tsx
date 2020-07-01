@@ -14,7 +14,7 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
 
     return (
         <div>
-            {JSON.stringify(props.sak, undefined, 4)}
+            <pre>{JSON.stringify(props.sak, undefined, 4)}</pre>
             <Hovedknapp
                 onClick={async () => {
                     await dispatch(behandlingSlice.startBehandling({ sakId, stønadsperiodeId }));
