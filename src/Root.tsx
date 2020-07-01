@@ -35,9 +35,6 @@ const Root = () => {
                             <Route path="/saksoversikt/:meny?">
                                 <Saksoversikt />
                             </Route>
-                            <Route path="/auth/complete">
-                                <AuthComplete />
-                            </Route>
                             <Route>404</Route>
                         </Switch>
                     </ContentWrapper>
@@ -54,8 +51,10 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
     const authCompleteRouteMatch = useRouteMatch('/auth/complete');
     const [loginState, setLoginState] = useState<LoginState>('logging-in');
 
+    const hasBaseUrl = window.BASE_URL && typeof window.BASE_URL === 'string';
+
     useEffect(() => {
-        if (!window.BASE_URL || typeof window.BASE_URL !== 'string') {
+        if (!hasBaseUrl) {
             fetch('/config.json').then((res) => {
                 if (res.ok) {
                     res.json().then((config) => {
@@ -66,11 +65,13 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
                     console.error('klarte ikke hente config.json', res.statusText);
                 }
             });
+        } else {
+            setConfigLoaded(true);
         }
     }, [window.BASE_URL]);
 
     useEffect(() => {
-        if (authCompleteRouteMatch || !configLoaded || !window.BASE_URL || typeof window.BASE_URL !== 'string') {
+        if (authCompleteRouteMatch || !configLoaded || !hasBaseUrl) {
             return;
         }
 
@@ -84,6 +85,23 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
             }
         });
     }, [configLoaded]);
+
+    const location = useLocation();
+    const history = useHistory();
+
+    useEffect(() => {
+        if (authCompleteRouteMatch) {
+            const tokens = location.hash.split('#');
+            const accessToken = tokens[1];
+            const refreshToken = tokens[2];
+            if (!accessToken || !refreshToken) {
+                console.error('On /auth/complete but no accesstoken/refreshtoken found');
+            }
+            Cookies.set(Cookies.CookieName.AccessToken, accessToken);
+            Cookies.set(Cookies.CookieName.RefreshToken, refreshToken);
+            history.push('/');
+        }
+    }, [authCompleteRouteMatch]);
 
     return (
         <div>
@@ -102,21 +120,6 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
             </div>
         </div>
     );
-}
-
-function AuthComplete() {
-    const location = useLocation();
-    const tokens = location.hash.split('#');
-    const accessToken = tokens[1];
-    const refreshToken = tokens[2];
-    const history = useHistory();
-
-    useEffect(() => {
-        Cookies.set(Cookies.CookieName.AccessToken, accessToken);
-        Cookies.set(Cookies.CookieName.RefreshToken, refreshToken);
-        history.push('/');
-    }, [accessToken, refreshToken]);
-    return null;
 }
 
 /* eslint-disable-next-line no-undef */
