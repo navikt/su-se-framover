@@ -261,7 +261,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
-    console.log(formik.values);
+
     return (
         <div className={sharedStyles.container}>
             <RawIntlProvider value={intl}>
