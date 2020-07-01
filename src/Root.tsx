@@ -23,26 +23,24 @@ const Root = () => {
         <Provider store={Store}>
             <ErrorBoundary>
                 <Router>
-                    <Switch>
-                        <Route exact path="/">
-                            <ContentWrapper>
+                    <ContentWrapper>
+                        <Switch>
+                            <Route exact path="/">
                                 <HomePage />
-                            </ContentWrapper>
-                        </Route>
-                        <Route path="/soknad/:step">
-                            <ContentWrapper>
+                            </Route>
+                            <Route path="/soknad/:step">
                                 <Soknad />
-                            </ContentWrapper>
-                        </Route>
+                            </Route>
 
-                        <Route path="/saksoversikt/:meny?">
-                            <Saksoversikt />
-                        </Route>
-                        <Route path="/auth/complete">
-                            <AuthComplete />
-                        </Route>
-                        <Route>404</Route>
-                    </Switch>
+                            <Route path="/saksoversikt/:meny?">
+                                <Saksoversikt />
+                            </Route>
+                            <Route path="/auth/complete">
+                                <AuthComplete />
+                            </Route>
+                            <Route>404</Route>
+                        </Switch>
+                    </ContentWrapper>
                 </Router>
             </ErrorBoundary>
         </Provider>
