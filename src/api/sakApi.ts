@@ -1,8 +1,10 @@
 import apiClient, { ApiClientResult } from './apiClient';
+import { Søknad } from './søknadApi';
 
 export interface Sak {
     id: string;
-    stønadsperioder: Array<{ id: string }>;
+    fnr: string;
+    stønadsperioder: Array<{ id: string; søknad: { id: number; json: Søknad } }>;
 }
 
 export async function fetchSak(fnr: string): Promise<ApiClientResult<Sak>> {

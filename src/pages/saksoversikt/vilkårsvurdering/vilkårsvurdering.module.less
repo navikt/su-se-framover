@@ -1,4 +1,29 @@
+@import '~/styles/variables.less';
+
+.container {
+    display: flex;
+}
+
 .tittel {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+}
+.tittelikon {
+    margin-right: @spacing-xs;
+}
+.titteltekster {
+    display: flex;
+    flex-direction: column;
+}
+
+.form {
+    flex: 1;
+    border-right: 1px solid @navMorkGra;
+
+    padding-right: @spacing-s;
+}
+
+.grunnlag {
+    flex: 1;
+    padding-left: @spacing-s;
 }
