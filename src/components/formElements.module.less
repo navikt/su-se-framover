@@ -1,0 +1,13 @@
+@import '~/styles/variables.less';
+
+.janeisporsmal {
+    display: flex;
+
+    .svar {
+        flex: 1;
+
+        &:not(:first-of-type) {
+            margin-left: @spacing-s;
+        }
+    }
+}
