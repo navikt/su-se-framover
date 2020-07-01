@@ -1,9 +1,10 @@
+// eslint-disable-next-line no-undef
 module.exports = {
     root: true,
     parser: '@typescript-eslint/parser',
     env: {
         browser: true,
-        es6: true
+        es6: true,
     },
     extends: [
         'eslint:recommended',
@@ -11,35 +12,36 @@ module.exports = {
         'plugin:prettier/recommended',
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
-        'prettier/@typescript-eslint'
+        'prettier/@typescript-eslint',
     ],
     globals: {
         Atomics: 'readonly',
-        SharedArrayBuffer: 'readonly'
+        SharedArrayBuffer: 'readonly',
     },
     parserOptions: {
         ecmaFeatures: {
-            jsx: true
+            jsx: true,
         },
         ecmaVersion: 2018,
-        sourceType: 'module'
+        sourceType: 'module',
     },
     settings: {
         react: {
-            version: '16.0'
-        }
+            version: '16.0',
+        },
     },
     plugins: ['react', '@typescript-eslint'],
     rules: {
         '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-        '@typescript-eslint/explicit-module-boundary-types': 'off'
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
+        'react/prop-types': 'off',
     },
     overrides: [
         {
             files: ['**/*.test.js', '**/*.test.jsx'],
             env: {
-                jest: true
-            }
-        }
-    ]
+                jest: true,
+            },
+        },
+    ],
 };
