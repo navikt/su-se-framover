@@ -44,7 +44,7 @@ const Root = () => {
     );
 };
 
-type LoginState = 'logging-in' | 'logged-in' | 'unauthorized';
+type LoginState = 'logging-in' | 'logged-in' | 'unauthorized' | 'error';
 
 function ContentWrapper({ children }: { children: React.ReactChild }) {
     const [configLoaded, setConfigLoaded] = useState(window.BASE_URL && typeof window.BASE_URL === 'string');
@@ -76,10 +76,14 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
         }
 
         apiClient('/authenticated', { method: 'GET' }).then((res) => {
-            if (res.status === 'error' && res.error.statusCode === 401) {
-                window.location.href = `${window.BASE_URL}/login`;
-            } else if (res.status === 'error' && res.error.statusCode === 403) {
-                setLoginState('unauthorized');
+            if (res.status === 'error') {
+                if (res.error.statusCode === 401) {
+                    window.location.href = `${window.BASE_URL}/login`;
+                } else if (res.error.statusCode === 403) {
+                    setLoginState('unauthorized');
+                } else {
+                    setLoginState('error');
+                }
             } else {
                 setLoginState('logged-in');
             }
@@ -112,6 +116,11 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
                 ) : loginState === 'unauthorized' ? (
                     <div className={styles.ikkeTilgangContainer}>
                         <Innholdstittel className={styles.overskrift}>Ikke tilgang</Innholdstittel>
+                        <Lenke href={`${window.BASE_URL}/login`}>Logg inn på nytt</Lenke>
+                    </div>
+                ) : loginState === 'error' ? (
+                    <div className={styles.ikkeTilgangContainer}>
+                        <Innholdstittel className={styles.overskrift}>En feil oppstod</Innholdstittel>
                         <Lenke href={`${window.BASE_URL}/login`}>Logg inn på nytt</Lenke>
                     </div>
                 ) : (
