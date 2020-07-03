@@ -22,26 +22,29 @@ import Sakintro from './sakintro/Sakintro';
 import Vilkår from './vilkår/Vilkår';
 
 const Saksoversikt = () => {
-    const { meny } = useParams<{ meny: SaksbehandligMenyValg }>();
+    const { meny, ...urlParams } = useParams<{
+        meny: SaksbehandligMenyValg;
+        sakId: string;
+        stonadsperiodeId: string;
+        behandlingId: string;
+    }>();
     const { path } = useRouteMatch();
-    const søkerFraStore = useAppSelector((s) => s.søker.søker);
-    const sakFraStore = useAppSelector((s) => s.sak.sak);
+
+    const data = useAppSelector((s) => RemoteData.combine(s.søker.søker, s.sak.sak));
     const history = useHistory();
 
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
-            {!RemoteData.isSuccess(søkerFraStore) && (
+            {!RemoteData.isSuccess(data) && (
                 <div>
                     <Søkefelt />
-                    {RemoteData.isPending(søkerFraStore) && <NavFrontendSpinner />}
-                    {RemoteData.isFailure(søkerFraStore) && (
-                        <AlertStripe type="feil">{søkerFraStore.error.message}</AlertStripe>
-                    )}
+                    {RemoteData.isPending(data) && <NavFrontendSpinner />}
+                    {RemoteData.isFailure(data) && <AlertStripe type="feil">{data.error.message}</AlertStripe>}
                 </div>
             )}
 
             {pipe(
-                RemoteData.combine(søkerFraStore, sakFraStore),
+                data,
                 RemoteData.map(([data, sak]) => (
                     <>
                         <div className={styles.headerContainer}>
@@ -53,57 +56,78 @@ const Saksoversikt = () => {
                             <Søkefelt />
                         </div>
                         <div className={styles.container}>
-                            <SideMenu
-                                links={[
-                                    {
-                                        label: 'Sak',
-                                        active: meny === undefined,
-                                    },
-                                    {
-                                        label: 'Søknad',
-                                        active: meny === SaksbehandligMenyValg.Søknad,
-                                    },
-                                    {
-                                        label: 'Vilkår',
-                                        active: meny === SaksbehandligMenyValg.Vilkår,
-                                    },
-                                    {
-                                        label: 'Behandlig',
-                                        active: meny === SaksbehandligMenyValg.Behandlig,
-                                    },
-                                    {
-                                        label: 'Vedtak',
-                                        active: meny === SaksbehandligMenyValg.Vedtak,
-                                    },
-                                ]}
-                                onClick={(index) => {
-                                    switch (index) {
-                                        case 0:
-                                            history.push(`/saksoversikt`);
-                                            return;
-                                        case 1:
-                                            history.push(`/saksoversikt/soknad`);
-                                            return;
-                                        case 2:
-                                            history.push(`/saksoversikt/vilkar`);
-                                            return;
-                                        case 3:
-                                            history.push(`/saksoversikt/behandling`);
-                                            return;
-                                        case 4:
-                                            history.push(`/saksoversikt/vedtak`);
-                                            return;
-                                    }
-                                }}
-                            />
+                            {meny && (
+                                <SideMenu
+                                    links={[
+                                        {
+                                            label: 'Søknad',
+                                            active: meny === SaksbehandligMenyValg.Søknad,
+                                        },
+                                        {
+                                            label: 'Vilkår',
+                                            active: meny === SaksbehandligMenyValg.Vilkår,
+                                        },
+                                        {
+                                            label: 'Behandling',
+                                            active: meny === SaksbehandligMenyValg.Behandlig,
+                                        },
+                                        {
+                                            label: 'Vedtak',
+                                            active: meny === SaksbehandligMenyValg.Vedtak,
+                                        },
+                                    ]}
+                                    onClick={(index) => {
+                                        switch (index) {
+                                            case 0:
+                                                history.push(
+                                                    `/saksoversikt/${sak.id}/${urlParams.stonadsperiodeId}/${urlParams.behandlingId}/soknad/`
+                                                );
+                                                return;
+                                            case 1:
+                                                history.push(
+                                                    `/saksoversikt/${sak.id}/${urlParams.stonadsperiodeId}/${urlParams.behandlingId}/vilkar/${sak.id}`
+                                                );
+                                                return;
+                                            case 2:
+                                                history.push(
+                                                    `/saksoversikt/${sak.id}/${urlParams.stonadsperiodeId}/${urlParams.behandlingId}/behandling`
+                                                );
+                                                return;
+                                            case 3:
+                                                history.push(
+                                                    `/saksoversikt/${sak.id}/${urlParams.stonadsperiodeId}/${urlParams.behandlingId}/vedtak`
+                                                );
+                                                return;
+                                        }
+                                    }}
+                                />
+                            )}
                             <div className={styles.mainContent}>
                                 <Switch>
-                                    <Route path={`${path}/${SaksbehandligMenyValg.Søknad}`}>heisann</Route>
-                                    <Route path={`${path}/${SaksbehandligMenyValg.Vilkår}`}>
-                                        <Vilkår sak={sak} />
+                                    <Route
+                                        path={`/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/${SaksbehandligMenyValg.Søknad}`}
+                                    >
+                                        Her kan vi kanskje vise hele søknaden
                                     </Route>
-                                    <Route path={`${path}/${SaksbehandligMenyValg.Behandlig}`}>behandling</Route>
-                                    <Route path={`${path}/${SaksbehandligMenyValg.Vedtak}`}>vedtak</Route>
+                                    <Route
+                                        path={`/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/${SaksbehandligMenyValg.Vilkår}`}
+                                    >
+                                        <Vilkår
+                                            sak={sak}
+                                            stønadsperiodeId={urlParams.stonadsperiodeId}
+                                            behandlingId={urlParams.behandlingId}
+                                        />
+                                    </Route>
+                                    <Route
+                                        path={`/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/${SaksbehandligMenyValg.Behandlig}`}
+                                    >
+                                        behandling
+                                    </Route>
+                                    <Route
+                                        path={`/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/${SaksbehandligMenyValg.Vedtak}`}
+                                    >
+                                        vedtak
+                                    </Route>
                                     <Route path={path}>
                                         <Sakintro sak={sak} />
                                     </Route>

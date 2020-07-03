@@ -1,19 +1,15 @@
 import React from 'react';
+import { Undertittel } from 'nav-frontend-typografi';
 
 import Vilkårsvurdering from '../vilkårsvurdering/Vilkårsvurdering';
 import WarningIcon from '../icons/WarningIcon';
-
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { useAppSelector } from '~redux/Store';
-
 import styles from './vilkår.module.less';
-import * as behandlingApi from '~api/behandlingApi';
-import { pipe } from '~lib/fp';
-import AlertStripe from 'nav-frontend-alertstriper';
+import { Behandling, Vilkårtype } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
-import { Undertittel } from 'nav-frontend-typografi';
+import { Søknad } from '~api/søknadApi';
 
-const VilkårInnhold = (props: { behandling: behandlingApi.Behandling; sak: Sak }) => {
+const VilkårInnhold = (props: { behandling: Behandling; søknad: Søknad }) => {
+    const { vilkårsvurderinger } = props.behandling;
     return (
         <div className={styles.container}>
             <Vilkårsvurdering
@@ -21,34 +17,30 @@ const VilkårInnhold = (props: { behandling: behandlingApi.Behandling; sak: Sak 
                 paragraph="§ 12-4 - § 12-8"
                 icon={<WarningIcon />}
                 legend="Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-8 i folketrygdloven er oppfylt?"
-                status={props.behandling.vilkårsvurderinger[0].status}
-                begrunnelse={props.behandling.vilkårsvurderinger[0].begrunnelse}
+                status={vilkårsvurderinger[Vilkårtype.Uførhet].status}
+                begrunnelse={vilkårsvurderinger[Vilkårtype.Uførhet].begrunnelse}
                 onSaveClick={console.log}
             >
                 <div>
                     <Undertittel>Fra søknad</Undertittel>
-                    <p>
-                        Har uførevedtak:{' '}
-                        {props.sak.stønadsperioder[0].søknad.json.uførevedtak.harUførevedtak.toString()}
-                    </p>
+                    <p>Har uførevedtak: {props.søknad.uførevedtak.harUførevedtak.toString()}</p>
                 </div>
             </Vilkårsvurdering>
         </div>
     );
 };
 
-const Vilkår = (props: { sak: Sak }) => {
-    const behandling = useAppSelector((s) => s.sak.behandling);
+const Vilkår = (props: { sak: Sak; stønadsperiodeId: string; behandlingId: string }) => {
+    const stønadsperiode = props.sak.stønadsperioder.find((sp) => sp.id.toString() === props.stønadsperiodeId);
+    const behandling = stønadsperiode?.behandlinger.find((b) => b.id.toString() === props.behandlingId);
+    const søknad = stønadsperiode?.søknad;
+
     return (
         <div className={styles.container}>
-            {pipe(
-                behandling,
-                RemoteData.fold(
-                    () => <></>,
-                    () => <></>,
-                    (error) => <AlertStripe type="feil">{error.message}</AlertStripe>,
-                    (data) => <VilkårInnhold behandling={data} sak={props.sak} />
-                )
+            {behandling && søknad ? (
+                <VilkårInnhold behandling={behandling} søknad={søknad.json} />
+            ) : (
+                'Klarte ikke finne søknaden'
             )}
         </div>
     );

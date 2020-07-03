@@ -4,7 +4,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import classNames from 'classnames';
 import styles from './formElements.module.less';
 import nb from './formElements-nb';
-import { useI18n } from '../lib/hooks';
+import { useI18n } from '~lib/hooks';
 
 export const JaNeiSpørsmål = (props: {
     id: string;

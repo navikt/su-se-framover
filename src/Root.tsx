@@ -32,7 +32,7 @@ const Root = () => {
                                 <Soknad />
                             </Route>
 
-                            <Route path="/saksoversikt/:meny?">
+                            <Route path="/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/:meny?/">
                                 <Saksoversikt />
                             </Route>
                             <Route>404</Route>
