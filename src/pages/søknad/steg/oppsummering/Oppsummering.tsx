@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import sharedStyles from '../../steg-shared.module.less';
 import { useHistory } from 'react-router-dom';
 import * as innsendingSlice from '~features/søknad/innsending.slice';
+import { FormattedMessage } from 'react-intl';
 
 import * as RemoteData from '@devexperts/remote-data-ts';
 import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
@@ -36,6 +37,9 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                         onClick: () => {
                             history.push(props.forrigeUrl);
                         },
+                    }}
+                    next={{
+                        label: <FormattedMessage id="steg.sendInn" />,
                     }}
                 />
             </form>
