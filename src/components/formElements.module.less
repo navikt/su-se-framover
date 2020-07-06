@@ -1,13 +1,15 @@
 @import '~/styles/variables.less';
 
 .janeisporsmal {
-    display: flex;
+    .svarContainer {
+        display: flex;
 
-    .svar {
-        flex: 1;
+        .svar {
+            flex: 1;
 
-        &:not(:first-of-type) {
-            margin-left: @spacing-s;
+            &:not(:first-of-type) {
+                margin-left: @spacing-s;
+            }
         }
     }
 }
