@@ -9,7 +9,7 @@ import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import * as behandlingSlice from '~features/saksoversikt/sak.slice';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import styles from './sakintro.module.less';
-import RemoteData from '@devexperts/remote-data-ts';
+import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe from 'nav-frontend-alertstriper';
 
 // TODO: Alle tekster her er placeholdere. Lag oversettelsesfil når vi er nærmere noe brukende.
