@@ -77,7 +77,7 @@ const index = () => {
             step: Søknadsteg.Oppsummering,
         },
     ];
-    const aktivtSteg = steg.map((s) => s.step).indexOf(step);
+    const aktivtSteg = steg.findIndex((s) => s.step === step);
 
     return (
         <div className={styles.container}>
