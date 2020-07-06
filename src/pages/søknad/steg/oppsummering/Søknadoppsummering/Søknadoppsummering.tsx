@@ -5,7 +5,7 @@ import React from 'react';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import styles from './oppsummering.module.less';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
-import messages from './oppsumering-nb';
+import messages from './oppsummering-nb';
 import sharedStyles from '../../../steg-shared.module.less';
 
 const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | React.ReactNode }) => (

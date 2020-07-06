@@ -12,7 +12,7 @@ import Formue from './steg/formue/DinFormue';
 import Inntekt from './steg/inntekt/Inntekt';
 import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
 import Kontakt from './steg/kontakt/Kontakt';
-import Oppsummering from './steg/oppsummering/Oppsumering';
+import Oppsummering from './steg/oppsummering/Oppsummering';
 import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import { useI18n } from '../../lib/hooks';
 
