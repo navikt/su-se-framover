@@ -1,5 +1,27 @@
+@import '~/styles/variables.less';
+
 .container {
     display: flex;
-    flex-flow: column;
-    width: 620px;
+    flex-direction: column;
+    width: 100%;
+    max-width: @container-tablet;
+}
+
+.vilkarsvurdering {
+    &:not(:first-child) {
+        margin-top: @spacing-s;
+    }
+}
+
+.infolinje {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .infotittel {
+        font-weight: 600;
+    }
+
+    .infoverdi {
+    }
 }

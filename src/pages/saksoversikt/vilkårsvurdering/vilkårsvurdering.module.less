@@ -4,16 +4,27 @@
     display: flex;
 }
 
-.tittel {
+.tittelContainer {
     display: flex;
     align-items: center;
+    width: 100%;
 }
 .tittelikon {
     margin-right: @spacing-xs;
 }
 .titteltekster {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.tittel {
+    margin-right: @spacing-s;
+}
+
+.paragraf {
+    vertical-align: middle;
 }
 
 .form {
@@ -21,6 +32,14 @@
     border-right: 1px solid @navMorkGra;
 
     padding-right: @spacing-s;
+
+    .vurdering {
+        margin-bottom: @spacing-s;
+    }
+    .begrunnelse {
+        margin-bottom: @spacing-s;
+        width: 100%;
+    }
 }
 
 .grunnlag {

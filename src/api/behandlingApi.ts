@@ -15,10 +15,16 @@ export enum Vilkårtype {
     BorOgOppholderSegINorge = 'BOR_OG_OPPHOLDER_SEG_I_NORGE',
 }
 
+export interface Vilkårsvurdering {
+    id: string;
+    begrunnelse: string;
+    status: VilkårVurderingStatus;
+}
+
 export interface Behandling {
     id: number;
     vilkårsvurderinger: {
-        [key in Vilkårtype]: { id: string; vilkår: string; begrunnelse: string; status: VilkårVurderingStatus };
+        [key in Vilkårtype]: Vilkårsvurdering;
     };
 }
 
