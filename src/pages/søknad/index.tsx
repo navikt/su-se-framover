@@ -77,6 +77,7 @@ const index = () => {
             step: Søknadsteg.Oppsummering,
         },
     ];
+    const aktivtSteg = steg.map((s) => s.step).indexOf(step);
 
     return (
         <div className={styles.container}>
@@ -91,8 +92,8 @@ const index = () => {
                                 steg={steg.map((s) => ({
                                     index: s.index,
                                     label: s.label,
-                                    aktiv: s.step === step,
                                 }))}
+                                aktivtSteg={aktivtSteg}
                                 visLabel={false}
                                 onChange={(index) => {
                                     const nyttSteg = steg[index];
