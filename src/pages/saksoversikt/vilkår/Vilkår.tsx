@@ -3,7 +3,7 @@ import { Undertittel } from 'nav-frontend-typografi';
 
 import Vilkårsvurdering from '../vilkårsvurdering/Vilkårsvurdering';
 import styles from './vilkår.module.less';
-import { Behandling, Vilkårtype } from '~api/behandlingApi';
+import { Behandling, Vilkårtype, VilkårVurderingStatus } from '~api/behandlingApi';
 import { Søknad } from '~api/søknadApi';
 import { Nullable } from '~lib/types';
 import { Sak } from '~api/sakApi';
@@ -31,6 +31,14 @@ const Infolinje = (props: { tittel: string; verdi: React.ReactNode }) => (
 
 const VilkårInnhold = (props: { behandling: Behandling; søknad: Søknad }) => {
     const { vilkårsvurderinger } = props.behandling;
+
+    const handleSaveClick = (vilkårtype: Vilkårtype) => (svar: {
+        status: VilkårVurderingStatus;
+        begrunnelse: string;
+    }) => {
+        console.log('[handleSaveClick]', { vilkårtype, svar });
+    };
+
     return (
         <div className={styles.container}>
             <Vilkårsvurdering
@@ -38,7 +46,7 @@ const VilkårInnhold = (props: { behandling: Behandling; søknad: Søknad }) => 
                 paragraph="§ 12-4 - § 12-8"
                 legend="Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-8 i folketrygdloven er oppfylt?"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Uførhet]}
-                onSaveClick={console.log}
+                onSaveClick={handleSaveClick(Vilkårtype.Uførhet)}
                 className={styles.vilkarsvurdering}
             >
                 <div>
@@ -51,7 +59,7 @@ const VilkårInnhold = (props: { behandling: Behandling; søknad: Søknad }) => 
                 paragraph="§ 28"
                 legend="Er søker registrert flyktning?"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Flyktning]}
-                onSaveClick={console.log}
+                onSaveClick={handleSaveClick(Vilkårtype.Flyktning)}
                 className={styles.vilkarsvurdering}
             >
                 <div>
@@ -67,7 +75,7 @@ const VilkårInnhold = (props: { behandling: Behandling; søknad: Søknad }) => 
                 paragraph="§ 3"
                 legend="Er søker norsk statsborger?"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Oppholdstillatelse]}
-                onSaveClick={console.log}
+                onSaveClick={handleSaveClick(Vilkårtype.Oppholdstillatelse)}
                 className={styles.vilkarsvurdering}
             >
                 <div>
@@ -106,7 +114,7 @@ const VilkårInnhold = (props: { behandling: Behandling; søknad: Søknad }) => 
                 paragraph="§ 17"
                 legend="TODO"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.PersonligOppmøte]}
-                onSaveClick={console.log}
+                onSaveClick={handleSaveClick(Vilkårtype.PersonligOppmøte)}
                 className={styles.vilkarsvurdering}
             >
                 <div>
@@ -119,7 +127,7 @@ const VilkårInnhold = (props: { behandling: Behandling; søknad: Søknad }) => 
                 paragraph="§ 8"
                 legend="TODO"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Formue]}
-                onSaveClick={console.log}
+                onSaveClick={handleSaveClick(Vilkårtype.Formue)}
                 className={styles.vilkarsvurdering}
             >
                 <div>
@@ -147,7 +155,7 @@ const VilkårInnhold = (props: { behandling: Behandling; søknad: Søknad }) => 
                 paragraph="§ 5"
                 legend="TODO"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.BorOgOppholderSegINorge]}
-                onSaveClick={console.log}
+                onSaveClick={handleSaveClick(Vilkårtype.BorOgOppholderSegINorge)}
                 className={styles.vilkarsvurdering}
             >
                 <div>

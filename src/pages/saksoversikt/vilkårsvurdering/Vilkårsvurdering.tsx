@@ -12,6 +12,7 @@ import { Nullable } from '~lib/types';
 import styles from './vilkårsvurdering.module.less';
 import { VilkårVurderingStatus, Vilkårsvurdering } from '~api/behandlingApi';
 import Ikon from 'nav-frontend-ikoner-assets';
+import yup from '../../../lib/validering';
 
 interface FormData {
     vurdering: Nullable<boolean>;
@@ -54,17 +55,21 @@ const Vilkårsvurdering: React.FC<{
     legend: string | React.ReactNode;
     children?: React.ReactChild;
     className?: string;
-    onSaveClick: (svar: { status: VilkårVurderingStatus; begrunnelse: Nullable<string> }) => void;
+    onSaveClick: (svar: { status: VilkårVurderingStatus; begrunnelse: string }) => void;
 }> = (props) => {
     const formik = useFormik<FormData>({
         initialValues: {
             vurdering: vilkårVurderingStatusTilJaNeiSpørsmål(props.vilkårsvurdering.status),
             begrunnelse: props.vilkårsvurdering.begrunnelse,
         },
+        validationSchema: yup.object<FormData>({
+            begrunnelse: yup.string().required(),
+            vurdering: yup.boolean().nullable().required(),
+        }),
         onSubmit: (values) => {
             props.onSaveClick({
                 status: boolTilVilkårvurderingStatus(values.vurdering),
-                begrunnelse: values.begrunnelse,
+                begrunnelse: values.begrunnelse ?? '',
             });
         },
     });
@@ -87,7 +92,7 @@ const Vilkårsvurdering: React.FC<{
                     <JaNeiSpørsmål
                         id={guid()}
                         legend={props.legend}
-                        feil={null}
+                        feil={formik.errors.vurdering}
                         state={formik.values.vurdering}
                         onChange={(val) => formik.setValues({ ...formik.values, vurdering: val })}
                         className={styles.vurdering}
@@ -97,6 +102,7 @@ const Vilkårsvurdering: React.FC<{
                             label="Begrunnelse"
                             name="begrunnelse"
                             value={formik.values.begrunnelse ?? ''}
+                            feil={formik.errors.begrunnelse}
                             onChange={formik.handleChange}
                         />
                     </div>
