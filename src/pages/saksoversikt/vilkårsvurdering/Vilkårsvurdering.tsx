@@ -53,6 +53,7 @@ const Vilkårsvurdering: React.FC<{
     paragraph: string;
     vilkårsvurdering: Vilkårsvurdering;
     legend: string | React.ReactNode;
+    lagrer: boolean;
     children?: React.ReactChild;
     className?: string;
     onSaveClick: (svar: { status: VilkårVurderingStatus; begrunnelse: string }) => void;
@@ -67,6 +68,9 @@ const Vilkårsvurdering: React.FC<{
             vurdering: yup.boolean().nullable().required(),
         }),
         onSubmit: (values) => {
+            if (props.lagrer) {
+                return;
+            }
             props.onSaveClick({
                 status: boolTilVilkårvurderingStatus(values.vurdering),
                 begrunnelse: values.begrunnelse ?? '',
@@ -106,7 +110,7 @@ const Vilkårsvurdering: React.FC<{
                             onChange={formik.handleChange}
                         />
                     </div>
-                    <Hovedknapp>Lagre</Hovedknapp>
+                    <Hovedknapp spinner={props.lagrer}>Lagre</Hovedknapp>
                 </form>
                 <div className={styles.grunnlag}>{props.children}</div>
             </div>

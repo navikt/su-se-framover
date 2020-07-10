@@ -1,11 +1,12 @@
 import React from 'react';
 import { Undertittel } from 'nav-frontend-typografi';
+import * as RemoteData from '@devexperts/remote-data-ts';
 
 import Vilkårsvurdering from '../vilkårsvurdering/Vilkårsvurdering';
 import styles from './vilkår.module.less';
 import { Behandling, Vilkårtype, VilkårVurderingStatus } from '~api/behandlingApi';
 import { Nullable } from '~lib/types';
-import { useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 
 const boolTilJaNei = (val: Nullable<boolean>) => {
@@ -36,6 +37,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
     } = props.behandling;
 
     const dispatch = useAppDispatch();
+    const lagrestatus = useAppSelector((s) => s.sak.lagreVilkårsvurderingStatus);
 
     const handleSaveClick = (vilkårtype: Vilkårtype) => (svar: {
         status: VilkårVurderingStatus;
@@ -60,6 +62,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                 paragraph="§ 12-4 - § 12-8"
                 legend="Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-8 i folketrygdloven er oppfylt?"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Uførhet]}
+                lagrer={RemoteData.isPending(lagrestatus)}
                 onSaveClick={handleSaveClick(Vilkårtype.Uførhet)}
                 className={styles.vilkarsvurdering}
             >
@@ -73,6 +76,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                 paragraph="§ 28"
                 legend="Er søker registrert flyktning?"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Flyktning]}
+                lagrer={RemoteData.isPending(lagrestatus)}
                 onSaveClick={handleSaveClick(Vilkårtype.Flyktning)}
                 className={styles.vilkarsvurdering}
             >
@@ -89,6 +93,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                 paragraph="§ 3"
                 legend="Er søker norsk statsborger?"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Oppholdstillatelse]}
+                lagrer={RemoteData.isPending(lagrestatus)}
                 onSaveClick={handleSaveClick(Vilkårtype.Oppholdstillatelse)}
                 className={styles.vilkarsvurdering}
             >
@@ -128,6 +133,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                 paragraph="§ 17"
                 legend="TODO"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.PersonligOppmøte]}
+                lagrer={RemoteData.isPending(lagrestatus)}
                 onSaveClick={handleSaveClick(Vilkårtype.PersonligOppmøte)}
                 className={styles.vilkarsvurdering}
             >
@@ -141,6 +147,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                 paragraph="§ 8"
                 legend="TODO"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Formue]}
+                lagrer={RemoteData.isPending(lagrestatus)}
                 onSaveClick={handleSaveClick(Vilkårtype.Formue)}
                 className={styles.vilkarsvurdering}
             >
@@ -169,6 +176,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                 paragraph="§ 5"
                 legend="TODO"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.BorOgOppholderSegINorge]}
+                lagrer={RemoteData.isPending(lagrestatus)}
                 onSaveClick={handleSaveClick(Vilkårtype.BorOgOppholderSegINorge)}
                 className={styles.vilkarsvurdering}
             >
