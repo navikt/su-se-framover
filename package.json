@@ -7,7 +7,7 @@
         "eslint": "eslint src --ext .tsx,.ts,.jsx,.js",
         "test": "jest --passWithNoTests",
         "tdd": "jest --watch",
-        "start-no-browser": "npm run inject_local_config && parcel src/index.html",
+        "start-no-browser": "npm run inject_local_config && rimraf .parcel_cache && parcel serve src/index.html --cache-dir .parcel_cache",
         "start": "npm run start-no-browser -- --open",
         "build": "npm run clean:dist && npm run lint && npm run test && parcel build src/index.html --out-dir dist/ --no-source-maps",
         "inject_local_config": "cp config.dev.json dist/config.json || echo \"Kjør 'npm run build' en gang først for å fikse serveroppsettet.\"",
