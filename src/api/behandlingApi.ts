@@ -46,3 +46,24 @@ export async function hentBehandling(sakId: string, behandlingId: string): Promi
         method: 'GET',
     });
 }
+
+export async function lagreVilkårsvurdering(arg: {
+    sakId: string;
+    behandlingId: string;
+    vilkårsvurderingId: string;
+    vilkårtype: Vilkårtype;
+    status: VilkårVurderingStatus;
+    begrunnelse: string;
+}) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/vilkarsvurderinger`,
+        method: 'PATCH',
+        body: {
+            [arg.vilkårtype]: {
+                id: arg.vilkårsvurderingId,
+                begrunnelse: arg.begrunnelse,
+                status: arg.status,
+            },
+        },
+    });
+}

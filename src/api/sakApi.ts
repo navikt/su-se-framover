@@ -9,6 +9,10 @@ export interface Sak {
     søknader: Array<{ id: string; søknadInnhold: SøknadInnhold }>;
 }
 
-export async function fetchSak(fnr: string): Promise<ApiClientResult<Sak>> {
+export async function fetchSakByFnr(fnr: string): Promise<ApiClientResult<Sak>> {
     return apiClient({ url: `/saker?fnr=${fnr}`, method: 'GET' });
+}
+
+export async function fetchSakBySakId(sakId: string): Promise<ApiClientResult<Sak>> {
+    return apiClient({ url: `/saker/${sakId}`, method: 'GET' });
 }

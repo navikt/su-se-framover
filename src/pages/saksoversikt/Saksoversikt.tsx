@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, useHistory, useParams, useRouteMatch, Switch } from 'react-router-dom';
 import AlertStripe from 'nav-frontend-alertstriper';
@@ -10,7 +10,7 @@ import SideMenu from '@navikt/nap-side-menu';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 
 import { Languages } from '~components/TextProvider';
-import { useAppSelector } from '~redux/Store';
+import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { pipe } from '~lib/fp';
 
 import messages from './saksoversikt-nb';
@@ -20,6 +20,8 @@ import { SaksbehandligMenyValg } from './types';
 import styles from './saksoversikt.module.less';
 import Sakintro from './sakintro/Sakintro';
 import Vilkår from './vilkår/Vilkår';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
+import * as personSlice from '~features/person/person.slice';
 
 const Saksoversikt = () => {
     const { meny, ...urlParams } = useParams<{
@@ -30,8 +32,22 @@ const Saksoversikt = () => {
     }>();
     const { path } = useRouteMatch();
 
-    const data = useAppSelector((s) => RemoteData.combine(s.søker.søker, s.sak.sak));
+    const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
     const history = useHistory();
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (urlParams.sakId && RemoteData.isInitial(sak)) {
+            dispatch(sakSlice.fetchSak({ sakId: urlParams.sakId }));
+        }
+    }, [sak._tag]);
+    useEffect(() => {
+        if (RemoteData.isSuccess(sak) && RemoteData.isInitial(søker)) {
+            dispatch(personSlice.fetchPerson({ fnr: sak.value.fnr }));
+        }
+    }, [sak._tag, søker._tag]);
+
+    const data = RemoteData.combine(søker, sak);
 
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>

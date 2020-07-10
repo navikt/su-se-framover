@@ -5,6 +5,8 @@ import Vilkårsvurdering from '../vilkårsvurdering/Vilkårsvurdering';
 import styles from './vilkår.module.less';
 import { Behandling, Vilkårtype, VilkårVurderingStatus } from '~api/behandlingApi';
 import { Nullable } from '~lib/types';
+import { useAppDispatch } from '~redux/Store';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 
 const boolTilJaNei = (val: Nullable<boolean>) => {
     if (val === null) {
@@ -27,17 +29,28 @@ const Infolinje = (props: { tittel: string; verdi: React.ReactNode }) => (
     </div>
 );
 
-const VilkårInnhold = (props: { behandling: Behandling }) => {
+const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
     const {
         vilkårsvurderinger,
         søknad: { søknadInnhold: søknad },
     } = props.behandling;
 
+    const dispatch = useAppDispatch();
+
     const handleSaveClick = (vilkårtype: Vilkårtype) => (svar: {
         status: VilkårVurderingStatus;
         begrunnelse: string;
     }) => {
-        console.log('[handleSaveClick]', { vilkårtype, svar });
+        dispatch(
+            sakSlice.lagreVilkårsvurdering({
+                sakId: props.sakId,
+                begrunnelse: svar.begrunnelse,
+                behandlingId: props.behandling.id,
+                status: svar.status,
+                vilkårsvurderingId: vilkårsvurderinger[vilkårtype].id,
+                vilkårtype,
+            })
+        );
     };
 
     return (
@@ -171,7 +184,11 @@ const VilkårInnhold = (props: { behandling: Behandling }) => {
 const Vilkår = (props: { sakId: string; behandling: Behandling | undefined }) => {
     return (
         <div className={styles.container}>
-            {props.behandling ? <VilkårInnhold behandling={props.behandling} /> : 'ingen behandling enda'}
+            {props.behandling ? (
+                <VilkårInnhold behandling={props.behandling} sakId={props.sakId} />
+            ) : (
+                'ingen behandling enda'
+            )}
         </div>
     );
 };
