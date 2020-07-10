@@ -10,7 +10,7 @@
         "start-no-browser": "npm run inject_local_config && rimraf .parcel_cache && parcel serve src/index.html --cache-dir .parcel_cache",
         "start": "npm run start-no-browser -- --open",
         "build": "npm run clean:dist && npm run lint && npm run test && parcel build src/index.html --out-dir dist/ --no-source-maps",
-        "inject_local_config": "cp config.dev.json dist/config.json || echo \"Kjør 'npm run build' en gang først for å fikse serveroppsettet.\"",
+        "inject_local_config": "mkdirp dist && cp config.dev.json dist/config.json",
         "clean:dist": "rimraf dist",
         "prettier": "prettier --write src",
         "tsc:watch": "tsc --watch --noEmit --project './tsconfig.json'"
@@ -133,6 +133,7 @@
         "husky": "^4.2.5",
         "jest": "^26.1.0",
         "lint-staged": "^10.2.11",
+        "mkdirp": "^1.0.4",
         "parcel-bundler": "^1.12.4",
         "prettier": "^2.0.5",
         "react-test-renderer": "^16.13.1",
