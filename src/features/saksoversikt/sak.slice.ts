@@ -18,10 +18,10 @@ export const fetchSak = createAsyncThunk<sakApi.Sak, { fnr: string }, { rejectVa
 
 export const startBehandling = createAsyncThunk<
     behandligApi.Behandling,
-    { sakId: number; stønadsperiodeId: number },
+    { sakId: string; søknadId: string },
     { rejectValue: ApiError }
->('behandling/start', async ({ sakId, stønadsperiodeId }, thunkApi) => {
-    const res = await behandligApi.startBehandling(sakId.toString(), stønadsperiodeId.toString());
+>('behandling/start', async ({ sakId, søknadId }, thunkApi) => {
+    const res = await behandligApi.startBehandling({ sakId, søknadId });
     if (res.status === 'ok') {
         return res.data;
     }
@@ -86,17 +86,7 @@ export default createSlice({
                 state.sak,
                 RemoteData.map((sak) => ({
                     ...sak,
-                    stønadsperioder: sak.stønadsperioder.map((sp) =>
-                        sp.id === action.meta.arg.stønadsperiodeId
-                            ? {
-                                  ...sp,
-                                  behandlinger: [
-                                      ...sp.behandlinger.filter((b) => b.id !== action.payload.id),
-                                      action.payload,
-                                  ],
-                              }
-                            : sp
-                    ),
+                    behandlinger: [...sak.behandlinger, action.payload],
                 }))
             );
         });

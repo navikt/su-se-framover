@@ -80,22 +80,22 @@ const Saksoversikt = () => {
                                         switch (index) {
                                             case 0:
                                                 history.push(
-                                                    `/saksoversikt/${sak.id}/${urlParams.stonadsperiodeId}/${urlParams.behandlingId}/soknad/`
+                                                    `/saksoversikt/${sak.id}/${urlParams.behandlingId}/soknad/`
                                                 );
                                                 return;
                                             case 1:
                                                 history.push(
-                                                    `/saksoversikt/${sak.id}/${urlParams.stonadsperiodeId}/${urlParams.behandlingId}/vilkar/${sak.id}`
+                                                    `/saksoversikt/${sak.id}/${urlParams.behandlingId}/vilkar`
                                                 );
                                                 return;
                                             case 2:
                                                 history.push(
-                                                    `/saksoversikt/${sak.id}/${urlParams.stonadsperiodeId}/${urlParams.behandlingId}/behandling`
+                                                    `/saksoversikt/${sak.id}/${urlParams.behandlingId}/behandling`
                                                 );
                                                 return;
                                             case 3:
                                                 history.push(
-                                                    `/saksoversikt/${sak.id}/${urlParams.stonadsperiodeId}/${urlParams.behandlingId}/vedtak`
+                                                    `/saksoversikt/${sak.id}/${urlParams.behandlingId}/vedtak`
                                                 );
                                                 return;
                                         }
@@ -105,26 +105,25 @@ const Saksoversikt = () => {
                             <div className={styles.mainContent}>
                                 <Switch>
                                     <Route
-                                        path={`/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/${SaksbehandligMenyValg.Søknad}`}
+                                        path={`/saksoversikt/:sakId?/:behandlingId?/${SaksbehandligMenyValg.Søknad}`}
                                     >
                                         Her kan vi kanskje vise hele søknaden
                                     </Route>
                                     <Route
-                                        path={`/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/${SaksbehandligMenyValg.Vilkår}`}
+                                        path={`/saksoversikt/:sakId?/:behandlingId?/${SaksbehandligMenyValg.Vilkår}`}
                                     >
                                         <Vilkår
-                                            sak={sak}
-                                            stønadsperiodeId={urlParams.stonadsperiodeId}
-                                            behandlingId={urlParams.behandlingId}
+                                            sakId={sak.id}
+                                            behandling={sak.behandlinger.find((b) => b.id === urlParams.behandlingId)}
                                         />
                                     </Route>
                                     <Route
-                                        path={`/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/${SaksbehandligMenyValg.Behandlig}`}
+                                        path={`/saksoversikt/:sakId?/:behandlingId?/${SaksbehandligMenyValg.Behandlig}`}
                                     >
                                         behandling
                                     </Route>
                                     <Route
-                                        path={`/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/${SaksbehandligMenyValg.Vedtak}`}
+                                        path={`/saksoversikt/:sakId?/:behandlingId?/${SaksbehandligMenyValg.Vedtak}`}
                                     >
                                         vedtak
                                     </Route>

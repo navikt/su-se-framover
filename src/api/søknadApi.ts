@@ -3,6 +3,11 @@ import apiClient, { ApiClientResult } from './apiClient';
 import { Nullable } from '~lib/types';
 
 export interface Søknad {
+    id: string;
+    søknadInnhold: SøknadInnhold;
+}
+
+export interface SøknadInnhold {
     personopplysninger: {
         aktørid: string;
         fnr: string;
@@ -75,9 +80,6 @@ export interface Søknad {
     };
 }
 
-export async function sendSøknad(søknad: Søknad): Promise<ApiClientResult<Søknad>> {
-    return apiClient('/soknad', {
-        method: 'POST',
-        body: (JSON.stringify(søknad) as unknown) as ReadableStream<Uint8Array>,
-    });
+export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientResult<SøknadInnhold>> {
+    return apiClient({ url: '/soknad', method: 'POST', body: søknad });
 }

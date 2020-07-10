@@ -23,70 +23,74 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
     return (
         <div className={styles.container}>
             <Innholdstittel>Sak for {props.sak.fnr}</Innholdstittel>
-            {props.sak.stønadsperioder.length > 0 && (
+            {props.sak.søknader.length > 0 ? (
                 <>
-                    <Undertittel>Stønadsperioder</Undertittel>
+                    <Undertittel>Søknader</Undertittel>
                     <ul>
-                        {props.sak.stønadsperioder.map((sp) => (
-                            <li key={sp.id}>
-                                <Panel border>
-                                    <p>Id: {sp.id}</p>
-                                    <p>Antall behandlinger: {sp.behandlinger.length}</p>
-                                    <Ekspanderbartpanel tittel="Rådata">
-                                        <pre>{JSON.stringify(props.sak, undefined, 4)}</pre>
-                                    </Ekspanderbartpanel>
-                                    {sp.behandlinger.length === 0 ? (
-                                        <>
-                                            <Hovedknapp
-                                                onClick={async () => {
-                                                    const startBehandlingRes = await dispatch(
-                                                        behandlingSlice.startBehandling({
-                                                            sakId,
-                                                            stønadsperiodeId: sp.id,
-                                                        })
-                                                    );
-                                                    if (
-                                                        startBehandlingRes.payload &&
-                                                        'id' in startBehandlingRes.payload
-                                                    ) {
-                                                        history.push(
-                                                            `/saksoversikt/${sakId}/${sp.id}/${startBehandlingRes.payload.id}/vilkar/`
+                        {props.sak.søknader.map((s) => {
+                            const behandlinger = props.sak.behandlinger.filter((b) => b.søknad.id === s.id);
+                            return (
+                                <li key={s.id}>
+                                    <Panel border>
+                                        <p>Id: {s.id}</p>
+                                        <Ekspanderbartpanel tittel="Rådata">
+                                            <pre>{JSON.stringify(s, undefined, 4)}</pre>
+                                        </Ekspanderbartpanel>
+                                        {behandlinger.length === 0 ? (
+                                            <>
+                                                <Hovedknapp
+                                                    onClick={async () => {
+                                                        const startBehandlingRes = await dispatch(
+                                                            behandlingSlice.startBehandling({
+                                                                sakId: props.sak.id,
+                                                                søknadId: s.id,
+                                                            })
                                                         );
-                                                    }
-                                                }}
-                                                spinner={RemoteData.isPending(startBehandlingStatus)}
-                                            >
-                                                Start førstegangsbehandling
-                                            </Hovedknapp>
-                                            {RemoteData.isFailure(startBehandlingStatus) && (
-                                                <AlertStripe type="feil">Klarte ikke starte behandling</AlertStripe>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <ul>
-                                            {sp.behandlinger.map((b) => (
-                                                <li key={b.id}>
-                                                    <Element>
-                                                        Behandling {b.id}
-                                                        <Knapp
-                                                            onClick={() => {
-                                                                history.push(
-                                                                    `/saksoversikt/${sakId}/${sp.id}/${b.id}/vilkar/`
-                                                                );
-                                                            }}
-                                                        >
-                                                            Fortsett behandling
-                                                        </Knapp>
-                                                    </Element>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </Panel>
-                            </li>
-                        ))}
+                                                        if (
+                                                            startBehandlingRes.payload &&
+                                                            'id' in startBehandlingRes.payload
+                                                        ) {
+                                                            history.push(
+                                                                `/saksoversikt/${sakId}/${startBehandlingRes.payload.id}/vilkar/`
+                                                            );
+                                                        }
+                                                    }}
+                                                    spinner={RemoteData.isPending(startBehandlingStatus)}
+                                                >
+                                                    Start førstegangsbehandling
+                                                </Hovedknapp>
+                                                {RemoteData.isFailure(startBehandlingStatus) && (
+                                                    <AlertStripe type="feil">Klarte ikke starte behandling</AlertStripe>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <ul>
+                                                {behandlinger.map((b) => (
+                                                    <li key={b.id}>
+                                                        <Element>
+                                                            Behandling {b.id}
+                                                            <Knapp
+                                                                onClick={() => {
+                                                                    history.push(
+                                                                        `/saksoversikt/${sakId}/${b.id}/vilkar/`
+                                                                    );
+                                                                }}
+                                                            >
+                                                                Fortsett behandling
+                                                            </Knapp>
+                                                        </Element>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </Panel>
+                                </li>
+                            );
+                        })}
                     </ul>
                 </>
+            ) : (
+                'Ingen søknader'
             )}
         </div>
     );

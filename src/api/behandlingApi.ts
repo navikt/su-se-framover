@@ -1,4 +1,5 @@
 import apiClient, { ApiClientResult } from './apiClient';
+import { Søknad } from './søknadApi';
 
 export enum VilkårVurderingStatus {
     IkkeVurdert = 'IKKE_VURDERT',
@@ -22,24 +23,26 @@ export interface Vilkårsvurdering {
 }
 
 export interface Behandling {
-    id: number;
+    id: string;
+    søknad: Søknad;
     vilkårsvurderinger: {
         [key in Vilkårtype]: Vilkårsvurdering;
     };
 }
 
-export async function startBehandling(sakId: string, stønadsperiodeId: string): Promise<ApiClientResult<Behandling>> {
-    return apiClient(`/sak/${sakId}/stonadsperioder/${stønadsperiodeId}/behandlinger`, {
+export async function startBehandling(arg: { sakId: string; søknadId: string }): Promise<ApiClientResult<Behandling>> {
+    return apiClient({
+        url: `/saker/${arg.sakId}/behandlinger`,
         method: 'POST',
+        body: {
+            soknadId: arg.søknadId,
+        },
     });
 }
 
-export async function hentBehandling(
-    sakId: string,
-    stønadsperiodeId: string,
-    behandlingId: string
-): Promise<ApiClientResult<Behandling>> {
-    return apiClient(`/sak/${sakId}/stonadsperioder/${stønadsperiodeId}/behandlinger/${behandlingId}`, {
+export async function hentBehandling(sakId: string, behandlingId: string): Promise<ApiClientResult<Behandling>> {
+    return apiClient({
+        url: `/saker/${sakId}/behandlinger/${behandlingId}`,
         method: 'GET',
     });
 }

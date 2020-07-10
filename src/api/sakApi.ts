@@ -1,15 +1,14 @@
 import apiClient, { ApiClientResult } from './apiClient';
-import { Søknad } from './søknadApi';
+import { SøknadInnhold } from './søknadApi';
 import { Behandling } from './behandlingApi';
 
 export interface Sak {
-    id: number;
+    id: string;
     fnr: string;
-    stønadsperioder: Array<{ id: number; søknad: { id: number; json: Søknad }; behandlinger: Behandling[] }>;
+    behandlinger: Behandling[];
+    søknader: Array<{ id: string; søknadInnhold: SøknadInnhold }>;
 }
 
 export async function fetchSak(fnr: string): Promise<ApiClientResult<Sak>> {
-    return apiClient(`/person/${fnr}/sak`, {
-        method: 'GET',
-    });
+    return apiClient({ url: `/saker?fnr=${fnr}`, method: 'GET' });
 }

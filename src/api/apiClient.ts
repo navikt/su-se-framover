@@ -32,17 +32,22 @@ function success<T>(data: T, statusCode: number): ApiClientResult<T> {
     };
 }
 
-export default async function apiClient<T>(
-    url: string,
-    request: Partial<Request>,
-    successStatusCodes?: number[],
-    extraData?: { accessToken: string; correlationId: string; numAttempts: number }
-): Promise<ApiClientResult<T>> {
-    const accessToken = extraData?.accessToken ?? Cookies.get(Cookies.CookieName.AccessToken);
-    const refreshToken = Cookies.get(Cookies.CookieName.RefreshToken);
-    const correlationId = extraData?.correlationId ?? guid();
+type Method = 'GET' | 'PUT' | 'POST' | 'PATCH';
 
-    if ((extraData?.numAttempts ?? 0) > 1) {
+export default async function apiClient<T>(arg: {
+    url: string;
+    method: Method;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    body?: Record<string, any>;
+    request?: Partial<Request>;
+    successStatusCodes?: number[];
+    extraData?: { accessToken: string; correlationId: string; numAttempts: number };
+}): Promise<ApiClientResult<T>> {
+    const accessToken = arg.extraData?.accessToken ?? Cookies.get(Cookies.CookieName.AccessToken);
+    const refreshToken = Cookies.get(Cookies.CookieName.RefreshToken);
+    const correlationId = arg.extraData?.correlationId ?? guid();
+
+    if ((arg.extraData?.numAttempts ?? 0) > 1) {
         return error({
             code: ErrorCode.Unknown,
             body: null,
@@ -51,13 +56,15 @@ export default async function apiClient<T>(
         });
     }
 
-    const res = await fetch(`${window.BASE_URL}${url}`, {
-        ...request,
+    const res = await fetch(`${window.BASE_URL}${arg.url}`, {
+        ...arg.request,
+        method: arg.method,
         headers: {
-            ...request.headers,
+            ...arg.request?.headers,
             ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
             'X-Correlation-ID': correlationId,
         },
+        body: arg.body ? JSON.stringify(arg.body) : undefined,
     });
 
     if (res.status === 401) {
@@ -78,10 +85,14 @@ export default async function apiClient<T>(
             if (nyttAccessToken) {
                 Cookies.set(CookieName.AccessToken, nyttAccessToken);
 
-                return apiClient(url, request, successStatusCodes, {
-                    accessToken: nyttAccessToken,
-                    correlationId,
-                    numAttempts: (extraData?.numAttempts ?? 0) + 1,
+                return apiClient({
+                    ...arg,
+                    extraData: {
+                        ...arg.extraData,
+                        accessToken: nyttAccessToken,
+                        correlationId,
+                        numAttempts: (arg.extraData?.numAttempts ?? 0) + 1,
+                    },
                 });
             }
         }
@@ -101,7 +112,7 @@ export default async function apiClient<T>(
         });
     }
 
-    if (res.ok || successStatusCodes?.includes(res.status)) {
+    if (res.ok || arg.successStatusCodes?.includes(res.status)) {
         return success<T>(await res.json(), res.status);
     }
 
