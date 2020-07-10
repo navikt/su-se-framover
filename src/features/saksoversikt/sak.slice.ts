@@ -5,10 +5,10 @@ import * as behandligApi from '~api/behandlingApi';
 import { ErrorCode, ApiError } from '~api/apiClient';
 import { pipe } from '~lib/fp';
 
-export const fetchSak = createAsyncThunk<sakApi.Sak, { fnr: string }, { rejectValue: ApiError }>(
+export const fetchSak = createAsyncThunk<sakApi.Sak, { fnr: string } | { sakId: string }, { rejectValue: ApiError }>(
     'sak/fetch',
-    async ({ fnr }, thunkApi) => {
-        const res = await sakApi.fetchSak(fnr);
+    async (arg, thunkApi) => {
+        const res = await ('fnr' in arg ? sakApi.fetchSakByFnr(arg.fnr) : sakApi.fetchSakBySakId(arg.sakId));
         if (res.status === 'ok') {
             return res.data;
         }
@@ -18,10 +18,29 @@ export const fetchSak = createAsyncThunk<sakApi.Sak, { fnr: string }, { rejectVa
 
 export const startBehandling = createAsyncThunk<
     behandligApi.Behandling,
-    { sakId: number; stønadsperiodeId: number },
+    { sakId: string; søknadId: string },
     { rejectValue: ApiError }
->('behandling/start', async ({ sakId, stønadsperiodeId }, thunkApi) => {
-    const res = await behandligApi.startBehandling(sakId.toString(), stønadsperiodeId.toString());
+>('behandling/start', async ({ sakId, søknadId }, thunkApi) => {
+    const res = await behandligApi.startBehandling({ sakId, søknadId });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreVilkårsvurdering = createAsyncThunk<
+    behandligApi.Behandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        vilkårsvurderingId: string;
+        vilkårtype: behandligApi.Vilkårtype;
+        status: behandligApi.VilkårVurderingStatus;
+        begrunnelse: string;
+    },
+    { rejectValue: ApiError }
+>('behandling/lagreVilkårsvurdering', async (arg, thunkApi) => {
+    const res = await behandligApi.lagreVilkårsvurdering(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -37,11 +56,13 @@ interface SakState {
         sakApi.Sak
     >;
     startBehandlingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
+    lagreVilkårsvurderingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
 }
 
 const initialState: SakState = {
     sak: RemoteData.initial,
     startBehandlingStatus: RemoteData.initial,
+    lagreVilkårsvurderingStatus: RemoteData.initial,
 };
 
 export default createSlice({
@@ -65,6 +86,7 @@ export default createSlice({
                 state.sak = RemoteData.failure({ code: ErrorCode.Unknown, message: 'Ukjent feil' });
             }
         });
+
         builder.addCase(startBehandling.pending, (state) => {
             state.startBehandlingStatus = RemoteData.pending;
         });
@@ -86,17 +108,33 @@ export default createSlice({
                 state.sak,
                 RemoteData.map((sak) => ({
                     ...sak,
-                    stønadsperioder: sak.stønadsperioder.map((sp) =>
-                        sp.id === action.meta.arg.stønadsperiodeId
-                            ? {
-                                  ...sp,
-                                  behandlinger: [
-                                      ...sp.behandlinger.filter((b) => b.id !== action.payload.id),
-                                      action.payload,
-                                  ],
-                              }
-                            : sp
-                    ),
+                    behandlinger: [...sak.behandlinger, action.payload],
+                }))
+            );
+        });
+
+        builder.addCase(lagreVilkårsvurdering.pending, (state) => {
+            state.lagreVilkårsvurderingStatus = RemoteData.pending;
+        });
+        builder.addCase(lagreVilkårsvurdering.rejected, (state, action) => {
+            state.lagreVilkårsvurderingStatus = action.payload
+                ? RemoteData.failure({
+                      code: action.payload.code,
+                      message: `Feilet med status ${action.payload.statusCode}`,
+                  })
+                : (state.startBehandlingStatus = RemoteData.failure({
+                      code: ErrorCode.Unknown,
+                      message: 'Ukjent feil',
+                  }));
+        });
+        builder.addCase(lagreVilkårsvurdering.fulfilled, (state, action) => {
+            state.lagreVilkårsvurderingStatus = RemoteData.success(null);
+
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
                 }))
             );
         });

@@ -6,11 +6,11 @@ import { SøknadState } from './søknad.slice';
 import * as personApi from '~api/personApi';
 
 export const sendSøknad = createAsyncThunk<
-    søknadApi.Søknad,
+    søknadApi.SøknadInnhold,
     { søknad: SøknadState; søker: personApi.Person },
     { rejectValue: ApiError }
 >('innsending/fetch', async ({ søknad, søker }, thunkApi) => {
-    const søknadDto: søknadApi.Søknad = {
+    const søknadDto: søknadApi.SøknadInnhold = {
         personopplysninger: {
             aktørid: '123',
             fnr: søker.fnr,

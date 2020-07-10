@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, useHistory, useParams, useRouteMatch, Switch } from 'react-router-dom';
 import AlertStripe from 'nav-frontend-alertstriper';
@@ -10,7 +10,7 @@ import SideMenu from '@navikt/nap-side-menu';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 
 import { Languages } from '~components/TextProvider';
-import { useAppSelector } from '~redux/Store';
+import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { pipe } from '~lib/fp';
 
 import messages from './saksoversikt-nb';
@@ -20,6 +20,8 @@ import { SaksbehandligMenyValg } from './types';
 import styles from './saksoversikt.module.less';
 import Sakintro from './sakintro/Sakintro';
 import Vilkår from './vilkår/Vilkår';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
+import * as personSlice from '~features/person/person.slice';
 
 const Saksoversikt = () => {
     const { meny, ...urlParams } = useParams<{
@@ -30,8 +32,22 @@ const Saksoversikt = () => {
     }>();
     const { path } = useRouteMatch();
 
-    const data = useAppSelector((s) => RemoteData.combine(s.søker.søker, s.sak.sak));
+    const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
     const history = useHistory();
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (urlParams.sakId && RemoteData.isInitial(sak)) {
+            dispatch(sakSlice.fetchSak({ sakId: urlParams.sakId }));
+        }
+    }, [sak._tag]);
+    useEffect(() => {
+        if (RemoteData.isSuccess(sak) && RemoteData.isInitial(søker)) {
+            dispatch(personSlice.fetchPerson({ fnr: sak.value.fnr }));
+        }
+    }, [sak._tag, søker._tag]);
+
+    const data = RemoteData.combine(søker, sak);
 
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
@@ -80,22 +96,22 @@ const Saksoversikt = () => {
                                         switch (index) {
                                             case 0:
                                                 history.push(
-                                                    `/saksoversikt/${sak.id}/${urlParams.stonadsperiodeId}/${urlParams.behandlingId}/soknad/`
+                                                    `/saksoversikt/${sak.id}/${urlParams.behandlingId}/soknad/`
                                                 );
                                                 return;
                                             case 1:
                                                 history.push(
-                                                    `/saksoversikt/${sak.id}/${urlParams.stonadsperiodeId}/${urlParams.behandlingId}/vilkar/${sak.id}`
+                                                    `/saksoversikt/${sak.id}/${urlParams.behandlingId}/vilkar`
                                                 );
                                                 return;
                                             case 2:
                                                 history.push(
-                                                    `/saksoversikt/${sak.id}/${urlParams.stonadsperiodeId}/${urlParams.behandlingId}/behandling`
+                                                    `/saksoversikt/${sak.id}/${urlParams.behandlingId}/behandling`
                                                 );
                                                 return;
                                             case 3:
                                                 history.push(
-                                                    `/saksoversikt/${sak.id}/${urlParams.stonadsperiodeId}/${urlParams.behandlingId}/vedtak`
+                                                    `/saksoversikt/${sak.id}/${urlParams.behandlingId}/vedtak`
                                                 );
                                                 return;
                                         }
@@ -105,26 +121,25 @@ const Saksoversikt = () => {
                             <div className={styles.mainContent}>
                                 <Switch>
                                     <Route
-                                        path={`/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/${SaksbehandligMenyValg.Søknad}`}
+                                        path={`/saksoversikt/:sakId?/:behandlingId?/${SaksbehandligMenyValg.Søknad}`}
                                     >
                                         Her kan vi kanskje vise hele søknaden
                                     </Route>
                                     <Route
-                                        path={`/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/${SaksbehandligMenyValg.Vilkår}`}
+                                        path={`/saksoversikt/:sakId?/:behandlingId?/${SaksbehandligMenyValg.Vilkår}`}
                                     >
                                         <Vilkår
-                                            sak={sak}
-                                            stønadsperiodeId={urlParams.stonadsperiodeId}
-                                            behandlingId={urlParams.behandlingId}
+                                            sakId={sak.id}
+                                            behandling={sak.behandlinger.find((b) => b.id === urlParams.behandlingId)}
                                         />
                                     </Route>
                                     <Route
-                                        path={`/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/${SaksbehandligMenyValg.Behandlig}`}
+                                        path={`/saksoversikt/:sakId?/:behandlingId?/${SaksbehandligMenyValg.Behandlig}`}
                                     >
                                         behandling
                                     </Route>
                                     <Route
-                                        path={`/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/${SaksbehandligMenyValg.Vedtak}`}
+                                        path={`/saksoversikt/:sakId?/:behandlingId?/${SaksbehandligMenyValg.Vedtak}`}
                                     >
                                         vedtak
                                     </Route>

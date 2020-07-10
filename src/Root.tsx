@@ -32,7 +32,7 @@ const Root = () => {
                                 <Soknad />
                             </Route>
 
-                            <Route path="/saksoversikt/:sakId?/:stonadsperiodeId?/:behandlingId?/:meny?/">
+                            <Route path="/saksoversikt/:sakId?/:behandlingId?/:meny?/">
                                 <Saksoversikt />
                             </Route>
                             <Route>404</Route>
@@ -75,7 +75,7 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
             return;
         }
 
-        apiClient('/authenticated', { method: 'GET' }).then((res) => {
+        apiClient({ url: '/authenticated', method: 'GET' }).then((res) => {
             if (res.status === 'error') {
                 if (res.error.statusCode === 401) {
                     window.location.href = `${window.BASE_URL}/login`;
