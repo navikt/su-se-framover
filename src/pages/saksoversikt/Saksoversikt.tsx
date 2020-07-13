@@ -20,6 +20,7 @@ import { SaksbehandlingMenyvalg } from './types';
 import styles from './saksoversikt.module.less';
 import Sakintro from './sakintro/Sakintro';
 import Vilkår from './vilkår/Vilkår';
+import Beregning from './beregning/Beregning';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import * as personSlice from '~features/person/person.slice';
 import * as routes from '~lib/routes';
@@ -123,7 +124,7 @@ const Saksoversikt = () => {
                                         behandling={sak.behandlinger.find((b) => b.id === urlParams.behandlingId)}
                                     />
                                 ) : meny === SaksbehandlingMenyvalg.Beregning ? (
-                                    'beregning'
+                                    <Beregning sakId={sak.id} behandlingId={urlParams.behandlingId} />
                                 ) : meny === SaksbehandlingMenyvalg.Vedtak ? (
                                     'vedtak'
                                 ) : (

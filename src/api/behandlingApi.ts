@@ -1,5 +1,6 @@
 import apiClient, { ApiClientResult } from './apiClient';
 import { Søknad } from './søknadApi';
+import { Sats } from '../pages/saksoversikt/beregning/Beregning';
 
 export enum VilkårVurderingStatus {
     IkkeVurdert = 'IKKE_VURDERT',
@@ -44,6 +45,27 @@ export async function hentBehandling(sakId: string, behandlingId: string): Promi
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}`,
         method: 'GET',
+    });
+}
+
+export async function startBeregning(
+    sakId: string,
+    behandlingId: string,
+    arg: {
+        sats: Sats;
+        startDato: string;
+        slutDato: string;
+    }
+) {
+    const { sats, startDato, slutDato } = arg;
+    return apiClient({
+        url: `/saker/${sakId}/behandlinger/${behandlingId}/beregning`,
+        method: 'POST',
+        body: {
+            sats,
+            startDato,
+            slutDato,
+        },
     });
 }
 
