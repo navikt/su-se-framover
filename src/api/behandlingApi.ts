@@ -28,6 +28,7 @@ export interface Beregning {
 
 export interface Månedsberegning {
     id: string;
+    sats: Sats;
     beløp: number;
     fom: string;
     tom: string;
