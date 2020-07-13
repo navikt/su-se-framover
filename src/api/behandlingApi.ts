@@ -21,8 +21,8 @@ export interface Beregning {
     id: string;
     opprettet: string;
     sats: Sats;
-    startDato: string;
-    sluttDato: string;
+    fom: string;
+    tom: string;
     månedsberegninger: Array<Månedsberegning>;
 }
 
@@ -69,18 +69,18 @@ export async function startBeregning(
     behandlingId: string,
     arg: {
         sats: Sats;
-        startDato: string;
-        sluttDato: string;
+        fom: string;
+        tom: string;
     }
 ): Promise<ApiClientResult<Beregning>> {
-    const { sats, startDato, sluttDato } = arg;
+    const { sats, fom, tom } = arg;
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}/beregn`,
         method: 'POST',
         body: {
             sats,
-            startDato,
-            sluttDato: sluttDato,
+            fom,
+            tom,
         },
     });
 }

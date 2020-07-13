@@ -15,8 +15,8 @@ export enum Sats {
 }
 interface FormData {
     sats: Sats | undefined;
-    startDato: string | undefined;
-    sluttDato: string | undefined;
+    fom: string | undefined;
+    tom: string | undefined;
 }
 type Props = {
     sakId: string;
@@ -29,8 +29,8 @@ const Beregning = (props: Props) => {
         id: '1',
         opprettet: new Date().toISOString(),
         sats: Sats.Høy,
-        startDato: new Date().toISOString(),
-        sluttDato: new Date().toISOString(),
+        fom: new Date().toISOString(),
+        tom: new Date().toISOString(),
         månedsberegninger: [
             { id: '1', beløp: 100, fom: new Date().toISOString(), tom: new Date().toISOString() },
             { id: '2', beløp: 200, fom: new Date().toISOString(), tom: new Date().toISOString() },
@@ -50,22 +50,22 @@ const Beregning = (props: Props) => {
     const formik = useFormik<FormData>({
         initialValues: {
             sats: undefined,
-            startDato: undefined,
-            sluttDato: undefined,
+            fom: undefined,
+            tom: undefined,
         },
         onSubmit: (values) => {
-            const { sats, startDato, sluttDato: sluttDato } = values;
-            if (!sats || !startDato || !sluttDato) return;
+            const { sats, fom, tom } = values;
+            if (!sats || !fom || !tom) return;
             startBeregning(sakId, behandlingId, {
                 sats,
-                startDato,
-                sluttDato,
+                fom,
+                tom,
             });
         },
         validationSchema: yup.object<FormData>({
             sats: yup.string() as yup.Schema<Sats>,
-            startDato: (yup.date() as unknown) as yup.Schema<string>,
-            sluttDato: (yup.date() as unknown) as yup.Schema<string>,
+            fom: (yup.date() as unknown) as yup.Schema<string>,
+            tom: (yup.date() as unknown) as yup.Schema<string>,
         }),
     });
 
@@ -84,19 +84,19 @@ const Beregning = (props: Props) => {
                 />
                 <Datovelger
                     input={{
-                        name: 'startDato',
+                        name: 'fom',
                         placeholder: 'dd.mm.åååå',
                     }}
-                    valgtDato={formik.values.startDato}
-                    onChange={(value) => formik.setValues({ ...formik.values, startDato: value })}
+                    valgtDato={formik.values.fom}
+                    onChange={(value) => formik.setValues({ ...formik.values, fom: value })}
                 />
                 <Datovelger
                     input={{
-                        name: 'sluttDato',
+                        name: 'tom',
                         placeholder: 'dd.mm.åååå',
                     }}
-                    valgtDato={formik.values.sluttDato}
-                    onChange={(value) => formik.setValues({ ...formik.values, sluttDato: value })}
+                    valgtDato={formik.values.tom}
+                    onChange={(value) => formik.setValues({ ...formik.values, tom: value })}
                 />
                 <Hovedknapp>Start beregning!</Hovedknapp>
 
@@ -104,8 +104,8 @@ const Beregning = (props: Props) => {
                     <InfoLinje tittel={'id:'} value={beregning.id} />
                     <InfoLinje tittel={'opprettet:'} value={formatDateTime(beregning.opprettet, intl)} />
                     <InfoLinje tittel={'sats:'} value={beregning.sats} />
-                    <InfoLinje tittel={'Start dato:'} value={intl.formatDate(beregning.startDato)} />
-                    <InfoLinje tittel={'Slutt dato:'} value={intl.formatDate(beregning.sluttDato)} />
+                    <InfoLinje tittel={'Start dato:'} value={intl.formatDate(beregning.fom)} />
+                    <InfoLinje tittel={'Slutt dato:'} value={intl.formatDate(beregning.tom)} />
                     {beregning.månedsberegninger.map((beregning) => (
                         <div key={beregning.id}>
                             <InfoLinje tittel={'id: '} value={beregning.id} />
