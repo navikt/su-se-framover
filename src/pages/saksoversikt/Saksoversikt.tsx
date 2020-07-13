@@ -15,7 +15,7 @@ import { pipe } from '~lib/fp';
 
 import messages from './saksoversikt-nb';
 import Søkefelt from './søkefelt/Søkefelt';
-import { SaksbehandligMenyValg } from './types';
+import { SaksbehandlingMenyvalg } from './types';
 
 import styles from './saksoversikt.module.less';
 import Sakintro from './sakintro/Sakintro';
@@ -26,7 +26,7 @@ import * as routes from '~lib/routes';
 
 const Saksoversikt = () => {
     const { meny, ...urlParams } = useParams<{
-        meny: SaksbehandligMenyValg;
+        meny: SaksbehandlingMenyvalg;
         sakId: string;
         stonadsperiodeId: string;
         behandlingId: string;
@@ -77,27 +77,27 @@ const Saksoversikt = () => {
                                     links={[
                                         {
                                             label: 'Søknad',
-                                            active: meny === SaksbehandligMenyValg.Søknad,
+                                            active: meny === SaksbehandlingMenyvalg.Søknad,
                                         },
                                         {
                                             label: 'Vilkår',
-                                            active: meny === SaksbehandligMenyValg.Vilkår,
+                                            active: meny === SaksbehandlingMenyvalg.Vilkår,
                                         },
                                         {
-                                            label: 'Behandling',
-                                            active: meny === SaksbehandligMenyValg.Behandling,
+                                            label: 'Beregning',
+                                            active: meny === SaksbehandlingMenyvalg.Beregning,
                                         },
                                         {
                                             label: 'Vedtak',
-                                            active: meny === SaksbehandligMenyValg.Vedtak,
+                                            active: meny === SaksbehandlingMenyvalg.Vedtak,
                                         },
                                     ]}
                                     onClick={(index) => {
                                         const menuItem = [
-                                            SaksbehandligMenyValg.Søknad,
-                                            SaksbehandligMenyValg.Vilkår,
-                                            SaksbehandligMenyValg.Behandling,
-                                            SaksbehandligMenyValg.Vedtak,
+                                            SaksbehandlingMenyvalg.Søknad,
+                                            SaksbehandlingMenyvalg.Vilkår,
+                                            SaksbehandlingMenyvalg.Beregning,
+                                            SaksbehandlingMenyvalg.Vedtak,
                                         ][index];
 
                                         if (!menuItem) {
@@ -115,16 +115,16 @@ const Saksoversikt = () => {
                                 />
                             )}
                             <div className={styles.mainContent}>
-                                {meny === SaksbehandligMenyValg.Søknad ? (
+                                {meny === SaksbehandlingMenyvalg.Søknad ? (
                                     'Her kan vi kanskje vise hele søknaden'
-                                ) : meny === SaksbehandligMenyValg.Vilkår ? (
+                                ) : meny === SaksbehandlingMenyvalg.Vilkår ? (
                                     <Vilkår
                                         sakId={sak.id}
                                         behandling={sak.behandlinger.find((b) => b.id === urlParams.behandlingId)}
                                     />
-                                ) : meny === SaksbehandligMenyValg.Behandling ? (
-                                    'behandling'
-                                ) : meny === SaksbehandligMenyValg.Vedtak ? (
+                                ) : meny === SaksbehandlingMenyvalg.Beregning ? (
+                                    'beregning'
+                                ) : meny === SaksbehandlingMenyvalg.Vedtak ? (
                                     'vedtak'
                                 ) : (
                                     <Sakintro sak={sak} />

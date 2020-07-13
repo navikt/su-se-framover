@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Undertittel } from 'nav-frontend-typografi';
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { useHistory } from 'react-router-dom';
 
 import Vilkårsvurdering from '../vilkårsvurdering/Vilkårsvurdering';
 import styles from './vilkår.module.less';
@@ -8,6 +9,10 @@ import { Behandling, Vilkårtype, VilkårVurderingStatus } from '~api/behandling
 import { Nullable } from '~lib/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { Hovedknapp } from 'nav-frontend-knapper';
+import Alertstripe from 'nav-frontend-alertstriper';
+import * as routes from '~lib/routes';
+import { SaksbehandlingMenyvalg } from '../types';
 
 const boolTilJaNei = (val: Nullable<boolean>) => {
     if (val === null) {
@@ -31,11 +36,18 @@ const Infolinje = (props: { tittel: string; verdi: React.ReactNode }) => (
 );
 
 const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
+    const [nextButtonHasBeenClicked, setNextButtonHasBeenClicked] = useState<boolean>(false);
+
     const {
         vilkårsvurderinger,
         søknad: { søknadInnhold: søknad },
     } = props.behandling;
 
+    const vilkårsvurderingIsValid = !Object.values(vilkårsvurderinger).some(
+        (vurdering) => vurdering.status !== VilkårVurderingStatus.Ok
+    );
+
+    const history = useHistory();
     const dispatch = useAppDispatch();
     const lagrestatus = useAppSelector((s) => s.sak.lagreVilkårsvurderingStatus);
 
@@ -185,6 +197,25 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                     <p>{søknad.boforhold.borOgOppholderSegINorge}</p>
                 </div>
             </Vilkårsvurdering>
+            <Hovedknapp
+                onClick={() => {
+                    if (vilkårsvurderingIsValid) {
+                        return history.push(
+                            routes.saksoversikt.createURL({
+                                sakId: props.sakId,
+                                behandlingId: props.behandling.id,
+                                meny: SaksbehandlingMenyvalg.Beregning,
+                            })
+                        );
+                    }
+                    setNextButtonHasBeenClicked(true);
+                }}
+            >
+                Send inn.
+            </Hovedknapp>
+            {nextButtonHasBeenClicked && !vilkårsvurderingIsValid && (
+                <Alertstripe type="feil">Må fylles ut</Alertstripe>
+            )}
         </div>
     );
 };

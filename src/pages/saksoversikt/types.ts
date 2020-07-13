@@ -1,7 +1,7 @@
-export enum SaksbehandligMenyValg {
+export enum SaksbehandlingMenyvalg {
     Sak = 'sak',
     Søknad = 'soknad',
     Vilkår = 'vilkar',
-    Behandling = 'behandling',
+    Beregning = 'beregning',
     Vedtak = 'vedtak',
 }
