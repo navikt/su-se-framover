@@ -17,6 +17,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import Lenke from 'nav-frontend-lenker';
 import styles from './root.module.less';
 import Header from '@navikt/nap-header';
+import * as routes from './lib/routes';
 
 const Root = () => {
     return (
@@ -25,14 +26,14 @@ const Root = () => {
                 <Router>
                     <ContentWrapper>
                         <Switch>
-                            <Route exact path="/">
+                            <Route exact path={routes.home.pattern}>
                                 <HomePage />
                             </Route>
-                            <Route path="/soknad/:step">
+                            <Route path={routes.soknad.pattern}>
                                 <Soknad />
                             </Route>
 
-                            <Route path="/saksoversikt/:sakId?/:behandlingId?/:meny?/">
+                            <Route path={routes.saksoversikt.pattern}>
                                 <Saksoversikt />
                             </Route>
                             <Route>404</Route>

@@ -14,7 +14,8 @@ import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
 import Kontakt from './steg/kontakt/Kontakt';
 import Oppsummering from './steg/oppsummering/Oppsummering';
 import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
-import { useI18n } from '../../lib/hooks';
+import { useI18n } from '~lib/hooks';
+import * as routes from '~lib/routes';
 
 const messages = {
     'steg.uforevedtak': 'Uførevedtak',
@@ -98,7 +99,7 @@ const index = () => {
                                 onChange={(index) => {
                                     const nyttSteg = steg[index];
                                     if (nyttSteg) {
-                                        history.push(`/soknad/${nyttSteg.step}`);
+                                        history.push(routes.soknad.createURL({ step: nyttSteg.step }));
                                     }
                                 }}
                             />
@@ -108,44 +109,44 @@ const index = () => {
                 )}
             </div>
             {step === Søknadsteg.Inngang ? (
-                <Inngang nesteUrl={`/soknad/${Søknadsteg.Uførevedtak}`} />
+                <Inngang nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })} />
             ) : step === Søknadsteg.Uførevedtak ? (
                 <Uførevedtak
-                    forrigeUrl={`/soknad/${Søknadsteg.Inngang}`}
-                    nesteUrl={`/soknad/${Søknadsteg.FlyktningstatusOppholdstillatelse}`}
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.Inngang })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.FlyktningstatusOppholdstillatelse })}
                 />
             ) : step === Søknadsteg.FlyktningstatusOppholdstillatelse ? (
                 <FlyktningstatusOppholdstillatelse
-                    forrigeUrl={`/soknad/${Søknadsteg.Uførevedtak}`}
-                    nesteUrl={`/soknad/${Søknadsteg.BoOgOppholdINorge}`}
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
                 />
             ) : step === Søknadsteg.BoOgOppholdINorge ? (
                 <BoOgOppholdINorge
-                    forrigeUrl={`/soknad/${Søknadsteg.FlyktningstatusOppholdstillatelse}`}
-                    nesteUrl={`/soknad/${Søknadsteg.DinFormue}`}
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.FlyktningstatusOppholdstillatelse })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.DinFormue })}
                 />
             ) : step === Søknadsteg.DinFormue ? (
                 <Formue
-                    forrigeUrl={`/soknad/${Søknadsteg.BoOgOppholdINorge}`}
-                    nesteUrl={`/soknad/${Søknadsteg.DinInntekt}`}
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
                 />
             ) : step === Søknadsteg.DinInntekt ? (
                 <Inntekt
-                    forrigeUrl={`/soknad/${Søknadsteg.DinFormue}`}
-                    nesteUrl={`/soknad/${Søknadsteg.ReiseTilUtlandet}`}
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinFormue })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
                 />
             ) : step === Søknadsteg.ReiseTilUtlandet ? (
                 <Utenlandsopphold
-                    forrigeUrl={`/soknad/${Søknadsteg.DinInntekt}`}
-                    nesteUrl={`/soknad/${Søknadsteg.Kontakt}`}
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Kontakt })}
                 />
             ) : step === Søknadsteg.Kontakt ? (
                 <Kontakt
-                    forrigeUrl={`/soknad/${Søknadsteg.ReiseTilUtlandet}`}
-                    nesteUrl={`/soknad/${Søknadsteg.Oppsummering}`}
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Oppsummering })}
                 />
             ) : step === Søknadsteg.Oppsummering ? (
-                <Oppsummering forrigeUrl={`/soknad/${Søknadsteg.Kontakt}`} />
+                <Oppsummering forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.Kontakt })} />
             ) : (
                 '404'
             )}
