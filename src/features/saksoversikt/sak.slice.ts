@@ -4,6 +4,7 @@ import * as sakApi from '~api/sakApi';
 import * as behandligApi from '~api/behandlingApi';
 import { ErrorCode, ApiError } from '~api/apiClient';
 import { pipe } from '~lib/fp';
+import { Sats } from '~pages/saksoversikt/beregning/Beregning';
 
 export const fetchSak = createAsyncThunk<sakApi.Sak, { fnr: string } | { sakId: string }, { rejectValue: ApiError }>(
     'sak/fetch',
@@ -47,6 +48,18 @@ export const lagreVilkårsvurdering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const startBeregning = createAsyncThunk<
+    behandligApi.Beregning,
+    { sakId: string; behandlingId: string; sats: Sats; fom: string; tom: string },
+    { rejectValue: ApiError }
+>('beregning/start', async ({ sakId, behandlingId, sats, fom, tom }, thunkApi) => {
+    const res = await behandligApi.startBeregning(sakId, behandlingId, { sats, fom, tom });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 interface SakState {
     sak: RemoteData.RemoteData<
         {
@@ -57,12 +70,14 @@ interface SakState {
     >;
     startBehandlingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
+    beregningStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
 }
 
 const initialState: SakState = {
     sak: RemoteData.initial,
     startBehandlingStatus: RemoteData.initial,
     lagreVilkårsvurderingStatus: RemoteData.initial,
+    beregningStatus: RemoteData.initial,
 };
 
 export default createSlice({
@@ -135,6 +150,32 @@ export default createSlice({
                 RemoteData.map((sak) => ({
                     ...sak,
                     behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
+        builder.addCase(startBeregning.pending, (state) => {
+            state.beregningStatus = RemoteData.pending;
+        });
+        builder.addCase(startBeregning.rejected, (state, action) => {
+            state.beregningStatus = action.payload
+                ? RemoteData.failure({
+                      code: action.payload.code,
+                      message: `Feilet med status ${action.payload.statusCode}`,
+                  })
+                : (state.beregningStatus = RemoteData.failure({
+                      code: ErrorCode.Unknown,
+                      message: 'Ukjent feil',
+                  }));
+        });
+        builder.addCase(startBeregning.fulfilled, (state, action) => {
+            state.beregningStatus = RemoteData.success(null);
+
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    beregning: action.payload,
                 }))
             );
         });

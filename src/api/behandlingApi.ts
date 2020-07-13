@@ -46,6 +46,7 @@ export interface Behandling {
     vilkårsvurderinger: {
         [key in Vilkårtype]: Vilkårsvurdering;
     };
+    beregning?: Beregning;
 }
 
 export async function startBehandling(arg: { sakId: string; søknadId: string }): Promise<ApiClientResult<Behandling>> {

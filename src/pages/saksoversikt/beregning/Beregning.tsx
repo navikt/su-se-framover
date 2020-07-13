@@ -4,10 +4,12 @@ import { Datovelger } from 'nav-datovelger';
 import { useFormik } from 'formik';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import yup from '~lib/validering';
-import { startBeregning, Beregning } from '~api/behandlingApi';
+import { Beregning } from '~api/behandlingApi';
 import Styles from './beregning.module.less';
 import { useI18n } from '~lib/hooks';
 import { formatDateTime } from '~lib/dateUtils';
+import { useAppDispatch } from '~redux/Store';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 
 export enum Sats {
     Høy = 'Høy',
@@ -23,6 +25,8 @@ type Props = {
     behandlingId: string;
 };
 const Beregning = (props: Props) => {
+    const dispatch = useAppDispatch();
+
     const { sakId, behandlingId } = props;
 
     const beregning: Beregning = {
@@ -56,11 +60,7 @@ const Beregning = (props: Props) => {
         onSubmit: (values) => {
             const { sats, fom, tom } = values;
             if (!sats || !fom || !tom) return;
-            startBeregning(sakId, behandlingId, {
-                sats,
-                fom,
-                tom,
-            });
+            dispatch(sakSlice.startBeregning({ sakId, behandlingId, sats, fom, tom }));
         },
         validationSchema: yup.object<FormData>({
             sats: yup.string() as yup.Schema<Sats>,
