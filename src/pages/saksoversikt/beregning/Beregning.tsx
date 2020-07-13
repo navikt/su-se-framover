@@ -13,7 +13,7 @@ export enum Sats {
 interface FormData {
     sats: Sats | undefined;
     startDato: string | undefined;
-    slutDato: string | undefined;
+    sluttDato: string | undefined;
 }
 type Props = {
     sakId: string;
@@ -25,21 +25,21 @@ const Beregning = (props: Props) => {
         initialValues: {
             sats: undefined,
             startDato: undefined,
-            slutDato: undefined,
+            sluttDato: undefined,
         },
         onSubmit: (values) => {
-            const { sats, startDato, slutDato } = values;
-            if (!sats || !startDato || !slutDato) return;
+            const { sats, startDato, sluttDato: sluttDato } = values;
+            if (!sats || !startDato || !sluttDato) return;
             startBeregning(sakId, behandlingId, {
                 sats,
                 startDato,
-                slutDato,
+                sluttDato,
             });
         },
         validationSchema: yup.object<FormData>({
             sats: yup.string() as yup.Schema<Sats>,
             startDato: (yup.date() as unknown) as yup.Schema<string>,
-            slutDato: (yup.date() as unknown) as yup.Schema<string>,
+            sluttDato: (yup.date() as unknown) as yup.Schema<string>,
         }),
     });
 
@@ -66,11 +66,11 @@ const Beregning = (props: Props) => {
                 />
                 <Datovelger
                     input={{
-                        name: 'slutDato',
+                        name: 'sluttDato',
                         placeholder: 'dd.mm.åååå',
                     }}
-                    valgtDato={formik.values.slutDato}
-                    onChange={(value) => formik.setValues({ ...formik.values, slutDato: value })}
+                    valgtDato={formik.values.sluttDato}
+                    onChange={(value) => formik.setValues({ ...formik.values, sluttDato: value })}
                 />
                 <Hovedknapp>Start beregning!</Hovedknapp>
             </form>

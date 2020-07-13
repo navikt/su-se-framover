@@ -17,6 +17,22 @@ export enum Vilkårtype {
     BorOgOppholderSegINorge = 'BOR_OG_OPPHOLDER_SEG_I_NORGE',
 }
 
+export interface Beregning {
+    id: string;
+    opprettet: string;
+    sats: Sats;
+    startDato: string;
+    sluttDato: string;
+    månedsberegninger: Array<Månedsberegning>;
+}
+
+export interface Månedsberegning {
+    id: string;
+    beløp: number;
+    fom: string;
+    tom: string;
+}
+
 export interface Vilkårsvurdering {
     id: string;
     begrunnelse: string;
@@ -54,17 +70,17 @@ export async function startBeregning(
     arg: {
         sats: Sats;
         startDato: string;
-        slutDato: string;
+        sluttDato: string;
     }
-) {
-    const { sats, startDato, slutDato } = arg;
+): Promise<ApiClientResult<Beregning>> {
+    const { sats, startDato, sluttDato } = arg;
     return apiClient({
-        url: `/saker/${sakId}/behandlinger/${behandlingId}/beregning`,
+        url: `/saker/${sakId}/behandlinger/${behandlingId}/beregn`,
         method: 'POST',
         body: {
             sats,
             startDato,
-            slutDato,
+            sluttDato: sluttDato,
         },
     });
 }
