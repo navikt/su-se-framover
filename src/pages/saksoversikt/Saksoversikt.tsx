@@ -124,7 +124,7 @@ const Saksoversikt = () => {
                                         behandling={sak.behandlinger.find((b) => b.id === urlParams.behandlingId)}
                                     />
                                 ) : meny === SaksbehandlingMenyvalg.Beregning ? (
-                                    <Beregning sakId={sak.id} behandlingId={urlParams.behandlingId} />
+                                    <Beregning sak={sak} behandlingId={urlParams.behandlingId} />
                                 ) : meny === SaksbehandlingMenyvalg.Vedtak ? (
                                     'vedtak'
                                 ) : (

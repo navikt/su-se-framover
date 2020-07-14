@@ -10,10 +10,12 @@ import { useI18n } from '~lib/hooks';
 import { formatDateTime } from '~lib/dateUtils';
 import { useAppDispatch } from '~redux/Store';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { Sak } from '~api/sakApi';
+import AlertStripe from 'nav-frontend-alertstriper';
 
 export enum Sats {
-    Høy = 'Høy',
-    Lav = 'Lav',
+    Høy = 'HØY',
+    Lav = 'LAV',
 }
 interface FormData {
     sats: Sats | undefined;
@@ -21,26 +23,16 @@ interface FormData {
     tom: string | undefined;
 }
 type Props = {
-    sakId: string;
+    sak: Sak;
     behandlingId: string;
 };
 const Beregning = (props: Props) => {
+    const { sak, behandlingId } = props;
     const dispatch = useAppDispatch();
-
-    const { sakId, behandlingId } = props;
-
-    const beregning: Beregning = {
-        id: '1',
-        opprettet: new Date().toISOString(),
-        sats: Sats.Høy,
-        fom: new Date().toISOString(),
-        tom: new Date().toISOString(),
-        månedsberegninger: [
-            { id: '1', sats: Sats.Høy, beløp: 100, fom: new Date().toISOString(), tom: new Date().toISOString() },
-            { id: '2', sats: Sats.Høy, beløp: 200, fom: new Date().toISOString(), tom: new Date().toISOString() },
-            { id: '3', sats: Sats.Høy, beløp: 300, fom: new Date().toISOString(), tom: new Date().toISOString() },
-        ],
-    };
+    const behandling = sak.behandlinger.find((behandling) => behandling.id === behandlingId);
+    if (!behandling) {
+        return <AlertStripe type="feil"> en feil skjedde</AlertStripe>;
+    }
 
     const InfoLinje = (props: { tittel: string; value: string | number }) => (
         <div className={Styles.infolinje}>
@@ -60,7 +52,7 @@ const Beregning = (props: Props) => {
         onSubmit: (values) => {
             const { sats, fom, tom } = values;
             if (!sats || !fom || !tom) return;
-            dispatch(sakSlice.startBeregning({ sakId, behandlingId, sats, fom, tom }));
+            dispatch(sakSlice.startBeregning({ sakId: sak.id, behandlingId, sats, fom, tom }));
         },
         validationSchema: yup.object<FormData>({
             sats: yup.string() as yup.Schema<Sats>,
@@ -100,23 +92,25 @@ const Beregning = (props: Props) => {
                 />
                 <Hovedknapp>Start beregning!</Hovedknapp>
 
-                <div>
-                    <InfoLinje tittel={'id:'} value={beregning.id} />
-                    <InfoLinje tittel={'opprettet:'} value={formatDateTime(beregning.opprettet, intl)} />
-                    <InfoLinje tittel={'sats:'} value={beregning.sats} />
-                    <InfoLinje tittel={'Start dato:'} value={intl.formatDate(beregning.fom)} />
-                    <InfoLinje tittel={'Slutt dato:'} value={intl.formatDate(beregning.tom)} />
-                    {beregning.månedsberegninger.map((beregning) => (
-                        <div key={beregning.id}>
-                            <InfoLinje tittel={'id: '} value={beregning.id} />
-                            <InfoLinje tittel={'sats: '} value={beregning.sats} />
-                            <InfoLinje
-                                tittel={`${intl.formatDate(beregning.fom)} - ${intl.formatDate(beregning.tom)}`}
-                                value={beregning.beløp}
-                            />
-                        </div>
-                    ))}
-                </div>
+                {behandling.beregning && (
+                    <div>
+                        <InfoLinje tittel={'id:'} value={behandling.beregning.id} />
+                        <InfoLinje tittel={'opprettet:'} value={formatDateTime(behandling.beregning.opprettet, intl)} />
+                        <InfoLinje tittel={'sats:'} value={behandling.beregning.sats} />
+                        <InfoLinje tittel={'Start dato:'} value={intl.formatDate(behandling.beregning.fom)} />
+                        <InfoLinje tittel={'Slutt dato:'} value={intl.formatDate(behandling.beregning.tom)} />
+                        {behandling.beregning.månedsberegninger.map((beregning) => (
+                            <div key={beregning.id}>
+                                <InfoLinje tittel={'id: '} value={beregning.id} />
+                                <InfoLinje tittel={'sats: '} value={beregning.sats} />
+                                <InfoLinje
+                                    tittel={`${intl.formatDate(beregning.fom)} - ${intl.formatDate(beregning.tom)}`}
+                                    value={beregning.beløp}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                )}
             </form>
         </div>
     );

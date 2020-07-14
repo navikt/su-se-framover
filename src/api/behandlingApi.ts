@@ -1,6 +1,7 @@
 import apiClient, { ApiClientResult } from './apiClient';
 import { Søknad } from './søknadApi';
 import { Sats } from '../pages/saksoversikt/beregning/Beregning';
+import { Nullable } from '~lib/types';
 
 export enum VilkårVurderingStatus {
     IkkeVurdert = 'IKKE_VURDERT',
@@ -46,7 +47,7 @@ export interface Behandling {
     vilkårsvurderinger: {
         [key in Vilkårtype]: Vilkårsvurdering;
     };
-    beregning?: Beregning;
+    beregning: Nullable<Beregning>;
 }
 
 export async function startBehandling(arg: { sakId: string; søknadId: string }): Promise<ApiClientResult<Behandling>> {

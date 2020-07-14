@@ -173,10 +173,14 @@ export default createSlice({
 
             state.sak = pipe(
                 state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    beregning: action.payload,
-                }))
+                RemoteData.map(
+                    (sak): sakApi.Sak => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) =>
+                            b.id === action.meta.arg.behandlingId ? { ...b, beregning: action.payload } : b
+                        ),
+                    })
+                )
             );
         });
     },
