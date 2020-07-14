@@ -5,4 +5,5 @@ export default {
     'knapp.startBeregning': 'Start beregning',
     'datovelger.fom.label': 'Startdato',
     'datovelger.tom.label': 'Sluttdato',
+    'feiloppsummering.title': 'For å gå videre må du rette opp følgende:',
 };

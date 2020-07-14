@@ -1,19 +1,20 @@
 import React from 'react';
-import { RadioPanelGruppe, Label } from 'nav-frontend-skjema';
+import { RadioPanelGruppe, Label, Feiloppsummering } from 'nav-frontend-skjema';
 import { Datovelger } from 'nav-datovelger';
 import { useFormik } from 'formik';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import yup from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { Beregning } from '~api/behandlingApi';
 import styles from './beregning.module.less';
 import { useI18n } from '~lib/hooks';
-import { useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { Sak } from '~api/sakApi';
 import AlertStripe from 'nav-frontend-alertstriper';
 import messages from './beregning-nb';
 import VisBeregning from './VisBeregning';
 import { Innholdstittel } from 'nav-frontend-typografi';
+import * as RemoteData from '@devexperts/remote-data-ts';
 
 export enum Sats {
     Høy = 'HØY',
@@ -33,6 +34,8 @@ type Props = {
 
 const Beregning = (props: Props) => {
     const { sak, behandlingId } = props;
+    const beregningStatus = useAppSelector((s) => s.sak.beregningStatus);
+
     const dispatch = useAppDispatch();
     const intl = useI18n({ messages });
     const behandling = sak.behandlinger.find((behandling) => behandling.id === behandlingId);
@@ -111,7 +114,18 @@ const Beregning = (props: Props) => {
                             />
                         </div>
                     </div>
-                    <Hovedknapp>{intl.formatMessage({ id: 'knapp.startBeregning' })}</Hovedknapp>
+                    <Feiloppsummering
+                        className={styles.marginBottom}
+                        tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                        feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                        hidden={!formikErrorsHarFeil(formik.errors)}
+                    />
+                    <Hovedknapp spinner={RemoteData.isPending(beregningStatus)}>
+                        {intl.formatMessage({ id: 'knapp.startBeregning' })}
+                    </Hovedknapp>
+                    {RemoteData.isFailure(beregningStatus) && (
+                        <AlertStripe type="feil">{beregningStatus.error.message}</AlertStripe>
+                    )}
                 </form>
             </div>
         </div>
