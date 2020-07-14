@@ -1,3 +1,10 @@
+@import '~/styles/variables.less';
+
+.beregningContainer {
+    display: flex;
+    flex-direction: row;
+}
+
 .infolinje {
     display: flex;
     justify-content: space-between;
@@ -6,7 +13,20 @@
     .infotittel {
         font-weight: 600;
     }
+}
 
-    .infoverdi {
+.visBeregning {
+    margin-right: @spacing-xl;
+}
+
+.sats {
+    margin-bottom: @spacing;
+}
+
+.datovelgerContainer {
+    width: 100%;
+
+    .datovelger {
+        margin-bottom: @spacing-s;
     }
 }

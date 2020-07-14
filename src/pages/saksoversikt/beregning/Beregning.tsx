@@ -1,47 +1,44 @@
 import React from 'react';
-import { RadioPanelGruppe } from 'nav-frontend-skjema';
+import { RadioPanelGruppe, Label } from 'nav-frontend-skjema';
 import { Datovelger } from 'nav-datovelger';
 import { useFormik } from 'formik';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import yup from '~lib/validering';
 import { Beregning } from '~api/behandlingApi';
-import Styles from './beregning.module.less';
+import styles from './beregning.module.less';
 import { useI18n } from '~lib/hooks';
-import { formatDateTime } from '~lib/dateUtils';
 import { useAppDispatch } from '~redux/Store';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { Sak } from '~api/sakApi';
 import AlertStripe from 'nav-frontend-alertstriper';
+import messages from './beregning-nb';
+import VisBeregning from './VisBeregning';
+import { Innholdstittel } from 'nav-frontend-typografi';
 
 export enum Sats {
     Høy = 'HØY',
     Lav = 'LAV',
 }
+
 interface FormData {
     sats: Sats | undefined;
     fom: string | undefined;
     tom: string | undefined;
 }
+
 type Props = {
     sak: Sak;
     behandlingId: string;
 };
+
 const Beregning = (props: Props) => {
     const { sak, behandlingId } = props;
     const dispatch = useAppDispatch();
+    const intl = useI18n({ messages });
     const behandling = sak.behandlinger.find((behandling) => behandling.id === behandlingId);
     if (!behandling) {
         return <AlertStripe type="feil"> en feil skjedde</AlertStripe>;
     }
-
-    const InfoLinje = (props: { tittel: string; value: string | number }) => (
-        <div className={Styles.infolinje}>
-            <span>{props.tittel}</span>
-            <span>{props.value}</span>
-        </div>
-    );
-
-    const intl = useI18n({ messages: {} });
 
     const formik = useFormik<FormData>({
         initialValues: {
@@ -55,63 +52,68 @@ const Beregning = (props: Props) => {
             dispatch(sakSlice.startBeregning({ sakId: sak.id, behandlingId, sats, fom, tom }));
         },
         validationSchema: yup.object<FormData>({
-            sats: yup.string() as yup.Schema<Sats>,
-            fom: (yup.date() as unknown) as yup.Schema<string>,
-            tom: (yup.date() as unknown) as yup.Schema<string>,
+            sats: yup.string().required() as yup.Schema<Sats>,
+            fom: (yup.date().required() as unknown) as yup.Schema<string>,
+            tom: (yup.date().required() as unknown) as yup.Schema<string>,
         }),
     });
+    const { errors } = formik;
 
     return (
-        <div>
-            <form onSubmit={formik.handleSubmit}>
-                <RadioPanelGruppe
-                    name="sats"
-                    legend="sats"
-                    radios={[
-                        { label: 'høy', value: Sats.Høy },
-                        { label: 'lav', value: Sats.Lav },
-                    ]}
-                    checked={formik.values.sats}
-                    onChange={(_, value) => formik.setValues({ ...formik.values, sats: value })}
-                />
-                <Datovelger
-                    input={{
-                        name: 'fom',
-                        placeholder: 'dd.mm.åååå',
-                    }}
-                    valgtDato={formik.values.fom}
-                    onChange={(value) => formik.setValues({ ...formik.values, fom: value })}
-                />
-                <Datovelger
-                    input={{
-                        name: 'tom',
-                        placeholder: 'dd.mm.åååå',
-                    }}
-                    valgtDato={formik.values.tom}
-                    onChange={(value) => formik.setValues({ ...formik.values, tom: value })}
-                />
-                <Hovedknapp>Start beregning!</Hovedknapp>
+        <div className={styles.beregningContainer}>
+            {behandling.beregning && <VisBeregning beregning={behandling.beregning} />}
 
-                {behandling.beregning && (
-                    <div>
-                        <InfoLinje tittel={'id:'} value={behandling.beregning.id} />
-                        <InfoLinje tittel={'opprettet:'} value={formatDateTime(behandling.beregning.opprettet, intl)} />
-                        <InfoLinje tittel={'sats:'} value={behandling.beregning.sats} />
-                        <InfoLinje tittel={'Start dato:'} value={intl.formatDate(behandling.beregning.fom)} />
-                        <InfoLinje tittel={'Slutt dato:'} value={intl.formatDate(behandling.beregning.tom)} />
-                        {behandling.beregning.månedsberegninger.map((beregning) => (
-                            <div key={beregning.id}>
-                                <InfoLinje tittel={'id: '} value={beregning.id} />
-                                <InfoLinje tittel={'sats: '} value={beregning.sats} />
-                                <InfoLinje
-                                    tittel={`${intl.formatDate(beregning.fom)} - ${intl.formatDate(beregning.tom)}`}
-                                    value={beregning.beløp}
-                                />
-                            </div>
-                        ))}
+            <div>
+                <Innholdstittel>Start ny beregning:</Innholdstittel>
+                <form onSubmit={formik.handleSubmit}>
+                    <RadioPanelGruppe
+                        className={styles.sats}
+                        name={intl.formatMessage({ id: 'input.sats.label' })}
+                        legend={intl.formatMessage({ id: 'input.sats.label' })}
+                        radios={[
+                            { label: intl.formatMessage({ id: 'input.sats.value.høy' }), value: Sats.Høy },
+                            { label: intl.formatMessage({ id: 'input.sats.value.lav' }), value: Sats.Lav },
+                        ]}
+                        checked={formik.values.sats}
+                        onChange={(_, value) => formik.setValues({ ...formik.values, sats: value })}
+                        feil={errors.sats}
+                    />
+
+                    <div className={styles.datovelgerContainer}>
+                        <div className={styles.datovelger}>
+                            <Label htmlFor="beregningInputFom">
+                                {intl.formatMessage({ id: 'datovelger.fom.label' })}
+                            </Label>
+                            <Datovelger
+                                input={{
+                                    id: 'beregningInputFom',
+                                    name: 'fom',
+                                    placeholder: 'dd.mm.åååå',
+                                }}
+                                valgtDato={formik.values.fom}
+                                datoErGyldig={!errors.fom}
+                                onChange={(value) => formik.setValues({ ...formik.values, fom: value })}
+                            />
+                        </div>
+                        <div className={styles.datovelger}>
+                            <Label htmlFor="beregningInputTom">
+                                {intl.formatMessage({ id: 'datovelger.tom.label' })}
+                            </Label>
+                            <Datovelger
+                                input={{
+                                    id: 'beregningInputTom',
+                                    name: 'tom',
+                                    placeholder: 'dd.mm.åååå',
+                                }}
+                                valgtDato={formik.values.tom}
+                                datoErGyldig={!errors.tom}
+                                onChange={(value) => formik.setValues({ ...formik.values, tom: value })}
+                            />
+                        </div>
                     </div>
-                )}
-            </form>
+                    <Hovedknapp>{intl.formatMessage({ id: 'knapp.startBeregning' })}</Hovedknapp>
+                </form>
+            </div>
         </div>
     );
 };
