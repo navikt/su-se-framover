@@ -50,7 +50,7 @@ export const lagreVilkårsvurdering = createAsyncThunk<
 
 export const startBeregning = createAsyncThunk<
     behandligApi.Beregning,
-    { sakId: string; behandlingId: string; sats: Sats; fom: string; tom: string },
+    { sakId: string; behandlingId: string; sats: Sats; fom: Date; tom: Date },
     { rejectValue: ApiError }
 >('beregning/start', async ({ sakId, behandlingId, sats, fom, tom }, thunkApi) => {
     const res = await behandligApi.startBeregning(sakId, behandlingId, { sats, fom, tom });

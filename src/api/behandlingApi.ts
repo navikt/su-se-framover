@@ -72,8 +72,8 @@ export async function startBeregning(
     behandlingId: string,
     arg: {
         sats: Sats;
-        fom: string;
-        tom: string;
+        fom: Date;
+        tom: Date;
     }
 ): Promise<ApiClientResult<Beregning>> {
     const { sats, fom, tom } = arg;
@@ -82,8 +82,8 @@ export async function startBeregning(
         method: 'POST',
         body: {
             sats,
-            fom,
-            tom,
+            fom: fom.toISOString(),
+            tom: tom.toISOString(),
         },
     });
 }

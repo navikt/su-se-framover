@@ -1,6 +1,5 @@
 import React from 'react';
 import { RadioPanelGruppe, Label, Feiloppsummering } from 'nav-frontend-skjema';
-import { Datovelger } from 'nav-datovelger';
 import { useFormik } from 'formik';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
@@ -13,8 +12,9 @@ import { Sak } from '~api/sakApi';
 import AlertStripe from 'nav-frontend-alertstriper';
 import messages from './beregning-nb';
 import VisBeregning from './VisBeregning';
-import { Innholdstittel } from 'nav-frontend-typografi';
+import { Innholdstittel, Feilmelding } from 'nav-frontend-typografi';
 import * as RemoteData from '@devexperts/remote-data-ts';
+import DatePicker from 'react-datepicker';
 
 export enum Sats {
     Høy = 'HØY',
@@ -23,8 +23,8 @@ export enum Sats {
 
 interface FormData {
     sats: Sats | undefined;
-    fom: string | undefined;
-    tom: string | undefined;
+    fom: Date | null;
+    tom: Date | null;
 }
 
 type Props = {
@@ -38,6 +38,8 @@ const Beregning = (props: Props) => {
 
     const dispatch = useAppDispatch();
     const intl = useI18n({ messages });
+    const [hasSubmitted, setHasSubmitted] = React.useState(false);
+
     const behandling = sak.behandlinger.find((behandling) => behandling.id === behandlingId);
     if (!behandling) {
         return <AlertStripe type="feil"> en feil skjedde</AlertStripe>;
@@ -46,8 +48,8 @@ const Beregning = (props: Props) => {
     const formik = useFormik<FormData>({
         initialValues: {
             sats: undefined,
-            fom: undefined,
-            tom: undefined,
+            fom: null,
+            tom: null,
         },
         onSubmit: (values) => {
             const { sats, fom, tom } = values;
@@ -56,9 +58,17 @@ const Beregning = (props: Props) => {
         },
         validationSchema: yup.object<FormData>({
             sats: yup.string().required() as yup.Schema<Sats>,
-            fom: (yup.date().required() as unknown) as yup.Schema<string>,
-            tom: (yup.date().required() as unknown) as yup.Schema<string>,
+            fom: yup.date().nullable().required(),
+            tom: yup
+                .date()
+                .nullable()
+                .required()
+                .test('isAfterFom', 'Sluttdato må være etter startdato', function (tom) {
+                    const { fom } = this.parent;
+                    return fom < tom;
+                }),
         }),
+        validateOnChange: hasSubmitted,
     });
     const { errors } = formik;
 
@@ -68,7 +78,13 @@ const Beregning = (props: Props) => {
 
             <div>
                 <Innholdstittel>Start ny beregning:</Innholdstittel>
-                <form onSubmit={formik.handleSubmit}>
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        formik.handleSubmit();
+                        setHasSubmitted(true);
+                    }}
+                >
                     <RadioPanelGruppe
                         className={styles.sats}
                         name={intl.formatMessage({ id: 'input.sats.label' })}
@@ -87,31 +103,25 @@ const Beregning = (props: Props) => {
                             <Label htmlFor="beregningInputFom">
                                 {intl.formatMessage({ id: 'datovelger.fom.label' })}
                             </Label>
-                            <Datovelger
-                                input={{
-                                    id: 'beregningInputFom',
-                                    name: 'fom',
-                                    placeholder: 'dd.mm.åååå',
-                                }}
-                                valgtDato={formik.values.fom}
-                                datoErGyldig={!errors.fom}
-                                onChange={(value) => formik.setValues({ ...formik.values, fom: value })}
+                            <DatePicker
+                                selected={formik.values.fom}
+                                onChange={(date) => formik.setValues({ ...formik.values, fom: date })}
+                                dateFormat="MM/yyyy"
+                                showMonthYearPicker
                             />
+                            {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
                         </div>
                         <div className={styles.datovelger}>
                             <Label htmlFor="beregningInputTom">
                                 {intl.formatMessage({ id: 'datovelger.tom.label' })}
                             </Label>
-                            <Datovelger
-                                input={{
-                                    id: 'beregningInputTom',
-                                    name: 'tom',
-                                    placeholder: 'dd.mm.åååå',
-                                }}
-                                valgtDato={formik.values.tom}
-                                datoErGyldig={!errors.tom}
-                                onChange={(value) => formik.setValues({ ...formik.values, tom: value })}
+                            <DatePicker
+                                selected={formik.values.tom}
+                                onChange={(date) => formik.setValues({ ...formik.values, tom: date })}
+                                dateFormat="MM/yyyy"
+                                showMonthYearPicker
                             />
+                            {formik.errors.tom && <Feilmelding>{formik.errors.tom}</Feilmelding>}
                         </div>
                     </div>
                     <Feiloppsummering

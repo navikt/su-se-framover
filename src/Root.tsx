@@ -5,6 +5,8 @@ import 'reset-css';
 import ErrorBoundary from './components/ErrorBoundary';
 import 'nav-frontend-tabell-style';
 import './Root.less';
+import 'react-datepicker/dist/react-datepicker.css';
+
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import Store from './redux/Store';
