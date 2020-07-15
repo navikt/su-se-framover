@@ -15,6 +15,7 @@ import VisBeregning from './VisBeregning';
 import { Innholdstittel, Feilmelding } from 'nav-frontend-typografi';
 import * as RemoteData from '@devexperts/remote-data-ts';
 import DatePicker from 'react-datepicker';
+import { trackEvent, startBeregning } from '~lib/tracking/trackingEvents';
 
 export enum Sats {
     Høy = 'HØY',
@@ -54,6 +55,12 @@ const Beregning = (props: Props) => {
         onSubmit: (values) => {
             const { sats, fom, tom } = values;
             if (!sats || !fom || !tom) return;
+            trackEvent(
+                startBeregning({
+                    sakId: sak.id,
+                    behandlingId,
+                })
+            );
             dispatch(sakSlice.startBeregning({ sakId: sak.id, behandlingId, sats, fom, tom }));
         },
         validationSchema: yup.object<FormData>({
