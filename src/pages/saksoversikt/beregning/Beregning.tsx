@@ -16,6 +16,7 @@ import { Innholdstittel, Feilmelding } from 'nav-frontend-typografi';
 import * as RemoteData from '@devexperts/remote-data-ts';
 import DatePicker from 'react-datepicker';
 import { trackEvent, startBeregning } from '~lib/tracking/trackingEvents';
+import { lastDayOfMonth } from 'date-fns';
 
 export enum Sats {
     Høy = 'HØY',
@@ -61,7 +62,7 @@ const Beregning = (props: Props) => {
                     behandlingId,
                 })
             );
-            dispatch(sakSlice.startBeregning({ sakId: sak.id, behandlingId, sats, fom, tom }));
+            dispatch(sakSlice.startBeregning({ sakId: sak.id, behandlingId, sats, fom, tom: lastDayOfMonth(tom) }));
         },
         validationSchema: yup.object<FormData>({
             sats: yup.string().required() as yup.Schema<Sats>,
