@@ -1,3 +1,5 @@
+import { formatISO } from 'date-fns';
+
 import apiClient, { ApiClientResult } from './apiClient';
 import { Søknad } from './søknadApi';
 import { Sats } from '../pages/saksoversikt/beregning/Beregning';
@@ -31,6 +33,7 @@ export interface Månedsberegning {
     id: string;
     sats: Sats;
     beløp: number;
+    grunnbeløp: number;
     fom: string;
     tom: string;
 }
@@ -82,8 +85,8 @@ export async function startBeregning(
         method: 'POST',
         body: {
             sats,
-            fom: fom.toISOString(),
-            tom: tom.toISOString(),
+            fom: formatISO(fom, { representation: 'date' }),
+            tom: formatISO(tom, { representation: 'date' }),
         },
     });
 }
