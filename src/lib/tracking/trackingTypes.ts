@@ -1,5 +1,5 @@
 export interface TrackingEvent<T extends TrackingCode, U> {
-    event: T;
+    code: T;
     data: U;
 }
 
