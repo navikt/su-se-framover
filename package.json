@@ -44,7 +44,7 @@
         "@navikt/nap-person-card": "^1.1.4",
         "@navikt/nap-side-menu": "^1.0.7",
         "@reduxjs/toolkit": "^1.4.0",
-        "@sentry/browser": "^5.19.0",
+        "@sentry/browser": "^5.19.2",
         "@types/react-datepicker": "^3.0.2",
         "autoprefixer": "^9.8.4",
         "babel-polyfill": "^6.26.0",
