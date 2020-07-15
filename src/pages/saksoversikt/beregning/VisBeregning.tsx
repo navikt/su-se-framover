@@ -28,16 +28,22 @@ const VisBeregning = (props: Props) => {
             <InfoLinje tittel={'sats:'} value={beregning.sats} />
             <InfoLinje tittel={'Start dato:'} value={intl.formatDate(beregning.fom)} />
             <InfoLinje tittel={'Slutt dato:'} value={intl.formatDate(beregning.tom)} />
-            {beregning.månedsberegninger.map((beregning) => (
-                <div key={beregning.id}>
-                    <InfoLinje tittel={'id: '} value={beregning.id} />
-                    <InfoLinje tittel={'sats: '} value={beregning.sats} />
-                    <InfoLinje
-                        tittel={`${intl.formatDate(beregning.fom)} - ${intl.formatDate(beregning.tom)}`}
-                        value={beregning.beløp}
-                    />
-                </div>
-            ))}
+            <table className="tabell">
+                <thead>
+                    <th></th>
+                    <th>{intl.formatMessage({ id: 'utbetaling.tabellheader.beløp' })}</th>
+                    <th>{intl.formatMessage({ id: 'utbetaling.tabellheader.grunnbeløp' })}</th>
+                </thead>
+                <tbody>
+                    {beregning.månedsberegninger.map((beregning) => (
+                        <tr key={beregning.id}>
+                            <td>{`${intl.formatDate(beregning.fom)} - ${intl.formatDate(beregning.tom)}`}</td>
+                            <td>{beregning.beløp}</td>
+                            <td>{beregning.grunnbeløp}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };
