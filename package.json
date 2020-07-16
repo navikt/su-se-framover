@@ -48,7 +48,7 @@
         "@types/jsonwebtoken": "^8.5.0",
         "@types/react-datepicker": "^3.0.2",
         "assemble": "^0.3.83",
-        "autoprefixer": "^9.8.4",
+        "autoprefixer": "^9.8.5",
         "babel-polyfill": "^6.26.0",
         "babel-runtime": "^6.26.0",
         "classnames": "^2.2.6",
