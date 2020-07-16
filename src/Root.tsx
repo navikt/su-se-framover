@@ -26,14 +26,14 @@ const Root = () => {
                 <Router>
                     <ContentWrapper>
                         <Switch>
-                            <Route exact path={routes.home.pattern}>
+                            <Route exact path={routes.home.path}>
                                 <HomePage />
                             </Route>
-                            <Route path={routes.soknad.pattern}>
+                            <Route path={routes.soknad.path}>
                                 <Soknad />
                             </Route>
 
-                            <Route path={routes.saksoversikt.pattern}>
+                            <Route path={routes.saksoversikt.path}>
                                 <Saksoversikt />
                             </Route>
                             <Route>404</Route>
@@ -50,7 +50,7 @@ type LoginState = 'logging-in' | 'logged-in' | 'unauthorized' | 'error';
 function ContentWrapper({ children }: { children: React.ReactChild }) {
     const [configLoaded, setConfigLoaded] = useState(window.BASE_URL && typeof window.BASE_URL === 'string');
     const authCompleteRouteMatch = useRouteMatch('/auth/complete');
-    const [loginState, setLoginState] = useState<LoginState>('logging-in');
+    const [loginState, setLoginState] = useState<LoginState>('unauthorized');
     const navn = Cookies.getNameFromAccessToken();
 
     const hasBaseUrl = window.BASE_URL && typeof window.BASE_URL === 'string';
@@ -78,18 +78,14 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
         }
 
         apiClient({ url: '/authenticated', method: 'GET' }).then((res) => {
-            if (res.status === 'error') {
-                if (res.error.statusCode === 401) {
-                    console.log('Logging in');
-                    window.location.href = `${window.BASE_URL}/login`;
-                } else if (res.error.statusCode === 403) {
-                    setLoginState('unauthorized');
-                } else {
-                    setLoginState('error');
-                }
-            } else {
-                setLoginState('logged-in');
+            if (res.status === 'ok') {
+                return setLoginState('logged-in');
             }
+            if (res.error.statusCode === 401 || res.error.statusCode === 403) {
+                return setLoginState('unauthorized');
+            }
+
+            setLoginState('error');
         });
     }, [configLoaded]);
 
