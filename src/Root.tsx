@@ -1,11 +1,7 @@
 import { hot } from 'react-hot-loader';
 import React, { useEffect, useState } from 'react';
 import { Innholdstittel } from 'nav-frontend-typografi';
-import 'reset-css';
 import ErrorBoundary from './components/ErrorBoundary';
-import 'nav-frontend-tabell-style';
-import './Root.less';
-import 'react-datepicker/dist/react-datepicker.css';
 
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -18,8 +14,10 @@ import Saksoversikt from '~pages/saksoversikt/Saksoversikt';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import Lenke from 'nav-frontend-lenker';
 import styles from './root.module.less';
+import Menyknapp from './components/Menyknapp';
 import Header from '@navikt/nap-header';
 import * as routes from './lib/routes';
+import './externalStyles';
 
 const Root = () => {
     return (
@@ -53,6 +51,7 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
     const [configLoaded, setConfigLoaded] = useState(window.BASE_URL && typeof window.BASE_URL === 'string');
     const authCompleteRouteMatch = useRouteMatch('/auth/complete');
     const [loginState, setLoginState] = useState<LoginState>('logging-in');
+    const navn = Cookies.getNameFromAccessToken();
 
     const hasBaseUrl = window.BASE_URL && typeof window.BASE_URL === 'string';
 
@@ -81,6 +80,7 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
         apiClient({ url: '/authenticated', method: 'GET' }).then((res) => {
             if (res.status === 'error') {
                 if (res.error.statusCode === 401) {
+                    console.log('Logging in');
                     window.location.href = `${window.BASE_URL}/login`;
                 } else if (res.error.statusCode === 403) {
                     setLoginState('unauthorized');
@@ -112,7 +112,18 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
 
     return (
         <div>
-            <Header title="Supplerende stønad Ufør" titleHref={'/'} />
+            <Header title="Supplerende stønad Ufør" titleHref={'/'}>
+                {navn && (
+                    <Menyknapp
+                        navn={navn}
+                        onLoggUtClick={() => {
+                            Cookies.remove(Cookies.CookieName.AccessToken);
+                            Cookies.remove(Cookies.CookieName.RefreshToken);
+                            window.location.reload();
+                        }}
+                    />
+                )}
+            </Header>
             <div className={styles.contentContainer}>
                 {loginState === 'logging-in' ? (
                     <NavFrontendSpinner />
