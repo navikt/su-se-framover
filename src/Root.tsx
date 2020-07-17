@@ -50,7 +50,7 @@ type LoginState = 'logging-in' | 'logged-in' | 'unauthorized' | 'error';
 function ContentWrapper({ children }: { children: React.ReactChild }) {
     const [configLoaded, setConfigLoaded] = useState(window.BASE_URL && typeof window.BASE_URL === 'string');
     const authCompleteRouteMatch = useRouteMatch('/auth/complete');
-    const [loginState, setLoginState] = useState<LoginState>('unauthorized');
+    const [loginState, setLoginState] = useState<LoginState>('logging-in');
     const navn = Cookies.getNameFromAccessToken();
 
     const hasBaseUrl = window.BASE_URL && typeof window.BASE_URL === 'string';
