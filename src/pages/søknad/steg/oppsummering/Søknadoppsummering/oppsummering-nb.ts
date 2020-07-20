@@ -79,5 +79,5 @@ export default {
     'input.utreisedato': 'Utreisedato',
     'input.innreisedato': 'innreisedato',
 
-    'panel.tittel.kontakt': 'kontakt',
+    'panel.tittel.forVeileder': 'forVeileder',
 };

@@ -99,9 +99,9 @@ export const sendSøknad = createAsyncThunk<
         },
         forNav: {
             harFullmektigEllerVerge:
-                søknad.kontaktOgForNav.harFullmektigEllerVerge === 'fullmektig'
+                søknad.forVeileder.harFullmektigEllerVerge === 'fullmektig'
                     ? 'fullmektig'
-                    : søknad.kontaktOgForNav.harFullmektigEllerVerge === 'verge'
+                    : søknad.forVeileder.harFullmektigEllerVerge === 'verge'
                     ? 'verge'
                     : null,
         },

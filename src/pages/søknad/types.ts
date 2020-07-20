@@ -6,7 +6,7 @@ export enum Søknadsteg {
     DinFormue = 'formue',
     DinInntekt = 'inntekt',
     ReiseTilUtlandet = 'utenlandsreise',
-    Kontakt = 'kontaktinformasjon',
+    ForVeileder = 'for-veileder',
     Oppsummering = 'oppsummering',
     LastOppDokumentasjon = 'dokumentasjon',
     Kvittering = 'kvittering',

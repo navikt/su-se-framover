@@ -11,7 +11,7 @@ import BoOgOppholdINorge from './steg/bo-og-opphold-i-norge/Bo-og-opphold-i-norg
 import Formue from './steg/formue/DinFormue';
 import Inntekt from './steg/inntekt/Inntekt';
 import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
-import Kontakt from './steg/kontakt/Kontakt';
+import ForVeileder from './steg/for-veileder/ForVeileder';
 import Oppsummering from './steg/oppsummering/Oppsummering';
 import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import { useI18n } from '~lib/hooks';
@@ -24,7 +24,7 @@ const messages = {
     'steg.formue': 'Din formue',
     'steg.inntekt': 'Din inntekt',
     'steg.utenlandsopphold': 'Reise til utlandet',
-    'steg.kontakt': 'Kontakt',
+    'steg.forVeileder': 'For Veileder',
     'steg.oppsummering': 'Oppsummering',
     'steg.neste': 'Neste',
     'steg.forrige': 'Forrige',
@@ -69,8 +69,8 @@ const index = () => {
         },
         {
             index: 6,
-            label: intl.formatMessage({ id: 'steg.kontakt' }),
-            step: Søknadsteg.Kontakt,
+            label: intl.formatMessage({ id: 'steg.forVeileder' }),
+            step: Søknadsteg.ForVeileder,
         },
         {
             index: 7,
@@ -138,15 +138,15 @@ const index = () => {
             ) : step === Søknadsteg.ReiseTilUtlandet ? (
                 <Utenlandsopphold
                     forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Kontakt })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ForVeileder })}
                 />
-            ) : step === Søknadsteg.Kontakt ? (
-                <Kontakt
+            ) : step === Søknadsteg.ForVeileder ? (
+                <ForVeileder
                     forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
                     nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Oppsummering })}
                 />
             ) : step === Søknadsteg.Oppsummering ? (
-                <Oppsummering forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.Kontakt })} />
+                <Oppsummering forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ForVeileder })} />
             ) : (
                 '404'
             )}

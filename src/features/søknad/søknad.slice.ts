@@ -69,7 +69,7 @@ export interface SøknadState {
         skalReiseTilUtlandetNeste12Måneder: Nullable<boolean>;
         skalReiseDatoer: Array<{ utreisedato: string; innreisedato: string }>;
     };
-    kontaktOgForNav: {
+    forVeileder: {
         harSøkerMøttPersonlig: Nullable<boolean>;
         harFullmektigEllerVerge: Nullable<Vergemål>;
     };
@@ -142,7 +142,7 @@ const initialState: SøknadState = {
         skalReiseTilUtlandetNeste12Måneder: null,
         skalReiseDatoer: [],
     },
-    kontaktOgForNav: {
+    forVeileder: {
         harSøkerMøttPersonlig: null,
         harFullmektigEllerVerge: null,
     },
@@ -170,8 +170,8 @@ export default createSlice({
         utenlandsoppholdUpdated(state, action: PayloadAction<SøknadState['utenlandsopphold']>) {
             state.utenlandsopphold = action.payload;
         },
-        kontaktOgForNav(state, action: PayloadAction<SøknadState['kontaktOgForNav']>) {
-            state.kontaktOgForNav = action.payload;
+        ForVeileder(state, action: PayloadAction<SøknadState['forVeileder']>) {
+            state.forVeileder = action.payload;
         },
     },
 });
