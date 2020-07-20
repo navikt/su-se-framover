@@ -1,4 +1,6 @@
 export default {
+    'oppsummering.endreSvar': 'Endre svar',
+
     'panel.tittel.uførevedtak': 'Uførevedtak',
     'input.uførevedtak.label': 'Har du uførevedtak?',
 
