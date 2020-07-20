@@ -1,16 +1,23 @@
 import * as React from 'react';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { useAppSelector } from '~redux/Store';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { useI18n } from '~lib/hooks';
+import { useHistory } from 'react-router-dom';
+import { Hovedknapp } from 'nav-frontend-knapper';
+import styles from './kvittering.module.less';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
+import * as personSlice from '~features/person/person.slice';
 
 const messages = {
     'kvittering.søknadSendt': 'Søknaden er sendt!',
+    'kvittering.nySøknad': 'Ny søknad',
 };
 
 const Kvittering = () => {
     const intl = useI18n({ messages });
     const innsending = useAppSelector((s) => s.innsending);
+    const dispatch = useAppDispatch();
+    const history = useHistory();
 
     return (
         <div>
@@ -21,6 +28,18 @@ const Kvittering = () => {
             ) : (
                 ''
             )}
+
+            <div className={styles.nySøknadKnapp}>
+                <Hovedknapp
+                    onClick={() => {
+                        dispatch(personSlice.default.actions.resetSøker());
+
+                        history.push('inngang');
+                    }}
+                >
+                    {intl.formatMessage({ id: 'kvittering.nySøknad' })}
+                </Hovedknapp>
+            </div>
         </div>
     );
 };
