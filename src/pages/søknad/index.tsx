@@ -16,6 +16,7 @@ import Oppsummering from './steg/oppsummering/Oppsummering';
 import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
+import Kvittering from './steg/kvittering/Kvittering';
 
 const messages = {
     'steg.uforevedtak': 'Uførevedtak',
@@ -26,6 +27,7 @@ const messages = {
     'steg.utenlandsopphold': 'Reise til utlandet',
     'steg.kontakt': 'Kontakt',
     'steg.oppsummering': 'Oppsummering',
+    'steg.kvittering': 'Kvittering',
     'steg.neste': 'Neste',
     'steg.forrige': 'Forrige',
 };
@@ -146,7 +148,12 @@ const index = () => {
                     nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Oppsummering })}
                 />
             ) : step === Søknadsteg.Oppsummering ? (
-                <Oppsummering forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.Kontakt })} />
+                <Oppsummering
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.Kontakt })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Kvittering })}
+                />
+            ) : step === Søknadsteg.Kvittering ? (
+                <Kvittering />
             ) : (
                 '404'
             )}
