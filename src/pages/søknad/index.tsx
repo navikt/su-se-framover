@@ -27,7 +27,6 @@ const messages = {
     'steg.utenlandsopphold': 'Reise til utlandet',
     'steg.kontakt': 'Kontakt',
     'steg.oppsummering': 'Oppsummering',
-    'steg.kvittering': 'Kvittering',
     'steg.neste': 'Neste',
     'steg.forrige': 'Forrige',
 };

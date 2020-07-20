@@ -122,6 +122,7 @@ interface InnsendingState {
               message: string;
           }
         | undefined;
+    søknadSendt: boolean;
 }
 
 export default createSlice({
@@ -129,6 +130,7 @@ export default createSlice({
     initialState: {
         sendingInProgress: false,
         error: undefined,
+        søknadSendt: false,
     } as InnsendingState,
     reducers: {},
     extraReducers: (builder) => {
@@ -138,6 +140,7 @@ export default createSlice({
 
         builder.addCase(sendSøknad.fulfilled, (state) => {
             state.sendingInProgress = false;
+            state.søknadSendt = true;
         });
         builder.addCase(sendSøknad.rejected, (state, action) => {
             if (action.payload) {
