@@ -27,16 +27,16 @@ export const viewIcon = () => (
     </svg>
 );
 
-export const StackedDocumentsIcon = (widthAndHeight) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={widthAndHeight} height={widthAndHeight} viewBox="0 0 24 24">
+export const StackedDocumentsIcon = (props: { width: string; height: string }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 24 24">
         <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
             <path d="M20.5 18.5h-13v-17h8l5 5zM18.5 18.5v2h-13v-17h2M16.5 20.5v2h-13v-17h2M15.5 1.5v5h5" />
         </g>
     </svg>
 );
 
-export const HomeIcon = (widthAndHeight) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={widthAndHeight} height={widthAndHeight} viewBox="0 0 24 24">
+export const HomeIcon = (props: { width: string; height: string }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 24 24">
         <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
             <path d="M3.5 13.5v10h6v-7h5v7h6v-9.5M.5 13l11.5-11.5 11.5 11.5M16 2.5h3.5v3.5" />
         </g>
@@ -72,8 +72,8 @@ export const DialogIcon = () => (
     </svg>
 );
 
-export const PencilIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+export const PencilIcon = (props: { width: string; height: string }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={props.width} height={props.height} viewBox="0 0 24 24">
         <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
             <path
                 d="M7.31 21.675l-6.466 1.517 1.517-6.465 15.6-15.602c.781-.781 2.049-.781 2.829
