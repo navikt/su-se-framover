@@ -114,7 +114,7 @@ export const sendSøknad = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-interface InnsendingState {
+export interface InnsendingState {
     sendingInProgress: boolean;
     error:
         | {
