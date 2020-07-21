@@ -13,4 +13,8 @@ export default {
 
     'input.statsborger.andre.land.label': 'Har du statsborgerskap i andre land enn Norge?',
     'input.statsborger.andre.land.fritekst.label': 'Hvilke land?',
+
+    'hjelpetekst.tittel': 'Hvordan vet jeg om jeg er registrert flyktning?',
+    'hjelpetekst.body':
+        'En flyktning er en person som fyller kravene til å få beskyttelse (asyl) i Norge. Hvis du er registrert flyktning har du mottatt et vedtak fra UDI om dette. Har du ikke offisiell flyktningstatus, har du ikke rett på supplerende stønad for uføre.',
 };
