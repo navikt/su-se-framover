@@ -96,7 +96,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             id="borOgOppholderSegINorge"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.opphold-i-norge.label" />}
-                            feil={null}
+                            feil={formik.errors.borOgOppholderSegINorge}
                             state={formik.values.borOgOppholderSegINorge}
                             onChange={(val) => {
                                 formik.setValues({ ...formik.values, borOgOppholderSegINorge: val });
@@ -110,7 +110,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             id="delerBoligMedPersonOver18"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.delerBoligMedPersonOver18.label" />}
-                            feil={null}
+                            feil={formik.errors.delerBoligMedPersonOver18}
                             state={formik.values.delerBoligMedPersonOver18}
                             onChange={(val) => {
                                 formik.setValues({
