@@ -12,11 +12,13 @@ import messages from './utenlandsopphold-nb';
 import { Datovelger } from 'nav-datovelger';
 import { Knapp } from 'nav-frontend-knapper';
 import { Nullable } from '~lib/types';
+import { addDaysBetweenTwoDates } from '~lib/dateUtils';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { Feiloppsummering, Label, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import { useI18n } from '~lib/hooks';
 import sharedI18n from '../steg-shared-i18n';
 import styles from './utenlandsopphold.module.less';
+import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 
 interface FormData {
     harReistTilUtlandetSiste90dager: Nullable<boolean>;
@@ -174,6 +176,48 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
+    const DagerIUtlandet = () => {
+        const harReistDager = formik.values.harReistTilUtlandetSiste90dager
+            ? addDaysBetweenTwoDates(formik.values.harReistDatoer) - formik.values.harReistDatoer.length
+            : addDaysBetweenTwoDates(formik.values.harReistDatoer);
+        const skalReiseDager = formik.values.skalReiseTilUtlandetNeste12Måneder
+            ? addDaysBetweenTwoDates(formik.values.skalReiseDatoer) - formik.values.skalReiseDatoer.length
+            : addDaysBetweenTwoDates(formik.values.skalReiseDatoer);
+        const totalDagerIUtlandet = harReistDager + skalReiseDager;
+
+        if (isNaN(totalDagerIUtlandet)) {
+            return (
+                <div className={styles.dagerIUtlandetContainer}>
+                    <p className={styles.dagerIUtland}>{intl.formatMessage({ id: 'display.fyllAntallDager' })}</p>
+                </div>
+            );
+        }
+
+        if (totalDagerIUtlandet > 90) {
+            return (
+                <div className={styles.dagerIUtlandetContainer}>
+                    <p className={styles.dagerIUtland}>
+                        {formik.values.harReistDatoer.length || formik.values.skalReiseDatoer.length
+                            ? intl.formatMessage({ id: 'display.antallDagerIUtlandet' }) + totalDagerIUtlandet
+                            : ''}
+                    </p>
+                    <AlertStripeAdvarsel>{intl.formatMessage({ id: 'display.passert90Dager' })}</AlertStripeAdvarsel>
+                </div>
+            );
+        }
+
+        return (
+            <div className={styles.dagerIUtlandetContainer}>
+                <p className={styles.dagerIUtland}>
+                    {' '}
+                    {formik.values.harReistDatoer.length || formik.values.skalReiseDatoer.length
+                        ? intl.formatMessage({ id: 'display.antallDagerIUtlandet' }) + totalDagerIUtlandet
+                        : ''}
+                </p>
+            </div>
+        );
+    };
+
     return (
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
@@ -305,7 +349,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             />
                         )}
                     </div>
-
+                    <DagerIUtlandet />
                     <Feiloppsummering
                         className={sharedStyles.marginBottom}
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
@@ -313,7 +357,6 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
                         innerRef={feiloppsummeringref}
                     />
-
                     <Bunnknapper
                         previous={{
                             onClick: () => {
