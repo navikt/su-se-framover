@@ -281,7 +281,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             id="eierBolig"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.eierDuBolig.label" />}
-                            feil={null}
+                            feil={formik.errors.eierBolig}
                             state={formik.values.eierBolig}
                             onChange={(e) =>
                                 formik.setValues({
@@ -301,7 +301,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 id="borIBolig"
                                 className={sharedStyles.sporsmal}
                                 legend={<FormattedMessage id="input.borIBolig.label" />}
-                                feil={null}
+                                feil={formik.errors.borIBolig}
                                 state={formik.values.borIBolig}
                                 onChange={(e) =>
                                     formik.setValues({
@@ -338,7 +338,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 id="depositumskonto"
                                 className={sharedStyles.sporsmal}
                                 legend={<FormattedMessage id="input.depositumskonto.label" />}
-                                feil={null}
+                                feil={formik.errors.harDepositumskonto}
                                 state={formik.values.harDepositumskonto}
                                 onChange={(e) =>
                                     formik.setValues({
@@ -375,7 +375,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 id="eierMerEnnEnBolig"
                                 className={sharedStyles.sporsmal}
                                 legend={<FormattedMessage id="input.eierMerEnnEnBolig.label" />}
-                                feil={null}
+                                feil={formik.errors.eierMerEnnEnBolig}
                                 state={formik.values.eierMerEnnEnBolig}
                                 onChange={(e) =>
                                     formik.setValues({
@@ -411,7 +411,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             id="eierKjøretøy"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.eierKjøretøy.label" />}
-                            feil={null}
+                            feil={formik.errors.eierKjøretøy}
                             state={formik.values.eierKjøretøy}
                             onChange={(e) =>
                                 formik.setValues({
@@ -446,7 +446,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             id="harInnskuddPåKonto"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.harInnskuddPåKonto.label" />}
-                            feil={null}
+                            feil={formik.errors.harInnskuddPåKonto}
                             state={formik.values.harInnskuddPåKonto}
                             onChange={(e) =>
                                 formik.setValues({
@@ -472,7 +472,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             id="harVerdipapir"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.harVerdipapir.label" />}
-                            feil={null}
+                            feil={formik.errors.harVerdipapir}
                             state={formik.values.harVerdipapir}
                             onChange={(e) =>
                                 formik.setValues({
@@ -498,7 +498,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             id="skylderNoenMegPenger"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.skylderNoenMegPenger.label" />}
-                            feil={null}
+                            feil={formik.errors.skylderNoenMegPenger}
                             state={formik.values.skylderNoenMegPenger}
                             onChange={(e) =>
                                 formik.setValues({
@@ -524,7 +524,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             id="harKontanterOver1000"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.harKontanterOver1000.label" />}
-                            feil={null}
+                            feil={formik.errors.harKontanterOver1000}
                             state={formik.values.harKontanterOver1000}
                             onChange={(e) =>
                                 formik.setValues({
