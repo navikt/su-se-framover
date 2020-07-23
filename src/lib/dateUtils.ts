@@ -21,7 +21,7 @@ const numberOfDaysBetweeenTwoDates = (utreisedato: string, innreisedato: string)
 
 export const addDaysBetweenTwoDates = (datesArray: Array<{ utreisedato: string; innreisedato: string }>) => {
     let x = 0;
-    datesArray.map((row) => {
+    datesArray.forEach((row) => {
         const utreisedato = row.utreisedato;
         const innreisedato = row.innreisedato;
 
