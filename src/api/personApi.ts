@@ -6,6 +6,7 @@ export interface Person {
     fornavn: string;
     mellomnavn: '' | string;
     etternavn: string;
+    kjønn: string | undefined;
 }
 
 export async function fetchPerson(fnr: string): Promise<ApiClientResult<Person>> {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useFormik } from 'formik';
-import { Input, SkjemaGruppe, Feiloppsummering } from 'nav-frontend-skjema';
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import { Input, Feiloppsummering } from 'nav-frontend-skjema';
+import { Hovedknapp } from 'nav-frontend-knapper';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import nb from './inngang-nb';
@@ -13,7 +13,9 @@ import { useI18n } from '../../../../lib/hooks';
 import sharedStyles from '../../steg-shared.module.less';
 import * as personSlice from '~features/person/person.slice';
 import * as RemoteData from '@devexperts/remote-data-ts';
-
+import NavFrontendSpinner from 'nav-frontend-spinner';
+import { KjønnKvinne, KjønnMann, KjønnUkent } from '~assets/Icons';
+import { Person } from '~api/personApi';
 interface FormData {
     fnr: string;
 }
@@ -39,7 +41,7 @@ const index = (props: { nesteUrl: string }) => {
             fnr: '',
         },
         onSubmit: async () => {
-            dispatch(personSlice.fetchPerson({ fnr: formik.values.fnr }));
+            history.push(props.nesteUrl);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -47,87 +49,77 @@ const index = (props: { nesteUrl: string }) => {
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
-    const handleNyttSøkClick = () => {
-        setHasSubmitted(false);
-        formik.resetForm();
-        dispatch(personSlice.default.actions.resetSøker());
-    };
-    const handleStarClick = () => {
-        if (søker) {
-            history.push(props.nesteUrl);
+    React.useEffect(() => {
+        if (formik.values.fnr.length === 11) {
+            dispatch(personSlice.fetchPerson({ fnr: formik.values.fnr }));
+        } else if (formik.values.fnr.length !== 11 && søker) {
+            dispatch(personSlice.default.actions.resetSøker());
         }
-    };
+    }, [formik.values.fnr]);
 
+    const Personkort = (props: { person: Person }) => {
+        return (
+            <div className={styles.personkortContainer}>
+                <div>
+                    <span>
+                        {props.person.kjønn === undefined && <KjønnUkent />}
+                        {props.person.kjønn === 'kvinne' && <KjønnKvinne />}
+                        {props.person.kjønn === 'mann' && <KjønnMann />}
+                    </span>
+                </div>
+                <div>
+                    <p>{`${props.person.fornavn} ${props.person.mellomnavn} ${props.person.etternavn}`}</p>
+                    <div>
+                        <span>{`${props.person.fnr} -`}</span>
+                        <span>{`${props.person.fnr.substring(0, 2)}.`}</span>
+                        <span>{`${props.person.fnr.substring(2, 4)}.`}</span>
+                        <span>{`${props.person.fnr.substring(4, 6)}`}</span>
+                    </div>
+                </div>
+            </div>
+        );
+    };
     return (
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
-                {!RemoteData.isSuccess(søker) ? (
-                    <form
-                        onSubmit={(e) => {
-                            setHasSubmitted(true);
-                            formik.handleSubmit(e);
-                            setTimeout(() => {
-                                if (feiloppsummeringref.current) {
-                                    feiloppsummeringref.current.focus();
-                                }
-                            }, 0);
-                        }}
-                    >
-                        <SkjemaGruppe className={styles.inputs}>
-                            <Input
-                                id="fnr"
-                                name="fnr"
-                                label={<FormattedMessage id={'input.fnr.label'} />}
-                                onChange={formik.handleChange}
-                                value={formik.values.fnr}
-                                feil={formik.errors.fnr}
-                            />
-                        </SkjemaGruppe>
-
-                        <Feiloppsummering
-                            className={sharedStyles.feiloppsummering}
-                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
-                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                            hidden={!formikErrorsHarFeil(formik.errors)}
-                            innerRef={feiloppsummeringref}
+                <form
+                    onSubmit={(e) => {
+                        setHasSubmitted(true);
+                        formik.handleSubmit(e);
+                        setTimeout(() => {
+                            if (feiloppsummeringref.current) {
+                                feiloppsummeringref.current.focus();
+                            }
+                        }, 0);
+                    }}
+                >
+                    <div className={styles.inputContainer}>
+                        <Input
+                            id="fnr"
+                            name="fnr"
+                            className={styles.fnrInput}
+                            label={<FormattedMessage id={'input.fnr.label'} />}
+                            onChange={formik.handleChange}
+                            value={formik.values.fnr}
+                            feil={formik.errors.fnr}
                         />
-
-                        <Hovedknapp htmlType="submit" spinner={RemoteData.isPending(søker)}>
-                            <FormattedMessage id="knapp.hentSøker" />
-                        </Hovedknapp>
-                    </form>
-                ) : (
-                    <div>
-                        <div className={styles.sokerinfo}>
-                            <div>
-                                <span className={styles.sokerinfoLabel}>
-                                    <FormattedMessage id="sokerinfo.fornavn.label" />
-                                </span>
-                                <span>{søker.value.fornavn}</span>
-                            </div>
-                            <div>
-                                <span className={styles.sokerinfoLabel}>
-                                    <FormattedMessage id="sokerinfo.etternavn.label" />
-                                </span>
-                                <span>{søker.value.etternavn}</span>
-                            </div>
-                            <div>
-                                <span className={styles.sokerinfoLabel}>
-                                    <FormattedMessage id="sokerinfo.fnr.label" />
-                                </span>
-                                <span>{søker.value.fnr}</span>
-                            </div>
-                        </div>
-                        <div className={styles.successknapper}>
-                            <Knapp htmlType="button" onClick={handleNyttSøkClick}>
-                                <FormattedMessage id="knapp.nyttSøk" />
-                            </Knapp>
-                            <Hovedknapp htmlType="button" className={styles.submitknapp} onClick={handleStarClick}>
-                                <FormattedMessage id="knapp.startSøknad" />
-                            </Hovedknapp>
-                        </div>
+                        {RemoteData.isPending(søker) && <NavFrontendSpinner />}
+                        {RemoteData.isSuccess(søker) && <Personkort person={søker.value} />}
                     </div>
-                )}
+
+                    <Feiloppsummering
+                        className={styles.feiloppsummering}
+                        tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                        feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                        hidden={!formikErrorsHarFeil(formik.errors)}
+                        innerRef={feiloppsummeringref}
+                    />
+                    <div className={styles.successknapper}>
+                        <Hovedknapp>
+                            <FormattedMessage id="knapp.startSøknad" />
+                        </Hovedknapp>
+                    </div>
+                </form>
             </div>
         </RawIntlProvider>
     );
