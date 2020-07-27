@@ -1,4 +1,6 @@
 export default {
+    'oppsummering.endreSvar': 'Endre svar',
+
     'panel.tittel.uførevedtak': 'Uførevedtak',
     'input.uførevedtak.label': 'Har du uførevedtak?',
 
@@ -77,5 +79,5 @@ export default {
     'input.utreisedato': 'Utreisedato',
     'input.innreisedato': 'innreisedato',
 
-    'panel.tittel.kontakt': 'kontakt',
+    'panel.tittel.forVeileder': 'forVeileder',
 };

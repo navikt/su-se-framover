@@ -7,6 +7,8 @@ import styles from './oppsummering.module.less';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 import messages from './oppsummering-nb';
 import sharedStyles from '../../../steg-shared.module.less';
+import { useHistory } from 'react-router-dom';
+import { PencilIcon } from '~assets/Icons';
 
 const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | React.ReactNode }) => (
     <div className={styles.oppsummeringsfelt}>
@@ -17,6 +19,19 @@ const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | Reac
 
 const reverseStr = (str: string) => {
     return str.split('-').reverse().join('-');
+};
+
+const EndreSvar = (props: { path: string }) => {
+    const history = useHistory();
+    const intl = useI18n({ messages });
+    return (
+        <span className={styles.endreSvarContainer} onClick={() => history.push(props.path)}>
+            <span className={styles.marginRight}>
+                <PencilIcon width="15" height="15" />
+            </span>
+            <span>{intl.formatMessage({ id: 'oppsummering.endreSvar' })}</span>
+        </span>
+    );
 };
 
 const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
@@ -33,6 +48,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                         label={<FormattedMessage id="input.uførevedtak.label" />}
                         verdi={søknad.harUførevedtak ? 'Ja' : søknad.harUførevedtak === false ? 'Nei' : 'Ubesvart'}
                     />
+                    <EndreSvar path="uforevedtak" />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -129,6 +145,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                             verdi={søknad.flyktningstatus.statsborgerskapAndreLandFritekst}
                         />
                     )}
+                    <EndreSvar path="flyktning-oppholdstillatelse" />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -195,6 +212,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                             }
                         />
                     )}
+                    <EndreSvar path="opphold-i-norge" />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -372,6 +390,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                             verdi={søknad.formue.kontanterBeløp ? søknad.formue.kontanterBeløp : 'Ubesvart'}
                         />
                     )}
+                    <EndreSvar path="formue" />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -549,6 +568,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                                 />
                             </div>
                         ))}
+                    <EndreSvar path="inntekt" />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -602,6 +622,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                                 />
                             </div>
                         ))}
+                    <EndreSvar path="utenlandsreise" />
                 </Ekspanderbartpanel>
             </div>
         </RawIntlProvider>

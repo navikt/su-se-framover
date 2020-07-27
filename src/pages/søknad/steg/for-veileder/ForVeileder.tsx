@@ -7,16 +7,17 @@ import { Nullable } from '~lib/types';
 import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
 import { useFormik } from 'formik';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import messages from './kontakt-nb';
+import messages from './forVeileder-nb';
 import TextProvider, { Languages } from '~components/TextProvider';
 import { useHistory } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknad.slice';
 import { Vergemål } from '~features/søknad/types';
-import AlertStripe from 'nav-frontend-alertstriper';
+import AlertStripe, { AlertStripeInfo } from 'nav-frontend-alertstriper';
 import sharedI18n from '../steg-shared-i18n';
 import { useI18n } from '../../../../lib/hooks';
-
+import Panel from 'nav-frontend-paneler';
+import styles from './forVeileder.module.less';
 interface FormData {
     harSøkerMøttPersonlig: Nullable<boolean>;
     harFullmektigEllerVerge: Nullable<Vergemål>;
@@ -30,15 +31,15 @@ const schema = yup.object<FormData>({
     }),
 });
 
-const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
+const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const history = useHistory();
-    const kontaktOgForNavFraStore = useAppSelector((s) => s.soknad.kontaktOgForNav);
+    const forVeileder = useAppSelector((s) => s.soknad.forVeileder);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
     const save = (values: FormData) =>
         dispatch(
-            søknadSlice.actions.kontaktOgForNav({
+            søknadSlice.actions.ForVeileder({
                 harSøkerMøttPersonlig: values.harSøkerMøttPersonlig,
                 harFullmektigEllerVerge: values.harFullmektigEllerVerge,
             })
@@ -46,8 +47,8 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            harSøkerMøttPersonlig: kontaktOgForNavFraStore.harSøkerMøttPersonlig,
-            harFullmektigEllerVerge: kontaktOgForNavFraStore.harFullmektigEllerVerge,
+            harSøkerMøttPersonlig: forVeileder.harSøkerMøttPersonlig,
+            harFullmektigEllerVerge: forVeileder.harFullmektigEllerVerge,
         },
         onSubmit: (values) => {
             save(values);
@@ -67,12 +68,21 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         formik.handleSubmit(e);
                     }}
                 >
-                    <p>______________________</p>
-                    <h1>tlf nummer: 12345678</h1>
+                    <Panel border className={styles.panelMargin}>
+                        <p className={styles.boldP}>{intl.formatMessage({ id: 'info.telefon.tittel' })}</p>
+                        <p>2222 5555</p>
+                        <AlertStripeInfo className={styles.marginTopXSS}>
+                            {intl.formatMessage({ id: 'info.telefon.body' })}
+                        </AlertStripeInfo>
+                    </Panel>
 
-                    <p>______________________</p>
-                    <h1>Søker er digital</h1>
-                    <p>----------------------</p>
+                    <Panel border className={styles.panelMargin}>
+                        <p className={styles.boldP}>{intl.formatMessage({ id: 'info.kontaktform.tittel' })}</p>
+                        <p>Digital</p>
+                        <AlertStripeInfo className={styles.marginTopXSS}>
+                            {intl.formatMessage({ id: 'info.kontaktform.body' })}
+                        </AlertStripeInfo>
+                    </Panel>
 
                     <JaNeiSpørsmål
                         id="harSøkerMøttPersonlig"
@@ -140,4 +150,4 @@ const Kontakt = (props: { forrigeUrl: string; nesteUrl: string }) => {
     );
 };
 
-export default Kontakt;
+export default ForVeileder;
