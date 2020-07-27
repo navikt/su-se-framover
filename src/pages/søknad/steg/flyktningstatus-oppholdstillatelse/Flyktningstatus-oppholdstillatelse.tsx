@@ -127,6 +127,8 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             id={'erFlyktning'}
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.flyktning.label" />}
+                            hjelpetekstTittel={intl.formatMessage({ id: 'hjelpetekst.tittel' })}
+                            hjelpetekstBody={intl.formatMessage({ id: 'hjelpetekst.body' })}
                             feil={formik.errors.erFlyktning}
                             state={formik.values.erFlyktning}
                             onChange={(val) =>
