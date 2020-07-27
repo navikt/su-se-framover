@@ -7,32 +7,26 @@
     width: 100%;
 }
 
-.inputs {
-    margin-bottom: @spacing-s;
-}
-
-.submitknapp {
-    width: 100%;
-}
-
-.sokerinfo {
+.inputContainer {
+    display: flex;
+    justify-content: center;
     margin-bottom: @spacing-l;
 
-    > div {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .sokerinfoLabel {
-        font-weight: 700;
+    .fnrInput {
         margin-right: @spacing-s;
     }
+}
+
+.personkortContainer {
+    display: flex;
+    align-items: flex-end;
+}
+
+.feiloppsummering {
+    margin-bottom: @spacing;
 }
 
 .successknapper {
     display: flex;
-
-    > :not(:last-child) {
-        margin-right: @spacing-s;
-    }
+    justify-content: center;
 }
