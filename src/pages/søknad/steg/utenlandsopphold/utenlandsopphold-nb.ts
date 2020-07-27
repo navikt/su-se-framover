@@ -5,4 +5,7 @@ export default {
     'input.utreisedato.label': 'Utreisedato',
     'button.fjernReiserad.label': 'Fjern rad',
     'button.leggTilReiserad.label': 'Legg til',
+    'display.antallDagerIUtlandet': 'Dager i utland: ',
+    'display.fyllAntallDager': 'Fyll ut alle dato-felter for å regne antall dager',
+    'display.passert90Dager': 'Du har mer enn 90 dager i utenlandsopphold, og kan dermed få avslag på søknaden',
 };
