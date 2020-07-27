@@ -14,6 +14,7 @@ import sharedStyles from '../../steg-shared.module.less';
 import * as personSlice from '~features/person/person.slice';
 import * as RemoteData from '@devexperts/remote-data-ts';
 import NavFrontendSpinner from 'nav-frontend-spinner';
+import { KjønnKvinne, KjønnMann, KjønnUkent } from '~assets/Icons';
 
 interface FormData {
     fnr: string;
@@ -62,7 +63,11 @@ const index = (props: { nesteUrl: string }) => {
         return (
             <div className={styles.personkortContainer}>
                 <div>
-                    <span> 🤪 &nbsp;</span>
+                    <span>
+                        {søker.value.kjønn === undefined && <KjønnUkent />}
+                        {søker.value.kjønn === 'kvinne' && <KjønnKvinne />}
+                        {søker.value.kjønn === 'mann' && <KjønnMann />}
+                    </span>
                 </div>
                 <div>
                     <p>{`${søker.value.fornavn} ${søker.value.mellomnavn} ${søker.value.etternavn}`}</p>

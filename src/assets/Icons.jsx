@@ -1,73 +1,78 @@
 import React from 'react';
 
-export const viewIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24">
-        <g>
-            <path
-                fill="none"
-                stroke="#000000"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeMiterlimit="10"
-                d="M23.5,12
-			c0,0-5.148,6.5-11.5,6.5S0.5,12,0.5,12S5.648,5.5,12,5.5S23.5,12,23.5,12z"
-            />
-
-            <circle
-                fill="none"
-                stroke="#000000"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeMiterlimit="10"
-                cx="12"
-                cy="12"
-                r="4"
-            />
+export const KjønnAnnet = () => (
+    <svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <g id="Struktur-på-hele-fpsak" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+            <g id="Visittkort-Forelder-1" transform="translate(-391.000000, -18.000000)" fill="#3E3832">
+                <g id="Group-4" transform="translate(32.000000, 16.000000)">
+                    <g id="Icon/Action-icon/Other_24-normal" transform="translate(359.000000, 2.000000)">
+                        <path
+                            d="M10,8.33333333 C9.08333333,8.33333333 8.33333333,9.08333333 8.33333333,10 C8.33333333,10.9166667 9.08333333,11.6666667 10,11.6666667 C10.9166667,11.6666667 11.6666667,10.9166667 11.6666667,10 C11.6666667,9.08333333 10.9166667,8.33333333 10,8.33333333 Z M5.83333333,8.33333333 C4.91666667,8.33333333 4.16666667,9.08333333 4.16666667,10 C4.16666667,10.9166667 4.91666667,11.6666667 5.83333333,11.6666667 C6.75,11.6666667 7.5,10.9166667 7.5,10 C7.5,9.08333333 6.75,8.33333333 5.83333333,8.33333333 Z M10,0 C4.5,0 0,4.5 0,10 C0,15.5 4.5,20 10,20 C15.5,20 20,15.5 20,10 C20,4.5 15.5,0 10,0 Z M10,18.3333333 C5.41666667,18.3333333 1.66666667,14.5833333 1.66666667,10 C1.66666667,5.41666667 5.41666667,1.66666667 10,1.66666667 C14.5833333,1.66666667 18.3333333,5.41666667 18.3333333,10 C18.3333333,14.5833333 14.5833333,18.3333333 10,18.3333333 Z M14.1666667,8.33333333 C13.25,8.33333333 12.5,9.08333333 12.5,10 C12.5,10.9166667 13.25,11.6666667 14.1666667,11.6666667 C15.0833333,11.6666667 15.8333333,10.9166667 15.8333333,10 C15.8333333,9.08333333 15.0833333,8.33333333 14.1666667,8.33333333 Z"
+                            id="Shape"
+                        ></path>
+                    </g>
+                </g>
+            </g>
         </g>
     </svg>
 );
 
-export const StackedDocumentsIcon = (widthAndHeight) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={widthAndHeight} height={widthAndHeight} viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path d="M20.5 18.5h-13v-17h8l5 5zM18.5 18.5v2h-13v-17h2M16.5 20.5v2h-13v-17h2M15.5 1.5v5h5" />
+export const KjønnUkent = () => (
+    <svg width="34px" height="34px" viewBox="0 0 165.4 162.59">
+        <title>{'01'}</title>
+        <path
+            d="M82.7 3.3a78 78 0 1078 78 78 78 0 00-78-78zm-2 102.22v28.9a5.4 5.4 0 11-10.8 0v-28.8H58.14c1.6-5.4 12.4-40.4 12.3-40.4a2.18 2.18 0 00-1.5-2.4 2.08 2.08 0 00-2.7 1.5L59 87.82a4.49 4.49 0 01-5.4 2.4 4.57 4.57 0 01-3-5.7s10-31.7 10.1-32c2.7-8.5 9.6-8.5 15.9-8.5h4.1zm1.7-63.86a9.45 9.45 0 119.45-9.44 9.44 9.44 0 01-9.41 9.44zm24.5 18.76v26.3a4.22 4.22 0 01-8.4 0v-21.8a1.79 1.79 0 00-1.8-1.8 1.84 1.84 0 00-1.8 1.7l-.1.1v69.5a5.4 5.4 0 01-10.8.2V44h6c8.1.5 16.9 6.5 16.9 14.7z"
+            fill="#c7c3c0"
+            fillRule="evenodd"
+        />
+    </svg>
+);
+
+export const KjønnKvinne = () => (
+    <svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <g id="Symbols" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+            <g id="Personkortet-/-V1" transform="translate(-16.000000, -20.000000)" fill="#C86151">
+                <g id="Personkortet-/-V2">
+                    <g id="id-markering-/-kvinne" transform="translate(16.000000, 20.000000)">
+                        <g id="kvinne">
+                            <g id="Layer_1">
+                                <g id="Layer_1_1_">
+                                    <path
+                                        d="M16,0 C7.164,0 0,7.1635 0,16 C0,24.836 7.1635,32 16,32 C24.8365,32 32,24.8365 32,16 C32,7.164 24.836,0 16,0 L16,0 Z M15.999,3.9745 C17.0685,3.9745 17.937,4.8415 17.937,5.9115 C17.937,6.9815 17.0685,7.849 15.999,7.849 C14.9295,7.849 14.0625,6.981 14.0625,5.9115 C14.0625,4.8415 14.929,3.9745 15.999,3.9745 L15.999,3.9745 Z M21.9015,17.855 C21.462,17.988 20.9965,17.767 20.7995,17.354 L19.3165,12.537 C19.2445,12.3005 18.9945,12.167 18.7575,12.239 C18.544,12.304 18.4235,12.514 18.4525,12.728 C18.446,12.7365 20.6445,19.9185 20.981,21.0175 L18.5695,21.0175 L18.5695,26.921 C18.5695,27.5305 18.0765,28.024 17.4675,28.024 C16.8585,28.024 16.364,27.53 16.364,26.921 L16.364,26.906 L16.364,21.193 L16.364,21.0175 L16,21.0175 L15.6355,21.0175 L15.6355,21.193 L15.6355,26.9065 L15.6355,26.9215 C15.6355,27.531 15.1415,28.0245 14.532,28.0245 C13.923,28.0245 13.43,27.5305 13.43,26.9215 L13.43,21.018 L11.0185,21.018 C11.3545,19.9185 13.5535,12.737 13.547,12.7285 C13.5765,12.5145 13.4555,12.304 13.242,12.2395 C13.0055,12.1675 12.755,12.3005 12.683,12.5375 L11.2,17.3545 C11.0035,17.7675 10.538,17.988 10.098,17.8555 C9.6115,17.7085 9.34,17.183 9.492,16.684 C9.492,16.684 11.5495,10.1765 11.5725,10.13 C12.1325,8.3815 13.5445,8.387 14.8435,8.384 L17.155,8.384 C18.4545,8.387 19.8665,8.3815 20.426,10.13 C20.4495,10.177 22.5065,16.684 22.5065,16.684 C22.6595,17.1825 22.3875,17.7075 21.9015,17.855 L21.9015,17.855 Z"
+                                        id="Shape"
+                                    ></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
         </g>
     </svg>
 );
 
-export const HomeIcon = (widthAndHeight) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={widthAndHeight} height={widthAndHeight} viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path d="M3.5 13.5v10h6v-7h5v7h6v-9.5M.5 13l11.5-11.5 11.5 11.5M16 2.5h3.5v3.5" />
-        </g>
-    </svg>
-);
-
-export const EmailIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
+export const KjønnMann = () => (
+    <svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <defs>
             <path
-                d="M22.5 17.012c0 .828-.672 1.5-1.5 1.5h-18c-.828 0-1.5-.672-1.5-1.5v-11c0-.829.672-1.5
-            1.5-1.5h18c.828 0 1.5.671 1.5 1.5v11zM22 5.012l-10 8-10-8"
-            />
-        </g>
-    </svg>
-);
-
-export const DialogIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path
-                d="M7.919 23.5h7.581v-4.5c0-.5-3-2-5.5-3v-2s1-.35
-            1-2.5c.695 0 1-2 .032-2 0-.212.766-1.308.468-2.5-.5-2-5.5-2-6 0-2.105-.431-.5 2.212-.5 2.5-1
-            0-.696 2 0 2 0 2.15 1 2.5 1 2.5v2c-2.5 1-5.5 2.5-5.5 3v4.5h7.419z"
-            />
-            <path
-                strokeLinecap="round"
-                d="M18 23.5h5.5v-4.5c0-.5-2.5-1.2-4.5-2v-1.5s1-.28 1-2c.557
-                  0 .774-2 0-2 0-.169.811-1.067.5-2-.5-1.5-4.5-1.5-5 0-1.685-.345-.5
-                  1.77-.5 2-.8 0-.557 2 0 2 0 1.72 1 2 1 2v1"
-            />
+                d="M16,0 C7.164,0 0,7.164 0,16 C0,24.836 7.1635,32 16,32 C24.8365,32 32,24.8365 32,16 C32,7.164 24.836,0 16,0 L16,0 Z M15.9995,3.9745 C17.069,3.9745 17.9375,4.8415 17.9375,5.9115 C17.9375,6.9815 17.0685,7.849 15.9995,7.849 C14.93,7.849 14.063,6.981 14.063,5.9115 C14.063,4.842 14.93,3.9745 15.9995,3.9745 L15.9995,3.9745 Z M21.0465,11.765 L21.0465,17.1645 C21.0465,17.6 20.6585,17.9515 20.1795,17.9515 C19.7,17.9515 19.3115,17.6 19.3115,17.1645 L19.3115,14.2465 L19.3115,13.287 L19.3115,12.6895 L19.3115,12.689 C19.3115,12.486 19.147,12.321 18.9435,12.321 C18.749,12.321 18.594,12.473 18.5805,12.664 C18.578,12.6735 18.57,12.6795 18.57,12.6895 L18.57,14.3645 L18.57,26.923 C18.57,27.5325 18.077,28.026 17.468,28.026 C16.859,28.026 16.3645,27.532 16.3645,26.923 L16.3645,26.908 L16.3645,21.194 L16.3645,18.43 L16.3645,17.8995 C16.3645,17.6995 16.2015,17.536 16,17.5355 C15.798,17.5355 15.6355,17.6995 15.6355,17.8995 L15.6355,18.43 L15.6355,21.194 L15.6355,26.9075 L15.6355,26.9225 C15.6355,27.532 15.1415,28.0255 14.532,28.0255 C13.923,28.0255 13.43,27.5315 13.43,26.9225 L13.43,14.364 L13.43,12.689 C13.43,12.679 13.4215,12.6725 13.4195,12.6635 C13.406,12.4725 13.251,12.3205 13.0565,12.3205 C12.8535,12.3205 12.6885,12.485 12.6885,12.6885 L12.6885,12.689 L12.6885,13.2865 L12.6885,14.246 L12.6885,17.164 C12.6885,17.5995 12.3,17.951 11.8205,17.951 C11.341,17.951 10.9535,17.5995 10.9535,17.164 L10.9535,11.7645 L10.9535,11.4155 C10.9535,9.7225 12.758,8.4885 14.4285,8.395 L15.6325,8.387 L15.6325,8.3825 L16.0005,8.385 L16.3685,8.3825 L16.3685,8.387 L17.5725,8.395 C19.2425,8.488 21.0475,9.7225 21.0475,11.4155 C21.0465,11.4915 21.0465,11.729 21.0465,11.765 L21.0465,11.765 Z"
+                id="path-1"
+            ></path>
+        </defs>
+        <g id="Symbols" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+            <g id="Personkortet-/-V3-Mann" transform="translate(-16.000000, -20.000000)">
+                <g id="id-markering-/-mann" transform="translate(16.000000, 20.000000)">
+                    <g id="mann">
+                        <g id="Layer_1">
+                            <g id="Layer_1_1_"></g>
+                            <g id="Shape">
+                                <use fill="#FFFFFF" href="#path-1"></use>
+                                <use fill="#3385D1" href="#path-1"></use>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
         </g>
     </svg>
 );
@@ -81,229 +86,5 @@ export const PencilIcon = () => (
             8.211l-4.941-4.965M7.562 21.425l-4.95-4.951"
             />
         </g>
-    </svg>
-);
-
-export const PaymentIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path d="M.5 13.5h4v8.042h-4z" />
-            <path
-                strokeLinecap="round"
-                d="M4.5 20c10.5 3.5 7 3.5 19-2.5-1.063-1.062-1.902-1.313-3-1l-4.434
-                  1.471M4.5 14.5h3c2.353 0 4 1.5 4.5 2h3c1.594 0 1.594 2 0 2h-5.5"
-            />
-            <circle strokeLinecap="round" cx="17.5" cy="3.5" r="3" />
-            <circle strokeLinecap="round" cx="12.5" cy="10.5" r="3" />
-            <path strokeLinecap="round" d="M12.5 9.5v2M17.5 2.5v2" />
-        </g>
-    </svg>
-);
-
-export const BankNote = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path d="M.513 4.5h23v14h-23z" />
-            <circle cx="12.013" cy="11.5" r="3" />
-            <circle cx="5.013" cy="9" r=".5" />
-            <circle cx="19.013" cy="14" r=".5" />
-            <path
-                d="M21.513 14.5c0 1.105-.896 2-2 2h-15c-1.104
-            0-2-.895-2-2v-6c0-1.104.896-2 2-2h15c1.104 0 2 .896 2 2v6z"
-            />
-        </g>
-    </svg>
-);
-
-export const ApplicationIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path d="M.513.5h23v23h-23zM6.513 5.5h4M3.513 8.5h7M3.513 11.5h7M3.513 14.5h17M3.513 17.5h12" />
-            <path d="M12.513 3.5h8v8h-8z" />
-        </g>
-    </svg>
-);
-
-export const ReceiptIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path
-                d="M4.513 23.5l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2v-23l-2 2-2-2-2 2-2-2-2 2-2-2-2 2-2-2zM7.513
-            6.5h8M7.513 9.5h4M7.513 12.5h4M7.513 15.5h3M16.013 17.5v1M16.013 10.5v1M14.513 16c0
-            .828.672 1.5 1.5 1.5s1.5-.672 1.5-1.5-.672-1.5-1.5-1.5-1.5-.672-1.5-1.5.672-1.5 1.5-1.5 1.5.672 1.5 1.5"
-            />
-        </g>
-    </svg>
-);
-
-export const CalculatorIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path
-                d="M20.513 21c0 1.375-1.125 2.5-2.5 2.5h-13c-1.375 0-2.5-1.125-2.5-2.5v-18c0-1.375
-            1.125-2.5 2.5-2.5h13c1.375 0 2.5 1.125 2.5 2.5v18zM18.513 5.606c0 .492-.402.894-.895.894h-12.211c-.492
-            0-.895-.402-.895-.894v-2.211c0-.492.402-.895.895-.895h12.211c.492 0 .895.402.895.895v2.211zM2.513
-            15.5h18M2.513 8.5h18M11.513 8.5v15M4.513 12h4M14.013 12.5h4M5.435 17.815l3.156 3.185M5.435
-            21l3.156-3.156M14.013 20.5h4M14.013 18.5h4M6.513 10v4"
-            />
-        </g>
-    </svg>
-);
-
-export const CreditCardIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path
-                d="M23.513 17.5c0 1.104-.896 2-2 2h-19c-1.104 0-2-.896-2-2v-10c0-1.104.896-2 2-2h19c1.104 0 2 .896
-             2 2v10zM.513 9.5h23M20.513 12.5h-3M11.513 12.5h-8M6.513 14.5h-3"
-            />
-        </g>
-    </svg>
-);
-
-export const CheckListIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path d="M.5.5h23v23h-23z" />
-            <path strokeLinecap="round" d="M3.5 7.5l2 2 5-5M3.5 16.5l2 2 5-5M12.5 8.5h8M12.5 17.5h8" />
-        </g>
-    </svg>
-);
-
-export const FemaleIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <circle cx="11.5" cy="4" r="3.5" />
-            <path d="M11.5 9c-3.038 0-5.5 4.5-5.5 9.5h3.5v5h4v-5h3.5c0-5-2.463-9.5-5.5-9.5z" />
-        </g>
-    </svg>
-);
-
-export const MaleIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <circle cx="11.5" cy="4" r="3.5" />
-            <path d="M17 9.5h-11c0 4.069 1.547 6.442 3.5 7.5v6.5h4v-6.5c1.951-1.058 3.5-3.431 3.5-7.5z" />
-        </g>
-    </svg>
-);
-
-export const IDCard = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path
-                d="M.5 3.5v17h4v-1.5c0-.962.787-1.75 1.75-1.75.962 0 1.75.788 1.75
-            1.75v1.5h8v-1.5c0-.962.787-1.75 1.75-1.75.962 0 1.75.788 1.75 1.75v1.5h4v-17h-23zM13
-            13.5h8M13 11.5h8M13 9.5h8M13 7.5h4"
-            />
-            <path
-                strokeLinecap="round"
-                d="M7 14.5h-4v-2s1-1.5 3-1.5v-1s-1-.5-1-2c0-1 0-2 2-2s2 1 2 2c0 1.5-1 2-1 2v1c2 0 3 1.5 3 1.5v2h-4z"
-            />
-        </g>
-    </svg>
-);
-
-export const PhoneIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <path
-            stroke="#000"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeMiterlimit="10"
-            d="M8.586 7.902c.902-.904.902-2.367 0-3.27l-2.454-2.454c-.903-.903-2.368-.903-3.271
-              0l-1.345 1.345c-1.168 1.168-1.349 2.989-.439 4.366 3.909 5.91 9.124 11.125 15.034 15.034 1.375.909
-              3.201.728 4.365-.437l1.346-1.347c.903-.903.903-2.368 0-3.271l-2.453-2.453c-.902-.904-2.367-.904-3.271
-              0l-.817.818c-2.69-2.205-5.309-4.824-7.513-7.515l.818-.816z"
-            fill="none"
-        />
-    </svg>
-);
-
-export const StackedCoinsIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <ellipse cx="8.013" cy="2.5" rx="7.5" ry="2" />
-            <path
-                d="M15.513 2.5v3c0 1.104-3.357 2-7.5 2-4.142 0-7.5-.896-7.5-2v-3M15.513 5.5v3c0 1.104-3.357 2-7.5
-            2-4.142 0-7.5-.896-7.5-2v-3"
-            />
-            <ellipse cx="16.013" cy="15.5" rx="7.5" ry="2" />
-            <path
-                d="M23.513 15.5v3c0 1.104-3.357 2-7.5 2-4.142 0-7.5-.896-7.5-2v-3M23.513 18.5v3c0 1.104-3.357
-            2-7.5 2-4.142 0-7.5-.896-7.5-2v-3M15.513 8.5v3c0 1.104-3.357 2-7.5 2-4.142 0-7.5-.896-7.5-2v-3M.513
-            11.5v3c0 1.104 3.358 2 7.5 2h.5M.513 14.5v3c0 1.104 3.358 2 7.5 2h.5M15.513 11.5v2"
-            />
-        </g>
-    </svg>
-);
-
-export const WorldIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <circle cx="12" cy="12" r="11.5" />
-            <path
-                d="M20.5 4.256s-.5 2.744-2.5 3.744c-2-.5-4 1-3.5 1l1 2c.5.5 1.5 0 1.5 0 1.25 1.25-2
-            3.5-2 4s1.25.75.5 1.5l-1.5 1c0 2.5-2.5 2.5-3 2.5s-1.5-2-1.5-2.5.5-1
-            .5-1.5l-1-1.5c0-2-1.5-1.5-3-1.5l-1.5-2s0-3.5 2.5-4l2.5.5c1 1 3 0 4 0 0 0
-            .5-3.5-.5-3s-1.896.113-2-1c-.146-1.562 4.363-2.5 4.363-2.5"
-            />
-        </g>
-    </svg>
-);
-
-export const HeartIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-        <path
-            fill="#C6C2BF"
-            stroke="none"
-            d="M12 22.4s10.5-8.1 10.5-15.8S13.2-1.7 12 6C10.8-1.7 1.5-1.1 1.5 7.2 1.5 15.4 12 22.4 12 22.4z"
-        ></path>
-    </svg>
-);
-
-export const AirplaneIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path
-                d="M20.734 5.055l-13.668 5.945-3-1.5-3.5 1.5 4.5 4.5 7.5-3-3 8 4-2 4-8 4.697-1.75c1.021-.423
-            1.506-1.593 1.084-2.613-.423-1.021-1.593-1.504-2.613-1.082zM16.238 7.01l-6.656-2.748-3.695 1.531 6.738 2.789"
-            />
-        </g>
-    </svg>
-);
-
-export const FileView = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path d="M11 21.5h-10.5v-21h11l5 5v4.5" />
-            <path strokeLinecap="round" d="M11.5.5v5h5" />
-            <circle cx="17.305" cy="17.306" r="3.805" />
-            <path strokeLinecap="round" d="M20 20l3.5 3.5" />
-        </g>
-    </svg>
-);
-
-export const LocationPinIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <g stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" fill="none">
-            <path
-                d="M19.5 8c0 4.144-7.5 15.5-7.5 15.5s-7.5-11.356-7.5-15.5c0-4.142
-          3.357-7.5 7.5-7.5 4.142 0 7.5 3.358 7.5 7.5z"
-            />
-            <circle cx="12" cy="8" r="3" />
-        </g>
-    </svg>
-);
-
-export const PersonIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <path
-            stroke="#000"
-            strokeLinejoin="round"
-            strokeMiterlimit="10"
-            d="M12 23.5h11.5s0-2.057-1-4.057c-.746-1.491-4-2.5-8-4v-3s1.5-1 1.5-3c.5 0 1-2 0-2.5 0-.297 1.339-2.801 1-4.5-.5-2.5-7.5-2.5-8-.5-3 0-1 4.594-1 5-1 .5-.5 2.5 0 2.5 0 2 1.5 3 1.5 3v3c-4 1.5-7.255 2.509-8 4-1 2-1 4.057-1 4.057h11.5z"
-            fill="none"
-        />
     </svg>
 );
