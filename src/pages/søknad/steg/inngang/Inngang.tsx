@@ -57,36 +57,27 @@ const index = (props: { nesteUrl: string }) => {
         }
     }, [formik.values.fnr]);
 
-    //TODO: fiks type
-    const Personkort = (person: Person) => {
+    const Personkort = (props: { person: Person }) => {
         return (
             <div className={styles.personkortContainer}>
                 <div>
                     <span>
-                        {person.kjønn === undefined && <KjønnUkent />}
-                        {person.kjønn === 'kvinne' && <KjønnKvinne />}
-                        {person.kjønn === 'mann' && <KjønnMann />}
+                        {props.person.kjønn === undefined && <KjønnUkent />}
+                        {props.person.kjønn === 'kvinne' && <KjønnKvinne />}
+                        {props.person.kjønn === 'mann' && <KjønnMann />}
                     </span>
                 </div>
                 <div>
-                    <p>{`${person.fornavn} ${person.mellomnavn} ${person.etternavn}`}</p>
+                    <p>{`${props.person.fornavn} ${props.person.mellomnavn} ${props.person.etternavn}`}</p>
                     <div>
-                        <span>{`${person.fnr} -`}</span>
-                        <span>{`${person.fnr.substring(0, 2)}.`}</span>
-                        <span>{`${person.fnr.substring(2, 4)}.`}</span>
-                        <span>{`${person.fnr.substring(4, 6)}`}</span>
+                        <span>{`${props.person.fnr} -`}</span>
+                        <span>{`${props.person.fnr.substring(0, 2)}.`}</span>
+                        <span>{`${props.person.fnr.substring(2, 4)}.`}</span>
+                        <span>{`${props.person.fnr.substring(4, 6)}`}</span>
                     </div>
                 </div>
             </div>
         );
-        /*
-            mulighet for å endre det eksisterende personkortet på en eller annen måte?
-            <PersonCard
-                fodselsnummer={søker.value.fnr}
-                gender="unknown"
-                name={`${søker.value.fornavn} ${søker.value.mellomnavn} ${søker.value.etternavn}`}
-            />
-        */
     };
     return (
         <RawIntlProvider value={intl}>
@@ -113,7 +104,7 @@ const index = (props: { nesteUrl: string }) => {
                             feil={formik.errors.fnr}
                         />
                         {RemoteData.isPending(søker) && <NavFrontendSpinner />}
-                        {RemoteData.isSuccess(søker) && <Personkort søker={søker.value} />}
+                        {RemoteData.isSuccess(søker) && <Personkort person={søker.value} />}
                     </div>
 
                     <Feiloppsummering
