@@ -15,7 +15,7 @@ import * as personSlice from '~features/person/person.slice';
 import * as RemoteData from '@devexperts/remote-data-ts';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { KjønnKvinne, KjønnMann, KjønnUkent } from '~assets/Icons';
-
+import { Person } from '~api/personApi';
 interface FormData {
     fnr: string;
 }
@@ -58,24 +58,23 @@ const index = (props: { nesteUrl: string }) => {
     }, [formik.values.fnr]);
 
     //TODO: fiks type
-    const Personkort = (RemoteDataSøker: any) => {
-        const { søker } = RemoteDataSøker;
+    const Personkort = (person: Person) => {
         return (
             <div className={styles.personkortContainer}>
                 <div>
                     <span>
-                        {søker.value.kjønn === undefined && <KjønnUkent />}
-                        {søker.value.kjønn === 'kvinne' && <KjønnKvinne />}
-                        {søker.value.kjønn === 'mann' && <KjønnMann />}
+                        {person.kjønn === undefined && <KjønnUkent />}
+                        {person.kjønn === 'kvinne' && <KjønnKvinne />}
+                        {person.kjønn === 'mann' && <KjønnMann />}
                     </span>
                 </div>
                 <div>
-                    <p>{`${søker.value.fornavn} ${søker.value.mellomnavn} ${søker.value.etternavn}`}</p>
+                    <p>{`${person.fornavn} ${person.mellomnavn} ${person.etternavn}`}</p>
                     <div>
-                        <span>{`${søker.value.fnr} -`}</span>
-                        <span>{`${søker.value.fnr.substring(0, 2)}.`}</span>
-                        <span>{`${søker.value.fnr.substring(2, 4)}.`}</span>
-                        <span>{`${søker.value.fnr.substring(4, 6)}`}</span>
+                        <span>{`${person.fnr} -`}</span>
+                        <span>{`${person.fnr.substring(0, 2)}.`}</span>
+                        <span>{`${person.fnr.substring(2, 4)}.`}</span>
+                        <span>{`${person.fnr.substring(4, 6)}`}</span>
                     </div>
                 </div>
             </div>
@@ -114,7 +113,7 @@ const index = (props: { nesteUrl: string }) => {
                             feil={formik.errors.fnr}
                         />
                         {RemoteData.isPending(søker) && <NavFrontendSpinner />}
-                        {RemoteData.isSuccess(søker) && <Personkort søker={søker} />}
+                        {RemoteData.isSuccess(søker) && <Personkort søker={søker.value} />}
                     </div>
 
                     <Feiloppsummering
