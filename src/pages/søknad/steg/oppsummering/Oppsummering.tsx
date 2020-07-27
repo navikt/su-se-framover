@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl';
 import * as RemoteData from '@devexperts/remote-data-ts';
 import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
 
-const Oppsummering = (props: { forrigeUrl: string }) => {
+const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const history = useHistory();
     const søknadFraStore = useAppSelector((s) => s.soknad);
     const søkerFraStore = useAppSelector((s) => s.søker.søker);
@@ -27,6 +27,7 @@ const Oppsummering = (props: { forrigeUrl: string }) => {
                                 søker: søkerFraStore.value,
                             })
                         );
+                        history.push(props.nesteUrl);
                     }
                 }}
             >

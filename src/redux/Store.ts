@@ -4,12 +4,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import person from '../features/person/person.slice';
 import søknadSlice from '~/features/søknad/søknad.slice';
 import sakSlice from '~features/saksoversikt/sak.slice';
-
+import innsending from '~features/søknad/innsending.slice';
 const store = configureStore({
     reducer: {
         søker: person.reducer,
         soknad: søknadSlice.reducer,
         sak: sakSlice.reducer,
+        innsending: innsending.reducer,
     },
 });
 
