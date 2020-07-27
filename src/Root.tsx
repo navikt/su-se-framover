@@ -1,5 +1,5 @@
 import { hot } from 'react-hot-loader';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -19,25 +19,37 @@ import Header from '@navikt/nap-header';
 import * as routes from './lib/routes';
 import './externalStyles';
 
+const ScrollToTop = () => {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
+    return null;
+};
+
 const Root = () => {
     return (
         <Provider store={Store}>
             <ErrorBoundary>
                 <Router>
                     <ContentWrapper>
-                        <Switch>
-                            <Route exact path={routes.home.path}>
-                                <HomePage />
-                            </Route>
-                            <Route path={routes.soknad.path}>
-                                <Soknad />
-                            </Route>
-
-                            <Route path={routes.saksoversikt.path}>
-                                <Saksoversikt />
-                            </Route>
-                            <Route>404</Route>
-                        </Switch>
+                        <Fragment>
+                            <ScrollToTop />
+                            <Switch>
+                                <Route exact path={routes.home.path}>
+                                    <HomePage />
+                                </Route>
+                                <Route path={routes.soknad.path}>
+                                    <Soknad />
+                                </Route>
+                                <Route path={routes.saksoversikt.path}>
+                                    <Saksoversikt />
+                                </Route>
+                                <Route>404</Route>
+                            </Switch>
+                        </Fragment>
                     </ContentWrapper>
                 </Router>
             </ErrorBoundary>
