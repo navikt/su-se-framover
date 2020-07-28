@@ -61,7 +61,7 @@ const index = (props: { nesteUrl: string }) => {
         return (
             <div className={styles.personkortContainer}>
                 <div>
-                    <span>
+                    <span className={styles.personkortSVG}>
                         {props.person.kjønn === undefined && <KjønnUkent />}
                         {props.person.kjønn === 'kvinne' && <KjønnKvinne />}
                         {props.person.kjønn === 'mann' && <KjønnMann />}
@@ -70,7 +70,7 @@ const index = (props: { nesteUrl: string }) => {
                 <div>
                     <p>{`${props.person.fornavn} ${props.person.mellomnavn} ${props.person.etternavn}`}</p>
                     <div>
-                        <span>{`${props.person.fnr} -`}</span>
+                        <span>{`${props.person.fnr} - `}</span>
                         <span>{`${props.person.fnr.substring(0, 2)}.`}</span>
                         <span>{`${props.person.fnr.substring(2, 4)}.`}</span>
                         <span>{`${props.person.fnr.substring(4, 6)}`}</span>
