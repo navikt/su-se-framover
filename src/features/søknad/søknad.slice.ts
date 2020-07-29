@@ -33,7 +33,8 @@ export interface SøknadState {
         verdiPåEiendom: Nullable<string>;
         eiendomBrukesTil: Nullable<string>;
         eierKjøretøy: Nullable<boolean>;
-        kjøretøy: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
+        verdiPåKjøretøy: Nullable<string>;
+        kjøretøyDeEier: Nullable<string>;
         harInnskuddPåKonto: Nullable<boolean>;
         innskuddsBeløp: Nullable<string>;
         harVerdipapir: Nullable<boolean>;
@@ -105,7 +106,8 @@ const initialState: SøknadState = {
         verdiPåEiendom: null,
         eiendomBrukesTil: null,
         eierKjøretøy: null,
-        kjøretøy: [],
+        verdiPåKjøretøy: null,
+        kjøretøyDeEier: null,
         harInnskuddPåKonto: null,
         innskuddsBeløp: null,
         harVerdipapir: null,

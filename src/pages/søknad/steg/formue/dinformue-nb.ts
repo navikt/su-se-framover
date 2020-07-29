@@ -15,8 +15,8 @@ export default {
     'input.kontonummer.label': 'Kontonummer',
 
     'input.eierKjøretøy.label': 'Eier du bil, campingvogn eller kjøretøy?',
-    'input.verdiPåKjøretøyTotal.label': 'Hva er verdien av kjøretøyet?',
-    'input.kjøretøyDeEier.label': 'Kjøretøy',
+    'input.verdiPåKjøretøyTotal.label': 'Hva er samlet verdi av kjøretøyene?',
+    'input.kjøretøyDeEier.label': 'Hvilke kjøretøy eier du?',
 
     'input.harInnskuddPåKonto.label': 'Har du innskudd stående på konto?',
     'input.innskuddsBeløp.label': 'Hva er beløpet på innskuddet?',
@@ -29,7 +29,4 @@ export default {
 
     'input.harKontanterOver1000.label': 'Har du kontanter over 1000kr?',
     'input.kontanterBeløp.label': 'Hvor mye i kroner?',
-
-    'button.fjernRad.label': 'Fjern rad',
-    'button.leggTil.label': 'Legg til',
 };
