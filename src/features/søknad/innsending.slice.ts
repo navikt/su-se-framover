@@ -86,8 +86,7 @@ export const sendSøknad = createAsyncThunk<
             verdiPåEiendom: søknad.formue.eierMerEnnEnBolig ? Number(søknad.formue.verdiPåEiendom) : null,
             eiendomBrukesTil: søknad.formue.eierMerEnnEnBolig ? søknad.formue.eiendomBrukesTil : null,
 
-            verdiPåKjøretøy: søknad.formue.eierKjøretøy ? Number(søknad.formue.verdiPåEiendom) : null,
-            kjøretøyDeEier: søknad.formue.eierKjøretøy ? søknad.formue.kjøretøyDeEier : null,
+            kjøretøy: søknad.formue.kjøretøy.map((p) => ({ ...p, verdiPåKjøretøy: Number(p.verdiPåKjøretøy) })),
 
             innskuddsBeløp: søknad.formue.harInnskuddPåKonto ? Number(søknad.formue.innskuddsBeløp) : null,
             verdipapirBeløp: søknad.formue.harVerdipapir ? Number(søknad.formue.verdipapirBeløp) : null,

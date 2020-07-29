@@ -310,18 +310,20 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                                 : 'Ubesvart'
                         }
                     />
-                    {søknad.formue.eierKjøretøy && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
-                            verdi={søknad.formue.verdiPåKjøretøy ? søknad.formue.verdiPåKjøretøy : 'Ubesvart'}
-                        />
-                    )}
-                    {søknad.formue.eierKjøretøy && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.kjøretøyDeEier.label" />}
-                            verdi={søknad.formue.kjøretøyDeEier ? søknad.formue.kjøretøyDeEier : 'Ubesvart'}
-                        />
-                    )}
+                    {søknad.formue.eierKjøretøy &&
+                        søknad.formue.kjøretøy.map((p, idx) => (
+                            <div key={idx}>
+                                <OppsummeringsFelt
+                                    label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
+                                    verdi={p.verdiPåKjøretøy}
+                                />
+                                <OppsummeringsFelt
+                                    label={<FormattedMessage id="input.kjøretøyDeEier.label" />}
+                                    verdi={p.kjøretøyDeEier}
+                                />
+                            </div>
+                        ))}
+
                     <OppsummeringsFelt
                         label={<FormattedMessage id="input.harInnskuddPåKonto.label" />}
                         verdi={
