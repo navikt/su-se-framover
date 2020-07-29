@@ -68,6 +68,7 @@ export interface SøknadInnhold {
         kontonummer: Nullable<string>;
         verdiPåEiendom: Nullable<number>;
         eiendomBrukesTil: Nullable<string>;
+        kjøretøy: Nullable<Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>>;
         verdiPåKjøretøy: Nullable<number>;
         kjøretøyDeEier: Nullable<string>;
         innskuddsBeløp: Nullable<number>;
