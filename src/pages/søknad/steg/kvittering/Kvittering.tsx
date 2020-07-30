@@ -5,6 +5,7 @@ import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import styles from './kvittering.module.less';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import * as personSlice from '~features/person/person.slice';
+import * as søknadslice from '~features/søknad/søknad.slice';
 import { pipe } from 'fp-ts/lib/function';
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe from 'nav-frontend-alertstriper';
@@ -51,6 +52,7 @@ const Kvittering = () => {
                 <Hovedknapp
                     onClick={() => {
                         dispatch(personSlice.default.actions.resetSøker());
+                        dispatch(søknadslice.default.actions.resetSøknad());
                         history.push('inngang');
                     }}
                 >

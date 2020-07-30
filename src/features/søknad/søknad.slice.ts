@@ -150,6 +150,9 @@ export default createSlice({
     name: 'soknad',
     initialState,
     reducers: {
+        resetSøknad() {
+            return initialState;
+        },
         harUførevedtakUpdated(state, action: PayloadAction<boolean | null>) {
             state.harUførevedtak = action.payload;
         },
