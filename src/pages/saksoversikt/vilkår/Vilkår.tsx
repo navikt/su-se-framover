@@ -172,7 +172,13 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                     <Infolinje tittel="Kontonummer" verdi={søknad.formue.kontonummer ?? ''} />
                     <Infolinje tittel="Verdi på eiendom" verdi={showNumber(søknad.formue.verdiPåEiendom)} />
                     <Infolinje tittel="Eiendom brukes til" verdi={søknad.formue.eiendomBrukesTil ?? ''} />
-                    TODO: legg til nye format for kjøretøy
+                    {søknad.formue.kjøretøy?.map((k, idx) => (
+                        <Infolinje
+                            key={idx}
+                            tittel={`Kjøretøy ${idx + 1}`}
+                            verdi={`${k.kjøretøyDeEier} - ${k.verdiPåKjøretøy}`}
+                        />
+                    ))}
                     <Infolinje tittel="Innskuddsbeløp" verdi={showNumber(søknad.formue.innskuddsBeløp)} />
                     <Infolinje tittel="Verdipapirbeløp" verdi={showNumber(søknad.formue.verdipapirBeløp)} />
                     <Infolinje
