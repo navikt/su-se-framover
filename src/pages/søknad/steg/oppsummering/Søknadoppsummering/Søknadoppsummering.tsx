@@ -17,6 +17,32 @@ const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | Reac
     </div>
 );
 
+const OppsummeringsFeltAvArray = (props: {
+    labelFirstEl: React.ReactNode;
+    labelScndEl: React.ReactNode;
+    arr: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
+}) => {
+    console.log(props);
+    return (
+        <div>
+            {props.arr.map((el, idx) => {
+                return (
+                    <div className={styles.oppsummeringsfeltArrayContainer} key={idx}>
+                        <div className={styles.oppsummeringElement}>
+                            <Element>{props.labelScndEl}</Element>
+                            <Normaltekst>{el.kjøretøyDeEier}</Normaltekst>
+                        </div>
+                        <div className={styles.oppsummeringElement}>
+                            <Element>{props.labelFirstEl}</Element>
+                            <Normaltekst>{el.verdiPåKjøretøy}</Normaltekst>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+};
+
 const reverseStr = (str: string) => {
     return str.split('-').reverse().join('-');
 };
@@ -310,19 +336,14 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                                 : 'Ubesvart'
                         }
                     />
-                    {søknad.formue.eierKjøretøy &&
-                        søknad.formue.kjøretøy.map((p, idx) => (
-                            <div key={idx}>
-                                <OppsummeringsFelt
-                                    label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
-                                    verdi={p.verdiPåKjøretøy}
-                                />
-                                <OppsummeringsFelt
-                                    label={<FormattedMessage id="input.kjøretøyDeEier.label" />}
-                                    verdi={p.kjøretøyDeEier}
-                                />
-                            </div>
-                        ))}
+
+                    {søknad.formue.eierKjøretøy && (
+                        <OppsummeringsFeltAvArray
+                            labelFirstEl={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
+                            labelScndEl={<FormattedMessage id="input.kjøretøyDeEier.label" />}
+                            arr={søknad.formue.kjøretøy}
+                        />
+                    )}
 
                     <OppsummeringsFelt
                         label={<FormattedMessage id="input.harInnskuddPåKonto.label" />}
