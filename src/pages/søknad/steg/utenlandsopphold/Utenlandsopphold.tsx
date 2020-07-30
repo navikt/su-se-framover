@@ -12,7 +12,7 @@ import messages from './utenlandsopphold-nb';
 import { Datovelger } from 'nav-datovelger';
 import { Knapp } from 'nav-frontend-knapper';
 import { Nullable } from '~lib/types';
-import { addDaysBetweenTwoDates } from '~lib/dateUtils';
+import { kalkulerTotaltAntallDagerIUtlandet } from '~lib/dateUtils';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { Feiloppsummering, Label, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import { useI18n } from '~lib/hooks';
@@ -178,11 +178,11 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
     const DagerIUtlandet = () => {
         const harReistDager = formik.values.harReistTilUtlandetSiste90dager
-            ? addDaysBetweenTwoDates(formik.values.harReistDatoer) - formik.values.harReistDatoer.length
-            : addDaysBetweenTwoDates(formik.values.harReistDatoer);
+            ? kalkulerTotaltAntallDagerIUtlandet(formik.values.harReistDatoer) - formik.values.harReistDatoer.length
+            : 0;
         const skalReiseDager = formik.values.skalReiseTilUtlandetNeste12Måneder
-            ? addDaysBetweenTwoDates(formik.values.skalReiseDatoer) - formik.values.skalReiseDatoer.length
-            : addDaysBetweenTwoDates(formik.values.skalReiseDatoer);
+            ? kalkulerTotaltAntallDagerIUtlandet(formik.values.skalReiseDatoer) - formik.values.skalReiseDatoer.length
+            : 0;
         const totalDagerIUtlandet = harReistDager + skalReiseDager;
 
         if (isNaN(totalDagerIUtlandet)) {
