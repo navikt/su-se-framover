@@ -17,4 +17,7 @@ export default {
     'input.andreYtelserINavBeløp.label': 'Beløp i kroner per måned',
     'input.søktAndreYtelserIkkeBehandlet.label': 'Har du søkt om andre trygdeytelser som ikke er behandlet?',
     'input.søktAndreYtelserIkkeBehandletBegrunnelse.label': 'Hvilke? ',
+
+    'button.fjernRad.label': 'Fjern rad',
+    'button.leggTil.label': 'Legg til',
 };

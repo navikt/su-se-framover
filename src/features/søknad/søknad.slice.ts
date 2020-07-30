@@ -55,10 +55,8 @@ export interface SøknadState {
         søktAndreYtelserIkkeBehandletBegrunnelse: Nullable<string>;
         harMottattSosialstønad: Nullable<boolean>;
         sosialStønadBeløp: Nullable<string>;
-        trygdeytelserIUtlandet: Nullable<boolean>;
-        trygdeytelserIUtlandetBeløp: Nullable<string>;
-        trygdeytelserIUtlandetType: Nullable<string>;
-        trygdeytelserIUtlandetFraHvem: Nullable<string>;
+        harTrygdeytelserIUtlandet: Nullable<boolean>;
+        trygdeytelserIUtlandet: Array<{ beløp: string; type: string; fraHvem: string }>;
         mottarPensjon: Nullable<boolean>;
         pensjonsInntekt: Array<{ ordning: string; beløp: string }>;
     };
@@ -127,10 +125,8 @@ const initialState: SøknadState = {
         søktAndreYtelserIkkeBehandletBegrunnelse: null,
         harMottattSosialstønad: null,
         sosialStønadBeløp: null,
-        trygdeytelserIUtlandet: null,
-        trygdeytelserIUtlandetBeløp: null,
-        trygdeytelserIUtlandetType: null,
-        trygdeytelserIUtlandetFraHvem: null,
+        harTrygdeytelserIUtlandet: null,
+        trygdeytelserIUtlandet: [],
         pensjonsInntekt: [],
         mottarPensjon: null,
     },

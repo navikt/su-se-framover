@@ -65,15 +65,10 @@ export const sendSøknad = createAsyncThunk<
                 ? søknad.inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
                 : null,
             sosialstønadBeløp: søknad.inntekt.harMottattSosialstønad ? Number(søknad.inntekt.sosialStønadBeløp) : null,
-            trygdeytelserIUtlandetBeløp: søknad.inntekt.trygdeytelserIUtlandet
-                ? Number(søknad.inntekt.trygdeytelserIUtlandetBeløp)
-                : null,
-            trygdeytelserIUtlandet: søknad.inntekt.trygdeytelserIUtlandet
-                ? søknad.inntekt.trygdeytelserIUtlandetType
-                : null,
-            trygdeytelserIUtlandetFra: søknad.inntekt.trygdeytelserIUtlandet
-                ? søknad.inntekt.trygdeytelserIUtlandetFraHvem
-                : null,
+            trygdeytelserIUtlandet: søknad.inntekt.trygdeytelserIUtlandet.map((p) => ({
+                ...p,
+                beløp: Number(p.beløp),
+            })),
             pensjon: søknad.inntekt.pensjonsInntekt.map((p) => ({ ...p, beløp: Number(p.beløp) })),
         },
         formue: {

@@ -55,9 +55,7 @@ export interface SøknadInnhold {
         andreYtelserINavBeløp: Nullable<number>;
         søktAndreYtelserIkkeBehandletBegrunnelse: Nullable<string>;
         sosialstønadBeløp: Nullable<number>;
-        trygdeytelserIUtlandetBeløp: Nullable<number>;
-        trygdeytelserIUtlandet: Nullable<string>;
-        trygdeytelserIUtlandetFra: Nullable<string>;
+        trygdeytelserIUtlandet: Array<{ beløp: number; type: string; fraHvem: string }>;
         pensjon: Nullable<Array<{ ordning: string; beløp: number }>>;
     };
     formue: {
