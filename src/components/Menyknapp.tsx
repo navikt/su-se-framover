@@ -12,7 +12,10 @@ const Menyknapp = ({ navn, onLoggUtClick }: Props) => {
     const [anchor, setAnchor] = useState<HTMLElement | undefined>(undefined);
     return (
         <div>
-            <button className={styles.menyknapp} onClick={(e) => setAnchor(e.currentTarget)}>
+            <button
+                className={styles.menyknapp}
+                onClick={(e) => (anchor ? setAnchor(undefined) : setAnchor(e.currentTarget))}
+            >
                 <p>{navn}</p>
                 <div className={styles.chevron}>
                     <Chevron type="ned" />
