@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { RadioGruppe, RadioPanel } from 'nav-frontend-skjema';
 import AlertStripe from 'nav-frontend-alertstriper';
 import classNames from 'classnames';
 import styles from './formElements.module.less';
 import nb from './formElements-nb';
 import { useI18n } from '~lib/hooks';
-import NavFrontendChevron from 'nav-frontend-chevron';
+import Lesmerpanel from 'nav-frontend-lesmerpanel';
+import { Normaltekst } from 'nav-frontend-typografi';
 
 export const JaNeiSpørsmål = (props: {
     id: string;
@@ -25,7 +26,13 @@ export const JaNeiSpørsmål = (props: {
                 feil={props.feil}
                 legend={props.legend}
             >
-                <Hjelpetekst tittel={props.hjelpetekstTittel} body={props.hjelpetekstBody} />
+                {props.hjelpetekstTittel && props.hjelpetekstBody && (
+                    <Hjelpetekst
+                        className={styles.hjelpetekst}
+                        tittel={props.hjelpetekstTittel}
+                        body={props.hjelpetekstBody}
+                    />
+                )}
                 <div className={styles.svarContainer}>
                     <div className={styles.svar}>
                         <RadioPanel
@@ -49,15 +56,11 @@ export const JaNeiSpørsmål = (props: {
     );
 };
 
-const Hjelpetekst = (props: { tittel?: string; body?: string }) => {
-    const [expanded, setExpanded] = useState(false);
+const Hjelpetekst = (props: { className?: string; tittel: string; body: string }) => {
     return (
-        <div>
-            <p className={styles.linkColouredP} onClick={() => setExpanded(!expanded)}>
-                {props.tittel} {expanded && <NavFrontendChevron type={'opp'} />}
-            </p>
-            {expanded && <p>{props.body}</p>}
-        </div>
+        <Lesmerpanel className={props.className} intro={<Normaltekst>{props.tittel}</Normaltekst>} border={true}>
+            {props.body}
+        </Lesmerpanel>
     );
 };
 
