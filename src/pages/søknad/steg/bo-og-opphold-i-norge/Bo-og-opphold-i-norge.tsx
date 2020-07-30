@@ -42,8 +42,9 @@ const schema = yup.object<FormData>({
         then: yup.boolean().nullable().required(),
     }),
     ektemakeEllerSamboerUførFlyktning: yup.boolean().nullable().defined().when('ektemakeEllerSamboerUnder67År', {
-        is: false,
+        is: true,
         then: yup.boolean().nullable().required(),
+        otherwise: yup.boolean().nullable(),
     }),
 });
 
@@ -125,7 +126,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         {formik.values.delerBoligMedPersonOver18 && (
                             <RadioPanelGruppe
                                 className={sharedStyles.sporsmal}
-                                feil={null}
+                                feil={formik.errors.delerBoligMed}
                                 legend={<FormattedMessage id={'input.delerBoligMed.label'} />}
                                 name="delerBoligMed"
                                 radios={[
@@ -160,7 +161,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 id="ektemakeEllerSamboerUnder67År"
                                 className={sharedStyles.sporsmal}
                                 legend={<FormattedMessage id="input.ektemakeEllerSamboerUnder67År.label" />}
-                                feil={null}
+                                feil={formik.errors.ektemakeEllerSamboerUnder67År}
                                 state={formik.values.ektemakeEllerSamboerUnder67År}
                                 onChange={(val) => {
                                     formik.setValues({
@@ -176,7 +177,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 id="ektemakeEllerSamboerUførFlyktning"
                                 className={sharedStyles.sporsmal}
                                 legend={<FormattedMessage id="input.ektemakeEllerSamboerUførFlyktning.label" />}
-                                feil={null}
+                                feil={formik.errors.ektemakeEllerSamboerUførFlyktning}
                                 state={formik.values.ektemakeEllerSamboerUførFlyktning}
                                 onChange={(val) => {
                                     formik.setValues({
