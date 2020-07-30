@@ -56,7 +56,7 @@
         "fp-ts": "^2.7.0",
         "js-cookie": "^2.2.1",
         "jsonwebtoken": "^8.5.1",
-        "less": "^3.11.3",
+        "less": "^3.12.2",
         "lodash.throttle": "^4.1.1",
         "moment": "^2.27.0",
         "nav-datovelger": "^6.1.9",
