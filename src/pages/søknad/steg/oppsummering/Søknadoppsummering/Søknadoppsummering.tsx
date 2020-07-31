@@ -62,7 +62,7 @@ const OppsummeringsFeltAvTrygdeytelser = (props: {
                             <Normaltekst>{el.type}</Normaltekst>
                         </div>
                         <div className={styles.oppsummeringElement}>
-                            <Element>{props.labelFirstEl}</Element>
+                            <Element>{props.labelThirdEl}</Element>
                             <Normaltekst>{el.fraHvem}</Normaltekst>
                         </div>
                     </div>
@@ -570,7 +570,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                         <OppsummeringsFeltAvTrygdeytelser
                             arr={søknad.inntekt.trygdeytelserIUtlandet}
                             labelFirstEl="Brutto beløp i lokal valuta per år"
-                            labelScndEl="Hvilke ytelser?"
+                            labelScndEl="Hvilken ytelser?"
                             labelThirdEl="Hvem gir disse ytelsene?"
                         />
                     )}

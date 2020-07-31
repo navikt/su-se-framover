@@ -13,7 +13,7 @@ export default {
     'input.tjenerPengerIUtlandet.label': 'Tjener du penger i utlandet?',
     'input.tjenerPengerIUtlandetBeløp.label': 'Beløp i kroner per måned',
     'input.andreYtelserINAV.label': 'Har du andre ytelser i NAV?',
-    'input.andreYtelserINavYtelse.label': 'Hvilke ytelser?',
+    'input.andreYtelserINavYtelse.label': 'Hvilken ytelser?',
     'input.andreYtelserINavBeløp.label': 'Beløp i kroner per måned',
     'input.søktAndreYtelserIkkeBehandlet.label': 'Har du søkt om andre trygdeytelser som ikke er behandlet?',
     'input.søktAndreYtelserIkkeBehandletBegrunnelse.label': 'Hvilke? ',
