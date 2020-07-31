@@ -14,8 +14,8 @@ import sharedStyles from '../../steg-shared.module.less';
 import * as personSlice from '~features/person/person.slice';
 import * as RemoteData from '@devexperts/remote-data-ts';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { KjønnKvinne, KjønnMann, KjønnUkent } from '~assets/Icons';
-import { Person } from '~api/personApi';
+import { Personkort } from '~components/Personkort';
+
 interface FormData {
     fnr: string;
 }
@@ -57,28 +57,6 @@ const index = (props: { nesteUrl: string }) => {
         }
     }, [formik.values.fnr]);
 
-    const Personkort = (props: { person: Person }) => {
-        return (
-            <div className={styles.personkortContainer}>
-                <div>
-                    <span className={styles.personkortSVG}>
-                        {props.person.kjønn === undefined && <KjønnUkent />}
-                        {props.person.kjønn === 'kvinne' && <KjønnKvinne />}
-                        {props.person.kjønn === 'mann' && <KjønnMann />}
-                    </span>
-                </div>
-                <div>
-                    <p>{`${props.person.fornavn} ${props.person.mellomnavn} ${props.person.etternavn}`}</p>
-                    <div>
-                        <span>{`${props.person.fnr} - `}</span>
-                        <span>{`${props.person.fnr.substring(0, 2)}.`}</span>
-                        <span>{`${props.person.fnr.substring(2, 4)}.`}</span>
-                        <span>{`${props.person.fnr.substring(4, 6)}`}</span>
-                    </div>
-                </div>
-            </div>
-        );
-    };
     return (
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
@@ -97,14 +75,17 @@ const index = (props: { nesteUrl: string }) => {
                         <Input
                             id="fnr"
                             name="fnr"
-                            className={styles.fnrInput}
                             label={<FormattedMessage id={'input.fnr.label'} />}
                             onChange={formik.handleChange}
                             value={formik.values.fnr}
                             feil={formik.errors.fnr}
                         />
                         {RemoteData.isPending(søker) && <NavFrontendSpinner />}
-                        {RemoteData.isSuccess(søker) && <Personkort person={søker.value} />}
+                        {RemoteData.isSuccess(søker) && (
+                            <div className={styles.personkortWrapper}>
+                                <Personkort person={søker.value} />
+                            </div>
+                        )}
                     </div>
 
                     <Feiloppsummering

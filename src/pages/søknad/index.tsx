@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import Stegindikator from 'nav-frontend-stegindikator';
-
+import { useAppSelector } from '~redux/Store';
 import styles from './index.module.less';
 import Inngang from './steg/inngang/Inngang';
 import { Søknadsteg } from './types';
@@ -17,6 +17,8 @@ import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
 import Kvittering from './steg/kvittering/Kvittering';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { Personkort } from '~components/Personkort';
 
 const messages = {
     'steg.uforevedtak': 'Uførevedtak',
@@ -32,6 +34,7 @@ const messages = {
 };
 
 const index = () => {
+    const { søker } = useAppSelector((s) => s.søker);
     const { step } = useParams<{ step: Søknadsteg }>();
     const history = useHistory();
 
@@ -85,8 +88,16 @@ const index = () => {
         <div className={styles.container}>
             <div className={styles.headerContainer}>
                 <div className={styles.sidetittelContainer}>
-                    <Innholdstittel>Søknad</Innholdstittel>
+                    <Innholdstittel>
+                        {step !== Søknadsteg.Inngang && RemoteData.isSuccess(søker) ? 'Søknad for' : 'Søknad'}
+                    </Innholdstittel>
                 </div>
+
+                {RemoteData.isSuccess(søker) && step !== Søknadsteg.Inngang && (
+                    <div className={styles.personkortContainer}>
+                        <Personkort person={søker.value} />
+                    </div>
+                )}
                 {step !== Søknadsteg.Inngang && (
                     <>
                         <div className={styles.stegindikatorContainer}>
