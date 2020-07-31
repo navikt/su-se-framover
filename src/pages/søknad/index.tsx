@@ -97,12 +97,16 @@ const index = () => {
                                 }))}
                                 aktivtSteg={aktivtSteg}
                                 visLabel={false}
-                                onChange={(index) => {
-                                    const nyttSteg = steg[index];
-                                    if (nyttSteg) {
-                                        history.push(routes.soknad.createURL({ step: nyttSteg.step }));
-                                    }
-                                }}
+                                onChange={
+                                    process.env.NODE_ENV === 'development'
+                                        ? (index) => {
+                                              const nyttSteg = steg[index];
+                                              if (nyttSteg) {
+                                                  history.push(routes.soknad.createURL({ step: nyttSteg.step }));
+                                              }
+                                          }
+                                        : undefined
+                                }
                             />
                         </div>
                         <Undertittel>{steg.find((s) => s.step === step)?.label}</Undertittel>
