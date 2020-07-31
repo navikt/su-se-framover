@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import AlertStripe from 'nav-frontend-alertstriper';
 
 import * as RemoteData from '@devexperts/remote-data-ts';
@@ -22,7 +22,6 @@ import Vilkår from './vilkår/Vilkår';
 import Beregning from './beregning/Beregning';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import * as personSlice from '~features/person/person.slice';
-import * as routes from '~lib/routes';
 import classNames from 'classnames';
 
 const Meny = (props: { aktiv: SaksbehandlingMenyvalg }) => (
@@ -62,7 +61,6 @@ const Saksoversikt = () => {
     }>();
 
     const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
-    const history = useHistory();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
