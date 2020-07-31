@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { Feiloppsummering, Input } from 'nav-frontend-skjema';
+import { Feiloppsummering, Input, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
-import { useFormik } from 'formik';
+import { useFormik, FormikErrors } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknad.slice';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
+import styles from './inntekt.module.less';
 import { Nullable } from '../../../../lib/types';
 import messages from './inntekt-nb';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
@@ -30,11 +31,17 @@ interface FormData {
     søktAndreYtelserIkkeBehandlet: Nullable<boolean>;
     søktAndreYtelserIkkeBehandletBegrunnelse: Nullable<string>;
     sosialStønadBeløp: Nullable<string>;
-    trygdeytelserIUtlandet: Nullable<boolean>;
-    trygdeytelserIUtlandetBeløp: Nullable<string>;
-    trygdeytelserIUtlandetType: Nullable<string>;
-    trygdeytelserIUtlandetFraHvem: Nullable<string>;
+    harTrygdeytelserIUtlandet: Nullable<boolean>;
+    trygdeytelserIUtlandet: Array<{ beløp: string; type: string; fraHvem: string }>;
 }
+
+const kjøretøySchema = yup.object({
+    beløp: (yup.number().typeError('Beløp må være et tall').positive().label('Beløp').required() as yup.Schema<
+        unknown
+    >) as yup.Schema<string>,
+    type: yup.string().required(),
+    fraHvem: yup.string().required(),
+});
 
 const schema = yup.object<FormData>({
     harForventetInntekt: yup.boolean().nullable().required(),
@@ -130,38 +137,115 @@ const schema = yup.object<FormData>({
             is: true,
             then: yup.string().nullable().min(1).required(),
         }),
-    trygdeytelserIUtlandet: yup.boolean().nullable().required(),
-    trygdeytelserIUtlandetBeløp: yup
-        .number()
-        .nullable()
+    harTrygdeytelserIUtlandet: yup.boolean().nullable().required(),
+    trygdeytelserIUtlandet: yup
+        .array(kjøretøySchema.required())
         .defined()
-        .when('trygdeytelserIUtlandet', {
+        .when('harTrygdeytelserIUtlandet', {
             is: true,
-            then: yup
-                .number()
-                .typeError('trygdeytelser i utlandet beløpet må være et tall')
-                .label('trygdeytelser i utlandet')
-                .nullable(false)
-                .positive(),
-            otherwise: yup.number(),
-        }) as yup.Schema<Nullable<string>>,
-    trygdeytelserIUtlandetType: yup
-        .string()
-        .nullable()
-        .defined()
-        .when('trygdeytelserIUtlandet', {
-            is: true,
-            then: yup.string().nullable().min(1).required(),
-        }),
-    trygdeytelserIUtlandetFraHvem: yup
-        .string()
-        .nullable()
-        .defined()
-        .when('trygdeytelserIUtlandet', {
-            is: true,
-            then: yup.string().nullable().min(1).required(),
+            then: yup.array().min(1).required(),
+            otherwise: yup.array().max(0),
         }),
 });
+
+const TrygdeytelserInputFelter = (props: {
+    arr: Array<{ beløp: string; type: string; fraHvem: string }>;
+    errors: string | string[] | FormikErrors<{ beløp: string; type: string; fraHvem: string }>[] | undefined;
+    feltnavn: string;
+    onChange: (element: { index: number; beløp: string; type: string; fraHvem: string }) => void;
+    onLeggTilClick: () => void;
+    onFjernClick: (index: number) => void;
+}) => {
+    return (
+        <div>
+            {props.arr.map((input, idx) => {
+                const errorForLinje = Array.isArray(props.errors) ? props.errors[idx] : null;
+                const beløpId = `${props.feltnavn}[${idx}].beløp`;
+                const typeId = `${props.feltnavn}[${idx}].type`;
+                const fraHvemId = `${props.feltnavn}[${idx}].fraHvem`;
+
+                return (
+                    <div className={styles.trygdeytelserContainer} key={idx}>
+                        <div className={styles.trippleFelter}>
+                            <div>
+                                <Input
+                                    id={`${beløpId}`}
+                                    name={`${beløpId}`}
+                                    label={<FormattedMessage id="input.trygdeytelserIUtlandetBeløp.label" />}
+                                    value={input.beløp}
+                                    onChange={(e) => {
+                                        props.onChange({
+                                            index: idx,
+                                            beløp: e.target.value,
+                                            type: input.type,
+                                            fraHvem: input.fraHvem,
+                                        });
+                                    }}
+                                />
+                                {errorForLinje && typeof errorForLinje === 'object' && (
+                                    <SkjemaelementFeilmelding>{errorForLinje.beløp}</SkjemaelementFeilmelding>
+                                )}
+                            </div>
+                            <div>
+                                <Input
+                                    id={`${typeId}`}
+                                    name={`${typeId}`}
+                                    label={<FormattedMessage id="input.trygdeytelserIUtlandetType.label" />}
+                                    value={input.type}
+                                    onChange={(e) => {
+                                        props.onChange({
+                                            index: idx,
+                                            beløp: input.beløp,
+                                            type: e.target.value,
+                                            fraHvem: input.fraHvem,
+                                        });
+                                    }}
+                                />
+                                {errorForLinje && typeof errorForLinje === 'object' && (
+                                    <SkjemaelementFeilmelding>{errorForLinje.type}</SkjemaelementFeilmelding>
+                                )}
+                            </div>
+                            <div>
+                                <Input
+                                    id={`${fraHvemId}`}
+                                    name={`${fraHvemId}`}
+                                    label={<FormattedMessage id="input.trygdeytelserIUtlandetFraHvem.label" />}
+                                    value={input.fraHvem}
+                                    onChange={(e) => {
+                                        props.onChange({
+                                            index: idx,
+                                            beløp: input.beløp,
+                                            type: input.type,
+                                            fraHvem: e.target.value,
+                                        });
+                                    }}
+                                />
+                                {errorForLinje && typeof errorForLinje === 'object' && (
+                                    <SkjemaelementFeilmelding>{errorForLinje.fraHvem}</SkjemaelementFeilmelding>
+                                )}
+                            </div>
+                        </div>
+                        {props.arr.length > 1 && (
+                            <Knapp
+                                className={styles.fjernFeltButton}
+                                onClick={() => props.onFjernClick(idx)}
+                                htmlType="button"
+                            >
+                                <FormattedMessage id="button.fjernRad.label" />
+                            </Knapp>
+                        )}
+                        {errorForLinje && typeof errorForLinje === 'string' && errorForLinje}
+                    </div>
+                );
+            })}
+            <div className={sharedStyles.leggTilFeltKnapp}>
+                <Knapp onClick={() => props.onLeggTilClick()} htmlType="button">
+                    <FormattedMessage id="button.leggTil.label" />
+                </Knapp>
+            </div>
+        </div>
+    );
+};
 
 const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const inntektFraStore = useAppSelector((s) => s.soknad.inntekt);
@@ -184,10 +268,8 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
             søktAndreYtelserIkkeBehandlet: inntektFraStore.søktAndreYtelserIkkeBehandlet,
             søktAndreYtelserIkkeBehandletBegrunnelse: inntektFraStore.søktAndreYtelserIkkeBehandletBegrunnelse,
             sosialStønadBeløp: inntektFraStore.sosialStønadBeløp,
+            harTrygdeytelserIUtlandet: inntektFraStore.harTrygdeytelserIUtlandet,
             trygdeytelserIUtlandet: inntektFraStore.trygdeytelserIUtlandet,
-            trygdeytelserIUtlandetBeløp: inntektFraStore.trygdeytelserIUtlandetBeløp,
-            trygdeytelserIUtlandetType: inntektFraStore.trygdeytelserIUtlandetType,
-            trygdeytelserIUtlandetFraHvem: inntektFraStore.trygdeytelserIUtlandetFraHvem,
         },
         onSubmit: (values) => {
             save(values);
@@ -213,10 +295,8 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 søktAndreYtelserIkkeBehandlet: values.søktAndreYtelserIkkeBehandlet,
                 søktAndreYtelserIkkeBehandletBegrunnelse: values.søktAndreYtelserIkkeBehandletBegrunnelse,
                 sosialStønadBeløp: values.sosialStønadBeløp,
+                harTrygdeytelserIUtlandet: values.harTrygdeytelserIUtlandet,
                 trygdeytelserIUtlandet: values.trygdeytelserIUtlandet,
-                trygdeytelserIUtlandetBeløp: values.trygdeytelserIUtlandetBeløp,
-                trygdeytelserIUtlandetType: values.trygdeytelserIUtlandetType,
-                trygdeytelserIUtlandetFraHvem: values.trygdeytelserIUtlandetFraHvem,
             })
         );
 
@@ -448,46 +528,57 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             id="trygdeytelserIUtlandet"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.trygdeytelserIUtlandet.label" />}
-                            feil={formik.errors.trygdeytelserIUtlandet}
-                            state={formik.values.trygdeytelserIUtlandet}
+                            feil={formik.errors.harTrygdeytelserIUtlandet}
+                            state={formik.values.harTrygdeytelserIUtlandet}
                             onChange={(val) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    trygdeytelserIUtlandet: val,
-                                    trygdeytelserIUtlandetBeløp: null,
-                                    trygdeytelserIUtlandetType: null,
-                                    trygdeytelserIUtlandetFraHvem: null,
+                                    harTrygdeytelserIUtlandet: val,
+                                    trygdeytelserIUtlandet: val ? [{ beløp: '', type: '', fraHvem: '' }] : [],
                                 })
                             }
                         />
-                        {formik.values.trygdeytelserIUtlandet && (
-                            <div className={sharedStyles.inputFelterDiv}>
-                                <Input
-                                    id="trygdeytelserIUtlandetBeløp"
-                                    name="trygdeytelserIUtlandetBeløp"
-                                    label={<FormattedMessage id="input.trygdeytelserIUtlandetBeløp.label" />}
-                                    value={formik.values.trygdeytelserIUtlandetBeløp || ''}
-                                    onChange={formik.handleChange}
-                                    feil={formik.errors.trygdeytelserIUtlandetBeløp}
-                                />
-                                <Input
-                                    id="trygdeytelserIUtlandetType"
-                                    name="trygdeytelserIUtlandetType"
-                                    label={<FormattedMessage id="input.trygdeytelserIUtlandetType.label" />}
-                                    value={formik.values.trygdeytelserIUtlandetType || ''}
-                                    onChange={formik.handleChange}
-                                    feil={formik.errors.trygdeytelserIUtlandetType}
-                                />
-
-                                <Input
-                                    id="trygdeytelserIUtlandetFraHvem"
-                                    name="trygdeytelserIUtlandetFraHvem"
-                                    label={<FormattedMessage id="input.trygdeytelserIUtlandetFraHvem.label" />}
-                                    value={formik.values.trygdeytelserIUtlandetFraHvem || ''}
-                                    onChange={formik.handleChange}
-                                    feil={formik.errors.trygdeytelserIUtlandetFraHvem}
-                                />
-                            </div>
+                        {formik.values.harTrygdeytelserIUtlandet && (
+                            <TrygdeytelserInputFelter
+                                arr={formik.values.trygdeytelserIUtlandet}
+                                errors={formik.errors.trygdeytelserIUtlandet}
+                                feltnavn="trygdeytelserIUtlandet"
+                                onLeggTilClick={() => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        trygdeytelserIUtlandet: [
+                                            ...formik.values.trygdeytelserIUtlandet,
+                                            {
+                                                beløp: '',
+                                                type: '',
+                                                fraHvem: '',
+                                            },
+                                        ],
+                                    });
+                                }}
+                                onFjernClick={(index) => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        trygdeytelserIUtlandet: formik.values.trygdeytelserIUtlandet.filter(
+                                            (_, i) => index !== i
+                                        ),
+                                    });
+                                }}
+                                onChange={(val) => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        trygdeytelserIUtlandet: formik.values.trygdeytelserIUtlandet.map((input, i) =>
+                                            val.index === i
+                                                ? {
+                                                      beløp: val.beløp,
+                                                      type: val.type,
+                                                      fraHvem: val.fraHvem,
+                                                  }
+                                                : input
+                                        ),
+                                    });
+                                }}
+                            />
                         )}
 
                         <JaNeiSpørsmål

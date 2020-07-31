@@ -4,6 +4,7 @@ import { ErrorCode, ApiError } from '~api/apiClient';
 import * as søknadApi from '~api/søknadApi';
 import { SøknadState } from './søknad.slice';
 import * as personApi from '~api/personApi';
+import * as RemoteData from '@devexperts/remote-data-ts';
 
 export const sendSøknad = createAsyncThunk<
     søknadApi.SøknadInnhold,
@@ -64,15 +65,10 @@ export const sendSøknad = createAsyncThunk<
                 ? søknad.inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
                 : null,
             sosialstønadBeløp: søknad.inntekt.harMottattSosialstønad ? Number(søknad.inntekt.sosialStønadBeløp) : null,
-            trygdeytelserIUtlandetBeløp: søknad.inntekt.trygdeytelserIUtlandet
-                ? Number(søknad.inntekt.trygdeytelserIUtlandetBeløp)
-                : null,
-            trygdeytelserIUtlandet: søknad.inntekt.trygdeytelserIUtlandet
-                ? søknad.inntekt.trygdeytelserIUtlandetType
-                : null,
-            trygdeytelserIUtlandetFra: søknad.inntekt.trygdeytelserIUtlandet
-                ? søknad.inntekt.trygdeytelserIUtlandetFraHvem
-                : null,
+            trygdeytelserIUtlandet: søknad.inntekt.trygdeytelserIUtlandet.map((p) => ({
+                ...p,
+                beløp: Number(p.beløp),
+            })),
             pensjon: søknad.inntekt.pensjonsInntekt.map((p) => ({ ...p, beløp: Number(p.beløp) })),
         },
         formue: {
@@ -86,8 +82,7 @@ export const sendSøknad = createAsyncThunk<
             verdiPåEiendom: søknad.formue.eierMerEnnEnBolig ? Number(søknad.formue.verdiPåEiendom) : null,
             eiendomBrukesTil: søknad.formue.eierMerEnnEnBolig ? søknad.formue.eiendomBrukesTil : null,
 
-            verdiPåKjøretøy: søknad.formue.eierKjøretøy ? Number(søknad.formue.verdiPåEiendom) : null,
-            kjøretøyDeEier: søknad.formue.eierKjøretøy ? søknad.formue.kjøretøyDeEier : null,
+            kjøretøy: søknad.formue.kjøretøy.map((p) => ({ ...p, verdiPåKjøretøy: Number(p.verdiPåKjøretøy) })),
 
             innskuddsBeløp: søknad.formue.harInnskuddPåKonto ? Number(søknad.formue.innskuddsBeløp) : null,
             verdipapirBeløp: søknad.formue.harVerdipapir ? Number(søknad.formue.verdipapirBeløp) : null,
@@ -115,43 +110,39 @@ export const sendSøknad = createAsyncThunk<
 });
 
 export interface InnsendingState {
-    sendingInProgress: boolean;
-    error:
-        | {
-              code: ErrorCode;
-              message: string;
-          }
-        | undefined;
-    søknadSendt: boolean;
+    søknadInnsendingState: RemoteData.RemoteData<
+        {
+            code: ErrorCode;
+            message: string;
+        },
+        null
+    >;
 }
 
+const initialState: InnsendingState = {
+    søknadInnsendingState: RemoteData.initial,
+};
 export default createSlice({
     name: 'innsending',
-    initialState: {
-        sendingInProgress: false,
-        error: undefined,
-        søknadSendt: false,
-    } as InnsendingState,
+    initialState: initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(sendSøknad.pending, (state) => {
-            state.sendingInProgress = true;
+            state.søknadInnsendingState = RemoteData.pending;
         });
 
         builder.addCase(sendSøknad.fulfilled, (state) => {
-            state.sendingInProgress = false;
-            state.søknadSendt = true;
+            state.søknadInnsendingState = RemoteData.success(null);
         });
         builder.addCase(sendSøknad.rejected, (state, action) => {
             if (action.payload) {
-                state.error = {
+                state.søknadInnsendingState = RemoteData.failure({
                     code: action.payload.code,
                     message: `Feilet med status ${action.payload.statusCode}`,
-                };
+                });
             } else {
-                state.error = { code: ErrorCode.Unknown, message: 'Ukjent feil' };
+                state.søknadInnsendingState = RemoteData.failure({ code: ErrorCode.Unknown, message: 'Ukjent feil' });
             }
-            state.sendingInProgress = false;
         });
     },
 });

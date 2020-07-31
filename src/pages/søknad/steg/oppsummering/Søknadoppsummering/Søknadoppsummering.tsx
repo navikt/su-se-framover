@@ -17,6 +17,61 @@ const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | Reac
     </div>
 );
 
+const OppsummeringsFeltAvKjøretøy = (props: {
+    labelFirstEl: React.ReactNode;
+    labelScndEl: React.ReactNode;
+    arr: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
+}) => {
+    return (
+        <div>
+            {props.arr.map((el, idx) => {
+                return (
+                    <div className={styles.oppsummeringsfeltKjøretøyContainer} key={idx}>
+                        <div className={styles.oppsummeringElement}>
+                            <Element>{props.labelScndEl}</Element>
+                            <Normaltekst>{el.kjøretøyDeEier}</Normaltekst>
+                        </div>
+                        <div className={styles.oppsummeringElement}>
+                            <Element>{props.labelFirstEl}</Element>
+                            <Normaltekst>{el.verdiPåKjøretøy}</Normaltekst>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+};
+
+const OppsummeringsFeltAvTrygdeytelser = (props: {
+    labelFirstEl: React.ReactNode;
+    labelScndEl: React.ReactNode;
+    labelThirdEl: React.ReactNode;
+    arr: Array<{ beløp: string; type: string; fraHvem: string }>;
+}) => {
+    return (
+        <div>
+            {props.arr.map((el, idx) => {
+                return (
+                    <div className={styles.oppsummeringsfeltTrygdeytelserContainer} key={idx}>
+                        <div className={styles.oppsummeringElement}>
+                            <Element>{props.labelFirstEl}</Element>
+                            <Normaltekst>{el.beløp}</Normaltekst>
+                        </div>
+                        <div className={styles.oppsummeringElement}>
+                            <Element>{props.labelScndEl}</Element>
+                            <Normaltekst>{el.type}</Normaltekst>
+                        </div>
+                        <div className={styles.oppsummeringElement}>
+                            <Element>{props.labelFirstEl}</Element>
+                            <Normaltekst>{el.fraHvem}</Normaltekst>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+};
+
 const reverseStr = (str: string) => {
     return str.split('-').reverse().join('-');
 };
@@ -310,18 +365,15 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                                 : 'Ubesvart'
                         }
                     />
+
                     {søknad.formue.eierKjøretøy && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
-                            verdi={søknad.formue.verdiPåKjøretøy ? søknad.formue.verdiPåKjøretøy : 'Ubesvart'}
+                        <OppsummeringsFeltAvKjøretøy
+                            labelFirstEl={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
+                            labelScndEl={<FormattedMessage id="input.kjøretøyDeEier.label" />}
+                            arr={søknad.formue.kjøretøy}
                         />
                     )}
-                    {søknad.formue.eierKjøretøy && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.kjøretøyDeEier.label" />}
-                            verdi={søknad.formue.kjøretøyDeEier ? søknad.formue.kjøretøyDeEier : 'Ubesvart'}
-                        />
-                    )}
+
                     <OppsummeringsFelt
                         label={<FormattedMessage id="input.harInnskuddPåKonto.label" />}
                         verdi={
@@ -507,41 +559,19 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                     <OppsummeringsFelt
                         label={<FormattedMessage id="input.trygdeytelserIUtlandet.label" />}
                         verdi={
-                            søknad.inntekt.trygdeytelserIUtlandet
+                            søknad.inntekt.harTrygdeytelserIUtlandet
                                 ? 'Ja'
-                                : søknad.inntekt.trygdeytelserIUtlandet === false
+                                : søknad.inntekt.harTrygdeytelserIUtlandet === false
                                 ? 'Nei'
                                 : 'Ubesvart'
                         }
                     />
-                    {søknad.inntekt.trygdeytelserIUtlandet && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.trygdeytelserIUtlandetBeløp.label" />}
-                            verdi={
-                                søknad.inntekt.trygdeytelserIUtlandetBeløp
-                                    ? søknad.inntekt.trygdeytelserIUtlandetBeløp
-                                    : 'Ubesvart'
-                            }
-                        />
-                    )}
-                    {søknad.inntekt.trygdeytelserIUtlandet && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.trygdeytelserIUtlandetType.label" />}
-                            verdi={
-                                søknad.inntekt.trygdeytelserIUtlandetType
-                                    ? søknad.inntekt.trygdeytelserIUtlandetType
-                                    : 'Ubesvart'
-                            }
-                        />
-                    )}
-                    {søknad.inntekt.trygdeytelserIUtlandet && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.trygdeytelserIUtlandetFraHvem.label" />}
-                            verdi={
-                                søknad.inntekt.trygdeytelserIUtlandetFraHvem
-                                    ? søknad.inntekt.trygdeytelserIUtlandetFraHvem
-                                    : 'Ubesvart'
-                            }
+                    {søknad.inntekt.harTrygdeytelserIUtlandet && (
+                        <OppsummeringsFeltAvTrygdeytelser
+                            arr={søknad.inntekt.trygdeytelserIUtlandet}
+                            labelFirstEl="Brutto beløp i lokal valuta per år"
+                            labelScndEl="Hvilke ytelser?"
+                            labelThirdEl="Hvem gir disse ytelsene?"
                         />
                     )}
 

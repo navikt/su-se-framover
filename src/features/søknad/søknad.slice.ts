@@ -33,8 +33,7 @@ export interface SøknadState {
         verdiPåEiendom: Nullable<string>;
         eiendomBrukesTil: Nullable<string>;
         eierKjøretøy: Nullable<boolean>;
-        verdiPåKjøretøy: Nullable<string>;
-        kjøretøyDeEier: Nullable<string>;
+        kjøretøy: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
         harInnskuddPåKonto: Nullable<boolean>;
         innskuddsBeløp: Nullable<string>;
         harVerdipapir: Nullable<boolean>;
@@ -56,10 +55,8 @@ export interface SøknadState {
         søktAndreYtelserIkkeBehandletBegrunnelse: Nullable<string>;
         harMottattSosialstønad: Nullable<boolean>;
         sosialStønadBeløp: Nullable<string>;
-        trygdeytelserIUtlandet: Nullable<boolean>;
-        trygdeytelserIUtlandetBeløp: Nullable<string>;
-        trygdeytelserIUtlandetType: Nullable<string>;
-        trygdeytelserIUtlandetFraHvem: Nullable<string>;
+        harTrygdeytelserIUtlandet: Nullable<boolean>;
+        trygdeytelserIUtlandet: Array<{ beløp: string; type: string; fraHvem: string }>;
         mottarPensjon: Nullable<boolean>;
         pensjonsInntekt: Array<{ ordning: string; beløp: string }>;
     };
@@ -106,8 +103,7 @@ const initialState: SøknadState = {
         verdiPåEiendom: null,
         eiendomBrukesTil: null,
         eierKjøretøy: null,
-        verdiPåKjøretøy: null,
-        kjøretøyDeEier: null,
+        kjøretøy: [],
         harInnskuddPåKonto: null,
         innskuddsBeløp: null,
         harVerdipapir: null,
@@ -129,10 +125,8 @@ const initialState: SøknadState = {
         søktAndreYtelserIkkeBehandletBegrunnelse: null,
         harMottattSosialstønad: null,
         sosialStønadBeløp: null,
-        trygdeytelserIUtlandet: null,
-        trygdeytelserIUtlandetBeløp: null,
-        trygdeytelserIUtlandetType: null,
-        trygdeytelserIUtlandetFraHvem: null,
+        harTrygdeytelserIUtlandet: null,
+        trygdeytelserIUtlandet: [],
         pensjonsInntekt: [],
         mottarPensjon: null,
     },
@@ -152,6 +146,9 @@ export default createSlice({
     name: 'soknad',
     initialState,
     reducers: {
+        resetSøknad() {
+            return initialState;
+        },
         harUførevedtakUpdated(state, action: PayloadAction<boolean | null>) {
             state.harUførevedtak = action.payload;
         },

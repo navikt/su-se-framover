@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Input } from 'nav-frontend-skjema';
+import { Input, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
-import { useFormik } from 'formik';
+import { useFormik, FormikErrors } from 'formik';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknad.slice';
@@ -14,6 +14,7 @@ import { Feiloppsummering } from 'nav-frontend-skjema';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useI18n } from '~lib/hooks';
 import sharedI18n from '../steg-shared-i18n';
+import { Knapp } from 'nav-frontend-knapper';
 
 interface FormData {
     eierBolig: Nullable<boolean>;
@@ -27,8 +28,7 @@ interface FormData {
     verdiPåEiendom: Nullable<string>;
     eiendomBrukesTil: Nullable<string>;
     eierKjøretøy: Nullable<boolean>;
-    verdiPåKjøretøy: Nullable<string>;
-    kjøretøyDeEier: Nullable<string>;
+    kjøretøy: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
     harInnskuddPåKonto: Nullable<boolean>;
     innskuddsBeløp: Nullable<string>;
     harVerdipapir: Nullable<boolean>;
@@ -38,6 +38,16 @@ interface FormData {
     harKontanterOver1000: Nullable<boolean>;
     kontanterBeløp: Nullable<string>;
 }
+
+const kjøretøySchema = yup.object({
+    verdiPåKjøretøy: (yup
+        .number()
+        .typeError('Verdi på kjøretøy må være et tall')
+        .positive()
+        .label('Verdi på kjøretøy')
+        .required() as yup.Schema<unknown>) as yup.Schema<string>,
+    kjøretøyDeEier: yup.string().required(),
+});
 
 const schema = yup.object<FormData>({
     eierBolig: yup.boolean().nullable().required(),
@@ -123,27 +133,13 @@ const schema = yup.object<FormData>({
             then: yup.string().nullable().min(1).required(),
         }),
     eierKjøretøy: yup.boolean().nullable().required(),
-    verdiPåKjøretøy: yup
-        .number()
-        .nullable()
+    kjøretøy: yup
+        .array(kjøretøySchema.required())
         .defined()
         .when('eierKjøretøy', {
             is: true,
-            then: yup
-                .number()
-                .typeError('Verdi på kjøretøyet må være et tall')
-                .label('Verdi på kjøretøyet')
-                .nullable(false)
-                .positive(),
-            otherwise: yup.number(),
-        }) as yup.Schema<Nullable<string>>,
-    kjøretøyDeEier: yup
-        .string()
-        .nullable()
-        .defined()
-        .when('eierKjøretøy', {
-            is: true,
-            then: yup.string().nullable().min(1).required(),
+            then: yup.array().min(1).required(),
+            otherwise: yup.array().max(0),
         }),
     harInnskuddPåKonto: yup.boolean().nullable().required(),
     innskuddsBeløp: yup
@@ -193,6 +189,81 @@ const schema = yup.object<FormData>({
         }) as yup.Schema<Nullable<string>>,
 });
 
+const KjøretøyInputFelter = (props: {
+    arr: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
+    errors: string | string[] | FormikErrors<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>[] | undefined;
+    feltnavn: string;
+    onChange: (element: { index: number; verdiPåKjøretøy: string; kjøretøyDeEier: string }) => void;
+    onLeggTilClick: () => void;
+    onFjernClick: (index: number) => void;
+}) => {
+    return (
+        <div>
+            {props.arr.map((input, idx) => {
+                const errorForLinje = Array.isArray(props.errors) ? props.errors[idx] : null;
+                const kjøretøyId = `${props.feltnavn}[${idx}].kjøretøy`;
+                const kjøretøyVerdiId = `${props.feltnavn}[${idx}].kjøretøyVerdi`;
+
+                return (
+                    <div className={sharedStyles.inputFelterDiv} key={idx}>
+                        <div>
+                            <Input
+                                id={`${kjøretøyVerdiId}`}
+                                name={`${kjøretøyVerdiId}`}
+                                label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
+                                value={input.verdiPåKjøretøy}
+                                onChange={(e) => {
+                                    props.onChange({
+                                        index: idx,
+                                        kjøretøyDeEier: input.kjøretøyDeEier,
+                                        verdiPåKjøretøy: e.target.value,
+                                    });
+                                }}
+                            />
+                            {errorForLinje && typeof errorForLinje === 'object' && (
+                                <SkjemaelementFeilmelding>{errorForLinje.verdiPåKjøretøy}</SkjemaelementFeilmelding>
+                            )}
+                        </div>
+                        <div>
+                            <Input
+                                id={`${kjøretøyId}`}
+                                name={`${kjøretøyId}`}
+                                label={<FormattedMessage id="input.kjøretøyDeEier.label" />}
+                                value={input.kjøretøyDeEier}
+                                onChange={(e) =>
+                                    props.onChange({
+                                        index: idx,
+                                        kjøretøyDeEier: e.target.value,
+                                        verdiPåKjøretøy: input.verdiPåKjøretøy,
+                                    })
+                                }
+                            />
+                            {errorForLinje && typeof errorForLinje === 'object' && (
+                                <SkjemaelementFeilmelding>{errorForLinje.kjøretøyDeEier}</SkjemaelementFeilmelding>
+                            )}
+                        </div>
+                        {props.arr.length > 1 && (
+                            <Knapp
+                                className={sharedStyles.fjernFeltLink}
+                                onClick={() => props.onFjernClick(idx)}
+                                htmlType="button"
+                            >
+                                <FormattedMessage id="button.fjernRad.label" />
+                            </Knapp>
+                        )}
+                        {errorForLinje && typeof errorForLinje === 'string' && errorForLinje}
+                    </div>
+                );
+            })}
+            <div className={sharedStyles.leggTilFeltKnapp}>
+                <Knapp onClick={() => props.onLeggTilClick()} htmlType="button">
+                    <FormattedMessage id="button.leggTil.label" />
+                </Knapp>
+            </div>
+        </div>
+    );
+};
+
 const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const formueFraStore = useAppSelector((s) => s.soknad.formue);
     const dispatch = useAppDispatch();
@@ -212,8 +283,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 verdiPåEiendom: values.verdiPåEiendom,
                 eiendomBrukesTil: values.eiendomBrukesTil,
                 eierKjøretøy: values.eierKjøretøy,
-                verdiPåKjøretøy: values.verdiPåKjøretøy,
-                kjøretøyDeEier: values.kjøretøyDeEier,
+                kjøretøy: values.kjøretøy,
                 harInnskuddPåKonto: values.harInnskuddPåKonto,
                 innskuddsBeløp: values.innskuddsBeløp,
                 harVerdipapir: values.harVerdipapir,
@@ -239,8 +309,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
             verdiPåEiendom: formueFraStore.verdiPåEiendom,
             eiendomBrukesTil: formueFraStore.eiendomBrukesTil,
             eierKjøretøy: formueFraStore.eierKjøretøy,
-            verdiPåKjøretøy: formueFraStore.verdiPåKjøretøy,
-            kjøretøyDeEier: formueFraStore.kjøretøyDeEier,
+            kjøretøy: formueFraStore.kjøretøy,
             harInnskuddPåKonto: formueFraStore.harInnskuddPåKonto,
             innskuddsBeløp: formueFraStore.innskuddsBeløp,
             harVerdipapir: formueFraStore.harVerdipapir,
@@ -418,13 +487,49 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     eierKjøretøy: e,
-                                    verdiPåKjøretøy: null,
-                                    kjøretøyDeEier: null,
+                                    kjøretøy: e ? [{ verdiPåKjøretøy: '', kjøretøyDeEier: '' }] : [],
                                 })
                             }
                         />
 
                         {formik.values.eierKjøretøy && (
+                            <KjøretøyInputFelter
+                                arr={formik.values.kjøretøy}
+                                errors={formik.errors.kjøretøy}
+                                feltnavn={'kjøretøy'}
+                                onLeggTilClick={() => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        kjøretøy: [
+                                            ...formik.values.kjøretøy,
+                                            {
+                                                verdiPåKjøretøy: '',
+                                                kjøretøyDeEier: '',
+                                            },
+                                        ],
+                                    });
+                                }}
+                                onFjernClick={(index) => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        kjøretøy: formik.values.kjøretøy.filter((_, i) => index !== i),
+                                    });
+                                }}
+                                onChange={(val) => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        kjøretøy: formik.values.kjøretøy.map((input, i) =>
+                                            val.index === i
+                                                ? {
+                                                      verdiPåKjøretøy: val.verdiPåKjøretøy,
+                                                      kjøretøyDeEier: val.kjøretøyDeEier,
+                                                  }
+                                                : input
+                                        ),
+                                    });
+                                }}
+                            />
+                            /*
                             <div className={sharedStyles.inputFelterDiv}>
                                 <Input
                                     id="verdiPåKjøretøy"
@@ -440,7 +545,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     value={formik.values.kjøretøyDeEier || ''}
                                     onChange={formik.handleChange}
                                 />
-                            </div>
+                            </div>*/
                         )}
 
                         <JaNeiSpørsmål
