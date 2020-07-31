@@ -25,3 +25,19 @@
 
     padding: @spacing;
 }
+
+.meny {
+    padding: @spacing-s 0;
+    border-right: 2px solid @navLysGra;
+
+    .menyItem {
+        padding: @spacing-xxs @spacing-s;
+        border-left: 4px solid transparent;
+
+        &.aktiv {
+            background-color: @navLysGra;
+            border-left-color: @navBla;
+            font-weight: 600;
+        }
+    }
+}

@@ -5,7 +5,6 @@ import AlertStripe from 'nav-frontend-alertstriper';
 
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { PersonCard } from '@navikt/nap-person-card';
-import SideMenu from '@navikt/nap-side-menu';
 
 import NavFrontendSpinner from 'nav-frontend-spinner';
 
@@ -24,6 +23,35 @@ import Beregning from './beregning/Beregning';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import * as personSlice from '~features/person/person.slice';
 import * as routes from '~lib/routes';
+import classNames from 'classnames';
+
+const Meny = (props: { aktiv: SaksbehandlingMenyvalg }) => (
+    <div className={styles.meny}>
+        <ol>
+            <li
+                className={classNames(styles.menyItem, {
+                    [styles.aktiv]: props.aktiv === SaksbehandlingMenyvalg.Vilkår,
+                })}
+            >
+                1.&nbsp;Vilkår
+            </li>
+            <li
+                className={classNames(styles.menyItem, {
+                    [styles.aktiv]: props.aktiv === SaksbehandlingMenyvalg.Beregning,
+                })}
+            >
+                2.&nbsp;Beregning
+            </li>
+            <li
+                className={classNames(styles.menyItem, {
+                    [styles.aktiv]: props.aktiv === SaksbehandlingMenyvalg.Vedtak,
+                })}
+            >
+                3.&nbsp;Vedtaksbrev
+            </li>
+        </ol>
+    </div>
+);
 
 const Saksoversikt = () => {
     const { meny, ...urlParams } = useParams<{
@@ -73,48 +101,7 @@ const Saksoversikt = () => {
                             <Søkefelt />
                         </div>
                         <div className={styles.container}>
-                            {meny && (
-                                <SideMenu
-                                    links={[
-                                        {
-                                            label: 'Søknad',
-                                            active: meny === SaksbehandlingMenyvalg.Søknad,
-                                        },
-                                        {
-                                            label: 'Vilkår',
-                                            active: meny === SaksbehandlingMenyvalg.Vilkår,
-                                        },
-                                        {
-                                            label: 'Beregning',
-                                            active: meny === SaksbehandlingMenyvalg.Beregning,
-                                        },
-                                        {
-                                            label: 'Vedtak',
-                                            active: meny === SaksbehandlingMenyvalg.Vedtak,
-                                        },
-                                    ]}
-                                    onClick={(index) => {
-                                        const menuItem = [
-                                            SaksbehandlingMenyvalg.Søknad,
-                                            SaksbehandlingMenyvalg.Vilkår,
-                                            SaksbehandlingMenyvalg.Beregning,
-                                            SaksbehandlingMenyvalg.Vedtak,
-                                        ][index];
-
-                                        if (!menuItem) {
-                                            return;
-                                        }
-
-                                        history.push(
-                                            routes.saksoversikt.createURL({
-                                                behandlingId: urlParams.behandlingId,
-                                                sakId: sak.id,
-                                                meny: menuItem,
-                                            })
-                                        );
-                                    }}
-                                />
-                            )}
+                            <Meny aktiv={meny} />
                             <div className={styles.mainContent}>
                                 {meny === SaksbehandlingMenyvalg.Søknad ? (
                                     'Her kan vi kanskje vise hele søknaden'
