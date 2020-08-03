@@ -10,7 +10,8 @@ module.exports = {
         'eslint:recommended',
         'plugin:react/recommended',
         'plugin:prettier/recommended',
-        'eslint:recommended',
+        'plugin:import/recommended',
+        'plugin:import/typescript',
         'plugin:@typescript-eslint/recommended',
         'prettier/@typescript-eslint',
     ],
@@ -29,12 +30,32 @@ module.exports = {
         react: {
             version: '16.0',
         },
+        'import/resolver': { typescript: {} },
+        'import/internal-regex': '^~',
     },
     plugins: ['react', '@typescript-eslint'],
     rules: {
         '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         'react/prop-types': 'off',
+        'import/order': [
+            1,
+            {
+                alphabetize: { order: 'asc', caseInsensitive: true },
+                'newlines-between': 'always',
+                groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+                pathGroups: [
+                    {
+                        pattern: '~*/**',
+                        group: 'internal',
+                    },
+                ],
+                pathGroupsExcludedImportTypes: [],
+            },
+        ],
+        // TypeScript passer på at vi ikke driter oss ut, så vi trenger ikke disse
+        'import/no-named-as-default-member': 0,
+        'import/no-named-as-default': 0,
     },
     overrides: [
         {

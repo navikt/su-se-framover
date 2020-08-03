@@ -1,12 +1,14 @@
-import * as React from 'react';
-import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import sharedStyles from '../../steg-shared.module.less';
-import { useHistory } from 'react-router-dom';
-import * as innsendingSlice from '~features/søknad/innsending.slice';
-import { FormattedMessage } from 'react-intl';
-
 import * as RemoteData from '@devexperts/remote-data-ts';
+import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
+import { useHistory } from 'react-router-dom';
+
+import * as innsendingSlice from '~features/søknad/innsending.slice';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
+
+import Bunnknapper from '../../bunnknapper/Bunnknapper';
+import sharedStyles from '../../steg-shared.module.less';
+
 import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
 
 const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string }) => {

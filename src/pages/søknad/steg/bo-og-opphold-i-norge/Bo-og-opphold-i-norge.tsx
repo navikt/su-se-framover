@@ -1,19 +1,22 @@
-import * as React from 'react';
 import { useFormik } from 'formik';
-import { AnbefalerIkkeSøke, JaNeiSpørsmål } from '~/components/FormElements';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import søknadSlice from '~/features/søknad/søknad.slice';
-import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
-import { DelerBoligMed } from '~features/søknad/types';
-import sharedStyles from '../../steg-shared.module.less';
+import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
-import messages from './bo-og-opphold-i-norge-nb';
-import { Nullable } from '~lib/types';
 import { useHistory } from 'react-router-dom';
+
+import { AnbefalerIkkeSøke, JaNeiSpørsmål } from '~/components/FormElements';
+import søknadSlice from '~/features/søknad/søknad.slice';
+import { DelerBoligMed } from '~features/søknad/types';
+import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import sharedI18n from '../steg-shared-i18n';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
+
 import { useI18n } from '../../../../lib/hooks';
+import Bunnknapper from '../../bunnknapper/Bunnknapper';
+import sharedStyles from '../../steg-shared.module.less';
+import sharedI18n from '../steg-shared-i18n';
+
+import messages from './bo-og-opphold-i-norge-nb';
 
 interface FormData {
     borOgOppholderSegINorge: Nullable<boolean>;

@@ -1,20 +1,22 @@
-import * as React from 'react';
-import { Input, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
-import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useFormik, FormikErrors } from 'formik';
+import { Knapp } from 'nav-frontend-knapper';
+import { Input, SkjemaelementFeilmelding, Feiloppsummering } from 'nav-frontend-skjema';
+import * as React from 'react';
+import { FormattedMessage, RawIntlProvider } from 'react-intl';
+import { useHistory } from 'react-router-dom';
+
 import { JaNeiSpørsmål } from '~/components/FormElements';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknad.slice';
+import { useI18n } from '~lib/hooks';
+import { Nullable } from '~lib/types';
+import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
+import { useAppSelector, useAppDispatch } from '~redux/Store';
+
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
-import messages from './dinformue-nb';
-import { Nullable } from '~lib/types';
-import { useHistory } from 'react-router-dom';
-import { Feiloppsummering } from 'nav-frontend-skjema';
-import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
-import { useI18n } from '~lib/hooks';
 import sharedI18n from '../steg-shared-i18n';
-import { Knapp } from 'nav-frontend-knapper';
+
+import messages from './dinformue-nb';
 
 interface FormData {
     eierBolig: Nullable<boolean>;

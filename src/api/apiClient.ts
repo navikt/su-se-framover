@@ -1,4 +1,5 @@
 import { guid } from 'nav-frontend-js-utils';
+
 import * as Cookies from '~lib/cookies';
 import { CookieName } from '~lib/cookies';
 

@@ -1,10 +1,12 @@
-import React from 'react';
-import { Beregning } from '~api/behandlingApi';
 import { Innholdstittel } from 'nav-frontend-typografi';
-import styles from './beregning.module.less';
-import { useI18n } from '~lib/hooks';
+import React from 'react';
+
+import { Beregning } from '~api/behandlingApi';
 import { formatDateTime } from '~lib/dateUtils';
+import { useI18n } from '~lib/hooks';
+
 import messages from './beregning-nb';
+import styles from './beregning.module.less';
 
 interface Props {
     beregning: Beregning;

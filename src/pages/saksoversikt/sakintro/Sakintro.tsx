@@ -1,16 +1,17 @@
-import React from 'react';
-import * as sakApi from 'api/sakApi';
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
-import Panel from 'nav-frontend-paneler';
-import { useHistory } from 'react-router-dom';
-import { Innholdstittel, Undertittel, Element } from 'nav-frontend-typografi';
-import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
-
-import * as behandlingSlice from '~features/saksoversikt/sak.slice';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import styles from './sakintro.module.less';
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe from 'nav-frontend-alertstriper';
+import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
+import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import Panel from 'nav-frontend-paneler';
+import { Innholdstittel, Undertittel, Element } from 'nav-frontend-typografi';
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+
+import * as sakApi from 'api/sakApi';
+import * as behandlingSlice from '~features/saksoversikt/sak.slice';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
+
+import styles from './sakintro.module.less';
 
 // TODO: Alle tekster her er placeholdere. Lag oversettelsesfil når vi er nærmere noe brukende.
 

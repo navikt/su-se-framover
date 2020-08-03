@@ -1,6 +1,7 @@
 import { Vergemål } from '~features/søknad/types';
-import apiClient, { ApiClientResult } from './apiClient';
 import { Nullable } from '~lib/types';
+
+import apiClient, { ApiClientResult } from './apiClient';
 
 export interface Søknad {
     id: string;

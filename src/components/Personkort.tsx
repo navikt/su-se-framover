@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { KjønnKvinne, KjønnMann, KjønnUkent } from '~assets/Icons';
+
 import { Person } from '~api/personApi';
+import { KjønnKvinne, KjønnMann, KjønnUkent } from '~assets/Icons';
+
 import styles from './personkort.module.less';
 
 export const Personkort = (props: { person: Person }) => {

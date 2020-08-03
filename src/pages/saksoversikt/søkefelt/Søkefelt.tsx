@@ -1,10 +1,10 @@
+import { Input } from 'nav-frontend-skjema';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Input } from 'nav-frontend-skjema';
 
-import { useAppDispatch } from '~redux/Store';
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { useAppDispatch } from '~redux/Store';
 
 const Søkefelt = () => {
     const dispatch = useAppDispatch();

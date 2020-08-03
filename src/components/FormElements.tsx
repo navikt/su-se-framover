@@ -1,12 +1,14 @@
-import React from 'react';
-import { RadioGruppe, RadioPanel } from 'nav-frontend-skjema';
-import AlertStripe from 'nav-frontend-alertstriper';
 import classNames from 'classnames';
-import styles from './formElements.module.less';
-import nb from './formElements-nb';
-import { useI18n } from '~lib/hooks';
+import AlertStripe from 'nav-frontend-alertstriper';
 import Lesmerpanel from 'nav-frontend-lesmerpanel';
+import { RadioGruppe, RadioPanel } from 'nav-frontend-skjema';
 import { Normaltekst } from 'nav-frontend-typografi';
+import React from 'react';
+
+import { useI18n } from '~lib/hooks';
+
+import nb from './formElements-nb';
+import styles from './formElements.module.less';
 
 export const JaNeiSpørsmål = (props: {
     id: string;

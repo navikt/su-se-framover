@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
 import { ErrorCode, ApiError } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 

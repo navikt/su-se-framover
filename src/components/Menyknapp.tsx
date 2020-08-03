@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
 import Chevron from 'nav-frontend-chevron';
-import Popover, { PopoverOrientering } from 'nav-frontend-popover';
-import styles from './menyknapp.module.less';
 import { Knapp } from 'nav-frontend-knapper';
+import Popover, { PopoverOrientering } from 'nav-frontend-popover';
+import React, { useState } from 'react';
+
+import styles from './menyknapp.module.less';
 
 interface Props {
     navn: string;

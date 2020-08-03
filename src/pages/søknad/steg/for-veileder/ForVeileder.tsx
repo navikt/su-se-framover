@@ -1,23 +1,27 @@
-import * as React from 'react';
-import sharedStyles from '../../steg-shared.module.less';
-import { JaNeiSpørsmål } from '~/components/FormElements';
-import { FormattedMessage } from 'react-intl';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { Nullable } from '~lib/types';
-import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
 import { useFormik } from 'formik';
-import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import messages from './forVeileder-nb';
-import TextProvider, { Languages } from '~components/TextProvider';
-import { useHistory } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import søknadSlice from '~/features/søknad/søknad.slice';
-import { Vergemål } from '~features/søknad/types';
 import AlertStripe, { AlertStripeInfo } from 'nav-frontend-alertstriper';
-import sharedI18n from '../steg-shared-i18n';
-import { useI18n } from '../../../../lib/hooks';
 import Panel from 'nav-frontend-paneler';
+import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
+import * as React from 'react';
+import { FormattedMessage } from 'react-intl';
+import { useHistory } from 'react-router-dom';
+
+import { JaNeiSpørsmål } from '~/components/FormElements';
+import søknadSlice from '~/features/søknad/søknad.slice';
+import TextProvider, { Languages } from '~components/TextProvider';
+import { Vergemål } from '~features/søknad/types';
+import { Nullable } from '~lib/types';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
+
+import { useI18n } from '../../../../lib/hooks';
+import Bunnknapper from '../../bunnknapper/Bunnknapper';
+import sharedStyles from '../../steg-shared.module.less';
+import sharedI18n from '../steg-shared-i18n';
+
+import messages from './forVeileder-nb';
 import styles from './forVeileder.module.less';
+
 interface FormData {
     harSøkerMøttPersonlig: Nullable<boolean>;
     harFullmektigEllerVerge: Nullable<Vergemål>;

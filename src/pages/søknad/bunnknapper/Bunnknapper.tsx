@@ -1,8 +1,10 @@
-import * as React from 'react';
 import { Knapp, Hovedknapp } from 'nav-frontend-knapper';
-import TextProvider, { Languages } from '~components/TextProvider';
-import messages from './bunnknapper-nb';
+import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+
+import TextProvider, { Languages } from '~components/TextProvider';
+
+import messages from './bunnknapper-nb';
 import styles from './bunnknapper.module.less';
 
 const Bunnknapper = (props: {

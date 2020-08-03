@@ -1,8 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import * as sakApi from '~api/sakApi';
-import * as behandligApi from '~api/behandlingApi';
+
 import { ErrorCode, ApiError } from '~api/apiClient';
+import * as behandligApi from '~api/behandlingApi';
+import * as sakApi from '~api/sakApi';
 import { pipe } from '~lib/fp';
 import { Sats } from '~pages/saksoversikt/beregning/Beregning';
 

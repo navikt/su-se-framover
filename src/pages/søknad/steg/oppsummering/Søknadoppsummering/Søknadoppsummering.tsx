@@ -1,14 +1,17 @@
+import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
+import { Element, Normaltekst } from 'nav-frontend-typografi';
+import React from 'react';
+import { RawIntlProvider, FormattedMessage } from 'react-intl';
+import { useHistory } from 'react-router-dom';
+
+import { PencilIcon } from '~assets/Icons';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
-import { RawIntlProvider, FormattedMessage } from 'react-intl';
-import React from 'react';
-import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
-import styles from './oppsummering.module.less';
-import { Element, Normaltekst } from 'nav-frontend-typografi';
-import messages from './oppsummering-nb';
+
 import sharedStyles from '../../../steg-shared.module.less';
-import { useHistory } from 'react-router-dom';
-import { PencilIcon } from '~assets/Icons';
+
+import messages from './oppsummering-nb';
+import styles from './oppsummering.module.less';
 
 const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | React.ReactNode }) => (
     <div className={styles.oppsummeringsfelt}>

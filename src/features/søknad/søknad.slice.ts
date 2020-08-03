@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { DelerBoligMed, TypeOppholdstillatelse, Vergemål } from './types';
+
 import { Nullable } from '~lib/types';
+
+import { DelerBoligMed, TypeOppholdstillatelse, Vergemål } from './types';
 
 export interface SøknadState {
     harUførevedtak: Nullable<boolean>;

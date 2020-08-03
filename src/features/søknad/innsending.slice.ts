@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { ErrorCode, ApiError } from '~api/apiClient';
-import * as søknadApi from '~api/søknadApi';
-import { SøknadState } from './søknad.slice';
-import * as personApi from '~api/personApi';
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
+import { ErrorCode, ApiError } from '~api/apiClient';
+import * as personApi from '~api/personApi';
+import * as søknadApi from '~api/søknadApi';
+
+import { SøknadState } from './søknad.slice';
 
 export const sendSøknad = createAsyncThunk<
     søknadApi.SøknadInnhold,

@@ -1,15 +1,17 @@
-import * as React from 'react';
-import { useI18n } from '~lib/hooks';
-import { useHistory } from 'react-router-dom';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { pipe } from 'fp-ts/lib/function';
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
-import styles from './kvittering.module.less';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
+import NavFrontendSpinner from 'nav-frontend-spinner';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
+
 import * as personSlice from '~features/person/person.slice';
 import * as søknadslice from '~features/søknad/søknad.slice';
-import { pipe } from 'fp-ts/lib/function';
-import * as RemoteData from '@devexperts/remote-data-ts';
-import AlertStripe from 'nav-frontend-alertstriper';
-import NavFrontendSpinner from 'nav-frontend-spinner';
+import { useI18n } from '~lib/hooks';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
+
+import styles from './kvittering.module.less';
 
 const messages = {
     'kvittering.søknadSendt': 'Søknaden er sendt!',

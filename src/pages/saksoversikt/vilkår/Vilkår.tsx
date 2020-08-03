@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
-import { Undertittel } from 'nav-frontend-typografi';
 import * as RemoteData from '@devexperts/remote-data-ts';
+import Alertstripe from 'nav-frontend-alertstriper';
+import { Hovedknapp } from 'nav-frontend-knapper';
+import { Undertittel } from 'nav-frontend-typografi';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import Vilkårsvurdering from '../vilkårsvurdering/Vilkårsvurdering';
-import styles from './vilkår.module.less';
 import { Behandling, Vilkårtype, VilkårVurderingStatus } from '~api/behandlingApi';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
+import * as routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { Hovedknapp } from 'nav-frontend-knapper';
-import Alertstripe from 'nav-frontend-alertstriper';
-import * as routes from '~lib/routes';
+
 import { SaksbehandlingMenyvalg } from '../types';
+import Vilkårsvurdering from '../vilkårsvurdering/Vilkårsvurdering';
+
+import styles from './vilkår.module.less';
 
 const boolTilJaNei = (val: Nullable<boolean>) => {
     if (val === null) {

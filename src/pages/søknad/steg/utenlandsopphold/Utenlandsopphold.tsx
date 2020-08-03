@@ -1,24 +1,27 @@
+import { useFormik, FormikErrors } from 'formik';
+import { Datovelger } from 'nav-datovelger';
+import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
+import { guid } from 'nav-frontend-js-utils';
+import { Knapp } from 'nav-frontend-knapper';
+import { Feiloppsummering, Label, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
-import { guid } from 'nav-frontend-js-utils';
-import { useFormik, FormikErrors } from 'formik';
 import { useHistory } from 'react-router-dom';
+
 import { JaNeiSpørsmål } from '~/components/FormElements';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknad.slice';
+import { kalkulerTotaltAntallDagerIUtlandet } from '~lib/dateUtils';
+import { useI18n } from '~lib/hooks';
+import { Nullable } from '~lib/types';
+import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
+import { useAppSelector, useAppDispatch } from '~redux/Store';
+
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
-import messages from './utenlandsopphold-nb';
-import { Datovelger } from 'nav-datovelger';
-import { Knapp } from 'nav-frontend-knapper';
-import { Nullable } from '~lib/types';
-import { kalkulerTotaltAntallDagerIUtlandet } from '~lib/dateUtils';
-import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
-import { Feiloppsummering, Label, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
-import { useI18n } from '~lib/hooks';
 import sharedI18n from '../steg-shared-i18n';
+
+import messages from './utenlandsopphold-nb';
 import styles from './utenlandsopphold.module.less';
-import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 
 interface FormData {
     harReistTilUtlandetSiste90dager: Nullable<boolean>;
