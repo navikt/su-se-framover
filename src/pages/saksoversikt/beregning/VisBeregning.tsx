@@ -34,9 +34,11 @@ const VisBeregning = (props: Props) => {
             <InfoLinje tittel="Totalbeløp:" value={intl.formatNumber(totalbeløp, { currency: 'NOK' })} />
             <table className="tabell">
                 <thead>
-                    <th></th>
-                    <th>{intl.formatMessage({ id: 'utbetaling.tabellheader.beløp' })}</th>
-                    <th>{intl.formatMessage({ id: 'utbetaling.tabellheader.grunnbeløp' })}</th>
+                    <tr>
+                        <th></th>
+                        <th>{intl.formatMessage({ id: 'utbetaling.tabellheader.beløp' })}</th>
+                        <th>{intl.formatMessage({ id: 'utbetaling.tabellheader.grunnbeløp' })}</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {beregning.månedsberegninger.map((beregning) => (
