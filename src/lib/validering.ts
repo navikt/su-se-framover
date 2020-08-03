@@ -1,6 +1,6 @@
-import * as yup from 'yup';
 import { FormikErrors } from 'formik';
 import { FeiloppsummeringFeil } from 'nav-frontend-skjema';
+import * as yup from 'yup';
 
 function label(data: Partial<yup.TestMessageParams>) {
     return data.label ?? 'Feltet';

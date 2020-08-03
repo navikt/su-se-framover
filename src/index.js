@@ -1,7 +1,8 @@
+import * as Sentry from '@sentry/browser';
 import * as React from 'react';
 import { render } from 'react-dom';
+
 import Root from './Root';
-import * as Sentry from '@sentry/browser';
 
 // eslint-disable-next-line no-undef
 if (process.env.NODE_ENV !== 'development') {

@@ -1,22 +1,23 @@
-import { hot } from 'react-hot-loader';
-import React, { useEffect, useState, Fragment } from 'react';
+import Header from '@navikt/nap-header';
+import Lenke from 'nav-frontend-lenker';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
-import ErrorBoundary from './components/ErrorBoundary';
-
-import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
+import React, { useEffect, useState, Fragment } from 'react';
+import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
-import Store from './redux/Store';
-import Soknad from './pages/søknad';
+import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
+
 import apiClient from '~/api/apiClient';
-import * as Cookies from './lib/cookies';
 import HomePage from '~pages/HomePage';
 import Saksoversikt from '~pages/saksoversikt/Saksoversikt';
-import NavFrontendSpinner from 'nav-frontend-spinner';
-import Lenke from 'nav-frontend-lenker';
-import styles from './root.module.less';
+
+import ErrorBoundary from './components/ErrorBoundary';
 import Menyknapp from './components/Menyknapp';
-import Header from '@navikt/nap-header';
+import * as Cookies from './lib/cookies';
 import * as routes from './lib/routes';
+import Soknad from './pages/søknad';
+import Store from './redux/Store';
+import styles from './root.module.less';
 import './externalStyles';
 
 const ScrollToTop = () => {

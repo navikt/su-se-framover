@@ -1,21 +1,24 @@
-import * as React from 'react';
-import { Feiloppsummering, Input, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
-import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useFormik, FormikErrors } from 'formik';
-import { useHistory } from 'react-router-dom';
-import { JaNeiSpørsmål } from '~/components/FormElements';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import søknadSlice from '~/features/søknad/søknad.slice';
-import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import sharedStyles from '../../steg-shared.module.less';
-import styles from './inntekt.module.less';
-import { Nullable } from '../../../../lib/types';
-import messages from './inntekt-nb';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import sharedI18n from '../steg-shared-i18n';
-import { useI18n } from '../../../../lib/hooks';
 import { Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
+import { Feiloppsummering, Input, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
+import * as React from 'react';
+import { FormattedMessage, RawIntlProvider } from 'react-intl';
+import { useHistory } from 'react-router-dom';
+
+import { JaNeiSpørsmål } from '~/components/FormElements';
+import søknadSlice from '~/features/søknad/søknad.slice';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
+
+import { useI18n } from '../../../../lib/hooks';
+import { Nullable } from '../../../../lib/types';
+import Bunnknapper from '../../bunnknapper/Bunnknapper';
+import sharedStyles from '../../steg-shared.module.less';
+import sharedI18n from '../steg-shared-i18n';
+
+import messages from './inntekt-nb';
+import styles from './inntekt.module.less';
 
 interface FormData {
     harForventetInntekt: Nullable<boolean>;

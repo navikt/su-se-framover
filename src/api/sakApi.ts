@@ -1,6 +1,6 @@
 import apiClient, { ApiClientResult } from './apiClient';
-import { SøknadInnhold } from './søknadApi';
 import { Behandling } from './behandlingApi';
+import { SøknadInnhold } from './søknadApi';
 
 export interface Sak {
     id: string;

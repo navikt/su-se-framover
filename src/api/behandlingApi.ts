@@ -1,9 +1,11 @@
 import { formatISO } from 'date-fns';
 
+import { Nullable } from '~lib/types';
+
+import { Sats } from '../pages/saksoversikt/beregning/Beregning';
+
 import apiClient, { ApiClientResult } from './apiClient';
 import { Søknad } from './søknadApi';
-import { Sats } from '../pages/saksoversikt/beregning/Beregning';
-import { Nullable } from '~lib/types';
 
 export enum VilkårVurderingStatus {
     IkkeVurdert = 'IKKE_VURDERT',

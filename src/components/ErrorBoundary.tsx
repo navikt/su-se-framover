@@ -1,6 +1,7 @@
-import React, { ErrorInfo } from 'react';
+import * as Sentry from '@sentry/browser';
 import { Feilmelding } from 'nav-frontend-typografi';
-import Sentry from '@sentry/browser';
+import React, { ErrorInfo } from 'react';
+
 import styles from './errorBoundary.module.less';
 
 class ErrorBoundary extends React.Component<unknown, { hasError: boolean; error?: Error; eventId?: string }> {

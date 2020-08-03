@@ -1,24 +1,26 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
+import Stegindikator from 'nav-frontend-stegindikator';
+import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import Stegindikator from 'nav-frontend-stegindikator';
-import { useAppSelector } from '~redux/Store';
-import styles from './index.module.less';
-import Inngang from './steg/inngang/Inngang';
-import { Søknadsteg } from './types';
-import Uførevedtak from './steg/uførevedtak/Uførevedtak';
-import FlyktningstatusOppholdstillatelse from './steg/flyktningstatus-oppholdstillatelse/Flyktningstatus-oppholdstillatelse';
-import BoOgOppholdINorge from './steg/bo-og-opphold-i-norge/Bo-og-opphold-i-norge';
-import Formue from './steg/formue/DinFormue';
-import Inntekt from './steg/inntekt/Inntekt';
-import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
-import ForVeileder from './steg/for-veileder/ForVeileder';
-import Oppsummering from './steg/oppsummering/Oppsummering';
-import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
+
+import { Personkort } from '~components/Personkort';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
+import { useAppSelector } from '~redux/Store';
+
+import styles from './index.module.less';
+import BoOgOppholdINorge from './steg/bo-og-opphold-i-norge/Bo-og-opphold-i-norge';
+import FlyktningstatusOppholdstillatelse from './steg/flyktningstatus-oppholdstillatelse/Flyktningstatus-oppholdstillatelse';
+import ForVeileder from './steg/for-veileder/ForVeileder';
+import Formue from './steg/formue/DinFormue';
+import Inngang from './steg/inngang/Inngang';
+import Inntekt from './steg/inntekt/Inntekt';
 import Kvittering from './steg/kvittering/Kvittering';
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { Personkort } from '~components/Personkort';
+import Oppsummering from './steg/oppsummering/Oppsummering';
+import Uførevedtak from './steg/uførevedtak/Uførevedtak';
+import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
+import { Søknadsteg } from './types';
 
 const messages = {
     'steg.uforevedtak': 'Uførevedtak',

@@ -1,18 +1,19 @@
-import React from 'react';
 import { useFormik } from 'formik';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
-import { Undertittel, EtikettLiten } from 'nav-frontend-typografi';
-import { Hovedknapp } from 'nav-frontend-knapper';
+import Ikon from 'nav-frontend-ikoner-assets';
 import { guid } from 'nav-frontend-js-utils';
+import { Hovedknapp } from 'nav-frontend-knapper';
 import { Textarea } from 'nav-frontend-skjema';
+import { Undertittel, EtikettLiten } from 'nav-frontend-typografi';
+import React from 'react';
 
+import { VilkårVurderingStatus, Vilkårsvurdering } from '~api/behandlingApi';
 import { JaNeiSpørsmål } from '~components/FormElements';
 import { Nullable } from '~lib/types';
 
-import styles from './vilkårsvurdering.module.less';
-import { VilkårVurderingStatus, Vilkårsvurdering } from '~api/behandlingApi';
-import Ikon from 'nav-frontend-ikoner-assets';
 import yup from '../../../lib/validering';
+
+import styles from './vilkårsvurdering.module.less';
 
 interface FormData {
     vurdering: Nullable<boolean>;

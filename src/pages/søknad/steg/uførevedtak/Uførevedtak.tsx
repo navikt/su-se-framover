@@ -1,19 +1,22 @@
+import { useFormik } from 'formik';
+import AlertStripe from 'nav-frontend-alertstriper';
+import { Feiloppsummering } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
-import { useFormik } from 'formik';
-import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import { JaNeiSpørsmål } from '~/components/FormElements';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
-import søknadSlice from '~/features/søknad/søknad.slice';
-import messages from './uførevedtak-nb';
-import sharedStyles from '../../steg-shared.module.less';
-import { Nullable } from '~lib/types';
-import { Feiloppsummering } from 'nav-frontend-skjema';
-import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useHistory } from 'react-router-dom';
-import sharedI18n from '../steg-shared-i18n';
+
+import { JaNeiSpørsmål } from '~/components/FormElements';
+import søknadSlice from '~/features/søknad/søknad.slice';
+import { Nullable } from '~lib/types';
+import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
+import { useAppSelector, useAppDispatch } from '~redux/Store';
+
 import { useI18n } from '../../../../lib/hooks';
-import AlertStripe from 'nav-frontend-alertstriper';
+import Bunnknapper from '../../bunnknapper/Bunnknapper';
+import sharedStyles from '../../steg-shared.module.less';
+import sharedI18n from '../steg-shared-i18n';
+
+import messages from './uførevedtak-nb';
 
 interface FormData {
     harUførevedtak: Nullable<boolean>;

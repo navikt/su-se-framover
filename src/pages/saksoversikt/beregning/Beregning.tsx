@@ -1,22 +1,24 @@
-import React from 'react';
-import { RadioPanelGruppe, Label, Feiloppsummering } from 'nav-frontend-skjema';
-import { useFormik } from 'formik';
-import { Hovedknapp } from 'nav-frontend-knapper';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { Beregning } from '~api/behandlingApi';
-import styles from './beregning.module.less';
-import { useI18n } from '~lib/hooks';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { Sak } from '~api/sakApi';
-import AlertStripe from 'nav-frontend-alertstriper';
-import messages from './beregning-nb';
-import VisBeregning from './VisBeregning';
-import { Innholdstittel, Feilmelding } from 'nav-frontend-typografi';
 import * as RemoteData from '@devexperts/remote-data-ts';
-import DatePicker from 'react-datepicker';
-import { trackEvent, startBeregning } from '~lib/tracking/trackingEvents';
 import { lastDayOfMonth } from 'date-fns';
+import { useFormik } from 'formik';
+import AlertStripe from 'nav-frontend-alertstriper';
+import { Hovedknapp } from 'nav-frontend-knapper';
+import { RadioPanelGruppe, Label, Feiloppsummering } from 'nav-frontend-skjema';
+import { Innholdstittel, Feilmelding } from 'nav-frontend-typografi';
+import React from 'react';
+import DatePicker from 'react-datepicker';
+
+import { Beregning } from '~api/behandlingApi';
+import { Sak } from '~api/sakApi';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { useI18n } from '~lib/hooks';
+import { trackEvent, startBeregning } from '~lib/tracking/trackingEvents';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
+
+import messages from './beregning-nb';
+import styles from './beregning.module.less';
+import VisBeregning from './VisBeregning';
 
 export enum Sats {
     Høy = 'HØY',

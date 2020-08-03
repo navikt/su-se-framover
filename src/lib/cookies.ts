@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 
 export enum CookieName {
     AccessToken = 'access_token',

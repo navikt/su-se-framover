@@ -1,20 +1,23 @@
-import * as React from 'react';
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
-import { Input, Feiloppsummering } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Input, Feiloppsummering } from 'nav-frontend-skjema';
+import NavFrontendSpinner from 'nav-frontend-spinner';
+import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
-import nb from './inngang-nb';
-import styles from './inngang.module.less';
 import { useHistory } from 'react-router-dom';
+
+import { Personkort } from '~components/Personkort';
+import * as personSlice from '~features/person/person.slice';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
-import sharedI18n from '../steg-shared-i18n';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
+
 import { useI18n } from '../../../../lib/hooks';
 import sharedStyles from '../../steg-shared.module.less';
-import * as personSlice from '~features/person/person.slice';
-import * as RemoteData from '@devexperts/remote-data-ts';
-import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Personkort } from '~components/Personkort';
+import sharedI18n from '../steg-shared-i18n';
+
+import nb from './inngang-nb';
+import styles from './inngang.module.less';
 
 interface FormData {
     fnr: string;

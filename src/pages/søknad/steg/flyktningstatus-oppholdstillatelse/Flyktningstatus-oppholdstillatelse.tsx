@@ -1,21 +1,24 @@
+import { useFormik } from 'formik';
+import AlertStripe from 'nav-frontend-alertstriper';
+import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
+import Input from 'nav-frontend-skjema/lib/input';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
-import { useFormik } from 'formik';
-import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
+import { useHistory } from 'react-router-dom';
+
 import { AnbefalerIkkeSøke, JaNeiSpørsmål } from '~/components/FormElements';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
 import søknadSlice from '~/features/søknad/søknad.slice';
-import messages from './flyktningstatus-oppholdstillatelse-nb';
-import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import sharedStyles from '../../steg-shared.module.less';
+import { TypeOppholdstillatelse } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { useHistory } from 'react-router-dom';
-import sharedI18n from '../steg-shared-i18n';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
+
 import { useI18n } from '../../../../lib/hooks';
-import { TypeOppholdstillatelse } from '~features/søknad/types';
-import AlertStripe from 'nav-frontend-alertstriper';
-import Input from 'nav-frontend-skjema/lib/input';
+import Bunnknapper from '../../bunnknapper/Bunnknapper';
+import sharedStyles from '../../steg-shared.module.less';
+import sharedI18n from '../steg-shared-i18n';
+
+import messages from './flyktningstatus-oppholdstillatelse-nb';
 
 interface FormData {
     erFlyktning: Nullable<boolean>;

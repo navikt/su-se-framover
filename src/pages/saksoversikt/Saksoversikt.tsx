@@ -1,28 +1,25 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { PersonCard } from '@navikt/nap-person-card';
+import classNames from 'classnames';
+import AlertStripe from 'nav-frontend-alertstriper';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { useParams } from 'react-router-dom';
-import AlertStripe from 'nav-frontend-alertstriper';
-
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { PersonCard } from '@navikt/nap-person-card';
-
-import NavFrontendSpinner from 'nav-frontend-spinner';
 
 import { Languages } from '~components/TextProvider';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
+import * as personSlice from '~features/person/person.slice';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
+import { useAppSelector, useAppDispatch } from '~redux/Store';
 
+import Beregning from './beregning/Beregning';
+import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
+import styles from './saksoversikt.module.less';
 import Søkefelt from './søkefelt/Søkefelt';
 import { SaksbehandlingMenyvalg } from './types';
-
-import styles from './saksoversikt.module.less';
-import Sakintro from './sakintro/Sakintro';
 import Vilkår from './vilkår/Vilkår';
-import Beregning from './beregning/Beregning';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
-import * as personSlice from '~features/person/person.slice';
-import classNames from 'classnames';
 
 const Meny = (props: { aktiv: SaksbehandlingMenyvalg }) => (
     <div className={styles.meny}>
