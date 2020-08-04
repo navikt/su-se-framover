@@ -2,8 +2,6 @@ import { formatISO } from 'date-fns';
 
 import { Nullable } from '~lib/types';
 
-import { Sats } from '../pages/saksoversikt/beregning/Beregning';
-
 import apiClient, { ApiClientResult } from './apiClient';
 import { Søknad } from './søknadApi';
 
@@ -22,6 +20,26 @@ export enum Vilkårtype {
     BorOgOppholderSegINorge = 'BOR_OG_OPPHOLDER_SEG_I_NORGE',
 }
 
+export enum Sats {
+    Høy = 'HØY',
+    Lav = 'LAV',
+}
+
+export enum Fradragstype {
+    Uføretrygd = 'Uføretrygd',
+    Barnetillegg = 'Barnetillegg',
+    Arbeidsinntekt = 'Arbeidsinntekt',
+    Pensjon = 'Pensjon',
+    Kapitalinntekt = 'Kapitalinntekt',
+    AndreYtelser = 'AndreYtelser',
+}
+
+export interface Fradrag {
+    type: Fradragstype;
+    beløp: number;
+    beskrivelse: Nullable<string>;
+}
+
 export interface Beregning {
     id: string;
     opprettet: string;
@@ -29,6 +47,7 @@ export interface Beregning {
     fom: string;
     tom: string;
     månedsberegninger: Array<Månedsberegning>;
+    fradrag: Array<Fradrag>;
 }
 
 export interface Månedsberegning {
@@ -79,6 +98,7 @@ export async function startBeregning(
         sats: Sats;
         fom: Date;
         tom: Date;
+        fradrag: Fradrag[];
     }
 ): Promise<ApiClientResult<Beregning>> {
     const { sats, fom, tom } = arg;
@@ -89,6 +109,7 @@ export async function startBeregning(
             sats,
             fom: formatISO(fom, { representation: 'date' }),
             tom: formatISO(tom, { representation: 'date' }),
+            fradrag: arg.fradrag,
         },
     });
 }

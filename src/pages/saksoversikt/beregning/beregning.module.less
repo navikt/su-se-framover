@@ -25,12 +25,32 @@
 
 .datovelgerContainer {
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: @spacing-s;
 
-    .datovelger {
-        margin-bottom: @spacing-s;
+    .datovelger:not(:last-child) {
+        margin-right: @spacing-s;
     }
 }
 
 .marginBottom {
     margin-bottom: @spacing-l;
+}
+
+.fradragContainer {
+    margin-bottom: @spacing;
+}
+
+.fradragItemContainer {
+    margin-bottom: @spacing;
+}
+
+.fradragTypeOgBelopContainer {
+    display: flex;
+    justify-content: space-between;
+
+    .fradragtype {
+        margin-right: @spacing-s;
+    }
 }
