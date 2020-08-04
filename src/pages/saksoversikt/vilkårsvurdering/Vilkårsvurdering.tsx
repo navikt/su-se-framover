@@ -1,14 +1,14 @@
 import { useFormik } from 'formik';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
-import Ikon from 'nav-frontend-ikoner-assets';
 import { guid } from 'nav-frontend-js-utils';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { Textarea } from 'nav-frontend-skjema';
 import { Undertittel, EtikettLiten } from 'nav-frontend-typografi';
 import React from 'react';
 
-import { VilkårVurderingStatus, Vilkårsvurdering } from '~api/behandlingApi';
+import { VilkårVurderingStatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
 import { JaNeiSpørsmål } from '~components/FormElements';
+import { vilkårTittelFormatted, statusIcon } from '~features/saksoversikt/utils';
 import { Nullable } from '~lib/types';
 
 import yup from '../../../lib/validering';
@@ -38,19 +38,8 @@ const boolTilVilkårvurderingStatus = (val: Nullable<boolean>): VilkårVurdering
     return val ? VilkårVurderingStatus.Ok : VilkårVurderingStatus.IkkeOk;
 };
 
-const statusIcon = (status: VilkårVurderingStatus) => {
-    switch (status) {
-        case VilkårVurderingStatus.IkkeVurdert:
-            return <Ikon kind="advarsel-sirkel-fyll" />;
-        case VilkårVurderingStatus.IkkeOk:
-            return <Ikon kind="feil-sirkel-fyll" />;
-        case VilkårVurderingStatus.Ok:
-            return <Ikon kind="ok-sirkel-fyll" />;
-    }
-};
-
 const Vilkårsvurdering: React.FC<{
-    title: string | React.ReactNode;
+    type: Vilkårtype;
     paragraph: string;
     vilkårsvurdering: Vilkårsvurdering;
     legend: string | React.ReactNode;
@@ -86,7 +75,7 @@ const Vilkårsvurdering: React.FC<{
                 <div className={styles.tittelContainer}>
                     <span className={styles.tittelikon}>{statusIcon(props.vilkårsvurdering.status)}</span>
                     <div className={styles.titteltekster}>
-                        <Undertittel className={styles.tittel}>{props.title}</Undertittel>
+                        <Undertittel className={styles.tittel}>{vilkårTittelFormatted(props.type)}</Undertittel>
                         <EtikettLiten className={styles.paragraf}>{props.paragraph}</EtikettLiten>
                     </div>
                 </div>

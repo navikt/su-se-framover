@@ -9,15 +9,19 @@ import { Innholdstittel, Feilmelding } from 'nav-frontend-typografi';
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import { IntlShape } from 'react-intl';
+import { useHistory } from 'react-router-dom';
 
 import { Beregning, Fradragstype, Sats, Fradrag } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
+import * as routes from '~lib/routes.ts';
 import { trackEvent, startBeregning } from '~lib/tracking/trackingEvents';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+
+import { SaksbehandlingMenyvalg } from '../types';
 
 import messages from './beregning-nb';
 import styles from './beregning.module.less';
@@ -158,6 +162,7 @@ const Beregning = (props: Props) => {
     const { sak, behandlingId } = props;
     const beregningStatus = useAppSelector((s) => s.sak.beregningStatus);
 
+    const history = useHistory();
     const dispatch = useAppDispatch();
     const intl = useI18n({ messages });
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -294,8 +299,32 @@ const Beregning = (props: Props) => {
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
                         hidden={!formikErrorsHarFeil(formik.errors)}
                     />
-                    <Hovedknapp spinner={RemoteData.isPending(beregningStatus)}>
+                    <Knapp className={styles.startBeregningKnapp} spinner={RemoteData.isPending(beregningStatus)}>
                         {intl.formatMessage({ id: 'knapp.startBeregning' })}
+                    </Knapp>
+                    <Hovedknapp
+                        onClick={(e) => {
+                            e.preventDefault();
+                            if (RemoteData.isSuccess(beregningStatus)) {
+                                history.push(
+                                    routes.saksoversikt.createURL({
+                                        sakId: sak.id,
+                                        behandlingId: behandlingId,
+                                        meny: SaksbehandlingMenyvalg.Vedtak,
+                                    })
+                                );
+                            } else if (behandling.beregning) {
+                                history.push(
+                                    routes.saksoversikt.createURL({
+                                        sakId: sak.id,
+                                        behandlingId: behandlingId,
+                                        meny: SaksbehandlingMenyvalg.Vedtak,
+                                    })
+                                );
+                            }
+                        }}
+                    >
+                        {intl.formatMessage({ id: 'knapp.neste' })}
                     </Hovedknapp>
                     {RemoteData.isFailure(beregningStatus) && (
                         <AlertStripe type="feil">{beregningStatus.error.message}</AlertStripe>

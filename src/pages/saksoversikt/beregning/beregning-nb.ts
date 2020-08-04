@@ -3,6 +3,7 @@ export default {
     'input.sats.value.høy': 'Høy',
     'input.sats.value.lav': 'Lav',
     'knapp.startBeregning': 'Start beregning',
+    'knapp.neste': 'Neste',
     'datovelger.fom.label': 'Startdato',
     'datovelger.tom.label': 'Sluttdato',
     'feiloppsummering.title': 'For å gå videre må du rette opp følgende:',

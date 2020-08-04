@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import { Behandling, Vilkårtype, VilkårVurderingStatus } from '~api/behandlingApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { oneVilkåringsvurderingIsNotOk, vilkårsvurderingIsValid } from '~features/saksoversikt/utils';
 import * as routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -45,10 +46,6 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
         søknad: { søknadInnhold: søknad },
     } = props.behandling;
 
-    const vilkårsvurderingIsValid = !Object.values(vilkårsvurderinger).some(
-        (vurdering) => vurdering.status !== VilkårVurderingStatus.Ok
-    );
-
     const history = useHistory();
     const dispatch = useAppDispatch();
     const lagrestatus = useAppSelector((s) => s.sak.lagreVilkårsvurderingStatus);
@@ -72,7 +69,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
     return (
         <div className={styles.container}>
             <Vilkårsvurdering
-                title="Uførhet"
+                type={Vilkårtype.Uførhet}
                 paragraph="§ 12-4 - § 12-8"
                 legend="Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-8 i folketrygdloven er oppfylt?"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Uførhet]}
@@ -86,7 +83,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                 </div>
             </Vilkårsvurdering>
             <Vilkårsvurdering
-                title="Flyktning"
+                type={Vilkårtype.Flyktning}
                 paragraph="§ 28"
                 legend="Er søker registrert flyktning?"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Flyktning]}
@@ -103,7 +100,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                 </div>
             </Vilkårsvurdering>
             <Vilkårsvurdering
-                title="Opphold"
+                type={Vilkårtype.Oppholdstillatelse}
                 paragraph="§ 3"
                 legend="Er søker norsk statsborger?"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Oppholdstillatelse]}
@@ -143,7 +140,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                 </div>
             </Vilkårsvurdering>
             <Vilkårsvurdering
-                title="Personlig oppmøte"
+                type={Vilkårtype.PersonligOppmøte}
                 paragraph="§ 17"
                 legend="TODO"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.PersonligOppmøte]}
@@ -157,7 +154,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                 </div>
             </Vilkårsvurdering>
             <Vilkårsvurdering
-                title="Formue"
+                type={Vilkårtype.Formue}
                 paragraph="§ 8"
                 legend="TODO"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Formue]}
@@ -191,7 +188,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                 </div>
             </Vilkårsvurdering>
             <Vilkårsvurdering
-                title="Boforhold/sivilstatus"
+                type={Vilkårtype.BorOgOppholderSegINorge}
                 paragraph="§ 5"
                 legend="TODO"
                 vilkårsvurdering={vilkårsvurderinger[Vilkårtype.BorOgOppholderSegINorge]}
@@ -206,12 +203,21 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
             </Vilkårsvurdering>
             <Hovedknapp
                 onClick={() => {
-                    if (vilkårsvurderingIsValid) {
+                    if (vilkårsvurderingIsValid(vilkårsvurderinger)) {
                         return history.push(
                             routes.saksoversikt.createURL({
                                 sakId: props.sakId,
                                 behandlingId: props.behandling.id,
                                 meny: SaksbehandlingMenyvalg.Beregning,
+                            })
+                        );
+                    }
+                    if (oneVilkåringsvurderingIsNotOk(vilkårsvurderinger)) {
+                        return history.push(
+                            routes.saksoversikt.createURL({
+                                sakId: props.sakId,
+                                behandlingId: props.behandling.id,
+                                meny: SaksbehandlingMenyvalg.Vedtak,
                             })
                         );
                     }
