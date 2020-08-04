@@ -3,9 +3,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ErrorCode, ApiError } from '~api/apiClient';
 import * as behandligApi from '~api/behandlingApi';
+import { Sats } from '~api/behandlingApi';
 import * as sakApi from '~api/sakApi';
 import { pipe } from '~lib/fp';
-import { Sats } from '~pages/saksoversikt/beregning/Beregning';
 
 export const fetchSak = createAsyncThunk<sakApi.Sak, { fnr: string } | { sakId: string }, { rejectValue: ApiError }>(
     'sak/fetch',
