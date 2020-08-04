@@ -57,6 +57,7 @@ export interface Månedsberegning {
     grunnbeløp: number;
     fom: string;
     tom: string;
+    fradrag: number;
 }
 
 export interface Vilkårsvurdering {
@@ -65,13 +66,25 @@ export interface Vilkårsvurdering {
     status: VilkårVurderingStatus;
 }
 
+export type Vilkårsvurderinger = {
+    [key in Vilkårtype]: Vilkårsvurdering;
+};
+
 export interface Behandling {
     id: string;
     søknad: Søknad;
-    vilkårsvurderinger: {
-        [key in Vilkårtype]: Vilkårsvurdering;
-    };
+    vilkårsvurderinger: Vilkårsvurderinger;
     beregning: Nullable<Beregning>;
+    status: Behandlingsstatus;
+}
+
+export enum Behandlingsstatus {
+    VILKÅRSVURDERING = 'VILKÅRSVURDERING',
+    BEREGNING = 'BEREGNING',
+    /*SIMULERING = 'SIMULERING', */
+    /*VEDTAKSBREV = 'VEDTAKSBREV',*/
+    INNVILGET = 'INNVILGET',
+    AVSLÅTT = 'AVSLÅTT',
 }
 
 export async function startBehandling(arg: { sakId: string; søknadId: string }): Promise<ApiClientResult<Behandling>> {

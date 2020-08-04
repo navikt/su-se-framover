@@ -1,0 +1,29 @@
+@import '~/styles/variables.less';
+
+.marginBottomContainer {
+    margin-bottom: @spacing;
+}
+
+.infolinjeContainer {
+    margin-bottom: @spacing-xs;
+
+    .infolinje {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .infotittel {
+            font-weight: 600;
+        }
+        .statusContainer {
+            display: flex;
+            align-items: center;
+
+            .statusIcon {
+                display: flex;
+                align-items: center;
+                margin-right: @spacing-xxs;
+            }
+        }
+    }
+}

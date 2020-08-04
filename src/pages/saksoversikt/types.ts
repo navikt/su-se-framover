@@ -4,4 +4,5 @@ export enum SaksbehandlingMenyvalg {
     Vilkår = 'vilkar',
     Beregning = 'beregning',
     Vedtak = 'vedtak',
+    Vedtaksbrev = 'vedtaksbrev',
 }

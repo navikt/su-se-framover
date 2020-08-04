@@ -19,6 +19,7 @@ import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
 import Søkefelt from './søkefelt/Søkefelt';
 import { SaksbehandlingMenyvalg } from './types';
+import Vedtak from './vedtak/Vedtak';
 import Vilkår from './vilkår/Vilkår';
 
 const Meny = (props: { aktiv: SaksbehandlingMenyvalg }) => (
@@ -43,7 +44,7 @@ const Meny = (props: { aktiv: SaksbehandlingMenyvalg }) => (
                     [styles.aktiv]: props.aktiv === SaksbehandlingMenyvalg.Vedtak,
                 })}
             >
-                3.&nbsp;Vedtaksbrev
+                3.&nbsp;Vedtak
             </li>
         </ol>
     </div>
@@ -108,7 +109,7 @@ const Saksoversikt = () => {
                                 ) : meny === SaksbehandlingMenyvalg.Beregning ? (
                                     <Beregning sak={sak} behandlingId={urlParams.behandlingId} />
                                 ) : meny === SaksbehandlingMenyvalg.Vedtak ? (
-                                    'vedtak'
+                                    <Vedtak sak={sak} behandlingId={urlParams.behandlingId} />
                                 ) : (
                                     <Sakintro sak={sak} />
                                 )}
