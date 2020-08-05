@@ -224,10 +224,14 @@ const Beregning = (props: Props) => {
 
     return (
         <div className={styles.beregningContainer}>
-            {behandling.beregning && <VisBeregning beregning={behandling.beregning} />}
+            {behandling.beregning && (
+                <div className={styles.visBeregning}>
+                    <VisBeregning beregning={behandling.beregning} />
+                </div>
+            )}
 
             <div>
-                <Innholdstittel>Start ny beregning:</Innholdstittel>
+                <Innholdstittel className={styles.tittel}>Start ny beregning:</Innholdstittel>
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
@@ -294,7 +298,7 @@ const Beregning = (props: Props) => {
                         }}
                     />
                     <Feiloppsummering
-                        className={styles.marginBottom}
+                        className={styles.feiloppsummering}
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
                         hidden={!formikErrorsHarFeil(formik.errors)}
