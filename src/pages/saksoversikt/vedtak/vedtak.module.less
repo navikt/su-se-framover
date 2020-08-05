@@ -1,15 +1,10 @@
 @import '~/styles/variables.less';
 
-.marginBottomContainer {
-    margin-bottom: @spacing;
-}
-
 .infolinjeContainer {
     margin-bottom: @spacing-xs;
 
     .infolinje {
         display: flex;
-        justify-content: space-between;
         align-items: center;
 
         .infotittel {
@@ -26,4 +21,20 @@
             }
         }
     }
+}
+
+.vedtakContainer {
+    margin-bottom: @spacing-xl;
+    >:not(:last-child){
+        margin-bottom: @spacing;
+    }
+}
+
+.navigeringContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.tittel {
+    margin-bottom: @spacing-s;
 }

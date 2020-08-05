@@ -68,139 +68,141 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
 
     return (
         <div className={styles.container}>
-            <Vilkårsvurdering
-                type={Vilkårtype.Uførhet}
-                paragraph="§ 12-4 - § 12-8"
-                legend="Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-8 i folketrygdloven er oppfylt?"
-                vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Uførhet]}
-                lagrer={RemoteData.isPending(lagrestatus)}
-                onSaveClick={handleSaveClick(Vilkårtype.Uførhet)}
-                className={styles.vilkarsvurdering}
-            >
-                <div>
-                    <Undertittel>Fra søknad</Undertittel>
-                    <Infolinje tittel="Har uførevedtak" verdi={boolTilJaNei(søknad.uførevedtak.harUførevedtak)} />
-                </div>
-            </Vilkårsvurdering>
-            <Vilkårsvurdering
-                type={Vilkårtype.Flyktning}
-                paragraph="§ 28"
-                legend="Er søker registrert flyktning?"
-                vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Flyktning]}
-                lagrer={RemoteData.isPending(lagrestatus)}
-                onSaveClick={handleSaveClick(Vilkårtype.Flyktning)}
-                className={styles.vilkarsvurdering}
-            >
-                <div>
-                    <Undertittel>Fra søknad</Undertittel>
-                    <Infolinje
-                        tittel="Registrert flyktning"
-                        verdi={boolTilJaNei(søknad.flyktningsstatus.registrertFlyktning)}
-                    />
-                </div>
-            </Vilkårsvurdering>
-            <Vilkårsvurdering
-                type={Vilkårtype.Oppholdstillatelse}
-                paragraph="§ 3"
-                legend="Er søker norsk statsborger?"
-                vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Oppholdstillatelse]}
-                lagrer={RemoteData.isPending(lagrestatus)}
-                onSaveClick={handleSaveClick(Vilkårtype.Oppholdstillatelse)}
-                className={styles.vilkarsvurdering}
-            >
-                <div>
-                    <Undertittel>Fra søknad</Undertittel>
-                    <Infolinje
-                        tittel="Norsk statsborger"
-                        verdi={boolTilJaNei(søknad.oppholdstillatelse.erNorskStatsborger)}
-                    />
-                    <Infolinje
-                        tittel="Har oppholdstillatelse"
-                        verdi={
-                            <span>
-                                {boolTilJaNei(søknad.oppholdstillatelse.harOppholdstillatelse)}.{' '}
-                                {søknad.oppholdstillatelse.typeOppholdstillatelse}
-                            </span>
-                        }
-                    />
-                    {søknad.oppholdstillatelse.statsborgerskapAndreLand && (
+            <div className={styles.vilkårContainer}>
+                <Vilkårsvurdering
+                    type={Vilkårtype.Uførhet}
+                    paragraph="§ 12-4 - § 12-8"
+                    legend="Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-8 i folketrygdloven er oppfylt?"
+                    vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Uførhet]}
+                    lagrer={RemoteData.isPending(lagrestatus)}
+                    onSaveClick={handleSaveClick(Vilkårtype.Uførhet)}
+                    className={styles.vilkarsvurdering}
+                >
+                    <div>
+                        <Undertittel>Fra søknad</Undertittel>
+                        <Infolinje tittel="Har uførevedtak" verdi={boolTilJaNei(søknad.uførevedtak.harUførevedtak)} />
+                    </div>
+                </Vilkårsvurdering>
+                <Vilkårsvurdering
+                    type={Vilkårtype.Flyktning}
+                    paragraph="§ 28"
+                    legend="Er søker registrert flyktning?"
+                    vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Flyktning]}
+                    lagrer={RemoteData.isPending(lagrestatus)}
+                    onSaveClick={handleSaveClick(Vilkårtype.Flyktning)}
+                    className={styles.vilkarsvurdering}
+                >
+                    <div>
+                        <Undertittel>Fra søknad</Undertittel>
                         <Infolinje
-                            tittel="Statsborgerskap i andre land"
-                            verdi={søknad.oppholdstillatelse.statsborgerskapAndreLandFritekst ?? ''}
+                            tittel="Registrert flyktning"
+                            verdi={boolTilJaNei(søknad.flyktningsstatus.registrertFlyktning)}
                         />
-                    )}
-                    <Infolinje
-                        tittel="Oppholdstillatelse forelengelse"
-                        verdi={boolTilJaNei(søknad.oppholdstillatelse.oppholdstillatelseForlengelse)}
-                    />
-                    <Infolinje
-                        tittel="Oppholdstillatelse mindre enn tre måneder"
-                        verdi={boolTilJaNei(søknad.oppholdstillatelse.oppholdstillatelseMindreEnnTreMåneder)}
-                    />
-                </div>
-            </Vilkårsvurdering>
-            <Vilkårsvurdering
-                type={Vilkårtype.PersonligOppmøte}
-                paragraph="§ 17"
-                legend="TODO"
-                vilkårsvurdering={vilkårsvurderinger[Vilkårtype.PersonligOppmøte]}
-                lagrer={RemoteData.isPending(lagrestatus)}
-                onSaveClick={handleSaveClick(Vilkårtype.PersonligOppmøte)}
-                className={styles.vilkarsvurdering}
-            >
-                <div>
-                    <Undertittel>Fra søknad</Undertittel>
-                    <p>TODO</p>
-                </div>
-            </Vilkårsvurdering>
-            <Vilkårsvurdering
-                type={Vilkårtype.Formue}
-                paragraph="§ 8"
-                legend="TODO"
-                vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Formue]}
-                lagrer={RemoteData.isPending(lagrestatus)}
-                onSaveClick={handleSaveClick(Vilkårtype.Formue)}
-                className={styles.vilkarsvurdering}
-            >
-                <div>
-                    <Undertittel>Fra søknad</Undertittel>
-                    <Infolinje tittel="Bor i bolig" verdi={boolTilJaNei(søknad.formue.borIBolig)} />
-                    <Infolinje tittel="Verdi på bolig" verdi={showNumber(søknad.formue.verdiPåBolig)} />
-                    <Infolinje tittel="Bolig brukes til" verdi={søknad.formue.boligBrukesTil ?? ''} />
-                    <Infolinje tittel="Depositumsbeløp" verdi={showNumber(søknad.formue.depositumsBeløp)} />
-                    <Infolinje tittel="Kontonummer" verdi={søknad.formue.kontonummer ?? ''} />
-                    <Infolinje tittel="Verdi på eiendom" verdi={showNumber(søknad.formue.verdiPåEiendom)} />
-                    <Infolinje tittel="Eiendom brukes til" verdi={søknad.formue.eiendomBrukesTil ?? ''} />
-                    {søknad.formue.kjøretøy?.map((k, idx) => (
+                    </div>
+                </Vilkårsvurdering>
+                <Vilkårsvurdering
+                    type={Vilkårtype.Oppholdstillatelse}
+                    paragraph="§ 3"
+                    legend="Er søker norsk statsborger?"
+                    vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Oppholdstillatelse]}
+                    lagrer={RemoteData.isPending(lagrestatus)}
+                    onSaveClick={handleSaveClick(Vilkårtype.Oppholdstillatelse)}
+                    className={styles.vilkarsvurdering}
+                >
+                    <div>
+                        <Undertittel>Fra søknad</Undertittel>
                         <Infolinje
-                            key={idx}
-                            tittel={`Kjøretøy ${idx + 1}`}
-                            verdi={`${k.kjøretøyDeEier} - ${k.verdiPåKjøretøy}`}
+                            tittel="Norsk statsborger"
+                            verdi={boolTilJaNei(søknad.oppholdstillatelse.erNorskStatsborger)}
                         />
-                    ))}
-                    <Infolinje tittel="Innskuddsbeløp" verdi={showNumber(søknad.formue.innskuddsBeløp)} />
-                    <Infolinje tittel="Verdipapirbeløp" verdi={showNumber(søknad.formue.verdipapirBeløp)} />
-                    <Infolinje
-                        tittel="Penger folk skylder søker"
-                        verdi={showNumber(søknad.formue.skylderNoenMegPengerBeløp)}
-                    />
-                    <Infolinje tittel="Kontanter" verdi={showNumber(søknad.formue.kontanterBeløp)} />
-                </div>
-            </Vilkårsvurdering>
-            <Vilkårsvurdering
-                type={Vilkårtype.BorOgOppholderSegINorge}
-                paragraph="§ 5"
-                legend="TODO"
-                vilkårsvurdering={vilkårsvurderinger[Vilkårtype.BorOgOppholderSegINorge]}
-                lagrer={RemoteData.isPending(lagrestatus)}
-                onSaveClick={handleSaveClick(Vilkårtype.BorOgOppholderSegINorge)}
-                className={styles.vilkarsvurdering}
-            >
-                <div>
-                    <Undertittel>Fra søknad</Undertittel>
-                    <p>{søknad.boforhold.borOgOppholderSegINorge}</p>
-                </div>
-            </Vilkårsvurdering>
+                        <Infolinje
+                            tittel="Har oppholdstillatelse"
+                            verdi={
+                                <span>
+                                    {boolTilJaNei(søknad.oppholdstillatelse.harOppholdstillatelse)}.{' '}
+                                    {søknad.oppholdstillatelse.typeOppholdstillatelse}
+                                </span>
+                            }
+                        />
+                        {søknad.oppholdstillatelse.statsborgerskapAndreLand && (
+                            <Infolinje
+                                tittel="Statsborgerskap i andre land"
+                                verdi={søknad.oppholdstillatelse.statsborgerskapAndreLandFritekst ?? ''}
+                            />
+                        )}
+                        <Infolinje
+                            tittel="Oppholdstillatelse forelengelse"
+                            verdi={boolTilJaNei(søknad.oppholdstillatelse.oppholdstillatelseForlengelse)}
+                        />
+                        <Infolinje
+                            tittel="Oppholdstillatelse mindre enn tre måneder"
+                            verdi={boolTilJaNei(søknad.oppholdstillatelse.oppholdstillatelseMindreEnnTreMåneder)}
+                        />
+                    </div>
+                </Vilkårsvurdering>
+                <Vilkårsvurdering
+                    type={Vilkårtype.PersonligOppmøte}
+                    paragraph="§ 17"
+                    legend="TODO"
+                    vilkårsvurdering={vilkårsvurderinger[Vilkårtype.PersonligOppmøte]}
+                    lagrer={RemoteData.isPending(lagrestatus)}
+                    onSaveClick={handleSaveClick(Vilkårtype.PersonligOppmøte)}
+                    className={styles.vilkarsvurdering}
+                >
+                    <div>
+                        <Undertittel>Fra søknad</Undertittel>
+                        <p>TODO</p>
+                    </div>
+                </Vilkårsvurdering>
+                <Vilkårsvurdering
+                    type={Vilkårtype.Formue}
+                    paragraph="§ 8"
+                    legend="TODO"
+                    vilkårsvurdering={vilkårsvurderinger[Vilkårtype.Formue]}
+                    lagrer={RemoteData.isPending(lagrestatus)}
+                    onSaveClick={handleSaveClick(Vilkårtype.Formue)}
+                    className={styles.vilkarsvurdering}
+                >
+                    <div>
+                        <Undertittel>Fra søknad</Undertittel>
+                        <Infolinje tittel="Bor i bolig" verdi={boolTilJaNei(søknad.formue.borIBolig)} />
+                        <Infolinje tittel="Verdi på bolig" verdi={showNumber(søknad.formue.verdiPåBolig)} />
+                        <Infolinje tittel="Bolig brukes til" verdi={søknad.formue.boligBrukesTil ?? ''} />
+                        <Infolinje tittel="Depositumsbeløp" verdi={showNumber(søknad.formue.depositumsBeløp)} />
+                        <Infolinje tittel="Kontonummer" verdi={søknad.formue.kontonummer ?? ''} />
+                        <Infolinje tittel="Verdi på eiendom" verdi={showNumber(søknad.formue.verdiPåEiendom)} />
+                        <Infolinje tittel="Eiendom brukes til" verdi={søknad.formue.eiendomBrukesTil ?? ''} />
+                        {søknad.formue.kjøretøy?.map((k, idx) => (
+                            <Infolinje
+                                key={idx}
+                                tittel={`Kjøretøy ${idx + 1}`}
+                                verdi={`${k.kjøretøyDeEier} - ${k.verdiPåKjøretøy}`}
+                            />
+                        ))}
+                        <Infolinje tittel="Innskuddsbeløp" verdi={showNumber(søknad.formue.innskuddsBeløp)} />
+                        <Infolinje tittel="Verdipapirbeløp" verdi={showNumber(søknad.formue.verdipapirBeløp)} />
+                        <Infolinje
+                            tittel="Penger folk skylder søker"
+                            verdi={showNumber(søknad.formue.skylderNoenMegPengerBeløp)}
+                        />
+                        <Infolinje tittel="Kontanter" verdi={showNumber(søknad.formue.kontanterBeløp)} />
+                    </div>
+                </Vilkårsvurdering>
+                <Vilkårsvurdering
+                    type={Vilkårtype.BorOgOppholderSegINorge}
+                    paragraph="§ 5"
+                    legend="TODO"
+                    vilkårsvurdering={vilkårsvurderinger[Vilkårtype.BorOgOppholderSegINorge]}
+                    lagrer={RemoteData.isPending(lagrestatus)}
+                    onSaveClick={handleSaveClick(Vilkårtype.BorOgOppholderSegINorge)}
+                    className={styles.vilkarsvurdering}
+                >
+                    <div>
+                        <Undertittel>Fra søknad</Undertittel>
+                        <p>{søknad.boforhold.borOgOppholderSegINorge}</p>
+                    </div>
+                </Vilkårsvurdering>
+            </div>
             <Hovedknapp
                 onClick={() => {
                     if (vilkårsvurderingIsValid(vilkårsvurderinger)) {
@@ -224,7 +226,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                     setNextButtonHasBeenClicked(true);
                 }}
             >
-                Send inn.
+                Gå til beregning
             </Hovedknapp>
             {nextButtonHasBeenClicked && !vilkårsvurderingIsValid && (
                 <Alertstripe type="feil">Må fylles ut</Alertstripe>

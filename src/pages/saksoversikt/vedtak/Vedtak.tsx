@@ -1,17 +1,19 @@
-import { AlertStripeSuksess, AlertStripeFeil } from 'nav-frontend-alertstriper';
-import { Sidetittel } from 'nav-frontend-typografi';
+import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-import { Behandling, Vilkårsvurdering, Vilkårtype, Behandlingsstatus } from '~api/behandlingApi';
+import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
 import {
     oneVilkåringsvurderingIsNotOk,
+    statusIcon,
     vilkårsvurderingIsValid,
     vilkårTittelFormatted,
-    statusIcon,
 } from '~features/saksoversikt/utils';
+import * as routes from '~lib/routes.ts';
 import VisBeregning from '~pages/saksoversikt/beregning/VisBeregning';
+import { SaksbehandlingMenyvalg } from '~pages/saksoversikt/types';
 
 import styles from './vedtak.module.less';
 
@@ -23,19 +25,21 @@ type Props = {
 const VilkårsvurderingInfoLinje = (props: { type: Vilkårtype; verdi: Vilkårsvurdering }) => (
     <div className={styles.infolinjeContainer}>
         <div className={styles.infolinje}>
-            <span className={styles.infotittel}>{vilkårTittelFormatted(props.type)}:</span>
             <span className={styles.statusContainer}>
                 <span className={styles.statusIcon}>{statusIcon(props.verdi.status)}</span>
             </span>
+            <div>
+                <span className={styles.infotittel}>{vilkårTittelFormatted(props.type)}:</span>
+                <p>{props.verdi.begrunnelse ? props.verdi.begrunnelse : ''}</p>
+            </div>
         </div>
-        <p>{props.verdi.begrunnelse ? props.verdi.begrunnelse : ''}</p>
     </div>
 );
 
 const VilkårsOppsummering = (props: { behandling: Behandling; sakId: string }) => {
     return (
         <div>
-            <Innholdstittel>Vilkårsvurderinger</Innholdstittel>
+            <Innholdstittel className={styles.tittel}>Vilkårsvurderinger</Innholdstittel>
             {Object.entries(props.behandling.vilkårsvurderinger).map(([k, v]) => (
                 <VilkårsvurderingInfoLinje type={k as Vilkårtype} verdi={v} key={k} />
             ))}
@@ -51,25 +55,35 @@ const Vedtak = (props: Props) => {
     }
     if (vilkårsvurderingIsValid(behandling.vilkårsvurderinger) && behandling.beregning) {
         return (
-            <div className={styles.vedtakContainer}>
-                <div className={styles.marginBottomContainer}>
-                    <Sidetittel>Vedtak</Sidetittel>
+            <div>
+                <div className={styles.vedtakContainer}>
+                    <Innholdstittel>Vedtak</Innholdstittel>
+                    <div>
+                        {behandling.status === Behandlingsstatus.INNVILGET && (
+                            <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>
+                        )}
+                        {behandling.status === Behandlingsstatus.AVSLÅTT && (
+                            <AlertStripeFeil>{behandling.status}</AlertStripeFeil>
+                        )}
+                    </div>
+                    <div>
+                        <VilkårsOppsummering behandling={behandling} sakId={sak.id} />
+                    </div>
+                    <div>
+                        <VisBeregning beregning={behandling.beregning} />
+                    </div>
                 </div>
-                <div className={styles.marginBottomContainer}>
-                    <VilkårsOppsummering behandling={behandling} sakId={sak.id} />
-                </div>
-                <div className={styles.marginBottomContainer}>
-                    <VisBeregning beregning={behandling.beregning} />
-                </div>
-                <div className={styles.marginBottomContainer}>Et fint brev her :)</div>
-
-                <div className={styles.marginBottomContainer}>
-                    {behandling.status === Behandlingsstatus.INNVILGET && (
-                        <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>
-                    )}
-                    {behandling.status === Behandlingsstatus.AVSLÅTT && (
-                        <AlertStripeFeil>{behandling.status}</AlertStripeFeil>
-                    )}
+                <div className={styles.navigeringContainer}>
+                    <Link
+                        to={routes.saksoversikt.createURL({
+                            sakId: sak.id,
+                            behandlingId: behandlingId,
+                            meny: SaksbehandlingMenyvalg.Beregning,
+                        })}
+                        className="knapp"
+                    >
+                        Tilbake
+                    </Link>
                 </div>
             </div>
         );

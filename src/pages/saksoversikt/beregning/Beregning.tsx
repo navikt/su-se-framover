@@ -9,7 +9,7 @@ import { Innholdstittel, Feilmelding } from 'nav-frontend-typografi';
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import { IntlShape } from 'react-intl';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { Beregning, Fradragstype, Sats, Fradrag } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
@@ -223,117 +223,131 @@ const Beregning = (props: Props) => {
     const { errors } = formik;
 
     return (
-        <div className={styles.beregningContainer}>
-            {behandling.beregning && (
-                <div className={styles.visBeregning}>
-                    <VisBeregning beregning={behandling.beregning} />
-                </div>
-            )}
-
-            <div>
-                <Innholdstittel className={styles.tittel}>Start ny beregning:</Innholdstittel>
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        formik.handleSubmit();
-                        setHasSubmitted(true);
-                    }}
-                >
-                    <div id="sats">
-                        <RadioPanelGruppe
-                            className={styles.sats}
-                            name={intl.formatMessage({ id: 'input.sats.label' })}
-                            legend={intl.formatMessage({ id: 'input.sats.label' })}
-                            radios={[
-                                { label: intl.formatMessage({ id: 'input.sats.value.høy' }), value: Sats.Høy },
-                                { label: intl.formatMessage({ id: 'input.sats.value.lav' }), value: Sats.Lav },
-                            ]}
-                            checked={formik.values.sats}
-                            onChange={(_, value) => formik.setValues({ ...formik.values, sats: value })}
-                            feil={errors.sats}
-                        />
+        <div className={styles.container}>
+            <div className={styles.beregningContainer}>
+                {behandling.beregning && (
+                    <div className={styles.visBeregning}>
+                        <VisBeregning beregning={behandling.beregning} />
                     </div>
+                )}
 
-                    <div className={styles.datovelgerContainer}>
-                        <div className={styles.datovelger}>
-                            <Label htmlFor="fom">{intl.formatMessage({ id: 'datovelger.fom.label' })}</Label>
-                            <DatePicker
-                                id="fom"
-                                selected={formik.values.fom}
-                                onChange={(date) => formik.setValues({ ...formik.values, fom: date })}
-                                dateFormat="MM/yyyy"
-                                showMonthYearPicker
-                            />
-                            {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
-                        </div>
-                        <div className={styles.datovelger}>
-                            <Label htmlFor="tom">{intl.formatMessage({ id: 'datovelger.tom.label' })}</Label>
-                            <DatePicker
-                                id="tom"
-                                selected={formik.values.tom}
-                                onChange={(date) => formik.setValues({ ...formik.values, tom: date })}
-                                dateFormat="MM/yyyy"
-                                showMonthYearPicker
-                            />
-                            {formik.errors.tom && <Feilmelding>{formik.errors.tom}</Feilmelding>}
-                        </div>
-                    </div>
-                    <FradragInputs
-                        feltnavn="fradrag"
-                        fradrag={formik.values.fradrag}
-                        errors={formik.errors.fradrag}
-                        intl={intl}
-                        onChange={formik.handleChange}
-                        onFjernClick={(index) => {
-                            formik.setValues({
-                                ...formik.values,
-                                fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
-                            });
-                        }}
-                        onLeggTilClick={() => {
-                            formik.setValues({
-                                ...formik.values,
-                                fradrag: [...formik.values.fradrag, { beløp: null, beskrivelse: null, type: null }],
-                            });
-                        }}
-                    />
-                    <Feiloppsummering
-                        className={styles.feiloppsummering}
-                        tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
-                        feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                        hidden={!formikErrorsHarFeil(formik.errors)}
-                    />
-                    <Knapp className={styles.startBeregningKnapp} spinner={RemoteData.isPending(beregningStatus)}>
-                        {intl.formatMessage({ id: 'knapp.startBeregning' })}
-                    </Knapp>
-                    <Hovedknapp
-                        onClick={(e) => {
+                <div>
+                    <Innholdstittel className={styles.tittel}>Start ny beregning:</Innholdstittel>
+                    <form
+                        onSubmit={(e) => {
                             e.preventDefault();
-                            if (RemoteData.isSuccess(beregningStatus)) {
-                                history.push(
-                                    routes.saksoversikt.createURL({
-                                        sakId: sak.id,
-                                        behandlingId: behandlingId,
-                                        meny: SaksbehandlingMenyvalg.Vedtak,
-                                    })
-                                );
-                            } else if (behandling.beregning) {
-                                history.push(
-                                    routes.saksoversikt.createURL({
-                                        sakId: sak.id,
-                                        behandlingId: behandlingId,
-                                        meny: SaksbehandlingMenyvalg.Vedtak,
-                                    })
-                                );
-                            }
+                            formik.handleSubmit();
+                            setHasSubmitted(true);
                         }}
                     >
-                        {intl.formatMessage({ id: 'knapp.neste' })}
-                    </Hovedknapp>
-                    {RemoteData.isFailure(beregningStatus) && (
-                        <AlertStripe type="feil">{beregningStatus.error.message}</AlertStripe>
-                    )}
-                </form>
+                        <div id="sats">
+                            <RadioPanelGruppe
+                                className={styles.sats}
+                                name={intl.formatMessage({ id: 'input.sats.label' })}
+                                legend={intl.formatMessage({ id: 'input.sats.label' })}
+                                radios={[
+                                    { label: intl.formatMessage({ id: 'input.sats.value.høy' }), value: Sats.Høy },
+                                    { label: intl.formatMessage({ id: 'input.sats.value.lav' }), value: Sats.Lav },
+                                ]}
+                                checked={formik.values.sats}
+                                onChange={(_, value) => formik.setValues({ ...formik.values, sats: value })}
+                                feil={errors.sats}
+                            />
+                        </div>
+
+                        <div className={styles.datovelgerContainer}>
+                            <div className={styles.datovelger}>
+                                <Label htmlFor="fom">{intl.formatMessage({ id: 'datovelger.fom.label' })}</Label>
+                                <DatePicker
+                                    id="fom"
+                                    selected={formik.values.fom}
+                                    onChange={(date) => formik.setValues({ ...formik.values, fom: date })}
+                                    dateFormat="MM/yyyy"
+                                    showMonthYearPicker
+                                />
+                                {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
+                            </div>
+                            <div className={styles.datovelger}>
+                                <Label htmlFor="tom">{intl.formatMessage({ id: 'datovelger.tom.label' })}</Label>
+                                <DatePicker
+                                    id="tom"
+                                    selected={formik.values.tom}
+                                    onChange={(date) => formik.setValues({ ...formik.values, tom: date })}
+                                    dateFormat="MM/yyyy"
+                                    showMonthYearPicker
+                                />
+                                {formik.errors.tom && <Feilmelding>{formik.errors.tom}</Feilmelding>}
+                            </div>
+                        </div>
+                        <FradragInputs
+                            feltnavn="fradrag"
+                            fradrag={formik.values.fradrag}
+                            errors={formik.errors.fradrag}
+                            intl={intl}
+                            onChange={formik.handleChange}
+                            onFjernClick={(index) => {
+                                formik.setValues({
+                                    ...formik.values,
+                                    fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
+                                });
+                            }}
+                            onLeggTilClick={() => {
+                                formik.setValues({
+                                    ...formik.values,
+                                    fradrag: [...formik.values.fradrag, { beløp: null, beskrivelse: null, type: null }],
+                                });
+                            }}
+                        />
+                        <Feiloppsummering
+                            className={styles.feiloppsummering}
+                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                            hidden={!formikErrorsHarFeil(formik.errors)}
+                        />
+                        <Knapp className={styles.startBeregningKnapp} spinner={RemoteData.isPending(beregningStatus)}>
+                            {intl.formatMessage({ id: 'knapp.startBeregning' })}
+                        </Knapp>
+                        {RemoteData.isFailure(beregningStatus) && (
+                            <AlertStripe type="feil">{beregningStatus.error.message}</AlertStripe>
+                        )}
+                    </form>
+                </div>
+            </div>
+            <div className={styles.navigeringContainer}>
+                <Link
+                    to={routes.saksoversikt.createURL({
+                        sakId: sak.id,
+                        behandlingId: behandlingId,
+                        meny: SaksbehandlingMenyvalg.Vilkår,
+                    })}
+                    className="knapp"
+                >
+                    Tilbake
+                </Link>
+                <Hovedknapp
+                    onClick={(e) => {
+                        e.preventDefault();
+                        if (RemoteData.isSuccess(beregningStatus)) {
+                            history.push(
+                                routes.saksoversikt.createURL({
+                                    sakId: sak.id,
+                                    behandlingId: behandlingId,
+                                    meny: SaksbehandlingMenyvalg.Vedtak,
+                                })
+                            );
+                        } else if (behandling.beregning) {
+                            history.push(
+                                routes.saksoversikt.createURL({
+                                    sakId: sak.id,
+                                    behandlingId: behandlingId,
+                                    meny: SaksbehandlingMenyvalg.Vedtak,
+                                })
+                            );
+                        }
+                    }}
+                >
+                    {intl.formatMessage({ id: 'knapp.neste' })}
+                </Hovedknapp>
             </div>
         </div>
     );
