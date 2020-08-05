@@ -17,9 +17,9 @@ export const sendSøknad = createAsyncThunk<
         personopplysninger: {
             aktørid: '123',
             fnr: søker.fnr,
-            fornavn: 'fornavn',
+            fornavn: søker.fornavn,
             mellomnavn: null,
-            etternavn: 'etternavn',
+            etternavn: søker.etternavn,
             telefonnummer: '123',
             gateadresse: 'Storgata 15 A',
             postnummer: '0161',
