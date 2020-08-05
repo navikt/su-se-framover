@@ -1,9 +1,11 @@
 import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import Lenke from 'nav-frontend-lenker';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
+import { fetchBrev } from '~api/brevApi';
 import { Sak } from '~api/sakApi';
 import {
     oneVilkåringsvurderingIsNotOk,
@@ -71,6 +73,19 @@ const Vedtak = (props: Props) => {
                     </div>
                     <div>
                         <VisBeregning beregning={behandling.beregning} />
+                    </div>
+                    <div>
+                        <Innholdstittel>Vis brev kladd</Innholdstittel>
+                        <Lenke
+                            href={'#'}
+                            onClick={() =>
+                                fetchBrev(sak.id, sak.behandlinger[0].id).then((res) => {
+                                    if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
+                                })
+                            }
+                        >
+                            test
+                        </Lenke>
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>

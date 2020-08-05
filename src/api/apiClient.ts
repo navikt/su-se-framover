@@ -43,6 +43,7 @@ export default async function apiClient<T>(arg: {
     request?: Partial<Request>;
     successStatusCodes?: number[];
     extraData?: { accessToken: string; correlationId: string; numAttempts: number };
+    bodyTransformer?: (res: Response) => Promise<T>;
 }): Promise<ApiClientResult<T>> {
     const accessToken = arg.extraData?.accessToken ?? Cookies.get(Cookies.CookieName.AccessToken);
     const refreshToken = Cookies.get(Cookies.CookieName.RefreshToken);
@@ -111,6 +112,15 @@ export default async function apiClient<T>(arg: {
             correlationId,
             body: null,
         });
+    }
+
+    // const contentType = res.headers.get('content-type');
+    // if (contentType && contentType.includes('application/pdf')) {
+    //     return success<T>(await res.blob(), res.status);
+    // }
+
+    if (arg.bodyTransformer) {
+        return success<T>(await arg.bodyTransformer(res), res.status);
     }
 
     if (res.ok || arg.successStatusCodes?.includes(res.status)) {
