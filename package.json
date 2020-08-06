@@ -36,7 +36,7 @@
     },
     "homepage": "https://github.com/navikt/su-se-framover#readme",
     "dependencies": {
-        "@babel/runtime": "^7.10.5",
+        "@babel/runtime": "^7.11.0",
         "@devexperts/remote-data-ts": "^2.0.3",
         "@navikt/fnrvalidator": "^1.1.2",
         "@navikt/nap-bem-utils": "^1.0.1",
