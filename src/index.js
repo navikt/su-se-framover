@@ -11,6 +11,8 @@ if (process.env.NODE_ENV !== 'development') {
         environment: window.location.hostname,
         integrations: [new Sentry.Integrations.Breadcrumbs({ console: false })],
     });
+} else {
+    import('./mock/modia-context-mock');
 }
 
 render(<Root />, document.getElementById('root'));

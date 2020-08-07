@@ -1,4 +1,5 @@
 import Header from '@navikt/nap-header';
+import NAVSPA from '@navikt/navspa';
 import Lenke from 'nav-frontend-lenker';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
@@ -19,6 +20,13 @@ import Soknad from './pages/søknad';
 import Store from './redux/Store';
 import styles from './root.module.less';
 import './externalStyles';
+
+interface DecoratorProps {
+    appname: string;
+    fnr: string | undefined | null;
+}
+
+const InternflateDecorator = NAVSPA.importer<DecoratorProps>('internarbeidsflatefs');
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -121,6 +129,7 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
 
     return (
         <div>
+            <InternflateDecorator appname="SUPP" fnr={undefined} />
             <Header title="Supplerende stønad Ufør" titleHref={'/'}>
                 {navn && (
                     <Menyknapp

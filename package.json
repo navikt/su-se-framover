@@ -43,6 +43,7 @@
         "@navikt/nap-header": "^1.0.10",
         "@navikt/nap-person-card": "^1.1.4",
         "@navikt/nap-side-menu": "^1.0.7",
+        "@navikt/navspa": "^1.0.3",
         "@reduxjs/toolkit": "^1.4.0",
         "@sentry/browser": "^5.20.1",
         "@types/jsonwebtoken": "^8.5.0",
@@ -103,6 +104,7 @@
         "postcss-import": "^12.0.1",
         "postcss-less": "^3.1.4",
         "postcss-modules": "^3.2.0",
+        "posthtml-expressions": "^1.4.5",
         "prop-types": "^15.7.2",
         "query-string": "^6.13.1",
         "react": "^16.13.1",
@@ -152,6 +154,7 @@
         "react-test-renderer": "^16.13.1",
         "rimraf": "^3.0.2",
         "ts-jest": "^26.1.1",
-        "typescript": "^3.9.7"
+        "typescript": "^3.9.7",
+        "yet-another-fetch-mock": "^4.0.0"
     }
 }
