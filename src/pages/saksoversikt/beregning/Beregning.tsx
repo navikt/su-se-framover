@@ -214,7 +214,7 @@ const Beregning = (props: Props) => {
                 .required()
                 .test('isAfterFom', 'Sluttdato må være etter startdato', function (tom) {
                     const { fom } = this.parent;
-                    return fom < tom;
+                    return fom <= tom;
                 }),
             fradrag: yup.array(fradragSchema.required()).defined(),
         }),
