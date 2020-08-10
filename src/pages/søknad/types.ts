@@ -1,5 +1,4 @@
 export enum Søknadsteg {
-    Inngang = 'inngang',
     Uførevedtak = 'uforevedtak',
     FlyktningstatusOppholdstillatelse = 'flyktning-oppholdstillatelse',
     BoOgOppholdINorge = 'opphold-i-norge',
