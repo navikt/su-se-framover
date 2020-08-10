@@ -4,6 +4,7 @@ import React from 'react';
 import { RawIntlProvider, FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
+import { Person } from '~api/personApi';
 import { PencilIcon } from '~assets/Icons';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
@@ -82,13 +83,13 @@ const reverseStr = (str: string) => {
     return str.split('-').reverse().join('-');
 };
 
-const EndreSvar = (props: { path: Søknadsteg }) => {
+const EndreSvar = (props: { path: Søknadsteg; søker: Person }) => {
     const intl = useI18n({ messages });
     return (
         <Link
             className={styles.endreSvarContainer}
             to={routes.soknad.createURL({ step: props.path })}
-            onClick={() => trackEvent(SøknadOppsummeringEndreSvarKlikk({ ident: '123' }))}
+            onClick={() => trackEvent(SøknadOppsummeringEndreSvarKlikk({ ident: props.søker.aktorId }))}
         >
             <span className={styles.marginRight}>
                 <PencilIcon width="15" height="15" />
@@ -98,7 +99,7 @@ const EndreSvar = (props: { path: Søknadsteg }) => {
     );
 };
 
-const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
+const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søker: Person }) => {
     const intl = useI18n({ messages });
 
     return (
@@ -112,7 +113,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                         label={<FormattedMessage id="input.uførevedtak.label" />}
                         verdi={søknad.harUførevedtak ? 'Ja' : søknad.harUførevedtak === false ? 'Nei' : 'Ubesvart'}
                     />
-                    <EndreSvar path={Søknadsteg.Uførevedtak} />
+                    <EndreSvar path={Søknadsteg.Uførevedtak} søker={søker} />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -209,7 +210,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                             verdi={søknad.flyktningstatus.statsborgerskapAndreLandFritekst}
                         />
                     )}
-                    <EndreSvar path={Søknadsteg.FlyktningstatusOppholdstillatelse} />
+                    <EndreSvar path={Søknadsteg.FlyktningstatusOppholdstillatelse} søker={søker} />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -276,7 +277,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                             }
                         />
                     )}
-                    <EndreSvar path={Søknadsteg.BoOgOppholdINorge} />
+                    <EndreSvar path={Søknadsteg.BoOgOppholdINorge} søker={søker} />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -451,7 +452,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                             verdi={søknad.formue.kontanterBeløp ? søknad.formue.kontanterBeløp : 'Ubesvart'}
                         />
                     )}
-                    <EndreSvar path={Søknadsteg.DinFormue} />
+                    <EndreSvar path={Søknadsteg.DinFormue} søker={søker} />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -607,7 +608,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                                 />
                             </div>
                         ))}
-                    <EndreSvar path={Søknadsteg.DinInntekt} />
+                    <EndreSvar path={Søknadsteg.DinInntekt} søker={søker} />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -661,7 +662,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                                 />
                             </div>
                         ))}
-                    <EndreSvar path={Søknadsteg.ReiseTilUtlandet} />
+                    <EndreSvar path={Søknadsteg.ReiseTilUtlandet} søker={søker} />
                 </Ekspanderbartpanel>
             </div>
         </RawIntlProvider>

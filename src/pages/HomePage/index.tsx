@@ -7,7 +7,7 @@ const HomePage = () => (
     <div className={styles.container}>
         <h1 className={styles.header}>Jeg er...</h1>
         <div className={styles.linkContainer}>
-            <Link to={'/soknad/inngang'} className={`${styles.link} knapp`}>
+            <Link to={'/soknad'} className={`${styles.link} knapp`}>
                 Veileder
             </Link>
             <Link to={'/saksoversikt'} className={`${styles.link} knapp`}>
