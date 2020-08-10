@@ -2,6 +2,7 @@ import { Vergemål } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 
 import apiClient, { ApiClientResult } from './apiClient';
+import { Person } from './personApi';
 
 export interface Søknad {
     id: string;
@@ -9,20 +10,7 @@ export interface Søknad {
 }
 
 export interface SøknadInnhold {
-    personopplysninger: {
-        aktørid: string;
-        fnr: string;
-        fornavn: string;
-        mellomnavn: Nullable<string>;
-        etternavn: string;
-        telefonnummer: string;
-        gateadresse: string;
-        postnummer: string;
-        poststed: string;
-        bruksenhet: string;
-        bokommune: string;
-        statsborgerskap: string;
-    };
+    personopplysninger: Person;
     uførevedtak: {
         harUførevedtak: boolean;
     };
