@@ -136,7 +136,7 @@
         "@types/yup": "^0.29.3",
         "@typescript-eslint/eslint-plugin": "^3.7.0",
         "@typescript-eslint/parser": "^3.7.1",
-        "enzyme-adapter-react-16": "^1.15.2",
+        "enzyme-adapter-react-16": "^1.15.3",
         "eslint": "^7.6.0",
         "eslint-config-prettier": "^6.11.0",
         "eslint-import-resolver-typescript": "^2.2.0",
