@@ -38,6 +38,9 @@ const messages = {
 const index = () => {
     const { søker } = useAppSelector((s) => s.søker);
     const { step } = useParams<{ step: Søknadsteg }>();
+    if (!step) {
+        return <Inngang nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })} />;
+    }
     const history = useHistory();
 
     const intl = useI18n({ messages });
@@ -90,47 +93,40 @@ const index = () => {
         <div className={styles.container}>
             <div className={styles.headerContainer}>
                 <div className={styles.sidetittelContainer}>
-                    <Innholdstittel>
-                        {step !== Søknadsteg.Inngang && RemoteData.isSuccess(søker) ? 'Søknad for' : 'Søknad'}
-                    </Innholdstittel>
+                    <Innholdstittel>{'Søknad for'}</Innholdstittel>
                 </div>
 
-                {RemoteData.isSuccess(søker) && step !== Søknadsteg.Inngang && (
+                {RemoteData.isSuccess(søker) && (
                     <div className={styles.personkortContainer}>
                         <Personkort person={søker.value} />
                     </div>
                 )}
-                {step !== Søknadsteg.Inngang && (
-                    <>
-                        <div className={styles.stegindikatorContainer}>
-                            <Stegindikator
-                                steg={steg.map((s) => ({
-                                    index: s.index,
-                                    label: s.label,
-                                }))}
-                                aktivtSteg={aktivtSteg}
-                                visLabel={false}
-                                onChange={
-                                    process.env.NODE_ENV === 'development'
-                                        ? (index) => {
-                                              const nyttSteg = steg[index];
-                                              if (nyttSteg) {
-                                                  history.push(routes.soknad.createURL({ step: nyttSteg.step }));
-                                              }
+                <>
+                    <div className={styles.stegindikatorContainer}>
+                        <Stegindikator
+                            steg={steg.map((s) => ({
+                                index: s.index,
+                                label: s.label,
+                            }))}
+                            aktivtSteg={aktivtSteg}
+                            visLabel={false}
+                            onChange={
+                                process.env.NODE_ENV === 'development'
+                                    ? (index) => {
+                                          const nyttSteg = steg[index];
+                                          if (nyttSteg) {
+                                              history.push(routes.soknad.createURL({ step: nyttSteg.step }));
                                           }
-                                        : undefined
-                                }
-                            />
-                        </div>
-                        <Undertittel>{steg.find((s) => s.step === step)?.label}</Undertittel>
-                    </>
-                )}
+                                      }
+                                    : undefined
+                            }
+                        />
+                    </div>
+                    <Undertittel>{steg.find((s) => s.step === step)?.label}</Undertittel>
+                </>
             </div>
-            {step === Søknadsteg.Inngang ? (
-                <Inngang nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })} />
-            ) : step === Søknadsteg.Uførevedtak ? (
+            {step === Søknadsteg.Uførevedtak ? (
                 <Uførevedtak
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.Inngang })}
                     nesteUrl={routes.soknad.createURL({ step: Søknadsteg.FlyktningstatusOppholdstillatelse })}
                 />
             ) : step === Søknadsteg.FlyktningstatusOppholdstillatelse ? (

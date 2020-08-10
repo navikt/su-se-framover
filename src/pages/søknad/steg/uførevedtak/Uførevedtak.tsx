@@ -26,7 +26,7 @@ const schema = yup.object<FormData>({
     harUførevedtak: yup.boolean().nullable().required(),
 });
 
-const Uførevedtak = (props: { forrigeUrl: string; nesteUrl: string }) => {
+const Uførevedtak = (props: { nesteUrl: string }) => {
     const harVedtakFraStore = useAppSelector((s) => s.soknad.harUførevedtak);
     const dispatch = useAppDispatch();
     const history = useHistory();
