@@ -4,7 +4,6 @@ import React from 'react';
 import { RawIntlProvider, FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
-import { Person } from '~api/personApi';
 import { PencilIcon } from '~assets/Icons';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
@@ -99,7 +98,7 @@ const EndreSvar = (props: { path: Søknadsteg }) => {
     );
 };
 
-const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søker: Person }) => {
+const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
     const intl = useI18n({ messages });
 
     return (
@@ -113,7 +112,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         label={<FormattedMessage id="input.uførevedtak.label" />}
                         verdi={søknad.harUførevedtak ? 'Ja' : søknad.harUførevedtak === false ? 'Nei' : 'Ubesvart'}
                     />
-                    <EndreSvar path={Søknadsteg.Uførevedtak} søker={søker} />
+                    <EndreSvar path={Søknadsteg.Uførevedtak} />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
