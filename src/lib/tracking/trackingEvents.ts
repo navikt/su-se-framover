@@ -21,3 +21,8 @@ const createEvent = <U, T extends TrackingCode>(code: T) => {
 export const startBeregning = createEvent<{ sakId: string; behandlingId: string }, TrackingCode.StartBeregning>(
     TrackingCode.StartBeregning
 );
+
+export const SøknadOppsummeringEndreSvarKlikk = createEvent<
+    { ident: string },
+    TrackingCode.SøknadOppsummeringEndreSvarKlikk
+>(TrackingCode.SøknadOppsummeringEndreSvarKlikk);

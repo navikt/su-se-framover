@@ -1,10 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import Stegindikator from 'nav-frontend-stegindikator';
-import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
+import { Innholdstittel, Undertittel, Feilmelding } from 'nav-frontend-typografi';
 import * as React from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, Link } from 'react-router-dom';
 
 import { Personkort } from '~components/Personkort';
+import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
 import { useAppSelector } from '~redux/Store';
@@ -23,6 +25,7 @@ import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
 import { Søknadsteg } from './types';
 
 const messages = {
+    tittel: 'Søknad for',
     'steg.uforevedtak': 'Uførevedtak',
     'steg.flyktningstatus': 'Flyktningstatus',
     'steg.boOgOppholdINorge': 'Bo og opphold i Norge',
@@ -33,14 +36,19 @@ const messages = {
     'steg.oppsummering': 'Oppsummering',
     'steg.neste': 'Neste',
     'steg.forrige': 'Forrige',
+    'feilmelding.tekst': 'En feil oppstod',
+    'feilmelding.knapp': 'Start ny søknad',
 };
 
 const index = () => {
-    const { søker } = useAppSelector((s) => s.søker);
+    const { søker: søkerFraStore } = useAppSelector((s) => s.søker);
     const { step } = useParams<{ step: Søknadsteg }>();
     const history = useHistory();
-
     const intl = useI18n({ messages });
+
+    if (!step) {
+        return <Inngang nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })} />;
+    }
 
     const steg = [
         {
@@ -86,92 +94,114 @@ const index = () => {
     ];
     const aktivtSteg = steg.findIndex((s) => s.step === step);
 
+    const manglendeData = () => (
+        <div>
+            <Feilmelding className={styles.feilmeldingTekst}>
+                {intl.formatMessage({ id: 'feilmelding.tekst' })}
+            </Feilmelding>
+            <Link to={routes.soknad.createURL({ step: null })} className="knapp">
+                {intl.formatMessage({ id: 'feilmelding.knapp' })}
+            </Link>
+        </div>
+    );
+
     return (
         <div className={styles.container}>
-            <div className={styles.headerContainer}>
-                <div className={styles.sidetittelContainer}>
-                    <Innholdstittel>
-                        {step !== Søknadsteg.Inngang && RemoteData.isSuccess(søker) ? 'Søknad for' : 'Søknad'}
-                    </Innholdstittel>
-                </div>
+            {pipe(
+                søkerFraStore,
+                RemoteData.fold(
+                    manglendeData,
+                    () => <NavFrontendSpinner />,
+                    manglendeData,
+                    (søker) => (
+                        <>
+                            <div className={styles.headerContainer}>
+                                <div className={styles.sidetittelContainer}>
+                                    <Innholdstittel>{intl.formatMessage({ id: 'tittel' })}</Innholdstittel>
+                                </div>
 
-                {RemoteData.isSuccess(søker) && step !== Søknadsteg.Inngang && (
-                    <div className={styles.personkortContainer}>
-                        <Personkort person={søker.value} />
-                    </div>
-                )}
-                {step !== Søknadsteg.Inngang && (
-                    <>
-                        <div className={styles.stegindikatorContainer}>
-                            <Stegindikator
-                                steg={steg.map((s) => ({
-                                    index: s.index,
-                                    label: s.label,
-                                }))}
-                                aktivtSteg={aktivtSteg}
-                                visLabel={false}
-                                onChange={
-                                    process.env.NODE_ENV === 'development'
-                                        ? (index) => {
-                                              const nyttSteg = steg[index];
-                                              if (nyttSteg) {
-                                                  history.push(routes.soknad.createURL({ step: nyttSteg.step }));
-                                              }
-                                          }
-                                        : undefined
-                                }
-                            />
-                        </div>
-                        <Undertittel>{steg.find((s) => s.step === step)?.label}</Undertittel>
-                    </>
-                )}
-            </div>
-            {step === Søknadsteg.Inngang ? (
-                <Inngang nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })} />
-            ) : step === Søknadsteg.Uførevedtak ? (
-                <Uførevedtak
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.Inngang })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.FlyktningstatusOppholdstillatelse })}
-                />
-            ) : step === Søknadsteg.FlyktningstatusOppholdstillatelse ? (
-                <FlyktningstatusOppholdstillatelse
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
-                />
-            ) : step === Søknadsteg.BoOgOppholdINorge ? (
-                <BoOgOppholdINorge
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.FlyktningstatusOppholdstillatelse })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.DinFormue })}
-                />
-            ) : step === Søknadsteg.DinFormue ? (
-                <Formue
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
-                />
-            ) : step === Søknadsteg.DinInntekt ? (
-                <Inntekt
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinFormue })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
-                />
-            ) : step === Søknadsteg.ReiseTilUtlandet ? (
-                <Utenlandsopphold
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ForVeileder })}
-                />
-            ) : step === Søknadsteg.ForVeileder ? (
-                <ForVeileder
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Oppsummering })}
-                />
-            ) : step === Søknadsteg.Oppsummering ? (
-                <Oppsummering
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ForVeileder })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Kvittering })}
-                />
-            ) : step === Søknadsteg.Kvittering ? (
-                <Kvittering />
-            ) : (
-                '404'
+                                <div className={styles.personkortContainer}>
+                                    <Personkort person={søker} />
+                                </div>
+                                <>
+                                    <div className={styles.stegindikatorContainer}>
+                                        <Stegindikator
+                                            steg={steg.map((s) => ({
+                                                index: s.index,
+                                                label: s.label,
+                                            }))}
+                                            aktivtSteg={aktivtSteg}
+                                            visLabel={false}
+                                            onChange={
+                                                process.env.NODE_ENV === 'development'
+                                                    ? (index) => {
+                                                          const nyttSteg = steg[index];
+                                                          if (nyttSteg) {
+                                                              history.push(
+                                                                  routes.soknad.createURL({ step: nyttSteg.step })
+                                                              );
+                                                          }
+                                                      }
+                                                    : undefined
+                                            }
+                                        />
+                                    </div>
+                                    <Undertittel>{steg.find((s) => s.step === step)?.label}</Undertittel>
+                                </>
+                            </div>
+                            {step === Søknadsteg.Uførevedtak ? (
+                                <Uførevedtak
+                                    forrigeUrl={routes.soknad.createURL({ step: null })}
+                                    nesteUrl={routes.soknad.createURL({
+                                        step: Søknadsteg.FlyktningstatusOppholdstillatelse,
+                                    })}
+                                />
+                            ) : step === Søknadsteg.FlyktningstatusOppholdstillatelse ? (
+                                <FlyktningstatusOppholdstillatelse
+                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })}
+                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
+                                />
+                            ) : step === Søknadsteg.BoOgOppholdINorge ? (
+                                <BoOgOppholdINorge
+                                    forrigeUrl={routes.soknad.createURL({
+                                        step: Søknadsteg.FlyktningstatusOppholdstillatelse,
+                                    })}
+                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.DinFormue })}
+                                />
+                            ) : step === Søknadsteg.DinFormue ? (
+                                <Formue
+                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
+                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
+                                />
+                            ) : step === Søknadsteg.DinInntekt ? (
+                                <Inntekt
+                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinFormue })}
+                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
+                                />
+                            ) : step === Søknadsteg.ReiseTilUtlandet ? (
+                                <Utenlandsopphold
+                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
+                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ForVeileder })}
+                                />
+                            ) : step === Søknadsteg.ForVeileder ? (
+                                <ForVeileder
+                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
+                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Oppsummering })}
+                                />
+                            ) : step === Søknadsteg.Oppsummering ? (
+                                <Oppsummering
+                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ForVeileder })}
+                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Kvittering })}
+                                    søker={søker}
+                                />
+                            ) : step === Søknadsteg.Kvittering ? (
+                                <Kvittering />
+                            ) : (
+                                '404'
+                            )}
+                        </>
+                    )
+                )
             )}
         </div>
     );

@@ -2,11 +2,15 @@ import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 import React from 'react';
 import { RawIntlProvider, FormattedMessage } from 'react-intl';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
+import { Person } from '~api/personApi';
 import { PencilIcon } from '~assets/Icons';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
+import * as routes from '~lib/routes';
+import { trackEvent, SøknadOppsummeringEndreSvarKlikk } from '~lib/tracking/trackingEvents';
+import { Søknadsteg } from '~pages/søknad/types';
 
 import sharedStyles from '../../../steg-shared.module.less';
 
@@ -79,20 +83,23 @@ const reverseStr = (str: string) => {
     return str.split('-').reverse().join('-');
 };
 
-const EndreSvar = (props: { path: string }) => {
-    const history = useHistory();
+const EndreSvar = (props: { path: Søknadsteg; søker: Person }) => {
     const intl = useI18n({ messages });
     return (
-        <span className={styles.endreSvarContainer} onClick={() => history.push(props.path)}>
+        <Link
+            className={styles.endreSvarContainer}
+            to={routes.soknad.createURL({ step: props.path })}
+            onClick={() => trackEvent(SøknadOppsummeringEndreSvarKlikk({ ident: props.søker.aktorId }))}
+        >
             <span className={styles.marginRight}>
                 <PencilIcon width="15" height="15" />
             </span>
             <span>{intl.formatMessage({ id: 'oppsummering.endreSvar' })}</span>
-        </span>
+        </Link>
     );
 };
 
-const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
+const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søker: Person }) => {
     const intl = useI18n({ messages });
 
     return (
@@ -106,7 +113,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                         label={<FormattedMessage id="input.uførevedtak.label" />}
                         verdi={søknad.harUførevedtak ? 'Ja' : søknad.harUførevedtak === false ? 'Nei' : 'Ubesvart'}
                     />
-                    <EndreSvar path="uforevedtak" />
+                    <EndreSvar path={Søknadsteg.Uførevedtak} søker={søker} />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -203,7 +210,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                             verdi={søknad.flyktningstatus.statsborgerskapAndreLandFritekst}
                         />
                     )}
-                    <EndreSvar path="flyktning-oppholdstillatelse" />
+                    <EndreSvar path={Søknadsteg.FlyktningstatusOppholdstillatelse} søker={søker} />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -270,7 +277,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                             }
                         />
                     )}
-                    <EndreSvar path="opphold-i-norge" />
+                    <EndreSvar path={Søknadsteg.BoOgOppholdINorge} søker={søker} />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -445,7 +452,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                             verdi={søknad.formue.kontanterBeløp ? søknad.formue.kontanterBeløp : 'Ubesvart'}
                         />
                     )}
-                    <EndreSvar path="formue" />
+                    <EndreSvar path={Søknadsteg.DinFormue} søker={søker} />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -601,7 +608,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                                 />
                             </div>
                         ))}
-                    <EndreSvar path="inntekt" />
+                    <EndreSvar path={Søknadsteg.DinInntekt} søker={søker} />
                 </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
@@ -655,7 +662,7 @@ const Søknadoppsummering = ({ søknad }: { søknad: SøknadState }) => {
                                 />
                             </div>
                         ))}
-                    <EndreSvar path="utenlandsreise" />
+                    <EndreSvar path={Søknadsteg.ReiseTilUtlandet} søker={søker} />
                 </Ekspanderbartpanel>
             </div>
         </RawIntlProvider>
