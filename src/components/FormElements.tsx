@@ -1,9 +1,7 @@
 import classNames from 'classnames';
 import AlertStripe from 'nav-frontend-alertstriper';
-import Lesmerpanel from 'nav-frontend-lesmerpanel';
 import { RadioGruppe, RadioPanel } from 'nav-frontend-skjema';
-import { Normaltekst } from 'nav-frontend-typografi';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useI18n } from '~lib/hooks';
 
@@ -29,11 +27,7 @@ export const JaNeiSpørsmål = (props: {
                 legend={props.legend}
             >
                 {props.hjelpetekstTittel && props.hjelpetekstBody && (
-                    <Hjelpetekst
-                        className={styles.hjelpetekst}
-                        tittel={props.hjelpetekstTittel}
-                        body={props.hjelpetekstBody}
-                    />
+                    <Hjelpetekst tittel={props.hjelpetekstTittel} body={props.hjelpetekstBody} />
                 )}
                 <div className={styles.svarContainer}>
                     <div className={styles.svar}>
@@ -58,11 +52,21 @@ export const JaNeiSpørsmål = (props: {
     );
 };
 
-const Hjelpetekst = (props: { className?: string; tittel: string; body: string }) => {
+const Hjelpetekst = (props: { tittel: string; body: string }) => {
+    const [visMer, setVisMer] = useState(false);
     return (
-        <Lesmerpanel className={props.className} intro={<Normaltekst>{props.tittel}</Normaltekst>} border={true}>
-            {props.body}
-        </Lesmerpanel>
+        <div className={styles.hjelpetekstContainer}>
+            <button
+                className={styles.hjelpetekstKnapp}
+                onClick={(e) => {
+                    e.preventDefault();
+                    setVisMer(!visMer);
+                }}
+            >
+                {props.tittel}
+            </button>
+            {visMer && <p className={styles.hjelpetekstBody}>{props.body}</p>}
+        </div>
     );
 };
 
