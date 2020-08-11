@@ -30,3 +30,5 @@ export const SøknadOppsummeringEndreSvarKlikk = createEvent<
 export const SøknadHjelpeTekstKlikk = createEvent<Record<string, unknown>, TrackingCode.SøknadHjelpeTekstKlikk>(
     TrackingCode.SøknadHjelpeTekstKlikk
 );
+
+export const SøknadSendInn = createEvent<{ ident: string }, TrackingCode.SøknadSendInn>(TrackingCode.SøknadSendInn);
