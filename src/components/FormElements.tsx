@@ -4,8 +4,7 @@ import { RadioGruppe, RadioPanel } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 
 import { useI18n } from '~lib/hooks';
-import { trackEvent } from '~lib/tracking/trackingEvents';
-import { TrackingCode } from '~lib/tracking/trackingTypes';
+import { trackEvent, søknadHjelpeTekstKlikk } from '~lib/tracking/trackingEvents';
 
 import nb from './formElements-nb';
 import styles from './formElements.module.less';
@@ -63,10 +62,7 @@ const Hjelpetekst = (props: { tittel: string; body: string }) => {
                 onClick={(e) => {
                     e.preventDefault();
                     setVisMer(!visMer);
-                    trackEvent({
-                        code: TrackingCode.SøknadHjelpeTekstKlikk,
-                        data: {},
-                    });
+                    trackEvent(søknadHjelpeTekstKlikk());
                 }}
             >
                 {props.tittel}

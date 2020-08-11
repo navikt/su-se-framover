@@ -1,4 +1,12 @@
-import { TrackingCode, TrackingEvent } from './trackingTypes';
+import { TrackingCode } from './trackingTypes';
+
+export interface TrackingEvent<T extends TrackingCode, U> {
+    code: T;
+    data: U;
+    __secret: typeof secretSymbol;
+}
+
+const secretSymbol = Symbol('super secret');
 
 export const trackEvent = <T extends TrackingCode, U>(event: TrackingEvent<T, U>) => {
     if (process.env.NODE_ENV === 'development') {
@@ -15,6 +23,7 @@ const createEvent = <U, T extends TrackingCode>(code: T) => {
     return (data: U): TrackingEvent<T, U> => ({
         code,
         data,
+        __secret: secretSymbol,
     });
 };
 
@@ -22,13 +31,13 @@ export const startBeregning = createEvent<{ sakId: string; behandlingId: string 
     TrackingCode.StartBeregning
 );
 
-export const SøknadOppsummeringEndreSvarKlikk = createEvent<
+export const søknadOppsummeringEndreSvarKlikk = createEvent<
     { ident: string },
     TrackingCode.SøknadOppsummeringEndreSvarKlikk
 >(TrackingCode.SøknadOppsummeringEndreSvarKlikk);
 
-export const SøknadHjelpeTekstKlikk = createEvent<Record<string, unknown>, TrackingCode.SøknadHjelpeTekstKlikk>(
+export const søknadHjelpeTekstKlikk = createEvent<void, TrackingCode.SøknadHjelpeTekstKlikk>(
     TrackingCode.SøknadHjelpeTekstKlikk
 );
 
-export const SøknadSendInn = createEvent<{ ident: string }, TrackingCode.SøknadSendInn>(TrackingCode.SøknadSendInn);
+export const søknadSendInn = createEvent<{ ident: string }, TrackingCode.SøknadSendInn>(TrackingCode.SøknadSendInn);
