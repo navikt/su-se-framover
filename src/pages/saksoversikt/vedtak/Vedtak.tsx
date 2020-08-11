@@ -1,21 +1,20 @@
-import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import Lenke from 'nav-frontend-lenker';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
 import { Sak } from '~api/sakApi';
-import {
-    oneVilkåringsvurderingIsNotOk,
-    statusIcon,
-    vilkårsvurderingIsValid,
-    vilkårTittelFormatted,
-} from '~features/saksoversikt/utils';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import * as routes from '~lib/routes.ts';
 import VisBeregning from '~pages/saksoversikt/beregning/VisBeregning';
 import { SaksbehandlingMenyvalg } from '~pages/saksoversikt/types';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import styles from './vedtak.module.less';
 
@@ -49,13 +48,41 @@ const VilkårsOppsummering = (props: { behandling: Behandling; sakId: string }) 
     );
 };
 
+const VisBeregningDersom = (props: { behandling: Behandling }) => {
+    if (props.behandling.status === Behandlingsstatus.AVSLÅTT) {
+        return null;
+    }
+    if (props.behandling.status === Behandlingsstatus.INNVILGET && props.behandling.beregning) {
+        return <VisBeregning beregning={props.behandling.beregning} />;
+    }
+    return <>Det er ikke gjort en beregning</>;
+};
+
 const Vedtak = (props: Props) => {
     const { sak, behandlingId } = props;
+
+    const fetchBehandlingStatus = useAppSelector((s) => s.sak.fetchBehandlingStatus);
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        if (RemoteData.isInitial(fetchBehandlingStatus)) {
+            dispatch(sakSlice.fetchBehandling({ sakId: sak.id, behandlingId }));
+        }
+    });
+    if (RemoteData.isPending(fetchBehandlingStatus) || RemoteData.isInitial(fetchBehandlingStatus)) {
+        return <NavFrontendSpinner />;
+    }
+    if (RemoteData.isFailure(fetchBehandlingStatus)) {
+        return <AlertStripe type="feil">{fetchBehandlingStatus.error.message}</AlertStripe>;
+    }
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
     if (!behandling) {
         return <div>Fant ikke behandlingsid</div>;
     }
-    if (vilkårsvurderingIsValid(behandling.vilkårsvurderinger) && behandling.beregning) {
+    if (
+        behandling.vilkårsvurderinger &&
+        (behandling.status === Behandlingsstatus.INNVILGET || behandling.status === Behandlingsstatus.AVSLÅTT)
+    ) {
         return (
             <div>
                 <div className={styles.vedtakContainer}>
@@ -72,7 +99,7 @@ const Vedtak = (props: Props) => {
                         <VilkårsOppsummering behandling={behandling} sakId={sak.id} />
                     </div>
                     <div>
-                        <VisBeregning beregning={behandling.beregning} />
+                        <VisBeregningDersom behandling={behandling} />
                     </div>
                     <div>
                         <Innholdstittel>Vis brev kladd</Innholdstittel>
@@ -103,9 +130,7 @@ const Vedtak = (props: Props) => {
             </div>
         );
     }
-    if (oneVilkåringsvurderingIsNotOk(behandling.vilkårsvurderinger)) {
-        return <div>Et eller fler vilkår var ikke OK</div>;
-    }
     return <div>Behandlingen er ikke ferdig</div>;
 };
+
 export default Vedtak;
