@@ -26,3 +26,7 @@ export const SøknadOppsummeringEndreSvarKlikk = createEvent<
     { ident: string },
     TrackingCode.SøknadOppsummeringEndreSvarKlikk
 >(TrackingCode.SøknadOppsummeringEndreSvarKlikk);
+
+export const SøknadHjelpeTekstKlikk = createEvent<Record<string, unknown>, TrackingCode.SøknadHjelpeTekstKlikk>(
+    TrackingCode.SøknadHjelpeTekstKlikk
+);
