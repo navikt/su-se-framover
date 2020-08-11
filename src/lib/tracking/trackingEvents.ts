@@ -35,9 +35,10 @@ export const søknadOppsummeringEndreSvarKlikk = createEvent<
     { ident: string },
     TrackingCode.SøknadOppsummeringEndreSvarKlikk
 >(TrackingCode.SøknadOppsummeringEndreSvarKlikk);
-
 export const søknadHjelpeTekstKlikk = createEvent<void, TrackingCode.SøknadHjelpeTekstKlikk>(
     TrackingCode.SøknadHjelpeTekstKlikk
 );
-
 export const søknadSendInn = createEvent<{ ident: string }, TrackingCode.SøknadSendInn>(TrackingCode.SøknadSendInn);
+export const søknadNesteSteg = createEvent<{ ident: string; steg: string }, TrackingCode.SøknadSendInn>(
+    TrackingCode.SøknadSendInn
+);

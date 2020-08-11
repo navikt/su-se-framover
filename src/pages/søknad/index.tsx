@@ -3,12 +3,14 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import Stegindikator from 'nav-frontend-stegindikator';
 import { Innholdstittel, Undertittel, Feilmelding } from 'nav-frontend-typografi';
 import * as React from 'react';
+import { useEffect } from 'react';
 import { useParams, useHistory, Link } from 'react-router-dom';
 
 import { Personkort } from '~components/Personkort';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
+import { trackEvent, søknadNesteSteg } from '~lib/tracking/trackingEvents';
 import { useAppSelector } from '~redux/Store';
 
 import styles from './index.module.less';
@@ -45,6 +47,19 @@ const index = () => {
     const { step } = useParams<{ step: Søknadsteg }>();
     const history = useHistory();
     const intl = useI18n({ messages });
+
+    useEffect(() => {
+        if (!RemoteData.isSuccess(søkerFraStore)) {
+            return;
+        }
+
+        trackEvent(
+            søknadNesteSteg({
+                ident: søkerFraStore.value.aktorId,
+                steg: step,
+            })
+        );
+    }, [step]);
 
     if (!step) {
         return <Inngang nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })} />;
