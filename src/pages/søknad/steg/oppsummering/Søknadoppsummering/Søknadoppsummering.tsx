@@ -9,7 +9,7 @@ import { PencilIcon } from '~assets/Icons';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
-import { trackEvent, SøknadOppsummeringEndreSvarKlikk } from '~lib/tracking/trackingEvents';
+import { trackEvent, søknadOppsummeringEndreSvarKlikk } from '~lib/tracking/trackingEvents';
 import { Søknadsteg } from '~pages/søknad/types';
 
 import sharedStyles from '../../../steg-shared.module.less';
@@ -89,7 +89,7 @@ const EndreSvar = (props: { path: Søknadsteg; søker: Person }) => {
         <Link
             className={styles.endreSvarContainer}
             to={routes.soknad.createURL({ step: props.path })}
-            onClick={() => trackEvent(SøknadOppsummeringEndreSvarKlikk({ ident: props.søker.aktorId }))}
+            onClick={() => trackEvent(søknadOppsummeringEndreSvarKlikk({ ident: props.søker.aktorId }))}
         >
             <span className={styles.marginRight}>
                 <PencilIcon width="15" height="15" />

@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
 import * as innsendingSlice from '~features/søknad/innsending.slice';
+import { trackEvent, søknadSendInn } from '~lib/tracking/trackingEvents';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
@@ -28,6 +29,7 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; søker: Per
                         })
                     );
                     history.push(props.nesteUrl);
+                    trackEvent(søknadSendInn({ ident: props.søker.aktorId }));
                 }}
             >
                 <Søknadoppsummering søknad={søknadFraStore} søker={props.søker} />
