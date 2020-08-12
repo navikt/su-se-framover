@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 
 import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
+import { showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
@@ -89,11 +90,7 @@ const Saksoversikt = () => {
                 RemoteData.map(([data, sak]) => (
                     <>
                         <div className={styles.headerContainer}>
-                            <PersonCard
-                                fodselsnummer={data.fnr}
-                                gender="unknown"
-                                name={`${data.fornavn} ${data.etternavn}`}
-                            />
+                            <PersonCard fodselsnummer={data.fnr} gender="unknown" name={showName(data)} />
                             <Søkefelt />
                         </div>
                         <div className={styles.container}>

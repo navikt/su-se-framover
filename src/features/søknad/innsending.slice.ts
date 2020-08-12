@@ -14,20 +14,7 @@ export const sendSøknad = createAsyncThunk<
     { rejectValue: ApiError }
 >('innsending/fetch', async ({ søknad, søker }, thunkApi) => {
     const søknadDto: søknadApi.SøknadInnhold = {
-        personopplysninger: {
-            aktørid: '123',
-            fnr: søker.fnr,
-            fornavn: søker.fornavn,
-            mellomnavn: null,
-            etternavn: søker.etternavn,
-            telefonnummer: '123',
-            gateadresse: 'Storgata 15 A',
-            postnummer: '0161',
-            poststed: 'Oslo',
-            bruksenhet: '102',
-            bokommune: 'Oslo',
-            statsborgerskap: 'sverige',
-        },
+        personopplysninger: søker,
         uførevedtak: {
             harUførevedtak: søknad.harUførevedtak!,
         },
