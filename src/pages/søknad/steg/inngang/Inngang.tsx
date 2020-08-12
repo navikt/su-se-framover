@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom';
 
 import { Personkort } from '~components/Personkort';
 import * as personSlice from '~features/person/person.slice';
+import søknadSlice from '~features/søknad/søknad.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -30,6 +31,10 @@ const index = (props: { nesteUrl: string }) => {
     const intl = useI18n({ messages: { ...sharedI18n, ...nb } });
 
     const [fnr, setFnr] = React.useState('');
+
+    React.useEffect(() => {
+        dispatch(søknadSlice.actions.resetSøknad());
+    }, [søker]);
 
     const [fnrValidation, setFnrValidation] = React.useState<ValidationResult | null>(null);
 
