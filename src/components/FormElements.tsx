@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import AlertStripe from 'nav-frontend-alertstriper';
+import { OppChevron, NedChevron } from 'nav-frontend-chevron';
 import { RadioGruppe, RadioPanel } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 
@@ -66,6 +67,7 @@ const Hjelpetekst = (props: { tittel: string; body: string }) => {
                 }}
             >
                 {props.tittel}
+                {visMer ? <OppChevron /> : <NedChevron />}
             </button>
             {visMer && <p className={styles.hjelpetekstBody}>{props.body}</p>}
         </div>
