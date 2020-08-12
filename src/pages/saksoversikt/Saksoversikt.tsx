@@ -1,12 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { PersonCard } from '@navikt/nap-person-card';
+import { PersonCard, Gender } from '@navikt/nap-person-card';
 import classNames from 'classnames';
 import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IntlProvider } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
+import { Kjønn } from '~api/personApi';
 import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
@@ -75,6 +76,24 @@ const Saksoversikt = () => {
 
     const data = RemoteData.combine(søker, sak);
 
+    const oversettKjønn = () => {
+        if (RemoteData.isSuccess(søker)) {
+            if (søker.value.kjønn === Kjønn.Mann) {
+                return Gender.male;
+            } else if (søker.value.kjønn === Kjønn.Kvinne) {
+                return Gender.female;
+            } else {
+                return Gender.unknown;
+            }
+        }
+        return Gender.unknown;
+    };
+
+    const [gender, setGender] = useState<Gender>(Gender.unknown);
+    useEffect(() => {
+        setGender(oversettKjønn());
+    }, [søker._tag]);
+
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
             {!RemoteData.isSuccess(data) && (
@@ -90,7 +109,7 @@ const Saksoversikt = () => {
                 RemoteData.map(([data, sak]) => (
                     <>
                         <div className={styles.headerContainer}>
-                            <PersonCard fodselsnummer={data.fnr} gender="unknown" name={showName(data)} />
+                            <PersonCard fodselsnummer={data.fnr} gender={gender} name={showName(data)} />
                             <Søkefelt />
                         </div>
                         <div className={styles.container}>

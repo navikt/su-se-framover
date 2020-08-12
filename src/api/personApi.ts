@@ -5,6 +5,7 @@ import apiClient, { ApiClientResult } from './apiClient';
 export enum Kjønn {
     Mann = 'MANN',
     Kvinne = 'KVINNE',
+    Ukjent = 'UKJENT',
 }
 
 export interface Person {
