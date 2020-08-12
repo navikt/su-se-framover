@@ -54,10 +54,7 @@ const Vilkårsvurdering: React.FC<{
             begrunnelse: props.vilkårsvurdering.begrunnelse,
         },
         validationSchema: yup.object<FormData>({
-            begrunnelse: yup.string().when('vurdering', {
-                is: false,
-                then: yup.string().required(),
-            }) as yup.Schema<Nullable<string>>,
+            begrunnelse: yup.string().nullable() as yup.Schema<Nullable<string>>,
             vurdering: yup.boolean().required(),
         }),
         onSubmit: (values) => {
