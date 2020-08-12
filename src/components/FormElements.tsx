@@ -69,7 +69,16 @@ const Hjelpetekst = (props: { tittel: string; body: string }) => {
                 {props.tittel}
                 {visMer ? <OppChevron /> : <NedChevron />}
             </button>
-            {visMer && <p className={styles.hjelpetekstBody}>{props.body}</p>}
+
+            <p
+                className={
+                    visMer
+                        ? `${styles.hjelpetekstBody} ${styles.hjelpetekstBodyOpen}`
+                        : `${styles.hjelpetekstBody} ${styles.hjelpetekstBodyClosed}`
+                }
+            >
+                {props.body}
+            </p>
         </div>
     );
 };
