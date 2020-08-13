@@ -2,7 +2,6 @@ import { Vergemål } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 
 import apiClient, { ApiClientResult } from './apiClient';
-import { Person } from './personApi';
 
 export interface Søknad {
     id: string;
@@ -10,7 +9,9 @@ export interface Søknad {
 }
 
 export interface SøknadInnhold {
-    personopplysninger: Person;
+    personopplysninger: {
+        fnr: string;
+    };
     uførevedtak: {
         harUførevedtak: boolean;
     };
