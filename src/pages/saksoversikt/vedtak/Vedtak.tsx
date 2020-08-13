@@ -106,7 +106,7 @@ const Vedtak = (props: Props) => {
                         <Lenke
                             href={'#'}
                             onClick={() =>
-                                fetchBrev(sak.id, sak.behandlinger[0].id).then((res) => {
+                                fetchBrev(sak.id, behandlingId).then((res) => {
                                     if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
                                 })
                             }
