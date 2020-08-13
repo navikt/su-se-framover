@@ -56,12 +56,27 @@ export const JaNeiSpørsmål = (props: {
 
 const Hjelpetekst = (props: { tittel: string; body: string }) => {
     const [visMer, setVisMer] = useState(false);
+    const [firstLoad, setFirstLoad] = useState(false);
+
+    const hjelpetekstClassName = () => {
+        if (!firstLoad) {
+            return `${styles.hjelpetekstBody} ${styles.hjelpetekstBodyFirstLoad}`;
+        }
+
+        if (visMer) {
+            return `${styles.hjelpetekstBody} ${styles.hjelpetekstBodyOpen}`;
+        } else {
+            return `${styles.hjelpetekstBody} ${styles.hjelpetekstBodyClosed}`;
+        }
+    };
+
     return (
         <div className={styles.hjelpetekstContainer}>
             <button
                 className={styles.hjelpetekstKnapp}
                 onClick={(e) => {
                     e.preventDefault();
+                    setFirstLoad(true);
                     setVisMer(!visMer);
                     trackEvent(søknadHjelpeTekstKlikk());
                 }}
@@ -70,15 +85,7 @@ const Hjelpetekst = (props: { tittel: string; body: string }) => {
                 {visMer ? <OppChevron /> : <NedChevron />}
             </button>
 
-            <p
-                className={
-                    visMer
-                        ? `${styles.hjelpetekstBody} ${styles.hjelpetekstBodyOpen}`
-                        : `${styles.hjelpetekstBody} ${styles.hjelpetekstBodyClosed}`
-                }
-            >
-                {props.body}
-            </p>
+            <p className={hjelpetekstClassName()}>{props.body}</p>
         </div>
     );
 };
