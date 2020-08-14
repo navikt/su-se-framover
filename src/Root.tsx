@@ -1,4 +1,3 @@
-import Header from '@navikt/nap-header';
 import NAVSPA from '@navikt/navspa';
 import Lenke from 'nav-frontend-lenker';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -13,7 +12,6 @@ import HomePage from '~pages/HomePage';
 import Saksoversikt from '~pages/saksoversikt/Saksoversikt';
 
 import ErrorBoundary from './components/ErrorBoundary';
-import Menyknapp from './components/Menyknapp';
 import * as Cookies from './lib/cookies';
 import * as routes from './lib/routes';
 import Soknad from './pages/søknad';
@@ -24,6 +22,15 @@ import './externalStyles';
 interface DecoratorProps {
     appname: string;
     fnr: string | undefined | null;
+    accessToken: string | undefined;
+    toggles: {
+        visVeileder: boolean;
+        visSokefelt: boolean;
+        visEnhetVelger: boolean;
+        visEnhet: boolean;
+    };
+    onEnhetChange(enhet: string): void;
+    onSok(fnr: string): void;
 }
 
 const InternflateDecorator = NAVSPA.importer<DecoratorProps>('internarbeidsflatefs');
@@ -72,7 +79,7 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
     const [configLoaded, setConfigLoaded] = useState(window.BASE_URL && typeof window.BASE_URL === 'string');
     const authCompleteRouteMatch = useRouteMatch('/auth/complete');
     const [loginState, setLoginState] = useState<LoginState>('logging-in');
-    const navn = Cookies.getNameFromAccessToken();
+    const accessToken = Cookies.get(Cookies.CookieName.AccessToken);
 
     const hasBaseUrl = window.BASE_URL && typeof window.BASE_URL === 'string';
 
@@ -129,19 +136,23 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
 
     return (
         <div>
-            <InternflateDecorator appname="SUPP" fnr={undefined} />
-            <Header title="Supplerende stønad Ufør" titleHref={'/'}>
-                {navn && (
-                    <Menyknapp
-                        navn={navn}
-                        onLoggUtClick={() => {
-                            Cookies.remove(Cookies.CookieName.AccessToken);
-                            Cookies.remove(Cookies.CookieName.RefreshToken);
-                            window.location.reload();
-                        }}
-                    />
-                )}
-            </Header>
+            <InternflateDecorator
+                appname="Supplerende Stønad"
+                fnr={undefined}
+                accessToken={accessToken}
+                toggles={{
+                    visEnhet: true,
+                    visEnhetVelger: true,
+                    visSokefelt: true,
+                    visVeileder: true,
+                }}
+                onEnhetChange={(enhet) => {
+                    console.log('enhet endret til: ', enhet);
+                }}
+                onSok={(fnr) => {
+                    console.log('søk på fnr: ', fnr);
+                }}
+            />
             <div className={styles.contentContainer}>
                 {loginState === 'logging-in' ? (
                     <NavFrontendSpinner />
