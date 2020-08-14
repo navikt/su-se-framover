@@ -1,7 +1,8 @@
 {
-  "ingress": "https://su-se-framover.nais.preprod.local",
-  "env": {
-    "SU_SE_BAKOVER_URL": "https://su-se-bakover.nais.preprod.local",
-    "DOMAIN": "nais.preprod.local"
-  }
+    "ingress": "https://su-se-framover.nais.preprod.local",
+    "env": {
+        "SU_SE_BAKOVER_URL": "https://su-se-bakover.nais.preprod.local",
+        "DOMAIN": "nais.preprod.local",
+        "HODE_URL": "https://internarbeidsflatedecorator-q1.nais.preprod.local/internarbeidsflatedecorator"
+    }
 }
