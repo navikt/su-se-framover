@@ -10,5 +10,6 @@ envsubst '${SU_SE_BAKOVER_URL}' < /app/www/config.template.json > /app/www/confi
 tmpfile=$(mktemp)
 dest=/app/www/index.html
 cat "$dest" | envsubst '${HODE_URL}' > "$tmpfile" && mv "$tmpfile" "$dest"
+chmod 644 "$dest"
 
 exec "$@"
