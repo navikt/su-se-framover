@@ -1,3 +1,6 @@
+/*
+Denne er hentet fra https://github.com/navikt/modiapersonoversikt-chat/blob/dev/src/mock/context-mock.ts
+*/
 import FetchMock from 'yet-another-fetch-mock';
 
 type Context = { aktivEnhet: string | null; aktivBruker: string | null };
@@ -23,6 +26,7 @@ class VoidWebSocket {
 }
 
 export function setupWsControlAndMock(mock: FetchMock) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).WebSocket = VoidWebSocket;
 
     mock.post('/modiacontextholder/api/context', ({ body }, res, ctx) => {

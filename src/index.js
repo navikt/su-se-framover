@@ -12,7 +12,9 @@ if (process.env.NODE_ENV !== 'development') {
         integrations: [new Sentry.Integrations.Breadcrumbs({ console: false })],
     });
 } else {
-    import('./mock/modia-context-mock');
+    console.log('Kjører i DEV. Setter opp mocks.');
+    // eslint-disable-next-line no-undef
+    require('./mock');
 }
 
 render(<Root />, document.getElementById('root'));
