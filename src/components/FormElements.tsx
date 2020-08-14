@@ -3,6 +3,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { OppChevron, NedChevron } from 'nav-frontend-chevron';
 import { RadioGruppe, RadioPanel } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
+import { Collapse } from 'react-collapse';
 
 import { useI18n } from '~lib/hooks';
 import { trackEvent, søknadHjelpeTekstKlikk } from '~lib/tracking/trackingEvents';
@@ -56,19 +57,6 @@ export const JaNeiSpørsmål = (props: {
 
 const Hjelpetekst = (props: { tittel: string; body: string }) => {
     const [visMer, setVisMer] = useState(false);
-    const [firstLoad, setFirstLoad] = useState(false);
-
-    const hjelpetekstClassName = () => {
-        if (!firstLoad) {
-            return `${styles.hjelpetekstBody} ${styles.hjelpetekstBodyFirstLoad}`;
-        }
-
-        if (visMer) {
-            return `${styles.hjelpetekstBody} ${styles.hjelpetekstBodyOpen}`;
-        } else {
-            return `${styles.hjelpetekstBody} ${styles.hjelpetekstBodyClosed}`;
-        }
-    };
 
     return (
         <div className={styles.hjelpetekstContainer}>
@@ -76,7 +64,6 @@ const Hjelpetekst = (props: { tittel: string; body: string }) => {
                 className={styles.hjelpetekstKnapp}
                 onClick={(e) => {
                     e.preventDefault();
-                    setFirstLoad(true);
                     setVisMer(!visMer);
                     trackEvent(søknadHjelpeTekstKlikk());
                 }}
@@ -84,8 +71,7 @@ const Hjelpetekst = (props: { tittel: string; body: string }) => {
                 {props.tittel}
                 {visMer ? <OppChevron /> : <NedChevron />}
             </button>
-
-            <p className={hjelpetekstClassName()}>{props.body}</p>
+            <Collapse isOpened={visMer}>{props.body}</Collapse>
         </div>
     );
 };

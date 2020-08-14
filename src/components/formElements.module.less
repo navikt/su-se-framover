@@ -31,46 +31,5 @@
 
     .hjelpetekstBody {
         margin-bottom: @spacing-xs;
-        animation-duration: 0.7s;
-        animation-timing-function: ease;
-
-        &.hjelpetekstBodyFirstLoad {
-            height: 0px;
-            overflow: hidden;
-        }
-
-        &.hjelpetekstBodyOpen {
-            overflow: hidden;
-            animation-name: slideDown;
-            @keyframes slideUp {
-                0% {
-                    height: 4em;
-                    max-height: 100%;
-                }
-
-                100% {
-                    height: 0px;
-                    max-height: 0%;
-                }
-            }
-        }
-
-        &.hjelpetekstBodyClosed {
-            height: 0px;
-            overflow: hidden;
-            animation-name: slideUp;
-
-            @keyframes slideDown {
-                0% {
-                    height: 0px;
-                    max-height: 0%;
-                }
-
-                100% {
-                    height: 4em;
-                    max-height: 100%;
-                }
-            }
-        }
     }
 }
