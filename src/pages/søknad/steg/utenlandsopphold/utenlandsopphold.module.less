@@ -1,12 +1,29 @@
 @import '~/styles/variables.less';
 
+.reiseradContainer {
+    padding: 0 @spacing-s;
+    margin-bottom: @spacing;
+}
+
 .reiserad {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
+    align-items: flex-start;
+    justify-content: space-between;
 
-    margin-bottom: @spacing;
+    .fjernradknapp {
+        align-self: flex-end;
+
+        &.skjult {
+            visibility: hidden;
+        }
+    }
+
+    &.feltfeil {
+        .fjernradknapp {
+            align-self: center;
+        }
+    }
 }
 
 .dagerIUtlandetContainer {

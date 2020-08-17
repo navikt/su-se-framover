@@ -1,7 +1,8 @@
+import classNames from 'classnames';
+import * as DateFns from 'date-fns';
 import { useFormik, FormikErrors } from 'formik';
 import { Datovelger } from 'nav-datovelger';
 import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
-import { guid } from 'nav-frontend-js-utils';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Label, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import * as React from 'react';
@@ -23,15 +24,48 @@ import sharedI18n from '../steg-shared-i18n';
 import messages from './utenlandsopphold-nb';
 import styles from './utenlandsopphold.module.less';
 
-interface FormData {
-    harReistTilUtlandetSiste90dager: Nullable<boolean>;
-    harReistDatoer: Array<{ utreisedato: string; innreisedato: string }>;
-    skalReiseTilUtlandetNeste12Måneder: Nullable<boolean>;
-    skalReiseDatoer: Array<{ utreisedato: string; innreisedato: string }>;
+interface Utenlandsopphold {
+    utreisedato: string;
+    innreisedato: string;
 }
 
-// TODO: valider at den ene datoen er etter den andre
-const reiseSchema = yup.object({ utreisedato: yup.string().required(), innreisedato: yup.string().required() });
+interface FormData {
+    harReistTilUtlandetSiste90dager: Nullable<boolean>;
+    harReistDatoer: Array<Utenlandsopphold>;
+    skalReiseTilUtlandetNeste12Måneder: Nullable<boolean>;
+    skalReiseDatoer: Array<Utenlandsopphold>;
+}
+
+const isValidUtenlandsopphold = (val: DateFns.Interval) => DateFns.isAfter(val.end, val.start);
+
+const reiseSchema = yup.object({ utreisedato: yup.string().required(), innreisedato: yup.string().required() }).test({
+    name: 'Utenlandsopphold',
+    message: 'Utreisedato må være før innreisedato',
+    test: (val: Utenlandsopphold) =>
+        isValidUtenlandsopphold({
+            start: new Date(val.utreisedato),
+            end: new Date(val.innreisedato),
+        }),
+});
+
+const testOverlappendeUtenlandsopphold: yup.TestFunction = (opphold: Utenlandsopphold[]) => {
+    if (opphold.length < 2) {
+        return true;
+    }
+
+    const oppholdIntervals = opphold.map<DateFns.Interval>((o) => ({
+        start: new Date(o.utreisedato),
+        end: new Date(o.innreisedato),
+    }));
+
+    return oppholdIntervals.every(
+        (o1, idx1) =>
+            isValidUtenlandsopphold(o1) &&
+            !oppholdIntervals.some(
+                (o2, idx2) => idx1 !== idx2 && isValidUtenlandsopphold(o2) && DateFns.areIntervalsOverlapping(o1, o2)
+            )
+    );
+};
 
 const schema = yup.object<FormData>({
     harReistTilUtlandetSiste90dager: yup.boolean().nullable().required(),
@@ -40,7 +74,15 @@ const schema = yup.object<FormData>({
         .defined()
         .when('harReistTilUtlandetSiste90dager', {
             is: true,
-            then: yup.array().min(1, 'Legg til felt hvis det er utenlandsopphold').required(),
+            then: yup
+                .array()
+                .min(1, 'Legg til felt hvis det er utenlandsopphold')
+                .test({
+                    name: 'Overlapping',
+                    message: 'Utenlandsopphold kan ikke overlappe',
+                    test: testOverlappendeUtenlandsopphold,
+                })
+                .required(),
             otherwise: yup.array().max(0),
         }),
     skalReiseTilUtlandetNeste12Måneder: yup.boolean().nullable().required(),
@@ -49,7 +91,15 @@ const schema = yup.object<FormData>({
         .defined()
         .when('skalReiseTilUtlandetNeste12Måneder', {
             is: true,
-            then: yup.array().min(1).required(),
+            then: yup
+                .array()
+                .min(1)
+                .test({
+                    name: 'Overlapping',
+                    message: 'Utenlandsopphold kan ikke overlappe',
+                    test: testOverlappendeUtenlandsopphold,
+                })
+                .required(),
             otherwise: yup.array().max(0),
         }),
 });
@@ -63,78 +113,87 @@ const MultiTidsperiodevelger = (props: {
     onFjernClick: (index: number) => void;
 }) => (
     <div>
-        {typeof props.errors === 'string' && props.errors}
         {props.perioder.map((periode, index) => {
             const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : null;
-            const utreisedatoId = `${props.feltnavn}[${index}].utreisedato`;
-            const innreisedatoId = `${props.feltnavn}[${index}].innreisedato`;
+            const baseId = `${props.feltnavn}[${index}]`;
+            const utreisedatoId = `${baseId}.utreisedato`;
+            const innreisedatoId = `${baseId}.innreisedato`;
             return (
-                <div className={styles.reiserad} key={guid()}>
-                    <div>
-                        <Label htmlFor={utreisedatoId}>
-                            <FormattedMessage id="input.utreisedato.label" />
-                        </Label>
-                        <Datovelger
-                            input={{
-                                name: 'utreisedato',
-                                placeholder: 'dd.mm.åååå',
-                                id: utreisedatoId,
-                            }}
-                            valgtDato={periode.utreisedato}
-                            id={utreisedatoId}
-                            onChange={(value) => {
-                                if (!value) {
-                                    return;
-                                }
-                                props.onChange({
-                                    index,
-                                    utreisedato: value,
-                                    innreisedato: periode.innreisedato,
-                                });
-                            }}
-                        />
-                        {errorForLinje && typeof errorForLinje === 'object' && (
-                            <SkjemaelementFeilmelding>{errorForLinje.utreisedato}</SkjemaelementFeilmelding>
-                        )}
-                    </div>
+                <div key={baseId} id={baseId} className={styles.reiseradContainer}>
+                    <div
+                        className={classNames(styles.reiserad, {
+                            [styles.feltfeil]: errorForLinje && typeof errorForLinje === 'object',
+                        })}
+                    >
+                        <div>
+                            <Label htmlFor={utreisedatoId}>
+                                <FormattedMessage id="input.utreisedato.label" />
+                            </Label>
+                            <Datovelger
+                                input={{
+                                    name: 'utreisedato',
+                                    placeholder: 'dd.mm.åååå',
+                                    id: utreisedatoId,
+                                }}
+                                valgtDato={periode.utreisedato}
+                                id={utreisedatoId}
+                                onChange={(value) => {
+                                    if (!value) {
+                                        return;
+                                    }
+                                    props.onChange({
+                                        index,
+                                        utreisedato: value,
+                                        innreisedato: periode.innreisedato,
+                                    });
+                                }}
+                            />
+                            {errorForLinje && typeof errorForLinje === 'object' && (
+                                <SkjemaelementFeilmelding>{errorForLinje.utreisedato}</SkjemaelementFeilmelding>
+                            )}
+                        </div>
 
-                    <div>
-                        <Label htmlFor={innreisedatoId}>
-                            <FormattedMessage id="input.innreisedato.label" />
-                        </Label>
-                        <Datovelger
-                            input={{
-                                name: 'innreisedato',
-                                placeholder: 'dd.mm.åååå',
-                                id: innreisedatoId,
-                            }}
-                            valgtDato={periode.innreisedato}
-                            avgrensninger={{ minDato: periode.utreisedato }}
-                            id={innreisedatoId}
-                            onChange={(value) => {
-                                if (!value) {
-                                    return;
-                                }
-                                props.onChange({ index, utreisedato: periode.utreisedato, innreisedato: value });
-                            }}
-                        />
-                        {errorForLinje && typeof errorForLinje === 'object' && (
-                            <SkjemaelementFeilmelding>{errorForLinje.innreisedato}</SkjemaelementFeilmelding>
-                        )}
-                    </div>
-                    {props.perioder.length > 1 && (
+                        <div>
+                            <Label htmlFor={innreisedatoId}>
+                                <FormattedMessage id="input.innreisedato.label" />
+                            </Label>
+                            <Datovelger
+                                input={{
+                                    name: 'innreisedato',
+                                    placeholder: 'dd.mm.åååå',
+                                    id: innreisedatoId,
+                                }}
+                                valgtDato={periode.innreisedato}
+                                avgrensninger={{ minDato: periode.utreisedato }}
+                                id={innreisedatoId}
+                                onChange={(value) => {
+                                    if (!value) {
+                                        return;
+                                    }
+                                    props.onChange({ index, utreisedato: periode.utreisedato, innreisedato: value });
+                                }}
+                            />
+                            {errorForLinje && typeof errorForLinje === 'object' && (
+                                <SkjemaelementFeilmelding>{errorForLinje.innreisedato}</SkjemaelementFeilmelding>
+                            )}
+                        </div>
                         <Knapp
-                            className={sharedStyles.fjernFeltLink}
+                            className={classNames(styles.fjernradknapp, {
+                                [styles.skjult]: props.perioder.length < 2,
+                            })}
                             onClick={() => props.onFjernClick(index)}
                             htmlType="button"
                         >
                             <FormattedMessage id="button.fjernReiserad.label" />
                         </Knapp>
+                    </div>
+                    {errorForLinje && typeof errorForLinje === 'string' && (
+                        <SkjemaelementFeilmelding>{errorForLinje}</SkjemaelementFeilmelding>
                     )}
-                    {errorForLinje && typeof errorForLinje === 'string' && errorForLinje}
                 </div>
             );
         })}
+        <SkjemaelementFeilmelding>{typeof props.errors === 'string' && props.errors}</SkjemaelementFeilmelding>
         <div className={sharedStyles.leggTilFeltKnapp}>
             <Knapp onClick={() => props.onLeggTilClick()} htmlType="button">
                 <FormattedMessage id="button.leggTilReiserad.label" />
