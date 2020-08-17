@@ -64,14 +64,21 @@ export function formikErrorsTilFeiloppsummering<T extends Record<string, any>>(
 ): FeiloppsummeringFeil[] {
     return Object.entries(errors).flatMap(([key, val]) => {
         if (Array.isArray(val)) {
-            return val.flatMap((x, index) =>
-                x !== undefined && x !== null
-                    ? Object.entries(x).map(([k, v]) => ({
-                          skjemaelementId: `${key}[${index}].${k}`,
-                          feilmelding: v,
-                      }))
-                    : []
-            );
+            return val.flatMap((x, index) => {
+                if (x === undefined || x === null) {
+                    return [];
+                }
+                if (typeof x === 'string') {
+                    return {
+                        skjemaelementId: `${key}[${index}]`,
+                        feilmelding: x,
+                    };
+                }
+                return Object.entries(x).map(([k, v]) => ({
+                    skjemaelementId: `${key}[${index}].${k}`,
+                    feilmelding: v,
+                }));
+            });
         }
         if (typeof val === 'object') {
             return Object.entries(val).map(([k, v]) => ({
