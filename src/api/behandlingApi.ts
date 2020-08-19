@@ -76,6 +76,7 @@ export interface Behandling {
     vilkårsvurderinger: Vilkårsvurderinger;
     beregning: Nullable<Beregning>;
     status: Behandlingsstatus;
+    oppdrag: Nullable<Oppdrag>;
 }
 
 export enum Behandlingsstatus {
@@ -85,6 +86,33 @@ export enum Behandlingsstatus {
     /*VEDTAKSBREV = 'VEDTAKSBREV',*/
     INNVILGET = 'INNVILGET',
     AVSLÅTT = 'AVSLÅTT',
+}
+
+export interface Oppdrag {
+    id: string;
+    simulering: Simulering;
+}
+
+export interface Simulering {
+    gjelderId: string;
+    gjelderNavn: string;
+    datoBeregnet: string;
+    totalBelop: number;
+    periodeList: SimulertPeriode[];
+}
+
+export interface SimulertPeriode {
+    fom: string;
+    tom: string;
+    utbetaling: Utbetaling[];
+}
+
+export interface Utbetaling {
+    detaljer: Detalj[];
+}
+
+export interface Detalj {
+    belop: number;
 }
 
 export async function startBehandling(arg: { sakId: string; søknadId: string }): Promise<ApiClientResult<Behandling>> {
@@ -145,5 +173,13 @@ export async function lagreVilkårsvurdering(arg: {
                 status: arg.status,
             },
         },
+    });
+}
+
+// Denne vil kanskje på sikt låse behandlingen også.
+export async function simulerBehandling(sakId: string, behandlingId: string): Promise<ApiClientResult<Behandling>> {
+    return apiClient({
+        url: `/saker/${sakId}/behandlinger/${behandlingId}/simuler`,
+        method: 'POST',
     });
 }

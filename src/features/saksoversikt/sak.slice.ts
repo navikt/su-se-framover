@@ -73,6 +73,18 @@ export const startBeregning = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const startSimulering = createAsyncThunk<
+    behandlingApi.Behandling,
+    { sakId: string; behandlingId: string },
+    { rejectValue: ApiError }
+>('simulering/start', async ({ sakId, behandlingId }, thunkApi) => {
+    const res = await behandlingApi.simulerBehandling(sakId, behandlingId);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 interface SakState {
     sak: RemoteData.RemoteData<
         {
@@ -85,6 +97,7 @@ interface SakState {
     fetchBehandlingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     beregningStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
+    simuleringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
 }
 
 const initialState: SakState = {
@@ -93,6 +106,7 @@ const initialState: SakState = {
     fetchBehandlingStatus: RemoteData.initial,
     lagreVilkårsvurderingStatus: RemoteData.initial,
     beregningStatus: RemoteData.initial,
+    simuleringStatus: RemoteData.initial,
 };
 
 export default createSlice({
@@ -221,6 +235,32 @@ export default createSlice({
                         ),
                     })
                 )
+            );
+        });
+
+        builder.addCase(startSimulering.pending, (state) => {
+            state.simuleringStatus = RemoteData.pending;
+        });
+        builder.addCase(startSimulering.rejected, (state, action) => {
+            state.simuleringStatus = action.payload
+                ? RemoteData.failure({
+                      code: action.payload.code,
+                      message: `Feilet med status ${action.payload.statusCode}`,
+                  })
+                : (state.beregningStatus = RemoteData.failure({
+                      code: ErrorCode.Unknown,
+                      message: 'Ukjent feil',
+                  }));
+        });
+        builder.addCase(startSimulering.fulfilled, (state, action) => {
+            state.simuleringStatus = RemoteData.success(null);
+
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
             );
         });
     },

@@ -13,6 +13,7 @@ import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import * as routes from '~lib/routes.ts';
 import VisBeregning from '~pages/saksoversikt/beregning/VisBeregning';
+import { Simulering } from '~pages/saksoversikt/simulering/simulering';
 import { SaksbehandlingMenyvalg } from '~pages/saksoversikt/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
@@ -113,6 +114,10 @@ const Vedtak = (props: Props) => {
                         >
                             test
                         </Lenke>
+                    </div>
+                    <div>
+                        <Innholdstittel>Oppdragssimulering</Innholdstittel>
+                        <Simulering sak={props.sak} behandlingId={props.behandlingId} />
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>
