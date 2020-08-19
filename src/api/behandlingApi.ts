@@ -113,7 +113,7 @@ export async function startBeregning(
         tom: Date;
         fradrag: Fradrag[];
     }
-): Promise<ApiClientResult<Beregning>> {
+): Promise<ApiClientResult<Behandling>> {
     const { sats, fom, tom } = arg;
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}/beregn`,

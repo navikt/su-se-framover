@@ -1,20 +1,16 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import Lenke from 'nav-frontend-lenker';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
 import { Sak } from '~api/sakApi';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import * as routes from '~lib/routes.ts';
 import VisBeregning from '~pages/saksoversikt/beregning/VisBeregning';
 import { SaksbehandlingMenyvalg } from '~pages/saksoversikt/types';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import styles from './vedtak.module.less';
 
@@ -61,23 +57,9 @@ const VisBeregningDersom = (props: { behandling: Behandling }) => {
 const Vedtak = (props: Props) => {
     const { sak, behandlingId } = props;
 
-    const fetchBehandlingStatus = useAppSelector((s) => s.sak.fetchBehandlingStatus);
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        if (RemoteData.isInitial(fetchBehandlingStatus)) {
-            dispatch(sakSlice.fetchBehandling({ sakId: sak.id, behandlingId }));
-        }
-    });
-    if (RemoteData.isPending(fetchBehandlingStatus) || RemoteData.isInitial(fetchBehandlingStatus)) {
-        return <NavFrontendSpinner />;
-    }
-    if (RemoteData.isFailure(fetchBehandlingStatus)) {
-        return <AlertStripe type="feil">{fetchBehandlingStatus.error.message}</AlertStripe>;
-    }
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
     if (!behandling) {
-        return <div>Fant ikke behandlingsid</div>;
+        return <AlertStripe type="feil">Fant ikke behandlingsid</AlertStripe>;
     }
     if (
         behandling.vilkårsvurderinger &&
