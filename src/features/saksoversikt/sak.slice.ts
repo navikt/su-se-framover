@@ -62,7 +62,7 @@ export const lagreVilkårsvurdering = createAsyncThunk<
 });
 
 export const startBeregning = createAsyncThunk<
-    behandlingApi.Beregning,
+    behandlingApi.Behandling,
     { sakId: string; behandlingId: string; sats: Sats; fom: Date; tom: Date; fradrag: behandlingApi.Fradrag[] },
     { rejectValue: ApiError }
 >('beregning/start', async ({ sakId, behandlingId, sats, fom, tom, fradrag }, thunkApi) => {
@@ -94,7 +94,6 @@ interface SakState {
         sakApi.Sak
     >;
     startBehandlingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
-    fetchBehandlingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     beregningStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     simuleringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
@@ -103,7 +102,6 @@ interface SakState {
 const initialState: SakState = {
     sak: RemoteData.initial,
     startBehandlingStatus: RemoteData.initial,
-    fetchBehandlingStatus: RemoteData.initial,
     lagreVilkårsvurderingStatus: RemoteData.initial,
     beregningStatus: RemoteData.initial,
     simuleringStatus: RemoteData.initial,
@@ -156,31 +154,6 @@ export default createSlice({
                 }))
             );
         });
-        builder.addCase(fetchBehandling.pending, (state) => {
-            state.fetchBehandlingStatus = RemoteData.pending;
-        });
-        builder.addCase(fetchBehandling.rejected, (state, action) => {
-            state.fetchBehandlingStatus = action.payload
-                ? RemoteData.failure({
-                      code: action.payload.code,
-                      message: `Feilet med status ${action.payload.statusCode}`,
-                  })
-                : (state.fetchBehandlingStatus = RemoteData.failure({
-                      code: ErrorCode.Unknown,
-                      message: 'Ukjent feil',
-                  }));
-        });
-        builder.addCase(fetchBehandling.fulfilled, (state, action) => {
-            state.fetchBehandlingStatus = RemoteData.success(null);
-
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                }))
-            );
-        });
 
         builder.addCase(lagreVilkårsvurdering.pending, (state) => {
             state.lagreVilkårsvurderingStatus = RemoteData.pending;
@@ -227,14 +200,10 @@ export default createSlice({
 
             state.sak = pipe(
                 state.sak,
-                RemoteData.map(
-                    (sak): sakApi.Sak => ({
-                        ...sak,
-                        behandlinger: sak.behandlinger.map((b) =>
-                            b.id === action.meta.arg.behandlingId ? { ...b, beregning: action.payload } : b
-                        ),
-                    })
-                )
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
             );
         });
 
