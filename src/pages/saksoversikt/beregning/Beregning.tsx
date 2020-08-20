@@ -327,15 +327,16 @@ const Beregning = (props: Props) => {
                 <Hovedknapp
                     onClick={(e) => {
                         e.preventDefault();
-                        if (RemoteData.isSuccess(beregningStatus)) {
-                            history.push(
-                                routes.saksoversikt.createURL({
+                        if (
+                            RemoteData.isSuccess(beregningStatus) ||
+                            (behandling.beregning && RemoteData.isInitial(beregningStatus))
+                        ) {
+                            dispatch(
+                                sakSlice.startSimulering({
                                     sakId: sak.id,
-                                    behandlingId: behandlingId,
-                                    meny: SaksbehandlingMenyvalg.Vedtak,
+                                    behandlingId,
                                 })
                             );
-                        } else if (behandling.beregning) {
                             history.push(
                                 routes.saksoversikt.createURL({
                                     sakId: sak.id,
