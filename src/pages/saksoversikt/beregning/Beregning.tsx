@@ -27,6 +27,14 @@ import messages from './beregning-nb';
 import styles from './beregning.module.less';
 import VisBeregning from './VisBeregning';
 
+const toDateOrNull = (date: string | undefined): Date | null => {
+    if (!date) {
+        return null;
+    }
+
+    return new Date(date);
+};
+
 interface FradragFormData {
     type: Nullable<Fradragstype>;
     beløp: Nullable<number>;
@@ -174,10 +182,10 @@ const Beregning = (props: Props) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            sats: undefined,
-            fom: null,
-            tom: null,
-            fradrag: [],
+            sats: behandling.beregning?.sats ?? undefined,
+            fom: toDateOrNull(behandling.beregning?.fom) ?? null,
+            tom: toDateOrNull(behandling.beregning?.tom) ?? null,
+            fradrag: behandling.beregning?.fradrag ?? [],
         },
         onSubmit: (values) => {
             const { sats, fom, tom } = values;
