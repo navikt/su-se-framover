@@ -45,12 +45,20 @@ const VilkårsOppsummering = (props: { behandling: Behandling; sakId: string }) 
     );
 };
 
-const VisBeregningDersom = (props: { behandling: Behandling }) => {
+const VisDersomInnvilget = (props: { sak: Sak; behandling: Behandling }) => {
     if (props.behandling.status === Behandlingsstatus.AVSLÅTT) {
         return null;
     }
     if (props.behandling.status === Behandlingsstatus.INNVILGET && props.behandling.beregning) {
-        return <VisBeregning beregning={props.behandling.beregning} />;
+        return (
+            <>
+                <VisBeregning beregning={props.behandling.beregning} />
+                <div>
+                    <Innholdstittel>Oppdragssimulering</Innholdstittel>
+                    <Simulering sak={props.sak} behandlingId={props.behandling.id} />
+                </div>
+            </>
+        );
     }
     return <>Det er ikke gjort en beregning</>;
 };
@@ -82,7 +90,7 @@ const Vedtak = (props: Props) => {
                         <VilkårsOppsummering behandling={behandling} sakId={sak.id} />
                     </div>
                     <div>
-                        <VisBeregningDersom behandling={behandling} />
+                        <VisDersomInnvilget sak={sak} behandling={behandling} />
                     </div>
                     <div>
                         <Innholdstittel>Vis brev kladd</Innholdstittel>
@@ -96,10 +104,6 @@ const Vedtak = (props: Props) => {
                         >
                             test
                         </Lenke>
-                    </div>
-                    <div>
-                        <Innholdstittel>Oppdragssimulering</Innholdstittel>
-                        <Simulering sak={props.sak} behandlingId={props.behandlingId} />
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>
