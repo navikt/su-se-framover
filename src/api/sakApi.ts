@@ -1,12 +1,12 @@
 import apiClient, { ApiClientResult } from './apiClient';
 import { Behandling } from './behandlingApi';
-import { SøknadInnhold } from './søknadApi';
+import { Søknad } from './søknadApi';
 
 export interface Sak {
     id: string;
     fnr: string;
     behandlinger: Behandling[];
-    søknader: Array<{ id: string; søknadInnhold: SøknadInnhold }>;
+    søknader: Array<Søknad>;
 }
 
 export async function fetchSakByFnr(fnr: string): Promise<ApiClientResult<Sak>> {

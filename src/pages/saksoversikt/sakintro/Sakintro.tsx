@@ -9,6 +9,8 @@ import { useHistory } from 'react-router-dom';
 
 import * as sakApi from 'api/sakApi';
 import * as behandlingSlice from '~features/saksoversikt/sak.slice';
+import { formatDateTime } from '~lib/dateUtils';
+import { useI18n } from '~lib/hooks';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import styles from './sakintro.module.less';
@@ -20,6 +22,7 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
     const startBehandlingStatus = useAppSelector((s) => s.sak.startBehandlingStatus);
+    const intl = useI18n({ messages: {} });
 
     return (
         <div className={styles.container}>
@@ -33,7 +36,10 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                             return (
                                 <li key={s.id}>
                                     <Panel border>
-                                        <p>Id: {s.id}</p>
+                                        <div>
+                                            <p>Id: {s.id}</p>
+                                            <p>Innsendt: {formatDateTime(s.opprettet, intl)}</p>
+                                        </div>
                                         <Ekspanderbartpanel tittel="Rådata">
                                             <pre>{JSON.stringify(s, undefined, 4)}</pre>
                                         </Ekspanderbartpanel>
@@ -67,19 +73,17 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                                         ) : (
                                             <ul>
                                                 {behandlinger.map((b) => (
-                                                    <li key={b.id}>
+                                                    <li key={b.id} className={styles.behandlingListItem}>
                                                         <Element>
-                                                            Behandling {b.id}
-                                                            <Knapp
-                                                                onClick={() => {
-                                                                    history.push(
-                                                                        `/saksoversikt/${sakId}/${b.id}/vilkar/`
-                                                                    );
-                                                                }}
-                                                            >
-                                                                Fortsett behandling
-                                                            </Knapp>
+                                                            Behandling (påbegynt {formatDateTime(b.opprettet, intl)})
                                                         </Element>
+                                                        <Knapp
+                                                            onClick={() => {
+                                                                history.push(`/saksoversikt/${sakId}/${b.id}/vilkar/`);
+                                                            }}
+                                                        >
+                                                            Fortsett behandling
+                                                        </Knapp>
                                                     </li>
                                                 ))}
                                             </ul>

@@ -77,6 +77,7 @@ export interface Behandling {
     beregning: Nullable<Beregning>;
     status: Behandlingsstatus;
     oppdrag: Nullable<Oppdrag>;
+    opprettet: string;
 }
 
 export enum Behandlingsstatus {

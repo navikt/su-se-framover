@@ -6,6 +6,7 @@ import apiClient, { ApiClientResult } from './apiClient';
 export interface Søknad {
     id: string;
     søknadInnhold: SøknadInnhold;
+    opprettet: string;
 }
 
 export interface SøknadInnhold {
