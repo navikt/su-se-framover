@@ -1,0 +1,20 @@
+name: Bygg og test PR
+
+on: pull_request
+
+env:
+    IMAGE: docker.pkg.github.com/${{ github.repository }}/su-se-framover:${{ github.sha }}
+
+jobs:
+    build:
+        name: Build, test and type-check
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v1
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: '12.x'
+            - name: install deps
+              run: npm install
+            - name: build client
+              run: npm run build
