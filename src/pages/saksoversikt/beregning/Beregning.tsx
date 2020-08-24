@@ -269,9 +269,18 @@ const Beregning = (props: Props) => {
                                 <DatePicker
                                     id="fom"
                                     selected={formik.values.fom}
-                                    onChange={(date) => formik.setValues({ ...formik.values, fom: date })}
+                                    onChange={(date) =>
+                                        formik.setValues({
+                                            ...formik.values,
+                                            fom: Array.isArray(date) ? date[0] : date,
+                                        })
+                                    }
                                     dateFormat="MM/yyyy"
                                     showMonthYearPicker
+                                    isClearable
+                                    selectsStart
+                                    startDate={formik.values.fom}
+                                    endDate={formik.values.tom}
                                 />
                                 {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
                             </div>
@@ -280,9 +289,19 @@ const Beregning = (props: Props) => {
                                 <DatePicker
                                     id="tom"
                                     selected={formik.values.tom}
-                                    onChange={(date) => formik.setValues({ ...formik.values, tom: date })}
+                                    onChange={(date) =>
+                                        formik.setValues({
+                                            ...formik.values,
+                                            tom: Array.isArray(date) ? date[0] : date,
+                                        })
+                                    }
                                     dateFormat="MM/yyyy"
                                     showMonthYearPicker
+                                    isClearable
+                                    selectsEnd
+                                    startDate={formik.values.fom}
+                                    endDate={formik.values.tom}
+                                    minDate={formik.values.fom}
                                 />
                                 {formik.errors.tom && <Feilmelding>{formik.errors.tom}</Feilmelding>}
                             </div>
