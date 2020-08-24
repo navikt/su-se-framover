@@ -123,7 +123,7 @@
         "yup": "^0.29.1"
     },
     "devDependencies": {
-        "@babel/core": "^7.11.1",
+        "@babel/core": "^7.11.4",
         "@babel/plugin-transform-runtime": "^7.11.0",
         "@babel/preset-react": "^7.10.4",
         "@hot-loader/react-dom": "^16.13.0",
