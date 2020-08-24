@@ -61,32 +61,25 @@ const Root = () => {
 type LoginState = 'logging-in' | 'logged-in' | 'unauthorized' | 'error';
 
 function ContentWrapper({ children }: { children: React.ReactChild }) {
-    const [configLoaded, setConfigLoaded] = useState(window.BASE_URL && typeof window.BASE_URL === 'string');
     const authCompleteRouteMatch = useRouteMatch('/auth/complete');
     const [loginState, setLoginState] = useState<LoginState>('logging-in');
     const navn = Cookies.getNameFromAccessToken();
 
-    const hasBaseUrl = window.BASE_URL && typeof window.BASE_URL === 'string';
+    const location = useLocation();
+    const history = useHistory();
 
     useEffect(() => {
-        if (!hasBaseUrl) {
-            fetch('/config.json').then((res) => {
-                if (res.ok) {
-                    res.json().then((config) => {
-                        window.BASE_URL = config.suSeBakoverUrl;
-                        setConfigLoaded(true);
-                    });
-                } else {
-                    console.error('klarte ikke hente config.json', res.statusText);
-                }
-            });
-        } else {
-            setConfigLoaded(true);
-        }
-    }, [window.BASE_URL]);
-
-    useEffect(() => {
-        if (authCompleteRouteMatch || !configLoaded || !hasBaseUrl) {
+        if (authCompleteRouteMatch) {
+            const tokens = location.hash.split('#');
+            const accessToken = tokens[1];
+            const refreshToken = tokens[2];
+            if (!accessToken || !refreshToken) {
+                console.error('On /auth/complete but no accesstoken/refreshtoken found');
+                return;
+            }
+            Cookies.set(Cookies.CookieName.AccessToken, accessToken);
+            Cookies.set(Cookies.CookieName.RefreshToken, refreshToken);
+            history.push('/');
             return;
         }
 
@@ -100,23 +93,6 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
 
             setLoginState('error');
         });
-    }, [configLoaded]);
-
-    const location = useLocation();
-    const history = useHistory();
-
-    useEffect(() => {
-        if (authCompleteRouteMatch) {
-            const tokens = location.hash.split('#');
-            const accessToken = tokens[1];
-            const refreshToken = tokens[2];
-            if (!accessToken || !refreshToken) {
-                console.error('On /auth/complete but no accesstoken/refreshtoken found');
-            }
-            Cookies.set(Cookies.CookieName.AccessToken, accessToken);
-            Cookies.set(Cookies.CookieName.RefreshToken, refreshToken);
-            history.push('/');
-        }
     }, [authCompleteRouteMatch]);
 
     return (
