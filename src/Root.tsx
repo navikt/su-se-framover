@@ -65,8 +65,21 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
     const [loginState, setLoginState] = useState<LoginState>('logging-in');
     const navn = Cookies.getNameFromAccessToken();
 
+    const location = useLocation();
+    const history = useHistory();
+
     useEffect(() => {
         if (authCompleteRouteMatch) {
+            const tokens = location.hash.split('#');
+            const accessToken = tokens[1];
+            const refreshToken = tokens[2];
+            if (!accessToken || !refreshToken) {
+                console.error('On /auth/complete but no accesstoken/refreshtoken found');
+                return;
+            }
+            Cookies.set(Cookies.CookieName.AccessToken, accessToken);
+            Cookies.set(Cookies.CookieName.RefreshToken, refreshToken);
+            history.push('/');
             return;
         }
 
@@ -80,23 +93,6 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
 
             setLoginState('error');
         });
-    }, [authCompleteRouteMatch]);
-
-    const location = useLocation();
-    const history = useHistory();
-
-    useEffect(() => {
-        if (authCompleteRouteMatch) {
-            const tokens = location.hash.split('#');
-            const accessToken = tokens[1];
-            const refreshToken = tokens[2];
-            if (!accessToken || !refreshToken) {
-                console.error('On /auth/complete but no accesstoken/refreshtoken found');
-            }
-            Cookies.set(Cookies.CookieName.AccessToken, accessToken);
-            Cookies.set(Cookies.CookieName.RefreshToken, refreshToken);
-            history.push('/');
-        }
     }, [authCompleteRouteMatch]);
 
     return (
