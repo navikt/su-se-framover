@@ -1,7 +1,8 @@
 {
-  "ingress": "https://su-se-framover.nais.adeo.no",
-  "env": {
-    "SU_SE_BAKOVER_URL": "https://su-se-bakover.nais.adeo.no",
-    "DOMAIN": "nais.adeo.no"
-  }
+    "ingress": "https://su-se-framover.nais.adeo.no",
+    "env": {
+        "SU_SE_BAKOVER_URL": "https://su-se-bakover.nais.adeo.no",
+        "DOMAIN": "nais.adeo.no",
+        "AMPLITUDE_API_KEY": "a9a60eb3e832909758c46016e1714d3e"
+    }
 }

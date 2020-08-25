@@ -1,5 +1,6 @@
 const variables = {
     SU_SE_BAKOVER_URL: 'http://localhost:8080',
+    AMPLITUDE_API_KEY: '',
 };
 
 module.exports = {
