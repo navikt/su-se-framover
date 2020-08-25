@@ -1,3 +1,4 @@
+import * as Amplitude from './amplitude';
 import { TrackingCode } from './trackingTypes';
 
 export interface TrackingEvent<T extends TrackingCode, U> {
@@ -9,14 +10,16 @@ export interface TrackingEvent<T extends TrackingCode, U> {
 const secretSymbol = Symbol('super secret');
 
 export const trackEvent = <T extends TrackingCode, U>(event: TrackingEvent<T, U>) => {
+    const eventCode = `#su.${event.code}`;
+
     if (process.env.NODE_ENV === 'development') {
-        console.groupCollapsed(`[tracking]: ${event.code}`);
+        console.groupCollapsed(`[tracking]: ${eventCode}`);
         console.log(event);
         console.groupEnd();
+        return;
     }
 
-    // TODO: Log to amplitude
-    event;
+    Amplitude.logEvent(eventCode, event.data);
 };
 
 const createEvent = <U, T extends TrackingCode>(code: T) => {
