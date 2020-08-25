@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React from 'react';
 
-import { Oppdrag } from '~api/behandlingApi';
+import { Utbetaling } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
 import { useAppSelector } from '~redux/Store';
 
@@ -11,7 +11,7 @@ interface Props {
     behandlingId: string;
 }
 
-const Oppdragssimulering = (props: { oppdrag: Oppdrag }) => {
+const Oppdragssimulering = (props: { oppdrag: Utbetaling }) => {
     return (
         <div>
             <div>Oppdragsid: {props.oppdrag.id} </div>
@@ -33,8 +33,8 @@ export const Simulering = (props: Props) => {
         return <NavFrontendSpinner />;
     }
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
-    if (!behandling || !behandling.oppdrag) {
+    if (!behandling || !behandling.utbetaling) {
         return <div>Behandlingen har ingen oppdrag</div>;
     }
-    return <Oppdragssimulering oppdrag={behandling.oppdrag} />;
+    return <Oppdragssimulering oppdrag={behandling.utbetaling} />;
 };

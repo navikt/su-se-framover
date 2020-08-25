@@ -76,7 +76,7 @@ export interface Behandling {
     vilkårsvurderinger: Vilkårsvurderinger;
     beregning: Nullable<Beregning>;
     status: Behandlingsstatus;
-    oppdrag: Nullable<Oppdrag>;
+    utbetaling: Nullable<Utbetaling>;
     opprettet: string;
 }
 
@@ -89,7 +89,7 @@ export enum Behandlingsstatus {
     AVSLÅTT = 'AVSLÅTT',
 }
 
-export interface Oppdrag {
+export interface Utbetaling {
     id: string;
     simulering: Simulering;
 }
@@ -99,20 +99,20 @@ export interface Simulering {
     gjelderNavn: string;
     datoBeregnet: string;
     totalBelop: number;
-    periodeList: SimulertPeriode[];
+    periodeList: Simuleringsperiode[];
 }
 
-export interface SimulertPeriode {
+export interface Simuleringsperiode {
     fom: string;
     tom: string;
-    utbetaling: Utbetaling[];
+    utbetaling: Simuleringsutbetaling[];
 }
 
-export interface Utbetaling {
-    detaljer: Detalj[];
+export interface Simuleringsutbetaling {
+    detaljer: Simuleringsdetalj[];
 }
 
-export interface Detalj {
+export interface Simuleringsdetalj {
     belop: number;
 }
 
