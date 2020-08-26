@@ -1,10 +1,11 @@
 import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import { Hovedknapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
+import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype, sendTilAttestering } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
 import { Sak } from '~api/sakApi';
 import { statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
@@ -107,6 +108,17 @@ const Vedtak = (props: Props) => {
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>
+                    <Hovedknapp
+                        onClick={() => {
+                            sendTilAttestering({
+                                sakId: sak.id,
+                                behandlingId: behandlingId,
+                            });
+                        }}
+                        htmlType="button"
+                    >
+                        Send til attestering
+                    </Hovedknapp>
                     <Link
                         to={routes.saksoversikt.createURL({
                             sakId: sak.id,
