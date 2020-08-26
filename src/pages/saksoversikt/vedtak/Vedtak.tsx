@@ -46,11 +46,11 @@ const VilkårsOppsummering = (props: { behandling: Behandling; sakId: string }) 
     );
 };
 
-const VisDersomInnvilget = (props: { sak: Sak; behandling: Behandling }) => {
+const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
     if (props.behandling.status === Behandlingsstatus.AVSLÅTT) {
         return null;
     }
-    if (props.behandling.status === Behandlingsstatus.INNVILGET && props.behandling.beregning) {
+    if (props.behandling.status === Behandlingsstatus.SIMULERT && props.behandling.beregning) {
         return (
             <>
                 <VisBeregning beregning={props.behandling.beregning} />
@@ -73,14 +73,14 @@ const Vedtak = (props: Props) => {
     }
     if (
         behandling.vilkårsvurderinger &&
-        (behandling.status === Behandlingsstatus.INNVILGET || behandling.status === Behandlingsstatus.AVSLÅTT)
+        (behandling.status === Behandlingsstatus.SIMULERT || behandling.status === Behandlingsstatus.AVSLÅTT)
     ) {
         return (
             <div>
                 <div className={styles.vedtakContainer}>
                     <Innholdstittel>Vedtak</Innholdstittel>
                     <div>
-                        {behandling.status === Behandlingsstatus.INNVILGET && (
+                        {behandling.status === Behandlingsstatus.SIMULERT && (
                             <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>
                         )}
                         {behandling.status === Behandlingsstatus.AVSLÅTT && (
@@ -91,7 +91,7 @@ const Vedtak = (props: Props) => {
                         <VilkårsOppsummering behandling={behandling} sakId={sak.id} />
                     </div>
                     <div>
-                        <VisDersomInnvilget sak={sak} behandling={behandling} />
+                        <VisDersomSimulert sak={sak} behandling={behandling} />
                     </div>
                     <div>
                         <Innholdstittel>Vis brev kladd</Innholdstittel>

@@ -81,9 +81,9 @@ export interface Behandling {
 }
 
 export enum Behandlingsstatus {
-    VILKÅRSVURDERING = 'VILKÅRSVURDERING',
-    BEREGNING = 'BEREGNING',
-    /*SIMULERING = 'SIMULERING', */
+    OPPRETTET = 'OPPRETTET',
+    BEREGNET = 'BEREGNET',
+    SIMULERT = 'SIMULERT',
     /*VEDTAKSBREV = 'VEDTAKSBREV',*/
     INNVILGET = 'INNVILGET',
     AVSLÅTT = 'AVSLÅTT',
