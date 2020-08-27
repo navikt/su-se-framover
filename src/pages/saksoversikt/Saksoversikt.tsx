@@ -3,7 +3,7 @@ import { PersonCard, Gender } from '@navikt/nap-person-card';
 import classNames from 'classnames';
 import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch } from 'react-router-dom';
 
@@ -90,7 +90,7 @@ const Saksoversikt = () => {
 
     const data = RemoteData.combine(søker, sak);
 
-    const oversettKjønn = () => {
+    const gender = useMemo<Gender>(() => {
         if (RemoteData.isSuccess(søker)) {
             if (søker.value.kjønn === Kjønn.Mann) {
                 return Gender.male;
@@ -101,11 +101,6 @@ const Saksoversikt = () => {
             }
         }
         return Gender.unknown;
-    };
-
-    const [gender, setGender] = useState<Gender>(Gender.unknown);
-    useEffect(() => {
-        setGender(oversettKjønn());
     }, [søker._tag]);
 
     return (
