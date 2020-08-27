@@ -6,7 +6,7 @@ import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useAppDispatch } from '~redux/Store';
 
-const Søkefelt = () => {
+const Søkefelt = (props: { historyUrl: string }) => {
     const dispatch = useAppDispatch();
     const [fnr, setFnr] = React.useState('');
     const history = useHistory();
@@ -22,7 +22,7 @@ const Søkefelt = () => {
                     await dispatch(personSlice.fetchPerson({ fnr }));
                     await dispatch(sakSlice.fetchSak({ fnr }));
                     setFnr('');
-                    history.push('/saksoversikt');
+                    history.push(props.historyUrl);
                 }
             }}
             value={fnr}

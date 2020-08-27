@@ -26,24 +26,22 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
 
     return (
         <div className={styles.container}>
-            <Innholdstittel>Sak for {props.sak.fnr}</Innholdstittel>
+            <Innholdstittel className={styles.tittel}>Saksnummer: {props.sak.id}</Innholdstittel>
             {props.sak.søknader.length > 0 ? (
                 <>
-                    <Undertittel>Søknader</Undertittel>
-                    <ul>
+                    <Undertittel className={styles.undertittel}>Søknader</Undertittel>
+                    <ul className={styles.søknader}>
                         {props.sak.søknader.map((s) => {
                             const behandlinger = props.sak.behandlinger.filter((b) => b.søknad.id === s.id);
+                            const isBehandlingerEmpty = behandlinger.length === 0;
                             return (
                                 <li key={s.id}>
-                                    <Panel border>
+                                    <Panel border className={isBehandlingerEmpty ? styles.førstegangsbehandling : ''}>
                                         <div>
-                                            <p>Id: {s.id}</p>
+                                            <p>Søknads-id: {s.id}</p>
                                             <p>Innsendt: {formatDateTime(s.opprettet, intl)}</p>
                                         </div>
-                                        <Ekspanderbartpanel tittel="Rådata">
-                                            <pre>{JSON.stringify(s, undefined, 4)}</pre>
-                                        </Ekspanderbartpanel>
-                                        {behandlinger.length === 0 ? (
+                                        {isBehandlingerEmpty ? (
                                             <>
                                                 <Hovedknapp
                                                     onClick={async () => {

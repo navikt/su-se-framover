@@ -98,7 +98,7 @@ const Saksoversikt = () => {
         <IntlProvider locale={Languages.nb} messages={messages}>
             {!RemoteData.isSuccess(data) && (
                 <div>
-                    <Søkefelt />
+                    <Søkefelt historyUrl={'/saksoversikt'} />
                     {RemoteData.isPending(data) && <NavFrontendSpinner />}
                     {RemoteData.isFailure(data) && <AlertStripe type="feil">{data.error.message}</AlertStripe>}
                 </div>
@@ -110,7 +110,7 @@ const Saksoversikt = () => {
                     <>
                         <div className={styles.headerContainer}>
                             <PersonCard fodselsnummer={data.fnr} gender={gender} name={showName(data)} />
-                            <Søkefelt />
+                            <Søkefelt historyUrl={'/saksoversikt'} />
                         </div>
                         <div className={styles.container}>
                             <Meny aktiv={meny} />
