@@ -59,3 +59,8 @@ export const saksoversiktVilkårsvurdering: Route<{
             args.vilkar ? `/${args.vilkar}` : ''
         }`,
 };
+
+export const attestering: Route<{ sakId?: string; behandlingId?: string }> = {
+    path: '/attestering/:sakId?/:behandlingId?/',
+    createURL: (args) => `/attestering/${args.sakId}/${args.behandlingId}`,
+};
