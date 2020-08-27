@@ -3,8 +3,7 @@ import React from 'react';
 
 import * as sakApi from 'api/sakApi';
 
-import styles from '../saksoversikt/sakintro/sakintro.module.less';
-
+import styles from './attestering.module.less';
 import AttesteringslisteElement from './AttesteringslisteElement';
 
 // TODO: Alle tekster her er placeholdere. Lag oversettelsesfil når vi er nærmere noe brukende.

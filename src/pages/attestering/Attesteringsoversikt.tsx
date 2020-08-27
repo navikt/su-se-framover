@@ -17,13 +17,13 @@ import { useAppSelector, useAppDispatch } from '~redux/Store';
 
 import styles from '../saksoversikt/saksoversikt.module.less';
 
+import Attestering from './Attestering';
 import messages from './attestering-nb';
 import Attesteringsliste from './Attesteringsliste';
 
-const Saksoversikt = () => {
-    const { ...urlParams } = useParams<{
+const Attesteringsoversikt = () => {
+    const { sakId, behandlingId } = useParams<{
         sakId: string;
-        stonadsperiodeId: string;
         behandlingId: string;
     }>();
 
@@ -31,8 +31,8 @@ const Saksoversikt = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        if (urlParams.sakId && RemoteData.isInitial(sak)) {
-            dispatch(sakSlice.fetchSak({ sakId: urlParams.sakId }));
+        if (sakId && RemoteData.isInitial(sak)) {
+            dispatch(sakSlice.fetchSak({ sakId }));
         }
     }, [sak._tag]);
     useEffect(() => {
@@ -81,7 +81,11 @@ const Saksoversikt = () => {
                         </div>
                         <div className={styles.container}>
                             <div className={styles.mainContent}>
-                                <Attesteringsliste sak={sak} />
+                                {sakId && behandlingId ? (
+                                    <Attestering sak={sak} behandlingId={behandlingId} />
+                                ) : (
+                                    <Attesteringsliste sak={sak} />
+                                )}
                             </div>
                         </div>
                     </>
@@ -92,4 +96,4 @@ const Saksoversikt = () => {
     );
 };
 
-export default Saksoversikt;
+export default Attesteringsoversikt;

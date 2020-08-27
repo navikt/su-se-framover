@@ -8,7 +8,7 @@ import { Søknad } from '~api/søknadApi';
 import { formatDateTime } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 
-import styles from '../saksoversikt/sakintro/sakintro.module.less';
+import styles from './attestering.module.less';
 
 type Props = {
     sakId: string;
@@ -40,7 +40,7 @@ const AttesteringslisteElement = (props: Props) => {
                                 {behandling.status == Behandlingsstatus.SIMULERT && (
                                     <Knapp
                                         onClick={() => {
-                                            history.push(`/saksoversikt/${sakId}/${behandling.id}/vilkar/`);
+                                            history.push(`/attestering/${sakId}/${behandling.id}`);
                                         }}
                                     >
                                         Start attestering
