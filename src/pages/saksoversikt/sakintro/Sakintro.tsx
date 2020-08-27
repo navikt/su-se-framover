@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe from 'nav-frontend-alertstriper';
-import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
 import { Innholdstittel, Undertittel, Element } from 'nav-frontend-typografi';
