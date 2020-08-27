@@ -13,6 +13,7 @@ import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import FeatureToggles from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
@@ -25,6 +26,7 @@ import Søkefelt from './søkefelt/Søkefelt';
 import { SaksbehandlingMenyvalg } from './types';
 import Vedtak from './vedtak/Vedtak';
 import Vilkår from './vilkår/Vilkår';
+import VilkårV2 from './vilkår/VilkårV2';
 
 const Meny = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
@@ -65,7 +67,11 @@ const Behandling = ({ sak }: { sak: Sak }) => {
         case SaksbehandlingMenyvalg.Vedtak:
             return <Vedtak sak={sak} />;
         case SaksbehandlingMenyvalg.Vilkår:
-            return <Vilkår sakId={sak.id} behandling={sak.behandlinger.find((b) => b.id === behandlingId)} />;
+            return FeatureToggles.VilkårsvurderingV2 ? (
+                <VilkårV2 sakId={sak.id} behandling={sak.behandlinger.find((b) => b.id === behandlingId)} />
+            ) : (
+                <Vilkår sakId={sak.id} behandling={sak.behandlinger.find((b) => b.id === behandlingId)} />
+            );
         default:
             return <div>404</div>;
     }
