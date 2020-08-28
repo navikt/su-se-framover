@@ -1,3 +1,4 @@
+import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 
@@ -16,5 +17,25 @@ export const Vurdering = (props: {
             <div className={styles.left}>{props.children.left}</div>
             <div className={styles.right}>{props.children.right}</div>
         </div>
+    </div>
+);
+
+export const Vurderingknapper = (props: {
+    onTilbakeClick(): void;
+    onNesteClick?(): void;
+    onLagreOgFortsettSenereClick(): void;
+}) => (
+    <div className={styles.buttonContainer}>
+        <div className={styles.navigationButtonContainer}>
+            <Knapp onClick={props.onTilbakeClick} htmlType="button">
+                Tilbake
+            </Knapp>
+            <Hovedknapp onClick={props.onNesteClick} htmlType={props.onNesteClick ? 'button' : 'submit'}>
+                Neste
+            </Hovedknapp>
+        </div>
+        <Knapp onClick={props.onLagreOgFortsettSenereClick} htmlType="button">
+            Lagre og fortsett senere
+        </Knapp>
     </div>
 );
