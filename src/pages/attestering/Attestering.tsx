@@ -86,19 +86,16 @@ const Attestering = (props: Props) => {
     const formik = useFormik<FormData>({
         initialValues: {},
         onSubmit: (values) => {
-            const { beslutning, grunn, begrunnelse } = values;
+            const { beslutning } = values;
 
             if (beslutning === true) {
-                console.log('iverksetter');
                 attester({
                     sakId: sak.id,
                     behandlingId: behandling.id,
                 });
                 return;
             }
-
-            if (!grunn) return;
-            console.log('revurder pågrunn av' + begrunnelse);
+            // TODO: Implementera vurdert på nytt når det implementeras i bakover
         },
         validationSchema: yup.object<FormData>({
             beslutning: yup.boolean().required(),
@@ -219,7 +216,9 @@ const Attestering = (props: Props) => {
                             hidden={!formikErrorsHarFeil(formik.errors)}
                         />
 
-                        <Knapp>{intl.formatMessage({ id: 'attestering.knapp.send' })}</Knapp>
+                        <Knapp className={styles.sendInnAttestering}>
+                            {intl.formatMessage({ id: 'attestering.knapp.send' })}
+                        </Knapp>
                     </form>
                 </div>
             </div>
