@@ -1,3 +1,4 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
@@ -6,14 +7,16 @@ import { RadioPanelGruppe, Feiloppsummering, Select, Textarea } from 'nav-fronte
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useState } from 'react';
 
-import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype, attester } from '~api/behandlingApi';
+import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
 import { Sak } from '~api/sakApi';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import VisBeregning from '~pages/saksoversikt/beregning/VisBeregning';
 import { Simulering } from '~pages/saksoversikt/simulering/simulering';
+import { useAppSelector, useAppDispatch } from '~redux/Store';
 
 import messages from './attestering-nb';
 import styles from './attestering.module.less';
@@ -52,7 +55,7 @@ const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
     if (props.behandling.status === Behandlingsstatus.AVSLÅTT) {
         return null;
     }
-    if (props.behandling.status === Behandlingsstatus.SIMULERT && props.behandling.beregning) {
+    if (props.behandling.beregning) {
         return (
             <>
                 <VisBeregning beregning={props.behandling.beregning} />
@@ -77,7 +80,9 @@ interface FormData {
 const Attestering = (props: Props) => {
     const { sak, behandlingId } = props;
     const [hasSubmitted, setHasSubmitted] = useState(false);
+    const attesteringStatus = useAppSelector((s) => s.sak.attesteringStatus);
     const intl = useI18n({ messages });
+    const dispatch = useAppDispatch();
 
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
     if (!behandling) {
@@ -88,11 +93,13 @@ const Attestering = (props: Props) => {
         onSubmit: (values) => {
             const { beslutning } = values;
 
-            if (beslutning === true) {
-                attester({
-                    sakId: sak.id,
-                    behandlingId: behandling.id,
-                });
+            if (beslutning) {
+                dispatch(
+                    sakSlice.startAttestering({
+                        sakId: sak.id,
+                        behandlingId: behandling.id,
+                    })
+                );
                 return;
             }
             // TODO: Implementera vurdert på nytt når det implementeras i bakover
@@ -112,7 +119,9 @@ const Attestering = (props: Props) => {
     const { errors } = formik;
     if (
         behandling.vilkårsvurderinger &&
-        (behandling.status === Behandlingsstatus.TIL_ATTESTERING || behandling.status === Behandlingsstatus.AVSLÅTT)
+        (behandling.status === Behandlingsstatus.TIL_ATTESTERING ||
+            behandling.status === Behandlingsstatus.ATTESTERT ||
+            behandling.status === Behandlingsstatus.AVSLÅTT)
     ) {
         return (
             <div>
@@ -147,79 +156,82 @@ const Attestering = (props: Props) => {
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>
-                    <form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            formik.handleSubmit();
-                            setHasSubmitted(true);
-                        }}
-                    >
-                        <RadioPanelGruppe
-                            className={styles.sats}
-                            name={intl.formatMessage({ id: 'attestering.beslutning' })}
-                            legend={intl.formatMessage({ id: 'attestering.beslutning' })}
-                            radios={[
-                                {
-                                    label: intl.formatMessage({ id: 'attestering.beslutning.godkjenn' }),
-                                    value: 'godkjenn',
-                                },
-                                {
-                                    label: intl.formatMessage({ id: 'attestering.beslutning.revurder' }),
-                                    value: 'revurder',
-                                },
-                            ]}
-                            checked={
-                                formik.values.beslutning
-                                    ? 'godkjenn'
-                                    : formik.values.beslutning === false
-                                    ? 'revurder'
-                                    : undefined
-                            }
-                            onChange={(_, value) =>
-                                formik.setValues({ ...formik.values, beslutning: value === 'godkjenn' })
-                            }
-                            feil={errors.beslutning}
-                        />
+                    {behandling.status === Behandlingsstatus.TIL_ATTESTERING && (
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                formik.handleSubmit();
+                                setHasSubmitted(true);
+                            }}
+                        >
+                            <RadioPanelGruppe
+                                className={styles.sats}
+                                name={intl.formatMessage({ id: 'attestering.beslutning' })}
+                                legend={intl.formatMessage({ id: 'attestering.beslutning' })}
+                                radios={[
+                                    {
+                                        label: intl.formatMessage({ id: 'attestering.beslutning.godkjenn' }),
+                                        value: 'godkjenn',
+                                    },
+                                    {
+                                        label: intl.formatMessage({ id: 'attestering.beslutning.revurder' }),
+                                        value: 'revurder',
+                                    },
+                                ]}
+                                checked={
+                                    formik.values.beslutning
+                                        ? 'godkjenn'
+                                        : formik.values.beslutning === false
+                                        ? 'revurder'
+                                        : undefined
+                                }
+                                onChange={(_, value) =>
+                                    formik.setValues({ ...formik.values, beslutning: value === 'godkjenn' })
+                                }
+                                feil={errors.beslutning}
+                            />
+                            {formik.values.beslutning === false && (
+                                <>
+                                    <Select
+                                        label="Velg grunn"
+                                        onChange={(value) =>
+                                            formik.setValues({ ...formik.values, grunn: value.target.value })
+                                        }
+                                        value={formik.values.grunn ?? ''}
+                                        feil={errors.grunn}
+                                    >
+                                        <option value=""> Grunn </option>
+                                        {Object.values(Grunn).map((grunn, index) => (
+                                            <option value={grunn} key={index}>
+                                                {grunn}
+                                            </option>
+                                        ))}
+                                    </Select>
 
-                        {formik.values.beslutning === false && (
-                            <>
-                                <Select
-                                    label="Velg grunn"
-                                    onChange={(value) =>
-                                        formik.setValues({ ...formik.values, grunn: value.target.value })
-                                    }
-                                    value={formik.values.grunn ?? ''}
-                                    feil={errors.grunn}
-                                >
-                                    <option value=""> Grunn </option>
-                                    {Object.values(Grunn).map((grunn, index) => (
-                                        <option value={grunn} key={index}>
-                                            {grunn}
-                                        </option>
-                                    ))}
-                                </Select>
-
-                                <Textarea
-                                    label="Begrunnelse"
-                                    name="begrunnelse"
-                                    value={formik.values.begrunnelse ?? ''}
-                                    feil={formik.errors.begrunnelse}
-                                    onChange={formik.handleChange}
-                                />
-                            </>
-                        )}
-
-                        <Feiloppsummering
-                            className={styles.feiloppsummering}
-                            tittel={'Feiloppsummering'}
-                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                            hidden={!formikErrorsHarFeil(formik.errors)}
-                        />
-
-                        <Knapp className={styles.sendInnAttestering}>
-                            {intl.formatMessage({ id: 'attestering.knapp.send' })}
-                        </Knapp>
-                    </form>
+                                    <Textarea
+                                        label="Begrunnelse"
+                                        name="begrunnelse"
+                                        value={formik.values.begrunnelse ?? ''}
+                                        feil={formik.errors.begrunnelse}
+                                        onChange={formik.handleChange}
+                                    />
+                                </>
+                            )}
+                            <Feiloppsummering
+                                className={styles.feiloppsummering}
+                                tittel={'Feiloppsummering'}
+                                feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                                hidden={!formikErrorsHarFeil(formik.errors)}
+                            />
+                            <Knapp
+                                spinner={RemoteData.isPending(attesteringStatus)}
+                                className={styles.sendInnAttestering}
+                            >
+                                {intl.formatMessage({ id: 'attestering.knapp.send' })}
+                            </Knapp>
+                        </form>
+                    )}
+                    {RemoteData.isSuccess(attesteringStatus) && <p>Attesteringsbeslut innsendt!</p>}
                 </div>
             </div>
         );

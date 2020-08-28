@@ -78,6 +78,7 @@ export interface Behandling {
     status: Behandlingsstatus;
     utbetaling: Nullable<Utbetaling>;
     opprettet: string;
+    attestant: Nullable<string>;
 }
 
 export enum Behandlingsstatus {
@@ -85,6 +86,7 @@ export enum Behandlingsstatus {
     BEREGNET = 'BEREGNET',
     SIMULERT = 'SIMULERT',
     TIL_ATTESTERING = 'TIL_ATTESTERING',
+    ATTESTERT = 'ATTESTERT',
     /*VEDTAKSBREV = 'VEDTAKSBREV',*/
     INNVILGET = 'INNVILGET',
     AVSLÅTT = 'AVSLÅTT',
