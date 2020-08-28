@@ -15,10 +15,9 @@ import { pipe } from '~lib/fp';
 import Søkefelt from '~pages/saksoversikt/søkefelt/Søkefelt';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
-import styles from '../saksoversikt/saksoversikt.module.less';
-
 import Attestering from './Attestering';
 import messages from './attestering-nb';
+import styles from './attestering.module.less';
 import Attesteringsliste from './Attesteringsliste';
 
 const Attesteringsoversikt = () => {
@@ -75,7 +74,7 @@ const Attesteringsoversikt = () => {
                 data,
                 RemoteData.map(([person, sak]) => (
                     <>
-                        <div className={styles.headerContainer}>
+                        <div className={styles.topBar}>
                             <PersonCard fodselsnummer={person.fnr} gender={gender} name={showName(person)} />
                             <Søkefelt historyUrl={'/attestering'} />
                         </div>

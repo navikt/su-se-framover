@@ -6,7 +6,7 @@ import { RadioPanelGruppe, Feiloppsummering, Select, Textarea } from 'nav-fronte
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useState } from 'react';
 
-import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
+import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype, attester } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
 import { Sak } from '~api/sakApi';
 import { statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
@@ -89,7 +89,12 @@ const Attestering = (props: Props) => {
             const { beslutning, grunn, begrunnelse } = values;
 
             if (beslutning === true) {
-                console.log('iverksett');
+                console.log('iverksetter');
+                attester({
+                    sakId: sak.id,
+                    behandlingId: behandling.id,
+                });
+                return;
             }
 
             if (!grunn) return;
@@ -110,18 +115,18 @@ const Attestering = (props: Props) => {
     const { errors } = formik;
     if (
         behandling.vilkårsvurderinger &&
-        (behandling.status === Behandlingsstatus.SIMULERT || behandling.status === Behandlingsstatus.AVSLÅTT)
+        (behandling.status === Behandlingsstatus.TIL_ATTESTERING || behandling.status === Behandlingsstatus.AVSLÅTT)
     ) {
         return (
             <div>
                 <div className={styles.vedtakContainer}>
                     <Innholdstittel>Vedtak</Innholdstittel>
                     <div>
-                        {behandling.status === Behandlingsstatus.SIMULERT && (
-                            <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>
+                        {behandling.status === Behandlingsstatus.TIL_ATTESTERING && (
+                            <AlertStripeSuksess>{Behandlingsstatus.SIMULERT}</AlertStripeSuksess>
                         )}
                         {behandling.status === Behandlingsstatus.AVSLÅTT && (
-                            <AlertStripeFeil>{behandling.status}</AlertStripeFeil>
+                            <AlertStripeFeil>{Behandlingsstatus.AVSLÅTT}</AlertStripeFeil>
                         )}
                     </div>
                     <div>
@@ -188,7 +193,6 @@ const Attestering = (props: Props) => {
                                     }
                                     value={formik.values.grunn ?? ''}
                                     feil={errors.grunn}
-                                    className={styles.fradragtype}
                                 >
                                     <option value=""> Grunn </option>
                                     {Object.values(Grunn).map((grunn, index) => (

@@ -11,7 +11,7 @@ import AttesteringslisteElement from './AttesteringslisteElement';
 const Attesteringsliste = (props: { sak: sakApi.Sak }) => {
     const { sak } = props;
     return (
-        <div className={styles.container}>
+        <div className={styles.attesteringsliste}>
             <Innholdstittel className={styles.tittel}>Saksnummer: {sak.id}</Innholdstittel>
             {sak.søknader.length > 0 ? (
                 <>

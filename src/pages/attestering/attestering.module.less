@@ -1,33 +1,32 @@
 @import '~/styles/variables.less';
 
-.oversikt {
-    .headerContainer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
+.topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 
-        padding-right: @spacing-xs;
+    padding-right: @spacing-xs;
 
-        border-bottom: 2px solid @navLysGra;
-    }
-
-    .mainContent {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-
-        padding: @spacing;
-    }
-
-    .containerz {
-        flex: 1;
-        display: flex;
-        width: 100%;
-    }
+    border-bottom: 2px solid @navLysGra;
 }
+
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    padding: @spacing;
+}
+
 .container {
+    flex: 1;
+    display: flex;
+    width: 100%;
+}
+
+.attesteringsliste {
     width: 100%;
     max-width: 50rem;
 }

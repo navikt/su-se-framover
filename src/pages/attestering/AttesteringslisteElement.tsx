@@ -37,7 +37,7 @@ const AttesteringslisteElement = (props: Props) => {
                                     <p>Status: {behandling.status}</p>
                                     <p>Behandling påbegynt: {formatDateTime(behandling.opprettet, intl)}</p>
                                 </div>
-                                {behandling.status == Behandlingsstatus.SIMULERT && (
+                                {behandling.status == Behandlingsstatus.TIL_ATTESTERING && (
                                     <Knapp
                                         onClick={() => {
                                             history.push(`/attestering/${sakId}/${behandling.id}`);
