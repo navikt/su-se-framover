@@ -1,25 +1,50 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import NavFrontendSpinner from 'nav-frontend-spinner';
+import { Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 
 import { Utbetaling } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
+import { formatDateTime } from '~lib/dateUtils';
+import { useI18n } from '~lib/hooks';
 import { useAppSelector } from '~redux/Store';
+
+import messages from '../beregning/beregning-nb';
+import { InfoLinje } from '../beregning/VisBeregning';
+import styles from '../beregning/visBeregning.module.less';
 
 interface Props {
     sak: Sak;
     behandlingId: string;
 }
 
-const Oppdragssimulering = (props: { oppdrag: Utbetaling }) => {
+const Utbetalingssimulering = (props: { utbetaling: Utbetaling }) => {
+    const intl = useI18n({ messages });
     return (
-        <div>
-            <div>Oppdragsid: {props.oppdrag.id} </div>
-            <div>Simulering:</div>
-            <div>Totalbeløp: {props.oppdrag.simulering.totalBelop} </div>
-            <div>Fra og med: {props.oppdrag.simulering.periodeList[0].fom} </div>
-            <div>Til og med: {props.oppdrag.simulering.periodeList[0].tom} </div>
-        </div>
+        <>
+            <Innholdstittel className={styles.tittel}>Simulering:</Innholdstittel>
+            <div className={styles.grunndata}>
+                <InfoLinje tittel={'id:'} value={props.utbetaling.id} />
+                <InfoLinje tittel={'opprettet:'} value={formatDateTime(props.utbetaling.opprettet, intl)} />
+                <InfoLinje tittel={'brutto:'} value={props.utbetaling.simulering.totalBruttoYtelse} />
+            </div>
+            <table className="tabell">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Brutto beløp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {props.utbetaling.simulering.perioder.map((periode, index) => (
+                        <tr key={index}>
+                            <td>{`${intl.formatDate(periode.fom)} - ${intl.formatDate(periode.tom)}`}</td>
+                            <td>{periode.bruttoYtelse}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </>
     );
 };
 
@@ -36,5 +61,5 @@ export const Simulering = (props: Props) => {
     if (!behandling || !behandling.utbetaling) {
         return <div>Behandlingen har ingen oppdrag</div>;
     }
-    return <Oppdragssimulering oppdrag={behandling.utbetaling} />;
+    return <Utbetalingssimulering utbetaling={behandling.utbetaling} />;
 };
