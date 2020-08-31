@@ -45,7 +45,7 @@ const Root = () => {
                                 <Route path={routes.soknad.path}>
                                     <Soknad />
                                 </Route>
-                                <Route path={routes.saksoversikt.path}>
+                                <Route path={routes.saksoversiktIndex.path}>
                                     <Saksoversikt />
                                 </Route>
                                 <Route>404</Route>

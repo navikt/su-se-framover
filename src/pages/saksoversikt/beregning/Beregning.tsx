@@ -50,7 +50,6 @@ interface FormData {
 
 type Props = {
     sak: Sak;
-    behandlingId: string;
 };
 
 const fradragSchema = yup.object<FradragFormData>({
@@ -167,7 +166,9 @@ const FradragInputs = (props: {
 };
 
 const Beregning = (props: Props) => {
-    const { sak, behandlingId } = props;
+    const { sak } = props;
+    const { behandlingId } = routes.useRouteParams<typeof routes.saksoversiktValgtBehandling>();
+
     const beregningStatus = useAppSelector((s) => s.sak.beregningStatus);
 
     const history = useHistory();
@@ -342,7 +343,7 @@ const Beregning = (props: Props) => {
             </div>
             <div className={styles.navigeringContainer}>
                 <Link
-                    to={routes.saksoversikt.createURL({
+                    to={routes.saksoversiktVilkårsvurdering.createURL({
                         sakId: sak.id,
                         behandlingId: behandlingId,
                         meny: SaksbehandlingMenyvalg.Vilkår,
@@ -365,7 +366,7 @@ const Beregning = (props: Props) => {
                                 })
                             );
                             history.push(
-                                routes.saksoversikt.createURL({
+                                routes.saksoversiktValgtBehandling.createURL({
                                     sakId: sak.id,
                                     behandlingId: behandlingId,
                                     meny: SaksbehandlingMenyvalg.Vedtak,

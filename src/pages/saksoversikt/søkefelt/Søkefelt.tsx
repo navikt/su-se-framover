@@ -4,9 +4,10 @@ import { useHistory } from 'react-router-dom';
 
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import * as Routes from '~lib/routes';
 import { useAppDispatch } from '~redux/Store';
 
-const Søkefelt = (props: { historyUrl: string }) => {
+const Søkefelt = () => {
     const dispatch = useAppDispatch();
     const [fnr, setFnr] = React.useState('');
     const history = useHistory();
@@ -20,9 +21,15 @@ const Søkefelt = (props: { historyUrl: string }) => {
             onKeyDown={async (e) => {
                 if (e.keyCode === 13) {
                     await dispatch(personSlice.fetchPerson({ fnr }));
-                    await dispatch(sakSlice.fetchSak({ fnr }));
-                    setFnr('');
-                    history.push(props.historyUrl);
+                    const sakAction = await dispatch(sakSlice.fetchSak({ fnr }));
+                    if (sakSlice.fetchSak.fulfilled.match(sakAction)) {
+                        setFnr('');
+                        history.push(
+                            Routes.saksoversiktValgtSak.createURL({
+                                sakId: sakAction.payload.id,
+                            })
+                        );
+                    }
                 }
             }}
             value={fnr}

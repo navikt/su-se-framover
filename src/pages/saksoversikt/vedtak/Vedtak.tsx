@@ -18,7 +18,6 @@ import styles from './vedtak.module.less';
 
 type Props = {
     sak: Sak;
-    behandlingId: string;
 };
 
 const VilkårsvurderingInfoLinje = (props: { type: Vilkårtype; verdi: Vilkårsvurdering }) => (
@@ -65,7 +64,8 @@ const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
 };
 
 const Vedtak = (props: Props) => {
-    const { sak, behandlingId } = props;
+    const { sak } = props;
+    const { behandlingId } = routes.useRouteParams<typeof routes.saksoversiktValgtBehandling>();
 
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
     if (!behandling) {
@@ -120,7 +120,7 @@ const Vedtak = (props: Props) => {
                         Send til attestering
                     </Hovedknapp>
                     <Link
-                        to={routes.saksoversikt.createURL({
+                        to={routes.saksoversiktValgtBehandling.createURL({
                             sakId: sak.id,
                             behandlingId: behandlingId,
                             meny: SaksbehandlingMenyvalg.Beregning,
