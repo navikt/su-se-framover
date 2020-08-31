@@ -7,7 +7,7 @@ import { Søknadsteg } from '../pages/søknad/types';
 
 interface Route<T> {
     path: string;
-    createURL: (args: T) => string;
+    createURL: [T] extends [never] ? () => string : (args: T) => string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,7 +18,7 @@ export const useRouteParams = <T extends Route<any>>() => useParams<Params<T>>()
 
 export const home: Route<never> = {
     path: '/',
-    createURL: (_x: never) => '/',
+    createURL: () => '/',
 };
 
 export const soknad: Route<{ step: Søknadsteg | null }> = {
@@ -28,7 +28,7 @@ export const soknad: Route<{ step: Søknadsteg | null }> = {
 
 export const saksoversiktIndex: Route<never> = {
     path: '/saksoversikt/:sakId?',
-    createURL: (_) => '/saksoversikt',
+    createURL: () => '/saksoversikt',
 };
 
 export const saksoversiktValgtSak: Route<{
