@@ -8,7 +8,6 @@ import { IntlProvider } from 'react-intl';
 import { Route, Switch } from 'react-router-dom';
 
 import { Kjønn } from '~api/personApi';
-import { Sak } from '~api/sakApi';
 import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
@@ -57,24 +56,6 @@ const Meny = () => {
             </ol>
         </div>
     );
-};
-
-const Behandling = ({ sak }: { sak: Sak }) => {
-    const { meny, behandlingId } = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
-    switch (meny) {
-        case SaksbehandlingMenyvalg.Beregning:
-            return <Beregning sak={sak} />;
-        case SaksbehandlingMenyvalg.Vedtak:
-            return <Vedtak sak={sak} />;
-        case SaksbehandlingMenyvalg.Vilkår:
-            return FeatureToggles.VilkårsvurderingV2 ? (
-                <VilkårV2 sakId={sak.id} behandling={sak.behandlinger.find((b) => b.id === behandlingId)} />
-            ) : (
-                <Vilkår sakId={sak.id} behandling={sak.behandlinger.find((b) => b.id === behandlingId)} />
-            );
-        default:
-            return <div>404</div>;
-    }
 };
 
 const Saksoversikt = () => {
@@ -126,7 +107,21 @@ const Saksoversikt = () => {
                                         <Route path={Routes.saksoversiktValgtBehandling.path}>
                                             <Meny />
                                             <div className={styles.mainContent}>
-                                                <Behandling sak={sak} />
+                                                <Switch>
+                                                    <Route path={Routes.saksbehandlingBeregning.path}>
+                                                        <Beregning sak={sak} />
+                                                    </Route>
+                                                    <Route path={Routes.saksbehandlingVedtak.path}>
+                                                        <Vedtak sak={sak} />
+                                                    </Route>
+                                                    <Route path={Routes.saksbehandlingVilkårsvurdering.path}>
+                                                        {FeatureToggles.VilkårsvurderingV2 ? (
+                                                            <VilkårV2 sak={sak} />
+                                                        ) : (
+                                                            <Vilkår sak={sak} />
+                                                        )}
+                                                    </Route>
+                                                </Switch>
                                             </div>
                                         </Route>
                                         <Route path="*">

@@ -343,10 +343,9 @@ const Beregning = (props: Props) => {
             </div>
             <div className={styles.navigeringContainer}>
                 <Link
-                    to={routes.saksoversiktVilkårsvurdering.createURL({
+                    to={routes.saksbehandlingVilkårsvurdering.createURL({
                         sakId: sak.id,
                         behandlingId: behandlingId,
-                        meny: SaksbehandlingMenyvalg.Vilkår,
                     })}
                     className="knapp"
                 >

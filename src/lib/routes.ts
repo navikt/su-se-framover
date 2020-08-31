@@ -27,14 +27,14 @@ export const soknad: Route<{ step: Søknadsteg | null }> = {
 };
 
 export const saksoversiktIndex: Route<never> = {
-    path: '/saksoversikt/:sakId?',
+    path: '/saksoversikt/:sakId?/:behandlingId?/:meny?/:vilkar?/',
     createURL: () => '/saksoversikt',
 };
 
 export const saksoversiktValgtSak: Route<{
     sakId: string;
 }> = {
-    path: '/saksoversikt/:sakId/',
+    path: '/saksoversikt/:sakId/:behandlingId?/:meny?/',
     createURL: (args) => `/saksoversikt/${args.sakId}`,
 };
 
@@ -47,15 +47,28 @@ export const saksoversiktValgtBehandling: Route<{
     createURL: (args) => `/saksoversikt/${args.sakId}/${args.behandlingId}/${args.meny}/`,
 };
 
-export const saksoversiktVilkårsvurdering: Route<{
+export const saksbehandlingBeregning: Route<{
     sakId: string;
     behandlingId: string;
-    meny: SaksbehandlingMenyvalg;
+}> = {
+    path: `/saksoversikt/:sakId/:behandlingId/${SaksbehandlingMenyvalg.Beregning}/`,
+    createURL: (args) => `/saksoversikt/${args.sakId}/${args.behandlingId}/${SaksbehandlingMenyvalg.Beregning}/`,
+};
+
+export const saksbehandlingVedtak: Route<{
+    sakId: string;
+    behandlingId: string;
+}> = {
+    path: `/saksoversikt/:sakId/:behandlingId/${SaksbehandlingMenyvalg.Vedtak}/`,
+    createURL: (args) => `/saksoversikt/${args.sakId}/${args.behandlingId}/${SaksbehandlingMenyvalg.Vedtak}/`,
+};
+
+export const saksbehandlingVilkårsvurdering: Route<{
+    sakId: string;
+    behandlingId: string;
     vilkar?: Vilkårtype;
 }> = {
-    path: '/saksoversikt/:sakId/:behandlingId/:meny/:vilkar?/',
-    createURL: (args) =>
-        `/saksoversikt/${args.sakId}/${args.behandlingId}/${SaksbehandlingMenyvalg.Vilkår}${
-            args.vilkar ? `/${args.vilkar}` : ''
-        }`,
+    path: `/saksoversikt/:sakId/:behandlingId/${SaksbehandlingMenyvalg.Vilkår}/:vilkar?/`,
+    createURL: ({ vilkar = Vilkårtype.Uførhet, ...args }) =>
+        `/saksoversikt/${args.sakId}/${args.behandlingId}/${SaksbehandlingMenyvalg.Vilkår}/${vilkar}`,
 };
