@@ -4,7 +4,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useState } from 'react';
 import { IntlProvider } from 'react-intl';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import { Kjønn } from '~api/personApi';
 import { Languages } from '~components/TextProvider';
@@ -12,6 +12,7 @@ import * as personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
+import * as Routes from '~lib/routes';
 import Søkefelt from '~pages/saksoversikt/søkefelt/Søkefelt';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
@@ -21,6 +22,7 @@ import styles from './attestering.module.less';
 import Attesteringsliste from './Attesteringsliste';
 
 const Attesteringsoversikt = () => {
+    const history = useHistory();
     const { sakId, behandlingId } = useParams<{
         sakId: string;
         behandlingId: string;
@@ -59,12 +61,13 @@ const Attesteringsoversikt = () => {
     useEffect(() => {
         setGender(oversettKjønn());
     }, [søker._tag]);
+    const rerouteToAttestering = (id: string) => history.push(Routes.attesteringsoversikt.createURL({ sakId: id }));
 
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
             {!RemoteData.isSuccess(data) && (
                 <div>
-                    <Søkefelt historyUrl={'/attestering'} />
+                    <Søkefelt onSuccess={rerouteToAttestering} />
                     {RemoteData.isPending(data) && <NavFrontendSpinner />}
                     {RemoteData.isFailure(data) && <AlertStripe type="feil">{data.error.message}</AlertStripe>}
                 </div>
@@ -76,7 +79,7 @@ const Attesteringsoversikt = () => {
                     <>
                         <div className={styles.topBar}>
                             <PersonCard fodselsnummer={person.fnr} gender={gender} name={showName(person)} />
-                            <Søkefelt historyUrl={'/attestering'} />
+                            <Søkefelt onSuccess={rerouteToAttestering} />
                         </div>
                         <div className={styles.container}>
                             <div className={styles.mainContent}>

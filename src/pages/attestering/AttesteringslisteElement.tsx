@@ -7,6 +7,7 @@ import { Behandling, Behandlingsstatus } from '~api/behandlingApi';
 import { Søknad } from '~api/søknadApi';
 import { formatDateTime } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 
 import styles from './attestering.module.less';
 
@@ -40,7 +41,12 @@ const AttesteringslisteElement = (props: Props) => {
                                 {behandling.status == Behandlingsstatus.TIL_ATTESTERING && (
                                     <Knapp
                                         onClick={() => {
-                                            history.push(`/attestering/${sakId}/${behandling.id}`);
+                                            history.push(
+                                                Routes.attestering.createURL({
+                                                    sakId: sakId,
+                                                    behandlingId: behandling.id,
+                                                })
+                                            );
                                         }}
                                     >
                                         Start attestering
