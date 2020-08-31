@@ -52,7 +52,7 @@
         "babel-polyfill": "^6.26.0",
         "babel-runtime": "^6.26.0",
         "classnames": "^2.2.6",
-        "date-fns": "^2.15.0",
+        "date-fns": "^2.16.0",
         "formik": "^2.1.5",
         "fp-ts": "^2.8.1",
         "js-cookie": "^2.2.1",
