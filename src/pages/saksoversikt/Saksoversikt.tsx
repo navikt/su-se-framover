@@ -5,14 +5,16 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useState } from 'react';
 import { IntlProvider } from 'react-intl';
-import { useParams } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import { Kjønn } from '~api/personApi';
+import { Sak } from '~api/sakApi';
 import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
+import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
 import Beregning from './beregning/Beregning';
@@ -24,41 +26,53 @@ import { SaksbehandlingMenyvalg } from './types';
 import Vedtak from './vedtak/Vedtak';
 import Vilkår from './vilkår/Vilkår';
 
-const Meny = (props: { aktiv: SaksbehandlingMenyvalg }) => (
-    <div className={styles.meny}>
-        <ol>
-            <li
-                className={classNames(styles.menyItem, {
-                    [styles.aktiv]: props.aktiv === SaksbehandlingMenyvalg.Vilkår,
-                })}
-            >
-                1.&nbsp;Vilkår
-            </li>
-            <li
-                className={classNames(styles.menyItem, {
-                    [styles.aktiv]: props.aktiv === SaksbehandlingMenyvalg.Beregning,
-                })}
-            >
-                2.&nbsp;Beregning
-            </li>
-            <li
-                className={classNames(styles.menyItem, {
-                    [styles.aktiv]: props.aktiv === SaksbehandlingMenyvalg.Vedtak,
-                })}
-            >
-                3.&nbsp;Vedtak
-            </li>
-        </ol>
-    </div>
-);
+const Meny = () => {
+    const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
+    return (
+        <div className={styles.meny}>
+            <ol>
+                <li
+                    className={classNames(styles.menyItem, {
+                        [styles.aktiv]: urlParams.meny === SaksbehandlingMenyvalg.Vilkår,
+                    })}
+                >
+                    1.&nbsp; Vilkår
+                </li>
+                <li
+                    className={classNames(styles.menyItem, {
+                        [styles.aktiv]: urlParams.meny === SaksbehandlingMenyvalg.Beregning,
+                    })}
+                >
+                    2.&nbsp; Beregning
+                </li>
+                <li
+                    className={classNames(styles.menyItem, {
+                        [styles.aktiv]: urlParams.meny === SaksbehandlingMenyvalg.Vedtak,
+                    })}
+                >
+                    3.&nbsp; Vedtak
+                </li>
+            </ol>
+        </div>
+    );
+};
+
+const Behandling = ({ sak }: { sak: Sak }) => {
+    const { meny, behandlingId } = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
+    switch (meny) {
+        case SaksbehandlingMenyvalg.Beregning:
+            return <Beregning sak={sak} />;
+        case SaksbehandlingMenyvalg.Vedtak:
+            return <Vedtak sak={sak} />;
+        case SaksbehandlingMenyvalg.Vilkår:
+            return <Vilkår sakId={sak.id} behandling={sak.behandlinger.find((b) => b.id === behandlingId)} />;
+        default:
+            return <div>404</div>;
+    }
+};
 
 const Saksoversikt = () => {
-    const { meny, ...urlParams } = useParams<{
-        meny: SaksbehandlingMenyvalg;
-        sakId: string;
-        stonadsperiodeId: string;
-        behandlingId: string;
-    }>();
+    const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
 
     const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
     const dispatch = useAppDispatch();
@@ -96,45 +110,42 @@ const Saksoversikt = () => {
 
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
-            {!RemoteData.isSuccess(data) && (
-                <div>
-                    <Søkefelt historyUrl={'/saksoversikt'} />
-                    {RemoteData.isPending(data) && <NavFrontendSpinner />}
-                    {RemoteData.isFailure(data) && <AlertStripe type="feil">{data.error.message}</AlertStripe>}
-                </div>
-            )}
-
-            {pipe(
-                data,
-                RemoteData.map(([data, sak]) => (
-                    <>
-                        <div className={styles.headerContainer}>
-                            <PersonCard fodselsnummer={data.fnr} gender={gender} name={showName(data)} />
-                            <Søkefelt historyUrl={'/saksoversikt'} />
-                        </div>
-                        <div className={styles.container}>
-                            <Meny aktiv={meny} />
-                            <div className={styles.mainContent}>
-                                {meny === SaksbehandlingMenyvalg.Søknad ? (
-                                    'Her kan vi kanskje vise hele søknaden'
-                                ) : meny === SaksbehandlingMenyvalg.Vilkår ? (
-                                    <Vilkår
-                                        sakId={sak.id}
-                                        behandling={sak.behandlinger.find((b) => b.id === urlParams.behandlingId)}
-                                    />
-                                ) : meny === SaksbehandlingMenyvalg.Beregning ? (
-                                    <Beregning sak={sak} behandlingId={urlParams.behandlingId} />
-                                ) : meny === SaksbehandlingMenyvalg.Vedtak ? (
-                                    <Vedtak sak={sak} behandlingId={urlParams.behandlingId} />
-                                ) : (
-                                    <Sakintro sak={sak} />
-                                )}
-                            </div>
-                        </div>
-                    </>
-                )),
-                RemoteData.getOrElse(() => <span />)
-            )}
+            <Switch>
+                <Route path={Routes.saksoversiktValgtSak.path}>
+                    {pipe(
+                        data,
+                        RemoteData.map(([søker, sak]) => (
+                            <>
+                                <div className={styles.headerContainer}>
+                                    <PersonCard fodselsnummer={søker.fnr} gender={gender} name={showName(søker)} />
+                                    <Søkefelt />
+                                </div>
+                                <div className={styles.container}>
+                                    <Switch>
+                                        <Route path={Routes.saksoversiktValgtBehandling.path}>
+                                            <Meny />
+                                            <div className={styles.mainContent}>
+                                                <Behandling sak={sak} />
+                                            </div>
+                                        </Route>
+                                        <Route path="*">
+                                            <Sakintro sak={sak} />
+                                        </Route>
+                                    </Switch>
+                                </div>
+                            </>
+                        )),
+                        RemoteData.getOrElse(() => <NavFrontendSpinner />)
+                    )}
+                </Route>
+                <Route path={Routes.saksoversiktIndex.path}>
+                    <div>
+                        <Søkefelt />
+                        {RemoteData.isPending(data) && <NavFrontendSpinner />}
+                        {RemoteData.isFailure(data) && <AlertStripe type="feil">{data.error.message}</AlertStripe>}
+                    </div>
+                </Route>
+            </Switch>
         </IntlProvider>
     );
 };

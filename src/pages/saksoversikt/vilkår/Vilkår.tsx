@@ -207,7 +207,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                 onClick={() => {
                     if (vilkårsvurderingIsValid(vilkårsvurderinger)) {
                         return history.push(
-                            routes.saksoversikt.createURL({
+                            routes.saksoversiktValgtBehandling.createURL({
                                 sakId: props.sakId,
                                 behandlingId: props.behandling.id,
                                 meny: SaksbehandlingMenyvalg.Beregning,
@@ -216,7 +216,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                     }
                     if (oneVilkåringsvurderingIsNotOk(vilkårsvurderinger)) {
                         return history.push(
-                            routes.saksoversikt.createURL({
+                            routes.saksoversiktValgtBehandling.createURL({
                                 sakId: props.sakId,
                                 behandlingId: props.behandling.id,
                                 meny: SaksbehandlingMenyvalg.Vedtak,
