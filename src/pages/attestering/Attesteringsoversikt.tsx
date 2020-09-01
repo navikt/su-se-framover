@@ -67,7 +67,7 @@ const Attesteringsoversikt = () => {
         <IntlProvider locale={Languages.nb} messages={messages}>
             {!RemoteData.isSuccess(data) && (
                 <div>
-                    <Søkefelt onSuccess={rerouteToAttestering} />
+                    <Søkefelt onSakFetchSuccess={rerouteToAttestering} />
                     {RemoteData.isPending(data) && <NavFrontendSpinner />}
                     {RemoteData.isFailure(data) && <AlertStripe type="feil">{data.error.message}</AlertStripe>}
                 </div>
@@ -79,7 +79,7 @@ const Attesteringsoversikt = () => {
                     <>
                         <div className={styles.topBar}>
                             <PersonCard fodselsnummer={person.fnr} gender={gender} name={showName(person)} />
-                            <Søkefelt onSuccess={rerouteToAttestering} />
+                            <Søkefelt onSakFetchSuccess={rerouteToAttestering} />
                         </div>
                         <div className={styles.container}>
                             <div className={styles.mainContent}>

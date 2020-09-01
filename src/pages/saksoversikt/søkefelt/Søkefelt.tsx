@@ -21,7 +21,7 @@ const Søkefelt = (props: { onSakFetchSuccess: (id: string) => void }) => {
                     const sakAction = await dispatch(sakSlice.fetchSak({ fnr }));
                     if (sakSlice.fetchSak.fulfilled.match(sakAction)) {
                         setFnr('');
-                        props.onSuccess(sakAction.payload.id);
+                        props.onSakFetchSuccess(sakAction.payload.id);
                     }
                 }
             }}

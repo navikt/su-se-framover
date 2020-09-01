@@ -120,7 +120,7 @@ const Saksoversikt = () => {
                             <>
                                 <div className={styles.headerContainer}>
                                     <PersonCard fodselsnummer={søker.fnr} gender={gender} name={showName(søker)} />
-                                    <Søkefelt onSuccess={rerouteToSak} />
+                                    <Søkefelt onSakFetchSuccess={rerouteToSak} />
                                 </div>
                                 <div className={styles.container}>
                                     <Switch>
@@ -142,7 +142,7 @@ const Saksoversikt = () => {
                 </Route>
                 <Route path={Routes.saksoversiktIndex.path}>
                     <div>
-                        <Søkefelt onSuccess={rerouteToSak} />
+                        <Søkefelt onSakFetchSuccess={rerouteToSak} />
                         {RemoteData.isPending(data) && <NavFrontendSpinner />}
                         {RemoteData.isFailure(data) && <AlertStripe type="feil">{data.error.message}</AlertStripe>}
                     </div>
