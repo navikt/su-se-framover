@@ -29,7 +29,11 @@ const Framdriftsindikator = (props: { behandling: Behandling; vilkår: Vilkårty
     return (
         <ol className={styles.container}>
             {vilkårrekkefølge
-                .filter((v) => props.behandling.vilkårsvurderinger[v].status !== VilkårVurderingStatus.IkkeVurdert)
+                .filter(
+                    (v) =>
+                        props.behandling.vilkårsvurderinger[v].status !== VilkårVurderingStatus.IkkeVurdert ||
+                        v === props.vilkår
+                )
                 .map((v) => (
                     <Item vilkar={v} status={props.behandling.vilkårsvurderinger[v].status} key={v} />
                 ))}
