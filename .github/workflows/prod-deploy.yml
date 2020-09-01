@@ -1,0 +1,20 @@
+name: Manuell deploy til prod
+
+on: workflow_dispatch
+
+env:
+    IMAGE: docker.pkg.github.com/${{ github.repository }}/su-se-framover:${{ github.sha }}
+
+jobs:
+    deploy_to_prod:
+        name: Deploy to prod
+        if: github.ref == 'refs/heads/master'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v1
+            - uses: nais/deploy/actions/deploy@v1
+              env:
+                  APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+                  CLUSTER: prod-fss
+                  RESOURCE: nais.yml
+                  VARS: nais-prod.json
