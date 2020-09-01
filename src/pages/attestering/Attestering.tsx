@@ -93,7 +93,7 @@ const Attestering = (props: Props) => {
         onSubmit: (values) => {
             const { beslutning } = values;
 
-            if (beslutning) {
+            if (values.beslutning) {
                 dispatch(
                     sakSlice.startAttestering({
                         sakId: sak.id,
