@@ -256,7 +256,7 @@ export default createSlice({
                       code: action.payload.code,
                       message: `Feilet med status ${action.payload.statusCode}`,
                   })
-                : (state.beregningStatus = RemoteData.failure({
+                : (state.attesteringStatus = RemoteData.failure({
                       code: ErrorCode.Unknown,
                       message: 'Ukjent feil',
                   }));
