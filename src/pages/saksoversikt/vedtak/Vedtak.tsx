@@ -77,11 +77,14 @@ const Vedtak = (props: Props) => {
     if (!behandling) {
         return <AlertStripe type="feil">Fant ikke behandlingsid</AlertStripe>;
     }
+
+    if (behandling.status === Behandlingsstatus.TIL_ATTESTERING) {
+        return <div>Behandling er sendt til Attestering</div>;
+    }
+
     if (
         behandling.vilkårsvurderinger &&
-        (behandling.status === Behandlingsstatus.SIMULERT ||
-            behandling.status === Behandlingsstatus.AVSLÅTT ||
-            behandling.status === Behandlingsstatus.TIL_ATTESTERING)
+        (behandling.status === Behandlingsstatus.SIMULERT || behandling.status === Behandlingsstatus.AVSLÅTT)
     ) {
         return (
             <div>
@@ -134,10 +137,6 @@ const Vedtak = (props: Props) => {
                         Send til attestering
                     </Hovedknapp>
                 </div>
-                {console.log(sendtTilAttesteringStatus)}
-                {RemoteData.isSuccess(sendtTilAttesteringStatus) && (
-                    <AlertStripeSuksess>Sendt til Attestering</AlertStripeSuksess>
-                )}
                 {RemoteData.isFailure(sendtTilAttesteringStatus) && (
                     <AlertStripeFeil>
                         <div>
@@ -150,6 +149,7 @@ const Vedtak = (props: Props) => {
             </div>
         );
     }
+
     return <div>Behandlingen er ikke ferdig</div>;
 };
 
