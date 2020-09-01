@@ -78,12 +78,15 @@ export interface Behandling {
     status: Behandlingsstatus;
     utbetaling: Nullable<Utbetaling>;
     opprettet: string;
+    attestant: Nullable<string>;
 }
 
 export enum Behandlingsstatus {
     OPPRETTET = 'OPPRETTET',
     BEREGNET = 'BEREGNET',
     SIMULERT = 'SIMULERT',
+    TIL_ATTESTERING = 'TIL_ATTESTERING',
+    ATTESTERT = 'ATTESTERT',
     /*VEDTAKSBREV = 'VEDTAKSBREV',*/
     INNVILGET = 'INNVILGET',
     AVSLÅTT = 'AVSLÅTT',
@@ -189,5 +192,12 @@ export async function sendTilAttestering(arg: { sakId: string; behandlingId: str
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/tilAttestering`,
         method: 'POST',
+    });
+}
+
+export async function attester(arg: { sakId: string; behandlingId: string }) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/attester`,
+        method: 'PATCH',
     });
 }

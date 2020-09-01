@@ -1,16 +1,13 @@
 import { Input } from 'nav-frontend-skjema';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import * as Routes from '~lib/routes';
 import { useAppDispatch } from '~redux/Store';
 
-const Søkefelt = () => {
+const Søkefelt = (props: { onSakFetchSuccess: (id: string) => void }) => {
     const dispatch = useAppDispatch();
     const [fnr, setFnr] = React.useState('');
-    const history = useHistory();
 
     return (
         <Input
@@ -24,11 +21,7 @@ const Søkefelt = () => {
                     const sakAction = await dispatch(sakSlice.fetchSak({ fnr }));
                     if (sakSlice.fetchSak.fulfilled.match(sakAction)) {
                         setFnr('');
-                        history.push(
-                            Routes.saksoversiktValgtSak.createURL({
-                                sakId: sakAction.payload.id,
-                            })
-                        );
+                        props.onSakFetchSuccess(sakAction.payload.id);
                     }
                 }
             }}

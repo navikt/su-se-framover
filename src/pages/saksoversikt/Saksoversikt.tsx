@@ -5,7 +5,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useState } from 'react';
 import { IntlProvider } from 'react-intl';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 
 import { Kjønn } from '~api/personApi';
 import { Sak } from '~api/sakApi';
@@ -73,6 +73,7 @@ const Behandling = ({ sak }: { sak: Sak }) => {
 
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
+    const history = useHistory();
 
     const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
     const dispatch = useAppDispatch();
@@ -107,6 +108,7 @@ const Saksoversikt = () => {
     useEffect(() => {
         setGender(oversettKjønn());
     }, [søker._tag]);
+    const rerouteToSak = (id: string) => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: id }));
 
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
@@ -118,7 +120,7 @@ const Saksoversikt = () => {
                             <>
                                 <div className={styles.headerContainer}>
                                     <PersonCard fodselsnummer={søker.fnr} gender={gender} name={showName(søker)} />
-                                    <Søkefelt />
+                                    <Søkefelt onSakFetchSuccess={rerouteToSak} />
                                 </div>
                                 <div className={styles.container}>
                                     <Switch>
@@ -140,7 +142,7 @@ const Saksoversikt = () => {
                 </Route>
                 <Route path={Routes.saksoversiktIndex.path}>
                     <div>
-                        <Søkefelt />
+                        <Søkefelt onSakFetchSuccess={rerouteToSak} />
                         {RemoteData.isPending(data) && <NavFrontendSpinner />}
                         {RemoteData.isFailure(data) && <AlertStripe type="feil">{data.error.message}</AlertStripe>}
                     </div>

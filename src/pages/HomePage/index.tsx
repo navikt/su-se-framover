@@ -13,6 +13,9 @@ const HomePage = () => (
             <Link to={'/saksoversikt'} className={`${styles.link} knapp`}>
                 Saksbehandler
             </Link>
+            <Link to={'/attestering'} className={`${styles.link} knapp`}>
+                Attestant
+            </Link>
         </div>
     </div>
 );

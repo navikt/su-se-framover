@@ -1,0 +1,94 @@
+@import '~/styles/variables.less';
+
+.topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    padding-right: @spacing-xs;
+
+    border-bottom: 2px solid @navLysGra;
+}
+
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    padding: @spacing;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    width: 100%;
+}
+
+.attesteringsliste {
+    width: 100%;
+    max-width: 50rem;
+}
+
+.behandlingListItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tittel {
+    margin-bottom: @spacing-s;
+}
+
+.undertittel {
+    margin-bottom: 16px;
+}
+
+.søknader > li {
+    margin-bottom: 16px;
+}
+
+.førstegangsbehandling {
+    display: flex;
+    justify-content: space-between;
+}
+
+.infolinjeContainer {
+    margin-bottom: @spacing-xs;
+
+    .infolinje {
+        display: flex;
+        align-items: center;
+
+        .infotittel {
+            font-weight: 600;
+        }
+        .statusContainer {
+            display: flex;
+            align-items: center;
+
+            .statusIcon {
+                display: flex;
+                align-items: center;
+                margin-right: @spacing-xxs;
+            }
+        }
+    }
+}
+
+.vedtakContainer {
+    margin-bottom: @spacing-xl;
+    > :not(:last-child) {
+        margin-bottom: @spacing;
+    }
+}
+
+.navigeringContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sendInnAttestering {
+    margin-top: @spacing-s;
+}

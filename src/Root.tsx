@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 
 import apiClient from '~/api/apiClient';
+import Attesteringsoversikt from '~pages/attestering/Attesteringsoversikt';
 import HomePage from '~pages/HomePage';
 import Saksoversikt from '~pages/saksoversikt/Saksoversikt';
 
@@ -47,6 +48,9 @@ const Root = () => {
                                 </Route>
                                 <Route path={routes.saksoversiktIndex.path}>
                                     <Saksoversikt />
+                                </Route>
+                                <Route path={routes.attestering.path}>
+                                    <Attesteringsoversikt />
                                 </Route>
                                 <Route>404</Route>
                             </Switch>
