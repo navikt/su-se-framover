@@ -5,19 +5,14 @@ import { Beregning } from '~api/behandlingApi';
 import { formatDateTime } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 
+import { InfoLinje } from '../delt/Infolinje/Infolinje';
+
 import messages from './beregning-nb';
 import styles from './visBeregning.module.less';
 
 interface Props {
     beregning: Beregning;
 }
-
-export const InfoLinje = (props: { tittel: string; value: string | number }) => (
-    <div className={styles.infolinje}>
-        <span>{props.tittel}</span>
-        <span>{props.value}</span>
-    </div>
-);
 
 const VisBeregning = (props: Props) => {
     const intl = useI18n({ messages });

@@ -10,8 +10,8 @@ import { useI18n } from '~lib/hooks';
 import { useAppSelector } from '~redux/Store';
 
 import messages from '../beregning/beregning-nb';
-import { InfoLinje } from '../beregning/VisBeregning';
 import styles from '../beregning/visBeregning.module.less';
+import { InfoLinje } from '../delt/Infolinje/Infolinje';
 
 interface Props {
     sak: Sak;
@@ -28,22 +28,24 @@ const Utbetalingssimulering = (props: { utbetaling: Utbetaling }) => {
                 <InfoLinje tittel={'opprettet:'} value={formatDateTime(props.utbetaling.opprettet, intl)} />
                 <InfoLinje tittel={'brutto:'} value={props.utbetaling.simulering.totalBruttoYtelse} />
             </div>
-            <table className="tabell">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Brutto beløp</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {props.utbetaling.simulering.perioder.map((periode, index) => (
-                        <tr key={index}>
-                            <td>{`${intl.formatDate(periode.fom)} - ${intl.formatDate(periode.tom)}`}</td>
-                            <td>{periode.bruttoYtelse}</td>
+            {props.utbetaling.simulering.perioder && (
+                <table className="tabell">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Brutto beløp</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {props.utbetaling.simulering.perioder.map((periode, index) => (
+                            <tr key={index}>
+                                <td>{`${intl.formatDate(periode.fom)} - ${intl.formatDate(periode.tom)}`}</td>
+                                <td>{periode.bruttoYtelse}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </>
     );
 };
