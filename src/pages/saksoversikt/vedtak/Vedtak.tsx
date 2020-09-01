@@ -1,3 +1,4 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
@@ -5,14 +6,16 @@ import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype, sendTilAttestering } from '~api/behandlingApi';
+import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
 import { Sak } from '~api/sakApi';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import * as routes from '~lib/routes.ts';
 import VisBeregning from '~pages/saksoversikt/beregning/VisBeregning';
 import { Simulering } from '~pages/saksoversikt/simulering/simulering';
 import { SaksbehandlingMenyvalg } from '~pages/saksoversikt/types';
+import { useAppSelector, useAppDispatch } from '~redux/Store';
 
 import styles from './vedtak.module.less';
 
@@ -63,16 +66,22 @@ const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
 };
 
 const Vedtak = (props: Props) => {
+    const sendtTilAttesteringStatus = useAppSelector((s) => s.sak.sendtTilAttesteringStatus);
+    const dispatch = useAppDispatch();
+
     const { sak } = props;
     const { behandlingId } = routes.useRouteParams<typeof routes.saksoversiktValgtBehandling>();
 
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
+
     if (!behandling) {
         return <AlertStripe type="feil">Fant ikke behandlingsid</AlertStripe>;
     }
     if (
         behandling.vilkårsvurderinger &&
-        (behandling.status === Behandlingsstatus.SIMULERT || behandling.status === Behandlingsstatus.AVSLÅTT)
+        (behandling.status === Behandlingsstatus.SIMULERT ||
+            behandling.status === Behandlingsstatus.AVSLÅTT ||
+            behandling.status === Behandlingsstatus.TIL_ATTESTERING)
     ) {
         return (
             <div>
@@ -107,17 +116,6 @@ const Vedtak = (props: Props) => {
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>
-                    <Hovedknapp
-                        onClick={() => {
-                            sendTilAttestering({
-                                sakId: sak.id,
-                                behandlingId: behandlingId,
-                            });
-                        }}
-                        htmlType="button"
-                    >
-                        Send til attestering
-                    </Hovedknapp>
                     <Link
                         to={routes.saksoversiktValgtBehandling.createURL({
                             sakId: sak.id,
@@ -128,7 +126,27 @@ const Vedtak = (props: Props) => {
                     >
                         Tilbake
                     </Link>
+                    <Hovedknapp
+                        spinner={RemoteData.isPending(sendtTilAttesteringStatus)}
+                        onClick={() => dispatch(sakSlice.tilAttestering({ sakId: sak.id, behandlingId: behandlingId }))}
+                        htmlType="button"
+                    >
+                        Send til attestering
+                    </Hovedknapp>
                 </div>
+                {console.log(sendtTilAttesteringStatus)}
+                {RemoteData.isSuccess(sendtTilAttesteringStatus) && (
+                    <AlertStripeSuksess>Sendt til Attestering</AlertStripeSuksess>
+                )}
+                {RemoteData.isFailure(sendtTilAttesteringStatus) && (
+                    <AlertStripeFeil>
+                        <div>
+                            <p>Sendingen Failet</p>
+                            <p>Error code: {sendtTilAttesteringStatus.error.code}</p>
+                            <p>Melding: {sendtTilAttesteringStatus.error.message}</p>
+                        </div>
+                    </AlertStripeFeil>
+                )}
             </div>
         );
     }

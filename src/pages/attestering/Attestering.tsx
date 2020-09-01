@@ -57,13 +57,15 @@ const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
     }
     if (props.behandling.beregning) {
         return (
-            <>
-                <VisBeregning beregning={props.behandling.beregning} />
+            <div className={styles.beregningOgOppdragContainer}>
+                <div className={styles.beregningContainer}>
+                    <VisBeregning beregning={props.behandling.beregning} />
+                </div>
                 <div>
                     <Innholdstittel>Oppdragssimulering</Innholdstittel>
                     <Simulering sak={props.sak} behandlingId={props.behandling.id} />
                 </div>
-            </>
+            </div>
         );
     }
     return <>Det er ikke gjort en beregning</>;
