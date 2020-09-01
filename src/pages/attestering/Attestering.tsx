@@ -91,8 +91,6 @@ const Attestering = (props: Props) => {
     const formik = useFormik<FormData>({
         initialValues: {},
         onSubmit: (values) => {
-            const { beslutning } = values;
-
             if (values.beslutning) {
                 dispatch(
                     sakSlice.startAttestering({
@@ -118,125 +116,125 @@ const Attestering = (props: Props) => {
 
     const { errors } = formik;
     if (
-        behandling.vilkårsvurderinger &&
-        (behandling.status === Behandlingsstatus.TIL_ATTESTERING ||
+        !behandling.vilkårsvurderinger ||
+        !(
+            behandling.status === Behandlingsstatus.TIL_ATTESTERING ||
             behandling.status === Behandlingsstatus.ATTESTERT ||
-            behandling.status === Behandlingsstatus.AVSLÅTT)
+            behandling.status === Behandlingsstatus.AVSLÅTT
+        )
     ) {
-        return (
-            <div>
-                <div className={styles.vedtakContainer}>
-                    <Innholdstittel>Vedtak</Innholdstittel>
-                    <div>
-                        {behandling.status === Behandlingsstatus.TIL_ATTESTERING && (
-                            <AlertStripeSuksess>{Behandlingsstatus.SIMULERT}</AlertStripeSuksess>
-                        )}
-                        {behandling.status === Behandlingsstatus.AVSLÅTT && (
-                            <AlertStripeFeil>{Behandlingsstatus.AVSLÅTT}</AlertStripeFeil>
-                        )}
-                    </div>
-                    <div>
-                        <VilkårsOppsummering behandling={behandling} sakId={sak.id} />
-                    </div>
-                    <div>
-                        <VisDersomSimulert sak={sak} behandling={behandling} />
-                    </div>
-                    <div>
-                        <Innholdstittel>Vis brev kladd</Innholdstittel>
-                        <Lenke
-                            href={'#'}
-                            onClick={() =>
-                                fetchBrev(sak.id, behandlingId).then((res) => {
-                                    if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
-                                })
-                            }
-                        >
-                            test
-                        </Lenke>
-                    </div>
-                </div>
-                <div className={styles.navigeringContainer}>
-                    {behandling.status === Behandlingsstatus.TIL_ATTESTERING && (
-                        <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                formik.handleSubmit();
-                                setHasSubmitted(true);
-                            }}
-                        >
-                            <RadioPanelGruppe
-                                className={styles.sats}
-                                name={intl.formatMessage({ id: 'attestering.beslutning' })}
-                                legend={intl.formatMessage({ id: 'attestering.beslutning' })}
-                                radios={[
-                                    {
-                                        label: intl.formatMessage({ id: 'attestering.beslutning.godkjenn' }),
-                                        value: 'godkjenn',
-                                    },
-                                    {
-                                        label: intl.formatMessage({ id: 'attestering.beslutning.revurder' }),
-                                        value: 'revurder',
-                                    },
-                                ]}
-                                checked={
-                                    formik.values.beslutning
-                                        ? 'godkjenn'
-                                        : formik.values.beslutning === false
-                                        ? 'revurder'
-                                        : undefined
-                                }
-                                onChange={(_, value) =>
-                                    formik.setValues({ ...formik.values, beslutning: value === 'godkjenn' })
-                                }
-                                feil={errors.beslutning}
-                            />
-                            {formik.values.beslutning === false && (
-                                <>
-                                    <Select
-                                        label="Velg grunn"
-                                        onChange={(value) =>
-                                            formik.setValues({ ...formik.values, grunn: value.target.value })
-                                        }
-                                        value={formik.values.grunn ?? ''}
-                                        feil={errors.grunn}
-                                    >
-                                        <option value=""> Grunn </option>
-                                        {Object.values(Grunn).map((grunn, index) => (
-                                            <option value={grunn} key={index}>
-                                                {grunn}
-                                            </option>
-                                        ))}
-                                    </Select>
+        return <div>Behandlingen er ikke ferdig</div>;
+    }
 
-                                    <Textarea
-                                        label="Begrunnelse"
-                                        name="begrunnelse"
-                                        value={formik.values.begrunnelse ?? ''}
-                                        feil={formik.errors.begrunnelse}
-                                        onChange={formik.handleChange}
-                                    />
-                                </>
-                            )}
-                            <Feiloppsummering
-                                className={styles.feiloppsummering}
-                                tittel={'Feiloppsummering'}
-                                feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                                hidden={!formikErrorsHarFeil(formik.errors)}
-                            />
-                            <Knapp
-                                spinner={RemoteData.isPending(attesteringStatus)}
-                                className={styles.sendInnAttestering}
-                            >
-                                {intl.formatMessage({ id: 'attestering.knapp.send' })}
-                            </Knapp>
-                        </form>
+    return (
+        <div>
+            <div className={styles.vedtakContainer}>
+                <Innholdstittel>Vedtak</Innholdstittel>
+                <div>
+                    {behandling.status === Behandlingsstatus.TIL_ATTESTERING && (
+                        <AlertStripeSuksess>{Behandlingsstatus.SIMULERT}</AlertStripeSuksess>
                     )}
-                    {RemoteData.isSuccess(attesteringStatus) && <p>Attesteringsbeslut innsendt!</p>}
+                    {behandling.status === Behandlingsstatus.AVSLÅTT && (
+                        <AlertStripeFeil>{Behandlingsstatus.AVSLÅTT}</AlertStripeFeil>
+                    )}
+                </div>
+                <div>
+                    <VilkårsOppsummering behandling={behandling} sakId={sak.id} />
+                </div>
+                <div>
+                    <VisDersomSimulert sak={sak} behandling={behandling} />
+                </div>
+                <div>
+                    <Innholdstittel>Vis brev kladd</Innholdstittel>
+                    <Lenke
+                        href={'#'}
+                        onClick={() =>
+                            fetchBrev(sak.id, behandlingId).then((res) => {
+                                if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
+                            })
+                        }
+                    >
+                        test
+                    </Lenke>
                 </div>
             </div>
-        );
-    }
-    return <div>Behandlingen er ikke ferdig</div>;
+            <div className={styles.navigeringContainer}>
+                {behandling.status === Behandlingsstatus.TIL_ATTESTERING && (
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            formik.handleSubmit();
+                            setHasSubmitted(true);
+                        }}
+                    >
+                        <RadioPanelGruppe
+                            className={styles.sats}
+                            name={intl.formatMessage({ id: 'attestering.beslutning' })}
+                            legend={intl.formatMessage({ id: 'attestering.beslutning' })}
+                            radios={[
+                                {
+                                    label: intl.formatMessage({ id: 'attestering.beslutning.godkjenn' }),
+                                    value: 'godkjenn',
+                                },
+                                {
+                                    label: intl.formatMessage({ id: 'attestering.beslutning.revurder' }),
+                                    value: 'revurder',
+                                },
+                            ]}
+                            checked={
+                                formik.values.beslutning
+                                    ? 'godkjenn'
+                                    : formik.values.beslutning === false
+                                    ? 'revurder'
+                                    : undefined
+                            }
+                            onChange={(_, value) =>
+                                formik.setValues({ ...formik.values, beslutning: value === 'godkjenn' })
+                            }
+                            feil={errors.beslutning}
+                        />
+                        {formik.values.beslutning === false && (
+                            <>
+                                <Select
+                                    label="Velg grunn"
+                                    onChange={(value) =>
+                                        formik.setValues({ ...formik.values, grunn: value.target.value })
+                                    }
+                                    value={formik.values.grunn ?? ''}
+                                    feil={errors.grunn}
+                                >
+                                    <option value=""> Grunn </option>
+                                    {Object.values(Grunn).map((grunn, index) => (
+                                        <option value={grunn} key={index}>
+                                            {grunn}
+                                        </option>
+                                    ))}
+                                </Select>
+
+                                <Textarea
+                                    label="Begrunnelse"
+                                    name="begrunnelse"
+                                    value={formik.values.begrunnelse ?? ''}
+                                    feil={formik.errors.begrunnelse}
+                                    onChange={formik.handleChange}
+                                />
+                            </>
+                        )}
+                        <Feiloppsummering
+                            className={styles.feiloppsummering}
+                            tittel={'Feiloppsummering'}
+                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                            hidden={!formikErrorsHarFeil(formik.errors)}
+                        />
+                        <Knapp spinner={RemoteData.isPending(attesteringStatus)} className={styles.sendInnAttestering}>
+                            {intl.formatMessage({ id: 'attestering.knapp.send' })}
+                        </Knapp>
+                    </form>
+                )}
+                {RemoteData.isSuccess(attesteringStatus) && <p>Attesteringsbeslut innsendt!</p>}
+            </div>
+        </div>
+    );
 };
 
 export default Attestering;

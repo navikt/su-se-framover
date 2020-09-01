@@ -1,7 +1,6 @@
-import { Knapp } from 'nav-frontend-knapper';
+import Lenke from 'nav-frontend-lenker';
 import Panel from 'nav-frontend-paneler';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { Behandling, Behandlingsstatus } from '~api/behandlingApi';
 import { Søknad } from '~api/søknadApi';
@@ -19,7 +18,6 @@ type Props = {
 
 const AttesteringslisteElement = (props: Props) => {
     const intl = useI18n({ messages: {} });
-    const history = useHistory();
     const { behandlinger, søknad, sakId } = props;
 
     return (
@@ -39,18 +37,9 @@ const AttesteringslisteElement = (props: Props) => {
                                     <p>Behandling påbegynt: {formatDateTime(behandling.opprettet, intl)}</p>
                                 </div>
                                 {behandling.status == Behandlingsstatus.TIL_ATTESTERING && (
-                                    <Knapp
-                                        onClick={() => {
-                                            history.push(
-                                                Routes.attestering.createURL({
-                                                    sakId: sakId,
-                                                    behandlingId: behandling.id,
-                                                })
-                                            );
-                                        }}
-                                    >
+                                    <Lenke href={Routes.attestering.createURL({ sakId, behandlingId: behandling.id })}>
                                         Start attestering
-                                    </Knapp>
+                                    </Lenke>
                                 )}
                             </li>
                         );
