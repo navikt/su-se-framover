@@ -121,7 +121,7 @@
         "redux-thunk": "^2.3.0",
         "reset-css": "^5.0.1",
         "styles": "^0.2.1",
-        "yup": "^0.29.1"
+        "yup": "^0.29.3"
     },
     "devDependencies": {
         "@babel/core": "^7.11.4",
@@ -136,7 +136,7 @@
         "@types/parcel-env": "0.0.0",
         "@types/react-redux": "^7.1.9",
         "@types/react-router-dom": "^5.1.5",
-        "@types/yup": "^0.29.3",
+        "@types/yup": "^0.29.6",
         "@typescript-eslint/eslint-plugin": "^3.9.1",
         "@typescript-eslint/parser": "^3.10.1",
         "enzyme-adapter-react-16": "^1.15.3",

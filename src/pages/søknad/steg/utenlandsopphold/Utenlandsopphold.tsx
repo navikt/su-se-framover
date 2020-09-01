@@ -38,17 +38,22 @@ interface FormData {
 
 const isValidUtenlandsopphold = (val: DateFns.Interval) => DateFns.isAfter(val.end, val.start);
 
-const reiseSchema = yup.object({ utreisedato: yup.string().required(), innreisedato: yup.string().required() }).test({
-    name: 'Utenlandsopphold',
-    message: 'Utreisedato må være før innreisedato',
-    test: (val: Utenlandsopphold) =>
-        isValidUtenlandsopphold({
-            start: new Date(val.utreisedato),
-            end: new Date(val.innreisedato),
-        }),
-});
+const reiseSchema = yup
+    .object<Utenlandsopphold>({ utreisedato: yup.string().required(), innreisedato: yup.string().required() })
+    .test({
+        name: 'Utenlandsopphold',
+        message: 'Utreisedato må være før innreisedato',
+        test: (val) =>
+            isValidUtenlandsopphold({
+                start: new Date(val.utreisedato),
+                end: new Date(val.innreisedato),
+            }),
+    });
 
-const testOverlappendeUtenlandsopphold: yup.TestFunction = (opphold: Utenlandsopphold[]) => {
+const testOverlappendeUtenlandsopphold: yup.TestFunction<Utenlandsopphold[] | null | undefined> = (opphold) => {
+    if (!opphold) {
+        return false;
+    }
     if (opphold.length < 2) {
         return true;
     }
@@ -75,13 +80,9 @@ const schema = yup.object<FormData>({
         .when('harReistTilUtlandetSiste90dager', {
             is: true,
             then: yup
-                .array()
+                .array<Utenlandsopphold>()
                 .min(1, 'Legg til felt hvis det er utenlandsopphold')
-                .test({
-                    name: 'Overlapping',
-                    message: 'Utenlandsopphold kan ikke overlappe',
-                    test: testOverlappendeUtenlandsopphold,
-                })
+                .test('Overlapping', 'Utenlandsopphold kan ikke overlappe', testOverlappendeUtenlandsopphold)
                 .required(),
             otherwise: yup.array().max(0),
         }),
@@ -92,13 +93,9 @@ const schema = yup.object<FormData>({
         .when('skalReiseTilUtlandetNeste12Måneder', {
             is: true,
             then: yup
-                .array()
+                .array<Utenlandsopphold>()
                 .min(1)
-                .test({
-                    name: 'Overlapping',
-                    message: 'Utenlandsopphold kan ikke overlappe',
-                    test: testOverlappendeUtenlandsopphold,
-                })
+                .test('Overlapping', 'Utenlandsopphold kan ikke overlappe', testOverlappendeUtenlandsopphold)
                 .required(),
             otherwise: yup.array().max(0),
         }),
