@@ -256,10 +256,10 @@ export default createSlice({
                       code: action.payload.code,
                       message: `Feilet med status ${action.payload.statusCode}`,
                   })
-                : (state.attesteringStatus = RemoteData.failure({
+                : RemoteData.failure({
                       code: ErrorCode.Unknown,
                       message: 'Ukjent feil',
-                  }));
+                  });
         });
         builder.addCase(startAttestering.fulfilled, (state, action) => {
             state.attesteringStatus = RemoteData.success(null);
