@@ -94,29 +94,19 @@ export enum Behandlingsstatus {
 
 export interface Utbetaling {
     id: string;
+    opprettet: string;
     simulering: Simulering;
 }
 
 export interface Simulering {
-    gjelderId: string;
-    gjelderNavn: string;
-    datoBeregnet: string;
-    totalBelop: number;
-    periodeList: Simuleringsperiode[];
+    totalBruttoYtelse: number;
+    perioder: SimulertPeriode[];
 }
 
-export interface Simuleringsperiode {
+export interface SimulertPeriode {
     fom: string;
     tom: string;
-    utbetaling: Simuleringsutbetaling[];
-}
-
-export interface Simuleringsutbetaling {
-    detaljer: Simuleringsdetalj[];
-}
-
-export interface Simuleringsdetalj {
-    belop: number;
+    bruttoYtelse: number;
 }
 
 export async function startBehandling(arg: { sakId: string; søknadId: string }): Promise<ApiClientResult<Behandling>> {

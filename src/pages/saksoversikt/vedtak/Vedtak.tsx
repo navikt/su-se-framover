@@ -54,7 +54,6 @@ const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
             <>
                 <VisBeregning beregning={props.behandling.beregning} />
                 <div>
-                    <Innholdstittel>Oppdragssimulering</Innholdstittel>
                     <Simulering sak={props.sak} behandlingId={props.behandling.id} />
                 </div>
             </>
