@@ -5,7 +5,7 @@ import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useAppDispatch } from '~redux/Store';
 
-const Søkefelt = (props: { onSuccess: (id: string) => void }) => {
+const Søkefelt = (props: { onSakFetchSuccess: (id: string) => void }) => {
     const dispatch = useAppDispatch();
     const [fnr, setFnr] = React.useState('');
 
