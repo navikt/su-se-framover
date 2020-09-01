@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Behandling, Vilkårtype, VilkårVurderingStatus } from '~api/behandlingApi';
+import { Sak } from '~api/sakApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { oneVilkåringsvurderingIsNotOk, vilkårsvurderingIsValid } from '~features/saksoversikt/utils';
 import * as routes from '~lib/routes';
@@ -235,14 +236,12 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
     );
 };
 
-const Vilkår = (props: { sakId: string; behandling: Behandling | undefined }) => {
+const Vilkår = (props: { sak: Sak }) => {
+    const { behandlingId } = routes.useRouteParams<typeof routes.saksbehandlingVilkårsvurdering>();
+    const behandling = props.sak.behandlinger.find((b) => b.id === behandlingId);
     return (
         <div className={styles.container}>
-            {props.behandling ? (
-                <VilkårInnhold behandling={props.behandling} sakId={props.sakId} />
-            ) : (
-                'ingen behandling enda'
-            )}
+            {behandling ? <VilkårInnhold behandling={behandling} sakId={props.sak.id} /> : 'ingen behandling enda'}
         </div>
     );
 };

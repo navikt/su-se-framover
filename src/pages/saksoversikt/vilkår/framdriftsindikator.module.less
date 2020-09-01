@@ -1,0 +1,31 @@
+@import '~/styles/variables.less';
+
+.container {
+    display: flex;
+    flex-direction: column;
+
+    padding: @spacing-xs;
+}
+
+.item {
+    display: flex;
+
+    &:last-child .line {
+        display: none;
+    }
+}
+
+.iconAndLineContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: @spacing-xxs;
+    width: 2rem;
+}
+
+.line {
+    min-height: 2rem;
+    width: 2px;
+    background-color: @navMorkGra;
+    margin: @spacing-xxxs 0;
+}

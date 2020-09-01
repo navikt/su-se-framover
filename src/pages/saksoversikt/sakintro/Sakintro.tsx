@@ -10,6 +10,7 @@ import * as sakApi from 'api/sakApi';
 import * as behandlingSlice from '~features/saksoversikt/sak.slice';
 import { formatDateTime } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import styles from './sakintro.module.less';
@@ -55,7 +56,10 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                                                             'id' in startBehandlingRes.payload
                                                         ) {
                                                             history.push(
-                                                                `/saksoversikt/${sakId}/${startBehandlingRes.payload.id}/vilkar/`
+                                                                Routes.saksbehandlingVilkårsvurdering.createURL({
+                                                                    sakId,
+                                                                    behandlingId: startBehandlingRes.payload.id,
+                                                                })
                                                             );
                                                         }
                                                     }}
@@ -76,7 +80,12 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                                                         </Element>
                                                         <Knapp
                                                             onClick={() => {
-                                                                history.push(`/saksoversikt/${sakId}/${b.id}/vilkar/`);
+                                                                history.push(
+                                                                    Routes.saksbehandlingVilkårsvurdering.createURL({
+                                                                        sakId,
+                                                                        behandlingId: b.id,
+                                                                    })
+                                                                );
                                                             }}
                                                         >
                                                             Fortsett behandling

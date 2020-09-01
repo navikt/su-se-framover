@@ -3,16 +3,16 @@ import { PersonCard, Gender } from '@navikt/nap-person-card';
 import classNames from 'classnames';
 import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
 import { Kjønn } from '~api/personApi';
-import { Sak } from '~api/sakApi';
 import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import FeatureToggles from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
@@ -25,6 +25,7 @@ import Søkefelt from './søkefelt/Søkefelt';
 import { SaksbehandlingMenyvalg } from './types';
 import Vedtak from './vedtak/Vedtak';
 import Vilkår from './vilkår/Vilkår';
+import VilkårV2 from './vilkår/VilkårV2';
 
 const Meny = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
@@ -57,20 +58,6 @@ const Meny = () => {
     );
 };
 
-const Behandling = ({ sak }: { sak: Sak }) => {
-    const { meny, behandlingId } = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
-    switch (meny) {
-        case SaksbehandlingMenyvalg.Beregning:
-            return <Beregning sak={sak} />;
-        case SaksbehandlingMenyvalg.Vedtak:
-            return <Vedtak sak={sak} />;
-        case SaksbehandlingMenyvalg.Vilkår:
-            return <Vilkår sakId={sak.id} behandling={sak.behandlinger.find((b) => b.id === behandlingId)} />;
-        default:
-            return <div>404</div>;
-    }
-};
-
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
     const history = useHistory();
@@ -91,7 +78,7 @@ const Saksoversikt = () => {
 
     const data = RemoteData.combine(søker, sak);
 
-    const oversettKjønn = () => {
+    const gender = useMemo<Gender>(() => {
         if (RemoteData.isSuccess(søker)) {
             if (søker.value.kjønn === Kjønn.Mann) {
                 return Gender.male;
@@ -102,11 +89,6 @@ const Saksoversikt = () => {
             }
         }
         return Gender.unknown;
-    };
-
-    const [gender, setGender] = useState<Gender>(Gender.unknown);
-    useEffect(() => {
-        setGender(oversettKjønn());
     }, [søker._tag]);
     const rerouteToSak = (id: string) => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: id }));
 
@@ -127,7 +109,21 @@ const Saksoversikt = () => {
                                         <Route path={Routes.saksoversiktValgtBehandling.path}>
                                             <Meny />
                                             <div className={styles.mainContent}>
-                                                <Behandling sak={sak} />
+                                                <Switch>
+                                                    <Route path={Routes.saksbehandlingBeregning.path}>
+                                                        <Beregning sak={sak} />
+                                                    </Route>
+                                                    <Route path={Routes.saksbehandlingVedtak.path}>
+                                                        <Vedtak sak={sak} />
+                                                    </Route>
+                                                    <Route path={Routes.saksbehandlingVilkårsvurdering.path}>
+                                                        {FeatureToggles.VilkårsvurderingV2 ? (
+                                                            <VilkårV2 sak={sak} />
+                                                        ) : (
+                                                            <Vilkår sak={sak} />
+                                                        )}
+                                                    </Route>
+                                                </Switch>
                                             </div>
                                         </Route>
                                         <Route path="*">

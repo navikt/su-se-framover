@@ -15,7 +15,7 @@ import { Beregning, Fradragstype, Sats, Fradrag } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
-import * as routes from '~lib/routes.ts';
+import * as Routes from '~lib/routes.ts';
 import { trackEvent, startBeregning } from '~lib/tracking/trackingEvents';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
@@ -167,7 +167,7 @@ const FradragInputs = (props: {
 
 const Beregning = (props: Props) => {
     const { sak } = props;
-    const { behandlingId } = routes.useRouteParams<typeof routes.saksoversiktValgtBehandling>();
+    const { behandlingId } = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
 
     const beregningStatus = useAppSelector((s) => s.sak.beregningStatus);
 
@@ -343,10 +343,9 @@ const Beregning = (props: Props) => {
             </div>
             <div className={styles.navigeringContainer}>
                 <Link
-                    to={routes.saksoversiktVilkårsvurdering.createURL({
+                    to={Routes.saksbehandlingVilkårsvurdering.createURL({
                         sakId: sak.id,
                         behandlingId: behandlingId,
-                        meny: SaksbehandlingMenyvalg.Vilkår,
                     })}
                     className="knapp"
                 >
@@ -366,7 +365,7 @@ const Beregning = (props: Props) => {
                                 })
                             );
                             history.push(
-                                routes.saksoversiktValgtBehandling.createURL({
+                                Routes.saksoversiktValgtBehandling.createURL({
                                     sakId: sak.id,
                                     behandlingId: behandlingId,
                                     meny: SaksbehandlingMenyvalg.Vedtak,
