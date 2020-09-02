@@ -25,7 +25,7 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
     const history = useHistory();
     const startBehandlingStatus = useAppSelector((s) => s.sak.startBehandlingStatus);
     const intl = useI18n({ messages: {} });
-    const context = useUserContext();
+    const user = useUserContext();
 
     return (
         <div className={styles.container}>
