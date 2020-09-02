@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRou
 
 import apiClient from '~/api/apiClient';
 import { UserProvider } from '~context/UserContext/UserContext';
+import Attestering from '~pages/attestering/Attestering';
 import HomePage from '~pages/HomePage';
 import Saksoversikt from '~pages/saksoversikt/Saksoversikt';
 
@@ -21,7 +22,6 @@ import Store from './redux/Store';
 import styles from './root.module.less';
 
 import './externalStyles';
-import Attestering from '~pages/attestering/Attestering';
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
