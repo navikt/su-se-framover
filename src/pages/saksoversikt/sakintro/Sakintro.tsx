@@ -1,11 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import Lenke from 'nav-frontend-lenker';
 import Panel from 'nav-frontend-paneler';
 import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
 import * as sakApi from 'api/sakApi';
 import { Behandlingsstatus } from '~api/behandlingApi';
@@ -88,20 +87,20 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                                                         </div>
                                                         {b.status === Behandlingsstatus.TIL_ATTESTERING &&
                                                         user.isAttestant ? (
-                                                            <Lenke
+                                                            <Link
                                                                 className="knapp"
-                                                                href={Routes.attestering.createURL({
+                                                                to={Routes.attestering.createURL({
                                                                     sakId,
                                                                     behandlingId: b.id,
                                                                 })}
                                                             >
                                                                 Attester
-                                                            </Lenke>
+                                                            </Link>
                                                         ) : (
                                                             b.status !== Behandlingsstatus.TIL_ATTESTERING && (
-                                                                <Lenke
+                                                                <Link
                                                                     className="knapp"
-                                                                    href={Routes.saksbehandlingVilkårsvurdering.createURL(
+                                                                    to={Routes.saksbehandlingVilkårsvurdering.createURL(
                                                                         {
                                                                             sakId,
                                                                             behandlingId: b.id,
@@ -109,7 +108,7 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                                                                     )}
                                                                 >
                                                                     Fortsett behandling
-                                                                </Lenke>
+                                                                </Link>
                                                             )
                                                         )}
                                                     </li>

@@ -80,8 +80,9 @@ const Attestering = () => {
     const attesteringStatus = useAppSelector((s) => s.sak.attesteringStatus);
     const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
-    const { sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
     const urlParams = Routes.useRouteParams<typeof Routes.attestering>();
+    const { sak } = useAppSelector((s) => ({ sak: s.sak.sak }));
+    console.log(sak);
 
     if (!RemoteData.isSuccess(sak)) {
         return <AlertStripe type="feil">Fant ikke sak</AlertStripe>;

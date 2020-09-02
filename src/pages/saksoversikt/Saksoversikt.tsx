@@ -76,6 +76,7 @@ const Saksoversikt = () => {
         }
     }, [sak._tag, søker._tag]);
 
+    console.log(sak);
     const data = RemoteData.combine(søker, sak);
 
     const gender = useMemo<Gender>(() => {
