@@ -86,7 +86,7 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                                                             </p>
                                                         </div>
                                                         {b.status === Behandlingsstatus.TIL_ATTESTERING &&
-                                                        context.isAttestant ? (
+                                                        user.isAttestant ? (
                                                             <Knapp
                                                                 onClick={() => {
                                                                     history.push(
