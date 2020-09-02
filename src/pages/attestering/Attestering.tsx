@@ -82,7 +82,6 @@ const Attestering = () => {
     const dispatch = useAppDispatch();
     const urlParams = Routes.useRouteParams<typeof Routes.attestering>();
     const { sak } = useAppSelector((s) => ({ sak: s.sak.sak }));
-    console.log(sak);
 
     if (!RemoteData.isSuccess(sak)) {
         return <AlertStripe type="feil">Fant ikke sak</AlertStripe>;
