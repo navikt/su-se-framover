@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 
 import apiClient from '~/api/apiClient';
+import { UserProvider } from '~context/UserContext/UserContext';
 import Attesteringsoversikt from '~pages/attestering/Attesteringsoversikt';
 import HomePage from '~pages/HomePage';
 import Saksoversikt from '~pages/saksoversikt/Saksoversikt';
@@ -34,30 +35,32 @@ const ScrollToTop = () => {
 const Root = () => {
     return (
         <Provider store={Store}>
-            <ErrorBoundary>
-                <Router>
-                    <ContentWrapper>
-                        <Fragment>
-                            <ScrollToTop />
-                            <Switch>
-                                <Route exact path={routes.home.path}>
-                                    <HomePage />
-                                </Route>
-                                <Route path={routes.soknad.path}>
-                                    <Soknad />
-                                </Route>
-                                <Route path={routes.saksoversiktIndex.path}>
-                                    <Saksoversikt />
-                                </Route>
-                                <Route path={routes.attestering.path}>
-                                    <Attesteringsoversikt />
-                                </Route>
-                                <Route>404</Route>
-                            </Switch>
-                        </Fragment>
-                    </ContentWrapper>
-                </Router>
-            </ErrorBoundary>
+            <UserProvider>
+                <ErrorBoundary>
+                    <Router>
+                        <ContentWrapper>
+                            <Fragment>
+                                <ScrollToTop />
+                                <Switch>
+                                    <Route exact path={routes.home.path}>
+                                        <HomePage />
+                                    </Route>
+                                    <Route path={routes.soknad.path}>
+                                        <Soknad />
+                                    </Route>
+                                    <Route path={routes.saksoversiktIndex.path}>
+                                        <Saksoversikt />
+                                    </Route>
+                                    <Route path={routes.attestering.path}>
+                                        <Attesteringsoversikt />
+                                    </Route>
+                                    <Route>404</Route>
+                                </Switch>
+                            </Fragment>
+                        </ContentWrapper>
+                    </Router>
+                </ErrorBoundary>
+            </UserProvider>
         </Provider>
     );
 };
