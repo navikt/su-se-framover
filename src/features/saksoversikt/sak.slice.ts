@@ -85,7 +85,7 @@ export const startSimulering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const tilAttestering = createAsyncThunk<
+export const sendTilAttestering = createAsyncThunk<
     behandlingApi.Behandling,
     { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
