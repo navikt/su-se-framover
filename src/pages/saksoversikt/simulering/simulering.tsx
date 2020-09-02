@@ -26,7 +26,10 @@ const Utbetalingssimulering = (props: { utbetaling: Utbetaling }) => {
             <div className={styles.grunndata}>
                 <InfoLinje tittel={'id:'} value={props.utbetaling.id} />
                 <InfoLinje tittel={'opprettet:'} value={formatDateTime(props.utbetaling.opprettet, intl)} />
-                <InfoLinje tittel={'brutto:'} value={props.utbetaling.simulering.totalBruttoYtelse} />
+                <InfoLinje
+                    tittel="Totalbeløp:"
+                    value={intl.formatNumber(props.utbetaling.simulering.totalBruttoYtelse, { currency: 'NOK' })}
+                />
             </div>
             {props.utbetaling.simulering.perioder && (
                 <table className="tabell">

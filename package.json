@@ -101,7 +101,6 @@
         "nav-frontend-toggle-style": "0.0.34",
         "nav-frontend-typografi": "^2.0.26",
         "nav-frontend-typografi-style": "^1.0.22",
-        "parcel-plugin-html-externals": "^0.2.0",
         "postcss-import": "^12.0.1",
         "postcss-less": "^3.1.4",
         "postcss-modules": "^3.2.2",

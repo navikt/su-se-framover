@@ -85,6 +85,18 @@ export const startSimulering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const sendTilAttestering = createAsyncThunk<
+    behandlingApi.Behandling,
+    { sakId: string; behandlingId: string },
+    { rejectValue: ApiError }
+>('behandling/tilAttestering', async ({ sakId, behandlingId }, thunkApi) => {
+    const res = await behandlingApi.sendTilAttestering({ sakId, behandlingId });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const startAttestering = createAsyncThunk<
     behandlingApi.Behandling,
     { sakId: string; behandlingId: string },
@@ -109,6 +121,7 @@ interface SakState {
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     beregningStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     simuleringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
+    sendtTilAttesteringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     attesteringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
 }
 
@@ -118,6 +131,7 @@ const initialState: SakState = {
     lagreVilkårsvurderingStatus: RemoteData.initial,
     beregningStatus: RemoteData.initial,
     simuleringStatus: RemoteData.initial,
+    sendtTilAttesteringStatus: RemoteData.initial,
     attesteringStatus: RemoteData.initial,
 };
 
@@ -263,6 +277,32 @@ export default createSlice({
         });
         builder.addCase(startAttestering.fulfilled, (state, action) => {
             state.attesteringStatus = RemoteData.success(null);
+
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
+        builder.addCase(sendTilAttestering.pending, (state) => {
+            state.sendtTilAttesteringStatus = RemoteData.pending;
+        });
+        builder.addCase(sendTilAttestering.rejected, (state, action) => {
+            state.sendtTilAttesteringStatus = action.payload
+                ? RemoteData.failure({
+                      code: action.payload.code,
+                      message: `Feilet med status ${action.payload.statusCode}`,
+                  })
+                : RemoteData.failure({
+                      code: ErrorCode.Unknown,
+                      message: 'Ukjent feil',
+                  });
+        });
+        builder.addCase(sendTilAttestering.fulfilled, (state, action) => {
+            state.sendtTilAttesteringStatus = RemoteData.success(null);
 
             state.sak = pipe(
                 state.sak,

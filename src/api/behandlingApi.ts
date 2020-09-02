@@ -178,7 +178,10 @@ export async function simulerBehandling(sakId: string, behandlingId: string): Pr
     });
 }
 
-export async function sendTilAttestering(arg: { sakId: string; behandlingId: string }) {
+export async function sendTilAttestering(arg: {
+    sakId: string;
+    behandlingId: string;
+}): Promise<ApiClientResult<Behandling>> {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/tilAttestering`,
         method: 'POST',
