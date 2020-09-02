@@ -9,7 +9,6 @@ import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRou
 
 import apiClient from '~/api/apiClient';
 import { UserProvider } from '~context/UserContext/UserContext';
-import Attesteringsoversikt from '~pages/attestering/Attesteringsoversikt';
 import HomePage from '~pages/HomePage';
 import Saksoversikt from '~pages/saksoversikt/Saksoversikt';
 
@@ -20,7 +19,9 @@ import * as routes from './lib/routes';
 import Soknad from './pages/søknad';
 import Store from './redux/Store';
 import styles from './root.module.less';
+
 import './externalStyles';
+import Attestering from '~pages/attestering/Attestering';
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -52,7 +53,7 @@ const Root = () => {
                                         <Saksoversikt />
                                     </Route>
                                     <Route path={routes.attestering.path}>
-                                        <Attesteringsoversikt />
+                                        <Attestering />
                                     </Route>
                                     <Route>404</Route>
                                 </Switch>
