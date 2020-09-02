@@ -7,6 +7,7 @@ import { RadioPanelGruppe, Feiloppsummering, Select, Textarea } from 'nav-fronte
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useState } from 'react';
 
+import * as Routes from '~/lib/routes';
 import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
 import { Sak } from '~api/sakApi';
@@ -20,11 +21,6 @@ import { useAppSelector, useAppDispatch } from '~redux/Store';
 
 import messages from './attestering-nb';
 import styles from './attestering.module.less';
-
-type Props = {
-    sak: Sak;
-    behandlingId: string;
-};
 
 const VilkårsvurderingInfoLinje = (props: { type: Vilkårtype; verdi: Vilkårsvurdering }) => (
     <div className={styles.infolinjeContainer}>
@@ -79,14 +75,18 @@ interface FormData {
     grunn?: string;
     begrunnelse?: string;
 }
-const Attestering = (props: Props) => {
-    const { sak, behandlingId } = props;
+const Attestering = () => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const attesteringStatus = useAppSelector((s) => s.sak.attesteringStatus);
     const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
+    const urlParams = Routes.useRouteParams<typeof Routes.attestering>();
+    const { sak } = useAppSelector((s) => ({ sak: s.sak.sak }));
 
-    const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
+    if (!RemoteData.isSuccess(sak)) {
+        return <AlertStripe type="feil">Fant ikke sak</AlertStripe>;
+    }
+    const behandling = sak.value.behandlinger.find((x) => x.id === urlParams.behandlingId);
     if (!behandling) {
         return <AlertStripe type="feil">Fant ikke behandlingsid</AlertStripe>;
     }
@@ -96,7 +96,7 @@ const Attestering = (props: Props) => {
             if (values.beslutning) {
                 dispatch(
                     sakSlice.startAttestering({
-                        sakId: sak.id,
+                        sakId: sak.value.id,
                         behandlingId: behandling.id,
                     })
                 );
@@ -141,17 +141,17 @@ const Attestering = (props: Props) => {
                     )}
                 </div>
                 <div>
-                    <VilkårsOppsummering behandling={behandling} sakId={sak.id} />
+                    <VilkårsOppsummering behandling={behandling} sakId={sak.value.id} />
                 </div>
                 <div>
-                    <VisDersomSimulert sak={sak} behandling={behandling} />
+                    <VisDersomSimulert sak={sak.value} behandling={behandling} />
                 </div>
                 <div>
                     <Innholdstittel>Vis brev kladd</Innholdstittel>
                     <Lenke
                         href={'#'}
                         onClick={() =>
-                            fetchBrev(sak.id, behandlingId).then((res) => {
+                            fetchBrev(sak.value.id, urlParams.behandlingId).then((res) => {
                                 if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
                             })
                         }

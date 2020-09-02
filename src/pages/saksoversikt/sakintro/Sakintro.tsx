@@ -1,12 +1,14 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
-import { Innholdstittel, Undertittel, Element } from 'nav-frontend-typografi';
+import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
 import * as sakApi from 'api/sakApi';
+import { Behandlingsstatus } from '~api/behandlingApi';
+import { useUserContext } from '~context/userContext';
 import * as behandlingSlice from '~features/saksoversikt/sak.slice';
 import { formatDateTime } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
@@ -23,6 +25,7 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
     const history = useHistory();
     const startBehandlingStatus = useAppSelector((s) => s.sak.startBehandlingStatus);
     const intl = useI18n({ messages: {} });
+    const user = useUserContext();
 
     return (
         <div className={styles.container}>
@@ -40,6 +43,7 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                                         <div>
                                             <p>Søknads-id: {s.id}</p>
                                             <p>Innsendt: {formatDateTime(s.opprettet, intl)}</p>
+                                            {behandlinger.length === 0 && <p>Status: OPPRETTET </p>}
                                         </div>
                                         {isBehandlingerEmpty ? (
                                             <>
@@ -75,21 +79,38 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                                             <ul>
                                                 {behandlinger.map((b) => (
                                                     <li key={b.id} className={styles.behandlingListItem}>
-                                                        <Element>
-                                                            Behandling (påbegynt {formatDateTime(b.opprettet, intl)})
-                                                        </Element>
-                                                        <Knapp
-                                                            onClick={() => {
-                                                                history.push(
-                                                                    Routes.saksbehandlingVilkårsvurdering.createURL({
-                                                                        sakId,
-                                                                        behandlingId: b.id,
-                                                                    })
-                                                                );
-                                                            }}
-                                                        >
-                                                            Fortsett behandling
-                                                        </Knapp>
+                                                        <div>
+                                                            <p>Status: {b.status}</p>
+                                                            <p>
+                                                                Behandling påbegynt: {formatDateTime(b.opprettet, intl)}
+                                                            </p>
+                                                        </div>
+                                                        {b.status === Behandlingsstatus.TIL_ATTESTERING &&
+                                                        user.isAttestant ? (
+                                                            <Link
+                                                                className="knapp"
+                                                                to={Routes.attestering.createURL({
+                                                                    sakId,
+                                                                    behandlingId: b.id,
+                                                                })}
+                                                            >
+                                                                Attester
+                                                            </Link>
+                                                        ) : (
+                                                            b.status !== Behandlingsstatus.TIL_ATTESTERING && (
+                                                                <Link
+                                                                    className="knapp"
+                                                                    to={Routes.saksbehandlingVilkårsvurdering.createURL(
+                                                                        {
+                                                                            sakId,
+                                                                            behandlingId: b.id,
+                                                                        }
+                                                                    )}
+                                                                >
+                                                                    Fortsett behandling
+                                                                </Link>
+                                                            )
+                                                        )}
                                                     </li>
                                                 ))}
                                             </ul>

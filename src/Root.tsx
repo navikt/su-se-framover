@@ -8,7 +8,8 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 
 import apiClient from '~/api/apiClient';
-import Attesteringsoversikt from '~pages/attestering/Attesteringsoversikt';
+import { UserProvider } from '~context/userContext';
+import Attestering from '~pages/attestering/Attestering';
 import HomePage from '~pages/HomePage';
 import Saksoversikt from '~pages/saksoversikt/Saksoversikt';
 
@@ -19,6 +20,7 @@ import * as routes from './lib/routes';
 import Soknad from './pages/søknad';
 import Store from './redux/Store';
 import styles from './root.module.less';
+
 import './externalStyles';
 
 const ScrollToTop = () => {
@@ -34,30 +36,32 @@ const ScrollToTop = () => {
 const Root = () => {
     return (
         <Provider store={Store}>
-            <ErrorBoundary>
-                <Router>
-                    <ContentWrapper>
-                        <Fragment>
-                            <ScrollToTop />
-                            <Switch>
-                                <Route exact path={routes.home.path}>
-                                    <HomePage />
-                                </Route>
-                                <Route path={routes.soknad.path}>
-                                    <Soknad />
-                                </Route>
-                                <Route path={routes.saksoversiktIndex.path}>
-                                    <Saksoversikt />
-                                </Route>
-                                <Route path={routes.attestering.path}>
-                                    <Attesteringsoversikt />
-                                </Route>
-                                <Route>404</Route>
-                            </Switch>
-                        </Fragment>
-                    </ContentWrapper>
-                </Router>
-            </ErrorBoundary>
+            <UserProvider>
+                <ErrorBoundary>
+                    <Router>
+                        <ContentWrapper>
+                            <Fragment>
+                                <ScrollToTop />
+                                <Switch>
+                                    <Route exact path={routes.home.path}>
+                                        <HomePage />
+                                    </Route>
+                                    <Route path={routes.soknad.path}>
+                                        <Soknad />
+                                    </Route>
+                                    <Route path={routes.saksoversiktIndex.path}>
+                                        <Saksoversikt />
+                                    </Route>
+                                    <Route path={routes.attestering.path}>
+                                        <Attestering />
+                                    </Route>
+                                    <Route>404</Route>
+                                </Switch>
+                            </Fragment>
+                        </ContentWrapper>
+                    </Router>
+                </ErrorBoundary>
+            </UserProvider>
         </Provider>
     );
 };

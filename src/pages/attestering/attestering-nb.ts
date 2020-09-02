@@ -3,5 +3,4 @@ export default {
     'attestering.beslutning.godkjenn': 'Iverksett vedtak',
     'attestering.beslutning.revurder': 'Send tilbake til vurdering',
     'attestering.knapp.send': 'Send beslutning',
-    'api.feilmelding': 'et feil skjedde',
 };
