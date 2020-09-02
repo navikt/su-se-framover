@@ -287,10 +287,10 @@ export default createSlice({
             );
         });
 
-        builder.addCase(tilAttestering.pending, (state) => {
+        builder.addCase(sendTilAttestering.pending, (state) => {
             state.sendtTilAttesteringStatus = RemoteData.pending;
         });
-        builder.addCase(tilAttestering.rejected, (state, action) => {
+        builder.addCase(sendTilAttestering.rejected, (state, action) => {
             state.sendtTilAttesteringStatus = action.payload
                 ? RemoteData.failure({
                       code: action.payload.code,
@@ -301,7 +301,7 @@ export default createSlice({
                       message: 'Ukjent feil',
                   });
         });
-        builder.addCase(tilAttestering.fulfilled, (state, action) => {
+        builder.addCase(sendTilAttestering.fulfilled, (state, action) => {
             state.sendtTilAttesteringStatus = RemoteData.success(null);
 
             state.sak = pipe(

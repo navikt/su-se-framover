@@ -131,7 +131,9 @@ const Vedtak = (props: Props) => {
                     </Link>
                     <Hovedknapp
                         spinner={RemoteData.isPending(sendtTilAttesteringStatus)}
-                        onClick={() => dispatch(sakSlice.tilAttestering({ sakId: sak.id, behandlingId: behandlingId }))}
+                        onClick={() =>
+                            dispatch(sakSlice.sendTilAttestering({ sakId: sak.id, behandlingId: behandlingId }))
+                        }
                         htmlType="button"
                     >
                         Send til attestering
