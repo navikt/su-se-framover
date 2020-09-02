@@ -1,6 +1,6 @@
 import React, { useState, createContext, useContext } from 'react';
 
-export const defaultValue = {
+const defaultValue = {
     isAttestant: false,
     setIsAttestant: () => undefined,
 };
@@ -24,5 +24,4 @@ export const UserProvider = (props: { children: React.ReactNode }) => {
     );
 };
 
-const useUserContext = () => useContext(UserContext);
-export default useUserContext;
+export const useUserContext = () => useContext(UserContext);

@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import { Hovedknapp } from 'nav-frontend-knapper';
+import Lenke from 'nav-frontend-lenker';
 import Panel from 'nav-frontend-paneler';
 import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
@@ -8,7 +9,7 @@ import { useHistory } from 'react-router-dom';
 
 import * as sakApi from 'api/sakApi';
 import { Behandlingsstatus } from '~api/behandlingApi';
-import useUserContext from '~context/UserContext/UserContext';
+import { useUserContext } from '~context/userContext';
 import * as behandlingSlice from '~features/saksoversikt/sak.slice';
 import { formatDateTime } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
@@ -87,34 +88,28 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                                                         </div>
                                                         {b.status === Behandlingsstatus.TIL_ATTESTERING &&
                                                         user.isAttestant ? (
-                                                            <Knapp
-                                                                onClick={() => {
-                                                                    history.push(
-                                                                        Routes.attestering.createURL({
-                                                                            sakId,
-                                                                            behandlingId: b.id,
-                                                                        })
-                                                                    );
-                                                                }}
+                                                            <Lenke
+                                                                className="knapp"
+                                                                href={Routes.attestering.createURL({
+                                                                    sakId,
+                                                                    behandlingId: b.id,
+                                                                })}
                                                             >
                                                                 Attester
-                                                            </Knapp>
+                                                            </Lenke>
                                                         ) : (
                                                             b.status !== Behandlingsstatus.TIL_ATTESTERING && (
-                                                                <Knapp
-                                                                    onClick={() => {
-                                                                        history.push(
-                                                                            Routes.saksbehandlingVilkårsvurdering.createURL(
-                                                                                {
-                                                                                    sakId,
-                                                                                    behandlingId: b.id,
-                                                                                }
-                                                                            )
-                                                                        );
-                                                                    }}
+                                                                <Lenke
+                                                                    className="knapp"
+                                                                    href={Routes.saksbehandlingVilkårsvurdering.createURL(
+                                                                        {
+                                                                            sakId,
+                                                                            behandlingId: b.id,
+                                                                        }
+                                                                    )}
                                                                 >
                                                                     Fortsett behandling
-                                                                </Knapp>
+                                                                </Lenke>
                                                             )
                                                         )}
                                                     </li>

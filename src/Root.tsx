@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 
 import apiClient from '~/api/apiClient';
-import { UserProvider } from '~context/UserContext/UserContext';
+import { UserProvider } from '~context/userContext';
 import Attestering from '~pages/attestering/Attestering';
 import HomePage from '~pages/HomePage';
 import Saksoversikt from '~pages/saksoversikt/Saksoversikt';

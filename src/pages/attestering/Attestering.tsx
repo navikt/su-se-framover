@@ -6,8 +6,8 @@ import Lenke from 'nav-frontend-lenker';
 import { RadioPanelGruppe, Feiloppsummering, Select, Textarea } from 'nav-frontend-skjema';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
 
+import * as Routes from '~/lib/routes';
 import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
 import { Sak } from '~api/sakApi';
@@ -81,14 +81,12 @@ const Attestering = () => {
     const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
     const { sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
-    const { behandlingId } = useParams<{
-        behandlingId: string;
-    }>();
+    const urlParams = Routes.useRouteParams<typeof Routes.attestering>();
 
     if (!RemoteData.isSuccess(sak)) {
         return <AlertStripe type="feil">Fant ikke sak</AlertStripe>;
     }
-    const behandling = sak.value.behandlinger.find((x) => x.id === behandlingId);
+    const behandling = sak.value.behandlinger.find((x) => x.id === urlParams.behandlingId);
     if (!behandling) {
         return <AlertStripe type="feil">Fant ikke behandlingsid</AlertStripe>;
     }
@@ -153,7 +151,7 @@ const Attestering = () => {
                     <Lenke
                         href={'#'}
                         onClick={() =>
-                            fetchBrev(sak.value.id, behandlingId).then((res) => {
+                            fetchBrev(sak.value.id, urlParams.behandlingId).then((res) => {
                                 if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
                             })
                         }
