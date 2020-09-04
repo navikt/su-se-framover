@@ -97,7 +97,8 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                                                                 Attester
                                                             </Link>
                                                         ) : (
-                                                            b.status !== Behandlingsstatus.TIL_ATTESTERING && (
+                                                            b.status !== Behandlingsstatus.TIL_ATTESTERING &&
+                                                            b.status !== Behandlingsstatus.ATTESTERT && (
                                                                 <Link
                                                                     className="knapp"
                                                                     to={Routes.saksbehandlingVilkårsvurdering.createURL(
