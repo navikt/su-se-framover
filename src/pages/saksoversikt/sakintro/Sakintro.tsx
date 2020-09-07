@@ -7,7 +7,7 @@ import React from 'react';
 import { useHistory, Link } from 'react-router-dom';
 
 import * as sakApi from 'api/sakApi';
-import { Behandlingsstatus } from '~api/behandlingApi';
+import { attestert, tilAttestering } from '~api/behandlingApi';
 import { useUserContext } from '~context/userContext';
 import * as behandlingSlice from '~features/saksoversikt/sak.slice';
 import { formatDateTime } from '~lib/dateUtils';
@@ -85,8 +85,7 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                                                                 Behandling påbegynt: {formatDateTime(b.opprettet, intl)}
                                                             </p>
                                                         </div>
-                                                        {b.status === Behandlingsstatus.TIL_ATTESTERING &&
-                                                        user.isAttestant ? (
+                                                        {tilAttestering(b) && user.isAttestant ? (
                                                             <Link
                                                                 className="knapp"
                                                                 to={Routes.attestering.createURL({
@@ -97,8 +96,8 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                                                                 Attester
                                                             </Link>
                                                         ) : (
-                                                            b.status !== Behandlingsstatus.TIL_ATTESTERING &&
-                                                            b.status !== Behandlingsstatus.ATTESTERT && (
+                                                            !tilAttestering(b) &&
+                                                            !attestert(b) && (
                                                                 <Link
                                                                     className="knapp"
                                                                     to={Routes.saksbehandlingVilkårsvurdering.createURL(

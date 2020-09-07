@@ -8,7 +8,7 @@ import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useState } from 'react';
 
 import * as Routes from '~/lib/routes';
-import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
+import { Behandling, Vilkårsvurdering, Vilkårtype, avslag, tilAttestering } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
 import { Sak } from '~api/sakApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -48,10 +48,7 @@ const VilkårsOppsummering = (props: { behandling: Behandling; sakId: string }) 
 };
 
 const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
-    if (props.behandling.status === Behandlingsstatus.AVSLÅTT) {
-        return null;
-    }
-    if (props.behandling.beregning) {
+    if (props.behandling.beregning && !avslag(props.behandling)) {
         return (
             <div className={styles.beregningOgOppdragContainer}>
                 <div className={styles.beregningContainer}>
@@ -117,15 +114,8 @@ const Attestering = () => {
     });
 
     const { errors } = formik;
-    if (
-        !behandling.vilkårsvurderinger ||
-        !(
-            behandling.status === Behandlingsstatus.TIL_ATTESTERING ||
-            behandling.status === Behandlingsstatus.ATTESTERT ||
-            behandling.status === Behandlingsstatus.AVSLÅTT
-        )
-    ) {
-        return <div>Behandlingen er ikke ferdig</div>;
+    if (!tilAttestering(behandling)) {
+        return <div>Behandlingen er ikke klar for attestering.</div>;
     }
 
     return (
@@ -133,12 +123,8 @@ const Attestering = () => {
             <div className={styles.vedtakContainer}>
                 <Innholdstittel>Vedtak</Innholdstittel>
                 <div>
-                    {behandling.status === Behandlingsstatus.TIL_ATTESTERING && (
-                        <AlertStripeSuksess>{Behandlingsstatus.SIMULERT}</AlertStripeSuksess>
-                    )}
-                    {behandling.status === Behandlingsstatus.AVSLÅTT && (
-                        <AlertStripeFeil>{Behandlingsstatus.AVSLÅTT}</AlertStripeFeil>
-                    )}
+                    {!avslag(behandling) && <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>}
+                    {avslag(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
                 </div>
                 <div>
                     <VilkårsOppsummering behandling={behandling} sakId={sak.value.id} />
@@ -161,7 +147,7 @@ const Attestering = () => {
                 </div>
             </div>
             <div className={styles.navigeringContainer}>
-                {behandling.status === Behandlingsstatus.TIL_ATTESTERING && (
+                {tilAttestering(behandling) && (
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();

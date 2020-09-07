@@ -83,13 +83,40 @@ export interface Behandling {
 
 export enum Behandlingsstatus {
     OPPRETTET = 'OPPRETTET',
+    VILKÅRSVURDERT_INNVILGET = 'VILKÅRSVURDERT_INNVILGET',
+    VILKÅRSVURDERT_AVSLAG = 'VILKÅRSVURDERT_AVSLAG',
     BEREGNET = 'BEREGNET',
     SIMULERT = 'SIMULERT',
-    TIL_ATTESTERING = 'TIL_ATTESTERING',
-    ATTESTERT = 'ATTESTERT',
-    /*VEDTAKSBREV = 'VEDTAKSBREV',*/
-    INNVILGET = 'INNVILGET',
-    AVSLÅTT = 'AVSLÅTT',
+    TIL_ATTESTERING_INNVILGET = 'TIL_ATTESTERING_INNVILGET',
+    TIL_ATTESTERING_AVSLAG = 'TIL_ATTESTERING_AVSLAG',
+    ATTESTERT_INNVILGET = 'ATTESTERT_INNVILGET',
+    ATTESTERT_AVSLAG = 'ATTESTERT_AVSLAG',
+}
+
+export function tilAttestering(behandling: Behandling): boolean {
+    return (
+        [Behandlingsstatus.TIL_ATTESTERING_AVSLAG, Behandlingsstatus.TIL_ATTESTERING_INNVILGET].find(
+            (x) => behandling.status === x
+        ) !== undefined
+    );
+}
+
+export function attestert(behandling: Behandling): boolean {
+    return (
+        [Behandlingsstatus.ATTESTERT_AVSLAG, Behandlingsstatus.ATTESTERT_INNVILGET].find(
+            (x) => behandling.status === x
+        ) !== undefined
+    );
+}
+
+export function avslag(behandling: Behandling): boolean {
+    return (
+        [
+            Behandlingsstatus.TIL_ATTESTERING_AVSLAG,
+            Behandlingsstatus.VILKÅRSVURDERT_AVSLAG,
+            Behandlingsstatus.ATTESTERT_AVSLAG,
+        ].find((x) => behandling.status === x) !== undefined
+    );
 }
 
 export interface Utbetaling {

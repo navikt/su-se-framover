@@ -6,7 +6,7 @@ import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
+import { Behandling, Behandlingsstatus, Vilkårsvurdering, Vilkårtype, tilAttestering } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
 import { Sak } from '~api/sakApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -49,9 +49,6 @@ const VilkårsOppsummering = (props: { behandling: Behandling; sakId: string }) 
 };
 
 const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
-    if (props.behandling.status === Behandlingsstatus.AVSLÅTT) {
-        return null;
-    }
     if (props.behandling.status === Behandlingsstatus.SIMULERT && props.behandling.beregning) {
         return (
             <>
@@ -78,13 +75,13 @@ const Vedtak = (props: Props) => {
         return <AlertStripe type="feil">Fant ikke behandlingsid</AlertStripe>;
     }
 
-    if (behandling.status === Behandlingsstatus.TIL_ATTESTERING) {
+    if (tilAttestering(behandling)) {
         return <div>Behandling er sendt til Attestering</div>;
     }
 
     if (
-        behandling.vilkårsvurderinger &&
-        (behandling.status === Behandlingsstatus.SIMULERT || behandling.status === Behandlingsstatus.AVSLÅTT)
+        behandling.status === Behandlingsstatus.SIMULERT ||
+        behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
     ) {
         return (
             <div>
@@ -94,7 +91,7 @@ const Vedtak = (props: Props) => {
                         {behandling.status === Behandlingsstatus.SIMULERT && (
                             <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>
                         )}
-                        {behandling.status === Behandlingsstatus.AVSLÅTT && (
+                        {behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG && (
                             <AlertStripeFeil>{behandling.status}</AlertStripeFeil>
                         )}
                     </div>
