@@ -5,10 +5,9 @@ import { Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Behandling, Vilkårtype, VilkårVurderingStatus } from '~api/behandlingApi';
+import { Behandling, Vilkårtype, VilkårVurderingStatus, Behandlingsstatus } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { oneVilkåringsvurderingIsNotOk, vilkårsvurderingIsValid } from '~features/saksoversikt/utils';
 import * as routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -206,7 +205,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
             </div>
             <Hovedknapp
                 onClick={() => {
-                    if (vilkårsvurderingIsValid(vilkårsvurderinger)) {
+                    if (props.behandling.status === Behandlingsstatus.VILKÅRSVURDERT_INNVILGET) {
                         return history.push(
                             routes.saksoversiktValgtBehandling.createURL({
                                 sakId: props.sakId,
@@ -215,7 +214,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
                             })
                         );
                     }
-                    if (oneVilkåringsvurderingIsNotOk(vilkårsvurderinger)) {
+                    if (props.behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
                         return history.push(
                             routes.saksoversiktValgtBehandling.createURL({
                                 sakId: props.sakId,
@@ -229,7 +228,7 @@ const VilkårInnhold = (props: { behandling: Behandling; sakId: string }) => {
             >
                 Gå til beregning
             </Hovedknapp>
-            {nextButtonHasBeenClicked && !vilkårsvurderingIsValid && (
+            {nextButtonHasBeenClicked && props.behandling.status === Behandlingsstatus.OPPRETTET && (
                 <Alertstripe type="feil">Må fylles ut</Alertstripe>
             )}
         </div>

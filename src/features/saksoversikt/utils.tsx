@@ -1,13 +1,7 @@
 import Ikon from 'nav-frontend-ikoner-assets';
 import React from 'react';
 
-import { Vilkårsvurderinger, VilkårVurderingStatus, Vilkårtype } from '~api/behandlingApi';
-
-export const vilkårsvurderingIsValid = (vilkårsvurderinger: Vilkårsvurderinger) =>
-    !Object.values(vilkårsvurderinger).some((vurdering) => vurdering.status !== VilkårVurderingStatus.Ok);
-
-export const oneVilkåringsvurderingIsNotOk = (vilkårsvurderinger: Vilkårsvurderinger) =>
-    Object.values(vilkårsvurderinger).some((vurdering) => vurdering.status === VilkårVurderingStatus.IkkeOk);
+import { VilkårVurderingStatus, Vilkårtype } from '~api/behandlingApi';
 
 export const vilkårTittelFormatted = (type: Vilkårtype) => {
     switch (type) {
