@@ -5,8 +5,12 @@ import { Vilkårtype } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
 import * as Routes from '~lib/routes';
 
+import FastOppholdINorge from './FastOppholdINorge';
 import Flyktning from './Flyktning';
+import Formue from './Formue';
 import Framdriftsindikator from './Framdriftsindikator';
+import LovligOppholdINorge from './LovligOppholdINorge';
+import PersonligOppmøte from './PersonligOppmøte';
 import Uførhet from './Uførhet';
 import styles from './v2.module.less';
 
@@ -47,7 +51,35 @@ const Vilkår = (props: { sak: Sak }) => {
                         <Flyktning
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.Uførhet)}
-                            nesteUrl={createVilkårUrl(Vilkårtype.Flyktning)}
+                            nesteUrl={createVilkårUrl(Vilkårtype.Oppholdstillatelse)}
+                        />
+                    </Route>
+                    <Route path={createVilkårUrl(Vilkårtype.Oppholdstillatelse)}>
+                        <LovligOppholdINorge
+                            behandling={behandling}
+                            forrigeUrl={createVilkårUrl(Vilkårtype.Flyktning)}
+                            nesteUrl={createVilkårUrl(Vilkårtype.BorOgOppholderSegINorge)}
+                        />
+                    </Route>
+                    <Route path={createVilkårUrl(Vilkårtype.BorOgOppholderSegINorge)}>
+                        <FastOppholdINorge
+                            behandling={behandling}
+                            forrigeUrl={createVilkårUrl(Vilkårtype.Oppholdstillatelse)}
+                            nesteUrl={createVilkårUrl(Vilkårtype.Formue)}
+                        />
+                    </Route>
+                    <Route path={createVilkårUrl(Vilkårtype.Formue)}>
+                        <Formue
+                            behandling={behandling}
+                            forrigeUrl={createVilkårUrl(Vilkårtype.BorOgOppholderSegINorge)}
+                            nesteUrl={createVilkårUrl(Vilkårtype.PersonligOppmøte)}
+                        />
+                    </Route>
+                    <Route path={createVilkårUrl(Vilkårtype.PersonligOppmøte)}>
+                        <PersonligOppmøte
+                            behandling={behandling}
+                            forrigeUrl={createVilkårUrl(Vilkårtype.BorOgOppholderSegINorge)}
+                            nesteUrl={createVilkårUrl(Vilkårtype.PersonligOppmøte)}
                         />
                     </Route>
                     <Route path="*">404</Route>
