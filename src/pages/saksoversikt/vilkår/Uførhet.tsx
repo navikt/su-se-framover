@@ -3,17 +3,36 @@ import { Radio, RadioGruppe } from 'nav-frontend-skjema';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { Nullable } from '~lib/types';
+import yup from '~lib/validering';
+
 import Faktablokk from './Faktablokk';
 import { VilkårsvurderingBaseProps } from './types';
 import { Vurdering, Vurderingknapper } from './Vurdering';
 
+type UførhetType = Nullable<boolean> | 'uføresakTilBehandling';
+
+interface FormData {
+    harUførevedtak: UførhetType;
+}
+
+// eslint-disable-next-line
+const schema = yup.object<FormData>({
+    harUførevedtak: yup.mixed().defined().oneOf([true, false, 'uføresakTilBehandling']),
+});
+console.log(schema);
+
 const Uførhet = (props: VilkårsvurderingBaseProps) => {
-    const formik = useFormik({
-        initialValues: {},
+    const formik = useFormik<FormData>({
+        initialValues: {
+            harUførevedtak: null,
+        },
         onSubmit(values) {
             console.log({ values });
             history.push(props.nesteUrl);
         },
+        //TODO: fjern kommentar for validering
+        //validationSchema: schema,
     });
     const history = useHistory();
 
@@ -23,9 +42,21 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                 left: (
                     <form onSubmit={formik.handleSubmit}>
                         <RadioGruppe legend="Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-7 i folketrygdloven er oppfylt?">
-                            <Radio label="Ja" name="ja" />
-                            <Radio label="Nei" name="nei" />
-                            <Radio label="Har uføresak til behandling" name="saktilbehandling" />
+                            <Radio
+                                label="Ja"
+                                name="harUførevedtak"
+                                onChange={() => formik.setValues({ harUførevedtak: true })}
+                            />
+                            <Radio
+                                label="Nei"
+                                name="harUførevedtak"
+                                onChange={() => formik.setValues({ harUførevedtak: false })}
+                            />
+                            <Radio
+                                label="Har uføresak til behandling"
+                                name="harUførevedtak"
+                                onChange={() => formik.setValues({ harUførevedtak: 'uføresakTilBehandling' })}
+                            />
                         </RadioGruppe>
                         <Vurderingknapper
                             onTilbakeClick={() => {
