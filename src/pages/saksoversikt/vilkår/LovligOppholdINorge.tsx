@@ -3,17 +3,33 @@ import { Radio, RadioGruppe } from 'nav-frontend-skjema';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { Nullable } from '~lib/types';
+import yup from '~lib/validering';
+
 import Faktablokk from './Faktablokk';
 import { VilkårsvurderingBaseProps } from './types';
 import { Vurdering, Vurderingknapper } from './Vurdering';
 
+type LovligOppholdINorgeType = Nullable<boolean> | 'uavklart';
+
+interface FormData {
+    lovligOppholdINorge: LovligOppholdINorgeType;
+}
+
+const schema = yup.object<FormData>({
+    lovligOppholdINorge: yup.mixed().defined().oneOf([true, false, 'uavklart'], 'Vennligst velg et alternativ '),
+});
+
 const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
-    const formik = useFormik({
-        initialValues: {},
+    const formik = useFormik<FormData>({
+        initialValues: {
+            lovligOppholdINorge: null,
+        },
         onSubmit(values) {
             console.log({ values });
             history.push(props.nesteUrl);
         },
+        validationSchema: schema,
     });
     const history = useHistory();
 
@@ -22,10 +38,25 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             {{
                 left: (
                     <form onSubmit={formik.handleSubmit}>
-                        <RadioGruppe legend="Har søker lovlig opphold i Norge?">
-                            <Radio label="Ja" name="ja" />
-                            <Radio label="Nei" name="nei" />
-                            <Radio label="Uavklart" name="saktilbehandling" />
+                        <RadioGruppe
+                            legend="Har søker lovlig opphold i Norge?"
+                            feil={formik.errors.lovligOppholdINorge}
+                        >
+                            <Radio
+                                label="Ja"
+                                name="lovligOppholdINorge"
+                                onChange={() => formik.setValues({ lovligOppholdINorge: true })}
+                            />
+                            <Radio
+                                label="Nei"
+                                name="lovligOppholdINorge"
+                                onChange={() => formik.setValues({ lovligOppholdINorge: false })}
+                            />
+                            <Radio
+                                label="Uavklart"
+                                name="lovligOppholdINorge"
+                                onChange={() => formik.setValues({ lovligOppholdINorge: 'uavklart' })}
+                            />
                         </RadioGruppe>
                         <Vurderingknapper
                             onTilbakeClick={() => {

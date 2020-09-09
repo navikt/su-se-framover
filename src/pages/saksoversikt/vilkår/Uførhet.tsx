@@ -16,11 +16,12 @@ interface FormData {
     harUførevedtak: UførhetType;
 }
 
-// eslint-disable-next-line
 const schema = yup.object<FormData>({
-    harUførevedtak: yup.mixed().defined().oneOf([true, false, 'uføresakTilBehandling']),
+    harUførevedtak: yup
+        .mixed()
+        .defined()
+        .oneOf([true, false, 'uføresakTilBehandling'], 'Vennligst velg et alternativ '),
 });
-console.log(schema);
 
 const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const formik = useFormik<FormData>({
@@ -31,8 +32,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
             console.log({ values });
             history.push(props.nesteUrl);
         },
-        //TODO: fjern kommentar for validering
-        //validationSchema: schema,
+        validationSchema: schema,
     });
     const history = useHistory();
 
@@ -41,7 +41,10 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
             {{
                 left: (
                     <form onSubmit={formik.handleSubmit}>
-                        <RadioGruppe legend="Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-7 i folketrygdloven er oppfylt?">
+                        <RadioGruppe
+                            legend="Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-7 i folketrygdloven er oppfylt?"
+                            feil={formik.errors.harUførevedtak}
+                        >
                             <Radio
                                 label="Ja"
                                 name="harUførevedtak"
