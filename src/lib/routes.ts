@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 
 import { Vilkårtype } from '~api/behandlingApi';
+import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 
 import { SaksbehandlingMenyvalg } from '../pages/saksoversikt/types';
 import { Søknadsteg } from '../pages/søknad/types';
@@ -66,7 +67,7 @@ export const saksbehandlingVedtak: Route<{
 export const saksbehandlingVilkårsvurdering: Route<{
     sakId: string;
     behandlingId: string;
-    vilkar?: Vilkårtype;
+    vilkar?: Vilkårtype | keyof Behandlingsinformasjon;
 }> = {
     path: `/saksoversikt/:sakId/:behandlingId/${SaksbehandlingMenyvalg.Vilkår}/:vilkar?/`,
     createURL: ({ vilkar = Vilkårtype.Uførhet, ...args }) =>

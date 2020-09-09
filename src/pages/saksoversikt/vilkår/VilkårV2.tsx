@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import { Vilkårtype } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
 import * as Routes from '~lib/routes';
+import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 
 import FastOppholdINorge from './FastOppholdINorge';
 import Flyktning from './Flyktning';
@@ -34,7 +35,7 @@ const Vilkår = (props: { sak: Sak }) => {
     return (
         <div className={styles.container}>
             <div className={styles.framdriftsindikator}>
-                <Framdriftsindikator behandling={behandling} vilkår={vilkar} />
+                <Framdriftsindikator behandling={behandling} vilkår={vilkar as keyof Behandlingsinformasjon} />
             </div>
             <div className={styles.content}>
                 <Switch>
@@ -51,17 +52,17 @@ const Vilkår = (props: { sak: Sak }) => {
                         <Flyktning
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.Uførhet)}
-                            nesteUrl={createVilkårUrl(Vilkårtype.Oppholdstillatelse)}
+                            nesteUrl={createVilkårUrl(Vilkårtype.LovligOpphold)}
                         />
                     </Route>
-                    <Route path={createVilkårUrl(Vilkårtype.Oppholdstillatelse)}>
+                    <Route path={createVilkårUrl(Vilkårtype.LovligOpphold)}>
                         <LovligOppholdINorge
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.Flyktning)}
-                            nesteUrl={createVilkårUrl(Vilkårtype.BorOgOppholderSegINorge)}
+                            nesteUrl={createVilkårUrl(Vilkårtype.FastOppholdINorge)}
                         />
                     </Route>
-                    <Route path={createVilkårUrl(Vilkårtype.BorOgOppholderSegINorge)}>
+                    <Route path={createVilkårUrl(Vilkårtype.FastOppholdINorge)}>
                         <FastOppholdINorge
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.Oppholdstillatelse)}
