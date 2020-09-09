@@ -1,6 +1,7 @@
 import { formatISO } from 'date-fns';
 
 import { Nullable } from '~lib/types';
+import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 
 import apiClient, { ApiClientResult } from './apiClient';
 import { Søknad } from './søknadApi';
@@ -74,6 +75,7 @@ export interface Behandling {
     id: string;
     søknad: Søknad;
     vilkårsvurderinger: Vilkårsvurderinger;
+    behandlingsinformasjon: Behandlingsinformasjon;
     beregning: Nullable<Beregning>;
     status: Behandlingsstatus;
     utbetaling: Nullable<Utbetaling>;
