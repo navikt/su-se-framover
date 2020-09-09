@@ -17,6 +17,8 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
             return 'Personlig oppmøte';
         case Vilkårtype.Uførhet:
             return 'Uførhet';
+        default:
+            return type.toString();
     }
 };
 
