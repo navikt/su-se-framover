@@ -46,6 +46,7 @@ const Vilkår = (props: { sak: Sak }) => {
                                 sakId: urlParams.sakId,
                             })}
                             nesteUrl={createVilkårUrl(Vilkårtype.Flyktning)}
+                            sakId={urlParams.sakId}
                         />
                     </Route>
                     <Route path={createVilkårUrl(Vilkårtype.Flyktning)}>
@@ -53,6 +54,7 @@ const Vilkår = (props: { sak: Sak }) => {
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.Uførhet)}
                             nesteUrl={createVilkårUrl(Vilkårtype.LovligOpphold)}
+                            sakId={urlParams.sakId}
                         />
                     </Route>
                     <Route path={createVilkårUrl(Vilkårtype.LovligOpphold)}>
@@ -60,6 +62,7 @@ const Vilkår = (props: { sak: Sak }) => {
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.Flyktning)}
                             nesteUrl={createVilkårUrl(Vilkårtype.FastOppholdINorge)}
+                            sakId={urlParams.sakId}
                         />
                     </Route>
                     <Route path={createVilkårUrl(Vilkårtype.FastOppholdINorge)}>
@@ -67,6 +70,7 @@ const Vilkår = (props: { sak: Sak }) => {
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.Oppholdstillatelse)}
                             nesteUrl={createVilkårUrl(Vilkårtype.Formue)}
+                            sakId={urlParams.sakId}
                         />
                     </Route>
                     <Route path={createVilkårUrl(Vilkårtype.Formue)}>
@@ -74,6 +78,7 @@ const Vilkår = (props: { sak: Sak }) => {
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.BorOgOppholderSegINorge)}
                             nesteUrl={createVilkårUrl(Vilkårtype.PersonligOppmøte)}
+                            sakId={urlParams.sakId}
                         />
                     </Route>
                     <Route path={createVilkårUrl(Vilkårtype.PersonligOppmøte)}>
@@ -81,6 +86,7 @@ const Vilkår = (props: { sak: Sak }) => {
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.BorOgOppholderSegINorge)}
                             nesteUrl={createVilkårUrl(Vilkårtype.PersonligOppmøte)}
+                            sakId={urlParams.sakId}
                         />
                     </Route>
                     <Route path="*">404</Route>
