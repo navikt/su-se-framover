@@ -15,7 +15,7 @@ const FormueInput = (props: {
     className: string;
     tittel: string;
     inputName: string;
-    defaultValues: number;
+    defaultValues: string;
     onChange: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (e: React.ChangeEvent<any>): void;
@@ -40,25 +40,29 @@ const FormueInput = (props: {
 );
 
 interface FormData {
-    verdiPåBolig: number;
-    verdiKjøretøy: number;
-    innskuddsBeløp: number;
-    verdipapirBeløp: number;
-    skylderNoenMegPengerBeløp: number;
-    kontanterBeløp: number;
-    depositumsBeløp: number;
+    verdiPåBolig: string;
+    verdiKjøretøy: string;
+    innskuddsBeløp: string;
+    verdipapirBeløp: string;
+    skylderNoenMegPengerBeløp: string;
+    kontanterBeløp: string;
+    depositumsBeløp: string;
     måHenteMerInfo: boolean;
     formueBegrunnelse: Nullable<string>;
 }
 
+const validateStringAsNumber = (yup.number().required().typeError('Feltet må være et tall') as unknown) as yup.Schema<
+    string
+>;
+
 const schema = yup.object<FormData>({
-    verdiPåBolig: yup.number().required().typeError('Feltet må være et tall'),
-    verdiKjøretøy: yup.number().required().typeError('Feltet må være et tall'),
-    innskuddsBeløp: yup.number().required().typeError('Feltet må være et tall'),
-    verdipapirBeløp: yup.number().required().typeError('Feltet må være et tall'),
-    skylderNoenMegPengerBeløp: yup.number().required().typeError('Feltet må være et tall'),
-    kontanterBeløp: yup.number().required().typeError('Feltet må være et tall'),
-    depositumsBeløp: yup.number().required().typeError('Feltet må være et tall'),
+    verdiPåBolig: validateStringAsNumber,
+    verdiKjøretøy: validateStringAsNumber,
+    innskuddsBeløp: validateStringAsNumber,
+    verdipapirBeløp: validateStringAsNumber,
+    skylderNoenMegPengerBeløp: validateStringAsNumber,
+    kontanterBeløp: validateStringAsNumber,
+    depositumsBeløp: validateStringAsNumber,
     måHenteMerInfo: yup.boolean().required(),
     formueBegrunnelse: yup.string().required().typeError('Begrunnelse kan ikke være tom'),
 });
@@ -66,39 +70,43 @@ const schema = yup.object<FormData>({
 const Formue = (props: VilkårsvurderingBaseProps) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [totalFormue, setTotalFormue] = useState<number | string>(0);
-    // const { formue } = props.behandling.søknad.søknadInnhold;
+    const [totalFormueFraSøknad, setTotalFormueFraSøknad] = useState<number | string>(0);
+    const { formue } = props.behandling.søknad.søknadInnhold;
 
-    const formue = {
+    /*const formue = {
         borIBolig: true,
-        verdiPåBolig: 10,
+        verdiPåBolig: '10',
         boligBrukesTil: 'hehe',
-        depositumsBeløp: 10,
+        depositumsBeløp: '10',
         kontonummer: '5660',
-        verdiPåEiendom: 10,
+        verdiPåEiendom: '10',
         eiendomBrukesTil: 'hehe',
         kjøretøy: [
             { verdiPåKjøretøy: 10, kjøretøyDeEier: 'kek' },
             { verdiPåKjøretøy: 10, kjøretøyDeEier: 'kek' },
         ],
-        innskuddsBeløp: 10,
-        verdipapirBeløp: 10,
-        skylderNoenMegPengerBeløp: 10,
-        kontanterBeløp: 10,
-    };
+        innskuddsBeløp: '10',
+        verdipapirBeløp: '10',
+        skylderNoenMegPengerBeløp: '10',
+        kontanterBeløp: '10',
+    };*/
+
     const formik = useFormik<FormData>({
         initialValues: {
-            verdiPåBolig: formue.verdiPåBolig,
-            verdiKjøretøy: totalVerdiKjøretøy(formue.kjøretøy),
-            innskuddsBeløp: formue.innskuddsBeløp + formue.depositumsBeløp,
-            verdipapirBeløp: formue.verdipapirBeløp,
-            skylderNoenMegPengerBeløp: formue.skylderNoenMegPengerBeløp,
-            kontanterBeløp: formue.kontanterBeløp,
-            depositumsBeløp: formue.depositumsBeløp,
+            verdiPåBolig: formue.verdiPåBolig?.toString() || '0',
+            verdiKjøretøy: totalVerdiKjøretøy(formue.kjøretøy).toString(),
+            innskuddsBeløp: (
+                parseInt(formue.innskuddsBeløp ? formue.innskuddsBeløp.toString() : '0', 10) +
+                parseInt(formue.depositumsBeløp ? formue.depositumsBeløp.toString() : '0', 10)
+            ).toString(),
+            verdipapirBeløp: formue.verdipapirBeløp?.toString() || '0',
+            skylderNoenMegPengerBeløp: formue.skylderNoenMegPengerBeløp?.toString() || '0',
+            kontanterBeløp: formue.kontanterBeløp?.toString() || '0',
+            depositumsBeløp: formue.depositumsBeløp?.toString() || '0',
             måHenteMerInfo: false,
             formueBegrunnelse: null,
         },
         onSubmit(values) {
-            setHasSubmitted(true);
             console.log({ values });
             history.push(props.nesteUrl);
         },
@@ -111,42 +119,66 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         kalkulerFormue(formik.values);
     }, [formik.values]);
 
+    useEffect(() => {
+        kalkulerFormueFraSøknad();
+    }, [formue]);
+
     function totalVerdiKjøretøy(kjøretøyArray: Nullable<Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>>) {
         if (kjøretøyArray === null) {
             return 0;
         }
+
         return kjøretøyArray.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0);
     }
 
+    function kalkulerFormueFraSøknad() {
+        const formueFraSøknad = [
+            formue.verdiPåBolig ? formue.verdiPåBolig.toString() : '0',
+            formue.verdiPåEiendom ? formue.verdiPåEiendom.toString() : '0',
+            totalVerdiKjøretøy(formue.kjøretøy).toString(),
+            formue.innskuddsBeløp ? formue.innskuddsBeløp.toString() : '0',
+            formue.verdipapirBeløp ? formue.verdipapirBeløp.toString() : '0',
+            formue.skylderNoenMegPengerBeløp ? formue.skylderNoenMegPengerBeløp.toString() : '0',
+            formue.kontanterBeløp ? formue.kontanterBeløp.toString() : '0',
+            formue.depositumsBeløp ? formue.depositumsBeløp.toString() : '0',
+        ];
+
+        setTotalFormueFraSøknad(
+            formueFraSøknad.reduce((acc, formue) => acc + parseInt(formue, 10), 0) -
+                parseInt(formue.depositumsBeløp ? formue.depositumsBeløp.toString() : '0', 10)
+        );
+    }
+
     function kalkulerFormue(formikValues: FormData) {
-        let total = 0;
         const formueArray = [
             formikValues.verdiPåBolig,
             formikValues.verdiKjøretøy,
-            formikValues.innskuddsBeløp + formikValues.depositumsBeløp,
+            formikValues.innskuddsBeløp,
             formikValues.verdipapirBeløp,
             formikValues.skylderNoenMegPengerBeløp,
             formikValues.kontanterBeløp,
-            -formikValues.depositumsBeløp,
         ];
 
-        console.log(formueArray);
-        formueArray.map((formue) => {
-            if (typeof formue === 'string') {
-                total += parseInt(formue);
-            } else {
-                total += formue;
-            }
-        });
+        const totalt =
+            formueArray.reduce((acc, formue) => acc + parseInt(formue), 0) - parseInt(formikValues.depositumsBeløp, 10);
 
-        setTotalFormue(total);
+        if (isNaN(totalt)) {
+            setTotalFormue('Alle feltene må være tall for å regne ut');
+        } else {
+            setTotalFormue(totalt);
+        }
     }
 
     return (
         <Vurdering tittel="Formue">
             {{
                 left: (
-                    <form onSubmit={formik.handleSubmit}>
+                    <form
+                        onSubmit={(e) => {
+                            setHasSubmitted(true);
+                            formik.handleSubmit(e);
+                        }}
+                    >
                         <FormueInput
                             tittel="Verdi boliger som ikke er primærbolig"
                             className={styles.formueInput}
@@ -159,7 +191,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             tittel="Verdi bil(sekundær), campingvogn eller kjøretøy"
                             className={styles.formueInput}
                             inputName="verdiKjøretøy"
-                            defaultValues={totalVerdiKjøretøy(formue.kjøretøy)}
+                            defaultValues={totalVerdiKjøretøy(formue.kjøretøy).toString()}
                             onChange={formik.handleChange}
                             feil={formik.errors.verdiKjøretøy}
                         />
@@ -210,7 +242,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             {totalFormue > 500 ? (
                                 <div>
                                     <p className={styles.vilkårOppfyltText}>
-                                        Søker har mer enn 500 kroner i formue. Søker får dermed ikke Supplerende Stønad
+                                        Søker har mer enn 500 kroner i formue. Søker får dermed ikke Supplerende
+                                        Stønad(TODO)
                                     </p>
                                     <hr></hr>
                                     <hr></hr>
@@ -255,6 +288,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                     <div>
                         <Faktablokk
                             tittel="Fra søknad"
+                            className={styles.formueFaktaBlokk}
                             fakta={[
                                 {
                                     tittel: 'Verdi på bolig',
@@ -285,10 +319,15 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 },
                                 {
                                     tittel: 'SkylderNoenMegPengerBeløp',
-                                    verdi: formue.kontanterBeløp?.toString() ?? '0',
+                                    verdi: formue.skylderNoenMegPengerBeløp?.toString() ?? '0',
+                                },
+                                {
+                                    tittel: 'Depositumskonto',
+                                    verdi: formue.depositumsBeløp?.toString() ?? '0',
                                 },
                             ]}
                         />
+                        <p className={styles.formueFraSøknad}>Totalt: {totalFormueFraSøknad}</p>
                     </div>
                 ),
             }}
