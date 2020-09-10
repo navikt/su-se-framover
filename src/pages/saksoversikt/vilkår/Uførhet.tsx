@@ -82,7 +82,6 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                         sakId: props.sakId,
                                         behandlingId: props.behandling.id,
                                         behandlingsinformasjon: {
-                                            ...props.behandling.behandlingsinformasjon,
                                             uførhet: {
                                                 status: formik.values.uførevedtak,
                                                 uføregrad: null,
