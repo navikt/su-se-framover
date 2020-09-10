@@ -47,9 +47,9 @@ export interface FastOppholdINorge {
     begrunnelse: Nullable<string>;
 }
 export enum FastOppholdINorgeStatus {
-    VilkårOppfylt,
-    VilkårIkkeOppfylt,
-    Uavklart,
+    VilkårOppfylt = 'VilkårOppfylt',
+    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
+    Uavklart = 'Uavklart',
 }
 
 export interface OppholdIUtlandet {
