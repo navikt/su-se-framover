@@ -211,9 +211,7 @@ export async function lagreBehandlingsinformasjon(arg: {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/informasjon`,
         method: 'PATCH',
-        body: {
-            ...arg.behandlingsinformasjon,
-        },
+        body: arg.behandlingsinformasjon,
     });
 }
 
