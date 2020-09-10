@@ -67,7 +67,7 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
     {
         sakId: string;
         behandlingId: string;
-        behandlingsinformasjon: Behandlingsinformasjon;
+        behandlingsinformasjon: Partial<Behandlingsinformasjon>;
     },
     { rejectValue: ApiError }
 >('behandling/informasjon', async (arg, thunkApi) => {

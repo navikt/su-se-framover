@@ -206,7 +206,7 @@ export async function lagreVilkårsvurdering(arg: {
 export async function lagreBehandlingsinformasjon(arg: {
     sakId: string;
     behandlingId: string;
-    behandlingsinformasjon: Behandlingsinformasjon;
+    behandlingsinformasjon: Partial<Behandlingsinformasjon>;
 }) {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/informasjon`,
