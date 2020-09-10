@@ -37,9 +37,9 @@ export interface LovligOpphold {
     begrunnelse: Nullable<string>;
 }
 export enum LovligOppholdStatus {
-    VilkårOppfylt,
-    VilkårIkkeOppfylt,
-    Uavklart,
+    VilkårOppfylt = 'VilkårOppfylt',
+    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
+    Uavklart = 'Uavklart',
 }
 
 export interface FastOppholdINorge {

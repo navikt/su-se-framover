@@ -1,8 +1,9 @@
 import { useFormik } from 'formik';
-import { Radio, RadioGruppe } from 'nav-frontend-skjema';
-import React from 'react';
+import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { SøknadInnhold } from '~api/søknadApi';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
@@ -10,11 +11,12 @@ import { useAppDispatch } from '~redux/Store';
 import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from './Faktablokk';
+import styles from './LovligOppholdINorge.module.less';
 import { VilkårsvurderingBaseProps } from './types';
 import { Vurdering, Vurderingknapper } from './Vurdering';
-
 interface FormData {
     status: Nullable<LovligOppholdStatus>;
+    begrunnelse: Nullable<string>;
 }
 
 const schema = yup.object<FormData>({
@@ -25,34 +27,122 @@ const schema = yup.object<FormData>({
             [LovligOppholdStatus.Uavklart, LovligOppholdStatus.VilkårIkkeOppfylt, LovligOppholdStatus.VilkårOppfylt],
             'Vennligst velg et alternativ '
         ),
+    begrunnelse: yup.string().nullable().defined().when('status', {
+        is: LovligOppholdStatus.Uavklart,
+        then: yup.string().required(),
+        otherwise: yup.string(),
+    }),
 });
+
+function kek(lol: SøknadInnhold) {
+    const arr = [createFaktaBlokkObject(lol.oppholdstillatelse.erNorskStatsborger, 'Er du norsk statsborger?')];
+
+    if (!lol.oppholdstillatelse.erNorskStatsborger) {
+        arr.push(
+            createFaktaBlokkObject(
+                lol.oppholdstillatelse.harOppholdstillatelse,
+                'Har søker oppholdstillatelse i Norge?'
+            )
+        );
+    }
+    if (lol.oppholdstillatelse.harOppholdstillatelse) {
+        arr.push(createFaktaBlokkObject(lol.oppholdstillatelse.typeOppholdstillatelse, 'Oppholdstillatelse?'));
+    }
+
+    if (lol.oppholdstillatelse.typeOppholdstillatelse === 'midlertidig') {
+        arr.push(
+            createFaktaBlokkObject(
+                lol.oppholdstillatelse.oppholdstillatelseMindreEnnTreMåneder,
+                'Oppholdstillatelse mindre enn tre måneder?'
+            )
+        );
+    }
+
+    if (lol.oppholdstillatelse.oppholdstillatelseMindreEnnTreMåneder) {
+        arr.push(
+            createFaktaBlokkObject(lol.oppholdstillatelse.oppholdstillatelseForlengelse, 'Har søker søkt forlengelse?')
+        );
+    }
+
+    return arr;
+}
+
+function createFaktaBlokkObject(oppholdstillatelsePair: Nullable<boolean | string>, tittel: string) {
+    if (typeof oppholdstillatelsePair === 'string') {
+        return {
+            tittel: tittel,
+            verdi: oppholdstillatelsePair.valueOf(),
+        };
+    } else if (typeof oppholdstillatelsePair === 'boolean') {
+        return {
+            tittel: tittel,
+            verdi: oppholdstillatelsePair.valueOf() ? 'Ja' : 'Nei',
+        };
+    } else {
+        return {
+            tittel: tittel,
+            verdi: oppholdstillatelsePair ? 'Ja' : 'Nei',
+        };
+    }
+}
 
 const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
+    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+
     const formik = useFormik<FormData>({
         initialValues: {
             status: props.behandling.behandlingsinformasjon.lovligOpphold?.status ?? null,
+            begrunnelse: props.behandling.behandlingsinformasjon.lovligOpphold?.begrunnelse ?? null,
         },
         onSubmit(values) {
-            console.log({ values });
+            if (!values.status) return;
+
+            dispatch(
+                lagreBehandlingsinformasjon({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                    behandlingsinformasjon: {
+                        ...props.behandling.behandlingsinformasjon,
+                        lovligOpphold: {
+                            status: values.status,
+                            begrunnelse: values.begrunnelse,
+                        },
+                    },
+                })
+            );
+
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
+        validateOnChange: hasSubmitted,
     });
     const history = useHistory();
+
+    kek(props.behandling.søknad.søknadInnhold);
 
     return (
         <Vurdering tittel="Lovlig opphold i Norge">
             {{
                 left: (
-                    <form onSubmit={formik.handleSubmit}>
+                    <form
+                        onSubmit={(e) => {
+                            setHasSubmitted(true);
+                            formik.handleSubmit(e);
+                        }}
+                    >
                         <RadioGruppe legend="Har søker lovlig opphold i Norge?" feil={formik.errors.status}>
                             <Radio
                                 label="Ja"
                                 name="lovligOppholdINorge"
                                 onChange={() =>
-                                    formik.setValues({ ...formik.values, status: LovligOppholdStatus.VilkårOppfylt })
+                                    formik.setValues({
+                                        ...formik.values,
+                                        status: LovligOppholdStatus.VilkårOppfylt,
+                                        begrunnelse: null,
+                                    })
                                 }
+                                checked={formik.values.status === LovligOppholdStatus.VilkårOppfylt}
                             />
                             <Radio
                                 label="Nei"
@@ -61,8 +151,10 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                     formik.setValues({
                                         ...formik.values,
                                         status: LovligOppholdStatus.VilkårIkkeOppfylt,
+                                        begrunnelse: null,
                                     })
                                 }
+                                checked={formik.values.status === LovligOppholdStatus.VilkårIkkeOppfylt}
                             />
                             <Radio
                                 label="Uavklart"
@@ -70,11 +162,20 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 onChange={() =>
                                     formik.setValues({ ...formik.values, status: LovligOppholdStatus.Uavklart })
                                 }
+                                checked={formik.values.status === LovligOppholdStatus.Uavklart}
                             />
                         </RadioGruppe>
+                        {formik.values.status === LovligOppholdStatus.Uavklart && (
+                            <Textarea
+                                label="Begrunnelse"
+                                name="begrunnelse"
+                                value={formik.values.begrunnelse || ''}
+                                onChange={formik.handleChange}
+                                feil={formik.errors.begrunnelse}
+                            />
+                        )}
                         <Vurderingknapper
                             onTilbakeClick={() => {
-                                console.log('tilbake');
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
@@ -88,7 +189,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                             ...props.behandling.behandlingsinformasjon,
                                             lovligOpphold: {
                                                 status: formik.values.status,
-                                                begrunnelse: null,
+                                                begrunnelse: formik.values.begrunnelse,
                                             },
                                         },
                                     })
@@ -100,20 +201,8 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 right: (
                     <Faktablokk
                         tittel="Fra søknad"
-                        fakta={[
-                            {
-                                tittel: 'Er du norsk statsborgare?',
-                                verdi: props.behandling.søknad.søknadInnhold.oppholdstillatelse.erNorskStatsborger
-                                    ? 'Ja'
-                                    : 'Nei',
-                            },
-                            {
-                                tittel: 'Oppholdstillatelse?',
-                                verdi: props.behandling.søknad.søknadInnhold.oppholdstillatelse.typeOppholdstillatelse
-                                    ? 'Ja'
-                                    : 'Nei',
-                            },
-                        ]}
+                        className={styles.lovligOppholdFaktaBlokk}
+                        fakta={kek(props.behandling.søknad.søknadInnhold)}
                     />
                 ),
             }}
