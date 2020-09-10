@@ -119,27 +119,27 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     }
 
     function kalkulerFormue(formikValues: FormData) {
-        const {
-            verdiPåBolig,
-            verdiKjøretøy,
-            innskuddsBeløp,
-            verdipapirBeløp,
-            skylderNoenMegPengerBeløp,
-            kontanterBeløp,
-            depositumsBeløp,
-        } = formikValues;
+        let total = 0;
+        const formueArray = [
+            formikValues.verdiPåBolig,
+            formikValues.verdiKjøretøy,
+            formikValues.innskuddsBeløp + formikValues.depositumsBeløp,
+            formikValues.verdipapirBeløp,
+            formikValues.skylderNoenMegPengerBeløp,
+            formikValues.kontanterBeløp,
+            -formikValues.depositumsBeløp,
+        ];
 
-        setTotalFormue(
-            [
-                verdiPåBolig,
-                verdiKjøretøy,
-                innskuddsBeløp + depositumsBeløp,
-                verdipapirBeløp,
-                skylderNoenMegPengerBeløp,
-                kontanterBeløp,
-                -depositumsBeløp,
-            ].reduce((acc, formue) => acc + formue, 0)
-        );
+        console.log(formueArray);
+        formueArray.map((formue) => {
+            if (typeof formue === 'string') {
+                total += parseInt(formue);
+            } else {
+                total += formue;
+            }
+        });
+
+        setTotalFormue(total);
     }
 
     return (
