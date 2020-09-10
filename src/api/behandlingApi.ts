@@ -1,6 +1,7 @@
 import { formatISO } from 'date-fns';
 
 import { Nullable } from '~lib/types';
+import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 
 import apiClient, { ApiClientResult } from './apiClient';
 import { Søknad } from './søknadApi';
@@ -18,6 +19,10 @@ export enum Vilkårtype {
     PersonligOppmøte = 'PERSONLIG_OPPMØTE',
     Formue = 'FORMUE',
     BorOgOppholderSegINorge = 'BOR_OG_OPPHOLDER_SEG_I_NORGE',
+    LovligOpphold = 'LOVLIG_OPPHOLD',
+    FastOppholdINorge = 'FAST_OPPHOLD_I_NORGE',
+    OppholdIUtlandet = 'OPPHOLD_I_UTLANDET',
+    Sats = 'SATS',
 }
 
 export enum Sats {
@@ -74,6 +79,7 @@ export interface Behandling {
     id: string;
     søknad: Søknad;
     vilkårsvurderinger: Vilkårsvurderinger;
+    behandlingsinformasjon: Behandlingsinformasjon;
     beregning: Nullable<Beregning>;
     status: Behandlingsstatus;
     utbetaling: Nullable<Utbetaling>;
@@ -194,6 +200,18 @@ export async function lagreVilkårsvurdering(arg: {
                 status: arg.status,
             },
         },
+    });
+}
+
+export async function lagreBehandlingsinformasjon(arg: {
+    sakId: string;
+    behandlingId: string;
+    behandlingsinformasjon: Behandlingsinformasjon;
+}) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/informasjon`,
+        method: 'PATCH',
+        body: arg.behandlingsinformasjon,
     });
 }
 

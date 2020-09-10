@@ -7,31 +7,31 @@ import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
-import { FlyktningStatus } from '~types/Behandlingsinformasjon';
+import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from './Faktablokk';
 import { VilkårsvurderingBaseProps } from './types';
 import { Vurdering, Vurderingknapper } from './Vurdering';
 
 interface FormData {
-    flyktningStatus: Nullable<FlyktningStatus>;
+    status: Nullable<LovligOppholdStatus>;
 }
 
 const schema = yup.object<FormData>({
-    flyktningStatus: yup
-        .mixed()
+    status: yup
+        .mixed<LovligOppholdStatus>()
         .defined()
         .oneOf(
-            [FlyktningStatus.VilkårOppfylt, FlyktningStatus.VilkårIkkeOppfylt, FlyktningStatus.Uavklart],
+            [LovligOppholdStatus.Uavklart, LovligOppholdStatus.VilkårIkkeOppfylt, LovligOppholdStatus.VilkårOppfylt],
             'Vennligst velg et alternativ '
         ),
 });
 
-const Flyktning = (props: VilkårsvurderingBaseProps) => {
+const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const formik = useFormik<FormData>({
         initialValues: {
-            flyktningStatus: props.behandling.behandlingsinformasjon.flyktning?.status ?? null,
+            status: props.behandling.behandlingsinformasjon.lovligOpphold?.status ?? null,
         },
         onSubmit(values) {
             console.log({ values });
@@ -42,41 +42,43 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
 
     return (
-        <Vurdering tittel="Flyktning">
+        <Vurdering tittel="Lovlig opphold i Norge">
             {{
                 left: (
                     <form onSubmit={formik.handleSubmit}>
-                        <RadioGruppe
-                            legend="Er søker registrer flyktning etter utlendingslova §28?"
-                            feil={formik.errors.flyktningStatus}
-                        >
+                        <RadioGruppe legend="Har søker lovlig opphold i Norge?" feil={formik.errors.status}>
                             <Radio
                                 label="Ja"
-                                name="registertFlyktning"
-                                onChange={() => formik.setValues({ flyktningStatus: FlyktningStatus.VilkårOppfylt })}
-                                defaultChecked={formik.values.flyktningStatus === FlyktningStatus.VilkårOppfylt}
+                                name="lovligOppholdINorge"
+                                onChange={() =>
+                                    formik.setValues({ ...formik.values, status: LovligOppholdStatus.VilkårOppfylt })
+                                }
                             />
                             <Radio
                                 label="Nei"
-                                name="registertFlyktning"
+                                name="lovligOppholdINorge"
                                 onChange={() =>
-                                    formik.setValues({ flyktningStatus: FlyktningStatus.VilkårIkkeOppfylt })
+                                    formik.setValues({
+                                        ...formik.values,
+                                        status: LovligOppholdStatus.VilkårIkkeOppfylt,
+                                    })
                                 }
-                                defaultChecked={formik.values.flyktningStatus === FlyktningStatus.VilkårIkkeOppfylt}
                             />
                             <Radio
                                 label="Uavklart"
-                                name="registertFlyktning"
-                                onChange={() => formik.setValues({ flyktningStatus: FlyktningStatus.Uavklart })}
-                                defaultChecked={formik.values.flyktningStatus === FlyktningStatus.Uavklart}
+                                name="lovligOppholdINorge"
+                                onChange={() =>
+                                    formik.setValues({ ...formik.values, status: LovligOppholdStatus.Uavklart })
+                                }
                             />
                         </RadioGruppe>
                         <Vurderingknapper
                             onTilbakeClick={() => {
+                                console.log('tilbake');
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                if (!formik.values.flyktningStatus) return;
+                                if (!formik.values.status) return;
 
                                 dispatch(
                                     lagreBehandlingsinformasjon({
@@ -84,9 +86,9 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                         behandlingId: props.behandling.id,
                                         behandlingsinformasjon: {
                                             ...props.behandling.behandlingsinformasjon,
-                                            flyktning: {
+                                            lovligOpphold: {
+                                                status: formik.values.status,
                                                 begrunnelse: null,
-                                                status: formik.values.flyktningStatus,
                                             },
                                         },
                                     })
@@ -100,8 +102,14 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                         tittel="Fra søknad"
                         fakta={[
                             {
-                                tittel: 'Er du registrert flyktning?',
-                                verdi: props.behandling.søknad.søknadInnhold.flyktningsstatus.registrertFlyktning
+                                tittel: 'Er du norsk statsborgare?',
+                                verdi: props.behandling.søknad.søknadInnhold.oppholdstillatelse.erNorskStatsborger
+                                    ? 'Ja'
+                                    : 'Nei',
+                            },
+                            {
+                                tittel: 'Oppholdstillatelse?',
+                                verdi: props.behandling.søknad.søknadInnhold.oppholdstillatelse.typeOppholdstillatelse
                                     ? 'Ja'
                                     : 'Nei',
                             },
@@ -113,4 +121,4 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     );
 };
 
-export default Flyktning;
+export default LovligOppholdINorge;

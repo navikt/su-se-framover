@@ -1,9 +1,10 @@
 const variables = {
     SU_SE_BAKOVER_URL: 'http://localhost:8080',
     AMPLITUDE_API_KEY: '',
-    FEATURE_VILKAR_V2: false,
+    FEATURE_VILKAR_V2: true,
 };
 
+// eslint-disable-next-line
 module.exports = {
     plugins: {
         'posthtml-expressions': {

@@ -1,41 +1,34 @@
 import React from 'react';
 
-import { Behandling, Vilkårtype, VilkårVurderingStatus } from '~api/behandlingApi';
+import { Behandling, VilkårVurderingStatus, Vilkårtype } from '~api/behandlingApi';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
-import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
+import { vilkårTittelFormatted, mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
 
 import styles from './framdriftsindikator.module.less';
 
-const Item = (props: { vilkar: Vilkårtype; status: VilkårVurderingStatus }) => (
-    <div className={styles.item}>
-        <div className={styles.iconAndLineContainer}>
-            <VilkårvurderingStatusIcon status={props.status} />
-            <span className={styles.line} />
+const Item = (props: { vilkar: Vilkårtype; status: VilkårVurderingStatus }) => {
+    return (
+        <div className={styles.item}>
+            <div className={styles.iconAndLineContainer}>
+                <VilkårvurderingStatusIcon status={props.status} />
+                <span className={styles.line} />
+            </div>
+            <span>{vilkårTittelFormatted(props.vilkar)}</span>
         </div>
-        <span>{vilkårTittelFormatted(props.vilkar)}</span>
-    </div>
-);
-
-const vilkårrekkefølge = [
-    Vilkårtype.Uførhet,
-    Vilkårtype.Flyktning,
-    Vilkårtype.Oppholdstillatelse,
-    Vilkårtype.PersonligOppmøte,
-    Vilkårtype.Formue,
-    Vilkårtype.BorOgOppholderSegINorge,
-];
+    );
+};
 
 const Framdriftsindikator = (props: { behandling: Behandling; vilkår: Vilkårtype }) => {
+    const { behandlingsinformasjon } = props.behandling;
+    const vilkårrekkefølge = mapToVilkårsinformasjon(behandlingsinformasjon);
+
+    console.log(props.vilkår.toLowerCase());
     return (
         <ol className={styles.container}>
             {vilkårrekkefølge
-                .filter(
-                    (v) =>
-                        props.behandling.vilkårsvurderinger[v].status !== VilkårVurderingStatus.IkkeVurdert ||
-                        v === props.vilkår
-                )
+                .filter((v) => v.status !== VilkårVurderingStatus.IkkeVurdert || props.vilkår === v.vilkårtype)
                 .map((v) => (
-                    <Item vilkar={v} status={props.behandling.vilkårsvurderinger[v].status} key={v} />
+                    <Item vilkar={v.vilkårtype} status={v.status} key={v.vilkårtype} />
                 ))}
         </ol>
     );

@@ -8,11 +8,11 @@ export interface Fakta {
     verdi: string;
 }
 
-const Faktablokk = (props: { tittel: string; fakta: Fakta[] }) => (
+const Faktablokk = (props: { tittel: string; fakta: Fakta[]; className?: string }) => (
     <div>
         <Undertittel className={styles.overskrift}>{props.tittel}</Undertittel>
         {props.fakta.map((f) => (
-            <div key={f.tittel}>
+            <div className={props.className} key={f.tittel}>
                 <Element>{f.tittel}</Element>
                 <Normaltekst>{f.verdi}</Normaltekst>
             </div>
