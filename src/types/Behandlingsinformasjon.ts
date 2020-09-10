@@ -27,9 +27,9 @@ export interface Flyktning {
     begrunnelse: Nullable<string>;
 }
 export enum FlyktningStatus {
-    VilkårOppfylt,
-    VilkårIkkeOppfylt,
-    Uavklart,
+    VilkårOppfylt = 'VilkårOppfylt',
+    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
+    Uavklart = 'Uavklart',
 }
 
 export interface LovligOpphold {
