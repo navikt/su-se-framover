@@ -185,10 +185,10 @@ export default createSlice({
                       code: action.payload.code,
                       message: `Feilet med status ${action.payload.statusCode}`,
                   })
-                : (state.startBehandlingStatus = RemoteData.failure({
+                : RemoteData.failure({
                       code: ErrorCode.Unknown,
                       message: 'Ukjent feil',
-                  }));
+                  });
         });
         builder.addCase(startBehandling.fulfilled, (state, action) => {
             state.startBehandlingStatus = RemoteData.success(null);
@@ -211,10 +211,10 @@ export default createSlice({
                       code: action.payload.code,
                       message: `Feilet med status ${action.payload.statusCode}`,
                   })
-                : (state.startBehandlingStatus = RemoteData.failure({
+                : RemoteData.failure({
                       code: ErrorCode.Unknown,
                       message: 'Ukjent feil',
-                  }));
+                  });
         });
         builder.addCase(lagreVilkårsvurdering.fulfilled, (state, action) => {
             state.lagreVilkårsvurderingStatus = RemoteData.success(null);
@@ -229,21 +229,21 @@ export default createSlice({
         });
 
         builder.addCase(lagreBehandlingsinformasjon.pending, (state) => {
-            state.lagreVilkårsvurderingStatus = RemoteData.pending;
+            state.lagreBehandlingsinformasjonStatus = RemoteData.pending;
         });
         builder.addCase(lagreBehandlingsinformasjon.rejected, (state, action) => {
-            state.lagreVilkårsvurderingStatus = action.payload
+            state.lagreBehandlingsinformasjonStatus = action.payload
                 ? RemoteData.failure({
                       code: action.payload.code,
                       message: `Feilet med status ${action.payload.statusCode}`,
                   })
-                : (state.startBehandlingStatus = RemoteData.failure({
+                : RemoteData.failure({
                       code: ErrorCode.Unknown,
                       message: 'Ukjent feil',
-                  }));
+                  });
         });
         builder.addCase(lagreBehandlingsinformasjon.fulfilled, (state, action) => {
-            state.lagreVilkårsvurderingStatus = RemoteData.success(null);
+            state.lagreBehandlingsinformasjonStatus = RemoteData.success(null);
 
             state.sak = pipe(
                 state.sak,
@@ -263,10 +263,10 @@ export default createSlice({
                       code: action.payload.code,
                       message: `Feilet med status ${action.payload.statusCode}`,
                   })
-                : (state.beregningStatus = RemoteData.failure({
+                : RemoteData.failure({
                       code: ErrorCode.Unknown,
                       message: 'Ukjent feil',
-                  }));
+                  });
         });
         builder.addCase(startBeregning.fulfilled, (state, action) => {
             state.beregningStatus = RemoteData.success(null);
@@ -289,10 +289,10 @@ export default createSlice({
                       code: action.payload.code,
                       message: `Feilet med status ${action.payload.statusCode}`,
                   })
-                : (state.beregningStatus = RemoteData.failure({
+                : RemoteData.failure({
                       code: ErrorCode.Unknown,
                       message: 'Ukjent feil',
-                  }));
+                  });
         });
         builder.addCase(startSimulering.fulfilled, (state, action) => {
             state.simuleringStatus = RemoteData.success(null);
