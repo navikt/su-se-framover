@@ -4,6 +4,7 @@ import * as jwt from 'jsonwebtoken';
 export enum CookieName {
     AccessToken = 'access_token',
     RefreshToken = 'refresh_token',
+    LoginRedirectUrl = 'login_redirect_url',
 }
 
 const defaultCookieOptions: Cookies.CookieAttributes =
@@ -26,6 +27,14 @@ export function set<T extends string>(name: CookieName, value: T) {
 
 export function remove(name: CookieName) {
     Cookies.remove(name, defaultCookieOptions);
+}
+
+export function take(name: CookieName) {
+    const val = get(name);
+    if (val) {
+        remove(name);
+    }
+    return val;
 }
 
 export const getNameFromAccessToken = (): string | null => {

@@ -87,7 +87,8 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
             }
             Cookies.set(Cookies.CookieName.AccessToken, accessToken);
             Cookies.set(Cookies.CookieName.RefreshToken, refreshToken);
-            history.push('/');
+            const redirectUrl = Cookies.take(Cookies.CookieName.LoginRedirectUrl);
+            history.push(redirectUrl ?? '/');
             return;
         }
 
@@ -118,20 +119,24 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
                 )}
             </Header>
             <div className={styles.contentContainer}>
-                {loginState === 'logging-in' ? (
-                    <NavFrontendSpinner />
-                ) : loginState === 'unauthorized' ? (
-                    <div className={styles.ikkeTilgangContainer}>
-                        <Innholdstittel className={styles.overskrift}>Ikke tilgang</Innholdstittel>
-                        <Lenke href={`${window.BASE_URL}/login`}>Logg inn på nytt</Lenke>
-                    </div>
-                ) : loginState === 'error' ? (
-                    <div className={styles.ikkeTilgangContainer}>
-                        <Innholdstittel className={styles.overskrift}>En feil oppstod</Innholdstittel>
-                        <Lenke href={`${window.BASE_URL}/login`}>Logg inn på nytt</Lenke>
-                    </div>
-                ) : (
+                {loginState === 'logged-in' ? (
                     children
+                ) : loginState === 'logging-in' ? (
+                    <NavFrontendSpinner />
+                ) : (
+                    <div className={styles.ikkeTilgangContainer}>
+                        <Innholdstittel className={styles.overskrift}>
+                            {loginState === 'error' ? 'En feil oppstod' : 'Ikke tilgang'}
+                        </Innholdstittel>
+                        <Lenke
+                            href={`${window.BASE_URL}/login`}
+                            onClick={() => {
+                                Cookies.set(Cookies.CookieName.LoginRedirectUrl, window.location.pathname);
+                            }}
+                        >
+                            Logg inn på nytt
+                        </Lenke>
+                    </div>
                 )}
             </div>
         </div>
