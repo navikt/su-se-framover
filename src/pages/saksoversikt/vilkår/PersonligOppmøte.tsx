@@ -7,7 +7,7 @@ import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
-import { PersonligOppmøteStatus, PersonligOppmøte } from '~types/Behandlingsinformasjon';
+import { PersonligOppmøteStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from './Faktablokk';
 import { VilkårsvurderingBaseProps } from './types';
