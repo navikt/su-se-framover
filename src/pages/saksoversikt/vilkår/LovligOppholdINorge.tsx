@@ -3,27 +3,35 @@ import { Radio, RadioGruppe } from 'nav-frontend-skjema';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
+import { useAppDispatch } from '~redux/Store';
+import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from './Faktablokk';
 import { VilkårsvurderingBaseProps } from './types';
 import { Vurdering, Vurderingknapper } from './Vurdering';
 
-type LovligOppholdINorgeType = Nullable<boolean> | 'uavklart';
-
 interface FormData {
-    lovligOppholdINorge: LovligOppholdINorgeType;
+    status: Nullable<LovligOppholdStatus>;
 }
 
 const schema = yup.object<FormData>({
-    lovligOppholdINorge: yup.mixed().defined().oneOf([true, false, 'uavklart'], 'Vennligst velg et alternativ '),
+    status: yup
+        .mixed<LovligOppholdStatus>()
+        .defined()
+        .oneOf(
+            [LovligOppholdStatus.Uavklart, LovligOppholdStatus.VilkårIkkeOppfylt, LovligOppholdStatus.VilkårOppfylt],
+            'Vennligst velg et alternativ '
+        ),
 });
 
 const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
+    const dispatch = useAppDispatch();
     const formik = useFormik<FormData>({
         initialValues: {
-            lovligOppholdINorge: null,
+            status: props.behandling.behandlingsinformasjon.lovligOpphold?.status ?? null,
         },
         onSubmit(values) {
             console.log({ values });
@@ -38,24 +46,30 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             {{
                 left: (
                     <form onSubmit={formik.handleSubmit}>
-                        <RadioGruppe
-                            legend="Har søker lovlig opphold i Norge?"
-                            feil={formik.errors.lovligOppholdINorge}
-                        >
+                        <RadioGruppe legend="Har søker lovlig opphold i Norge?" feil={formik.errors.status}>
                             <Radio
                                 label="Ja"
                                 name="lovligOppholdINorge"
-                                onChange={() => formik.setValues({ lovligOppholdINorge: true })}
+                                onChange={() =>
+                                    formik.setValues({ ...formik.values, status: LovligOppholdStatus.VilkårOppfylt })
+                                }
                             />
                             <Radio
                                 label="Nei"
                                 name="lovligOppholdINorge"
-                                onChange={() => formik.setValues({ lovligOppholdINorge: false })}
+                                onChange={() =>
+                                    formik.setValues({
+                                        ...formik.values,
+                                        status: LovligOppholdStatus.VilkårIkkeOppfylt,
+                                    })
+                                }
                             />
                             <Radio
                                 label="Uavklart"
                                 name="lovligOppholdINorge"
-                                onChange={() => formik.setValues({ lovligOppholdINorge: 'uavklart' })}
+                                onChange={() =>
+                                    formik.setValues({ ...formik.values, status: LovligOppholdStatus.Uavklart })
+                                }
                             />
                         </RadioGruppe>
                         <Vurderingknapper
@@ -64,7 +78,21 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                console.log('lagre og fortsett senere');
+                                if (!formik.values.status) return;
+
+                                dispatch(
+                                    lagreBehandlingsinformasjon({
+                                        sakId: props.sakId,
+                                        behandlingId: props.behandling.id,
+                                        behandlingsinformasjon: {
+                                            ...props.behandling.behandlingsinformasjon,
+                                            lovligOpphold: {
+                                                status: formik.values.status,
+                                                begrunnelse: null,
+                                            },
+                                        },
+                                    })
+                                );
                             }}
                         />
                     </form>
