@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router-dom';
 import { Vilkårtype } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
 import * as Routes from '~lib/routes';
-import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 
 import FastOppholdINorge from './FastOppholdINorge';
 import Flyktning from './Flyktning';
@@ -35,7 +34,7 @@ const Vilkår = (props: { sak: Sak }) => {
     return (
         <div className={styles.container}>
             <div className={styles.framdriftsindikator}>
-                <Framdriftsindikator behandling={behandling} vilkår={vilkar as keyof Behandlingsinformasjon} />
+                <Framdriftsindikator behandling={behandling} vilkår={vilkar} />
             </div>
             <div className={styles.content}>
                 <Switch>
@@ -68,7 +67,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={createVilkårUrl(Vilkårtype.FastOppholdINorge)}>
                         <FastOppholdINorge
                             behandling={behandling}
-                            forrigeUrl={createVilkårUrl(Vilkårtype.Oppholdstillatelse)}
+                            forrigeUrl={createVilkårUrl(Vilkårtype.LovligOpphold)}
                             nesteUrl={createVilkårUrl(Vilkårtype.Formue)}
                             sakId={urlParams.sakId}
                         />
@@ -76,7 +75,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={createVilkårUrl(Vilkårtype.Formue)}>
                         <Formue
                             behandling={behandling}
-                            forrigeUrl={createVilkårUrl(Vilkårtype.BorOgOppholderSegINorge)}
+                            forrigeUrl={createVilkårUrl(Vilkårtype.FastOppholdINorge)}
                             nesteUrl={createVilkårUrl(Vilkårtype.PersonligOppmøte)}
                             sakId={urlParams.sakId}
                         />
