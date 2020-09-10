@@ -3,30 +3,33 @@ import { Radio, RadioGruppe } from 'nav-frontend-skjema';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
+import { useAppDispatch } from '~redux/Store';
+import { UførhetStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from './Faktablokk';
 import { VilkårsvurderingBaseProps } from './types';
 import { Vurdering, Vurderingknapper } from './Vurdering';
 
-type UførhetType = Nullable<boolean> | 'uføresakTilBehandling';
-
 interface FormData {
-    harUførevedtak: UførhetType;
+    uførevedtak: Nullable<UførhetStatus>;
 }
 
 const schema = yup.object<FormData>({
-    harUførevedtak: yup
+    uførevedtak: yup
         .mixed()
         .defined()
-        .oneOf([true, false, 'uføresakTilBehandling'], 'Vennligst velg et alternativ '),
+        .oneOf([UførhetStatus.VilkårOppfylt, UførhetStatus.VilkårIkkeOppfylt, UførhetStatus.HarUføresakTilBehandling]),
 });
 
 const Uførhet = (props: VilkårsvurderingBaseProps) => {
+    const dispatch = useAppDispatch();
+
     const formik = useFormik<FormData>({
         initialValues: {
-            harUførevedtak: null,
+            uførevedtak: props.behandling.behandlingsinformasjon.uførhet?.status ?? null,
         },
         onSubmit(values) {
             console.log({ values });
@@ -43,22 +46,27 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                     <form onSubmit={formik.handleSubmit}>
                         <RadioGruppe
                             legend="Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-7 i folketrygdloven er oppfylt?"
-                            feil={formik.errors.harUførevedtak}
+                            feil={formik.errors.uførevedtak}
                         >
                             <Radio
                                 label="Ja"
-                                name="harUførevedtak"
-                                onChange={() => formik.setValues({ harUførevedtak: true })}
+                                name="uførevedtak"
+                                onChange={() => formik.setValues({ uførevedtak: UførhetStatus.VilkårOppfylt })}
+                                defaultChecked={formik.values.uførevedtak === UførhetStatus.VilkårOppfylt}
                             />
                             <Radio
                                 label="Nei"
-                                name="harUførevedtak"
-                                onChange={() => formik.setValues({ harUførevedtak: false })}
+                                name="uførevedtak"
+                                onChange={() => formik.setValues({ uførevedtak: UførhetStatus.VilkårIkkeOppfylt })}
+                                defaultChecked={formik.values.uførevedtak === UførhetStatus.VilkårIkkeOppfylt}
                             />
                             <Radio
                                 label="Har uføresak til behandling"
-                                name="harUførevedtak"
-                                onChange={() => formik.setValues({ harUførevedtak: 'uføresakTilBehandling' })}
+                                name="uførevedtak"
+                                onChange={() =>
+                                    formik.setValues({ uførevedtak: UførhetStatus.HarUføresakTilBehandling })
+                                }
+                                defaultChecked={formik.values.uførevedtak === UførhetStatus.HarUføresakTilBehandling}
                             />
                         </RadioGruppe>
                         <Vurderingknapper
@@ -67,7 +75,22 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                console.log('lagre og fortsett senere');
+                                if (!formik.values.uførevedtak) return;
+
+                                dispatch(
+                                    lagreBehandlingsinformasjon({
+                                        sakId: props.sakId,
+                                        behandlingId: props.behandling.id,
+                                        behandlingsinformasjon: {
+                                            ...props.behandling.behandlingsinformasjon,
+                                            uførhet: {
+                                                status: formik.values.uførevedtak,
+                                                uføregrad: null,
+                                                forventetInntekt: null,
+                                            },
+                                        },
+                                    })
+                                );
                             }}
                         />
                     </form>

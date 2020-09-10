@@ -17,9 +17,9 @@ export interface Uførhet {
     forventetInntekt: Nullable<number>;
 }
 export enum UførhetStatus {
-    VilkårOppfylt,
-    VilkårIkkeOppfylt,
-    HarUføresakTilBehandling,
+    VilkårOppfylt = 'VilkårOppfylt',
+    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
+    HarUføresakTilBehandling = 'HarUføresakTilBehandling',
 }
 
 export interface Flyktning {
@@ -29,7 +29,7 @@ export interface Flyktning {
 export enum FlyktningStatus {
     VilkårOppfylt,
     VilkårIkkeOppfylt,
-    HarUføresakTilBehandling,
+    Uavklart,
 }
 
 export interface LovligOpphold {

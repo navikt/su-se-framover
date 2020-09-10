@@ -203,6 +203,20 @@ export async function lagreVilkårsvurdering(arg: {
     });
 }
 
+export async function lagreBehandlingsinformasjon(arg: {
+    sakId: string;
+    behandlingId: string;
+    behandlingsinformasjon: Behandlingsinformasjon;
+}) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/informasjon`,
+        method: 'PATCH',
+        body: {
+            ...arg.behandlingsinformasjon,
+        },
+    });
+}
+
 // Denne vil kanskje på sikt låse behandlingen også.
 export async function simulerBehandling(sakId: string, behandlingId: string): Promise<ApiClientResult<Behandling>> {
     return apiClient({

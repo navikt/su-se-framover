@@ -67,7 +67,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [totalFormue, setTotalFormue] = useState<number | string>(0);
     // const { formue } = props.behandling.søknad.søknadInnhold;
-    //type FormueType = typeof formue;
 
     const formue = {
         borIBolig: true,
@@ -90,7 +89,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         initialValues: {
             verdiPåBolig: formue.verdiPåBolig,
             verdiKjøretøy: totalVerdiKjøretøy(formue.kjøretøy),
-            innskuddsBeløp: formue.innskuddsBeløp,
+            innskuddsBeløp: formue.innskuddsBeløp + formue.depositumsBeløp,
             verdipapirBeløp: formue.verdipapirBeløp,
             skylderNoenMegPengerBeløp: formue.skylderNoenMegPengerBeløp,
             kontanterBeløp: formue.kontanterBeløp,
@@ -116,11 +115,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         if (kjøretøyArray === null) {
             return 0;
         }
-        let total = 0;
-        kjøretøyArray.map((kjøretøy) => {
-            total += kjøretøy.verdiPåKjøretøy;
-        });
-        return total;
+        return kjøretøyArray.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0);
     }
 
     function kalkulerFormue(formikValues: FormData) {
@@ -138,7 +133,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             [
                 verdiPåBolig,
                 verdiKjøretøy,
-                innskuddsBeløp - depositumsBeløp,
+                innskuddsBeløp + depositumsBeløp,
                 verdipapirBeløp,
                 skylderNoenMegPengerBeløp,
                 kontanterBeløp,
@@ -152,7 +147,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             {{
                 left: (
                     <form onSubmit={formik.handleSubmit}>
-                        {console.log('values', formik.values)}
                         <FormueInput
                             tittel="Verdi boliger som ikke er primærbolig"
                             className={styles.formueInput}
