@@ -62,7 +62,7 @@ const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinformasjon
         },
         {
             steg: 'personligOppmøte',
-            status: personligOppmøte?.status !== PersonligOppmøteStatus.IkkeMøttOpp,
+            status: personligOppmøte !== null && personligOppmøte?.status !== PersonligOppmøteStatus.IkkeMøttOpp,
             vilkårtype: Vilkårtype.PersonligOppmøte,
         },
     ];
@@ -75,7 +75,7 @@ const Framdriftsindikator = (props: { behandling: Behandling; vilkår: keyof Beh
     return (
         <ol className={styles.container}>
             {vilkårrekkefølge
-                .filter((v) => v.status || props.vilkår === v.steg)
+                .filter((v) => v.status || props.vilkår.toLowerCase() === v.steg)
                 .map((v) => {
                     const vilkårIkkeVurdert = behandlingsinformasjon[v.steg] === null;
 
