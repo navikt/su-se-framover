@@ -81,11 +81,11 @@ export interface PersonligOppmøte {
     begrunnelse: Nullable<string>;
 }
 export enum PersonligOppmøteStatus {
-    MøttPersonlig,
-    Verge,
-    FullmektigMedLegeattest,
-    FullmektigUtenLegeattest,
-    IkkeMøttOpp,
+    MøttPersonlig = 'MøttPersonlig',
+    Verge = 'Verge',
+    FullmektigMedLegeattest = 'FullmektigMedLegeattest',
+    FullmektigUtenLegeattest = 'FullmektigUtenLegeattest',
+    IkkeMøttOpp = 'IkkeMøttOpp',
 }
 
 export interface Sats {

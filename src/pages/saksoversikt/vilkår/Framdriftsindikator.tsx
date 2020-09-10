@@ -22,7 +22,6 @@ const Framdriftsindikator = (props: { behandling: Behandling; vilkår: Vilkårty
     const { behandlingsinformasjon } = props.behandling;
     const vilkårrekkefølge = mapToVilkårsinformasjon(behandlingsinformasjon);
 
-    console.log(props.vilkår.toLowerCase());
     return (
         <ol className={styles.container}>
             {vilkårrekkefølge
