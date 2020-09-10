@@ -1,8 +1,9 @@
 import { useFormik } from 'formik';
 import { Input, Textarea, Checkbox } from 'nav-frontend-skjema';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { SøknadInnhold } from '~api/søknadApi';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 
@@ -16,15 +17,7 @@ const FormueInput = (props: {
     tittel: string;
     inputName: string;
     defaultValues: string;
-    onChange: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (e: React.ChangeEvent<any>): void;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        <T_1 = string | React.ChangeEvent<any>>(field: T_1): T_1 extends React.ChangeEvent<any>
-            ? void
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (e: string | React.ChangeEvent<any>) => void;
-    };
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     feil: string | undefined;
 }) => (
     <>
@@ -67,42 +60,63 @@ const schema = yup.object<FormData>({
     formueBegrunnelse: yup.string().required().typeError('Begrunnelse kan ikke være tom'),
 });
 
+function kalkulerFormue(formikValues: FormData) {
+    const formueArray = [
+        formikValues.verdiPåBolig,
+        formikValues.verdiKjøretøy,
+        formikValues.innskuddsBeløp,
+        formikValues.verdipapirBeløp,
+        formikValues.skylderNoenMegPengerBeløp,
+        formikValues.kontanterBeløp,
+    ];
+
+    const totalt =
+        formueArray.reduce((acc, formue) => acc + parseInt(formue), 0) - parseInt(formikValues.depositumsBeløp, 10);
+    return totalt;
+}
+
+function totalVerdiKjøretøy(kjøretøyArray: Nullable<Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>>) {
+    if (kjøretøyArray === null) {
+        return 0;
+    }
+
+    return kjøretøyArray.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0);
+}
+
+function kalkulerFormueFraSøknad(f: SøknadInnhold['formue']) {
+    const formueFraSøknad = [
+        f.verdiPåBolig?.toString() ?? '0',
+        f.verdiPåEiendom?.toString() ?? '0',
+        totalVerdiKjøretøy(f.kjøretøy).toString(),
+        f.innskuddsBeløp?.toString() ?? '0',
+        f.verdipapirBeløp?.toString() ?? '0',
+        f.skylderNoenMegPengerBeløp?.toString() ?? '0',
+        f.kontanterBeløp?.toString() ?? '0',
+        f.depositumsBeløp?.toString() ?? '0',
+    ];
+
+    return (
+        formueFraSøknad.reduce((acc, formue) => acc + parseInt(formue, 10), 0) -
+        parseInt(f.depositumsBeløp?.toString() ?? '0', 10)
+    );
+}
+
 const Formue = (props: VilkårsvurderingBaseProps) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
-    const [totalFormue, setTotalFormue] = useState<number | string>(0);
-    const [totalFormueFraSøknad, setTotalFormueFraSøknad] = useState<number | string>(0);
     const { formue } = props.behandling.søknad.søknadInnhold;
-
-    /*const formue = {
-        borIBolig: true,
-        verdiPåBolig: '10',
-        boligBrukesTil: 'hehe',
-        depositumsBeløp: '10',
-        kontonummer: '5660',
-        verdiPåEiendom: '10',
-        eiendomBrukesTil: 'hehe',
-        kjøretøy: [
-            { verdiPåKjøretøy: 10, kjøretøyDeEier: 'kek' },
-            { verdiPåKjøretøy: 10, kjøretøyDeEier: 'kek' },
-        ],
-        innskuddsBeløp: '10',
-        verdipapirBeløp: '10',
-        skylderNoenMegPengerBeløp: '10',
-        kontanterBeløp: '10',
-    };*/
 
     const formik = useFormik<FormData>({
         initialValues: {
-            verdiPåBolig: formue.verdiPåBolig?.toString() || '0',
+            verdiPåBolig: formue.verdiPåBolig?.toString() ?? '0',
             verdiKjøretøy: totalVerdiKjøretøy(formue.kjøretøy).toString(),
             innskuddsBeløp: (
-                parseInt(formue.innskuddsBeløp ? formue.innskuddsBeløp.toString() : '0', 10) +
-                parseInt(formue.depositumsBeløp ? formue.depositumsBeløp.toString() : '0', 10)
+                parseInt(formue.innskuddsBeløp?.toString() ?? '0', 10) +
+                parseInt(formue.depositumsBeløp?.toString() ?? '0', 10)
             ).toString(),
-            verdipapirBeløp: formue.verdipapirBeløp?.toString() || '0',
-            skylderNoenMegPengerBeløp: formue.skylderNoenMegPengerBeløp?.toString() || '0',
-            kontanterBeløp: formue.kontanterBeløp?.toString() || '0',
-            depositumsBeløp: formue.depositumsBeløp?.toString() || '0',
+            verdipapirBeløp: formue.verdipapirBeløp?.toString() ?? '0',
+            skylderNoenMegPengerBeløp: formue.skylderNoenMegPengerBeløp?.toString() ?? '0',
+            kontanterBeløp: formue.kontanterBeløp?.toString() ?? '0',
+            depositumsBeløp: formue.depositumsBeløp?.toString() ?? '0',
             måHenteMerInfo: false,
             formueBegrunnelse: null,
         },
@@ -115,59 +129,14 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     });
     const history = useHistory();
 
-    useEffect(() => {
-        kalkulerFormue(formik.values);
+    const totalFormue = useMemo(() => {
+        const totalt = kalkulerFormue(formik.values);
+        return isNaN(totalt) ? 'Alle feltene må være tall for å regne ut' : totalt;
     }, [formik.values]);
 
-    useEffect(() => {
-        kalkulerFormueFraSøknad();
+    const totalFormueFraSøknad = useMemo(() => {
+        return kalkulerFormueFraSøknad(formue);
     }, [formue]);
-
-    function totalVerdiKjøretøy(kjøretøyArray: Nullable<Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>>) {
-        if (kjøretøyArray === null) {
-            return 0;
-        }
-
-        return kjøretøyArray.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0);
-    }
-
-    function kalkulerFormueFraSøknad() {
-        const formueFraSøknad = [
-            formue.verdiPåBolig ? formue.verdiPåBolig.toString() : '0',
-            formue.verdiPåEiendom ? formue.verdiPåEiendom.toString() : '0',
-            totalVerdiKjøretøy(formue.kjøretøy).toString(),
-            formue.innskuddsBeløp ? formue.innskuddsBeløp.toString() : '0',
-            formue.verdipapirBeløp ? formue.verdipapirBeløp.toString() : '0',
-            formue.skylderNoenMegPengerBeløp ? formue.skylderNoenMegPengerBeløp.toString() : '0',
-            formue.kontanterBeløp ? formue.kontanterBeløp.toString() : '0',
-            formue.depositumsBeløp ? formue.depositumsBeløp.toString() : '0',
-        ];
-
-        setTotalFormueFraSøknad(
-            formueFraSøknad.reduce((acc, formue) => acc + parseInt(formue, 10), 0) -
-                parseInt(formue.depositumsBeløp ? formue.depositumsBeløp.toString() : '0', 10)
-        );
-    }
-
-    function kalkulerFormue(formikValues: FormData) {
-        const formueArray = [
-            formikValues.verdiPåBolig,
-            formikValues.verdiKjøretøy,
-            formikValues.innskuddsBeløp,
-            formikValues.verdipapirBeløp,
-            formikValues.skylderNoenMegPengerBeløp,
-            formikValues.kontanterBeløp,
-        ];
-
-        const totalt =
-            formueArray.reduce((acc, formue) => acc + parseInt(formue), 0) - parseInt(formikValues.depositumsBeløp, 10);
-
-        if (isNaN(totalt)) {
-            setTotalFormue('Alle feltene må være tall for å regne ut');
-        } else {
-            setTotalFormue(totalt);
-        }
-    }
 
     return (
         <Vurdering tittel="Formue">
