@@ -244,7 +244,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {
-                                console.log('tilbake');
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
