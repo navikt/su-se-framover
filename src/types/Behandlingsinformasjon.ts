@@ -70,10 +70,11 @@ export interface Formue {
     pengerSkyldt: Nullable<number>;
     kontanter: Nullable<number>;
     depositumskonto: Nullable<number>;
+    begrunnelse: Nullable<string>;
 }
 export enum FormueStatus {
-    Ok,
-    MåInnhenteMerInformasjon,
+    Ok = 'Ok',
+    MåInnhenteMerInformasjon = 'MåInnhenteMerInformasjon',
 }
 
 export interface PersonligOppmøte {

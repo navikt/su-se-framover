@@ -4,8 +4,11 @@ import React, { useState, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { SøknadInnhold } from '~api/søknadApi';
+import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
+import { useAppDispatch } from '~redux/Store';
+import { FormueStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from './Faktablokk';
 import styles from './formue.module.less';
@@ -33,15 +36,15 @@ const FormueInput = (props: {
 );
 
 interface FormData {
-    verdiPåBolig: string;
+    status: FormueStatus;
+    verdiIkkePrimærbolig: string;
     verdiKjøretøy: string;
-    innskuddsBeløp: string;
-    verdipapirBeløp: string;
-    skylderNoenMegPengerBeløp: string;
-    kontanterBeløp: string;
-    depositumsBeløp: string;
-    måHenteMerInfo: boolean;
-    formueBegrunnelse: Nullable<string>;
+    innskudd: string;
+    verdipapir: string;
+    pengerSkyldt: string;
+    kontanter: string;
+    depositumskonto: string;
+    begrunnelse: Nullable<string>;
 }
 
 const validateStringAsNumber = (yup.number().required().typeError('Feltet må være et tall') as unknown) as yup.Schema<
@@ -49,29 +52,29 @@ const validateStringAsNumber = (yup.number().required().typeError('Feltet må v�
 >;
 
 const schema = yup.object<FormData>({
-    verdiPåBolig: validateStringAsNumber,
+    verdiIkkePrimærbolig: validateStringAsNumber,
     verdiKjøretøy: validateStringAsNumber,
-    innskuddsBeløp: validateStringAsNumber,
-    verdipapirBeløp: validateStringAsNumber,
-    skylderNoenMegPengerBeløp: validateStringAsNumber,
-    kontanterBeløp: validateStringAsNumber,
-    depositumsBeløp: validateStringAsNumber,
-    måHenteMerInfo: yup.boolean().required(),
-    formueBegrunnelse: yup.string().required().typeError('Begrunnelse kan ikke være tom'),
+    innskudd: validateStringAsNumber,
+    verdipapir: validateStringAsNumber,
+    pengerSkyldt: validateStringAsNumber,
+    kontanter: validateStringAsNumber,
+    depositumskonto: validateStringAsNumber,
+    status: yup.mixed().required().oneOf([FormueStatus.Ok, FormueStatus.MåInnhenteMerInformasjon]),
+    begrunnelse: yup.string().defined(),
 });
 
 function kalkulerFormue(formikValues: FormData) {
     const formueArray = [
-        formikValues.verdiPåBolig,
+        formikValues.verdiIkkePrimærbolig,
         formikValues.verdiKjøretøy,
-        formikValues.innskuddsBeløp,
-        formikValues.verdipapirBeløp,
-        formikValues.skylderNoenMegPengerBeløp,
-        formikValues.kontanterBeløp,
+        formikValues.innskudd,
+        formikValues.verdipapir,
+        formikValues.pengerSkyldt,
+        formikValues.kontanter,
     ];
 
     const totalt =
-        formueArray.reduce((acc, formue) => acc + parseInt(formue), 0) - parseInt(formikValues.depositumsBeløp, 10);
+        formueArray.reduce((acc, formue) => acc + parseInt(formue), 0) - parseInt(formikValues.depositumskonto, 10);
     return totalt;
 }
 
@@ -102,26 +105,46 @@ function kalkulerFormueFraSøknad(f: SøknadInnhold['formue']) {
 }
 
 const Formue = (props: VilkårsvurderingBaseProps) => {
+    const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const { formue } = props.behandling.søknad.søknadInnhold;
 
     const formik = useFormik<FormData>({
         initialValues: {
-            verdiPåBolig: formue.verdiPåBolig?.toString() ?? '0',
+            verdiIkkePrimærbolig: formue.verdiPåBolig?.toString() ?? '0',
             verdiKjøretøy: totalVerdiKjøretøy(formue.kjøretøy).toString(),
-            innskuddsBeløp: (
+            innskudd: (
                 parseInt(formue.innskuddsBeløp?.toString() ?? '0', 10) +
                 parseInt(formue.depositumsBeløp?.toString() ?? '0', 10)
             ).toString(),
-            verdipapirBeløp: formue.verdipapirBeløp?.toString() ?? '0',
-            skylderNoenMegPengerBeløp: formue.skylderNoenMegPengerBeløp?.toString() ?? '0',
-            kontanterBeløp: formue.kontanterBeløp?.toString() ?? '0',
-            depositumsBeløp: formue.depositumsBeløp?.toString() ?? '0',
-            måHenteMerInfo: false,
-            formueBegrunnelse: null,
+            verdipapir: formue.verdipapirBeløp?.toString() ?? '0',
+            pengerSkyldt: formue.skylderNoenMegPengerBeløp?.toString() ?? '0',
+            kontanter: formue.kontanterBeløp?.toString() ?? '0',
+            depositumskonto: formue.depositumsBeløp?.toString() ?? '0',
+            status: FormueStatus.Ok,
+            begrunnelse: props.behandling.behandlingsinformasjon.formue?.begrunnelse ?? null,
         },
         onSubmit(values) {
             console.log({ values });
+            dispatch(
+                lagreBehandlingsinformasjon({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                    behandlingsinformasjon: {
+                        formue: {
+                            status: formik.values.status,
+                            verdiIkkePrimærbolig: parseInt(formik.values.verdiIkkePrimærbolig, 10),
+                            verdiKjøretøy: parseInt(formik.values.verdiKjøretøy, 10),
+                            innskudd: parseInt(formik.values.innskudd, 10),
+                            verdipapir: parseInt(formik.values.verdipapir, 10),
+                            pengerSkyldt: parseInt(formik.values.pengerSkyldt, 10),
+                            kontanter: parseInt(formik.values.kontanter, 10),
+                            depositumskonto: parseInt(formik.values.depositumskonto, 10),
+                            begrunnelse: formik.values.begrunnelse,
+                        },
+                    },
+                })
+            );
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
@@ -151,10 +174,10 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         <FormueInput
                             tittel="Verdi boliger som ikke er primærbolig"
                             className={styles.formueInput}
-                            inputName="verdiPåBolig"
-                            defaultValues={formik.values.verdiPåBolig}
+                            inputName="verdiIkkePrimærbolig"
+                            defaultValues={formik.values.verdiIkkePrimærbolig}
                             onChange={formik.handleChange}
-                            feil={formik.errors.verdiPåBolig}
+                            feil={formik.errors.verdiIkkePrimærbolig}
                         />
                         <FormueInput
                             tittel="Verdi bil(sekundær), campingvogn eller kjøretøy"
@@ -167,42 +190,42 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         <FormueInput
                             tittel="Innskudd på konto (inkludert depositumskonto)"
                             className={styles.formueInput}
-                            inputName="innskuddsBeløp"
-                            defaultValues={formik.values.innskuddsBeløp}
+                            inputName="innskudd"
+                            defaultValues={formik.values.innskudd}
                             onChange={formik.handleChange}
-                            feil={formik.errors.innskuddsBeløp}
+                            feil={formik.errors.innskudd}
                         />
                         <FormueInput
                             tittel="Verdipapirer, aksjefond ++"
                             className={styles.formueInput}
-                            inputName="verdipapirBeløp"
-                            defaultValues={formik.values.verdipapirBeløp}
+                            inputName="verdipapir"
+                            defaultValues={formik.values.verdipapir}
                             onChange={formik.handleChange}
-                            feil={formik.errors.verdipapirBeløp}
+                            feil={formik.errors.verdipapir}
                         />
                         <FormueInput
                             tittel="Skylder noen søker penger?"
                             className={styles.formueInput}
-                            inputName="skylderNoenMegPengerBeløp"
-                            defaultValues={formik.values.skylderNoenMegPengerBeløp}
+                            inputName="pengerSkyldt"
+                            defaultValues={formik.values.pengerSkyldt}
                             onChange={formik.handleChange}
-                            feil={formik.errors.skylderNoenMegPengerBeløp}
+                            feil={formik.errors.pengerSkyldt}
                         />
                         <FormueInput
                             tittel="Kontanter over 1000"
                             className={styles.formueInput}
-                            inputName="kontanterBeløp"
-                            defaultValues={formik.values.kontanterBeløp}
+                            inputName="kontanter"
+                            defaultValues={formik.values.kontanter}
                             onChange={formik.handleChange}
-                            feil={formik.errors.kontanterBeløp}
+                            feil={formik.errors.kontanter}
                         />
                         <FormueInput
                             tittel="Depositumskonto"
                             className={styles.formueInput}
-                            inputName="depositumsBeløp"
-                            defaultValues={formik.values.depositumsBeløp}
+                            inputName="depositumskonto"
+                            defaultValues={formik.values.depositumskonto}
                             onChange={formik.handleChange}
-                            feil={formik.errors.depositumsBeløp}
+                            feil={formik.errors.depositumskonto}
                         />
 
                         <div className={styles.totalFormueContainer}>
@@ -228,26 +251,50 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
                         <Checkbox
                             label={'Må innhente mer informasjon'}
-                            name="måHenteMerInfo"
+                            name="status"
                             className={styles.henteMerInfoCheckbox}
-                            checked={formik.values.måHenteMerInfo}
-                            onChange={() =>
-                                formik.setValues({ ...formik.values, måHenteMerInfo: !formik.values.måHenteMerInfo })
-                            }
+                            checked={formik.values.status === FormueStatus.MåInnhenteMerInformasjon}
+                            onChange={() => {
+                                formik.setValues({
+                                    ...formik.values,
+                                    status:
+                                        formik.values.status === FormueStatus.Ok
+                                            ? FormueStatus.MåInnhenteMerInformasjon
+                                            : FormueStatus.Ok,
+                                });
+                            }}
                         />
                         <Textarea
                             label="Begrunnelse"
-                            name="formueBegrunnelse"
-                            value={formik.values.formueBegrunnelse || ''}
+                            name="begrunnelse"
+                            value={formik.values.begrunnelse || ''}
                             onChange={formik.handleChange}
-                            feil={formik.errors.formueBegrunnelse}
+                            feil={formik.errors.begrunnelse}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                console.log('lagre og fortsett senere');
+                                dispatch(
+                                    lagreBehandlingsinformasjon({
+                                        sakId: props.sakId,
+                                        behandlingId: props.behandling.id,
+                                        behandlingsinformasjon: {
+                                            formue: {
+                                                status: formik.values.status,
+                                                verdiIkkePrimærbolig: parseInt(formik.values.verdiIkkePrimærbolig, 10),
+                                                verdiKjøretøy: parseInt(formik.values.verdiKjøretøy, 10),
+                                                innskudd: parseInt(formik.values.innskudd, 10),
+                                                verdipapir: parseInt(formik.values.verdipapir, 10),
+                                                pengerSkyldt: parseInt(formik.values.pengerSkyldt, 10),
+                                                kontanter: parseInt(formik.values.kontanter, 10),
+                                                depositumskonto: parseInt(formik.values.depositumskonto, 10),
+                                                begrunnelse: formik.values.begrunnelse,
+                                            },
+                                        },
+                                    })
+                                );
                             }}
                         />
                     </form>

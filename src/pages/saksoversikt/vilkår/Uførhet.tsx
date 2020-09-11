@@ -31,7 +31,22 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         initialValues: {
             uførevedtak: props.behandling.behandlingsinformasjon.uførhet?.status ?? null,
         },
-        onSubmit() {
+        onSubmit(values) {
+            if (!values.uførevedtak) return;
+
+            dispatch(
+                lagreBehandlingsinformasjon({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                    behandlingsinformasjon: {
+                        uførhet: {
+                            status: values.uførevedtak,
+                            uføregrad: null,
+                            forventetInntekt: null,
+                        },
+                    },
+                })
+            );
             history.push(props.nesteUrl);
         },
         validationSchema: schema,

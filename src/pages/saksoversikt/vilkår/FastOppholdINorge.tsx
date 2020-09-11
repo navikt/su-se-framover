@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
@@ -30,21 +30,41 @@ const schema = yup.object<FormData>({
             ],
             'Vennligst velg et alternativ '
         ),
-    begrunnelse: yup.string().nullable().defined().typeError('Feltet kan ikke være tomt'),
+    begrunnelse: yup.string().nullable().defined().when('status', {
+        is: FastOppholdINorgeStatus.Uavklart,
+        then: yup.string().required(),
+        otherwise: yup.string().nullable().defined(),
+    }),
 });
 
 const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
+    const [hasSubmitted, setHasSubmitted] = useState(false);
+
     const formik = useFormik<FormData>({
         initialValues: {
             status: props.behandling.behandlingsinformasjon.fastOppholdINorge?.status ?? null,
             begrunnelse: props.behandling.behandlingsinformasjon.fastOppholdINorge?.begrunnelse ?? null,
         },
-        onSubmit() {
-            updateBehandlingsinformasjon();
+        onSubmit(values) {
+            if (!values.status) return;
+
+            dispatch(
+                lagreBehandlingsinformasjon({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                    behandlingsinformasjon: {
+                        fastOppholdINorge: {
+                            status: values.status,
+                            begrunnelse: values.begrunnelse,
+                        },
+                    },
+                })
+            );
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
+        validateOnChange: hasSubmitted,
     });
     const history = useHistory();
     const updateBehandlingsinformasjon = () => {
@@ -68,15 +88,22 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         <Vurdering tittel="Fast opphold i Norge?">
             {{
                 left: (
-                    <form onSubmit={formik.handleSubmit}>
+                    <form
+                        onSubmit={(e) => {
+                            setHasSubmitted(true);
+                            formik.handleSubmit(e);
+                        }}
+                    >
                         <RadioGruppe legend="Oppholder søker sig fast i Norge" feil={formik.errors.status}>
                             <Radio
                                 label="Ja"
                                 name="fastOppholdINorge"
+                                checked={formik.values.status === FastOppholdINorgeStatus.VilkårOppfylt}
                                 onChange={() =>
                                     formik.setValues({
                                         ...formik.values,
                                         status: FastOppholdINorgeStatus.VilkårOppfylt,
+                                        begrunnelse: null,
                                     })
                                 }
                                 defaultChecked={formik.values.status === FastOppholdINorgeStatus.VilkårOppfylt}
@@ -84,10 +111,12 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             <Radio
                                 label="Nei"
                                 name="fastOppholdINorge"
+                                checked={formik.values.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt}
                                 onChange={() =>
                                     formik.setValues({
                                         ...formik.values,
                                         status: FastOppholdINorgeStatus.VilkårIkkeOppfylt,
+                                        begrunnelse: null,
                                     })
                                 }
                                 defaultChecked={formik.values.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt}
@@ -95,21 +124,22 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             <Radio
                                 label="Uavklart"
                                 name="fastOppholdINorge"
+                                checked={formik.values.status === FastOppholdINorgeStatus.Uavklart}
                                 onChange={() =>
                                     formik.setValues({ ...formik.values, status: FastOppholdINorgeStatus.Uavklart })
                                 }
                                 defaultChecked={formik.values.status === FastOppholdINorgeStatus.Uavklart}
                             />
                         </RadioGruppe>
-                        <Textarea
-                            label="Begrunnelse"
-                            name="fastOppholdINorgeBegrunnelse"
-                            feil={formik.errors.begrunnelse}
-                            value={formik.values.begrunnelse ?? ''}
-                            onChange={(e) => {
-                                formik.setValues({ ...formik.values, begrunnelse: e.target.value });
-                            }}
-                        />
+                        {formik.values.status === FastOppholdINorgeStatus.Uavklart && (
+                            <Textarea
+                                label="Begrunnelse"
+                                name="begrunnelse"
+                                feil={formik.errors.begrunnelse}
+                                value={formik.values.begrunnelse ?? ''}
+                                onChange={formik.handleChange}
+                            />
+                        )}
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
