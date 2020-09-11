@@ -42,6 +42,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
             flyktningStatus: props.behandling.behandlingsinformasjon.flyktning?.status ?? null,
             begrunnelse: props.behandling.behandlingsinformasjon.flyktning?.begrunnelse ?? null,
         },
+<<<<<<< HEAD
         onSubmit(values) {
             if (!values.flyktningStatus) return;
 
@@ -59,6 +60,9 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                 })
             );
 
+=======
+        onSubmit() {
+>>>>>>> Fix routing from PersonligOppmøte and remove console logs
             history.push(props.nesteUrl);
         },
         validationSchema: schema,

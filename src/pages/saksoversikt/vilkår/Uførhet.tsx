@@ -32,8 +32,6 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
             uførevedtak: props.behandling.behandlingsinformasjon.uførhet?.status ?? null,
         },
         onSubmit(values) {
-            console.log({ values });
-
             if (!values.uførevedtak) return;
 
             dispatch(
@@ -87,7 +85,6 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                         </RadioGruppe>
                         <Vurderingknapper
                             onTilbakeClick={() => {
-                                console.log('tilbake');
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {

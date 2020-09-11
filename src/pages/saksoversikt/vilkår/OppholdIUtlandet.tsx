@@ -10,8 +10,7 @@ import { Vurdering, Vurderingknapper } from './Vurdering';
 const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
     const formik = useFormik({
         initialValues: {},
-        onSubmit(values) {
-            console.log({ values });
+        onSubmit() {
             history.push(props.nesteUrl);
         },
     });
@@ -29,7 +28,6 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                         <Textarea label="Begrunnelse" name="begrunnelse" value="" onChange={formik.handleChange} />
                         <Vurderingknapper
                             onTilbakeClick={() => {
-                                console.log('tilbake');
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
