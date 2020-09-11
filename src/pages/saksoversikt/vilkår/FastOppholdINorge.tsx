@@ -14,7 +14,7 @@ import { VilkårsvurderingBaseProps } from './types';
 import { Vurdering, Vurderingknapper } from './Vurdering';
 
 interface FormData {
-    status: Nullable<FastOppholdINorgeStatus>;
+    status?: FastOppholdINorgeStatus;
     begrunnelse: Nullable<string>;
 }
 
@@ -37,16 +37,32 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const formik = useFormik<FormData>({
         initialValues: {
-            status: null,
-            begrunnelse: null,
+            status: props.behandling.behandlingsinformasjon.fastOppholdINorge?.status,
+            begrunnelse: props.behandling.behandlingsinformasjon.fastOppholdINorge?.begrunnelse ?? null,
         },
-        onSubmit(values) {
-            console.log({ values });
+        onSubmit() {
+            updateBehandlingsinformasjon();
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
     });
     const history = useHistory();
+    const updateBehandlingsinformasjon = () => {
+        if (!formik.values.status) return;
+
+        dispatch(
+            lagreBehandlingsinformasjon({
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+                behandlingsinformasjon: {
+                    fastOppholdINorge: {
+                        status: formik.values.status,
+                        begrunnelse: formik.values.begrunnelse,
+                    },
+                },
+            })
+        );
+    };
 
     return (
         <Vurdering tittel="Fast opphold i Norge?">
@@ -63,6 +79,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                         status: FastOppholdINorgeStatus.VilkårOppfylt,
                                     })
                                 }
+                                defaultChecked={formik.values.status === FastOppholdINorgeStatus.VilkårOppfylt}
                             />
                             <Radio
                                 label="Nei"
@@ -73,6 +90,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                         status: FastOppholdINorgeStatus.VilkårIkkeOppfylt,
                                     })
                                 }
+                                defaultChecked={formik.values.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt}
                             />
                             <Radio
                                 label="Uavklart"
@@ -80,6 +98,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 onChange={() =>
                                     formik.setValues({ ...formik.values, status: FastOppholdINorgeStatus.Uavklart })
                                 }
+                                defaultChecked={formik.values.status === FastOppholdINorgeStatus.Uavklart}
                             />
                         </RadioGruppe>
                         <Textarea
@@ -87,29 +106,15 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             name="fastOppholdINorgeBegrunnelse"
                             feil={formik.errors.begrunnelse}
                             value={formik.values.begrunnelse ?? ''}
-                            onChange={formik.handleChange}
+                            onChange={(e) => {
+                                formik.setValues({ ...formik.values, begrunnelse: e.target.value });
+                            }}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {
-                                console.log('tilbake');
                                 history.push(props.forrigeUrl);
                             }}
-                            onLagreOgFortsettSenereClick={() => {
-                                if (!formik.values.status) return;
-
-                                dispatch(
-                                    lagreBehandlingsinformasjon({
-                                        sakId: props.sakId,
-                                        behandlingId: props.behandling.id,
-                                        behandlingsinformasjon: {
-                                            fastOppholdINorge: {
-                                                status: formik.values.status,
-                                                begrunnelse: formik.values.begrunnelse,
-                                            },
-                                        },
-                                    })
-                                );
-                            }}
+                            onLagreOgFortsettSenereClick={updateBehandlingsinformasjon}
                         />
                     </form>
                 ),
