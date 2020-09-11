@@ -61,7 +61,6 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                     },
                 })
             );
-
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
