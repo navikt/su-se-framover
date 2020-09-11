@@ -11,6 +11,7 @@ import Formue from './Formue';
 import Framdriftsindikator from './Framdriftsindikator';
 import LovligOppholdINorge from './LovligOppholdINorge';
 import PersonligOppmøte from './PersonligOppmøte';
+import Sats from './Sats';
 import Uførhet from './Uførhet';
 import styles from './v2.module.less';
 
@@ -84,10 +85,15 @@ const Vilkår = (props: { sak: Sak }) => {
                         <PersonligOppmøte
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.Formue)}
-                            nesteUrl={Routes.saksbehandlingBeregning.createURL({
-                                sakId: urlParams.sakId,
-                                behandlingId: urlParams.behandlingId,
-                            })}
+                            nesteUrl={createVilkårUrl(Vilkårtype.Sats)}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path={createVilkårUrl(Vilkårtype.Sats)}>
+                        <Sats
+                            behandling={behandling}
+                            forrigeUrl={createVilkårUrl(Vilkårtype.PersonligOppmøte)}
+                            nesteUrl={createVilkårUrl(Vilkårtype.Sats)}
                             sakId={urlParams.sakId}
                         />
                     </Route>
