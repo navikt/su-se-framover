@@ -156,7 +156,6 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        {console.log('values: ', formik.values)}
                         <RadioGruppe legend="Har søker møtt personlig?" feil={formik.errors.status}>
                             <Radio
                                 label="Ja"
