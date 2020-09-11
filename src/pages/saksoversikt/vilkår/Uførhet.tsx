@@ -33,6 +33,22 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         },
         onSubmit(values) {
             console.log({ values });
+
+            if (!values.uførevedtak) return;
+
+            dispatch(
+                lagreBehandlingsinformasjon({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                    behandlingsinformasjon: {
+                        uførhet: {
+                            status: values.uførevedtak,
+                            uføregrad: null,
+                            forventetInntekt: null,
+                        },
+                    },
+                })
+            );
             history.push(props.nesteUrl);
         },
         validationSchema: schema,

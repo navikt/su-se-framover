@@ -1,13 +1,13 @@
 import { useFormik } from 'formik';
 import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
-import { PersonligOppmøteStatus } from '~types/Behandlingsinformasjon';
+import { PersonligOppmøteStatus, PersonligOppmøte as PersonligOppmøteType } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from './Faktablokk';
 import { VilkårsvurderingBaseProps } from './types';
@@ -22,6 +22,7 @@ enum MøttPersonlig {
 interface FormData {
     status: Nullable<MøttPersonlig>;
     legeattest: Nullable<boolean>;
+    begrunnelse: Nullable<string>;
 }
 
 const schema = yup.object<FormData>({
@@ -29,58 +30,72 @@ const schema = yup.object<FormData>({
         .mixed()
         .defined()
         .oneOf([MøttPersonlig.Ja, MøttPersonlig.Nei, MøttPersonlig.Verge, MøttPersonlig.Fullmektig]),
-    legeattest: yup.boolean().required(),
+    legeattest: yup.boolean().nullable().defined().when('status', {
+        is: MøttPersonlig.Fullmektig,
+        then: yup.boolean().required(),
+        otherwise: yup.boolean().nullable().defined(),
+    }),
+    begrunnelse: yup.string().nullable().defined(),
 });
 
 const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
-    const updateBehandlingsinformasjon = (personligOppmøte: PersonligOppmøteStatus) => {
+    const [hasSubmitted, setHasSubmitted] = useState(false);
+
+    const updateBehandlingsinformasjon = (personligOppmøte: PersonligOppmøteType) => {
         dispatch(
             lagreBehandlingsinformasjon({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                behandlingsinformasjon: { personligOppmøte: { status: personligOppmøte, begrunnelse: null } },
+                behandlingsinformasjon: {
+                    personligOppmøte: { status: personligOppmøte.status, begrunnelse: personligOppmøte.begrunnelse },
+                },
             })
         );
     };
 
-    const onInit = (personligOppmøteStatus: PersonligOppmøteStatus | undefined): FormData => {
-        if (!personligOppmøteStatus) {
+    const onInit = (personligOppmøte: PersonligOppmøteType | null): FormData => {
+        if (!personligOppmøte) {
             return {
                 status: null,
                 legeattest: null,
+                begrunnelse: null,
             };
         }
-
-        switch (personligOppmøteStatus) {
+        switch (personligOppmøte.status) {
             case PersonligOppmøteStatus.FullmektigMedLegeattest:
                 return {
                     status: MøttPersonlig.Fullmektig,
                     legeattest: true,
+                    begrunnelse: personligOppmøte.begrunnelse,
                 };
 
             case PersonligOppmøteStatus.FullmektigUtenLegeattest:
                 return {
                     status: MøttPersonlig.Fullmektig,
                     legeattest: false,
+                    begrunnelse: personligOppmøte.begrunnelse,
                 };
 
             case PersonligOppmøteStatus.MøttPersonlig:
                 return {
                     status: MøttPersonlig.Ja,
                     legeattest: null,
+                    begrunnelse: personligOppmøte.begrunnelse,
                 };
 
             case PersonligOppmøteStatus.IkkeMøttOpp:
                 return {
                     status: MøttPersonlig.Nei,
                     legeattest: null,
+                    begrunnelse: personligOppmøte.begrunnelse,
                 };
 
             case PersonligOppmøteStatus.Verge:
                 return {
                     status: MøttPersonlig.Verge,
                     legeattest: null,
+                    begrunnelse: personligOppmøte.begrunnelse,
                 };
         }
     };
@@ -103,17 +118,18 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     };
 
     const formik = useFormik<FormData>({
-        initialValues: onInit(props.behandling.behandlingsinformasjon.personligOppmøte?.status),
+        initialValues: onInit(props.behandling.behandlingsinformasjon.personligOppmøte ?? null),
         onSubmit(values) {
             const personligOppmøte = toPersonligOppmøteStatus(values);
             if (!personligOppmøte) {
                 return;
             }
 
-            updateBehandlingsinformasjon(personligOppmøte);
+            updateBehandlingsinformasjon({ status: personligOppmøte, begrunnelse: values.begrunnelse });
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
+        validateOnChange: hasSubmitted,
     });
 
     const history = useHistory();
@@ -134,8 +150,14 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         <Vurdering tittel="Personlig oppmøte?">
             {{
                 left: (
-                    <form onSubmit={formik.handleSubmit}>
-                        <RadioGruppe legend="Har søker møtt personlig?">
+                    <form
+                        onSubmit={(e) => {
+                            setHasSubmitted(true);
+                            formik.handleSubmit(e);
+                        }}
+                    >
+                        {console.log('values: ', formik.values)}
+                        <RadioGruppe legend="Har søker møtt personlig?" feil={formik.errors.status}>
                             <Radio
                                 label="Ja"
                                 name="MøttPersonlig"
@@ -162,7 +184,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                             />
                         </RadioGruppe>
                         {formik.values.status === MøttPersonlig.Fullmektig && (
-                            <RadioGruppe legend="Legeattest?">
+                            <RadioGruppe legend="Legeattest?" feil={formik.errors.legeattest}>
                                 <Radio
                                     label="Ja"
                                     name="HarLegeattest"
@@ -179,7 +201,13 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                 />
                             </RadioGruppe>
                         )}
-                        <Textarea label="Begrunnelse" name="begrunnelse" value="" onChange={formik.handleChange} />
+                        <Textarea
+                            label="Begrunnelse"
+                            name="begrunnelse"
+                            feil={formik.errors.begrunnelse}
+                            value={formik.values.begrunnelse ?? ''}
+                            onChange={formik.handleChange}
+                        />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
@@ -188,7 +216,10 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                 const personligOppmøteStatus = toPersonligOppmøteStatus(formik.values);
                                 if (!personligOppmøteStatus) return;
 
-                                updateBehandlingsinformasjon(personligOppmøteStatus);
+                                updateBehandlingsinformasjon({
+                                    status: personligOppmøteStatus,
+                                    begrunnelse: formik.values.begrunnelse,
+                                });
                             }}
                         />
                     </form>
