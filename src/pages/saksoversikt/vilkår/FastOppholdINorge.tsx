@@ -14,7 +14,7 @@ import { VilkårsvurderingBaseProps } from './types';
 import { Vurdering, Vurderingknapper } from './Vurdering';
 
 interface FormData {
-    status?: FastOppholdINorgeStatus;
+    status: Nullable<FastOppholdINorgeStatus>;
     begrunnelse: Nullable<string>;
 }
 
@@ -43,7 +43,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            status: props.behandling.behandlingsinformasjon.fastOppholdINorge?.status ?? undefined,
+            status: props.behandling.behandlingsinformasjon.fastOppholdINorge?.status ?? null,
             begrunnelse: props.behandling.behandlingsinformasjon.fastOppholdINorge?.begrunnelse ?? null,
         },
         onSubmit(values) {
