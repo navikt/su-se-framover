@@ -257,7 +257,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                     <div>
                         <Faktablokk
                             tittel="Fra søknad"
-                            className={styles.formueFaktaBlokk}
+                            faktaBlokkerClassName={styles.formueFaktaBlokk}
                             fakta={[
                                 {
                                     tittel: 'Verdi på bolig',

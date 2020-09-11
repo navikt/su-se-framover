@@ -34,33 +34,40 @@ const schema = yup.object<FormData>({
     }),
 });
 
-function kek(lol: SøknadInnhold) {
-    const arr = [createFaktaBlokkObject(lol.oppholdstillatelse.erNorskStatsborger, 'Er du norsk statsborger?')];
+function createFaktaBlokkArray(søknadsInnhold: SøknadInnhold) {
+    const arr = [
+        createFaktaBlokkObject(søknadsInnhold.oppholdstillatelse.erNorskStatsborger, 'Er du norsk statsborger?'),
+    ];
 
-    if (!lol.oppholdstillatelse.erNorskStatsborger) {
+    if (!søknadsInnhold.oppholdstillatelse.erNorskStatsborger) {
         arr.push(
             createFaktaBlokkObject(
-                lol.oppholdstillatelse.harOppholdstillatelse,
+                søknadsInnhold.oppholdstillatelse.harOppholdstillatelse,
                 'Har søker oppholdstillatelse i Norge?'
             )
         );
     }
-    if (lol.oppholdstillatelse.harOppholdstillatelse) {
-        arr.push(createFaktaBlokkObject(lol.oppholdstillatelse.typeOppholdstillatelse, 'Oppholdstillatelse?'));
+    if (søknadsInnhold.oppholdstillatelse.harOppholdstillatelse) {
+        arr.push(
+            createFaktaBlokkObject(søknadsInnhold.oppholdstillatelse.typeOppholdstillatelse, 'Oppholdstillatelse?')
+        );
     }
 
-    if (lol.oppholdstillatelse.typeOppholdstillatelse === 'midlertidig') {
+    if (søknadsInnhold.oppholdstillatelse.typeOppholdstillatelse === 'midlertidig') {
         arr.push(
             createFaktaBlokkObject(
-                lol.oppholdstillatelse.oppholdstillatelseMindreEnnTreMåneder,
+                søknadsInnhold.oppholdstillatelse.oppholdstillatelseMindreEnnTreMåneder,
                 'Oppholdstillatelse mindre enn tre måneder?'
             )
         );
     }
 
-    if (lol.oppholdstillatelse.oppholdstillatelseMindreEnnTreMåneder) {
+    if (søknadsInnhold.oppholdstillatelse.oppholdstillatelseMindreEnnTreMåneder) {
         arr.push(
-            createFaktaBlokkObject(lol.oppholdstillatelse.oppholdstillatelseForlengelse, 'Har søker søkt forlengelse?')
+            createFaktaBlokkObject(
+                søknadsInnhold.oppholdstillatelse.oppholdstillatelseForlengelse,
+                'Har søker søkt forlengelse?'
+            )
         );
     }
 
@@ -119,7 +126,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     });
     const history = useHistory();
 
-    kek(props.behandling.søknad.søknadInnhold);
+    createFaktaBlokkArray(props.behandling.søknad.søknadInnhold);
 
     return (
         <Vurdering tittel="Lovlig opphold i Norge">
@@ -201,8 +208,9 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 right: (
                     <Faktablokk
                         tittel="Fra søknad"
-                        className={styles.lovligOppholdFaktaBlokk}
-                        fakta={kek(props.behandling.søknad.søknadInnhold)}
+                        containerClassName={styles.lovligOppholdFaktaBlokkContainer}
+                        faktaBlokkerClassName={styles.lovligOppholdFaktaBlokk}
+                        fakta={createFaktaBlokkArray(props.behandling.søknad.søknadInnhold)}
                     />
                 ),
             }}
