@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { Normaltekst, Undertittel, Element } from 'nav-frontend-typografi';
 import React from 'react';
 
@@ -18,7 +19,7 @@ const Faktablokk = (props: {
         <Undertittel className={styles.overskrift}>{props.tittel}</Undertittel>
         <div className={props.containerClassName}>
             {props.fakta.map((f) => (
-                <div className={props.faktaBlokkerClassName} key={f.tittel}>
+                <div className={classNames(props.faktaBlokkerClassName, styles.linje)} key={f.tittel}>
                     <Element>{f.tittel}</Element>
                     <Normaltekst>{f.verdi}</Normaltekst>
                 </div>
