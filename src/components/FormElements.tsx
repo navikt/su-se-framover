@@ -1,7 +1,8 @@
 import classNames from 'classnames';
+import { FormikErrors } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { OppChevron, NedChevron } from 'nav-frontend-chevron';
-import { RadioGruppe, RadioPanel } from 'nav-frontend-skjema';
+import { Radio, RadioGruppe, RadioPanel } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 import { Collapse } from 'react-collapse';
 
@@ -84,3 +85,45 @@ export const AnbefalerIkkeSøke = (props: { className?: string }) => {
         </AlertStripe>
     );
 };
+
+export const SuperRadio = <T, U extends Extract<keyof T, string>>(props: {
+    values: T;
+    label: string;
+    property: U;
+    radioValue: T[U];
+    onChange: (a: T) => void;
+}) => (
+    <Radio
+        label={props.label}
+        name={props.property}
+        onChange={() =>
+            props.onChange({
+                ...props.values,
+                [props.property]: props.radioValue,
+            })
+        }
+        checked={props.values[props.property] === props.radioValue}
+    />
+);
+
+export const SuperRadioGruppe = <T, U extends Extract<keyof T, string>>(props: {
+    legend: string;
+    values: T;
+    errors: FormikErrors<T>;
+    property: U;
+    options: Array<{ label: string; radioValue: T[U] }>;
+    onChange: (a: T) => void;
+}) => (
+    <RadioGruppe legend="Deler søker bolig med noen over 18 år?" feil={props.errors[props.property]}>
+        {props.options.map((e) => (
+            <SuperRadio
+                key={`${props.property}${e.radioValue}`}
+                label={e.label}
+                values={props.values}
+                onChange={props.onChange}
+                property={props.property}
+                radioValue={e.radioValue}
+            />
+        ))}
+    </RadioGruppe>
+);
