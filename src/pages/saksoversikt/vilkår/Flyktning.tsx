@@ -33,8 +33,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         initialValues: {
             flyktningStatus: props.behandling.behandlingsinformasjon.flyktning?.status ?? null,
         },
-        onSubmit(values) {
-            console.log({ values });
+        onSubmit() {
             history.push(props.nesteUrl);
         },
         validationSchema: schema,

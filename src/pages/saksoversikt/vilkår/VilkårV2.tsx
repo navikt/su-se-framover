@@ -84,7 +84,10 @@ const Vilkår = (props: { sak: Sak }) => {
                         <PersonligOppmøte
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.Formue)}
-                            nesteUrl={createVilkårUrl(Vilkårtype.PersonligOppmøte)}
+                            nesteUrl={Routes.saksbehandlingBeregning.createURL({
+                                sakId: urlParams.sakId,
+                                behandlingId: urlParams.behandlingId,
+                            })}
                             sakId={urlParams.sakId}
                         />
                     </Route>
