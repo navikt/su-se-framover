@@ -94,10 +94,10 @@ export interface Sats {
     delerBoligMed: Nullable<DelerBoligMed>;
     ektemakeEllerSamboerUnder67År: Nullable<boolean>;
     ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
-    begrunnelse: string;
+    begrunnelse: Nullable<string>;
 }
 export enum DelerBoligMed {
-    EKTEMAKE_SAMBOER,
-    VOKSNE_BARN,
-    ANNEN_VOKSEN,
+    EKTEMAKE_SAMBOER = 'EKTEMAKE_SAMBOER',
+    VOKSNE_BARN = 'VOKSNE_BARN',
+    ANNEN_VOKSEN = 'ANNEN_VOKSEN',
 }
