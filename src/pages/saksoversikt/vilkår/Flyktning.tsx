@@ -43,6 +43,9 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
             begrunnelse: props.behandling.behandlingsinformasjon.flyktning?.begrunnelse ?? null,
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Save when save/move next step & begrunnelse added for some steps
         onSubmit(values) {
             if (!values.flyktningStatus) return;
 
@@ -60,9 +63,12 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                 })
             );
 
+<<<<<<< HEAD
 =======
         onSubmit() {
 >>>>>>> Fix routing from PersonligOppmøte and remove console logs
+=======
+>>>>>>> Save when save/move next step & begrunnelse added for some steps
             history.push(props.nesteUrl);
         },
         validationSchema: schema,
