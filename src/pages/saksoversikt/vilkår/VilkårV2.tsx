@@ -10,6 +10,7 @@ import Flyktning from './Flyktning';
 import Formue from './Formue';
 import Framdriftsindikator from './Framdriftsindikator';
 import LovligOppholdINorge from './LovligOppholdINorge';
+import OppholdIUtlandet from './OppholdIUtlandet';
 import PersonligOppmøte from './PersonligOppmøte';
 import Sats from './Sats';
 import Uførhet from './Uførhet';
@@ -69,6 +70,14 @@ const Vilkår = (props: { sak: Sak }) => {
                         <FastOppholdINorge
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.LovligOpphold)}
+                            nesteUrl={createVilkårUrl(Vilkårtype.OppholdIUtlandet)}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path={createVilkårUrl(Vilkårtype.OppholdIUtlandet)}>
+                        <OppholdIUtlandet
+                            behandling={behandling}
+                            forrigeUrl={createVilkårUrl(Vilkårtype.FastOppholdINorge)}
                             nesteUrl={createVilkårUrl(Vilkårtype.Formue)}
                             sakId={urlParams.sakId}
                         />
@@ -76,7 +85,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={createVilkårUrl(Vilkårtype.Formue)}>
                         <Formue
                             behandling={behandling}
-                            forrigeUrl={createVilkårUrl(Vilkårtype.FastOppholdINorge)}
+                            forrigeUrl={createVilkårUrl(Vilkårtype.OppholdIUtlandet)}
                             nesteUrl={createVilkårUrl(Vilkårtype.PersonligOppmøte)}
                             sakId={urlParams.sakId}
                         />

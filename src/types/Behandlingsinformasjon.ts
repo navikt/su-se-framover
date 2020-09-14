@@ -59,8 +59,8 @@ export interface OppholdIUtlandet {
     begrunnelse: Nullable<string>;
 }
 export enum OppholdIUtlandetStatus {
-    SkalVæreMerEnn90DagerIUtlandet,
-    SkalHoldeSegINorge,
+    SkalVæreMerEnn90DagerIUtlandet = 'SkalVæreMerEnn90DagerIUtlandet',
+    SkalHoldeSegINorge = 'SkalHoldeSegINorge',
 }
 
 export interface Formue {
