@@ -29,7 +29,11 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            uførevedtak: props.behandling.behandlingsinformasjon.uførhet?.status ?? null,
+            uførevedtak:
+                props.behandling.behandlingsinformasjon.uførhet?.status ??
+                (props.behandling.søknad.søknadInnhold.uførevedtak.harUførevedtak
+                    ? UførhetStatus.VilkårOppfylt
+                    : UførhetStatus.VilkårIkkeOppfylt),
         },
         onSubmit(values) {
             if (!values.uførevedtak) return;

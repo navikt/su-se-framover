@@ -9,6 +9,8 @@ import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { PersonligOppmøteStatus, PersonligOppmøte as PersonligOppmøteType } from '~types/Behandlingsinformasjon';
 
+import { Vergemål } from '../../../features/søknad/types';
+
 import Faktablokk from './Faktablokk';
 import { VilkårsvurderingBaseProps } from './types';
 import { Vurdering, Vurderingknapper } from './Vurdering';
@@ -54,12 +56,19 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         );
     };
 
-    const onInit = (personligOppmøte: PersonligOppmøteType | null): FormData => {
+    const onInit = (personligOppmøte: Nullable<PersonligOppmøteType>, fraSøknad: Nullable<Vergemål>): FormData => {
         if (!personligOppmøte) {
+            if (!fraSøknad) {
+                return {
+                    status: MøttPersonlig.Ja,
+                    begrunnelse: null,
+                    legeattest: null,
+                };
+            }
             return {
-                status: null,
-                legeattest: null,
+                status: fraSøknad === 'verge' ? MøttPersonlig.Verge : MøttPersonlig.Fullmektig,
                 begrunnelse: null,
+                legeattest: null,
             };
         }
         switch (personligOppmøte.status) {
@@ -118,7 +127,10 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     };
 
     const formik = useFormik<FormData>({
-        initialValues: onInit(props.behandling.behandlingsinformasjon.personligOppmøte ?? null),
+        initialValues: onInit(
+            props.behandling.behandlingsinformasjon.personligOppmøte,
+            props.behandling.søknad.søknadInnhold.forNav.harFullmektigEllerVerge
+        ),
         onSubmit(values) {
             const personligOppmøte = toPersonligOppmøteStatus(values);
             if (!personligOppmøte) {

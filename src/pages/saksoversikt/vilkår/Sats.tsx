@@ -6,10 +6,11 @@ import { useHistory } from 'react-router-dom';
 import { Sats as FaktiskSats } from '~api/behandlingApi';
 import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
-import { DelerBoligMed, Satsinformasjon as BehandlingsinformasjonSats } from '~types/Behandlingsinformasjon';
+import { Satsinformasjon as BehandlingsinformasjonSats } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from './Faktablokk';
 import { VilkårsvurderingBaseProps } from './types';
@@ -91,12 +92,15 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
 
     const eksisterende = props.behandling.behandlingsinformasjon.sats;
+    const søknad = props.behandling.søknad.søknadInnhold;
     const formik = useFormik<FormData>({
         initialValues: {
-            delerSøkerBolig: eksisterende?.delerBolig ?? null,
-            delerBoligMedHvem: eksisterende?.delerBoligMed ?? null,
-            erEktemakeEllerSamboerUnder67: eksisterende?.ektemakeEllerSamboerUnder67År ?? null,
-            mottarEktemakeEllerSamboerSU: eksisterende?.ektemakeEllerSamboerUførFlyktning ?? null,
+            delerSøkerBolig: eksisterende?.delerBolig ?? søknad.boforhold.delerBoligMedVoksne,
+            delerBoligMedHvem: eksisterende?.delerBoligMed ?? søknad.boforhold.delerBoligMed,
+            erEktemakeEllerSamboerUnder67:
+                eksisterende?.ektemakeEllerSamboerUnder67År ?? søknad.boforhold.ektemakeEllerSamboerUnder67År,
+            mottarEktemakeEllerSamboerSU:
+                eksisterende?.ektemakeEllerSamboerUførFlyktning ?? søknad.boforhold.ektemakeEllerSamboerUførFlyktning,
             begrunnelse: eksisterende?.begrunnelse ?? null,
         },
         validationSchema: schema,
