@@ -7,4 +7,8 @@ export type TypeOppholdstillatelse = 'permanent' | 'midlertidig';
 
 export type Vergemål = 'fullmektig' | 'verge';
 
-export type DelerBoligMed = 'ektemake-eller-samboer' | 'voksne-barn' | 'andre';
+export enum DelerBoligMed {
+    EKTEMAKE_SAMBOER = 'EKTEMAKE_SAMBOER',
+    VOKSNE_BARN = 'VOKSNE_BARN',
+    ANNEN_VOKSEN = 'ANNEN_VOKSEN',
+}

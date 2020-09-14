@@ -37,7 +37,11 @@ const schema = yup.object<FormData>({
             then: yup
                 .mixed<DelerBoligMed>()
                 .nullable()
-                .oneOf<DelerBoligMed>(['ektemake-eller-samboer', 'voksne-barn', 'andre'])
+                .oneOf<DelerBoligMed>([
+                    DelerBoligMed.EKTEMAKE_SAMBOER,
+                    DelerBoligMed.VOKSNE_BARN,
+                    DelerBoligMed.ANNEN_VOKSEN,
+                ])
                 .required(),
         }),
     ektemakeEllerSamboerUnder67År: yup.boolean().nullable().defined().when('delerBoligMed', {
@@ -159,7 +163,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 checked={formik.values.delerBoligMed?.toString()}
                             />
                         )}
-                        {formik.values.delerBoligMed === 'ektemake-eller-samboer' && (
+                        {formik.values.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
                             <JaNeiSpørsmål
                                 id="ektemakeEllerSamboerUnder67År"
                                 className={sharedStyles.sporsmal}

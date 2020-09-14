@@ -12,6 +12,7 @@ import * as routes from '~lib/routes';
 import { trackEvent, søknadOppsummeringEndreSvarKlikk } from '~lib/tracking/trackingEvents';
 import { Søknadsteg } from '~pages/søknad/types';
 
+import { DelerBoligMed } from '../../../../../features/søknad/types';
 import sharedStyles from '../../../steg-shared.module.less';
 
 import messages from './oppsummering-nb';
@@ -243,16 +244,16 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         <OppsummeringsFelt
                             label={<FormattedMessage id="input.delerBoligMed.label" />}
                             verdi={
-                                søknad.boOgOpphold.delerBoligMed === 'ektemake-eller-samboer'
+                                søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
                                     ? 'Ektemake eller samboer'
-                                    : søknad.boOgOpphold.delerBoligMed === 'voksne-barn'
+                                    : søknad.boOgOpphold.delerBoligMed === DelerBoligMed.VOKSNE_BARN
                                     ? 'Voksne barn'
-                                    : søknad.boOgOpphold.delerBoligMed === 'andre'
+                                    : søknad.boOgOpphold.delerBoligMed === DelerBoligMed.ANNEN_VOKSEN
                             }
                         />
                     )}
 
-                    {søknad.boOgOpphold.delerBoligMed === 'ektemake-eller-samboer' && (
+                    {søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
                         <OppsummeringsFelt
                             label={<FormattedMessage id="input.ektemakeEllerSamboerUnder67År.label" />}
                             verdi={
