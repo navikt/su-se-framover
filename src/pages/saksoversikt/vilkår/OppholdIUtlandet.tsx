@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
-import { kalkulerTotaltAntallDagerIUtlandet } from '~lib/dateUtils';
+import { kalkulerTotaltAntallDagerIUtlandet, Utlandsdatoer } from '~lib/dateUtils';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
@@ -40,7 +40,7 @@ const schema = yup.object<FormData>({
     begrunnelse: yup.string().defined().nullable(),
 });
 
-const visDatoer = (datesArray: Nullable<Array<{ utreisedato: string; innreisedato: string }>>) => {
+const visDatoer = (datesArray: Utlandsdatoer) => {
     if (!datesArray) return '';
 
     return (

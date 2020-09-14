@@ -7,9 +7,9 @@ export const formatDateTime = (time: string, intl: IntlShape) => {
     return `${intl.formatDate(time)} ${intl.formatTime(time)}`;
 };
 
-export const kalkulerTotaltAntallDagerIUtlandet = (
-    datesArray: Nullable<Array<{ utreisedato: string; innreisedato: string }>>
-) => {
+export type Utlandsdatoer = Nullable<Array<{ utreisedato: string; innreisedato: string }>>;
+
+export const kalkulerTotaltAntallDagerIUtlandet = (datesArray: Utlandsdatoer) => {
     if (!datesArray) return 0;
 
     return datesArray.reduce(
