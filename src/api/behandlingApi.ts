@@ -23,6 +23,7 @@ export enum Vilkårtype {
     FastOppholdINorge = 'FAST_OPPHOLD_I_NORGE',
     OppholdIUtlandet = 'OPPHOLD_I_UTLANDET',
     Sats = 'SATS',
+    Beregning = 'BEREGNING',
 }
 
 export enum Sats {

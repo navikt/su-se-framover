@@ -27,7 +27,7 @@ import messages from './beregning-nb';
 import styles from './beregning.module.less';
 import VisBeregning from './VisBeregning';
 
-const toDateOrNull = (date: string | undefined): Date | null => {
+export const toDateOrNull = (date: string | undefined): Date | null => {
     if (!date) {
         return null;
     }
@@ -35,7 +35,7 @@ const toDateOrNull = (date: string | undefined): Date | null => {
     return new Date(date);
 };
 
-interface FradragFormData {
+export interface FradragFormData {
     type: Nullable<Fradragstype>;
     beløp: Nullable<number>;
     beskrivelse: Nullable<string>;
@@ -52,13 +52,13 @@ type Props = {
     sak: Sak;
 };
 
-const fradragSchema = yup.object<FradragFormData>({
+export const fradragSchema = yup.object<FradragFormData>({
     beløp: yup.number().typeError('Beløp må være et tall').required(),
     beskrivelse: yup.string().defined().default(null),
     type: yup.string().defined().oneOf(Object.values(Fradragstype), 'Du må velge en fradragstype'),
 });
 
-const isValidFradrag = (f: FradragFormData): f is Fradrag => fradragSchema.isValidSync(f);
+export const isValidFradrag = (f: FradragFormData): f is Fradrag => fradragSchema.isValidSync(f);
 
 const fradragstypeResourceId = (f: Fradragstype): string => {
     switch (f) {
@@ -77,7 +77,7 @@ const fradragstypeResourceId = (f: Fradragstype): string => {
     }
 };
 
-const FradragInputs = (props: {
+export const FradragInputs = (props: {
     fradrag: Array<FradragFormData>;
     feltnavn: string;
     errors: string | string[] | FormikErrors<FradragFormData>[] | undefined;

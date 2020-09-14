@@ -1,7 +1,8 @@
-import { Innholdstittel, Element, Undertekst } from 'nav-frontend-typografi';
+import * as arr from 'fp-ts/es6/Array';
+import { Element, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
-import { Beregning } from '~api/behandlingApi';
+import { Beregning, Månedsberegning } from '~api/behandlingApi';
 import { formatDateTime } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 
@@ -9,6 +10,25 @@ import { InfoLinje } from '../delt/Infolinje/Infolinje';
 
 import messages from './beregning-nb';
 import styles from './visBeregning.module.less';
+
+const groupMånedsberegninger = (månedsberegninger: Array<Månedsberegning>) => {
+    return månedsberegninger.reduce(
+        (groups, månedsberegning, index) => {
+            if (index === 0) {
+                return [[månedsberegning]];
+            }
+
+            if (månedsberegning.beløp === månedsberegninger[index - 1].beløp) {
+                const init = groups.slice(0, groups.length - 1);
+
+                return [...init, [...groups[groups.length - 1], månedsberegning]];
+            }
+
+            return [...groups, [månedsberegning]];
+        },
+        [[]] as Array<Array<Månedsberegning>>
+    );
+};
 
 interface Props {
     beregning: Beregning;
@@ -18,16 +38,13 @@ const VisBeregning = (props: Props) => {
     const intl = useI18n({ messages });
     const { beregning } = props;
     const totalbeløp = beregning.månedsberegninger.reduce((acc, val) => acc + val.beløp, 0);
+    const gruppertMånedsberegninger = groupMånedsberegninger(beregning.månedsberegninger);
+
     return (
         <div>
-            <Innholdstittel className={styles.tittel}>Beregning:</Innholdstittel>
             <div className={styles.grunndata}>
-                <InfoLinje tittel={'id:'} value={beregning.id} />
                 <InfoLinje tittel={'opprettet:'} value={formatDateTime(beregning.opprettet, intl)} />
                 <InfoLinje tittel={'sats:'} value={beregning.sats} />
-                <InfoLinje tittel={'Startdato:'} value={intl.formatDate(beregning.fom)} />
-                <InfoLinje tittel={'Sluttdato:'} value={intl.formatDate(beregning.tom)} />
-                <InfoLinje tittel="Totalbeløp:" value={intl.formatNumber(totalbeløp, { currency: 'NOK' })} />
             </div>
             {beregning.fradrag.length > 0 && (
                 <div>
@@ -47,21 +64,29 @@ const VisBeregning = (props: Props) => {
             <table className="tabell">
                 <thead>
                     <tr>
-                        <th></th>
+                        <th>{intl.formatMessage({ id: 'utbetaling.tabellheader.periode' })}</th>
                         <th>{intl.formatMessage({ id: 'utbetaling.tabellheader.beløp' })}</th>
                         <th>{intl.formatMessage({ id: 'utbetaling.tabellheader.grunnbeløp' })}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {beregning.månedsberegninger.map((beregning) => (
-                        <tr key={beregning.id}>
-                            <td>{`${intl.formatDate(beregning.fom)} - ${intl.formatDate(beregning.tom)}`}</td>
-                            <td>{beregning.beløp}</td>
-                            <td>{beregning.grunnbeløp}</td>
-                        </tr>
-                    ))}
+                    {gruppertMånedsberegninger.map((gruppe) => {
+                        const head = arr.head(gruppe);
+                        const last = arr.last(gruppe);
+                        if (head._tag === 'None') return;
+                        if (last._tag === 'None') return;
+
+                        return (
+                            <tr key={beregning.id}>
+                                <td>{`${intl.formatDate(head.value.fom)} - ${intl.formatDate(last.value.tom)}`}</td>
+                                <td>{head.value.beløp}</td>
+                                <td>{head.value.grunnbeløp}</td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
+            <p className={styles.totalBeløp}>Totalbeløp: {intl.formatNumber(totalbeløp)},-</p>
         </div>
     );
 };

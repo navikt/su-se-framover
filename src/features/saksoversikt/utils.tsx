@@ -34,6 +34,8 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
             return 'Opphold i Norge';
         case Vilkårtype.Sats:
             return 'Sats';
+        case Vilkårtype.Beregning:
+            return 'Beregning';
     }
 };
 
