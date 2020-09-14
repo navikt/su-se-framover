@@ -1,4 +1,5 @@
 import { useFormik } from 'formik';
+import { Textarea } from 'nav-frontend-skjema';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -19,6 +20,7 @@ interface FormData {
     delerBoligMedHvem: Nullable<DelerBoligMed>;
     erEktemakeEllerSamboerUnder67: Nullable<boolean>;
     mottarEktemakeEllerSamboerSU: Nullable<boolean>;
+    begrunnelse: Nullable<string>;
 }
 
 const toBehandlingsinformasjonSats = (values: FormData): Nullable<BehandlingsinformasjonSats> => {
@@ -81,6 +83,7 @@ const schema = yup.object<FormData>({
         then: yup.boolean().required(),
         otherwise: yup.boolean().nullable().defined(),
     }),
+    begrunnelse: yup.string().defined(),
 });
 
 const Sats = (props: VilkårsvurderingBaseProps) => {
@@ -94,6 +97,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
             delerBoligMedHvem: eksisterende?.delerBoligMed ?? null,
             erEktemakeEllerSamboerUnder67: eksisterende?.ektemakeEllerSamboerUnder67År ?? null,
             mottarEktemakeEllerSamboerSU: eksisterende?.ektemakeEllerSamboerUførFlyktning ?? null,
+            begrunnelse: eksisterende?.begrunnelse ?? null,
         },
         validationSchema: schema,
         onSubmit: (values) => {
@@ -125,6 +129,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 delerBoligMedHvem: null,
                 erEktemakeEllerSamboerUnder67: null,
                 mottarEktemakeEllerSamboerSU: null,
+                begrunnelse: values.begrunnelse,
             });
         } else if (values.delerBoligMedHvem !== DelerBoligMed.EKTEMAKE_SAMBOER) {
             formik.setValues({
@@ -132,6 +137,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 delerBoligMedHvem: values.delerBoligMedHvem,
                 erEktemakeEllerSamboerUnder67: null,
                 mottarEktemakeEllerSamboerSU: null,
+                begrunnelse: values.begrunnelse,
             });
         } else if (values.erEktemakeEllerSamboerUnder67 !== true) {
             formik.setValues({
@@ -139,6 +145,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 delerBoligMedHvem: values.delerBoligMedHvem,
                 erEktemakeEllerSamboerUnder67: values.erEktemakeEllerSamboerUnder67,
                 mottarEktemakeEllerSamboerSU: null,
+                begrunnelse: values.begrunnelse,
             });
         } else {
             formik.setValues({
@@ -146,6 +153,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 delerBoligMedHvem: values.delerBoligMedHvem,
                 erEktemakeEllerSamboerUnder67: values.erEktemakeEllerSamboerUnder67,
                 mottarEktemakeEllerSamboerSU: values.mottarEktemakeEllerSamboerSU,
+                begrunnelse: values.begrunnelse,
             });
         }
     };
@@ -242,6 +250,13 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 <hr />
                             </>
                         )}
+                        <Textarea
+                            label="Begrunnelse"
+                            name="begrunnelse"
+                            value={formik.values.begrunnelse ?? ''}
+                            feil={formik.errors.begrunnelse}
+                            onChange={formik.handleChange}
+                        />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
