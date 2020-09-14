@@ -4,7 +4,6 @@ import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~lib/dateUtils';
@@ -46,8 +45,8 @@ const visDatoer = (datesArray: Nullable<Array<{ utreisedato: string; innreisedat
 
     return (
         <div>
-            {datesArray.map((datoRad) => (
-                <div key={uuidv4()} className={styles.datoFelterContainer}>
+            {datesArray.map((datoRad, index) => (
+                <div key={index} className={styles.datoFelterContainer}>
                     <DatoFelt
                         label={'Utreisedato'}
                         verdi={DateFns.parseISO(datoRad.utreisedato).toLocaleDateString()}
