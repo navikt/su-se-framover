@@ -2,12 +2,13 @@ import { useFormik } from 'formik';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { Sats as FaktiskSats } from '~api/behandlingApi';
 import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
-import { DelerBoligMed, Sats as BehandlingsinformasjonSats } from '~types/Behandlingsinformasjon';
+import { DelerBoligMed, Satsinformasjon as BehandlingsinformasjonSats } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from './Faktablokk';
 import { VilkårsvurderingBaseProps } from './types';
@@ -25,12 +26,44 @@ const toBehandlingsinformasjonSats = (values: FormData): Nullable<Behandlingsinf
         return null;
     }
     return {
-        delerBolig: true,
+        delerBolig: values.delerSøkerBolig,
         delerBoligMed: values.delerBoligMedHvem,
         ektemakeEllerSamboerUførFlyktning: values.mottarEktemakeEllerSamboerSU,
         ektemakeEllerSamboerUnder67År: values.erEktemakeEllerSamboerUnder67,
         begrunnelse: null,
     };
+};
+
+const utledSats = (values: FormData) => {
+    if (values.delerSøkerBolig === null) {
+        return null;
+    }
+    if (!values.delerSøkerBolig) {
+        return FaktiskSats.Høy;
+    }
+    switch (values.delerBoligMedHvem) {
+        case null:
+            return null;
+        case DelerBoligMed.VOKSNE_BARN:
+        case DelerBoligMed.ANNEN_VOKSEN:
+            return FaktiskSats.Lav;
+        case DelerBoligMed.EKTEMAKE_SAMBOER:
+            switch (values.erEktemakeEllerSamboerUnder67) {
+                case null:
+                    return null;
+                case false:
+                    return FaktiskSats.Lav;
+                case true:
+                    switch (values.mottarEktemakeEllerSamboerSU) {
+                        case null:
+                            return null;
+                        case false:
+                            return FaktiskSats.Høy;
+                        case true:
+                            return FaktiskSats.Lav;
+                    }
+            }
+    }
 };
 
 const schema = yup.object<FormData>({
@@ -65,7 +98,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
         validationSchema: schema,
         onSubmit: (values) => {
             handleSave(values);
-            history.push(props.forrigeUrl);
+            history.push(props.nesteUrl);
         },
     });
 
@@ -85,6 +118,38 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
         );
     };
 
+    const handleChange = (values: FormData) => {
+        if (values.delerSøkerBolig !== true) {
+            formik.setValues({
+                delerSøkerBolig: values.delerSøkerBolig,
+                delerBoligMedHvem: null,
+                erEktemakeEllerSamboerUnder67: null,
+                mottarEktemakeEllerSamboerSU: null,
+            });
+        } else if (values.delerBoligMedHvem !== DelerBoligMed.EKTEMAKE_SAMBOER) {
+            formik.setValues({
+                delerSøkerBolig: values.delerSøkerBolig,
+                delerBoligMedHvem: values.delerBoligMedHvem,
+                erEktemakeEllerSamboerUnder67: null,
+                mottarEktemakeEllerSamboerSU: null,
+            });
+        } else if (values.erEktemakeEllerSamboerUnder67 !== true) {
+            formik.setValues({
+                delerSøkerBolig: values.delerSøkerBolig,
+                delerBoligMedHvem: values.delerBoligMedHvem,
+                erEktemakeEllerSamboerUnder67: values.erEktemakeEllerSamboerUnder67,
+                mottarEktemakeEllerSamboerSU: null,
+            });
+        } else {
+            formik.setValues({
+                delerSøkerBolig: values.delerSøkerBolig,
+                delerBoligMedHvem: values.delerBoligMedHvem,
+                erEktemakeEllerSamboerUnder67: values.erEktemakeEllerSamboerUnder67,
+                mottarEktemakeEllerSamboerSU: values.mottarEktemakeEllerSamboerSU,
+            });
+        }
+    };
+
     return (
         <Vurdering tittel="Sats">
             {{
@@ -95,7 +160,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                             values={formik.values}
                             errors={formik.errors}
                             property="delerSøkerBolig"
-                            onChange={formik.setValues}
+                            onChange={handleChange}
                             options={[
                                 {
                                     label: 'Ja',
@@ -112,7 +177,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 legend="Hvem deler søker bolig med?"
                                 values={formik.values}
                                 errors={formik.errors}
-                                onChange={formik.setValues}
+                                onChange={handleChange}
                                 property="delerBoligMedHvem"
                                 options={[
                                     {
@@ -135,7 +200,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 legend="Er ektemake eller samboer under 67 år?"
                                 values={formik.values}
                                 errors={formik.errors}
-                                onChange={formik.setValues}
+                                onChange={handleChange}
                                 property="erEktemakeEllerSamboerUnder67"
                                 options={[
                                     {
@@ -155,7 +220,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 legend="Mottar ektemake eller samboer supplerende stønad for uføre flyktninger?"
                                 values={formik.values}
                                 errors={formik.errors}
-                                onChange={formik.setValues}
+                                onChange={handleChange}
                                 property="mottarEktemakeEllerSamboerSU"
                                 options={[
                                     {
@@ -168,6 +233,14 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                     },
                                 ]}
                             />
+                        )}
+                        {utledSats(formik.values) && (
+                            <>
+                                <hr />
+                                <span>Sats: {utledSats(formik.values)}</span>
+                                <hr />
+                                <hr />
+                            </>
                         )}
                         <Vurderingknapper
                             onTilbakeClick={() => {

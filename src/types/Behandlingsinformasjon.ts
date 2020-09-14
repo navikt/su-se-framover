@@ -1,3 +1,4 @@
+import { Sats } from '~api/behandlingApi';
 import { Nullable } from '~lib/types';
 
 export interface Behandlingsinformasjon {
@@ -8,7 +9,8 @@ export interface Behandlingsinformasjon {
     oppholdIUtlandet: Nullable<OppholdIUtlandet>;
     formue: Nullable<Formue>;
     personligOppmøte: Nullable<PersonligOppmøte>;
-    sats: Nullable<Sats>;
+    sats: Nullable<Satsinformasjon>;
+    utledetSats: Nullable<Sats>;
 }
 
 export interface Uførhet {
@@ -89,7 +91,7 @@ export enum PersonligOppmøteStatus {
     IkkeMøttOpp = 'IkkeMøttOpp',
 }
 
-export interface Sats {
+export interface Satsinformasjon {
     delerBolig: boolean;
     delerBoligMed: Nullable<DelerBoligMed>;
     ektemakeEllerSamboerUnder67År: Nullable<boolean>;
