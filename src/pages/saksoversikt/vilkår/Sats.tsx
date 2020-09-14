@@ -45,7 +45,6 @@ const utledSats = (values: FormData) => {
         case null:
             return null;
         case DelerBoligMed.VOKSNE_BARN:
-            return FaktiskSats.Lav;
         case DelerBoligMed.ANNEN_VOKSEN:
             return FaktiskSats.Lav;
         case DelerBoligMed.EKTEMAKE_SAMBOER:
