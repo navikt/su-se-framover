@@ -114,7 +114,7 @@ export const SuperRadioGruppe = <T, U extends Extract<keyof T, string>>(props: {
     options: Array<{ label: string; radioValue: T[U] }>;
     onChange: (a: T) => void;
 }) => (
-    <RadioGruppe legend="Deler søker bolig med noen over 18 år?" feil={props.errors[props.property]}>
+    <RadioGruppe legend={props.legend} feil={props.errors[props.property]}>
         {props.options.map((e) => (
             <SuperRadio
                 key={`${props.property}${e.radioValue}`}
