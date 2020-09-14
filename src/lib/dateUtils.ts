@@ -10,7 +10,7 @@ export const formatDateTime = (time: string, intl: IntlShape) => {
 export const kalkulerTotaltAntallDagerIUtlandet = (
     datesArray: Nullable<Array<{ utreisedato: string; innreisedato: string }>>
 ) => {
-    if (!datesArray) return '0';
+    if (!datesArray) return 0;
 
     return datesArray.reduce(
         (acc, { utreisedato, innreisedato }) =>
