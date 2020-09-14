@@ -200,27 +200,39 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             },
                             {
                                 tittel: 'Tjener du penger i utlandet?',
-                                verdi: 'Nope',
+                                verdi:
+                                    props.behandling.søknad.søknadInnhold.inntektOgPensjon.tjenerPengerIUtlandetBeløp?.toString() ??
+                                    'Nei',
                             },
                             {
                                 tittel: 'Har du andre ytelser i NAV?',
-                                verdi: 'Nope',
+                                verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINav
+                                    ? `Ja, ${props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINav}: ${props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINavBeløp}`
+                                    : 'Nei',
                             },
                             {
                                 tittel: 'Har du søkt om andre trygdeytelser som ikke er behandlet?',
-                                verdi: 'Nope',
+                                verdi:
+                                    props.behandling.søknad.søknadInnhold.inntektOgPensjon.søktAndreYtelserIkkeBehandletBegrunnelse?.toString() ??
+                                    'Nei',
                             },
                             {
                                 tittel: 'Har du mottatt sosialstønad i løpet av de siste tre måneder?',
-                                verdi: 'Nope',
+                                verdi:
+                                    props.behandling.søknad.søknadInnhold.inntektOgPensjon.sosialstønadBeløp?.toString() ??
+                                    'Nei',
                             },
                             {
                                 tittel: 'Har du trygdeytelser i utlandet?',
-                                verdi: 'Nope',
+                                verdi:
+                                    props.behandling.søknad.søknadInnhold.inntektOgPensjon.tjenerPengerIUtlandetBeløp?.toString() ??
+                                    'Nei',
                             },
                             {
                                 tittel: 'Har du tjenestepensjon og/eller pensjonssparing?',
-                                verdi: 'Nope',
+                                verdi:
+                                    props.behandling.søknad.søknadInnhold.inntektOgPensjon.trygdeytelserIUtlandet?.toString() ??
+                                    'Nei',
                             },
                         ]}
                     />
