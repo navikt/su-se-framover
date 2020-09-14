@@ -105,7 +105,7 @@
         "postcss-less": "^3.1.4",
         "postcss-modules": "^3.2.2",
         "prop-types": "^15.7.2",
-        "query-string": "^6.13.1",
+        "query-string": "^6.13.2",
         "react": "^16.13.1",
         "react-collapse": "^5.0.1",
         "react-datepicker": "^3.1.3",
