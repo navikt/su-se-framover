@@ -7,12 +7,12 @@ import { Link } from 'react-router-dom';
 import { Person } from '~api/personApi';
 import { PencilIcon } from '~assets/Icons';
 import { SøknadState } from '~features/søknad/søknad.slice';
+import { DelerBoligMed } from '~features/søknad/types';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
 import { trackEvent, søknadOppsummeringEndreSvarKlikk } from '~lib/tracking/trackingEvents';
 import { Søknadsteg } from '~pages/søknad/types';
 
-import { DelerBoligMed } from '../../../../../features/søknad/types';
 import sharedStyles from '../../../steg-shared.module.less';
 
 import messages from './oppsummering-nb';
