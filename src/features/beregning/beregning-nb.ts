@@ -7,6 +7,7 @@ export default {
     'datovelger.fom.label': 'Startdato',
     'datovelger.tom.label': 'Sluttdato',
     'feiloppsummering.title': 'For å gå videre må du rette opp følgende:',
+    'utbetaling.tabellheader.periode': 'Periode',
     'utbetaling.tabellheader.beløp': 'Beløp',
     'utbetaling.tabellheader.grunnbeløp': 'Grunnbeløp',
     'fradrag.heading': 'Fradrag',

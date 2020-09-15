@@ -1,7 +1,8 @@
 const variables = {
     SU_SE_BAKOVER_URL: 'http://localhost:8080',
     AMPLITUDE_API_KEY: '',
-    FEATURE_VILKAR_V2: false,
+    // eslint-disable-next-line no-undef
+    FEATURE_VILKAR_V2: process.env.FEATURE_VILKAR_V2,
 };
 
 // eslint-disable-next-line

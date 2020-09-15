@@ -5,6 +5,7 @@ import { Vilkårtype } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
 import * as Routes from '~lib/routes';
 
+import Beregning from './Beregning';
 import FastOppholdINorge from './FastOppholdINorge';
 import Flyktning from './Flyktning';
 import Formue from './Formue';
@@ -102,6 +103,14 @@ const Vilkår = (props: { sak: Sak }) => {
                         <Sats
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.PersonligOppmøte)}
+                            nesteUrl={createVilkårUrl(Vilkårtype.Beregning)}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
+                    <Route path={createVilkårUrl(Vilkårtype.Beregning)}>
+                        <Beregning
+                            behandling={behandling}
+                            forrigeUrl={createVilkårUrl(Vilkårtype.Sats)}
                             nesteUrl={createVilkårUrl(Vilkårtype.Sats)}
                             sakId={urlParams.sakId}
                         />
