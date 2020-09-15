@@ -531,23 +531,6 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     });
                                 }}
                             />
-                            /*
-                            <div className={sharedStyles.inputFelterDiv}>
-                                <Input
-                                    id="verdiPåKjøretøy"
-                                    name="verdiPåKjøretøy"
-                                    label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
-                                    value={formik.values.verdiPåKjøretøy || ''}
-                                    onChange={formik.handleChange}
-                                />
-                                <Input
-                                    id="kjøretøyDeEier"
-                                    name="kjøretøyDeEier"
-                                    label={<FormattedMessage id="input.kjøretøyDeEier.label" />}
-                                    value={formik.values.kjøretøyDeEier || ''}
-                                    onChange={formik.handleChange}
-                                />
-                            </div>*/
                         )}
 
                         <JaNeiSpørsmål
