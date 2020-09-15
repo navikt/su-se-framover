@@ -45,8 +45,8 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                     behandlingsinformasjon: {
                         uførhet: {
                             status: values.uførevedtak,
-                            uføregrad: null,
-                            forventetInntekt: null,
+                            uføregrad: 1,
+                            forventetInntekt: 1,
                         },
                     },
                 })

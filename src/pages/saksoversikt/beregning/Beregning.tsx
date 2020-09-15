@@ -1,45 +1,30 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { lastDayOfMonth } from 'date-fns';
-import { useFormik, FormikErrors } from 'formik';
+import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
-import Panel from 'nav-frontend-paneler';
-import { RadioPanelGruppe, Label, Feiloppsummering, Select, Input, SkjemaGruppe } from 'nav-frontend-skjema';
+import { RadioPanelGruppe, Label, Feiloppsummering } from 'nav-frontend-skjema';
 import { Innholdstittel, Feilmelding } from 'nav-frontend-typografi';
 import React from 'react';
 import DatePicker from 'react-datepicker';
-import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
-import { Beregning, Fradragstype, Sats, Fradrag } from '~api/behandlingApi';
+import messages from '~/features/beregning/beregning-nb';
+import { Beregning, Sats } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
+import { FradragFormData, isValidFradrag, fradragSchema, FradragInputs } from '~features/beregning';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { toDateOrNull } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes.ts';
 import { trackEvent, startBeregning } from '~lib/tracking/trackingEvents';
-import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import { SaksbehandlingMenyvalg } from '../types';
 
-import messages from './beregning-nb';
 import styles from './beregning.module.less';
 import VisBeregning from './VisBeregning';
-
-const toDateOrNull = (date: string | undefined): Date | null => {
-    if (!date) {
-        return null;
-    }
-
-    return new Date(date);
-};
-
-interface FradragFormData {
-    type: Nullable<Fradragstype>;
-    beløp: Nullable<number>;
-    beskrivelse: Nullable<string>;
-}
 
 interface FormData {
     sats: Sats | undefined;
@@ -50,119 +35,6 @@ interface FormData {
 
 type Props = {
     sak: Sak;
-};
-
-const fradragSchema = yup.object<FradragFormData>({
-    beløp: yup.number().typeError('Beløp må være et tall').required(),
-    beskrivelse: yup.string().defined().default(null),
-    type: yup.string().defined().oneOf(Object.values(Fradragstype), 'Du må velge en fradragstype'),
-});
-
-const isValidFradrag = (f: FradragFormData): f is Fradrag => fradragSchema.isValidSync(f);
-
-const fradragstypeResourceId = (f: Fradragstype): string => {
-    switch (f) {
-        case Fradragstype.Uføretrygd:
-            return 'fradrag.type.uføre';
-        case Fradragstype.Barnetillegg:
-            return 'fradrag.type.barnetillegg';
-        case Fradragstype.Arbeidsinntekt:
-            return 'fradrag.type.arbeidsinntekt';
-        case Fradragstype.Pensjon:
-            return 'fradrag.type.pensjon';
-        case Fradragstype.Kapitalinntekt:
-            return 'fradrag.type.kapitalinntekt';
-        case Fradragstype.AndreYtelser:
-            return 'fradrag.type.andreytelser';
-    }
-};
-
-const FradragInputs = (props: {
-    fradrag: Array<FradragFormData>;
-    feltnavn: string;
-    errors: string | string[] | FormikErrors<FradragFormData>[] | undefined;
-    intl: IntlShape;
-    onChange: (e: React.ChangeEvent<unknown>) => void;
-    onLeggTilClick: () => void;
-    onFjernClick: (index: number) => void;
-}) => {
-    return (
-        <div className={styles.fradragContainer}>
-            {typeof props.errors === 'string' && props.errors}
-            {props.fradrag.map((fradrag, index) => {
-                const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : null;
-                const name = `${props.feltnavn}[${index}]`;
-                const typeId = `${name}.type`;
-                const belopId = `${name}.beløp`;
-                const beskrivelseId = `${name}.beskrivelse`;
-
-                return (
-                    <Panel key={index} border className={styles.fradragItemContainer}>
-                        <SkjemaGruppe legend={`Fradrag ${index + 1}`}>
-                            <div className={styles.fradragTypeOgBelopContainer}>
-                                <Select
-                                    label={props.intl.formatMessage({ id: 'input.fradragstype.label' })}
-                                    onChange={props.onChange}
-                                    id={typeId}
-                                    name={typeId}
-                                    value={fradrag.type?.toString() ?? ''}
-                                    feil={
-                                        errorForLinje && typeof errorForLinje === 'object'
-                                            ? errorForLinje.type
-                                            : undefined
-                                    }
-                                    className={styles.fradragtype}
-                                >
-                                    <option value="">
-                                        {props.intl.formatMessage({ id: 'input.fradragstype.emptyLabel' })}
-                                    </option>
-                                    {Object.values(Fradragstype).map((f) => (
-                                        <option value={f} key={f}>
-                                            {props.intl.formatMessage({ id: fradragstypeResourceId(f) })}
-                                        </option>
-                                    ))}
-                                </Select>
-                                <Input
-                                    label={props.intl.formatMessage({ id: 'input.fradragsbeløp.label' })}
-                                    id={belopId}
-                                    name={belopId}
-                                    onChange={props.onChange}
-                                    inputMode="decimal"
-                                    value={fradrag.beløp ?? ''}
-                                    feil={
-                                        errorForLinje && typeof errorForLinje === 'object'
-                                            ? errorForLinje.beløp
-                                            : undefined
-                                    }
-                                />
-                            </div>
-                            <Input
-                                label={props.intl.formatMessage({ id: 'input.fradragsbeskrivelse.label' })}
-                                id={beskrivelseId}
-                                name={beskrivelseId}
-                                onChange={props.onChange}
-                                value={fradrag.beskrivelse ?? ''}
-                                feil={
-                                    errorForLinje && typeof errorForLinje === 'object'
-                                        ? errorForLinje.beskrivelse
-                                        : undefined
-                                }
-                            />
-                            <Knapp onClick={() => props.onFjernClick(index)} htmlType="button">
-                                {props.intl.formatMessage({ id: 'knapp.fradrag.fjern' })}
-                            </Knapp>
-                            {errorForLinje && typeof errorForLinje === 'string' && errorForLinje}
-                        </SkjemaGruppe>
-                    </Panel>
-                );
-            })}
-            <div>
-                <Knapp onClick={() => props.onLeggTilClick()} htmlType="button">
-                    {props.intl.formatMessage({ id: 'knapp.fradrag.leggtil' })}
-                </Knapp>
-            </div>
-        </div>
-    );
 };
 
 const Beregning = (props: Props) => {

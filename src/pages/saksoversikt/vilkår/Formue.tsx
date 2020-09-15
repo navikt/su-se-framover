@@ -125,22 +125,21 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             begrunnelse: props.behandling.behandlingsinformasjon.formue?.begrunnelse ?? null,
         },
         onSubmit(values) {
-            console.log({ values });
             dispatch(
                 lagreBehandlingsinformasjon({
                     sakId: props.sakId,
                     behandlingId: props.behandling.id,
                     behandlingsinformasjon: {
                         formue: {
-                            status: formik.values.status,
-                            verdiIkkePrimærbolig: parseInt(formik.values.verdiIkkePrimærbolig, 10),
-                            verdiKjøretøy: parseInt(formik.values.verdiKjøretøy, 10),
-                            innskudd: parseInt(formik.values.innskudd, 10),
-                            verdipapir: parseInt(formik.values.verdipapir, 10),
-                            pengerSkyldt: parseInt(formik.values.pengerSkyldt, 10),
-                            kontanter: parseInt(formik.values.kontanter, 10),
-                            depositumskonto: parseInt(formik.values.depositumskonto, 10),
-                            begrunnelse: formik.values.begrunnelse,
+                            status: values.status,
+                            verdiIkkePrimærbolig: parseInt(values.verdiIkkePrimærbolig, 10),
+                            verdiKjøretøy: parseInt(values.verdiKjøretøy, 10),
+                            innskudd: parseInt(values.innskudd, 10),
+                            verdipapir: parseInt(values.verdipapir, 10),
+                            pengerSkyldt: parseInt(values.pengerSkyldt, 10),
+                            kontanter: parseInt(values.kontanter, 10),
+                            depositumskonto: parseInt(values.depositumskonto, 10),
+                            begrunnelse: values.begrunnelse,
                         },
                     },
                 })

@@ -18,3 +18,11 @@ export const kalkulerTotaltAntallDagerIUtlandet = (datesArray: Utlandsdatoer) =>
         0
     );
 };
+
+export const toDateOrNull = (date: string | undefined): Date | null => {
+    if (!date) {
+        return null;
+    }
+
+    return new Date(date);
+};
