@@ -141,15 +141,15 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                         label: (
                                             <FormattedMessage id={'input.delerBoligMedEktemakeEllerSamboer.label'} />
                                         ),
-                                        value: 'ektemake-eller-samboer',
+                                        value: DelerBoligMed.EKTEMAKE_SAMBOER,
                                     },
                                     {
                                         label: <FormattedMessage id={'input.delerBoligMedBarnOver18.label'} />,
-                                        value: 'voksne-barn',
+                                        value: DelerBoligMed.VOKSNE_BARN,
                                     },
                                     {
                                         label: <FormattedMessage id={'input.delerBoligMedAndreVoksne.label'} />,
-                                        value: 'andre',
+                                        value: DelerBoligMed.ANNEN_VOKSEN,
                                     },
                                 ]}
                                 onChange={(_, value) => {
