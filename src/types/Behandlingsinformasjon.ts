@@ -1,4 +1,5 @@
 import { Sats } from '~api/behandlingApi';
+import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 
 export interface Behandlingsinformasjon {
@@ -97,9 +98,4 @@ export interface Satsinformasjon {
     ektemakeEllerSamboerUnder67År: Nullable<boolean>;
     ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
     begrunnelse: Nullable<string>;
-}
-export enum DelerBoligMed {
-    EKTEMAKE_SAMBOER = 'EKTEMAKE_SAMBOER',
-    VOKSNE_BARN = 'VOKSNE_BARN',
-    ANNEN_VOKSEN = 'ANNEN_VOKSEN',
 }

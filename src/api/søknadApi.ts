@@ -1,4 +1,4 @@
-import { Vergemål } from '~features/søknad/types';
+import { DelerBoligMed, Vergemål } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -31,7 +31,7 @@ export interface SøknadInnhold {
     boforhold: {
         borOgOppholderSegINorge: boolean;
         delerBoligMedVoksne: boolean;
-        delerBoligMed: Nullable<string>;
+        delerBoligMed: Nullable<DelerBoligMed>;
         ektemakeEllerSamboerUnder67År: Nullable<boolean>;
         ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
     };

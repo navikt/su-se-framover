@@ -99,7 +99,12 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            status: props.behandling.behandlingsinformasjon.lovligOpphold?.status ?? null,
+            status:
+                props.behandling.behandlingsinformasjon.lovligOpphold?.status ??
+                (props.behandling.søknad.søknadInnhold.oppholdstillatelse.erNorskStatsborger ||
+                props.behandling.søknad.søknadInnhold.oppholdstillatelse.harOppholdstillatelse
+                    ? LovligOppholdStatus.VilkårOppfylt
+                    : LovligOppholdStatus.VilkårIkkeOppfylt),
             begrunnelse: props.behandling.behandlingsinformasjon.lovligOpphold?.begrunnelse ?? null,
         },
         onSubmit(values) {

@@ -1,9 +1,11 @@
 import { useFormik } from 'formik';
-import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
+import { Textarea } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import { Vergemål } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
@@ -38,6 +40,79 @@ const schema = yup.object<FormData>({
     begrunnelse: yup.string().nullable().defined(),
 });
 
+const getInitialFormValues = (
+    personligOppmøteFraBehandlingsinformasjon: Nullable<PersonligOppmøteType>,
+    harFullmektigEllerVergeFraSøknad: Nullable<Vergemål>
+): FormData => {
+    if (!personligOppmøteFraBehandlingsinformasjon) {
+        if (!harFullmektigEllerVergeFraSøknad) {
+            return {
+                status: MøttPersonlig.Ja,
+                begrunnelse: null,
+                legeattest: null,
+            };
+        }
+        return {
+            status: harFullmektigEllerVergeFraSøknad === 'verge' ? MøttPersonlig.Verge : MøttPersonlig.Fullmektig,
+            begrunnelse: null,
+            legeattest: null,
+        };
+    }
+    switch (personligOppmøteFraBehandlingsinformasjon.status) {
+        case PersonligOppmøteStatus.FullmektigMedLegeattest:
+            return {
+                status: MøttPersonlig.Fullmektig,
+                legeattest: true,
+                begrunnelse: personligOppmøteFraBehandlingsinformasjon.begrunnelse,
+            };
+
+        case PersonligOppmøteStatus.FullmektigUtenLegeattest:
+            return {
+                status: MøttPersonlig.Fullmektig,
+                legeattest: false,
+                begrunnelse: personligOppmøteFraBehandlingsinformasjon.begrunnelse,
+            };
+
+        case PersonligOppmøteStatus.MøttPersonlig:
+            return {
+                status: MøttPersonlig.Ja,
+                legeattest: null,
+                begrunnelse: personligOppmøteFraBehandlingsinformasjon.begrunnelse,
+            };
+
+        case PersonligOppmøteStatus.IkkeMøttOpp:
+            return {
+                status: MøttPersonlig.Nei,
+                legeattest: null,
+                begrunnelse: personligOppmøteFraBehandlingsinformasjon.begrunnelse,
+            };
+
+        case PersonligOppmøteStatus.Verge:
+            return {
+                status: MøttPersonlig.Verge,
+                legeattest: null,
+                begrunnelse: personligOppmøteFraBehandlingsinformasjon.begrunnelse,
+            };
+    }
+};
+
+const toPersonligOppmøteStatus = (formData: FormData): Nullable<PersonligOppmøteStatus> => {
+    switch (formData.status) {
+        case MøttPersonlig.Ja:
+            return PersonligOppmøteStatus.MøttPersonlig;
+        case MøttPersonlig.Nei:
+            return PersonligOppmøteStatus.IkkeMøttOpp;
+        case MøttPersonlig.Verge:
+            return PersonligOppmøteStatus.Verge;
+        case MøttPersonlig.Fullmektig:
+            return formData.legeattest
+                ? PersonligOppmøteStatus.FullmektigMedLegeattest
+                : PersonligOppmøteStatus.FullmektigUtenLegeattest;
+        case null:
+            return null;
+    }
+};
+
 const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -54,71 +129,11 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         );
     };
 
-    const onInit = (personligOppmøte: PersonligOppmøteType | null): FormData => {
-        if (!personligOppmøte) {
-            return {
-                status: null,
-                legeattest: null,
-                begrunnelse: null,
-            };
-        }
-        switch (personligOppmøte.status) {
-            case PersonligOppmøteStatus.FullmektigMedLegeattest:
-                return {
-                    status: MøttPersonlig.Fullmektig,
-                    legeattest: true,
-                    begrunnelse: personligOppmøte.begrunnelse,
-                };
-
-            case PersonligOppmøteStatus.FullmektigUtenLegeattest:
-                return {
-                    status: MøttPersonlig.Fullmektig,
-                    legeattest: false,
-                    begrunnelse: personligOppmøte.begrunnelse,
-                };
-
-            case PersonligOppmøteStatus.MøttPersonlig:
-                return {
-                    status: MøttPersonlig.Ja,
-                    legeattest: null,
-                    begrunnelse: personligOppmøte.begrunnelse,
-                };
-
-            case PersonligOppmøteStatus.IkkeMøttOpp:
-                return {
-                    status: MøttPersonlig.Nei,
-                    legeattest: null,
-                    begrunnelse: personligOppmøte.begrunnelse,
-                };
-
-            case PersonligOppmøteStatus.Verge:
-                return {
-                    status: MøttPersonlig.Verge,
-                    legeattest: null,
-                    begrunnelse: personligOppmøte.begrunnelse,
-                };
-        }
-    };
-
-    const toPersonligOppmøteStatus = (formData: FormData): Nullable<PersonligOppmøteStatus> => {
-        switch (formData.status) {
-            case MøttPersonlig.Ja:
-                return PersonligOppmøteStatus.MøttPersonlig;
-            case MøttPersonlig.Nei:
-                return PersonligOppmøteStatus.IkkeMøttOpp;
-            case MøttPersonlig.Verge:
-                return PersonligOppmøteStatus.Verge;
-            case MøttPersonlig.Fullmektig:
-                return formData.legeattest
-                    ? PersonligOppmøteStatus.FullmektigMedLegeattest
-                    : PersonligOppmøteStatus.FullmektigUtenLegeattest;
-            case null:
-                return null;
-        }
-    };
-
     const formik = useFormik<FormData>({
-        initialValues: onInit(props.behandling.behandlingsinformasjon.personligOppmøte ?? null),
+        initialValues: getInitialFormValues(
+            props.behandling.behandlingsinformasjon.personligOppmøte,
+            props.behandling.søknad.søknadInnhold.forNav.harFullmektigEllerVerge
+        ),
         onSubmit(values) {
             const personligOppmøte = toPersonligOppmøteStatus(values);
             if (!personligOppmøte) {
@@ -133,18 +148,6 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     });
 
     const history = useHistory();
-    const onChange = (status: MøttPersonlig) => {
-        formik.setValues({
-            ...formik.values,
-            status,
-        });
-    };
-    const onLegeattestChange = (legeattest: boolean) => {
-        formik.setValues({
-            ...formik.values,
-            legeattest: legeattest,
-        });
-    };
 
     return (
         <Vurdering tittel="Personlig oppmøte?">
@@ -156,49 +159,49 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        <RadioGruppe legend="Har søker møtt personlig?" feil={formik.errors.status}>
-                            <Radio
-                                label="Ja"
-                                name="MøttPersonlig"
-                                onChange={() => onChange(MøttPersonlig.Ja)}
-                                checked={formik.values.status === MøttPersonlig.Ja}
-                            />
-                            <Radio
-                                label="Søker har verge"
-                                name="verge"
-                                onChange={() => onChange(MøttPersonlig.Verge)}
-                                checked={formik.values.status === MøttPersonlig.Verge}
-                            />
-                            <Radio
-                                label="Fullmektig har møtt på vegne av søker"
-                                name="fullmektig"
-                                onChange={() => onChange(MøttPersonlig.Fullmektig)}
-                                checked={formik.values.status === MøttPersonlig.Fullmektig}
-                            />
-                            <Radio
-                                label="Nei"
-                                name="IkkeMøttOpp"
-                                onChange={() => onChange(MøttPersonlig.Nei)}
-                                checked={formik.values.status === MøttPersonlig.Nei}
-                            />
-                        </RadioGruppe>
+                        <SuperRadioGruppe
+                            legend="Har søker møtt personlig?"
+                            values={formik.values}
+                            errors={formik.errors}
+                            onChange={formik.setValues}
+                            property="status"
+                            options={[
+                                {
+                                    label: 'Ja',
+                                    radioValue: MøttPersonlig.Ja,
+                                },
+                                {
+                                    label: 'Søker har verge',
+                                    radioValue: MøttPersonlig.Verge,
+                                },
+                                {
+                                    label: 'Fullmektig har møtt på vegne av søker',
+                                    radioValue: MøttPersonlig.Fullmektig,
+                                },
+                                {
+                                    label: 'Nei',
+                                    radioValue: MøttPersonlig.Nei,
+                                },
+                            ]}
+                        />
                         {formik.values.status === MøttPersonlig.Fullmektig && (
-                            <RadioGruppe legend="Legeattest?" feil={formik.errors.legeattest}>
-                                <Radio
-                                    label="Ja"
-                                    name="HarLegeattest"
-                                    onChange={() => onLegeattestChange(true)}
-                                    checked={Boolean(formik.values.legeattest)}
-                                />
-                                <Radio
-                                    label="Nei"
-                                    name="HarIkkeLegeattest"
-                                    onChange={() => {
-                                        onLegeattestChange(false);
-                                    }}
-                                    checked={formik.values.legeattest === false}
-                                />
-                            </RadioGruppe>
+                            <SuperRadioGruppe
+                                legend="Legeattest?"
+                                values={formik.values}
+                                errors={formik.errors}
+                                onChange={formik.setValues}
+                                property="legeattest"
+                                options={[
+                                    {
+                                        label: 'Ja',
+                                        radioValue: true,
+                                    },
+                                    {
+                                        label: 'Nei',
+                                        radioValue: false,
+                                    },
+                                ]}
+                            />
                         )}
                         <Textarea
                             label="Begrunnelse"

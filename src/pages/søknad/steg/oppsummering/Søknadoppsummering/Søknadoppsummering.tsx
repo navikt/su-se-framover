@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { Person } from '~api/personApi';
 import { PencilIcon } from '~assets/Icons';
 import { SøknadState } from '~features/søknad/søknad.slice';
+import { DelerBoligMed } from '~features/søknad/types';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
 import { trackEvent, søknadOppsummeringEndreSvarKlikk } from '~lib/tracking/trackingEvents';
@@ -243,16 +244,16 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         <OppsummeringsFelt
                             label={<FormattedMessage id="input.delerBoligMed.label" />}
                             verdi={
-                                søknad.boOgOpphold.delerBoligMed === 'ektemake-eller-samboer'
+                                søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
                                     ? 'Ektemake eller samboer'
-                                    : søknad.boOgOpphold.delerBoligMed === 'voksne-barn'
+                                    : søknad.boOgOpphold.delerBoligMed === DelerBoligMed.VOKSNE_BARN
                                     ? 'Voksne barn'
-                                    : søknad.boOgOpphold.delerBoligMed === 'andre'
+                                    : søknad.boOgOpphold.delerBoligMed === DelerBoligMed.ANNEN_VOKSEN
                             }
                         />
                     )}
 
-                    {søknad.boOgOpphold.delerBoligMed === 'ektemake-eller-samboer' && (
+                    {søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
                         <OppsummeringsFelt
                             label={<FormattedMessage id="input.ektemakeEllerSamboerUnder67År.label" />}
                             verdi={

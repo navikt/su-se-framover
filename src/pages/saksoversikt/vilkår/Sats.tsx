@@ -1,14 +1,16 @@
 import { useFormik } from 'formik';
+import { Textarea } from 'nav-frontend-skjema';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Sats as FaktiskSats } from '~api/behandlingApi';
 import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
-import { DelerBoligMed, Satsinformasjon as BehandlingsinformasjonSats } from '~types/Behandlingsinformasjon';
+import { Satsinformasjon as BehandlingsinformasjonSats } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from './Faktablokk';
 import { VilkårsvurderingBaseProps } from './types';
@@ -19,6 +21,7 @@ interface FormData {
     delerBoligMedHvem: Nullable<DelerBoligMed>;
     erEktemakeEllerSamboerUnder67: Nullable<boolean>;
     mottarEktemakeEllerSamboerSU: Nullable<boolean>;
+    begrunnelse: Nullable<string>;
 }
 
 const toBehandlingsinformasjonSats = (values: FormData): Nullable<BehandlingsinformasjonSats> => {
@@ -81,6 +84,7 @@ const schema = yup.object<FormData>({
         then: yup.boolean().required(),
         otherwise: yup.boolean().nullable().defined(),
     }),
+    begrunnelse: yup.string().defined(),
 });
 
 const Sats = (props: VilkårsvurderingBaseProps) => {
@@ -88,12 +92,16 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
 
     const eksisterende = props.behandling.behandlingsinformasjon.sats;
+    const søknad = props.behandling.søknad.søknadInnhold;
     const formik = useFormik<FormData>({
         initialValues: {
-            delerSøkerBolig: eksisterende?.delerBolig ?? null,
-            delerBoligMedHvem: eksisterende?.delerBoligMed ?? null,
-            erEktemakeEllerSamboerUnder67: eksisterende?.ektemakeEllerSamboerUnder67År ?? null,
-            mottarEktemakeEllerSamboerSU: eksisterende?.ektemakeEllerSamboerUførFlyktning ?? null,
+            delerSøkerBolig: eksisterende?.delerBolig ?? søknad.boforhold.delerBoligMedVoksne,
+            delerBoligMedHvem: eksisterende?.delerBoligMed ?? søknad.boforhold.delerBoligMed,
+            erEktemakeEllerSamboerUnder67:
+                eksisterende?.ektemakeEllerSamboerUnder67År ?? søknad.boforhold.ektemakeEllerSamboerUnder67År,
+            mottarEktemakeEllerSamboerSU:
+                eksisterende?.ektemakeEllerSamboerUførFlyktning ?? søknad.boforhold.ektemakeEllerSamboerUførFlyktning,
+            begrunnelse: eksisterende?.begrunnelse ?? null,
         },
         validationSchema: schema,
         onSubmit: (values) => {
@@ -125,6 +133,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 delerBoligMedHvem: null,
                 erEktemakeEllerSamboerUnder67: null,
                 mottarEktemakeEllerSamboerSU: null,
+                begrunnelse: values.begrunnelse,
             });
         } else if (values.delerBoligMedHvem !== DelerBoligMed.EKTEMAKE_SAMBOER) {
             formik.setValues({
@@ -132,6 +141,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 delerBoligMedHvem: values.delerBoligMedHvem,
                 erEktemakeEllerSamboerUnder67: null,
                 mottarEktemakeEllerSamboerSU: null,
+                begrunnelse: values.begrunnelse,
             });
         } else if (values.erEktemakeEllerSamboerUnder67 !== true) {
             formik.setValues({
@@ -139,6 +149,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 delerBoligMedHvem: values.delerBoligMedHvem,
                 erEktemakeEllerSamboerUnder67: values.erEktemakeEllerSamboerUnder67,
                 mottarEktemakeEllerSamboerSU: null,
+                begrunnelse: values.begrunnelse,
             });
         } else {
             formik.setValues({
@@ -146,6 +157,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 delerBoligMedHvem: values.delerBoligMedHvem,
                 erEktemakeEllerSamboerUnder67: values.erEktemakeEllerSamboerUnder67,
                 mottarEktemakeEllerSamboerSU: values.mottarEktemakeEllerSamboerSU,
+                begrunnelse: values.begrunnelse,
             });
         }
     };
@@ -242,6 +254,13 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 <hr />
                             </>
                         )}
+                        <Textarea
+                            label="Begrunnelse"
+                            name="begrunnelse"
+                            value={formik.values.begrunnelse ?? ''}
+                            feil={formik.errors.begrunnelse}
+                            onChange={formik.handleChange}
+                        />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);

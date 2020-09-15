@@ -39,7 +39,11 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            flyktningStatus: props.behandling.behandlingsinformasjon.flyktning?.status ?? null,
+            flyktningStatus:
+                props.behandling.behandlingsinformasjon.flyktning?.status ??
+                (props.behandling.søknad.søknadInnhold.flyktningsstatus.registrertFlyktning
+                    ? FlyktningStatus.VilkårOppfylt
+                    : FlyktningStatus.VilkårIkkeOppfylt),
             begrunnelse: props.behandling.behandlingsinformasjon.flyktning?.begrunnelse ?? null,
         },
         onSubmit(values) {
