@@ -166,8 +166,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 
                         <div className={styles.bottomButtons}>
                             <Knapp
-                                onClick={(e) => {
-                                    e.preventDefault();
+                                htmlType="button"
+                                onClick={() => {
                                     startBeregning();
                                 }}
                             >
