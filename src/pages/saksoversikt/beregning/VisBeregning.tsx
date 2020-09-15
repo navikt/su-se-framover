@@ -1,5 +1,5 @@
-import * as arr from 'fp-ts/es6/Array';
-import * as Option from 'fp-ts/es6/Option';
+import * as arr from 'fp-ts/Array';
+import * as Option from 'fp-ts/Option';
 import { Element, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
@@ -13,23 +13,20 @@ import { InfoLinje } from '../delt/Infolinje/Infolinje';
 
 import styles from './visBeregning.module.less';
 
-const groupMånedsberegninger = (månedsberegninger: Array<Månedsberegning>) => {
-    return månedsberegninger.reduce(
-        (groups, månedsberegning, index) => {
-            if (index === 0) {
-                return [[månedsberegning]];
-            }
+export const groupMånedsberegninger = (månedsberegninger: Array<Månedsberegning>) => {
+    return månedsberegninger.reduce((groups, månedsberegning, index) => {
+        if (index === 0) {
+            return [[månedsberegning]];
+        }
 
-            if (månedsberegning.beløp === månedsberegninger[index - 1].beløp) {
-                const init = groups.slice(0, groups.length - 1);
+        if (månedsberegning.beløp === månedsberegninger[index - 1].beløp) {
+            const init = groups.slice(0, groups.length - 1);
 
-                return [...init, [...groups[groups.length - 1], månedsberegning]];
-            }
+            return [...init, [...groups[groups.length - 1], månedsberegning]];
+        }
 
-            return [...groups, [månedsberegning]];
-        },
-        [[]] as Array<Array<Månedsberegning>>
-    );
+        return [...groups, [månedsberegning]];
+    }, [] as Array<Array<Månedsberegning>>);
 };
 
 interface Props {
@@ -41,7 +38,6 @@ const VisBeregning = (props: Props) => {
     const { beregning } = props;
     const totalbeløp = beregning.månedsberegninger.reduce((acc, val) => acc + val.beløp, 0);
     const gruppertMånedsberegninger = groupMånedsberegninger(beregning.månedsberegninger);
-    console.log(gruppertMånedsberegninger);
 
     return (
         <div>
