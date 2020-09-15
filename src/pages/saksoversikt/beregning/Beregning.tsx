@@ -14,6 +14,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { Beregning, Fradragstype, Sats, Fradrag } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { toDateOrNull } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes.ts';
 import { trackEvent, startBeregning } from '~lib/tracking/trackingEvents';
@@ -26,14 +27,6 @@ import { SaksbehandlingMenyvalg } from '../types';
 import messages from './beregning-nb';
 import styles from './beregning.module.less';
 import VisBeregning from './VisBeregning';
-
-export const toDateOrNull = (date: string | undefined): Date | null => {
-    if (!date) {
-        return null;
-    }
-
-    return new Date(date);
-};
 
 export interface FradragFormData {
     type: Nullable<Fradragstype>;

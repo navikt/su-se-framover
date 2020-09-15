@@ -1,15 +1,20 @@
+import * as Apply from 'fp-ts/es6/Apply';
 import * as arr from 'fp-ts/es6/Array';
+import * as Option from 'fp-ts/es6/Option';
 import { Element, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
 import { Beregning, Månedsberegning } from '~api/behandlingApi';
 import { formatDateTime } from '~lib/dateUtils';
+import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 
 import { InfoLinje } from '../delt/Infolinje/Infolinje';
 
 import messages from './beregning-nb';
 import styles from './visBeregning.module.less';
+
+export const combineOptions = Apply.sequenceT(Option.option);
 
 const groupMånedsberegninger = (månedsberegninger: Array<Månedsberegning>) => {
     return månedsberegninger.reduce(
@@ -72,17 +77,17 @@ const VisBeregning = (props: Props) => {
                 <tbody>
                     {gruppertMånedsberegninger.map((gruppe) => {
                         pipe(
-                        	combineOptions(Arr.head(gruppe), Arr.last(gruppe)),
-                        	Option.fold(
-                        		() => null,
-                        		([head, last]) => (
-	                        		<tr key={beregning.id}>
-	                                <td>{`${intl.formatDate(head.value.fom)} - ${intl.formatDate(last.value.tom)}`}</td>
-	                                <td>{head.value.beløp}</td>
-	                                <td>{head.value.grunnbeløp}</td>
-	                            </tr>
-                        		)
-                        	)
+                            combineOptions(arr.head(gruppe), arr.last(gruppe)),
+                            Option.fold(
+                                () => null,
+                                ([head, last]) => (
+                                    <tr key={beregning.id}>
+                                        <td>{`${intl.formatDate(head.fom)} - ${intl.formatDate(last.tom)}`}</td>
+                                        <td>{head.beløp}</td>
+                                        <td>{head.grunnbeløp}</td>
+                                    </tr>
+                                )
+                            )
                         );
                     })}
                 </tbody>

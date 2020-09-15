@@ -6,13 +6,14 @@ import DatePicker from 'react-datepicker';
 import { useHistory } from 'react-router-dom';
 
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { toDateOrNull } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 
 import messages from '../../saksoversikt/beregning/beregning-nb';
-import { FradragFormData, FradragInputs, fradragSchema, isValidFradrag, toDateOrNull } from '../beregning/Beregning';
+import { FradragFormData, FradragInputs, fradragSchema, isValidFradrag } from '../beregning/Beregning';
 import VisBeregning from '../beregning/VisBeregning';
 
 import styles from './beregning.module.less';
