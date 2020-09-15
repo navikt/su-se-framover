@@ -71,17 +71,18 @@ const VisBeregning = (props: Props) => {
                 </thead>
                 <tbody>
                     {gruppertMånedsberegninger.map((gruppe) => {
-                        const head = arr.head(gruppe);
-                        const last = arr.last(gruppe);
-                        if (head._tag === 'None') return;
-                        if (last._tag === 'None') return;
-
-                        return (
-                            <tr key={beregning.id}>
-                                <td>{`${intl.formatDate(head.value.fom)} - ${intl.formatDate(last.value.tom)}`}</td>
-                                <td>{head.value.beløp}</td>
-                                <td>{head.value.grunnbeløp}</td>
-                            </tr>
+                        pipe(
+                        	combineOptions(Arr.head(gruppe), Arr.last(gruppe)),
+                        	Option.fold(
+                        		() => null,
+                        		([head, last]) => (
+	                        		<tr key={beregning.id}>
+	                                <td>{`${intl.formatDate(head.value.fom)} - ${intl.formatDate(last.value.tom)}`}</td>
+	                                <td>{head.value.beløp}</td>
+	                                <td>{head.value.grunnbeløp}</td>
+	                            </tr>
+                        		)
+                        	)
                         );
                     })}
                 </tbody>
