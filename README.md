@@ -24,6 +24,7 @@ Vi bruker en kombinasjon av https://www.npmjs.com/package/posthtml-expressions o
 1. Legg den til på `window` i [./src/index.html]()
 1. Legg den til i `variables` i [./posthtml.config.js]()
     - Verdien på denne er default-verdien som brukes lokalt
+    - Hvis verdien skal være forskjellig for utviklerne, kan det være praktisk å definere den i `.env`
 1. Legg til den faktiske verdien i [./nais-dev.json]() og [./nais-prod.json]()
     - **Merk**: Hvis verdien er hemmelig så må man heller legge den inn i `Vault` enn i `nais.json`-filene
 
@@ -39,6 +40,8 @@ window.MIN_VARIABEL = '{{MIN_VARIABEL}}';
 const variables = {
     // ...
     MIN_VARIABEL: 'fin verdi som brukes lokalt'
+    // eller
+    MIN_VARIABEL: process.env.MIN_VARIABEL // i kombinasjon med å definere den i .env-filen
 };
 
 // nais-dev.json
