@@ -10,6 +10,7 @@ import {
     FastOppholdINorgeStatus,
     FormueStatus,
     PersonligOppmøteStatus,
+    OppholdIUtlandetStatus,
 } from '~types/Behandlingsinformasjon';
 
 export const vilkårTittelFormatted = (type: Vilkårtype) => {
@@ -54,7 +55,15 @@ type Vilkårsinformasjon = {
 };
 
 export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinformasjon): Vilkårsinformasjon[] => {
-    const { uførhet, flyktning, lovligOpphold, fastOppholdINorge, formue, personligOppmøte } = behandlingsinformasjon;
+    const {
+        uførhet,
+        flyktning,
+        lovligOpphold,
+        fastOppholdINorge,
+        oppholdIUtlandet,
+        formue,
+        personligOppmøte,
+    } = behandlingsinformasjon;
 
     return [
         {
@@ -92,6 +101,15 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.FastOppholdINorge,
+        },
+        {
+            status:
+                oppholdIUtlandet === null
+                    ? VilkårVurderingStatus.IkkeVurdert
+                    : oppholdIUtlandet.status === OppholdIUtlandetStatus.SkalHoldeSegINorge
+                    ? VilkårVurderingStatus.Ok
+                    : VilkårVurderingStatus.IkkeOk,
+            vilkårtype: Vilkårtype.OppholdIUtlandet,
         },
         {
             status:
