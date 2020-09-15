@@ -1,15 +1,15 @@
 import { useFormik } from 'formik';
-import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
+import { Textarea } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import { Vergemål } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { PersonligOppmøteStatus, PersonligOppmøte as PersonligOppmøteType } from '~types/Behandlingsinformasjon';
-
-import { Vergemål } from '../../../features/søknad/types';
 
 import Faktablokk from './Faktablokk';
 import { VilkårsvurderingBaseProps } from './types';
@@ -148,18 +148,6 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     });
 
     const history = useHistory();
-    const handleStatusChange = (status: MøttPersonlig) => {
-        formik.setValues({
-            ...formik.values,
-            status,
-        });
-    };
-    const handleLegeattestChange = (legeattest: boolean) => {
-        formik.setValues({
-            ...formik.values,
-            legeattest: legeattest,
-        });
-    };
 
     return (
         <Vurdering tittel="Personlig oppmøte?">
@@ -171,49 +159,49 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        <RadioGruppe legend="Har søker møtt personlig?" feil={formik.errors.status}>
-                            <Radio
-                                label="Ja"
-                                name="MøttPersonlig"
-                                onChange={() => handleStatusChange(MøttPersonlig.Ja)}
-                                checked={formik.values.status === MøttPersonlig.Ja}
-                            />
-                            <Radio
-                                label="Søker har verge"
-                                name="verge"
-                                onChange={() => handleStatusChange(MøttPersonlig.Verge)}
-                                checked={formik.values.status === MøttPersonlig.Verge}
-                            />
-                            <Radio
-                                label="Fullmektig har møtt på vegne av søker"
-                                name="fullmektig"
-                                onChange={() => handleStatusChange(MøttPersonlig.Fullmektig)}
-                                checked={formik.values.status === MøttPersonlig.Fullmektig}
-                            />
-                            <Radio
-                                label="Nei"
-                                name="IkkeMøttOpp"
-                                onChange={() => handleStatusChange(MøttPersonlig.Nei)}
-                                checked={formik.values.status === MøttPersonlig.Nei}
-                            />
-                        </RadioGruppe>
+                        <SuperRadioGruppe
+                            legend="Har søker møtt personlig?"
+                            values={formik.values}
+                            errors={formik.errors}
+                            onChange={formik.setValues}
+                            property="status"
+                            options={[
+                                {
+                                    label: 'Ja',
+                                    radioValue: MøttPersonlig.Ja,
+                                },
+                                {
+                                    label: 'Søker har verge',
+                                    radioValue: MøttPersonlig.Verge,
+                                },
+                                {
+                                    label: 'Fullmektig har møtt på vegne av søker',
+                                    radioValue: MøttPersonlig.Fullmektig,
+                                },
+                                {
+                                    label: 'Nei',
+                                    radioValue: MøttPersonlig.Nei,
+                                },
+                            ]}
+                        />
                         {formik.values.status === MøttPersonlig.Fullmektig && (
-                            <RadioGruppe legend="Legeattest?" feil={formik.errors.legeattest}>
-                                <Radio
-                                    label="Ja"
-                                    name="HarLegeattest"
-                                    onChange={() => handleLegeattestChange(true)}
-                                    checked={Boolean(formik.values.legeattest)}
-                                />
-                                <Radio
-                                    label="Nei"
-                                    name="HarIkkeLegeattest"
-                                    onChange={() => {
-                                        handleLegeattestChange(false);
-                                    }}
-                                    checked={formik.values.legeattest === false}
-                                />
-                            </RadioGruppe>
+                            <SuperRadioGruppe
+                                legend="Legeattest?"
+                                values={formik.values}
+                                errors={formik.errors}
+                                onChange={formik.setValues}
+                                property="legeattest"
+                                options={[
+                                    {
+                                        label: 'Ja',
+                                        radioValue: true,
+                                    },
+                                    {
+                                        label: 'Nei',
+                                        radioValue: false,
+                                    },
+                                ]}
+                            />
                         )}
                         <Textarea
                             label="Begrunnelse"
