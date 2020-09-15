@@ -1,20 +1,17 @@
-import * as Apply from 'fp-ts/es6/Apply';
 import * as arr from 'fp-ts/es6/Array';
 import * as Option from 'fp-ts/es6/Option';
 import { Element, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
+import messages from '~/features/beregning/beregning-nb';
 import { Beregning, Månedsberegning } from '~api/behandlingApi';
 import { formatDateTime } from '~lib/dateUtils';
-import { pipe } from '~lib/fp';
+import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 
 import { InfoLinje } from '../delt/Infolinje/Infolinje';
 
-import messages from './beregning-nb';
 import styles from './visBeregning.module.less';
-
-export const combineOptions = Apply.sequenceT(Option.option);
 
 const groupMånedsberegninger = (månedsberegninger: Array<Månedsberegning>) => {
     return månedsberegninger.reduce(
@@ -44,6 +41,7 @@ const VisBeregning = (props: Props) => {
     const { beregning } = props;
     const totalbeløp = beregning.månedsberegninger.reduce((acc, val) => acc + val.beløp, 0);
     const gruppertMånedsberegninger = groupMånedsberegninger(beregning.månedsberegninger);
+    console.log(gruppertMånedsberegninger);
 
     return (
         <div>
@@ -76,7 +74,7 @@ const VisBeregning = (props: Props) => {
                 </thead>
                 <tbody>
                     {gruppertMånedsberegninger.map((gruppe) => {
-                        pipe(
+                        return pipe(
                             combineOptions(arr.head(gruppe), arr.last(gruppe)),
                             Option.fold(
                                 () => null,

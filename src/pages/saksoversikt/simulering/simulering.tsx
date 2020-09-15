@@ -3,13 +3,13 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 
+import messages from '~/features/beregning/beregning-nb';
 import { Utbetaling } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
 import { formatDateTime } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { useAppSelector } from '~redux/Store';
 
-import messages from '../beregning/beregning-nb';
 import styles from '../beregning/visBeregning.module.less';
 import { InfoLinje } from '../delt/Infolinje/Infolinje';
 
