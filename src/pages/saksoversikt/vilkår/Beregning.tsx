@@ -1,6 +1,7 @@
 import { lastDayOfMonth } from 'date-fns';
 import { useFormik } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
+import { Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { useHistory } from 'react-router-dom';
@@ -31,15 +32,15 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
-    const startBeregning = () => {
-        if (!formik.values.fom || !formik.values.tom) {
+    const startBeregning = (values: FormData) => {
+        if (!values.fom || !values.tom) {
             return;
         }
         if (!props.behandling.behandlingsinformasjon.utledetSats) {
             return;
         }
-        const fradrag = formik.values.fradrag.filter(isValidFradrag);
-        if (fradrag.length !== formik.values.fradrag.length) {
+        const fradrag = values.fradrag.filter(isValidFradrag);
+        if (fradrag.length !== values.fradrag.length) {
             return;
         }
 
@@ -48,8 +49,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 sats: props.behandling.behandlingsinformasjon.utledetSats,
-                fom: formik.values.fom,
-                tom: lastDayOfMonth(formik.values.tom),
+                fom: values.fom,
+                tom: lastDayOfMonth(values.tom),
                 fradrag,
             })
         );
@@ -69,9 +70,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             fradrag: props.behandling.beregning?.fradrag ?? [],
         },
         onSubmit(values) {
-            if (!values || !props.behandling.beregning) return;
-
-            history.push(props.nesteUrl);
+            startBeregning(values);
         },
         validationSchema: yup.object<FormData>({
             fom: yup.date().nullable().required(),
@@ -122,6 +121,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     endDate={formik.values.tom}
                                     minDate={formik.values.fom}
                                 />
+                                {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
                             </div>
                             <div>
                                 <p>Til og med</p>
@@ -137,6 +137,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     endDate={formik.values.tom}
                                     minDate={formik.values.fom}
                                 />
+                                {formik.errors.tom && <Feilmelding>{formik.errors.tom}</Feilmelding>}
                             </div>
                         </div>
 
@@ -166,14 +167,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                         </div>
 
                         <div className={styles.bottomButtons}>
-                            <Knapp
-                                htmlType="button"
-                                onClick={() => {
-                                    startBeregning();
-                                }}
-                            >
-                                Start beregning
-                            </Knapp>
+                            <Knapp htmlType="submit">Start beregning</Knapp>
                         </div>
 
                         {props.behandling.beregning && (
@@ -185,7 +179,16 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
-                            onLagreOgFortsettSenereClick={() => null}
+                            onNesteClick={() => {
+                                if (props.behandling.beregning !== null) {
+                                    history.push(props.nesteUrl);
+                                } else {
+                                    formik.submitForm();
+                                }
+                            }}
+                            onLagreOgFortsettSenereClick={() => {
+                                formik.submitForm();
+                            }}
                         />
                     </form>
                 ),
