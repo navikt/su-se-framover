@@ -9,6 +9,7 @@ import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
+import { ErrorCode } from '~api/apiClient';
 import { Personkort } from '~components/Personkort';
 import * as personSlice from '~features/person/person.slice';
 import søknadSlice from '~features/søknad/søknad.slice';
@@ -112,7 +113,13 @@ const index = (props: { nesteUrl: string }) => {
                             RemoteData.fold(
                                 () => null,
                                 () => <NavFrontendSpinner />,
-                                (err) => <AlertStripe type="feil">{err.message}</AlertStripe>,
+                                (err) => (
+                                    <AlertStripe type="feil">
+                                        {err.code === ErrorCode.Unauthorized
+                                            ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
+                                            : err.message}
+                                    </AlertStripe>
+                                ),
                                 (s) => <Personkort person={s} />
                             )
                         )}

@@ -7,6 +7,7 @@ import React, { useEffect, useMemo } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
+import { ErrorCode } from '~api/apiClient';
 import { Kjønn } from '~api/personApi';
 import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
@@ -14,6 +15,7 @@ import { showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import FeatureToggles from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
+import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
@@ -61,6 +63,8 @@ const Meny = () => {
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
     const history = useHistory();
+
+    const intl = useI18n({ messages });
 
     const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
     const dispatch = useAppDispatch();
@@ -140,7 +144,15 @@ const Saksoversikt = () => {
                     <div>
                         <Søkefelt onSakFetchSuccess={rerouteToSak} />
                         {RemoteData.isPending(data) && <NavFrontendSpinner />}
-                        {RemoteData.isFailure(data) && <AlertStripe type="feil">{data.error.message}</AlertStripe>}
+                        {RemoteData.isFailure(søker) ? (
+                            <AlertStripe type="feil">
+                                {søker.error.code === ErrorCode.Unauthorized
+                                    ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
+                                    : søker.error.message}
+                            </AlertStripe>
+                        ) : (
+                            RemoteData.isFailure(sak) && <AlertStripe type="feil">{sak.error.message}</AlertStripe>
+                        )}
                     </div>
                 </Route>
             </Switch>
