@@ -62,11 +62,11 @@ const VilkårsOppsummeringV2 = (props: { behandling: Behandling }) => {
     return (
         <div>
             <Innholdstittel className={styles.tittel}>Vilkårsvurderinger</Innholdstittel>
-            {vilkårsinformasjon.map((v, index) => (
+            {vilkårsinformasjon.map((v) => (
                 <VilkårsvurderingInfoLinjeV2
                     type={v.vilkårtype}
                     status={v.status}
-                    key={index}
+                    key={v.vilkårtype}
                     begrunnelse={v.begrunnelse}
                 />
             ))}

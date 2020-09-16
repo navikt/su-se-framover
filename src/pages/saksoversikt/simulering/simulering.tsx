@@ -15,7 +15,7 @@ import { useI18n } from '~lib/hooks';
 import { useAppSelector } from '~redux/Store';
 
 import styles from '../beregning/visBeregning.module.less';
-import { groupSimuleringsperioder } from '../delt/Infolinje/arrayUtils';
+import { groupSimuleringsperioder } from '../delt/arrayUtils';
 import { InfoLinje } from '../delt/Infolinje/Infolinje';
 
 interface Props {

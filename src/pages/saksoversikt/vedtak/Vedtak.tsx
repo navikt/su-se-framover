@@ -60,7 +60,7 @@ const VilkårsOppsummering = (props: { behandling: Behandling; sakId: string }) 
 const VilkårsvurderingInfoLinjeV2 = (props: {
     type: Vilkårtype;
     status: VilkårVurderingStatus;
-    begrunnelse?: Nullable<string>;
+    begrunnelse: Nullable<string>;
 }) => {
     return (
         <div className={styles.infolinjeContainer}>

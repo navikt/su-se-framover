@@ -9,7 +9,7 @@ import { formatDateTime } from '~lib/dateUtils';
 import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 
-import { groupMånedsberegninger } from '../delt/Infolinje/arrayUtils';
+import { groupMånedsberegninger } from '../delt/arrayUtils';
 import { InfoLinje } from '../delt/Infolinje/Infolinje';
 
 import styles from './visBeregning.module.less';
