@@ -1,6 +1,6 @@
 import { Månedsberegning, Sats } from '~api/behandlingApi';
 
-import { groupMånedsberegninger } from './VisBeregning';
+import { groupMånedsberegninger } from './arrayUtils';
 
 const genererMånedsberegning = (id: string, beløp: number): Månedsberegning => {
     return {
