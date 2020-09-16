@@ -8,7 +8,7 @@ export const groupSimuleringsperioder = (simuleringsperioder: Array<SimulertPeri
     return groupByKeyValue(simuleringsperioder, 'bruttoYtelse');
 };
 
-function groupByKeyValue<T>(arr: Array<T>, key: keyof Partial<T>) {
+function groupByKeyValue<T>(arr: Array<T>, key: keyof T) {
     return arr.reduce((groups, currentValue, index) => {
         if (index === 0) {
             return [[currentValue]];
