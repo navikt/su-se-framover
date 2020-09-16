@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import { Vilkårtype } from '~api/behandlingApi';
+import { Behandlingsstatus, Vilkårtype } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
 import * as Routes from '~lib/routes';
 
@@ -103,7 +103,14 @@ const Vilkår = (props: { sak: Sak }) => {
                         <Sats
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.PersonligOppmøte)}
-                            nesteUrl={createVilkårUrl(Vilkårtype.Beregning)}
+                            nesteUrl={
+                                behandling.status == Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
+                                    ? Routes.saksbehandlingVedtak.createURL({
+                                          sakId: urlParams.sakId,
+                                          behandlingId: behandling.id,
+                                      })
+                                    : createVilkårUrl(Vilkårtype.Beregning)
+                            }
                             sakId={urlParams.sakId}
                         />
                     </Route>

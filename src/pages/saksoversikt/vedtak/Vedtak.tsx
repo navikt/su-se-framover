@@ -168,11 +168,19 @@ const Vedtak = (props: Props) => {
                 </div>
                 <div className={styles.navigeringContainer}>
                     <Link
-                        to={routes.saksoversiktValgtBehandling.createURL({
-                            sakId: sak.id,
-                            behandlingId: behandlingId,
-                            meny: SaksbehandlingMenyvalg.Beregning,
-                        })}
+                        to={
+                            FeatureToggles.VilkårsvurderingV2
+                                ? routes.saksbehandlingVilkårsvurdering.createURL({
+                                      sakId: sak.id,
+                                      behandlingId: behandling.id,
+                                      vilkar: Vilkårtype.Sats,
+                                  })
+                                : routes.saksoversiktValgtBehandling.createURL({
+                                      sakId: sak.id,
+                                      behandlingId: behandlingId,
+                                      meny: SaksbehandlingMenyvalg.Beregning,
+                                  })
+                        }
                         className="knapp"
                     >
                         Tilbake
