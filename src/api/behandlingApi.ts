@@ -117,10 +117,10 @@ export function iverksatt(behandling: Behandling): boolean {
 }
 
 export function avslag(behandling: Behandling): boolean {
-    return (
-        [Behandlingsstatus.TIL_ATTESTERING_INNVILGET, Behandlingsstatus.VILKÅRSVURDERT_AVSLAG].find(
-            (x) => behandling.status === x
-        ) !== undefined
+    return Boolean(
+        [Behandlingsstatus.TIL_ATTESTERING_AVSLAG, Behandlingsstatus.VILKÅRSVURDERT_AVSLAG].find(
+            (status) => behandling.status === status
+        )
     );
 }
 
