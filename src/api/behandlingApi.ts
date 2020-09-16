@@ -95,7 +95,8 @@ export enum Behandlingsstatus {
     SIMULERT = 'SIMULERT',
     TIL_ATTESTERING_INNVILGET = 'TIL_ATTESTERING_INNVILGET',
     TIL_ATTESTERING_AVSLAG = 'TIL_ATTESTERING_AVSLAG',
-    IVERKSATT = 'IVERKSATT',
+    IVERKSATT_INNVILGET = 'IVERKSATT_INNVILGET',
+    IVERKSATT_AVSLAG = 'IVERKSATT_AVSLAG',
 }
 
 export function tilAttestering(behandling: Behandling): boolean {
@@ -107,12 +108,16 @@ export function tilAttestering(behandling: Behandling): boolean {
 }
 
 export function iverksatt(behandling: Behandling): boolean {
-    return Behandlingsstatus.IVERKSATT === behandling.status;
+    return (
+        [Behandlingsstatus.IVERKSATT_AVSLAG, Behandlingsstatus.IVERKSATT_INNVILGET].find(
+            (x) => behandling.status === x
+        ) !== undefined
+    );
 }
 
 export function avslag(behandling: Behandling): boolean {
     return (
-        [Behandlingsstatus.TIL_ATTESTERING_AVSLAG, Behandlingsstatus.VILKÅRSVURDERT_AVSLAG].find(
+        [Behandlingsstatus.TIL_ATTESTERING_INNVILGET, Behandlingsstatus.VILKÅRSVURDERT_AVSLAG].find(
             (x) => behandling.status === x
         ) !== undefined
     );
