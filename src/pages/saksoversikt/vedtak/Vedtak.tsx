@@ -143,10 +143,10 @@ const Vedtak = (props: Props) => {
                         )}
                     </div>
                     <div>
-                        {!FeatureToggles.VilkårsvurderingV2 ? (
-                            <VilkårsOppsummering behandling={behandling} sakId={sak.id} />
-                        ) : (
+                        {FeatureToggles.VilkårsvurderingV2 ? (
                             <VilkårsOppsummeringV2 behandling={behandling} />
+                        ) : (
+                            <VilkårsOppsummering behandling={behandling} sakId={sak.id} />
                         )}
                     </div>
                     <div>
