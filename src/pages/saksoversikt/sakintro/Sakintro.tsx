@@ -6,7 +6,6 @@ import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { useHistory, Link } from 'react-router-dom';
 
-import * as sakApi from 'api/sakApi';
 import { iverksatt, tilAttestering } from '~api/behandlingApi';
 import { useUserContext } from '~context/userContext';
 import * as behandlingSlice from '~features/saksoversikt/sak.slice';
@@ -14,12 +13,13 @@ import { formatDateTime } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Sak } from '~types/Sak';
 
 import styles from './sakintro.module.less';
 
 // TODO: Alle tekster her er placeholdere. Lag oversettelsesfil når vi er nærmere noe brukende.
 
-const Sakintro = (props: { sak: sakApi.Sak }) => {
+const Sakintro = (props: { sak: Sak }) => {
     const sakId = props.sak.id;
     const dispatch = useAppDispatch();
     const history = useHistory();

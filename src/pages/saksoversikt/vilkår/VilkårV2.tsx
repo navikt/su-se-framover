@@ -1,9 +1,10 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import { Behandlingsstatus, Vilkårtype } from '~api/behandlingApi';
-import { Sak } from '~api/sakApi';
 import * as Routes from '~lib/routes';
+import { Behandlingsstatus } from '~types/Behandling';
+import { Sak } from '~types/Sak';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import Beregning from './Beregning';
 import FastOppholdINorge from './FastOppholdINorge';

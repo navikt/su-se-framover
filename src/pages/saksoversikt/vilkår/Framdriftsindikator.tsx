@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { Behandling, VilkårVurderingStatus, Vilkårtype } from '~api/behandlingApi';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { vilkårTittelFormatted, mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
+import { Behandling } from '~types/Behandling';
+import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import styles from './framdriftsindikator.module.less';
 

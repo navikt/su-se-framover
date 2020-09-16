@@ -1,6 +1,7 @@
-import { Sats } from '~api/behandlingApi';
 import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
+
+import { Sats } from './Sats';
 
 export interface Behandlingsinformasjon {
     uførhet: Nullable<Uførhet>;

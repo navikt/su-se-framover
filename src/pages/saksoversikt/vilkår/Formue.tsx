@@ -3,12 +3,12 @@ import { Input, Textarea, Checkbox } from 'nav-frontend-skjema';
 import React, { useState, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { SøknadInnhold } from '~api/søknadApi';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { FormueStatus } from '~types/Behandlingsinformasjon';
+import { SøknadInnhold } from '~types/Søknad';
 
 import Faktablokk from './Faktablokk';
 import styles from './formue.module.less';

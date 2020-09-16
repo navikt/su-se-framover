@@ -10,8 +10,6 @@ import DatePicker from 'react-datepicker';
 import { Link, useHistory } from 'react-router-dom';
 
 import messages from '~/features/beregning/beregning-nb';
-import { Beregning, Sats } from '~api/behandlingApi';
-import { Sak } from '~api/sakApi';
 import { FradragFormData, isValidFradrag, fradragSchema, FradragInputs } from '~features/beregning';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { toDateOrNull } from '~lib/dateUtils';
@@ -20,6 +18,8 @@ import * as Routes from '~lib/routes.ts';
 import { trackEvent, startBeregning } from '~lib/tracking/trackingEvents';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Sak } from '~types/Sak';
+import { Sats } from '~types/Sats';
 
 import { SaksbehandlingMenyvalg } from '../types';
 

@@ -6,16 +6,8 @@ import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import {
-    Behandling,
-    Behandlingsstatus,
-    Vilkårsvurdering,
-    Vilkårtype,
-    tilAttestering,
-    VilkårVurderingStatus,
-} from '~api/behandlingApi';
+import { tilAttestering } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
-import { Sak } from '~api/sakApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import FeatureToggles from '~lib/featureToggles';
@@ -25,6 +17,9 @@ import VisBeregning from '~pages/saksoversikt/beregning/VisBeregning';
 import { Simulering } from '~pages/saksoversikt/simulering/simulering';
 import { SaksbehandlingMenyvalg } from '~pages/saksoversikt/types';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
+import { Behandling, Behandlingsstatus } from '~types/Behandling';
+import { Sak } from '~types/Sak';
+import { Vilkårtype, Vilkårsvurdering, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import styles from './vedtak.module.less';
 

@@ -1,7 +1,7 @@
 import Ikon from 'nav-frontend-ikoner-assets';
 import React from 'react';
 
-import { VilkårVurderingStatus } from '~api/behandlingApi';
+import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const VilkårvurderingStatusIcon = (props: { status: VilkårVurderingStatus; className?: string }) => {
     switch (props.status) {

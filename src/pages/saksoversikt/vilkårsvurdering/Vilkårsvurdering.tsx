@@ -6,10 +6,10 @@ import { Textarea } from 'nav-frontend-skjema';
 import { Undertittel, EtikettLiten } from 'nav-frontend-typografi';
 import React from 'react';
 
-import { VilkårVurderingStatus, Vilkårsvurdering, Vilkårtype } from '~api/behandlingApi';
 import { JaNeiSpørsmål } from '~components/FormElements';
 import { vilkårTittelFormatted, statusIcon } from '~features/saksoversikt/utils';
 import { Nullable } from '~lib/types';
+import { VilkårVurderingStatus, Vilkårsvurdering, Vilkårtype } from '~types/Vilkårsvurdering';
 
 import yup from '../../../lib/validering';
 

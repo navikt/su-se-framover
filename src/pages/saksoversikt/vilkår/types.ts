@@ -1,4 +1,4 @@
-import { Behandling } from '~api/behandlingApi';
+import { Behandling } from '~types/Behandling';
 
 export interface VilkårsvurderingBaseProps {
     behandling: Behandling;

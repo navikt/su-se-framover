@@ -1,7 +1,6 @@
 import Ikon from 'nav-frontend-ikoner-assets';
 import React from 'react';
 
-import { VilkårVurderingStatus, Vilkårtype } from '~api/behandlingApi';
 import { Nullable } from '~lib/types';
 import {
     Behandlingsinformasjon,
@@ -13,6 +12,7 @@ import {
     PersonligOppmøteStatus,
     OppholdIUtlandetStatus,
 } from '~types/Behandlingsinformasjon';
+import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const vilkårTittelFormatted = (type: Vilkårtype) => {
     switch (type) {
