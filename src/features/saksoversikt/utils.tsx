@@ -32,7 +32,7 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
         case Vilkårtype.FastOppholdINorge:
             return 'Opphold i Norge';
         case Vilkårtype.OppholdIUtlandet:
-            return 'Opphold i Norge';
+            return 'Opphold i Utlandet';
         case Vilkårtype.Sats:
             return 'Sats';
         case Vilkårtype.Beregning:

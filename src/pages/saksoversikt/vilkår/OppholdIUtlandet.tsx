@@ -41,7 +41,7 @@ const schema = yup.object<FormData>({
 });
 
 const visDatoer = (datesArray: Utlandsdatoer) => {
-    if (!datesArray) return '';
+    if (!datesArray || datesArray?.length === 0) return 'Det er ikke registert noen datoer';
 
     return (
         <div>

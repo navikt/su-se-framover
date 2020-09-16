@@ -1,0 +1,25 @@
+@import '~/styles/variables.less';
+
+.uføreInputContainer {
+    display: flex;
+    align-items: center;
+
+    .uførehetInputFelt {
+        margin-right: @spacing-xxs;
+    }
+}
+
+.radioGruppe {
+    margin-bottom: @spacing-xxs;
+}
+
+.feilTekst {
+    color: #ba3a26;
+    font-weight: 600;
+}
+
+.formInputContainer {
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+}
