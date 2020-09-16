@@ -118,8 +118,8 @@ export const startAttestering = createAsyncThunk<
     behandlingApi.Behandling,
     { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
->('behandling/attester', async ({ sakId, behandlingId }, thunkApi) => {
-    const res = await behandlingApi.attester({ sakId, behandlingId });
+>('behandling/iverksett', async ({ sakId, behandlingId }, thunkApi) => {
+    const res = await behandlingApi.iverksett({ sakId, behandlingId });
     if (res.status === 'ok') {
         return res.data;
     }

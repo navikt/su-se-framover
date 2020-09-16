@@ -7,7 +7,7 @@ import React from 'react';
 import { useHistory, Link } from 'react-router-dom';
 
 import * as sakApi from 'api/sakApi';
-import { attestert, tilAttestering } from '~api/behandlingApi';
+import { iverksatt, tilAttestering } from '~api/behandlingApi';
 import { useUserContext } from '~context/userContext';
 import * as behandlingSlice from '~features/saksoversikt/sak.slice';
 import { formatDateTime } from '~lib/dateUtils';
@@ -97,7 +97,7 @@ const Sakintro = (props: { sak: sakApi.Sak }) => {
                                                             </Link>
                                                         ) : (
                                                             !tilAttestering(b) &&
-                                                            !attestert(b) && (
+                                                            !iverksatt(b) && (
                                                                 <Link
                                                                     className="knapp"
                                                                     to={Routes.saksbehandlingVilkårsvurdering.createURL(

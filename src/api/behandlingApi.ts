@@ -96,8 +96,8 @@ export enum Behandlingsstatus {
     SIMULERT = 'SIMULERT',
     TIL_ATTESTERING_INNVILGET = 'TIL_ATTESTERING_INNVILGET',
     TIL_ATTESTERING_AVSLAG = 'TIL_ATTESTERING_AVSLAG',
-    ATTESTERT_INNVILGET = 'ATTESTERT_INNVILGET',
-    ATTESTERT_AVSLAG = 'ATTESTERT_AVSLAG',
+    IVERKSATT_INNVILGET = 'IVERKSATT_INNVILGET',
+    IVERKSATT_AVSLAG = 'IVERKSATT_AVSLAG',
 }
 
 export function tilAttestering(behandling: Behandling): boolean {
@@ -108,9 +108,9 @@ export function tilAttestering(behandling: Behandling): boolean {
     );
 }
 
-export function attestert(behandling: Behandling): boolean {
+export function iverksatt(behandling: Behandling): boolean {
     return (
-        [Behandlingsstatus.ATTESTERT_AVSLAG, Behandlingsstatus.ATTESTERT_INNVILGET].find(
+        [Behandlingsstatus.IVERKSATT_AVSLAG, Behandlingsstatus.IVERKSATT_INNVILGET].find(
             (x) => behandling.status === x
         ) !== undefined
     );
@@ -118,11 +118,9 @@ export function attestert(behandling: Behandling): boolean {
 
 export function avslag(behandling: Behandling): boolean {
     return (
-        [
-            Behandlingsstatus.TIL_ATTESTERING_AVSLAG,
-            Behandlingsstatus.VILKÅRSVURDERT_AVSLAG,
-            Behandlingsstatus.ATTESTERT_AVSLAG,
-        ].find((x) => behandling.status === x) !== undefined
+        [Behandlingsstatus.TIL_ATTESTERING_INNVILGET, Behandlingsstatus.VILKÅRSVURDERT_AVSLAG].find(
+            (x) => behandling.status === x
+        ) !== undefined
     );
 }
 
@@ -234,9 +232,9 @@ export async function sendTilAttestering(arg: {
     });
 }
 
-export async function attester(arg: { sakId: string; behandlingId: string }) {
+export async function iverksett(arg: { sakId: string; behandlingId: string }) {
     return apiClient<Behandling>({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/attester`,
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/iverksett`,
         method: 'PATCH',
     });
 }
