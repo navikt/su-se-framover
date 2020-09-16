@@ -1,4 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import * as arr from 'fp-ts/Array';
+import { pipe } from 'fp-ts/lib/function';
+import * as Option from 'fp-ts/Option';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
@@ -7,10 +10,12 @@ import messages from '~/features/beregning/beregning-nb';
 import { Utbetaling } from '~api/behandlingApi';
 import { Sak } from '~api/sakApi';
 import { formatDateTime } from '~lib/dateUtils';
+import { combineOptions } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { useAppSelector } from '~redux/Store';
 
 import styles from '../beregning/visBeregning.module.less';
+import { groupSimuleringsperioder } from '../delt/arrayUtils';
 import { InfoLinje } from '../delt/Infolinje/Infolinje';
 
 interface Props {
@@ -20,6 +25,8 @@ interface Props {
 
 const Utbetalingssimulering = (props: { utbetaling: Utbetaling }) => {
     const intl = useI18n({ messages });
+    const gruppertSimuleringsperioder = groupSimuleringsperioder(props.utbetaling.simulering.perioder);
+
     return (
         <>
             <Innholdstittel className={styles.tittel}>Simulering:</Innholdstittel>
@@ -40,12 +47,23 @@ const Utbetalingssimulering = (props: { utbetaling: Utbetaling }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {props.utbetaling.simulering.perioder.map((periode, index) => (
-                            <tr key={index}>
-                                <td>{`${intl.formatDate(periode.fom)} - ${intl.formatDate(periode.tom)}`}</td>
-                                <td>{periode.bruttoYtelse}</td>
-                            </tr>
-                        ))}
+                        {gruppertSimuleringsperioder.map((gruppe) => {
+                            return pipe(
+                                combineOptions(arr.head(gruppe), arr.last(gruppe)),
+                                Option.fold(
+                                    () => null,
+                                    ([head, last]) => (
+                                        <tr key={head.fom + last.tom}>
+                                            <td>{`${intl.formatDate(head.fom)} - ${intl.formatDate(last.tom)}`}</td>
+                                            <td>{head.bruttoYtelse}</td>
+                                        </tr>
+                                    )
+                                )
+                            );
+                        })}
+                        <p className={styles.totalBeløp}>
+                            Totalbeløp: {intl.formatNumber(props.utbetaling.simulering.totalBruttoYtelse)},-
+                        </p>
                     </tbody>
                 </table>
             )}

@@ -1,3 +1,4 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { lastDayOfMonth } from 'date-fns';
 import { useFormik } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
@@ -13,7 +14,7 @@ import { toDateOrNull } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import VisBeregning from '../beregning/VisBeregning';
 
@@ -31,6 +32,7 @@ interface FormData {
 const Beregning = (props: VilkårsvurderingBaseProps) => {
     const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
+    const beregningStatus = useAppSelector((state) => state.sak.beregningStatus);
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const startBeregning = (values: FormData) => {
         if (!values.fom || !values.tom) {
@@ -181,7 +183,19 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             }}
                             onNesteClick={() => {
                                 if (props.behandling.beregning !== null) {
-                                    history.push(props.nesteUrl);
+                                    if (
+                                        RemoteData.isSuccess(beregningStatus) ||
+                                        (props.behandling.beregning && RemoteData.isInitial(beregningStatus))
+                                    ) {
+                                        dispatch(
+                                            sakSlice.startSimulering({
+                                                sakId: props.sakId,
+                                                behandlingId: props.behandling.id,
+                                            })
+                                        );
+
+                                        history.push(props.nesteUrl);
+                                    }
                                 } else {
                                     formik.submitForm();
                                 }

@@ -111,7 +111,10 @@ const Vilkår = (props: { sak: Sak }) => {
                         <Beregning
                             behandling={behandling}
                             forrigeUrl={createVilkårUrl(Vilkårtype.Sats)}
-                            nesteUrl={createVilkårUrl(Vilkårtype.Sats)}
+                            nesteUrl={Routes.saksbehandlingVedtak.createURL({
+                                sakId: urlParams.sakId,
+                                behandlingId: behandling.id,
+                            })}
                             sakId={urlParams.sakId}
                         />
                     </Route>

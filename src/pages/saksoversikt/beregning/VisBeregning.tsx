@@ -4,30 +4,15 @@ import { Element, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
 import messages from '~/features/beregning/beregning-nb';
-import { Beregning, Månedsberegning } from '~api/behandlingApi';
+import { Beregning } from '~api/behandlingApi';
 import { formatDateTime } from '~lib/dateUtils';
 import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 
+import { groupMånedsberegninger } from '../delt/arrayUtils';
 import { InfoLinje } from '../delt/Infolinje/Infolinje';
 
 import styles from './visBeregning.module.less';
-
-export const groupMånedsberegninger = (månedsberegninger: Array<Månedsberegning>) => {
-    return månedsberegninger.reduce((groups, månedsberegning, index) => {
-        if (index === 0) {
-            return [[månedsberegning]];
-        }
-
-        if (månedsberegning.beløp === månedsberegninger[index - 1].beløp) {
-            const init = groups.slice(0, groups.length - 1);
-
-            return [...init, [...groups[groups.length - 1], månedsberegning]];
-        }
-
-        return [...groups, [månedsberegning]];
-    }, [] as Array<Array<Månedsberegning>>);
-};
 
 interface Props {
     beregning: Beregning;
@@ -75,7 +60,7 @@ const VisBeregning = (props: Props) => {
                             Option.fold(
                                 () => null,
                                 ([head, last]) => (
-                                    <tr key={beregning.id}>
+                                    <tr key={head.id + last.id}>
                                         <td>{`${intl.formatDate(head.fom)} - ${intl.formatDate(last.tom)}`}</td>
                                         <td>{head.beløp}</td>
                                         <td>{head.grunnbeløp}</td>

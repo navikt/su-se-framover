@@ -2,6 +2,7 @@ import Ikon from 'nav-frontend-ikoner-assets';
 import React from 'react';
 
 import { VilkårVurderingStatus, Vilkårtype } from '~api/behandlingApi';
+import { Nullable } from '~lib/types';
 import {
     Behandlingsinformasjon,
     UførhetStatus,
@@ -54,6 +55,7 @@ export const statusIcon = (status: VilkårVurderingStatus) => {
 type Vilkårsinformasjon = {
     status: VilkårVurderingStatus;
     vilkårtype: Vilkårtype;
+    begrunnelse: Nullable<string>;
 };
 
 export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinformasjon): Vilkårsinformasjon[] => {
@@ -76,6 +78,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Uførhet,
+            begrunnelse: null,
         },
         {
             status:
@@ -85,6 +88,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Flyktning,
+            begrunnelse: behandlingsinformasjon.flyktning?.begrunnelse ?? null,
         },
         {
             status:
@@ -94,6 +98,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.LovligOpphold,
+            begrunnelse: behandlingsinformasjon.lovligOpphold?.begrunnelse ?? null,
         },
         {
             status:
@@ -103,6 +108,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.FastOppholdINorge,
+            begrunnelse: behandlingsinformasjon.fastOppholdINorge?.begrunnelse ?? null,
         },
         {
             status:
@@ -112,6 +118,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.OppholdIUtlandet,
+            begrunnelse: behandlingsinformasjon.oppholdIUtlandet?.begrunnelse ?? null,
         },
         {
             status:
@@ -121,6 +128,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Formue,
+            begrunnelse: behandlingsinformasjon.formue?.begrunnelse ?? null,
         },
         {
             status:
@@ -130,6 +138,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.PersonligOppmøte,
+            begrunnelse: behandlingsinformasjon.personligOppmøte?.begrunnelse ?? null,
         },
     ];
 };
