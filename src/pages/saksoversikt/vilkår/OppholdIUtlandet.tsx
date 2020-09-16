@@ -37,7 +37,7 @@ const schema = yup.object<FormData>({
             [OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet, OppholdIUtlandetStatus.SkalHoldeSegINorge],
             'Vennligst velg et alternativ '
         ),
-    begrunnelse: yup.string(),
+    begrunnelse: yup.string().defined(),
 });
 
 const visDatoer = (datesArray: Utlandsdatoer) => {
@@ -90,8 +90,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
         validateOnChange: hasSubmitted,
     });
     const history = useHistory();
-    console.log(formik.values);
-    console.log(typeof formik.values.begrunnelse);
+
     return (
         <Vurdering tittel="Opphold i Utlandet">
             {{
@@ -134,7 +133,12 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                             name="begrunnelse"
                             feil={formik.errors.begrunnelse}
                             value={formik.values.begrunnelse ?? ''}
-                            onChange={formik.handleChange}
+                            onChange={(e) => {
+                                formik.setValues({
+                                    ...formik.values,
+                                    begrunnelse: e.target.value ? e.target.value : null,
+                                });
+                            }}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {

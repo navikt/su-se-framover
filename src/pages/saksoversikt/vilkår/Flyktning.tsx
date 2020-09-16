@@ -26,11 +26,7 @@ const schema = yup.object<FormData>({
             [FlyktningStatus.VilkårOppfylt, FlyktningStatus.VilkårIkkeOppfylt, FlyktningStatus.Uavklart],
             'Vennligst velg et alternativ '
         ),
-    begrunnelse: yup.string().nullable().defined().when('flyktningStatus', {
-        is: FlyktningStatus.Uavklart,
-        then: yup.string().required(),
-        otherwise: yup.string().nullable().defined(),
-    }),
+    begrunnelse: yup.string().defined(),
 });
 
 const Flyktning = (props: VilkårsvurderingBaseProps) => {
@@ -89,7 +85,6 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                     formik.setValues({
                                         ...formik.values,
                                         flyktningStatus: FlyktningStatus.VilkårOppfylt,
-                                        begrunnelse: null,
                                     })
                                 }
                                 defaultChecked={formik.values.flyktningStatus === FlyktningStatus.VilkårOppfylt}
@@ -101,7 +96,6 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                     formik.setValues({
                                         ...formik.values,
                                         flyktningStatus: FlyktningStatus.VilkårIkkeOppfylt,
-                                        begrunnelse: null,
                                     })
                                 }
                                 defaultChecked={formik.values.flyktningStatus === FlyktningStatus.VilkårIkkeOppfylt}
@@ -115,15 +109,18 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 defaultChecked={formik.values.flyktningStatus === FlyktningStatus.Uavklart}
                             />
                         </RadioGruppe>
-                        {formik.values.flyktningStatus === FlyktningStatus.Uavklart && (
-                            <Textarea
-                                label="Begrunnelse"
-                                name="begrunnelse"
-                                value={formik.values.begrunnelse || ''}
-                                onChange={formik.handleChange}
-                                feil={formik.errors.begrunnelse}
-                            />
-                        )}
+                        <Textarea
+                            label="Begrunnelse"
+                            name="begrunnelse"
+                            value={formik.values.begrunnelse || ''}
+                            onChange={(e) => {
+                                formik.setValues({
+                                    ...formik.values,
+                                    begrunnelse: e.target.value ? e.target.value : null,
+                                });
+                            }}
+                            feil={formik.errors.begrunnelse}
+                        />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
