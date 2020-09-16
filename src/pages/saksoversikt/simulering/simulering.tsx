@@ -53,7 +53,7 @@ const Utbetalingssimulering = (props: { utbetaling: Utbetaling }) => {
                                 Option.fold(
                                     () => null,
                                     ([head, last]) => (
-                                        <tr key={index}>
+                                        <tr key={head.fom+last.tom}>
                                             <td>{`${intl.formatDate(head.fom)} - ${intl.formatDate(last.tom)}`}</td>
                                             <td>{head.bruttoYtelse}</td>
                                         </tr>
