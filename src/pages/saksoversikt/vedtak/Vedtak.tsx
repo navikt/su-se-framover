@@ -88,7 +88,7 @@ const VilkårsOppsummeringV2 = (props: { behandling: Behandling }) => {
                     type={v.vilkårtype}
                     status={v.status}
                     key={index}
-                    begrunnelse={v.begrunnelse}
+                    begrunnelse={v.begrunnelse ?? null}
                 />
             ))}
         </div>

@@ -47,13 +47,13 @@ const Utbetalingssimulering = (props: { utbetaling: Utbetaling }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {gruppertSimuleringsperioder.map((gruppe, index) => {
+                        {gruppertSimuleringsperioder.map((gruppe) => {
                             return pipe(
                                 combineOptions(arr.head(gruppe), arr.last(gruppe)),
                                 Option.fold(
                                     () => null,
                                     ([head, last]) => (
-                                        <tr key={head.fom+last.tom}>
+                                        <tr key={head.fom + last.tom}>
                                             <td>{`${intl.formatDate(head.fom)} - ${intl.formatDate(last.tom)}`}</td>
                                             <td>{head.bruttoYtelse}</td>
                                         </tr>
