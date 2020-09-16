@@ -12,10 +12,12 @@ export type Utlandsdatoer = Nullable<Array<{ utreisedato: string; innreisedato: 
 export const kalkulerTotaltAntallDagerIUtlandet = (datesArray: Utlandsdatoer) => {
     if (!datesArray) return 0;
 
-    return datesArray.reduce(
-        (acc, { utreisedato, innreisedato }) =>
-            acc + DateFns.differenceInCalendarDays(DateFns.parseISO(innreisedato), DateFns.parseISO(utreisedato)),
-        0
+    return (
+        datesArray.reduce(
+            (acc, { utreisedato, innreisedato }) =>
+                acc + DateFns.differenceInCalendarDays(DateFns.parseISO(innreisedato), DateFns.parseISO(utreisedato)),
+            0
+        ) - datesArray.length
     );
 };
 

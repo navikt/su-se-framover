@@ -237,10 +237,10 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
     const DagerIUtlandet = () => {
         const harReistDager = formik.values.harReistTilUtlandetSiste90dager
-            ? kalkulerTotaltAntallDagerIUtlandet(formik.values.harReistDatoer) - formik.values.harReistDatoer.length
+            ? kalkulerTotaltAntallDagerIUtlandet(formik.values.harReistDatoer)
             : 0;
         const skalReiseDager = formik.values.skalReiseTilUtlandetNeste12Måneder
-            ? kalkulerTotaltAntallDagerIUtlandet(formik.values.skalReiseDatoer) - formik.values.skalReiseDatoer.length
+            ? kalkulerTotaltAntallDagerIUtlandet(formik.values.skalReiseDatoer)
             : 0;
         const totalDagerIUtlandet = harReistDager + skalReiseDager;
 
