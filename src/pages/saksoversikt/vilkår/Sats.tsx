@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import { Textarea } from 'nav-frontend-skjema';
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Sats as FaktiskSats } from '~api/behandlingApi';
@@ -71,9 +71,12 @@ const utledSats = (values: FormData) => {
 
 const schema = yup.object<FormData>({
     delerSøkerBolig: yup.boolean().required(),
-    delerBoligMedHvem: yup
-        .mixed<DelerBoligMed>()
-        .oneOf([DelerBoligMed.ANNEN_VOKSEN, DelerBoligMed.EKTEMAKE_SAMBOER, DelerBoligMed.VOKSNE_BARN]),
+    delerBoligMedHvem: yup.mixed<DelerBoligMed>().when('delerSøkerBolig', {
+        is: true,
+        then: yup
+            .mixed()
+            .oneOf([DelerBoligMed.ANNEN_VOKSEN, DelerBoligMed.EKTEMAKE_SAMBOER, DelerBoligMed.VOKSNE_BARN]),
+    }),
     erEktemakeEllerSamboerUnder67: yup.boolean().defined().when('delerBoligMedHvem', {
         is: DelerBoligMed.EKTEMAKE_SAMBOER,
         then: yup.boolean().required(),
@@ -90,6 +93,7 @@ const schema = yup.object<FormData>({
 const Sats = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
+    const [hasSubmitted, setHasSubmitted] = useState(false);
 
     const eksisterende = props.behandling.behandlingsinformasjon.sats;
     const søknad = props.behandling.søknad.søknadInnhold;
@@ -104,6 +108,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
             begrunnelse: eksisterende?.begrunnelse ?? null,
         },
         validationSchema: schema,
+        validateOnChange: hasSubmitted,
         onSubmit: (values) => {
             handleSave(values);
             history.push(props.nesteUrl);
@@ -166,7 +171,12 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
         <Vurdering tittel="Sats">
             {{
                 left: (
-                    <form onSubmit={formik.handleSubmit}>
+                    <form
+                        onSubmit={(e) => {
+                            setHasSubmitted(true);
+                            formik.handleSubmit(e);
+                        }}
+                    >
                         <SuperRadioGruppe
                             legend="Deler søker bolig med noen over 18 år?"
                             values={formik.values}
