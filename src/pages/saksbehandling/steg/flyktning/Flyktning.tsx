@@ -1,12 +1,16 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FlyktningStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
@@ -32,6 +36,7 @@ const schema = yup.object<FormData>({
 const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
+    const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
 
     const formik = useFormik<FormData>({
         initialValues: {
@@ -42,10 +47,10 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                     : FlyktningStatus.VilkårIkkeOppfylt),
             begrunnelse: props.behandling.behandlingsinformasjon.flyktning?.begrunnelse ?? null,
         },
-        onSubmit(values) {
+        async onSubmit(values) {
             if (!values.flyktningStatus) return;
 
-            dispatch(
+            const res = await dispatch(
                 lagreBehandlingsinformasjon({
                     sakId: props.sakId,
                     behandlingId: props.behandling.id,
@@ -57,7 +62,9 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                     },
                 })
             );
-            history.push(props.nesteUrl);
+            if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+                history.push(props.nesteUrl);
+            }
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -121,6 +128,15 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                             }}
                             feil={formik.errors.begrunnelse}
                         />
+                        {pipe(
+                            lagreBehandlingsinformasjonStatus,
+                            RemoteData.fold(
+                                () => null,
+                                () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
+                                () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
+                                () => null
+                            )
+                        )}
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);

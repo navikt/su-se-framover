@@ -1,14 +1,18 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Textarea } from 'nav-frontend-skjema';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { Vergemål } from '~features/søknad/types';
+import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { PersonligOppmøteStatus, PersonligOppmøte as PersonligOppmøteType } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
@@ -116,8 +120,9 @@ const toPersonligOppmøteStatus = (formData: FormData): Nullable<PersonligOppmø
 const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
+    const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
 
-    const updateBehandlingsinformasjon = (personligOppmøte: PersonligOppmøteType) => {
+    const updateBehandlingsinformasjon = (personligOppmøte: PersonligOppmøteType) =>
         dispatch(
             lagreBehandlingsinformasjon({
                 sakId: props.sakId,
@@ -127,21 +132,26 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                 },
             })
         );
-    };
 
     const formik = useFormik<FormData>({
         initialValues: getInitialFormValues(
             props.behandling.behandlingsinformasjon.personligOppmøte,
             props.behandling.søknad.søknadInnhold.forNav.harFullmektigEllerVerge
         ),
-        onSubmit(values) {
+        async onSubmit(values) {
             const personligOppmøte = toPersonligOppmøteStatus(values);
             if (!personligOppmøte) {
                 return;
             }
 
-            updateBehandlingsinformasjon({ status: personligOppmøte, begrunnelse: values.begrunnelse });
-            history.push(props.nesteUrl);
+            const res = await updateBehandlingsinformasjon({
+                status: personligOppmøte,
+                begrunnelse: values.begrunnelse,
+            });
+
+            if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+                history.push(props.nesteUrl);
+            }
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -210,6 +220,15 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                             value={formik.values.begrunnelse ?? ''}
                             onChange={formik.handleChange}
                         />
+                        {pipe(
+                            lagreBehandlingsinformasjonStatus,
+                            RemoteData.fold(
+                                () => null,
+                                () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
+                                () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
+                                () => null
+                            )
+                        )}
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);

@@ -1,12 +1,16 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Input, Textarea, Checkbox } from 'nav-frontend-skjema';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FormueStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
@@ -109,6 +113,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const { formue } = props.behandling.søknad.søknadInnhold;
+    const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
 
     const formik = useFormik<FormData>({
         initialValues: {
@@ -125,8 +130,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             status: FormueStatus.Ok,
             begrunnelse: props.behandling.behandlingsinformasjon.formue?.begrunnelse ?? null,
         },
-        onSubmit(values) {
-            dispatch(
+        async onSubmit(values) {
+            const res = await dispatch(
                 lagreBehandlingsinformasjon({
                     sakId: props.sakId,
                     behandlingId: props.behandling.id,
@@ -145,7 +150,10 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                     },
                 })
             );
-            history.push(props.nesteUrl);
+
+            if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+                history.push(props.nesteUrl);
+            }
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -271,6 +279,15 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             onChange={formik.handleChange}
                             feil={formik.errors.begrunnelse}
                         />
+                        {pipe(
+                            lagreBehandlingsinformasjonStatus,
+                            RemoteData.fold(
+                                () => null,
+                                () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
+                                () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
+                                () => null
+                            )
+                        )}
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);

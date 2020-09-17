@@ -1,12 +1,16 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
@@ -15,6 +19,7 @@ import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import styles from './LovligOppholdINorge.module.less';
+
 interface FormData {
     status: Nullable<LovligOppholdStatus>;
     begrunnelse: Nullable<string>;
@@ -93,6 +98,7 @@ function createFaktaBlokkObject(oppholdstillatelsePair: Nullable<boolean | strin
 const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+    const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
 
     const formik = useFormik<FormData>({
         initialValues: {
@@ -104,10 +110,10 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                     : LovligOppholdStatus.VilkårIkkeOppfylt),
             begrunnelse: props.behandling.behandlingsinformasjon.lovligOpphold?.begrunnelse ?? null,
         },
-        onSubmit(values) {
+        async onSubmit(values) {
             if (!values.status) return;
 
-            dispatch(
+            const res = await dispatch(
                 lagreBehandlingsinformasjon({
                     sakId: props.sakId,
                     behandlingId: props.behandling.id,
@@ -121,7 +127,9 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 })
             );
 
-            history.push(props.nesteUrl);
+            if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+                history.push(props.nesteUrl);
+            }
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -184,6 +192,15 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             }}
                             feil={formik.errors.begrunnelse}
                         />
+                        {pipe(
+                            lagreBehandlingsinformasjonStatus,
+                            RemoteData.fold(
+                                () => null,
+                                () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
+                                () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
+                                () => null
+                            )
+                        )}
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);

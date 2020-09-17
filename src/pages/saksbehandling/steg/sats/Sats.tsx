@@ -1,5 +1,8 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Textarea } from 'nav-frontend-skjema';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -7,9 +10,10 @@ import { Sats as FaktiskSats } from '~/types/Sats';
 import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { DelerBoligMed } from '~features/søknad/types';
+import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Bosituasjon } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
@@ -94,6 +98,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = useState(false);
+    const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
 
     const eksisterende = props.behandling.behandlingsinformasjon.bosituasjon;
     const søknad = props.behandling.søknad.søknadInnhold;
@@ -109,18 +114,20 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
-        onSubmit: (values) => {
-            handleSave(values);
-            history.push(props.nesteUrl);
+        async onSubmit(values) {
+            const res = await handleSave(values);
+            if (res && lagreBehandlingsinformasjon.fulfilled.match(res)) {
+                history.push(props.nesteUrl);
+            }
         },
     });
 
-    const handleSave = async (values: FormData) => {
+    const handleSave = (values: FormData) => {
         const v = toBosituasjon(values);
         if (!v) {
             return;
         }
-        await dispatch(
+        return dispatch(
             lagreBehandlingsinformasjon({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
@@ -271,6 +278,15 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                             feil={formik.errors.begrunnelse}
                             onChange={formik.handleChange}
                         />
+                        {pipe(
+                            lagreBehandlingsinformasjonStatus,
+                            RemoteData.fold(
+                                () => null,
+                                () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
+                                () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
+                                () => null
+                            )
+                        )}
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
