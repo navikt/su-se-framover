@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
+import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -15,9 +16,11 @@ import { FormueStatus, Formue, Behandlingsinformasjon } from '~types/Behandlings
 import { SøknadInnhold } from '~types/Søknad';
 
 import Faktablokk from '../Faktablokk';
+import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
+import messages from './formue-nb';
 import styles from './formue.module.less';
 
 const FormueInput = (props: {
@@ -141,6 +144,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const søknadInnhold = props.behandling.søknad.søknadInnhold;
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const formik = useFormik<FormData>({
         initialValues: setInitialValues(behandlingsInfo, søknadInnhold),
@@ -184,7 +188,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     }, [søknadInnhold.formue]);
 
     return (
-        <Vurdering tittel="Formue">
+        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <form
@@ -194,7 +198,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         }}
                     >
                         <FormueInput
-                            tittel="Verdi boliger som ikke er primærbolig"
+                            tittel={intl.formatMessage({ id: 'input.label.verdiIkkePrimærBolig' })}
                             className={styles.formueInput}
                             inputName="verdiIkkePrimærbolig"
                             defaultValues={formik.values.verdiIkkePrimærbolig}
@@ -202,7 +206,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             feil={formik.errors.verdiIkkePrimærbolig}
                         />
                         <FormueInput
-                            tittel="Verdi bil(sekundær), campingvogn eller kjøretøy"
+                            tittel={intl.formatMessage({ id: 'input.label.verdiKjøretøy' })}
                             className={styles.formueInput}
                             inputName="verdiKjøretøy"
                             defaultValues={formik.values.verdiKjøretøy}
@@ -210,7 +214,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             feil={formik.errors.verdiKjøretøy}
                         />
                         <FormueInput
-                            tittel="Innskudd på konto (inkludert depositumskonto)"
+                            tittel={intl.formatMessage({ id: 'input.label.inskuddPåKonto' })}
                             className={styles.formueInput}
                             inputName="innskudd"
                             defaultValues={formik.values.innskudd}
@@ -218,7 +222,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             feil={formik.errors.innskudd}
                         />
                         <FormueInput
-                            tittel="Verdipapirer, aksjefond ++"
+                            tittel={intl.formatMessage({ id: 'input.label.verdipapir' })}
                             className={styles.formueInput}
                             inputName="verdipapir"
                             defaultValues={formik.values.verdipapir}
@@ -226,7 +230,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             feil={formik.errors.verdipapir}
                         />
                         <FormueInput
-                            tittel="Skylder noen søker penger?"
+                            tittel={intl.formatMessage({ id: 'input.label.skylderNoenSøkerPenger' })}
                             className={styles.formueInput}
                             inputName="pengerSkyldt"
                             defaultValues={formik.values.pengerSkyldt}
@@ -234,7 +238,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             feil={formik.errors.pengerSkyldt}
                         />
                         <FormueInput
-                            tittel="Kontanter over 1000"
+                            tittel={intl.formatMessage({ id: 'input.label.kontanterOver1000' })}
                             className={styles.formueInput}
                             inputName="kontanter"
                             defaultValues={formik.values.kontanter}
@@ -242,7 +246,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             feil={formik.errors.kontanter}
                         />
                         <FormueInput
-                            tittel="Depositumskonto"
+                            tittel={intl.formatMessage({ id: 'input.label.depositumskonto' })}
                             className={styles.formueInput}
                             inputName="depositumskonto"
                             defaultValues={formik.values.depositumskonto}
@@ -251,20 +255,23 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         />
 
                         <div className={styles.totalFormueContainer}>
-                            <p className={styles.totalFormue}>Totalt: {totalFormue}</p>
+                            <p className={styles.totalFormue}>
+                                {intl.formatMessage({ id: 'display.totalt' })} {totalFormue}
+                            </p>
 
                             {totalFormue > 500 ? (
                                 <div>
                                     <p className={styles.vilkårOppfyltText}>
-                                        Søker har mer enn 500 kroner i formue. Søker får dermed ikke Supplerende
-                                        Stønad(TODO)
+                                        {intl.formatMessage({ id: 'display.vilkårIkkeOppfylt' })}
                                     </p>
                                     <hr></hr>
                                     <hr></hr>
                                 </div>
                             ) : (
                                 <div>
-                                    <p className={styles.vilkårOppfyltText}>Oppfylt vilkår, formue under 0.5G(TODO)</p>
+                                    <p className={styles.vilkårOppfyltText}>
+                                        {intl.formatMessage({ id: 'display.vilkårOppfylt' })}
+                                    </p>
                                     <hr></hr>
                                     <hr></hr>
                                 </div>
@@ -272,7 +279,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         </div>
 
                         <Checkbox
-                            label={'Må innhente mer informasjon'}
+                            label={intl.formatMessage({ id: 'checkbox.henteMerInfo' })}
                             name="status"
                             className={styles.henteMerInfoCheckbox}
                             checked={formik.values.status === FormueStatus.MåInnhenteMerInformasjon}
@@ -287,12 +294,13 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             }}
                         />
                         <Textarea
-                            label="Begrunnelse"
+                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
                             name="begrunnelse"
                             value={formik.values.begrunnelse || ''}
                             onChange={formik.handleChange}
                             feil={formik.errors.begrunnelse}
                         />
+
                         {pipe(
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(
@@ -333,42 +341,42 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                 right: (
                     <div>
                         <Faktablokk
-                            tittel="Fra søknad"
+                            tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
                             faktaBlokkerClassName={styles.formueFaktaBlokk}
                             fakta={[
                                 {
-                                    tittel: 'Verdi på bolig',
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.verdiPåBolig' }),
                                     verdi: søknadInnhold.formue.verdiPåBolig?.toString() ?? '0',
                                 },
                                 {
-                                    tittel: 'Verdi på eiendom',
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.verdiPåEiendom' }),
                                     verdi: søknadInnhold.formue.verdiPåEiendom?.toString() ?? '0',
                                 },
                                 {
-                                    tittel: 'Kjøretøy',
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.kjøretøy' }),
                                     verdi:
                                         søknadInnhold.formue.kjøretøy
                                             ?.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0)
                                             .toString() ?? '0',
                                 },
                                 {
-                                    tittel: 'Innskuddsbeløp',
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.innskuddsbeløp' }),
                                     verdi: søknadInnhold.formue.innskuddsBeløp?.toString() ?? '0',
                                 },
                                 {
-                                    tittel: 'Verdipapirbeløp',
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.verdipapirbeløp' }),
                                     verdi: søknadInnhold.formue.verdipapirBeløp?.toString() ?? '0',
                                 },
                                 {
-                                    tittel: 'Kontanter',
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.kontanter' }),
                                     verdi: søknadInnhold.formue.kontanterBeløp?.toString() ?? '0',
                                 },
                                 {
-                                    tittel: 'SkylderNoenMegPengerBeløp',
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.skylderNoenSøkerPengerBeløp' }),
                                     verdi: søknadInnhold.formue.skylderNoenMegPengerBeløp?.toString() ?? '0',
                                 },
                                 {
-                                    tittel: 'Depositumskonto',
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.depositumskonto' }),
                                     verdi: søknadInnhold.formue.depositumsBeløp?.toString() ?? '0',
                                 },
                             ]}

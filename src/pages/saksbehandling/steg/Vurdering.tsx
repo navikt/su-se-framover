@@ -43,7 +43,7 @@ export const Vurderingknapper = (props: {
                     </Hovedknapp>
                 </div>
                 <Knapp onClick={props.onLagreOgFortsettSenereClick} htmlType="button">
-                    {intl.formatMessage({ id: 'knapp.lagreOgFortsettSenere' })}
+                    {intl.formatMessage({ id: 'knapp.lagreOgfortsettSenere' })}
                 </Knapp>
             </div>
         </RawIntlProvider>

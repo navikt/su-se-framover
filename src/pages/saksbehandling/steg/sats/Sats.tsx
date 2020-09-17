@@ -4,6 +4,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
+import { RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { Sats as FaktiskSats } from '~/types/Sats';
@@ -11,14 +12,18 @@ import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { DelerBoligMed } from '~features/søknad/types';
 import { pipe } from '~lib/fp';
+import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Bosituasjon } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
+import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
+
+import messages from './sats-nb';
 
 interface FormData {
     delerSøkerBolig: Nullable<boolean>;
@@ -99,6 +104,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const eksisterende = props.behandling.behandlingsinformasjon.bosituasjon;
     const søknad = props.behandling.søknad.søknadInnhold;
@@ -175,162 +181,209 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     };
 
     return (
-        <Vurdering tittel="Sats">
+        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
-                    <form
-                        onSubmit={(e) => {
-                            setHasSubmitted(true);
-                            formik.handleSubmit(e);
-                        }}
-                    >
-                        <SuperRadioGruppe
-                            legend="Deler søker bolig med noen over 18 år?"
-                            values={formik.values}
-                            errors={formik.errors}
-                            property="delerSøkerBolig"
-                            onChange={handleChange}
-                            options={[
-                                {
-                                    label: 'Ja',
-                                    radioValue: true,
-                                },
-                                {
-                                    label: 'Nei',
-                                    radioValue: false,
-                                },
-                            ]}
-                        />
-                        {formik.values.delerSøkerBolig && (
+                    <RawIntlProvider value={intl}>
+                        <form
+                            onSubmit={(e) => {
+                                setHasSubmitted(true);
+                                formik.handleSubmit(e);
+                            }}
+                        >
                             <SuperRadioGruppe
-                                legend="Hvem deler søker bolig med?"
+                                legend={intl.formatMessage({ id: 'radio.delerSøkerBoligOver18.legend' })}
                                 values={formik.values}
                                 errors={formik.errors}
+                                property="delerSøkerBolig"
                                 onChange={handleChange}
-                                property="delerBoligMedHvem"
                                 options={[
                                     {
-                                        label: 'Ektemake eller samboer',
-                                        radioValue: DelerBoligMed.EKTEMAKE_SAMBOER,
-                                    },
-                                    {
-                                        label: 'Voksne barn',
-                                        radioValue: DelerBoligMed.VOKSNE_BARN,
-                                    },
-                                    {
-                                        label: 'Annen voksen',
-                                        radioValue: DelerBoligMed.ANNEN_VOKSEN,
-                                    },
-                                ]}
-                            />
-                        )}
-                        {formik.values.delerBoligMedHvem === DelerBoligMed.EKTEMAKE_SAMBOER && (
-                            <SuperRadioGruppe
-                                legend="Er ektemake eller samboer under 67 år?"
-                                values={formik.values}
-                                errors={formik.errors}
-                                onChange={handleChange}
-                                property="erEktemakeEllerSamboerUnder67"
-                                options={[
-                                    {
-                                        label: 'Ja',
+                                        label: intl.formatMessage({ id: 'radio.label.ja' }),
                                         radioValue: true,
                                     },
                                     {
-                                        label: 'Nei',
+                                        label: intl.formatMessage({ id: 'radio.label.nei' }),
                                         radioValue: false,
                                     },
                                 ]}
                             />
-                        )}
+                            {formik.values.delerSøkerBolig && (
+                                <SuperRadioGruppe
+                                    legend={intl.formatMessage({ id: 'radio.hvemDelerSøkerBoligMed.legend' })}
+                                    values={formik.values}
+                                    errors={formik.errors}
+                                    onChange={handleChange}
+                                    property="delerBoligMedHvem"
+                                    options={[
+                                        {
+                                            label: intl.formatMessage({
+                                                id: 'radio.label.ektemakeEllerSamboer',
+                                            }),
+                                            radioValue: DelerBoligMed.EKTEMAKE_SAMBOER,
+                                        },
+                                        {
+                                            label: intl.formatMessage({
+                                                id: 'radio.label.voksneBarn',
+                                            }),
+                                            radioValue: DelerBoligMed.VOKSNE_BARN,
+                                        },
+                                        {
+                                            label: intl.formatMessage({
+                                                id: 'radio.label.annenVoksen',
+                                            }),
+                                            radioValue: DelerBoligMed.ANNEN_VOKSEN,
+                                        },
+                                    ]}
+                                />
+                            )}
+                            {formik.values.delerBoligMedHvem === DelerBoligMed.EKTEMAKE_SAMBOER && (
+                                <SuperRadioGruppe
+                                    legend={intl.formatMessage({ id: 'radio.ektemakeEllerSamboerUnder67år.legend' })}
+                                    values={formik.values}
+                                    errors={formik.errors}
+                                    onChange={handleChange}
+                                    property="erEktemakeEllerSamboerUnder67"
+                                    options={[
+                                        {
+                                            label: intl.formatMessage({
+                                                id: 'radio.label.ja',
+                                            }),
+                                            radioValue: true,
+                                        },
+                                        {
+                                            label: intl.formatMessage({
+                                                id: 'radio.label.nei',
+                                            }),
+                                            radioValue: false,
+                                        },
+                                    ]}
+                                />
+                            )}
 
-                        {formik.values.erEktemakeEllerSamboerUnder67 === true && (
-                            <SuperRadioGruppe
-                                legend="Mottar ektemake eller samboer supplerende stønad for uføre flyktninger?"
-                                values={formik.values}
-                                errors={formik.errors}
-                                onChange={handleChange}
-                                property="mottarEktemakeEllerSamboerSU"
-                                options={[
-                                    {
-                                        label: 'Ja',
-                                        radioValue: true,
-                                    },
-                                    {
-                                        label: 'Nei',
-                                        radioValue: false,
-                                    },
-                                ]}
+                            {formik.values.erEktemakeEllerSamboerUnder67 === true && (
+                                <SuperRadioGruppe
+                                    legend={intl.formatMessage({
+                                        id: 'radio.ektemakeEllerSamboerUførFlyktning.legend',
+                                    })}
+                                    values={formik.values}
+                                    errors={formik.errors}
+                                    onChange={handleChange}
+                                    property="mottarEktemakeEllerSamboerSU"
+                                    options={[
+                                        {
+                                            label: intl.formatMessage({
+                                                id: 'radio.label.ja',
+                                            }),
+                                            radioValue: true,
+                                        },
+                                        {
+                                            label: intl.formatMessage({
+                                                id: 'radio.label.nei',
+                                            }),
+                                            radioValue: false,
+                                        },
+                                    ]}
+                                />
+                            )}
+                            {utledSats(formik.values) && (
+                                <>
+                                    <hr />
+                                    <span>
+                                        {intl.formatMessage({
+                                            id: 'display.sats',
+                                        })}{' '}
+                                        {utledSats(formik.values)}
+                                    </span>
+                                    <hr />
+                                    <hr />
+                                </>
+                            )}
+                            <Textarea
+                                label={intl.formatMessage({
+                                    id: 'input.label.begrunnelse',
+                                })}
+                                name="begrunnelse"
+                                value={formik.values.begrunnelse ?? ''}
+                                feil={formik.errors.begrunnelse}
+                                onChange={formik.handleChange}
                             />
-                        )}
-                        {utledSats(formik.values) && (
-                            <>
-                                <hr />
-                                <span>Sats: {utledSats(formik.values)}</span>
-                                <hr />
-                                <hr />
-                            </>
-                        )}
-                        <Textarea
-                            label="Begrunnelse"
-                            name="begrunnelse"
-                            value={formik.values.begrunnelse ?? ''}
-                            feil={formik.errors.begrunnelse}
-                            onChange={formik.handleChange}
-                        />
-                        {pipe(
-                            lagreBehandlingsinformasjonStatus,
-                            RemoteData.fold(
-                                () => null,
-                                () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
-                                () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
-                                () => null
-                            )
-                        )}
-                        <Vurderingknapper
-                            onTilbakeClick={() => {
-                                history.push(props.forrigeUrl);
-                            }}
-                            onLagreOgFortsettSenereClick={() => {
-                                handleSave(formik.values);
-                            }}
-                        />
-                    </form>
+                            {pipe(
+                                lagreBehandlingsinformasjonStatus,
+                                RemoteData.fold(
+                                    () => null,
+                                    () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
+                                    () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
+                                    () => null
+                                )
+                            )}
+                            <Vurderingknapper
+                                onTilbakeClick={() => {
+                                    history.push(props.forrigeUrl);
+                                }}
+                                onLagreOgFortsettSenereClick={() => {
+                                    handleSave(formik.values);
+                                }}
+                            />
+                        </form>
+                    </RawIntlProvider>
                 ),
                 right: (
                     <Faktablokk
-                        tittel="Fra søknad"
+                        tittel={intl.formatMessage({
+                            id: 'display.fraSøknad',
+                        })}
                         fakta={[
                             {
-                                tittel: 'Har oppholdstillatelse?',
+                                tittel: intl.formatMessage({
+                                    id: 'display.fraSøknad.harOppholdstillatelse',
+                                }),
                                 verdi: props.behandling.søknad.søknadInnhold.boforhold.delerBoligMedVoksne
-                                    ? 'Ja'
-                                    : 'Nei',
+                                    ? intl.formatMessage({
+                                          id: 'radio.label.ja',
+                                      })
+                                    : intl.formatMessage({
+                                          id: 'radio.label.nei',
+                                      }),
                             },
                             {
-                                tittel: 'Hvem deler søker bolig med?',
+                                tittel: intl.formatMessage({
+                                    id: 'display.fraSøknad.hvemDelerSøkerBoligMed',
+                                }),
                                 verdi: props.behandling.søknad.søknadInnhold.boforhold.delerBoligMed ?? '-',
                             },
                             {
-                                tittel: 'Er ektemake eller samboer under 67 år?',
+                                tittel: intl.formatMessage({
+                                    id: 'display.fraSøknad.ektemakeEllerSamboerUnder67år',
+                                }),
                                 verdi:
                                     props.behandling.søknad.søknadInnhold.boforhold.ektemakeEllerSamboerUnder67År ===
                                     null
                                         ? '-'
                                         : props.behandling.søknad.søknadInnhold.boforhold.ektemakeEllerSamboerUnder67År
-                                        ? 'Ja'
-                                        : 'Nei',
+                                        ? intl.formatMessage({
+                                              id: 'radio.label.ja',
+                                          })
+                                        : intl.formatMessage({
+                                              id: 'radio.label.nei',
+                                          }),
                             },
                             {
-                                tittel: 'Mottar ektemake eller samboer supplerende stønad for uføre flyktninger?',
+                                tittel: intl.formatMessage({
+                                    id: 'display.fraSøknad.ektemakeEllerSamboerUførFlyktning',
+                                }),
                                 verdi:
                                     props.behandling.søknad.søknadInnhold.boforhold
                                         .ektemakeEllerSamboerUførFlyktning === null
                                         ? '-'
                                         : props.behandling.søknad.søknadInnhold.boforhold
                                               .ektemakeEllerSamboerUførFlyktning
-                                        ? 'Ja'
-                                        : 'Nei',
+                                        ? intl.formatMessage({
+                                              id: 'radio.label.ja',
+                                          })
+                                        : intl.formatMessage({
+                                              id: 'radio.label.nei',
+                                          }),
                             },
                         ]}
                     />

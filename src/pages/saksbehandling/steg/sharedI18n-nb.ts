@@ -2,8 +2,9 @@ export default {
     'display.fraSøknad': 'Fra søknad',
     'display.fraSøknad.ja': 'Ja',
     'display.fraSøknad.nei': 'Nei',
+    'display.fraSøknad.ikkeRegistert': 'Ikke registert fra søknad',
 
-    'input.begrunnelse.label': 'Begrunnelse',
+    'input.label.begrunnelse': 'Begrunnelse',
 
     'knapp.tilbake': 'Tilbake',
     'knapp.neste': 'Neste',
