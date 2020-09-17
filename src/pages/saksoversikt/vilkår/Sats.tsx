@@ -10,7 +10,7 @@ import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
-import { Satsinformasjon as BehandlingsinformasjonSats } from '~types/Behandlingsinformasjon';
+import { Bosituasjon } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from './Faktablokk';
 import { VilkårsvurderingBaseProps } from './types';
@@ -24,7 +24,7 @@ interface FormData {
     begrunnelse: Nullable<string>;
 }
 
-const toBehandlingsinformasjonSats = (values: FormData): Nullable<BehandlingsinformasjonSats> => {
+const toBosituasjon = (values: FormData): Nullable<Bosituasjon> => {
     if (values.delerSøkerBolig === null) {
         return null;
     }
@@ -95,7 +95,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
-    const eksisterende = props.behandling.behandlingsinformasjon.sats;
+    const eksisterende = props.behandling.behandlingsinformasjon.bosituasjon;
     const søknad = props.behandling.søknad.søknadInnhold;
     const formik = useFormik<FormData>({
         initialValues: {
@@ -116,7 +116,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     });
 
     const handleSave = async (values: FormData) => {
-        const v = toBehandlingsinformasjonSats(values);
+        const v = toBosituasjon(values);
         if (!v) {
             return;
         }
@@ -125,7 +125,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    sats: v,
+                    bosituasjon: v,
                 },
             })
         );

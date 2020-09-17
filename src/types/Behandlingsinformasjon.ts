@@ -10,7 +10,7 @@ export interface Behandlingsinformasjon {
     oppholdIUtlandet: Nullable<OppholdIUtlandet>;
     formue: Nullable<Formue>;
     personligOppmøte: Nullable<PersonligOppmøte>;
-    sats: Nullable<Satsinformasjon>;
+    bosituasjon: Nullable<Bosituasjon>;
     utledetSats: Nullable<Sats>;
 }
 
@@ -92,7 +92,7 @@ export enum PersonligOppmøteStatus {
     IkkeMøttOpp = 'IkkeMøttOpp',
 }
 
-export interface Satsinformasjon {
+export interface Bosituasjon {
     delerBolig: boolean;
     delerBoligMed: Nullable<DelerBoligMed>;
     ektemakeEllerSamboerUnder67År: Nullable<boolean>;
