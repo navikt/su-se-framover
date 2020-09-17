@@ -1,4 +1,5 @@
-import { Månedsberegning, SimulertPeriode } from '~api/behandlingApi';
+import { Månedsberegning } from '~types/Beregning';
+import { SimulertPeriode } from '~types/Simulering';
 
 export const groupMånedsberegninger = (månedsberegninger: Array<Månedsberegning>) => {
     return groupByKeyValue(månedsberegninger, 'beløp');

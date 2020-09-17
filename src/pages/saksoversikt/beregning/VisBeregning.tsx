@@ -4,10 +4,10 @@ import { Element, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
 import messages from '~/features/beregning/beregning-nb';
-import { Beregning } from '~api/behandlingApi';
 import { formatDateTime } from '~lib/dateUtils';
 import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
+import { Beregning } from '~types/Beregning';
 
 import { groupMånedsberegninger } from '../delt/arrayUtils';
 import { InfoLinje } from '../delt/Infolinje/Infolinje';

@@ -1,104 +1,12 @@
 import { formatISO } from 'date-fns';
 
-import { Nullable } from '~lib/types';
+import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
+import { Fradrag } from '~types/Fradrag';
+import { Sats } from '~types/Sats';
+import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
-import { Søknad } from './søknadApi';
-
-export enum VilkårVurderingStatus {
-    IkkeVurdert = 'IKKE_VURDERT',
-    Ok = 'OK',
-    IkkeOk = 'IKKE_OK',
-}
-
-export enum Vilkårtype {
-    Uførhet = 'UFØRHET',
-    Flyktning = 'FLYKTNING',
-    Oppholdstillatelse = 'OPPHOLDSTILLATELSE',
-    PersonligOppmøte = 'PERSONLIG_OPPMØTE',
-    Formue = 'FORMUE',
-    BorOgOppholderSegINorge = 'BOR_OG_OPPHOLDER_SEG_I_NORGE',
-    LovligOpphold = 'LOVLIG_OPPHOLD',
-    FastOppholdINorge = 'FAST_OPPHOLD_I_NORGE',
-    OppholdIUtlandet = 'OPPHOLD_I_UTLANDET',
-    Sats = 'SATS',
-    Beregning = 'BEREGNING',
-}
-
-export enum Sats {
-    Høy = 'HØY',
-    Lav = 'LAV',
-}
-
-export enum Fradragstype {
-    Uføretrygd = 'Uføretrygd',
-    Barnetillegg = 'Barnetillegg',
-    Arbeidsinntekt = 'Arbeidsinntekt',
-    Pensjon = 'Pensjon',
-    Kapitalinntekt = 'Kapitalinntekt',
-    AndreYtelser = 'AndreYtelser',
-}
-
-export interface Fradrag {
-    type: Fradragstype;
-    beløp: number;
-    beskrivelse: Nullable<string>;
-}
-
-export interface Beregning {
-    id: string;
-    opprettet: string;
-    sats: Sats;
-    fom: string;
-    tom: string;
-    månedsberegninger: Array<Månedsberegning>;
-    fradrag: Array<Fradrag>;
-}
-
-export interface Månedsberegning {
-    id: string;
-    sats: Sats;
-    beløp: number;
-    grunnbeløp: number;
-    fom: string;
-    tom: string;
-    fradrag: number;
-}
-
-export interface Vilkårsvurdering {
-    id: string;
-    begrunnelse: string;
-    status: VilkårVurderingStatus;
-}
-
-export type Vilkårsvurderinger = {
-    [key in Vilkårtype]: Vilkårsvurdering;
-};
-
-export interface Behandling {
-    id: string;
-    søknad: Søknad;
-    vilkårsvurderinger: Vilkårsvurderinger;
-    behandlingsinformasjon: Behandlingsinformasjon;
-    beregning: Nullable<Beregning>;
-    status: Behandlingsstatus;
-    utbetaling: Nullable<Utbetaling>;
-    opprettet: string;
-    attestant: Nullable<string>;
-}
-
-export enum Behandlingsstatus {
-    OPPRETTET = 'OPPRETTET',
-    VILKÅRSVURDERT_INNVILGET = 'VILKÅRSVURDERT_INNVILGET',
-    VILKÅRSVURDERT_AVSLAG = 'VILKÅRSVURDERT_AVSLAG',
-    BEREGNET = 'BEREGNET',
-    SIMULERT = 'SIMULERT',
-    TIL_ATTESTERING_INNVILGET = 'TIL_ATTESTERING_INNVILGET',
-    TIL_ATTESTERING_AVSLAG = 'TIL_ATTESTERING_AVSLAG',
-    IVERKSATT_INNVILGET = 'IVERKSATT_INNVILGET',
-    IVERKSATT_AVSLAG = 'IVERKSATT_AVSLAG',
-}
 
 export function tilAttestering(behandling: Behandling): boolean {
     return (
@@ -122,23 +30,6 @@ export function avslag(behandling: Behandling): boolean {
             (status) => behandling.status === status
         )
     );
-}
-
-export interface Utbetaling {
-    id: string;
-    opprettet: string;
-    simulering: Simulering;
-}
-
-export interface Simulering {
-    totalBruttoYtelse: number;
-    perioder: SimulertPeriode[];
-}
-
-export interface SimulertPeriode {
-    fom: string;
-    tom: string;
-    bruttoYtelse: number;
 }
 
 export async function startBehandling(arg: { sakId: string; søknadId: string }): Promise<ApiClientResult<Behandling>> {

@@ -3,12 +3,16 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ErrorCode, ApiError } from '~api/apiClient';
 import * as behandlingApi from '~api/behandlingApi';
-import { Sats } from '~api/behandlingApi';
 import * as sakApi from '~api/sakApi';
 import { pipe } from '~lib/fp';
+import { Behandling } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
+import { Fradrag } from '~types/Fradrag';
+import { Sak } from '~types/Sak';
+import { Sats } from '~types/Sats';
+import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
-export const fetchSak = createAsyncThunk<sakApi.Sak, { fnr: string } | { sakId: string }, { rejectValue: ApiError }>(
+export const fetchSak = createAsyncThunk<Sak, { fnr: string } | { sakId: string }, { rejectValue: ApiError }>(
     'sak/fetch',
     async (arg, thunkApi) => {
         const res = await ('fnr' in arg ? sakApi.fetchSakByFnr(arg.fnr) : sakApi.fetchSakBySakId(arg.sakId));
@@ -20,7 +24,7 @@ export const fetchSak = createAsyncThunk<sakApi.Sak, { fnr: string } | { sakId: 
 );
 
 export const startBehandling = createAsyncThunk<
-    behandlingApi.Behandling,
+    Behandling,
     { sakId: string; søknadId: string },
     { rejectValue: ApiError }
 >('behandling/start', async ({ sakId, søknadId }, thunkApi) => {
@@ -32,7 +36,7 @@ export const startBehandling = createAsyncThunk<
 });
 
 export const fetchBehandling = createAsyncThunk<
-    behandlingApi.Behandling,
+    Behandling,
     { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
 >('behandling/fetch', async ({ sakId, behandlingId }, thunkApi) => {
@@ -44,13 +48,13 @@ export const fetchBehandling = createAsyncThunk<
 });
 
 export const lagreVilkårsvurdering = createAsyncThunk<
-    behandlingApi.Behandling,
+    Behandling,
     {
         sakId: string;
         behandlingId: string;
         vilkårsvurderingId: string;
-        vilkårtype: behandlingApi.Vilkårtype;
-        status: behandlingApi.VilkårVurderingStatus;
+        vilkårtype: Vilkårtype;
+        status: VilkårVurderingStatus;
         begrunnelse: string;
     },
     { rejectValue: ApiError }
@@ -63,7 +67,7 @@ export const lagreVilkårsvurdering = createAsyncThunk<
 });
 
 export const lagreBehandlingsinformasjon = createAsyncThunk<
-    behandlingApi.Behandling,
+    Behandling,
     {
         sakId: string;
         behandlingId: string;
@@ -79,8 +83,8 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
 });
 
 export const startBeregning = createAsyncThunk<
-    behandlingApi.Behandling,
-    { sakId: string; behandlingId: string; sats: Sats; fom: Date; tom: Date; fradrag: behandlingApi.Fradrag[] },
+    Behandling,
+    { sakId: string; behandlingId: string; sats: Sats; fom: Date; tom: Date; fradrag: Fradrag[] },
     { rejectValue: ApiError }
 >('beregning/start', async ({ sakId, behandlingId, sats, fom, tom, fradrag }, thunkApi) => {
     const res = await behandlingApi.startBeregning(sakId, behandlingId, { sats, fom, tom, fradrag });
@@ -91,7 +95,7 @@ export const startBeregning = createAsyncThunk<
 });
 
 export const startSimulering = createAsyncThunk<
-    behandlingApi.Behandling,
+    Behandling,
     { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
 >('simulering/start', async ({ sakId, behandlingId }, thunkApi) => {
@@ -103,7 +107,7 @@ export const startSimulering = createAsyncThunk<
 });
 
 export const sendTilAttestering = createAsyncThunk<
-    behandlingApi.Behandling,
+    Behandling,
     { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
 >('behandling/tilAttestering', async ({ sakId, behandlingId }, thunkApi) => {
@@ -115,7 +119,7 @@ export const sendTilAttestering = createAsyncThunk<
 });
 
 export const startAttestering = createAsyncThunk<
-    behandlingApi.Behandling,
+    Behandling,
     { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
 >('behandling/iverksett', async ({ sakId, behandlingId }, thunkApi) => {
@@ -132,7 +136,7 @@ interface SakState {
             code: ErrorCode;
             message: string;
         },
-        sakApi.Sak
+        Sak
     >;
     startBehandlingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;

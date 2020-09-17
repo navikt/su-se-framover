@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 
-import { Vilkårtype } from '~api/behandlingApi';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import { SaksbehandlingMenyvalg } from '../pages/saksoversikt/types';
 import { Søknadsteg } from '../pages/søknad/types';

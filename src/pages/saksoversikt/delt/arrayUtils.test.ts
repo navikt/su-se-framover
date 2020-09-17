@@ -1,4 +1,5 @@
-import { Månedsberegning, Sats } from '~api/behandlingApi';
+import { Månedsberegning } from '~types/Beregning';
+import { Sats } from '~types/Sats';
 
 import { groupMånedsberegninger } from './arrayUtils';
 

@@ -8,16 +8,8 @@ import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useState } from 'react';
 
 import * as Routes from '~/lib/routes';
-import {
-    Behandling,
-    Vilkårsvurdering,
-    Vilkårtype,
-    avslag,
-    tilAttestering,
-    VilkårVurderingStatus,
-} from '~api/behandlingApi';
+import { avslag, tilAttestering } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
-import { Sak } from '~api/sakApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import FeatureToggles from '~lib/featureToggles';
@@ -27,6 +19,9 @@ import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/
 import VisBeregning from '~pages/saksoversikt/beregning/VisBeregning';
 import { Simulering } from '~pages/saksoversikt/simulering/simulering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
+import { Behandling } from '~types/Behandling';
+import { Sak } from '~types/Sak';
+import { Vilkårtype, Vilkårsvurdering, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import messages from './attestering-nb';
 import styles from './attestering.module.less';

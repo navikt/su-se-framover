@@ -5,9 +5,9 @@ import { SkjemaGruppe, Select, Input } from 'nav-frontend-skjema';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
-import { Fradrag, Fradragstype } from '~api/behandlingApi';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
+import { Fradrag, Fradragstype } from '~types/Fradrag';
 
 import styles from './beregning.module.less';
 

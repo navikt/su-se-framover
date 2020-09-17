@@ -5,12 +5,13 @@ import { Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Behandling, Vilkårtype, VilkårVurderingStatus, Behandlingsstatus } from '~api/behandlingApi';
-import { Sak } from '~api/sakApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import * as routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Behandling, Behandlingsstatus } from '~types/Behandling';
+import { Sak } from '~types/Sak';
+import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import { SaksbehandlingMenyvalg } from '../types';
 import Vilkårsvurdering from '../vilkårsvurdering/Vilkårsvurdering';

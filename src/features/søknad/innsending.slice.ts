@@ -5,15 +5,16 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ErrorCode, ApiError } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import * as søknadApi from '~api/søknadApi';
+import { SøknadInnhold } from '~types/Søknad';
 
 import { SøknadState } from './søknad.slice';
 
 export const sendSøknad = createAsyncThunk<
-    søknadApi.SøknadInnhold,
+    SøknadInnhold,
     { søknad: SøknadState; søker: personApi.Person },
     { rejectValue: ApiError }
 >('innsending/fetch', async ({ søknad, søker }, thunkApi) => {
-    const søknadDto: søknadApi.SøknadInnhold = {
+    const søknadDto: SøknadInnhold = {
         personopplysninger: {
             fnr: søker.fnr,
         },

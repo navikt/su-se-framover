@@ -3,12 +3,12 @@ import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { SøknadInnhold } from '~api/søknadApi';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';
+import { SøknadInnhold } from '~types/Søknad';
 
 import Faktablokk from './Faktablokk';
 import styles from './LovligOppholdINorge.module.less';

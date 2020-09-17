@@ -3,7 +3,7 @@ import { Textarea } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Sats as FaktiskSats } from '~api/behandlingApi';
+import { Sats as FaktiskSats } from '~/types/Sats';
 import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { DelerBoligMed } from '~features/søknad/types';
