@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
-import { SaksbehandlingMenyvalg } from '../pages/saksoversikt/types';
+import { SaksbehandlingMenyvalg } from '../pages/saksbehandling/types';
 import { Søknadsteg } from '../pages/søknad/types';
 
 interface Route<T> {

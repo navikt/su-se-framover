@@ -11,9 +11,9 @@ import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { PersonligOppmøteStatus, PersonligOppmøte as PersonligOppmøteType } from '~types/Behandlingsinformasjon';
 
-import Faktablokk from './Faktablokk';
-import { VilkårsvurderingBaseProps } from './types';
-import { Vurdering, Vurderingknapper } from './Vurdering';
+import Faktablokk from '../Faktablokk';
+import { VilkårsvurderingBaseProps } from '../types';
+import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 enum MøttPersonlig {
     Ja = 'Ja',

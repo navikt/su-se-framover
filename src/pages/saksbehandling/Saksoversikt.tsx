@@ -23,11 +23,11 @@ import Beregning from './beregning/Beregning';
 import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
+import Vilkår from './steg/Vilkår';
+import VilkårV2 from './steg/VilkårV2';
 import Søkefelt from './søkefelt/Søkefelt';
 import { SaksbehandlingMenyvalg } from './types';
 import Vedtak from './vedtak/Vedtak';
-import Vilkår from './vilkår/Vilkår';
-import VilkårV2 from './vilkår/VilkårV2';
 
 const Meny = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();

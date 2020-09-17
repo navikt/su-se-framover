@@ -19,12 +19,12 @@ import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
-import VisBeregning from '../beregning/VisBeregning';
+import VisBeregning from '../../beregning/VisBeregning';
+import Faktablokk from '../Faktablokk';
+import { VilkårsvurderingBaseProps } from '../types';
+import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import styles from './beregning.module.less';
-import Faktablokk from './Faktablokk';
-import { VilkårsvurderingBaseProps } from './types';
-import { Vurdering, Vurderingknapper } from './Vurdering';
 
 interface FormData {
     fom: Nullable<Date>;

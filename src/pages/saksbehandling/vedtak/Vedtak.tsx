@@ -13,9 +13,9 @@ import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~f
 import FeatureToggles from '~lib/featureToggles';
 import * as routes from '~lib/routes.ts';
 import { Nullable } from '~lib/types';
-import VisBeregning from '~pages/saksoversikt/beregning/VisBeregning';
-import { Simulering } from '~pages/saksoversikt/simulering/simulering';
-import { SaksbehandlingMenyvalg } from '~pages/saksoversikt/types';
+import VisBeregning from '~pages/saksbehandling/beregning/VisBeregning';
+import { Simulering } from '~pages/saksbehandling/simulering/simulering';
+import { SaksbehandlingMenyvalg } from '~pages/saksbehandling/types';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Sak } from '~types/Sak';

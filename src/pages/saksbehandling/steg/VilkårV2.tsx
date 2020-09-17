@@ -6,16 +6,16 @@ import { Behandlingsstatus } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
-import Beregning from './Beregning';
-import FastOppholdINorge from './FastOppholdINorge';
-import Flyktning from './Flyktning';
-import Formue from './Formue';
+import Beregning from './beregning/Beregning';
+import FastOppholdINorge from './fast-opphold-i-norge/FastOppholdINorge';
+import Flyktning from './flyktning/Flyktning';
+import Formue from './formue/Formue';
 import Framdriftsindikator from './Framdriftsindikator';
-import LovligOppholdINorge from './LovligOppholdINorge';
-import OppholdIUtlandet from './OppholdIUtlandet';
-import PersonligOppmøte from './PersonligOppmøte';
-import Sats from './Sats';
-import Uførhet from './Uførhet';
+import LovligOppholdINorge from './lovlig-opphold-i-norge/LovligOppholdINorge';
+import OppholdIUtlandet from './opphold-i-utlandet/OppholdIUtlandet';
+import PersonligOppmøte from './personlig-oppmøte/PersonligOppmøte';
+import Sats from './sats/Sats';
+import Uførhet from './uførhet/Uførhet';
 import styles from './v2.module.less';
 
 const Vilkår = (props: { sak: Sak }) => {

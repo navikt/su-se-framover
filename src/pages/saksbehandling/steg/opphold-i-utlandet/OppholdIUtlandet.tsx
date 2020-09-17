@@ -12,10 +12,11 @@ import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
 
-import Faktablokk from './Faktablokk';
+import Faktablokk from '../Faktablokk';
+import { VilkårsvurderingBaseProps } from '../types';
+import { Vurdering, Vurderingknapper } from '../Vurdering';
+
 import styles from './OppholdIUtland.module.less';
-import { VilkårsvurderingBaseProps } from './types';
-import { Vurdering, Vurderingknapper } from './Vurdering';
 
 interface FormData {
     status: Nullable<OppholdIUtlandetStatus>;

@@ -10,10 +10,11 @@ import { useAppDispatch } from '~redux/Store';
 import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
-import Faktablokk from './Faktablokk';
+import Faktablokk from '../Faktablokk';
+import { VilkårsvurderingBaseProps } from '../types';
+import { Vurdering, Vurderingknapper } from '../Vurdering';
+
 import styles from './LovligOppholdINorge.module.less';
-import { VilkårsvurderingBaseProps } from './types';
-import { Vurdering, Vurderingknapper } from './Vurdering';
 interface FormData {
     status: Nullable<LovligOppholdStatus>;
     begrunnelse: Nullable<string>;

@@ -10,10 +10,11 @@ import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { UførhetStatus } from '~types/Behandlingsinformasjon';
 
-import Faktablokk from './Faktablokk';
-import { VilkårsvurderingBaseProps } from './types';
+import Faktablokk from '../Faktablokk';
+import { VilkårsvurderingBaseProps } from '../types';
+import { Vurdering, Vurderingknapper } from '../Vurdering';
+
 import styles from './Uførhet.module.less';
-import { Vurdering, Vurderingknapper } from './Vurdering';
 
 const UførhetInput = (props: {
     tittel: string;
