@@ -4,7 +4,6 @@ import { Element, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
 import messages from '~/features/beregning/beregning-nb';
-import { formatDateTime } from '~lib/dateUtils';
 import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Beregning } from '~types/Beregning';
@@ -26,10 +25,6 @@ const VisBeregning = (props: Props) => {
 
     return (
         <div>
-            <div className={styles.grunndata}>
-                <InfoLinje tittel={'opprettet:'} value={formatDateTime(beregning.opprettet, intl)} />
-                <InfoLinje tittel={'sats:'} value={beregning.sats} />
-            </div>
             {beregning.fradrag.length > 0 && (
                 <div>
                     <Element className={styles.fradragHeading}>Fradrag:</Element>
