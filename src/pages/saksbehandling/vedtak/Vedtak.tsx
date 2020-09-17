@@ -10,16 +10,14 @@ import { tilAttestering } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
-import FeatureToggles from '~lib/featureToggles';
 import * as routes from '~lib/routes.ts';
 import { Nullable } from '~lib/types';
 import VisBeregning from '~pages/saksbehandling/beregning/VisBeregning';
 import { Simulering } from '~pages/saksbehandling/simulering/simulering';
-import { SaksbehandlingMenyvalg } from '~pages/saksbehandling/types';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Sak } from '~types/Sak';
-import { Vilkårtype, Vilkårsvurdering, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import styles from './vedtak.module.less';
 
@@ -27,32 +25,7 @@ type Props = {
     sak: Sak;
 };
 
-const VilkårsvurderingInfoLinje = (props: { type: Vilkårtype; verdi: Vilkårsvurdering }) => (
-    <div className={styles.infolinjeContainer}>
-        <div className={styles.infolinje}>
-            <span className={styles.statusContainer}>
-                <span className={styles.statusIcon}>{statusIcon(props.verdi.status)}</span>
-            </span>
-            <div>
-                <span className={styles.infotittel}>{vilkårTittelFormatted(props.type)}:</span>
-                <p>{props.verdi.begrunnelse ? props.verdi.begrunnelse : ''}</p>
-            </div>
-        </div>
-    </div>
-);
-
-const VilkårsOppsummering = (props: { behandling: Behandling; sakId: string }) => {
-    return (
-        <div>
-            <Innholdstittel className={styles.tittel}>Vilkårsvurderinger</Innholdstittel>
-            {Object.entries(props.behandling.vilkårsvurderinger).map(([k, v]) => (
-                <VilkårsvurderingInfoLinje type={k as Vilkårtype} verdi={v} key={k} />
-            ))}
-        </div>
-    );
-};
-
-const VilkårsvurderingInfoLinjeV2 = (props: {
+const VilkårsvurderingInfoLinje = (props: {
     type: Vilkårtype;
     status: VilkårVurderingStatus;
     begrunnelse: Nullable<string>;
@@ -72,14 +45,14 @@ const VilkårsvurderingInfoLinjeV2 = (props: {
     );
 };
 
-const VilkårsOppsummeringV2 = (props: { behandling: Behandling }) => {
+const VilkårsOppsummering = (props: { behandling: Behandling }) => {
     const vilkårsinformasjon = mapToVilkårsinformasjon(props.behandling.behandlingsinformasjon);
 
     return (
         <div>
             <Innholdstittel className={styles.tittel}>Vilkårsvurderinger</Innholdstittel>
             {vilkårsinformasjon.map((v, index) => (
-                <VilkårsvurderingInfoLinjeV2
+                <VilkårsvurderingInfoLinje
                     type={v.vilkårtype}
                     status={v.status}
                     key={index}
@@ -138,11 +111,7 @@ const Vedtak = (props: Props) => {
                         )}
                     </div>
                     <div>
-                        {FeatureToggles.VilkårsvurderingV2 ? (
-                            <VilkårsOppsummeringV2 behandling={behandling} />
-                        ) : (
-                            <VilkårsOppsummering behandling={behandling} sakId={sak.id} />
-                        )}
+                        <VilkårsOppsummering behandling={behandling} />
                     </div>
                     <div>
                         <VisDersomSimulert sak={sak} behandling={behandling} />
@@ -163,19 +132,11 @@ const Vedtak = (props: Props) => {
                 </div>
                 <div className={styles.navigeringContainer}>
                     <Link
-                        to={
-                            FeatureToggles.VilkårsvurderingV2
-                                ? routes.saksbehandlingVilkårsvurdering.createURL({
-                                      sakId: sak.id,
-                                      behandlingId: behandling.id,
-                                      vilkar: Vilkårtype.Sats,
-                                  })
-                                : routes.saksoversiktValgtBehandling.createURL({
-                                      sakId: sak.id,
-                                      behandlingId: behandlingId,
-                                      meny: SaksbehandlingMenyvalg.Beregning,
-                                  })
-                        }
+                        to={routes.saksbehandlingVilkårsvurdering.createURL({
+                            sakId: sak.id,
+                            behandlingId: behandling.id,
+                            vilkar: Vilkårtype.Sats,
+                        })}
                         className="knapp"
                     >
                         Tilbake
