@@ -3,7 +3,7 @@ import { Textarea } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Sats as FaktisktSats } from '~/types/Sats';
+import { Sats as FaktiskSats } from '~/types/Sats';
 import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { DelerBoligMed } from '~features/søknad/types';
@@ -42,14 +42,14 @@ const utledSats = (values: FormData) => {
         return null;
     }
     if (!values.delerSøkerBolig) {
-        return FaktisktSats.Høy;
+        return FaktiskSats.Høy;
     }
     switch (values.delerBoligMedHvem) {
         case null:
             return null;
         case DelerBoligMed.VOKSNE_BARN:
         case DelerBoligMed.ANNEN_VOKSEN:
-            return FaktisktSats.Lav;
+            return FaktiskSats.Lav;
         case DelerBoligMed.EKTEMAKE_SAMBOER:
             switch (values.erEktemakeEllerSamboerUnder67) {
                 case null:
