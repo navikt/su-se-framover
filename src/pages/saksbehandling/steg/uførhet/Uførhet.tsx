@@ -5,19 +5,23 @@ import { Radio, RadioGruppe, Input } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
+import { RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
+import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { UførhetStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
+import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
+import messages from './uførhet-nb';
 import styles from './Uførhet.module.less';
 
 const UførhetInput = (props: {
@@ -82,6 +86,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const formik = useFormik<FormData>({
         initialValues: {
@@ -119,116 +124,122 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
 
     return (
-        <Vurdering tittel="Uførhet">
+        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
-                    <form
-                        onSubmit={(e) => {
-                            setHasSubmitted(true);
-                            formik.handleSubmit(e);
-                        }}
-                    >
-                        <RadioGruppe
-                            className={styles.radioGruppe}
-                            legend="Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-7 i folketrygdloven er oppfylt?"
-                            feil={formik.errors.uførevedtak}
+                    <RawIntlProvider value={intl}>
+                        <form
+                            onSubmit={(e) => {
+                                setHasSubmitted(true);
+                                formik.handleSubmit(e);
+                            }}
                         >
-                            <Radio
-                                label="Ja"
-                                name="uførevedtak"
-                                onChange={() =>
-                                    formik.setValues({ ...formik.values, uførevedtak: UførhetStatus.VilkårOppfylt })
-                                }
-                                defaultChecked={formik.values.uførevedtak === UførhetStatus.VilkårOppfylt}
-                            />
-                            <Radio
-                                label="Nei"
-                                name="uførevedtak"
-                                onChange={() =>
-                                    formik.setValues({
-                                        uførevedtak: UførhetStatus.VilkårIkkeOppfylt,
-                                        uføregrad: null,
-                                        forventetInntekt: null,
-                                    })
-                                }
-                                defaultChecked={formik.values.uførevedtak === UførhetStatus.VilkårIkkeOppfylt}
-                            />
-                            <Radio
-                                label="Har uføresak til behandling"
-                                name="uførevedtak"
-                                onChange={() =>
-                                    formik.setValues({
-                                        uførevedtak: UførhetStatus.HarUføresakTilBehandling,
-                                        uføregrad: null,
-                                        forventetInntekt: null,
-                                    })
-                                }
-                                defaultChecked={formik.values.uførevedtak === UførhetStatus.HarUføresakTilBehandling}
-                            />
-                        </RadioGruppe>
-
-                        {formik.values.uførevedtak === UførhetStatus.VilkårOppfylt && (
-                            <div className={styles.formInputContainer}>
-                                <UførhetInput
-                                    tittel="Uføregrad"
-                                    inputName="uføregrad"
-                                    inputTekst="%"
-                                    bredde="XS"
-                                    defaultValues={formik.values.uføregrad ?? ''}
-                                    onChange={formik.handleChange}
-                                    feil={formik.errors.uføregrad}
+                            <RadioGruppe
+                                className={styles.radioGruppe}
+                                legend={intl.formatMessage({ id: 'radio.uførhet.legend' })}
+                                feil={formik.errors.uførevedtak}
+                            >
+                                <Radio
+                                    label={intl.formatMessage({ id: 'radio.label.ja' })}
+                                    name="uførevedtak"
+                                    onChange={() =>
+                                        formik.setValues({ ...formik.values, uførevedtak: UførhetStatus.VilkårOppfylt })
+                                    }
+                                    defaultChecked={formik.values.uførevedtak === UførhetStatus.VilkårOppfylt}
                                 />
-                                <UførhetInput
-                                    tittel="Forventet Inntekt"
-                                    inputName="forventetInntekt"
-                                    inputTekst=" NOK"
-                                    bredde="L"
-                                    defaultValues={formik.values.forventetInntekt ?? ''}
-                                    onChange={formik.handleChange}
-                                    feil={formik.errors.forventetInntekt}
+                                <Radio
+                                    label={intl.formatMessage({ id: 'radio.label.nei' })}
+                                    name="uførevedtak"
+                                    onChange={() =>
+                                        formik.setValues({
+                                            uførevedtak: UførhetStatus.VilkårIkkeOppfylt,
+                                            uføregrad: null,
+                                            forventetInntekt: null,
+                                        })
+                                    }
+                                    defaultChecked={formik.values.uførevedtak === UførhetStatus.VilkårIkkeOppfylt}
                                 />
-                            </div>
-                        )}
-                        {pipe(
-                            lagreBehandlingsinformasjonStatus,
-                            RemoteData.fold(
-                                () => null,
-                                () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
-                                () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
-                                () => null
-                            )
-                        )}
-                        <Vurderingknapper
-                            onTilbakeClick={() => {
-                                history.push(props.forrigeUrl);
-                            }}
-                            onLagreOgFortsettSenereClick={() => {
-                                if (!formik.values.uførevedtak) return;
+                                <Radio
+                                    label={intl.formatMessage({ id: 'radio.label.uføresakTilBehandling' })}
+                                    name="uførevedtak"
+                                    onChange={() =>
+                                        formik.setValues({
+                                            uførevedtak: UførhetStatus.HarUføresakTilBehandling,
+                                            uføregrad: null,
+                                            forventetInntekt: null,
+                                        })
+                                    }
+                                    defaultChecked={
+                                        formik.values.uførevedtak === UførhetStatus.HarUføresakTilBehandling
+                                    }
+                                />
+                            </RadioGruppe>
 
-                                dispatch(
-                                    lagreBehandlingsinformasjon({
-                                        sakId: props.sakId,
-                                        behandlingId: props.behandling.id,
-                                        behandlingsinformasjon: {
-                                            uførhet: {
-                                                status: formik.values.uførevedtak,
-                                                uføregrad: null,
-                                                forventetInntekt: null,
+                            {formik.values.uførevedtak === UførhetStatus.VilkårOppfylt && (
+                                <div className={styles.formInputContainer}>
+                                    <UførhetInput
+                                        tittel={intl.formatMessage({ id: 'input.label.uføregrad' })}
+                                        inputName="uføregrad"
+                                        inputTekst="%"
+                                        bredde="XS"
+                                        defaultValues={formik.values.uføregrad ?? ''}
+                                        onChange={formik.handleChange}
+                                        feil={formik.errors.uføregrad}
+                                    />
+                                    <UførhetInput
+                                        tittel={intl.formatMessage({ id: 'input.label.forventetInntekt' })}
+                                        inputName="forventetInntekt"
+                                        inputTekst=" NOK"
+                                        bredde="L"
+                                        defaultValues={formik.values.forventetInntekt ?? ''}
+                                        onChange={formik.handleChange}
+                                        feil={formik.errors.forventetInntekt}
+                                    />
+                                </div>
+                            )}
+                            {pipe(
+                                lagreBehandlingsinformasjonStatus,
+                                RemoteData.fold(
+                                    () => null,
+                                    () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
+                                    () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
+                                    () => null
+                                )
+                            )}
+                            <Vurderingknapper
+                                onTilbakeClick={() => {
+                                    history.push(props.forrigeUrl);
+                                }}
+                                onLagreOgFortsettSenereClick={() => {
+                                    if (!formik.values.uførevedtak) return;
+
+                                    dispatch(
+                                        lagreBehandlingsinformasjon({
+                                            sakId: props.sakId,
+                                            behandlingId: props.behandling.id,
+                                            behandlingsinformasjon: {
+                                                uførhet: {
+                                                    status: formik.values.uførevedtak,
+                                                    uføregrad: null,
+                                                    forventetInntekt: null,
+                                                },
                                             },
-                                        },
-                                    })
-                                );
-                            }}
-                        />
-                    </form>
+                                        })
+                                    );
+                                }}
+                            />
+                        </form>
+                    </RawIntlProvider>
                 ),
                 right: (
                     <Faktablokk
-                        tittel="Fra søknad"
+                        tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
                         fakta={[
                             {
-                                tittel: 'Har du fått vedtak om uføretrygd?',
-                                verdi: props.behandling.søknad.søknadInnhold.uførevedtak.harUførevedtak ? 'Ja' : 'Nei',
+                                tittel: intl.formatMessage({ id: 'display.fraSøknad.vedtakOmUføretrygd' }),
+                                verdi: props.behandling.søknad.søknadInnhold.uførevedtak.harUførevedtak
+                                    ? intl.formatMessage({ id: 'display.fraSøknad.ja' })
+                                    : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
                             },
                         ]}
                     />
