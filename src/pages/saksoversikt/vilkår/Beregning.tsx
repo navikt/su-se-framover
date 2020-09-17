@@ -1,7 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { lastDayOfMonth } from 'date-fns';
 import { useFormik } from 'formik';
+import { pipe } from 'fp-ts/lib/function';
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -32,8 +35,12 @@ interface FormData {
 const Beregning = (props: VilkårsvurderingBaseProps) => {
     const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
-    const beregningStatus = useAppSelector((state) => state.sak.beregningStatus);
+    const [beregningStatus, simuleringStatus] = useAppSelector((state) => [
+        state.sak.beregningStatus,
+        state.sak.simuleringStatus,
+    ]);
     const [hasSubmitted, setHasSubmitted] = useState(false);
+    const [needsBeregning, setNeedsBeregning] = useState(false);
     const startBeregning = (values: FormData) => {
         if (!values.fom || !values.tom) {
             return;
@@ -177,27 +184,39 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 <VisBeregning beregning={props.behandling.beregning} />
                             </div>
                         )}
+                        {needsBeregning && !props.behandling.beregning && (
+                            <AlertStripe type="advarsel">Du må kjøre en beregning før du kan gå videre</AlertStripe>
+                        )}
+                        {pipe(
+                            simuleringStatus,
+                            RemoteData.fold(
+                                () => null,
+                                () => <NavFrontendSpinner>Simulerer</NavFrontendSpinner>,
+                                () => <AlertStripe type="feil">Simulering feilet</AlertStripe>,
+                                () => null
+                            )
+                        )}
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
-                            onNesteClick={() => {
-                                if (props.behandling.beregning !== null) {
-                                    if (
-                                        RemoteData.isSuccess(beregningStatus) ||
-                                        (props.behandling.beregning && RemoteData.isInitial(beregningStatus))
-                                    ) {
-                                        dispatch(
-                                            sakSlice.startSimulering({
-                                                sakId: props.sakId,
-                                                behandlingId: props.behandling.id,
-                                            })
-                                        );
+                            onNesteClick={async () => {
+                                if (
+                                    RemoteData.isSuccess(beregningStatus) ||
+                                    (props.behandling.beregning && RemoteData.isInitial(beregningStatus))
+                                ) {
+                                    const res = await dispatch(
+                                        sakSlice.startSimulering({
+                                            sakId: props.sakId,
+                                            behandlingId: props.behandling.id,
+                                        })
+                                    );
 
+                                    if (sakSlice.startSimulering.fulfilled.match(res)) {
                                         history.push(props.nesteUrl);
                                     }
                                 } else {
-                                    formik.submitForm();
+                                    setNeedsBeregning(true);
                                 }
                             }}
                             onLagreOgFortsettSenereClick={() => {
