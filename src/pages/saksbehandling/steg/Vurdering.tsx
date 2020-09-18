@@ -1,7 +1,6 @@
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
-import { RawIntlProvider } from 'react-intl';
 
 import { useI18n } from '~lib/hooks';
 
@@ -32,20 +31,18 @@ export const Vurderingknapper = (props: {
     const intl = useI18n({ messages: { ...sharedI18n } });
 
     return (
-        <RawIntlProvider value={intl}>
-            <div className={styles.buttonContainer}>
-                <div className={styles.navigationButtonContainer}>
-                    <Knapp onClick={props.onTilbakeClick} htmlType="button">
-                        {intl.formatMessage({ id: 'knapp.tilbake' })}
-                    </Knapp>
-                    <Hovedknapp onClick={props.onNesteClick} htmlType={props.onNesteClick ? 'button' : 'submit'}>
-                        {intl.formatMessage({ id: 'knapp.neste' })}
-                    </Hovedknapp>
-                </div>
-                <Knapp onClick={props.onLagreOgFortsettSenereClick} htmlType="button">
-                    {intl.formatMessage({ id: 'knapp.lagreOgfortsettSenere' })}
+        <div className={styles.buttonContainer}>
+            <div className={styles.navigationButtonContainer}>
+                <Knapp onClick={props.onTilbakeClick} htmlType="button">
+                    {intl.formatMessage({ id: 'knapp.tilbake' })}
                 </Knapp>
+                <Hovedknapp onClick={props.onNesteClick} htmlType={props.onNesteClick ? 'button' : 'submit'}>
+                    {intl.formatMessage({ id: 'knapp.neste' })}
+                </Hovedknapp>
             </div>
-        </RawIntlProvider>
+            <Knapp onClick={props.onLagreOgFortsettSenereClick} htmlType="button">
+                {intl.formatMessage({ id: 'knapp.lagreOgfortsettSenere' })}
+            </Knapp>
+        </div>
     );
 };
