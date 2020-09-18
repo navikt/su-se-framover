@@ -193,7 +193,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        {console.log(formik.values)}
                         <FormueInput
                             tittel="Verdi boliger som ikke er primærbolig"
                             className={styles.formueInput}
@@ -308,7 +307,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                console.log('saved kjøretøy: ', formik.values.verdiKjøretøy);
                                 dispatch(
                                     lagreBehandlingsinformasjon({
                                         sakId: props.sakId,

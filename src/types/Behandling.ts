@@ -16,6 +16,7 @@ export interface Behandling {
     utbetaling: Nullable<Utbetaling>;
     opprettet: string;
     attestant: Nullable<string>;
+    hendelser: Nullable<Array<Hendelse>>;
 }
 
 export enum Behandlingsstatus {
@@ -28,4 +29,11 @@ export enum Behandlingsstatus {
     TIL_ATTESTERING_AVSLAG = 'TIL_ATTESTERING_AVSLAG',
     IVERKSATT_INNVILGET = 'IVERKSATT_INNVILGET',
     IVERKSATT_AVSLAG = 'IVERKSATT_AVSLAG',
+}
+
+export interface Hendelse {
+    overskrift: string;
+    underoverskrift: string;
+    tidspunkt: Date;
+    melding: string;
 }
