@@ -292,7 +292,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                     <span>
                                         {intl.formatMessage({
                                             id: 'display.sats',
-                                        })}{' '}
+                                        })}
                                         {utledSats(formik.values)}
                                     </span>
                                     <hr />
@@ -359,7 +359,9 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 verdi:
                                     props.behandling.søknad.søknadInnhold.boforhold.ektemakeEllerSamboerUnder67År ===
                                     null
-                                        ? '-'
+                                        ? intl.formatMessage({
+                                              id: 'display.fraSøknad.ikkeRegistert',
+                                          })
                                         : props.behandling.søknad.søknadInnhold.boforhold.ektemakeEllerSamboerUnder67År
                                         ? intl.formatMessage({
                                               id: 'radio.label.ja',
@@ -375,7 +377,9 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 verdi:
                                     props.behandling.søknad.søknadInnhold.boforhold
                                         .ektemakeEllerSamboerUførFlyktning === null
-                                        ? '-'
+                                        ? intl.formatMessage({
+                                              id: 'display.fraSøknad.ikkeRegistert',
+                                          })
                                         : props.behandling.søknad.søknadInnhold.boforhold
                                               .ektemakeEllerSamboerUførFlyktning
                                         ? intl.formatMessage({

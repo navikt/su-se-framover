@@ -23,8 +23,8 @@ import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
-import styles from './OppholdIUtland.module.less';
 import messages from './oppholdIUtlandet-nb';
+import styles from './OppholdIUtlandet.module.less';
 
 interface FormData {
     status: Nullable<OppholdIUtlandetStatus>;

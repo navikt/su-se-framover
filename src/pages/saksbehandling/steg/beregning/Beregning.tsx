@@ -120,7 +120,12 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     {props.behandling.behandlingsinformasjon.utledetSats}{' '}
                                     {intl.formatMessage({ id: 'display.sats' })} xxx
                                 </p>
-                                <p>{intl.formatMessage({ id: 'display.forventerArbeidsinntekt' })}</p>
+                                <p>
+                                    {intl.formatMessage({ id: 'display.forventerArbeidsinntekt' })}{' '}
+                                    {props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt
+                                        ? props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt
+                                        : 0}
+                                </p>
                             </div>
                             <div className={styles.datoContainer}>
                                 <div>
@@ -262,11 +267,15 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             {
                                 tittel: intl.formatMessage({ id: 'display.fraSøknad.andreYtelserINav' }),
                                 verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINav
-                                    ? `Ja, ${props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINav}: ${props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINavBeløp}`
+                                    ? `${intl.formatMessage({ id: 'display.fraSøknad.nei' })}, ${
+                                          props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINav
+                                      }: ${
+                                          props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINavBeløp
+                                      }`
                                     : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
                             },
                             {
-                                tittel: intl.formatMessage({ id: 'display.fraSøknad.andreYtelserINav' }),
+                                tittel: intl.formatMessage({ id: 'display.fraSøknad.sømtOmAndreTrygdeytelser' }),
                                 verdi:
                                     props.behandling.søknad.søknadInnhold.inntektOgPensjon.søktAndreYtelserIkkeBehandletBegrunnelse?.toString() ??
                                     intl.formatMessage({ id: 'display.fraSøknad.nei' }),

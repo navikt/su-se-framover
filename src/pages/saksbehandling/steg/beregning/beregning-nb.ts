@@ -5,7 +5,7 @@ export default {
     'datovelger.fom.legend': 'Fra og med',
     'datovelger.tom.legend': 'Til og med',
 
-    'display.fraSøknad.forventerArbeidsInntekt': 'Forventer du å ha arbeidsinntekt fremover?',
+    'display.fraSøknad.forventerArbeidsinntekt': 'Forventer du å ha arbeidsinntekt fremover?',
     'display.fraSøknad.tjenerPengerIUtland': 'Tjener du penger i utlandet?',
     'display.fraSøknad.andreYtelserINav': 'Har du andre ytelser i NAV?',
     'display.fraSøknad.sømtOmAndreTrygdeytelser': 'Har du søkt om andre trygdeytelser som ikke er behandlet?',

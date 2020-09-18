@@ -180,7 +180,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
     const totalFormue = useMemo(() => {
         const totalt = kalkulerFormue(formik.values);
-        return isNaN(totalt) ? 'Alle feltene må være tall for å regne ut' : totalt;
+        return isNaN(totalt) ? intl.formatMessage({ id: 'display.totalt.fyllUtAlleFelter' }) : totalt;
     }, [formik.values]);
 
     const totalFormueFraSøknad = useMemo(() => {
@@ -353,7 +353,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                     verdi: søknadInnhold.formue.verdiPåEiendom?.toString() ?? '0',
                                 },
                                 {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.kjøretøy' }),
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.verdiPåKjøretøy' }),
                                     verdi:
                                         søknadInnhold.formue.kjøretøy
                                             ?.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0)
@@ -368,7 +368,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                     verdi: søknadInnhold.formue.verdipapirBeløp?.toString() ?? '0',
                                 },
                                 {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.kontanter' }),
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.kontanterOver1000' }),
                                     verdi: søknadInnhold.formue.kontanterBeløp?.toString() ?? '0',
                                 },
                                 {
@@ -376,7 +376,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                     verdi: søknadInnhold.formue.skylderNoenMegPengerBeløp?.toString() ?? '0',
                                 },
                                 {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.depositumskonto' }),
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.depositumsBeløp' }),
                                     verdi: søknadInnhold.formue.depositumsBeløp?.toString() ?? '0',
                                 },
                             ]}
