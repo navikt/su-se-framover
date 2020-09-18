@@ -253,7 +253,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                 tittel: 'Hvem har møtt opp?',
                                 verdi:
                                     props.behandling.søknad.søknadInnhold.forNav.harFullmektigEllerVerge === null
-                                        ? 'Personlig'
+                                        ? 'Bruker'
                                         : props.behandling.søknad.søknadInnhold.forNav.harFullmektigEllerVerge,
                             },
                         ]}
