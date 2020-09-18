@@ -1,0 +1,36 @@
+// TODO: Bruk nav standard spacing
+.hendelseslogg {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid;
+    padding-top: 12px;
+    padding-left: 24px;
+
+    .connection {
+        display: flex;
+        flex-direction: column;
+        .circle {
+            height: 12px;
+            width: 12px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            display: inline-block;
+            border: 1px solid;
+            margin-right: 12px;
+        }
+
+        .dottedLine {
+            height: 100%;
+            border-left: 1px solid;
+            margin-left: 6px;
+        }
+    }
+
+    .hendelse {
+        display: flex;
+
+        .content {
+            margin: 12px 0;
+        }
+    }
+}

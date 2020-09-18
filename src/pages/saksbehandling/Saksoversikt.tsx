@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { PersonCard, Gender } from '@navikt/nap-person-card';
-import classNames from 'classnames';
 import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useMemo } from 'react';
@@ -10,6 +9,7 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import { ErrorCode } from '~api/apiClient';
 import { Kjønn } from '~api/personApi';
 import { AdressebeskyttelseEtikett } from '~components/AdressebeskyttelseEtikett';
+import Hendelseslogg from '~components/Hendelseslogg';
 import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
@@ -25,39 +25,7 @@ import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
 import Vilkår from './steg/Vilkår';
 import Søkefelt from './søkefelt/Søkefelt';
-import { SaksbehandlingMenyvalg } from './types';
 import Vedtak from './vedtak/Vedtak';
-
-const Meny = () => {
-    const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
-    return (
-        <div className={styles.meny}>
-            <ol>
-                <li
-                    className={classNames(styles.menyItem, {
-                        [styles.aktiv]: urlParams.meny === SaksbehandlingMenyvalg.Vilkår,
-                    })}
-                >
-                    1.&nbsp; Vilkår
-                </li>
-                <li
-                    className={classNames(styles.menyItem, {
-                        [styles.aktiv]: urlParams.meny === SaksbehandlingMenyvalg.Beregning,
-                    })}
-                >
-                    2.&nbsp; Beregning
-                </li>
-                <li
-                    className={classNames(styles.menyItem, {
-                        [styles.aktiv]: urlParams.meny === SaksbehandlingMenyvalg.Vedtak,
-                    })}
-                >
-                    3.&nbsp; Vedtak
-                </li>
-            </ol>
-        </div>
-    );
-};
 
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
@@ -118,7 +86,6 @@ const Saksoversikt = () => {
                                 <div className={styles.container}>
                                     <Switch>
                                         <Route path={Routes.saksoversiktValgtBehandling.path}>
-                                            <Meny />
                                             <div className={styles.mainContent}>
                                                 <Switch>
                                                     <Route path={Routes.saksbehandlingBeregning.path}>
@@ -132,6 +99,7 @@ const Saksoversikt = () => {
                                                     </Route>
                                                 </Switch>
                                             </div>
+                                            <Hendelseslogg hendelser={sak.behandlinger[0].hendelser} />
                                         </Route>
                                         <Route path="*">
                                             <Sakintro sak={sak} />

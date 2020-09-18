@@ -115,7 +115,16 @@ const Attestering = () => {
                 );
                 return;
             }
-            // TODO: Implementera vurdert på nytt når det implementeras i bakover
+
+            if (values.begrunnelse) {
+                dispatch(
+                    sakSlice.attesteringUnderkjenn({
+                        sakId: sak.value.id,
+                        behandlingId: behandling.id,
+                        begrunnelse: values.begrunnelse,
+                    })
+                );
+            }
         },
         validationSchema: yup.object<FormData>({
             beslutning: yup.boolean().required(),

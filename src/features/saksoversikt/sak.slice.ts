@@ -130,6 +130,18 @@ export const startAttestering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const attesteringUnderkjenn = createAsyncThunk<
+    Behandling,
+    { sakId: string; behandlingId: string; begrunnelse: string },
+    { rejectValue: ApiError }
+>('behandling/underkjenn', async ({ sakId, behandlingId, begrunnelse }, thunkApi) => {
+    const res = await behandlingApi.underkjenn({ sakId, behandlingId, begrunnelse });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 interface SakState {
     sak: RemoteData.RemoteData<
         {

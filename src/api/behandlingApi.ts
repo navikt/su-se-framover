@@ -105,3 +105,13 @@ export async function iverksett(arg: { sakId: string; behandlingId: string }) {
         method: 'PATCH',
     });
 }
+
+export async function underkjenn(arg: { sakId: string; behandlingId: string; begrunnelse: string }) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/underkjenn`,
+        method: 'PATCH',
+        body: {
+            begrunnelse: arg.begrunnelse,
+        },
+    });
+}
