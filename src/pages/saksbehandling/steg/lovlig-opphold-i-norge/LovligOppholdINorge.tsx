@@ -4,10 +4,12 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
+import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
+import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -15,9 +17,11 @@ import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
 import Faktablokk from '../Faktablokk';
+import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
+import messages from './lovligOppholdINorge-nb';
 import styles from './LovligOppholdINorge.module.less';
 
 interface FormData {
@@ -36,22 +40,31 @@ const schema = yup.object<FormData>({
     begrunnelse: yup.string().defined(),
 });
 
-function createFaktaBlokkArray(søknadsInnhold: SøknadInnhold) {
+function createFaktaBlokkArray(intl: IntlShape, søknadsInnhold: SøknadInnhold) {
     const arr = [
-        createFaktaBlokkObject(søknadsInnhold.oppholdstillatelse.erNorskStatsborger, 'Er du norsk statsborger?'),
+        createFaktaBlokkObject(
+            søknadsInnhold.oppholdstillatelse.erNorskStatsborger,
+            intl.formatMessage({ id: 'display.fraSøknad.erNorskStatsborger' }),
+            intl
+        ),
     ];
 
     if (!søknadsInnhold.oppholdstillatelse.erNorskStatsborger) {
         arr.push(
             createFaktaBlokkObject(
                 søknadsInnhold.oppholdstillatelse.harOppholdstillatelse,
-                'Har søker oppholdstillatelse i Norge?'
+                intl.formatMessage({ id: 'display.fraSøknad.harOppholdstillatelse' }),
+                intl
             )
         );
     }
     if (søknadsInnhold.oppholdstillatelse.harOppholdstillatelse) {
         arr.push(
-            createFaktaBlokkObject(søknadsInnhold.oppholdstillatelse.typeOppholdstillatelse, 'Oppholdstillatelse?')
+            createFaktaBlokkObject(
+                søknadsInnhold.oppholdstillatelse.typeOppholdstillatelse,
+                intl.formatMessage({ id: 'display.fraSøknad.typeOppholdstillatelse' }),
+                intl
+            )
         );
     }
 
@@ -59,7 +72,8 @@ function createFaktaBlokkArray(søknadsInnhold: SøknadInnhold) {
         arr.push(
             createFaktaBlokkObject(
                 søknadsInnhold.oppholdstillatelse.oppholdstillatelseMindreEnnTreMåneder,
-                'Oppholdstillatelse mindre enn tre måneder?'
+                intl.formatMessage({ id: 'display.fraSøknad.oppholdstillatelseMindreEnn3måneder' }),
+                intl
             )
         );
     }
@@ -68,7 +82,8 @@ function createFaktaBlokkArray(søknadsInnhold: SøknadInnhold) {
         arr.push(
             createFaktaBlokkObject(
                 søknadsInnhold.oppholdstillatelse.oppholdstillatelseForlengelse,
-                'Har søker søkt forlengelse?'
+                intl.formatMessage({ id: 'display.fraSøknad.søktOmForlengelse' }),
+                intl
             )
         );
     }
@@ -77,7 +92,8 @@ function createFaktaBlokkArray(søknadsInnhold: SøknadInnhold) {
         arr.push(
             createFaktaBlokkObject(
                 søknadsInnhold.oppholdstillatelse.statsborgerskapAndreLandFritekst,
-                'Statsborgerskap fra andre land'
+                intl.formatMessage({ id: 'display.fraSøknad.statsborgerskapAndreLand' }),
+                intl
             )
         );
     }
@@ -85,7 +101,7 @@ function createFaktaBlokkArray(søknadsInnhold: SøknadInnhold) {
     return arr;
 }
 
-function createFaktaBlokkObject(oppholdstillatelsePair: Nullable<boolean | string>, tittel: string) {
+function createFaktaBlokkObject(oppholdstillatelsePair: Nullable<boolean | string>, tittel: string, intl: IntlShape) {
     if (typeof oppholdstillatelsePair === 'string') {
         return {
             tittel: tittel,
@@ -94,12 +110,16 @@ function createFaktaBlokkObject(oppholdstillatelsePair: Nullable<boolean | strin
     } else if (typeof oppholdstillatelsePair === 'boolean') {
         return {
             tittel: tittel,
-            verdi: oppholdstillatelsePair.valueOf() ? 'Ja' : 'Nei',
+            verdi: oppholdstillatelsePair.valueOf()
+                ? intl.formatMessage({ id: 'display.fraSøknad.ja' })
+                : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
         };
     } else {
         return {
             tittel: tittel,
-            verdi: oppholdstillatelsePair ? 'Ja' : 'Nei',
+            verdi: oppholdstillatelsePair
+                ? intl.formatMessage({ id: 'display.fraSøknad.ja' })
+                : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
         };
     }
 }
@@ -108,6 +128,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const formik = useFormik<FormData>({
         initialValues: {
@@ -145,10 +166,10 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     });
     const history = useHistory();
 
-    createFaktaBlokkArray(props.behandling.søknad.søknadInnhold);
+    createFaktaBlokkArray(intl, props.behandling.søknad.søknadInnhold);
 
     return (
-        <Vurdering tittel="Lovlig opphold i Norge">
+        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <form
@@ -157,9 +178,12 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        <RadioGruppe legend="Har søker lovlig opphold i Norge?" feil={formik.errors.status}>
+                        <RadioGruppe
+                            legend={intl.formatMessage({ id: 'radio.lovligOpphold.legend' })}
+                            feil={formik.errors.status}
+                        >
                             <Radio
-                                label="Ja"
+                                label={intl.formatMessage({ id: 'radio.label.ja' })}
                                 name="lovligOppholdINorge"
                                 onChange={() =>
                                     formik.setValues({
@@ -170,7 +194,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 checked={formik.values.status === LovligOppholdStatus.VilkårOppfylt}
                             />
                             <Radio
-                                label="Nei"
+                                label={intl.formatMessage({ id: 'radio.label.nei' })}
                                 name="lovligOppholdINorge"
                                 onChange={() =>
                                     formik.setValues({
@@ -181,7 +205,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 checked={formik.values.status === LovligOppholdStatus.VilkårIkkeOppfylt}
                             />
                             <Radio
-                                label="Uavklart"
+                                label={intl.formatMessage({ id: 'radio.label.uavklart' })}
                                 name="lovligOppholdINorge"
                                 onChange={() =>
                                     formik.setValues({ ...formik.values, status: LovligOppholdStatus.Uavklart })
@@ -190,7 +214,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             />
                         </RadioGruppe>
                         <Textarea
-                            label="Begrunnelse"
+                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
                             name="begrunnelse"
                             value={formik.values.begrunnelse || ''}
                             onChange={(e) => {
@@ -201,12 +225,21 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             }}
                             feil={formik.errors.begrunnelse}
                         />
+
                         {pipe(
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(
                                 () => null,
-                                () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
-                                () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
+                                () => (
+                                    <NavFrontendSpinner>
+                                        {intl.formatMessage({ id: 'display.lagre.lagrer' })}
+                                    </NavFrontendSpinner>
+                                ),
+                                () => (
+                                    <AlertStripe type="feil">
+                                        {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                    </AlertStripe>
+                                ),
                                 () => null
                             )
                         )}
@@ -236,10 +269,10 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 ),
                 right: (
                     <Faktablokk
-                        tittel="Fra søknad"
+                        tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
                         containerClassName={styles.lovligOppholdFaktaBlokkContainer}
                         faktaBlokkerClassName={styles.lovligOppholdFaktaBlokk}
-                        fakta={createFaktaBlokkArray(props.behandling.søknad.søknadInnhold)}
+                        fakta={createFaktaBlokkArray(intl, props.behandling.søknad.søknadInnhold)}
                     />
                 ),
             }}

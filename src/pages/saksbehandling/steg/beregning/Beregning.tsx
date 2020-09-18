@@ -10,7 +10,6 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { useHistory } from 'react-router-dom';
 
-import messages from '~/features/beregning/beregning-nb';
 import { FradragFormData, isValidFradrag, fradragSchema, FradragInputs } from '~features/beregning';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { toDateOrNull } from '~lib/dateUtils';
@@ -21,9 +20,11 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import VisBeregning from '../../beregning/VisBeregning';
 import Faktablokk from '../Faktablokk';
+import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
+import messages from './beregning-nb';
 import styles from './beregning.module.less';
 
 interface FormData {
@@ -33,8 +34,9 @@ interface FormData {
 }
 
 const Beregning = (props: VilkårsvurderingBaseProps) => {
-    const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+
     const [beregningStatus, simuleringStatus] = useAppSelector((state) => [
         state.sak.beregningStatus,
         state.sak.simuleringStatus,
@@ -102,7 +104,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
 
     return (
-        <Vurdering tittel="Beregning">
+        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <form
@@ -112,12 +114,20 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                         }}
                     >
                         <div className={styles.summering}>
-                            <p>{props.behandling.behandlingsinformasjon.utledetSats} sats: xxx</p>
-                            <p>Forventet inntekt etter uføre (IEU):</p>
+                            <p>
+                                {props.behandling.behandlingsinformasjon.utledetSats}{' '}
+                                {intl.formatMessage({ id: 'display.sats' })} xxx
+                            </p>
+                            <p>
+                                {intl.formatMessage({ id: 'display.forventerArbeidsinntekt' })}{' '}
+                                {props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt
+                                    ? props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt
+                                    : 0}
+                            </p>
                         </div>
                         <div className={styles.datoContainer}>
                             <div>
-                                <p>Fra og med</p>
+                                <p>{intl.formatMessage({ id: 'datovelger.fom.legend' })}</p>
                                 <DatePicker
                                     id="fom"
                                     selected={formik.values.fom}
@@ -133,7 +143,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
                             </div>
                             <div>
-                                <p>Til og med</p>
+                                <p>{intl.formatMessage({ id: 'datovelger.tom.legend' })}</p>
                                 <DatePicker
                                     id="tom"
                                     selected={formik.values.tom}
@@ -176,7 +186,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                         </div>
 
                         <div className={styles.bottomButtons}>
-                            <Knapp htmlType="submit">Start beregning</Knapp>
+                            <Knapp htmlType="submit">{intl.formatMessage({ id: 'knapp.startBeregning' })}</Knapp>
                         </div>
 
                         {props.behandling.beregning && (
@@ -185,14 +195,24 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             </div>
                         )}
                         {needsBeregning && !props.behandling.beregning && (
-                            <AlertStripe type="advarsel">Du må kjøre en beregning før du kan gå videre</AlertStripe>
+                            <AlertStripe type="advarsel">
+                                {intl.formatMessage({ id: 'alert.advarsel.kjørBeregningFørst' })}
+                            </AlertStripe>
                         )}
                         {pipe(
                             simuleringStatus,
                             RemoteData.fold(
                                 () => null,
-                                () => <NavFrontendSpinner>Simulerer</NavFrontendSpinner>,
-                                () => <AlertStripe type="feil">Simulering feilet</AlertStripe>,
+                                () => (
+                                    <NavFrontendSpinner>
+                                        {intl.formatMessage({ id: 'display.simulerer' })}
+                                    </NavFrontendSpinner>
+                                ),
+                                () => (
+                                    <AlertStripe type="feil">
+                                        {intl.formatMessage({ id: 'display.simuleringFeilet' })}
+                                    </AlertStripe>
+                                ),
                                 () => null
                             )
                         )}
@@ -227,49 +247,59 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 ),
                 right: (
                     <Faktablokk
-                        tittel="Fra søknad"
+                        tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
                         fakta={[
                             {
-                                tittel: 'Forventer du å ha arbeidsinntekt fremover?',
+                                tittel: intl.formatMessage({ id: 'display.fraSøknad.forventerArbeidsinntekt' }),
                                 verdi:
                                     props.behandling.søknad.søknadInnhold.inntektOgPensjon.forventetInntekt?.toString() ??
-                                    'Nei',
+                                    intl.formatMessage({ id: 'display.fraSøknad.nei' }),
                             },
                             {
-                                tittel: 'Tjener du penger i utlandet?',
+                                tittel: intl.formatMessage({ id: 'display.fraSøknad.tjenerPengerIUtland' }),
                                 verdi:
                                     props.behandling.søknad.søknadInnhold.inntektOgPensjon.tjenerPengerIUtlandetBeløp?.toString() ??
-                                    'Nei',
+                                    intl.formatMessage({ id: 'display.fraSøknad.nei' }),
                             },
                             {
-                                tittel: 'Har du andre ytelser i NAV?',
+                                tittel: intl.formatMessage({ id: 'display.fraSøknad.andreYtelserINav' }),
                                 verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINav
-                                    ? `Ja, ${props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINav}: ${props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINavBeløp}`
-                                    : 'Nei',
+                                    ? `${intl.formatMessage({ id: 'display.fraSøknad.nei' })}, ${
+                                          props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINav
+                                      }: ${
+                                          props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINavBeløp
+                                      }`
+                                    : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
                             },
                             {
-                                tittel: 'Har du søkt om andre trygdeytelser som ikke er behandlet?',
+                                tittel: intl.formatMessage({ id: 'display.fraSøknad.sømtOmAndreTrygdeytelser' }),
                                 verdi:
                                     props.behandling.søknad.søknadInnhold.inntektOgPensjon.søktAndreYtelserIkkeBehandletBegrunnelse?.toString() ??
-                                    'Nei',
+                                    intl.formatMessage({ id: 'display.fraSøknad.nei' }),
                             },
                             {
-                                tittel: 'Har du mottatt sosialstønad i løpet av de siste tre måneder?',
+                                tittel: intl.formatMessage({
+                                    id: 'display.fraSøknad.mottattSosialstønadSiste3måneder',
+                                }),
                                 verdi:
                                     props.behandling.søknad.søknadInnhold.inntektOgPensjon.sosialstønadBeløp?.toString() ??
-                                    'Nei',
+                                    intl.formatMessage({ id: 'display.fraSøknad.nei' }),
                             },
                             {
-                                tittel: 'Har du trygdeytelser i utlandet?',
+                                tittel: intl.formatMessage({
+                                    id: 'display.fraSøknad.trygdeytelserIUtlandet',
+                                }),
                                 verdi:
                                     props.behandling.søknad.søknadInnhold.inntektOgPensjon.tjenerPengerIUtlandetBeløp?.toString() ??
-                                    'Nei',
+                                    intl.formatMessage({ id: 'display.fraSøknad.nei' }),
                             },
                             {
-                                tittel: 'Har du tjenestepensjon og/eller pensjonssparing?',
+                                tittel: intl.formatMessage({
+                                    id: 'display.fraSøknad.tjenestepensjon/pensjonssparing',
+                                }),
                                 verdi:
                                     props.behandling.søknad.søknadInnhold.inntektOgPensjon.trygdeytelserIUtlandet?.toString() ??
-                                    'Nei',
+                                    intl.formatMessage({ id: 'display.fraSøknad.nei' }),
                             },
                         ]}
                     />

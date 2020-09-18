@@ -9,15 +9,18 @@ import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
+import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { UførhetStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
+import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
+import messages from './uførhet-nb';
 import styles from './Uførhet.module.less';
 
 const UførhetInput = (props: {
@@ -82,6 +85,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const formik = useFormik<FormData>({
         initialValues: {
@@ -119,7 +123,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
 
     return (
-        <Vurdering tittel="Uførhet">
+        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <form
@@ -130,11 +134,11 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                     >
                         <RadioGruppe
                             className={styles.radioGruppe}
-                            legend="Har søker fått vedtak om uføretrygd der vilkårene i §12-4 til §12-7 i folketrygdloven er oppfylt?"
+                            legend={intl.formatMessage({ id: 'radio.uførhet.legend' })}
                             feil={formik.errors.uførevedtak}
                         >
                             <Radio
-                                label="Ja"
+                                label={intl.formatMessage({ id: 'radio.label.ja' })}
                                 name="uførevedtak"
                                 onChange={() =>
                                     formik.setValues({ ...formik.values, uførevedtak: UførhetStatus.VilkårOppfylt })
@@ -142,7 +146,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                 defaultChecked={formik.values.uførevedtak === UførhetStatus.VilkårOppfylt}
                             />
                             <Radio
-                                label="Nei"
+                                label={intl.formatMessage({ id: 'radio.label.nei' })}
                                 name="uførevedtak"
                                 onChange={() =>
                                     formik.setValues({
@@ -154,7 +158,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                 defaultChecked={formik.values.uførevedtak === UførhetStatus.VilkårIkkeOppfylt}
                             />
                             <Radio
-                                label="Har uføresak til behandling"
+                                label={intl.formatMessage({ id: 'radio.label.uføresakTilBehandling' })}
                                 name="uførevedtak"
                                 onChange={() =>
                                     formik.setValues({
@@ -166,11 +170,10 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                 defaultChecked={formik.values.uførevedtak === UførhetStatus.HarUføresakTilBehandling}
                             />
                         </RadioGruppe>
-
                         {formik.values.uførevedtak === UførhetStatus.VilkårOppfylt && (
                             <div className={styles.formInputContainer}>
                                 <UførhetInput
-                                    tittel="Uføregrad"
+                                    tittel={intl.formatMessage({ id: 'input.label.uføregrad' })}
                                     inputName="uføregrad"
                                     inputTekst="%"
                                     bredde="XS"
@@ -179,7 +182,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                     feil={formik.errors.uføregrad}
                                 />
                                 <UførhetInput
-                                    tittel="Forventet Inntekt"
+                                    tittel={intl.formatMessage({ id: 'input.label.forventetInntekt' })}
                                     inputName="forventetInntekt"
                                     inputTekst=" NOK"
                                     bredde="L"
@@ -193,8 +196,16 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(
                                 () => null,
-                                () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
-                                () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
+                                () => (
+                                    <NavFrontendSpinner>
+                                        {intl.formatMessage({ id: 'display.lagre.lagrer' })}
+                                    </NavFrontendSpinner>
+                                ),
+                                () => (
+                                    <AlertStripe type="feil">
+                                        {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                    </AlertStripe>
+                                ),
                                 () => null
                             )
                         )}
@@ -224,11 +235,13 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                 ),
                 right: (
                     <Faktablokk
-                        tittel="Fra søknad"
+                        tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
                         fakta={[
                             {
-                                tittel: 'Har du fått vedtak om uføretrygd?',
-                                verdi: props.behandling.søknad.søknadInnhold.uførevedtak.harUførevedtak ? 'Ja' : 'Nei',
+                                tittel: intl.formatMessage({ id: 'display.fraSøknad.vedtakOmUføretrygd' }),
+                                verdi: props.behandling.søknad.søknadInnhold.uførevedtak.harUførevedtak
+                                    ? intl.formatMessage({ id: 'display.fraSøknad.ja' })
+                                    : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
                             },
                         ]}
                     />

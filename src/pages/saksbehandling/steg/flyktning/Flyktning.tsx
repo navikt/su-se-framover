@@ -8,14 +8,18 @@ import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
+import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FlyktningStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
+import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
+
+import messages from './flyktning-nb';
 
 interface FormData {
     flyktningStatus: Nullable<FlyktningStatus>;
@@ -28,7 +32,7 @@ const schema = yup.object<FormData>({
         .defined()
         .oneOf(
             [FlyktningStatus.VilkårOppfylt, FlyktningStatus.VilkårIkkeOppfylt, FlyktningStatus.Uavklart],
-            'Vennligst velg et alternativ '
+            'Vennligst velg et alternativ'
         ),
     begrunnelse: yup.string().defined(),
 });
@@ -37,6 +41,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const formik = useFormik<FormData>({
         initialValues: {
@@ -72,7 +77,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
 
     return (
-        <Vurdering tittel="Flyktning">
+        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <form
@@ -82,11 +87,11 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                         }}
                     >
                         <RadioGruppe
-                            legend="Er søker registrer flyktning etter utlendingslova §28?"
+                            legend={intl.formatMessage({ id: 'radio.flyktning.legend' })}
                             feil={formik.errors.flyktningStatus}
                         >
                             <Radio
-                                label="Ja"
+                                label={intl.formatMessage({ id: 'radio.label.ja' })}
                                 name="registertFlyktning"
                                 onChange={() =>
                                     formik.setValues({
@@ -97,7 +102,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 defaultChecked={formik.values.flyktningStatus === FlyktningStatus.VilkårOppfylt}
                             />
                             <Radio
-                                label="Nei"
+                                label={intl.formatMessage({ id: 'radio.label.nei' })}
                                 name="registertFlyktning"
                                 onChange={() =>
                                     formik.setValues({
@@ -108,16 +113,19 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 defaultChecked={formik.values.flyktningStatus === FlyktningStatus.VilkårIkkeOppfylt}
                             />
                             <Radio
-                                label="Uavklart"
+                                label={intl.formatMessage({ id: 'radio.label.uavklart' })}
                                 name="registertFlyktning"
                                 onChange={() =>
-                                    formik.setValues({ ...formik.values, flyktningStatus: FlyktningStatus.Uavklart })
+                                    formik.setValues({
+                                        ...formik.values,
+                                        flyktningStatus: FlyktningStatus.Uavklart,
+                                    })
                                 }
                                 defaultChecked={formik.values.flyktningStatus === FlyktningStatus.Uavklart}
                             />
                         </RadioGruppe>
                         <Textarea
-                            label="Begrunnelse"
+                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
                             name="begrunnelse"
                             value={formik.values.begrunnelse || ''}
                             onChange={(e) => {
@@ -128,12 +136,21 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                             }}
                             feil={formik.errors.begrunnelse}
                         />
+
                         {pipe(
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(
                                 () => null,
-                                () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
-                                () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
+                                () => (
+                                    <NavFrontendSpinner>
+                                        {intl.formatMessage({ id: 'display.lagre.lagrer' })}
+                                    </NavFrontendSpinner>
+                                ),
+                                () => (
+                                    <AlertStripe type="feil">
+                                        {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                    </AlertStripe>
+                                ),
                                 () => null
                             )
                         )}
@@ -163,13 +180,13 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                 ),
                 right: (
                     <Faktablokk
-                        tittel="Fra søknad"
+                        tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
                         fakta={[
                             {
-                                tittel: 'Er du registrert flyktning?',
+                                tittel: intl.formatMessage({ id: 'display.fraSøknad.registrertFlyktning' }),
                                 verdi: props.behandling.søknad.søknadInnhold.flyktningsstatus.registrertFlyktning
-                                    ? 'Ja'
-                                    : 'Nei',
+                                    ? intl.formatMessage({ id: 'display.fraSøknad.ja' })
+                                    : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
                             },
                         ]}
                     />

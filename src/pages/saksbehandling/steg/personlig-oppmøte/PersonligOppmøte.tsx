@@ -10,14 +10,18 @@ import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { Vergemål } from '~features/søknad/types';
 import { pipe } from '~lib/fp';
+import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { PersonligOppmøteStatus, PersonligOppmøte as PersonligOppmøteType } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
+import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
+
+import messages from './personligOppmøte-nb';
 
 enum MøttPersonlig {
     Ja = 'Ja',
@@ -121,6 +125,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const updateBehandlingsinformasjon = (personligOppmøte: PersonligOppmøteType) =>
         dispatch(
@@ -160,7 +165,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
 
     return (
-        <Vurdering tittel="Personlig oppmøte?">
+        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <form
@@ -170,51 +175,51 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                         }}
                     >
                         <SuperRadioGruppe
-                            legend="Har søker møtt personlig?"
+                            legend={intl.formatMessage({ id: 'radio.personligOppmøte.legend' })}
                             values={formik.values}
                             errors={formik.errors}
                             onChange={formik.setValues}
                             property="status"
                             options={[
                                 {
-                                    label: 'Ja',
+                                    label: intl.formatMessage({ id: 'radio.label.ja' }),
                                     radioValue: MøttPersonlig.Ja,
                                 },
                                 {
-                                    label: 'Søker har verge',
+                                    label: intl.formatMessage({ id: 'radio.label.søkerHarVerge' }),
                                     radioValue: MøttPersonlig.Verge,
                                 },
                                 {
-                                    label: 'Fullmektig har møtt på vegne av søker',
+                                    label: intl.formatMessage({ id: 'radio.label.søkerHarFullmektig' }),
                                     radioValue: MøttPersonlig.Fullmektig,
                                 },
                                 {
-                                    label: 'Nei',
+                                    label: intl.formatMessage({ id: 'radio.label.nei' }),
                                     radioValue: MøttPersonlig.Nei,
                                 },
                             ]}
                         />
                         {formik.values.status === MøttPersonlig.Fullmektig && (
                             <SuperRadioGruppe
-                                legend="Legeattest?"
+                                legend={intl.formatMessage({ id: 'radio.legeattest.legend' })}
                                 values={formik.values}
                                 errors={formik.errors}
                                 onChange={formik.setValues}
                                 property="legeattest"
                                 options={[
                                     {
-                                        label: 'Ja',
+                                        label: intl.formatMessage({ id: 'radio.label.ja' }),
                                         radioValue: true,
                                     },
                                     {
-                                        label: 'Nei',
+                                        label: intl.formatMessage({ id: 'radio.label.nei' }),
                                         radioValue: false,
                                     },
                                 ]}
                             />
                         )}
                         <Textarea
-                            label="Begrunnelse"
+                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
                             name="begrunnelse"
                             feil={formik.errors.begrunnelse}
                             value={formik.values.begrunnelse ?? ''}
@@ -224,8 +229,16 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(
                                 () => null,
-                                () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
-                                () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
+                                () => (
+                                    <NavFrontendSpinner>
+                                        {intl.formatMessage({ id: 'display.lagre.lagrer' })}
+                                    </NavFrontendSpinner>
+                                ),
+                                () => (
+                                    <AlertStripe type="feil">
+                                        {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                    </AlertStripe>
+                                ),
                                 () => null
                             )
                         )}
@@ -247,13 +260,13 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                 ),
                 right: (
                     <Faktablokk
-                        tittel="Fra søknad"
+                        tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
                         fakta={[
                             {
-                                tittel: 'Hvem har møtt opp?',
+                                tittel: intl.formatMessage({ id: 'display.fraSøknad.hvemHarMøtt' }),
                                 verdi:
                                     props.behandling.søknad.søknadInnhold.forNav.harFullmektigEllerVerge === null
-                                        ? 'Bruker'
+                                        ? intl.formatMessage({ id: 'display.fraSøknad.personligOppmøte' })
                                         : props.behandling.søknad.søknadInnhold.forNav.harFullmektigEllerVerge,
                             },
                         ]}
