@@ -99,7 +99,7 @@ const Saksoversikt = () => {
                                                     </Route>
                                                 </Switch>
                                             </div>
-                                            <Hendelseslogg hendelser={sak.behandlinger[0].hendelser} />
+                                            <Hendelseslogg sak={sak} />
                                         </Route>
                                         <Route path="*">
                                             <Sakintro sak={sak} />

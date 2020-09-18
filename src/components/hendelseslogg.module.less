@@ -1,27 +1,30 @@
+@import '~/styles/variables.less';
 // TODO: Bruk nav standard spacing
 .hendelseslogg {
     display: flex;
     flex-direction: column;
     border-left: 1px solid;
+    padding: 0 24px;
     padding-top: 12px;
-    padding-left: 24px;
 
     .connection {
         display: flex;
         flex-direction: column;
+        color: @navgra60;
         .circle {
             height: 12px;
             width: 12px;
-            flex-shrink: 0;
             border-radius: 50%;
+            flex-shrink: 0;
             display: inline-block;
             border: 1px solid;
             margin-right: 12px;
+            margin-top: 4px;
         }
 
         .dottedLine {
             height: 100%;
-            border-left: 1px solid;
+            border-left: 1px dotted;
             margin-left: 6px;
         }
     }
@@ -30,7 +33,12 @@
         display: flex;
 
         .content {
-            margin: 12px 0;
+            .undertekst {
+                color: @navgra60;
+            }
+            .melding {
+                margin: 12px 0;
+            }
         }
     }
 }

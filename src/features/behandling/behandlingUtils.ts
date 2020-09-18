@@ -1,4 +1,9 @@
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
+import { Sak } from '~types/Sak';
+
+export const findBehandling = (sak: Sak, behandlingId: string) => {
+    return sak.behandlinger.find((b) => b.id === behandlingId);
+};
 
 export function tilAttestering(behandling: Behandling): boolean {
     return Boolean(

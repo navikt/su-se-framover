@@ -1,19 +1,25 @@
+import { format } from 'date-fns';
+import { Element, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
-import { Nullable } from '~lib/types';
+import { findBehandling } from '~features/behandling/behandlingUtils';
+import * as Routes from '~lib/routes';
 import { Hendelse } from '~types/Behandling';
+import { Sak } from '~types/Sak';
 
 import styles from './hendelseslogg.module.less';
 
 type Props = {
-    hendelser: Nullable<Array<Hendelse>>;
+    sak: Sak;
 };
-const Hendelseslogg = ({ hendelser }: Props) => {
-    console.log(hendelser);
+const Hendelseslogg = ({ sak }: Props) => {
+    const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
+    const behandling = findBehandling(sak, urlParams.behandlingId);
+
     return (
         <div className={styles.hendelseslogg}>
-            {hendelser ? (
-                hendelser.map((hendelse, index) => <Hendelse key={index} hendelse={hendelse} />)
+            {behandling?.hendelser?.length ? (
+                behandling.hendelser.map((hendelse, index) => <Hendelse key={index} hendelse={hendelse} />)
             ) : (
                 <div> inge hendelser nå</div>
             )}
@@ -21,17 +27,22 @@ const Hendelseslogg = ({ hendelser }: Props) => {
     );
 };
 
-const Hendelse = (props: { hendelse: Hendelse }) => (
-    <div className={styles.hendelse}>
-        <div className={styles.connection}>
-            <div className={styles.circle} />
-            <div className={styles.dottedLine} />
+const Hendelse = (props: { hendelse: Hendelse }) => {
+    const { overskrift, melding, tidspunkt } = props.hendelse;
+
+    return (
+        <div className={styles.hendelse}>
+            <div className={styles.connection}>
+                <div className={styles.circle} />
+                <div className={styles.dottedLine} />
+            </div>
+            <div className={styles.content}>
+                <Element>{overskrift}</Element>
+                <Undertekst className={styles.undertekst}>{format(new Date(tidspunkt), 'dd.MM.yyyy')}</Undertekst>
+                <p className={styles.melding}>{melding}</p>
+            </div>
         </div>
-        <div className={styles.content}>
-            <p>{props.hendelse.overskrift}</p>
-            <p>{props.hendelse.melding}</p>
-        </div>
-    </div>
-);
+    );
+};
 
 export default Hendelseslogg;
