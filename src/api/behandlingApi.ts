@@ -1,36 +1,12 @@
 import { formatISO } from 'date-fns';
 
-import { Behandling, Behandlingsstatus } from '~types/Behandling';
+import { Behandling } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
 import { Sats } from '~types/Sats';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
-
-export function tilAttestering(behandling: Behandling): boolean {
-    return (
-        [Behandlingsstatus.TIL_ATTESTERING_AVSLAG, Behandlingsstatus.TIL_ATTESTERING_INNVILGET].find(
-            (x) => behandling.status === x
-        ) !== undefined
-    );
-}
-
-export function iverksatt(behandling: Behandling): boolean {
-    return (
-        [Behandlingsstatus.IVERKSATT_AVSLAG, Behandlingsstatus.IVERKSATT_INNVILGET].find(
-            (x) => behandling.status === x
-        ) !== undefined
-    );
-}
-
-export function avslag(behandling: Behandling): boolean {
-    return Boolean(
-        [Behandlingsstatus.TIL_ATTESTERING_AVSLAG, Behandlingsstatus.VILKÅRSVURDERT_AVSLAG].find(
-            (status) => behandling.status === status
-        )
-    );
-}
 
 export async function startBehandling(arg: { sakId: string; søknadId: string }): Promise<ApiClientResult<Behandling>> {
     return apiClient({

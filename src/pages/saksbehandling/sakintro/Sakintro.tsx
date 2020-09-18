@@ -6,8 +6,8 @@ import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { useHistory, Link } from 'react-router-dom';
 
-import { iverksatt, tilAttestering } from '~api/behandlingApi';
 import { useUserContext } from '~context/userContext';
+import { tilAttestering, iverksatt } from '~features/behandling/behandlingUtils';
 import * as behandlingSlice from '~features/saksoversikt/sak.slice';
 import { formatDateTime } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';

@@ -8,8 +8,8 @@ import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useState } from 'react';
 
 import * as Routes from '~/lib/routes';
-import { avslag, tilAttestering } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
+import { avslag, tilAttestering, iverksatt } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
@@ -130,7 +130,7 @@ const Attestering = () => {
     });
 
     const { errors } = formik;
-    if (!tilAttestering(behandling)) {
+    if (!tilAttestering(behandling) && !iverksatt(behandling)) {
         return <div>Behandlingen er ikke klar for attestering.</div>;
     }
 

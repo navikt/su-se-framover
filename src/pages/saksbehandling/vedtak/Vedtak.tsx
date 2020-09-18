@@ -6,8 +6,8 @@ import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { tilAttestering } from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
+import { tilAttestering } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import * as routes from '~lib/routes.ts';
