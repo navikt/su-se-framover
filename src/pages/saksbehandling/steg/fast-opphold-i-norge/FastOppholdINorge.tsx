@@ -6,13 +6,13 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { SøknadInnhold } from '~api/søknadApi';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
+import { SøknadInnhold } from '~types/Søknad';
 
 import Faktablokk from '../Faktablokk';
 import { VilkårsvurderingBaseProps } from '../types';
