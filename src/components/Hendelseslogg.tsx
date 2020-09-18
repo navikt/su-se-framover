@@ -19,7 +19,7 @@ const Hendelseslogg = ({ sak }: Props) => {
     return (
         <div className={styles.hendelseslogg}>
             {behandling?.hendelser?.length ? (
-                behandling.hendelser.map((hendelse, index) => <Hendelse key={index} hendelse={hendelse} />)
+                behandling.hendelser.map((hendelse, index) => <HendelseComponent key={index} hendelse={hendelse} />)
             ) : (
                 <div> inge hendelser nå</div>
             )}
@@ -27,7 +27,7 @@ const Hendelseslogg = ({ sak }: Props) => {
     );
 };
 
-const Hendelse = (props: { hendelse: Hendelse }) => {
+const HendelseComponent = (props: { hendelse: Hendelse }) => {
     const { overskrift, melding, tidspunkt } = props.hendelse;
 
     return (
