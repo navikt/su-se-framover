@@ -11,7 +11,7 @@ import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { FormueStatus } from '~types/Behandlingsinformasjon';
+import { FormueStatus, Formue, Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
 import Faktablokk from '../Faktablokk';
@@ -109,27 +109,41 @@ function kalkulerFormueFraSøknad(f: SøknadInnhold['formue']) {
     );
 }
 
+const setInitialValues = (behandlingsInfo: Behandlingsinformasjon, søknadsInnhold: SøknadInnhold) => {
+    const behandlingsFormue = behandlingsInfo.formue;
+    const søknadsFormue = søknadsInnhold.formue;
+
+    return {
+        verdiIkkePrimærbolig:
+            behandlingsFormue?.verdiIkkePrimærbolig?.toString() ?? søknadsFormue.verdiPåBolig?.toString() ?? '0',
+        verdiKjøretøy:
+            behandlingsFormue?.verdiKjøretøy?.toString() ?? totalVerdiKjøretøy(søknadsFormue.kjøretøy).toString(),
+        innskudd:
+            behandlingsFormue?.innskudd?.toString() ??
+            (
+                parseInt(søknadsFormue.innskuddsBeløp?.toString() ?? '0', 10) +
+                parseInt(søknadsFormue.depositumsBeløp?.toString() ?? '0', 10)
+            ).toString(),
+        verdipapir: behandlingsFormue?.verdipapir?.toString() ?? søknadsFormue.verdipapirBeløp?.toString() ?? '0',
+        pengerSkyldt:
+            behandlingsFormue?.pengerSkyldt?.toString() ?? søknadsFormue.skylderNoenMegPengerBeløp?.toString() ?? '0',
+        kontanter: behandlingsFormue?.kontanter?.toString() ?? søknadsFormue.kontanterBeløp?.toString() ?? '0',
+        depositumskonto:
+            behandlingsFormue?.depositumskonto?.toString() ?? søknadsFormue.depositumsBeløp?.toString() ?? '0',
+        status: behandlingsFormue?.status ?? FormueStatus.Ok,
+        begrunnelse: behandlingsFormue?.begrunnelse ?? null,
+    };
+};
+
 const Formue = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
-    const { formue } = props.behandling.søknad.søknadInnhold;
+    const søknadInnhold = props.behandling.søknad.søknadInnhold;
+    const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
 
     const formik = useFormik<FormData>({
-        initialValues: {
-            verdiIkkePrimærbolig: formue.verdiPåBolig?.toString() ?? '0',
-            verdiKjøretøy: totalVerdiKjøretøy(formue.kjøretøy).toString(),
-            innskudd: (
-                parseInt(formue.innskuddsBeløp?.toString() ?? '0', 10) +
-                parseInt(formue.depositumsBeløp?.toString() ?? '0', 10)
-            ).toString(),
-            verdipapir: formue.verdipapirBeløp?.toString() ?? '0',
-            pengerSkyldt: formue.skylderNoenMegPengerBeløp?.toString() ?? '0',
-            kontanter: formue.kontanterBeløp?.toString() ?? '0',
-            depositumskonto: formue.depositumsBeløp?.toString() ?? '0',
-            status: FormueStatus.Ok,
-            begrunnelse: props.behandling.behandlingsinformasjon.formue?.begrunnelse ?? null,
-        },
+        initialValues: setInitialValues(behandlingsInfo, søknadInnhold),
         async onSubmit(values) {
             const res = await dispatch(
                 lagreBehandlingsinformasjon({
@@ -166,8 +180,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     }, [formik.values]);
 
     const totalFormueFraSøknad = useMemo(() => {
-        return kalkulerFormueFraSøknad(formue);
-    }, [formue]);
+        return kalkulerFormueFraSøknad(søknadInnhold.formue);
+    }, [søknadInnhold.formue]);
 
     return (
         <Vurdering tittel="Formue">
@@ -179,6 +193,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
+                        {console.log(formik.values)}
                         <FormueInput
                             tittel="Verdi boliger som ikke er primærbolig"
                             className={styles.formueInput}
@@ -191,7 +206,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             tittel="Verdi bil(sekundær), campingvogn eller kjøretøy"
                             className={styles.formueInput}
                             inputName="verdiKjøretøy"
-                            defaultValues={totalVerdiKjøretøy(formue.kjøretøy).toString()}
+                            defaultValues={formik.values.verdiKjøretøy}
                             onChange={formik.handleChange}
                             feil={formik.errors.verdiKjøretøy}
                         />
@@ -293,6 +308,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
+                                console.log('saved kjøretøy: ', formik.values.verdiKjøretøy);
                                 dispatch(
                                     lagreBehandlingsinformasjon({
                                         sakId: props.sakId,
@@ -324,38 +340,38 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             fakta={[
                                 {
                                     tittel: 'Verdi på bolig',
-                                    verdi: formue.verdiPåBolig?.toString() ?? '0',
+                                    verdi: søknadInnhold.formue.verdiPåBolig?.toString() ?? '0',
                                 },
                                 {
                                     tittel: 'Verdi på eiendom',
-                                    verdi: formue.verdiPåEiendom?.toString() ?? '0',
+                                    verdi: søknadInnhold.formue.verdiPåEiendom?.toString() ?? '0',
                                 },
                                 {
                                     tittel: 'Kjøretøy',
                                     verdi:
-                                        formue.kjøretøy
+                                        søknadInnhold.formue.kjøretøy
                                             ?.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0)
                                             .toString() ?? '0',
                                 },
                                 {
                                     tittel: 'Innskuddsbeløp',
-                                    verdi: formue.innskuddsBeløp?.toString() ?? '0',
+                                    verdi: søknadInnhold.formue.innskuddsBeløp?.toString() ?? '0',
                                 },
                                 {
                                     tittel: 'Verdipapirbeløp',
-                                    verdi: formue.verdipapirBeløp?.toString() ?? '0',
+                                    verdi: søknadInnhold.formue.verdipapirBeløp?.toString() ?? '0',
                                 },
                                 {
                                     tittel: 'Kontanter',
-                                    verdi: formue.kontanterBeløp?.toString() ?? '0',
+                                    verdi: søknadInnhold.formue.kontanterBeløp?.toString() ?? '0',
                                 },
                                 {
                                     tittel: 'SkylderNoenMegPengerBeløp',
-                                    verdi: formue.skylderNoenMegPengerBeløp?.toString() ?? '0',
+                                    verdi: søknadInnhold.formue.skylderNoenMegPengerBeløp?.toString() ?? '0',
                                 },
                                 {
                                     tittel: 'Depositumskonto',
-                                    verdi: formue.depositumsBeløp?.toString() ?? '0',
+                                    verdi: søknadInnhold.formue.depositumsBeløp?.toString() ?? '0',
                                 },
                             ]}
                         />
