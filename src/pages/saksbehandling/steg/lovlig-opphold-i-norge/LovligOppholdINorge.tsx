@@ -92,7 +92,8 @@ function createFaktaBlokkArray(intl: IntlShape, søknadsInnhold: SøknadInnhold)
         arr.push(
             createFaktaBlokkObject(
                 søknadsInnhold.oppholdstillatelse.statsborgerskapAndreLandFritekst,
-                'Statsborgerskap fra andre land'
+                intl.formatMessage({ id: 'display.fraSøknad.statsborgerskapAndreLand' }),
+                intl
             )
         );
     }
