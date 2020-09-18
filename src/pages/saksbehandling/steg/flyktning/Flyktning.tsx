@@ -4,7 +4,6 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
-import { RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
@@ -81,97 +80,103 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
-                    <RawIntlProvider value={intl}>
-                        <form
-                            onSubmit={(e) => {
-                                setHasSubmitted(true);
-                                formik.handleSubmit(e);
-                            }}
+                    <form
+                        onSubmit={(e) => {
+                            setHasSubmitted(true);
+                            formik.handleSubmit(e);
+                        }}
+                    >
+                        <RadioGruppe
+                            legend={intl.formatMessage({ id: 'radio.flyktning.legend' })}
+                            feil={formik.errors.flyktningStatus}
                         >
-                            <RadioGruppe
-                                legend={intl.formatMessage({ id: 'radio.flyktning.legend' })}
-                                feil={formik.errors.flyktningStatus}
-                            >
-                                <Radio
-                                    label={intl.formatMessage({ id: 'radio.label.ja' })}
-                                    name="registertFlyktning"
-                                    onChange={() =>
-                                        formik.setValues({
-                                            ...formik.values,
-                                            flyktningStatus: FlyktningStatus.VilkårOppfylt,
-                                        })
-                                    }
-                                    defaultChecked={formik.values.flyktningStatus === FlyktningStatus.VilkårOppfylt}
-                                />
-                                <Radio
-                                    label={intl.formatMessage({ id: 'radio.label.nei' })}
-                                    name="registertFlyktning"
-                                    onChange={() =>
-                                        formik.setValues({
-                                            ...formik.values,
-                                            flyktningStatus: FlyktningStatus.VilkårIkkeOppfylt,
-                                        })
-                                    }
-                                    defaultChecked={formik.values.flyktningStatus === FlyktningStatus.VilkårIkkeOppfylt}
-                                />
-                                <Radio
-                                    label={intl.formatMessage({ id: 'radio.label.uavklart' })}
-                                    name="registertFlyktning"
-                                    onChange={() =>
-                                        formik.setValues({
-                                            ...formik.values,
-                                            flyktningStatus: FlyktningStatus.Uavklart,
-                                        })
-                                    }
-                                    defaultChecked={formik.values.flyktningStatus === FlyktningStatus.Uavklart}
-                                />
-                            </RadioGruppe>
-                            <Textarea
-                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
-                                name="begrunnelse"
-                                value={formik.values.begrunnelse || ''}
-                                onChange={(e) => {
+                            <Radio
+                                label={intl.formatMessage({ id: 'radio.label.ja' })}
+                                name="registertFlyktning"
+                                onChange={() =>
                                     formik.setValues({
                                         ...formik.values,
-                                        begrunnelse: e.target.value ? e.target.value : null,
-                                    });
-                                }}
-                                feil={formik.errors.begrunnelse}
+                                        flyktningStatus: FlyktningStatus.VilkårOppfylt,
+                                    })
+                                }
+                                defaultChecked={formik.values.flyktningStatus === FlyktningStatus.VilkårOppfylt}
                             />
+                            <Radio
+                                label={intl.formatMessage({ id: 'radio.label.nei' })}
+                                name="registertFlyktning"
+                                onChange={() =>
+                                    formik.setValues({
+                                        ...formik.values,
+                                        flyktningStatus: FlyktningStatus.VilkårIkkeOppfylt,
+                                    })
+                                }
+                                defaultChecked={formik.values.flyktningStatus === FlyktningStatus.VilkårIkkeOppfylt}
+                            />
+                            <Radio
+                                label={intl.formatMessage({ id: 'radio.label.uavklart' })}
+                                name="registertFlyktning"
+                                onChange={() =>
+                                    formik.setValues({
+                                        ...formik.values,
+                                        flyktningStatus: FlyktningStatus.Uavklart,
+                                    })
+                                }
+                                defaultChecked={formik.values.flyktningStatus === FlyktningStatus.Uavklart}
+                            />
+                        </RadioGruppe>
+                        <Textarea
+                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                            name="begrunnelse"
+                            value={formik.values.begrunnelse || ''}
+                            onChange={(e) => {
+                                formik.setValues({
+                                    ...formik.values,
+                                    begrunnelse: e.target.value ? e.target.value : null,
+                                });
+                            }}
+                            feil={formik.errors.begrunnelse}
+                        />
 
-                            {pipe(
-                                lagreBehandlingsinformasjonStatus,
-                                RemoteData.fold(
-                                    () => null,
-                                    () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
-                                    () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
-                                    () => null
-                                )
-                            )}
-                            <Vurderingknapper
-                                onTilbakeClick={() => {
-                                    history.push(props.forrigeUrl);
-                                }}
-                                onLagreOgFortsettSenereClick={() => {
-                                    if (!formik.values.flyktningStatus) return;
+                        {pipe(
+                            lagreBehandlingsinformasjonStatus,
+                            RemoteData.fold(
+                                () => null,
+                                () => (
+                                    <NavFrontendSpinner>
+                                        {intl.formatMessage({ id: 'display.lagre.lagrer' })}
+                                    </NavFrontendSpinner>
+                                ),
+                                () => (
+                                    <AlertStripe type="feil">
+                                        {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                    </AlertStripe>
+                                ),
+                                () => null
+                            )
+                        )}
+                        <Vurderingknapper
+                            onTilbakeClick={() => {
+                                history.push(props.forrigeUrl);
+                            }}
+                            onLagreOgFortsettSenereClick={() => {
+                                if (!formik.values.flyktningStatus) return;
 
-                                    dispatch(
-                                        lagreBehandlingsinformasjon({
-                                            sakId: props.sakId,
-                                            behandlingId: props.behandling.id,
-                                            behandlingsinformasjon: {
-                                                ...props.behandling.behandlingsinformasjon,
-                                                flyktning: {
-                                                    status: formik.values.flyktningStatus,
-                                                    begrunnelse: formik.values.begrunnelse,
-                                                },
+                                dispatch(
+                                    lagreBehandlingsinformasjon({
+                                        sakId: props.sakId,
+                                        behandlingId: props.behandling.id,
+                                        behandlingsinformasjon: {
+                                            ...props.behandling.behandlingsinformasjon,
+                                            flyktning: {
+                                                status: formik.values.flyktningStatus,
+                                                begrunnelse: formik.values.begrunnelse,
                                             },
-                                        })
-                                    );
-                                }}
-                            />
-                        </form>
-                    </RawIntlProvider>
+                                        },
+                                    })
+                                );
+                            }}
+                        />
+                    </form>
                 ),
                 right: (
                     <Faktablokk

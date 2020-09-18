@@ -4,7 +4,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
-import { RawIntlProvider, IntlShape } from 'react-intl';
+import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
@@ -121,80 +121,86 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
-                    <RawIntlProvider value={intl}>
-                        <form
-                            onSubmit={(e) => {
-                                setHasSubmitted(true);
-                                formik.handleSubmit(e);
-                            }}
+                    <form
+                        onSubmit={(e) => {
+                            setHasSubmitted(true);
+                            formik.handleSubmit(e);
+                        }}
+                    >
+                        <RadioGruppe
+                            legend={intl.formatMessage({ id: 'radio.fastOpphold.legend' })}
+                            feil={formik.errors.status}
                         >
-                            <RadioGruppe
-                                legend={intl.formatMessage({ id: 'radio.fastOpphold.legend' })}
-                                feil={formik.errors.status}
-                            >
-                                <Radio
-                                    label={intl.formatMessage({ id: 'radio.label.ja' })}
-                                    name="fastOppholdINorge"
-                                    checked={formik.values.status === FastOppholdINorgeStatus.VilkårOppfylt}
-                                    onChange={() =>
-                                        formik.setValues({
-                                            ...formik.values,
-                                            status: FastOppholdINorgeStatus.VilkårOppfylt,
-                                        })
-                                    }
-                                    defaultChecked={formik.values.status === FastOppholdINorgeStatus.VilkårOppfylt}
-                                />
-                                <Radio
-                                    label={intl.formatMessage({ id: 'radio.label.nei' })}
-                                    name="fastOppholdINorge"
-                                    checked={formik.values.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt}
-                                    onChange={() =>
-                                        formik.setValues({
-                                            ...formik.values,
-                                            status: FastOppholdINorgeStatus.VilkårIkkeOppfylt,
-                                        })
-                                    }
-                                    defaultChecked={formik.values.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt}
-                                />
-                                <Radio
-                                    label={intl.formatMessage({ id: 'radio.label.uavklart' })}
-                                    name="fastOppholdINorge"
-                                    checked={formik.values.status === FastOppholdINorgeStatus.Uavklart}
-                                    onChange={() =>
-                                        formik.setValues({ ...formik.values, status: FastOppholdINorgeStatus.Uavklart })
-                                    }
-                                    defaultChecked={formik.values.status === FastOppholdINorgeStatus.Uavklart}
-                                />
-                            </RadioGruppe>
-                            <Textarea
-                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
-                                name="begrunnelse"
-                                feil={formik.errors.begrunnelse}
-                                value={formik.values.begrunnelse ?? ''}
-                                onChange={(e) => {
+                            <Radio
+                                label={intl.formatMessage({ id: 'radio.label.ja' })}
+                                name="fastOppholdINorge"
+                                checked={formik.values.status === FastOppholdINorgeStatus.VilkårOppfylt}
+                                onChange={() =>
                                     formik.setValues({
                                         ...formik.values,
-                                        begrunnelse: e.target.value ? e.target.value : null,
-                                    });
-                                }}
+                                        status: FastOppholdINorgeStatus.VilkårOppfylt,
+                                    })
+                                }
+                                defaultChecked={formik.values.status === FastOppholdINorgeStatus.VilkårOppfylt}
                             />
-                            {pipe(
-                                lagreBehandlingsinformasjonStatus,
-                                RemoteData.fold(
-                                    () => null,
-                                    () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
-                                    () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
-                                    () => null
-                                )
-                            )}
-                            <Vurderingknapper
-                                onTilbakeClick={() => {
-                                    history.push(props.forrigeUrl);
-                                }}
-                                onLagreOgFortsettSenereClick={updateBehandlingsinformasjon}
+                            <Radio
+                                label={intl.formatMessage({ id: 'radio.label.nei' })}
+                                name="fastOppholdINorge"
+                                checked={formik.values.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt}
+                                onChange={() =>
+                                    formik.setValues({
+                                        ...formik.values,
+                                        status: FastOppholdINorgeStatus.VilkårIkkeOppfylt,
+                                    })
+                                }
+                                defaultChecked={formik.values.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt}
                             />
-                        </form>
-                    </RawIntlProvider>
+                            <Radio
+                                label={intl.formatMessage({ id: 'radio.label.uavklart' })}
+                                name="fastOppholdINorge"
+                                checked={formik.values.status === FastOppholdINorgeStatus.Uavklart}
+                                onChange={() =>
+                                    formik.setValues({ ...formik.values, status: FastOppholdINorgeStatus.Uavklart })
+                                }
+                                defaultChecked={formik.values.status === FastOppholdINorgeStatus.Uavklart}
+                            />
+                        </RadioGruppe>
+                        <Textarea
+                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                            name="begrunnelse"
+                            feil={formik.errors.begrunnelse}
+                            value={formik.values.begrunnelse ?? ''}
+                            onChange={(e) => {
+                                formik.setValues({
+                                    ...formik.values,
+                                    begrunnelse: e.target.value ? e.target.value : null,
+                                });
+                            }}
+                        />
+                        {pipe(
+                            lagreBehandlingsinformasjonStatus,
+                            RemoteData.fold(
+                                () => null,
+                                () => (
+                                    <NavFrontendSpinner>
+                                        {intl.formatMessage({ id: 'display.lagre.lagrer' })}
+                                    </NavFrontendSpinner>
+                                ),
+                                () => (
+                                    <AlertStripe type="feil">
+                                        {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                    </AlertStripe>
+                                ),
+                                () => null
+                            )
+                        )}
+                        <Vurderingknapper
+                            onTilbakeClick={() => {
+                                history.push(props.forrigeUrl);
+                            }}
+                            onLagreOgFortsettSenereClick={updateBehandlingsinformasjon}
+                        />
+                    </form>
                 ),
                 right: (
                     <Faktablokk

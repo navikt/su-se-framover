@@ -6,7 +6,7 @@ import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
-import { RawIntlProvider, IntlShape } from 'react-intl';
+import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
@@ -110,86 +110,90 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
-                    <RawIntlProvider value={intl}>
-                        <form
-                            onSubmit={(e) => {
-                                setHasSubmitted(true);
-                                formik.handleSubmit(e);
-                            }}
+                    <form
+                        onSubmit={(e) => {
+                            setHasSubmitted(true);
+                            formik.handleSubmit(e);
+                        }}
+                    >
+                        <RadioGruppe
+                            legend={intl.formatMessage({ id: 'radio.oppholdIUtland.legend' })}
+                            feil={formik.errors.status}
                         >
-                            <RadioGruppe
-                                legend={intl.formatMessage({ id: 'radio.oppholdIUtland.legend' })}
-                                feil={formik.errors.status}
-                            >
-                                <Radio
-                                    label={intl.formatMessage({ id: 'radio.label.ja' })}
-                                    name="status"
-                                    onChange={() =>
-                                        formik.setValues({
-                                            ...formik.values,
-                                            status: OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet,
-                                        })
-                                    }
-                                    checked={
-                                        formik.values.status === OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet
-                                    }
-                                />
-                                <Radio
-                                    label={intl.formatMessage({ id: 'radio.label.nei' })}
-                                    name="status"
-                                    onChange={() =>
-                                        formik.setValues({
-                                            ...formik.values,
-                                            status: OppholdIUtlandetStatus.SkalHoldeSegINorge,
-                                        })
-                                    }
-                                    checked={formik.values.status === OppholdIUtlandetStatus.SkalHoldeSegINorge}
-                                />
-                            </RadioGruppe>
-                            <Textarea
-                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
-                                name="begrunnelse"
-                                feil={formik.errors.begrunnelse}
-                                value={formik.values.begrunnelse ?? ''}
-                                onChange={(e) => {
+                            <Radio
+                                label={intl.formatMessage({ id: 'radio.label.ja' })}
+                                name="status"
+                                onChange={() =>
                                     formik.setValues({
                                         ...formik.values,
-                                        begrunnelse: e.target.value ? e.target.value : null,
-                                    });
-                                }}
+                                        status: OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet,
+                                    })
+                                }
+                                checked={formik.values.status === OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet}
                             />
-                            {pipe(
-                                lagreBehandlingsinformasjonStatus,
-                                RemoteData.fold(
-                                    () => null,
-                                    () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
-                                    () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
-                                    () => null
-                                )
-                            )}
-                            <Vurderingknapper
-                                onTilbakeClick={() => {
-                                    history.push(props.forrigeUrl);
-                                }}
-                                onLagreOgFortsettSenereClick={() => {
-                                    if (!formik.values.status) return;
+                            <Radio
+                                label={intl.formatMessage({ id: 'radio.label.nei' })}
+                                name="status"
+                                onChange={() =>
+                                    formik.setValues({
+                                        ...formik.values,
+                                        status: OppholdIUtlandetStatus.SkalHoldeSegINorge,
+                                    })
+                                }
+                                checked={formik.values.status === OppholdIUtlandetStatus.SkalHoldeSegINorge}
+                            />
+                        </RadioGruppe>
+                        <Textarea
+                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                            name="begrunnelse"
+                            feil={formik.errors.begrunnelse}
+                            value={formik.values.begrunnelse ?? ''}
+                            onChange={(e) => {
+                                formik.setValues({
+                                    ...formik.values,
+                                    begrunnelse: e.target.value ? e.target.value : null,
+                                });
+                            }}
+                        />
+                        {pipe(
+                            lagreBehandlingsinformasjonStatus,
+                            RemoteData.fold(
+                                () => null,
+                                () => (
+                                    <NavFrontendSpinner>
+                                        {intl.formatMessage({ id: 'display.lagre.lagrer' })}
+                                    </NavFrontendSpinner>
+                                ),
+                                () => (
+                                    <AlertStripe type="feil">
+                                        {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                    </AlertStripe>
+                                ),
+                                () => null
+                            )
+                        )}
+                        <Vurderingknapper
+                            onTilbakeClick={() => {
+                                history.push(props.forrigeUrl);
+                            }}
+                            onLagreOgFortsettSenereClick={() => {
+                                if (!formik.values.status) return;
 
-                                    dispatch(
-                                        lagreBehandlingsinformasjon({
-                                            sakId: props.sakId,
-                                            behandlingId: props.behandling.id,
-                                            behandlingsinformasjon: {
-                                                oppholdIUtlandet: {
-                                                    status: formik.values.status,
-                                                    begrunnelse: formik.values.begrunnelse,
-                                                },
+                                dispatch(
+                                    lagreBehandlingsinformasjon({
+                                        sakId: props.sakId,
+                                        behandlingId: props.behandling.id,
+                                        behandlingsinformasjon: {
+                                            oppholdIUtlandet: {
+                                                status: formik.values.status,
+                                                begrunnelse: formik.values.begrunnelse,
                                             },
-                                        })
-                                    );
-                                }}
-                            />
-                        </form>
-                    </RawIntlProvider>
+                                        },
+                                    })
+                                );
+                            }}
+                        />
+                    </form>
                 ),
                 right: (
                     <Faktablokk

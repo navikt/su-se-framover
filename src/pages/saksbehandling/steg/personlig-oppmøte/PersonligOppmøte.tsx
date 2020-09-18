@@ -4,7 +4,6 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
-import { RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { SuperRadioGruppe } from '~components/FormElements';
@@ -169,89 +168,95 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
-                    <RawIntlProvider value={intl}>
-                        <form
-                            onSubmit={(e) => {
-                                setHasSubmitted(true);
-                                formik.handleSubmit(e);
-                            }}
-                        >
+                    <form
+                        onSubmit={(e) => {
+                            setHasSubmitted(true);
+                            formik.handleSubmit(e);
+                        }}
+                    >
+                        <SuperRadioGruppe
+                            legend={intl.formatMessage({ id: 'radio.personligOppmøte.legend' })}
+                            values={formik.values}
+                            errors={formik.errors}
+                            onChange={formik.setValues}
+                            property="status"
+                            options={[
+                                {
+                                    label: intl.formatMessage({ id: 'radio.label.ja' }),
+                                    radioValue: MøttPersonlig.Ja,
+                                },
+                                {
+                                    label: intl.formatMessage({ id: 'radio.label.søkerHarVerge' }),
+                                    radioValue: MøttPersonlig.Verge,
+                                },
+                                {
+                                    label: intl.formatMessage({ id: 'radio.label.søkerHarFullmektig' }),
+                                    radioValue: MøttPersonlig.Fullmektig,
+                                },
+                                {
+                                    label: intl.formatMessage({ id: 'radio.label.nei' }),
+                                    radioValue: MøttPersonlig.Nei,
+                                },
+                            ]}
+                        />
+                        {formik.values.status === MøttPersonlig.Fullmektig && (
                             <SuperRadioGruppe
-                                legend={intl.formatMessage({ id: 'radio.personligOppmøte.legend' })}
+                                legend={intl.formatMessage({ id: 'radio.legeattest.legend' })}
                                 values={formik.values}
                                 errors={formik.errors}
                                 onChange={formik.setValues}
-                                property="status"
+                                property="legeattest"
                                 options={[
                                     {
                                         label: intl.formatMessage({ id: 'radio.label.ja' }),
-                                        radioValue: MøttPersonlig.Ja,
-                                    },
-                                    {
-                                        label: intl.formatMessage({ id: 'radio.label.søkerHarVerge' }),
-                                        radioValue: MøttPersonlig.Verge,
-                                    },
-                                    {
-                                        label: intl.formatMessage({ id: 'radio.label.søkerHarFullmektig' }),
-                                        radioValue: MøttPersonlig.Fullmektig,
+                                        radioValue: true,
                                     },
                                     {
                                         label: intl.formatMessage({ id: 'radio.label.nei' }),
-                                        radioValue: MøttPersonlig.Nei,
+                                        radioValue: false,
                                     },
                                 ]}
                             />
-                            {formik.values.status === MøttPersonlig.Fullmektig && (
-                                <SuperRadioGruppe
-                                    legend={intl.formatMessage({ id: 'radio.legeattest.legend' })}
-                                    values={formik.values}
-                                    errors={formik.errors}
-                                    onChange={formik.setValues}
-                                    property="legeattest"
-                                    options={[
-                                        {
-                                            label: intl.formatMessage({ id: 'radio.label.ja' }),
-                                            radioValue: true,
-                                        },
-                                        {
-                                            label: intl.formatMessage({ id: 'radio.label.nei' }),
-                                            radioValue: false,
-                                        },
-                                    ]}
-                                />
-                            )}
-                            <Textarea
-                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
-                                name="begrunnelse"
-                                feil={formik.errors.begrunnelse}
-                                value={formik.values.begrunnelse ?? ''}
-                                onChange={formik.handleChange}
-                            />
-                            {pipe(
-                                lagreBehandlingsinformasjonStatus,
-                                RemoteData.fold(
-                                    () => null,
-                                    () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
-                                    () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
-                                    () => null
-                                )
-                            )}
-                            <Vurderingknapper
-                                onTilbakeClick={() => {
-                                    history.push(props.forrigeUrl);
-                                }}
-                                onLagreOgFortsettSenereClick={() => {
-                                    const personligOppmøteStatus = toPersonligOppmøteStatus(formik.values);
-                                    if (!personligOppmøteStatus) return;
+                        )}
+                        <Textarea
+                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                            name="begrunnelse"
+                            feil={formik.errors.begrunnelse}
+                            value={formik.values.begrunnelse ?? ''}
+                            onChange={formik.handleChange}
+                        />
+                        {pipe(
+                            lagreBehandlingsinformasjonStatus,
+                            RemoteData.fold(
+                                () => null,
+                                () => (
+                                    <NavFrontendSpinner>
+                                        {intl.formatMessage({ id: 'display.lagre.lagrer' })}
+                                    </NavFrontendSpinner>
+                                ),
+                                () => (
+                                    <AlertStripe type="feil">
+                                        {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                    </AlertStripe>
+                                ),
+                                () => null
+                            )
+                        )}
+                        <Vurderingknapper
+                            onTilbakeClick={() => {
+                                history.push(props.forrigeUrl);
+                            }}
+                            onLagreOgFortsettSenereClick={() => {
+                                const personligOppmøteStatus = toPersonligOppmøteStatus(formik.values);
+                                if (!personligOppmøteStatus) return;
 
-                                    updateBehandlingsinformasjon({
-                                        status: personligOppmøteStatus,
-                                        begrunnelse: formik.values.begrunnelse,
-                                    });
-                                }}
-                            />
-                        </form>
-                    </RawIntlProvider>
+                                updateBehandlingsinformasjon({
+                                    status: personligOppmøteStatus,
+                                    begrunnelse: formik.values.begrunnelse,
+                                });
+                            }}
+                        />
+                    </form>
                 ),
                 right: (
                     <Faktablokk

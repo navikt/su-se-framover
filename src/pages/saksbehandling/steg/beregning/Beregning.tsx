@@ -8,7 +8,6 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { FradragFormData, isValidFradrag, fradragSchema, FradragInputs } from '~features/beregning';
@@ -108,145 +107,143 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
-                    <RawIntlProvider value={intl}>
-                        <form
-                            onSubmit={(e) => {
-                                setHasSubmitted(true);
-                                formik.handleSubmit(e);
-                            }}
-                        >
-                            <div className={styles.summering}>
-                                <p>
-                                    {props.behandling.behandlingsinformasjon.utledetSats}{' '}
-                                    {intl.formatMessage({ id: 'display.sats' })} xxx
-                                </p>
-                                <p>
-                                    {intl.formatMessage({ id: 'display.forventerArbeidsinntekt' })}{' '}
-                                    {props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt
-                                        ? props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt
-                                        : 0}
-                                </p>
-                            </div>
-                            <div className={styles.datoContainer}>
-                                <div>
-                                    <p>{intl.formatMessage({ id: 'datovelger.fom.legend' })}</p>
-                                    <DatePicker
-                                        id="fom"
-                                        selected={formik.values.fom}
-                                        onChange={(dato) => byttDato('fom', dato)}
-                                        dateFormat="MM/yyyy"
-                                        showMonthYearPicker
-                                        isClearable
-                                        selectsEnd
-                                        startDate={formik.values.fom}
-                                        endDate={formik.values.tom}
-                                        minDate={formik.values.fom}
-                                    />
-                                    {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
-                                </div>
-                                <div>
-                                    <p>{intl.formatMessage({ id: 'datovelger.tom.legend' })}</p>
-                                    <DatePicker
-                                        id="tom"
-                                        selected={formik.values.tom}
-                                        onChange={(dato) => byttDato('tom', dato)}
-                                        dateFormat="MM/yyyy"
-                                        showMonthYearPicker
-                                        isClearable
-                                        selectsEnd
-                                        startDate={formik.values.fom}
-                                        endDate={formik.values.tom}
-                                        minDate={formik.values.fom}
-                                    />
-                                    {formik.errors.tom && <Feilmelding>{formik.errors.tom}</Feilmelding>}
-                                </div>
-                            </div>
-
-                            <div className={styles.fradrag}>
-                                <FradragInputs
-                                    feltnavn="fradrag"
-                                    fradrag={formik.values.fradrag}
-                                    errors={formik.errors.fradrag}
-                                    intl={intl}
-                                    onChange={formik.handleChange}
-                                    onFjernClick={(index) => {
-                                        formik.setValues({
-                                            ...formik.values,
-                                            fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
-                                        });
-                                    }}
-                                    onLeggTilClick={() => {
-                                        formik.setValues({
-                                            ...formik.values,
-                                            fradrag: [
-                                                ...formik.values.fradrag,
-                                                { beløp: null, beskrivelse: null, type: null },
-                                            ],
-                                        });
-                                    }}
+                    <form
+                        onSubmit={(e) => {
+                            setHasSubmitted(true);
+                            formik.handleSubmit(e);
+                        }}
+                    >
+                        <div className={styles.summering}>
+                            <p>
+                                {props.behandling.behandlingsinformasjon.utledetSats}{' '}
+                                {intl.formatMessage({ id: 'display.sats' })} xxx
+                            </p>
+                            <p>
+                                {intl.formatMessage({ id: 'display.forventerArbeidsinntekt' })}{' '}
+                                {props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt
+                                    ? props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt
+                                    : 0}
+                            </p>
+                        </div>
+                        <div className={styles.datoContainer}>
+                            <div>
+                                <p>{intl.formatMessage({ id: 'datovelger.fom.legend' })}</p>
+                                <DatePicker
+                                    id="fom"
+                                    selected={formik.values.fom}
+                                    onChange={(dato) => byttDato('fom', dato)}
+                                    dateFormat="MM/yyyy"
+                                    showMonthYearPicker
+                                    isClearable
+                                    selectsEnd
+                                    startDate={formik.values.fom}
+                                    endDate={formik.values.tom}
+                                    minDate={formik.values.fom}
                                 />
+                                {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
                             </div>
-
-                            <div className={styles.bottomButtons}>
-                                <Knapp htmlType="submit">{intl.formatMessage({ id: 'knapp.startBeregning' })}</Knapp>
+                            <div>
+                                <p>{intl.formatMessage({ id: 'datovelger.tom.legend' })}</p>
+                                <DatePicker
+                                    id="tom"
+                                    selected={formik.values.tom}
+                                    onChange={(dato) => byttDato('tom', dato)}
+                                    dateFormat="MM/yyyy"
+                                    showMonthYearPicker
+                                    isClearable
+                                    selectsEnd
+                                    startDate={formik.values.fom}
+                                    endDate={formik.values.tom}
+                                    minDate={formik.values.fom}
+                                />
+                                {formik.errors.tom && <Feilmelding>{formik.errors.tom}</Feilmelding>}
                             </div>
+                        </div>
 
-                            {props.behandling.beregning && (
-                                <div className={styles.beregning}>
-                                    <VisBeregning beregning={props.behandling.beregning} />
-                                </div>
-                            )}
-                            {needsBeregning && !props.behandling.beregning && (
-                                <AlertStripe type="advarsel">
-                                    {intl.formatMessage({ id: 'alert.advarsel.kjørBeregningFørst' })}
-                                </AlertStripe>
-                            )}
-                            {pipe(
-                                simuleringStatus,
-                                RemoteData.fold(
-                                    () => null,
-                                    () => (
-                                        <NavFrontendSpinner>
-                                            {intl.formatMessage({ id: 'display.simulerer' })}
-                                        </NavFrontendSpinner>
-                                    ),
-                                    () => (
-                                        <AlertStripe type="feil">
-                                            {intl.formatMessage({ id: 'display.simuleringFeilet' })}
-                                        </AlertStripe>
-                                    ),
-                                    () => null
-                                )
-                            )}
-                            <Vurderingknapper
-                                onTilbakeClick={() => {
-                                    history.push(props.forrigeUrl);
+                        <div className={styles.fradrag}>
+                            <FradragInputs
+                                feltnavn="fradrag"
+                                fradrag={formik.values.fradrag}
+                                errors={formik.errors.fradrag}
+                                intl={intl}
+                                onChange={formik.handleChange}
+                                onFjernClick={(index) => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
+                                    });
                                 }}
-                                onNesteClick={async () => {
-                                    if (
-                                        RemoteData.isSuccess(beregningStatus) ||
-                                        (props.behandling.beregning && RemoteData.isInitial(beregningStatus))
-                                    ) {
-                                        const res = await dispatch(
-                                            sakSlice.startSimulering({
-                                                sakId: props.sakId,
-                                                behandlingId: props.behandling.id,
-                                            })
-                                        );
-
-                                        if (sakSlice.startSimulering.fulfilled.match(res)) {
-                                            history.push(props.nesteUrl);
-                                        }
-                                    } else {
-                                        setNeedsBeregning(true);
-                                    }
-                                }}
-                                onLagreOgFortsettSenereClick={() => {
-                                    formik.submitForm();
+                                onLeggTilClick={() => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        fradrag: [
+                                            ...formik.values.fradrag,
+                                            { beløp: null, beskrivelse: null, type: null },
+                                        ],
+                                    });
                                 }}
                             />
-                        </form>
-                    </RawIntlProvider>
+                        </div>
+
+                        <div className={styles.bottomButtons}>
+                            <Knapp htmlType="submit">{intl.formatMessage({ id: 'knapp.startBeregning' })}</Knapp>
+                        </div>
+
+                        {props.behandling.beregning && (
+                            <div className={styles.beregning}>
+                                <VisBeregning beregning={props.behandling.beregning} />
+                            </div>
+                        )}
+                        {needsBeregning && !props.behandling.beregning && (
+                            <AlertStripe type="advarsel">
+                                {intl.formatMessage({ id: 'alert.advarsel.kjørBeregningFørst' })}
+                            </AlertStripe>
+                        )}
+                        {pipe(
+                            simuleringStatus,
+                            RemoteData.fold(
+                                () => null,
+                                () => (
+                                    <NavFrontendSpinner>
+                                        {intl.formatMessage({ id: 'display.simulerer' })}
+                                    </NavFrontendSpinner>
+                                ),
+                                () => (
+                                    <AlertStripe type="feil">
+                                        {intl.formatMessage({ id: 'display.simuleringFeilet' })}
+                                    </AlertStripe>
+                                ),
+                                () => null
+                            )
+                        )}
+                        <Vurderingknapper
+                            onTilbakeClick={() => {
+                                history.push(props.forrigeUrl);
+                            }}
+                            onNesteClick={async () => {
+                                if (
+                                    RemoteData.isSuccess(beregningStatus) ||
+                                    (props.behandling.beregning && RemoteData.isInitial(beregningStatus))
+                                ) {
+                                    const res = await dispatch(
+                                        sakSlice.startSimulering({
+                                            sakId: props.sakId,
+                                            behandlingId: props.behandling.id,
+                                        })
+                                    );
+
+                                    if (sakSlice.startSimulering.fulfilled.match(res)) {
+                                        history.push(props.nesteUrl);
+                                    }
+                                } else {
+                                    setNeedsBeregning(true);
+                                }
+                            }}
+                            onLagreOgFortsettSenereClick={() => {
+                                formik.submitForm();
+                            }}
+                        />
+                    </form>
                 ),
                 right: (
                     <Faktablokk
