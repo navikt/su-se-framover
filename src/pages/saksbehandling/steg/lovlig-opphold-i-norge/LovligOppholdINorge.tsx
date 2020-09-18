@@ -73,6 +73,15 @@ function createFaktaBlokkArray(søknadsInnhold: SøknadInnhold) {
         );
     }
 
+    if (søknadsInnhold.oppholdstillatelse.statsborgerskapAndreLand) {
+        arr.push(
+            createFaktaBlokkObject(
+                søknadsInnhold.oppholdstillatelse.statsborgerskapAndreLandFritekst,
+                'Statsborgerskap fra andre land'
+            )
+        );
+    }
+
     return arr;
 }
 
