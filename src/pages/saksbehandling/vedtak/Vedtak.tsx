@@ -91,7 +91,7 @@ const Vedtak = (props: Props) => {
     }
 
     if (tilAttestering(behandling)) {
-        return <div>Behandling er sendt til Attestering</div>;
+        return <div>Vedtak er sendt til Attestering</div>;
     }
 
     if (
