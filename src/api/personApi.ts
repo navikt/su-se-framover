@@ -8,6 +8,13 @@ export enum Kjønn {
     Ukjent = 'UKJENT',
 }
 
+export enum Adressebeskyttelse {
+    Ugradert = 'UGRADERT',
+    StrengtFortrolig = 'STRENGT_FORTROLIG',
+    Fortrolig = 'FORTROLIG',
+    StrengtFortroligUtland = 'STRENGT_FORTROLIG_UTLAND',
+}
+
 export interface Person {
     fnr: string;
     aktorId: string;
@@ -28,6 +35,7 @@ export interface Person {
         kommunenavn: Nullable<string>;
     };
     statsborgerskap: Nullable<string>;
+    adressebeskyttelse: Nullable<Adressebeskyttelse>;
 }
 
 export async function fetchPerson(fnr: string): Promise<ApiClientResult<Person>> {

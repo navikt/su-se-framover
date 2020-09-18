@@ -5,6 +5,7 @@ import { KjønnKvinne, KjønnMann, KjønnUkent } from '~assets/Icons';
 
 import { showName } from '../features/person/personUtils';
 
+import { AdressebeskyttelseEtikett } from './AdressebeskyttelseEtikett';
 import styles from './personkort.module.less';
 
 export const Personkort = (props: { person: Person }) => {
@@ -29,6 +30,7 @@ export const Personkort = (props: { person: Person }) => {
                     <span>{`${props.person.fnr.substring(2, 4)}.`}</span>
                     <span>{`${props.person.fnr.substring(4, 6)}`}</span>
                 </div>
+                <AdressebeskyttelseEtikett person={props.person} />
             </div>
         </div>
     );

@@ -9,6 +9,7 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 
 import { ErrorCode } from '~api/apiClient';
 import { Kjønn } from '~api/personApi';
+import { AdressebeskyttelseEtikett } from '~components/AdressebeskyttelseEtikett';
 import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
@@ -92,6 +93,7 @@ const Saksoversikt = () => {
         }
         return Gender.unknown;
     }, [søker._tag]);
+
     const rerouteToSak = (id: string) => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: id }));
 
     return (
@@ -103,7 +105,14 @@ const Saksoversikt = () => {
                         RemoteData.map(([søker, sak]) => (
                             <>
                                 <div className={styles.headerContainer}>
-                                    <PersonCard fodselsnummer={søker.fnr} gender={gender} name={showName(søker)} />
+                                    <PersonCard
+                                        fodselsnummer={søker.fnr}
+                                        gender={gender}
+                                        name={showName(søker)}
+                                        renderLabelContent={(): JSX.Element => (
+                                            <AdressebeskyttelseEtikett person={søker} />
+                                        )}
+                                    />
                                     <Søkefelt onSakFetchSuccess={rerouteToSak} />
                                 </div>
                                 <div className={styles.container}>
