@@ -6,6 +6,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { SøknadInnhold } from '~api/søknadApi';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
@@ -36,6 +37,25 @@ const schema = yup.object<FormData>({
         ),
     begrunnelse: yup.string().defined(),
 });
+
+const createFaktaBlokkArray = (søknadsInnhold: SøknadInnhold) => {
+    const arr = [];
+    arr.push({
+        tittel: 'Er søker norsk statsborger?',
+        verdi: søknadsInnhold.oppholdstillatelse.erNorskStatsborger ? 'Ja' : 'Nei',
+    });
+    if (!søknadsInnhold.oppholdstillatelse.erNorskStatsborger) {
+        arr.push({
+            tittel: 'Har oppholdstillatelse?',
+            verdi: søknadsInnhold.oppholdstillatelse.harOppholdstillatelse ? 'Ja' : 'Nei',
+        });
+        arr.push({
+            tittel: 'Type oppholdstillatelse',
+            verdi: søknadsInnhold.oppholdstillatelse.typeOppholdstillatelse ?? 'Ikke registert',
+        });
+    }
+    return arr;
+};
 
 const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
@@ -164,20 +184,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 right: (
                     <Faktablokk
                         tittel="Fra søknad"
-                        fakta={[
-                            {
-                                tittel: 'Har oppholdstillatelse?',
-                                verdi: props.behandling.søknad.søknadInnhold.oppholdstillatelse.harOppholdstillatelse
-                                    ? 'Ja'
-                                    : 'Nei',
-                            },
-                            {
-                                tittel: 'Type oppholdstillatelse',
-                                verdi:
-                                    props.behandling.søknad.søknadInnhold.oppholdstillatelse.typeOppholdstillatelse ??
-                                    '',
-                            },
-                        ]}
+                        fakta={createFaktaBlokkArray(props.behandling.søknad.søknadInnhold)}
                     />
                 ),
             }}
