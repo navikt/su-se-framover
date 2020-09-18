@@ -73,7 +73,7 @@ const schema = yup.object<FormData>({
         .defined()
         .when('uførevedtak', {
             is: UførhetStatus.VilkårOppfylt,
-            then: yup.number().positive().integer().min(1).required().typeError('Feltet må være et tall'),
+            then: yup.number().positive().integer().min(0).required().typeError('Feltet må være et tall'),
             otherwise: yup.number().nullable().defined(),
         }) as unknown) as yup.Schema<string>,
 });
