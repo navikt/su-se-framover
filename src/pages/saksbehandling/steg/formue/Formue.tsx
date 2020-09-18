@@ -305,10 +305,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(
                                 () => null,
-<<<<<<< HEAD
-                                () => <NavFrontendSpinner>Lagrer...</NavFrontendSpinner>,
-                                () => <AlertStripe type="feil">En feil skjedde under lagring</AlertStripe>,
-=======
                                 () => (
                                     <NavFrontendSpinner>
                                         {intl.formatMessage({ id: 'display.lagre.lagrer' })}
@@ -319,7 +315,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                         {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
                                     </AlertStripe>
                                 ),
->>>>>>> removed unnecessary intlProvider and added intl for saving
                                 () => null
                             )
                         )}
