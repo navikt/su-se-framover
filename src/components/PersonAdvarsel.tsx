@@ -7,7 +7,7 @@ export const PersonAdvarsel = (props: { person: Person }) => {
     const { adressebeskyttelse, skjermet } = props.person;
 
     if (!adressebeskyttelse || adressebeskyttelse === Adressebeskyttelse.Ugradert) {
-        return skjermet ? <EtikettAdvarsel mini>Egen ansatt</EtikettAdvarsel> : <></>;
+        return skjermet ? <EtikettAdvarsel mini>Skjermet</EtikettAdvarsel> : <></>;
     }
 
     return <EtikettAdvarsel mini>{humanize(adressebeskyttelse)}</EtikettAdvarsel>;
