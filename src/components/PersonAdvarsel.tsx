@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { Person, Adressebeskyttelse } from '~api/personApi';
 
-export const AdressebeskyttelseEtikett = (props: { person: Person }) => {
+export const PersonAdvarsel = (props: { person: Person }) => {
     const adressebeskyttelse = props.person.adressebeskyttelse;
 
     if (adressebeskyttelse === null || adressebeskyttelse === Adressebeskyttelse.Ugradert) {

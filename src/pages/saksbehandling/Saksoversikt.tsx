@@ -8,8 +8,8 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 
 import { ErrorCode } from '~api/apiClient';
 import { Kjønn } from '~api/personApi';
-import { AdressebeskyttelseEtikett } from '~components/AdressebeskyttelseEtikett';
 import Hendelseslogg from '~components/Hendelseslogg';
+import { PersonAdvarsel } from '~components/PersonAdvarsel';
 import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
@@ -77,9 +77,7 @@ const Saksoversikt = () => {
                                         fodselsnummer={søker.fnr}
                                         gender={gender}
                                         name={showName(søker)}
-                                        renderLabelContent={(): JSX.Element => (
-                                            <AdressebeskyttelseEtikett person={søker} />
-                                        )}
+                                        renderLabelContent={(): JSX.Element => <PersonAdvarsel person={søker} />}
                                     />
                                     <Søkefelt onSakFetchSuccess={rerouteToSak} />
                                 </div>
