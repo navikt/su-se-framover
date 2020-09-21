@@ -6,20 +6,11 @@ import { Person, Adressebeskyttelse } from '~api/personApi';
 export const PersonAdvarsel = (props: { person: Person }) => {
     const { adressebeskyttelse, skjermet } = props.person;
 
-    switch (adressebeskyttelse) {
-        case null:
-        case Adressebeskyttelse.Ugradert:
-            return skjermet ? <EtikettAdvarsel mini>Egen ansatt</EtikettAdvarsel> : <></>;
-
-        case Adressebeskyttelse.StrengtFortrolig:
-            return <EtikettAdvarsel mini>Kode 6</EtikettAdvarsel>;
-
-        case Adressebeskyttelse.Fortrolig:
-            return <EtikettAdvarsel mini>Kode 7</EtikettAdvarsel>;
-
-        default:
-            return <EtikettAdvarsel mini>{humanize(adressebeskyttelse)}</EtikettAdvarsel>;
+    if (!adressebeskyttelse || adressebeskyttelse === Adressebeskyttelse.Ugradert) {
+        return skjermet ? <EtikettAdvarsel mini>Egen ansatt</EtikettAdvarsel> : <></>;
     }
+
+    return <EtikettAdvarsel mini>{humanize(adressebeskyttelse)}</EtikettAdvarsel>;
 };
 
 function humanize(upperSnakeCase: string): string {
