@@ -2,8 +2,6 @@ import { format } from 'date-fns';
 import { Element, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
-import { findBehandling } from '~features/behandling/behandlingUtils';
-import * as Routes from '~lib/routes';
 import { Hendelse } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 
@@ -13,13 +11,14 @@ type Props = {
     sak: Sak;
 };
 const Hendelseslogg = ({ sak }: Props) => {
-    const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
-    const behandling = findBehandling(sak, urlParams.behandlingId);
+    const hendelser = sak.behandlinger
+        .flatMap((b) => b.hendelser ?? [])
+        .sort((a, b) => new Date(a.tidspunkt).getMilliseconds() - new Date(b.tidspunkt).getMilliseconds());
 
     return (
         <div className={styles.hendelseslogg}>
-            {behandling?.hendelser?.length ? (
-                behandling.hendelser.map((hendelse, index) => <HendelseComponent key={index} hendelse={hendelse} />)
+            {hendelser ? (
+                hendelser.map((hendelse, index) => <HendelseComponent key={index} hendelse={hendelse} />)
             ) : (
                 <div> inge hendelser nå</div>
             )}
