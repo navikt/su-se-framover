@@ -36,6 +36,7 @@ export interface Person {
     };
     statsborgerskap: Nullable<string>;
     adressebeskyttelse: Nullable<Adressebeskyttelse>;
+    skjermet: Nullable<boolean>;
 }
 
 export async function fetchPerson(fnr: string): Promise<ApiClientResult<Person>> {
