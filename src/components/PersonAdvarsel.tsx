@@ -4,16 +4,21 @@ import * as React from 'react';
 import { Person, Adressebeskyttelse } from '~api/personApi';
 
 export const PersonAdvarsel = (props: { person: Person }) => {
-    const adressebeskyttelse = props.person.adressebeskyttelse;
+    const { adressebeskyttelse, skjermet } = props.person;
 
-    if (adressebeskyttelse === null || adressebeskyttelse === Adressebeskyttelse.Ugradert) {
-        return <></>;
-    } else if (adressebeskyttelse === Adressebeskyttelse.StrengtFortrolig) {
-        return <EtikettAdvarsel mini>Kode 6</EtikettAdvarsel>;
-    } else if (adressebeskyttelse === Adressebeskyttelse.Fortrolig) {
-        return <EtikettAdvarsel mini>Kode 7</EtikettAdvarsel>;
-    } else {
-        return <EtikettAdvarsel mini>{humanize(adressebeskyttelse)}</EtikettAdvarsel>;
+    switch (adressebeskyttelse) {
+        case null:
+        case Adressebeskyttelse.Ugradert:
+            return skjermet ? <EtikettAdvarsel mini>Egen ansatt</EtikettAdvarsel> : <></>;
+
+        case Adressebeskyttelse.StrengtFortrolig:
+            return <EtikettAdvarsel mini>Kode 6</EtikettAdvarsel>;
+
+        case Adressebeskyttelse.Fortrolig:
+            return <EtikettAdvarsel mini>Kode 7</EtikettAdvarsel>;
+
+        default:
+            return <EtikettAdvarsel mini>{humanize(adressebeskyttelse)}</EtikettAdvarsel>;
     }
 };
 
