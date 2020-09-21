@@ -6,7 +6,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Feilmelding } from 'nav-frontend-typografi';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import { useHistory } from 'react-router-dom';
 
@@ -36,13 +36,19 @@ interface FormData {
 const Beregning = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-
-    const [beregningStatus, simuleringStatus] = useAppSelector((state) => [
-        state.sak.beregningStatus,
-        state.sak.simuleringStatus,
-    ]);
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [needsBeregning, setNeedsBeregning] = useState(false);
+
+    const [beregningStatus, simuleringStatus, utledetSatsBeløp] = useAppSelector((state) => [
+        state.sak.beregningStatus,
+        state.sak.simuleringStatus,
+        state.sak.utledetSatsBeløp,
+    ]);
+
+    useEffect(() => {
+        dispatch(sakSlice.utledetSatsBeløp({ sakId: props.sakId, behandlingId: props.behandling.id }));
+    }, []);
+
     const startBeregning = (values: FormData) => {
         if (!values.fom || !values.tom) {
             return;
@@ -116,7 +122,10 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                         <div className={styles.summering}>
                             <p>
                                 {props.behandling.behandlingsinformasjon.utledetSats}{' '}
-                                {intl.formatMessage({ id: 'display.sats' })} xxx
+                                {intl.formatMessage({ id: 'display.sats' })}{' '}
+                                {RemoteData.isSuccess(utledetSatsBeløp)
+                                    ? intl.formatNumber(utledetSatsBeløp.value)
+                                    : intl.formatMessage({ id: 'display.finnerIkkeSatsBeløp' })}
                             </p>
                             <p>
                                 {intl.formatMessage({ id: 'display.forventerArbeidsinntekt' })}{' '}

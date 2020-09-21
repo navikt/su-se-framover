@@ -25,6 +25,13 @@ export async function hentBehandling(sakId: string, behandlingId: string): Promi
     });
 }
 
+export async function utledetSatsBeløp(sakId: string, behandlingId: string): Promise<ApiClientResult<number>> {
+    return apiClient({
+        url: `/saker/${sakId}/behandlinger/${behandlingId}/utledetSatsBeløp`,
+        method: 'GET',
+    });
+}
+
 export async function startBeregning(
     sakId: string,
     behandlingId: string,

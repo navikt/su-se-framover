@@ -17,6 +17,7 @@ export interface Behandling {
     opprettet: string;
     attestant: Nullable<string>;
     hendelser: Nullable<Array<Hendelse>>;
+    satsBeløp: Nullable<number>;
 }
 
 export enum Behandlingsstatus {

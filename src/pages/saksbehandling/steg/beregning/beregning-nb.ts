@@ -5,6 +5,7 @@ export default {
     'datovelger.fom.legend': 'Fra og med',
     'datovelger.tom.legend': 'Til og med',
 
+    'display.finnerIkkeSatsBeløp': 'Sats er ikke tilgjengelig',
     'display.fraSøknad.forventerArbeidsinntekt': 'Forventer du å ha arbeidsinntekt fremover?',
     'display.fraSøknad.tjenerPengerIUtland': 'Tjener du penger i utlandet?',
     'display.fraSøknad.andreYtelserINav': 'Har du andre ytelser i NAV?',

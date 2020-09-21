@@ -82,6 +82,18 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const utledetSatsBeløp = createAsyncThunk<
+    number,
+    { sakId: string; behandlingId: string },
+    { rejectValue: ApiError }
+>('behandling/utledetSatsBeløp', async ({ sakId, behandlingId }, thunkApi) => {
+    const res = await behandlingApi.utledetSatsBeløp(sakId, behandlingId);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const startBeregning = createAsyncThunk<
     Behandling,
     { sakId: string; behandlingId: string; sats: Sats; fom: Date; tom: Date; fradrag: Fradrag[] },
@@ -157,6 +169,7 @@ interface SakState {
     simuleringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     sendtTilAttesteringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     attesteringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
+    utledetSatsBeløp: RemoteData.RemoteData<{ code: ErrorCode; message: string }, number>;
 }
 
 const initialState: SakState = {
@@ -168,6 +181,7 @@ const initialState: SakState = {
     simuleringStatus: RemoteData.initial,
     sendtTilAttesteringStatus: RemoteData.initial,
     attesteringStatus: RemoteData.initial,
+    utledetSatsBeløp: RemoteData.initial,
 };
 
 export default createSlice({
@@ -372,6 +386,24 @@ export default createSlice({
                     behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
                 }))
             );
+        });
+
+        builder.addCase(utledetSatsBeløp.pending, (state) => {
+            state.utledetSatsBeløp = RemoteData.pending;
+        });
+        builder.addCase(utledetSatsBeløp.rejected, (state, action) => {
+            state.utledetSatsBeløp = action.payload
+                ? RemoteData.failure({
+                      code: action.payload.code,
+                      message: `Feilet med status ${action.payload.statusCode}`,
+                  })
+                : RemoteData.failure({
+                      code: ErrorCode.Unknown,
+                      message: 'Ukjent feil',
+                  });
+        });
+        builder.addCase(utledetSatsBeløp.fulfilled, (state, action) => {
+            state.utledetSatsBeløp = RemoteData.success(action.payload);
         });
     },
 });
