@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { compareDesc, format } from 'date-fns';
 import { Element, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
@@ -10,10 +10,23 @@ import styles from './hendelseslogg.module.less';
 type Props = {
     sak: Sak;
 };
+
+const hentSøknadMottatHendelser = (sak: Sak) => {
+    const mottatHendelser: Array<Hendelse> = sak.søknader.map((søknad) => ({
+        overskrift: 'Søknad mottat!',
+        underoverskrift: '',
+        tidspunkt: søknad.opprettet,
+        melding: `Søknad blev mottat med søknadsid: ${søknad.id}`,
+    }));
+
+    return mottatHendelser;
+};
+
 const Hendelseslogg = ({ sak }: Props) => {
-    const hendelser = sak.behandlinger
-        .flatMap((b) => b.hendelser ?? [])
-        .sort((a, b) => new Date(a.tidspunkt).getMilliseconds() - new Date(b.tidspunkt).getMilliseconds());
+    const mottatSøknader = hentSøknadMottatHendelser(sak);
+    const hendelser = [...sak.behandlinger.flatMap((b) => b.hendelser ?? []), ...mottatSøknader].sort((a, b) =>
+        compareDesc(new Date(a.tidspunkt), new Date(b.tidspunkt))
+    );
 
     return (
         <div className={styles.hendelseslogg}>
