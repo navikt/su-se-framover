@@ -244,7 +244,7 @@ const Attestering = () => {
                         </Knapp>
                     </form>
                 )}
-                {RemoteData.isSuccess(attesteringStatus) && <p>Attesteringsbeslut innsendt!</p>}
+                {RemoteData.isSuccess(attesteringStatus) && <p>Attestering utført!</p>}
             </div>
         </div>
     );
