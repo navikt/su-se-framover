@@ -19,12 +19,12 @@ const hentSøknadMottattHendelser = (sak: Sak) => {
         melding: `Søknad ble mottatt, søknadsid: ${søknad.id}`,
     }));
 
-    return mottatHendelser;
+    return mottattHendelser;
 };
 
 const Hendelseslogg = ({ sak }: Props) => {
-    const mottatteSøknader = hentSøknadMottatHendelser(sak);
-    const hendelser = [...sak.behandlinger.flatMap((b) => b.hendelser ?? []), ...mottattSøknader].sort((a, b) =>
+    const mottatteSøknader = hentSøknadMottattHendelser(sak);
+    const hendelser = [...sak.behandlinger.flatMap((b) => b.hendelser ?? []), ...mottatteSøknader].sort((a, b) =>
         compareDesc(new Date(a.tidspunkt), new Date(b.tidspunkt))
     );
 
