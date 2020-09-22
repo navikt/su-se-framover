@@ -39,14 +39,14 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [needsBeregning, setNeedsBeregning] = useState(false);
 
-    const [beregningStatus, simuleringStatus, utledetSatsBeløp] = useAppSelector((state) => [
+    const [beregningStatus, simuleringStatus, utledetSatsInfo] = useAppSelector((state) => [
         state.sak.beregningStatus,
         state.sak.simuleringStatus,
-        state.sak.utledetSatsBeløp,
+        state.sak.utledetSatsInfo,
     ]);
 
     useEffect(() => {
-        dispatch(sakSlice.utledetSatsBeløp({ sakId: props.sakId, behandlingId: props.behandling.id }));
+        dispatch(sakSlice.getUtledetSatsInfo({ sakId: props.sakId, behandlingId: props.behandling.id }));
     }, []);
 
     const startBeregning = (values: FormData) => {
@@ -123,8 +123,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             <p>
                                 {props.behandling.behandlingsinformasjon.utledetSats}{' '}
                                 {intl.formatMessage({ id: 'display.sats' })}{' '}
-                                {RemoteData.isSuccess(utledetSatsBeløp)
-                                    ? intl.formatNumber(utledetSatsBeløp.value)
+                                {RemoteData.isSuccess(utledetSatsInfo)
+                                    ? intl.formatNumber(utledetSatsInfo.value.satsBeløp)
                                     : intl.formatMessage({ id: 'display.finnerIkkeSatsBeløp' })}
                             </p>
                             <p>
