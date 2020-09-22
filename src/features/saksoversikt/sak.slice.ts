@@ -404,7 +404,6 @@ export default createSlice({
                   });
         });
         builder.addCase(getUtledetSatsInfo.fulfilled, (state, action) => {
-            console.log('payload: ', action.payload);
             state.utledetSatsInfo = RemoteData.success(action.payload);
         });
     },
