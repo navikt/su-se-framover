@@ -16,7 +16,7 @@ const hentSøknadMottattHendelser = (sak: Sak) => {
         overskrift: 'Søknad mottatt!',
         underoverskrift: '',
         tidspunkt: søknad.opprettet,
-        melding: `Søknad blev mottat med søknadsid: ${søknad.id}`,
+        melding: `Søknad ble mottatt, søknadsid: ${søknad.id}`,
     }));
 
     return mottatHendelser;
