@@ -34,6 +34,6 @@ export enum Behandlingsstatus {
 export interface Hendelse {
     overskrift: string;
     underoverskrift: string;
-    tidspunkt: Date;
+    tidspunkt: string;
     melding: string;
 }
