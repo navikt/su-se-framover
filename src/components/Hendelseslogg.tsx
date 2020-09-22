@@ -33,7 +33,7 @@ const Hendelseslogg = ({ sak }: Props) => {
             {hendelser ? (
                 hendelser.map((hendelse, index) => <HendelseComponent key={index} hendelse={hendelse} />)
             ) : (
-                <div> inge hendelser nå</div>
+                <div>Ingen hendelser</div>
             )}
         </div>
     );
