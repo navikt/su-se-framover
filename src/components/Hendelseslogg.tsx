@@ -11,7 +11,7 @@ type Props = {
     sak: Sak;
 };
 
-const hentSøknadMottatHendelser = (sak: Sak) => {
+const hentSøknadMottattHendelser = (sak: Sak) => {
     const mottatHendelser: Array<Hendelse> = sak.søknader.map((søknad) => ({
         overskrift: 'Søknad mottat!',
         underoverskrift: '',
