@@ -1,9 +1,7 @@
-import { format } from 'date-fns';
+import { compareDesc, format } from 'date-fns';
 import { Element, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
-import { findBehandling } from '~features/behandling/behandlingUtils';
-import * as Routes from '~lib/routes';
 import { Hendelse } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 
@@ -12,16 +10,30 @@ import styles from './hendelseslogg.module.less';
 type Props = {
     sak: Sak;
 };
+
+const hentSøknadMottattHendelser = (sak: Sak) => {
+    const mottattHendelser: Array<Hendelse> = sak.søknader.map((søknad) => ({
+        overskrift: 'Søknad mottatt!',
+        underoverskrift: '',
+        tidspunkt: søknad.opprettet,
+        melding: `Søknad ble mottatt, søknadsid: ${søknad.id}`,
+    }));
+
+    return mottattHendelser;
+};
+
 const Hendelseslogg = ({ sak }: Props) => {
-    const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
-    const behandling = findBehandling(sak, urlParams.behandlingId);
+    const mottatteSøknader = hentSøknadMottattHendelser(sak);
+    const hendelser = [...sak.behandlinger.flatMap((b) => b.hendelser ?? []), ...mottatteSøknader].sort((a, b) =>
+        compareDesc(new Date(a.tidspunkt), new Date(b.tidspunkt))
+    );
 
     return (
         <div className={styles.hendelseslogg}>
-            {behandling?.hendelser?.length ? (
-                behandling.hendelser.map((hendelse, index) => <HendelseComponent key={index} hendelse={hendelse} />)
+            {hendelser ? (
+                hendelser.map((hendelse, index) => <HendelseComponent key={index} hendelse={hendelse} />)
             ) : (
-                <div> inge hendelser nå</div>
+                <div>Ingen hendelser</div>
             )}
         </div>
     );

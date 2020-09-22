@@ -74,6 +74,7 @@ const Saksoversikt = () => {
                 <Route path={Routes.saksoversiktValgtSak.path}>
                     {pipe(
                         data,
+<<<<<<< HEAD
                         RemoteData.fold(
                             () => null,
                             () => <NavFrontendSpinner />,
@@ -126,6 +127,45 @@ const Saksoversikt = () => {
                                 </>
                             )
                         )
+=======
+                        RemoteData.map(([søker, sak]) => (
+                            <>
+                                <div className={styles.headerContainer}>
+                                    <PersonCard
+                                        fodselsnummer={søker.fnr}
+                                        gender={gender}
+                                        name={showName(søker)}
+                                        renderLabelContent={(): JSX.Element => <PersonAdvarsel person={søker} />}
+                                    />
+                                    <Søkefelt onSakFetchSuccess={rerouteToSak} />
+                                </div>
+                                <div className={styles.container}>
+                                    <Switch>
+                                        <Route path={Routes.saksoversiktValgtBehandling.path}>
+                                            <div className={styles.mainContent}>
+                                                <Switch>
+                                                    <Route path={Routes.saksbehandlingBeregning.path}>
+                                                        <Beregning sak={sak} />
+                                                    </Route>
+                                                    <Route path={Routes.saksbehandlingVedtak.path}>
+                                                        <Vedtak sak={sak} />
+                                                    </Route>
+                                                    <Route path={Routes.saksbehandlingVilkårsvurdering.path}>
+                                                        <Vilkår sak={sak} />
+                                                    </Route>
+                                                </Switch>
+                                            </div>
+                                        </Route>
+                                        <Route path="*">
+                                            <Sakintro sak={sak} />
+                                        </Route>
+                                    </Switch>
+                                    <Hendelseslogg sak={sak} />
+                                </div>
+                            </>
+                        )),
+                        RemoteData.getOrElse(() => <NavFrontendSpinner />)
+>>>>>>> Hendelselogg oversikt (#257)
                     )}
                 </Route>
                 <Route path={Routes.saksoversiktIndex.path}>
