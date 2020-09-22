@@ -12,7 +12,7 @@ type Props = {
 };
 
 const hentSøknadMottattHendelser = (sak: Sak) => {
-    const mottatHendelser: Array<Hendelse> = sak.søknader.map((søknad) => ({
+    const mottattHendelser: Array<Hendelse> = sak.søknader.map((søknad) => ({
         overskrift: 'Søknad mottat!',
         underoverskrift: '',
         tidspunkt: søknad.opprettet,
