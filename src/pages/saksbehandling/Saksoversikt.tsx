@@ -42,8 +42,12 @@ const Saksoversikt = () => {
         }
     }, [sak._tag]);
     useEffect(() => {
-        if (RemoteData.isSuccess(sak) && RemoteData.isInitial(søker)) {
-            dispatch(personSlice.fetchPerson({ fnr: sak.value.fnr }));
+        if (RemoteData.isSuccess(sak)) {
+            if (RemoteData.isInitial(søker)) {
+                dispatch(personSlice.fetchPerson({ fnr: sak.value.fnr }));
+            } else if (RemoteData.isSuccess(søker)) {
+                rerouteToSak(sak.value.id);
+            }
         }
     }, [sak._tag, søker._tag]);
 
@@ -70,49 +74,64 @@ const Saksoversikt = () => {
                 <Route path={Routes.saksoversiktValgtSak.path}>
                     {pipe(
                         data,
-                        RemoteData.map(([søker, sak]) => (
-                            <>
-                                <div className={styles.headerContainer}>
-                                    <PersonCard
-                                        fodselsnummer={søker.fnr}
-                                        gender={gender}
-                                        name={showName(søker)}
-                                        renderLabelContent={(): JSX.Element => <PersonAdvarsel person={søker} />}
-                                    />
-                                    <Søkefelt onSakFetchSuccess={rerouteToSak} />
-                                </div>
-                                <div className={styles.container}>
-                                    <Switch>
-                                        <Route path={Routes.saksoversiktValgtBehandling.path}>
-                                            <div className={styles.mainContent}>
-                                                <Switch>
-                                                    <Route path={Routes.saksbehandlingBeregning.path}>
-                                                        <Beregning sak={sak} />
-                                                    </Route>
-                                                    <Route path={Routes.saksbehandlingVedtak.path}>
-                                                        <Vedtak sak={sak} />
-                                                    </Route>
-                                                    <Route path={Routes.saksbehandlingVilkårsvurdering.path}>
-                                                        <Vilkår sak={sak} />
-                                                    </Route>
-                                                </Switch>
-                                            </div>
-                                        </Route>
-                                        <Route path="*">
-                                            <Sakintro sak={sak} />
-                                        </Route>
-                                    </Switch>
-                                    <Hendelseslogg sak={sak} />
-                                </div>
-                            </>
-                        )),
-                        RemoteData.getOrElse(() => <NavFrontendSpinner />)
+                        RemoteData.fold(
+                            () => null,
+                            () => <NavFrontendSpinner />,
+                            () =>
+                                RemoteData.isFailure(søker) ? (
+                                    <AlertStripe type="feil">
+                                        {søker.error.code === ErrorCode.Unauthorized
+                                            ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
+                                            : søker.error.message}
+                                    </AlertStripe>
+                                ) : (
+                                    RemoteData.isFailure(sak) && (
+                                        <AlertStripe type="feil">{sak.error.message}</AlertStripe>
+                                    )
+                                ),
+                            ([søker, sak]) => (
+                                <>
+                                    <div className={styles.headerContainer}>
+                                        <PersonCard
+                                            fodselsnummer={søker.fnr}
+                                            gender={gender}
+                                            name={showName(søker)}
+                                            renderLabelContent={(): JSX.Element => <PersonAdvarsel person={søker} />}
+                                        />
+                                        <Søkefelt />
+                                    </div>
+                                    <div className={styles.container}>
+                                        <Switch>
+                                            <Route path={Routes.saksoversiktValgtBehandling.path}>
+                                                <div className={styles.mainContent}>
+                                                    <Switch>
+                                                        <Route path={Routes.saksbehandlingBeregning.path}>
+                                                            <Beregning sak={sak} />
+                                                        </Route>
+                                                        <Route path={Routes.saksbehandlingVedtak.path}>
+                                                            <Vedtak sak={sak} />
+                                                        </Route>
+                                                        <Route path={Routes.saksbehandlingVilkårsvurdering.path}>
+                                                            <Vilkår sak={sak} />
+                                                        </Route>
+                                                    </Switch>
+                                                </div>
+                                            </Route>
+                                            <Route path="*">
+                                                <Sakintro sak={sak} />
+                                            </Route>
+                                        </Switch>
+                                        <Hendelseslogg sak={sak} />
+                                    </div>
+                                </>
+                            )
+                        )
                     )}
                 </Route>
                 <Route path={Routes.saksoversiktIndex.path}>
                     <div>
-                        <Søkefelt onSakFetchSuccess={rerouteToSak} />
-                        {RemoteData.isPending(data) && <NavFrontendSpinner />}
+                        <Søkefelt />
+                        {(RemoteData.isPending(søker) || RemoteData.isPending(sak)) && <NavFrontendSpinner />}
                         {RemoteData.isFailure(søker) ? (
                             <AlertStripe type="feil">
                                 {søker.error.code === ErrorCode.Unauthorized
