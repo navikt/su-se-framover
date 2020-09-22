@@ -24,7 +24,7 @@ const hentSøknadMottattHendelser = (sak: Sak) => {
 
 const Hendelseslogg = ({ sak }: Props) => {
     const mottatteSøknader = hentSøknadMottatHendelser(sak);
-    const hendelser = [...sak.behandlinger.flatMap((b) => b.hendelser ?? []), ...mottatSøknader].sort((a, b) =>
+    const hendelser = [...sak.behandlinger.flatMap((b) => b.hendelser ?? []), ...mottattSøknader].sort((a, b) =>
         compareDesc(new Date(a.tidspunkt), new Date(b.tidspunkt))
     );
 
