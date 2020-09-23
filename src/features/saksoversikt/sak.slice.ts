@@ -7,6 +7,7 @@ import * as sakApi from '~api/sakApi';
 import { pipe } from '~lib/fp';
 import { Behandling } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
+import { UtledetSatsInfo } from '~types/Beregning';
 import { Fradrag } from '~types/Fradrag';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
@@ -76,6 +77,18 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/informasjon', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreBehandlingsinformasjon(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const getUtledetSatsInfo = createAsyncThunk<
+    UtledetSatsInfo,
+    { sakId: string; behandlingId: string },
+    { rejectValue: ApiError }
+>('behandling/utledetSatsInfo', async ({ sakId, behandlingId }, thunkApi) => {
+    const res = await behandlingApi.getUtledetSatsInfo(sakId, behandlingId);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -157,6 +170,7 @@ interface SakState {
     simuleringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     sendtTilAttesteringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     attesteringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
+    utledetSatsInfo: RemoteData.RemoteData<{ code: ErrorCode; message: string }, UtledetSatsInfo>;
 }
 
 const initialState: SakState = {
@@ -168,6 +182,7 @@ const initialState: SakState = {
     simuleringStatus: RemoteData.initial,
     sendtTilAttesteringStatus: RemoteData.initial,
     attesteringStatus: RemoteData.initial,
+    utledetSatsInfo: RemoteData.initial,
 };
 
 export default createSlice({
@@ -372,6 +387,24 @@ export default createSlice({
                     behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
                 }))
             );
+        });
+
+        builder.addCase(getUtledetSatsInfo.pending, (state) => {
+            state.utledetSatsInfo = RemoteData.pending;
+        });
+        builder.addCase(getUtledetSatsInfo.rejected, (state, action) => {
+            state.utledetSatsInfo = action.payload
+                ? RemoteData.failure({
+                      code: action.payload.code,
+                      message: `Feilet med status ${action.payload.statusCode}`,
+                  })
+                : RemoteData.failure({
+                      code: ErrorCode.Unknown,
+                      message: 'Ukjent feil',
+                  });
+        });
+        builder.addCase(getUtledetSatsInfo.fulfilled, (state, action) => {
+            state.utledetSatsInfo = RemoteData.success(action.payload);
         });
     },
 });
