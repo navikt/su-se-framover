@@ -4,15 +4,64 @@
     margin-bottom: @spacing;
 }
 
-.fradragItemContainer {
-    margin-bottom: @spacing;
+.fradragItemsContainer {
+    display: flex;
+    align-items: center;
 }
 
 .fradragTypeOgBelopContainer {
     display: flex;
-    justify-content: space-between;
+    margin-bottom: @spacing;
+    justify-content: flex-start;
+
+    > :not(:last-child) {
+        margin-right: @spacing-xs;
+    }
 
     .fradragtype {
-        margin-right: @spacing-s;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0px;
+    }
+
+    .søppelbøtte {
+        align-self: flex-end;
+        height: 40px;
+        width: 40px;
+        padding: 0px;
+    }
+}
+
+.utenlandOgPeriodeContainer {
+    display: flex;
+    flex-direction: column;
+
+    .checkboxContainer {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .utenlandsinntektOgPeriodeContainer {
+        display: flex;
+        justify-content: space-around;
+    }
+}
+
+.classname {
+    display: flex;
+}
+
+.leggTilNyttFradragContainer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.inputOgtekstContainer {
+    display: flex;
+    align-items: center;
+
+    .inputWithFollowTextInputfelt {
+        margin-bottom: 0px;
+        margin-right: @spacing-xxs;
     }
 }

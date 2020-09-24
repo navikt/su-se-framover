@@ -19,7 +19,6 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
-import Beregning from './beregning/Beregning';
 import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
@@ -45,7 +44,7 @@ const Saksoversikt = () => {
         if (RemoteData.isSuccess(sak)) {
             if (RemoteData.isInitial(søker)) {
                 dispatch(personSlice.fetchPerson({ fnr: sak.value.fnr }));
-            } else if (RemoteData.isSuccess(søker)) {
+            } else if (RemoteData.isSuccess(søker) && !urlParams.sakId) {
                 rerouteToSak(sak.value.id);
             }
         }
@@ -105,9 +104,6 @@ const Saksoversikt = () => {
                                             <Route path={Routes.saksoversiktValgtBehandling.path}>
                                                 <div className={styles.mainContent}>
                                                     <Switch>
-                                                        <Route path={Routes.saksbehandlingBeregning.path}>
-                                                            <Beregning sak={sak} />
-                                                        </Route>
                                                         <Route path={Routes.saksbehandlingVedtak.path}>
                                                             <Vedtak sak={sak} />
                                                         </Route>

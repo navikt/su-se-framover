@@ -5,6 +5,8 @@ export default {
     'datovelger.fom.legend': 'Fra og med',
     'datovelger.tom.legend': 'Til og med',
 
+    'display.checkbox.delerAvPeriode': 'Deler av periode',
+    'display.checkbox.fraUtland': 'Fra utland',
     'display.finnerIkkeSatsBeløp': 'Sats er ikke tilgjengelig',
     'display.fraSøknad.forventerArbeidsinntekt': 'Forventer du å ha arbeidsinntekt fremover?',
     'display.fraSøknad.tjenerPengerIUtland': 'Tjener du penger i utlandet?',
@@ -16,6 +18,11 @@ export default {
     'display.fraSøknad.tjenestepensjon/pensjonssparing': 'Har du tjenestepensjon og/eller pensjonssparing?',
 
     'display.forventerArbeidsinntekt': 'Forventet inntekt etter uføre (IEU):',
+
+    'display.input.beløpUtenlandskValuta': 'Beløp i utenlandsk valuta',
+    'display.input.kurs': 'Kurs ved utregning',
+    'display.input.valuta': 'Valuta',
+
     'display.sats': 'sats:',
 
     'display.simulerer': 'Simulerer',

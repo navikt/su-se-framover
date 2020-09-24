@@ -14,9 +14,9 @@ import { useAppSelector } from '~redux/Store';
 import { Sak } from '~types/Sak';
 import { Utbetaling } from '~types/Utbetaling';
 
-import styles from '../beregning/visBeregning.module.less';
 import { groupSimuleringsperioder } from '../delt/arrayUtils';
 import { InfoLinje } from '../delt/Infolinje/Infolinje';
+import styles from '../steg/beregning/visBeregning.module.less';
 
 interface Props {
     sak: Sak;

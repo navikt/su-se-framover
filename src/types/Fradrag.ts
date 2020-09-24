@@ -4,6 +4,21 @@ export interface Fradrag {
     type: Fradragstype;
     beløp: number;
     beskrivelse: Nullable<string>;
+    fraUtland: boolean;
+    delerAvPeriode: boolean;
+    fraUtlandInntekt: FraUtlandInntekt;
+    delerAvPeriodeData: DelerAvPeriode;
+}
+
+export interface FraUtlandInntekt {
+    beløpUtenlandskValuta: Nullable<string>;
+    valuta: Nullable<string>;
+    kurs: Nullable<string>;
+}
+
+export interface DelerAvPeriode {
+    fraOgMed: Nullable<Date>;
+    tilOgMed: Nullable<Date>;
 }
 
 export enum Fradragstype {

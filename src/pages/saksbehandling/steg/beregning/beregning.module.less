@@ -11,7 +11,7 @@
 
 .fradrag {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     padding: @spacing-l 0;
     border-bottom: 1px dotted @navMorkGra;
     margin-bottom: @spacing-l;
@@ -23,4 +23,90 @@
 
 .beregning {
     margin: @spacing-l 0;
+}
+
+.inntektFraUtlandContainer {
+    margin-bottom: @spacing-xxs;
+}
+
+.delerAvPeriodeContainer {
+    display: flex;
+    flex-direction: column;
+
+    :first-child {
+        margin-bottom: @spacing-xxs;
+    }
+
+    .dateLabelTekst {
+        font-weight: bold;
+    }
+
+    margin-bottom: @spacing;
+}
+
+@import '~/styles/variables.less';
+
+.beregningContainer {
+    display: flex;
+    flex-direction: row;
+
+    .startBeregningKnapp {
+        margin-right: @spacing-s;
+    }
+
+    margin-bottom: @spacing-xl;
+}
+
+.tittel {
+    margin-bottom: @spacing;
+}
+
+.visBeregning {
+    margin-right: @spacing-xl;
+}
+
+.sats {
+    margin-bottom: @spacing;
+}
+
+.datovelgerContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: @spacing-s;
+
+    .datovelger:not(:last-child) {
+        margin-right: @spacing-s;
+    }
+}
+
+.feiloppsummering {
+    margin-bottom: @spacing-l;
+}
+
+.fradragContainer {
+    margin-bottom: @spacing;
+}
+
+.fradragItemContainer {
+    margin-bottom: @spacing;
+}
+
+.fradragTypeOgBelopContainer {
+    display: flex;
+    justify-content: space-between;
+
+    .fradragtype {
+        margin-right: @spacing-s;
+    }
+}
+
+.navigeringContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
 }

@@ -1,14 +1,14 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Hovedknapp } from 'nav-frontend-knapper';
+import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
 import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { useUserContext } from '~context/userContext';
-import { tilAttestering, iverksatt } from '~features/behandling/behandlingUtils';
-import * as behandlingSlice from '~features/saksoversikt/sak.slice';
+import { iverksatt, tilAttestering } from '~features/behandling/behandlingUtils';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { formatDateTime } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -24,6 +24,7 @@ const Sakintro = (props: { sak: Sak }) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
     const startBehandlingStatus = useAppSelector((s) => s.sak.startBehandlingStatus);
+    const stansUtbetalingerStatus = useAppSelector((s) => s.sak.stansUtbetalingerStatus);
     const intl = useI18n({ messages: {} });
     const user = useUserContext();
 
@@ -50,7 +51,7 @@ const Sakintro = (props: { sak: Sak }) => {
                                                 <Hovedknapp
                                                     onClick={async () => {
                                                         const startBehandlingRes = await dispatch(
-                                                            behandlingSlice.startBehandling({
+                                                            sakSlice.startBehandling({
                                                                 sakId: props.sak.id,
                                                                 søknadId: s.id,
                                                             })
@@ -120,6 +121,28 @@ const Sakintro = (props: { sak: Sak }) => {
                             );
                         })}
                     </ul>
+                    <Undertittel className={styles.undertittel}>Utbetalinger</Undertittel>
+                    <Knapp
+                        onClick={async () => {
+                            if (!RemoteData.isPending(stansUtbetalingerStatus)) {
+                                await dispatch(
+                                    sakSlice.stansUtbetalinger({
+                                        sakId: props.sak.id,
+                                    })
+                                );
+                            }
+                        }}
+                        spinner={RemoteData.isPending(stansUtbetalingerStatus)}
+                        className={styles.stansUtbetalinger}
+                    >
+                        Stans utbetalinger
+                    </Knapp>
+                    {RemoteData.isFailure(stansUtbetalingerStatus) && (
+                        <AlertStripe type="feil">Klarte ikke stanse utbetalingene.</AlertStripe>
+                    )}
+                    {RemoteData.isSuccess(stansUtbetalingerStatus) && (
+                        <AlertStripe type="suksess">Utbetalingene er stanset.</AlertStripe>
+                    )}
                 </>
             ) : (
                 'Ingen søknader'

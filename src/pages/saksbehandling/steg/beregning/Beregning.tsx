@@ -17,8 +17,8 @@ import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { DelerAvPeriode, FraUtlandInntekt } from '~types/Fradrag';
 
-import VisBeregning from '../../beregning/VisBeregning';
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -26,6 +26,7 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './beregning-nb';
 import styles from './beregning.module.less';
+import VisBeregning from './VisBeregning';
 
 interface FormData {
     fom: Nullable<Date>;
@@ -80,6 +81,50 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         });
     };
 
+    const periodeChanger = (
+        keyNavn: keyof DelerAvPeriode,
+        dato: Date | [Date, Date] | null,
+        index: number,
+        fradrag: Array<FradragFormData>
+    ) => {
+        const nyFradrag = [...fradrag];
+
+        nyFradrag[index] = {
+            ...nyFradrag[index],
+            delerAvPeriodeData: {
+                ...nyFradrag[index].delerAvPeriodeData,
+                [keyNavn]: dato,
+            },
+        };
+
+        formik.setValues({
+            ...formik.values,
+            fradrag: nyFradrag,
+        });
+    };
+
+    const utenlandsInntektChanger = (
+        keyNavn: keyof FraUtlandInntekt,
+        value: string,
+        index: number,
+        fradrag: Array<FradragFormData>
+    ) => {
+        const nyFradrag = [...fradrag];
+
+        nyFradrag[index] = {
+            ...nyFradrag[index],
+            fraUtlandInntekt: {
+                ...nyFradrag[index].fraUtlandInntekt,
+                [keyNavn]: value,
+            },
+        };
+
+        formik.setValues({
+            ...formik.values,
+            fradrag: nyFradrag,
+        });
+    };
+
     const formik = useFormik<FormData>({
         initialValues: {
             fom: toDateOrNull(props.behandling.beregning?.fom),
@@ -119,6 +164,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
+                        {console.log(formik.values)}
                         <div className={styles.summering}>
                             <p>
                                 {props.behandling.behandlingsinformasjon.utledetSats}{' '}
@@ -176,6 +222,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 errors={formik.errors.fradrag}
                                 intl={intl}
                                 onChange={formik.handleChange}
+                                periodeChanger={periodeChanger}
+                                utenlandsInntektChanger={utenlandsInntektChanger}
                                 onFjernClick={(index) => {
                                     formik.setValues({
                                         ...formik.values,
@@ -187,7 +235,19 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                         ...formik.values,
                                         fradrag: [
                                             ...formik.values.fradrag,
-                                            { beløp: null, beskrivelse: null, type: null },
+                                            {
+                                                beløp: null,
+                                                beskrivelse: null,
+                                                type: null,
+                                                fraUtland: false,
+                                                fraUtlandInntekt: {
+                                                    beløpUtenlandskValuta: null,
+                                                    valuta: null,
+                                                    kurs: null,
+                                                },
+                                                delerAvPeriode: false,
+                                                delerAvPeriodeData: { fraOgMed: null, tilOgMed: null },
+                                            },
                                         ],
                                     });
                                 }}

@@ -8,8 +8,8 @@ import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Beregning } from '~types/Beregning';
 
-import { groupMånedsberegninger } from '../delt/arrayUtils';
-import { InfoLinje } from '../delt/Infolinje/Infolinje';
+import { groupMånedsberegninger } from '../../delt/arrayUtils';
+import { InfoLinje } from '../../delt/Infolinje/Infolinje';
 
 import styles from './visBeregning.module.less';
 
