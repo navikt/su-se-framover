@@ -1,9 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { ErrorCode, ApiError } from '~api/apiClient';
+import { ApiError, ErrorCode } from '~api/apiClient';
 import * as behandlingApi from '~api/behandlingApi';
 import * as sakApi from '~api/sakApi';
+import * as utbetalingApi from '~api/utbetalingApi';
 import { pipe } from '~lib/fp';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling } from '~types/Behandling';
@@ -12,12 +13,24 @@ import { UtledetSatsInfo } from '~types/Beregning';
 import { Fradrag } from '~types/Fradrag';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
+import { Utbetaling } from '~types/Utbetaling';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<Sak, { fnr: string } | { sakId: string }, { rejectValue: ApiError }>(
     'sak/fetch',
     async (arg, thunkApi) => {
         const res = await ('fnr' in arg ? sakApi.fetchSakByFnr(arg.fnr) : sakApi.fetchSakBySakId(arg.sakId));
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
+    }
+);
+
+export const stansUtbetalinger = createAsyncThunk<Utbetaling, { sakId: string }, { rejectValue: ApiError }>(
+    'utbetalinger/stans',
+    async ({ sakId }, thunkApi) => {
+        const res = await utbetalingApi.stansUtbetalinger(sakId);
         if (res.status === 'ok') {
             return res.data;
         }
@@ -164,6 +177,7 @@ interface SakState {
         },
         Sak
     >;
+    stansUtbetalingerStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     startBehandlingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
     lagreBehandlingsinformasjonStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
@@ -176,6 +190,7 @@ interface SakState {
 
 const initialState: SakState = {
     sak: RemoteData.initial,
+    stansUtbetalingerStatus: RemoteData.initial,
     startBehandlingStatus: RemoteData.initial,
     lagreVilkårsvurderingStatus: RemoteData.initial,
     lagreBehandlingsinformasjonStatus: RemoteData.initial,
@@ -200,6 +215,18 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.sak = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, stansUtbetalinger, {
+            pending: (state) => {
+                state.stansUtbetalingerStatus = RemoteData.pending;
+            },
+            fulfilled: (state) => {
+                state.stansUtbetalingerStatus = RemoteData.success(null);
+            },
+            rejected: (state, action) => {
+                state.stansUtbetalingerStatus = simpleRejectedActionToRemoteData(action);
             },
         });
 
