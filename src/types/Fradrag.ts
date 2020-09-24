@@ -1,7 +1,7 @@
 import { Nullable } from '~lib/types';
 
 export interface Fradrag {
-    type: Fradragstype;
+    type: Fradragstype | 'Forventet inntekt';
     beløp: number;
     beskrivelse: Nullable<string>;
 }

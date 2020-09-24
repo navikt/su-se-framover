@@ -112,7 +112,10 @@ const Beregning = (props: Props) => {
             <div className={styles.beregningContainer}>
                 {behandling.beregning && (
                     <div className={styles.visBeregning}>
-                        <VisBeregning beregning={behandling.beregning} />
+                        <VisBeregning
+                            beregning={behandling.beregning}
+                            forventetinntekt={behandling.behandlingsinformasjon.uførhet?.forventetInntekt ?? 0}
+                        />
                     </div>
                 )}
 

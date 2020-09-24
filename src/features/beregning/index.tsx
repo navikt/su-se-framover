@@ -12,7 +12,7 @@ import { Fradrag, Fradragstype } from '~types/Fradrag';
 import styles from './beregning.module.less';
 
 export interface FradragFormData {
-    type: Nullable<Fradragstype>;
+    type: Nullable<Fradragstype> | 'Forventet inntekt';
     beløp: Nullable<number>;
     beskrivelse: Nullable<string>;
 }

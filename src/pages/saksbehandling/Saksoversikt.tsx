@@ -41,12 +41,15 @@ const Saksoversikt = () => {
             dispatch(sakSlice.fetchSak({ sakId: urlParams.sakId }));
         }
     }, [sak._tag]);
+
     useEffect(() => {
         if (RemoteData.isSuccess(sak)) {
             if (RemoteData.isInitial(søker)) {
                 dispatch(personSlice.fetchPerson({ fnr: sak.value.fnr }));
             } else if (RemoteData.isSuccess(søker)) {
-                rerouteToSak(sak.value.id);
+                if (!urlParams.sakId) {
+                    rerouteToSak(sak.value.id);
+                }
             }
         }
     }, [sak._tag, søker._tag]);
