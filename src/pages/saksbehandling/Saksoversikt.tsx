@@ -46,10 +46,8 @@ const Saksoversikt = () => {
         if (RemoteData.isSuccess(sak)) {
             if (RemoteData.isInitial(søker)) {
                 dispatch(personSlice.fetchPerson({ fnr: sak.value.fnr }));
-            } else if (RemoteData.isSuccess(søker)) {
-                if (!urlParams.sakId) {
-                    rerouteToSak(sak.value.id);
-                }
+            } else if (RemoteData.isSuccess(søker) && !urlParams.sakId) {
+                rerouteToSak(sak.value.id);
             }
         }
     }, [sak._tag, søker._tag]);

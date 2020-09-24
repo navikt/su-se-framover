@@ -8,7 +8,7 @@ import messages from '~/features/beregning/beregning-nb';
 import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Beregning } from '~types/Beregning';
-import { Fradragstype, Fradrag } from '~types/Fradrag';
+import { Fradragstype, Fradrag, ForventetInntektfradrag } from '~types/Fradrag';
 
 import { groupMånedsberegninger } from '../delt/arrayUtils';
 import { InfoLinje } from '../delt/Infolinje/Infolinje';
@@ -35,7 +35,7 @@ const fradragMedForventetinntekt = (
     }
 
     andreFradrag.push({
-        type: 'Forventet inntekt',
+        type: ForventetInntektfradrag,
         beløp: forventetinntekt,
         beskrivelse: intl.formatMessage({ id: 'display.brukerForventetinntekt' }),
     });
