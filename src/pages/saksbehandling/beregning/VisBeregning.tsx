@@ -25,21 +25,22 @@ const fradragMedForventetinntekt = (
     forventetinntekt: number,
     intl: IntlShape
 ): Array<Fradrag> => {
-    const totalArbeidsinntekt = fragdragsArray
-        .filter((f) => f.type === Fradragstype.Arbeidsinntekt)
-        .reduce((acc, arbeidsfradrag) => acc + arbeidsfradrag.beløp, 0);
-    const andreFradrag = fragdragsArray.filter((f) => f.type !== Fradragstype.Arbeidsinntekt);
+    const fradragPartioned = pipe(
+        fragdragsArray,
+        arr.partition((f) => f.type === Fradragstype.Arbeidsinntekt)
+    );
 
-    if (totalArbeidsinntekt >= forventetinntekt) {
+    if (fradragPartioned.right.reduce((acc, fradrag) => acc + fradrag.beløp, 0) >= forventetinntekt) {
         return fragdragsArray;
     }
 
-    andreFradrag.push({
+    fradragPartioned.left.push({
         type: ForventetInntektfradrag,
         beløp: forventetinntekt,
         beskrivelse: intl.formatMessage({ id: 'display.brukerForventetinntekt' }),
     });
-    return andreFradrag;
+
+    return fradragPartioned.left;
 };
 
 const VisBeregning = (props: Props) => {
