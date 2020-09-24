@@ -5,6 +5,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ErrorCode, ApiError } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import * as søknadApi from '~api/søknadApi';
+import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { SøknadInnhold } from '~types/Søknad';
 
 import { SøknadState } from './søknad.slice';
@@ -119,22 +120,16 @@ export default createSlice({
     initialState: initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(sendSøknad.pending, (state) => {
-            state.søknadInnsendingState = RemoteData.pending;
-        });
-
-        builder.addCase(sendSøknad.fulfilled, (state) => {
-            state.søknadInnsendingState = RemoteData.success(null);
-        });
-        builder.addCase(sendSøknad.rejected, (state, action) => {
-            if (action.payload) {
-                state.søknadInnsendingState = RemoteData.failure({
-                    code: action.payload.code,
-                    message: `Feilet med status ${action.payload.statusCode}`,
-                });
-            } else {
-                state.søknadInnsendingState = RemoteData.failure({ code: ErrorCode.Unknown, message: 'Ukjent feil' });
-            }
+        handleAsyncThunk(builder, sendSøknad, {
+            pending: (state) => {
+                state.søknadInnsendingState = RemoteData.pending;
+            },
+            fulfilled: (state) => {
+                state.søknadInnsendingState = RemoteData.success(null);
+            },
+            rejected: (state, action) => {
+                state.søknadInnsendingState = simpleRejectedActionToRemoteData(action);
+            },
         });
     },
 });
