@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ErrorCode, ApiError } from '~api/apiClient';
 import * as personApi from '~api/personApi';
+import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 
 export const fetchPerson = createAsyncThunk<personApi.Person, { fnr: string }, { rejectValue: ApiError }>(
     'person/fetch',
@@ -39,21 +40,16 @@ export default createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchPerson.pending, (state) => {
-            state.søker = RemoteData.pending;
-        });
-        builder.addCase(fetchPerson.fulfilled, (state, action) => {
-            state.søker = RemoteData.success(action.payload);
-        });
-        builder.addCase(fetchPerson.rejected, (state, action) => {
-            if (action.payload) {
-                state.søker = RemoteData.failure({
-                    code: action.payload.code,
-                    message: `Feilet med status ${action.payload.statusCode}`,
-                });
-            } else {
-                state.søker = RemoteData.failure({ code: ErrorCode.Unknown, message: 'Ukjent feil' });
-            }
+        handleAsyncThunk(builder, fetchPerson, {
+            pending: (state) => {
+                state.søker = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.søker = RemoteData.success(action.payload);
+            },
+            rejected: (state, action) => {
+                state.søker = simpleRejectedActionToRemoteData(action);
+            },
         });
     },
 });

@@ -5,6 +5,7 @@ import { ErrorCode, ApiError } from '~api/apiClient';
 import * as behandlingApi from '~api/behandlingApi';
 import * as sakApi from '~api/sakApi';
 import { pipe } from '~lib/fp';
+import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { UtledetSatsInfo } from '~types/Beregning';
@@ -190,203 +191,156 @@ export default createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(fetchSak.pending, (state) => {
-            state.sak = RemoteData.pending;
-        });
-        builder.addCase(fetchSak.fulfilled, (state, action) => {
-            state.sak = RemoteData.success(action.payload);
-        });
-        builder.addCase(fetchSak.rejected, (state, action) => {
-            if (action.payload) {
-                state.sak = RemoteData.failure({
-                    code: action.payload.code,
-                    message: `Feilet med status ${action.payload.statusCode}`,
-                });
-            } else {
-                state.sak = RemoteData.failure({ code: ErrorCode.Unknown, message: 'Ukjent feil' });
-            }
+        handleAsyncThunk(builder, fetchSak, {
+            pending: (state) => {
+                state.sak = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.sak = RemoteData.success(action.payload);
+            },
+            rejected: (state, action) => {
+                state.sak = simpleRejectedActionToRemoteData(action);
+            },
         });
 
-        builder.addCase(startBehandling.pending, (state) => {
-            state.startBehandlingStatus = RemoteData.pending;
-        });
-        builder.addCase(startBehandling.rejected, (state, action) => {
-            state.startBehandlingStatus = action.payload
-                ? RemoteData.failure({
-                      code: action.payload.code,
-                      message: `Feilet med status ${action.payload.statusCode}`,
-                  })
-                : RemoteData.failure({
-                      code: ErrorCode.Unknown,
-                      message: 'Ukjent feil',
-                  });
-        });
-        builder.addCase(startBehandling.fulfilled, (state, action) => {
-            state.startBehandlingStatus = RemoteData.success(null);
+        handleAsyncThunk(builder, startBehandling, {
+            pending: (state) => {
+                state.startBehandlingStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.startBehandlingStatus = RemoteData.success(null);
 
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    behandlinger: [...sak.behandlinger, action.payload],
-                }))
-            );
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: [...sak.behandlinger, action.payload],
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.startBehandlingStatus = simpleRejectedActionToRemoteData(action);
+            },
         });
 
-        builder.addCase(lagreVilkårsvurdering.pending, (state) => {
-            state.lagreVilkårsvurderingStatus = RemoteData.pending;
-        });
-        builder.addCase(lagreVilkårsvurdering.rejected, (state, action) => {
-            state.lagreVilkårsvurderingStatus = action.payload
-                ? RemoteData.failure({
-                      code: action.payload.code,
-                      message: `Feilet med status ${action.payload.statusCode}`,
-                  })
-                : RemoteData.failure({
-                      code: ErrorCode.Unknown,
-                      message: 'Ukjent feil',
-                  });
-        });
-        builder.addCase(lagreVilkårsvurdering.fulfilled, (state, action) => {
-            state.lagreVilkårsvurderingStatus = RemoteData.success(null);
+        handleAsyncThunk(builder, lagreVilkårsvurdering, {
+            pending: (state) => {
+                state.lagreVilkårsvurderingStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.lagreVilkårsvurderingStatus = RemoteData.success(null);
 
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                }))
-            );
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.lagreVilkårsvurderingStatus = simpleRejectedActionToRemoteData(action);
+            },
         });
 
-        builder.addCase(lagreBehandlingsinformasjon.pending, (state) => {
-            state.lagreBehandlingsinformasjonStatus = RemoteData.pending;
-        });
-        builder.addCase(lagreBehandlingsinformasjon.rejected, (state, action) => {
-            state.lagreBehandlingsinformasjonStatus = action.payload
-                ? RemoteData.failure({
-                      code: action.payload.code,
-                      message: `Feilet med status ${action.payload.statusCode}`,
-                  })
-                : RemoteData.failure({
-                      code: ErrorCode.Unknown,
-                      message: 'Ukjent feil',
-                  });
-        });
-        builder.addCase(lagreBehandlingsinformasjon.fulfilled, (state, action) => {
-            state.lagreBehandlingsinformasjonStatus = RemoteData.success(null);
+        handleAsyncThunk(builder, lagreBehandlingsinformasjon, {
+            pending: (state) => {
+                state.lagreBehandlingsinformasjonStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.lagreBehandlingsinformasjonStatus = RemoteData.success(null);
 
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                }))
-            );
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.lagreBehandlingsinformasjonStatus = simpleRejectedActionToRemoteData(action);
+            },
         });
 
-        builder.addCase(startBeregning.pending, (state) => {
-            state.beregningStatus = RemoteData.pending;
-        });
-        builder.addCase(startBeregning.rejected, (state, action) => {
-            state.beregningStatus = action.payload
-                ? RemoteData.failure({
-                      code: action.payload.code,
-                      message: `Feilet med status ${action.payload.statusCode}`,
-                  })
-                : RemoteData.failure({
-                      code: ErrorCode.Unknown,
-                      message: 'Ukjent feil',
-                  });
-        });
-        builder.addCase(startBeregning.fulfilled, (state, action) => {
-            state.beregningStatus = RemoteData.success(null);
+        handleAsyncThunk(builder, startBeregning, {
+            pending: (state) => {
+                state.beregningStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.beregningStatus = RemoteData.success(null);
 
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                }))
-            );
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.beregningStatus = simpleRejectedActionToRemoteData(action);
+            },
         });
 
-        builder.addCase(startSimulering.pending, (state) => {
-            state.simuleringStatus = RemoteData.pending;
-        });
-        builder.addCase(startSimulering.rejected, (state, action) => {
-            state.simuleringStatus = action.payload
-                ? RemoteData.failure({
-                      code: action.payload.code,
-                      message: `Feilet med status ${action.payload.statusCode}`,
-                  })
-                : RemoteData.failure({
-                      code: ErrorCode.Unknown,
-                      message: 'Ukjent feil',
-                  });
-        });
-        builder.addCase(startSimulering.fulfilled, (state, action) => {
-            state.simuleringStatus = RemoteData.success(null);
+        handleAsyncThunk(builder, startSimulering, {
+            pending: (state) => {
+                state.simuleringStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.simuleringStatus = RemoteData.success(null);
 
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                }))
-            );
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.simuleringStatus = simpleRejectedActionToRemoteData(action);
+            },
         });
 
-        builder.addCase(startAttestering.pending, (state) => {
-            state.attesteringStatus = RemoteData.pending;
-        });
-        builder.addCase(startAttestering.rejected, (state, action) => {
-            state.attesteringStatus = action.payload
-                ? RemoteData.failure({
-                      code: action.payload.code,
-                      message: `Feilet med status ${action.payload.statusCode}`,
-                  })
-                : RemoteData.failure({
-                      code: ErrorCode.Unknown,
-                      message: 'Ukjent feil',
-                  });
-        });
-        builder.addCase(startAttestering.fulfilled, (state, action) => {
-            state.attesteringStatus = RemoteData.success(null);
+        handleAsyncThunk(builder, startAttestering, {
+            pending: (state) => {
+                state.attesteringStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.attesteringStatus = RemoteData.success(null);
 
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                }))
-            );
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.attesteringStatus = simpleRejectedActionToRemoteData(action);
+            },
         });
 
-        builder.addCase(sendTilAttestering.pending, (state) => {
-            state.sendtTilAttesteringStatus = RemoteData.pending;
-        });
-        builder.addCase(sendTilAttestering.rejected, (state, action) => {
-            state.sendtTilAttesteringStatus = action.payload
-                ? RemoteData.failure({
-                      code: action.payload.code,
-                      message: `Feilet med status ${action.payload.statusCode}`,
-                  })
-                : RemoteData.failure({
-                      code: ErrorCode.Unknown,
-                      message: 'Ukjent feil',
-                  });
-        });
-        builder.addCase(sendTilAttestering.fulfilled, (state, action) => {
-            state.sendtTilAttesteringStatus = RemoteData.success(null);
+        handleAsyncThunk(builder, sendTilAttestering, {
+            pending: (state) => {
+                state.sendtTilAttesteringStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.sendtTilAttesteringStatus = RemoteData.success(null);
 
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
-                }))
-            );
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.sendtTilAttesteringStatus = simpleRejectedActionToRemoteData(action);
+            },
         });
 
         builder.addCase(getUtledetSatsInfo.pending, (state) => {
