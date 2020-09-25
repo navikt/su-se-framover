@@ -30,7 +30,7 @@ const fradragMedForventetinntekt = (
         arr.partition((f) => f.type === Fradragstype.Arbeidsinntekt)
     );
 
-    if (arbeidsinntektfradrag.reduce((acc, fradrag) => acc + fradrag.beløp, 0) >= forventetinntekt) {
+    if (arbeidsinntektfradrag.reduce((acc, fradragEntry) => acc + fradragEntry.beløp, 0) >= forventetinntekt) {
         return fradrag;
     }
 
