@@ -21,26 +21,27 @@ interface Props {
 }
 
 const fradragMedForventetinntekt = (
-    fragdragsArray: Array<Fradrag>,
+    fradrag: Array<Fradrag>,
     forventetinntekt: number,
     intl: IntlShape
 ): Array<Fradrag> => {
-    const fradragPartioned = pipe(
-        fragdragsArray,
+    const { left: andreFradrag, right: arbeidsinntektfradrag } = pipe(
+        fradrag,
         arr.partition((f) => f.type === Fradragstype.Arbeidsinntekt)
     );
 
-    if (fradragPartioned.right.reduce((acc, fradrag) => acc + fradrag.beløp, 0) >= forventetinntekt) {
-        return fragdragsArray;
+    if (arbeidsinntektfradrag.reduce((acc, fradrag) => acc + fradrag.beløp, 0) >= forventetinntekt) {
+        return fradrag;
     }
 
-    fradragPartioned.left.push({
-        type: ForventetInntektfradrag,
-        beløp: forventetinntekt,
-        beskrivelse: intl.formatMessage({ id: 'display.brukerForventetinntekt' }),
-    });
-
-    return fradragPartioned.left;
+    return [
+        ...andreFradrag,
+        {
+            type: ForventetInntektfradrag,
+            beløp: forventetinntekt,
+            beskrivelse: intl.formatMessage({ id: 'display.brukerForventetinntekt' }),
+        },
+    ];
 };
 
 const VisBeregning = (props: Props) => {
