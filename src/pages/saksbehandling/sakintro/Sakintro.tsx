@@ -9,6 +9,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useUserContext } from '~context/userContext';
 import { iverksatt, tilAttestering } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { getOidFromAccessToken } from '~lib/cookies';
 import { formatDateTime } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -86,7 +87,9 @@ const Sakintro = (props: { sak: Sak }) => {
                                                                 Behandling påbegynt: {formatDateTime(b.opprettet, intl)}
                                                             </p>
                                                         </div>
-                                                        {tilAttestering(b) && user.isAttestant ? (
+                                                        {tilAttestering(b) &&
+                                                        user.isAttestant &&
+                                                        getOidFromAccessToken() !== b.saksbehandler ? (
                                                             <Link
                                                                 className="knapp"
                                                                 to={Routes.attestering.createURL({

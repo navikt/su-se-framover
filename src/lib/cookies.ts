@@ -37,7 +37,7 @@ export function take(name: CookieName) {
     return val;
 }
 
-export const getNameFromAccessToken = (): string | null => {
+const getFieldFromAccessToken = (field: string) => {
     const token = Cookies.get(CookieName.AccessToken);
     if (!token) {
         return null;
@@ -46,8 +46,16 @@ export const getNameFromAccessToken = (): string | null => {
     if (!decodedToken || typeof decodedToken === 'string') {
         return null;
     }
-    if ('name' in decodedToken) {
-        return decodedToken.name;
+    if (field in decodedToken) {
+        return decodedToken[field];
     }
     return null;
+};
+
+export const getNameFromAccessToken = (): string | null => {
+    return getFieldFromAccessToken('name');
+};
+
+export const getOidFromAccessToken = (): string | null => {
+    return getFieldFromAccessToken('oid');
 };
