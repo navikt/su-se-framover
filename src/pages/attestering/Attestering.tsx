@@ -167,7 +167,7 @@ const Attestering = () => {
                             })
                         }
                     >
-                        test
+                        Last ned brev
                     </Lenke>
                 </div>
             </div>

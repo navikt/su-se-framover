@@ -126,7 +126,7 @@ const Vedtak = (props: Props) => {
                                 })
                             }
                         >
-                            test
+                            Last ned brev
                         </Lenke>
                     </div>
                 </div>
