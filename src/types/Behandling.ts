@@ -16,6 +16,7 @@ export interface Behandling {
     utbetaling: Nullable<Utbetaling>;
     opprettet: string;
     attestant: Nullable<string>;
+    saksbehandler: Nullable<string>;
     hendelser: Nullable<Array<Hendelse>>;
     satsBeløp: Nullable<number>;
 }
