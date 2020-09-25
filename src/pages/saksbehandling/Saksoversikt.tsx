@@ -119,9 +119,9 @@ const Saksoversikt = () => {
                                             </Route>
                                             <Route path="*">
                                                 <Sakintro sak={sak} />
+                                                <Hendelseslogg sak={sak} />
                                             </Route>
                                         </Switch>
-                                        <Hendelseslogg sak={sak} />
                                     </div>
                                 </>
                             )
