@@ -93,7 +93,7 @@ const fraUtlandInntekt = yup
         is: true,
         then: yup.object<FraUtlandInntekt>({
             beløpUtenlandskValuta: validateStringAsNumber,
-            valuta: validateStringAsNumber,
+            valuta: yup.string().required().nullable(),
             kurs: validateStringAsNumber,
         }),
         otherwise: yup.object<FraUtlandInntekt>(),
