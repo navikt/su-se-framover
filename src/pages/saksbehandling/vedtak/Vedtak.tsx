@@ -67,7 +67,10 @@ const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
     if (props.behandling.status === Behandlingsstatus.SIMULERT && props.behandling.beregning) {
         return (
             <>
-                <VisBeregning beregning={props.behandling.beregning} />
+                <VisBeregning
+                    beregning={props.behandling.beregning}
+                    forventetinntekt={props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt ?? 0}
+                />
                 <div>
                     <Simulering sak={props.sak} behandlingId={props.behandling.id} />
                 </div>

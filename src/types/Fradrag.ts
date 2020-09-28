@@ -1,7 +1,10 @@
 import { Nullable } from '~lib/types';
 
+export const ForventetInntektfradrag = 'Forventet inntekt' as const;
+export type ForventetInntektfradrag = typeof ForventetInntektfradrag;
+
 export interface Fradrag {
-    type: Fradragstype;
+    type: Fradragstype | ForventetInntektfradrag;
     beløp: number;
     beskrivelse: Nullable<string>;
 }

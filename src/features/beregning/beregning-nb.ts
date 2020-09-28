@@ -23,4 +23,5 @@ export default {
     'fradrag.type.pensjon': 'Pensjon',
     'fradrag.type.kapitalinntekt': 'Kapitalinntekt',
     'fradrag.type.andreytelser': 'Andre ytelser',
+    'display.brukerForventetinntekt': 'Forventet inntekt er brukt for beregning',
 };

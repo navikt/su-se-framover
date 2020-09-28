@@ -200,7 +200,12 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 
                         {props.behandling.beregning && (
                             <div className={styles.beregning}>
-                                <VisBeregning beregning={props.behandling.beregning} />
+                                <VisBeregning
+                                    beregning={props.behandling.beregning}
+                                    forventetinntekt={
+                                        props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt ?? 0
+                                    }
+                                />
                             </div>
                         )}
                         {needsBeregning && !props.behandling.beregning && (

@@ -68,7 +68,10 @@ const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
         return (
             <div className={styles.beregningOgOppdragContainer}>
                 <div className={styles.beregningContainer}>
-                    <VisBeregning beregning={props.behandling.beregning} />
+                    <VisBeregning
+                        beregning={props.behandling.beregning}
+                        forventetinntekt={props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt ?? 0}
+                    />
                 </div>
                 <div>
                     <Innholdstittel>Oppdragssimulering</Innholdstittel>

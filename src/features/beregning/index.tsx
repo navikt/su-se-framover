@@ -7,12 +7,12 @@ import { IntlShape } from 'react-intl';
 
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { Fradrag, Fradragstype } from '~types/Fradrag';
+import { Fradrag, Fradragstype, ForventetInntektfradrag } from '~types/Fradrag';
 
 import styles from './beregning.module.less';
 
 export interface FradragFormData {
-    type: Nullable<Fradragstype>;
+    type: Nullable<Fradragstype> | ForventetInntektfradrag;
     beløp: Nullable<number>;
     beskrivelse: Nullable<string>;
 }
