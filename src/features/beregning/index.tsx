@@ -135,12 +135,6 @@ export const FradragInputs = (props: {
         index: number,
         fradrag: Array<FradragFormData>
     ) => void;
-    utenlandsInntektChanger: (
-        keyNavn: keyof Pick<FraUtlandInntekt, 'valuta' | 'kurs' | 'beløpUtenlandskValuta'>,
-        value: string,
-        index: number,
-        fradrag: Array<FradragFormData>
-    ) => void;
     onChange: (e: React.ChangeEvent<unknown>) => void;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
@@ -226,10 +220,7 @@ export const FradragInputs = (props: {
                                             valutaId={valutaId}
                                             kursId={kursId}
                                             fradrag={fradrag}
-                                            fradragsArray={props.fradrag}
-                                            index={index}
                                             onChange={props.onChange}
-                                            utenlandsInntektChanger={props.utenlandsInntektChanger}
                                             fraUtlandInntektErrors={
                                                 errorForLinje &&
                                                 typeof errorForLinje === 'object' &&

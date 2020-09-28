@@ -13,15 +13,7 @@ const InntektFraUtland = (props: {
     valutaId: string;
     kursId: string;
     fradrag: FradragFormData;
-    fradragsArray: FradragFormData[];
-    index: number;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    utenlandsInntektChanger: (
-        keyNavn: keyof Pick<FraUtlandInntekt, 'valuta' | 'kurs' | 'beløpUtenlandskValuta'>,
-        value: string,
-        index: number,
-        fradrag: Array<FradragFormData>
-    ) => void;
     fraUtlandInntektErrors: FormikErrors<FraUtlandInntekt> | undefined;
     intl: IntlShape;
 }) => {
@@ -36,14 +28,7 @@ const InntektFraUtland = (props: {
                 name={props.utenlandsBeløpId}
                 value={props.fradrag.fraUtlandInntekt?.beløpUtenlandskValuta ?? ''}
                 bredde={'M'}
-                onChange={(e) => {
-                    props.utenlandsInntektChanger(
-                        'beløpUtenlandskValuta',
-                        e.target.value,
-                        props.index,
-                        props.fradragsArray
-                    );
-                }}
+                onChange={props.onChange}
                 feil={beløpUtenlandskValutaError}
             />
             <Input
@@ -51,9 +36,7 @@ const InntektFraUtland = (props: {
                 name={props.valutaId}
                 value={props.fradrag.fraUtlandInntekt?.valuta ?? ''}
                 bredde={'S'}
-                onChange={(e) => {
-                    props.utenlandsInntektChanger('valuta', e.target.value, props.index, props.fradragsArray);
-                }}
+                onChange={props.onChange}
                 feil={valutaError}
             />
             <Input
@@ -61,9 +44,7 @@ const InntektFraUtland = (props: {
                 name={props.kursId}
                 value={props.fradrag.fraUtlandInntekt?.kurs ?? ''}
                 bredde={'S'}
-                onChange={(e) => {
-                    props.utenlandsInntektChanger('kurs', e.target.value, props.index, props.fradragsArray);
-                }}
+                onChange={props.onChange}
                 feil={kursError}
             />
         </div>

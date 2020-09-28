@@ -17,7 +17,7 @@ import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { DelerAvPeriode, FraUtlandInntekt } from '~types/Fradrag';
+import { DelerAvPeriode } from '~types/Fradrag';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -94,28 +94,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             delerAvPeriodeData: {
                 ...nyFradrag[index].delerAvPeriodeData,
                 [keyNavn]: dato,
-            },
-        };
-
-        formik.setValues({
-            ...formik.values,
-            fradrag: nyFradrag,
-        });
-    };
-
-    const utenlandsInntektChanger = (
-        keyNavn: keyof FraUtlandInntekt,
-        value: string,
-        index: number,
-        fradrag: Array<FradragFormData>
-    ) => {
-        const nyFradrag = [...fradrag];
-
-        nyFradrag[index] = {
-            ...nyFradrag[index],
-            fraUtlandInntekt: {
-                ...nyFradrag[index].fraUtlandInntekt,
-                [keyNavn]: value,
             },
         };
 
@@ -223,7 +201,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 intl={intl}
                                 onChange={formik.handleChange}
                                 periodeChanger={periodeChanger}
-                                utenlandsInntektChanger={utenlandsInntektChanger}
                                 onFjernClick={(index) => {
                                     formik.setValues({
                                         ...formik.values,
