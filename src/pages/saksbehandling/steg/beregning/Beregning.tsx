@@ -190,7 +190,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                             ...formik.values.fradrag,
                                             {
                                                 beløp: null,
-                                                beskrivelse: null,
                                                 type: null,
                                                 fraUtland: false,
                                                 fraUtlandInntekt: {

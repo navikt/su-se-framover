@@ -1,6 +1,6 @@
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
-import { Element, Undertekst } from 'nav-frontend-typografi';
+import { Element } from 'nav-frontend-typografi';
 import React from 'react';
 
 import messages from '~/features/beregning/beregning-nb';
@@ -32,9 +32,6 @@ const VisBeregning = (props: Props) => {
                         {beregning.fradrag.map((f, idx) => (
                             <li key={idx} className={styles.fradragItem}>
                                 <InfoLinje tittel={f.type} value={intl.formatNumber(f.beløp, { currency: 'NOK' })} />
-                                {f.beskrivelse && (
-                                    <Undertekst className={styles.fradragKommentar}>{f.beskrivelse}</Undertekst>
-                                )}
                             </li>
                         ))}
                     </ul>

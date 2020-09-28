@@ -3,7 +3,6 @@ import { Nullable } from '~lib/types';
 export interface Fradrag {
     type: Fradragstype;
     beløp: number;
-    beskrivelse: Nullable<string>;
     fraUtland: boolean;
     delerAvPeriode: boolean;
     fraUtlandInntekt: FraUtlandInntekt;

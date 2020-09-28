@@ -18,7 +18,6 @@ import styles from './beregning.module.less';
 export interface FradragFormData {
     type: Nullable<Fradragstype>;
     beløp: Nullable<number>;
-    beskrivelse: Nullable<string>;
     fraUtland: boolean;
     delerAvPeriode: boolean;
     fraUtlandInntekt: FraUtlandInntekt;
@@ -114,7 +113,6 @@ const delerAvPeriodeData = yup
 
 export const fradragSchema = yup.object<FradragFormData>({
     beløp: yup.number().typeError('Beløp må være et tall').required(),
-    beskrivelse: yup.string().defined().default(null),
     type: yup.string().defined().oneOf(Object.values(Fradragstype), 'Du må velge en fradragstype'),
     fraUtland: yup.boolean(),
     fraUtlandInntekt: fraUtlandInntekt,
