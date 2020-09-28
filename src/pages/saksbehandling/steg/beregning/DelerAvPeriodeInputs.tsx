@@ -13,14 +13,7 @@ const DelerAvPeriodeInputs = (props: {
     fraOgMedId: string;
     tilOgMedId: string;
     fradrag: FradragFormData;
-    periodeChanger: (
-        keyNavn: keyof Pick<DelerAvPeriode, 'fraOgMed' | 'tilOgMed'>,
-        dato: Date | [Date, Date] | null,
-        index: number,
-        fradrag: Array<FradragFormData>
-    ) => void;
-    fradragsArray: FradragFormData[];
-    index: number;
+    setFieldValue: (field: string, value: Date | [Date, Date] | null) => void;
     delerAvPeriodeErrors: FormikErrors<DelerAvPeriode> | undefined;
     intl: IntlShape;
 }) => {
@@ -35,8 +28,11 @@ const DelerAvPeriodeInputs = (props: {
                 </Normaltekst>
                 <DatePicker
                     id={props.fraOgMedId}
+                    name={props.fraOgMedId}
                     selected={props.fradrag.delerAvPeriodeData?.fraOgMed}
-                    onChange={(dato) => props.periodeChanger('fraOgMed', dato, props.index, props.fradragsArray)}
+                    onChange={(e) => {
+                        props.setFieldValue(props.fraOgMedId, e);
+                    }}
                     dateFormat="MM/yyyy"
                     showMonthYearPicker
                     isClearable
@@ -53,8 +49,11 @@ const DelerAvPeriodeInputs = (props: {
                 </Normaltekst>
                 <DatePicker
                     id={props.tilOgMedId}
+                    name={props.tilOgMedId}
                     selected={props.fradrag.delerAvPeriodeData?.tilOgMed}
-                    onChange={(dato) => props.periodeChanger('tilOgMed', dato, props.index, props.fradragsArray)}
+                    onChange={(e) => {
+                        props.setFieldValue(props.tilOgMedId, e);
+                    }}
                     dateFormat="MM/yyyy"
                     showMonthYearPicker
                     isClearable

@@ -129,13 +129,8 @@ export const FradragInputs = (props: {
     feltnavn: string;
     errors: string | string[] | FormikErrors<FradragFormData>[] | undefined;
     intl: IntlShape;
-    periodeChanger: (
-        keyNavn: keyof Pick<DelerAvPeriode, 'fraOgMed' | 'tilOgMed'>,
-        dato: Date | [Date, Date] | null,
-        index: number,
-        fradrag: Array<FradragFormData>
-    ) => void;
     onChange: (e: React.ChangeEvent<unknown>) => void;
+    setFieldValue: (field: string, value: Date | [Date, Date] | null) => void;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
 }) => {
@@ -236,9 +231,8 @@ export const FradragInputs = (props: {
                                             fraOgMedId={fraOgMedId}
                                             tilOgMedId={tilOgMedId}
                                             fradrag={fradrag}
-                                            fradragsArray={props.fradrag}
-                                            index={index}
                                             intl={props.intl}
+                                            setFieldValue={props.setFieldValue}
                                             delerAvPeriodeErrors={
                                                 errorForLinje &&
                                                 typeof errorForLinje === 'object' &&
@@ -246,7 +240,6 @@ export const FradragInputs = (props: {
                                                     ? errorForLinje.delerAvPeriodeData
                                                     : undefined
                                             }
-                                            periodeChanger={props.periodeChanger}
                                         />
                                     )}
                                 </div>
