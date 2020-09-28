@@ -149,12 +149,12 @@ export const FradragInputs = (props: {
                 const typeId = `${name}.type`;
                 const belopId = `${name}.beløp`;
                 const fraUtlandId = `${name}.fraUtland`;
-                const beløpUtenlandskValutaId = `${name}.beløpUtenlandskValuta`;
-                const valutaId = `${name}.valuta`;
-                const kursId = `${name}.kurs`;
+                const beløpUtenlandskValutaId = `${name}.fraUtlandInntekt.beløpUtenlandskValuta`;
+                const valutaId = `${name}.fraUtlandInntekt.valuta`;
+                const kursId = `${name}.fraUtlandInntekt.kurs`;
                 const delerAvPeriodeId = `${name}.delerAvPeriode`;
-                const fraOgMedId = `${name}.fraOgMed`;
-                const tilOgMedId = `${name}.tilOgMed`;
+                const fraOgMedId = `${name}.delerAvPeriodeData.fraOgMed`;
+                const tilOgMedId = `${name}.delerAvPeriodeData.tilOgMed`;
 
                 return (
                     <Panel key={index} border className={styles.fradragItemContainer}>
