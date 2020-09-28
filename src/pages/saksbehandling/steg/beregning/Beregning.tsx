@@ -119,7 +119,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        {console.log(formik.values)}
                         <div className={styles.summering}>
                             <p>
                                 {props.behandling.behandlingsinformasjon.utledetSats}{' '}
