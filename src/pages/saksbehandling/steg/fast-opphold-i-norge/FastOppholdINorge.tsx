@@ -141,7 +141,6 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                         status: FastOppholdINorgeStatus.VilkårOppfylt,
                                     })
                                 }
-                                defaultChecked={formik.values.status === FastOppholdINorgeStatus.VilkårOppfylt}
                             />
                             <Radio
                                 label={intl.formatMessage({ id: 'radio.label.nei' })}
@@ -153,7 +152,6 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                         status: FastOppholdINorgeStatus.VilkårIkkeOppfylt,
                                     })
                                 }
-                                defaultChecked={formik.values.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt}
                             />
                             <Radio
                                 label={intl.formatMessage({ id: 'radio.label.uavklart' })}
@@ -162,7 +160,6 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 onChange={() =>
                                     formik.setValues({ ...formik.values, status: FastOppholdINorgeStatus.Uavklart })
                                 }
-                                defaultChecked={formik.values.status === FastOppholdINorgeStatus.Uavklart}
                             />
                         </RadioGruppe>
                         <Textarea
