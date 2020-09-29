@@ -52,10 +52,6 @@ const getFieldFromAccessToken = (field: string) => {
     return null;
 };
 
-export const getNameFromAccessToken = (): string | null => {
-    return getFieldFromAccessToken('name');
-};
-
 export const getOidFromAccessToken = (): string | null => {
     return getFieldFromAccessToken('oid');
 };

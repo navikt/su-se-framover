@@ -74,7 +74,6 @@ type LoginState = 'logging-in' | 'logged-in' | 'unauthorized' | 'error';
 function ContentWrapper({ children }: { children: React.ReactChild }) {
     const authCompleteRouteMatch = useRouteMatch('/auth/complete');
     const [loginState, setLoginState] = useState<LoginState>('logging-in');
-    const navn = Cookies.getNameFromAccessToken();
     const loggedInUser = useAppSelector((s) => s.me.me);
 
     const dispatch = useAppDispatch();
@@ -125,9 +124,9 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
     return (
         <div>
             <Header title="Supplerende stønad Ufør" titleHref={'/'}>
-                {navn && (
+                {RemoteData.isSuccess(loggedInUser) && (
                     <Menyknapp
-                        navn={navn}
+                        navn={loggedInUser.value.navn}
                         onLoggUtClick={() => {
                             Cookies.remove(Cookies.CookieName.AccessToken);
                             Cookies.remove(Cookies.CookieName.RefreshToken);
