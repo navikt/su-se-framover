@@ -76,7 +76,7 @@ const FradragsSelection = (props: {
                 </option>
             ))}
         </Select>
-        <p className={styles.feilTekst}>{props.feil ? props.feil : ''}</p>
+        <Feilmelding>{props.feil ? props.feil : ''}</Feilmelding>
     </div>
 );
 
