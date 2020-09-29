@@ -4,15 +4,15 @@ export interface Fradrag {
     type: Fradragstype;
     beløp: number;
     fraUtland: boolean;
-    delerAvPeriode: boolean;
+    delerAvPeriodeChecked: boolean;
     fraUtlandInntekt: FraUtlandInntekt;
-    delerAvPeriodeData: DelerAvPeriode;
+    delerAvPeriode: DelerAvPeriode;
 }
 
 export interface FraUtlandInntekt {
-    beløpUtenlandskValuta: Nullable<string>;
+    beløpUtenlandskValuta: Nullable<number>;
     valuta: Nullable<string>;
-    kurs: Nullable<string>;
+    kurs: Nullable<number>;
 }
 
 export interface DelerAvPeriode {

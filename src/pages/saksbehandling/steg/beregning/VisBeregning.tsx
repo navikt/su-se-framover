@@ -32,6 +32,46 @@ const VisBeregning = (props: Props) => {
                         {beregning.fradrag.map((f, idx) => (
                             <li key={idx} className={styles.fradragItem}>
                                 <InfoLinje tittel={f.type} value={intl.formatNumber(f.beløp, { currency: 'NOK' })} />
+                                {f.fraUtlandInntekt && (
+                                    <div>
+                                        <InfoLinje
+                                            tittel={intl.formatMessage({
+                                                id: 'display.visBeregning.beløpUtenlandskValuta',
+                                            })}
+                                            //på grunn av annerledes typing på front-end og back-end, så har verdiene her
+                                            //en default, selv om den sjekkes på f.fraUtlandInntekt
+                                            value={intl.formatNumber(f.fraUtlandInntekt.beløpUtenlandskValuta ?? 0, {
+                                                currency: 'NOK',
+                                            })}
+                                        />
+                                        <InfoLinje
+                                            tittel={intl.formatMessage({
+                                                id: 'display.visBeregning.valuta',
+                                            })}
+                                            value={f.fraUtlandInntekt.valuta ?? ''}
+                                        />
+                                        <InfoLinje
+                                            tittel={intl.formatMessage({
+                                                id: 'display.visBeregning.kurs',
+                                            })}
+                                            value={intl.formatNumber(f.fraUtlandInntekt.kurs ?? 0, {
+                                                currency: 'NOK',
+                                            })}
+                                        />
+                                    </div>
+                                )}
+                                {f.delerAvPeriode && (
+                                    <div>
+                                        <InfoLinje
+                                            tittel="Fra og med"
+                                            value={f.delerAvPeriode.fraOgMed?.toString() ?? ''}
+                                        />
+                                        <InfoLinje
+                                            tittel="Til og med"
+                                            value={f.delerAvPeriode.tilOgMed?.toString() ?? ''}
+                                        />
+                                    </div>
+                                )}
                             </li>
                         ))}
                     </ul>

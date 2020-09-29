@@ -197,8 +197,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                                     valuta: null,
                                                     kurs: null,
                                                 },
-                                                delerAvPeriode: false,
-                                                delerAvPeriodeData: { fraOgMed: null, tilOgMed: null },
+                                                delerAvPeriodeChecked: false,
+                                                delerAvPeriode: { fraOgMed: null, tilOgMed: null },
                                             },
                                         ],
                                     });

@@ -19,9 +19,9 @@ export interface FradragFormData {
     type: Nullable<Fradragstype>;
     beløp: Nullable<number>;
     fraUtland: boolean;
-    delerAvPeriode: boolean;
+    delerAvPeriodeChecked: boolean;
     fraUtlandInntekt: FraUtlandInntekt;
-    delerAvPeriodeData: DelerAvPeriode;
+    delerAvPeriode: DelerAvPeriode;
 }
 
 const InputWithFollowText = (props: {
@@ -80,29 +80,23 @@ const FradragsSelection = (props: {
     </div>
 );
 
-const validateStringAsNumber = (yup
-    .number()
-    .required()
-    .nullable()
-    .typeError('Feltet må være et tall') as unknown) as yup.Schema<string>;
-
 const fraUtlandInntekt = yup
     .object<FraUtlandInntekt>()
     .defined()
     .when('fraUtland', {
         is: true,
         then: yup.object<FraUtlandInntekt>({
-            beløpUtenlandskValuta: validateStringAsNumber,
+            beløpUtenlandskValuta: yup.number().required().nullable().typeError('Feltet må være et tall'),
             valuta: yup.string().required().nullable(),
-            kurs: validateStringAsNumber,
+            kurs: yup.number().required().nullable().typeError('Feltet må være et tall'),
         }),
         otherwise: yup.object<FraUtlandInntekt>(),
     });
 
-const delerAvPeriodeData = yup
+const delerAvPeriode = yup
     .object<DelerAvPeriode>()
     .defined()
-    .when('delerAvPeriode', {
+    .when('delerAvPeriodeChecked', {
         is: true,
         then: yup.object<DelerAvPeriode>({
             fraOgMed: yup.date().required().nullable(),
@@ -116,8 +110,8 @@ export const fradragSchema = yup.object<FradragFormData>({
     type: yup.string().defined().oneOf(Object.values(Fradragstype), 'Du må velge en fradragstype'),
     fraUtland: yup.boolean(),
     fraUtlandInntekt: fraUtlandInntekt,
-    delerAvPeriode: yup.boolean(),
-    delerAvPeriodeData: delerAvPeriodeData,
+    delerAvPeriodeChecked: yup.boolean(),
+    delerAvPeriode: delerAvPeriode,
 });
 
 export const isValidFradrag = (f: FradragFormData): f is Fradrag => fradragSchema.isValidSync(f);
@@ -145,9 +139,9 @@ export const FradragInputs = (props: {
                 const beløpUtenlandskValutaId = `${name}.fraUtlandInntekt.beløpUtenlandskValuta`;
                 const valutaId = `${name}.fraUtlandInntekt.valuta`;
                 const kursId = `${name}.fraUtlandInntekt.kurs`;
-                const delerAvPeriodeId = `${name}.delerAvPeriode`;
-                const fraOgMedId = `${name}.delerAvPeriodeData.fraOgMed`;
-                const tilOgMedId = `${name}.delerAvPeriodeData.tilOgMed`;
+                const delerAvPeriodeId = `${name}.delerAvPeriodeChecked`;
+                const fraOgMedId = `${name}.delerAvPeriode.fraOgMed`;
+                const tilOgMedId = `${name}.delerAvPeriode.tilOgMed`;
 
                 return (
                     <Panel key={index} border className={styles.fradragItemContainer}>
@@ -202,7 +196,7 @@ export const FradragInputs = (props: {
                                         label={props.intl.formatMessage({ id: 'display.checkbox.delerAvPeriode' })}
                                         name={delerAvPeriodeId}
                                         className={styles.henteMerInfoCheckbox}
-                                        checked={fradrag.delerAvPeriode}
+                                        checked={fradrag.delerAvPeriodeChecked}
                                         onChange={props.onChange}
                                     />
                                 </div>
@@ -224,7 +218,7 @@ export const FradragInputs = (props: {
                                             intl={props.intl}
                                         />
                                     )}
-                                    {fradrag.delerAvPeriode && (
+                                    {fradrag.delerAvPeriodeChecked && (
                                         <DelerAvPeriodeInputs
                                             fraOgMedId={fraOgMedId}
                                             tilOgMedId={tilOgMedId}
@@ -234,8 +228,8 @@ export const FradragInputs = (props: {
                                             delerAvPeriodeErrors={
                                                 errorForLinje &&
                                                 typeof errorForLinje === 'object' &&
-                                                errorForLinje.delerAvPeriodeData
-                                                    ? errorForLinje.delerAvPeriodeData
+                                                errorForLinje.delerAvPeriode
+                                                    ? errorForLinje.delerAvPeriode
                                                     : undefined
                                             }
                                         />
