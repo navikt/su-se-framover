@@ -1,3 +1,4 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import Header from '@navikt/nap-header';
 import Lenke from 'nav-frontend-lenker';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -7,7 +8,7 @@ import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 
-import apiClient from '~/api/apiClient';
+import { ErrorCode } from '~/api/apiClient';
 import { UserProvider } from '~context/userContext';
 import Attestering from '~pages/attestering/Attestering';
 import HomePage from '~pages/HomePage';
@@ -15,10 +16,12 @@ import Saksoversikt from '~pages/saksbehandling/Saksoversikt';
 
 import ErrorBoundary from './components/ErrorBoundary';
 import Menyknapp from './components/Menyknapp';
+import * as meSlice from './features/me/me.slice';
 import * as Cookies from './lib/cookies';
+import { pipe } from './lib/fp';
 import * as routes from './lib/routes';
 import Soknad from './pages/søknad';
-import Store from './redux/Store';
+import Store, { useAppDispatch, useAppSelector } from './redux/Store';
 import styles from './root.module.less';
 
 import './externalStyles';
@@ -72,37 +75,52 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
     const authCompleteRouteMatch = useRouteMatch('/auth/complete');
     const [loginState, setLoginState] = useState<LoginState>('logging-in');
     const navn = Cookies.getNameFromAccessToken();
+    const loggedInUser = useAppSelector((s) => s.me.me);
 
+    const dispatch = useAppDispatch();
     const location = useLocation();
     const history = useHistory();
 
     useEffect(() => {
-        if (authCompleteRouteMatch) {
-            const tokens = location.hash.split('#');
-            const accessToken = tokens[1];
-            const refreshToken = tokens[2];
-            if (!accessToken || !refreshToken) {
-                console.error('On /auth/complete but no accesstoken/refreshtoken found');
-                return;
-            }
-            Cookies.set(Cookies.CookieName.AccessToken, accessToken);
-            Cookies.set(Cookies.CookieName.RefreshToken, refreshToken);
-            const redirectUrl = Cookies.take(Cookies.CookieName.LoginRedirectUrl);
-            history.push(redirectUrl ?? '/');
+        if (!authCompleteRouteMatch) {
             return;
         }
-
-        apiClient({ url: '/authenticated', method: 'GET' }).then((res) => {
-            if (res.status === 'ok') {
-                return setLoginState('logged-in');
-            }
-            if (res.error.statusCode === 401 || res.error.statusCode === 403) {
-                return setLoginState('unauthorized');
-            }
-
-            setLoginState('error');
-        });
+        const tokens = location.hash.split('#');
+        const accessToken = tokens[1];
+        const refreshToken = tokens[2];
+        if (!accessToken || !refreshToken) {
+            console.error('On /auth/complete but no accesstoken/refreshtoken found');
+            return;
+        }
+        Cookies.set(Cookies.CookieName.AccessToken, accessToken);
+        Cookies.set(Cookies.CookieName.RefreshToken, refreshToken);
+        const redirectUrl = Cookies.take(Cookies.CookieName.LoginRedirectUrl);
+        history.push(redirectUrl ?? '/');
     }, [authCompleteRouteMatch]);
+
+    useEffect(() => {
+        pipe(
+            loggedInUser,
+            RemoteData.fold(
+                () => {
+                    dispatch(meSlice.fetchMe());
+                },
+                () => {
+                    setLoginState('logging-in');
+                },
+                (err) => {
+                    if (err.code === ErrorCode.NotAuthenticated || err.code === ErrorCode.Unauthorized) {
+                        setLoginState('unauthorized');
+                    } else {
+                        return setLoginState('error');
+                    }
+                },
+                () => {
+                    setLoginState('logged-in');
+                }
+            )
+        );
+    }, [loggedInUser._tag]);
 
     return (
         <div>
