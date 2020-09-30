@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { lastDayOfMonth } from 'date-fns';
+import { lastDayOfMonth, formatISO } from 'date-fns';
 import { useFormik } from 'formik';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe from 'nav-frontend-alertstriper';
@@ -80,8 +80,10 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                     type: f.type!,
                     delerAvPeriode: f.delerAvPeriodeChecked
                         ? {
-                              fraOgMed: f.delerAvPeriode.fraOgMed!.toISOString(),
-                              tilOgMed: f.delerAvPeriode.tilOgMed!.toISOString(),
+                              fraOgMed: formatISO(f.delerAvPeriode.fraOgMed!, { representation: 'date' }),
+                              tilOgMed: formatISO(lastDayOfMonth(f.delerAvPeriode.tilOgMed!), {
+                                  representation: 'date',
+                              }),
                           }
                         : null,
                     fraUtlandInntekt: f.fraUtlandInntekt
