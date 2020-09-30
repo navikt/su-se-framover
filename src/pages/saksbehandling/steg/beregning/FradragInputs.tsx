@@ -137,7 +137,6 @@ export const FradragInputs = (props: {
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
 }) => {
-    console.log('fradrag Errors: ', props.errors);
     return (
         <div className={styles.fradragContainer}>
             {typeof props.errors === 'string' && props.errors}
