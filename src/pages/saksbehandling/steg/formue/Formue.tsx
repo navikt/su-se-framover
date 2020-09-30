@@ -10,7 +10,7 @@ import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
+import yup, { validateStringAsNumber } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FormueStatus, Formue, Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
@@ -54,10 +54,6 @@ interface FormData {
     depositumskonto: string;
     begrunnelse: Nullable<string>;
 }
-
-const validateStringAsNumber = (yup.number().required().typeError('Feltet må være et tall') as unknown) as yup.Schema<
-    string
->;
 
 const schema = yup.object<FormData>({
     verdiIkkePrimærbolig: validateStringAsNumber,

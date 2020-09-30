@@ -68,7 +68,26 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 sats: props.behandling.behandlingsinformasjon.utledetSats,
                 fom: values.fom,
                 tom: lastDayOfMonth(values.tom),
-                fradrag,
+                fradrag: values.fradrag.map((f) => ({
+                    //valdiering sikrer at feltet ikke er null
+                    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                    beløp: parseInt(f.beløp!, 10),
+                    type: f.type!,
+                    delerAvPeriode: f.delerAvPeriodeChecked
+                        ? {
+                              fraOgMed: f.delerAvPeriode.fraOgMed!.toISOString(),
+                              tilOgMed: f.delerAvPeriode.tilOgMed!.toISOString(),
+                          }
+                        : null,
+                    fraUtlandInntekt: f.fraUtlandInntekt
+                        ? {
+                              beløpUtenlandskValuta: parseInt(f.fraUtlandInntekt.beløpUtenlandskValuta),
+                              valuta: f.fraUtlandInntekt.valuta,
+                              kurs: parseInt(f.fraUtlandInntekt.kurs),
+                          }
+                        : null,
+                    /* eslint-enable @typescript-eslint/no-non-null-assertion */
+                })),
             })
         );
     };
@@ -84,7 +103,21 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         initialValues: {
             fom: toDateOrNull(props.behandling.beregning?.fom),
             tom: toDateOrNull(props.behandling.beregning?.tom),
-            fradrag: props.behandling.beregning?.fradrag ?? [],
+            fradrag: (props.behandling.beregning?.fradrag ?? []).map((f) => ({
+                fraUtland: f.fraUtlandInntekt !== null,
+                delerAvPeriodeChecked: f.delerAvPeriode !== null,
+                beløp: f.beløp.toString(),
+                delerAvPeriode: {
+                    fraOgMed: f.delerAvPeriode?.fraOgMed ? new Date(f.delerAvPeriode?.fraOgMed) : null,
+                    tilOgMed: f.delerAvPeriode?.tilOgMed ? new Date(f.delerAvPeriode?.tilOgMed) : null,
+                },
+                fraUtlandInntekt: {
+                    beløpUtenlandskValuta: f.fraUtlandInntekt?.beløpUtenlandskValuta.toString() ?? '',
+                    valuta: f.fraUtlandInntekt?.valuta.toString() ?? '',
+                    kurs: f.fraUtlandInntekt?.kurs.toString() ?? '',
+                },
+                type: f.type,
+            })),
         },
         onSubmit(values) {
             startBeregning(values);
@@ -193,9 +226,9 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                                 type: null,
                                                 fraUtland: false,
                                                 fraUtlandInntekt: {
-                                                    beløpUtenlandskValuta: null,
-                                                    valuta: null,
-                                                    kurs: null,
+                                                    beløpUtenlandskValuta: '',
+                                                    valuta: '',
+                                                    kurs: '',
                                                 },
                                                 delerAvPeriodeChecked: false,
                                                 delerAvPeriode: { fraOgMed: null, tilOgMed: null },

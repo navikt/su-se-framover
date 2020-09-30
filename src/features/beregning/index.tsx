@@ -8,20 +8,31 @@ import { IntlShape } from 'react-intl';
 
 import { TrashBin } from '~assets/Icons';
 import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
+import yup, { validateStringAsNumber } from '~lib/validering';
 import DelerAvPeriodeInputs from '~pages/saksbehandling/steg/beregning/DelerAvPeriodeInputs';
 import InntektFraUtland from '~pages/saksbehandling/steg/beregning/InntektFraUtland';
-import { Fradrag, Fradragstype, FraUtlandInntekt, DelerAvPeriode } from '~types/Fradrag';
+import { Fradrag, Fradragstype } from '~types/Fradrag';
 
 import styles from './beregning.module.less';
 
 export interface FradragFormData {
     type: Nullable<Fradragstype>;
-    beløp: Nullable<number>;
+    beløp: Nullable<string>;
     fraUtland: boolean;
     delerAvPeriodeChecked: boolean;
-    fraUtlandInntekt: FraUtlandInntekt;
-    delerAvPeriode: DelerAvPeriode;
+    fraUtlandInntekt: FraUtlandInntektFormData;
+    delerAvPeriode: DelerAvPeriodeFormData;
+}
+
+export interface FraUtlandInntektFormData {
+    beløpUtenlandskValuta: string;
+    valuta: string;
+    kurs: string;
+}
+
+export interface DelerAvPeriodeFormData {
+    fraOgMed: Nullable<Date>;
+    tilOgMed: Nullable<Date>;
 }
 
 const InputWithFollowText = (props: {
@@ -81,32 +92,32 @@ const FradragsSelection = (props: {
 );
 
 const fraUtlandInntekt = yup
-    .object<FraUtlandInntekt>()
+    .object<FraUtlandInntektFormData>()
     .defined()
     .when('fraUtland', {
         is: true,
-        then: yup.object<FraUtlandInntekt>({
-            beløpUtenlandskValuta: yup.number().required().nullable().typeError('Feltet må være et tall'),
-            valuta: yup.string().required().nullable(),
-            kurs: yup.number().required().nullable().typeError('Feltet må være et tall'),
+        then: yup.object<FraUtlandInntektFormData>({
+            beløpUtenlandskValuta: validateStringAsNumber,
+            valuta: yup.string().required(),
+            kurs: validateStringAsNumber,
         }),
-        otherwise: yup.object<FraUtlandInntekt>(),
+        otherwise: yup.object<FraUtlandInntektFormData>(),
     });
 
 const delerAvPeriode = yup
-    .object<DelerAvPeriode>()
+    .object<DelerAvPeriodeFormData>()
     .defined()
     .when('delerAvPeriodeChecked', {
         is: true,
-        then: yup.object<DelerAvPeriode>({
+        then: yup.object<DelerAvPeriodeFormData>({
             fraOgMed: yup.date().required().nullable(),
             tilOgMed: yup.date().required().nullable(),
         }),
-        otherwise: yup.object<DelerAvPeriode>(),
+        otherwise: yup.object<DelerAvPeriodeFormData>(),
     });
 
 export const fradragSchema = yup.object<FradragFormData>({
-    beløp: yup.number().typeError('Beløp må være et tall').required(),
+    beløp: validateStringAsNumber,
     type: yup.string().defined().oneOf(Object.values(Fradragstype), 'Du må velge en fradragstype'),
     fraUtland: yup.boolean(),
     fraUtlandInntekt: fraUtlandInntekt,
@@ -114,7 +125,7 @@ export const fradragSchema = yup.object<FradragFormData>({
     delerAvPeriode: delerAvPeriode,
 });
 
-export const isValidFradrag = (f: FradragFormData): f is Fradrag => fradragSchema.isValidSync(f);
+export const isValidFradrag = (f: unknown): f is Fradrag => fradragSchema.isValidSync(f);
 
 export const FradragInputs = (props: {
     fradrag: Array<FradragFormData>;
@@ -122,7 +133,7 @@ export const FradragInputs = (props: {
     errors: string | string[] | FormikErrors<FradragFormData>[] | undefined;
     intl: IntlShape;
     onChange: (e: React.ChangeEvent<unknown>) => void;
-    setFieldValue: (field: string, value: Date | [Date, Date] | null) => void;
+    setFieldValue: (field: string, value: Date | [Date, Date] | null | string) => void;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
 }) => {
@@ -193,9 +204,9 @@ export const FradragInputs = (props: {
                                         onChange={(e) => {
                                             props.onChange(e);
                                             if (fradrag.fraUtland) {
-                                                props.setFieldValue(beløpUtenlandskValutaId, null);
-                                                props.setFieldValue(valutaId, null);
-                                                props.setFieldValue(kursId, null);
+                                                props.setFieldValue(beløpUtenlandskValutaId, '');
+                                                props.setFieldValue(valutaId, '');
+                                                props.setFieldValue(kursId, '');
                                             }
                                         }}
                                     />

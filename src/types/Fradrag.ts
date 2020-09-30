@@ -3,21 +3,19 @@ import { Nullable } from '~lib/types';
 export interface Fradrag {
     type: Fradragstype;
     beløp: number;
-    fraUtland: boolean;
-    delerAvPeriodeChecked: boolean;
-    fraUtlandInntekt: FraUtlandInntekt;
-    delerAvPeriode: DelerAvPeriode;
+    fraUtlandInntekt: Nullable<FraUtlandInntekt>;
+    delerAvPeriode: Nullable<DelerAvPeriode>;
 }
 
 export interface FraUtlandInntekt {
-    beløpUtenlandskValuta: Nullable<number>;
-    valuta: Nullable<string>;
-    kurs: Nullable<number>;
+    beløpUtenlandskValuta: number;
+    valuta: string;
+    kurs: number;
 }
 
 export interface DelerAvPeriode {
-    fraOgMed: Nullable<Date>;
-    tilOgMed: Nullable<Date>;
+    fraOgMed: string;
+    tilOgMed: string;
 }
 
 export enum Fradragstype {

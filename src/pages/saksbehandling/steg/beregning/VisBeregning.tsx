@@ -32,35 +32,33 @@ const VisBeregning = (props: Props) => {
                         {beregning.fradrag.map((f, idx) => (
                             <li key={idx} className={styles.fradragItem}>
                                 <InfoLinje tittel={f.type} value={intl.formatNumber(f.beløp, { currency: 'NOK' })} />
-                                {f.fraUtlandInntekt.beløpUtenlandskValuta &&
-                                    f.fraUtlandInntekt.kurs &&
-                                    f.fraUtlandInntekt.valuta && (
-                                        <div>
-                                            <InfoLinje
-                                                tittel={intl.formatMessage({
-                                                    id: 'display.visBeregning.beløpUtenlandskValuta',
-                                                })}
-                                                value={intl.formatNumber(f.fraUtlandInntekt.beløpUtenlandskValuta, {
-                                                    currency: 'NOK',
-                                                })}
-                                            />
-                                            <InfoLinje
-                                                tittel={intl.formatMessage({
-                                                    id: 'display.visBeregning.valuta',
-                                                })}
-                                                value={f.fraUtlandInntekt.valuta}
-                                            />
-                                            <InfoLinje
-                                                tittel={intl.formatMessage({
-                                                    id: 'display.visBeregning.kurs',
-                                                })}
-                                                value={intl.formatNumber(f.fraUtlandInntekt.kurs, {
-                                                    currency: 'NOK',
-                                                })}
-                                            />
-                                        </div>
-                                    )}
-                                {f.delerAvPeriode.fraOgMed && f.delerAvPeriode.tilOgMed && (
+                                {f.fraUtlandInntekt && (
+                                    <div>
+                                        <InfoLinje
+                                            tittel={intl.formatMessage({
+                                                id: 'display.visBeregning.beløpUtenlandskValuta',
+                                            })}
+                                            value={intl.formatNumber(f.fraUtlandInntekt.beløpUtenlandskValuta, {
+                                                currency: 'NOK',
+                                            })}
+                                        />
+                                        <InfoLinje
+                                            tittel={intl.formatMessage({
+                                                id: 'display.visBeregning.valuta',
+                                            })}
+                                            value={f.fraUtlandInntekt.valuta}
+                                        />
+                                        <InfoLinje
+                                            tittel={intl.formatMessage({
+                                                id: 'display.visBeregning.kurs',
+                                            })}
+                                            value={intl.formatNumber(f.fraUtlandInntekt.kurs, {
+                                                currency: 'NOK',
+                                            })}
+                                        />
+                                    </div>
+                                )}
+                                {f.delerAvPeriode && (
                                     <div>
                                         <InfoLinje
                                             tittel="Fra og med"
