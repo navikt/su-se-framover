@@ -56,8 +56,8 @@ const Beregning = (props: Props) => {
     const formik = useFormik<FormData>({
         initialValues: {
             sats: behandling.beregning?.sats ?? undefined,
-            fom: toDateOrNull(behandling.beregning?.fom) ?? null,
-            tom: toDateOrNull(behandling.beregning?.tom) ?? null,
+            fom: toDateOrNull(behandling.beregning?.fraOgMed) ?? null,
+            tom: toDateOrNull(behandling.beregning?.tilOgMed) ?? null,
             fradrag: behandling.beregning?.fradrag ?? [],
         },
         onSubmit: (values) => {

@@ -52,8 +52,8 @@ export async function startBeregning(
         method: 'POST',
         body: {
             sats,
-            fom: formatISO(fom, { representation: 'date' }),
-            tom: formatISO(tom, { representation: 'date' }),
+            fraOgMed: formatISO(fom, { representation: 'date' }),
+            tilOgMed: formatISO(tom, { representation: 'date' }),
             fradrag: arg.fradrag,
         },
     });
