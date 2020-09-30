@@ -82,8 +82,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            fom: toDateOrNull(props.behandling.beregning?.fom),
-            tom: toDateOrNull(props.behandling.beregning?.tom),
+            fom: toDateOrNull(props.behandling.beregning?.fraOgMed),
+            tom: toDateOrNull(props.behandling.beregning?.tilOgMed),
             fradrag: props.behandling.beregning?.fradrag ?? [],
         },
         onSubmit(values) {

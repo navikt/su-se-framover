@@ -5,8 +5,8 @@ export interface Beregning {
     id: string;
     opprettet: string;
     sats: Sats;
-    fom: string;
-    tom: string;
+    fraOgMed: string;
+    tilOgMed: string;
     månedsberegninger: Array<Månedsberegning>;
     fradrag: Array<Fradrag>;
 }
