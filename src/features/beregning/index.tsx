@@ -190,14 +190,27 @@ export const FradragInputs = (props: {
                                         name={fraUtlandId}
                                         className={styles.henteMerInfoCheckbox}
                                         checked={fradrag.fraUtland}
-                                        onChange={props.onChange}
+                                        onChange={(e) => {
+                                            props.onChange(e);
+                                            if (fradrag.fraUtland) {
+                                                props.setFieldValue(beløpUtenlandskValutaId, null);
+                                                props.setFieldValue(valutaId, null);
+                                                props.setFieldValue(kursId, null);
+                                            }
+                                        }}
                                     />
                                     <Checkbox
                                         label={props.intl.formatMessage({ id: 'display.checkbox.delerAvPeriode' })}
                                         name={delerAvPeriodeId}
                                         className={styles.henteMerInfoCheckbox}
                                         checked={fradrag.delerAvPeriodeChecked}
-                                        onChange={props.onChange}
+                                        onChange={(e) => {
+                                            props.onChange(e);
+                                            if (fradrag.delerAvPeriodeChecked) {
+                                                props.setFieldValue(fraOgMedId, null);
+                                                props.setFieldValue(tilOgMedId, null);
+                                            }
+                                        }}
                                     />
                                 </div>
                                 <div className={styles.utenlandsinntektOgPeriodeContainer}>
