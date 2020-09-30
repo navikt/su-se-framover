@@ -23,8 +23,10 @@ export function iverksatt(behandling: Behandling): boolean {
 
 export function avslag(behandling: Behandling): boolean {
     return Boolean(
-        [Behandlingsstatus.TIL_ATTESTERING_AVSLAG, Behandlingsstatus.VILKÅRSVURDERT_AVSLAG].find(
-            (status) => behandling.status === status
-        )
+        [
+            Behandlingsstatus.TIL_ATTESTERING_AVSLAG,
+            Behandlingsstatus.VILKÅRSVURDERT_AVSLAG,
+            Behandlingsstatus.BEREGNET_AVSLAG,
+        ].find((status) => behandling.status === status)
     );
 }

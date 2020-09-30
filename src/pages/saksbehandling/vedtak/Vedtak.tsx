@@ -7,7 +7,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { fetchBrev } from '~api/brevApi';
-import { tilAttestering } from '~features/behandling/behandlingUtils';
+import { avslag, tilAttestering } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import * as routes from '~lib/routes.ts';
@@ -99,7 +99,8 @@ const Vedtak = (props: Props) => {
 
     if (
         behandling.status === Behandlingsstatus.SIMULERT ||
-        behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
+        behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ||
+        behandling.status === Behandlingsstatus.BEREGNET_AVSLAG
     ) {
         return (
             <div>
@@ -109,9 +110,7 @@ const Vedtak = (props: Props) => {
                         {behandling.status === Behandlingsstatus.SIMULERT && (
                             <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>
                         )}
-                        {behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG && (
-                            <AlertStripeFeil>{behandling.status}</AlertStripeFeil>
-                        )}
+                        {avslag(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
                     </div>
                     <div>
                         <VilkårsOppsummering behandling={behandling} />
