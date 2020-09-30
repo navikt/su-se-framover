@@ -3,10 +3,10 @@ import { Input } from 'nav-frontend-skjema';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
-import { FradragFormData } from '~features/beregning';
+import { FradragFormData } from '~pages/saksbehandling/steg/beregning/FradragInputs';
 import { FraUtlandInntekt } from '~types/Fradrag';
 
-import styles from './beregning.module.less';
+import styles from './fradragInputs.module.less';
 
 const InntektFraUtland = (props: {
     utenlandsBeløpId: string;

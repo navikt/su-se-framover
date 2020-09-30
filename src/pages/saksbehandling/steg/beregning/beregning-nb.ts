@@ -19,6 +19,9 @@ export default {
 
     'display.forventerArbeidsinntekt': 'Forventet inntekt etter uføre (IEU):',
 
+    'display.fradrag.type': 'Type',
+    'display.fradrag.beløp': 'Beløp per år',
+
     'display.input.beløpUtenlandskValuta': 'Beløp i utenlandsk valuta',
     'display.input.kurs': 'Kurs ved utregning',
     'display.input.valuta': 'Valuta',
@@ -27,9 +30,9 @@ export default {
 
     'display.simulerer': 'Simulerer',
 
-    'knapp.fradrag.leggtil': 'Legg til fradrag',
-    'knapp.fradrag.fjern': 'Fjern fradrag',
-    'knapp.startBeregning': 'Start beregning',
+    'display.visBeregning.beløpUtenlandskValuta': 'Beløp i utenlandsk valuta',
+    'display.visBeregning.valuta': 'Valuta',
+    'display.visBeregning.kurs': 'Kurs',
 
     'feiloppsummering.title': 'For å gå videre må du rette opp følgende:',
 
@@ -38,14 +41,14 @@ export default {
     'fradrag.type.andreytelser': 'Andre ytelser',
     'fradrag.type.arbeidsinntekt': 'Arbeidsinntekt',
     'fradrag.type.barnetillegg': 'Barnetillegg',
+    'fradrag.type.emptyLabel': 'Velg fradragstype',
     'fradrag.type.kapitalinntekt': 'Kapitalinntekt',
     'fradrag.type.pensjon': 'Pensjon',
     'fradrag.type.uføre': 'Uføretrygd',
 
-    'input.fradragstype.label': 'Type',
-    'input.fradragstype.emptyLabel': 'Velg fradragstype',
-    'input.fradragsbeløp.label': 'Beløp per år',
-    'input.fradragsbeskrivelse.label': 'Beskrivelse',
+    'knapp.fradrag.leggtil': 'Legg til fradrag',
+    'knapp.fradrag.fjern': 'Fjern fradrag',
+    'knapp.startBeregning': 'Start beregning',
 
     'page.tittel': 'Beregning',
 

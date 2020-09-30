@@ -10,12 +10,17 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import { useHistory } from 'react-router-dom';
 
-import { FradragFormData, isValidFradrag, fradragSchema, FradragInputs } from '~features/beregning';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { toDateOrNull } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
+import {
+    FradragFormData,
+    isValidFradrag,
+    fradragSchema,
+    FradragInputs,
+} from '~pages/saksbehandling/steg/beregning/FradragInputs';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import Faktablokk from '../Faktablokk';
@@ -152,7 +157,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        <div className={styles.summering}>
+                        <div className={styles.utledetSatsOgForventetInntektContainer}>
                             <p>
                                 {props.behandling.behandlingsinformasjon.utledetSats}{' '}
                                 {intl.formatMessage({ id: 'display.sats' })}{' '}
@@ -202,7 +207,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             </div>
                         </div>
 
-                        <div className={styles.fradrag}>
+                        <div className={styles.fradragInputsContainer}>
                             <FradragInputs
                                 feltnavn="fradrag"
                                 fradrag={formik.values.fradrag}
@@ -239,12 +244,12 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             />
                         </div>
 
-                        <div className={styles.bottomButtons}>
+                        <div className={styles.startBeregningContainer}>
                             <Knapp htmlType="submit">{intl.formatMessage({ id: 'knapp.startBeregning' })}</Knapp>
                         </div>
 
                         {props.behandling.beregning && (
-                            <div className={styles.beregning}>
+                            <div className={styles.visBeregningContainer}>
                                 <VisBeregning beregning={props.behandling.beregning} />
                             </div>
                         )}

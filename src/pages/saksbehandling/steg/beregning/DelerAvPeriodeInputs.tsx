@@ -4,10 +4,10 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { IntlShape } from 'react-intl';
 
-import { FradragFormData } from '~features/beregning';
+import { FradragFormData } from '~pages/saksbehandling/steg/beregning/FradragInputs';
 import { DelerAvPeriode } from '~types/Fradrag';
 
-import styles from './beregning.module.less';
+import styles from './fradragInputs.module.less';
 
 const DelerAvPeriodeInputs = (props: {
     fraOgMedId: string;

@@ -3,9 +3,9 @@ import * as Option from 'fp-ts/Option';
 import { Element } from 'nav-frontend-typografi';
 import React from 'react';
 
-import messages from '~/features/beregning/beregning-nb';
 import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
+import messages from '~pages/saksbehandling/steg/beregning/beregning-nb';
 import { Beregning } from '~types/Beregning';
 
 import { groupMånedsberegninger } from '../../delt/arrayUtils';

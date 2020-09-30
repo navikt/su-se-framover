@@ -13,7 +13,7 @@ import DelerAvPeriodeInputs from '~pages/saksbehandling/steg/beregning/DelerAvPe
 import InntektFraUtland from '~pages/saksbehandling/steg/beregning/InntektFraUtland';
 import { Fradrag, Fradragstype } from '~types/Fradrag';
 
-import styles from './beregning.module.less';
+import styles from './fradragInputs.module.less';
 
 export interface FradragFormData {
     type: Nullable<Fradragstype>;
@@ -80,7 +80,7 @@ const FradragsSelection = (props: {
             value={props.value}
             className={props.className}
         >
-            <option value="">{props.intl.formatMessage({ id: 'input.fradragstype.emptyLabel' })}</option>
+            <option value="">{props.intl.formatMessage({ id: 'fradrag.type.emptyLabel' })}</option>
             {Object.values(Fradragstype).map((f) => (
                 <option value={f} key={f}>
                     {props.intl.formatMessage({ id: fradragstypeResourceId(f) })}
@@ -159,7 +159,7 @@ export const FradragInputs = (props: {
                         <SkjemaGruppe legend={`Fradrag ${index + 1}`}>
                             <div className={styles.fradragTypeOgBelopContainer}>
                                 <FradragsSelection
-                                    label={props.intl.formatMessage({ id: 'input.fradragstype.label' })}
+                                    label={props.intl.formatMessage({ id: 'display.fradrag.type' })}
                                     onChange={props.onChange}
                                     id={typeId}
                                     name={typeId}
@@ -174,7 +174,7 @@ export const FradragInputs = (props: {
                                     intl={props.intl}
                                 />
                                 <InputWithFollowText
-                                    tittel={props.intl.formatMessage({ id: 'input.fradragsbeløp.label' })}
+                                    tittel={props.intl.formatMessage({ id: 'display.fradrag.beløp' })}
                                     inputName={belopId}
                                     value={fradrag.beløp?.toString() ?? ''}
                                     bredde={'S'}
@@ -187,7 +187,7 @@ export const FradragInputs = (props: {
                                     }
                                 />
                                 <Knapp
-                                    className={styles.søppelbøtte}
+                                    className={styles.søppelbøtteContainer}
                                     htmlType={'button'}
                                     onClick={() => props.onFjernClick(index)}
                                 >
@@ -199,7 +199,6 @@ export const FradragInputs = (props: {
                                     <Checkbox
                                         label={props.intl.formatMessage({ id: 'display.checkbox.fraUtland' })}
                                         name={fraUtlandId}
-                                        className={styles.henteMerInfoCheckbox}
                                         checked={fradrag.fraUtland}
                                         onChange={(e) => {
                                             props.onChange(e);
@@ -213,7 +212,6 @@ export const FradragInputs = (props: {
                                     <Checkbox
                                         label={props.intl.formatMessage({ id: 'display.checkbox.delerAvPeriode' })}
                                         name={delerAvPeriodeId}
-                                        className={styles.henteMerInfoCheckbox}
                                         checked={fradrag.delerAvPeriodeChecked}
                                         onChange={(e) => {
                                             props.onChange(e);
@@ -224,7 +222,7 @@ export const FradragInputs = (props: {
                                         }}
                                     />
                                 </div>
-                                <div className={styles.utenlandsinntektOgPeriodeContainer}>
+                                <div className={styles.utenlandsinntektOgPeriodeComponentContainer}>
                                     {fradrag.fraUtland && (
                                         <InntektFraUtland
                                             utenlandsBeløpId={beløpUtenlandskValutaId}

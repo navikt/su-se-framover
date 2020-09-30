@@ -4,9 +4,8 @@
     margin-bottom: @spacing;
 }
 
-.fradragItemsContainer {
-    display: flex;
-    align-items: center;
+.fradragItemContainer {
+    margin-bottom: @spacing;
 }
 
 .fradragTypeOgBelopContainer {
@@ -24,7 +23,7 @@
         margin-bottom: 0px;
     }
 
-    .søppelbøtte {
+    .søppelbøtteContainer {
         align-self: flex-end;
         height: 40px;
         width: 40px;
@@ -41,14 +40,29 @@
         justify-content: space-around;
     }
 
-    .utenlandsinntektOgPeriodeContainer {
+    .utenlandsinntektOgPeriodeComponentContainer {
         display: flex;
         justify-content: space-around;
     }
 }
 
-.classname {
+.delerAvPeriodeContainer {
     display: flex;
+    flex-direction: column;
+
+    :first-child {
+        margin-bottom: @spacing-xxs;
+    }
+
+    .dateLabelTekst {
+        font-weight: bold;
+    }
+
+    margin-bottom: @spacing;
+}
+
+.inntektFraUtlandContainer {
+    margin-bottom: @spacing-xxs;
 }
 
 .leggTilNyttFradragContainer {
