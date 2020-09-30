@@ -11,7 +11,7 @@ import { Nullable } from '~lib/types';
 import yup, { validateStringAsNumber } from '~lib/validering';
 import DelerAvPeriodeInputs from '~pages/saksbehandling/steg/beregning/DelerAvPeriodeInputs';
 import InntektFraUtland from '~pages/saksbehandling/steg/beregning/InntektFraUtland';
-import { Fradrag, Fradragstype } from '~types/Fradrag';
+import { Fradrag, Fradragstype, FraUtlandInntektKeys, FradragObjectKeys, DelerAvPeriodeKeys } from '~types/Fradrag';
 
 import styles from './fradragInputs.module.less';
 
@@ -144,15 +144,15 @@ export const FradragInputs = (props: {
             {props.fradrag.map((fradrag, index) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : null;
                 const name = `${props.feltnavn}[${index}]`;
-                const typeId = `${name}.type`;
-                const belopId = `${name}.beløp`;
-                const fraUtlandId = `${name}.fraUtland`;
-                const beløpUtenlandskValutaId = `${name}.fraUtlandInntekt.beløpUtenlandskValuta`;
-                const valutaId = `${name}.fraUtlandInntekt.valuta`;
-                const kursId = `${name}.fraUtlandInntekt.kurs`;
-                const delerAvPeriodeId = `${name}.delerAvPeriodeChecked`;
-                const fraOgMedId = `${name}.delerAvPeriode.fraOgMed`;
-                const tilOgMedId = `${name}.delerAvPeriode.tilOgMed`;
+                const typeId = `${name}.${FradragObjectKeys.type}`;
+                const belopId = `${name}.${FradragObjectKeys.beløp}`;
+                const fraUtlandId = `${name}.${FradragObjectKeys.fraUtland}`;
+                const beløpUtenlandskValutaId = `${name}.${FradragObjectKeys.fraUtlandInntekt}.${FraUtlandInntektKeys.beløpUtenlandskValuta}`;
+                const valutaId = `${name}.${FradragObjectKeys.fraUtlandInntekt}.${FraUtlandInntektKeys.valuta}`;
+                const kursId = `${name}.${FradragObjectKeys.fraUtlandInntekt}.${FraUtlandInntektKeys.kurs}`;
+                const delerAvPeriodeId = `${name}.${FradragObjectKeys.delerAvPeriodeChecked}`;
+                const fraOgMedId = `${name}.${FradragObjectKeys.delerAvPeriode}.${DelerAvPeriodeKeys.fraOgMed}`;
+                const tilOgMedId = `${name}.${FradragObjectKeys.delerAvPeriode}.${DelerAvPeriodeKeys.tilOgMed}`;
 
                 return (
                     <Panel key={index} border className={styles.fradragItemContainer}>
@@ -170,7 +170,7 @@ export const FradragInputs = (props: {
                                             : undefined
                                     }
                                     className={styles.fradragtype}
-                                    optionLabel={props.intl.formatMessage({ id: 'input.fradragstype.emptyLabel' })}
+                                    optionLabel={props.intl.formatMessage({ id: 'fradrag.type.emptyLabel' })}
                                     intl={props.intl}
                                 />
                                 <InputWithFollowText

@@ -18,6 +18,26 @@ export interface DelerAvPeriode {
     tilOgMed: string;
 }
 
+export enum FradragObjectKeys {
+    type = 'type',
+    beløp = 'beløp',
+    fraUtland = 'fraUtland',
+    delerAvPeriodeChecked = 'delerAvPeriodeChecked',
+    fraUtlandInntekt = 'fraUtlandInntekt',
+    delerAvPeriode = 'delerAvPeriode',
+}
+
+export enum FraUtlandInntektKeys {
+    beløpUtenlandskValuta = 'beløpUtenlandskValuta',
+    valuta = 'valuta',
+    kurs = 'kurs',
+}
+
+export enum DelerAvPeriodeKeys {
+    fraOgMed = 'fraOgMed',
+    tilOgMed = 'tilOgMed',
+}
+
 export enum Fradragstype {
     Uføretrygd = 'Uføretrygd',
     Barnetillegg = 'Barnetillegg',

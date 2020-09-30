@@ -3,9 +3,9 @@ import { Input } from 'nav-frontend-skjema';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
-import { FradragFormData } from '~pages/saksbehandling/steg/beregning/FradragInputs';
 import { FraUtlandInntekt } from '~types/Fradrag';
 
+import { FradragFormData } from './FradragInputs';
 import styles from './fradragInputs.module.less';
 
 const InntektFraUtland = (props: {
