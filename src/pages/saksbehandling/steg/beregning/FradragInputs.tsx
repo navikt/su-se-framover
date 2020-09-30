@@ -1,7 +1,7 @@
 import { FormikErrors } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
-import { SkjemaGruppe, Select, Input, Checkbox } from 'nav-frontend-skjema';
+import { SkjemaGruppe, Select, Input, Checkbox, InputProps } from 'nav-frontend-skjema';
 import { Normaltekst, Feilmelding } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
@@ -40,7 +40,7 @@ const InputWithFollowText = (props: {
     inputName: string;
     inputTekst: string;
     value: string;
-    bredde?: 'fullbredde' | 'XXL' | 'XL' | 'L' | 'M' | 'S' | 'XS' | 'XXS';
+    bredde?: InputProps['bredde'];
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     feil: string | undefined;
 }) => (
@@ -56,7 +56,7 @@ const InputWithFollowText = (props: {
             />
             <Normaltekst>{props.inputTekst}</Normaltekst>
         </span>
-        <Feilmelding>{props.feil ?? ''}</Feilmelding>
+        {props.feil && <Feilmelding>{props.feil}</Feilmelding>}
     </div>
 );
 
@@ -87,7 +87,7 @@ const FradragsSelection = (props: {
                 </option>
             ))}
         </Select>
-        <Feilmelding>{props.feil ? props.feil : ''}</Feilmelding>
+        {props.feil && <Feilmelding>{props.feil}</Feilmelding>}
     </div>
 );
 
@@ -137,6 +137,7 @@ export const FradragInputs = (props: {
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
 }) => {
+    console.log('fradrag Errors: ', props.errors);
     return (
         <div className={styles.fradragContainer}>
             {typeof props.errors === 'string' && props.errors}

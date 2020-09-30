@@ -36,12 +36,11 @@ const DelerAvPeriodeInputs = (props: {
                     dateFormat="MM/yyyy"
                     showMonthYearPicker
                     isClearable
-                    selectsEnd
+                    selectsStart
                     startDate={props.fradrag.delerAvPeriode?.fraOgMed}
                     endDate={props.fradrag.delerAvPeriode?.tilOgMed}
-                    minDate={props.fradrag.delerAvPeriode?.fraOgMed}
                 />
-                <Feilmelding>{fraOgMedError ?? ''}</Feilmelding>
+                {fraOgMedError && <Feilmelding>{fraOgMedError}</Feilmelding>}
             </div>
             <div>
                 <Normaltekst className={styles.dateLabelTekst}>
@@ -60,9 +59,9 @@ const DelerAvPeriodeInputs = (props: {
                     selectsEnd
                     startDate={props.fradrag.delerAvPeriode?.fraOgMed}
                     endDate={props.fradrag.delerAvPeriode?.tilOgMed}
-                    minDate={props.fradrag.delerAvPeriode?.fraOgMed}
+                    minDate={props.fradrag.delerAvPeriode?.tilOgMed}
                 />
-                <Feilmelding>{tilOgMedError ?? ''}</Feilmelding>
+                {tilOgMedError && <Feilmelding>{tilOgMedError}</Feilmelding>}
             </div>
         </div>
     );

@@ -45,7 +45,7 @@ const UførhetInput = (props: {
                 />
                 <Normaltekst>{props.inputTekst}</Normaltekst>
             </span>
-            <Feilmelding>{props.feil ?? ''}</Feilmelding>
+            {props.feil && <Feilmelding>{props.feil}</Feilmelding>}
         </span>
     </div>
 );
