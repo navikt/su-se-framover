@@ -7,7 +7,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { fetchBrev } from '~api/brevApi';
-import { avslag, tilAttestering } from '~features/behandling/behandlingUtils';
+import { erAvslått, erTilAttestering } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import * as routes from '~lib/routes.ts';
@@ -93,7 +93,7 @@ const Vedtak = (props: Props) => {
         return <AlertStripe type="feil">Fant ikke behandlingsid</AlertStripe>;
     }
 
-    if (tilAttestering(behandling)) {
+    if (erTilAttestering(behandling)) {
         return <div>Vedtak er sendt til Attestering</div>;
     }
 
@@ -110,7 +110,7 @@ const Vedtak = (props: Props) => {
                         {behandling.status === Behandlingsstatus.SIMULERT && (
                             <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>
                         )}
-                        {avslag(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
+                        {erAvslått(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
                     </div>
                     <div>
                         <VilkårsOppsummering behandling={behandling} />
