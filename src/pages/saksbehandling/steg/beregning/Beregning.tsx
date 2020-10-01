@@ -17,6 +17,7 @@ import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Behandlingsstatus } from '~types/Behandling';
 
 import VisBeregning from '../../beregning/VisBeregning';
 import Faktablokk from '../Faktablokk';
@@ -239,6 +240,11 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     RemoteData.isSuccess(beregningStatus) ||
                                     (props.behandling.beregning && RemoteData.isInitial(beregningStatus))
                                 ) {
+                                    if (props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG) {
+                                        history.push(props.nesteUrl);
+                                        return;
+                                    }
+
                                     const res = await dispatch(
                                         sakSlice.startSimulering({
                                             sakId: props.sakId,

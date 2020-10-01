@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 
 import * as Routes from '~/lib/routes';
 import { fetchBrev } from '~api/brevApi';
-import { avslag, tilAttestering, iverksatt } from '~features/behandling/behandlingUtils';
+import { erAvslått, erTilAttestering, erIverksatt } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
@@ -64,7 +64,7 @@ const VilkårsvurderingInfoLinje = (props: {
 };
 
 const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
-    if (props.behandling.beregning && !avslag(props.behandling)) {
+    if (props.behandling.beregning && !erAvslått(props.behandling)) {
         return (
             <div className={styles.beregningOgOppdragContainer}>
                 <div className={styles.beregningContainer}>
@@ -142,7 +142,7 @@ const Attestering = () => {
     });
 
     const { errors } = formik;
-    if (!tilAttestering(behandling) && !iverksatt(behandling)) {
+    if (!erTilAttestering(behandling) && !erIverksatt(behandling)) {
         return <div>Behandlingen er ikke klar for attestering.</div>;
     }
 
@@ -151,8 +151,8 @@ const Attestering = () => {
             <div className={styles.vedtakContainer}>
                 <Innholdstittel>Vedtak</Innholdstittel>
                 <div>
-                    {!avslag(behandling) && <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>}
-                    {avslag(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
+                    {!erAvslått(behandling) && <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>}
+                    {erAvslått(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
                 </div>
                 <div>
                     <VilkårsOppsummering behandling={behandling} />
@@ -175,7 +175,7 @@ const Attestering = () => {
                 </div>
             </div>
             <div className={styles.navigeringContainer}>
-                {tilAttestering(behandling) && (
+                {erTilAttestering(behandling) && (
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
