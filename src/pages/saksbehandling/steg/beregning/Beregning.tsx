@@ -242,6 +242,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 ) {
                                     if (props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG) {
                                         history.push(props.nesteUrl);
+                                        return;
                                     }
 
                                     const res = await dispatch(
