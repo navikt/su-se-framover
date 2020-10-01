@@ -86,11 +86,11 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                               }),
                           }
                         : null,
-                    fraUtlandInntekt: f.fraUtlandInntekt
+                    utenlandskInntekt: f.utenlandskInntekt
                         ? {
-                              beløpUtenlandskValuta: parseInt(f.fraUtlandInntekt.beløpUtenlandskValuta),
-                              valuta: f.fraUtlandInntekt.valuta,
-                              kurs: parseInt(f.fraUtlandInntekt.kurs),
+                              beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
+                              valuta: f.utenlandskInntekt.valuta,
+                              kurs: parseInt(f.utenlandskInntekt.kurs),
                           }
                         : null,
                     /* eslint-enable @typescript-eslint/no-non-null-assertion */
@@ -111,17 +111,17 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             fom: toDateOrNull(props.behandling.beregning?.fom),
             tom: toDateOrNull(props.behandling.beregning?.tom),
             fradrag: (props.behandling.beregning?.fradrag ?? []).map((f) => ({
-                fraUtland: f.fraUtlandInntekt !== null,
+                fraUtland: f.utenlandskInntekt !== null,
                 delerAvPeriodeChecked: f.delerAvPeriode !== null,
                 beløp: f.beløp.toString(),
                 delerAvPeriode: {
                     fraOgMed: f.delerAvPeriode?.fraOgMed ? new Date(f.delerAvPeriode?.fraOgMed) : null,
                     tilOgMed: f.delerAvPeriode?.tilOgMed ? new Date(f.delerAvPeriode?.tilOgMed) : null,
                 },
-                fraUtlandInntekt: {
-                    beløpUtenlandskValuta: f.fraUtlandInntekt?.beløpUtenlandskValuta.toString() ?? '',
-                    valuta: f.fraUtlandInntekt?.valuta.toString() ?? '',
-                    kurs: f.fraUtlandInntekt?.kurs.toString() ?? '',
+                utenlandskInntekt: {
+                    beløpIUtenlandskValuta: f.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',
+                    valuta: f.utenlandskInntekt?.valuta.toString() ?? '',
+                    kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
                 },
                 type: f.type,
             })),
@@ -232,8 +232,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                                 beløp: null,
                                                 type: null,
                                                 fraUtland: false,
-                                                fraUtlandInntekt: {
-                                                    beløpUtenlandskValuta: '',
+                                                utenlandskInntekt: {
+                                                    beløpIUtenlandskValuta: '',
                                                     valuta: '',
                                                     kurs: '',
                                                 },

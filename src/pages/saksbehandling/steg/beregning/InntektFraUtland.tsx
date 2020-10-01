@@ -3,7 +3,7 @@ import { Input } from 'nav-frontend-skjema';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
-import { FraUtlandInntekt } from '~types/Fradrag';
+import { UtenlandskInntekt } from '~types/Fradrag';
 
 import { FradragFormData } from './FradragInputs';
 import styles from './fradragInputs.module.less';
@@ -14,27 +14,27 @@ const InntektFraUtland = (props: {
     kursId: string;
     fradrag: FradragFormData;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    fraUtlandInntektErrors: FormikErrors<FraUtlandInntekt> | undefined;
+    utenlandskInntektErrors: FormikErrors<UtenlandskInntekt> | undefined;
     intl: IntlShape;
 }) => {
-    const beløpUtenlandskValutaError = props.fraUtlandInntektErrors?.beløpUtenlandskValuta;
-    const valutaError = props.fraUtlandInntektErrors?.valuta;
-    const kursError = props.fraUtlandInntektErrors?.kurs;
+    const beløpIUtenlandskValutaError = props.utenlandskInntektErrors?.beløpIUtenlandskValuta;
+    const valutaError = props.utenlandskInntektErrors?.valuta;
+    const kursError = props.utenlandskInntektErrors?.kurs;
 
     return (
         <div className={styles.inntektFraUtlandContainer}>
             <Input
-                label={props.intl.formatMessage({ id: 'display.input.beløpUtenlandskValuta' })}
+                label={props.intl.formatMessage({ id: 'display.input.beløpIUtenlandskValuta' })}
                 name={props.utenlandsBeløpId}
-                value={props.fradrag.fraUtlandInntekt?.beløpUtenlandskValuta ?? ''}
+                value={props.fradrag.utenlandskInntekt?.beløpIUtenlandskValuta ?? ''}
                 bredde={'M'}
                 onChange={props.onChange}
-                feil={beløpUtenlandskValutaError}
+                feil={beløpIUtenlandskValutaError}
             />
             <Input
                 label={props.intl.formatMessage({ id: 'display.input.valuta' })}
                 name={props.valutaId}
-                value={props.fradrag.fraUtlandInntekt?.valuta ?? ''}
+                value={props.fradrag.utenlandskInntekt?.valuta ?? ''}
                 bredde={'S'}
                 onChange={props.onChange}
                 feil={valutaError}
@@ -42,7 +42,7 @@ const InntektFraUtland = (props: {
             <Input
                 label={props.intl.formatMessage({ id: 'display.input.kurs' })}
                 name={props.kursId}
-                value={props.fradrag.fraUtlandInntekt?.kurs ?? ''}
+                value={props.fradrag.utenlandskInntekt?.kurs ?? ''}
                 bredde={'S'}
                 onChange={props.onChange}
                 feil={kursError}

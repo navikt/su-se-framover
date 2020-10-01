@@ -22,7 +22,7 @@ export default {
     'display.fradrag.type': 'Type',
     'display.fradrag.beløp': 'Beløp per år',
 
-    'display.input.beløpUtenlandskValuta': 'Beløp i utenlandsk valuta',
+    'display.input.beløpIUtenlandskValuta': 'Beløp i utenlandsk valuta',
     'display.input.kurs': 'Kurs ved utregning',
     'display.input.valuta': 'Valuta',
 
@@ -30,7 +30,7 @@ export default {
 
     'display.simulerer': 'Simulerer',
 
-    'display.visBeregning.beløpUtenlandskValuta': 'Beløp i utenlandsk valuta',
+    'display.visBeregning.beløpIUtenlandskValuta': 'Beløp i utenlandsk valuta',
     'display.visBeregning.valuta': 'Valuta',
     'display.visBeregning.kurs': 'Kurs',
 

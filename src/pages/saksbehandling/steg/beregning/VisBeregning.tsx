@@ -32,13 +32,13 @@ const VisBeregning = (props: Props) => {
                         {beregning.fradrag.map((f, idx) => (
                             <li key={idx} className={styles.fradragItem}>
                                 <InfoLinje tittel={f.type} value={intl.formatNumber(f.beløp, { currency: 'NOK' })} />
-                                {f.fraUtlandInntekt && (
+                                {f.utenlandskInntekt && (
                                     <div>
                                         <InfoLinje
                                             tittel={intl.formatMessage({
-                                                id: 'display.visBeregning.beløpUtenlandskValuta',
+                                                id: 'display.visBeregning.beløpIUtenlandskValuta',
                                             })}
-                                            value={intl.formatNumber(f.fraUtlandInntekt.beløpUtenlandskValuta, {
+                                            value={intl.formatNumber(f.utenlandskInntekt.beløpIUtenlandskValuta, {
                                                 currency: 'NOK',
                                             })}
                                         />
@@ -46,13 +46,13 @@ const VisBeregning = (props: Props) => {
                                             tittel={intl.formatMessage({
                                                 id: 'display.visBeregning.valuta',
                                             })}
-                                            value={f.fraUtlandInntekt.valuta}
+                                            value={f.utenlandskInntekt.valuta}
                                         />
                                         <InfoLinje
                                             tittel={intl.formatMessage({
                                                 id: 'display.visBeregning.kurs',
                                             })}
-                                            value={intl.formatNumber(f.fraUtlandInntekt.kurs, {
+                                            value={intl.formatNumber(f.utenlandskInntekt.kurs, {
                                                 currency: 'NOK',
                                             })}
                                         />

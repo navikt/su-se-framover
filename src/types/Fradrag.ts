@@ -3,12 +3,12 @@ import { Nullable } from '~lib/types';
 export interface Fradrag {
     type: Fradragstype;
     beløp: number;
-    fraUtlandInntekt: Nullable<FraUtlandInntekt>;
+    utenlandskInntekt: Nullable<UtenlandskInntekt>;
     delerAvPeriode: Nullable<DelerAvPeriode>;
 }
 
-export interface FraUtlandInntekt {
-    beløpUtenlandskValuta: number;
+export interface UtenlandskInntekt {
+    beløpIUtenlandskValuta: number;
     valuta: string;
     kurs: number;
 }
@@ -23,12 +23,12 @@ export enum FradragObjectKeys {
     beløp = 'beløp',
     fraUtland = 'fraUtland',
     delerAvPeriodeChecked = 'delerAvPeriodeChecked',
-    fraUtlandInntekt = 'fraUtlandInntekt',
+    utenlandskInntekt = 'utenlandskInntekt',
     delerAvPeriode = 'delerAvPeriode',
 }
 
-export enum FraUtlandInntektKeys {
-    beløpUtenlandskValuta = 'beløpUtenlandskValuta',
+export enum UtenlandskInntektKeys {
+    beløpIUtenlandskValuta = 'beløpIUtenlandskValuta',
     valuta = 'valuta',
     kurs = 'kurs',
 }

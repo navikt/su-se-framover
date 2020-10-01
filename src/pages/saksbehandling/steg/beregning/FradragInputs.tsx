@@ -11,7 +11,7 @@ import { Nullable } from '~lib/types';
 import yup, { validateStringAsNumber } from '~lib/validering';
 import DelerAvPeriodeInputs from '~pages/saksbehandling/steg/beregning/DelerAvPeriodeInputs';
 import InntektFraUtland from '~pages/saksbehandling/steg/beregning/InntektFraUtland';
-import { Fradrag, Fradragstype, FraUtlandInntektKeys, FradragObjectKeys, DelerAvPeriodeKeys } from '~types/Fradrag';
+import { Fradrag, Fradragstype, UtenlandskInntektKeys, FradragObjectKeys, DelerAvPeriodeKeys } from '~types/Fradrag';
 
 import styles from './fradragInputs.module.less';
 
@@ -20,12 +20,12 @@ export interface FradragFormData {
     beløp: Nullable<string>;
     fraUtland: boolean;
     delerAvPeriodeChecked: boolean;
-    fraUtlandInntekt: FraUtlandInntektFormData;
+    utenlandskInntekt: UtenlandskInntektFormData;
     delerAvPeriode: DelerAvPeriodeFormData;
 }
 
-export interface FraUtlandInntektFormData {
-    beløpUtenlandskValuta: string;
+export interface UtenlandskInntektFormData {
+    beløpIUtenlandskValuta: string;
     valuta: string;
     kurs: string;
 }
@@ -91,17 +91,17 @@ const FradragsSelection = (props: {
     </div>
 );
 
-const fraUtlandInntekt = yup
-    .object<FraUtlandInntektFormData>()
+const utenlandskInntekt = yup
+    .object<UtenlandskInntektFormData>()
     .defined()
     .when('fraUtland', {
         is: true,
-        then: yup.object<FraUtlandInntektFormData>({
-            beløpUtenlandskValuta: validateStringAsNumber,
+        then: yup.object<UtenlandskInntektFormData>({
+            beløpIUtenlandskValuta: validateStringAsNumber,
             valuta: yup.string().required(),
             kurs: validateStringAsNumber,
         }),
-        otherwise: yup.object<FraUtlandInntektFormData>(),
+        otherwise: yup.object<UtenlandskInntektFormData>(),
     });
 
 const delerAvPeriode = yup
@@ -120,7 +120,7 @@ export const fradragSchema = yup.object<FradragFormData>({
     beløp: validateStringAsNumber,
     type: yup.string().defined().oneOf(Object.values(Fradragstype), 'Du må velge en fradragstype'),
     fraUtland: yup.boolean(),
-    fraUtlandInntekt: fraUtlandInntekt,
+    utenlandskInntekt: utenlandskInntekt,
     delerAvPeriodeChecked: yup.boolean(),
     delerAvPeriode: delerAvPeriode,
 });
@@ -147,9 +147,9 @@ export const FradragInputs = (props: {
                 const typeId = `${name}.${FradragObjectKeys.type}`;
                 const belopId = `${name}.${FradragObjectKeys.beløp}`;
                 const fraUtlandId = `${name}.${FradragObjectKeys.fraUtland}`;
-                const beløpUtenlandskValutaId = `${name}.${FradragObjectKeys.fraUtlandInntekt}.${FraUtlandInntektKeys.beløpUtenlandskValuta}`;
-                const valutaId = `${name}.${FradragObjectKeys.fraUtlandInntekt}.${FraUtlandInntektKeys.valuta}`;
-                const kursId = `${name}.${FradragObjectKeys.fraUtlandInntekt}.${FraUtlandInntektKeys.kurs}`;
+                const beløpIUtenlandskValuta = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.beløpIUtenlandskValuta}`;
+                const valutaId = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.valuta}`;
+                const kursId = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.kurs}`;
                 const delerAvPeriodeId = `${name}.${FradragObjectKeys.delerAvPeriodeChecked}`;
                 const fraOgMedId = `${name}.${FradragObjectKeys.delerAvPeriode}.${DelerAvPeriodeKeys.fraOgMed}`;
                 const tilOgMedId = `${name}.${FradragObjectKeys.delerAvPeriode}.${DelerAvPeriodeKeys.tilOgMed}`;
@@ -203,7 +203,7 @@ export const FradragInputs = (props: {
                                         onChange={(e) => {
                                             props.onChange(e);
                                             if (fradrag.fraUtland) {
-                                                props.setFieldValue(beløpUtenlandskValutaId, '');
+                                                props.setFieldValue(beløpIUtenlandskValuta, '');
                                                 props.setFieldValue(valutaId, '');
                                                 props.setFieldValue(kursId, '');
                                             }
@@ -225,16 +225,16 @@ export const FradragInputs = (props: {
                                 <div className={styles.utenlandsinntektOgPeriodeComponentContainer}>
                                     {fradrag.fraUtland && (
                                         <InntektFraUtland
-                                            utenlandsBeløpId={beløpUtenlandskValutaId}
+                                            utenlandsBeløpId={beløpIUtenlandskValuta}
                                             valutaId={valutaId}
                                             kursId={kursId}
                                             fradrag={fradrag}
                                             onChange={props.onChange}
-                                            fraUtlandInntektErrors={
+                                            utenlandskInntektErrors={
                                                 errorForLinje &&
                                                 typeof errorForLinje === 'object' &&
-                                                errorForLinje.fraUtlandInntekt
-                                                    ? errorForLinje.fraUtlandInntekt
+                                                errorForLinje.utenlandskInntekt
+                                                    ? errorForLinje.utenlandskInntekt
                                                     : undefined
                                             }
                                             intl={props.intl}
