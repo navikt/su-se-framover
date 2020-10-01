@@ -6,6 +6,12 @@ function label(data: Partial<yup.TestMessageParams>) {
     return data.label ?? 'Feltet';
 }
 
+export const validateStringAsNumber = (yup
+    .number()
+    .required('Feltet må fylles ut')
+    .moreThan(-1, 'Feltet må være et positivt tall høyere enn 0')
+    .typeError('Feltet må være et tall') as unknown) as yup.Schema<string>;
+
 const norskLocale: yup.LocaleObject = {
     mixed: {
         default: (data) => `${label(data)} er ugyldig`,

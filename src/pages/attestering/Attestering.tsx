@@ -15,8 +15,8 @@ import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~f
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
-import VisBeregning from '~pages/saksbehandling/beregning/VisBeregning';
 import { Simulering } from '~pages/saksbehandling/simulering/simulering';
+import VisBeregning from '~pages/saksbehandling/steg/beregning/VisBeregning';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { Sak } from '~types/Sak';

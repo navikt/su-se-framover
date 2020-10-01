@@ -6,17 +6,17 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 
-import messages from '~/features/beregning/beregning-nb';
 import { formatDateTime } from '~lib/dateUtils';
 import { combineOptions } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
+import messages from '~pages/saksbehandling/steg/beregning/beregning-nb';
 import { useAppSelector } from '~redux/Store';
 import { Sak } from '~types/Sak';
 import { Utbetaling } from '~types/Utbetaling';
 
-import styles from '../beregning/visBeregning.module.less';
 import { groupSimuleringsperioder } from '../delt/arrayUtils';
 import { InfoLinje } from '../delt/Infolinje/Infolinje';
+import styles from '../steg/beregning/visBeregning.module.less';
 
 interface Props {
     sak: Sak;

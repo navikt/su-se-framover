@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Radio, RadioGruppe, Input } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Normaltekst } from 'nav-frontend-typografi';
+import { Normaltekst, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -45,7 +45,7 @@ const UførhetInput = (props: {
                 />
                 <Normaltekst>{props.inputTekst}</Normaltekst>
             </span>
-            <Normaltekst className={styles.feilTekst}>{props.feil}</Normaltekst>
+            {props.feil && <Feilmelding>{props.feil}</Feilmelding>}
         </span>
     </div>
 );

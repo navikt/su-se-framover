@@ -1,17 +1,16 @@
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
-import { Element, Undertekst } from 'nav-frontend-typografi';
+import { Element } from 'nav-frontend-typografi';
 import React from 'react';
-import { IntlShape } from 'react-intl';
 
-import messages from '~/features/beregning/beregning-nb';
 import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
+import messages from '~pages/saksbehandling/steg/beregning/beregning-nb';
 import { Beregning } from '~types/Beregning';
 import { Fradragstype, Fradrag, ForventetInntektfradrag } from '~types/Fradrag';
 
-import { groupMånedsberegninger } from '../delt/arrayUtils';
-import { InfoLinje } from '../delt/Infolinje/Infolinje';
+import { groupMånedsberegninger } from '../../delt/arrayUtils';
+import { InfoLinje } from '../../delt/Infolinje/Infolinje';
 
 import styles from './visBeregning.module.less';
 
@@ -20,11 +19,7 @@ interface Props {
     forventetinntekt: number;
 }
 
-const fradragMedForventetinntekt = (
-    fradrag: Array<Fradrag>,
-    forventetinntekt: number,
-    intl: IntlShape
-): Array<Fradrag> => {
+const fradragMedForventetinntekt = (fradrag: Array<Fradrag>, forventetinntekt: number): Array<Fradrag> => {
     const { left: andreFradrag, right: arbeidsinntektfradrag } = pipe(
         fradrag,
         arr.partition((f) => f.type === Fradragstype.Arbeidsinntekt)
@@ -39,7 +34,8 @@ const fradragMedForventetinntekt = (
         {
             type: ForventetInntektfradrag,
             beløp: forventetinntekt,
-            beskrivelse: intl.formatMessage({ id: 'display.brukerForventetinntekt' }),
+            utenlandskInntekt: null,
+            delerAvPeriode: null,
         },
     ];
 };
@@ -52,15 +48,50 @@ const VisBeregning = (props: Props) => {
 
     return (
         <div>
-            {fradragMedForventetinntekt(beregning.fradrag, props.forventetinntekt, intl).length > 0 && (
+            {fradragMedForventetinntekt(beregning.fradrag, props.forventetinntekt).length > 0 && (
                 <div>
                     <Element className={styles.fradragHeading}>Fradrag:</Element>
                     <ul>
-                        {fradragMedForventetinntekt(beregning.fradrag, props.forventetinntekt, intl).map((f, idx) => (
+                        {fradragMedForventetinntekt(beregning.fradrag, props.forventetinntekt).map((f, idx) => (
                             <li key={idx} className={styles.fradragItem}>
                                 <InfoLinje tittel={f.type} value={intl.formatNumber(f.beløp, { currency: 'NOK' })} />
-                                {f.beskrivelse && (
-                                    <Undertekst className={styles.fradragKommentar}>{f.beskrivelse}</Undertekst>
+                                {f.utenlandskInntekt && (
+                                    <div>
+                                        <InfoLinje
+                                            tittel={intl.formatMessage({
+                                                id: 'display.visBeregning.beløpIUtenlandskValuta',
+                                            })}
+                                            value={intl.formatNumber(f.utenlandskInntekt.beløpIUtenlandskValuta, {
+                                                currency: 'NOK',
+                                            })}
+                                        />
+                                        <InfoLinje
+                                            tittel={intl.formatMessage({
+                                                id: 'display.visBeregning.valuta',
+                                            })}
+                                            value={f.utenlandskInntekt.valuta}
+                                        />
+                                        <InfoLinje
+                                            tittel={intl.formatMessage({
+                                                id: 'display.visBeregning.kurs',
+                                            })}
+                                            value={intl.formatNumber(f.utenlandskInntekt.kurs, {
+                                                currency: 'NOK',
+                                            })}
+                                        />
+                                    </div>
+                                )}
+                                {f.delerAvPeriode && (
+                                    <div>
+                                        <InfoLinje
+                                            tittel="Fra og med"
+                                            value={intl.formatDate(f.delerAvPeriode.fraOgMed)}
+                                        />
+                                        <InfoLinje
+                                            tittel="Til og med"
+                                            value={intl.formatDate(f.delerAvPeriode.tilOgMed)}
+                                        />
+                                    </div>
                                 )}
                             </li>
                         ))}

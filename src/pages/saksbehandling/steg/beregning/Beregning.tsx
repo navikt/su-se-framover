@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { lastDayOfMonth } from 'date-fns';
+import { lastDayOfMonth, formatISO } from 'date-fns';
 import { useFormik } from 'formik';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe from 'nav-frontend-alertstriper';
@@ -10,16 +10,20 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import { useHistory } from 'react-router-dom';
 
-import { FradragFormData, isValidFradrag, fradragSchema, FradragInputs } from '~features/beregning';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { toDateOrNull } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
+import {
+    FradragFormData,
+    isValidFradrag,
+    fradragSchema,
+    FradragInputs,
+} from '~pages/saksbehandling/steg/beregning/FradragInputs';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 
-import VisBeregning from '../../beregning/VisBeregning';
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -27,6 +31,7 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './beregning-nb';
 import styles from './beregning.module.less';
+import VisBeregning from './VisBeregning';
 
 interface FormData {
     fom: Nullable<Date>;
@@ -69,7 +74,28 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 sats: props.behandling.behandlingsinformasjon.utledetSats,
                 fom: values.fom,
                 tom: lastDayOfMonth(values.tom),
-                fradrag,
+                fradrag: values.fradrag.map((f) => ({
+                    //valdiering sikrer at feltet ikke er null
+                    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                    beløp: parseInt(f.beløp!, 10),
+                    type: f.type!,
+                    delerAvPeriode: f.delerAvPeriodeChecked
+                        ? {
+                              fraOgMed: formatISO(f.delerAvPeriode.fraOgMed!, { representation: 'date' }),
+                              tilOgMed: formatISO(lastDayOfMonth(f.delerAvPeriode.tilOgMed!), {
+                                  representation: 'date',
+                              }),
+                          }
+                        : null,
+                    utenlandskInntekt: f.utenlandskInntekt
+                        ? {
+                              beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
+                              valuta: f.utenlandskInntekt.valuta,
+                              kurs: parseInt(f.utenlandskInntekt.kurs),
+                          }
+                        : null,
+                    /* eslint-enable @typescript-eslint/no-non-null-assertion */
+                })),
             })
         );
     };
@@ -85,7 +111,21 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         initialValues: {
             fom: toDateOrNull(props.behandling.beregning?.fraOgMed),
             tom: toDateOrNull(props.behandling.beregning?.tilOgMed),
-            fradrag: props.behandling.beregning?.fradrag ?? [],
+            fradrag: (props.behandling.beregning?.fradrag ?? []).map((f) => ({
+                fraUtland: f.utenlandskInntekt !== null,
+                delerAvPeriodeChecked: f.delerAvPeriode !== null,
+                beløp: f.beløp.toString(),
+                delerAvPeriode: {
+                    fraOgMed: f.delerAvPeriode?.fraOgMed ? new Date(f.delerAvPeriode?.fraOgMed) : null,
+                    tilOgMed: f.delerAvPeriode?.tilOgMed ? new Date(f.delerAvPeriode?.tilOgMed) : null,
+                },
+                utenlandskInntekt: {
+                    beløpIUtenlandskValuta: f.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',
+                    valuta: f.utenlandskInntekt?.valuta.toString() ?? '',
+                    kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
+                },
+                type: f.type,
+            })),
         },
         onSubmit(values) {
             startBeregning(values);
@@ -120,7 +160,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        <div className={styles.summering}>
+                        <div className={styles.utledetSatsOgForventetInntektContainer}>
                             <p>
                                 {props.behandling.behandlingsinformasjon.utledetSats}{' '}
                                 {intl.formatMessage({ id: 'display.sats' })}{' '}
@@ -170,13 +210,14 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             </div>
                         </div>
 
-                        <div className={styles.fradrag}>
+                        <div className={styles.fradragInputsContainer}>
                             <FradragInputs
                                 feltnavn="fradrag"
                                 fradrag={formik.values.fradrag}
                                 errors={formik.errors.fradrag}
                                 intl={intl}
                                 onChange={formik.handleChange}
+                                setFieldValue={formik.setFieldValue}
                                 onFjernClick={(index) => {
                                     formik.setValues({
                                         ...formik.values,
@@ -188,19 +229,30 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                         ...formik.values,
                                         fradrag: [
                                             ...formik.values.fradrag,
-                                            { beløp: null, beskrivelse: null, type: null },
+                                            {
+                                                beløp: null,
+                                                type: null,
+                                                fraUtland: false,
+                                                utenlandskInntekt: {
+                                                    beløpIUtenlandskValuta: '',
+                                                    valuta: '',
+                                                    kurs: '',
+                                                },
+                                                delerAvPeriodeChecked: false,
+                                                delerAvPeriode: { fraOgMed: null, tilOgMed: null },
+                                            },
                                         ],
                                     });
                                 }}
                             />
                         </div>
 
-                        <div className={styles.bottomButtons}>
+                        <div className={styles.startBeregningContainer}>
                             <Knapp htmlType="submit">{intl.formatMessage({ id: 'knapp.startBeregning' })}</Knapp>
                         </div>
 
                         {props.behandling.beregning && (
-                            <div className={styles.beregning}>
+                            <div className={styles.visBeregningContainer}>
                                 <VisBeregning
                                     beregning={props.behandling.beregning}
                                     forventetinntekt={

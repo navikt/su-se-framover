@@ -6,7 +6,19 @@ export type ForventetInntektfradrag = typeof ForventetInntektfradrag;
 export interface Fradrag {
     type: Fradragstype | ForventetInntektfradrag;
     beløp: number;
-    beskrivelse: Nullable<string>;
+    utenlandskInntekt: Nullable<UtenlandskInntekt>;
+    delerAvPeriode: Nullable<DelerAvPeriode>;
+}
+
+export interface UtenlandskInntekt {
+    beløpIUtenlandskValuta: number;
+    valuta: string;
+    kurs: number;
+}
+
+export interface DelerAvPeriode {
+    fraOgMed: string;
+    tilOgMed: string;
 }
 
 export enum Fradragstype {
