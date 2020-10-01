@@ -1,5 +1,4 @@
-import { Nullable, KeyDict } from '~lib/types';
-import { FradragFormData } from '~pages/saksbehandling/steg/beregning/FradragInputs';
+import { Nullable } from '~lib/types';
 
 export interface Fradrag {
     type: Fradragstype;
@@ -18,26 +17,6 @@ export interface DelerAvPeriode {
     fraOgMed: string;
     tilOgMed: string;
 }
-
-export const FradragObjectKeys: KeyDict<FradragFormData> = {
-    type: 'type',
-    beløp: 'beløp',
-    fraUtland: 'fraUtland',
-    delerAvPeriodeChecked: 'delerAvPeriodeChecked',
-    utenlandskInntekt: 'utenlandskInntekt',
-    delerAvPeriode: 'delerAvPeriode',
-};
-
-export const UtenlandskInntektKeys: KeyDict<UtenlandskInntekt> = {
-    beløpIUtenlandskValuta: 'beløpIUtenlandskValuta',
-    valuta: 'valuta',
-    kurs: 'kurs',
-};
-
-export const DelerAvPeriodeKeys: KeyDict<DelerAvPeriode> = {
-    fraOgMed: 'fraOgMed',
-    tilOgMed: 'tilOgMed',
-};
 
 export enum Fradragstype {
     Uføretrygd = 'Uføretrygd',

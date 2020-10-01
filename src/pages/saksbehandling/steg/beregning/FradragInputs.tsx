@@ -7,11 +7,11 @@ import React from 'react';
 import { IntlShape } from 'react-intl';
 
 import { TrashBin } from '~assets/Icons';
-import { Nullable } from '~lib/types';
+import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsNumber } from '~lib/validering';
 import DelerAvPeriodeInputs from '~pages/saksbehandling/steg/beregning/DelerAvPeriodeInputs';
 import InntektFraUtland from '~pages/saksbehandling/steg/beregning/InntektFraUtland';
-import { Fradrag, Fradragstype, UtenlandskInntektKeys, FradragObjectKeys, DelerAvPeriodeKeys } from '~types/Fradrag';
+import { Fradrag, Fradragstype, UtenlandskInntekt, DelerAvPeriode } from '~types/Fradrag';
 
 import styles from './fradragInputs.module.less';
 
@@ -34,6 +34,26 @@ export interface DelerAvPeriodeFormData {
     fraOgMed: Nullable<Date>;
     tilOgMed: Nullable<Date>;
 }
+
+const FradragObjectKeys: KeyDict<FradragFormData> = {
+    type: 'type',
+    beløp: 'beløp',
+    fraUtland: 'fraUtland',
+    delerAvPeriodeChecked: 'delerAvPeriodeChecked',
+    utenlandskInntekt: 'utenlandskInntekt',
+    delerAvPeriode: 'delerAvPeriode',
+};
+
+const UtenlandskInntektKeys: KeyDict<UtenlandskInntekt> = {
+    beløpIUtenlandskValuta: 'beløpIUtenlandskValuta',
+    valuta: 'valuta',
+    kurs: 'kurs',
+};
+
+const DelerAvPeriodeKeys: KeyDict<DelerAvPeriode> = {
+    fraOgMed: 'fraOgMed',
+    tilOgMed: 'tilOgMed',
+};
 
 const InputWithFollowText = (props: {
     tittel: string;
