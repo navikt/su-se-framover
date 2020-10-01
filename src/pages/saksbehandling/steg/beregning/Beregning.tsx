@@ -187,7 +187,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     selectsEnd
                                     startDate={formik.values.fom}
                                     endDate={formik.values.tom}
-                                    minDate={formik.values.fom}
                                 />
                                 {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
                             </div>

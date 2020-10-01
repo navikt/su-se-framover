@@ -59,7 +59,7 @@ const DelerAvPeriodeInputs = (props: {
                     selectsEnd
                     startDate={props.fradrag.delerAvPeriode?.fraOgMed}
                     endDate={props.fradrag.delerAvPeriode?.tilOgMed}
-                    minDate={props.fradrag.delerAvPeriode?.tilOgMed}
+                    minDate={props.fradrag.delerAvPeriode?.fraOgMed}
                 />
                 {tilOgMedError && <Feilmelding>{tilOgMedError}</Feilmelding>}
             </div>
