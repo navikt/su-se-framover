@@ -141,6 +141,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    // TODO ai: implementera detta i backend
     const G = 101351;
 
     const formik = useFormik<FormData>({
