@@ -1,13 +1,34 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
-import { useUserContext } from '~context/userContext';
 import * as Routes from '~lib/routes';
+
+import { useAppSelector } from '../../redux/Store';
+import { Rolle } from '../../types/LoggedInUser';
 
 import styles from './homePage.module.less';
 
 const HomePage = () => {
-    const context = useUserContext();
+    const loggedInUser = useAppSelector((s) => s.me.me);
+    const history = useHistory();
+
+    React.useEffect(() => {
+        if (RemoteData.isSuccess(loggedInUser) && loggedInUser.value.roller.length === 1) {
+            switch (loggedInUser.value.roller[0]) {
+                case Rolle.Attestant:
+                    history.replace(Routes.saksoversiktIndex.createURL());
+                    break;
+                case Rolle.Saksbehandler:
+                    history.replace(Routes.saksoversiktIndex.createURL());
+                    break;
+                case Rolle.Veileder:
+                    history.replace(Routes.soknad.createURL({ step: null }));
+                    break;
+            }
+        }
+    }, [loggedInUser._tag]);
+
     return (
         <div className={styles.container}>
             <h1 className={styles.header}>Jeg er...</h1>
@@ -18,16 +39,7 @@ const HomePage = () => {
                 <Link to={Routes.saksoversiktIndex.createURL()} className={`${styles.link} knapp`}>
                     Saksbehandler
                 </Link>
-                <Link
-                    to={Routes.saksoversiktIndex.createURL()}
-                    onClick={() =>
-                        context.setIsAttestant({
-                            ...context,
-                            isAttestant: true,
-                        })
-                    }
-                    className={`${styles.link} knapp`}
-                >
+                <Link to={Routes.saksoversiktIndex.createURL()} className={`${styles.link} knapp`}>
                     Attestant
                 </Link>
             </div>
