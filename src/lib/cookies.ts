@@ -1,5 +1,4 @@
 import Cookies from 'js-cookie';
-import * as jwt from 'jsonwebtoken';
 
 export enum CookieName {
     AccessToken = 'access_token',
@@ -36,22 +35,3 @@ export function take(name: CookieName) {
     }
     return val;
 }
-
-const getFieldFromAccessToken = (field: string) => {
-    const token = Cookies.get(CookieName.AccessToken);
-    if (!token) {
-        return null;
-    }
-    const decodedToken = jwt.decode(token);
-    if (!decodedToken || typeof decodedToken === 'string') {
-        return null;
-    }
-    if (field in decodedToken) {
-        return decodedToken[field];
-    }
-    return null;
-};
-
-export const getOidFromAccessToken = (): string | null => {
-    return getFieldFromAccessToken('oid');
-};
