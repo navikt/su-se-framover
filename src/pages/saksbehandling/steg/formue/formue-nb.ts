@@ -12,8 +12,8 @@ export default {
 
     'display.totalt': 'Totalt:',
     'display.totalt.fyllUtAlleFelter': 'Alle feltene må være tall for å regne ut',
-    'display.vilkårOppfylt': 'Vilkår er oppfylt(TODO)',
-    'display.vilkårIkkeOppfylt': 'Søker har mer enn 500 kr. Søker får dermed ikke Supplerende Stønad(TODO)',
+    'display.vilkårOppfylt': 'Oppfylt vilkår, formue under 0.5G',
+    'display.vilkårIkkeOppfylt': 'Ikke oppfylt vilkår, formue over 0.5G',
 
     'input.label.verdiIkkePrimærBolig': 'Verdi boliger som ikke er primærbolig',
     'input.label.verdiKjøretøy': 'Verdi bil(sekundær), campingvogn eller kjøretøy',

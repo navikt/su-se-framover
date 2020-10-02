@@ -63,7 +63,7 @@ const schema = yup.object<FormData>({
     pengerSkyldt: validateStringAsNumber,
     kontanter: validateStringAsNumber,
     depositumskonto: validateStringAsNumber,
-    status: yup.mixed().required().oneOf([FormueStatus.Ok, FormueStatus.MåInnhenteMerInformasjon]),
+    status: yup.mixed().required().oneOf([FormueStatus.VilkårOppfylt, FormueStatus.MåInnhenteMerInformasjon]),
     begrunnelse: yup.string().defined(),
 });
 
@@ -129,7 +129,7 @@ const setInitialValues = (behandlingsInfo: Behandlingsinformasjon, søknadsInnho
         kontanter: behandlingsFormue?.kontanter?.toString() ?? søknadsFormue.kontanterBeløp?.toString() ?? '0',
         depositumskonto:
             behandlingsFormue?.depositumskonto?.toString() ?? søknadsFormue.depositumsBeløp?.toString() ?? '0',
-        status: behandlingsFormue?.status ?? FormueStatus.Ok,
+        status: behandlingsFormue?.status ?? FormueStatus.VilkårOppfylt,
         begrunnelse: behandlingsFormue?.begrunnelse ?? null,
     };
 };
@@ -141,6 +141,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    // TODO ai: implementera detta i backend
+    const G = 101351;
 
     const formik = useFormik<FormData>({
         initialValues: setInitialValues(behandlingsInfo, søknadInnhold),
@@ -255,7 +257,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 {intl.formatMessage({ id: 'display.totalt' })} {totalFormue}
                             </p>
 
-                            {totalFormue > 500 ? (
+                            {totalFormue > 0.5 * G ? (
                                 <div>
                                     <p className={styles.vilkårOppfyltText}>
                                         {intl.formatMessage({ id: 'display.vilkårIkkeOppfylt' })}
@@ -283,9 +285,9 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 formik.setValues({
                                     ...formik.values,
                                     status:
-                                        formik.values.status === FormueStatus.Ok
+                                        formik.values.status === FormueStatus.VilkårOppfylt
                                             ? FormueStatus.MåInnhenteMerInformasjon
-                                            : FormueStatus.Ok,
+                                            : FormueStatus.VilkårOppfylt,
                                 });
                             }}
                         />
@@ -319,13 +321,20 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
+                                const status =
+                                    formik.values.status === FormueStatus.MåInnhenteMerInformasjon
+                                        ? FormueStatus.MåInnhenteMerInformasjon
+                                        : totalFormue <= 0.5 * G
+                                        ? FormueStatus.VilkårOppfylt
+                                        : FormueStatus.VilkårIkkeOppfylt;
+
                                 dispatch(
                                     lagreBehandlingsinformasjon({
                                         sakId: props.sakId,
                                         behandlingId: props.behandling.id,
                                         behandlingsinformasjon: {
                                             formue: {
-                                                status: formik.values.status,
+                                                status,
                                                 verdiIkkePrimærbolig: parseInt(formik.values.verdiIkkePrimærbolig, 10),
                                                 verdiKjøretøy: parseInt(formik.values.verdiKjøretøy, 10),
                                                 innskudd: parseInt(formik.values.innskudd, 10),

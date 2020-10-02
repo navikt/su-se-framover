@@ -77,7 +77,8 @@ export interface Formue {
     begrunnelse: Nullable<string>;
 }
 export enum FormueStatus {
-    Ok = 'Ok',
+    VilkårOppfylt = 'VilkårOppfylt',
+    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
     MåInnhenteMerInformasjon = 'MåInnhenteMerInformasjon',
 }
 
