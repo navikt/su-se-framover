@@ -1,0 +1,32 @@
+@import '~/styles/variables.less';
+
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-bottom: @spacing;
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    @horizontal-spacing: @spacing;
+
+    padding-left: @horizontal-spacing;
+
+    .inputfeltcontainer {
+        display: flex;
+        margin-right: @horizontal-spacing;
+    }
+
+    .inputfelt {
+        margin-right: @spacing-s;
+    }
+}
+
+.personkortWrapper {
+    margin-top: @spacing-s;
+}
