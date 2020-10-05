@@ -91,7 +91,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                         ? {
                               beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
                               valuta: f.utenlandskInntekt.valuta,
-                              kurs: parseInt(f.utenlandskInntekt.kurs),
+                              kurs: Number.parseFloat(f.utenlandskInntekt.kurs),
                           }
                         : null,
                     /* eslint-enable @typescript-eslint/no-non-null-assertion */
