@@ -87,7 +87,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                               }),
                           }
                         : null,
-                    utenlandskInntekt: f.utenlandskInntekt
+                    utenlandskInntekt: f.fraUtland
                         ? {
                               beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
                               valuta: f.utenlandskInntekt.valuta,
