@@ -34,7 +34,7 @@ const AvslutteBehandling = () => {
 
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktAvsluttBehandling>();
 
-    const [hasSubmittet, setHasSubmitted] = useState<boolean>(false);
+    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
 
     if (!urlParams) {
         return <div>404</div>;
@@ -45,8 +45,6 @@ const AvslutteBehandling = () => {
             avsluttetBegrunnelse: AvsluttetBegrunnelse.VelgBegrunnelse,
         },
         async onSubmit(values) {
-            console.log('submitting: ', values);
-
             if (values.avsluttetBegrunnelse === AvsluttetBegrunnelse.VelgBegrunnelse) {
                 return;
             }
@@ -60,7 +58,7 @@ const AvslutteBehandling = () => {
             );
         },
         validationSchema: validationSchema,
-        validateOnChange: hasSubmittet,
+        validateOnChange: hasSubmitted,
     });
 
     if (RemoteData.isSuccess(behandlingSlettet)) {
