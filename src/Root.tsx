@@ -108,7 +108,7 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
                     setLoginState('logging-in');
                 },
                 (err) => {
-                    if (err.code === ErrorCode.NotAuthenticated || err.code === ErrorCode.Unauthorized) {
+                    if (err.statusCode === ErrorCode.NotAuthenticated || err.statusCode === ErrorCode.Unauthorized) {
                         setLoginState('unauthorized');
                     } else {
                         return setLoginState('error');

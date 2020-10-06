@@ -17,13 +17,12 @@ export const handleAsyncThunk = <State, A, B, C>(
 
 export const simpleRejectedActionToRemoteData = <ActionType extends string, M, E>(
     action: PayloadAction<ApiError | undefined, ActionType, M, E>
-) =>
-    action.payload
-        ? RemoteData.failure({
-              code: action.payload.code,
-              message: `Feilet med status ${action.payload.statusCode}`,
-          })
-        : RemoteData.failure({
-              code: ErrorCode.Unknown,
-              message: 'Ukjent feil',
-          });
+): RemoteData.RemoteData<ApiError, never> =>
+    RemoteData.failure(
+        action.payload ?? {
+            code: ErrorCode.Unknown,
+            body: action,
+            correlationId: '',
+            statusCode: -1,
+        }
+    );

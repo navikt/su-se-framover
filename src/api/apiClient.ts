@@ -4,14 +4,14 @@ import * as Cookies from '~lib/cookies';
 import { CookieName } from '~lib/cookies';
 
 export enum ErrorCode {
-    Unauthorized = 'unauthorized',
-    NotAuthenticated = 'not-authenticated',
-    Unknown = 'unknown',
+    Unauthorized = 403,
+    NotAuthenticated = 401,
+    Unknown = -1,
+    NotFound = 404,
 }
 
 export interface ApiError {
-    code: ErrorCode;
-    statusCode: number;
+    statusCode: ErrorCode | number;
     correlationId: string;
     body: unknown;
 }
@@ -51,10 +51,9 @@ export default async function apiClient<T>(arg: {
 
     if ((arg.extraData?.numAttempts ?? 0) > 1) {
         return error({
-            code: ErrorCode.Unknown,
+            statusCode: ErrorCode.Unknown,
             body: null,
             correlationId,
-            statusCode: 0,
         });
     }
 
@@ -100,24 +99,17 @@ export default async function apiClient<T>(arg: {
         }
 
         return error({
-            code: ErrorCode.NotAuthenticated,
             statusCode: res.status,
             correlationId,
             body: null,
         });
     } else if (res.status === 403) {
         return error({
-            code: ErrorCode.Unauthorized,
             statusCode: res.status,
             correlationId,
             body: null,
         });
     }
-
-    // const contentType = res.headers.get('content-type');
-    // if (contentType && contentType.includes('application/pdf')) {
-    //     return success<T>(await res.blob(), res.status);
-    // }
 
     if (arg.bodyTransformer) {
         return success<T>(await arg.bodyTransformer(res), res.status);
@@ -128,7 +120,6 @@ export default async function apiClient<T>(arg: {
     }
 
     return error({
-        code: ErrorCode.Unknown,
         statusCode: res.status,
         correlationId,
         body: await res.json(),

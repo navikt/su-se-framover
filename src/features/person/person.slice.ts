@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { ErrorCode, ApiError } from '~api/apiClient';
+import { ApiError } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 
@@ -18,13 +18,7 @@ export const fetchPerson = createAsyncThunk<personApi.Person, { fnr: string }, {
 );
 
 export interface PersonState {
-    søker: RemoteData.RemoteData<
-        {
-            code: ErrorCode;
-            message: string;
-        },
-        personApi.Person
-    >;
+    søker: RemoteData.RemoteData<ApiError, personApi.Person>;
 }
 
 const initialState: PersonState = {

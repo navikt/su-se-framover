@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { ApiError, ErrorCode } from '~api/apiClient';
+import { ApiError } from '~api/apiClient';
 import * as behandlingApi from '~api/behandlingApi';
 import * as sakApi from '~api/sakApi';
 import * as utbetalingApi from '~api/utbetalingApi';
@@ -170,22 +170,16 @@ export const attesteringUnderkjenn = createAsyncThunk<
 });
 
 interface SakState {
-    sak: RemoteData.RemoteData<
-        {
-            code: ErrorCode;
-            message: string;
-        },
-        Sak
-    >;
-    stansUtbetalingerStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
-    startBehandlingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
-    lagreVilkårsvurderingStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
-    lagreBehandlingsinformasjonStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
-    beregningStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
-    simuleringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
-    sendtTilAttesteringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
-    attesteringStatus: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
-    utledetSatsInfo: RemoteData.RemoteData<{ code: ErrorCode; message: string }, UtledetSatsInfo>;
+    sak: RemoteData.RemoteData<ApiError, Sak>;
+    stansUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
+    startBehandlingStatus: RemoteData.RemoteData<ApiError, null>;
+    lagreVilkårsvurderingStatus: RemoteData.RemoteData<ApiError, null>;
+    lagreBehandlingsinformasjonStatus: RemoteData.RemoteData<ApiError, null>;
+    beregningStatus: RemoteData.RemoteData<ApiError, null>;
+    simuleringStatus: RemoteData.RemoteData<ApiError, null>;
+    sendtTilAttesteringStatus: RemoteData.RemoteData<ApiError, null>;
+    attesteringStatus: RemoteData.RemoteData<ApiError, null>;
+    utledetSatsInfo: RemoteData.RemoteData<ApiError, UtledetSatsInfo>;
 }
 
 const initialState: SakState = {
@@ -204,7 +198,11 @@ const initialState: SakState = {
 export default createSlice({
     name: 'sak',
     initialState,
-    reducers: {},
+    reducers: {
+        resetSak(state) {
+            state.sak = RemoteData.initial;
+        },
+    },
     extraReducers: (builder) => {
         handleAsyncThunk(builder, fetchSak, {
             pending: (state) => {
@@ -374,15 +372,7 @@ export default createSlice({
             state.utledetSatsInfo = RemoteData.pending;
         });
         builder.addCase(getUtledetSatsInfo.rejected, (state, action) => {
-            state.utledetSatsInfo = action.payload
-                ? RemoteData.failure({
-                      code: action.payload.code,
-                      message: `Feilet med status ${action.payload.statusCode}`,
-                  })
-                : RemoteData.failure({
-                      code: ErrorCode.Unknown,
-                      message: 'Ukjent feil',
-                  });
+            state.utledetSatsInfo = simpleRejectedActionToRemoteData(action);
         });
         builder.addCase(getUtledetSatsInfo.fulfilled, (state, action) => {
             state.utledetSatsInfo = RemoteData.success(action.payload);

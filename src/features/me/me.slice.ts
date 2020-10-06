@@ -1,20 +1,14 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { ApiError, ErrorCode } from '~api/apiClient';
+import { ApiError } from '~api/apiClient';
 import * as MeApi from '~api/meApi';
 import { LoggedInUser } from '~types/LoggedInUser';
 
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '../../redux/utils';
 
 interface State {
-    me: RemoteData.RemoteData<
-        {
-            code: ErrorCode;
-            message: string;
-        },
-        LoggedInUser
-    >;
+    me: RemoteData.RemoteData<ApiError, LoggedInUser>;
 }
 
 const initialState: State = {
