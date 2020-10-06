@@ -197,7 +197,7 @@ interface SakState {
     sendtTilAttesteringStatus: RemoteData.RemoteData<ApiError, null>;
     attesteringStatus: RemoteData.RemoteData<ApiError, null>;
     utledetSatsInfo: RemoteData.RemoteData<ApiError, UtledetSatsInfo>;
-    slettetBehandling: RemoteData.RemoteData<{ code: ErrorCode; message: string }, null>;
+    slettetBehandling: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: SakState = {
