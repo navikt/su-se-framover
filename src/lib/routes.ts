@@ -27,15 +27,23 @@ export const soknad: Route<{ step: Søknadsteg | null }> = {
 };
 
 export const saksoversiktIndex: Route<never> = {
-    path: '/saksoversikt/:sakId?/:behandlingId?/:meny?/:vilkar?/',
+    path: '/saksoversikt/:sakId?/:soknadId?/:behandlingId?/:meny?/:vilkar?/',
     createURL: () => '/saksoversikt',
 };
 
 export const saksoversiktValgtSak: Route<{
     sakId: string;
 }> = {
-    path: '/saksoversikt/:sakId/:behandlingId?/:meny?/',
+    path: '/saksoversikt/:sakId/:soknadId?/:behandlingId?/:meny?/',
     createURL: (args) => `/saksoversikt/${args.sakId}`,
+};
+
+export const saksoversiktAvsluttBehandling: Route<{
+    sakId: string;
+    soknadId: string;
+}> = {
+    path: '/saksoversikt/:sakId/:soknadId/avsluttSaksbehandling/',
+    createURL: (args) => `/saksoversikt/${args.sakId}/${args.soknadId}/avsluttSaksbehandling`,
 };
 
 export const saksoversiktValgtBehandling: Route<{
