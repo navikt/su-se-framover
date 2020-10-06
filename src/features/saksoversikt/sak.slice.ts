@@ -198,7 +198,11 @@ const initialState: SakState = {
 export default createSlice({
     name: 'sak',
     initialState,
-    reducers: {},
+    reducers: {
+        resetSak(state) {
+            state.sak = RemoteData.initial;
+        },
+    },
     extraReducers: (builder) => {
         handleAsyncThunk(builder, fetchSak, {
             pending: (state) => {

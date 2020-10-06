@@ -10,6 +10,7 @@ import { ErrorCode } from '~api/apiClient';
 import { Kjønn } from '~api/personApi';
 import Hendelseslogg from '~components/Hendelseslogg';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
+import Personsøk from '~components/Personsøk/Personsøk';
 import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
@@ -51,8 +52,6 @@ const Saksoversikt = () => {
         }
     }, [sak._tag, søker._tag]);
 
-    const data = RemoteData.combine(søker, sak);
-
     const gender = useMemo<Gender>(() => {
         if (RemoteData.isSuccess(søker)) {
             if (søker.value.kjønn === Kjønn.Mann) {
@@ -73,7 +72,7 @@ const Saksoversikt = () => {
             <Switch>
                 <Route path={Routes.saksoversiktValgtSak.path}>
                     {pipe(
-                        data,
+                        RemoteData.combine(søker, sak),
                         RemoteData.fold(
                             () => null,
                             () => <NavFrontendSpinner />,
@@ -139,30 +138,30 @@ const Saksoversikt = () => {
                 </Route>
                 <Route path={Routes.saksoversiktIndex.path}>
                     <div>
-                        <Søkefelt />
-                        {(RemoteData.isPending(søker) || RemoteData.isPending(sak)) && <NavFrontendSpinner />}
-                        {RemoteData.isFailure(søker) ? (
+                        <Personsøk
+                            onReset={() => {
+                                dispatch(personSlice.default.actions.resetSøker());
+                                dispatch(sakSlice.default.actions.resetSak());
+                            }}
+                            onSubmit={(fnr) => {
+                                dispatch(personSlice.fetchPerson({ fnr }));
+                                dispatch(sakSlice.fetchSak({ fnr }));
+                            }}
+                            person={søker}
+                        />
+                        {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
                             <AlertStripe type="feil">
-                                {søker.error.statusCode === ErrorCode.Unauthorized
-                                    ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
+                                {sak.error.statusCode === ErrorCode.NotFound
+                                    ? intl.formatMessage({
+                                          id: 'feilmelding.fantIkkeSak',
+                                      })
                                     : intl.formatMessage(
                                           { id: 'feilmelding.generisk' },
                                           {
-                                              statusCode: søker.error.statusCode,
+                                              statusCode: sak.error.statusCode,
                                           }
                                       )}
                             </AlertStripe>
-                        ) : (
-                            RemoteData.isFailure(sak) && (
-                                <AlertStripe type="feil">
-                                    {intl.formatMessage(
-                                        { id: 'feilmelding.generisk' },
-                                        {
-                                            statusCode: sak.error.statusCode,
-                                        }
-                                    )}
-                                </AlertStripe>
-                            )
                         )}
                     </div>
                 </Route>
