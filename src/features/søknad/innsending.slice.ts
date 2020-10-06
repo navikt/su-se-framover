@@ -2,7 +2,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { ErrorCode, ApiError } from '~api/apiClient';
+import { ApiError } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import * as søknadApi from '~api/søknadApi';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
@@ -103,13 +103,7 @@ export const sendSøknad = createAsyncThunk<
 });
 
 export interface InnsendingState {
-    søknadInnsendingState: RemoteData.RemoteData<
-        {
-            code: ErrorCode;
-            message: string;
-        },
-        null
-    >;
+    søknadInnsendingState: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: InnsendingState = {

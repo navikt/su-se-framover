@@ -7,7 +7,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 
-import { ErrorCode } from '~api/apiClient';
+import { ApiError, ErrorCode } from '~api/apiClient';
 import { Person } from '~api/personApi';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
@@ -18,13 +18,7 @@ import messages from './personsøk-nb';
 import styles from './personsøk.module.less';
 
 interface PersonsøkProps {
-    person: RemoteData.RemoteData<
-        {
-            code: ErrorCode;
-            message: string;
-        },
-        Person
-    >;
+    person: RemoteData.RemoteData<ApiError, Person>;
     onSubmit(fnr: string): void;
     onReset(): void;
 }
@@ -106,9 +100,11 @@ const Personsøk = (props: PersonsøkProps) => {
                             () => <NavFrontendSpinner />,
                             (err) => (
                                 <AlertStripe type="feil">
-                                    {err.code === ErrorCode.Unauthorized
+                                    {err.statusCode === ErrorCode.Unauthorized
                                         ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
-                                        : err.message}
+                                        : err.statusCode === ErrorCode.NotFound
+                                        ? intl.formatMessage({ id: 'feilmelding.ikkeFunnet' })
+                                        : intl.formatMessage({ id: 'feilmelding.ukjent' })}
                                 </AlertStripe>
                             ),
                             (s) => <Personkort person={s} />

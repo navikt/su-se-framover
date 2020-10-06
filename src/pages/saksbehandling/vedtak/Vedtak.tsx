@@ -157,8 +157,7 @@ const Vedtak = (props: Props) => {
                     <AlertStripeFeil>
                         <div>
                             <p>Sendingen Failet</p>
-                            <p>Error code: {sendtTilAttesteringStatus.error.code}</p>
-                            <p>Melding: {sendtTilAttesteringStatus.error.message}</p>
+                            <p>Error code: {sendtTilAttesteringStatus.error.statusCode}</p>
                         </div>
                     </AlertStripeFeil>
                 )}

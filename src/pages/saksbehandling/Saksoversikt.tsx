@@ -80,13 +80,25 @@ const Saksoversikt = () => {
                             () =>
                                 RemoteData.isFailure(søker) ? (
                                     <AlertStripe type="feil">
-                                        {søker.error.code === ErrorCode.Unauthorized
+                                        {søker.error.statusCode === ErrorCode.Unauthorized
                                             ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
-                                            : søker.error.message}
+                                            : intl.formatMessage(
+                                                  { id: 'feilmelding.generisk' },
+                                                  {
+                                                      statusCode: søker.error.statusCode,
+                                                  }
+                                              )}
                                     </AlertStripe>
                                 ) : (
                                     RemoteData.isFailure(sak) && (
-                                        <AlertStripe type="feil">{sak.error.message}</AlertStripe>
+                                        <AlertStripe type="feil">
+                                            {intl.formatMessage(
+                                                { id: 'feilmelding.generisk' },
+                                                {
+                                                    statusCode: sak.error.statusCode,
+                                                }
+                                            )}
+                                        </AlertStripe>
                                     )
                                 ),
                             ([søker, sak]) => (
@@ -131,12 +143,26 @@ const Saksoversikt = () => {
                         {(RemoteData.isPending(søker) || RemoteData.isPending(sak)) && <NavFrontendSpinner />}
                         {RemoteData.isFailure(søker) ? (
                             <AlertStripe type="feil">
-                                {søker.error.code === ErrorCode.Unauthorized
+                                {søker.error.statusCode === ErrorCode.Unauthorized
                                     ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
-                                    : søker.error.message}
+                                    : intl.formatMessage(
+                                          { id: 'feilmelding.generisk' },
+                                          {
+                                              statusCode: søker.error.statusCode,
+                                          }
+                                      )}
                             </AlertStripe>
                         ) : (
-                            RemoteData.isFailure(sak) && <AlertStripe type="feil">{sak.error.message}</AlertStripe>
+                            RemoteData.isFailure(sak) && (
+                                <AlertStripe type="feil">
+                                    {intl.formatMessage(
+                                        { id: 'feilmelding.generisk' },
+                                        {
+                                            statusCode: sak.error.statusCode,
+                                        }
+                                    )}
+                                </AlertStripe>
+                            )
                         )}
                     </div>
                 </Route>
