@@ -141,31 +141,41 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const onSave = (values: FormData) => {
+        const status =
+            values.status === FormueStatus.MåInnhenteMerInformasjon
+                ? FormueStatus.MåInnhenteMerInformasjon
+                : totalFormue <= 0.5 * G
+                ? FormueStatus.VilkårOppfylt
+                : FormueStatus.VilkårIkkeOppfylt;
+
+        return dispatch(
+            lagreBehandlingsinformasjon({
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+                behandlingsinformasjon: {
+                    formue: {
+                        status,
+                        verdiIkkePrimærbolig: parseInt(values.verdiIkkePrimærbolig, 10),
+                        verdiKjøretøy: parseInt(values.verdiKjøretøy, 10),
+                        innskudd: parseInt(values.innskudd, 10),
+                        verdipapir: parseInt(values.verdipapir, 10),
+                        pengerSkyldt: parseInt(values.pengerSkyldt, 10),
+                        kontanter: parseInt(values.kontanter, 10),
+                        depositumskonto: parseInt(values.depositumskonto, 10),
+                        begrunnelse: values.begrunnelse,
+                    },
+                },
+            })
+        );
+    };
     // TODO ai: implementera detta i backend
     const G = 101351;
 
     const formik = useFormik<FormData>({
         initialValues: setInitialValues(behandlingsInfo, søknadInnhold),
-        async onSubmit(values) {
-            const res = await dispatch(
-                lagreBehandlingsinformasjon({
-                    sakId: props.sakId,
-                    behandlingId: props.behandling.id,
-                    behandlingsinformasjon: {
-                        formue: {
-                            status: values.status,
-                            verdiIkkePrimærbolig: parseInt(values.verdiIkkePrimærbolig, 10),
-                            verdiKjøretøy: parseInt(values.verdiKjøretøy, 10),
-                            innskudd: parseInt(values.innskudd, 10),
-                            verdipapir: parseInt(values.verdipapir, 10),
-                            pengerSkyldt: parseInt(values.pengerSkyldt, 10),
-                            kontanter: parseInt(values.kontanter, 10),
-                            depositumskonto: parseInt(values.depositumskonto, 10),
-                            begrunnelse: values.begrunnelse,
-                        },
-                    },
-                })
-            );
+        async onSubmit() {
+            const res = await onSave(formik.values);
 
             if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
                 history.push(props.nesteUrl);
@@ -320,34 +330,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
-                            onLagreOgFortsettSenereClick={() => {
-                                const status =
-                                    formik.values.status === FormueStatus.MåInnhenteMerInformasjon
-                                        ? FormueStatus.MåInnhenteMerInformasjon
-                                        : totalFormue <= 0.5 * G
-                                        ? FormueStatus.VilkårOppfylt
-                                        : FormueStatus.VilkårIkkeOppfylt;
-
-                                dispatch(
-                                    lagreBehandlingsinformasjon({
-                                        sakId: props.sakId,
-                                        behandlingId: props.behandling.id,
-                                        behandlingsinformasjon: {
-                                            formue: {
-                                                status,
-                                                verdiIkkePrimærbolig: parseInt(formik.values.verdiIkkePrimærbolig, 10),
-                                                verdiKjøretøy: parseInt(formik.values.verdiKjøretøy, 10),
-                                                innskudd: parseInt(formik.values.innskudd, 10),
-                                                verdipapir: parseInt(formik.values.verdipapir, 10),
-                                                pengerSkyldt: parseInt(formik.values.pengerSkyldt, 10),
-                                                kontanter: parseInt(formik.values.kontanter, 10),
-                                                depositumskonto: parseInt(formik.values.depositumskonto, 10),
-                                                begrunnelse: formik.values.begrunnelse,
-                                            },
-                                        },
-                                    })
-                                );
-                            }}
+                            onLagreOgFortsettSenereClick={() => onSave(formik.values)}
                         />
                     </form>
                 ),
