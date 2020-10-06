@@ -11,9 +11,11 @@ import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { Vergemål } from '~features/søknad/types';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Behandlingsstatus } from '~types/Behandling';
 import { PersonligOppmøteStatus, PersonligOppmøte as PersonligOppmøteType } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
@@ -155,6 +157,14 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             });
 
             if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+                if (res.payload.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+                    return history.push(
+                        Routes.saksbehandlingVedtak.createURL({
+                            sakId: props.sakId,
+                            behandlingId: props.behandling.id,
+                        })
+                    );
+                }
                 history.push(props.nesteUrl);
             }
         },
