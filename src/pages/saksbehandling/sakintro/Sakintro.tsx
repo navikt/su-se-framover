@@ -45,7 +45,7 @@ const Sakintro = (props: { sak: Sak }) => {
                                         <div>
                                             <p>Søknads-id: {s.id}</p>
                                             <p>Innsendt: {formatDateTime(s.opprettet, intl)}</p>
-                                            {behandlinger.length === 0 && <p>Status: OPPRETTET </p>}
+                                            {behandlinger.length === 0 && <p>Status: OPPRETTET</p>}
                                         </div>
                                         {isBehandlingerEmpty ? (
                                             <>
@@ -73,6 +73,15 @@ const Sakintro = (props: { sak: Sak }) => {
                                                 >
                                                     Start førstegangsbehandling
                                                 </Hovedknapp>
+                                                <Link
+                                                    className="knapp knapp--fare"
+                                                    to={Routes.saksoversiktAvsluttBehandling.createURL({
+                                                        sakId: sakId,
+                                                        soknadId: s.id,
+                                                    })}
+                                                >
+                                                    Avslutt behandling
+                                                </Link>
                                                 {RemoteData.isFailure(startBehandlingStatus) && (
                                                     <AlertStripe type="feil">Klarte ikke starte behandling</AlertStripe>
                                                 )}
@@ -115,6 +124,15 @@ const Sakintro = (props: { sak: Sak }) => {
                                                                 </Link>
                                                             )
                                                         )}
+                                                        <Link
+                                                            className="knapp knapp--fare"
+                                                            to={Routes.saksoversiktAvsluttBehandling.createURL({
+                                                                sakId: sakId,
+                                                                soknadId: s.id,
+                                                            })}
+                                                        >
+                                                            Avslutt behandling
+                                                        </Link>
                                                     </li>
                                                 ))}
                                             </ul>

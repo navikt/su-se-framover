@@ -20,6 +20,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
+import AvslutteBehandling from './sakintro/AvslutteBehandling';
 import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
@@ -113,6 +114,11 @@ const Saksoversikt = () => {
                                     </div>
                                     <div className={styles.container}>
                                         <Switch>
+                                            <Route path={Routes.saksoversiktAvsluttBehandling.path}>
+                                                <div className={styles.mainContent}>
+                                                    <AvslutteBehandling />
+                                                </div>
+                                            </Route>
                                             <Route path={Routes.saksoversiktValgtBehandling.path}>
                                                 <div className={styles.mainContent}>
                                                     <Switch>
