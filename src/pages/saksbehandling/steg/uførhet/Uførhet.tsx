@@ -86,6 +86,23 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const onSave = (values: FormData) => {
+        if (!values.uførevedtak) return;
+
+        return dispatch(
+            lagreBehandlingsinformasjon({
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+                behandlingsinformasjon: {
+                    uførhet: {
+                        status: values.uførevedtak,
+                        uføregrad: values.uføregrad ? parseInt(values.uføregrad, 10) : null,
+                        forventetInntekt: values.forventetInntekt ? parseInt(values.forventetInntekt, 10) : null,
+                    },
+                },
+            })
+        );
+    };
 
     const formik = useFormik<FormData>({
         initialValues: {
@@ -98,21 +115,9 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
             forventetInntekt: props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt?.toString() ?? null,
         },
         async onSubmit(values) {
-            if (!values.uførevedtak) return;
+            const res = await onSave(values);
+            if (!res) return;
 
-            const res = await dispatch(
-                lagreBehandlingsinformasjon({
-                    sakId: props.sakId,
-                    behandlingId: props.behandling.id,
-                    behandlingsinformasjon: {
-                        uførhet: {
-                            status: values.uførevedtak,
-                            uføregrad: values.uføregrad ? parseInt(values.uføregrad, 10) : null,
-                            forventetInntekt: values.forventetInntekt ? parseInt(values.forventetInntekt, 10) : null,
-                        },
-                    },
-                })
-            );
             if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
                 history.push(props.nesteUrl);
             }
@@ -213,23 +218,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
-                            onLagreOgFortsettSenereClick={() => {
-                                if (!formik.values.uførevedtak) return;
-
-                                dispatch(
-                                    lagreBehandlingsinformasjon({
-                                        sakId: props.sakId,
-                                        behandlingId: props.behandling.id,
-                                        behandlingsinformasjon: {
-                                            uførhet: {
-                                                status: formik.values.uførevedtak,
-                                                uføregrad: null,
-                                                forventetInntekt: null,
-                                            },
-                                        },
-                                    })
-                                );
-                            }}
+                            onLagreOgFortsettSenereClick={() => onSave(formik.values)}
                         />
                     </form>
                 ),
