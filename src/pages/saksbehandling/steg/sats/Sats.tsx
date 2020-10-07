@@ -50,28 +50,28 @@ const utledSats = (values: FormData) => {
         return null;
     }
     if (!values.delerSøkerBolig) {
-        return FaktiskSats.Høy;
+        return FaktiskSats.Ordinær;
     }
     switch (values.delerBoligMedHvem) {
         case null:
             return null;
         case DelerBoligMed.VOKSNE_BARN:
         case DelerBoligMed.ANNEN_VOKSEN:
-            return FaktiskSats.Lav;
+            return FaktiskSats.Ordinær;
         case DelerBoligMed.EKTEMAKE_SAMBOER:
             switch (values.erEktemakeEllerSamboerUnder67) {
                 case null:
                     return null;
                 case false:
-                    return FaktiskSats.Lav;
+                    return FaktiskSats.Ordinær;
                 case true:
                     switch (values.mottarEktemakeEllerSamboerSU) {
                         case null:
                             return null;
                         case false:
-                            return FaktiskSats.Høy;
+                            return FaktiskSats.Ordinær;
                         case true:
-                            return FaktiskSats.Lav;
+                            return FaktiskSats.Ordinær;
                     }
             }
     }

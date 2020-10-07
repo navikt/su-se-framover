@@ -1,4 +1,4 @@
 export enum Sats {
     Høy = 'HØY',
-    Lav = 'LAV',
+    Ordinær = 'ORDINÆR',
 }
