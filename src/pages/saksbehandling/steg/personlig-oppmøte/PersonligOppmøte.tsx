@@ -8,7 +8,6 @@ import { useHistory } from 'react-router-dom';
 
 import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
-import { Vergemål } from '~features/søknad/types';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -50,20 +49,10 @@ const schema = yup.object<FormData>({
     begrunnelse: yup.string().nullable().defined(),
 });
 
-const getInitialFormValues = (
-    personligOppmøteFraBehandlingsinformasjon: Nullable<PersonligOppmøteType>,
-    harFullmektigEllerVergeFraSøknad: Nullable<Vergemål>
-): FormData => {
+const getInitialFormValues = (personligOppmøteFraBehandlingsinformasjon: Nullable<PersonligOppmøteType>): FormData => {
     if (!personligOppmøteFraBehandlingsinformasjon) {
-        if (!harFullmektigEllerVergeFraSøknad) {
-            return {
-                status: MøttPersonlig.Ja,
-                begrunnelse: null,
-                legeattest: null,
-            };
-        }
         return {
-            status: harFullmektigEllerVergeFraSøknad === 'verge' ? MøttPersonlig.Verge : MøttPersonlig.Fullmektig,
+            status: null,
             begrunnelse: null,
             legeattest: null,
         };
@@ -141,10 +130,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         );
 
     const formik = useFormik<FormData>({
-        initialValues: getInitialFormValues(
-            props.behandling.behandlingsinformasjon.personligOppmøte,
-            props.behandling.søknad.søknadInnhold.forNav.harFullmektigEllerVerge
-        ),
+        initialValues: getInitialFormValues(props.behandling.behandlingsinformasjon.personligOppmøte),
         async onSubmit(values) {
             const personligOppmøte = toPersonligOppmøteStatus(values);
             if (!personligOppmøte) {
