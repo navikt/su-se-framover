@@ -56,6 +56,7 @@ type Vilkårsinformasjon = {
     status: VilkårVurderingStatus;
     vilkårtype: Vilkårtype;
     begrunnelse: Nullable<string>;
+    erStartet: boolean;
 };
 
 export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinformasjon): Vilkårsinformasjon[] => {
@@ -72,23 +73,25 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
     return [
         {
             status:
-                uførhet === null
+                uførhet === null || uførhet.status === UførhetStatus.HarUføresakTilBehandling
                     ? VilkårVurderingStatus.IkkeVurdert
                     : uførhet.status === UførhetStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Uførhet,
             begrunnelse: null,
+            erStartet: uførhet !== null,
         },
         {
             status:
-                flyktning === null
+                flyktning === null || flyktning.status === FlyktningStatus.Uavklart
                     ? VilkårVurderingStatus.IkkeVurdert
                     : flyktning.status === FlyktningStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Flyktning,
             begrunnelse: behandlingsinformasjon.flyktning?.begrunnelse ?? null,
+            erStartet: flyktning !== null,
         },
         {
             status:
@@ -99,16 +102,18 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.LovligOpphold,
             begrunnelse: behandlingsinformasjon.lovligOpphold?.begrunnelse ?? null,
+            erStartet: lovligOpphold !== null,
         },
         {
             status:
-                fastOppholdINorge === null
+                fastOppholdINorge === null || fastOppholdINorge.status === FastOppholdINorgeStatus.Uavklart
                     ? VilkårVurderingStatus.IkkeVurdert
                     : fastOppholdINorge.status === FastOppholdINorgeStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.FastOppholdINorge,
             begrunnelse: behandlingsinformasjon.fastOppholdINorge?.begrunnelse ?? null,
+            erStartet: fastOppholdINorge !== null,
         },
         {
             status:
@@ -119,16 +124,18 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.OppholdIUtlandet,
             begrunnelse: behandlingsinformasjon.oppholdIUtlandet?.begrunnelse ?? null,
+            erStartet: oppholdIUtlandet !== null,
         },
         {
             status:
-                formue === null
+                formue === null || formue.status === FormueStatus.MåInnhenteMerInformasjon
                     ? VilkårVurderingStatus.IkkeVurdert
                     : formue.status === FormueStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Formue,
             begrunnelse: behandlingsinformasjon.formue?.begrunnelse ?? null,
+            erStartet: formue !== null,
         },
         {
             status:
@@ -139,6 +146,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.PersonligOppmøte,
             begrunnelse: behandlingsinformasjon.personligOppmøte?.begrunnelse ?? null,
+            erStartet: personligOppmøte !== null,
         },
     ];
 };
