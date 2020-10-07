@@ -106,11 +106,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            uførevedtak:
-                props.behandling.behandlingsinformasjon.uførhet?.status ??
-                (props.behandling.søknad.søknadInnhold.uførevedtak.harUførevedtak
-                    ? UførhetStatus.VilkårOppfylt
-                    : UførhetStatus.VilkårIkkeOppfylt),
+            uførevedtak: props.behandling.behandlingsinformasjon.uførhet?.status ?? null,
             uføregrad: props.behandling.behandlingsinformasjon.uførhet?.uføregrad?.toString() ?? null,
             forventetInntekt: props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt?.toString() ?? null,
         },
