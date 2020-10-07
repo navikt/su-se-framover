@@ -72,7 +72,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
     return [
         {
             status:
-                uførhet === null
+                uførhet === null || uførhet.status === UførhetStatus.HarUføresakTilBehandling
                     ? VilkårVurderingStatus.IkkeVurdert
                     : uførhet.status === UførhetStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
@@ -82,7 +82,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
         },
         {
             status:
-                flyktning === null
+                flyktning === null || flyktning.status === FlyktningStatus.Uavklart
                     ? VilkårVurderingStatus.IkkeVurdert
                     : flyktning.status === FlyktningStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
@@ -102,7 +102,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
         },
         {
             status:
-                fastOppholdINorge === null
+                fastOppholdINorge === null || fastOppholdINorge.status === FastOppholdINorgeStatus.Uavklart
                     ? VilkårVurderingStatus.IkkeVurdert
                     : fastOppholdINorge.status === FastOppholdINorgeStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
@@ -122,7 +122,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
         },
         {
             status:
-                formue === null
+                formue === null || formue.status === FormueStatus.MåInnhenteMerInformasjon
                     ? VilkårVurderingStatus.IkkeVurdert
                     : formue.status === FormueStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
