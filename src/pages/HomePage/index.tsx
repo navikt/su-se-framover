@@ -1,33 +1,23 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
+import { useUserContext } from '~context/userContext';
 import * as Routes from '~lib/routes';
-
-import { useAppSelector } from '../../redux/Store';
-import { Rolle } from '../../types/LoggedInUser';
+import { Rolle } from '~types/LoggedInUser';
 
 import styles from './homePage.module.less';
 
 const HomePage = () => {
-    const loggedInUser = useAppSelector((s) => s.me.me);
     const history = useHistory();
+    const user = useUserContext();
 
     React.useEffect(() => {
-        if (RemoteData.isSuccess(loggedInUser) && loggedInUser.value.roller.length === 1) {
-            switch (loggedInUser.value.roller[0]) {
-                case Rolle.Attestant:
-                    history.replace(Routes.saksoversiktIndex.createURL());
-                    break;
-                case Rolle.Saksbehandler:
-                    history.replace(Routes.saksoversiktIndex.createURL());
-                    break;
-                case Rolle.Veileder:
-                    history.replace(Routes.soknad.createURL({ step: null }));
-                    break;
-            }
+        if (user.roller.length === 1 && user.roller[0] === Rolle.Veileder) {
+            history.replace(Routes.soknad.createURL({ step: null }));
+        } else if (user.roller.every((r) => [Rolle.Saksbehandler, Rolle.Attestant].includes(r))) {
+            history.replace(Routes.saksoversiktIndex.createURL());
         }
-    }, [loggedInUser._tag]);
+    }, [user]);
 
     return (
         <div className={styles.container}>
