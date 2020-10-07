@@ -6,7 +6,6 @@ import * as behandlingApi from '~api/behandlingApi';
 import * as sakApi from '~api/sakApi';
 import * as utbetalingApi from '~api/utbetalingApi';
 import { pipe } from '~lib/fp';
-import { AvsluttetBegrunnelse } from '~pages/saksbehandling/sakintro/AvslutteBehandling';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
@@ -27,22 +26,6 @@ export const fetchSak = createAsyncThunk<Sak, { fnr: string } | { sakId: string 
         return thunkApi.rejectWithValue(res.error);
     }
 );
-
-export const slettBehandlingForSak = createAsyncThunk<
-    string,
-    {
-        sakId: string;
-        søknadId: string;
-        avsluttetBegrunnelse: AvsluttetBegrunnelse;
-    },
-    { rejectValue: ApiError }
->('sak/avsluttSaksbehandling', async (arg, thunkApi) => {
-    const res = await sakApi.slettSaksbehandling(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
 
 export const stansUtbetalinger = createAsyncThunk<Utbetaling, { sakId: string }, { rejectValue: ApiError }>(
     'utbetalinger/stans',
@@ -197,7 +180,6 @@ interface SakState {
     sendtTilAttesteringStatus: RemoteData.RemoteData<ApiError, null>;
     attesteringStatus: RemoteData.RemoteData<ApiError, null>;
     utledetSatsInfo: RemoteData.RemoteData<ApiError, UtledetSatsInfo>;
-    slettetBehandling: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: SakState = {
@@ -211,7 +193,6 @@ const initialState: SakState = {
     sendtTilAttesteringStatus: RemoteData.initial,
     attesteringStatus: RemoteData.initial,
     utledetSatsInfo: RemoteData.initial,
-    slettetBehandling: RemoteData.initial,
 };
 
 export default createSlice({
@@ -395,18 +376,6 @@ export default createSlice({
         });
         builder.addCase(getUtledetSatsInfo.fulfilled, (state, action) => {
             state.utledetSatsInfo = RemoteData.success(action.payload);
-        });
-
-        handleAsyncThunk(builder, slettBehandlingForSak, {
-            pending: (state) => {
-                state.slettetBehandling = RemoteData.pending;
-            },
-            fulfilled: (state) => {
-                state.slettetBehandling = RemoteData.success(null);
-            },
-            rejected: (state, action) => {
-                state.slettetBehandling = simpleRejectedActionToRemoteData(action);
-            },
         });
     },
 });

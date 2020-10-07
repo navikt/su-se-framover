@@ -1,6 +1,11 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 
+import { ApiError } from '~api/apiClient';
+import * as søknadApi from '~api/søknadApi';
 import { Nullable } from '~lib/types';
+import { AvsluttetBegrunnelse } from '~pages/saksbehandling/sakintro/AvslutteBehandling';
+import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 
 import { DelerBoligMed, TypeOppholdstillatelse, Vergemål } from './types';
 
@@ -72,6 +77,7 @@ export interface SøknadState {
         harSøkerMøttPersonlig: Nullable<boolean>;
         harFullmektigEllerVerge: Nullable<Vergemål>;
     };
+    avsluttetBehandling: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: SøknadState = {
@@ -142,7 +148,24 @@ const initialState: SøknadState = {
         harSøkerMøttPersonlig: null,
         harFullmektigEllerVerge: null,
     },
+    avsluttetBehandling: RemoteData.initial,
 };
+
+export const avsluttSøknadsBehandling = createAsyncThunk<
+    string,
+    {
+        sakId: string;
+        søknadId: string;
+        avsluttetBegrunnelse: AvsluttetBegrunnelse;
+    },
+    { rejectValue: ApiError }
+>('soknad/avsluttSoknadsbehandling', async (arg, thunkApi) => {
+    const res = await søknadApi.avsluttSøknadsBehandling(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
 
 export default createSlice({
     name: 'soknad',
@@ -172,5 +195,18 @@ export default createSlice({
         ForVeileder(state, action: PayloadAction<SøknadState['forVeileder']>) {
             state.forVeileder = action.payload;
         },
+    },
+    extraReducers: (builder) => {
+        handleAsyncThunk(builder, avsluttSøknadsBehandling, {
+            pending: (state) => {
+                state.avsluttetBehandling = RemoteData.pending;
+            },
+            fulfilled: (state) => {
+                state.avsluttetBehandling = RemoteData.success(null);
+            },
+            rejected: (state, action) => {
+                state.avsluttetBehandling = simpleRejectedActionToRemoteData(action);
+            },
+        });
     },
 });

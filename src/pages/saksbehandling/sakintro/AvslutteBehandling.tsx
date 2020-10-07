@@ -5,7 +5,7 @@ import { Fareknapp } from 'nav-frontend-knapper';
 import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 
-import { slettBehandlingForSak } from '~features/saksoversikt/sak.slice';
+import { avsluttSøknadsBehandling } from '~features/søknad/søknad.slice';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -30,7 +30,7 @@ const validationSchema = yup.object<FormData>({
 
 const AvslutteBehandling = () => {
     const dispatch = useAppDispatch();
-    const behandlingSlettet = useAppSelector((s) => s.sak.slettetBehandling);
+    const behandlingSlettet = useAppSelector((s) => s.soknad.avsluttetBehandling);
 
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktAvsluttBehandling>();
 
@@ -50,7 +50,7 @@ const AvslutteBehandling = () => {
             }
 
             dispatch(
-                slettBehandlingForSak({
+                avsluttSøknadsBehandling({
                     sakId: urlParams.sakId,
                     søknadId: urlParams.soknadId,
                     avsluttetBegrunnelse: values.avsluttetBegrunnelse,

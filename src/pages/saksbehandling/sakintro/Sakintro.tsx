@@ -45,6 +45,9 @@ const Sakintro = (props: { sak: Sak }) => {
                                             <p>Søknads-id: {s.id}</p>
                                             <p>Innsendt: {formatDateTime(s.opprettet, intl)}</p>
                                             {behandlinger.length === 0 && <p>Status: OPPRETTET</p>}
+                                            {s.grunnForAvsluttelse && (
+                                                <p>Søknadsbehandlingen av blitt avsluttet. Grunn: {s.søknadInnhold}</p>
+                                            )}
                                         </div>
                                         {isBehandlingerEmpty ? (
                                             <>
@@ -126,15 +129,6 @@ const Sakintro = (props: { sak: Sak }) => {
                                                                 </Link>
                                                             )
                                                         )}
-                                                        <Link
-                                                            className="knapp knapp--fare"
-                                                            to={Routes.saksoversiktAvsluttBehandling.createURL({
-                                                                sakId: sakId,
-                                                                soknadId: s.id,
-                                                            })}
-                                                        >
-                                                            Avslutt behandling
-                                                        </Link>
                                                     </li>
                                                 ))}
                                             </ul>
