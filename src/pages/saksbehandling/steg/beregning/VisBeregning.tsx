@@ -19,6 +19,8 @@ interface Props {
     forventetinntekt: number;
 }
 
+const Utenlandsk = 'Utenlandsk';
+
 const fradragMedForventetinntekt = (fradrag: Array<Fradrag>, forventetinntekt: number): Array<Fradrag> => {
     const { left: andreFradrag, right: arbeidsinntektfradrag } = pipe(
         fradrag,
@@ -54,7 +56,10 @@ const VisBeregning = (props: Props) => {
                     <ul>
                         {fradragMedForventetinntekt(beregning.fradrag, props.forventetinntekt).map((f, idx) => (
                             <li key={idx} className={styles.fradragItem}>
-                                <InfoLinje tittel={f.type} value={intl.formatNumber(f.beløp, { currency: 'NOK' })} />
+                                <InfoLinje
+                                    tittel={f.utenlandskInntekt ? `${Utenlandsk} ${f.type}` : f.type}
+                                    value={intl.formatNumber(f.beløp, { currency: 'NOK' })}
+                                />
                                 {f.utenlandskInntekt && (
                                     <div>
                                         <InfoLinje
