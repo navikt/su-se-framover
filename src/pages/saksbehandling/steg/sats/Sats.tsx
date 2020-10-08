@@ -341,18 +341,6 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                         fakta={[
                             {
                                 tittel: intl.formatMessage({
-                                    id: 'display.fraSøknad.harOppholdstillatelse',
-                                }),
-                                verdi: props.behandling.søknad.søknadInnhold.boforhold.delerBoligMedVoksne
-                                    ? intl.formatMessage({
-                                          id: 'radio.label.ja',
-                                      })
-                                    : intl.formatMessage({
-                                          id: 'radio.label.nei',
-                                      }),
-                            },
-                            {
-                                tittel: intl.formatMessage({
                                     id: 'display.fraSøknad.hvemDelerSøkerBoligMed',
                                 }),
                                 verdi: props.behandling.søknad.søknadInnhold.boforhold.delerBoligMed ?? '-',
