@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
-import { AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import { AlertStripeSuksess, AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Fareknapp } from 'nav-frontend-knapper';
 import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
@@ -10,27 +10,30 @@ import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
-export enum AvsluttetBegrunnelse {
-    VelgBegrunnelse = 'Velg begrunnelse',
+export enum AvsluttSøkndsBehandlingBegrunnelse {
     Trukket = 'Trukket',
     Bortfalt = 'Bortfalt',
     AvvistSøktForTidlig = 'AvvistSøktForTidlig',
 }
 
 interface FormData {
-    avsluttetBegrunnelse: AvsluttetBegrunnelse;
+    avsluttSøkndsBehandlingBegrunnelse: AvsluttSøkndsBehandlingBegrunnelse | null;
 }
 
 const validationSchema = yup.object<FormData>({
-    avsluttetBegrunnelse: yup
+    avsluttSøkndsBehandlingBegrunnelse: yup
         .mixed()
-        .oneOf([AvsluttetBegrunnelse.Trukket, AvsluttetBegrunnelse.Bortfalt, AvsluttetBegrunnelse.AvvistSøktForTidlig])
+        .oneOf([
+            AvsluttSøkndsBehandlingBegrunnelse.Trukket,
+            AvsluttSøkndsBehandlingBegrunnelse.Bortfalt,
+            AvsluttSøkndsBehandlingBegrunnelse.AvvistSøktForTidlig,
+        ])
         .required(),
 });
 
 const AvslutteBehandling = () => {
     const dispatch = useAppDispatch();
-    const behandlingSlettet = useAppSelector((s) => s.soknad.avsluttetBehandling);
+    const behandlingSlettet = useAppSelector((s) => s.soknad.avsluttetSøknadsBehandling);
 
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktAvsluttBehandling>();
 
@@ -42,10 +45,10 @@ const AvslutteBehandling = () => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            avsluttetBegrunnelse: AvsluttetBegrunnelse.VelgBegrunnelse,
+            avsluttSøkndsBehandlingBegrunnelse: null,
         },
         async onSubmit(values) {
-            if (values.avsluttetBegrunnelse === AvsluttetBegrunnelse.VelgBegrunnelse) {
+            if (!values.avsluttSøkndsBehandlingBegrunnelse) {
                 return;
             }
 
@@ -53,7 +56,7 @@ const AvslutteBehandling = () => {
                 avsluttSøknadsBehandling({
                     sakId: urlParams.sakId,
                     søknadId: urlParams.soknadId,
-                    avsluttetBegrunnelse: values.avsluttetBegrunnelse,
+                    avsluttSøkndsBehandlingBegrunnelse: values.avsluttSøkndsBehandlingBegrunnelse,
                 })
             );
         },
@@ -64,10 +67,11 @@ const AvslutteBehandling = () => {
     if (RemoteData.isSuccess(behandlingSlettet)) {
         return (
             <div>
-                <AlertStripeSuksess>Behandling har blitt slettet</AlertStripeSuksess>
+                <AlertStripeSuksess>Behandlingen har blitt avsluttet</AlertStripeSuksess>
             </div>
         );
     }
+    console.log(formik.values);
     return (
         <form
             onSubmit={(e) => {
@@ -82,11 +86,12 @@ const AvslutteBehandling = () => {
             <div>
                 <Select
                     label={'Begrunnelse for å avslutte behandling'}
-                    name={'avsluttetBegrunnelse'}
+                    name={'avsluttSøkndsBehandlingBegrunnelse'}
                     onChange={formik.handleChange}
-                    feil={formik.errors.avsluttetBegrunnelse}
+                    feil={formik.errors.avsluttSøkndsBehandlingBegrunnelse}
                 >
-                    {Object.values(AvsluttetBegrunnelse).map((begrunnelse, index) => (
+                    <option value="velgBegrunnelse">Velg begrunnelse</option>
+                    {Object.values(AvsluttSøkndsBehandlingBegrunnelse).map((begrunnelse, index) => (
                         <option value={begrunnelse} key={index}>
                             {begrunnelse}
                         </option>
@@ -94,6 +99,10 @@ const AvslutteBehandling = () => {
                 </Select>
             </div>
             <Fareknapp>Avslutt behandling</Fareknapp>
+
+            {RemoteData.isFailure(behandlingSlettet) && (
+                <AlertStripeFeil>Kunne ikke slette søknadsbehandling</AlertStripeFeil>
+            )}
         </form>
     );
 };

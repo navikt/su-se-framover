@@ -5,7 +5,7 @@ export interface Søknad {
     id: string;
     søknadInnhold: SøknadInnhold;
     opprettet: string;
-    grunnForAvsluttelse: string;
+    avsluttetBegrunnelse: Nullable<string>;
 }
 
 export interface SøknadInnhold {

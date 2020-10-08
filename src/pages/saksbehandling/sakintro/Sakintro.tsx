@@ -45,11 +45,14 @@ const Sakintro = (props: { sak: Sak }) => {
                                             <p>Søknads-id: {s.id}</p>
                                             <p>Innsendt: {formatDateTime(s.opprettet, intl)}</p>
                                             {behandlinger.length === 0 && <p>Status: OPPRETTET</p>}
-                                            {s.grunnForAvsluttelse && (
-                                                <p>Søknadsbehandlingen av blitt avsluttet. Grunn: {s.søknadInnhold}</p>
+                                            {s.avsluttetBegrunnelse && (
+                                                <p>
+                                                    Søknadsbehandlingen av blitt avsluttet. Grunn:{' '}
+                                                    {s.avsluttetBegrunnelse}
+                                                </p>
                                             )}
                                         </div>
-                                        {isBehandlingerEmpty ? (
+                                        {isBehandlingerEmpty && !s.avsluttetBegrunnelse ? (
                                             <>
                                                 <Hovedknapp
                                                     onClick={async () => {

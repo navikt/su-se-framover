@@ -1,4 +1,4 @@
-import { AvsluttetBegrunnelse } from '~pages/saksbehandling/sakintro/AvslutteBehandling';
+import { AvsluttSøkndsBehandlingBegrunnelse } from '~pages/saksbehandling/sakintro/AvslutteBehandling';
 import { SøknadInnhold } from '~types/Søknad';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -10,7 +10,7 @@ export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientRes
 export async function avsluttSøknadsBehandling(arg: {
     sakId: string;
     søknadId: string;
-    avsluttetBegrunnelse: AvsluttetBegrunnelse;
+    avsluttSøkndsBehandlingBegrunnelse: AvsluttSøkndsBehandlingBegrunnelse;
 }): Promise<ApiClientResult<string>> {
     return apiClient({
         url: `/soknad/${arg.søknadId}/avsluttSoknadsbehandling`,
@@ -18,7 +18,7 @@ export async function avsluttSøknadsBehandling(arg: {
         body: {
             sakId: arg.sakId,
             søknadId: arg.søknadId,
-            avsluttetBegrunnelse: arg.avsluttetBegrunnelse,
+            avsluttSøkndsBehandlingBegrunnelse: arg.avsluttSøkndsBehandlingBegrunnelse,
         },
     });
 }
