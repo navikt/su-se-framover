@@ -7,13 +7,12 @@ import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
 import { ErrorCode } from '~api/apiClient';
-import { Kjønn } from '~api/personApi';
 import Hendelseslogg from '~components/Hendelseslogg';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
 import Personsøk from '~components/Personsøk/Personsøk';
 import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
-import { showName } from '~features/person/personUtils';
+import { getGender, showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
@@ -52,18 +51,7 @@ const Saksoversikt = () => {
         }
     }, [sak._tag, søker._tag]);
 
-    const gender = useMemo<Gender>(() => {
-        if (RemoteData.isSuccess(søker)) {
-            if (søker.value.kjønn === Kjønn.Mann) {
-                return Gender.male;
-            } else if (søker.value.kjønn === Kjønn.Kvinne) {
-                return Gender.female;
-            } else {
-                return Gender.unknown;
-            }
-        }
-        return Gender.unknown;
-    }, [søker._tag]);
+    const gender = useMemo<Gender>(() => getGender(søker), [søker._tag]);
 
     const rerouteToSak = (id: string) => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: id }));
 
