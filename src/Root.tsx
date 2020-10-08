@@ -3,7 +3,7 @@ import Header from '@navikt/nap-header';
 import Lenke from 'nav-frontend-lenker';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
@@ -39,41 +39,36 @@ const ScrollToTop = () => {
 const Root = () => {
     return (
         <Provider store={Store}>
-            <UserProvider>
-                <ErrorBoundary>
-                    <Router>
-                        <ContentWrapper>
-                            <Fragment>
-                                <ScrollToTop />
-                                <Switch>
-                                    <Route exact path={routes.home.path}>
-                                        <HomePage />
-                                    </Route>
-                                    <Route path={routes.soknad.path}>
-                                        <Soknad />
-                                    </Route>
-                                    <Route path={routes.saksoversiktIndex.path}>
-                                        <Saksoversikt />
-                                    </Route>
-                                    <Route path={routes.attestering.path}>
-                                        <Attestering />
-                                    </Route>
-                                    <Route>404</Route>
-                                </Switch>
-                            </Fragment>
-                        </ContentWrapper>
-                    </Router>
-                </ErrorBoundary>
-            </UserProvider>
+            <ErrorBoundary>
+                <Router>
+                    <ContentWrapper>
+                        <Fragment>
+                            <ScrollToTop />
+                            <Switch>
+                                <Route exact path={routes.home.path}>
+                                    <HomePage />
+                                </Route>
+                                <Route path={routes.soknad.path}>
+                                    <Soknad />
+                                </Route>
+                                <Route path={routes.saksoversiktIndex.path}>
+                                    <Saksoversikt />
+                                </Route>
+                                <Route path={routes.attestering.path}>
+                                    <Attestering />
+                                </Route>
+                                <Route>404</Route>
+                            </Switch>
+                        </Fragment>
+                    </ContentWrapper>
+                </Router>
+            </ErrorBoundary>
         </Provider>
     );
 };
 
-type LoginState = 'logging-in' | 'logged-in' | 'unauthorized' | 'error';
-
-function ContentWrapper({ children }: { children: React.ReactChild }) {
+const ContentWrapper: React.FC = (props) => {
     const authCompleteRouteMatch = useRouteMatch('/auth/complete');
-    const [loginState, setLoginState] = useState<LoginState>('logging-in');
     const loggedInUser = useAppSelector((s) => s.me.me);
 
     const dispatch = useAppDispatch();
@@ -98,27 +93,9 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
     }, [authCompleteRouteMatch]);
 
     useEffect(() => {
-        pipe(
-            loggedInUser,
-            RemoteData.fold(
-                () => {
-                    dispatch(meSlice.fetchMe());
-                },
-                () => {
-                    setLoginState('logging-in');
-                },
-                (err) => {
-                    if (err.statusCode === ErrorCode.NotAuthenticated || err.statusCode === ErrorCode.Unauthorized) {
-                        setLoginState('unauthorized');
-                    } else {
-                        return setLoginState('error');
-                    }
-                },
-                () => {
-                    setLoginState('logged-in');
-                }
-            )
-        );
+        if (RemoteData.isInitial(loggedInUser)) {
+            dispatch(meSlice.fetchMe());
+        }
     }, [loggedInUser._tag]);
 
     return (
@@ -136,29 +113,38 @@ function ContentWrapper({ children }: { children: React.ReactChild }) {
                 )}
             </Header>
             <div className={styles.contentContainer}>
-                {loginState === 'logged-in' ? (
-                    children
-                ) : loginState === 'logging-in' ? (
-                    <NavFrontendSpinner />
-                ) : (
-                    <div className={styles.ikkeTilgangContainer}>
-                        <Innholdstittel className={styles.overskrift}>
-                            {loginState === 'error' ? 'En feil oppstod' : 'Ikke tilgang'}
-                        </Innholdstittel>
-                        <Lenke
-                            href={`${window.BASE_URL}/login`}
-                            onClick={() => {
-                                Cookies.set(Cookies.CookieName.LoginRedirectUrl, window.location.pathname);
-                            }}
-                        >
-                            Logg inn på nytt
-                        </Lenke>
-                    </div>
+                {pipe(
+                    loggedInUser,
+                    RemoteData.fold(
+                        () => <NavFrontendSpinner />,
+                        () => <NavFrontendSpinner />,
+                        (err) => {
+                            return (
+                                <div className={styles.ikkeTilgangContainer}>
+                                    <Innholdstittel className={styles.overskrift}>
+                                        {err.statusCode === ErrorCode.NotAuthenticated ||
+                                        err.statusCode === ErrorCode.Unauthorized
+                                            ? 'Ikke tilgang'
+                                            : 'En feil oppstod'}
+                                    </Innholdstittel>
+                                    <Lenke
+                                        href={`${window.BASE_URL}/login`}
+                                        onClick={() => {
+                                            Cookies.set(Cookies.CookieName.LoginRedirectUrl, window.location.pathname);
+                                        }}
+                                    >
+                                        Logg inn på nytt
+                                    </Lenke>
+                                </div>
+                            );
+                        },
+                        (u) => <UserProvider user={u}>{props.children}</UserProvider>
+                    )
                 )}
             </div>
         </div>
     );
-}
+};
 
 /* eslint-disable-next-line no-undef */
 export default hot(module)(Root);
