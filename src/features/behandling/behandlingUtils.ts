@@ -42,6 +42,5 @@ export const hentSisteVurderteVilkår = (behandlingsinformasjon: Behandlingsinfo
     if (isNone(lastElement)) {
         return Vilkårtype.Uførhet;
     }
-    console.log(lastElement);
     return lastElement.value.vilkårtype;
 };
