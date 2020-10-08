@@ -1,22 +1,28 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Gender, PersonCard } from '@navikt/nap-person-card';
 import { useFormik } from 'formik';
 import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
 import { RadioPanelGruppe, Feiloppsummering, Select, Textarea } from 'nav-frontend-skjema';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import * as Routes from '~/lib/routes';
 import { fetchBrev } from '~api/brevApi';
+import { Person } from '~api/personApi';
+import { PersonAdvarsel } from '~components/PersonAdvarsel';
 import { erAvslått, erTilAttestering, erIverksatt } from '~features/behandling/behandlingUtils';
+import { getGender, showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
+import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { Simulering } from '~pages/saksbehandling/simulering/simulering';
 import VisBeregning from '~pages/saksbehandling/steg/beregning/VisBeregning';
+import Søkefelt from '~pages/saksbehandling/søkefelt/Søkefelt';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { Sak } from '~types/Sak';
@@ -97,7 +103,7 @@ const Attestering = () => {
     const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
     const urlParams = Routes.useRouteParams<typeof Routes.attestering>();
-    const { sak } = useAppSelector((s) => ({ sak: s.sak.sak }));
+    const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
 
     if (!RemoteData.isSuccess(sak)) {
         return <AlertStripe type="feil">Fant ikke sak</AlertStripe>;
@@ -146,110 +152,138 @@ const Attestering = () => {
         return <div>Behandlingen er ikke klar for attestering.</div>;
     }
 
-    return (
-        <div>
-            <div className={styles.vedtakContainer}>
-                <Innholdstittel>Vedtak</Innholdstittel>
-                <div>
-                    {!erAvslått(behandling) && <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>}
-                    {erAvslått(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
-                </div>
-                <div>
-                    <VilkårsOppsummering behandling={behandling} />
-                </div>
-                <div>
-                    <VisDersomSimulert sak={sak.value} behandling={behandling} />
-                </div>
-                <div>
-                    <Innholdstittel>Vis brev kladd</Innholdstittel>
-                    <Lenke
-                        href={'#'}
-                        onClick={() =>
-                            fetchBrev(sak.value.id, urlParams.behandlingId).then((res) => {
-                                if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
-                            })
-                        }
-                    >
-                        Last ned brev
-                    </Lenke>
-                </div>
-            </div>
-            <div className={styles.navigeringContainer}>
-                {erTilAttestering(behandling) && (
-                    <form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            formik.handleSubmit();
-                            setHasSubmitted(true);
-                        }}
-                    >
-                        <RadioPanelGruppe
-                            className={styles.sats}
-                            name={intl.formatMessage({ id: 'attestering.beslutning' })}
-                            legend={intl.formatMessage({ id: 'attestering.beslutning' })}
-                            radios={[
-                                {
-                                    label: intl.formatMessage({ id: 'attestering.beslutning.godkjenn' }),
-                                    value: 'godkjenn',
-                                },
-                                {
-                                    label: intl.formatMessage({ id: 'attestering.beslutning.revurder' }),
-                                    value: 'revurder',
-                                },
-                            ]}
-                            checked={
-                                formik.values.beslutning
-                                    ? 'godkjenn'
-                                    : formik.values.beslutning === false
-                                    ? 'revurder'
-                                    : undefined
-                            }
-                            onChange={(_, value) =>
-                                formik.setValues({ ...formik.values, beslutning: value === 'godkjenn' })
-                            }
-                            feil={errors.beslutning}
-                        />
-                        {formik.values.beslutning === false && (
-                            <>
-                                <Select
-                                    label="Velg grunn"
-                                    onChange={(value) =>
-                                        formik.setValues({ ...formik.values, grunn: value.target.value })
-                                    }
-                                    value={formik.values.grunn ?? ''}
-                                    feil={errors.grunn}
-                                >
-                                    <option value=""> Grunn </option>
-                                    {Object.values(Grunn).map((grunn, index) => (
-                                        <option value={grunn} key={index}>
-                                            {grunn}
-                                        </option>
-                                    ))}
-                                </Select>
+    const gender = useMemo<Gender>(() => getGender(søker), [søker._tag]);
 
-                                <Textarea
-                                    label="Begrunnelse"
-                                    name="begrunnelse"
-                                    value={formik.values.begrunnelse ?? ''}
-                                    feil={formik.errors.begrunnelse}
-                                    onChange={formik.handleChange}
+    return (
+        <>
+            <div className={styles.headerContainer}>
+                {pipe(
+                    søker,
+                    RemoteData.fold(
+                        () => null,
+                        () => null,
+                        () => null,
+                        (søker: Person) => (
+                            <>
+                                <PersonCard
+                                    fodselsnummer={søker.fnr}
+                                    gender={gender}
+                                    name={showName(søker)}
+                                    renderLabelContent={(): JSX.Element => <PersonAdvarsel person={søker} />}
                                 />
+                                <Søkefelt />
                             </>
-                        )}
-                        <Feiloppsummering
-                            className={styles.feiloppsummering}
-                            tittel={'Feiloppsummering'}
-                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                            hidden={!formikErrorsHarFeil(formik.errors)}
-                        />
-                        <Knapp spinner={RemoteData.isPending(attesteringStatus)} className={styles.sendInnAttestering}>
-                            {intl.formatMessage({ id: 'attestering.knapp.send' })}
-                        </Knapp>
-                    </form>
+                        )
+                    )
                 )}
-                {RemoteData.isSuccess(attesteringStatus) && <p>Attestering utført!</p>}
             </div>
-        </div>
+            <div>
+                <div className={styles.vedtakContainer}>
+                    <Innholdstittel>Vedtak</Innholdstittel>
+                    <div>
+                        {!erAvslått(behandling) && <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>}
+                        {erAvslått(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
+                    </div>
+                    <div>
+                        <VilkårsOppsummering behandling={behandling} />
+                    </div>
+                    <div>
+                        <VisDersomSimulert sak={sak.value} behandling={behandling} />
+                    </div>
+                    <div>
+                        <Innholdstittel>Vis brev kladd</Innholdstittel>
+                        <Lenke
+                            href={'#'}
+                            onClick={() =>
+                                fetchBrev(sak.value.id, urlParams.behandlingId).then((res) => {
+                                    if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
+                                })
+                            }
+                        >
+                            Last ned brev
+                        </Lenke>
+                    </div>
+                </div>
+                <div className={styles.navigeringContainer}>
+                    {erTilAttestering(behandling) && (
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                formik.handleSubmit();
+                                setHasSubmitted(true);
+                            }}
+                        >
+                            <RadioPanelGruppe
+                                className={styles.sats}
+                                name={intl.formatMessage({ id: 'attestering.beslutning' })}
+                                legend={intl.formatMessage({ id: 'attestering.beslutning' })}
+                                radios={[
+                                    {
+                                        label: intl.formatMessage({ id: 'attestering.beslutning.godkjenn' }),
+                                        value: 'godkjenn',
+                                    },
+                                    {
+                                        label: intl.formatMessage({ id: 'attestering.beslutning.revurder' }),
+                                        value: 'revurder',
+                                    },
+                                ]}
+                                checked={
+                                    formik.values.beslutning
+                                        ? 'godkjenn'
+                                        : formik.values.beslutning === false
+                                        ? 'revurder'
+                                        : undefined
+                                }
+                                onChange={(_, value) =>
+                                    formik.setValues({ ...formik.values, beslutning: value === 'godkjenn' })
+                                }
+                                feil={errors.beslutning}
+                            />
+                            {formik.values.beslutning === false && (
+                                <>
+                                    <Select
+                                        label="Velg grunn"
+                                        onChange={(value) =>
+                                            formik.setValues({ ...formik.values, grunn: value.target.value })
+                                        }
+                                        value={formik.values.grunn ?? ''}
+                                        feil={errors.grunn}
+                                    >
+                                        <option value=""> Grunn </option>
+                                        {Object.values(Grunn).map((grunn, index) => (
+                                            <option value={grunn} key={index}>
+                                                {grunn}
+                                            </option>
+                                        ))}
+                                    </Select>
+
+                                    <Textarea
+                                        label="Begrunnelse"
+                                        name="begrunnelse"
+                                        value={formik.values.begrunnelse ?? ''}
+                                        feil={formik.errors.begrunnelse}
+                                        onChange={formik.handleChange}
+                                    />
+                                </>
+                            )}
+                            <Feiloppsummering
+                                className={styles.feiloppsummering}
+                                tittel={'Feiloppsummering'}
+                                feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                                hidden={!formikErrorsHarFeil(formik.errors)}
+                            />
+                            <Knapp
+                                spinner={RemoteData.isPending(attesteringStatus)}
+                                className={styles.sendInnAttestering}
+                            >
+                                {intl.formatMessage({ id: 'attestering.knapp.send' })}
+                            </Knapp>
+                        </form>
+                    )}
+                    {RemoteData.isSuccess(attesteringStatus) && <p>Attestering utført!</p>}
+                </div>
+            </div>
+        </>
     );
 };
 
