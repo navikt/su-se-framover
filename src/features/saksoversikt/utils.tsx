@@ -57,7 +57,7 @@ export interface Vilkårsinformasjon {
     vilkårtype: Vilkårtype;
     begrunnelse: Nullable<string>;
     erStartet: boolean;
-};
+}
 
 export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinformasjon): Vilkårsinformasjon[] => {
     const {

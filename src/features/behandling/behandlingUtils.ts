@@ -1,6 +1,6 @@
-import { findLast } from 'fp-ts/lib/Array';
+import * as Array from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
-import { isNone } from 'fp-ts/lib/Option';
+import * as Option from 'fp-ts/Option';
 
 import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksoversikt/utils';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
@@ -33,14 +33,13 @@ export function erAvslått(behandling: Behandling): boolean {
 }
 
 export const hentSisteVurderteVilkår = (behandlingsinformasjon: Behandlingsinformasjon) => {
-    const vilkår = mapToVilkårsinformasjon(behandlingsinformasjon);
-    const lastElement = pipe(
+    return pipe(
         behandlingsinformasjon,
         mapToVilkårsinformasjon,
         Array.findLast((v: Vilkårsinformasjon) => v.erStartet),
         Option.fold(
             () => Vilkårtype.Uførhet,
-            x => x.vilkårtype
+            (x) => x.vilkårtype
         )
     );
 };
