@@ -163,13 +163,13 @@ const Attestering = () => {
                         () => null,
                         () => null,
                         () => null,
-                        (søker: Person) => (
+                        (s: Person) => (
                             <>
                                 <PersonCard
-                                    fodselsnummer={søker.fnr}
+                                    fodselsnummer={s.fnr}
                                     gender={gender}
-                                    name={showName(søker)}
-                                    renderLabelContent={(): JSX.Element => <PersonAdvarsel person={søker} />}
+                                    name={showName(s)}
+                                    renderLabelContent={(): JSX.Element => <PersonAdvarsel person={s} />}
                                 />
                                 <Søkefelt />
                             </>
