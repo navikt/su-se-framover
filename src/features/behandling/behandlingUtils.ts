@@ -1,5 +1,12 @@
+import * as Array from 'fp-ts/Array';
+import { pipe } from 'fp-ts/lib/function';
+import * as Option from 'fp-ts/Option';
+
+import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksoversikt/utils';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
+import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Sak } from '~types/Sak';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 export const findBehandling = (sak: Sak, behandlingId: string) => {
     return sak.behandlinger.find((b) => b.id === behandlingId);
@@ -24,3 +31,15 @@ export function erAvslått(behandling: Behandling): boolean {
         Behandlingsstatus.BEREGNET_AVSLAG,
     ].some((status) => behandling.status === status);
 }
+
+export const hentSisteVurderteVilkår = (behandlingsinformasjon: Behandlingsinformasjon) => {
+    return pipe(
+        behandlingsinformasjon,
+        mapToVilkårsinformasjon,
+        Array.findLast((v: Vilkårsinformasjon) => v.erStartet),
+        Option.fold(
+            () => Vilkårtype.Uførhet,
+            (x) => x.vilkårtype
+        )
+    );
+};

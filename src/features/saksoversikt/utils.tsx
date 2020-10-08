@@ -52,12 +52,12 @@ export const statusIcon = (status: VilkårVurderingStatus) => {
     }
 };
 
-type Vilkårsinformasjon = {
+export interface Vilkårsinformasjon {
     status: VilkårVurderingStatus;
     vilkårtype: Vilkårtype;
     begrunnelse: Nullable<string>;
     erStartet: boolean;
-};
+}
 
 export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinformasjon): Vilkårsinformasjon[] => {
     const {
