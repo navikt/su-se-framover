@@ -35,12 +35,12 @@ export function erAvslått(behandling: Behandling): boolean {
 export const hentSisteVurderteVilkår = (behandlingsinformasjon: Behandlingsinformasjon) => {
     const vilkår = mapToVilkårsinformasjon(behandlingsinformasjon);
     const lastElement = pipe(
-        vilkår,
-        findLast((v: Vilkårsinformasjon) => v.erStartet)
+        behandlingsinformasjon,
+        mapToVilkårsinformasjon,
+        Array.findLast((v: Vilkårsinformasjon) => v.erStartet),
+        Option.fold(
+            () => Vilkårtype.Uførhet,
+            x => x.vilkårtype
+        )
     );
-
-    if (isNone(lastElement)) {
-        return Vilkårtype.Uførhet;
-    }
-    return lastElement.value.vilkårtype;
 };
