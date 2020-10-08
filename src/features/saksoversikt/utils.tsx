@@ -52,7 +52,7 @@ export const statusIcon = (status: VilkårVurderingStatus) => {
     }
 };
 
-type Vilkårsinformasjon = {
+export type Vilkårsinformasjon = {
     status: VilkårVurderingStatus;
     vilkårtype: Vilkårtype;
     begrunnelse: Nullable<string>;

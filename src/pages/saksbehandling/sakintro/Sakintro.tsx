@@ -7,7 +7,7 @@ import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import { useUserContext } from '~context/userContext';
-import { erIverksatt, erTilAttestering } from '~features/behandling/behandlingUtils';
+import { erIverksatt, erTilAttestering, hentSisteVurderteVilkår } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { getOidFromAccessToken } from '~lib/cookies';
 import { formatDateTime } from '~lib/dateUtils';
@@ -108,6 +108,9 @@ const Sakintro = (props: { sak: Sak }) => {
                                                                         {
                                                                             sakId,
                                                                             behandlingId: b.id,
+                                                                            vilkar: hentSisteVurderteVilkår(
+                                                                                b.behandlingsinformasjon
+                                                                            ),
                                                                         }
                                                                     )}
                                                                 >
