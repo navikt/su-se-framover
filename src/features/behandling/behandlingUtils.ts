@@ -32,6 +32,12 @@ export function erAvslått(behandling: Behandling): boolean {
     ].some((status) => behandling.status === status);
 }
 
+export function harBeregning(behandling: Behandling): boolean {
+    return [Behandlingsstatus.BEREGNET_AVSLAG, Behandlingsstatus.BEREGNET_INVILGET, Behandlingsstatus.SIMULERT].some(
+        (status) => behandling.status === status
+    );
+}
+
 export const hentSisteVurderteVilkår = (behandlingsinformasjon: Behandlingsinformasjon) => {
     return pipe(
         behandlingsinformasjon,

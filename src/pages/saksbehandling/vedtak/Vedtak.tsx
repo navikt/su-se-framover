@@ -1,15 +1,19 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
-import { Hovedknapp } from 'nav-frontend-knapper';
-import Lenke from 'nav-frontend-lenker';
+import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
-import { fetchBrev } from '~api/brevApi';
-import { erAvslått, erTilAttestering } from '~features/behandling/behandlingUtils';
+import { erAvslått, erTilAttestering, harBeregning } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
+import { lastNedBrev } from '~features/saksoversikt/sak.slice';
+import {
+    createVilkårUrl,
+    mapToVilkårsinformasjon,
+    statusIcon,
+    vilkårTittelFormatted,
+} from '~features/saksoversikt/utils';
 import * as routes from '~lib/routes.ts';
 import { Nullable } from '~lib/types';
 import { Simulering } from '~pages/saksbehandling/simulering/simulering';
@@ -23,6 +27,103 @@ import styles from './vedtak.module.less';
 
 type Props = {
     sak: Sak;
+};
+
+const Vedtak = (props: Props) => {
+    const { sak } = props;
+    const dispatch = useAppDispatch();
+    const { sendtTilAttesteringStatus, lastNedBrevStatus } = useAppSelector((s) => s.sak);
+    const { sakId, behandlingId } = routes.useRouteParams<typeof routes.saksoversiktValgtBehandling>();
+    const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
+
+    if (!behandling) {
+        return <AlertStripe type="feil">Fant ikke behandlingsid</AlertStripe>;
+    }
+
+    if (erTilAttestering(behandling)) {
+        return <div>Vedtak er sendt til Attestering</div>;
+    }
+
+    const hentBrev = useCallback(() => {
+        if (RemoteData.isPending(lastNedBrevStatus)) {
+            return;
+        }
+
+        dispatch(lastNedBrev({ sakId: sak.id, behandlingId: behandlingId })).then((action) => {
+            if (lastNedBrev.fulfilled.match(action)) {
+                window.open(action.payload.objectUrl);
+            }
+        });
+    }, [sak.id, behandlingId]);
+
+    const vilkårUrl = (vilkårType: Vilkårtype) => {
+        return createVilkårUrl({
+            sakId: sakId,
+            behandlingId: behandlingId,
+            vilkar: vilkårType,
+        });
+    };
+
+    if (behandling.status === Behandlingsstatus.SIMULERT || erAvslått(behandling)) {
+        return (
+            <div>
+                <div className={styles.vedtakContainer}>
+                    <Innholdstittel>Vedtak</Innholdstittel>
+
+                    {behandling.status === Behandlingsstatus.SIMULERT && (
+                        <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>
+                    )}
+                    {erAvslått(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
+
+                    <VilkårsOppsummering behandling={behandling} />
+
+                    {harBeregning(behandling) ? (
+                        <VisSimuleringOgBeregning sak={sak} behandling={behandling} />
+                    ) : (
+                        <>Det er ikke gjort en beregning</>
+                    )}
+
+                    <div>
+                        <Innholdstittel>Utkast vedtaksbrev</Innholdstittel>
+                        <Knapp spinner={RemoteData.isPending(lastNedBrevStatus)} htmlType="button" onClick={hentBrev}>
+                            Vis
+                        </Knapp>
+                    </div>
+                </div>
+                <div className={styles.navigeringContainer}>
+                    <Link
+                        to={
+                            erAvslått(behandling) && behandling.status !== Behandlingsstatus.BEREGNET_AVSLAG
+                                ? vilkårUrl(Vilkårtype.PersonligOppmøte)
+                                : vilkårUrl(Vilkårtype.Beregning)
+                        }
+                        className="knapp"
+                    >
+                        Tilbake
+                    </Link>
+                    <Hovedknapp
+                        spinner={RemoteData.isPending(sendtTilAttesteringStatus)}
+                        onClick={() =>
+                            dispatch(sakSlice.sendTilAttestering({ sakId: sak.id, behandlingId: behandlingId }))
+                        }
+                        htmlType="button"
+                    >
+                        Send til attestering
+                    </Hovedknapp>
+                </div>
+                {RemoteData.isFailure(sendtTilAttesteringStatus) && (
+                    <AlertStripeFeil>
+                        <div>
+                            <p>Sendingen Failet</p>
+                            <p>Error code: {sendtTilAttesteringStatus.error.statusCode}</p>
+                        </div>
+                    </AlertStripeFeil>
+                )}
+            </div>
+        );
+    }
+
+    return <div>Behandlingen er ikke ferdig</div>;
 };
 
 const VilkårsvurderingInfoLinje = (props: {
@@ -63,109 +164,22 @@ const VilkårsOppsummering = (props: { behandling: Behandling }) => {
     );
 };
 
-const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
-    if (props.behandling.status === Behandlingsstatus.SIMULERT && props.behandling.beregning) {
-        return (
+const VisSimuleringOgBeregning = (props: { sak: Sak; behandling: Behandling }) => (
+    <div>
+        {props.behandling.beregning && (
             <>
                 <VisBeregning
                     beregning={props.behandling.beregning}
                     forventetinntekt={props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt ?? 0}
                 />
-                <div>
-                    <Simulering sak={props.sak} behandlingId={props.behandling.id} />
-                </div>
-            </>
-        );
-    }
-    return <>Det er ikke gjort en beregning</>;
-};
-
-const Vedtak = (props: Props) => {
-    const sendtTilAttesteringStatus = useAppSelector((s) => s.sak.sendtTilAttesteringStatus);
-    const dispatch = useAppDispatch();
-
-    const { sak } = props;
-    const { behandlingId } = routes.useRouteParams<typeof routes.saksoversiktValgtBehandling>();
-
-    const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
-
-    if (!behandling) {
-        return <AlertStripe type="feil">Fant ikke behandlingsid</AlertStripe>;
-    }
-
-    if (erTilAttestering(behandling)) {
-        return <div>Vedtak er sendt til Attestering</div>;
-    }
-
-    if (
-        behandling.status === Behandlingsstatus.SIMULERT ||
-        behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ||
-        behandling.status === Behandlingsstatus.BEREGNET_AVSLAG
-    ) {
-        return (
-            <div>
-                <div className={styles.vedtakContainer}>
-                    <Innholdstittel>Vedtak</Innholdstittel>
+                {props.behandling.status !== Behandlingsstatus.BEREGNET_AVSLAG && (
                     <div>
-                        {behandling.status === Behandlingsstatus.SIMULERT && (
-                            <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>
-                        )}
-                        {erAvslått(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
+                        <Simulering sak={props.sak} behandlingId={props.behandling.id} />
                     </div>
-                    <div>
-                        <VilkårsOppsummering behandling={behandling} />
-                    </div>
-                    <div>
-                        <VisDersomSimulert sak={sak} behandling={behandling} />
-                    </div>
-                    <div>
-                        <Innholdstittel>Vis brev kladd</Innholdstittel>
-                        <Lenke
-                            href={'#'}
-                            onClick={() =>
-                                fetchBrev(sak.id, behandlingId).then((res) => {
-                                    if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
-                                })
-                            }
-                        >
-                            Last ned brev
-                        </Lenke>
-                    </div>
-                </div>
-                <div className={styles.navigeringContainer}>
-                    <Link
-                        to={routes.saksbehandlingVilkårsvurdering.createURL({
-                            sakId: sak.id,
-                            behandlingId: behandling.id,
-                            vilkar: Vilkårtype.Sats,
-                        })}
-                        className="knapp"
-                    >
-                        Tilbake
-                    </Link>
-                    <Hovedknapp
-                        spinner={RemoteData.isPending(sendtTilAttesteringStatus)}
-                        onClick={() =>
-                            dispatch(sakSlice.sendTilAttestering({ sakId: sak.id, behandlingId: behandlingId }))
-                        }
-                        htmlType="button"
-                    >
-                        Send til attestering
-                    </Hovedknapp>
-                </div>
-                {RemoteData.isFailure(sendtTilAttesteringStatus) && (
-                    <AlertStripeFeil>
-                        <div>
-                            <p>Sendingen Failet</p>
-                            <p>Error code: {sendtTilAttesteringStatus.error.statusCode}</p>
-                        </div>
-                    </AlertStripeFeil>
                 )}
-            </div>
-        );
-    }
-
-    return <div>Behandlingen er ikke ferdig</div>;
-};
+            </>
+        )}
+    </div>
+);
 
 export default Vedtak;

@@ -1,6 +1,7 @@
 import Ikon from 'nav-frontend-ikoner-assets';
 import React from 'react';
 
+import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import {
     Behandlingsinformasjon,
@@ -13,6 +14,13 @@ import {
     OppholdIUtlandetStatus,
 } from '~types/Behandlingsinformasjon';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+
+export const createVilkårUrl = (props: { sakId: string; behandlingId: string; vilkar: Vilkårtype }) =>
+    Routes.saksbehandlingVilkårsvurdering.createURL({
+        sakId: props.sakId,
+        behandlingId: props.behandlingId,
+        vilkar: props.vilkar,
+    });
 
 export const vilkårTittelFormatted = (type: Vilkårtype) => {
     switch (type) {
