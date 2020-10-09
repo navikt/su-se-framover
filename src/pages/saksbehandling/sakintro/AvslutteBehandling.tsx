@@ -5,37 +5,28 @@ import { Fareknapp } from 'nav-frontend-knapper';
 import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 
-import { avsluttSøknadsBehandling } from '~features/søknad/søknad.slice';
+import { trekkSøknad } from '~features/søknad/søknad.slice';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
-export enum AvsluttSøknadsBehandlingBegrunnelse {
+export enum trekkSøknadEnum {
     Trukket = 'Trukket',
-    Bortfalt = 'Bortfalt',
-    AvvistSøktForTidlig = 'AvvistSøktForTidlig',
 }
 
 interface FormData {
-    avsluttSøknadsBehandlingBegrunnelse: AvsluttSøknadsBehandlingBegrunnelse | null;
+    trekkSøknad: trekkSøknadEnum | null;
 }
 
 const validationSchema = yup.object<FormData>({
-    avsluttSøknadsBehandlingBegrunnelse: yup
-        .mixed()
-        .oneOf([
-            AvsluttSøknadsBehandlingBegrunnelse.Trukket,
-            AvsluttSøknadsBehandlingBegrunnelse.Bortfalt,
-            AvsluttSøknadsBehandlingBegrunnelse.AvvistSøktForTidlig,
-        ])
-        .required(),
+    trekkSøknad: yup.mixed().oneOf([trekkSøknadEnum.Trukket]).required(),
 });
 
 const AvslutteBehandling = () => {
     const dispatch = useAppDispatch();
-    const behandlingSlettet = useAppSelector((s) => s.soknad.avsluttetSøknadsBehandling);
+    const behandlingSlettet = useAppSelector((s) => s.soknad.søknadHarBlittTrukket);
 
-    const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktAvsluttBehandling>();
+    const urlParams = Routes.useRouteParams<typeof Routes.trekkSøknad>();
 
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
 
@@ -45,18 +36,18 @@ const AvslutteBehandling = () => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            avsluttSøknadsBehandlingBegrunnelse: null,
+            trekkSøknad: null,
         },
         async onSubmit(values) {
-            if (!values.avsluttSøknadsBehandlingBegrunnelse) {
+            if (!values.trekkSøknad) {
                 return;
             }
 
             dispatch(
-                avsluttSøknadsBehandling({
+                trekkSøknad({
                     sakId: urlParams.sakId,
                     søknadId: urlParams.soknadId,
-                    avsluttSøknadsBehandlingBegrunnelse: values.avsluttSøknadsBehandlingBegrunnelse,
+                    søknadTrukket: values.trekkSøknad == trekkSøknadEnum.Trukket,
                 })
             );
         },
@@ -67,7 +58,7 @@ const AvslutteBehandling = () => {
     if (RemoteData.isSuccess(behandlingSlettet)) {
         return (
             <div>
-                <AlertStripeSuksess>Behandlingen har blitt avsluttet</AlertStripeSuksess>
+                <AlertStripeSuksess>Søknaden har blitt trukket</AlertStripeSuksess>
             </div>
         );
     }
@@ -85,24 +76,22 @@ const AvslutteBehandling = () => {
             </div>
             <div>
                 <Select
-                    label={'Begrunnelse for å avslutte behandling'}
-                    name={'avsluttSøknadsBehandlingBegrunnelse'}
+                    label={'Begrunnelse for å trekke søknad'}
+                    name={'trekkSøknad'}
                     onChange={formik.handleChange}
-                    feil={formik.errors.avsluttSøknadsBehandlingBegrunnelse}
+                    feil={formik.errors.trekkSøknad}
                 >
                     <option value="velgBegrunnelse">Velg begrunnelse</option>
-                    {Object.values(AvsluttSøknadsBehandlingBegrunnelse).map((begrunnelse, index) => (
+                    {Object.values(trekkSøknadEnum).map((begrunnelse, index) => (
                         <option value={begrunnelse} key={index}>
                             {begrunnelse}
                         </option>
                     ))}
                 </Select>
             </div>
-            <Fareknapp>Avslutt behandling</Fareknapp>
+            <Fareknapp>Søknad er trukket</Fareknapp>
 
-            {RemoteData.isFailure(behandlingSlettet) && (
-                <AlertStripeFeil>Kunne ikke slette søknadsbehandling</AlertStripeFeil>
-            )}
+            {RemoteData.isFailure(behandlingSlettet) && <AlertStripeFeil>Kunne ikke trekke søknad</AlertStripeFeil>}
         </form>
     );
 };

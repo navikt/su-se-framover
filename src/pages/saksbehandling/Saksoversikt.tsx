@@ -114,7 +114,7 @@ const Saksoversikt = () => {
                                     </div>
                                     <div className={styles.container}>
                                         <Switch>
-                                            <Route path={Routes.saksoversiktAvsluttBehandling.path}>
+                                            <Route path={Routes.trekkSøknad.path}>
                                                 <div className={styles.mainContent}>
                                                     <AvslutteBehandling />
                                                 </div>

@@ -27,7 +27,7 @@ const Sakintro = (props: { sak: Sak }) => {
     const stansUtbetalingerStatus = useAppSelector((s) => s.sak.stansUtbetalingerStatus);
     const intl = useI18n({ messages: {} });
     const user = useUserContext();
-
+    console.log(props.sak);
     return (
         <div className={styles.container}>
             <Innholdstittel className={styles.tittel}>Saksnummer: {props.sak.id}</Innholdstittel>
@@ -45,14 +45,14 @@ const Sakintro = (props: { sak: Sak }) => {
                                             <p>Søknads-id: {s.id}</p>
                                             <p>Innsendt: {formatDateTime(s.opprettet, intl)}</p>
                                             {behandlinger.length === 0 && <p>Status: OPPRETTET</p>}
-                                            {s.avsluttetBegrunnelse && (
+                                            {s.søknadTrukket && (
                                                 <p>
-                                                    Søknadsbehandlingen av blitt avsluttet. Grunn:{' '}
-                                                    {s.avsluttetBegrunnelse}
+                                                    Søknadsbehandlingen av blitt avsluttet. Grunn:
+                                                    {s.søknadTrukket && 'Trukket'}
                                                 </p>
                                             )}
                                         </div>
-                                        {isBehandlingerEmpty && !s.avsluttetBegrunnelse ? (
+                                        {isBehandlingerEmpty && !s.søknadTrukket ? (
                                             <>
                                                 <Hovedknapp
                                                     onClick={async () => {
@@ -80,7 +80,7 @@ const Sakintro = (props: { sak: Sak }) => {
                                                 </Hovedknapp>
                                                 <Link
                                                     className="knapp knapp--fare"
-                                                    to={Routes.saksoversiktAvsluttBehandling.createURL({
+                                                    to={Routes.trekkSøknad.createURL({
                                                         sakId: sakId,
                                                         soknadId: s.id,
                                                     })}

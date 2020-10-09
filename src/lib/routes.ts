@@ -38,12 +38,12 @@ export const saksoversiktValgtSak: Route<{
     createURL: (args) => `/saksoversikt/${args.sakId}`,
 };
 
-export const saksoversiktAvsluttBehandling: Route<{
+export const trekkSøknad: Route<{
     sakId: string;
     soknadId: string;
 }> = {
-    path: '/saksoversikt/:sakId/:soknadId/avsluttSaksbehandling/',
-    createURL: (args) => `/saksoversikt/${args.sakId}/${args.soknadId}/avsluttSaksbehandling`,
+    path: '/saksoversikt/:sakId/:soknadId/trekkSoknad/',
+    createURL: (args) => `/saksoversikt/${args.sakId}/${args.soknadId}/trekkSoknad`,
 };
 
 export const saksoversiktValgtBehandling: Route<{

@@ -4,7 +4,6 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~api/apiClient';
 import * as søknadApi from '~api/søknadApi';
 import { Nullable } from '~lib/types';
-import { AvsluttSøknadsBehandlingBegrunnelse } from '~pages/saksbehandling/sakintro/AvslutteBehandling';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 
 import { DelerBoligMed, TypeOppholdstillatelse, Vergemål } from './types';
@@ -77,7 +76,7 @@ export interface SøknadState {
         harSøkerMøttPersonlig: Nullable<boolean>;
         harFullmektigEllerVerge: Nullable<Vergemål>;
     };
-    avsluttetSøknadsBehandling: RemoteData.RemoteData<ApiError, null>;
+    søknadHarBlittTrukket: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: SøknadState = {
@@ -148,19 +147,19 @@ const initialState: SøknadState = {
         harSøkerMøttPersonlig: null,
         harFullmektigEllerVerge: null,
     },
-    avsluttetSøknadsBehandling: RemoteData.initial,
+    søknadHarBlittTrukket: RemoteData.initial,
 };
 
-export const avsluttSøknadsBehandling = createAsyncThunk<
+export const trekkSøknad = createAsyncThunk<
     string,
     {
         sakId: string;
         søknadId: string;
-        avsluttSøknadsBehandlingBegrunnelse: AvsluttSøknadsBehandlingBegrunnelse;
+        søknadTrukket: boolean;
     },
     { rejectValue: ApiError }
 >('soknad/avsluttSoknadsbehandling', async (arg, thunkApi) => {
-    const res = await søknadApi.avsluttSøknadsBehandling(arg);
+    const res = await søknadApi.trekkSøknad(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -197,15 +196,15 @@ export default createSlice({
         },
     },
     extraReducers: (builder) => {
-        handleAsyncThunk(builder, avsluttSøknadsBehandling, {
+        handleAsyncThunk(builder, trekkSøknad, {
             pending: (state) => {
-                state.avsluttetSøknadsBehandling = RemoteData.pending;
+                state.søknadHarBlittTrukket = RemoteData.pending;
             },
             fulfilled: (state) => {
-                state.avsluttetSøknadsBehandling = RemoteData.success(null);
+                state.søknadHarBlittTrukket = RemoteData.success(null);
             },
             rejected: (state, action) => {
-                state.avsluttetSøknadsBehandling = simpleRejectedActionToRemoteData(action);
+                state.søknadHarBlittTrukket = simpleRejectedActionToRemoteData(action);
             },
         });
     },
