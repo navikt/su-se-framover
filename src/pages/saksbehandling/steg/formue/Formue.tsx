@@ -99,7 +99,6 @@ function kalkulerFormueFraSøknad(f: SøknadInnhold['formue']) {
         f.verdipapirBeløp?.toString() ?? '0',
         f.skylderNoenMegPengerBeløp?.toString() ?? '0',
         f.kontanterBeløp?.toString() ?? '0',
-        f.depositumsBeløp?.toString() ?? '0',
     ];
 
     return (
