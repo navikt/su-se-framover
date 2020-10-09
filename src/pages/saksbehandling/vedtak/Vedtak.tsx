@@ -1,14 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
-import { Hovedknapp } from 'nav-frontend-knapper';
-import Lenke from 'nav-frontend-lenker';
+import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
-import { fetchBrev } from '~api/brevApi';
-import { erAvslått, erTilAttestering } from '~features/behandling/behandlingUtils';
+import { erAvslått, erTilAttestering, harBeregning } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { lastNedBrev } from '~features/saksoversikt/sak.slice';
 import {
     createVilkårUrl,
     mapToVilkårsinformasjon,
@@ -33,7 +32,7 @@ type Props = {
 const Vedtak = (props: Props) => {
     const { sak } = props;
     const dispatch = useAppDispatch();
-    const sendtTilAttesteringStatus = useAppSelector((s) => s.sak.sendtTilAttesteringStatus);
+    const { sendtTilAttesteringStatus, lastNedBrevStatus } = useAppSelector((s) => s.sak);
     const { sakId, behandlingId } = routes.useRouteParams<typeof routes.saksoversiktValgtBehandling>();
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
 
@@ -45,18 +44,25 @@ const Vedtak = (props: Props) => {
         return <div>Vedtak er sendt til Attestering</div>;
     }
 
-    const lastNedBrev = useCallback(() => {
-        fetchBrev(sak.id, behandlingId).then((res) => {
-            if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
+    const hentBrev = useCallback(() => {
+        if (RemoteData.isPending(lastNedBrevStatus)) {
+            return;
+        }
+
+        dispatch(lastNedBrev({ sakId: sak.id, behandlingId: behandlingId })).then((action) => {
+            if (lastNedBrev.fulfilled.match(action)) {
+                window.open(action.payload.objectUrl);
+            }
         });
     }, [sak.id, behandlingId]);
 
-    const vilkårUrl = (vilkårType: Vilkårtype) =>
-        createVilkårUrl({
+    const vilkårUrl = (vilkårType: Vilkårtype) => {
+        return createVilkårUrl({
             sakId: sakId,
             behandlingId: behandlingId,
             vilkar: vilkårType,
         });
+    };
 
     if (behandling.status === Behandlingsstatus.SIMULERT || erAvslått(behandling)) {
         return (
@@ -71,17 +77,17 @@ const Vedtak = (props: Props) => {
 
                     <VilkårsOppsummering behandling={behandling} />
 
-                    {behandling.status === Behandlingsstatus.SIMULERT ? (
+                    {harBeregning(behandling) ? (
                         <VisSimuleringOgBeregning sak={sak} behandling={behandling} />
                     ) : (
                         <>Det er ikke gjort en beregning</>
                     )}
 
                     <div>
-                        <Innholdstittel>Vis brev kladd</Innholdstittel>
-                        <Lenke href={'#'} onClick={lastNedBrev}>
-                            Last ned brev
-                        </Lenke>
+                        <Innholdstittel>Utkast vedtaksbrev</Innholdstittel>
+                        <Knapp spinner={RemoteData.isPending(lastNedBrevStatus)} htmlType="button" onClick={hentBrev}>
+                            Vis
+                        </Knapp>
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>
@@ -166,9 +172,11 @@ const VisSimuleringOgBeregning = (props: { sak: Sak; behandling: Behandling }) =
                     beregning={props.behandling.beregning}
                     forventetinntekt={props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt ?? 0}
                 />
-                <div>
-                    <Simulering sak={props.sak} behandlingId={props.behandling.id} />
-                </div>
+                {props.behandling.status !== Behandlingsstatus.BEREGNET_AVSLAG && (
+                    <div>
+                        <Simulering sak={props.sak} behandlingId={props.behandling.id} />
+                    </div>
+                )}
             </>
         )}
     </div>

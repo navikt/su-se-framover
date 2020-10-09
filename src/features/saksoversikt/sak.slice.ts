@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
 import * as behandlingApi from '~api/behandlingApi';
+import { fetchBrev } from '~api/brevApi';
 import * as sakApi from '~api/sakApi';
 import * as utbetalingApi from '~api/utbetalingApi';
 import { pipe } from '~lib/fp';
@@ -109,6 +110,18 @@ export const getUtledetSatsInfo = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const lastNedBrev = createAsyncThunk<
+    { objectUrl: string },
+    { sakId: string; behandlingId: string },
+    { rejectValue: ApiError }
+>('behandling/lastNedBrev', async ({ sakId, behandlingId }, thunkApi) => {
+    const res = await fetchBrev(sakId, behandlingId);
+    if (res.status === 'ok') {
+        return { objectUrl: URL.createObjectURL(res.data) };
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const startBeregning = createAsyncThunk<
     Behandling,
     { sakId: string; behandlingId: string; sats: Sats; fom: Date; tom: Date; fradrag: Fradrag[] },
@@ -180,6 +193,7 @@ interface SakState {
     sendtTilAttesteringStatus: RemoteData.RemoteData<ApiError, null>;
     attesteringStatus: RemoteData.RemoteData<ApiError, null>;
     utledetSatsInfo: RemoteData.RemoteData<ApiError, UtledetSatsInfo>;
+    lastNedBrevStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: SakState = {
@@ -193,6 +207,7 @@ const initialState: SakState = {
     sendtTilAttesteringStatus: RemoteData.initial,
     attesteringStatus: RemoteData.initial,
     utledetSatsInfo: RemoteData.initial,
+    lastNedBrevStatus: RemoteData.initial,
 };
 
 export default createSlice({
@@ -365,6 +380,18 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.sendtTilAttesteringStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, lastNedBrev, {
+            pending: (state) => {
+                state.lastNedBrevStatus = RemoteData.pending;
+            },
+            fulfilled: (state) => {
+                state.lastNedBrevStatus = RemoteData.success(null);
+            },
+            rejected: (state, action) => {
+                state.lastNedBrevStatus = simpleRejectedActionToRemoteData(action);
             },
         });
 
