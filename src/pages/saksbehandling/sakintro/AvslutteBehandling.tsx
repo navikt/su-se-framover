@@ -10,23 +10,23 @@ import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
-export enum AvsluttSøkndsBehandlingBegrunnelse {
+export enum AvsluttSøknadsBehandlingBegrunnelse {
     Trukket = 'Trukket',
     Bortfalt = 'Bortfalt',
     AvvistSøktForTidlig = 'AvvistSøktForTidlig',
 }
 
 interface FormData {
-    avsluttSøkndsBehandlingBegrunnelse: AvsluttSøkndsBehandlingBegrunnelse | null;
+    avsluttSøknadsBehandlingBegrunnelse: AvsluttSøknadsBehandlingBegrunnelse | null;
 }
 
 const validationSchema = yup.object<FormData>({
-    avsluttSøkndsBehandlingBegrunnelse: yup
+    avsluttSøknadsBehandlingBegrunnelse: yup
         .mixed()
         .oneOf([
-            AvsluttSøkndsBehandlingBegrunnelse.Trukket,
-            AvsluttSøkndsBehandlingBegrunnelse.Bortfalt,
-            AvsluttSøkndsBehandlingBegrunnelse.AvvistSøktForTidlig,
+            AvsluttSøknadsBehandlingBegrunnelse.Trukket,
+            AvsluttSøknadsBehandlingBegrunnelse.Bortfalt,
+            AvsluttSøknadsBehandlingBegrunnelse.AvvistSøktForTidlig,
         ])
         .required(),
 });
@@ -45,10 +45,10 @@ const AvslutteBehandling = () => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            avsluttSøkndsBehandlingBegrunnelse: null,
+            avsluttSøknadsBehandlingBegrunnelse: null,
         },
         async onSubmit(values) {
-            if (!values.avsluttSøkndsBehandlingBegrunnelse) {
+            if (!values.avsluttSøknadsBehandlingBegrunnelse) {
                 return;
             }
 
@@ -56,7 +56,7 @@ const AvslutteBehandling = () => {
                 avsluttSøknadsBehandling({
                     sakId: urlParams.sakId,
                     søknadId: urlParams.soknadId,
-                    avsluttSøkndsBehandlingBegrunnelse: values.avsluttSøkndsBehandlingBegrunnelse,
+                    avsluttSøknadsBehandlingBegrunnelse: values.avsluttSøknadsBehandlingBegrunnelse,
                 })
             );
         },
@@ -71,7 +71,7 @@ const AvslutteBehandling = () => {
             </div>
         );
     }
-    console.log(formik.values);
+
     return (
         <form
             onSubmit={(e) => {
@@ -86,12 +86,12 @@ const AvslutteBehandling = () => {
             <div>
                 <Select
                     label={'Begrunnelse for å avslutte behandling'}
-                    name={'avsluttSøkndsBehandlingBegrunnelse'}
+                    name={'avsluttSøknadsBehandlingBegrunnelse'}
                     onChange={formik.handleChange}
-                    feil={formik.errors.avsluttSøkndsBehandlingBegrunnelse}
+                    feil={formik.errors.avsluttSøknadsBehandlingBegrunnelse}
                 >
                     <option value="velgBegrunnelse">Velg begrunnelse</option>
-                    {Object.values(AvsluttSøkndsBehandlingBegrunnelse).map((begrunnelse, index) => (
+                    {Object.values(AvsluttSøknadsBehandlingBegrunnelse).map((begrunnelse, index) => (
                         <option value={begrunnelse} key={index}>
                             {begrunnelse}
                         </option>

@@ -4,7 +4,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~api/apiClient';
 import * as søknadApi from '~api/søknadApi';
 import { Nullable } from '~lib/types';
-import { AvsluttSøkndsBehandlingBegrunnelse } from '~pages/saksbehandling/sakintro/AvslutteBehandling';
+import { AvsluttSøknadsBehandlingBegrunnelse } from '~pages/saksbehandling/sakintro/AvslutteBehandling';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 
 import { DelerBoligMed, TypeOppholdstillatelse, Vergemål } from './types';
@@ -156,7 +156,7 @@ export const avsluttSøknadsBehandling = createAsyncThunk<
     {
         sakId: string;
         søknadId: string;
-        avsluttSøkndsBehandlingBegrunnelse: AvsluttSøkndsBehandlingBegrunnelse;
+        avsluttSøknadsBehandlingBegrunnelse: AvsluttSøknadsBehandlingBegrunnelse;
     },
     { rejectValue: ApiError }
 >('soknad/avsluttSoknadsbehandling', async (arg, thunkApi) => {
