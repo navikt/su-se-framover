@@ -106,15 +106,12 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const eksisterende = props.behandling.behandlingsinformasjon.bosituasjon;
-    const søknad = props.behandling.søknad.søknadInnhold;
     const formik = useFormik<FormData>({
         initialValues: {
-            delerSøkerBolig: eksisterende?.delerBolig ?? søknad.boforhold.delerBoligMedVoksne,
-            delerBoligMedHvem: eksisterende?.delerBoligMed ?? søknad.boforhold.delerBoligMed,
-            erEktemakeEllerSamboerUnder67:
-                eksisterende?.ektemakeEllerSamboerUnder67År ?? søknad.boforhold.ektemakeEllerSamboerUnder67År,
-            mottarEktemakeEllerSamboerSU:
-                eksisterende?.ektemakeEllerSamboerUførFlyktning ?? søknad.boforhold.ektemakeEllerSamboerUførFlyktning,
+            delerSøkerBolig: eksisterende?.delerBolig ?? null,
+            delerBoligMedHvem: eksisterende?.delerBoligMed ?? null,
+            erEktemakeEllerSamboerUnder67: eksisterende?.ektemakeEllerSamboerUnder67År ?? null,
+            mottarEktemakeEllerSamboerSU: eksisterende?.ektemakeEllerSamboerUførFlyktning ?? null,
             begrunnelse: eksisterende?.begrunnelse ?? null,
         },
         validationSchema: schema,
