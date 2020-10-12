@@ -35,6 +35,7 @@ module.exports = {
     },
     plugins: ['react', '@typescript-eslint'],
     rules: {
+        '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
         '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         'react/prop-types': 'off',

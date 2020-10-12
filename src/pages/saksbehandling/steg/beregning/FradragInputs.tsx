@@ -148,9 +148,9 @@ export const fradragSchema = yup.object<FradragFormData>({
 export const isValidFradrag = (f: unknown): f is Fradrag => fradragSchema.isValidSync(f);
 
 export const FradragInputs = (props: {
-    fradrag: Array<FradragFormData>;
+    fradrag: FradragFormData[];
     feltnavn: string;
-    errors: string | string[] | FormikErrors<FradragFormData>[] | undefined;
+    errors: string | string[] | Array<FormikErrors<FradragFormData>> | undefined;
     intl: IntlShape;
     onChange: (e: React.ChangeEvent<unknown>) => void;
     setFieldValue: (field: string, value: Date | [Date, Date] | null | string) => void;

@@ -5,5 +5,5 @@ export interface Sak {
     id: string;
     fnr: string;
     behandlinger: Behandling[];
-    søknader: Array<Søknad>;
+    søknader: Søknad[];
 }

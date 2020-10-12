@@ -7,8 +7,8 @@ export interface Beregning {
     sats: Sats;
     fraOgMed: string;
     tilOgMed: string;
-    månedsberegninger: Array<Månedsberegning>;
-    fradrag: Array<Fradrag>;
+    månedsberegninger: Månedsberegning[];
+    fradrag: Fradrag[];
 }
 
 export interface UtledetSatsInfo {

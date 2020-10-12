@@ -1,15 +1,15 @@
 import { Månedsberegning } from '~types/Beregning';
 import { SimulertPeriode } from '~types/Simulering';
 
-export const groupMånedsberegninger = (månedsberegninger: Array<Månedsberegning>) => {
+export const groupMånedsberegninger = (månedsberegninger: Månedsberegning[]) => {
     return groupByKeyValue(månedsberegninger, 'beløp');
 };
 
-export const groupSimuleringsperioder = (simuleringsperioder: Array<SimulertPeriode>) => {
+export const groupSimuleringsperioder = (simuleringsperioder: SimulertPeriode[]) => {
     return groupByKeyValue(simuleringsperioder, 'bruttoYtelse');
 };
 
-function groupByKeyValue<T>(arr: Array<T>, key: keyof T) {
+function groupByKeyValue<T>(arr: T[], key: keyof T) {
     return arr.reduce((groups, currentValue, index) => {
         if (index === 0) {
             return [[currentValue]];
@@ -22,5 +22,5 @@ function groupByKeyValue<T>(arr: Array<T>, key: keyof T) {
         }
 
         return [...groups, [currentValue]];
-    }, [] as Array<Array<T>>);
+    }, [] as T[][]);
 }

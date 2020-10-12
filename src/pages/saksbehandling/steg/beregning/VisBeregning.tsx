@@ -21,7 +21,7 @@ interface Props {
 
 const Utenlandsk = 'Utenlandsk';
 
-const fradragMedForventetinntekt = (fradrag: Array<Fradrag>, forventetinntekt: number): Array<Fradrag> => {
+const fradragMedForventetinntekt = (fradrag: Fradrag[], forventetinntekt: number): Fradrag[] => {
     const { left: andreFradrag, right: arbeidsinntektfradrag } = pipe(
         fradrag,
         arr.partition((f) => f.type === Fradragstype.Arbeidsinntekt)

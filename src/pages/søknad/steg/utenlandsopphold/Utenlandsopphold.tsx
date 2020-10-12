@@ -31,9 +31,9 @@ interface Utenlandsopphold {
 
 interface FormData {
     harReistTilUtlandetSiste90dager: Nullable<boolean>;
-    harReistDatoer: Array<Utenlandsopphold>;
+    harReistDatoer: Utenlandsopphold[];
     skalReiseTilUtlandetNeste12Måneder: Nullable<boolean>;
-    skalReiseDatoer: Array<Utenlandsopphold>;
+    skalReiseDatoer: Utenlandsopphold[];
 }
 
 const isValidUtenlandsopphold = (val: DateFns.Interval) => DateFns.isAfter(val.end, val.start);
@@ -103,7 +103,7 @@ const schema = yup.object<FormData>({
 
 const MultiTidsperiodevelger = (props: {
     perioder: Array<{ utreisedato: string; innreisedato: string }>;
-    errors: string | string[] | FormikErrors<{ utreisedato: string; innreisedato: string }>[] | undefined;
+    errors: string | string[] | Array<FormikErrors<{ utreisedato: string; innreisedato: string }>> | undefined;
     feltnavn: string;
     onChange: (element: { index: number; utreisedato: string; innreisedato: string }) => void;
     onLeggTilClick: () => void;

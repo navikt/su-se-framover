@@ -36,7 +36,7 @@ import VisBeregning from './VisBeregning';
 interface FormData {
     fom: Nullable<Date>;
     tom: Nullable<Date>;
-    fradrag: Array<FradragFormData>;
+    fradrag: FradragFormData[];
 }
 
 const Beregning = (props: VilkårsvurderingBaseProps) => {
