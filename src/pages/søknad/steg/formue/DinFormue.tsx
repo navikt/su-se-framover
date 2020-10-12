@@ -193,7 +193,7 @@ const schema = yup.object<FormData>({
 
 const KjøretøyInputFelter = (props: {
     arr: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
-    errors: string | string[] | FormikErrors<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>[] | undefined;
+    errors: string | string[] | Array<FormikErrors<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>> | undefined;
     feltnavn: string;
     onChange: (element: { index: number; verdiPåKjøretøy: string; kjøretøyDeEier: string }) => void;
     onLeggTilClick: () => void;

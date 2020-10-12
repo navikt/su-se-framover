@@ -153,7 +153,7 @@ const schema = yup.object<FormData>({
 
 const TrygdeytelserInputFelter = (props: {
     arr: Array<{ beløp: string; type: string; fraHvem: string }>;
-    errors: string | string[] | FormikErrors<{ beløp: string; type: string; fraHvem: string }>[] | undefined;
+    errors: string | string[] | Array<FormikErrors<{ beløp: string; type: string; fraHvem: string }>> | undefined;
     feltnavn: string;
     onChange: (element: { index: number; beløp: string; type: string; fraHvem: string }) => void;
     onLeggTilClick: () => void;
