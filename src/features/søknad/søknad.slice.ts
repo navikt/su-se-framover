@@ -155,10 +155,10 @@ export const trekkSøknad = createAsyncThunk<
     {
         sakId: string;
         søknadId: string;
-        søknadTrukket: boolean;
+        navIdent: string;
     },
     { rejectValue: ApiError }
->('soknad/avsluttSoknadsbehandling', async (arg, thunkApi) => {
+>('soknad/trekk', async (arg, thunkApi) => {
     const res = await søknadApi.trekkSøknad(arg);
     if (res.status === 'ok') {
         return res.data;

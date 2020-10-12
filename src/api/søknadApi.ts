@@ -9,15 +9,13 @@ export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientRes
 export async function trekkSøknad(arg: {
     sakId: string;
     søknadId: string;
-    søknadTrukket: boolean;
+    navIdent: string;
 }): Promise<ApiClientResult<string>> {
     return apiClient({
-        url: `/soknad/${arg.søknadId}/trekkSoknad`,
+        url: `/soknad/${arg.sakId}/${arg.søknadId}/trekk`,
         method: 'POST',
         body: {
-            sakId: arg.sakId,
-            søknadId: arg.søknadId,
-            søknadTrukket: arg.søknadTrukket,
+            navIdent: arg.navIdent,
         },
     });
 }

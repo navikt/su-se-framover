@@ -27,7 +27,7 @@ const Sakintro = (props: { sak: Sak }) => {
     const stansUtbetalingerStatus = useAppSelector((s) => s.sak.stansUtbetalingerStatus);
     const intl = useI18n({ messages: {} });
     const user = useUserContext();
-    console.log(props.sak);
+
     return (
         <div className={styles.container}>
             <Innholdstittel className={styles.tittel}>Saksnummer: {props.sak.id}</Innholdstittel>
@@ -45,14 +45,14 @@ const Sakintro = (props: { sak: Sak }) => {
                                             <p>Søknads-id: {s.id}</p>
                                             <p>Innsendt: {formatDateTime(s.opprettet, intl)}</p>
                                             {behandlinger.length === 0 && <p>Status: OPPRETTET</p>}
-                                            {s.søknadTrukket && (
+                                            {s.trukket && (
                                                 <p>
                                                     Søknadsbehandlingen av blitt avsluttet. Grunn:
-                                                    {s.søknadTrukket && 'Trukket'}
+                                                    {s.trukket && 'Trukket'}
                                                 </p>
                                             )}
                                         </div>
-                                        {isBehandlingerEmpty && !s.søknadTrukket ? (
+                                        {isBehandlingerEmpty && !s.trukket ? (
                                             <>
                                                 <Hovedknapp
                                                     onClick={async () => {

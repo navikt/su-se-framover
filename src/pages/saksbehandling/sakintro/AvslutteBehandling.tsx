@@ -5,26 +5,28 @@ import { Fareknapp } from 'nav-frontend-knapper';
 import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 
+import { useUserContext } from '~context/userContext';
 import { trekkSøknad } from '~features/søknad/søknad.slice';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
-export enum trekkSøknadEnum {
+export enum TrekkSøknadEnum {
     Trukket = 'Trukket',
 }
 
 interface FormData {
-    trekkSøknad: trekkSøknadEnum | null;
+    trekkSøknad: TrekkSøknadEnum | null;
 }
 
 const validationSchema = yup.object<FormData>({
-    trekkSøknad: yup.mixed().oneOf([trekkSøknadEnum.Trukket]).required(),
+    trekkSøknad: yup.mixed().oneOf([TrekkSøknadEnum.Trukket]).required(),
 });
 
 const AvslutteBehandling = () => {
     const dispatch = useAppDispatch();
     const behandlingSlettet = useAppSelector((s) => s.soknad.søknadHarBlittTrukket);
+    const user = useUserContext();
 
     const urlParams = Routes.useRouteParams<typeof Routes.trekkSøknad>();
 
@@ -47,7 +49,7 @@ const AvslutteBehandling = () => {
                 trekkSøknad({
                     sakId: urlParams.sakId,
                     søknadId: urlParams.soknadId,
-                    søknadTrukket: values.trekkSøknad == trekkSøknadEnum.Trukket,
+                    navIdent: user.navIdent,
                 })
             );
         },
@@ -82,14 +84,14 @@ const AvslutteBehandling = () => {
                     feil={formik.errors.trekkSøknad}
                 >
                     <option value="velgBegrunnelse">Velg begrunnelse</option>
-                    {Object.values(trekkSøknadEnum).map((begrunnelse, index) => (
+                    {Object.values(TrekkSøknadEnum).map((begrunnelse, index) => (
                         <option value={begrunnelse} key={index}>
                             {begrunnelse}
                         </option>
                     ))}
                 </Select>
             </div>
-            <Fareknapp>Søknad er trukket</Fareknapp>
+            <Fareknapp>Avslutt søknadsbehandlingen</Fareknapp>
 
             {RemoteData.isFailure(behandlingSlettet) && <AlertStripeFeil>Kunne ikke trekke søknad</AlertStripeFeil>}
         </form>
