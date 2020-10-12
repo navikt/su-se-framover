@@ -1,4 +1,5 @@
 import { Nullable } from '~lib/types';
+import { Simulering } from '~types/Simulering';
 
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
@@ -14,6 +15,7 @@ export interface Behandling {
     beregning: Nullable<Beregning>;
     status: Behandlingsstatus;
     utbetaling: Nullable<Utbetaling>;
+    simulering: Nullable<Simulering>;
     opprettet: string;
     attestant: Nullable<string>;
     saksbehandler: Nullable<string>;

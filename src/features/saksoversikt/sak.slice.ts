@@ -39,6 +39,17 @@ export const stansUtbetalinger = createAsyncThunk<Utbetaling, { sakId: string },
     }
 );
 
+export const gjenopptaUtbetalinger = createAsyncThunk<Utbetaling, { sakId: string }, { rejectValue: ApiError }>(
+    'utbetalinger/gjenoppta',
+    async ({ sakId }, thunkApi) => {
+        const res = await utbetalingApi.gjenopptaUtbetalinger(sakId);
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
+    }
+);
+
 export const startBehandling = createAsyncThunk<
     Behandling,
     { sakId: string; søknadId: string },
@@ -184,7 +195,7 @@ export const attesteringUnderkjenn = createAsyncThunk<
 
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
-    stansUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
+    stansEllerGjenopptaUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
     startBehandlingStatus: RemoteData.RemoteData<ApiError, null>;
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<ApiError, null>;
     lagreBehandlingsinformasjonStatus: RemoteData.RemoteData<ApiError, null>;
@@ -198,7 +209,7 @@ interface SakState {
 
 const initialState: SakState = {
     sak: RemoteData.initial,
-    stansUtbetalingerStatus: RemoteData.initial,
+    stansEllerGjenopptaUtbetalingerStatus: RemoteData.initial,
     startBehandlingStatus: RemoteData.initial,
     lagreVilkårsvurderingStatus: RemoteData.initial,
     lagreBehandlingsinformasjonStatus: RemoteData.initial,
@@ -233,13 +244,13 @@ export default createSlice({
 
         handleAsyncThunk(builder, stansUtbetalinger, {
             pending: (state) => {
-                state.stansUtbetalingerStatus = RemoteData.pending;
+                state.stansEllerGjenopptaUtbetalingerStatus = RemoteData.pending;
             },
             fulfilled: (state) => {
-                state.stansUtbetalingerStatus = RemoteData.success(null);
+                state.stansEllerGjenopptaUtbetalingerStatus = RemoteData.success(null);
             },
             rejected: (state, action) => {
-                state.stansUtbetalingerStatus = simpleRejectedActionToRemoteData(action);
+                state.stansEllerGjenopptaUtbetalingerStatus = simpleRejectedActionToRemoteData(action);
             },
         });
 

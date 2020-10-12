@@ -16,7 +16,7 @@ import {
 } from '~features/saksoversikt/utils';
 import * as routes from '~lib/routes.ts';
 import { Nullable } from '~lib/types';
-import { Simulering } from '~pages/saksbehandling/simulering/simulering';
+import { VisSimulering } from '~pages/saksbehandling/simulering/simulering';
 import VisBeregning from '~pages/saksbehandling/steg/beregning/VisBeregning';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
@@ -174,7 +174,7 @@ const VisSimuleringOgBeregning = (props: { sak: Sak; behandling: Behandling }) =
                 />
                 {props.behandling.status !== Behandlingsstatus.BEREGNET_AVSLAG && (
                     <div>
-                        <Simulering sak={props.sak} behandlingId={props.behandling.id} />
+                        <VisSimulering sak={props.sak} behandling={props.behandling} />
                     </div>
                 )}
             </>

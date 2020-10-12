@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
 import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
@@ -12,6 +12,7 @@ import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { formatDateTime } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Sak } from '~types/Sak';
 
@@ -24,7 +25,6 @@ const Sakintro = (props: { sak: Sak }) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
     const startBehandlingStatus = useAppSelector((s) => s.sak.startBehandlingStatus);
-    const stansUtbetalingerStatus = useAppSelector((s) => s.sak.stansUtbetalingerStatus);
     const intl = useI18n({ messages: {} });
     const user = useUserContext();
 
@@ -126,28 +126,8 @@ const Sakintro = (props: { sak: Sak }) => {
                             );
                         })}
                     </ul>
-                    <Undertittel className={styles.undertittel}>Utbetalinger</Undertittel>
-                    <Knapp
-                        onClick={async () => {
-                            if (!RemoteData.isPending(stansUtbetalingerStatus)) {
-                                await dispatch(
-                                    sakSlice.stansUtbetalinger({
-                                        sakId: props.sak.id,
-                                    })
-                                );
-                            }
-                        }}
-                        spinner={RemoteData.isPending(stansUtbetalingerStatus)}
-                        className={styles.stansUtbetalinger}
-                    >
-                        Stans utbetalinger
-                    </Knapp>
-                    {RemoteData.isFailure(stansUtbetalingerStatus) && (
-                        <AlertStripe type="feil">Klarte ikke stanse utbetalingene.</AlertStripe>
-                    )}
-                    {RemoteData.isSuccess(stansUtbetalingerStatus) && (
-                        <AlertStripe type="suksess">Utbetalingene er stanset.</AlertStripe>
-                    )}
+                    <Undertittel className={styles.undertittel}>Utbetalingsperioder</Undertittel>
+                    <Utbetalinger sak={props.sak} />
                 </>
             ) : (
                 'Ingen søknader'
