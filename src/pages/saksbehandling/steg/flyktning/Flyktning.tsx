@@ -6,13 +6,14 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { eqFlyktning } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { FlyktningStatus } from '~types/Behandlingsinformasjon';
+import { Flyktning, FlyktningStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -22,12 +23,12 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 import messages from './flyktning-nb';
 
 interface FormData {
-    flyktningStatus: Nullable<FlyktningStatus>;
+    status: Nullable<FlyktningStatus>;
     begrunnelse: Nullable<string>;
 }
 
 const schema = yup.object<FormData>({
-    flyktningStatus: yup
+    status: yup
         .mixed()
         .defined()
         .oneOf(
@@ -45,11 +46,16 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            flyktningStatus: props.behandling.behandlingsinformasjon.flyktning?.status ?? null,
+            status: props.behandling.behandlingsinformasjon.flyktning?.status ?? null,
             begrunnelse: props.behandling.behandlingsinformasjon.flyktning?.begrunnelse ?? null,
         },
         async onSubmit(values) {
-            if (!values.flyktningStatus) return;
+            if (!values.status) return;
+
+            if (eqFlyktning.equals(values as Flyktning, props.behandling.behandlingsinformasjon.flyktning)) {
+                history.push(props.nesteUrl);
+                return;
+            }
 
             const res = await dispatch(
                 lagreBehandlingsinformasjon({
@@ -57,7 +63,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                     behandlingId: props.behandling.id,
                     behandlingsinformasjon: {
                         flyktning: {
-                            status: values.flyktningStatus,
+                            status: values.status,
                             begrunnelse: values.begrunnelse,
                         },
                     },
@@ -84,7 +90,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                     >
                         <RadioGruppe
                             legend={intl.formatMessage({ id: 'radio.flyktning.legend' })}
-                            feil={formik.errors.flyktningStatus}
+                            feil={formik.errors.status}
                         >
                             <Radio
                                 label={intl.formatMessage({ id: 'radio.label.ja' })}
@@ -92,10 +98,10 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 onChange={() =>
                                     formik.setValues({
                                         ...formik.values,
-                                        flyktningStatus: FlyktningStatus.VilkårOppfylt,
+                                        status: FlyktningStatus.VilkårOppfylt,
                                     })
                                 }
-                                defaultChecked={formik.values.flyktningStatus === FlyktningStatus.VilkårOppfylt}
+                                defaultChecked={formik.values.status === FlyktningStatus.VilkårOppfylt}
                             />
                             <Radio
                                 label={intl.formatMessage({ id: 'radio.label.nei' })}
@@ -103,10 +109,10 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 onChange={() =>
                                     formik.setValues({
                                         ...formik.values,
-                                        flyktningStatus: FlyktningStatus.VilkårIkkeOppfylt,
+                                        status: FlyktningStatus.VilkårIkkeOppfylt,
                                     })
                                 }
-                                defaultChecked={formik.values.flyktningStatus === FlyktningStatus.VilkårIkkeOppfylt}
+                                defaultChecked={formik.values.status === FlyktningStatus.VilkårIkkeOppfylt}
                             />
                             <Radio
                                 label={intl.formatMessage({ id: 'radio.label.uavklart' })}
@@ -114,10 +120,10 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 onChange={() =>
                                     formik.setValues({
                                         ...formik.values,
-                                        flyktningStatus: FlyktningStatus.Uavklart,
+                                        status: FlyktningStatus.Uavklart,
                                     })
                                 }
-                                defaultChecked={formik.values.flyktningStatus === FlyktningStatus.Uavklart}
+                                defaultChecked={formik.values.status === FlyktningStatus.Uavklart}
                             />
                         </RadioGruppe>
                         <Textarea
@@ -155,7 +161,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                if (!formik.values.flyktningStatus) return;
+                                if (!formik.values.status) return;
 
                                 dispatch(
                                     lagreBehandlingsinformasjon({
@@ -164,7 +170,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                         behandlingsinformasjon: {
                                             ...props.behandling.behandlingsinformasjon,
                                             flyktning: {
-                                                status: formik.values.flyktningStatus,
+                                                status: formik.values.status,
                                                 begrunnelse: formik.values.begrunnelse,
                                             },
                                         },

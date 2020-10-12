@@ -7,13 +7,14 @@ import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
+import { eqLovligOppholdINorge } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';
+import { LovligOpphold, LovligOppholdStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
 import Faktablokk from '../Faktablokk';
@@ -137,6 +138,18 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         },
         async onSubmit(values) {
             if (!values.status) return;
+
+            const lovligOppholdValues: LovligOpphold = {
+                status: values.status,
+                begrunnelse: values.begrunnelse,
+            };
+
+            if (
+                eqLovligOppholdINorge.equals(lovligOppholdValues, props.behandling.behandlingsinformasjon.lovligOpphold)
+            ) {
+                history.push(props.nesteUrl);
+                return;
+            }
 
             const res = await dispatch(
                 lagreBehandlingsinformasjon({

@@ -7,13 +7,14 @@ import { Normaltekst, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { eqUførhet } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { UførhetStatus } from '~types/Behandlingsinformasjon';
+import { Uførhet, UførhetStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -51,13 +52,13 @@ const UførhetInput = (props: {
 );
 
 interface FormData {
-    uførevedtak: Nullable<UførhetStatus>;
+    status: Nullable<UførhetStatus>;
     uføregrad: Nullable<string>;
     forventetInntekt: Nullable<string>;
 }
 
 const schema = yup.object<FormData>({
-    uførevedtak: yup
+    status: yup
         .mixed()
         .defined()
         .oneOf([UførhetStatus.VilkårOppfylt, UførhetStatus.VilkårIkkeOppfylt, UførhetStatus.HarUføresakTilBehandling]),
@@ -87,18 +88,25 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const onSave = (values: FormData) => {
-        if (!values.uførevedtak) return;
+        if (!values.status) return;
+
+        const uføreValues: Uførhet = {
+            status: values.status,
+            uføregrad: values.uføregrad ? parseInt(values.uføregrad, 10) : null,
+            forventetInntekt: values.forventetInntekt ? parseInt(values.forventetInntekt, 10) : null,
+        };
+
+        if (eqUførhet.equals(uføreValues, props.behandling.behandlingsinformasjon.uførhet)) {
+            history.push(props.nesteUrl);
+            return;
+        }
 
         return dispatch(
             lagreBehandlingsinformasjon({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    uførhet: {
-                        status: values.uførevedtak,
-                        uføregrad: values.uføregrad ? parseInt(values.uføregrad, 10) : null,
-                        forventetInntekt: values.forventetInntekt ? parseInt(values.forventetInntekt, 10) : null,
-                    },
+                    uførhet: { ...uføreValues },
                 },
             })
         );
@@ -106,7 +114,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            uførevedtak: props.behandling.behandlingsinformasjon.uførhet?.status ?? null,
+            status: props.behandling.behandlingsinformasjon.uførhet?.status ?? null,
             uføregrad: props.behandling.behandlingsinformasjon.uførhet?.uføregrad?.toString() ?? null,
             forventetInntekt: props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt?.toString() ?? null,
         },
@@ -136,42 +144,42 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                         <RadioGruppe
                             className={styles.radioGruppe}
                             legend={intl.formatMessage({ id: 'radio.uførhet.legend' })}
-                            feil={formik.errors.uførevedtak}
+                            feil={formik.errors.status}
                         >
                             <Radio
                                 label={intl.formatMessage({ id: 'radio.label.ja' })}
                                 name="uførevedtak"
                                 onChange={() =>
-                                    formik.setValues({ ...formik.values, uførevedtak: UførhetStatus.VilkårOppfylt })
+                                    formik.setValues({ ...formik.values, status: UførhetStatus.VilkårOppfylt })
                                 }
-                                defaultChecked={formik.values.uførevedtak === UførhetStatus.VilkårOppfylt}
+                                defaultChecked={formik.values.status === UførhetStatus.VilkårOppfylt}
                             />
                             <Radio
                                 label={intl.formatMessage({ id: 'radio.label.nei' })}
                                 name="uførevedtak"
                                 onChange={() =>
                                     formik.setValues({
-                                        uførevedtak: UførhetStatus.VilkårIkkeOppfylt,
+                                        status: UførhetStatus.VilkårIkkeOppfylt,
                                         uføregrad: null,
                                         forventetInntekt: null,
                                     })
                                 }
-                                defaultChecked={formik.values.uførevedtak === UførhetStatus.VilkårIkkeOppfylt}
+                                defaultChecked={formik.values.status === UførhetStatus.VilkårIkkeOppfylt}
                             />
                             <Radio
                                 label={intl.formatMessage({ id: 'radio.label.uføresakTilBehandling' })}
                                 name="uførevedtak"
                                 onChange={() =>
                                     formik.setValues({
-                                        uførevedtak: UførhetStatus.HarUføresakTilBehandling,
+                                        status: UførhetStatus.HarUføresakTilBehandling,
                                         uføregrad: null,
                                         forventetInntekt: null,
                                     })
                                 }
-                                defaultChecked={formik.values.uførevedtak === UførhetStatus.HarUføresakTilBehandling}
+                                defaultChecked={formik.values.status === UførhetStatus.HarUføresakTilBehandling}
                             />
                         </RadioGruppe>
-                        {formik.values.uførevedtak === UførhetStatus.VilkårOppfylt && (
+                        {formik.values.status === UførhetStatus.VilkårOppfylt && (
                             <div className={styles.formInputContainer}>
                                 <UførhetInput
                                     tittel={intl.formatMessage({ id: 'input.label.uføregrad' })}

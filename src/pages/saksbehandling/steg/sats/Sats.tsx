@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 
 import { Sats as FaktiskSats } from '~/types/Sats';
 import { SuperRadioGruppe } from '~components/FormElements';
+import { eqBosituasjon } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { DelerBoligMed } from '~features/søknad/types';
 import { pipe } from '~lib/fp';
@@ -132,6 +133,12 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
         if (!v) {
             return;
         }
+
+        if (eqBosituasjon.equals(v, props.behandling.behandlingsinformasjon.bosituasjon)) {
+            history.push(props.nesteUrl);
+            return;
+        }
+
         return dispatch(
             lagreBehandlingsinformasjon({
                 sakId: props.sakId,
