@@ -130,7 +130,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    personligOppmøte: { status: personligOppmøte.status, begrunnelse: personligOppmøte.begrunnelse },
+                    personligOppmøte: { ...personligOppmøte },
                 },
             })
         );

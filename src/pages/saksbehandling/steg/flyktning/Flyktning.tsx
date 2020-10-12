@@ -67,10 +67,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                     sakId: props.sakId,
                     behandlingId: props.behandling.id,
                     behandlingsinformasjon: {
-                        flyktning: {
-                            status: values.status,
-                            begrunnelse: values.begrunnelse,
-                        },
+                        flyktning: { ...flyktningValues },
                     },
                 })
             );

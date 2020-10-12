@@ -129,12 +129,12 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     });
 
     const handleSave = (values: FormData) => {
-        const v = toBosituasjon(values);
-        if (!v) {
+        const bosSituasjonValues = toBosituasjon(values);
+        if (!bosSituasjonValues) {
             return;
         }
 
-        if (eqBosituasjon.equals(v, props.behandling.behandlingsinformasjon.bosituasjon)) {
+        if (eqBosituasjon.equals(bosSituasjonValues, props.behandling.behandlingsinformasjon.bosituasjon)) {
             history.push(props.nesteUrl);
             return;
         }
@@ -144,7 +144,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    bosituasjon: v,
+                    bosituasjon: bosSituasjonValues,
                 },
             })
         );
