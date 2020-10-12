@@ -12,6 +12,7 @@ import {
     FormueStatus,
     PersonligOppmøteStatus,
     OppholdIUtlandetStatus,
+    PersonligOppmøte,
 } from '~types/Behandlingsinformasjon';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
@@ -146,15 +147,26 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
             erStartet: formue !== null,
         },
         {
-            status:
-                personligOppmøte === null
-                    ? VilkårVurderingStatus.IkkeVurdert
-                    : personligOppmøte.status !== PersonligOppmøteStatus.IkkeMøttOpp
-                    ? VilkårVurderingStatus.Ok
-                    : VilkårVurderingStatus.IkkeOk,
+            status: statusForPersonligOppmøte(personligOppmøte),
             vilkårtype: Vilkårtype.PersonligOppmøte,
             begrunnelse: behandlingsinformasjon.personligOppmøte?.begrunnelse ?? null,
             erStartet: personligOppmøte !== null,
         },
     ];
 };
+
+function statusForPersonligOppmøte(personligOppmøte: Nullable<PersonligOppmøte>): VilkårVurderingStatus {
+    switch (personligOppmøte?.status) {
+        case PersonligOppmøteStatus.MøttPersonlig:
+        case PersonligOppmøteStatus.FullmektigMedLegeattest:
+        case PersonligOppmøteStatus.Verge:
+            return VilkårVurderingStatus.Ok;
+
+        case PersonligOppmøteStatus.FullmektigUtenLegeattest:
+        case PersonligOppmøteStatus.IkkeMøttOpp:
+            return VilkårVurderingStatus.IkkeOk;
+
+        default:
+            return VilkårVurderingStatus.IkkeVurdert;
+    }
+}
