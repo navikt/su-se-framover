@@ -14,7 +14,7 @@ import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { FastOppholdINorge, FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
+import { FastOppholdINorge as FastOppholdINorgeType, FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
 import Faktablokk from '../Faktablokk';
@@ -81,7 +81,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         async onSubmit(values) {
             if (!values.status) return;
 
-            const fastOppholdValues: FastOppholdINorge = {
+            const fastOppholdValues: FastOppholdINorgeType = {
                 status: values.status,
                 begrunnelse: values.begrunnelse,
             };

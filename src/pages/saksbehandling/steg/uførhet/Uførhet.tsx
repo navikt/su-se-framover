@@ -14,7 +14,7 @@ import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Uførhet, UførhetStatus } from '~types/Behandlingsinformasjon';
+import { Uførhet as UførhetType, UførhetStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -90,7 +90,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const onSave = (values: FormData) => {
         if (!values.status) return;
 
-        const uføreValues: Uførhet = {
+        const uføreValues: UførhetType = {
             status: values.status,
             uføregrad: values.uføregrad ? parseInt(values.uføregrad, 10) : null,
             forventetInntekt: values.forventetInntekt ? parseInt(values.forventetInntekt, 10) : null,

@@ -171,17 +171,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    formue: {
-                        status,
-                        verdiIkkePrimærbolig: parseInt(values.verdiIkkePrimærbolig, 10),
-                        verdiKjøretøy: parseInt(values.verdiKjøretøy, 10),
-                        innskudd: parseInt(values.innskudd, 10),
-                        verdipapir: parseInt(values.verdipapir, 10),
-                        pengerSkyldt: parseInt(values.pengerSkyldt, 10),
-                        kontanter: parseInt(values.kontanter, 10),
-                        depositumskonto: parseInt(values.depositumskonto, 10),
-                        begrunnelse: values.begrunnelse,
-                    },
+                    formue: { ...formueValues },
                 },
             })
         );

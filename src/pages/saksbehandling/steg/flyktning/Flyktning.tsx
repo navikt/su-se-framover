@@ -13,7 +13,7 @@ import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Flyktning, FlyktningStatus } from '~types/Behandlingsinformasjon';
+import { Flyktning as FlyktningType, FlyktningStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -52,7 +52,12 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         async onSubmit(values) {
             if (!values.status) return;
 
-            if (eqFlyktning.equals(values as Flyktning, props.behandling.behandlingsinformasjon.flyktning)) {
+            const flyktningValues: FlyktningType = {
+                status: values.status,
+                begrunnelse: values.begrunnelse,
+            };
+
+            if (eqFlyktning.equals(flyktningValues, props.behandling.behandlingsinformasjon.flyktning)) {
                 history.push(props.nesteUrl);
                 return;
             }

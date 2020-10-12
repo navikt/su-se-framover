@@ -17,7 +17,7 @@ import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { OppholdIUtlandet, OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
+import { OppholdIUtlandet as OppholdIUtlandetType, OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -85,7 +85,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
         async onSubmit(values) {
             if (!values.status) return;
 
-            const oppholdIUtlandetValues: OppholdIUtlandet = {
+            const oppholdIUtlandetValues: OppholdIUtlandetType = {
                 status: values.status,
                 begrunnelse: values.begrunnelse,
             };
