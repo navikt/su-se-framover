@@ -147,7 +147,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
             erStartet: formue !== null,
         },
         {
-            status: toVilkårsvurderingStatus(personligOppmøte),
+            status: statusForPersonligOppmøte(personligOppmøte),
             vilkårtype: Vilkårtype.PersonligOppmøte,
             begrunnelse: behandlingsinformasjon.personligOppmøte?.begrunnelse ?? null,
             erStartet: personligOppmøte !== null,
