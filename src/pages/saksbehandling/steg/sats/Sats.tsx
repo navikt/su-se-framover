@@ -50,7 +50,7 @@ const utledSats = (values: FormData) => {
         return null;
     }
     if (!values.delerSøkerBolig) {
-        return FaktiskSats.Ordinær;
+        return FaktiskSats.Høy;
     }
     switch (values.delerBoligMedHvem) {
         case null:
@@ -69,7 +69,7 @@ const utledSats = (values: FormData) => {
                         case null:
                             return null;
                         case false:
-                            return FaktiskSats.Ordinær;
+                            return FaktiskSats.Høy;
                         case true:
                             return FaktiskSats.Ordinær;
                     }
@@ -288,10 +288,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                             <>
                                 <hr />
                                 <span>
-                                    {intl.formatMessage({
-                                        id: 'display.sats',
-                                    })}
-                                    {utledSats(formik.values)}
+                                    {`${intl.formatMessage({ id: 'display.sats' })} ${utledSats(formik.values)}`}
                                 </span>
                                 <hr />
                                 <hr />
