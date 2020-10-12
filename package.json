@@ -152,7 +152,7 @@
         "lint-staged": "^10.4.0",
         "mkdirp": "^1.0.4",
         "parcel-bundler": "^1.12.4",
-        "posthtml-expressions": "^1.4.7",
+        "posthtml-expressions": "^1.5.0",
         "prettier": "^2.1.2",
         "react-test-renderer": "^16.13.1",
         "rimraf": "^3.0.2",
