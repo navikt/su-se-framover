@@ -155,7 +155,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
     ];
 };
 
-function toVilkårsvurderingStatus(personligOppmøte: Nullable<PersonligOppmøte>): VilkårVurderingStatus {
+function statusForPersonligOppmøte(personligOppmøte: Nullable<PersonligOppmøte>): VilkårVurderingStatus {
     switch (personligOppmøte?.status) {
         case PersonligOppmøteStatus.MøttPersonlig:
         case PersonligOppmøteStatus.FullmektigMedLegeattest:
