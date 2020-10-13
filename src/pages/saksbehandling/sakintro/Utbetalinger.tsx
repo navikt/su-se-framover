@@ -24,14 +24,8 @@ const Utbetalinger = (props: { sak: Sak }) => {
                     <li key={u.id}>
                         <Panel border>
                             <div>
-                                <p>
-                                    Fra og med:{' '}
-                                    {DateFns.formatISO(DateFns.parseISO(u.fraOgMed), { representation: 'date' })}
-                                </p>
-                                <p>
-                                    Til og med:{' '}
-                                    {DateFns.formatISO(DateFns.parseISO(u.tilOgMed), { representation: 'date' })}
-                                </p>
+                                <p>Fra og med: {u.fraOgMed}</p>
+                                <p>Til og med: {u.tilOgMed}</p>
                                 <p>Beløp: {u.beløp}</p>
                                 <p>Type: {u.type}</p>
                             </div>
