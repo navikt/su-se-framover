@@ -10,18 +10,18 @@ import { TrashBin } from '~assets/Icons';
 import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsNumber } from '~lib/validering';
 import InntektFraUtland from '~pages/saksbehandling/steg/beregning/InntektFraUtland';
-import { Fradrag, Fradragstype, UtenlandskInntekt, DelerAvPeriode, ForventetInntektfradrag } from '~types/Fradrag';
+import { Fradrag, Fradragstype, UtenlandskInntekt, DelerAvPeriode } from '~types/Fradrag';
 
 import DelerAvPeriodeInputs from './DelerAvPeriodeInputs';
 import styles from './fradragInputs.module.less';
 
 export interface FradragFormData {
-    type: Nullable<Fradragstype> | ForventetInntektfradrag;
+    type: Nullable<Fradragstype>;
     beløp: Nullable<string>;
     fraUtland: boolean;
     delerAvPeriodeChecked: boolean;
     utenlandskInntekt: UtenlandskInntektFormData;
-    delerAvPeriode: DelerAvPeriodeFormData;
+    inntektDelerAvPeriode: DelerAvPeriodeFormData;
 }
 
 export interface UtenlandskInntektFormData {
@@ -41,7 +41,7 @@ const FradragObjectKeys: KeyDict<FradragFormData> = {
     fraUtland: 'fraUtland',
     delerAvPeriodeChecked: 'delerAvPeriodeChecked',
     utenlandskInntekt: 'utenlandskInntekt',
-    delerAvPeriode: 'delerAvPeriode',
+    inntektDelerAvPeriode: 'inntektDelerAvPeriode',
 };
 
 const UtenlandskInntektKeys: KeyDict<UtenlandskInntekt> = {
@@ -101,11 +101,13 @@ const FradragsSelection = (props: {
             className={props.className}
         >
             <option value="">{props.intl.formatMessage({ id: 'fradrag.type.emptyLabel' })}</option>
-            {Object.values(Fradragstype).map((f) => (
-                <option value={f} key={f}>
-                    {props.intl.formatMessage({ id: fradragstypeResourceId(f) })}
-                </option>
-            ))}
+            {Object.values(Fradragstype)
+                .filter((type) => type !== Fradragstype.ForventetInntekt)
+                .map((f) => (
+                    <option value={f} key={f}>
+                        {props.intl.formatMessage({ id: fradragstypeResourceId(f) })}
+                    </option>
+                ))}
         </Select>
         {props.feil && <Feilmelding>{props.feil}</Feilmelding>}
     </div>
@@ -142,7 +144,7 @@ export const fradragSchema = yup.object<FradragFormData>({
     fraUtland: yup.boolean(),
     utenlandskInntekt: utenlandskInntekt,
     delerAvPeriodeChecked: yup.boolean(),
-    delerAvPeriode: delerAvPeriode,
+    inntektDelerAvPeriode: delerAvPeriode,
 });
 
 export const isValidFradrag = (f: unknown): f is Fradrag => fradragSchema.isValidSync(f);
@@ -171,8 +173,8 @@ export const FradragInputs = (props: {
                 const valutaId = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.valuta}`;
                 const kursId = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.kurs}`;
                 const delerAvPeriodeId = `${name}.${FradragObjectKeys.delerAvPeriodeChecked}`;
-                const fraOgMedId = `${name}.${FradragObjectKeys.delerAvPeriode}.${DelerAvPeriodeKeys.fraOgMed}`;
-                const tilOgMedId = `${name}.${FradragObjectKeys.delerAvPeriode}.${DelerAvPeriodeKeys.tilOgMed}`;
+                const fraOgMedId = `${name}.${FradragObjectKeys.inntektDelerAvPeriode}.${DelerAvPeriodeKeys.fraOgMed}`;
+                const tilOgMedId = `${name}.${FradragObjectKeys.inntektDelerAvPeriode}.${DelerAvPeriodeKeys.tilOgMed}`;
 
                 return (
                     <Panel key={index} border className={styles.fradragItemContainer}>
@@ -270,8 +272,8 @@ export const FradragInputs = (props: {
                                             delerAvPeriodeErrors={
                                                 errorForLinje &&
                                                 typeof errorForLinje === 'object' &&
-                                                errorForLinje.delerAvPeriode
-                                                    ? errorForLinje.delerAvPeriode
+                                                errorForLinje.inntektDelerAvPeriode
+                                                    ? errorForLinje.inntektDelerAvPeriode
                                                     : undefined
                                             }
                                         />
@@ -306,5 +308,7 @@ const fradragstypeResourceId = (f: Fradragstype): string => {
             return 'fradrag.type.kapitalinntekt';
         case Fradragstype.AndreYtelser:
             return 'fradrag.type.andreytelser';
+        case Fradragstype.ForventetInntekt:
+            throw new Error('Forventet inntekt skal ikke finnes.');
     }
 };

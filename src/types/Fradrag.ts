@@ -1,13 +1,10 @@
 import { Nullable } from '~lib/types';
 
-export const ForventetInntektfradrag = 'Forventet inntekt' as const;
-export type ForventetInntektfradrag = typeof ForventetInntektfradrag;
-
 export interface Fradrag {
-    type: Fradragstype | ForventetInntektfradrag;
+    type: Fradragstype;
     beløp: number;
     utenlandskInntekt: Nullable<UtenlandskInntekt>;
-    delerAvPeriode: Nullable<DelerAvPeriode>;
+    inntektDelerAvPeriode: Nullable<DelerAvPeriode>;
 }
 
 export interface UtenlandskInntekt {
@@ -28,4 +25,5 @@ export enum Fradragstype {
     Pensjon = 'Pensjon',
     Kapitalinntekt = 'Kapitalinntekt',
     AndreYtelser = 'AndreYtelser',
+    ForventetInntekt = 'ForventetInntekt',
 }
