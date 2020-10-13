@@ -10,25 +10,26 @@ import { combineOptions } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import messages from '~pages/saksbehandling/steg/beregning/beregning-nb';
 import { useAppSelector } from '~redux/Store';
+import { Behandling } from '~types/Behandling';
 import { Sak } from '~types/Sak';
-import { Utbetaling } from '~types/Utbetaling';
+import { Simulering } from '~types/Simulering';
 
 import { groupSimuleringsperioder } from '../delt/arrayUtils';
 import styles from '../steg/beregning/visBeregning.module.less';
 
 interface Props {
     sak: Sak;
-    behandlingId: string;
+    behandling: Behandling;
 }
 
-const Utbetalingssimulering = (props: { utbetaling: Utbetaling }) => {
+const Utbetalingssimulering = (props: { simulering: Simulering }) => {
     const intl = useI18n({ messages });
-    const gruppertSimuleringsperioder = groupSimuleringsperioder(props.utbetaling.simulering.perioder);
+    const gruppertSimuleringsperioder = groupSimuleringsperioder(props.simulering.perioder);
 
     return (
         <>
             <Innholdstittel className={styles.tittel}>Simulering:</Innholdstittel>
-            {props.utbetaling.simulering.perioder && (
+            {props.simulering.perioder && (
                 <table className="tabell">
                     <thead>
                         <tr>
@@ -43,8 +44,10 @@ const Utbetalingssimulering = (props: { utbetaling: Utbetaling }) => {
                                 Option.fold(
                                     () => null,
                                     ([head, last]) => (
-                                        <tr key={head.fom + last.tom}>
-                                            <td>{`${intl.formatDate(head.fom)} - ${intl.formatDate(last.tom)}`}</td>
+                                        <tr key={head.fraOgMed + last.tilOgMed}>
+                                            <td>{`${intl.formatDate(head.fraOgMed)} - ${intl.formatDate(
+                                                last.tilOgMed
+                                            )}`}</td>
                                             <td>{head.bruttoYtelse}</td>
                                         </tr>
                                     )
@@ -52,7 +55,7 @@ const Utbetalingssimulering = (props: { utbetaling: Utbetaling }) => {
                             );
                         })}
                         <p className={styles.totalBeløp}>
-                            Totalbeløp: {intl.formatNumber(props.utbetaling.simulering.totalBruttoYtelse)},-
+                            Totalbeløp: {intl.formatNumber(props.simulering.totalBruttoYtelse)},-
                         </p>
                     </tbody>
                 </table>
@@ -61,8 +64,8 @@ const Utbetalingssimulering = (props: { utbetaling: Utbetaling }) => {
     );
 };
 
-export const Simulering = (props: Props) => {
-    const { sak, behandlingId } = props;
+export const VisSimulering = (props: Props) => {
+    const { behandling } = props;
 
     const simuleringStatus = useAppSelector((s) => s.sak.simuleringStatus);
     if (RemoteData.isFailure(simuleringStatus)) {
@@ -70,9 +73,8 @@ export const Simulering = (props: Props) => {
     } else if (RemoteData.isPending(simuleringStatus)) {
         return <NavFrontendSpinner />;
     }
-    const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
-    if (!behandling || !behandling.utbetaling) {
-        return <div>Behandlingen har ingen oppdrag</div>;
+    if (!behandling.simulering) {
+        return <div>Behandlingen har ingen simulering</div>;
     }
-    return <Utbetalingssimulering utbetaling={behandling.utbetaling} />;
+    return <Utbetalingssimulering simulering={behandling.simulering} />;
 };

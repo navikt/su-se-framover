@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
-import { RadioPanelGruppe, Feiloppsummering, Select, Textarea } from 'nav-frontend-skjema';
+import { Feiloppsummering, RadioPanelGruppe, Select, Textarea } from 'nav-frontend-skjema';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useMemo, useState } from 'react';
 
@@ -12,18 +12,18 @@ import * as Routes from '~/lib/routes';
 import { fetchBrev } from '~api/brevApi';
 import { Person } from '~api/personApi';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
-import { erAvslått, erTilAttestering, erIverksatt } from '~features/behandling/behandlingUtils';
+import { erAvslått, erIverksatt, erTilAttestering } from '~features/behandling/behandlingUtils';
 import { getGender, showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
-import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
-import { Simulering } from '~pages/saksbehandling/simulering/simulering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import { VisSimulering } from '~pages/saksbehandling/simulering/simulering';
 import VisBeregning from '~pages/saksbehandling/steg/beregning/VisBeregning';
 import Søkefelt from '~pages/saksbehandling/søkefelt/Søkefelt';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
@@ -81,7 +81,7 @@ const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
                 </div>
                 <div>
                     <Innholdstittel>Oppdragssimulering</Innholdstittel>
-                    <Simulering sak={props.sak} behandlingId={props.behandling.id} />
+                    <VisSimulering sak={props.sak} behandling={props.behandling} />
                 </div>
             </div>
         );

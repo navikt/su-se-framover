@@ -4,7 +4,7 @@ export interface Simulering {
 }
 
 export interface SimulertPeriode {
-    fom: string;
-    tom: string;
+    fraOgMed: string;
+    tilOgMed: string;
     bruttoYtelse: number;
 }

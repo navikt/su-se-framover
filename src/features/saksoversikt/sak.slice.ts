@@ -14,7 +14,6 @@ import { UtledetSatsInfo } from '~types/Beregning';
 import { Fradrag } from '~types/Fradrag';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
-import { Utbetaling } from '~types/Utbetaling';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<Sak, { fnr: string } | { sakId: string }, { rejectValue: ApiError }>(
@@ -28,10 +27,21 @@ export const fetchSak = createAsyncThunk<Sak, { fnr: string } | { sakId: string 
     }
 );
 
-export const stansUtbetalinger = createAsyncThunk<Utbetaling, { sakId: string }, { rejectValue: ApiError }>(
+export const stansUtbetalinger = createAsyncThunk<Sak, { sakId: string }, { rejectValue: ApiError }>(
     'utbetalinger/stans',
     async ({ sakId }, thunkApi) => {
         const res = await utbetalingApi.stansUtbetalinger(sakId);
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
+    }
+);
+
+export const gjenopptaUtbetalinger = createAsyncThunk<Sak, { sakId: string }, { rejectValue: ApiError }>(
+    'utbetalinger/gjenoppta',
+    async ({ sakId }, thunkApi) => {
+        const res = await utbetalingApi.gjenopptaUtbetalinger(sakId);
         if (res.status === 'ok') {
             return res.data;
         }
@@ -185,6 +195,7 @@ export const attesteringUnderkjenn = createAsyncThunk<
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
     stansUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
+    gjenopptaUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
     startBehandlingStatus: RemoteData.RemoteData<ApiError, null>;
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<ApiError, null>;
     lagreBehandlingsinformasjonStatus: RemoteData.RemoteData<ApiError, null>;
@@ -199,6 +210,7 @@ interface SakState {
 const initialState: SakState = {
     sak: RemoteData.initial,
     stansUtbetalingerStatus: RemoteData.initial,
+    gjenopptaUtbetalingerStatus: RemoteData.initial,
     startBehandlingStatus: RemoteData.initial,
     lagreVilkårsvurderingStatus: RemoteData.initial,
     lagreBehandlingsinformasjonStatus: RemoteData.initial,
@@ -235,11 +247,27 @@ export default createSlice({
             pending: (state) => {
                 state.stansUtbetalingerStatus = RemoteData.pending;
             },
-            fulfilled: (state) => {
+            fulfilled: (state, action) => {
                 state.stansUtbetalingerStatus = RemoteData.success(null);
+                state.gjenopptaUtbetalingerStatus = RemoteData.initial;
+                state.sak = RemoteData.success(action.payload);
             },
             rejected: (state, action) => {
                 state.stansUtbetalingerStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, gjenopptaUtbetalinger, {
+            pending: (state) => {
+                state.gjenopptaUtbetalingerStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.gjenopptaUtbetalingerStatus = RemoteData.success(null);
+                state.stansUtbetalingerStatus = RemoteData.initial;
+                state.sak = RemoteData.success(action.payload);
+            },
+            rejected: (state, action) => {
+                state.gjenopptaUtbetalingerStatus = simpleRejectedActionToRemoteData(action);
             },
         });
 
