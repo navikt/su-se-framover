@@ -17,6 +17,15 @@ const Utbetalinger = (props: { sak: Sak }) => {
 
     const { stansUtbetalingerStatus, gjenopptaUtbetalingerStatus } = useAppSelector((s) => s.sak);
 
+    // TODO jah: Vi skal legge til dette per utbetalingslinje i backend, slik at den følger den faktiske implementasjonen
+    // Tidligste utbetaling må være etter eller lik den første neste måned (nåværende backend impl).
+    const kanStanses =
+        sak.utbetalingerKanStansesEllerGjenopptas === KanStansesEllerGjenopptas.STANS &&
+        sak.utbetalinger.some(
+            (u) =>
+                !DateFns.isBefore(DateFns.parseISO(u.tilOgMed), DateFns.startOfMonth(DateFns.addMonths(new Date(), 1)))
+        );
+
     return (
         <div className={styles.container}>
             <ul className={styles.utbetalinger}>
@@ -33,34 +42,23 @@ const Utbetalinger = (props: { sak: Sak }) => {
                     </li>
                 ))}
             </ul>
-            {
-                // TODO jah: Vi skal legge til dette per utbetalingslinje i backend, slik at den følger den faktiske implementasjonen
-                // Tidligste utbetaling må være etter eller lik den første neste måned (nåværende backend impl).
-                sak.utbetalingerKanStansesEllerGjenopptas === KanStansesEllerGjenopptas.STANS &&
-                    sak.utbetalinger.some(
-                        (u) =>
-                            !DateFns.isBefore(
-                                DateFns.parseISO(u.tilOgMed),
-                                DateFns.startOfMonth(DateFns.addMonths(new Date(), 1))
-                            )
-                    ) && (
-                        <Knapp
-                            onClick={() => {
-                                if (!RemoteData.isPending(stansUtbetalingerStatus)) {
-                                    dispatch(
-                                        sakSlice.stansUtbetalinger({
-                                            sakId: props.sak.id,
-                                        })
-                                    );
-                                }
-                            }}
-                            spinner={RemoteData.isPending(stansUtbetalingerStatus)}
-                            className={styles.stansUtbetalinger}
-                        >
-                            Stans utbetalinger
-                        </Knapp>
-                    )
-            }
+            {kanStanses && (
+                <Knapp
+                    onClick={() => {
+                        if (!RemoteData.isPending(stansUtbetalingerStatus)) {
+                            dispatch(
+                                sakSlice.stansUtbetalinger({
+                                    sakId: props.sak.id,
+                                })
+                            );
+                        }
+                    }}
+                    spinner={RemoteData.isPending(stansUtbetalingerStatus)}
+                    className={styles.stansUtbetalinger}
+                >
+                    Stans utbetalinger
+                </Knapp>
+            )}
             {sak.utbetalingerKanStansesEllerGjenopptas === KanStansesEllerGjenopptas.GJENOPPTA && (
                 <Knapp
                     onClick={() => {
