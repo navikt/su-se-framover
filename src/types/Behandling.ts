@@ -4,7 +4,6 @@ import { Simulering } from '~types/Simulering';
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
 import { Søknad } from './Søknad';
-import { Utbetaling } from './Utbetaling';
 import { Vilkårsvurderinger } from './Vilkårsvurdering';
 
 export interface Behandling {
@@ -14,7 +13,6 @@ export interface Behandling {
     behandlingsinformasjon: Behandlingsinformasjon;
     beregning: Nullable<Beregning>;
     status: Behandlingsstatus;
-    utbetaling: Nullable<Utbetaling>;
     simulering: Nullable<Simulering>;
     opprettet: string;
     attestant: Nullable<string>;
