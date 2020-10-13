@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
+import { eqOppholdIUtlandet } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { kalkulerTotaltAntallDagerIUtlandet, Utlandsdatoer } from '~lib/dateUtils';
 import { pipe } from '~lib/fp';
@@ -16,7 +17,7 @@ import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
+import { OppholdIUtlandet as OppholdIUtlandetType, OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -84,15 +85,27 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
         async onSubmit(values) {
             if (!values.status) return;
 
+            const oppholdIUtlandetValues: OppholdIUtlandetType = {
+                status: values.status,
+                begrunnelse: values.begrunnelse,
+            };
+
+            if (
+                eqOppholdIUtlandet.equals(
+                    oppholdIUtlandetValues,
+                    props.behandling.behandlingsinformasjon.oppholdIUtlandet
+                )
+            ) {
+                history.push(props.nesteUrl);
+                return;
+            }
+
             const res = await dispatch(
                 lagreBehandlingsinformasjon({
                     sakId: props.sakId,
                     behandlingId: props.behandling.id,
                     behandlingsinformasjon: {
-                        oppholdIUtlandet: {
-                            status: values.status,
-                            begrunnelse: values.begrunnelse,
-                        },
+                        oppholdIUtlandet: { ...oppholdIUtlandetValues },
                     },
                 })
             );
