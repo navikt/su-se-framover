@@ -6,7 +6,6 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 
-import { formatDateTime } from '~lib/dateUtils';
 import { combineOptions } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import messages from '~pages/saksbehandling/steg/beregning/beregning-nb';
@@ -15,7 +14,6 @@ import { Sak } from '~types/Sak';
 import { Utbetaling } from '~types/Utbetaling';
 
 import { groupSimuleringsperioder } from '../delt/arrayUtils';
-import { InfoLinje } from '../delt/Infolinje/Infolinje';
 import styles from '../steg/beregning/visBeregning.module.less';
 
 interface Props {
@@ -30,14 +28,6 @@ const Utbetalingssimulering = (props: { utbetaling: Utbetaling }) => {
     return (
         <>
             <Innholdstittel className={styles.tittel}>Simulering:</Innholdstittel>
-            <div className={styles.grunndata}>
-                <InfoLinje tittel={'id:'} value={props.utbetaling.id} />
-                <InfoLinje tittel={'opprettet:'} value={formatDateTime(props.utbetaling.opprettet, intl)} />
-                <InfoLinje
-                    tittel="Totalbeløp:"
-                    value={intl.formatNumber(props.utbetaling.simulering.totalBruttoYtelse, { currency: 'NOK' })}
-                />
-            </div>
             {props.utbetaling.simulering.perioder && (
                 <table className="tabell">
                     <thead>
