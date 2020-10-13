@@ -119,7 +119,9 @@ const VisBeregning = (props: Props) => {
                                 () => null,
                                 ([head, last]) => (
                                     <tr key={head.id + last.id}>
-                                        <td>{`${intl.formatDate(head.fom)} - ${intl.formatDate(last.tom)}`}</td>
+                                        <td>{`${intl.formatDate(head.fraOgMed)} - ${intl.formatDate(
+                                            last.tilOgMed
+                                        )}`}</td>
                                         <td>{head.beløp}</td>
                                         <td>{head.grunnbeløp}</td>
                                     </tr>

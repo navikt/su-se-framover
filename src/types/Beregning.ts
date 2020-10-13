@@ -20,7 +20,7 @@ export interface Månedsberegning {
     sats: Sats;
     beløp: number;
     grunnbeløp: number;
-    fom: string;
-    tom: string;
+    fraOgMed: string;
+    tilOgMed: string;
     fradrag: number;
 }

@@ -8,8 +8,8 @@ const genererMånedsberegning = (id: string, beløp: number): Månedsberegning =
         id,
         beløp,
         sats: Sats.Høy,
-        fom: '1.1.2020',
-        tom: '31.12.2020',
+        fraOgMed: '1.1.2020',
+        tilOgMed: '31.12.2020',
         fradrag: 0,
         grunnbeløp: 1337,
     };
