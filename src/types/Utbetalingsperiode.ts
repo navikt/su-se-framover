@@ -3,4 +3,5 @@ export interface Utbetalingsperiode {
     fraOgMed: string;
     tilOgMed: string;
     beløp: number;
+    type: string;
 }

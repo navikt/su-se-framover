@@ -15,7 +15,8 @@ const Utbetalinger = (props: { sak: Sak }) => {
     const { sak } = props;
     const dispatch = useAppDispatch();
 
-    const stansEllerGjenopptaUtbetalingerStatus = useAppSelector((s) => s.sak.stansEllerGjenopptaUtbetalingerStatus);
+    const { stansUtbetalingerStatus, gjenopptaUtbetalingerStatus } = useAppSelector((s) => s.sak);
+
     return (
         <div className={styles.container}>
             <ul className={styles.utbetalinger}>
@@ -32,58 +33,68 @@ const Utbetalinger = (props: { sak: Sak }) => {
                                     {DateFns.formatISO(DateFns.parseISO(u.tilOgMed), { representation: 'date' })}
                                 </p>
                                 <p>Beløp: {u.beløp}</p>
+                                <p>Type: {u.type}</p>
                             </div>
                         </Panel>
                     </li>
                 ))}
             </ul>
-            <Knapp
-                hidden={
-                    // TODO jah: Vi skal legge til dette per utbetalingslinje i backend, slik at den følger den faktiske implementasjonen
-                    // Tidligste utbetaling må være etter eller lik den første neste måned (nåværende backend impl).
-                    sak.utbetalingerKanStansesEllerGjenopptas != KanStansesEllerGjenopptas.STANS ||
-                    sak.utbetalinger.every((u) =>
-                        DateFns.isBefore(
-                            DateFns.parseISO(u.tilOgMed),
-                            DateFns.startOfMonth(DateFns.addMonths(new Date(), 1))
-                        )
+            {
+                // TODO jah: Vi skal legge til dette per utbetalingslinje i backend, slik at den følger den faktiske implementasjonen
+                // Tidligste utbetaling må være etter eller lik den første neste måned (nåværende backend impl).
+                sak.utbetalingerKanStansesEllerGjenopptas === KanStansesEllerGjenopptas.STANS &&
+                    sak.utbetalinger.some(
+                        (u) =>
+                            !DateFns.isBefore(
+                                DateFns.parseISO(u.tilOgMed),
+                                DateFns.startOfMonth(DateFns.addMonths(new Date(), 1))
+                            )
+                    ) && (
+                        <Knapp
+                            onClick={() => {
+                                if (!RemoteData.isPending(stansUtbetalingerStatus)) {
+                                    dispatch(
+                                        sakSlice.stansUtbetalinger({
+                                            sakId: props.sak.id,
+                                        })
+                                    );
+                                }
+                            }}
+                            spinner={RemoteData.isPending(stansUtbetalingerStatus)}
+                            className={styles.stansUtbetalinger}
+                        >
+                            Stans utbetalinger
+                        </Knapp>
                     )
-                }
-                onClick={async () => {
-                    if (!RemoteData.isPending(stansEllerGjenopptaUtbetalingerStatus)) {
-                        await dispatch(
-                            sakSlice.stansUtbetalinger({
-                                sakId: props.sak.id,
-                            })
-                        );
-                    }
-                }}
-                spinner={RemoteData.isPending(stansEllerGjenopptaUtbetalingerStatus)}
-                className={styles.stansUtbetalinger}
-            >
-                Stans utbetalinger
-            </Knapp>
-            <Knapp
-                hidden={sak.utbetalingerKanStansesEllerGjenopptas != KanStansesEllerGjenopptas.GJENOPPTA}
-                onClick={async () => {
-                    if (!RemoteData.isPending(stansEllerGjenopptaUtbetalingerStatus)) {
-                        await dispatch(
-                            sakSlice.gjenopptaUtbetalinger({
-                                sakId: props.sak.id,
-                            })
-                        );
-                    }
-                }}
-                spinner={RemoteData.isPending(stansEllerGjenopptaUtbetalingerStatus)}
-                className={styles.stansUtbetalinger}
-            >
-                Gjenoppta utbetalinger
-            </Knapp>
-            {RemoteData.isFailure(stansEllerGjenopptaUtbetalingerStatus) && (
-                <AlertStripe type="feil">Klarte ikke stanse/gjenoppta utbetalingene.</AlertStripe>
+            }
+            {sak.utbetalingerKanStansesEllerGjenopptas === KanStansesEllerGjenopptas.GJENOPPTA && (
+                <Knapp
+                    onClick={() => {
+                        if (!RemoteData.isPending(gjenopptaUtbetalingerStatus)) {
+                            dispatch(
+                                sakSlice.gjenopptaUtbetalinger({
+                                    sakId: props.sak.id,
+                                })
+                            );
+                        }
+                    }}
+                    spinner={RemoteData.isPending(gjenopptaUtbetalingerStatus)}
+                    className={styles.stansUtbetalinger}
+                >
+                    Gjenoppta utbetalinger
+                </Knapp>
             )}
-            {RemoteData.isSuccess(stansEllerGjenopptaUtbetalingerStatus) && (
-                <AlertStripe type="suksess">Utbetalingene er stanset/gjenopptatt.</AlertStripe>
+            {RemoteData.isFailure(stansUtbetalingerStatus) && (
+                <AlertStripe type="feil">Klarte ikke stanse utbetalingene.</AlertStripe>
+            )}
+            {RemoteData.isSuccess(stansUtbetalingerStatus) && (
+                <AlertStripe type="suksess">Utbetalingene er stanset.</AlertStripe>
+            )}
+            {RemoteData.isFailure(gjenopptaUtbetalingerStatus) && (
+                <AlertStripe type="feil">Klarte ikke gjenoppta utbetalingene.</AlertStripe>
+            )}
+            {RemoteData.isSuccess(gjenopptaUtbetalingerStatus) && (
+                <AlertStripe type="suksess">Utbetalingene er gjenopptatt.</AlertStripe>
             )}
         </div>
     );
