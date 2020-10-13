@@ -6,7 +6,7 @@ import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect, Fragment } from 'react';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, useLocation, useHistory } from 'react-router-dom';
 
 import { ErrorCode } from '~/api/apiClient';
 import { UserProvider } from '~context/userContext';
@@ -41,45 +41,47 @@ const Root = () => {
         <Provider store={Store}>
             <ErrorBoundary>
                 <Router>
-                    <ContentWrapper>
-                        <Fragment>
-                            <ScrollToTop />
-                            <Switch>
-                                <Route exact path={routes.home.path}>
-                                    <HomePage />
-                                </Route>
-                                <Route path={routes.soknad.path}>
-                                    <Soknad />
-                                </Route>
-                                <Route path={routes.saksoversiktIndex.path}>
-                                    <Saksoversikt />
-                                </Route>
-                                <Route path={routes.attestering.path}>
-                                    <Attestering />
-                                </Route>
-                                <Route>404</Route>
-                            </Switch>
-                        </Fragment>
-                    </ContentWrapper>
+                    <Route path="/auth/complete">
+                        <AuthComplete />
+                    </Route>
+                    <Route path="/logout/complete">
+                        <LogoutComplete />
+                    </Route>
+                    <Route>
+                        <ContentWrapper>
+                            <Fragment>
+                                <ScrollToTop />
+                                <Switch>
+                                    <Route exact path={routes.home.path}>
+                                        <HomePage />
+                                    </Route>
+                                    <Route path={routes.soknad.path}>
+                                        <Soknad />
+                                    </Route>
+                                    <Route path={routes.saksoversiktIndex.path}>
+                                        <Saksoversikt />
+                                    </Route>
+                                    <Route path={routes.attestering.path}>
+                                        <Attestering />
+                                    </Route>
+                                    <Route>404</Route>
+                                </Switch>
+                            </Fragment>
+                        </ContentWrapper>
+                    </Route>
                 </Router>
             </ErrorBoundary>
         </Provider>
     );
 };
 
-const ContentWrapper: React.FC = (props) => {
-    const authCompleteRouteMatch = useRouteMatch('/auth/complete');
-    const loggedInUser = useAppSelector((s) => s.me.me);
-
-    const dispatch = useAppDispatch();
+const AuthComplete = () => {
     const location = useLocation();
     const history = useHistory();
 
     useEffect(() => {
-        if (!authCompleteRouteMatch) {
-            return;
-        }
         const tokens = location.hash.split('#');
+
         const accessToken = tokens[1];
         const refreshToken = tokens[2];
         if (!accessToken || !refreshToken) {
@@ -90,7 +92,27 @@ const ContentWrapper: React.FC = (props) => {
         Cookies.set(Cookies.CookieName.RefreshToken, refreshToken);
         const redirectUrl = Cookies.take(Cookies.CookieName.LoginRedirectUrl);
         history.push(redirectUrl ?? '/');
-    }, [authCompleteRouteMatch]);
+    }, []);
+
+    return null;
+};
+
+const LogoutComplete = () => {
+    const history = useHistory();
+
+    useEffect(() => {
+        Cookies.remove(Cookies.CookieName.AccessToken);
+        Cookies.remove(Cookies.CookieName.RefreshToken);
+        history.push('/');
+    }, []);
+
+    return null;
+};
+
+const ContentWrapper: React.FC = (props) => {
+    const loggedInUser = useAppSelector((s) => s.me.me);
+
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (RemoteData.isInitial(loggedInUser)) {
@@ -105,9 +127,7 @@ const ContentWrapper: React.FC = (props) => {
                     <Menyknapp
                         navn={loggedInUser.value.navn}
                         onLoggUtClick={() => {
-                            Cookies.remove(Cookies.CookieName.AccessToken);
-                            Cookies.remove(Cookies.CookieName.RefreshToken);
-                            window.location.reload();
+                            window.location.href = `${window.BASE_URL}/logout`;
                         }}
                     />
                 )}

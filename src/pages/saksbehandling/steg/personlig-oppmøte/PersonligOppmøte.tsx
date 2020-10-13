@@ -6,6 +6,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { eqPersonligOppmøte } from '~/features/behandling/behandlingUtils';
 import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
@@ -118,16 +119,22 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
-    const updateBehandlingsinformasjon = (personligOppmøte: PersonligOppmøteType) =>
-        dispatch(
+    const updateBehandlingsinformasjon = (personligOppmøte: PersonligOppmøteType) => {
+        if (eqPersonligOppmøte.equals(personligOppmøte, props.behandling.behandlingsinformasjon.personligOppmøte)) {
+            history.push(props.nesteUrl);
+            return;
+        }
+
+        return dispatch(
             lagreBehandlingsinformasjon({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    personligOppmøte: { status: personligOppmøte.status, begrunnelse: personligOppmøte.begrunnelse },
+                    personligOppmøte: { ...personligOppmøte },
                 },
             })
         );
+    };
 
     const formik = useFormik<FormData>({
         initialValues: getInitialFormValues(props.behandling.behandlingsinformasjon.personligOppmøte),
@@ -141,6 +148,8 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                 status: personligOppmøte,
                 begrunnelse: values.begrunnelse,
             });
+
+            if (!res) return;
 
             if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
                 if (res.payload.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {

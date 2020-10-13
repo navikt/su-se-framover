@@ -36,14 +36,6 @@ const Vedtak = (props: Props) => {
     const { sakId, behandlingId } = routes.useRouteParams<typeof routes.saksoversiktValgtBehandling>();
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
 
-    if (!behandling) {
-        return <AlertStripe type="feil">Fant ikke behandlingsid</AlertStripe>;
-    }
-
-    if (erTilAttestering(behandling)) {
-        return <div>Vedtak er sendt til Attestering</div>;
-    }
-
     const hentBrev = useCallback(() => {
         if (RemoteData.isPending(lastNedBrevStatus)) {
             return;
@@ -55,6 +47,14 @@ const Vedtak = (props: Props) => {
             }
         });
     }, [sak.id, behandlingId]);
+
+    if (!behandling) {
+        return <AlertStripe type="feil">Fant ikke behandlingsid</AlertStripe>;
+    }
+
+    if (erTilAttestering(behandling)) {
+        return <div>Vedtak er sendt til Attestering</div>;
+    }
 
     const vilkårUrl = (vilkårType: Vilkårtype) => {
         return createVilkårUrl({

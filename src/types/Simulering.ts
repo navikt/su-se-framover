@@ -1,6 +1,4 @@
 export interface Simulering {
-    utbetalingId: string;
-    opprettet: string;
     totalBruttoYtelse: number;
     perioder: SimulertPeriode[];
 }

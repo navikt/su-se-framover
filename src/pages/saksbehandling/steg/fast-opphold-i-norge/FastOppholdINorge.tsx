@@ -7,13 +7,14 @@ import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
+import { eqFastOppholdINorge } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
+import { FastOppholdINorge as FastOppholdINorgeType, FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
 import Faktablokk from '../Faktablokk';
@@ -80,15 +81,24 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         async onSubmit(values) {
             if (!values.status) return;
 
+            const fastOppholdValues: FastOppholdINorgeType = {
+                status: values.status,
+                begrunnelse: values.begrunnelse,
+            };
+
+            if (
+                eqFastOppholdINorge.equals(fastOppholdValues, props.behandling.behandlingsinformasjon.fastOppholdINorge)
+            ) {
+                history.push(props.nesteUrl);
+                return;
+            }
+
             const res = await dispatch(
                 lagreBehandlingsinformasjon({
                     sakId: props.sakId,
                     behandlingId: props.behandling.id,
                     behandlingsinformasjon: {
-                        fastOppholdINorge: {
-                            status: values.status,
-                            begrunnelse: values.begrunnelse,
-                        },
+                        fastOppholdINorge: { ...fastOppholdValues },
                     },
                 })
             );

@@ -6,6 +6,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { eqFormue } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
@@ -148,22 +149,29 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                 ? FormueStatus.VilkårOppfylt
                 : FormueStatus.VilkårIkkeOppfylt;
 
+        const formueValues: Formue = {
+            status,
+            verdiIkkePrimærbolig: parseInt(values.verdiIkkePrimærbolig, 10),
+            verdiKjøretøy: parseInt(values.verdiKjøretøy, 10),
+            innskudd: parseInt(values.innskudd, 10),
+            verdipapir: parseInt(values.verdipapir, 10),
+            pengerSkyldt: parseInt(values.pengerSkyldt, 10),
+            kontanter: parseInt(values.kontanter, 10),
+            depositumskonto: parseInt(values.depositumskonto, 10),
+            begrunnelse: values.begrunnelse,
+        };
+
+        if (eqFormue.equals(formueValues, props.behandling.behandlingsinformasjon.formue)) {
+            history.push(props.nesteUrl);
+            return;
+        }
+
         return dispatch(
             lagreBehandlingsinformasjon({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    formue: {
-                        status,
-                        verdiIkkePrimærbolig: parseInt(values.verdiIkkePrimærbolig, 10),
-                        verdiKjøretøy: parseInt(values.verdiKjøretøy, 10),
-                        innskudd: parseInt(values.innskudd, 10),
-                        verdipapir: parseInt(values.verdipapir, 10),
-                        pengerSkyldt: parseInt(values.pengerSkyldt, 10),
-                        kontanter: parseInt(values.kontanter, 10),
-                        depositumskonto: parseInt(values.depositumskonto, 10),
-                        begrunnelse: values.begrunnelse,
-                    },
+                    formue: { ...formueValues },
                 },
             })
         );
@@ -175,6 +183,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         initialValues: setInitialValues(behandlingsInfo, søknadInnhold),
         async onSubmit() {
             const res = await onSave(formik.values);
+            if (!res) return;
 
             if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
                 history.push(props.nesteUrl);
