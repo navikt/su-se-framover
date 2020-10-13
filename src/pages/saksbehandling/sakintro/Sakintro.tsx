@@ -44,9 +44,14 @@ const Sakintro = (props: { sak: Sak }) => {
                                         <div>
                                             <p>Søknads-id: {s.id}</p>
                                             <p>Innsendt: {formatDateTime(s.opprettet, intl)}</p>
-                                            {behandlinger.length === 0 && <p>Status: OPPRETTET </p>}
+                                            {behandlinger.length === 0 && !s.søknadTrukket && <p>Status: OPPRETTET</p>}
+                                            {s.søknadTrukket && (
+                                                <div>
+                                                    <p>Søknadsbehandlingen av blitt avsluttet.</p>
+                                                </div>
+                                            )}
                                         </div>
-                                        {isBehandlingerEmpty ? (
+                                        {isBehandlingerEmpty && !s.søknadTrukket ? (
                                             <>
                                                 <Hovedknapp
                                                     onClick={async () => {
@@ -72,6 +77,15 @@ const Sakintro = (props: { sak: Sak }) => {
                                                 >
                                                     Start førstegangsbehandling
                                                 </Hovedknapp>
+                                                <Link
+                                                    className="knapp knapp--fare"
+                                                    to={Routes.avsluttSøknadsbehandling.createURL({
+                                                        sakId: sakId,
+                                                        soknadId: s.id,
+                                                    })}
+                                                >
+                                                    Avslutt behandling
+                                                </Link>
                                                 {RemoteData.isFailure(startBehandlingStatus) && (
                                                     <AlertStripe type="feil">Klarte ikke starte behandling</AlertStripe>
                                                 )}
