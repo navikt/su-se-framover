@@ -104,7 +104,7 @@ const Saksoversikt = () => {
                                         <Switch>
                                             <Route path={Routes.avsluttSøknadsbehandling.path}>
                                                 <div className={styles.mainContent}>
-                                                    <AvsluttBehandling />
+                                                    <AvsluttBehandling sak={sak} />
                                                 </div>
                                             </Route>
                                             <Route path={Routes.saksoversiktValgtBehandling.path}>

@@ -44,14 +44,14 @@ const Sakintro = (props: { sak: Sak }) => {
                                         <div>
                                             <p>Søknads-id: {s.id}</p>
                                             <p>Innsendt: {formatDateTime(s.opprettet, intl)}</p>
-                                            {behandlinger.length === 0 && !s.søknadTrukket && <p>Status: OPPRETTET</p>}
-                                            {s.søknadTrukket && (
+                                            {behandlinger.length === 0 && !s.lukket && <p>Status: OPPRETTET</p>}
+                                            {s.lukket && (
                                                 <div>
                                                     <p>Søknadsbehandlingen av blitt avsluttet.</p>
                                                 </div>
                                             )}
                                         </div>
-                                        {isBehandlingerEmpty && !s.søknadTrukket ? (
+                                        {isBehandlingerEmpty && !s.lukket ? (
                                             <>
                                                 <Hovedknapp
                                                     onClick={async () => {

@@ -5,12 +5,14 @@ export interface Søknad {
     id: string;
     søknadInnhold: SøknadInnhold;
     opprettet: string;
-    søknadTrukket: Nullable<SøknadTrukket>;
+    lukket: Nullable<Lukket>;
 }
 
-interface SøknadTrukket {
+interface Lukket {
+    begrunnelse: string;
     tidspunkt: string;
     saksbehandler: Saksbehandler;
+    type: string;
 }
 
 interface Saksbehandler {

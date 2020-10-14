@@ -5,6 +5,7 @@ import { ApiError } from '~api/apiClient';
 import * as behandlingApi from '~api/behandlingApi';
 import { fetchBrev } from '~api/brevApi';
 import * as sakApi from '~api/sakApi';
+import * as søknadApi from '~api/søknadApi';
 import * as utbetalingApi from '~api/utbetalingApi';
 import { pipe } from '~lib/fp';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
@@ -192,6 +193,22 @@ export const attesteringUnderkjenn = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const lukkSøknad = createAsyncThunk<
+    Sak,
+    {
+        sakId: string;
+        søknadId: string;
+        navIdent: string;
+    },
+    { rejectValue: ApiError }
+>('soknad/lukkSøknad', async (arg, thunkApi) => {
+    const res = await søknadApi.lukkSøknad(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
     stansUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
@@ -205,6 +222,7 @@ interface SakState {
     attesteringStatus: RemoteData.RemoteData<ApiError, null>;
     utledetSatsInfo: RemoteData.RemoteData<ApiError, UtledetSatsInfo>;
     lastNedBrevStatus: RemoteData.RemoteData<ApiError, null>;
+    søknadsbehandlingAvsluttetStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: SakState = {
@@ -220,6 +238,7 @@ const initialState: SakState = {
     attesteringStatus: RemoteData.initial,
     utledetSatsInfo: RemoteData.initial,
     lastNedBrevStatus: RemoteData.initial,
+    søknadsbehandlingAvsluttetStatus: RemoteData.initial,
 };
 
 export default createSlice({
@@ -431,6 +450,20 @@ export default createSlice({
         });
         builder.addCase(getUtledetSatsInfo.fulfilled, (state, action) => {
             state.utledetSatsInfo = RemoteData.success(action.payload);
+        });
+
+        handleAsyncThunk(builder, lukkSøknad, {
+            pending: (state) => {
+                state.søknadsbehandlingAvsluttetStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.søknadsbehandlingAvsluttetStatus = RemoteData.success(null);
+
+                state.sak = RemoteData.success(action.payload);
+            },
+            rejected: (state, action) => {
+                state.søknadsbehandlingAvsluttetStatus = simpleRejectedActionToRemoteData(action);
+            },
         });
     },
 });

@@ -6,10 +6,11 @@ import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 
 import { useUserContext } from '~context/userContext';
-import { avsluttSøknadsbehandling } from '~features/søknad/søknad.slice';
+import { lukkSøknad } from '~features/saksoversikt/sak.slice';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Sak } from '~types/Sak';
 
 enum AvsluttSøknadsbehandling {
     Trukket = 'Trukket',
@@ -23,11 +24,10 @@ const validationSchema = yup.object<FormData>({
     avsluttSøknadsbehandling: yup.mixed().oneOf([AvsluttSøknadsbehandling.Trukket]).required(),
 });
 
-const AvsluttBehandling = () => {
+const AvsluttBehandling = (props: { sak: Sak }) => {
     const dispatch = useAppDispatch();
-    const søknadsbehandlingAvsluttet = useAppSelector((s) => s.soknad.søknadsbehandlingAvsluttetStatus);
+    const søknadsbehandlingAvsluttet = useAppSelector((s) => s.sak.søknadsbehandlingAvsluttetStatus);
     const user = useUserContext();
-
     const urlParams = Routes.useRouteParams<typeof Routes.avsluttSøknadsbehandling>();
 
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
@@ -41,7 +41,7 @@ const AvsluttBehandling = () => {
                 return;
             }
             dispatch(
-                avsluttSøknadsbehandling({
+                lukkSøknad({
                     sakId: urlParams.sakId,
                     søknadId: urlParams.soknadId,
                     navIdent: user.navIdent,
@@ -52,10 +52,12 @@ const AvsluttBehandling = () => {
         validateOnChange: hasSubmitted,
     });
 
-    if (RemoteData.isSuccess(søknadsbehandlingAvsluttet)) {
+    const søknad = props.sak.søknader.find((s) => s.id === urlParams.soknadId);
+
+    if (RemoteData.isSuccess(søknadsbehandlingAvsluttet) || (søknad && søknad.lukket !== null)) {
         return (
             <div>
-                <AlertStripeSuksess>Søknaden har blitt trukket</AlertStripeSuksess>
+                <AlertStripeSuksess>Søknaden har blitt lukket</AlertStripeSuksess>
             </div>
         );
     }
@@ -86,10 +88,10 @@ const AvsluttBehandling = () => {
                     ))}
                 </Select>
             </div>
-            <Fareknapp>Avslutt søknadsbehandlingen</Fareknapp>
+            <Fareknapp>Lukk søknad</Fareknapp>
 
             {RemoteData.isFailure(søknadsbehandlingAvsluttet) && (
-                <AlertStripeFeil>Kunne ikke trekke søknad</AlertStripeFeil>
+                <AlertStripeFeil>Kunne ikke lukke søknad</AlertStripeFeil>
             )}
         </form>
     );

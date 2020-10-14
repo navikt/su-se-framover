@@ -1,10 +1,6 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ApiError } from '~api/apiClient';
-import * as søknadApi from '~api/søknadApi';
 import { Nullable } from '~lib/types';
-import { simpleRejectedActionToRemoteData, handleAsyncThunk } from '~redux/utils';
 
 import { DelerBoligMed, TypeOppholdstillatelse, Vergemål } from './types';
 
@@ -76,7 +72,6 @@ export interface SøknadState {
         harSøkerMøttPersonlig: Nullable<boolean>;
         harFullmektigEllerVerge: Nullable<Vergemål>;
     };
-    søknadsbehandlingAvsluttetStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: SøknadState = {
@@ -147,24 +142,7 @@ const initialState: SøknadState = {
         harSøkerMøttPersonlig: null,
         harFullmektigEllerVerge: null,
     },
-    søknadsbehandlingAvsluttetStatus: RemoteData.initial,
 };
-
-export const avsluttSøknadsbehandling = createAsyncThunk<
-    string,
-    {
-        sakId: string;
-        søknadId: string;
-        navIdent: string;
-    },
-    { rejectValue: ApiError }
->('soknad/trekk', async (arg, thunkApi) => {
-    const res = await søknadApi.avsluttSøknadsbehandling(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
 
 export default createSlice({
     name: 'soknad',
@@ -194,18 +172,5 @@ export default createSlice({
         ForVeileder(state, action: PayloadAction<SøknadState['forVeileder']>) {
             state.forVeileder = action.payload;
         },
-    },
-    extraReducers: (builder) => {
-        handleAsyncThunk(builder, avsluttSøknadsbehandling, {
-            pending: (state) => {
-                state.søknadsbehandlingAvsluttetStatus = RemoteData.pending;
-            },
-            fulfilled: (state) => {
-                state.søknadsbehandlingAvsluttetStatus = RemoteData.success(null);
-            },
-            rejected: (state, action) => {
-                state.søknadsbehandlingAvsluttetStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
     },
 });
