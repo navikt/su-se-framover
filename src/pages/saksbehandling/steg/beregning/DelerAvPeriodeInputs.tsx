@@ -29,7 +29,7 @@ const DelerAvPeriodeInputs = (props: {
                 <DatePicker
                     id={props.fraOgMedId}
                     name={props.fraOgMedId}
-                    selected={props.fradrag.delerAvPeriode?.fraOgMed}
+                    selected={props.fradrag.inntektDelerAvPeriode?.fraOgMed}
                     onChange={(e) => {
                         props.setFieldValue(props.fraOgMedId, e);
                     }}
@@ -37,8 +37,8 @@ const DelerAvPeriodeInputs = (props: {
                     showMonthYearPicker
                     isClearable
                     selectsStart
-                    startDate={props.fradrag.delerAvPeriode?.fraOgMed}
-                    endDate={props.fradrag.delerAvPeriode?.tilOgMed}
+                    startDate={props.fradrag.inntektDelerAvPeriode?.fraOgMed}
+                    endDate={props.fradrag.inntektDelerAvPeriode?.tilOgMed}
                 />
                 {fraOgMedError && <Feilmelding>{fraOgMedError}</Feilmelding>}
             </div>
@@ -49,7 +49,7 @@ const DelerAvPeriodeInputs = (props: {
                 <DatePicker
                     id={props.tilOgMedId}
                     name={props.tilOgMedId}
-                    selected={props.fradrag.delerAvPeriode?.tilOgMed}
+                    selected={props.fradrag.inntektDelerAvPeriode?.tilOgMed}
                     onChange={(e) => {
                         props.setFieldValue(props.tilOgMedId, e);
                     }}
@@ -57,9 +57,9 @@ const DelerAvPeriodeInputs = (props: {
                     showMonthYearPicker
                     isClearable
                     selectsEnd
-                    startDate={props.fradrag.delerAvPeriode?.fraOgMed}
-                    endDate={props.fradrag.delerAvPeriode?.tilOgMed}
-                    minDate={props.fradrag.delerAvPeriode?.fraOgMed}
+                    startDate={props.fradrag.inntektDelerAvPeriode?.fraOgMed}
+                    endDate={props.fradrag.inntektDelerAvPeriode?.tilOgMed}
+                    minDate={props.fradrag.inntektDelerAvPeriode?.fraOgMed}
                 />
                 {tilOgMedError && <Feilmelding>{tilOgMedError}</Feilmelding>}
             </div>

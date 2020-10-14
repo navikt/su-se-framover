@@ -23,6 +23,7 @@ import {
 } from '~pages/saksbehandling/steg/beregning/FradragInputs';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
+import { Fradragstype } from '~types/Fradrag';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -45,23 +46,20 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [needsBeregning, setNeedsBeregning] = useState(false);
 
-    const [beregningStatus, simuleringStatus, utledetSatsInfo] = useAppSelector((state) => [
-        state.sak.beregningStatus,
-        state.sak.simuleringStatus,
-        state.sak.utledetSatsInfo,
-    ]);
+    const { beregningStatus, simuleringStatus, utledetSatsInfo } = useAppSelector((state) => state.sak);
+    const FradragUtenomForventetInntekt = (props.behandling.beregning?.fradrag ?? []).filter(
+        (f) => f.type !== Fradragstype.ForventetInntekt
+    );
 
     useEffect(() => {
         dispatch(sakSlice.getUtledetSatsInfo({ sakId: props.sakId, behandlingId: props.behandling.id }));
     }, []);
 
     const startBeregning = (values: FormData) => {
-        if (!values.fom || !values.tom) {
+        if (!values.fom || !values.tom || !props.behandling.behandlingsinformasjon.utledetSats) {
             return;
         }
-        if (!props.behandling.behandlingsinformasjon.utledetSats) {
-            return;
-        }
+
         const fradrag = values.fradrag.filter(isValidFradrag);
         if (fradrag.length !== values.fradrag.length) {
             return;
@@ -79,10 +77,10 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                     /* eslint-disable @typescript-eslint/no-non-null-assertion */
                     beløp: parseInt(f.beløp!, 10),
                     type: f.type!,
-                    delerAvPeriode: f.delerAvPeriodeChecked
+                    inntektDelerAvPeriode: f.delerAvPeriodeChecked
                         ? {
-                              fraOgMed: formatISO(f.delerAvPeriode.fraOgMed!, { representation: 'date' }),
-                              tilOgMed: formatISO(lastDayOfMonth(f.delerAvPeriode.tilOgMed!), {
+                              fraOgMed: formatISO(f.inntektDelerAvPeriode.fraOgMed!, { representation: 'date' }),
+                              tilOgMed: formatISO(lastDayOfMonth(f.inntektDelerAvPeriode.tilOgMed!), {
                                   representation: 'date',
                               }),
                           }
@@ -111,13 +109,13 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         initialValues: {
             fom: toDateOrNull(props.behandling.beregning?.fraOgMed),
             tom: toDateOrNull(props.behandling.beregning?.tilOgMed),
-            fradrag: (props.behandling.beregning?.fradrag ?? []).map((f) => ({
+            fradrag: FradragUtenomForventetInntekt.map((f) => ({
                 fraUtland: f.utenlandskInntekt !== null,
-                delerAvPeriodeChecked: f.delerAvPeriode !== null,
+                delerAvPeriodeChecked: f.inntektDelerAvPeriode !== null,
                 beløp: f.beløp.toString(),
-                delerAvPeriode: {
-                    fraOgMed: f.delerAvPeriode?.fraOgMed ? new Date(f.delerAvPeriode?.fraOgMed) : null,
-                    tilOgMed: f.delerAvPeriode?.tilOgMed ? new Date(f.delerAvPeriode?.tilOgMed) : null,
+                inntektDelerAvPeriode: {
+                    fraOgMed: f.inntektDelerAvPeriode?.fraOgMed ? new Date(f.inntektDelerAvPeriode?.fraOgMed) : null,
+                    tilOgMed: f.inntektDelerAvPeriode?.tilOgMed ? new Date(f.inntektDelerAvPeriode?.tilOgMed) : null,
                 },
                 utenlandskInntekt: {
                     beløpIUtenlandskValuta: f.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',
@@ -239,7 +237,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                                     kurs: '',
                                                 },
                                                 delerAvPeriodeChecked: false,
-                                                delerAvPeriode: { fraOgMed: null, tilOgMed: null },
+                                                inntektDelerAvPeriode: { fraOgMed: null, tilOgMed: null },
                                             },
                                         ],
                                     });

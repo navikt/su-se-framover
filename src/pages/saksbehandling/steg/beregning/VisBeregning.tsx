@@ -7,7 +7,7 @@ import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import messages from '~pages/saksbehandling/steg/beregning/beregning-nb';
 import { Beregning } from '~types/Beregning';
-import { Fradragstype, Fradrag, ForventetInntektfradrag } from '~types/Fradrag';
+import { Fradragstype, Fradrag } from '~types/Fradrag';
 
 import { groupMånedsberegninger } from '../../delt/arrayUtils';
 import { InfoLinje } from '../../delt/Infolinje/Infolinje';
@@ -19,27 +19,21 @@ interface Props {
     forventetinntekt: number;
 }
 
-const Utenlandsk = 'Utenlandsk';
-
-const fradragMedForventetinntekt = (fradrag: Fradrag[], forventetinntekt: number): Fradrag[] => {
-    const { left: andreFradrag, right: arbeidsinntektfradrag } = pipe(
+const fradragMedDenHøyesteAvArbeidsinntektOgForventetinntekt = (
+    fradrag: Fradrag[],
+    forventetinntekt: number
+): Fradrag[] => {
+    const { left: fradragUtenomArbeidsinntekt, right: arbeidsinntekt } = pipe(
         fradrag,
         arr.partition((f) => f.type === Fradragstype.Arbeidsinntekt)
     );
+    const totalArbeidsinntekt = arbeidsinntekt.reduce((acc, currentInntekt) => acc + currentInntekt.beløp, 0);
 
-    if (arbeidsinntektfradrag.reduce((acc, fradragEntry) => acc + fradragEntry.beløp, 0) >= forventetinntekt) {
+    if (totalArbeidsinntekt >= forventetinntekt) {
         return fradrag;
     }
 
-    return [
-        ...andreFradrag,
-        {
-            type: ForventetInntektfradrag,
-            beløp: forventetinntekt,
-            utenlandskInntekt: null,
-            delerAvPeriode: null,
-        },
-    ];
+    return fradragUtenomArbeidsinntekt;
 };
 
 const VisBeregning = (props: Props) => {
@@ -47,17 +41,18 @@ const VisBeregning = (props: Props) => {
     const { beregning } = props;
     const totalbeløp = beregning.månedsberegninger.reduce((acc, val) => acc + val.beløp, 0);
     const gruppertMånedsberegninger = groupMånedsberegninger(beregning.månedsberegninger);
+    const fradrag = fradragMedDenHøyesteAvArbeidsinntektOgForventetinntekt(beregning.fradrag, props.forventetinntekt);
 
     return (
         <div>
-            {fradragMedForventetinntekt(beregning.fradrag, props.forventetinntekt).length > 0 && (
+            {fradrag.length > 0 && (
                 <div>
                     <Element className={styles.fradragHeading}>Fradrag:</Element>
                     <ul>
-                        {fradragMedForventetinntekt(beregning.fradrag, props.forventetinntekt).map((f, idx) => (
+                        {fradrag.map((f, idx) => (
                             <li key={idx} className={styles.fradragItem}>
                                 <InfoLinje
-                                    tittel={f.utenlandskInntekt ? `${Utenlandsk} ${f.type}` : f.type}
+                                    tittel={f.utenlandskInntekt ? `Utenlandsk ${f.type}` : f.type}
                                     value={intl.formatNumber(f.beløp, { currency: 'NOK' })}
                                 />
                                 {f.utenlandskInntekt && (
@@ -86,15 +81,15 @@ const VisBeregning = (props: Props) => {
                                         />
                                     </div>
                                 )}
-                                {f.delerAvPeriode && (
+                                {f.inntektDelerAvPeriode && (
                                     <div>
                                         <InfoLinje
                                             tittel="Fra og med"
-                                            value={intl.formatDate(f.delerAvPeriode.fraOgMed)}
+                                            value={intl.formatDate(f.inntektDelerAvPeriode.fraOgMed)}
                                         />
                                         <InfoLinje
                                             tittel="Til og med"
-                                            value={intl.formatDate(f.delerAvPeriode.tilOgMed)}
+                                            value={intl.formatDate(f.inntektDelerAvPeriode.tilOgMed)}
                                         />
                                     </div>
                                 )}
