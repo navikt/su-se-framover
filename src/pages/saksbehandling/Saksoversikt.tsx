@@ -125,7 +125,7 @@ const Saksoversikt = () => {
                     )}
                 </Route>
                 <Route path={Routes.saksoversiktIndex.path}>
-                    <div>
+                    <div className={styles.search}>
                         <Personsøk
                             onReset={() => {
                                 dispatch(personSlice.default.actions.resetSøker());

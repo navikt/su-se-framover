@@ -77,7 +77,7 @@ const Personsøk = (props: PersonsøkProps) => {
                             id="fnr"
                             name="fnr"
                             className={styles.inputfelt}
-                            inputRef={(input) => input?.focus()}
+                            autoFocus
                             onChange={(e) => {
                                 setFnr(e.target.value);
                             }}

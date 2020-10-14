@@ -35,23 +35,25 @@ const index = (props: { nesteUrl: string }) => {
     return (
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
-                <Personsøk
-                    onReset={() => {
-                        dispatch(personSlice.default.actions.resetSøker());
-                    }}
-                    onSubmit={(fnr) => {
-                        dispatch(personSlice.fetchPerson({ fnr }));
-                    }}
-                    person={søker}
-                />
+                <div className={styles.search}>
+                    <Personsøk
+                        onReset={() => {
+                            dispatch(personSlice.default.actions.resetSøker());
+                        }}
+                        onSubmit={(fnr) => {
+                            dispatch(personSlice.fetchPerson({ fnr }));
+                        }}
+                        person={søker}
+                    />
 
-                {RemoteData.isSuccess(søker) && (
-                    <div className={styles.successknapper}>
-                        <Hovedknapp htmlType="button" onClick={handleStartSøknadClick}>
-                            <FormattedMessage id="knapp.startSøknad" />
-                        </Hovedknapp>
-                    </div>
-                )}
+                    {RemoteData.isSuccess(søker) && (
+                        <div className={styles.successknapper}>
+                            <Hovedknapp htmlType="button" onClick={handleStartSøknadClick}>
+                                <FormattedMessage id="knapp.startSøknad" />
+                            </Hovedknapp>
+                        </div>
+                    )}
+                </div>
             </div>
         </RawIntlProvider>
     );
