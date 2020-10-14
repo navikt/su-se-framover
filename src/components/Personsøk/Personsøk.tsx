@@ -77,13 +77,16 @@ const Personsøk = (props: PersonsøkProps) => {
                             id="fnr"
                             name="fnr"
                             className={styles.inputfelt}
+                            autoFocus
                             onChange={(e) => {
                                 setFnr(e.target.value);
                             }}
                             value={fnr}
                         />
                         <Søkeknapp htmlType="submit">
-                            <FormattedMessage id="knapp.søk" />
+                            <span>
+                                <FormattedMessage id="knapp.søk" />
+                            </span>
                         </Søkeknapp>
                     </div>
                     <SkjemaelementFeilmelding>
