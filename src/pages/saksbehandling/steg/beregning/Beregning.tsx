@@ -47,7 +47,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     const [needsBeregning, setNeedsBeregning] = useState(false);
 
     const { beregningStatus, simuleringStatus, utledetSatsInfo } = useAppSelector((state) => state.sak);
-    const filteredFradrag = (props.behandling.beregning?.fradrag ?? []).filter(
+    const FradragUtenomForventetInntekt = (props.behandling.beregning?.fradrag ?? []).filter(
         (f) => f.type !== Fradragstype.ForventetInntekt
     );
 
@@ -109,7 +109,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         initialValues: {
             fom: toDateOrNull(props.behandling.beregning?.fraOgMed),
             tom: toDateOrNull(props.behandling.beregning?.tilOgMed),
-            fradrag: filteredFradrag.map((f) => ({
+            fradrag: FradragUtenomForventetInntekt.map((f) => ({
                 fraUtland: f.utenlandskInntekt !== null,
                 delerAvPeriodeChecked: f.inntektDelerAvPeriode !== null,
                 beløp: f.beløp.toString(),

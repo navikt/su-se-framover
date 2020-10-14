@@ -19,17 +19,21 @@ interface Props {
     forventetinntekt: number;
 }
 
-const fradragMedForventetinntekt = (fradrag: Fradrag[], forventetinntekt: number): Fradrag[] => {
-    const { left: andreFradrag, right: arbeidsinntektfradrag } = pipe(
+const fradragMedDenHøyesteAvArbeidsinntektOgForventetinntekt = (
+    fradrag: Fradrag[],
+    forventetinntekt: number
+): Fradrag[] => {
+    const { left: fradragUtenomArbeidsinntekt, right: arbeidsinntekt } = pipe(
         fradrag,
         arr.partition((f) => f.type === Fradragstype.Arbeidsinntekt)
     );
+    const totalArbeidsinntekt = arbeidsinntekt.reduce((acc, currentInntekt) => acc + currentInntekt.beløp, 0);
 
-    if (arbeidsinntektfradrag.reduce((acc, fradragEntry) => acc + fradragEntry.beløp, 0) >= forventetinntekt) {
+    if (totalArbeidsinntekt >= forventetinntekt) {
         return fradrag;
     }
 
-    return andreFradrag;
+    return fradragUtenomArbeidsinntekt;
 };
 
 const VisBeregning = (props: Props) => {
@@ -37,14 +41,15 @@ const VisBeregning = (props: Props) => {
     const { beregning } = props;
     const totalbeløp = beregning.månedsberegninger.reduce((acc, val) => acc + val.beløp, 0);
     const gruppertMånedsberegninger = groupMånedsberegninger(beregning.månedsberegninger);
+    const fradrag = fradragMedDenHøyesteAvArbeidsinntektOgForventetinntekt(beregning.fradrag, props.forventetinntekt);
 
     return (
         <div>
-            {fradragMedForventetinntekt(beregning.fradrag, props.forventetinntekt).length > 0 && (
+            {fradrag.length > 0 && (
                 <div>
                     <Element className={styles.fradragHeading}>Fradrag:</Element>
                     <ul>
-                        {fradragMedForventetinntekt(beregning.fradrag, props.forventetinntekt).map((f, idx) => (
+                        {fradrag.map((f, idx) => (
                             <li key={idx} className={styles.fradragItem}>
                                 <InfoLinje
                                     tittel={f.utenlandskInntekt ? `Utenlandsk ${f.type}` : f.type}
