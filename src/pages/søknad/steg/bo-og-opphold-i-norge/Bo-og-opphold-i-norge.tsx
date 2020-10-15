@@ -63,11 +63,19 @@ const schema = yup.object<FormData>({
                 .mixed<EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr>()
                 .required()
                 .test('isValidEktefelleData', 'Ugyldig informasjon om ektefelle', (value) => {
-                    if (value.fnr) {
-                        return value.fnr.length === 11 && value.erUførFlyktning !== null;
-                    }
+                    const eps = toEktefellePartnerSamboer(value);
 
-                    return isValidDayMonthYearFormat(value.fødselsdato) && value.navn !== null;
+                    switch (eps?.type) {
+                        case 'MedFnr':
+                            return eps.fnr.length === 11;
+                        case 'UtenFnr':
+                            return isValidDayMonthYearFormat(eps.fødselsdato) && eps.navn?.length > 0;
+                        default:
+                            return false;
+                    }
+                })
+                .test('UførhetFyltInn', 'Må fylles inn', (value) => {
+                    return value.erUførFlyktning !== null;
                 }),
         }),
 });

@@ -24,6 +24,7 @@ import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './sats-nb';
+import { hentEktefellesAlder } from './utils';
 
 interface FormData {
     delerSøkerBolig: Nullable<boolean>;
@@ -345,6 +346,16 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                     id: 'display.fraSøknad.hvemDelerSøkerBoligMed',
                                 }),
                                 verdi: props.behandling.søknad.søknadInnhold.boforhold.delerBoligMed ?? '-',
+                            },
+                            {
+                                tittel: intl.formatMessage({
+                                    id: 'display.fraSøknad.ektemakeEllerSamboerUnder67år',
+                                }),
+                                verdi: props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
+                                    ? hentEktefellesAlder(
+                                          props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
+                                      ).toString()
+                                    : '-',
                             },
                             // TODO AI: Legg in info om ålder och uførhet på ektefelle
                         ]}

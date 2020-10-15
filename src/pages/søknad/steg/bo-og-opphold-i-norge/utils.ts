@@ -6,7 +6,7 @@ import { EPSFormData } from './Bo-og-opphold-i-norge';
 export const toEktefellePartnerSamboer = (
     eps: Nullable<EPSFormData>
 ): EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr | null => {
-    if (!eps?.erUførFlyktning) {
+    if (!eps || eps.erUførFlyktning === null) {
         return null;
     }
 
