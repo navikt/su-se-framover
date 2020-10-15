@@ -10,6 +10,7 @@ import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { EktefellePartnerSamboerMedFnr, EktefellePartnerSamboerUtenFnr } from '~types/Søknad';
 
 import { useI18n } from '../../../../lib/hooks';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
@@ -17,13 +18,13 @@ import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './bo-og-opphold-i-norge-nb';
+import EktefellePartnerSamboer from './ektefelle-partner-samboer-form';
 
 interface FormData {
     borOgOppholderSegINorge: Nullable<boolean>;
     delerBoligMedPersonOver18: Nullable<boolean>;
     delerBoligMed: Nullable<DelerBoligMed>;
-    ektemakeEllerSamboerUnder67År: Nullable<boolean>;
-    ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
+    ektefellePartnerSamboer: EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr | null;
 }
 
 const schema = yup.object<FormData>({
@@ -44,14 +45,10 @@ const schema = yup.object<FormData>({
                 ])
                 .required(),
         }),
-    ektemakeEllerSamboerUnder67År: yup.boolean().nullable().defined().when('delerBoligMed', {
-        is: 'ektemake-eller-samboer',
-        then: yup.boolean().nullable().required(),
-    }),
-    ektemakeEllerSamboerUførFlyktning: yup.boolean().nullable().defined().when('ektemakeEllerSamboerUnder67År', {
-        is: true,
-        then: yup.boolean().nullable().required(),
-        otherwise: yup.boolean().nullable(),
+    ektefellePartnerSamboer: yup.mixed<null>().nullable().defined().when('delerBoligMed', {
+        // todo ai: wtf is going on here
+        is: DelerBoligMed.EKTEMAKE_SAMBOER,
+        then: yup.mixed<EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr>().required(),
     }),
 });
 
@@ -67,8 +64,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 borOgOppholderSegINorge: values.borOgOppholderSegINorge,
                 delerBoligMedPersonOver18: values.delerBoligMedPersonOver18,
                 delerBoligMed: values.delerBoligMed,
-                ektemakeEllerSamboerUnder67År: values.ektemakeEllerSamboerUnder67År,
-                ektemakeEllerSamboerUførFlyktning: values.ektemakeEllerSamboerUførFlyktning,
+                ektefellePartnerSamboer: values.ektefellePartnerSamboer,
             })
         );
 
@@ -77,8 +73,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
             borOgOppholderSegINorge: boOgOppholdFraStore.borOgOppholderSegINorge,
             delerBoligMedPersonOver18: boOgOppholdFraStore.delerBoligMedPersonOver18,
             delerBoligMed: boOgOppholdFraStore.delerBoligMed,
-            ektemakeEllerSamboerUnder67År: boOgOppholdFraStore.ektemakeEllerSamboerUnder67År,
-            ektemakeEllerSamboerUførFlyktning: boOgOppholdFraStore.ektemakeEllerSamboerUførFlyktning,
+            ektefellePartnerSamboer: boOgOppholdFraStore.ektefellePartnerSamboer,
         },
         onSubmit: (values) => {
             save(values);
@@ -125,8 +120,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     ...formik.values,
                                     delerBoligMedPersonOver18: val,
                                     delerBoligMed: null,
-                                    ektemakeEllerSamboerUnder67År: null,
-                                    ektemakeEllerSamboerUførFlyktning: null,
+                                    ektefellePartnerSamboer: null,
                                 });
                             }}
                         />
@@ -156,44 +150,14 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     formik.setValues({
                                         ...formik.values,
                                         delerBoligMed: value,
-                                        ektemakeEllerSamboerUnder67År: null,
-                                        ektemakeEllerSamboerUførFlyktning: null,
+                                        ektefellePartnerSamboer: null,
                                     });
                                 }}
                                 checked={formik.values.delerBoligMed?.toString()}
                             />
                         )}
-                        {formik.values.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
-                            <JaNeiSpørsmål
-                                id="ektemakeEllerSamboerUnder67År"
-                                className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="input.ektemakeEllerSamboerUnder67År.label" />}
-                                feil={formik.errors.ektemakeEllerSamboerUnder67År}
-                                state={formik.values.ektemakeEllerSamboerUnder67År}
-                                onChange={(val) => {
-                                    formik.setValues({
-                                        ...formik.values,
-                                        ektemakeEllerSamboerUnder67År: val,
-                                        ektemakeEllerSamboerUførFlyktning: null,
-                                    });
-                                }}
-                            />
-                        )}
-                        {formik.values.ektemakeEllerSamboerUnder67År && (
-                            <JaNeiSpørsmål
-                                id="ektemakeEllerSamboerUførFlyktning"
-                                className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="input.ektemakeEllerSamboerUførFlyktning.label" />}
-                                feil={formik.errors.ektemakeEllerSamboerUførFlyktning}
-                                state={formik.values.ektemakeEllerSamboerUførFlyktning}
-                                onChange={(val) => {
-                                    formik.setValues({
-                                        ...formik.values,
-                                        ektemakeEllerSamboerUførFlyktning: val,
-                                    });
-                                }}
-                            />
-                        )}
+
+                        {formik.values.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && <EktefellePartnerSamboer />}
                     </div>
                     <Feiloppsummering
                         className={sharedStyles.marginBottom}

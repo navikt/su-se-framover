@@ -228,7 +228,6 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                 : 'Ubesvart'
                         }
                     />
-
                     <OppsummeringsFelt
                         label={<FormattedMessage id="input.delerBoligMedPersonOver18.label" />}
                         verdi={
@@ -239,7 +238,6 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                 : 'Ubesvart'
                         }
                     />
-
                     {søknad.boOgOpphold.delerBoligMedPersonOver18 && (
                         <OppsummeringsFelt
                             label={<FormattedMessage id="input.delerBoligMed.label" />}
@@ -252,8 +250,9 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                             }
                         />
                     )}
-
-                    {søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
+                    {
+                        // TODO AI: Ersätt dessa med ny information
+                        /* {søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
                         <OppsummeringsFelt
                             label={<FormattedMessage id="input.ektemakeEllerSamboerUnder67År.label" />}
                             verdi={
@@ -277,7 +276,8 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                     : 'Ubesvart'
                             }
                         />
-                    )}
+                    )} */
+                    }
                     <EndreSvar path={Søknadsteg.BoOgOppholdINorge} søker={søker} />
                 </Ekspanderbartpanel>
 

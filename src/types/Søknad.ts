@@ -42,8 +42,7 @@ export interface SøknadInnhold {
         borOgOppholderSegINorge: boolean;
         delerBoligMedVoksne: boolean;
         delerBoligMed: Nullable<DelerBoligMed>;
-        ektemakeEllerSamboerUnder67År: Nullable<boolean>;
-        ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
+        ektefellePartnerSamboer: EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr | null;
     };
     utenlandsopphold: {
         registrertePerioder: Nullable<Array<{ utreisedato: string; innreisedato: string }>>;
@@ -77,3 +76,19 @@ export interface SøknadInnhold {
         harFullmektigEllerVerge: Nullable<Vergemål>;
     };
 }
+
+type EktefellePartnerSamboer = {
+    erUførFlyktning: boolean;
+    type: 'MedFnr' | 'UtenFnr';
+};
+
+export type EktefellePartnerSamboerMedFnr = EktefellePartnerSamboer & {
+    fnr: string;
+    type: 'MedFnr';
+};
+
+export type EktefellePartnerSamboerUtenFnr = EktefellePartnerSamboer & {
+    navn: string;
+    fødselsdato: string;
+    type: 'UtenFnr';
+};

@@ -346,43 +346,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 }),
                                 verdi: props.behandling.søknad.søknadInnhold.boforhold.delerBoligMed ?? '-',
                             },
-                            {
-                                tittel: intl.formatMessage({
-                                    id: 'display.fraSøknad.ektemakeEllerSamboerUnder67år',
-                                }),
-                                verdi:
-                                    props.behandling.søknad.søknadInnhold.boforhold.ektemakeEllerSamboerUnder67År ===
-                                    null
-                                        ? intl.formatMessage({
-                                              id: 'display.fraSøknad.ikkeRegistert',
-                                          })
-                                        : props.behandling.søknad.søknadInnhold.boforhold.ektemakeEllerSamboerUnder67År
-                                        ? intl.formatMessage({
-                                              id: 'radio.label.ja',
-                                          })
-                                        : intl.formatMessage({
-                                              id: 'radio.label.nei',
-                                          }),
-                            },
-                            {
-                                tittel: intl.formatMessage({
-                                    id: 'display.fraSøknad.ektemakeEllerSamboerUførFlyktning',
-                                }),
-                                verdi:
-                                    props.behandling.søknad.søknadInnhold.boforhold
-                                        .ektemakeEllerSamboerUførFlyktning === null
-                                        ? intl.formatMessage({
-                                              id: 'display.fraSøknad.ikkeRegistert',
-                                          })
-                                        : props.behandling.søknad.søknadInnhold.boforhold
-                                              .ektemakeEllerSamboerUførFlyktning
-                                        ? intl.formatMessage({
-                                              id: 'radio.label.ja',
-                                          })
-                                        : intl.formatMessage({
-                                              id: 'radio.label.nei',
-                                          }),
-                            },
+                            // TODO AI: Legg in info om ålder och uførhet på ektefelle
                         ]}
                     />
                 ),
