@@ -19,12 +19,19 @@ import sharedI18n from '../steg-shared-i18n';
 
 import messages from './bo-og-opphold-i-norge-nb';
 import EktefellePartnerSamboer from './ektefelle-partner-samboer-form';
+import { toEktefellePartnerSamboer, toEPSFormData } from './utils';
 
 interface FormData {
     borOgOppholderSegINorge: Nullable<boolean>;
     delerBoligMedPersonOver18: Nullable<boolean>;
     delerBoligMed: Nullable<DelerBoligMed>;
-    ektefellePartnerSamboer: EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr | null;
+    ektefellePartnerSamboer: Nullable<EPSFormData>;
+}
+export interface EPSFormData {
+    fnr: Nullable<string>;
+    navn: Nullable<string>;
+    fødselsdato: Nullable<string>;
+    erUførFlyktning: Nullable<boolean>;
 }
 
 const schema = yup.object<FormData>({
@@ -45,11 +52,24 @@ const schema = yup.object<FormData>({
                 ])
                 .required(),
         }),
-    ektefellePartnerSamboer: yup.mixed<null>().nullable().defined().when('delerBoligMed', {
-        // todo ai: wtf is going on here
-        is: DelerBoligMed.EKTEMAKE_SAMBOER,
-        then: yup.mixed<EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr>().required(),
-    }),
+    ektefellePartnerSamboer: yup
+        .mixed<null>()
+        .nullable()
+        .defined()
+        .when('delerBoligMed', {
+            is: DelerBoligMed.EKTEMAKE_SAMBOER,
+            then: yup
+                .mixed<EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr>()
+                .required()
+                .test('isValidEktefelleData', 'Ugyldig informasjon om ektefelle', (value) => {
+                    console.log(value);
+                    if (value.fnr) {
+                        return value.fnr.length === 11 && value.erUførFlyktning !== null;
+                    }
+
+                    return value.fødselsdato !== null && value.navn !== null;
+                }),
+        }),
 });
 
 const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
@@ -58,22 +78,23 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
-    const save = (values: FormData) =>
-        dispatch(
+    const save = (values: FormData) => {
+        return dispatch(
             søknadSlice.actions.boOgOppholdUpdated({
                 borOgOppholderSegINorge: values.borOgOppholderSegINorge,
                 delerBoligMedPersonOver18: values.delerBoligMedPersonOver18,
                 delerBoligMed: values.delerBoligMed,
-                ektefellePartnerSamboer: values.ektefellePartnerSamboer,
+                ektefellePartnerSamboer: toEktefellePartnerSamboer(values.ektefellePartnerSamboer),
             })
         );
+    };
 
     const formik = useFormik<FormData>({
         initialValues: {
             borOgOppholderSegINorge: boOgOppholdFraStore.borOgOppholderSegINorge,
             delerBoligMedPersonOver18: boOgOppholdFraStore.delerBoligMedPersonOver18,
             delerBoligMed: boOgOppholdFraStore.delerBoligMed,
-            ektefellePartnerSamboer: boOgOppholdFraStore.ektefellePartnerSamboer,
+            ektefellePartnerSamboer: toEPSFormData(boOgOppholdFraStore.ektefellePartnerSamboer),
         },
         onSubmit: (values) => {
             save(values);
@@ -83,6 +104,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
         validateOnChange: hasSubmitted,
     });
 
+    console.log(formik.values.ektefellePartnerSamboer);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     return (
@@ -157,7 +179,17 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             />
                         )}
 
-                        {formik.values.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && <EktefellePartnerSamboer />}
+                        {formik.values.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
+                            <EktefellePartnerSamboer
+                                onChange={(eps) =>
+                                    formik.setValues((values) => ({
+                                        ...values,
+                                        ektefellePartnerSamboer: eps,
+                                    }))
+                                }
+                                value={formik.values.ektefellePartnerSamboer}
+                            />
+                        )}
                     </div>
                     <Feiloppsummering
                         className={sharedStyles.marginBottom}
