@@ -28,3 +28,16 @@ export const toDateOrNull = (date: string | undefined): Date | null => {
 
     return new Date(date);
 };
+
+export const isValidDayMonthYearFormat = (date: Nullable<string>) => {
+    if (!date) {
+        return false;
+    }
+
+    return DayMonthYearRegExp.test(date);
+};
+
+// DD.MM.YYYY / DD-MM-YYYY
+const DayMonthYearRegExp = RegExp(
+    /^([0]?[1-9]|[1|2][0-9]|[3][0|1])[./-]([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})$/gm
+);

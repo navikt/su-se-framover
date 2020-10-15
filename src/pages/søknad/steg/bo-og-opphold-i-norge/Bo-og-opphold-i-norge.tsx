@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { AnbefalerIkkeSøke, JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice from '~/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~features/søknad/types';
+import { isValidDayMonthYearFormat } from '~lib/dateUtils';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -62,12 +63,11 @@ const schema = yup.object<FormData>({
                 .mixed<EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr>()
                 .required()
                 .test('isValidEktefelleData', 'Ugyldig informasjon om ektefelle', (value) => {
-                    console.log(value);
                     if (value.fnr) {
                         return value.fnr.length === 11 && value.erUførFlyktning !== null;
                     }
 
-                    return value.fødselsdato !== null && value.navn !== null;
+                    return isValidDayMonthYearFormat(value.fødselsdato) && value.navn !== null;
                 }),
         }),
 });
@@ -104,7 +104,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
         validateOnChange: hasSubmitted,
     });
 
-    console.log(formik.values.ektefellePartnerSamboer);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     return (

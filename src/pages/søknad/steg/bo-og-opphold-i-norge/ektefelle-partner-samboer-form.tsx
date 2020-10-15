@@ -30,24 +30,41 @@ const EktefellePartnerSamboer = ({ onChange, value }: Props) => {
                 onChange={(e) => {
                     const { checked } = e.target;
                     setFnrErUkjent(checked);
-                    if (checked) {
-                        onChange({
-                            ...(value ?? initialEPS),
-                            fnr: null,
-                        });
-                    }
+
+                    onChange({
+                        ...(value ?? initialEPS),
+                        navn: null,
+                        fødselsdato: null,
+                        fnr: null,
+                    });
                 }}
-                label="Vet ikke"
+                label="Vet ikke fødselsnummer"
             />
 
             {fnrErUkjent && (
                 <div className={styles.ukjentFnr}>
-                    <Input label="Hva er navnet til ektefelle eller samboer?" />
                     <Input
+                        value={value?.navn ?? ''}
+                        label="Hva er navnet til ektefelle eller samboer?"
+                        onChange={(e) => {
+                            onChange({
+                                ...(value ?? initialEPS),
+                                navn: e.target.value,
+                            });
+                        }}
+                    />
+                    <Input
+                        value={value?.fødselsdato ?? ''}
                         label="Hva er fødselsdatoen til ektefelle eller samboer?"
                         placeholder="DD.MM.ÅÅÅÅ"
                         bredde="S"
                         maxLength={10}
+                        onChange={(e) => {
+                            onChange({
+                                ...(value ?? initialEPS),
+                                fødselsdato: e.target.value,
+                            });
+                        }}
                     />
                 </div>
             )}
