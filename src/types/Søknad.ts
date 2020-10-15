@@ -5,6 +5,18 @@ export interface Søknad {
     id: string;
     søknadInnhold: SøknadInnhold;
     opprettet: string;
+    lukket: Nullable<Lukket>;
+}
+
+interface Lukket {
+    begrunnelse: string;
+    tidspunkt: string;
+    saksbehandler: Saksbehandler;
+    type: string;
+}
+
+interface Saksbehandler {
+    navIdent: string;
 }
 
 export interface SøknadInnhold {

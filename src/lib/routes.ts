@@ -38,6 +38,14 @@ export const saksoversiktValgtSak: Route<{
     createURL: (args) => `/saksoversikt/${args.sakId}`,
 };
 
+export const avsluttSøknadsbehandling: Route<{
+    sakId: string;
+    soknadId: string;
+}> = {
+    path: '/saksoversikt/:sakId/:soknadId/avsluttSoknadsbehandling/',
+    createURL: (args) => `/saksoversikt/${args.sakId}/${args.soknadId}/avsluttSoknadsbehandling`,
+};
+
 export const saksoversiktValgtBehandling: Route<{
     sakId: string;
     behandlingId: string;
