@@ -1,4 +1,4 @@
-import { differenceInYears } from 'date-fns';
+import { differenceInYears, parse } from 'date-fns';
 
 import { EktefellePartnerSamboerMedFnr, EktefellePartnerSamboerUtenFnr } from '~types/Søknad';
 
@@ -6,10 +6,12 @@ export const hentEktefellesAlder = (ektefelle: EktefellePartnerSamboerMedFnr | E
     const today = new Date();
 
     if (ektefelle.type === 'MedFnr') {
-        const [dd, mm, yyyy] = [ektefelle.fnr.substr(0, 2), ektefelle.fnr.substr(2, 4), ektefelle.fnr.substr(4, 10)];
+        const fødselsdato = ektefelle.fnr.substr(0, 6);
+        const parsedEktefellesFødselsdato = parse(fødselsdato, 'ddMMyy', new Date());
 
-        return differenceInYears(today, new Date(`${dd}.${mm}.${yyyy}`));
+        return differenceInYears(today, parsedEktefellesFødselsdato);
     }
 
-    return differenceInYears(today, new Date(ektefelle.fødselsdato));
+    const parsedEktefellesFødselsdato = parse(ektefelle.fødselsdato, 'dd.MM.yyyy', new Date());
+    return differenceInYears(today, parsedEktefellesFødselsdato);
 };
