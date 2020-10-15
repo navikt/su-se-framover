@@ -198,7 +198,6 @@ export const lukkSøknad = createAsyncThunk<
     {
         sakId: string;
         søknadId: string;
-        navIdent: string;
     },
     { rejectValue: ApiError }
 >('soknad/lukkSøknad', async (arg, thunkApi) => {

@@ -5,7 +5,6 @@ import { Fareknapp } from 'nav-frontend-knapper';
 import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 
-import { useUserContext } from '~context/userContext';
 import { lukkSøknad } from '~features/saksoversikt/sak.slice';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
@@ -27,7 +26,6 @@ const validationSchema = yup.object<FormData>({
 const AvsluttBehandling = (props: { sak: Sak }) => {
     const dispatch = useAppDispatch();
     const søknadsbehandlingAvsluttet = useAppSelector((s) => s.sak.søknadsbehandlingAvsluttetStatus);
-    const user = useUserContext();
     const urlParams = Routes.useRouteParams<typeof Routes.avsluttSøknadsbehandling>();
 
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
@@ -44,7 +42,6 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
                 lukkSøknad({
                     sakId: urlParams.sakId,
                     søknadId: urlParams.soknadId,
-                    navIdent: user.navIdent,
                 })
             );
         },

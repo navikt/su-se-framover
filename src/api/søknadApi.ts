@@ -7,16 +7,9 @@ export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientRes
     return apiClient({ url: '/soknad', method: 'POST', body: søknad });
 }
 
-export async function lukkSøknad(arg: {
-    sakId: string;
-    søknadId: string;
-    navIdent: string;
-}): Promise<ApiClientResult<Sak>> {
+export async function lukkSøknad(arg: { sakId: string; søknadId: string }): Promise<ApiClientResult<Sak>> {
     return apiClient({
         url: `/soknad/${arg.søknadId}/trekk`,
         method: 'POST',
-        body: {
-            navIdent: arg.navIdent,
-        },
     });
 }
