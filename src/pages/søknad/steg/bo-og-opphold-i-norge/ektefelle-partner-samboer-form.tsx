@@ -1,6 +1,10 @@
 import { Checkbox, Input, Radio, RadioGruppe } from 'nav-frontend-skjema';
 import React, { useEffect, useState } from 'react';
 
+import * as personApi from '~api/personApi';
+import { Person } from '~api/personApi';
+import { KjønnKvinne, KjønnMann, KjønnUkjent } from '~assets/Icons';
+import { showName } from '~features/person/personUtils';
 import { Nullable } from '~lib/types';
 
 import { EPSFormData } from './Bo-og-opphold-i-norge';
@@ -19,12 +23,12 @@ const EktefellePartnerSamboer = ({ onChange, value }: Props) => {
             <FnrInput
                 disabled={fnrErUkjent}
                 fnr={value?.fnr ?? null}
-                onFnrChange={(fnr) =>
+                onFnrChange={(fnr) => {
                     onChange({
                         ...(value ?? initialEPS),
                         fnr,
-                    })
-                }
+                    });
+                }}
             />
             <Checkbox
                 onChange={(e) => {
@@ -105,14 +109,18 @@ interface FnrInputProps {
     onFnrChange: (fnr: string) => void;
 }
 const FnrInput = ({ disabled, fnr, onFnrChange }: FnrInputProps) => {
-    // TODO AI: Finns en FnrInput-komponent från designbiblioteket.
-    const [person, setPerson] = useState<string | null>(null);
+    const [person, setPerson] = useState<Person | null>(null);
+
+    async function fetchPerson(fnr: string) {
+        const res = await personApi.fetchPerson(fnr);
+        if (res.status === 'ok') {
+            setPerson(res.data);
+        }
+    }
 
     useEffect(() => {
         setPerson(null);
-        if (fnr?.length === 11) {
-            setPerson('Daniel Pesløs');
-        }
+        if (fnr?.length === 11) fetchPerson(fnr);
     }, [fnr]);
 
     return (
@@ -127,13 +135,22 @@ const FnrInput = ({ disabled, fnr, onFnrChange }: FnrInputProps) => {
 
             {!disabled && person && (
                 <div className={styles.result}>
-                    <GenderIcon />
-                    <p>{person}</p>
+                    <GenderIcon kjønn={person.kjønn} />
+                    <p>{showName(person)}</p>
                 </div>
             )}
         </div>
     );
 };
-const GenderIcon = () => <div className={styles.genderIcon} />;
+
+const GenderIcon = ({ kjønn }: { kjønn: Nullable<personApi.Kjønn> }) => {
+    if (kjønn === personApi.Kjønn.Mann) {
+        return <KjønnMann />;
+    } else if (kjønn === personApi.Kjønn.Kvinne) {
+        return <KjønnKvinne />;
+    } else {
+        return <KjønnUkjent />;
+    }
+};
 
 export default EktefellePartnerSamboer;
