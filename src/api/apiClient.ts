@@ -111,11 +111,10 @@ export default async function apiClient<T>(arg: {
         });
     }
 
-    if (arg.bodyTransformer) {
-        return success<T>(await arg.bodyTransformer(res), res.status);
-    }
-
     if (res.ok || arg.successStatusCodes?.includes(res.status)) {
+        if (arg.bodyTransformer) {
+            return success<T>(await arg.bodyTransformer(res), res.status);
+        }
         return success<T>(await res.json(), res.status);
     }
 

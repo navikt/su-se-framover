@@ -9,10 +9,9 @@ export interface Søknad {
 }
 
 interface Lukket {
-    begrunnelse: string;
     tidspunkt: string;
     saksbehandler: Saksbehandler;
-    type: string;
+    typeLukking: string;
 }
 
 interface Saksbehandler {

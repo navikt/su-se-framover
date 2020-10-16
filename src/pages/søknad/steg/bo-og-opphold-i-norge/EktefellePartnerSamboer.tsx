@@ -23,7 +23,7 @@ interface Props {
 }
 const EktefellePartnerSamboer = (props: Props) => {
     const [fnrErUkjent, setFnrErUkjent] = useState(false);
-    const EPSFormData = props.value ?? initialEPS;
+    const formData = props.value ?? initialEPS;
 
     const intl = useI18n({ messages });
 
@@ -31,10 +31,10 @@ const EktefellePartnerSamboer = (props: Props) => {
         <div>
             <FnrInput
                 disabled={fnrErUkjent}
-                fnr={EPSFormData.fnr}
+                fnr={formData.fnr}
                 onFnrChange={(fnr) => {
                     props.onChange({
-                        ...EPSFormData,
+                        ...formData,
                         fnr,
                     });
                 }}
@@ -46,7 +46,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                     setFnrErUkjent(checked);
 
                     props.onChange({
-                        ...EPSFormData,
+                        ...formData,
                         navn: null,
                         fødselsdato: null,
                         fnr: null,
@@ -62,11 +62,11 @@ const EktefellePartnerSamboer = (props: Props) => {
                         label={intl.formatMessage({ id: 'input.ektefelleEllerSamboerNavn.label' })}
                         onChange={(e) => {
                             props.onChange({
-                                ...EPSFormData,
+                                ...formData,
                                 navn: e.target.value,
                             });
                         }}
-                        feil={!EPSFormData.navn && props.feil}
+                        feil={!formData.navn && props.feil}
                     />
                     <Input
                         value={EPSFormData.fødselsdato ?? ''}
@@ -76,11 +76,11 @@ const EktefellePartnerSamboer = (props: Props) => {
                         maxLength={10}
                         onChange={(e) => {
                             props.onChange({
-                                ...EPSFormData,
+                                ...formData,
                                 fødselsdato: e.target.value,
                             });
                         }}
-                        feil={!isValidDayMonthYearFormat(EPSFormData.fødselsdato) && props.feil}
+                        feil={!isValidDayMonthYearFormat(formData.fødselsdato) && props.feil}
                     />
                 </div>
             )}
@@ -91,10 +91,10 @@ const EktefellePartnerSamboer = (props: Props) => {
                     feil={EPSFormData.erUførFlyktning === null && props.feil}
                 >
                     <Radio
-                        checked={Boolean(EPSFormData.erUførFlyktning)}
+                        checked={Boolean(formData.erUførFlyktning)}
                         onChange={() =>
                             props.onChange({
-                                ...EPSFormData,
+                                ...formData,
                                 erUførFlyktning: true,
                             })
                         }
@@ -102,10 +102,10 @@ const EktefellePartnerSamboer = (props: Props) => {
                         name="erUfør"
                     />
                     <Radio
-                        checked={EPSFormData.erUførFlyktning === false}
+                        checked={formData.erUførFlyktning === false}
                         onChange={() =>
                             props.onChange({
-                                ...EPSFormData,
+                                ...formData,
                                 erUførFlyktning: false,
                             })
                         }

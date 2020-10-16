@@ -1,41 +1,41 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import { AlertStripeSuksess, AlertStripeFeil } from 'nav-frontend-alertstriper';
-import { Fareknapp } from 'nav-frontend-knapper';
+import { Fareknapp, Knapp } from 'nav-frontend-knapper';
 import { Select } from 'nav-frontend-skjema';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
-import { lukkSøknad } from '~features/saksoversikt/sak.slice';
+import { lukkSøknad, hentLukketSøknadBrevutkast } from '~features/saksoversikt/sak.slice';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Sak } from '~types/Sak';
 
-enum AvsluttSøknadsbehandling {
+export enum LukkSøknadType {
     Trukket = 'Trukket',
 }
 
 interface FormData {
-    avsluttSøknadsbehandling: AvsluttSøknadsbehandling | null;
+    lukkSøknadType: LukkSøknadType | null;
 }
 
 const validationSchema = yup.object<FormData>({
-    avsluttSøknadsbehandling: yup.mixed().oneOf([AvsluttSøknadsbehandling.Trukket]).required(),
+    lukkSøknadType: yup.mixed().oneOf([LukkSøknadType.Trukket]).required(),
 });
 
 const AvsluttBehandling = (props: { sak: Sak }) => {
     const dispatch = useAppDispatch();
-    const søknadsbehandlingAvsluttet = useAppSelector((s) => s.sak.søknadsbehandlingAvsluttetStatus);
+    const { søknadsbehandlingAvsluttetStatus, lukketSøknadBrevutkastStatus } = useAppSelector((s) => s.sak);
     const urlParams = Routes.useRouteParams<typeof Routes.avsluttSøknadsbehandling>();
 
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
 
     const formik = useFormik<FormData>({
         initialValues: {
-            avsluttSøknadsbehandling: null,
+            lukkSøknadType: null,
         },
         async onSubmit(values) {
-            if (!values.avsluttSøknadsbehandling) {
+            if (!values.lukkSøknadType) {
                 return;
             }
             dispatch(
@@ -49,9 +49,25 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
         validateOnChange: hasSubmitted,
     });
 
+    const lukketSøknadBrev = useCallback(() => {
+        if (RemoteData.isPending(lukketSøknadBrevutkastStatus) || !formik.values.lukkSøknadType) {
+            return;
+        }
+        dispatch(
+            hentLukketSøknadBrevutkast({
+                søknadId: urlParams.soknadId,
+                lukketSøknadType: formik.values.lukkSøknadType,
+            })
+        ).then((action) => {
+            if (hentLukketSøknadBrevutkast.fulfilled.match(action)) {
+                window.open(action.payload.objectUrl);
+            }
+        });
+    }, [formik.values.lukkSøknadType]);
+
     const søknad = props.sak.søknader.find((s) => s.id === urlParams.soknadId);
 
-    if (RemoteData.isSuccess(søknadsbehandlingAvsluttet) || (søknad && søknad.lukket !== null)) {
+    if (RemoteData.isSuccess(søknadsbehandlingAvsluttetStatus) || (søknad && søknad.lukket !== null)) {
         return (
             <div>
                 <AlertStripeSuksess>Søknaden har blitt lukket</AlertStripeSuksess>
@@ -73,21 +89,36 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
             <div>
                 <Select
                     label={'Begrunnelse for å trekke søknad'}
-                    name={'avsluttSøknadsbehandling'}
+                    name={'lukkSøknadType'}
                     onChange={formik.handleChange}
-                    feil={formik.errors.avsluttSøknadsbehandling}
+                    feil={formik.errors.lukkSøknadType}
                 >
                     <option value="velgBegrunnelse">Velg begrunnelse</option>
-                    {Object.values(AvsluttSøknadsbehandling).map((begrunnelse) => (
+                    {Object.values(LukkSøknadType).map((begrunnelse) => (
                         <option value={begrunnelse} key={begrunnelse}>
                             {begrunnelse}
                         </option>
                     ))}
                 </Select>
             </div>
-            <Fareknapp>Lukk søknad</Fareknapp>
+            {formik.values.lukkSøknadType != null && (
+                <div>
+                    <Knapp
+                        htmlType="button"
+                        onClick={lukketSøknadBrev}
+                        spinner={RemoteData.isPending(lukketSøknadBrevutkastStatus)}
+                    >
+                        Se brev
+                    </Knapp>
+                    <Fareknapp>Lukk søknad</Fareknapp>
+                </div>
+            )}
 
-            {RemoteData.isFailure(søknadsbehandlingAvsluttet) && (
+            {RemoteData.isFailure(lukketSøknadBrevutkastStatus) && (
+                <AlertStripeFeil>Kunne ikke vise brev</AlertStripeFeil>
+            )}
+
+            {RemoteData.isFailure(søknadsbehandlingAvsluttetStatus) && (
                 <AlertStripeFeil>Kunne ikke lukke søknad</AlertStripeFeil>
             )}
         </form>
