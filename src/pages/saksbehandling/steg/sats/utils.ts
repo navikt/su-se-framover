@@ -15,3 +15,7 @@ export const hentEktefellesAlder = (ektefelle: EktefellePartnerSamboerMedFnr | E
     const parsedEktefellesFødselsdato = parse(ektefelle.fødselsdato, 'dd.MM.yyyy', new Date());
     return differenceInYears(today, parsedEktefellesFødselsdato);
 };
+
+export const hentEktefellesFnrEllerFødselsdato = (
+    ektefelle: EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr
+) => (ektefelle.type === 'MedFnr' ? ektefelle.fnr : ektefelle.fødselsdato);
