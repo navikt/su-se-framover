@@ -19,7 +19,7 @@ import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './bo-og-opphold-i-norge-nb';
-import EktefellePartnerSamboer from './ektefelle-partner-samboer-form';
+import EktefellePartnerSamboer from './EktefellePartnerSamboer';
 import { toEktefellePartnerSamboer, toEPSFormData } from './utils';
 
 interface FormData {

@@ -4,16 +4,14 @@ import { EktefellePartnerSamboerMedFnr, EktefellePartnerSamboerUtenFnr } from '~
 
 export const hentEktefellesAlder = (ektefelle: EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr) => {
     const today = new Date();
+    const parseEktefellesFødselsdato = (fødselsdato: string, format: string) => parse(fødselsdato, format, new Date());
 
     if (ektefelle.type === 'MedFnr') {
         const fødselsdato = ektefelle.fnr.substr(0, 6);
-        const parsedEktefellesFødselsdato = parse(fødselsdato, 'ddMMyy', new Date());
-
-        return differenceInYears(today, parsedEktefellesFødselsdato);
+        return differenceInYears(today, parseEktefellesFødselsdato(fødselsdato, 'ddMMyy'));
     }
 
-    const parsedEktefellesFødselsdato = parse(ektefelle.fødselsdato, 'dd.MM.yyyy', new Date());
-    return differenceInYears(today, parsedEktefellesFødselsdato);
+    return differenceInYears(today, parseEktefellesFødselsdato(ektefelle.fødselsdato, 'dd.MM.yyyy'));
 };
 
 export const hentEktefellesFnrEllerFødselsdato = (

@@ -8,7 +8,7 @@ import { showName } from '~features/person/personUtils';
 import { Nullable } from '~lib/types';
 
 import { EPSFormData } from './Bo-og-opphold-i-norge';
-import styles from './ektefelle-partner-samboer-form.module.less';
+import styles from './ektefelle-partner-samboer.module.less';
 import { initialEPS } from './utils';
 
 interface Props {
@@ -111,8 +111,8 @@ interface FnrInputProps {
 const FnrInput = ({ disabled, fnr, onFnrChange }: FnrInputProps) => {
     const [person, setPerson] = useState<Person | null>(null);
 
-    async function fetchPerson(fnr: string) {
-        const res = await personApi.fetchPerson(fnr);
+    async function fetchPerson(fødselsnummer: string) {
+        const res = await personApi.fetchPerson(fødselsnummer);
         if (res.status === 'ok') {
             setPerson(res.data);
         }
