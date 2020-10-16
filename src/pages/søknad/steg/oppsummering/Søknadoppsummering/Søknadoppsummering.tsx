@@ -250,34 +250,23 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                             }
                         />
                     )}
-                    {
-                        // TODO AI: Ersätt dessa med ny information
-                        /* {søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.ektemakeEllerSamboerUnder67År.label" />}
-                            verdi={
-                                søknad.boOgOpphold.ektemakeEllerSamboerUnder67År
-                                    ? 'Ja'
-                                    : søknad.boOgOpphold.ektemakeEllerSamboerUnder67År === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
-                        />
+                    {søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
+                        <>
+                            <OppsummeringsFelt
+                                label={intl.formatMessage({ id: 'input.ektemakeEllerSamboerFnr.label' })}
+                                verdi={
+                                    søknad.boOgOpphold.ektefellePartnerSamboer &&
+                                    søknad.boOgOpphold.ektefellePartnerSamboer.type === 'MedFnr'
+                                        ? søknad.boOgOpphold.ektefellePartnerSamboer.fnr
+                                        : søknad.boOgOpphold.ektefellePartnerSamboer!.fødselsdato
+                                }
+                            />
+                            <OppsummeringsFelt
+                                label={<FormattedMessage id="input.ektemakeEllerSamboerUførFlyktning.label" />}
+                                verdi={søknad.boOgOpphold.ektefellePartnerSamboer?.erUførFlyktning ? 'Ja' : 'Nei'}
+                            />
+                        </>
                     )}
-
-                    {søknad.boOgOpphold.ektemakeEllerSamboerUnder67År && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.ektemakeEllerSamboerUførFlyktning.label" />}
-                            verdi={
-                                søknad.boOgOpphold.ektemakeEllerSamboerUførFlyktning
-                                    ? 'Ja'
-                                    : søknad.boOgOpphold.ektemakeEllerSamboerUførFlyktning === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
-                        />
-                    )} */
-                    }
                     <EndreSvar path={Søknadsteg.BoOgOppholdINorge} søker={søker} />
                 </Ekspanderbartpanel>
 
