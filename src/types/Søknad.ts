@@ -77,23 +77,15 @@ export interface SøknadInnhold {
     };
 }
 
-// TODO AI: Fixa typerna
-// enum EktefellePartnerSamboerType {
-//     MED_FNR = 'MedFnr',
-//     UTEN_FNR = 'UtenFnr',
-// }
-type EktefellePartnerSamboer = {
+interface EktefellePartnerSamboer<T extends 'MedFnr' | 'UtenFnr'> {
     erUførFlyktning: boolean;
-    type: 'MedFnr' | 'UtenFnr';
-};
+    type: T;
+}
 
-export type EktefellePartnerSamboerMedFnr = EktefellePartnerSamboer & {
+export interface EktefellePartnerSamboerMedFnr extends EktefellePartnerSamboer<'MedFnr'> {
     fnr: string;
-    type: 'MedFnr';
-};
-
-export type EktefellePartnerSamboerUtenFnr = EktefellePartnerSamboer & {
+}
+export interface EktefellePartnerSamboerUtenFnr extends EktefellePartnerSamboer<'UtenFnr'> {
     navn: string;
     fødselsdato: string;
-    type: 'UtenFnr';
-};
+}
