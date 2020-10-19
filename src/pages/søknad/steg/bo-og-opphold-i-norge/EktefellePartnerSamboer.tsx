@@ -15,7 +15,7 @@ interface Props {
     onChange: (eps: EPSFormData) => void;
     value: Nullable<EPSFormData>;
 }
-const EktefellePartnerSamboer = ({ onChange, value }: Props) => {
+const EktefellePartnerSamboer = ({ onChange, value = initialEPS }: Props) => {
     const [fnrErUkjent, setFnrErUkjent] = useState(false);
 
     return (
