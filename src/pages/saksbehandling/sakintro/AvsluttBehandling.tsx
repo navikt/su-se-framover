@@ -110,7 +110,7 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
                     >
                         Se brev
                     </Knapp>
-                    <Fareknapp>Lukk søknad</Fareknapp>
+                    <Fareknapp spinner={RemoteData.isPending(lukketSøknadBrevutkastStatus)}>Lukk søknad</Fareknapp>
                 </div>
             )}
 
