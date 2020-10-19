@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Nullable } from '~lib/types';
-import { EktefellePartnerSamboerMedFnr, EktefellePartnerSamboerUtenFnr } from '~types/Søknad';
+import { EktefellePartnerSamboer } from '~types/Søknad';
 
 import { DelerBoligMed, TypeOppholdstillatelse, Vergemål } from './types';
 
@@ -21,7 +21,7 @@ export interface SøknadState {
         borOgOppholderSegINorge: Nullable<boolean>;
         delerBoligMedPersonOver18: Nullable<boolean>;
         delerBoligMed: Nullable<DelerBoligMed>;
-        ektefellePartnerSamboer: EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr | null;
+        ektefellePartnerSamboer: Nullable<EktefellePartnerSamboer>;
     };
     formue: {
         eierBolig: Nullable<boolean>;

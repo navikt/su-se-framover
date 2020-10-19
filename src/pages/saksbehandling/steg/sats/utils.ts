@@ -1,8 +1,8 @@
 import { differenceInYears, parse } from 'date-fns';
 
-import { EktefellePartnerSamboerMedFnr, EktefellePartnerSamboerUtenFnr } from '~types/Søknad';
+import { EktefellePartnerSamboer } from '~types/Søknad';
 
-export const hentEktefellesAlder = (ektefelle: EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr) => {
+export const hentEktefellesAlder = (ektefelle: EktefellePartnerSamboer) => {
     const today = new Date();
     const parseEktefellesFødselsdato = (fødselsdato: string, format: string) => parse(fødselsdato, format, new Date());
 
@@ -14,6 +14,5 @@ export const hentEktefellesAlder = (ektefelle: EktefellePartnerSamboerMedFnr | E
     return differenceInYears(today, parseEktefellesFødselsdato(ektefelle.fødselsdato, 'dd.MM.yyyy'));
 };
 
-export const hentEktefellesFnrEllerFødselsdato = (
-    ektefelle: EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr
-) => (ektefelle.type === 'MedFnr' ? ektefelle.fnr : ektefelle.fødselsdato);
+export const hentEktefellesFnrEllerFødselsdato = (ektefelle: EktefellePartnerSamboer) =>
+    ektefelle.type === 'MedFnr' ? ektefelle.fnr : ektefelle.fødselsdato;

@@ -90,4 +90,4 @@ export interface EktefellePartnerSamboerUtenFnr extends EktefellePartnerSamboerB
     fødselsdato: string;
 }
 
-export type EktefellePartnerSamboer = EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr
+export type EktefellePartnerSamboer = EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr;

@@ -1,11 +1,9 @@
 import { Nullable } from '~lib/types';
-import { EktefellePartnerSamboerMedFnr, EktefellePartnerSamboerUtenFnr } from '~types/Søknad';
+import { EktefellePartnerSamboer } from '~types/Søknad';
 
 import { EPSFormData } from './Bo-og-opphold-i-norge';
 
-export const toEktefellePartnerSamboer = (
-    eps: Nullable<EPSFormData>
-): EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr | null => {
+export const toEktefellePartnerSamboer = (eps: Nullable<EPSFormData>): Nullable<EktefellePartnerSamboer> => {
     if (!eps || eps.erUførFlyktning === null) {
         return null;
     }
@@ -28,9 +26,7 @@ export const toEktefellePartnerSamboer = (
     return null;
 };
 
-export const toEPSFormData = (
-    ektefellePartnerSamboer: EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr | null
-): EPSFormData => {
+export const toEPSFormData = (ektefellePartnerSamboer: Nullable<EktefellePartnerSamboer>): EPSFormData => {
     if (!ektefellePartnerSamboer) {
         return initialEPS;
     }
