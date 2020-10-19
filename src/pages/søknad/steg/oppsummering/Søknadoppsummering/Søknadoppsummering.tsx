@@ -250,23 +250,23 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                             }
                         />
                     )}
-                    {søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
-                        <>
-                            <OppsummeringsFelt
-                                label={intl.formatMessage({ id: 'input.ektemakeEllerSamboerFnr.label' })}
-                                verdi={
-                                    søknad.boOgOpphold.ektefellePartnerSamboer &&
-                                    søknad.boOgOpphold.ektefellePartnerSamboer.type === 'MedFnr'
-                                        ? søknad.boOgOpphold.ektefellePartnerSamboer.fnr
-                                        : søknad.boOgOpphold.ektefellePartnerSamboer!.fødselsdato
-                                }
-                            />
-                            <OppsummeringsFelt
-                                label={<FormattedMessage id="input.ektemakeEllerSamboerUførFlyktning.label" />}
-                                verdi={søknad.boOgOpphold.ektefellePartnerSamboer?.erUførFlyktning ? 'Ja' : 'Nei'}
-                            />
-                        </>
-                    )}
+                    {søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER &&
+                        søknad.boOgOpphold.ektefellePartnerSamboer && (
+                            <>
+                                <OppsummeringsFelt
+                                    label={intl.formatMessage({ id: 'input.ektemakeEllerSamboerFnr.label' })}
+                                    verdi={
+                                        søknad.boOgOpphold.ektefellePartnerSamboer.type === 'MedFnr'
+                                            ? søknad.boOgOpphold.ektefellePartnerSamboer.fnr
+                                            : søknad.boOgOpphold.ektefellePartnerSamboer.fødselsdato
+                                    }
+                                />
+                                <OppsummeringsFelt
+                                    label={<FormattedMessage id="input.ektemakeEllerSamboerUførFlyktning.label" />}
+                                    verdi={søknad.boOgOpphold.ektefellePartnerSamboer?.erUførFlyktning ? 'Ja' : 'Nei'}
+                                />
+                            </>
+                        )}
                     <EndreSvar path={Søknadsteg.BoOgOppholdINorge} søker={søker} />
                 </Ekspanderbartpanel>
 
