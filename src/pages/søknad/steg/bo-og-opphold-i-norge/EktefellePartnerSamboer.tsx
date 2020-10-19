@@ -129,7 +129,7 @@ const FnrInput = ({ disabled, fnr, onFnrChange }: FnrInputProps) => {
                 onChange={(e) => onFnrChange(e.target.value)}
                 value={fnr ?? ''}
                 disabled={disabled}
-                placeholder="11 siffrer"
+                placeholder="11 siffer"
                 maxLength={11}
             />
 
