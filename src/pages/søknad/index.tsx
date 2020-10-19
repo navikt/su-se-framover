@@ -71,51 +71,44 @@ const index = () => {
 
     const steg = [
         {
-            index: 0,
             label: intl.formatMessage({ id: 'steg.uforevedtak' }),
             step: Søknadsteg.Uførevedtak,
         },
         {
-            index: 1,
             label: intl.formatMessage({ id: 'steg.flyktningstatus' }),
             step: Søknadsteg.FlyktningstatusOppholdstillatelse,
         },
         {
-            index: 2,
             label: intl.formatMessage({ id: 'steg.boOgOppholdINorge' }),
             step: Søknadsteg.BoOgOppholdINorge,
         },
         {
-            index: 3,
             label: intl.formatMessage({ id: 'steg.formue' }),
             step: Søknadsteg.DinFormue,
         },
         {
-            index: 4,
             label: intl.formatMessage({ id: 'steg.inntekt' }),
             step: Søknadsteg.DinInntekt,
         },
         {
-            index: 5,
             label: intl.formatMessage({ id: 'steg.ektefellesformue' }),
             step: Søknadsteg.EktefellesFormue,
         },
         {
-            index: 6,
             label: intl.formatMessage({ id: 'steg.utenlandsopphold' }),
             step: Søknadsteg.ReiseTilUtlandet,
         },
         {
-            index: 7,
             label: intl.formatMessage({ id: 'steg.forVeileder' }),
             step: Søknadsteg.ForVeileder,
         },
         {
-            index: 8,
             label: intl.formatMessage({ id: 'steg.oppsummering' }),
             step: Søknadsteg.Oppsummering,
         },
-    ];
+    ].filter(
+        (s) => borMedEktefelleSamboer === DelerBoligMed.EKTEMAKE_SAMBOER || s.step !== Søknadsteg.EktefellesFormue
+    );
     const aktivtSteg = steg.findIndex((s) => s.step === step);
 
     const manglendeData = () => (
@@ -150,19 +143,10 @@ const index = () => {
                                 <>
                                     <div className={styles.stegindikatorContainer}>
                                         <Stegindikator
-                                            steg={steg
-                                                .filter(
-                                                    (s) =>
-                                                        borMedEktefelleSamboer === DelerBoligMed.EKTEMAKE_SAMBOER ||
-                                                        s.step !== Søknadsteg.EktefellesFormue
-                                                )
-                                                .map((s) => {
-                                                    console.log(s);
-                                                    return {
-                                                        index: s.index,
-                                                        label: s.label,
-                                                    };
-                                                })}
+                                            steg={steg.map((s, index) => ({
+                                                index,
+                                                label: s.label,
+                                            }))}
                                             aktivtSteg={aktivtSteg}
                                             visLabel={false}
                                             onChange={
