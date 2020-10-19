@@ -1,3 +1,5 @@
+import { isValid } from 'date-fns';
+import { parse } from 'date-fns/esm';
 import { useFormik } from 'formik';
 import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
 import * as React from 'react';
@@ -7,7 +9,6 @@ import { useHistory } from 'react-router-dom';
 import { AnbefalerIkkeSøke, JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice from '~/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~features/søknad/types';
-import { isValidDayMonthYearFormat } from '~lib/dateUtils';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -69,7 +70,7 @@ const schema = yup.object<FormData>({
                         case 'MedFnr':
                             return eps.fnr.length === 11;
                         case 'UtenFnr':
-                            return isValidDayMonthYearFormat(eps.fødselsdato) && eps.navn?.length > 0;
+                            return isValid(parse(eps.fødselsdato, 'dd.MM.yyyy', new Date())) && eps.navn?.length > 0;
                         default:
                             return false;
                     }
