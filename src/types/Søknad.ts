@@ -77,15 +77,17 @@ export interface SøknadInnhold {
     };
 }
 
-interface EktefellePartnerSamboer<T extends 'MedFnr' | 'UtenFnr'> {
+interface EktefellePartnerSamboerBase<T extends 'MedFnr' | 'UtenFnr'> {
     erUførFlyktning: boolean;
     type: T;
 }
 
-export interface EktefellePartnerSamboerMedFnr extends EktefellePartnerSamboer<'MedFnr'> {
+export interface EktefellePartnerSamboerMedFnr extends EktefellePartnerSamboerBase<'MedFnr'> {
     fnr: string;
 }
-export interface EktefellePartnerSamboerUtenFnr extends EktefellePartnerSamboer<'UtenFnr'> {
+export interface EktefellePartnerSamboerUtenFnr extends EktefellePartnerSamboerBase<'UtenFnr'> {
     navn: string;
     fødselsdato: string;
 }
+
+export type EktefellePartnerSamboer = EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr
