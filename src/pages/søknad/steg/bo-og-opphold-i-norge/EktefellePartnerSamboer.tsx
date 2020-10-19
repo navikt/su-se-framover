@@ -15,17 +15,18 @@ interface Props {
     onChange: (eps: EPSFormData) => void;
     value: Nullable<EPSFormData>;
 }
-const EktefellePartnerSamboer = ({ onChange, value = initialEPS }: Props) => {
+const EktefellePartnerSamboer = (props: Props) => {
     const [fnrErUkjent, setFnrErUkjent] = useState(false);
+    const EPSFormData = props.value ?? initialEPS;
 
     return (
         <div>
             <FnrInput
                 disabled={fnrErUkjent}
-                fnr={value?.fnr ?? null}
+                fnr={EPSFormData.fnr}
                 onFnrChange={(fnr) => {
-                    onChange({
-                        ...(value ?? initialEPS),
+                    props.onChange({
+                        ...EPSFormData,
                         fnr,
                     });
                 }}
@@ -35,8 +36,8 @@ const EktefellePartnerSamboer = ({ onChange, value = initialEPS }: Props) => {
                     const { checked } = e.target;
                     setFnrErUkjent(checked);
 
-                    onChange({
-                        ...(value ?? initialEPS),
+                    props.onChange({
+                        ...EPSFormData,
                         navn: null,
                         fødselsdato: null,
                         fnr: null,
@@ -48,24 +49,24 @@ const EktefellePartnerSamboer = ({ onChange, value = initialEPS }: Props) => {
             {fnrErUkjent && (
                 <div className={styles.ukjentFnr}>
                     <Input
-                        value={value?.navn ?? ''}
+                        value={EPSFormData.navn ?? ''}
                         label="Hva er navnet til ektefelle eller samboer?"
                         onChange={(e) => {
-                            onChange({
-                                ...(value ?? initialEPS),
+                            props.onChange({
+                                ...EPSFormData,
                                 navn: e.target.value,
                             });
                         }}
                     />
                     <Input
-                        value={value?.fødselsdato ?? ''}
+                        value={EPSFormData.fødselsdato ?? ''}
                         label="Hva er fødselsdatoen til ektefelle eller samboer?"
                         placeholder="DD.MM.ÅÅÅÅ"
                         bredde="S"
                         maxLength={10}
                         onChange={(e) => {
-                            onChange({
-                                ...(value ?? initialEPS),
+                            props.onChange({
+                                ...EPSFormData,
                                 fødselsdato: e.target.value,
                             });
                         }}
@@ -76,10 +77,10 @@ const EktefellePartnerSamboer = ({ onChange, value = initialEPS }: Props) => {
             <div className={styles.ufør}>
                 <RadioGruppe legend="Er ektefelle eller samboer ufør flyktning?">
                     <Radio
-                        checked={Boolean(value?.erUførFlyktning)}
+                        checked={Boolean(EPSFormData.erUførFlyktning)}
                         onChange={() =>
-                            onChange({
-                                ...(value ?? initialEPS),
+                            props.onChange({
+                                ...EPSFormData,
                                 erUførFlyktning: true,
                             })
                         }
@@ -87,10 +88,10 @@ const EktefellePartnerSamboer = ({ onChange, value = initialEPS }: Props) => {
                         name="erUfør"
                     />
                     <Radio
-                        checked={value?.erUførFlyktning === false}
+                        checked={EPSFormData.erUførFlyktning === false}
                         onChange={() =>
-                            onChange({
-                                ...(value ?? initialEPS),
+                            props.onChange({
+                                ...EPSFormData,
                                 erUførFlyktning: false,
                             })
                         }
