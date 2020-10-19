@@ -17,7 +17,7 @@ export const KjønnAnnet = () => (
     </svg>
 );
 
-export const KjønnUkent = () => (
+export const KjønnUkjent = () => (
     <svg width="34px" height="34px" viewBox="0 0 165.4 162.59">
         <title>{'01'}</title>
         <path

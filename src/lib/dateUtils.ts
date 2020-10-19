@@ -28,3 +28,11 @@ export const toDateOrNull = (date: string | undefined): Date | null => {
 
     return new Date(date);
 };
+
+export const isValidDayMonthYearFormat = (date: Nullable<string>): boolean => {
+    if (!date) {
+        return false;
+    }
+
+    return DateFns.isValid(DateFns.parse(date, 'dd.MM.yyyy', new Date()));
+};

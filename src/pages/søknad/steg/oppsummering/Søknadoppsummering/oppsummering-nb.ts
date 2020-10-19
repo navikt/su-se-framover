@@ -25,8 +25,8 @@ export default {
     'input.delerBoligMedEktemakeEllerSamboer.label': 'Ektemake eller samboer',
     'input.delerBoligMedBarnOver18.label': 'Voksne barn',
     'input.delerBoligMedAndreVoksne.label': 'Andre voksne',
-    'input.ektemakeEllerSamboerUnder67År.label': 'Er ektemake eller samboer under 67 år?',
-    'input.ektemakeEllerSamboerUførFlyktning.label': 'Er ektemake eller samboer ufør flyktning?',
+    'input.ektemakeEllerSamboerFnr.label': 'Fødselsnummer eller fødselsdato på ektefelle eller samboer?',
+    'input.ektemakeEllerSamboerUførFlyktning.label': 'Er ektefelle eller samboer ufør flyktning?',
 
     'panel.tittel.dinFormue': 'Din formue',
     'input.harFormue.label': 'Har du formue?',

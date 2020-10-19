@@ -15,6 +15,7 @@ import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
 const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; søker: Person }) => {
     const history = useHistory();
     const søknadFraStore = useAppSelector((s) => s.soknad);
+
     const dispatch = useAppDispatch();
 
     return (

@@ -7,9 +7,11 @@ import { useHistory } from 'react-router-dom';
 import { AnbefalerIkkeSøke, JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice from '~/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~features/søknad/types';
+import { isValidDayMonthYearFormat } from '~lib/dateUtils';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { EktefellePartnerSamboerMedFnr, EktefellePartnerSamboerUtenFnr } from '~types/Søknad';
 
 import { useI18n } from '../../../../lib/hooks';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
@@ -17,13 +19,20 @@ import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './bo-og-opphold-i-norge-nb';
+import EktefellePartnerSamboer from './EktefellePartnerSamboer';
+import { toEktefellePartnerSamboer, toEPSFormData } from './utils';
 
 interface FormData {
     borOgOppholderSegINorge: Nullable<boolean>;
     delerBoligMedPersonOver18: Nullable<boolean>;
     delerBoligMed: Nullable<DelerBoligMed>;
-    ektemakeEllerSamboerUnder67År: Nullable<boolean>;
-    ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
+    ektefellePartnerSamboer: Nullable<EPSFormData>;
+}
+export interface EPSFormData {
+    fnr: Nullable<string>;
+    navn: Nullable<string>;
+    fødselsdato: Nullable<string>;
+    erUførFlyktning: Nullable<boolean>;
 }
 
 const schema = yup.object<FormData>({
@@ -44,15 +53,31 @@ const schema = yup.object<FormData>({
                 ])
                 .required(),
         }),
-    ektemakeEllerSamboerUnder67År: yup.boolean().nullable().defined().when('delerBoligMed', {
-        is: 'ektemake-eller-samboer',
-        then: yup.boolean().nullable().required(),
-    }),
-    ektemakeEllerSamboerUførFlyktning: yup.boolean().nullable().defined().when('ektemakeEllerSamboerUnder67År', {
-        is: true,
-        then: yup.boolean().nullable().required(),
-        otherwise: yup.boolean().nullable(),
-    }),
+    ektefellePartnerSamboer: yup
+        .mixed<null>()
+        .nullable()
+        .defined()
+        .when('delerBoligMed', {
+            is: DelerBoligMed.EKTEMAKE_SAMBOER,
+            then: yup
+                .mixed<EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr>()
+                .required()
+                .test('isValidEktefelleData', 'Ugyldig informasjon om ektefelle', (value) => {
+                    const eps = toEktefellePartnerSamboer(value);
+
+                    switch (eps?.type) {
+                        case 'MedFnr':
+                            return eps.fnr.length === 11;
+                        case 'UtenFnr':
+                            return isValidDayMonthYearFormat(eps.fødselsdato) && eps.navn?.length > 0;
+                        default:
+                            return false;
+                    }
+                })
+                .test('UførhetFyltInn', 'Må fylles inn', (value) => {
+                    return value.erUførFlyktning !== null;
+                }),
+        }),
 });
 
 const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
@@ -61,24 +86,23 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
-    const save = (values: FormData) =>
-        dispatch(
+    const save = (values: FormData) => {
+        return dispatch(
             søknadSlice.actions.boOgOppholdUpdated({
                 borOgOppholderSegINorge: values.borOgOppholderSegINorge,
                 delerBoligMedPersonOver18: values.delerBoligMedPersonOver18,
                 delerBoligMed: values.delerBoligMed,
-                ektemakeEllerSamboerUnder67År: values.ektemakeEllerSamboerUnder67År,
-                ektemakeEllerSamboerUførFlyktning: values.ektemakeEllerSamboerUførFlyktning,
+                ektefellePartnerSamboer: toEktefellePartnerSamboer(values.ektefellePartnerSamboer),
             })
         );
+    };
 
     const formik = useFormik<FormData>({
         initialValues: {
             borOgOppholderSegINorge: boOgOppholdFraStore.borOgOppholderSegINorge,
             delerBoligMedPersonOver18: boOgOppholdFraStore.delerBoligMedPersonOver18,
             delerBoligMed: boOgOppholdFraStore.delerBoligMed,
-            ektemakeEllerSamboerUnder67År: boOgOppholdFraStore.ektemakeEllerSamboerUnder67År,
-            ektemakeEllerSamboerUførFlyktning: boOgOppholdFraStore.ektemakeEllerSamboerUførFlyktning,
+            ektefellePartnerSamboer: toEPSFormData(boOgOppholdFraStore.ektefellePartnerSamboer),
         },
         onSubmit: (values) => {
             save(values);
@@ -125,8 +149,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     ...formik.values,
                                     delerBoligMedPersonOver18: val,
                                     delerBoligMed: null,
-                                    ektemakeEllerSamboerUnder67År: null,
-                                    ektemakeEllerSamboerUførFlyktning: null,
+                                    ektefellePartnerSamboer: null,
                                 });
                             }}
                         />
@@ -156,42 +179,23 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     formik.setValues({
                                         ...formik.values,
                                         delerBoligMed: value,
-                                        ektemakeEllerSamboerUnder67År: null,
-                                        ektemakeEllerSamboerUførFlyktning: null,
+                                        ektefellePartnerSamboer: null,
                                     });
                                 }}
                                 checked={formik.values.delerBoligMed?.toString()}
                             />
                         )}
+
                         {formik.values.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
-                            <JaNeiSpørsmål
-                                id="ektemakeEllerSamboerUnder67År"
-                                className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="input.ektemakeEllerSamboerUnder67År.label" />}
-                                feil={formik.errors.ektemakeEllerSamboerUnder67År}
-                                state={formik.values.ektemakeEllerSamboerUnder67År}
-                                onChange={(val) => {
-                                    formik.setValues({
-                                        ...formik.values,
-                                        ektemakeEllerSamboerUnder67År: val,
-                                        ektemakeEllerSamboerUførFlyktning: null,
-                                    });
-                                }}
-                            />
-                        )}
-                        {formik.values.ektemakeEllerSamboerUnder67År && (
-                            <JaNeiSpørsmål
-                                id="ektemakeEllerSamboerUførFlyktning"
-                                className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="input.ektemakeEllerSamboerUførFlyktning.label" />}
-                                feil={formik.errors.ektemakeEllerSamboerUførFlyktning}
-                                state={formik.values.ektemakeEllerSamboerUførFlyktning}
-                                onChange={(val) => {
-                                    formik.setValues({
-                                        ...formik.values,
-                                        ektemakeEllerSamboerUførFlyktning: val,
-                                    });
-                                }}
+                            <EktefellePartnerSamboer
+                                onChange={(eps) =>
+                                    formik.setValues((values) => ({
+                                        ...values,
+                                        ektefellePartnerSamboer: eps,
+                                    }))
+                                }
+                                value={formik.values.ektefellePartnerSamboer}
+                                feil={formik.errors.ektefellePartnerSamboer}
                             />
                         )}
                     </div>

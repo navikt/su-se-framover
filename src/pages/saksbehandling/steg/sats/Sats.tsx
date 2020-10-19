@@ -24,6 +24,7 @@ import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './sats-nb';
+import { hentEktefellesAlder, hentEktefellesFnrEllerFødselsdato } from './utils';
 
 interface FormData {
     delerSøkerBolig: Nullable<boolean>;
@@ -106,14 +107,14 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
-    const eksisterende = props.behandling.behandlingsinformasjon.bosituasjon;
+    const eksisterendeBosituasjon = props.behandling.behandlingsinformasjon.bosituasjon;
     const formik = useFormik<FormData>({
         initialValues: {
-            delerSøkerBolig: eksisterende?.delerBolig ?? null,
-            delerBoligMedHvem: eksisterende?.delerBoligMed ?? null,
-            erEktemakeEllerSamboerUnder67: eksisterende?.ektemakeEllerSamboerUnder67År ?? null,
-            mottarEktemakeEllerSamboerSU: eksisterende?.ektemakeEllerSamboerUførFlyktning ?? null,
-            begrunnelse: eksisterende?.begrunnelse ?? null,
+            delerSøkerBolig: eksisterendeBosituasjon?.delerBolig ?? null,
+            delerBoligMedHvem: eksisterendeBosituasjon?.delerBoligMed ?? null,
+            erEktemakeEllerSamboerUnder67: eksisterendeBosituasjon?.ektemakeEllerSamboerUnder67År ?? null,
+            mottarEktemakeEllerSamboerSU: eksisterendeBosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null,
+            begrunnelse: eksisterendeBosituasjon?.begrunnelse ?? null,
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -348,40 +349,44 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                             },
                             {
                                 tittel: intl.formatMessage({
-                                    id: 'display.fraSøknad.ektemakeEllerSamboerUnder67år',
+                                    id: 'display.fraSøknad.ektefelleEllerSamboerFnr',
+                                }),
+                                verdi: props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
+                                    ? hentEktefellesFnrEllerFødselsdato(
+                                          props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
+                                      )
+                                    : '-',
+                            },
+                            {
+                                tittel: intl.formatMessage({
+                                    id: 'display.fraSøknad.ektefelleEllerSamboerAlder',
+                                }),
+                                verdi: props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
+                                    ? hentEktefellesAlder(
+                                          props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
+                                      ).toString()
+                                    : '-',
+                            },
+                            {
+                                tittel: intl.formatMessage({
+                                    id: 'display.fraSøknad.ektefelleEllerSamboerNavn',
                                 }),
                                 verdi:
-                                    props.behandling.søknad.søknadInnhold.boforhold.ektemakeEllerSamboerUnder67År ===
-                                    null
-                                        ? intl.formatMessage({
-                                              id: 'display.fraSøknad.ikkeRegistert',
-                                          })
-                                        : props.behandling.søknad.søknadInnhold.boforhold.ektemakeEllerSamboerUnder67År
-                                        ? intl.formatMessage({
-                                              id: 'radio.label.ja',
-                                          })
-                                        : intl.formatMessage({
-                                              id: 'radio.label.nei',
-                                          }),
+                                    props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer?.type ===
+                                    'UtenFnr'
+                                        ? props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer.navn
+                                        : '-',
                             },
                             {
                                 tittel: intl.formatMessage({
                                     id: 'display.fraSøknad.ektemakeEllerSamboerUførFlyktning',
                                 }),
-                                verdi:
-                                    props.behandling.søknad.søknadInnhold.boforhold
-                                        .ektemakeEllerSamboerUførFlyktning === null
-                                        ? intl.formatMessage({
-                                              id: 'display.fraSøknad.ikkeRegistert',
-                                          })
-                                        : props.behandling.søknad.søknadInnhold.boforhold
-                                              .ektemakeEllerSamboerUførFlyktning
-                                        ? intl.formatMessage({
-                                              id: 'radio.label.ja',
-                                          })
-                                        : intl.formatMessage({
-                                              id: 'radio.label.nei',
-                                          }),
+                                verdi: props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
+                                    ? props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
+                                          .erUførFlyktning
+                                        ? 'Ja'
+                                        : 'Nei'
+                                    : '-',
                             },
                         ]}
                     />

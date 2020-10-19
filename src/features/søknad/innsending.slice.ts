@@ -38,8 +38,7 @@ export const sendSøknad = createAsyncThunk<
             borOgOppholderSegINorge: søknad.boOgOpphold.borOgOppholderSegINorge!,
             delerBoligMedVoksne: søknad.boOgOpphold.delerBoligMedPersonOver18!,
             delerBoligMed: søknad.boOgOpphold.delerBoligMed,
-            ektemakeEllerSamboerUnder67År: søknad.boOgOpphold.ektemakeEllerSamboerUnder67År,
-            ektemakeEllerSamboerUførFlyktning: søknad.boOgOpphold.ektemakeEllerSamboerUførFlyktning,
+            ektefellePartnerSamboer: søknad.boOgOpphold.ektefellePartnerSamboer,
         },
         utenlandsopphold: {
             registrertePerioder: søknad.utenlandsopphold.harReistDatoer,

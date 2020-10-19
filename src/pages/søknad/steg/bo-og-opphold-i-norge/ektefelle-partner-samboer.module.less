@@ -1,0 +1,32 @@
+@import '~/styles/variables.less';
+
+.fnrInput {
+    display: flex;
+    margin-bottom: @spacing-xs;
+
+    .result {
+        .genderIcon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: @navbla;
+            margin: 0 @spacing-xxs;
+        }
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+.ukjentFnr {
+    margin: @spacing-xs 0;
+
+    > :first-child {
+        margin-bottom: @spacing-s;
+    }
+}
+
+.ufør {
+    margin-top: @spacing-s;
+}

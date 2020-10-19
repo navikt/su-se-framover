@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Person, Kjønn } from '~api/personApi';
-import { KjønnKvinne, KjønnMann, KjønnUkent } from '~assets/Icons';
+import { KjønnKvinne, KjønnMann, KjønnUkjent } from '~assets/Icons';
 
 import { showName } from '../features/person/personUtils';
 
@@ -18,7 +18,7 @@ export const Personkort = (props: { person: Person }) => {
                     ) : props.person.kjønn === Kjønn.Mann ? (
                         <KjønnMann />
                     ) : (
-                        <KjønnUkent />
+                        <KjønnUkjent />
                     )}
                 </span>
             </div>
