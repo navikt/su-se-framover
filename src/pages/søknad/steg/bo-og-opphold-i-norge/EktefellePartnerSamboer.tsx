@@ -5,6 +5,7 @@ import * as personApi from '~api/personApi';
 import { Person } from '~api/personApi';
 import { KjønnKvinne, KjønnMann, KjønnUkjent } from '~assets/Icons';
 import { showName } from '~features/person/personUtils';
+import { isValidDayMonthYearFormat } from '~lib/dateUtils';
 import { Nullable } from '~lib/types';
 
 import { EPSFormData } from './Bo-og-opphold-i-norge';
@@ -14,6 +15,7 @@ import { initialEPS } from './utils';
 interface Props {
     onChange: (eps: EPSFormData) => void;
     value: Nullable<EPSFormData>;
+    feil?: string;
 }
 const EktefellePartnerSamboer = (props: Props) => {
     const [fnrErUkjent, setFnrErUkjent] = useState(false);
@@ -30,6 +32,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                         fnr,
                     });
                 }}
+                feil={!fnrErUkjent && props.feil}
             />
             <Checkbox
                 onChange={(e) => {
@@ -57,6 +60,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                                 navn: e.target.value,
                             });
                         }}
+                        feil={!EPSFormData.navn && props.feil}
                     />
                     <Input
                         value={EPSFormData.fødselsdato ?? ''}
@@ -70,12 +74,16 @@ const EktefellePartnerSamboer = (props: Props) => {
                                 fødselsdato: e.target.value,
                             });
                         }}
+                        feil={!isValidDayMonthYearFormat(EPSFormData.fødselsdato) && props.feil}
                     />
                 </div>
             )}
 
             <div className={styles.ufør}>
-                <RadioGruppe legend="Er ektefelle eller samboer ufør flyktning?">
+                <RadioGruppe
+                    legend="Er ektefelle eller samboer ufør flyktning?"
+                    feil={EPSFormData.erUførFlyktning === null && props.feil}
+                >
                     <Radio
                         checked={Boolean(EPSFormData.erUførFlyktning)}
                         onChange={() =>
@@ -108,8 +116,9 @@ interface FnrInputProps {
     disabled: boolean;
     fnr: Nullable<string>;
     onFnrChange: (fnr: string) => void;
+    feil?: React.ReactNode;
 }
-const FnrInput = ({ disabled, fnr, onFnrChange }: FnrInputProps) => {
+const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
     const [person, setPerson] = useState<Person | null>(null);
 
     async function fetchPerson(fødselsnummer: string) {
@@ -132,6 +141,7 @@ const FnrInput = ({ disabled, fnr, onFnrChange }: FnrInputProps) => {
                 disabled={disabled}
                 placeholder="11 siffer"
                 maxLength={11}
+                feil={feil}
             />
 
             {!disabled && person && (
