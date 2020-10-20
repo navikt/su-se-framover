@@ -9,6 +9,7 @@ import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils
 import { SøknadInnhold } from '~types/Søknad';
 
 import { SøknadState } from './søknad.slice';
+import { DelerBoligMed } from './types';
 import { toFormue } from './utils';
 
 export const sendSøknad = createAsyncThunk<
@@ -73,9 +74,12 @@ export const sendSøknad = createAsyncThunk<
                     ? 'verge'
                     : null,
         },
-        ektefelle: {
-            formue: toFormue(søknad.ektefelle.formue),
-        },
+        ektefelle:
+            søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
+                ? {
+                      formue: toFormue(søknad.ektefelle.formue),
+                  }
+                : null,
     };
 
     const res = await søknadApi.sendSøknad(søknadDto);
