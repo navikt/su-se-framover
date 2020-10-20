@@ -162,7 +162,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 radios={[
                                     {
                                         label: (
-                                            <FormattedMessage id={'input.delerBoligMedEktemakeEllerSamboer.label'} />
+                                            <FormattedMessage id={'input.delerBoligMedEktefelleEllerSamboer.label'} />
                                         ),
                                         value: DelerBoligMed.EKTEMAKE_SAMBOER,
                                     },
