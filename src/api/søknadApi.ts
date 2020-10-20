@@ -1,5 +1,5 @@
 import { Sak } from '~types/Sak';
-import { SøknadInnhold } from '~types/Søknad';
+import { LukkSøknadType, SøknadInnhold } from '~types/Søknad';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -7,21 +7,34 @@ export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientRes
     return apiClient({ url: '/soknad', method: 'POST', body: søknad });
 }
 
-export async function lukkSøknad(arg: { sakId: string; søknadId: string }): Promise<ApiClientResult<Sak>> {
+export async function lukkSøknad(arg: {
+    søknadId: string;
+    lukketSøknadType: LukkSøknadType;
+    datoSøkerTrakkSøknad: Date;
+}): Promise<ApiClientResult<Sak>> {
     return apiClient({
         url: `/soknad/${arg.søknadId}/lukk`,
         method: 'POST',
+        body: {
+            typeLukking: arg.lukketSøknadType,
+            datoSøkerTrakkSøknad: arg.datoSøkerTrakkSøknad,
+        },
     });
 }
 
 export async function hentLukketSøknadsBrevutkast(arg: {
     søknadId: string;
-    lukketSøknadType: string;
+    lukketSøknadType: LukkSøknadType;
+    datoSøkerTrakkSøknad: Date;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
-        url: `/soknad/${arg.søknadId}/lukk/brevutkast?type=${arg.lukketSøknadType}`,
-        method: 'GET',
+        url: `/soknad/${arg.søknadId}/lukk/brevutkast`,
+        method: 'POST',
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
+        body: {
+            typeLukking: arg.lukketSøknadType,
+            datoSøkerTrakkSøknad: arg.datoSøkerTrakkSøknad,
+        },
         bodyTransformer: (res) => res.blob(),
     });
 }

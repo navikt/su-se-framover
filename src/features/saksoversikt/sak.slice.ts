@@ -8,7 +8,6 @@ import * as sakApi from '~api/sakApi';
 import * as søknadApi from '~api/søknadApi';
 import * as utbetalingApi from '~api/utbetalingApi';
 import { pipe } from '~lib/fp';
-import { LukkSøknadType } from '~pages/saksbehandling/sakintro/AvsluttBehandling';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
@@ -16,6 +15,7 @@ import { UtledetSatsInfo } from '~types/Beregning';
 import { Fradrag } from '~types/Fradrag';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
+import { LukkSøknadType } from '~types/Søknad';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<Sak, { fnr: string } | { sakId: string }, { rejectValue: ApiError }>(
@@ -197,8 +197,9 @@ export const attesteringUnderkjenn = createAsyncThunk<
 export const lukkSøknad = createAsyncThunk<
     Sak,
     {
-        sakId: string;
         søknadId: string;
+        lukketSøknadType: LukkSøknadType;
+        datoSøkerTrakkSøknad: Date;
     },
     { rejectValue: ApiError }
 >('soknad/lukkSøknad', async (arg, thunkApi) => {
@@ -211,10 +212,10 @@ export const lukkSøknad = createAsyncThunk<
 
 export const hentLukketSøknadBrevutkast = createAsyncThunk<
     { objectUrl: string },
-    { søknadId: string; lukketSøknadType: LukkSøknadType },
+    { søknadId: string; lukketSøknadType: LukkSøknadType; datoSøkerTrakkSøknad: Date },
     { rejectValue: ApiError }
->('soknad/hentLukketSøknadBrevUtkast', async ({ søknadId, lukketSøknadType }, thunkApi) => {
-    const res = await søknadApi.hentLukketSøknadsBrevutkast({ søknadId, lukketSøknadType });
+>('soknad/hentLukketSøknadBrevutkast', async ({ søknadId, lukketSøknadType, datoSøkerTrakkSøknad }, thunkApi) => {
+    const res = await søknadApi.hentLukketSøknadsBrevutkast({ søknadId, lukketSøknadType, datoSøkerTrakkSøknad });
     if (res.status === 'ok') {
         return { objectUrl: URL.createObjectURL(res.data) };
     }

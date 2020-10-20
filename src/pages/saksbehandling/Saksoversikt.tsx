@@ -19,7 +19,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
-import AvsluttBehandling from './sakintro/AvsluttBehandling';
+import AvsluttBehandling from './avsluttBehandling/AvsluttBehandling';
 import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
