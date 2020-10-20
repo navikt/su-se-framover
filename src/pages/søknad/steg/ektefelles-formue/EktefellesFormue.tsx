@@ -35,8 +35,8 @@ interface FormData {
     innskuddsBeløp: Nullable<string>;
     harVerdipapir: Nullable<boolean>;
     verdipapirBeløp: Nullable<string>;
-    skylderNoenEktefellePenger: Nullable<boolean>;
-    skylderNoenEktefellePengerBeløp: Nullable<string>;
+    skylderNoenMegPenger: Nullable<boolean>;
+    skylderNoenMegPengerBeløp: Nullable<string>;
     harKontanterOver1000: Nullable<boolean>;
     kontanterBeløp: Nullable<string>;
 }
@@ -164,15 +164,15 @@ const schema = yup.object<FormData>({
             is: true,
             then: yup.number().typeError('Beløp på verdipapir må være et tall').nullable(false).positive(),
         }) as yup.Schema<Nullable<string>>,
-    skylderNoenEktefellePenger: yup.boolean().nullable().required(),
-    skylderNoenEktefellePengerBeløp: yup
+    skylderNoenMegPenger: yup.boolean().nullable().required(),
+    skylderNoenMegPengerBeløp: yup
         .number()
         .nullable()
-        .label('skylderNoenEktefellePenger beløp')
+        .label('skylderNoenMegPenger beløp')
         .defined()
-        .when('skylderNoenEktefellePenger', {
+        .when('skylderNoenMegPenger', {
             is: true,
-            then: yup.number().typeError('skylderNoenEktefellePenger beløp må være et tall').nullable(false).positive(),
+            then: yup.number().typeError('skylderNoenMegPenger beløp må være et tall').nullable(false).positive(),
         }) as yup.Schema<Nullable<string>>,
     harKontanterOver1000: yup.boolean().nullable().required(),
     kontanterBeløp: yup
@@ -267,60 +267,41 @@ const KjøretøyInputFelter = (props: {
 };
 
 const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
-    const ektefellesFormueFraStore = useAppSelector((s) => s.soknad.ektefellesformue);
+    const ektefellesFormueFraStore = useAppSelector((s) => s.soknad.ektefelle.formue);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
     const save = (values: FormData) => {
         dispatch(
-            søknadSlice.actions.ektefellesformueUpdated({
-                eierBolig: values.eierBolig,
-                borIBolig: values.borIBolig,
-                verdiPåBolig: values.verdiPåBolig,
-                boligBrukesTil: values.boligBrukesTil,
-                eierMerEnnEnBolig: values.eierMerEnnEnBolig,
-                harDepositumskonto: values.harDepositumskonto,
-                depositumsBeløp: values.depositumsBeløp,
-                kontonummer: values.kontonummer,
-                verdiPåEiendom: values.verdiPåEiendom,
-                eiendomBrukesTil: values.eiendomBrukesTil,
-                eierKjøretøy: values.eierKjøretøy,
-                kjøretøy: values.kjøretøy,
-                harInnskuddPåKonto: values.harInnskuddPåKonto,
-                innskuddsBeløp: values.innskuddsBeløp,
-                harVerdipapir: values.harVerdipapir,
-                verdipapirBeløp: values.verdipapirBeløp,
-                skylderNoenEktefellePenger: values.skylderNoenEktefellePenger,
-                skylderNoenEktefellePengerBeløp: values.skylderNoenEktefellePengerBeløp,
-                harKontanterOver1000: values.harKontanterOver1000,
-                kontanterBeløp: values.kontanterBeløp,
+            søknadSlice.actions.ektefelleUpdated({
+                formue: {
+                    eierBolig: values.eierBolig,
+                    borIBolig: values.borIBolig,
+                    verdiPåBolig: values.verdiPåBolig,
+                    boligBrukesTil: values.boligBrukesTil,
+                    eierMerEnnEnBolig: values.eierMerEnnEnBolig,
+                    harDepositumskonto: values.harDepositumskonto,
+                    depositumsBeløp: values.depositumsBeløp,
+                    kontonummer: values.kontonummer,
+                    verdiPåEiendom: values.verdiPåEiendom,
+                    eiendomBrukesTil: values.eiendomBrukesTil,
+                    eierKjøretøy: values.eierKjøretøy,
+                    kjøretøy: values.kjøretøy,
+                    harInnskuddPåKonto: values.harInnskuddPåKonto,
+                    innskuddsBeløp: values.innskuddsBeløp,
+                    harVerdipapir: values.harVerdipapir,
+                    verdipapirBeløp: values.verdipapirBeløp,
+                    skylderNoenMegPenger: values.skylderNoenMegPenger,
+                    skylderNoenMegPengerBeløp: values.skylderNoenMegPengerBeløp,
+                    harKontanterOver1000: values.harKontanterOver1000,
+                    kontanterBeløp: values.kontanterBeløp,
+                },
             })
         );
     };
 
     const formik = useFormik<FormData>({
-        initialValues: {
-            eierBolig: ektefellesFormueFraStore.eierBolig,
-            borIBolig: ektefellesFormueFraStore.borIBolig,
-            verdiPåBolig: ektefellesFormueFraStore.verdiPåBolig,
-            boligBrukesTil: ektefellesFormueFraStore.boligBrukesTil,
-            eierMerEnnEnBolig: ektefellesFormueFraStore.eierMerEnnEnBolig,
-            harDepositumskonto: ektefellesFormueFraStore.harDepositumskonto,
-            depositumsBeløp: ektefellesFormueFraStore.depositumsBeløp,
-            kontonummer: ektefellesFormueFraStore.kontonummer,
-            verdiPåEiendom: ektefellesFormueFraStore.verdiPåEiendom,
-            eiendomBrukesTil: ektefellesFormueFraStore.eiendomBrukesTil,
-            eierKjøretøy: ektefellesFormueFraStore.eierKjøretøy,
-            kjøretøy: ektefellesFormueFraStore.kjøretøy,
-            harInnskuddPåKonto: ektefellesFormueFraStore.harInnskuddPåKonto,
-            innskuddsBeløp: ektefellesFormueFraStore.innskuddsBeløp,
-            harVerdipapir: ektefellesFormueFraStore.harVerdipapir,
-            verdipapirBeløp: ektefellesFormueFraStore.verdipapirBeløp,
-            skylderNoenEktefellePenger: ektefellesFormueFraStore.skylderNoenEktefellePenger,
-            skylderNoenEktefellePengerBeløp: ektefellesFormueFraStore.skylderNoenEktefellePengerBeløp,
-            harKontanterOver1000: ektefellesFormueFraStore.harKontanterOver1000,
-            kontanterBeløp: ektefellesFormueFraStore.kontanterBeløp,
-        },
+        initialValues: ektefellesFormueFraStore,
         onSubmit: (values) => {
             save(values);
             history.push(props.nesteUrl);
@@ -589,24 +570,24 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             id="skylderNoenMegPenger"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.skylderNoenMegPenger.label" />}
-                            feil={formik.errors.skylderNoenEktefellePenger}
-                            state={formik.values.skylderNoenEktefellePenger}
+                            feil={formik.errors.skylderNoenMegPenger}
+                            state={formik.values.skylderNoenMegPenger}
                             onChange={(e) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    skylderNoenEktefellePenger: e,
-                                    skylderNoenEktefellePengerBeløp: null,
+                                    skylderNoenMegPenger: e,
+                                    skylderNoenMegPengerBeløp: null,
                                 })
                             }
                         />
 
-                        {formik.values.skylderNoenEktefellePenger && (
+                        {formik.values.skylderNoenMegPenger && (
                             <Input
                                 className={sharedStyles.marginBottom}
                                 id="skylderNoenMegPengerBeløp"
                                 name="skylderNoenMegPengerBeløp"
                                 label={<FormattedMessage id="input.skylderNoenMegPengerBeløp.label" />}
-                                value={formik.values.skylderNoenEktefellePengerBeløp || ''}
+                                value={formik.values.skylderNoenMegPengerBeløp || ''}
                                 onChange={formik.handleChange}
                             />
                         )}

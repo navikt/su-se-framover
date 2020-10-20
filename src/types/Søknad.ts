@@ -58,23 +58,28 @@ export interface SøknadInnhold {
         trygdeytelserIUtlandet: Array<{ beløp: number; type: string; fraHvem: string }>;
         pensjon: Nullable<Array<{ ordning: string; beløp: number }>>;
     };
-    formue: {
-        borIBolig: Nullable<boolean>;
-        verdiPåBolig: Nullable<number>;
-        boligBrukesTil: Nullable<string>;
-        depositumsBeløp: Nullable<number>;
-        kontonummer: Nullable<string>;
-        verdiPåEiendom: Nullable<number>;
-        eiendomBrukesTil: Nullable<string>;
-        kjøretøy: Nullable<Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>>;
-        innskuddsBeløp: Nullable<number>;
-        verdipapirBeløp: Nullable<number>;
-        skylderNoenMegPengerBeløp: Nullable<number>;
-        kontanterBeløp: Nullable<number>;
-    };
+    formue: Formue;
+    ektefelle: Nullable<{
+        formue: Formue;
+    }>;
     forNav: {
         harFullmektigEllerVerge: Nullable<Vergemål>;
     };
+}
+
+interface Formue {
+    borIBolig: Nullable<boolean>;
+    verdiPåBolig: Nullable<number>;
+    boligBrukesTil: Nullable<string>;
+    depositumsBeløp: Nullable<number>;
+    kontonummer: Nullable<string>;
+    verdiPåEiendom: Nullable<number>;
+    eiendomBrukesTil: Nullable<string>;
+    kjøretøy: Nullable<Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>>;
+    innskuddsBeløp: Nullable<number>;
+    verdipapirBeløp: Nullable<number>;
+    skylderNoenMegPengerBeløp: Nullable<number>;
+    kontanterBeløp: Nullable<number>;
 }
 
 interface EktefellePartnerSamboerBase<T extends 'MedFnr' | 'UtenFnr'> {

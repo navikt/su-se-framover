@@ -45,27 +45,29 @@ export interface SøknadState {
         harKontanterOver1000: Nullable<boolean>;
         kontanterBeløp: Nullable<string>;
     };
-    ektefellesformue: {
-        eierBolig: Nullable<boolean>;
-        borIBolig: Nullable<boolean>;
-        verdiPåBolig: Nullable<string>;
-        boligBrukesTil: Nullable<string>;
-        eierMerEnnEnBolig: Nullable<boolean>;
-        harDepositumskonto: Nullable<boolean>;
-        depositumsBeløp: Nullable<string>;
-        kontonummer: Nullable<string>;
-        verdiPåEiendom: Nullable<string>;
-        eiendomBrukesTil: Nullable<string>;
-        eierKjøretøy: Nullable<boolean>;
-        kjøretøy: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
-        harInnskuddPåKonto: Nullable<boolean>;
-        innskuddsBeløp: Nullable<string>;
-        harVerdipapir: Nullable<boolean>;
-        verdipapirBeløp: Nullable<string>;
-        skylderNoenEktefellePenger: Nullable<boolean>;
-        skylderNoenEktefellePengerBeløp: Nullable<string>;
-        harKontanterOver1000: Nullable<boolean>;
-        kontanterBeløp: Nullable<string>;
+    ektefelle: {
+        formue: {
+            eierBolig: Nullable<boolean>;
+            borIBolig: Nullable<boolean>;
+            verdiPåBolig: Nullable<string>;
+            boligBrukesTil: Nullable<string>;
+            eierMerEnnEnBolig: Nullable<boolean>;
+            harDepositumskonto: Nullable<boolean>;
+            depositumsBeløp: Nullable<string>;
+            kontonummer: Nullable<string>;
+            verdiPåEiendom: Nullable<string>;
+            eiendomBrukesTil: Nullable<string>;
+            eierKjøretøy: Nullable<boolean>;
+            kjøretøy: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
+            harInnskuddPåKonto: Nullable<boolean>;
+            innskuddsBeløp: Nullable<string>;
+            harVerdipapir: Nullable<boolean>;
+            verdipapirBeløp: Nullable<string>;
+            skylderNoenMegPenger: Nullable<boolean>;
+            skylderNoenMegPengerBeløp: Nullable<string>;
+            harKontanterOver1000: Nullable<boolean>;
+            kontanterBeløp: Nullable<string>;
+        };
     };
     inntekt: {
         harForventetInntekt: Nullable<boolean>;
@@ -136,27 +138,29 @@ const initialState: SøknadState = {
         harKontanterOver1000: null,
         kontanterBeløp: null,
     },
-    ektefellesformue: {
-        eierBolig: null,
-        borIBolig: null,
-        verdiPåBolig: null,
-        boligBrukesTil: null,
-        eierMerEnnEnBolig: null,
-        harDepositumskonto: null,
-        depositumsBeløp: null,
-        kontonummer: null,
-        verdiPåEiendom: null,
-        eiendomBrukesTil: null,
-        eierKjøretøy: null,
-        kjøretøy: [],
-        harInnskuddPåKonto: null,
-        innskuddsBeløp: null,
-        harVerdipapir: null,
-        verdipapirBeløp: null,
-        skylderNoenEktefellePenger: null,
-        skylderNoenEktefellePengerBeløp: null,
-        harKontanterOver1000: null,
-        kontanterBeløp: null,
+    ektefelle: {
+        formue: {
+            eierBolig: null,
+            borIBolig: null,
+            verdiPåBolig: null,
+            boligBrukesTil: null,
+            eierMerEnnEnBolig: null,
+            harDepositumskonto: null,
+            depositumsBeløp: null,
+            kontonummer: null,
+            verdiPåEiendom: null,
+            eiendomBrukesTil: null,
+            eierKjøretøy: null,
+            kjøretøy: [],
+            harInnskuddPåKonto: null,
+            innskuddsBeløp: null,
+            harVerdipapir: null,
+            verdipapirBeløp: null,
+            skylderNoenMegPenger: null,
+            skylderNoenMegPengerBeløp: null,
+            harKontanterOver1000: null,
+            kontanterBeløp: null,
+        },
     },
     inntekt: {
         harForventetInntekt: null,
@@ -209,8 +213,8 @@ export default createSlice({
         inntektUpdated(state, action: PayloadAction<SøknadState['inntekt']>) {
             state.inntekt = action.payload;
         },
-        ektefellesformueUpdated(state, action: PayloadAction<SøknadState['ektefellesformue']>) {
-            state.ektefellesformue = action.payload;
+        ektefelleUpdated(state, action: PayloadAction<SøknadState['ektefelle']>) {
+            state.ektefelle = action.payload;
         },
         utenlandsoppholdUpdated(state, action: PayloadAction<SøknadState['utenlandsopphold']>) {
             state.utenlandsopphold = action.payload;
