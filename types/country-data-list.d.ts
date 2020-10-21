@@ -5,5 +5,5 @@ declare module 'country-data-list' {
         number: string;
     }
 
-    export const currencies: Currency;
+    export const currencies: { all: Currency[]; [key: string]: Currency };
 }

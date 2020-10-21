@@ -41,8 +41,11 @@ const InntektFraUtland = (props: {
                 feil={valutaError}
                 bredde="s"
             >
-                {Object.values(currencies).map((c, index) => (
-                    <option value={c.code} key={index}>
+                <option value="" disabled={true}>
+                    Velg valuta..
+                </option>
+                {currencies.all.map((c) => (
+                    <option value={c.code} key={c.number}>
                         {c.code}
                     </option>
                 ))}
