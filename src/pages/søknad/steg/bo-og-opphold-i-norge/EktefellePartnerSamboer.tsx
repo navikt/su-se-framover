@@ -65,7 +65,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                     <Input
                         value={EPSFormData.fødselsdato ?? ''}
                         label="Hva er fødselsdatoen til ektefelle eller samboer?"
-                        placeholder="DD.MM.ÅÅÅÅ"
+                        description="DD.MM.ÅÅÅÅ"
                         bredde="S"
                         maxLength={10}
                         onChange={(e) => {
@@ -136,10 +136,11 @@ const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
     return (
         <div className={styles.fnrInput}>
             <Input
+                label="Hva er fødselsnummeret til ektefelle eller samboer?"
+                description="11 siffer"
                 onChange={(e) => onFnrChange(e.target.value)}
                 value={fnr ?? ''}
                 disabled={disabled}
-                placeholder="11 siffer"
                 maxLength={11}
                 feil={feil}
             />

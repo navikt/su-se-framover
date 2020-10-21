@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useParams, useHistory, Link } from 'react-router-dom';
 
 import { Personkort } from '~components/Personkort';
+import { DelerBoligMed } from '~features/søknad/types';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
@@ -15,6 +16,7 @@ import { useAppSelector } from '~redux/Store';
 
 import styles from './index.module.less';
 import BoOgOppholdINorge from './steg/bo-og-opphold-i-norge/Bo-og-opphold-i-norge';
+import EktefellesFormue from './steg/ektefelles-formue/EktefellesFormue';
 import FlyktningstatusOppholdstillatelse from './steg/flyktningstatus-oppholdstillatelse/Flyktningstatus-oppholdstillatelse';
 import ForVeileder from './steg/for-veileder/ForVeileder';
 import Formue from './steg/formue/DinFormue';
@@ -33,6 +35,7 @@ const messages = {
     'steg.boOgOppholdINorge': 'Bo og opphold i Norge',
     'steg.formue': 'Din formue',
     'steg.inntekt': 'Din inntekt',
+    'steg.ektefellesformue': 'Ektefelle/samboers formue',
     'steg.utenlandsopphold': 'Reise til utlandet',
     'steg.forVeileder': 'For Veileder',
     'steg.oppsummering': 'Oppsummering',
@@ -44,6 +47,7 @@ const messages = {
 
 const index = () => {
     const { søker: søkerFraStore } = useAppSelector((s) => s.søker);
+    const borMedEktefelleSamboer = useAppSelector((s) => s.soknad.boOgOpphold.delerBoligMed);
     const { step } = useParams<{ step: Søknadsteg }>();
     const history = useHistory();
     const intl = useI18n({ messages });
@@ -67,46 +71,44 @@ const index = () => {
 
     const steg = [
         {
-            index: 0,
             label: intl.formatMessage({ id: 'steg.uforevedtak' }),
             step: Søknadsteg.Uførevedtak,
         },
         {
-            index: 1,
             label: intl.formatMessage({ id: 'steg.flyktningstatus' }),
             step: Søknadsteg.FlyktningstatusOppholdstillatelse,
         },
         {
-            index: 2,
             label: intl.formatMessage({ id: 'steg.boOgOppholdINorge' }),
             step: Søknadsteg.BoOgOppholdINorge,
         },
         {
-            index: 3,
             label: intl.formatMessage({ id: 'steg.formue' }),
             step: Søknadsteg.DinFormue,
         },
         {
-            index: 4,
             label: intl.formatMessage({ id: 'steg.inntekt' }),
             step: Søknadsteg.DinInntekt,
         },
         {
-            index: 5,
+            label: intl.formatMessage({ id: 'steg.ektefellesformue' }),
+            step: Søknadsteg.EktefellesFormue,
+        },
+        {
             label: intl.formatMessage({ id: 'steg.utenlandsopphold' }),
             step: Søknadsteg.ReiseTilUtlandet,
         },
         {
-            index: 6,
             label: intl.formatMessage({ id: 'steg.forVeileder' }),
             step: Søknadsteg.ForVeileder,
         },
         {
-            index: 7,
             label: intl.formatMessage({ id: 'steg.oppsummering' }),
             step: Søknadsteg.Oppsummering,
         },
-    ];
+    ].filter(
+        (s) => borMedEktefelleSamboer === DelerBoligMed.EKTEMAKE_SAMBOER || s.step !== Søknadsteg.EktefellesFormue
+    );
     const aktivtSteg = steg.findIndex((s) => s.step === step);
 
     const manglendeData = () => (
@@ -141,8 +143,8 @@ const index = () => {
                                 <>
                                     <div className={styles.stegindikatorContainer}>
                                         <Stegindikator
-                                            steg={steg.map((s) => ({
-                                                index: s.index,
+                                            steg={steg.map((s, index) => ({
+                                                index,
                                                 label: s.label,
                                             }))}
                                             aktivtSteg={aktivtSteg}
@@ -191,11 +193,24 @@ const index = () => {
                             ) : step === Søknadsteg.DinInntekt ? (
                                 <Inntekt
                                     forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinFormue })}
+                                    nesteUrl={
+                                        borMedEktefelleSamboer === DelerBoligMed.EKTEMAKE_SAMBOER
+                                            ? routes.soknad.createURL({ step: Søknadsteg.EktefellesFormue })
+                                            : routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })
+                                    }
+                                />
+                            ) : step === Søknadsteg.EktefellesFormue ? (
+                                <EktefellesFormue
+                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
                                     nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
                                 />
                             ) : step === Søknadsteg.ReiseTilUtlandet ? (
                                 <Utenlandsopphold
-                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
+                                    forrigeUrl={
+                                        borMedEktefelleSamboer === DelerBoligMed.EKTEMAKE_SAMBOER
+                                            ? routes.soknad.createURL({ step: Søknadsteg.EktefellesFormue })
+                                            : routes.soknad.createURL({ step: Søknadsteg.DinInntekt })
+                                    }
                                     nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ForVeileder })}
                                 />
                             ) : step === Søknadsteg.ForVeileder ? (

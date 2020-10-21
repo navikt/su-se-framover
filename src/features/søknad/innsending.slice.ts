@@ -9,6 +9,8 @@ import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils
 import { SøknadInnhold } from '~types/Søknad';
 
 import { SøknadState } from './søknad.slice';
+import { DelerBoligMed } from './types';
+import { toFormue } from './utils';
 
 export const sendSøknad = createAsyncThunk<
     SøknadInnhold,
@@ -63,27 +65,7 @@ export const sendSøknad = createAsyncThunk<
             })),
             pensjon: søknad.inntekt.pensjonsInntekt.map((p) => ({ ...p, beløp: Number(p.beløp) })),
         },
-        formue: {
-            borIBolig: søknad.formue.eierBolig ? søknad.formue.borIBolig : null,
-            verdiPåBolig: søknad.formue.borIBolig ? null : Number(søknad.formue.verdiPåBolig),
-            boligBrukesTil: søknad.formue.borIBolig ? null : søknad.formue.boligBrukesTil,
-
-            depositumsBeløp: søknad.formue.harDepositumskonto ? Number(søknad.formue.depositumsBeløp) : null,
-            kontonummer: søknad.formue.harDepositumskonto ? søknad.formue.kontonummer : null,
-
-            verdiPåEiendom: søknad.formue.eierMerEnnEnBolig ? Number(søknad.formue.verdiPåEiendom) : null,
-            eiendomBrukesTil: søknad.formue.eierMerEnnEnBolig ? søknad.formue.eiendomBrukesTil : null,
-
-            kjøretøy: søknad.formue.kjøretøy.map((p) => ({ ...p, verdiPåKjøretøy: Number(p.verdiPåKjøretøy) })),
-
-            innskuddsBeløp: søknad.formue.harInnskuddPåKonto ? Number(søknad.formue.innskuddsBeløp) : null,
-            verdipapirBeløp: søknad.formue.harVerdipapir ? Number(søknad.formue.verdipapirBeløp) : null,
-
-            skylderNoenMegPengerBeløp: søknad.formue.skylderNoenMegPenger
-                ? Number(søknad.formue.skylderNoenMegPengerBeløp)
-                : null,
-            kontanterBeløp: søknad.formue.harKontanterOver1000 ? Number(søknad.formue.kontanterBeløp) : null,
-        },
+        formue: toFormue(søknad.formue),
         forNav: {
             harFullmektigEllerVerge:
                 søknad.forVeileder.harFullmektigEllerVerge === 'fullmektig'
@@ -92,6 +74,12 @@ export const sendSøknad = createAsyncThunk<
                     ? 'verge'
                     : null,
         },
+        ektefelle:
+            søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
+                ? {
+                      formue: toFormue(søknad.ektefelle.formue),
+                  }
+                : null,
     };
 
     const res = await søknadApi.sendSøknad(søknadDto);
