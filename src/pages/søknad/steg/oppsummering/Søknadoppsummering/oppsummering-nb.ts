@@ -54,6 +54,7 @@ export default {
     'input.kontanterBeløp.label': 'Hvor mye i kroner?',
 
     'panel.tittel.dinInntekt': 'Din inntekt',
+    'panel.tittel.ektefelle.inntekt': 'Ektefelles inntekt',
     'input.harForventetInntekt.label': 'Forventer du å ha arbeidsinntekt fremover?',
     'input.forventetInntekt.label': 'Forventet arbeidsinntekt i kroner per måned',
     'input.mottarPensjon.label': 'Har du tjenestepensjon og/eller pensjonssparing?',
