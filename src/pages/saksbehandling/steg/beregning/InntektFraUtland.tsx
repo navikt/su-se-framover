@@ -1,5 +1,6 @@
+import { currencies } from 'country-data-list';
 import { FormikErrors } from 'formik';
-import { Input } from 'nav-frontend-skjema';
+import { Input, Select } from 'nav-frontend-skjema';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
@@ -13,13 +14,14 @@ const InntektFraUtland = (props: {
     valutaId: string;
     kursId: string;
     fradrag: FradragFormData;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange: (e: React.ChangeEvent<HTMLElement>) => void;
     utenlandskInntektErrors: FormikErrors<UtenlandskInntekt> | undefined;
     intl: IntlShape;
 }) => {
     const beløpIUtenlandskValutaError = props.utenlandskInntektErrors?.beløpIUtenlandskValuta;
     const valutaError = props.utenlandskInntektErrors?.valuta;
     const kursError = props.utenlandskInntektErrors?.kurs;
+    const valuta = props.fradrag.utenlandskInntekt.valuta;
 
     return (
         <div className={styles.inntektFraUtlandContainer}>
@@ -31,14 +33,23 @@ const InntektFraUtland = (props: {
                 onChange={props.onChange}
                 feil={beløpIUtenlandskValutaError}
             />
-            <Input
+            <Select
                 label={props.intl.formatMessage({ id: 'display.input.valuta' })}
                 name={props.valutaId}
-                value={props.fradrag.utenlandskInntekt?.valuta ?? ''}
-                bredde={'S'}
+                value={valuta ?? ''}
                 onChange={props.onChange}
                 feil={valutaError}
-            />
+                bredde="s"
+            >
+                <option value="" disabled={true}>
+                    Velg valuta..
+                </option>
+                {currencies.all.map((c) => (
+                    <option value={c.code} key={c.number}>
+                        {c.code}
+                    </option>
+                ))}
+            </Select>
             <Input
                 label={props.intl.formatMessage({ id: 'display.input.kurs' })}
                 name={props.kursId}
