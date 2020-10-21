@@ -81,18 +81,6 @@ const VisBeregning = (props: Props) => {
                                         />
                                     </div>
                                 )}
-                                {f.inntektDelerAvPeriode && (
-                                    <div>
-                                        <InfoLinje
-                                            tittel="Fra og med"
-                                            value={intl.formatDate(f.inntektDelerAvPeriode.fraOgMed)}
-                                        />
-                                        <InfoLinje
-                                            tittel="Til og med"
-                                            value={intl.formatDate(f.inntektDelerAvPeriode.tilOgMed)}
-                                        />
-                                    </div>
-                                )}
                             </li>
                         ))}
                     </ul>

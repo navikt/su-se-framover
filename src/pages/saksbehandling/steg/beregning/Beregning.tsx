@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { lastDayOfMonth, formatISO } from 'date-fns';
+import { lastDayOfMonth } from 'date-fns';
 import { useFormik } from 'formik';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe from 'nav-frontend-alertstriper';
@@ -77,14 +77,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                     /* eslint-disable @typescript-eslint/no-non-null-assertion */
                     beløp: parseInt(f.beløp!, 10),
                     type: f.type!,
-                    inntektDelerAvPeriode: f.delerAvPeriodeChecked
-                        ? {
-                              fraOgMed: formatISO(f.inntektDelerAvPeriode.fraOgMed!, { representation: 'date' }),
-                              tilOgMed: formatISO(lastDayOfMonth(f.inntektDelerAvPeriode.tilOgMed!), {
-                                  representation: 'date',
-                              }),
-                          }
-                        : null,
                     utenlandskInntekt: f.fraUtland
                         ? {
                               beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
@@ -111,12 +103,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             tom: toDateOrNull(props.behandling.beregning?.tilOgMed),
             fradrag: FradragUtenomForventetInntekt.map((f) => ({
                 fraUtland: f.utenlandskInntekt !== null,
-                delerAvPeriodeChecked: f.inntektDelerAvPeriode !== null,
                 beløp: f.beløp.toString(),
-                inntektDelerAvPeriode: {
-                    fraOgMed: f.inntektDelerAvPeriode?.fraOgMed ? new Date(f.inntektDelerAvPeriode?.fraOgMed) : null,
-                    tilOgMed: f.inntektDelerAvPeriode?.tilOgMed ? new Date(f.inntektDelerAvPeriode?.tilOgMed) : null,
-                },
                 utenlandskInntekt: {
                     beløpIUtenlandskValuta: f.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',
                     valuta: f.utenlandskInntekt?.valuta.toString() ?? '',
@@ -236,8 +223,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                                     valuta: '',
                                                     kurs: '',
                                                 },
-                                                delerAvPeriodeChecked: false,
-                                                inntektDelerAvPeriode: { fraOgMed: null, tilOgMed: null },
                                             },
                                         ],
                                     });

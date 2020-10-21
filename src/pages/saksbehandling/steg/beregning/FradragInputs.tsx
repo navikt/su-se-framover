@@ -10,18 +10,15 @@ import { TrashBin } from '~assets/Icons';
 import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsNumber } from '~lib/validering';
 import InntektFraUtland from '~pages/saksbehandling/steg/beregning/InntektFraUtland';
-import { Fradrag, Fradragstype, UtenlandskInntekt, DelerAvPeriode } from '~types/Fradrag';
+import { Fradrag, Fradragstype, UtenlandskInntekt } from '~types/Fradrag';
 
-import DelerAvPeriodeInputs from './DelerAvPeriodeInputs';
 import styles from './fradragInputs.module.less';
 
 export interface FradragFormData {
     type: Nullable<Fradragstype>;
     beløp: Nullable<string>;
     fraUtland: boolean;
-    delerAvPeriodeChecked: boolean;
     utenlandskInntekt: UtenlandskInntektFormData;
-    inntektDelerAvPeriode: DelerAvPeriodeFormData;
 }
 
 export interface UtenlandskInntektFormData {
@@ -30,29 +27,17 @@ export interface UtenlandskInntektFormData {
     kurs: string;
 }
 
-export interface DelerAvPeriodeFormData {
-    fraOgMed: Nullable<Date>;
-    tilOgMed: Nullable<Date>;
-}
-
 const FradragObjectKeys: KeyDict<FradragFormData> = {
     type: 'type',
     beløp: 'beløp',
     fraUtland: 'fraUtland',
-    delerAvPeriodeChecked: 'delerAvPeriodeChecked',
     utenlandskInntekt: 'utenlandskInntekt',
-    inntektDelerAvPeriode: 'inntektDelerAvPeriode',
 };
 
 const UtenlandskInntektKeys: KeyDict<UtenlandskInntekt> = {
     beløpIUtenlandskValuta: 'beløpIUtenlandskValuta',
     valuta: 'valuta',
     kurs: 'kurs',
-};
-
-const DelerAvPeriodeKeys: KeyDict<DelerAvPeriode> = {
-    fraOgMed: 'fraOgMed',
-    tilOgMed: 'tilOgMed',
 };
 
 const InputWithFollowText = (props: {
@@ -126,25 +111,11 @@ const utenlandskInntekt = yup
         otherwise: yup.object<UtenlandskInntektFormData>(),
     });
 
-const delerAvPeriode = yup
-    .object<DelerAvPeriodeFormData>()
-    .defined()
-    .when('delerAvPeriodeChecked', {
-        is: true,
-        then: yup.object<DelerAvPeriodeFormData>({
-            fraOgMed: yup.date().required().nullable(),
-            tilOgMed: yup.date().required().nullable(),
-        }),
-        otherwise: yup.object<DelerAvPeriodeFormData>(),
-    });
-
 export const fradragSchema = yup.object<FradragFormData>({
     beløp: validateStringAsNumber,
     type: yup.string().defined().oneOf(Object.values(Fradragstype), 'Du må velge en fradragstype'),
     fraUtland: yup.boolean(),
     utenlandskInntekt: utenlandskInntekt,
-    delerAvPeriodeChecked: yup.boolean(),
-    inntektDelerAvPeriode: delerAvPeriode,
 });
 
 export const isValidFradrag = (f: unknown): f is Fradrag => fradragSchema.isValidSync(f);
@@ -172,9 +143,6 @@ export const FradragInputs = (props: {
                 const beløpIUtenlandskValuta = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.beløpIUtenlandskValuta}`;
                 const valutaId = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.valuta}`;
                 const kursId = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.kurs}`;
-                const delerAvPeriodeId = `${name}.${FradragObjectKeys.delerAvPeriodeChecked}`;
-                const fraOgMedId = `${name}.${FradragObjectKeys.inntektDelerAvPeriode}.${DelerAvPeriodeKeys.fraOgMed}`;
-                const tilOgMedId = `${name}.${FradragObjectKeys.inntektDelerAvPeriode}.${DelerAvPeriodeKeys.tilOgMed}`;
 
                 return (
                     <Panel key={index} border className={styles.fradragItemContainer}>
@@ -231,18 +199,6 @@ export const FradragInputs = (props: {
                                             }
                                         }}
                                     />
-                                    <Checkbox
-                                        label={props.intl.formatMessage({ id: 'display.checkbox.delerAvPeriode' })}
-                                        name={delerAvPeriodeId}
-                                        checked={fradrag.delerAvPeriodeChecked}
-                                        onChange={(e) => {
-                                            props.onChange(e);
-                                            if (fradrag.delerAvPeriodeChecked) {
-                                                props.setFieldValue(fraOgMedId, null);
-                                                props.setFieldValue(tilOgMedId, null);
-                                            }
-                                        }}
-                                    />
                                 </div>
                                 <div className={styles.utenlandsinntektOgPeriodeComponentContainer}>
                                     {fradrag.fraUtland && (
@@ -260,22 +216,6 @@ export const FradragInputs = (props: {
                                                     : undefined
                                             }
                                             intl={props.intl}
-                                        />
-                                    )}
-                                    {fradrag.delerAvPeriodeChecked && (
-                                        <DelerAvPeriodeInputs
-                                            fraOgMedId={fraOgMedId}
-                                            tilOgMedId={tilOgMedId}
-                                            fradrag={fradrag}
-                                            intl={props.intl}
-                                            setFieldValue={props.setFieldValue}
-                                            delerAvPeriodeErrors={
-                                                errorForLinje &&
-                                                typeof errorForLinje === 'object' &&
-                                                errorForLinje.inntektDelerAvPeriode
-                                                    ? errorForLinje.inntektDelerAvPeriode
-                                                    : undefined
-                                            }
                                         />
                                     )}
                                 </div>
