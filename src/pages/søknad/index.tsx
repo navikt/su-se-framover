@@ -15,6 +15,7 @@ import { trackEvent, søknadNesteSteg } from '~lib/tracking/trackingEvents';
 import { useAppSelector } from '~redux/Store';
 
 import styles from './index.module.less';
+import messages from './nb';
 import BoOgOppholdINorge from './steg/bo-og-opphold-i-norge/Bo-og-opphold-i-norge';
 import EktefellesFormue from './steg/ektefelle/EktefellesFormue';
 import EktefellesInntekt from './steg/ektefelle/EktefellesInntekt';
@@ -28,24 +29,6 @@ import Oppsummering from './steg/oppsummering/Oppsummering';
 import Uførevedtak from './steg/uførevedtak/Uførevedtak';
 import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
 import { Søknadsteg } from './types';
-
-const messages = {
-    tittel: 'Søknad for',
-    'steg.uforevedtak': 'Uførevedtak',
-    'steg.flyktningstatus': 'Flyktningstatus',
-    'steg.boOgOppholdINorge': 'Bo og opphold i Norge',
-    'steg.formue': 'Din formue',
-    'steg.inntekt': 'Din inntekt',
-    'steg.ektefellesformue': 'Ektefelle/samboers formue',
-    'steg.ektefellesinntekt': 'Ektefelle/samboers inntekt',
-    'steg.utenlandsopphold': 'Reise til utlandet',
-    'steg.forVeileder': 'For Veileder',
-    'steg.oppsummering': 'Oppsummering',
-    'steg.neste': 'Neste',
-    'steg.forrige': 'Forrige',
-    'feilmelding.tekst': 'En feil oppstod',
-    'feilmelding.knapp': 'Start ny søknad',
-};
 
 const index = () => {
     const { søker: søkerFraStore } = useAppSelector((s) => s.søker);
@@ -140,7 +123,7 @@ const index = () => {
                         <>
                             <div className={styles.headerContainer}>
                                 <div className={styles.sidetittelContainer}>
-                                    <Innholdstittel>{intl.formatMessage({ id: 'tittel' })}</Innholdstittel>
+                                    <Innholdstittel>Søknad for</Innholdstittel>
                                 </div>
 
                                 <div className={styles.personkortContainer}>
