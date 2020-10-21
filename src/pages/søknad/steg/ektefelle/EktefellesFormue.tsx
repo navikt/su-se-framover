@@ -267,41 +267,21 @@ const KjøretøyInputFelter = (props: {
 };
 
 const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
-    const ektefellesFormueFraStore = useAppSelector((s) => s.soknad.ektefelle.formue);
+    const ektefelle = useAppSelector((s) => s.soknad.ektefelle);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
     const save = (values: FormData) => {
         dispatch(
             søknadSlice.actions.ektefelleUpdated({
-                formue: {
-                    eierBolig: values.eierBolig,
-                    borIBolig: values.borIBolig,
-                    verdiPåBolig: values.verdiPåBolig,
-                    boligBrukesTil: values.boligBrukesTil,
-                    eierMerEnnEnBolig: values.eierMerEnnEnBolig,
-                    harDepositumskonto: values.harDepositumskonto,
-                    depositumsBeløp: values.depositumsBeløp,
-                    kontonummer: values.kontonummer,
-                    verdiPåEiendom: values.verdiPåEiendom,
-                    eiendomBrukesTil: values.eiendomBrukesTil,
-                    eierKjøretøy: values.eierKjøretøy,
-                    kjøretøy: values.kjøretøy,
-                    harInnskuddPåKonto: values.harInnskuddPåKonto,
-                    innskuddsBeløp: values.innskuddsBeløp,
-                    harVerdipapir: values.harVerdipapir,
-                    verdipapirBeløp: values.verdipapirBeløp,
-                    skylderNoenMegPenger: values.skylderNoenMegPenger,
-                    skylderNoenMegPengerBeløp: values.skylderNoenMegPengerBeløp,
-                    harKontanterOver1000: values.harKontanterOver1000,
-                    kontanterBeløp: values.kontanterBeløp,
-                },
+                ...ektefelle,
+                formue: values,
             })
         );
     };
 
     const formik = useFormik<FormData>({
-        initialValues: ektefellesFormueFraStore,
+        initialValues: ektefelle.formue,
         onSubmit: (values) => {
             save(values);
             history.push(props.nesteUrl);

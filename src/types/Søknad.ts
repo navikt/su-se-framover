@@ -48,19 +48,11 @@ export interface SøknadInnhold {
         registrertePerioder: Nullable<Array<{ utreisedato: string; innreisedato: string }>>;
         planlagtePerioder: Nullable<Array<{ utreisedato: string; innreisedato: string }>>;
     };
-    inntektOgPensjon: {
-        forventetInntekt: Nullable<number>;
-        tjenerPengerIUtlandetBeløp: Nullable<number>;
-        andreYtelserINav: Nullable<string>;
-        andreYtelserINavBeløp: Nullable<number>;
-        søktAndreYtelserIkkeBehandletBegrunnelse: Nullable<string>;
-        sosialstønadBeløp: Nullable<number>;
-        trygdeytelserIUtlandet: Array<{ beløp: number; type: string; fraHvem: string }>;
-        pensjon: Nullable<Array<{ ordning: string; beløp: number }>>;
-    };
+    inntektOgPensjon: InntektOgPensjon;
     formue: Formue;
     ektefelle: Nullable<{
         formue: Formue;
+        inntektOgPensjon: InntektOgPensjon;
     }>;
     forNav: {
         harFullmektigEllerVerge: Nullable<Vergemål>;
@@ -80,6 +72,17 @@ interface Formue {
     verdipapirBeløp: Nullable<number>;
     skylderNoenMegPengerBeløp: Nullable<number>;
     kontanterBeløp: Nullable<number>;
+}
+
+interface InntektOgPensjon {
+    forventetInntekt: Nullable<number>;
+    tjenerPengerIUtlandetBeløp: Nullable<number>;
+    andreYtelserINav: Nullable<string>;
+    andreYtelserINavBeløp: Nullable<number>;
+    søktAndreYtelserIkkeBehandletBegrunnelse: Nullable<string>;
+    sosialstønadBeløp: Nullable<number>;
+    trygdeytelserIUtlandet: Array<{ beløp: number; type: string; fraHvem: string }>;
+    pensjon: Nullable<Array<{ ordning: string; beløp: number }>>;
 }
 
 interface EktefellePartnerSamboerBase<T extends 'MedFnr' | 'UtenFnr'> {
