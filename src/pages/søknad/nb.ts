@@ -1,1 +1,16 @@
-export default {};
+export default {
+    'steg.uforevedtak': 'Uførevedtak',
+    'steg.flyktningstatus': 'Flyktningstatus',
+    'steg.boOgOppholdINorge': 'Bo og opphold i Norge',
+    'steg.formue': 'Din formue',
+    'steg.inntekt': 'Din inntekt',
+    'steg.ektefellesFormue': 'Ektefelle/samboers formue',
+    'steg.ektefellesInntekt': 'Ektefelle/samboers inntekt',
+    'steg.utenlandsopphold': 'Reise til utlandet',
+    'steg.forVeileder': 'For veileder',
+    'steg.oppsummering': 'Oppsummering',
+    'steg.neste': 'Neste',
+    'steg.forrige': 'Forrige',
+    'feilmelding.tekst': 'En feil oppstod',
+    'feilmelding.knapp': 'Start ny søknad',
+};
