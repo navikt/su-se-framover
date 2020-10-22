@@ -101,7 +101,7 @@ const initialFormue: SøknadState['formue'] = {
     kontanterBeløp: null,
 };
 
-const initialInntekt = {
+const initialInntekt: SøknadState['inntekt'] = {
     harForventetInntekt: null,
     forventetInntekt: null,
     tjenerPengerIUtlandet: null,
