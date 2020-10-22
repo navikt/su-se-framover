@@ -6,10 +6,9 @@ import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { AnbefalerIkkeSøke, JaNeiSpørsmål } from '~/components/FormElements';
-import søknadSlice from '~/features/søknad/søknad.slice';
+import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~features/søknad/types';
 import { isValidDayMonthYearFormat } from '~lib/dateUtils';
-import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { EktefellePartnerSamboerMedFnr, EktefellePartnerSamboerUtenFnr } from '~types/Søknad';
@@ -21,20 +20,9 @@ import sharedI18n from '../steg-shared-i18n';
 
 import messages from './bo-og-opphold-i-norge-nb';
 import EktefellePartnerSamboer from './EktefellePartnerSamboer';
-import { toEktefellePartnerSamboer, toEPSFormData } from './utils';
+import { toEktefellePartnerSamboer } from './utils';
 
-interface FormData {
-    borOgOppholderSegINorge: Nullable<boolean>;
-    delerBoligMedPersonOver18: Nullable<boolean>;
-    delerBoligMed: Nullable<DelerBoligMed>;
-    ektefellePartnerSamboer: Nullable<EPSFormData>;
-}
-export interface EPSFormData {
-    fnr: Nullable<string>;
-    navn: Nullable<string>;
-    fødselsdato: Nullable<string>;
-    erUførFlyktning: Nullable<boolean>;
-}
+type FormData = SøknadState['boOgOpphold'];
 
 const schema = yup.object<FormData>({
     borOgOppholderSegINorge: yup.boolean().nullable().required(),
@@ -93,7 +81,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 borOgOppholderSegINorge: values.borOgOppholderSegINorge,
                 delerBoligMedPersonOver18: values.delerBoligMedPersonOver18,
                 delerBoligMed: values.delerBoligMed,
-                ektefellePartnerSamboer: toEktefellePartnerSamboer(values.ektefellePartnerSamboer),
+                ektefellePartnerSamboer: values.ektefellePartnerSamboer,
             })
         );
     };
@@ -103,7 +91,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
             borOgOppholderSegINorge: boOgOppholdFraStore.borOgOppholderSegINorge,
             delerBoligMedPersonOver18: boOgOppholdFraStore.delerBoligMedPersonOver18,
             delerBoligMed: boOgOppholdFraStore.delerBoligMed,
-            ektefellePartnerSamboer: toEPSFormData(boOgOppholdFraStore.ektefellePartnerSamboer),
+            ektefellePartnerSamboer: boOgOppholdFraStore.ektefellePartnerSamboer,
         },
         onSubmit: (values) => {
             save(values);

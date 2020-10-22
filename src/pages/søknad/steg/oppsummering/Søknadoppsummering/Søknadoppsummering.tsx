@@ -198,7 +198,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                             <>
                                 <Oppsummeringsfelt
                                     label={
-                                        søknad.boOgOpphold.ektefellePartnerSamboer.type === 'MedFnr'
+                                        søknad.boOgOpphold.ektefellePartnerSamboer?.fnr
                                             ? intl.formatMessage({
                                                   id: 'input.ektefelleEllerSamboerFnr.label',
                                               })
@@ -207,9 +207,8 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                               })
                                     }
                                     verdi={
-                                        søknad.boOgOpphold.ektefellePartnerSamboer.type === 'MedFnr'
-                                            ? søknad.boOgOpphold.ektefellePartnerSamboer.fnr
-                                            : søknad.boOgOpphold.ektefellePartnerSamboer.fødselsdato
+                                        søknad.boOgOpphold.ektefellePartnerSamboer.fnr ??
+                                        søknad.boOgOpphold.ektefellePartnerSamboer.fødselsdato
                                     }
                                 />
                                 <Oppsummeringsfelt

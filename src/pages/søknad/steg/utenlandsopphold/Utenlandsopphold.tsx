@@ -10,10 +10,10 @@ import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
-import søknadSlice from '~/features/søknad/søknad.slice';
+import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import { Utenlandsopphold as UtenlandsoppholdType } from '~features/søknad/types';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
-import { Nullable } from '~lib/types';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
@@ -24,22 +24,12 @@ import sharedI18n from '../steg-shared-i18n';
 import messages from './utenlandsopphold-nb';
 import styles from './utenlandsopphold.module.less';
 
-interface Utenlandsopphold {
-    utreisedato: string;
-    innreisedato: string;
-}
-
-interface FormData {
-    harReistTilUtlandetSiste90dager: Nullable<boolean>;
-    harReistDatoer: Utenlandsopphold[];
-    skalReiseTilUtlandetNeste12Måneder: Nullable<boolean>;
-    skalReiseDatoer: Utenlandsopphold[];
-}
+type FormData = SøknadState['utenlandsopphold'];
 
 const isValidUtenlandsopphold = (val: DateFns.Interval) => DateFns.isAfter(val.end, val.start);
 
 const reiseSchema = yup
-    .object<Utenlandsopphold>({ utreisedato: yup.string().required(), innreisedato: yup.string().required() })
+    .object<UtenlandsoppholdType>({ utreisedato: yup.string().required(), innreisedato: yup.string().required() })
     .test({
         name: 'Utenlandsopphold',
         message: 'Utreisedato må være før innreisedato',
@@ -50,7 +40,7 @@ const reiseSchema = yup
             }),
     });
 
-const testOverlappendeUtenlandsopphold: yup.TestFunction<Utenlandsopphold[] | null | undefined> = (opphold) => {
+const testOverlappendeUtenlandsopphold: yup.TestFunction<UtenlandsoppholdType[] | null | undefined> = (opphold) => {
     if (!opphold) {
         return false;
     }
@@ -80,7 +70,7 @@ const schema = yup.object<FormData>({
         .when('harReistTilUtlandetSiste90dager', {
             is: true,
             then: yup
-                .array<Utenlandsopphold>()
+                .array<UtenlandsoppholdType>()
                 .min(1, 'Legg til felt hvis det er utenlandsopphold')
                 .test('Overlapping', 'Utenlandsopphold kan ikke overlappe', testOverlappendeUtenlandsopphold)
                 .required(),
@@ -93,7 +83,7 @@ const schema = yup.object<FormData>({
         .when('skalReiseTilUtlandetNeste12Måneder', {
             is: true,
             then: yup
-                .array<Utenlandsopphold>()
+                .array<UtenlandsoppholdType>()
                 .min(1)
                 .test('Overlapping', 'Utenlandsopphold kan ikke overlappe', testOverlappendeUtenlandsopphold)
                 .required(),

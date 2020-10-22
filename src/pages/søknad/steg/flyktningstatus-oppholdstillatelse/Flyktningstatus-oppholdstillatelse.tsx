@@ -7,7 +7,7 @@ import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { AnbefalerIkkeSøke, JaNeiSpørsmål } from '~/components/FormElements';
-import søknadSlice from '~/features/søknad/søknad.slice';
+import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { TypeOppholdstillatelse } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
@@ -20,16 +20,7 @@ import sharedI18n from '../steg-shared-i18n';
 
 import messages from './flyktningstatus-oppholdstillatelse-nb';
 
-interface FormData {
-    erFlyktning: Nullable<boolean>;
-    erNorskStatsborger: Nullable<boolean>;
-    harOppholdstillatelse: Nullable<boolean>;
-    typeOppholdstillatelse: Nullable<TypeOppholdstillatelse>;
-    oppholdstillatelseMindreEnnTreMåneder: Nullable<boolean>;
-    oppholdstillatelseForlengelse: Nullable<boolean>;
-    statsborgerskapAndreLand: Nullable<boolean>;
-    statsborgerskapAndreLandFritekst: Nullable<string>;
-}
+type FormData = SøknadState['flyktningstatus'];
 
 const schema = yup.object<FormData>({
     erFlyktning: yup.boolean().nullable().required(),
