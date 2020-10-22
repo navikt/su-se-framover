@@ -35,7 +35,6 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
             ...stegMessages,
             ...uførevedtakMessages,
             ...flyktningstatusMessages,
-            ...inntektMessages,
             ...boOgOppholdMessages,
             ...utenlandsoppholdMessages,
         },
