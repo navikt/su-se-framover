@@ -1,34 +1,22 @@
-import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import React from 'react';
 
-import { Person } from '~api/personApi';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
-import { Søknadsteg } from '~pages/søknad/types';
 
 import { Oppsummeringsfelt } from '../components/Oppsummeringsfelt';
 import { OppsummeringsfeltAvKjøretøy } from '../components/OppsummeringsfeltAvKjøretøy';
 
-import { EndreSvar } from './EndreSvar';
-import styles from './oppsummering.module.less';
-
 export const FormueOppsummering = ({
     formue,
-    søker,
-    tittel,
     messages,
-    søknadsteg,
 }: {
     formue: SøknadState['formue'];
-    søker: Person;
-    tittel: string;
     messages: Record<string, string>;
-    søknadsteg: Søknadsteg;
 }) => {
     const intl = useI18n({ messages });
 
     return (
-        <Ekspanderbartpanel className={styles.ekspanderbarOppsumeringSeksjon} tittel={tittel}>
+        <>
             <Oppsummeringsfelt
                 label={intl.formatMessage({ id: 'input.eierDuBolig.label' })}
                 verdi={formue.eierBolig ? 'Ja' : formue.eierBolig === false ? 'Nei' : 'Ubesvart'}
@@ -149,7 +137,6 @@ export const FormueOppsummering = ({
                     verdi={formue.kontanterBeløp ? formue.kontanterBeløp : 'Ubesvart'}
                 />
             )}
-            <EndreSvar path={søknadsteg} søker={søker} />
-        </Ekspanderbartpanel>
+        </>
     );
 };

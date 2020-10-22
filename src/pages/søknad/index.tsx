@@ -76,11 +76,11 @@ const index = () => {
             step: Søknadsteg.DinInntekt,
         },
         {
-            label: intl.formatMessage({ id: 'steg.ektefellesformue' }),
+            label: intl.formatMessage({ id: 'steg.ektefellesFormue' }),
             step: Søknadsteg.EktefellesFormue,
         },
         {
-            label: intl.formatMessage({ id: 'steg.ektefellesinntekt' }),
+            label: intl.formatMessage({ id: 'steg.ektefellesInntekt' }),
             step: Søknadsteg.EktefellesInntekt,
         },
         {

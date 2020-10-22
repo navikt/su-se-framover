@@ -222,13 +222,13 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                     <EndreSvar path={Søknadsteg.BoOgOppholdINorge} søker={søker} />
                 </Ekspanderbartpanel>
 
-                <FormueOppsummering
+                <Ekspanderbartpanel
+                    className={styles.ekspanderbarOppsumeringSeksjon}
                     tittel={intl.formatMessage({ id: 'steg.formue' })}
-                    formue={søknad.formue}
-                    søker={søker}
-                    messages={formueMessages}
-                    søknadsteg={Søknadsteg.DinFormue}
-                />
+                >
+                    <FormueOppsummering formue={søknad.formue} messages={formueMessages} />
+                    <EndreSvar path={Søknadsteg.DinFormue} søker={søker} />
+                </Ekspanderbartpanel>
 
                 <Ekspanderbartpanel
                     className={styles.ekspanderbarOppsumeringSeksjon}
@@ -240,19 +240,19 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
 
                 {søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
                     <>
-                        <FormueOppsummering
-                            tittel={intl.formatMessage({ id: 'panel.tittel.ektefellesFormue' })}
-                            formue={søknad.ektefelle.formue}
-                            søker={søker}
-                            messages={epsFormueMessages}
-                            søknadsteg={Søknadsteg.EktefellesFormue}
-                        />
                         <Ekspanderbartpanel
                             className={styles.ekspanderbarOppsumeringSeksjon}
-                            tittel={intl.formatMessage({ id: 'panel.tittel.ektefelle.inntekt' })}
+                            tittel={intl.formatMessage({ id: 'steg.ektefellesFormue' })}
+                        >
+                            <FormueOppsummering formue={søknad.ektefelle.formue} messages={epsFormueMessages} />
+                            <EndreSvar path={Søknadsteg.EktefellesFormue} søker={søker} />
+                        </Ekspanderbartpanel>
+                        <Ekspanderbartpanel
+                            className={styles.ekspanderbarOppsumeringSeksjon}
+                            tittel={intl.formatMessage({ id: 'steg.ektefellesInntekt' })}
                         >
                             <InntektsOppsummering inntekt={søknad.ektefelle.inntekt} messages={epsInntektMessages} />
-                            <EndreSvar path={Søknadsteg.DinInntekt} søker={søker} />
+                            <EndreSvar path={Søknadsteg.EktefellesInntekt} søker={søker} />
                         </Ekspanderbartpanel>
                     </>
                 )}
