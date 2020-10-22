@@ -78,7 +78,7 @@ export interface SøknadState {
     };
 }
 
-const initialFormue = {
+const initialFormue: SøknadState['formue'] = {
     eierBolig: null,
     borIBolig: null,
     verdiPåBolig: null,
