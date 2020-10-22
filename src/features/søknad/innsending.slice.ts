@@ -5,6 +5,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import * as søknadApi from '~api/søknadApi';
+import { toEktefellePartnerSamboer } from '~pages/søknad/steg/bo-og-opphold-i-norge/utils';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { SøknadInnhold } from '~types/Søknad';
 
@@ -40,7 +41,7 @@ export const sendSøknad = createAsyncThunk<
             borOgOppholderSegINorge: søknad.boOgOpphold.borOgOppholderSegINorge!,
             delerBoligMedVoksne: søknad.boOgOpphold.delerBoligMedPersonOver18!,
             delerBoligMed: søknad.boOgOpphold.delerBoligMed,
-            ektefellePartnerSamboer: søknad.boOgOpphold.ektefellePartnerSamboer,
+            ektefellePartnerSamboer: toEktefellePartnerSamboer(søknad.boOgOpphold.ektefellePartnerSamboer),
         },
         utenlandsopphold: {
             registrertePerioder: søknad.utenlandsopphold.harReistDatoer,

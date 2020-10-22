@@ -6,12 +6,12 @@ import * as personApi from '~api/personApi';
 import { Person } from '~api/personApi';
 import { KjønnKvinne, KjønnMann, KjønnUkjent } from '~assets/Icons';
 import { showName } from '~features/person/personUtils';
+import { EPSFormData } from '~features/søknad/types';
 import { isValidDayMonthYearFormat } from '~lib/dateUtils';
 import { Nullable } from '~lib/types';
 
 import { useI18n } from '../../../../lib/hooks';
 
-import { EPSFormData } from './Bo-og-opphold-i-norge';
 import messages from './bo-og-opphold-i-norge-nb';
 import styles from './ektefelle-partner-samboer.module.less';
 import { initialEPS } from './utils';

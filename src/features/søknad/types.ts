@@ -1,3 +1,5 @@
+import { Nullable } from '~lib/types';
+
 export enum Bosituasjon {
     BorAleneEllerMedBarnUnder18 = 'bor-alene-med-barn-under-18',
     BorMedNoenOver18 = 'bor-med-noen-over-18',
@@ -16,4 +18,11 @@ export enum DelerBoligMed {
 export interface Utenlandsopphold {
     utreisedato: string;
     innreisedato: string;
+}
+
+export interface EPSFormData {
+    fnr: Nullable<string>;
+    navn: Nullable<string>;
+    fødselsdato: Nullable<string>;
+    erUførFlyktning: Nullable<boolean>;
 }

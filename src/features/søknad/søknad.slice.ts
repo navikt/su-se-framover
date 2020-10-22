@@ -1,9 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Nullable } from '~lib/types';
-import { EktefellePartnerSamboer } from '~types/Søknad';
 
-import { DelerBoligMed, TypeOppholdstillatelse, Utenlandsopphold, Vergemål } from './types';
+import { DelerBoligMed, EPSFormData, TypeOppholdstillatelse, Utenlandsopphold, Vergemål } from './types';
 
 export interface SøknadState {
     harUførevedtak: Nullable<boolean>;
@@ -21,7 +20,7 @@ export interface SøknadState {
         borOgOppholderSegINorge: Nullable<boolean>;
         delerBoligMedPersonOver18: Nullable<boolean>;
         delerBoligMed: Nullable<DelerBoligMed>;
-        ektefellePartnerSamboer: Nullable<EktefellePartnerSamboer>;
+        ektefellePartnerSamboer: Nullable<EPSFormData>;
     };
     formue: {
         eierBolig: Nullable<boolean>;

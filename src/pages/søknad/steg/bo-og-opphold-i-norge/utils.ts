@@ -1,7 +1,6 @@
+import { EPSFormData } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import { EktefellePartnerSamboer } from '~types/Søknad';
-
-import { EPSFormData } from './Bo-og-opphold-i-norge';
 
 export const toEktefellePartnerSamboer = (eps: Nullable<EPSFormData>): Nullable<EktefellePartnerSamboer> => {
     if (!eps || eps.erUførFlyktning === null) {
