@@ -3,8 +3,8 @@ import React from 'react';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
 
-import { Oppsummeringsfelt } from '../components/Oppsummeringsfelt';
-import { OppsummeringsfeltAvKjøretøy } from '../components/OppsummeringsfeltAvKjøretøy';
+import { Oppsummeringsfelt } from './Oppsummeringsfelt';
+import { OppsummeringsfeltAvKjøretøy } from './OppsummeringsfeltAvKjøretøy';
 
 export const FormueOppsummering = ({
     formue,

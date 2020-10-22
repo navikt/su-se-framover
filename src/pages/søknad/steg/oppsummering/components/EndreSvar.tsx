@@ -8,8 +8,8 @@ import * as routes from '~lib/routes';
 import { søknadOppsummeringEndreSvarKlikk, trackEvent } from '~lib/tracking/trackingEvents';
 import { Søknadsteg } from '~pages/søknad/types';
 
-import messages from './oppsummering-nb';
-import styles from './oppsummering.module.less';
+import messages from '../Søknadoppsummering/oppsummering-nb';
+import styles from '../Søknadoppsummering/oppsummering.module.less';
 
 export const EndreSvar = (props: { path: Søknadsteg; søker: Person }) => {
     const intl = useI18n({ messages });

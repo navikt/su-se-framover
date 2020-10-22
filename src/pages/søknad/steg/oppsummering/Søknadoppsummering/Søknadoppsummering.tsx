@@ -18,11 +18,11 @@ import { useI18n } from '~lib/hooks';
 import { Søknadsteg } from '~pages/søknad/types';
 
 import sharedStyles from '../../../steg-shared.module.less';
+import { EndreSvar } from '../components/EndreSvar';
+import { FormueOppsummering } from '../components/FormueOppsummering';
 import InntektsOppsummering from '../components/InntektsOppsummering';
 import { Oppsummeringsfelt } from '../components/Oppsummeringsfelt';
 
-import { EndreSvar } from './EndreSvar';
-import { FormueOppsummering } from './FormueOppsummering';
 import styles from './oppsummering.module.less';
 
 const reverseStr = (str: string) => {
