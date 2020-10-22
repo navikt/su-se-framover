@@ -5,6 +5,7 @@ export enum Søknadsteg {
     DinFormue = 'formue',
     DinInntekt = 'inntekt',
     EktefellesFormue = 'ektefellesformue',
+    EktefellesInntekt = 'ektefellesinntekt',
     ReiseTilUtlandet = 'utenlandsreise',
     ForVeileder = 'for-veileder',
     Oppsummering = 'oppsummering',

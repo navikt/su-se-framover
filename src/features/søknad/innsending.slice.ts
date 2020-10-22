@@ -10,7 +10,7 @@ import { SøknadInnhold } from '~types/Søknad';
 
 import { SøknadState } from './søknad.slice';
 import { DelerBoligMed } from './types';
-import { toFormue } from './utils';
+import { toFormue, toInntekt } from './utils';
 
 export const sendSøknad = createAsyncThunk<
     SøknadInnhold,
@@ -46,25 +46,7 @@ export const sendSøknad = createAsyncThunk<
             registrertePerioder: søknad.utenlandsopphold.harReistDatoer,
             planlagtePerioder: søknad.utenlandsopphold.skalReiseDatoer,
         },
-        inntektOgPensjon: {
-            forventetInntekt: søknad.inntekt.harForventetInntekt ? Number(søknad.inntekt.forventetInntekt) : null,
-            tjenerPengerIUtlandetBeløp: søknad.inntekt.tjenerPengerIUtlandet
-                ? Number(søknad.inntekt.tjenerPengerIUtlandetBeløp)
-                : null,
-            andreYtelserINav: søknad.inntekt.andreYtelserINav ? søknad.inntekt.andreYtelserINavYtelse : null,
-            andreYtelserINavBeløp: søknad.inntekt.andreYtelserINav
-                ? Number(søknad.inntekt.andreYtelserINavBeløp)
-                : null,
-            søktAndreYtelserIkkeBehandletBegrunnelse: søknad.inntekt.søktAndreYtelserIkkeBehandlet
-                ? søknad.inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
-                : null,
-            sosialstønadBeløp: søknad.inntekt.harMottattSosialstønad ? Number(søknad.inntekt.sosialStønadBeløp) : null,
-            trygdeytelserIUtlandet: søknad.inntekt.trygdeytelserIUtlandet.map((p) => ({
-                ...p,
-                beløp: Number(p.beløp),
-            })),
-            pensjon: søknad.inntekt.pensjonsInntekt.map((p) => ({ ...p, beløp: Number(p.beløp) })),
-        },
+        inntektOgPensjon: toInntekt(søknad.inntekt),
         formue: toFormue(søknad.formue),
         forNav: {
             harFullmektigEllerVerge:
@@ -78,6 +60,7 @@ export const sendSøknad = createAsyncThunk<
             søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
                 ? {
                       formue: toFormue(søknad.ektefelle.formue),
+                      inntektOgPensjon: toInntekt(søknad.ektefelle.inntekt),
                   }
                 : null,
     };

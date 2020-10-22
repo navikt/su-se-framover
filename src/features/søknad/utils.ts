@@ -21,3 +21,21 @@ export const toFormue = (formue: SøknadState['formue']) => {
         kontanterBeløp: formue.harKontanterOver1000 ? Number(formue.kontanterBeløp) : null,
     };
 };
+
+export const toInntekt = (inntekt: SøknadState['inntekt']) => {
+    return {
+        forventetInntekt: inntekt.harForventetInntekt ? Number(inntekt.forventetInntekt) : null,
+        tjenerPengerIUtlandetBeløp: inntekt.tjenerPengerIUtlandet ? Number(inntekt.tjenerPengerIUtlandetBeløp) : null,
+        andreYtelserINav: inntekt.andreYtelserINav ? inntekt.andreYtelserINavYtelse : null,
+        andreYtelserINavBeløp: inntekt.andreYtelserINav ? Number(inntekt.andreYtelserINavBeløp) : null,
+        søktAndreYtelserIkkeBehandletBegrunnelse: inntekt.søktAndreYtelserIkkeBehandlet
+            ? inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
+            : null,
+        sosialstønadBeløp: inntekt.harMottattSosialstønad ? Number(inntekt.sosialStønadBeløp) : null,
+        trygdeytelserIUtlandet: inntekt.trygdeytelserIUtlandet.map((p) => ({
+            ...p,
+            beløp: Number(p.beløp),
+        })),
+        pensjon: inntekt.pensjonsInntekt.map((p) => ({ ...p, beløp: Number(p.beløp) })),
+    };
+};

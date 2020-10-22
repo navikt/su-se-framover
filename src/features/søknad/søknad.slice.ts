@@ -46,28 +46,8 @@ export interface SøknadState {
         kontanterBeløp: Nullable<string>;
     };
     ektefelle: {
-        formue: {
-            eierBolig: Nullable<boolean>;
-            borIBolig: Nullable<boolean>;
-            verdiPåBolig: Nullable<string>;
-            boligBrukesTil: Nullable<string>;
-            eierMerEnnEnBolig: Nullable<boolean>;
-            harDepositumskonto: Nullable<boolean>;
-            depositumsBeløp: Nullable<string>;
-            kontonummer: Nullable<string>;
-            verdiPåEiendom: Nullable<string>;
-            eiendomBrukesTil: Nullable<string>;
-            eierKjøretøy: Nullable<boolean>;
-            kjøretøy: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
-            harInnskuddPåKonto: Nullable<boolean>;
-            innskuddsBeløp: Nullable<string>;
-            harVerdipapir: Nullable<boolean>;
-            verdipapirBeløp: Nullable<string>;
-            skylderNoenMegPenger: Nullable<boolean>;
-            skylderNoenMegPengerBeløp: Nullable<string>;
-            harKontanterOver1000: Nullable<boolean>;
-            kontanterBeløp: Nullable<string>;
-        };
+        formue: SøknadState['formue'];
+        inntekt: SøknadState['inntekt'];
     };
     inntekt: {
         harForventetInntekt: Nullable<boolean>;
@@ -98,6 +78,47 @@ export interface SøknadState {
     };
 }
 
+const initialFormue: SøknadState['formue'] = {
+    eierBolig: null,
+    borIBolig: null,
+    verdiPåBolig: null,
+    boligBrukesTil: null,
+    eierMerEnnEnBolig: null,
+    harDepositumskonto: null,
+    depositumsBeløp: null,
+    kontonummer: null,
+    verdiPåEiendom: null,
+    eiendomBrukesTil: null,
+    eierKjøretøy: null,
+    kjøretøy: [],
+    harInnskuddPåKonto: null,
+    innskuddsBeløp: null,
+    harVerdipapir: null,
+    verdipapirBeløp: null,
+    skylderNoenMegPenger: null,
+    skylderNoenMegPengerBeløp: null,
+    harKontanterOver1000: null,
+    kontanterBeløp: null,
+};
+
+const initialInntekt: SøknadState['inntekt'] = {
+    harForventetInntekt: null,
+    forventetInntekt: null,
+    tjenerPengerIUtlandet: null,
+    tjenerPengerIUtlandetBeløp: null,
+    andreYtelserINav: null,
+    andreYtelserINavYtelse: null,
+    andreYtelserINavBeløp: null,
+    søktAndreYtelserIkkeBehandlet: null,
+    søktAndreYtelserIkkeBehandletBegrunnelse: null,
+    harMottattSosialstønad: null,
+    sosialStønadBeløp: null,
+    harTrygdeytelserIUtlandet: null,
+    trygdeytelserIUtlandet: [],
+    pensjonsInntekt: [],
+    mottarPensjon: null,
+};
+
 const initialState: SøknadState = {
     harUførevedtak: null,
     flyktningstatus: {
@@ -116,69 +137,12 @@ const initialState: SøknadState = {
         delerBoligMed: null,
         ektefellePartnerSamboer: null,
     },
-    formue: {
-        eierBolig: null,
-        borIBolig: null,
-        verdiPåBolig: null,
-        boligBrukesTil: null,
-        eierMerEnnEnBolig: null,
-        harDepositumskonto: null,
-        depositumsBeløp: null,
-        kontonummer: null,
-        verdiPåEiendom: null,
-        eiendomBrukesTil: null,
-        eierKjøretøy: null,
-        kjøretøy: [],
-        harInnskuddPåKonto: null,
-        innskuddsBeløp: null,
-        harVerdipapir: null,
-        verdipapirBeløp: null,
-        skylderNoenMegPenger: null,
-        skylderNoenMegPengerBeløp: null,
-        harKontanterOver1000: null,
-        kontanterBeløp: null,
-    },
+    formue: initialFormue,
     ektefelle: {
-        formue: {
-            eierBolig: null,
-            borIBolig: null,
-            verdiPåBolig: null,
-            boligBrukesTil: null,
-            eierMerEnnEnBolig: null,
-            harDepositumskonto: null,
-            depositumsBeløp: null,
-            kontonummer: null,
-            verdiPåEiendom: null,
-            eiendomBrukesTil: null,
-            eierKjøretøy: null,
-            kjøretøy: [],
-            harInnskuddPåKonto: null,
-            innskuddsBeløp: null,
-            harVerdipapir: null,
-            verdipapirBeløp: null,
-            skylderNoenMegPenger: null,
-            skylderNoenMegPengerBeløp: null,
-            harKontanterOver1000: null,
-            kontanterBeløp: null,
-        },
+        formue: initialFormue,
+        inntekt: initialInntekt,
     },
-    inntekt: {
-        harForventetInntekt: null,
-        forventetInntekt: null,
-        tjenerPengerIUtlandet: null,
-        tjenerPengerIUtlandetBeløp: null,
-        andreYtelserINav: null,
-        andreYtelserINavYtelse: null,
-        andreYtelserINavBeløp: null,
-        søktAndreYtelserIkkeBehandlet: null,
-        søktAndreYtelserIkkeBehandletBegrunnelse: null,
-        harMottattSosialstønad: null,
-        sosialStønadBeløp: null,
-        harTrygdeytelserIUtlandet: null,
-        trygdeytelserIUtlandet: [],
-        pensjonsInntekt: [],
-        mottarPensjon: null,
-    },
+    inntekt: initialInntekt,
     utenlandsopphold: {
         harReistTilUtlandetSiste90dager: null,
         harReistDatoer: [],

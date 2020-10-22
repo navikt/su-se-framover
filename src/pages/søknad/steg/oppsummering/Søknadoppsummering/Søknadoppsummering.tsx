@@ -14,11 +14,12 @@ import { trackEvent, søknadOppsummeringEndreSvarKlikk } from '~lib/tracking/tra
 import { Søknadsteg } from '~pages/søknad/types';
 
 import sharedStyles from '../../../steg-shared.module.less';
+import InntektsOppsummering from '../components/InntektsOppsummering';
 
 import messages from './oppsummering-nb';
 import styles from './oppsummering.module.less';
 
-const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | React.ReactNode }) => (
+export const OppsummeringsFelt = (props: { label: React.ReactNode; verdi: string | React.ReactNode }) => (
     <div className={styles.oppsummeringsfelt}>
         <Element>{props.label}</Element>
         <Normaltekst>{props.verdi}</Normaltekst>
@@ -50,7 +51,7 @@ const OppsummeringsFeltAvKjøretøy = (props: {
     );
 };
 
-const OppsummeringsFeltAvTrygdeytelser = (props: {
+export const OppsummeringsFeltAvTrygdeytelser = (props: {
     labelFirstEl: React.ReactNode;
     labelScndEl: React.ReactNode;
     labelThirdEl: React.ReactNode;
@@ -449,157 +450,19 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                     className={styles.ekspanderbarOppsumeringSeksjon}
                     tittel={intl.formatMessage({ id: 'panel.tittel.dinInntekt' })}
                 >
-                    <OppsummeringsFelt
-                        label={<FormattedMessage id="input.harForventetInntekt.label" />}
-                        verdi={
-                            søknad.inntekt.harForventetInntekt
-                                ? 'Ja'
-                                : søknad.inntekt.harForventetInntekt === false
-                                ? 'Nei'
-                                : 'Ubesvart'
-                        }
-                    />
-
-                    {søknad.inntekt.forventetInntekt && Number(søknad.inntekt.forventetInntekt) > 0 && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.forventetInntekt.label" />}
-                            verdi={søknad.inntekt.forventetInntekt}
-                        />
-                    )}
-
-                    <OppsummeringsFelt
-                        label={<FormattedMessage id="input.tjenerPengerIUtlandet.label" />}
-                        verdi={
-                            søknad.inntekt.tjenerPengerIUtlandet
-                                ? 'Ja'
-                                : søknad.inntekt.tjenerPengerIUtlandet === false
-                                ? 'Nei'
-                                : 'Ubesvart'
-                        }
-                    />
-                    {søknad.inntekt.tjenerPengerIUtlandet && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.tjenerPengerIUtlandetBeløp.label" />}
-                            verdi={
-                                søknad.inntekt.tjenerPengerIUtlandetBeløp
-                                    ? søknad.inntekt.tjenerPengerIUtlandetBeløp
-                                    : 'Ubesvart'
-                            }
-                        />
-                    )}
-
-                    <OppsummeringsFelt
-                        label={<FormattedMessage id="input.andreYtelserINAV.label" />}
-                        verdi={
-                            søknad.inntekt.andreYtelserINav
-                                ? 'Ja'
-                                : søknad.inntekt.andreYtelserINav === false
-                                ? 'Nei'
-                                : 'Ubesvart'
-                        }
-                    />
-                    {søknad.inntekt.andreYtelserINav && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.andreYtelserINavYtelse.label" />}
-                            verdi={
-                                søknad.inntekt.andreYtelserINavYtelse
-                                    ? søknad.inntekt.andreYtelserINavYtelse
-                                    : 'Ubesvart'
-                            }
-                        />
-                    )}
-                    {søknad.inntekt.andreYtelserINav && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.andreYtelserINavBeløp.label" />}
-                            verdi={
-                                søknad.inntekt.andreYtelserINavBeløp ? søknad.inntekt.andreYtelserINavBeløp : 'Ubesvart'
-                            }
-                        />
-                    )}
-
-                    <OppsummeringsFelt
-                        label={<FormattedMessage id="input.søktAndreYtelserIkkeBehandlet.label" />}
-                        verdi={
-                            søknad.inntekt.søktAndreYtelserIkkeBehandlet
-                                ? 'Ja'
-                                : søknad.inntekt.søktAndreYtelserIkkeBehandlet === false
-                                ? 'Nei'
-                                : 'Ubesvart'
-                        }
-                    />
-
-                    {søknad.inntekt.søktAndreYtelserIkkeBehandlet && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.søktAndreYtelserIkkeBehandletBegrunnelse.label" />}
-                            verdi={
-                                søknad.inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
-                                    ? søknad.inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
-                                    : 'Ubesvart'
-                            }
-                        />
-                    )}
-
-                    <OppsummeringsFelt
-                        label={<FormattedMessage id="input.harMottattSosialstønad.label" />}
-                        verdi={
-                            søknad.inntekt.harMottattSosialstønad
-                                ? 'Ja'
-                                : søknad.inntekt.harMottattSosialstønad === false
-                                ? 'Nei'
-                                : 'Ubesvart'
-                        }
-                    />
-                    {søknad.inntekt.harMottattSosialstønad && (
-                        <OppsummeringsFelt
-                            label={<FormattedMessage id="input.sosialStønadBeløp.label" />}
-                            verdi={søknad.inntekt.sosialStønadBeløp ? søknad.inntekt.sosialStønadBeløp : 'Ubesvart'}
-                        />
-                    )}
-
-                    <OppsummeringsFelt
-                        label={<FormattedMessage id="input.trygdeytelserIUtlandet.label" />}
-                        verdi={
-                            søknad.inntekt.harTrygdeytelserIUtlandet
-                                ? 'Ja'
-                                : søknad.inntekt.harTrygdeytelserIUtlandet === false
-                                ? 'Nei'
-                                : 'Ubesvart'
-                        }
-                    />
-                    {søknad.inntekt.harTrygdeytelserIUtlandet && (
-                        <OppsummeringsFeltAvTrygdeytelser
-                            arr={søknad.inntekt.trygdeytelserIUtlandet}
-                            labelFirstEl="Brutto beløp i lokal valuta per år"
-                            labelScndEl="Hvilken ytelser?"
-                            labelThirdEl="Hvem gir disse ytelsene?"
-                        />
-                    )}
-
-                    <OppsummeringsFelt
-                        label={<FormattedMessage id="input.mottarPensjon.label" />}
-                        verdi={
-                            søknad.inntekt.mottarPensjon
-                                ? 'Ja'
-                                : søknad.inntekt.mottarPensjon === false
-                                ? 'Nei'
-                                : 'Ubesvart'
-                        }
-                    />
-                    {søknad.inntekt.mottarPensjon &&
-                        søknad.inntekt.pensjonsInntekt.map((item, index) => (
-                            <div className={sharedStyles.inputFelterDiv} key={index}>
-                                <OppsummeringsFelt
-                                    label={<FormattedMessage id="input.pensjonsOrdning.label" />}
-                                    verdi={item.ordning}
-                                />
-                                <OppsummeringsFelt
-                                    label={<FormattedMessage id="input.pensjonsBeløp.label" />}
-                                    verdi={item.beløp}
-                                />
-                            </div>
-                        ))}
+                    <InntektsOppsummering inntekt={søknad.inntekt} intl={intl} />
                     <EndreSvar path={Søknadsteg.DinInntekt} søker={søker} />
                 </Ekspanderbartpanel>
+
+                {søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
+                    <Ekspanderbartpanel
+                        className={styles.ekspanderbarOppsumeringSeksjon}
+                        tittel={intl.formatMessage({ id: 'panel.tittel.ektefelle.inntekt' })}
+                    >
+                        <InntektsOppsummering inntekt={søknad.ektefelle.inntekt} intl={intl} />
+                        <EndreSvar path={Søknadsteg.DinInntekt} søker={søker} />
+                    </Ekspanderbartpanel>
+                )}
 
                 <Ekspanderbartpanel
                     className={styles.ekspanderbarOppsumeringSeksjon}

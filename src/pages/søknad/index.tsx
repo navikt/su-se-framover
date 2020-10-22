@@ -16,7 +16,8 @@ import { useAppSelector } from '~redux/Store';
 
 import styles from './index.module.less';
 import BoOgOppholdINorge from './steg/bo-og-opphold-i-norge/Bo-og-opphold-i-norge';
-import EktefellesFormue from './steg/ektefelles-formue/EktefellesFormue';
+import EktefellesFormue from './steg/ektefelle/EktefellesFormue';
+import EktefellesInntekt from './steg/ektefelle/EktefellesInntekt';
 import FlyktningstatusOppholdstillatelse from './steg/flyktningstatus-oppholdstillatelse/Flyktningstatus-oppholdstillatelse';
 import ForVeileder from './steg/for-veileder/ForVeileder';
 import Formue from './steg/formue/DinFormue';
@@ -36,6 +37,7 @@ const messages = {
     'steg.formue': 'Din formue',
     'steg.inntekt': 'Din inntekt',
     'steg.ektefellesformue': 'Ektefelle/samboers formue',
+    'steg.ektefellesinntekt': 'Ektefelle/samboers inntekt',
     'steg.utenlandsopphold': 'Reise til utlandet',
     'steg.forVeileder': 'For Veileder',
     'steg.oppsummering': 'Oppsummering',
@@ -93,6 +95,10 @@ const index = () => {
         {
             label: intl.formatMessage({ id: 'steg.ektefellesformue' }),
             step: Søknadsteg.EktefellesFormue,
+        },
+        {
+            label: intl.formatMessage({ id: 'steg.ektefellesinntekt' }),
+            step: Søknadsteg.EktefellesInntekt,
         },
         {
             label: intl.formatMessage({ id: 'steg.utenlandsopphold' }),
@@ -202,13 +208,18 @@ const index = () => {
                             ) : step === Søknadsteg.EktefellesFormue ? (
                                 <EktefellesFormue
                                     forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
+                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.EktefellesInntekt })}
+                                />
+                            ) : step === Søknadsteg.EktefellesInntekt ? (
+                                <EktefellesInntekt
+                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.EktefellesFormue })}
                                     nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
                                 />
                             ) : step === Søknadsteg.ReiseTilUtlandet ? (
                                 <Utenlandsopphold
                                     forrigeUrl={
                                         borMedEktefelleSamboer === DelerBoligMed.EKTEMAKE_SAMBOER
-                                            ? routes.soknad.createURL({ step: Søknadsteg.EktefellesFormue })
+                                            ? routes.soknad.createURL({ step: Søknadsteg.EktefellesInntekt })
                                             : routes.soknad.createURL({ step: Søknadsteg.DinInntekt })
                                     }
                                     nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ForVeileder })}
