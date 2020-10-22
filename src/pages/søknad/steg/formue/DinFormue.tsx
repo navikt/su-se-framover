@@ -6,7 +6,7 @@ import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
-import søknadSlice from '~/features/søknad/søknad.slice';
+import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
@@ -18,28 +18,7 @@ import sharedI18n from '../steg-shared-i18n';
 
 import messages from './dinformue-nb';
 
-interface FormData {
-    eierBolig: Nullable<boolean>;
-    borIBolig: Nullable<boolean>;
-    verdiPåBolig: Nullable<string>;
-    boligBrukesTil: Nullable<string>;
-    eierMerEnnEnBolig: Nullable<boolean>;
-    harDepositumskonto: Nullable<boolean>;
-    depositumsBeløp: Nullable<string>;
-    kontonummer: Nullable<string>;
-    verdiPåEiendom: Nullable<string>;
-    eiendomBrukesTil: Nullable<string>;
-    eierKjøretøy: Nullable<boolean>;
-    kjøretøy: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
-    harInnskuddPåKonto: Nullable<boolean>;
-    innskuddsBeløp: Nullable<string>;
-    harVerdipapir: Nullable<boolean>;
-    verdipapirBeløp: Nullable<string>;
-    skylderNoenMegPenger: Nullable<boolean>;
-    skylderNoenMegPengerBeløp: Nullable<string>;
-    harKontanterOver1000: Nullable<boolean>;
-    kontanterBeløp: Nullable<string>;
-}
+type FormData = SøknadState['formue'];
 
 const kjøretøySchema = yup.object({
     verdiPåKjøretøy: (yup

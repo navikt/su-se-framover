@@ -12,3 +12,8 @@ export enum DelerBoligMed {
     VOKSNE_BARN = 'VOKSNE_BARN',
     ANNEN_VOKSEN = 'ANNEN_VOKSEN',
 }
+
+export interface Utenlandsopphold {
+    utreisedato: string;
+    innreisedato: string;
+}

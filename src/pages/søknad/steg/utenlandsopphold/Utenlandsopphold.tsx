@@ -10,10 +10,10 @@ import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
-import søknadSlice from '~/features/søknad/søknad.slice';
+import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import { Utenlandsopphold } from '~features/søknad/types';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
-import { Nullable } from '~lib/types';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
@@ -24,17 +24,7 @@ import sharedI18n from '../steg-shared-i18n';
 import messages from './utenlandsopphold-nb';
 import styles from './utenlandsopphold.module.less';
 
-interface Utenlandsopphold {
-    utreisedato: string;
-    innreisedato: string;
-}
-
-interface FormData {
-    harReistTilUtlandetSiste90dager: Nullable<boolean>;
-    harReistDatoer: Utenlandsopphold[];
-    skalReiseTilUtlandetNeste12Måneder: Nullable<boolean>;
-    skalReiseDatoer: Utenlandsopphold[];
-}
+type FormData = SøknadState['utenlandsopphold'];
 
 const isValidUtenlandsopphold = (val: DateFns.Interval) => DateFns.isAfter(val.end, val.start);
 

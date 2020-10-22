@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
-import søknadSlice from '~/features/søknad/søknad.slice';
+import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import TextProvider, { Languages } from '~components/TextProvider';
 import { Vergemål } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
@@ -22,10 +22,7 @@ import sharedI18n from '../steg-shared-i18n';
 import messages from './forVeileder-nb';
 import styles from './forVeileder.module.less';
 
-interface FormData {
-    harSøkerMøttPersonlig: Nullable<boolean>;
-    harFullmektigEllerVerge: Nullable<Vergemål>;
-}
+type FormData = SøknadState['forVeileder'];
 
 const schema = yup.object<FormData>({
     harSøkerMøttPersonlig: yup.boolean().nullable().required(),

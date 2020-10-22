@@ -6,8 +6,7 @@ import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
-import søknadSlice from '~/features/søknad/søknad.slice';
-import { Nullable } from '~lib/types';
+import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
@@ -18,9 +17,9 @@ import sharedI18n from '../steg-shared-i18n';
 
 import messages from './uførevedtak-nb';
 
-interface FormData {
-    harUførevedtak: Nullable<boolean>;
-}
+type FormData = {
+    harUførevedtak: SøknadState['harUførevedtak'];
+};
 
 const schema = yup.object<FormData>({
     harUførevedtak: yup.boolean().nullable().required(),

@@ -7,7 +7,7 @@ import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
-import søknadSlice from '~/features/søknad/søknad.slice';
+import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
@@ -20,23 +20,7 @@ import sharedI18n from '../steg-shared-i18n';
 import messages from './inntekt-nb';
 import styles from './inntekt.module.less';
 
-interface FormData {
-    harForventetInntekt: Nullable<boolean>;
-    forventetInntekt: Nullable<string>;
-    harMottattSosialstønad: Nullable<boolean>;
-    mottarPensjon: Nullable<boolean>;
-    pensjonsInntekt: Array<{ ordning: string; beløp: string }>;
-    tjenerPengerIUtlandet: Nullable<boolean>;
-    tjenerPengerIUtlandetBeløp: Nullable<string>;
-    andreYtelserINav: Nullable<boolean>;
-    andreYtelserINavYtelse: Nullable<string>;
-    andreYtelserINavBeløp: Nullable<string>;
-    søktAndreYtelserIkkeBehandlet: Nullable<boolean>;
-    søktAndreYtelserIkkeBehandletBegrunnelse: Nullable<string>;
-    sosialStønadBeløp: Nullable<string>;
-    harTrygdeytelserIUtlandet: Nullable<boolean>;
-    trygdeytelserIUtlandet: Array<{ beløp: string; type: string; fraHvem: string }>;
-}
+type FormData = SøknadState['inntekt'];
 
 const kjøretøySchema = yup.object({
     beløp: (yup.number().typeError('Beløp må være et tall').positive().label('Beløp').required() as yup.Schema<
