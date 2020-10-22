@@ -1,3 +1,4 @@
+import fnrValidator from '@navikt/fnrvalidator';
 import { useFormik } from 'formik';
 import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
 import * as React from 'react';
@@ -67,7 +68,7 @@ const schema = yup.object<FormData>({
 
                     switch (eps?.type) {
                         case 'MedFnr':
-                            return eps.fnr.length === 11;
+                            return eps.fnr.length === 11 && fnrValidator.fnr(eps.fnr).status === 'valid';
                         case 'UtenFnr':
                             return isValidDayMonthYearFormat(eps.fødselsdato) && eps.navn?.length > 0;
                         default:

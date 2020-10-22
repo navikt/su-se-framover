@@ -1,3 +1,4 @@
+import fnrValidator from '@navikt/fnrvalidator';
 import { Checkbox, Input, Radio, RadioGruppe } from 'nav-frontend-skjema';
 import React, { useEffect, useState } from 'react';
 
@@ -136,7 +137,12 @@ const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
 
     useEffect(() => {
         setPerson(null);
-        if (fnr?.length === 11) fetchPerson(fnr);
+        if (fnr?.length === 11) {
+            const validateFnr = fnrValidator.fnr(fnr);
+            if (validateFnr.status === 'valid') {
+                fetchPerson(fnr);
+            }
+        }
     }, [fnr]);
 
     return (
