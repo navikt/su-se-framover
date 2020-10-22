@@ -8,7 +8,10 @@ import { showName } from '~features/person/personUtils';
 import { isValidDayMonthYearFormat } from '~lib/dateUtils';
 import { Nullable } from '~lib/types';
 
+import { useI18n } from '../../../../lib/hooks';
+
 import { EPSFormData } from './Bo-og-opphold-i-norge';
+import messages from './bo-og-opphold-i-norge-nb';
 import styles from './ektefelle-partner-samboer.module.less';
 import { initialEPS } from './utils';
 
@@ -20,6 +23,8 @@ interface Props {
 const EktefellePartnerSamboer = (props: Props) => {
     const [fnrErUkjent, setFnrErUkjent] = useState(false);
     const EPSFormData = props.value ?? initialEPS;
+
+    const intl = useI18n({ messages });
 
     return (
         <div>
@@ -53,7 +58,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                 <div className={styles.ukjentFnr}>
                     <Input
                         value={EPSFormData.navn ?? ''}
-                        label="Hva er navnet til ektefelle eller samboer?"
+                        label={intl.formatMessage({ id: 'input.ektefelleEllerSamboerNavn.label' })}
                         onChange={(e) => {
                             props.onChange({
                                 ...EPSFormData,
@@ -64,7 +69,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                     />
                     <Input
                         value={EPSFormData.fødselsdato ?? ''}
-                        label="Hva er fødselsdatoen til ektefelle eller samboer?"
+                        label={intl.formatMessage({ id: 'input.ektefelleEllerSamboerFødselsdato.label' })}
                         description="DD.MM.ÅÅÅÅ"
                         bredde="S"
                         maxLength={10}
@@ -81,7 +86,7 @@ const EktefellePartnerSamboer = (props: Props) => {
 
             <div className={styles.ufør}>
                 <RadioGruppe
-                    legend="Er ektefelle eller samboer ufør flyktning?"
+                    legend={intl.formatMessage({ id: 'input.ektefelleEllerSamboerUførFlyktning.label' })}
                     feil={EPSFormData.erUførFlyktning === null && props.feil}
                 >
                     <Radio
@@ -120,6 +125,7 @@ interface FnrInputProps {
 }
 const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
     const [person, setPerson] = useState<Person | null>(null);
+    const intl = useI18n({ messages });
 
     async function fetchPerson(fødselsnummer: string) {
         const res = await personApi.fetchPerson(fødselsnummer);
@@ -136,8 +142,8 @@ const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
     return (
         <div className={styles.fnrInput}>
             <Input
-                label="Hva er fødselsnummeret til ektefelle eller samboer?"
-                description="11 siffer"
+                label={intl.formatMessage({ id: 'input.ektefelleEllerSamboerFnr.label' })}
+                description={intl.formatMessage({ id: 'input.ektefelleEllerSamboerFnrDescription.label' })}
                 onChange={(e) => onFnrChange(e.target.value)}
                 value={fnr ?? ''}
                 disabled={disabled}

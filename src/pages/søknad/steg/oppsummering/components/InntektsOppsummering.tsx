@@ -1,57 +1,66 @@
 import React from 'react';
-import { IntlShape } from 'react-intl';
 
 import { SøknadState } from '~features/søknad/søknad.slice';
+import { useI18n } from '~lib/hooks';
 
 import sharedStyles from '../../../steg-shared.module.less';
-import { OppsummeringsFelt, OppsummeringsFeltAvTrygdeytelser } from '../Søknadoppsummering/Søknadoppsummering';
 
-const InntektsOppsummering = ({ inntekt, intl }: { inntekt: SøknadState['inntekt']; intl: IntlShape }) => {
+import { OppsummeringAvTrygdeytelser } from './OppsummeringAvTrygdeytelser';
+import { Oppsummeringsfelt } from './Oppsummeringsfelt';
+
+const InntektsOppsummering = ({
+    inntekt,
+    messages,
+}: {
+    inntekt: SøknadState['inntekt'];
+    messages: Record<string, string>;
+}) => {
+    const intl = useI18n({ messages });
     return (
         <>
-            <OppsummeringsFelt
+            <Oppsummeringsfelt
                 label={intl.formatMessage({ id: 'input.harForventetInntekt.label' })}
                 verdi={inntekt.harForventetInntekt ? 'Ja' : inntekt.harForventetInntekt === false ? 'Nei' : 'Ubesvart'}
             />
 
             {inntekt.forventetInntekt && Number(inntekt.forventetInntekt) > 0 && (
-                <OppsummeringsFelt
+                <Oppsummeringsfelt
                     label={intl.formatMessage({ id: 'input.forventetInntekt.label' })}
                     verdi={inntekt.forventetInntekt}
                 />
             )}
 
-            <OppsummeringsFelt
+            <Oppsummeringsfelt
                 label={intl.formatMessage({ id: 'input.tjenerPengerIUtlandet.label' })}
                 verdi={
                     inntekt.tjenerPengerIUtlandet ? 'Ja' : inntekt.tjenerPengerIUtlandet === false ? 'Nei' : 'Ubesvart'
                 }
             />
             {inntekt.tjenerPengerIUtlandet && (
-                <OppsummeringsFelt
+                <Oppsummeringsfelt
                     label={intl.formatMessage({ id: 'input.tjenerPengerIUtlandetBeløp.label' })}
                     verdi={inntekt.tjenerPengerIUtlandetBeløp ? inntekt.tjenerPengerIUtlandetBeløp : 'Ubesvart'}
                 />
             )}
 
-            <OppsummeringsFelt
+            <Oppsummeringsfelt
                 label={intl.formatMessage({ id: 'input.andreYtelserINAV.label' })}
                 verdi={inntekt.andreYtelserINav ? 'Ja' : inntekt.andreYtelserINav === false ? 'Nei' : 'Ubesvart'}
             />
             {inntekt.andreYtelserINav && (
-                <OppsummeringsFelt
+                <Oppsummeringsfelt
                     label={intl.formatMessage({ id: 'input.andreYtelserINavYtelse.label' })}
                     verdi={inntekt.andreYtelserINavYtelse ? inntekt.andreYtelserINavYtelse : 'Ubesvart'}
                 />
             )}
             {inntekt.andreYtelserINav && (
-                <OppsummeringsFelt
+                <Oppsummeringsfelt
                     label={intl.formatMessage({ id: 'input.andreYtelserINavBeløp.label' })}
                     verdi={inntekt.andreYtelserINavBeløp ? inntekt.andreYtelserINavBeløp : 'Ubesvart'}
                 />
             )}
 
-            <OppsummeringsFelt
+            <Oppsummeringsfelt
                 label={intl.formatMessage({ id: 'input.søktAndreYtelserIkkeBehandlet.label' })}
                 verdi={
                     inntekt.søktAndreYtelserIkkeBehandlet
@@ -63,7 +72,7 @@ const InntektsOppsummering = ({ inntekt, intl }: { inntekt: SøknadState['inntek
             />
 
             {inntekt.søktAndreYtelserIkkeBehandlet && (
-                <OppsummeringsFelt
+                <Oppsummeringsfelt
                     label={intl.formatMessage({ id: 'input.søktAndreYtelserIkkeBehandletBegrunnelse.label' })}
                     verdi={
                         inntekt.søktAndreYtelserIkkeBehandletBegrunnelse
@@ -73,7 +82,7 @@ const InntektsOppsummering = ({ inntekt, intl }: { inntekt: SøknadState['inntek
                 />
             )}
 
-            <OppsummeringsFelt
+            <Oppsummeringsfelt
                 label={intl.formatMessage({ id: 'input.harMottattSosialstønad.label' })}
                 verdi={
                     inntekt.harMottattSosialstønad
@@ -84,13 +93,13 @@ const InntektsOppsummering = ({ inntekt, intl }: { inntekt: SøknadState['inntek
                 }
             />
             {inntekt.harMottattSosialstønad && (
-                <OppsummeringsFelt
+                <Oppsummeringsfelt
                     label={intl.formatMessage({ id: 'input.sosialStønadBeløp.label' })}
                     verdi={inntekt.sosialStønadBeløp ? inntekt.sosialStønadBeløp : 'Ubesvart'}
                 />
             )}
 
-            <OppsummeringsFelt
+            <Oppsummeringsfelt
                 label={intl.formatMessage({ id: 'input.trygdeytelserIUtlandet.label' })}
                 verdi={
                     inntekt.harTrygdeytelserIUtlandet
@@ -101,7 +110,7 @@ const InntektsOppsummering = ({ inntekt, intl }: { inntekt: SøknadState['inntek
                 }
             />
             {inntekt.harTrygdeytelserIUtlandet && (
-                <OppsummeringsFeltAvTrygdeytelser
+                <OppsummeringAvTrygdeytelser
                     arr={inntekt.trygdeytelserIUtlandet}
                     labelFirstEl="Brutto beløp i lokal valuta per år"
                     labelScndEl="Hvilken ytelser?"
@@ -109,18 +118,18 @@ const InntektsOppsummering = ({ inntekt, intl }: { inntekt: SøknadState['inntek
                 />
             )}
 
-            <OppsummeringsFelt
+            <Oppsummeringsfelt
                 label={intl.formatMessage({ id: 'input.mottarPensjon.label' })}
                 verdi={inntekt.mottarPensjon ? 'Ja' : inntekt.mottarPensjon === false ? 'Nei' : 'Ubesvart'}
             />
             {inntekt.mottarPensjon &&
                 inntekt.pensjonsInntekt.map((item, index) => (
                     <div className={sharedStyles.inputFelterDiv} key={index}>
-                        <OppsummeringsFelt
+                        <Oppsummeringsfelt
                             label={intl.formatMessage({ id: 'input.pensjonsOrdning.label' })}
                             verdi={item.ordning}
                         />
-                        <OppsummeringsFelt
+                        <Oppsummeringsfelt
                             label={intl.formatMessage({ id: 'input.pensjonsBeløp.label' })}
                             verdi={item.beløp}
                         />

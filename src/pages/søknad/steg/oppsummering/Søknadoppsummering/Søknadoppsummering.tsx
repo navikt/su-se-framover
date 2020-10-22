@@ -2,8 +2,15 @@ import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import React from 'react';
 import { RawIntlProvider, FormattedMessage } from 'react-intl';
 
+import stegMessages from '~/pages/søknad/nb';
+import boOgOppholdMessages from '~/pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
 import epsFormueMessages from '~/pages/søknad/steg/ektefelle/ektefellesformue-nb';
+import epsInntektMessages from '~/pages/søknad/steg/ektefelle/inntekt-nb';
+import flyktningstatusMessages from '~/pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import formueMessages from '~/pages/søknad/steg/formue/dinformue-nb';
+import inntektMessages from '~/pages/søknad/steg/inntekt/inntekt-nb';
+import uførevedtakMessages from '~/pages/søknad/steg/uførevedtak/uførevedtak-nb';
+import utenlandsoppholdMessages from '~/pages/søknad/steg/utenlandsopphold/utenlandsopphold-nb';
 import { Person } from '~api/personApi';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { DelerBoligMed } from '~features/søknad/types';
@@ -12,26 +19,34 @@ import { Søknadsteg } from '~pages/søknad/types';
 
 import sharedStyles from '../../../steg-shared.module.less';
 import InntektsOppsummering from '../components/InntektsOppsummering';
+import { Oppsummeringsfelt } from '../components/Oppsummeringsfelt';
 
 import { EndreSvar } from './EndreSvar';
 import { FormueOppsummering } from './FormueOppsummering';
-import messages from './oppsummering-nb';
 import styles from './oppsummering.module.less';
-import { Oppsummeringsfelt } from './Oppsummeringsfelt';
 
 const reverseStr = (str: string) => {
     return str.split('-').reverse().join('-');
 };
 
 const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søker: Person }) => {
-    const intl = useI18n({ messages });
+    const intl = useI18n({
+        messages: {
+            ...stegMessages,
+            ...uførevedtakMessages,
+            ...flyktningstatusMessages,
+            ...inntektMessages,
+            ...boOgOppholdMessages,
+            ...utenlandsoppholdMessages,
+        },
+    });
 
     return (
         <RawIntlProvider value={intl}>
             <div>
                 <Ekspanderbartpanel
                     className={styles.ekspanderbarOppsumeringSeksjon}
-                    tittel={intl.formatMessage({ id: 'panel.tittel.uførevedtak' })}
+                    tittel={intl.formatMessage({ id: 'steg.uforevedtak' })}
                 >
                     <Oppsummeringsfelt
                         label={<FormattedMessage id="input.uførevedtak.label" />}
@@ -42,7 +57,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
 
                 <Ekspanderbartpanel
                     className={styles.ekspanderbarOppsumeringSeksjon}
-                    tittel={intl.formatMessage({ id: 'panel.tittel.flyktningstatus' })}
+                    tittel={intl.formatMessage({ id: 'steg.flyktningstatus' })}
                 >
                     <Oppsummeringsfelt
                         label={<FormattedMessage id="input.flyktning.label" />}
@@ -139,7 +154,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
 
                 <Ekspanderbartpanel
                     className={styles.ekspanderbarOppsumeringSeksjon}
-                    tittel={intl.formatMessage({ id: 'panel.tittel.boOgOpphold' })}
+                    tittel={intl.formatMessage({ id: 'steg.boOgOppholdINorge' })}
                 >
                     <Oppsummeringsfelt
                         label={<FormattedMessage id="input.opphold-i-norge.label" />}
@@ -166,10 +181,16 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                             label={<FormattedMessage id="input.delerBoligMed.label" />}
                             verdi={
                                 søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
-                                    ? 'Ektemake eller samboer'
+                                    ? intl.formatMessage({
+                                          id: 'input.delerBoligMedEktefelleEllerSamboer.label',
+                                      })
                                     : søknad.boOgOpphold.delerBoligMed === DelerBoligMed.VOKSNE_BARN
-                                    ? 'Voksne barn'
-                                    : søknad.boOgOpphold.delerBoligMed === DelerBoligMed.ANNEN_VOKSEN
+                                    ? intl.formatMessage({
+                                          id: 'input.delerBoligMedAndreVoksne.label',
+                                      })
+                                    : intl.formatMessage({
+                                          id: 'input.delerBoligMedBarnOver18.label',
+                                      })
                             }
                         />
                     )}
@@ -177,7 +198,15 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         søknad.boOgOpphold.ektefellePartnerSamboer && (
                             <>
                                 <Oppsummeringsfelt
-                                    label={intl.formatMessage({ id: 'input.ektemakeEllerSamboerFnr.label' })}
+                                    label={
+                                        søknad.boOgOpphold.ektefellePartnerSamboer.type === 'MedFnr'
+                                            ? intl.formatMessage({
+                                                  id: 'input.ektefelleEllerSamboerFnr.label',
+                                              })
+                                            : intl.formatMessage({
+                                                  id: 'input.ektefelleEllerSamboerFødselsdato.label',
+                                              })
+                                    }
                                     verdi={
                                         søknad.boOgOpphold.ektefellePartnerSamboer.type === 'MedFnr'
                                             ? søknad.boOgOpphold.ektefellePartnerSamboer.fnr
@@ -185,7 +214,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                     }
                                 />
                                 <Oppsummeringsfelt
-                                    label={<FormattedMessage id="input.ektemakeEllerSamboerUførFlyktning.label" />}
+                                    label={<FormattedMessage id="input.ektefelleEllerSamboerUførFlyktning.label" />}
                                     verdi={søknad.boOgOpphold.ektefellePartnerSamboer?.erUførFlyktning ? 'Ja' : 'Nei'}
                                 />
                             </>
@@ -194,7 +223,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 </Ekspanderbartpanel>
 
                 <FormueOppsummering
-                    tittel={intl.formatMessage({ id: 'panel.tittel.dinFormue' })}
+                    tittel={intl.formatMessage({ id: 'steg.formue' })}
                     formue={søknad.formue}
                     søker={søker}
                     messages={formueMessages}
@@ -203,9 +232,9 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
 
                 <Ekspanderbartpanel
                     className={styles.ekspanderbarOppsumeringSeksjon}
-                    tittel={intl.formatMessage({ id: 'panel.tittel.dinInntekt' })}
+                    tittel={intl.formatMessage({ id: 'steg.inntekt' })}
                 >
-                    <InntektsOppsummering inntekt={søknad.inntekt} intl={intl} />
+                    <InntektsOppsummering inntekt={søknad.inntekt} messages={inntektMessages} />
                     <EndreSvar path={Søknadsteg.DinInntekt} søker={søker} />
                 </Ekspanderbartpanel>
 
@@ -222,7 +251,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                             className={styles.ekspanderbarOppsumeringSeksjon}
                             tittel={intl.formatMessage({ id: 'panel.tittel.ektefelle.inntekt' })}
                         >
-                            <InntektsOppsummering inntekt={søknad.ektefelle.inntekt} intl={intl} />
+                            <InntektsOppsummering inntekt={søknad.ektefelle.inntekt} messages={epsInntektMessages} />
                             <EndreSvar path={Søknadsteg.DinInntekt} søker={søker} />
                         </Ekspanderbartpanel>
                     </>
@@ -230,7 +259,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
 
                 <Ekspanderbartpanel
                     className={styles.ekspanderbarOppsumeringSeksjon}
-                    tittel={intl.formatMessage({ id: 'panel.tittel.reiseTilUtlandet' })}
+                    tittel={intl.formatMessage({ id: 'steg.utenlandsopphold' })}
                 >
                     <Oppsummeringsfelt
                         label={<FormattedMessage id="input.harReistSiste90.label" />}

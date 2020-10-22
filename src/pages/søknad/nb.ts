@@ -7,7 +7,7 @@ export default {
     'steg.ektefellesformue': 'Ektefelle/samboers formue',
     'steg.ektefellesinntekt': 'Ektefelle/samboers inntekt',
     'steg.utenlandsopphold': 'Reise til utlandet',
-    'steg.forVeileder': 'For Veileder',
+    'steg.forVeileder': 'For veileder',
     'steg.oppsummering': 'Oppsummering',
     'steg.neste': 'Neste',
     'steg.forrige': 'Forrige',

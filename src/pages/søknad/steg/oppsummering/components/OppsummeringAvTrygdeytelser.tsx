@@ -3,7 +3,7 @@ import React from 'react';
 
 import styles from '../Søknadoppsummering/oppsummering.module.less';
 
-export const OppsummeringsfeltAvTrygdeytelser = (props: {
+export const OppsummeringAvTrygdeytelser = (props: {
     labelFirstEl: React.ReactNode;
     labelScndEl: React.ReactNode;
     labelThirdEl: React.ReactNode;

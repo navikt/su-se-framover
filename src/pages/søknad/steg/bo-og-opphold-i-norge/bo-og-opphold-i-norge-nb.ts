@@ -6,6 +6,10 @@ export default {
     'input.delerBoligMedEktefelleEllerSamboer.label': 'Ektefelle eller samboer',
     'input.delerBoligMedBarnOver18.label': 'Voksne barn',
     'input.delerBoligMedAndreVoksne.label': 'Andre voksne',
+    'input.ektefelleEllerSamboerFnr.label': 'Hva er fødselsnummeret til ektefelle eller samboer?',
+    'input.ektefelleEllerSamboerFnrDescription.label': '11 siffer',
+    'input.ektefelleEllerSamboerNavn.label': 'Hva er navnet til ektefelle eller samboer?',
+    'input.ektefelleEllerSamboerFødselsdato.label': 'Hva er fødselsdatoen til ektefelle eller samboer?',
     'input.ektefelleEllerSamboerUnder67År.label': 'Er ektefelle eller samboer under 67 år?',
     'input.ektefelleEllerSamboerUførFlyktning.label': 'Er ektefelle eller samboer ufør flyktning?',
 };

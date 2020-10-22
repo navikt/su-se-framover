@@ -1,3 +1,3 @@
 export default {
-    'input.uforevedtak.label': 'Har du uførevedtak?',
+    'input.uførevedtak.label': 'Har du uførevedtak?',
 };

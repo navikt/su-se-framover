@@ -61,7 +61,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string }) => {
                     <div className={sharedStyles.formContainer}>
                         <JaNeiSpørsmål
                             id="harUførevedtak"
-                            legend={<FormattedMessage id="input.uforevedtak.label" />}
+                            legend={<FormattedMessage id="input.uførevedtak.label" />}
                             feil={formik.errors.harUførevedtak}
                             state={formik.values.harUførevedtak}
                             onChange={(e) =>

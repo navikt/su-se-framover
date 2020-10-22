@@ -6,10 +6,11 @@ import { SøknadState } from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
 import { Søknadsteg } from '~pages/søknad/types';
 
+import { Oppsummeringsfelt } from '../components/Oppsummeringsfelt';
+import { OppsummeringsfeltAvKjøretøy } from '../components/OppsummeringsfeltAvKjøretøy';
+
 import { EndreSvar } from './EndreSvar';
 import styles from './oppsummering.module.less';
-import { Oppsummeringsfelt } from './Oppsummeringsfelt';
-import { OppsummeringsfeltAvKjøretøy } from './OppsummeringsfeltAvKjøretøy';
 
 export const FormueOppsummering = ({
     formue,
