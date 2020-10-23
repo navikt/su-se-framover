@@ -1,11 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import fnrValidator from '@navikt/fnrvalidator';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Input, Textarea, Checkbox } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import React, { useState, useMemo } from 'react';
+import { Element } from 'nav-frontend-typografi';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import * as personApi from '~api/personApi';
+import { Personkort } from '~components/Personkort';
 import { eqFormue } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
@@ -54,6 +58,8 @@ interface FormData {
     kontanter: string;
     depositumskonto: string;
     begrunnelse: Nullable<string>;
+    borSøkerMedEktefelle: Nullable<boolean>;
+    ektefellesFnr: Nullable<string>;
 }
 
 const schema = yup.object<FormData>({
@@ -66,6 +72,8 @@ const schema = yup.object<FormData>({
     depositumskonto: validateStringAsNumber,
     status: yup.mixed().required().oneOf([FormueStatus.VilkårOppfylt, FormueStatus.MåInnhenteMerInformasjon]),
     begrunnelse: yup.string().defined(),
+    borSøkerMedEktefelle: yup.boolean().nullable().required(),
+    ektefellesFnr: yup.mixed<string>().nullable().required(),
 });
 
 function kalkulerFormue(formikValues: FormData) {
@@ -130,6 +138,8 @@ const setInitialValues = (behandlingsInfo: Behandlingsinformasjon, søknadsInnho
         depositumskonto:
             behandlingsFormue?.depositumskonto?.toString() ?? søknadsFormue.depositumsBeløp?.toString() ?? '0',
         status: behandlingsFormue?.status ?? FormueStatus.VilkårOppfylt,
+        borSøkerMedEktefelle: null,
+        ektefellesFnr: null,
         begrunnelse: behandlingsFormue?.begrunnelse ?? null,
     };
 };
@@ -141,6 +151,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const [eps, setEps] = useState<Nullable<personApi.Person>>();
     const onSave = (values: FormData) => {
         const status =
             values.status === FormueStatus.MåInnhenteMerInformasjon
@@ -176,6 +187,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             })
         );
     };
+
     // TODO ai: implementera detta i backend
     const G = 101351;
 
@@ -192,6 +204,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         validationSchema: schema,
         validateOnChange: hasSubmitted,
     });
+
     const history = useHistory();
 
     const totalFormue = useMemo(() => {
@@ -203,6 +216,28 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         return kalkulerFormueFraSøknad(søknadInnhold.formue);
     }, [søknadInnhold.formue]);
 
+    useEffect(() => {
+        async function fetchPerson(fnr: Nullable<string>) {
+            if (!fnr || fnrValidator.fnr(fnr).status === 'invalid') {
+                setEps(null);
+                return;
+            }
+
+            const res = await personApi.fetchPerson(fnr);
+            if (res.status === 'ok') {
+                const ektefelle = res.data;
+
+                formik.setValues({
+                    ...formik.values,
+                    ektefellesFnr: ektefelle.fnr,
+                });
+                setEps(ektefelle);
+            }
+        }
+
+        fetchPerson(formik.values.ektefellesFnr);
+    }, [formik.values.ektefellesFnr]);
+
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
@@ -213,6 +248,15 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
+                        <div>
+                            <Element>Bor søker med en ektefelle eller samboer?</Element>
+                            <Input
+                                name="ektefellesFnr"
+                                defaultValue={formik.values.ektefellesFnr ?? ''}
+                                onChange={formik.handleChange}
+                            />
+                            {eps && <Personkort person={eps} />}
+                        </div>
                         <FormueInput
                             tittel={intl.formatMessage({ id: 'input.label.verdiIkkePrimærBolig' })}
                             className={styles.formueInput}
@@ -269,7 +313,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             onChange={formik.handleChange}
                             feil={formik.errors.depositumskonto}
                         />
-
                         <div className={styles.totalFormueContainer}>
                             <p className={styles.totalFormue}>
                                 {intl.formatMessage({ id: 'display.totalt' })} {totalFormue}
@@ -293,7 +336,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 </div>
                             )}
                         </div>
-
                         <Checkbox
                             label={intl.formatMessage({ id: 'checkbox.henteMerInfo' })}
                             name="status"
@@ -316,7 +358,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             onChange={formik.handleChange}
                             feil={formik.errors.begrunnelse}
                         />
-
                         {pipe(
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(
