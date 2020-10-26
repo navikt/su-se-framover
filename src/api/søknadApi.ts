@@ -10,31 +10,25 @@ export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientRes
 export async function lukkSøknad(arg: {
     søknadId: string;
     lukketSøknadType: LukkSøknadType;
-    datoSøkerTrakkSøknad: Date;
+    body: Record<string, string>;
 }): Promise<ApiClientResult<Sak>> {
     return apiClient({
-        url: `/soknad/${arg.søknadId}/lukk`,
+        url: `/soknad/${arg.søknadId}/lukk?type=${arg.lukketSøknadType}`,
         method: 'POST',
-        body: {
-            typeLukking: arg.lukketSøknadType,
-            datoSøkerTrakkSøknad: arg.datoSøkerTrakkSøknad,
-        },
+        body: arg.body,
     });
 }
 
 export async function hentLukketSøknadsBrevutkast(arg: {
     søknadId: string;
     lukketSøknadType: LukkSøknadType;
-    datoSøkerTrakkSøknad: Date;
+    body: Record<string, string>;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
-        url: `/soknad/${arg.søknadId}/lukk/brevutkast`,
+        url: `/soknad/${arg.søknadId}/lukk/brevutkast?type=${arg.lukketSøknadType}`,
         method: 'POST',
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
-        body: {
-            typeLukking: arg.lukketSøknadType,
-            datoSøkerTrakkSøknad: arg.datoSøkerTrakkSøknad,
-        },
+        body: arg.body,
         bodyTransformer: (res) => res.blob(),
     });
 }

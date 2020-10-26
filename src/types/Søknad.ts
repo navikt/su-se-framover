@@ -11,7 +11,7 @@ export interface Søknad {
 interface Lukket {
     tidspunkt: string;
     saksbehandler: Saksbehandler;
-    typeLukking: LukkSøknadType;
+    type: LukkSøknadType;
 }
 
 export enum LukkSøknadType {

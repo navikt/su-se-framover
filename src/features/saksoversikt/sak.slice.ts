@@ -199,7 +199,7 @@ export const lukkSøknad = createAsyncThunk<
     {
         søknadId: string;
         lukketSøknadType: LukkSøknadType;
-        datoSøkerTrakkSøknad: Date;
+        body: Record<string, string>;
     },
     { rejectValue: ApiError }
 >('soknad/lukkSøknad', async (arg, thunkApi) => {
@@ -212,10 +212,10 @@ export const lukkSøknad = createAsyncThunk<
 
 export const hentLukketSøknadBrevutkast = createAsyncThunk<
     { objectUrl: string },
-    { søknadId: string; lukketSøknadType: LukkSøknadType; datoSøkerTrakkSøknad: Date },
+    { søknadId: string; lukketSøknadType: LukkSøknadType; body: Record<string, string> },
     { rejectValue: ApiError }
->('soknad/hentLukketSøknadBrevutkast', async ({ søknadId, lukketSøknadType, datoSøkerTrakkSøknad }, thunkApi) => {
-    const res = await søknadApi.hentLukketSøknadsBrevutkast({ søknadId, lukketSøknadType, datoSøkerTrakkSøknad });
+>('soknad/hentLukketSøknadBrevutkast', async ({ søknadId, lukketSøknadType, body }, thunkApi) => {
+    const res = await søknadApi.hentLukketSøknadsBrevutkast({ søknadId, lukketSøknadType, body });
     if (res.status === 'ok') {
         return { objectUrl: URL.createObjectURL(res.data) };
     }

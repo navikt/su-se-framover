@@ -47,13 +47,18 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
             if (!values.lukkSøknadType || !values.datoSøkerTrakkSøknad) {
                 return;
             }
-            dispatch(
-                lukkSøknad({
-                    søknadId: urlParams.soknadId,
-                    lukketSøknadType: values.lukkSøknadType,
-                    datoSøkerTrakkSøknad: new Date(values.datoSøkerTrakkSøknad),
-                })
-            );
+
+            if (values.lukkSøknadType === LukkSøknadType.Trukket) {
+                dispatch(
+                    lukkSøknad({
+                        søknadId: urlParams.soknadId,
+                        lukketSøknadType: values.lukkSøknadType,
+                        body: {
+                            datoSøkerTrakkSøknad: values.datoSøkerTrakkSøknad,
+                        },
+                    })
+                );
+            }
         },
         validationSchema: validationSchema,
         validateOnChange: hasSubmitted,
@@ -67,17 +72,22 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
         ) {
             return;
         }
-        dispatch(
-            hentLukketSøknadBrevutkast({
-                søknadId: urlParams.soknadId,
-                lukketSøknadType: formik.values.lukkSøknadType,
-                datoSøkerTrakkSøknad: new Date(formik.values.datoSøkerTrakkSøknad),
-            })
-        ).then((action) => {
-            if (hentLukketSøknadBrevutkast.fulfilled.match(action)) {
-                window.open(action.payload.objectUrl);
-            }
-        });
+
+        if (formik.values.lukkSøknadType === LukkSøknadType.Trukket) {
+            dispatch(
+                hentLukketSøknadBrevutkast({
+                    søknadId: urlParams.soknadId,
+                    lukketSøknadType: formik.values.lukkSøknadType,
+                    body: {
+                        datoSøkerTrakkSøknad: formik.values.datoSøkerTrakkSøknad,
+                    },
+                })
+            ).then((action) => {
+                if (hentLukketSøknadBrevutkast.fulfilled.match(action)) {
+                    window.open(action.payload.objectUrl);
+                }
+            });
+        }
     }, [formik.values]);
 
     const søknad = props.sak.søknader.find((s) => s.id === urlParams.soknadId);

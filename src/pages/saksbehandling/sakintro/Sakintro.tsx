@@ -48,7 +48,7 @@ const Sakintro = (props: { sak: Sak }) => {
                                             {s.lukket && (
                                                 <div>
                                                     <p>Søknadsbehandlingen er blitt avsluttet.</p>
-                                                    <p>Grunn for avslutning: {s.lukket.typeLukking}</p>
+                                                    <p>Grunn for avslutning: {s.lukket.type}</p>
                                                 </div>
                                             )}
                                         </div>
