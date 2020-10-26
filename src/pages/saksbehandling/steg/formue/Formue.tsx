@@ -157,6 +157,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [eps, setEps] = useState<Nullable<personApi.Person>>();
+    const [erSuperSecret, setErSuperSecret] = useState<boolean>(false);
     const onSave = (values: FormData) => {
         const status =
             values.status === FormueStatus.MåInnhenteMerInformasjon
@@ -235,11 +236,17 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     useEffect(() => {
         async function fetchPerson(fnr: Nullable<string>) {
             setEps(null);
+            setErSuperSecret(false);
             if (!fnr || fnrValidator.fnr(fnr).status === 'invalid') {
                 return;
             }
 
             const res = await personApi.fetchPerson(fnr);
+            console.log(res);
+            if (res.status === 'error' && res.error.statusCode === 403) {
+                setErSuperSecret(true);
+                return;
+            }
             if (res.status === 'ok') {
                 const ektefelle = res.data;
 
@@ -304,6 +311,11 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                             feil={formik.errors.ektefellesFnr}
                                         />
                                         {eps && <Personkort person={eps} />}
+                                        {erSuperSecret && (
+                                            <AlertStripe type="feil">
+                                                Du har ikke tilgang til å se informasjon om denne brukeren
+                                            </AlertStripe>
+                                        )}
                                     </div>
                                 </>
                             )}
