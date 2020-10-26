@@ -23,7 +23,7 @@ interface Props {
 }
 const EktefellePartnerSamboer = (props: Props) => {
     const [fnrErUkjent, setFnrErUkjent] = useState(false);
-    const EPSFormData = props.value ?? initialEPS;
+    const epsFormData = props.value ?? initialEPS;
 
     const intl = useI18n({ messages });
 
@@ -31,10 +31,10 @@ const EktefellePartnerSamboer = (props: Props) => {
         <div>
             <FnrInput
                 disabled={fnrErUkjent}
-                fnr={EPSFormData.fnr}
+                fnr={epsFormData.fnr}
                 onFnrChange={(fnr) => {
                     props.onChange({
-                        ...EPSFormData,
+                        ...epsFormData,
                         fnr,
                     });
                 }}
@@ -46,7 +46,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                     setFnrErUkjent(checked);
 
                     props.onChange({
-                        ...EPSFormData,
+                        ...epsFormData,
                         navn: null,
                         fødselsdato: null,
                         fnr: null,
@@ -58,29 +58,29 @@ const EktefellePartnerSamboer = (props: Props) => {
             {fnrErUkjent && (
                 <div className={styles.ukjentFnr}>
                     <Input
-                        value={EPSFormData.navn ?? ''}
+                        value={epsFormData.navn ?? ''}
                         label={intl.formatMessage({ id: 'input.ektefelleEllerSamboerNavn.label' })}
                         onChange={(e) => {
                             props.onChange({
-                                ...EPSFormData,
+                                ...epsFormData,
                                 navn: e.target.value,
                             });
                         }}
-                        feil={!EPSFormData.navn && props.feil}
+                        feil={!epsFormData.navn && props.feil}
                     />
                     <Input
-                        value={EPSFormData.fødselsdato ?? ''}
+                        value={epsFormData.fødselsdato ?? ''}
                         label={intl.formatMessage({ id: 'input.ektefelleEllerSamboerFødselsdato.label' })}
                         description="DD.MM.ÅÅÅÅ"
                         bredde="S"
                         maxLength={10}
                         onChange={(e) => {
                             props.onChange({
-                                ...EPSFormData,
+                                ...epsFormData,
                                 fødselsdato: e.target.value,
                             });
                         }}
-                        feil={!isValidDayMonthYearFormat(EPSFormData.fødselsdato) && props.feil}
+                        feil={!isValidDayMonthYearFormat(epsFormData.fødselsdato) && props.feil}
                     />
                 </div>
             )}
@@ -88,13 +88,13 @@ const EktefellePartnerSamboer = (props: Props) => {
             <div className={styles.ufør}>
                 <RadioGruppe
                     legend={intl.formatMessage({ id: 'input.ektefelleEllerSamboerUførFlyktning.label' })}
-                    feil={EPSFormData.erUførFlyktning === null && props.feil}
+                    feil={epsFormData.erUførFlyktning === null && props.feil}
                 >
                     <Radio
-                        checked={Boolean(EPSFormData.erUførFlyktning)}
+                        checked={Boolean(epsFormData.erUførFlyktning)}
                         onChange={() =>
                             props.onChange({
-                                ...EPSFormData,
+                                ...epsFormData,
                                 erUførFlyktning: true,
                             })
                         }
@@ -102,10 +102,10 @@ const EktefellePartnerSamboer = (props: Props) => {
                         name="erUfør"
                     />
                     <Radio
-                        checked={EPSFormData.erUførFlyktning === false}
+                        checked={epsFormData.erUførFlyktning === false}
                         onChange={() =>
                             props.onChange({
-                                ...EPSFormData,
+                                ...epsFormData,
                                 erUførFlyktning: false,
                             })
                         }

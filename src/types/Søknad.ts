@@ -9,10 +9,13 @@ export interface Søknad {
 }
 
 interface Lukket {
-    begrunnelse: string;
     tidspunkt: string;
     saksbehandler: Saksbehandler;
-    type: string;
+    type: LukkSøknadType;
+}
+
+export enum LukkSøknadType {
+    Trukket = 'Trukket',
 }
 
 interface Saksbehandler {

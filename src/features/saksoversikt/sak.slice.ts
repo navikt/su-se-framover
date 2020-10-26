@@ -15,6 +15,7 @@ import { UtledetSatsInfo } from '~types/Beregning';
 import { Fradrag } from '~types/Fradrag';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
+import { LukkSøknadType } from '~types/Søknad';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<Sak, { fnr: string } | { sakId: string }, { rejectValue: ApiError }>(
@@ -196,14 +197,27 @@ export const attesteringUnderkjenn = createAsyncThunk<
 export const lukkSøknad = createAsyncThunk<
     Sak,
     {
-        sakId: string;
         søknadId: string;
+        lukketSøknadType: LukkSøknadType;
+        body: Record<string, string>;
     },
     { rejectValue: ApiError }
 >('soknad/lukkSøknad', async (arg, thunkApi) => {
     const res = await søknadApi.lukkSøknad(arg);
     if (res.status === 'ok') {
         return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const hentLukketSøknadBrevutkast = createAsyncThunk<
+    { objectUrl: string },
+    { søknadId: string; lukketSøknadType: LukkSøknadType; body: Record<string, string> },
+    { rejectValue: ApiError }
+>('soknad/hentLukketSøknadBrevutkast', async ({ søknadId, lukketSøknadType, body }, thunkApi) => {
+    const res = await søknadApi.hentLukketSøknadsBrevutkast({ søknadId, lukketSøknadType, body });
+    if (res.status === 'ok') {
+        return { objectUrl: URL.createObjectURL(res.data) };
     }
     return thunkApi.rejectWithValue(res.error);
 });
@@ -222,6 +236,7 @@ interface SakState {
     utledetSatsInfo: RemoteData.RemoteData<ApiError, UtledetSatsInfo>;
     lastNedBrevStatus: RemoteData.RemoteData<ApiError, null>;
     søknadsbehandlingAvsluttetStatus: RemoteData.RemoteData<ApiError, null>;
+    lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: SakState = {
@@ -238,6 +253,7 @@ const initialState: SakState = {
     utledetSatsInfo: RemoteData.initial,
     lastNedBrevStatus: RemoteData.initial,
     søknadsbehandlingAvsluttetStatus: RemoteData.initial,
+    lukketSøknadBrevutkastStatus: RemoteData.initial,
 };
 
 export default createSlice({
@@ -462,6 +478,18 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.søknadsbehandlingAvsluttetStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, hentLukketSøknadBrevutkast, {
+            pending: (state) => {
+                state.lukketSøknadBrevutkastStatus = RemoteData.pending;
+            },
+            fulfilled: (state) => {
+                state.lukketSøknadBrevutkastStatus = RemoteData.success(null);
+            },
+            rejected: (state, action) => {
+                state.lukketSøknadBrevutkastStatus = simpleRejectedActionToRemoteData(action);
             },
         });
     },
