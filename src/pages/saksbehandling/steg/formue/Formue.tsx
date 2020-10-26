@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import fnrValidator from '@navikt/fnrvalidator';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Input, Textarea, Checkbox } from 'nav-frontend-skjema';
+import { Input, Textarea, Checkbox, RadioGruppe, Radio } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element } from 'nav-frontend-typografi';
 import React, { useState, useMemo, useEffect } from 'react';
@@ -10,7 +10,7 @@ import { useHistory } from 'react-router-dom';
 
 import * as personApi from '~api/personApi';
 import { Personkort } from '~components/Personkort';
-import { eqFormue } from '~features/behandling/behandlingUtils';
+import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
@@ -72,8 +72,8 @@ const schema = yup.object<FormData>({
     depositumskonto: validateStringAsNumber,
     status: yup.mixed().required().oneOf([FormueStatus.VilkårOppfylt, FormueStatus.MåInnhenteMerInformasjon]),
     begrunnelse: yup.string().defined(),
-    borSøkerMedEktefelle: yup.boolean().nullable().required(),
-    ektefellesFnr: yup.mixed<string>().nullable().required(),
+    borSøkerMedEktefelle: yup.boolean().required(),
+    ektefellesFnr: yup.mixed<string>().nullable(),
 });
 
 function kalkulerFormue(formikValues: FormData) {
@@ -138,9 +138,9 @@ const setInitialValues = (behandlingsInfo: Behandlingsinformasjon, søknadsInnho
         depositumskonto:
             behandlingsFormue?.depositumskonto?.toString() ?? søknadsFormue.depositumsBeløp?.toString() ?? '0',
         status: behandlingsFormue?.status ?? FormueStatus.VilkårOppfylt,
-        borSøkerMedEktefelle: null,
-        ektefellesFnr: null,
         begrunnelse: behandlingsFormue?.begrunnelse ?? null,
+        borSøkerMedEktefelle: behandlingsInfo.ektefelle?.harEktefellePartnerSamboer ?? null,
+        ektefellesFnr: behandlingsInfo.ektefelle?.fnr ?? null,
     };
 };
 
@@ -171,8 +171,15 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             depositumskonto: parseInt(values.depositumskonto, 10),
             begrunnelse: values.begrunnelse,
         };
+        const ektefelle = {
+            harEktefellePartnerSamboer: values.borSøkerMedEktefelle,
+            fnr: values.ektefellesFnr,
+        };
 
-        if (eqFormue.equals(formueValues, props.behandling.behandlingsinformasjon.formue)) {
+        if (
+            eqFormue.equals(formueValues, props.behandling.behandlingsinformasjon.formue) &&
+            eqEktefelle.equals(ektefelle, props.behandling.behandlingsinformasjon.ektefelle)
+        ) {
             history.push(props.nesteUrl);
             return;
         }
@@ -183,6 +190,10 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
                     formue: { ...formueValues },
+                    ektefelle: {
+                        harEktefellePartnerSamboer: values.borSøkerMedEktefelle,
+                        fnr: values.ektefellesFnr,
+                    },
                 },
             })
         );
@@ -248,14 +259,47 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        <div>
+                        <div className={styles.ektefellePartnerSamboer}>
                             <Element>Bor søker med en ektefelle eller samboer?</Element>
-                            <Input
-                                name="ektefellesFnr"
-                                defaultValue={formik.values.ektefellesFnr ?? ''}
-                                onChange={formik.handleChange}
-                            />
-                            {eps && <Personkort person={eps} />}
+                            <RadioGruppe feil={formik.errors.borSøkerMedEktefelle}>
+                                <Radio
+                                    label="Ja"
+                                    name="borSøkerMedEktefelle"
+                                    checked={Boolean(formik.values.borSøkerMedEktefelle)}
+                                    onChange={() =>
+                                        formik.setValues({
+                                            ...formik.values,
+                                            borSøkerMedEktefelle: true,
+                                            ektefellesFnr: null,
+                                        })
+                                    }
+                                />
+                                <Radio
+                                    label="Nei"
+                                    name="borSøkerMedEktefelle"
+                                    checked={formik.values.borSøkerMedEktefelle === false}
+                                    onChange={() =>
+                                        formik.setValues({
+                                            ...formik.values,
+                                            borSøkerMedEktefelle: false,
+                                        })
+                                    }
+                                />
+                            </RadioGruppe>
+                            {formik.values.borSøkerMedEktefelle && (
+                                <>
+                                    <Element>Ektefelle/samboers fødselsnummer</Element>
+                                    <div className={styles.fnrInput}>
+                                        <Input
+                                            name="ektefellesFnr"
+                                            defaultValue={formik.values.ektefellesFnr ?? ''}
+                                            onChange={formik.handleChange}
+                                            bredde="S"
+                                        />
+                                        {eps && <Personkort person={eps} />}
+                                    </div>
+                                </>
+                            )}
                         </div>
                         <FormueInput
                             tittel={intl.formatMessage({ id: 'input.label.verdiIkkePrimærBolig' })}

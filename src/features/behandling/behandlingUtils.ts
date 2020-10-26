@@ -101,6 +101,15 @@ export const eqFormue: Eq<Nullable<Formue>> = {
         formue1?.begrunnelse === formue2?.begrunnelse,
 };
 
+export const eqEktefelle: Eq<Nullable<{
+    harEktefellePartnerSamboer: Nullable<boolean>;
+    fnr: Nullable<string>;
+}>> = {
+    equals: (ektefelle1, ektefelle2) =>
+        ektefelle1?.harEktefellePartnerSamboer === ektefelle2?.harEktefellePartnerSamboer &&
+        ektefelle1?.fnr === ektefelle2?.fnr,
+};
+
 export const eqPersonligOppmøte: Eq<Nullable<PersonligOppmøte>> = {
     equals: (personligOppmøte1, personligOppmøte2) =>
         personligOppmøte1?.status === personligOppmøte2?.status &&
