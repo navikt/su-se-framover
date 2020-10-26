@@ -73,7 +73,12 @@ const schema = yup.object<FormData>({
     status: yup.mixed().required().oneOf([FormueStatus.VilkårOppfylt, FormueStatus.MåInnhenteMerInformasjon]),
     begrunnelse: yup.string().defined(),
     borSøkerMedEktefelle: yup.boolean().required(),
-    ektefellesFnr: yup.mixed<string>().nullable(),
+    ektefellesFnr: yup.mixed<string>().when('borSøkerMedEktefelle', {
+        is: true,
+        then: yup.mixed<string>().test('erGyldigFnr', 'Fnr er ikke gyldig', (fnr) => {
+            return fnr && fnrValidator.fnr(fnr).status === 'valid';
+        }),
+    }),
 });
 
 function kalkulerFormue(formikValues: FormData) {
@@ -282,6 +287,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                         formik.setValues({
                                             ...formik.values,
                                             borSøkerMedEktefelle: false,
+                                            ektefellesFnr: null,
                                         })
                                     }
                                 />
@@ -295,6 +301,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                             defaultValue={formik.values.ektefellesFnr ?? ''}
                                             onChange={formik.handleChange}
                                             bredde="S"
+                                            feil={formik.errors.ektefellesFnr}
                                         />
                                         {eps && <Personkort person={eps} />}
                                     </div>
