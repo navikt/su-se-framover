@@ -1,4 +1,5 @@
 import fnrValidator from '@navikt/fnrvalidator';
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Checkbox, Input, Radio, RadioGruppe } from 'nav-frontend-skjema';
 import React, { useEffect, useState } from 'react';
 
@@ -22,8 +23,13 @@ interface Props {
     feil?: string;
 }
 const EktefellePartnerSamboer = (props: Props) => {
+<<<<<<< HEAD
     const [fnrErUkjent, setFnrErUkjent] = useState(false);
     const epsFormData = props.value ?? initialEPS;
+=======
+    const EPSFormData = props.value ?? initialEPS;
+    const [fnrErUkjent, setFnrErUkjent] = useState(Boolean(EPSFormData.fødselsdato && EPSFormData.navn));
+>>>>>>> Fix initialvalues for prefilled eps info in søknad
 
     const intl = useI18n({ messages });
 
@@ -52,6 +58,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                         fnr: null,
                     });
                 }}
+                checked={fnrErUkjent}
                 label="Vet ikke fødselsnummer"
             />
 
@@ -126,10 +133,15 @@ interface FnrInputProps {
 }
 const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
     const [person, setPerson] = useState<Person | null>(null);
+    const [isForbidden, setIsForbidden] = useState<boolean>(false);
     const intl = useI18n({ messages });
 
     async function fetchPerson(fødselsnummer: string) {
+        setIsForbidden(false);
         const res = await personApi.fetchPerson(fødselsnummer);
+        if (res.status === 'error' && res.error.statusCode === 403) {
+            setIsForbidden(true);
+        }
         if (res.status === 'ok') {
             setPerson(res.data);
         }
@@ -161,6 +173,11 @@ const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
                 <div className={styles.result}>
                     <GenderIcon kjønn={person.kjønn} />
                     <p>{showName(person)}</p>
+                </div>
+            )}
+            {!disabled && isForbidden && (
+                <div>
+                    <AlertStripe type="feil"> Du har ikke tilgang til å se informasjon om denne brukeren </AlertStripe>
                 </div>
             )}
         </div>
