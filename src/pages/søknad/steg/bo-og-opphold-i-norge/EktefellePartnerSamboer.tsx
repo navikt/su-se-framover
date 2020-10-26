@@ -58,7 +58,7 @@ const EktefellePartnerSamboer = (props: Props) => {
             {fnrErUkjent && (
                 <div className={styles.ukjentFnr}>
                     <Input
-                        value={EPSFormData.navn ?? ''}
+                        value={epsFormData.navn ?? ''}
                         label={intl.formatMessage({ id: 'input.ektefelleEllerSamboerNavn.label' })}
                         onChange={(e) => {
                             props.onChange({
@@ -69,7 +69,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                         feil={!epsFormData.navn && props.feil}
                     />
                     <Input
-                        value={EPSFormData.fødselsdato ?? ''}
+                        value={epsFormData.fødselsdato ?? ''}
                         label={intl.formatMessage({ id: 'input.ektefelleEllerSamboerFødselsdato.label' })}
                         description="DD.MM.ÅÅÅÅ"
                         bredde="S"
@@ -88,7 +88,7 @@ const EktefellePartnerSamboer = (props: Props) => {
             <div className={styles.ufør}>
                 <RadioGruppe
                     legend={intl.formatMessage({ id: 'input.ektefelleEllerSamboerUførFlyktning.label' })}
-                    feil={EPSFormData.erUførFlyktning === null && props.feil}
+                    feil={epsFormData.erUførFlyktning === null && props.feil}
                 >
                     <Radio
                         checked={Boolean(epsFormData.erUførFlyktning)}

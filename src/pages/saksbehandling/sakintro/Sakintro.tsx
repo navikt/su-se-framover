@@ -45,7 +45,7 @@ const Sakintro = (props: { sak: Sak }) => {
                                             <p>Søknads-id: {s.id}</p>
                                             <p>Innsendt: {formatDateTime(s.opprettet, intl)}</p>
                                             {behandlinger.length === 0 && !s.lukket && <p>Status: OPPRETTET</p>}
-                                            {s.lukket && ( // TODO: Her må vi ta inn grunn
+                                            {s.lukket && (
                                                 <div>
                                                     <p>Søknadsbehandlingen er blitt avsluttet.</p>
                                                     <p>Grunn for avslutning: {s.lukket.typeLukking}</p>
