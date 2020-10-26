@@ -234,8 +234,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
     useEffect(() => {
         async function fetchPerson(fnr: Nullable<string>) {
+            setEps(null);
             if (!fnr || fnrValidator.fnr(fnr).status === 'invalid') {
-                setEps(null);
                 return;
             }
 
