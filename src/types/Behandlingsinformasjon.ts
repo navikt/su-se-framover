@@ -88,10 +88,11 @@ export interface PersonligOppmøte {
 }
 export enum PersonligOppmøteStatus {
     MøttPersonlig = 'MøttPersonlig',
-    Verge = 'Verge',
-    FullmektigMedLegeattest = 'FullmektigMedLegeattest',
-    FullmektigUtenLegeattest = 'FullmektigUtenLegeattest',
-    IkkeMøttOpp = 'IkkeMøttOpp',
+    IkkeMøttMenVerge = 'IkkeMøttMenVerge',
+    IkkeMøttMenSykMedLegeerklæringOgFullmakt = 'IkkeMøttMenSykMedLegeerklæringOgFullmakt',
+    IkkeMøttMenKortvarigSykMedLegeerklæring = 'IkkeMøttMenKortvarigSykMedLegeerklæring',
+    IkkeMøttMenMidlertidigUnntakFraOppmøteplikt = 'IkkeMøttMenMidlertidigUnntakFraOppmøteplikt',
+    IkkeMøttPersonlig = 'IkkeMøttPersonlig',
 }
 
 export interface Bosituasjon {

@@ -158,12 +158,13 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
 function statusForPersonligOppmøte(personligOppmøte: Nullable<PersonligOppmøte>): VilkårVurderingStatus {
     switch (personligOppmøte?.status) {
         case PersonligOppmøteStatus.MøttPersonlig:
-        case PersonligOppmøteStatus.FullmektigMedLegeattest:
-        case PersonligOppmøteStatus.Verge:
+        case PersonligOppmøteStatus.IkkeMøttMenSykMedLegeerklæringOgFullmakt:
+        case PersonligOppmøteStatus.IkkeMøttMenVerge:
+        case PersonligOppmøteStatus.IkkeMøttMenKortvarigSykMedLegeerklæring:
+        case PersonligOppmøteStatus.IkkeMøttMenMidlertidigUnntakFraOppmøteplikt:
             return VilkårVurderingStatus.Ok;
 
-        case PersonligOppmøteStatus.FullmektigUtenLegeattest:
-        case PersonligOppmøteStatus.IkkeMøttOpp:
+        case PersonligOppmøteStatus.IkkeMøttPersonlig:
             return VilkårVurderingStatus.IkkeOk;
 
         default:

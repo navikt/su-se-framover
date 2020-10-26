@@ -3,9 +3,16 @@ export default {
     'display.fraSøknad.personligOppmøte': 'Personlig',
     'page.tittel': 'Personlig oppmøte',
 
-    'radio.legeattest.legend': 'Legeattest?',
-    'radio.personligOppmøte.legend': 'Har søker møtt personlig?',
+    'radio.personligOppmøte.legend': 'Har bruker møtt personlig?',
+    'radio.personligOppmøte.grunn.legend': 'Hvorfor har ikke bruker møtt personlig?',
 
-    'radio.label.søkerHarVerge': 'Søker har verge',
-    'radio.label.søkerHarFullmektig': 'Fullmektig har møtt på vegne av søker',
+    'radio.personligOppmøte.grunn.sykMedLegeerklæringOgFullmakt':
+        'Brukeren er for syk til å møte, og det foreligger legeerklæring og fullmakt',
+    'radio.personligOppmøte.grunn.oppnevntVergeSøktPerPost':
+        'Oppnevnt verge, og søkt per post i tråd med reglene for vergemål',
+    'radio.personligOppmøte.grunn.kortvarigSykMedLegeerklæring':
+        'Kortvarig sykdom som er dokumentert med legeerklæring',
+    'radio.personligOppmøte.grunn.midlertidigUnntakFraOppmøteplikt': 'Midlertidig unntak fra oppmøteplikten',
+    'radio.personligOppmøte.grunn.brukerIkkeMøttOppfyllerIkkeVilkår':
+        'Bruker har ikke møtt, og oppfyller ikke vilkåret',
 };
