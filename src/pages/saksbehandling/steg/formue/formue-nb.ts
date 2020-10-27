@@ -23,5 +23,9 @@ export default {
     'input.label.kontanterOver1000': 'Kontanter over 1000',
     'input.label.depositumskonto': 'Depositumskonto',
 
+    'feilmelding.ikkeTilgang': 'Du har ikke tilgang til å se informasjon om denne brukeren',
+    'feilmelding.ikkeFunnet': 'Fant ikke noen bruker med det fødselsnummeret',
+    'feilmelding.ukjent': 'En feil skjedde',
+
     'page.tittel': 'Formue',
 };

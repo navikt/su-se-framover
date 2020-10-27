@@ -13,6 +13,7 @@ export interface Behandlingsinformasjon {
     personligOppmøte: Nullable<PersonligOppmøte>;
     bosituasjon: Nullable<Bosituasjon>;
     utledetSats: Nullable<Sats>;
+    ektefelle: Nullable<Ektefelle>;
 }
 
 export interface Uførhet {
@@ -101,4 +102,8 @@ export interface Bosituasjon {
     ektemakeEllerSamboerUnder67År: Nullable<boolean>;
     ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
     begrunnelse: Nullable<string>;
+}
+
+interface Ektefelle {
+    fnr: Nullable<string>;
 }
