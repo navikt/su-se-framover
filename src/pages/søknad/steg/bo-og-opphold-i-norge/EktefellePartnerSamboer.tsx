@@ -133,14 +133,14 @@ interface FnrInputProps {
 }
 const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
     const [person, setPerson] = useState<Person | null>(null);
-    const [isForbidden, setIsForbidden] = useState<boolean>(false);
+    const [HarIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
     const intl = useI18n({ messages });
 
     async function fetchPerson(fødselsnummer: string) {
-        setIsForbidden(false);
+        setHarIkkeTilgang(false);
         const res = await personApi.fetchPerson(fødselsnummer);
         if (res.status === 'error' && res.error.statusCode === 403) {
-            setIsForbidden(true);
+            setHarIkkeTilgang(true);
         }
         if (res.status === 'ok') {
             setPerson(res.data);
@@ -175,7 +175,7 @@ const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
                     <p className={styles.name}>{showName(person)}</p>
                 </div>
             )}
-            {!disabled && isForbidden && (
+            {!disabled && HarIkkeTilgang && (
                 <div>
                     <AlertStripe type="feil"> Du har ikke tilgang til å se informasjon om denne brukeren </AlertStripe>
                 </div>
