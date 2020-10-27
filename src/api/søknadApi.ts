@@ -13,7 +13,7 @@ export async function lukkSøknad(arg: {
     body: Record<string, string>;
 }): Promise<ApiClientResult<Sak>> {
     return apiClient({
-        url: `/soknad/${arg.søknadId}/lukk?type=${arg.lukketSøknadType}`,
+        url: `/soknad/${arg.søknadId}/lukk`,
         method: 'POST',
         body: arg.body,
     });
@@ -25,7 +25,7 @@ export async function hentLukketSøknadsBrevutkast(arg: {
     body: Record<string, string>;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
-        url: `/soknad/${arg.søknadId}/lukk/brevutkast?type=${arg.lukketSøknadType}`,
+        url: `/soknad/${arg.søknadId}/lukk/brevutkast`,
         method: 'POST',
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
         body: arg.body,

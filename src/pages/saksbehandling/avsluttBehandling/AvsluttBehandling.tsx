@@ -23,7 +23,7 @@ interface FormData {
 }
 
 const validationSchema = yup.object<FormData>({
-    lukkSøknadType: yup.mixed().oneOf([LukkSøknadType.Trukket]).required(),
+    lukkSøknadType: yup.mixed().oneOf([LukkSøknadType.Trukket, LukkSøknadType.Bortfalt]).required(),
     datoSøkerTrakkSøknad: yup.string().nullable().defined().when('lukkSøknadType', {
         is: LukkSøknadType.Trukket,
         then: yup.string().required(),
@@ -44,17 +44,28 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
             datoSøkerTrakkSøknad: null,
         },
         async onSubmit(values) {
-            if (!values.lukkSøknadType || !values.datoSøkerTrakkSøknad) {
+            if (!values.lukkSøknadType) {
                 return;
             }
 
-            if (values.lukkSøknadType === LukkSøknadType.Trukket) {
+            if (values.lukkSøknadType === LukkSøknadType.Trukket && values.datoSøkerTrakkSøknad) {
                 dispatch(
                     lukkSøknad({
                         søknadId: urlParams.soknadId,
                         lukketSøknadType: values.lukkSøknadType,
                         body: {
+                            type: values.lukkSøknadType.toUpperCase(),
                             datoSøkerTrakkSøknad: values.datoSøkerTrakkSøknad,
+                        },
+                    })
+                );
+            } else if (values.lukkSøknadType === LukkSøknadType.Bortfalt) {
+                dispatch(
+                    lukkSøknad({
+                        søknadId: urlParams.soknadId,
+                        lukketSøknadType: values.lukkSøknadType,
+                        body: {
+                            type: values.lukkSøknadType.toUpperCase(),
                         },
                     })
                 );
@@ -79,6 +90,7 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
                     søknadId: urlParams.soknadId,
                     lukketSøknadType: formik.values.lukkSøknadType,
                     body: {
+                        type: formik.values.lukkSøknadType.toUpperCase(),
                         datoSøkerTrakkSøknad: formik.values.datoSøkerTrakkSøknad,
                     },
                 })
@@ -91,7 +103,7 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
     }, [formik.values]);
 
     const søknad = props.sak.søknader.find((s) => s.id === urlParams.soknadId);
-
+    console.log(formik.values);
     if (RemoteData.isSuccess(søknadsbehandlingAvsluttetStatus) || søknad?.lukket !== null) {
         return (
             <div>
@@ -164,10 +176,11 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
                         >
                             Se brev
                         </Knapp>
-                        <Fareknapp spinner={RemoteData.isPending(lukketSøknadBrevutkastStatus)}>Lukk søknad</Fareknapp>
                     </div>
                 </div>
             )}
+
+            <Fareknapp spinner={RemoteData.isPending(lukketSøknadBrevutkastStatus)}>Lukk søknad</Fareknapp>
 
             {RemoteData.isFailure(lukketSøknadBrevutkastStatus) && (
                 <AlertStripeFeil>Kunne ikke vise brev</AlertStripeFeil>
