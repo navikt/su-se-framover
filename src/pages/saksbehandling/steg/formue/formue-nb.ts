@@ -1,6 +1,8 @@
 export default {
     'checkbox.henteMerInfo': 'Må hente mer informasjon',
 
+    'display.fraSøknad.ektefellesFnr': 'Ektefelles fnr/fødselsdato',
+    'display.fraSøknad.ektefellesNavn': 'Ektefelles navn (hvis oppgitt)',
     'display.fraSøknad.verdiPåBolig': 'Verdi på bolig',
     'display.fraSøknad.verdiPåEiendom': 'Verdi på eiendom',
     'display.fraSøknad.verdiPåKjøretøy': 'Verdi på Kjøretøy',

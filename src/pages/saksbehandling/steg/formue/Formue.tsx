@@ -459,6 +459,21 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             faktaBlokkerClassName={styles.formueFaktaBlokk}
                             fakta={[
                                 {
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.ektefellesFnr' }),
+                                    verdi: søknadInnhold.boforhold.ektefellePartnerSamboer
+                                        ? søknadInnhold.boforhold.ektefellePartnerSamboer?.type === 'MedFnr'
+                                            ? søknadInnhold.boforhold.ektefellePartnerSamboer.fnr
+                                            : søknadInnhold.boforhold.ektefellePartnerSamboer.fødselsdato
+                                        : '-',
+                                },
+                                {
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.ektefellesNavn' }),
+                                    verdi:
+                                        søknadInnhold.boforhold.ektefellePartnerSamboer?.type === 'UtenFnr'
+                                            ? søknadInnhold.boforhold.ektefellePartnerSamboer.navn
+                                            : '-',
+                                },
+                                {
                                     tittel: intl.formatMessage({ id: 'display.fraSøknad.verdiPåBolig' }),
                                     verdi: søknadInnhold.formue.verdiPåBolig?.toString() ?? '0',
                                 },
