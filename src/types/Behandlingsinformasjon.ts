@@ -104,6 +104,5 @@ export interface Bosituasjon {
 }
 
 interface Ektefelle {
-    harEktefellePartnerSamboer: Nullable<boolean>;
     fnr: Nullable<string>;
 }

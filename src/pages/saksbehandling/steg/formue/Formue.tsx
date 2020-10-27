@@ -121,7 +121,7 @@ function kalkulerFormueFraSøknad(f: SøknadInnhold['formue']) {
     );
 }
 
-const setInitialValues = (behandlingsInfo: Behandlingsinformasjon, søknadsInnhold: SøknadInnhold) => {
+const setInitialValues = (behandlingsInfo: Behandlingsinformasjon, søknadsInnhold: SøknadInnhold): FormData => {
     const behandlingsFormue = behandlingsInfo.formue;
     const søknadsFormue = søknadsInnhold.formue;
 
@@ -144,7 +144,7 @@ const setInitialValues = (behandlingsInfo: Behandlingsinformasjon, søknadsInnho
             behandlingsFormue?.depositumskonto?.toString() ?? søknadsFormue.depositumsBeløp?.toString() ?? '0',
         status: behandlingsFormue?.status ?? FormueStatus.VilkårOppfylt,
         begrunnelse: behandlingsFormue?.begrunnelse ?? null,
-        borSøkerMedEktefelle: behandlingsInfo.ektefelle?.harEktefellePartnerSamboer ?? null,
+        borSøkerMedEktefelle: behandlingsInfo.ektefelle ? behandlingsInfo.ektefelle.fnr != null : null,
         ektefellesFnr: behandlingsInfo.ektefelle?.fnr ?? null,
     };
 };
@@ -197,7 +197,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                 behandlingsinformasjon: {
                     formue: { ...formueValues },
                     ektefelle: {
-                        harEktefellePartnerSamboer: values.borSøkerMedEktefelle,
                         fnr: values.ektefellesFnr,
                     },
                 },
