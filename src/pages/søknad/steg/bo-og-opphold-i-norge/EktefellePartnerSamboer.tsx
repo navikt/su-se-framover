@@ -23,13 +23,8 @@ interface Props {
     feil?: string;
 }
 const EktefellePartnerSamboer = (props: Props) => {
-<<<<<<< HEAD
     const [fnrErUkjent, setFnrErUkjent] = useState(false);
     const epsFormData = props.value ?? initialEPS;
-=======
-    const EPSFormData = props.value ?? initialEPS;
-    const [fnrErUkjent, setFnrErUkjent] = useState(Boolean(EPSFormData.fødselsdato && EPSFormData.navn));
->>>>>>> Fix initialvalues for prefilled eps info in søknad
 
     const intl = useI18n({ messages });
 
@@ -133,7 +128,7 @@ interface FnrInputProps {
 }
 const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
     const [person, setPerson] = useState<Person | null>(null);
-    const [HarIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
+    const [harIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
     const intl = useI18n({ messages });
 
     async function fetchPerson(fødselsnummer: string) {
@@ -175,7 +170,7 @@ const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
                     <p className={styles.name}>{showName(person)}</p>
                 </div>
             )}
-            {!disabled && HarIkkeTilgang && (
+            {!disabled && harIkkeTilgang && (
                 <div>
                     <AlertStripe type="feil"> Du har ikke tilgang til å se informasjon om denne brukeren </AlertStripe>
                 </div>
