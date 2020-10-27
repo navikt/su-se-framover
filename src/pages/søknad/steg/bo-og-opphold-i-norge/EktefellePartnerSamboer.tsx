@@ -1,4 +1,5 @@
 import fnrValidator from '@navikt/fnrvalidator';
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Checkbox, Input, Radio, RadioGruppe } from 'nav-frontend-skjema';
 import React, { useEffect, useState } from 'react';
 
@@ -52,6 +53,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                         fnr: null,
                     });
                 }}
+                checked={fnrErUkjent}
                 label="Vet ikke fødselsnummer"
             />
 
@@ -126,10 +128,15 @@ interface FnrInputProps {
 }
 const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
     const [person, setPerson] = useState<Person | null>(null);
+    const [harIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
     const intl = useI18n({ messages });
 
     async function fetchPerson(fødselsnummer: string) {
+        setHarIkkeTilgang(false);
         const res = await personApi.fetchPerson(fødselsnummer);
+        if (res.status === 'error' && res.error.statusCode === 403) {
+            setHarIkkeTilgang(true);
+        }
         if (res.status === 'ok') {
             setPerson(res.data);
         }
@@ -160,7 +167,12 @@ const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
             {!disabled && person && (
                 <div className={styles.result}>
                     <GenderIcon kjønn={person.kjønn} />
-                    <p>{showName(person)}</p>
+                    <p className={styles.name}>{showName(person)}</p>
+                </div>
+            )}
+            {!disabled && harIkkeTilgang && (
+                <div>
+                    <AlertStripe type="feil"> Du har ikke tilgang til å se informasjon om denne brukeren </AlertStripe>
                 </div>
             )}
         </div>
