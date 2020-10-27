@@ -157,7 +157,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [eps, setEps] = useState<Nullable<personApi.Person>>();
-    const [erSuperSecret, setErSuperSecret] = useState<boolean>(false);
+    const [harIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
     const onSave = (values: FormData) => {
         const status =
             values.status === FormueStatus.MåInnhenteMerInformasjon
@@ -235,14 +235,14 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     useEffect(() => {
         async function fetchPerson(fnr: Nullable<string>) {
             setEps(null);
-            setErSuperSecret(false);
+            setHarIkkeTilgang(false);
             if (!fnr || fnrValidator.fnr(fnr).status === 'invalid') {
                 return;
             }
 
             const res = await personApi.fetchPerson(fnr);
             if (res.status === 'error' && res.error.statusCode === 403) {
-                setErSuperSecret(true);
+                setHarIkkeTilgang(true);
                 return;
             }
             if (res.status === 'ok') {
@@ -308,12 +308,14 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                             bredde="S"
                                             feil={formik.errors.ektefellesFnr}
                                         />
-                                        {eps && <Personkort person={eps} />}
-                                        {erSuperSecret && (
-                                            <AlertStripe type="feil">
-                                                Du har ikke tilgang til å se informasjon om denne brukeren
-                                            </AlertStripe>
-                                        )}
+                                        <div className={styles.result}>
+                                            {eps && <Personkort person={eps} />}
+                                            {harIkkeTilgang && (
+                                                <AlertStripe type="feil">
+                                                    Du har ikke tilgang til å se informasjon om denne brukeren
+                                                </AlertStripe>
+                                            )}
+                                        </div>
                                     </div>
                                 </>
                             )}
