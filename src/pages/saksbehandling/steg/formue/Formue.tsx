@@ -8,6 +8,7 @@ import { Element } from 'nav-frontend-typografi';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { ErrorCode } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import { Personkort } from '~components/Personkort';
 import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';
@@ -157,7 +158,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [eps, setEps] = useState<Nullable<personApi.Person>>();
-    const [harIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
+    const [personOppslagFeil, setPersonOppslagFeil] = useState<{ statusCode: number } | null>(null);
     const onSave = (values: FormData) => {
         const status =
             values.status === FormueStatus.MåInnhenteMerInformasjon
@@ -235,14 +236,15 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     useEffect(() => {
         async function fetchPerson(fnr: Nullable<string>) {
             setEps(null);
-            setHarIkkeTilgang(false);
+            setPersonOppslagFeil(null);
             if (!fnr || fnrValidator.fnr(fnr).status === 'invalid') {
                 return;
             }
 
             const res = await personApi.fetchPerson(fnr);
-            if (res.status === 'error' && res.error.statusCode === 403) {
-                setHarIkkeTilgang(true);
+            console.log(res);
+            if (res.status === 'error') {
+                setPersonOppslagFeil({ statusCode: res.error.statusCode });
                 return;
             }
             if (res.status === 'ok') {
@@ -310,9 +312,13 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                         />
                                         <div className={styles.result}>
                                             {eps && <Personkort person={eps} />}
-                                            {harIkkeTilgang && (
+                                            {personOppslagFeil && (
                                                 <AlertStripe type="feil">
-                                                    Du har ikke tilgang til å se informasjon om denne brukeren
+                                                    {personOppslagFeil.statusCode === ErrorCode.Unauthorized
+                                                        ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
+                                                        : personOppslagFeil.statusCode === ErrorCode.NotFound
+                                                        ? intl.formatMessage({ id: 'feilmelding.ikkeFunnet' })
+                                                        : intl.formatMessage({ id: 'feilmelding.ukjent' })}
                                                 </AlertStripe>
                                             )}
                                         </div>
