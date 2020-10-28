@@ -103,7 +103,7 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
     }, [formik.values]);
 
     const søknad = props.sak.søknader.find((s) => s.id === urlParams.soknadId);
-    console.log(formik.values);
+
     if (RemoteData.isSuccess(søknadsbehandlingAvsluttetStatus) || søknad?.lukket !== null) {
         return (
             <div>
