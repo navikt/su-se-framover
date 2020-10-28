@@ -13,11 +13,15 @@ export interface UtenlandskInntekt {
 }
 
 export enum Fradragstype {
-    Uføretrygd = 'Uføretrygd',
-    Barnetillegg = 'Barnetillegg',
+    NAVytelserTilLivsopphold = 'NAVytelserTilLivsopphold',
     Arbeidsinntekt = 'Arbeidsinntekt',
-    Pensjon = 'Pensjon',
+    OffentligPensjon = 'OffentligPensjon',
+    PrivatPensjon = 'PrivatPensjon',
+    Sosialstønad = 'Sosialstønad',
+    Kontantstøtte = 'Kontantstøtte',
+    Introduksjonsstønad = 'Introduksjonsstønad',
+    Kvalifiseringsstønad = 'Kvalifiseringsstønad',
+    BidragEtterEkteskapsloven = 'BidragEtterEkteskapsloven',
     Kapitalinntekt = 'Kapitalinntekt',
-    AndreYtelser = 'AndreYtelser',
     ForventetInntekt = 'ForventetInntekt',
 }

@@ -12,6 +12,7 @@ import { Fradragstype, Fradrag } from '~types/Fradrag';
 import { groupMånedsberegninger } from '../../delt/arrayUtils';
 import { InfoLinje } from '../../delt/Infolinje/Infolinje';
 
+import * as BeregningUtils from './beregningUtils';
 import styles from './visBeregning.module.less';
 
 interface Props {
@@ -49,40 +50,49 @@ const VisBeregning = (props: Props) => {
                 <div>
                     <Element className={styles.fradragHeading}>Fradrag:</Element>
                     <ul>
-                        {fradrag.map((f, idx) => (
-                            <li key={idx} className={styles.fradragItem}>
-                                <InfoLinje
-                                    tittel={f.utenlandskInntekt ? `Utenlandsk ${f.type}` : f.type}
-                                    value={intl.formatNumber(f.beløp, { currency: 'NOK' })}
-                                />
-                                {f.utenlandskInntekt && (
-                                    <div>
-                                        <InfoLinje
-                                            tittel={intl.formatMessage({
-                                                id: 'display.visBeregning.beløpIUtenlandskValuta',
-                                            })}
-                                            value={intl.formatNumber(f.utenlandskInntekt.beløpIUtenlandskValuta, {
-                                                currency: 'NOK',
-                                            })}
-                                        />
-                                        <InfoLinje
-                                            tittel={intl.formatMessage({
-                                                id: 'display.visBeregning.valuta',
-                                            })}
-                                            value={f.utenlandskInntekt.valuta}
-                                        />
-                                        <InfoLinje
-                                            tittel={intl.formatMessage({
-                                                id: 'display.visBeregning.kurs',
-                                            })}
-                                            value={intl.formatNumber(f.utenlandskInntekt.kurs, {
-                                                currency: 'NOK',
-                                            })}
-                                        />
-                                    </div>
-                                )}
-                            </li>
-                        ))}
+                        {fradrag.map((f, idx) => {
+                            const fradragstype = intl.formatMessage({
+                                id: BeregningUtils.fradragstypeResourceId(f.type),
+                            });
+                            return (
+                                <li key={idx} className={styles.fradragItem}>
+                                    <InfoLinje
+                                        tittel={
+                                            f.utenlandskInntekt
+                                                ? `Utenlandsk ${fradragstype.toLowerCase()}`
+                                                : fradragstype
+                                        }
+                                        value={intl.formatNumber(f.beløp, { currency: 'NOK' })}
+                                    />
+                                    {f.utenlandskInntekt && (
+                                        <div>
+                                            <InfoLinje
+                                                tittel={intl.formatMessage({
+                                                    id: 'display.visBeregning.beløpIUtenlandskValuta',
+                                                })}
+                                                value={intl.formatNumber(f.utenlandskInntekt.beløpIUtenlandskValuta, {
+                                                    currency: 'NOK',
+                                                })}
+                                            />
+                                            <InfoLinje
+                                                tittel={intl.formatMessage({
+                                                    id: 'display.visBeregning.valuta',
+                                                })}
+                                                value={f.utenlandskInntekt.valuta}
+                                            />
+                                            <InfoLinje
+                                                tittel={intl.formatMessage({
+                                                    id: 'display.visBeregning.kurs',
+                                                })}
+                                                value={intl.formatNumber(f.utenlandskInntekt.kurs, {
+                                                    currency: 'NOK',
+                                                })}
+                                            />
+                                        </div>
+                                    )}
+                                </li>
+                            );
+                        })}
                     </ul>
                 </div>
             )}
