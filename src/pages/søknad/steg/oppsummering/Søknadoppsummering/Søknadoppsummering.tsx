@@ -273,11 +273,11 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         søknad.utenlandsopphold.harReistDatoer.map((item, index) => (
                             <div className={sharedStyles.inputFelterDiv} key={index}>
                                 <Oppsummeringsfelt
-                                    label={<FormattedMessage id="input.utreisedato" />}
+                                    label={<FormattedMessage id="input.utreisedato.label" />}
                                     verdi={item.utreisedato ? reverseStr(item.utreisedato) : 'Ubesvart'}
                                 />
                                 <Oppsummeringsfelt
-                                    label={<FormattedMessage id="input.innreisedato" />}
+                                    label={<FormattedMessage id="input.innreisedato.label" />}
                                     verdi={item.innreisedato ? reverseStr(item.innreisedato) : 'Ubesvart'}
                                 />
                             </div>
@@ -297,11 +297,11 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         søknad.utenlandsopphold.skalReiseDatoer.map((item, index) => (
                             <div className={sharedStyles.inputFelterDiv} key={index}>
                                 <Oppsummeringsfelt
-                                    label={<FormattedMessage id="input.utreisedato" />}
+                                    label={<FormattedMessage id="input.utreisedato.label" />}
                                     verdi={item.utreisedato ? reverseStr(item.utreisedato) : 'Ubesvart'}
                                 />
                                 <Oppsummeringsfelt
-                                    label={<FormattedMessage id="input.innreisedato" />}
+                                    label={<FormattedMessage id="input.innreisedato.label" />}
                                     verdi={item.innreisedato ? reverseStr(item.innreisedato) : 'Ubesvart'}
                                 />
                             </div>

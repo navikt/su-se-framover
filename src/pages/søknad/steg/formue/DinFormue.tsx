@@ -189,24 +189,6 @@ const KjøretøyInputFelter = (props: {
                     <div className={sharedStyles.inputFelterDiv} key={idx}>
                         <div>
                             <Input
-                                id={`${kjøretøyVerdiId}`}
-                                name={`${kjøretøyVerdiId}`}
-                                label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
-                                value={input.verdiPåKjøretøy}
-                                onChange={(e) => {
-                                    props.onChange({
-                                        index: idx,
-                                        kjøretøyDeEier: input.kjøretøyDeEier,
-                                        verdiPåKjøretøy: e.target.value,
-                                    });
-                                }}
-                            />
-                            {errorForLinje && typeof errorForLinje === 'object' && (
-                                <SkjemaelementFeilmelding>{errorForLinje.verdiPåKjøretøy}</SkjemaelementFeilmelding>
-                            )}
-                        </div>
-                        <div>
-                            <Input
                                 id={`${kjøretøyId}`}
                                 name={`${kjøretøyId}`}
                                 label={<FormattedMessage id="input.kjøretøyDeEier.label" />}
@@ -221,6 +203,24 @@ const KjøretøyInputFelter = (props: {
                             />
                             {errorForLinje && typeof errorForLinje === 'object' && (
                                 <SkjemaelementFeilmelding>{errorForLinje.kjøretøyDeEier}</SkjemaelementFeilmelding>
+                            )}
+                        </div>
+                        <div>
+                            <Input
+                                id={`${kjøretøyVerdiId}`}
+                                name={`${kjøretøyVerdiId}`}
+                                label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
+                                value={input.verdiPåKjøretøy}
+                                onChange={(e) => {
+                                    props.onChange({
+                                        index: idx,
+                                        kjøretøyDeEier: input.kjøretøyDeEier,
+                                        verdiPåKjøretøy: e.target.value,
+                                    });
+                                }}
+                            />
+                            {errorForLinje && typeof errorForLinje === 'object' && (
+                                <SkjemaelementFeilmelding>{errorForLinje.verdiPåKjøretøy}</SkjemaelementFeilmelding>
                             )}
                         </div>
                         {props.arr.length > 1 && (
@@ -532,6 +532,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 className={sharedStyles.marginBottom}
                                 id="innskuddsBeløp"
                                 name="innskuddsBeløp"
+                                bredde="S"
                                 label={<FormattedMessage id="input.innskuddsBeløp.label" />}
                                 value={formik.values.innskuddsBeløp || ''}
                                 onChange={formik.handleChange}
@@ -558,6 +559,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 className={sharedStyles.marginBottom}
                                 id="verdipapirBeløp"
                                 name="verdipapirBeløp"
+                                bredde="S"
                                 label={<FormattedMessage id="input.verdipapirBeløp.label" />}
                                 value={formik.values.verdipapirBeløp || ''}
                                 onChange={formik.handleChange}
@@ -584,6 +586,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 className={sharedStyles.marginBottom}
                                 id="skylderNoenMegPengerBeløp"
                                 name="skylderNoenMegPengerBeløp"
+                                bredde="S"
                                 label={<FormattedMessage id="input.skylderNoenMegPengerBeløp.label" />}
                                 value={formik.values.skylderNoenMegPengerBeløp || ''}
                                 onChange={formik.handleChange}
@@ -610,6 +613,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 className={sharedStyles.marginBottom}
                                 id="kontanterBeløp"
                                 name="kontanterBeløp"
+                                bredde="S"
                                 label={<FormattedMessage id="input.kontanterBeløp.label" />}
                                 value={formik.values.kontanterBeløp || ''}
                                 onChange={formik.handleChange}
