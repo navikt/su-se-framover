@@ -4,15 +4,15 @@ export default {
     'input.norsk.statsborger.label': 'Er du norsk statsborger?',
 
     'input.oppholdstillatelse.label': 'Har du oppholdstillatelse i Norge?',
-    'input.hvilken.oppholdstillatelse.label': 'Hvilken type oppholdstillatelse har du?',
+    'input.hvilken.oppholdstillatelse.label': 'Er oppholdstillatelsen din permanent eller midlertidig?',
     'input.permanent.oppholdstillatelse.label': 'Permanent',
     'input.midlertidig.oppholdstillatelse.label': 'Midlertidig',
     'input.midlertidig.oppholdstillatelse.opphører.label':
-        'Er det mindre enn tre måneder til oppholdstillatelsen opphører?',
-    'input.oppholdtillatelse.forlengelse.label': 'Har du søkt forlengelse?',
+        'Er det mindre enn tre måneder til oppholdstillatelsen din opphører?',
+    'input.oppholdtillatelse.forlengelse.label': 'Har du søkt om forlengelse?',
 
     'input.statsborger.andre.land.label': 'Har du statsborgerskap i andre land enn Norge?',
-    'input.statsborger.andre.land.fritekst.label': 'Hvilke land?',
+    'input.statsborger.andre.land.fritekst.label': 'Hvilke land har du statsborgerskap i?',
 
     'hjelpetekst.tittel': 'Hvordan vet jeg om jeg er registrert flyktning?',
     'hjelpetekst.body':

@@ -1,7 +1,7 @@
 export default {
     'input.harForventetInntekt.label': 'Forventer du å ha arbeidsinntekt fremover?',
     'input.forventetInntekt.label': 'Forventet arbeidsinntekt i kroner per måned',
-    'input.mottarPensjon.label': 'Har du tjenestepensjon og/eller pensjonssparing?',
+    'input.mottarPensjon.label': 'Har du tjenestepensjon eller pensjonssparing?',
     'input.pensjonsOrdning.label': 'Pensjonsgiver',
     'input.pensjonsBeløp.label': 'Beløp per måned',
     'input.harMottattSosialstønad.label': 'Har du mottatt sosialstønad i løpet av de siste tre månedene?',
@@ -13,7 +13,7 @@ export default {
     'input.tjenerPengerIUtlandet.label': 'Tjener du penger i utlandet?',
     'input.tjenerPengerIUtlandetBeløp.label': 'Beløp i kroner per måned',
     'input.andreYtelserINAV.label': 'Har du andre ytelser i NAV?',
-    'input.andreYtelserINavYtelse.label': 'Hvilken ytelser?',
+    'input.andreYtelserINavYtelse.label': 'Hvilke ytelser?',
     'input.andreYtelserINavBeløp.label': 'Beløp i kroner per måned',
     'input.søktAndreYtelserIkkeBehandlet.label': 'Har du søkt om andre trygdeytelser som ikke er behandlet?',
     'input.søktAndreYtelserIkkeBehandletBegrunnelse.label': 'Hvilke? ',

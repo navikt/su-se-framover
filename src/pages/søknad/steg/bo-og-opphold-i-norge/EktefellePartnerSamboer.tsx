@@ -54,7 +54,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                     });
                 }}
                 checked={fnrErUkjent}
-                label="Vet ikke fødselsnummer"
+                label="Vet ikke fødselsnummeret"
             />
 
             {fnrErUkjent && (

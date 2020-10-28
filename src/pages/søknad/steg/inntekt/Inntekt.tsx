@@ -386,6 +386,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             <Input
                                 id="forventetInntekt"
                                 feil={formik.errors.forventetInntekt}
+                                bredde="S"
                                 className={sharedStyles.marginBottom}
                                 value={formik.values.forventetInntekt || ''}
                                 label={<FormattedMessage id="input.forventetInntekt.label" />}
@@ -413,6 +414,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 className={sharedStyles.marginBottom}
                                 id="tjenerPengerIUtlandetBeløp"
                                 name="tjenerPengerIUtlandetBeløp"
+                                bredde="S"
                                 label={<FormattedMessage id="input.tjenerPengerIUtlandetBeløp.label" />}
                                 value={formik.values.tjenerPengerIUtlandetBeløp || ''}
                                 onChange={formik.handleChange}
@@ -478,6 +480,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 className={sharedStyles.marginBottom}
                                 id="søktAndreYtelserIkkeBehandletBegrunnelse"
                                 name="søktAndreYtelserIkkeBehandletBegrunnelse"
+                                bredde="XXL"
                                 label={<FormattedMessage id="input.søktAndreYtelserIkkeBehandletBegrunnelse.label" />}
                                 value={formik.values.søktAndreYtelserIkkeBehandletBegrunnelse || ''}
                                 onChange={formik.handleChange}
@@ -504,6 +507,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 className={sharedStyles.marginBottom}
                                 id="sosialStønadBeløp"
                                 name="sosialStønadBeløp"
+                                bredde="S"
                                 label={<FormattedMessage id="input.sosialStønadBeløp.label" />}
                                 value={formik.values.sosialStønadBeløp || ''}
                                 onChange={formik.handleChange}
