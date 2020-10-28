@@ -12,6 +12,7 @@ import yup, { validateStringAsNumber } from '~lib/validering';
 import InntektFraUtland from '~pages/saksbehandling/steg/beregning/InntektFraUtland';
 import { Fradrag, Fradragstype, UtenlandskInntekt } from '~types/Fradrag';
 
+import * as BeregningUtils from './beregningUtils';
 import styles from './fradragInputs.module.less';
 
 export interface FradragFormData {
@@ -90,7 +91,7 @@ const FradragsSelection = (props: {
                 .filter((type) => type !== Fradragstype.ForventetInntekt)
                 .map((f) => (
                     <option value={f} key={f}>
-                        {props.intl.formatMessage({ id: fradragstypeResourceId(f) })}
+                        {props.intl.formatMessage({ id: BeregningUtils.fradragstypeResourceId(f) })}
                     </option>
                 ))}
         </Select>
@@ -232,23 +233,4 @@ export const FradragInputs = (props: {
             </div>
         </div>
     );
-};
-
-const fradragstypeResourceId = (f: Fradragstype): string => {
-    switch (f) {
-        case Fradragstype.Uføretrygd:
-            return 'fradrag.type.uføre';
-        case Fradragstype.Barnetillegg:
-            return 'fradrag.type.barnetillegg';
-        case Fradragstype.Arbeidsinntekt:
-            return 'fradrag.type.arbeidsinntekt';
-        case Fradragstype.Pensjon:
-            return 'fradrag.type.pensjon';
-        case Fradragstype.Kapitalinntekt:
-            return 'fradrag.type.kapitalinntekt';
-        case Fradragstype.AndreYtelser:
-            return 'fradrag.type.andreytelser';
-        case Fradragstype.ForventetInntekt:
-            throw new Error('Forventet inntekt skal ikke finnes.');
-    }
 };

@@ -37,13 +37,18 @@ export default {
 
     'fradrag.heading': 'Fradrag',
 
-    'fradrag.type.andreytelser': 'Andre ytelser',
-    'fradrag.type.arbeidsinntekt': 'Arbeidsinntekt',
-    'fradrag.type.barnetillegg': 'Barnetillegg',
     'fradrag.type.emptyLabel': 'Velg fradragstype',
+    'fradrag.type.navytelsertillivsopphold': 'NAV-ytelser til livsopphold',
+    'fradrag.type.arbeidsinntekt': 'Arbeidsinntekt',
+    'fradrag.type.offentligpensjon': 'Offentlig pensjon',
+    'fradrag.type.privatpensjon': 'Privat pensjon',
+    'fradrag.type.sosialstønad': 'Sosialstønad',
+    'fradrag.type.kontantstøtte': 'Kontantstøtte',
+    'fradrag.type.introduksjonsstønad': 'Introduksjonsstønad',
+    'fradrag.type.kvalifiseringsstønad': 'Kvalifiseringsstønad',
+    'fradrag.type.bidragetterekteskapsloven': 'Bidrag etter ekteskapsloven',
     'fradrag.type.kapitalinntekt': 'Kapitalinntekt',
-    'fradrag.type.pensjon': 'Pensjon',
-    'fradrag.type.uføre': 'Uføretrygd',
+    'fradrag.type.forventetinntekt': 'Forventet inntekt',
 
     'knapp.fradrag.leggtil': 'Legg til fradrag',
     'knapp.fradrag.fjern': 'Fjern fradrag',
