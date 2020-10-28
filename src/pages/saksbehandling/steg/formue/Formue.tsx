@@ -4,13 +4,14 @@ import { FormikErrors, useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Input, Textarea, Checkbox, RadioGruppe, Radio } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Element } from 'nav-frontend-typografi';
+import { Element, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ErrorCode } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import { Personkort } from '~components/Personkort';
+import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
@@ -19,6 +20,7 @@ import { Nullable } from '~lib/types';
 import yup, { validatePositiveNumber } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FormueStatus, Formue, Verdier } from '~types/Behandlingsinformasjon';
+import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -183,6 +185,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
         fetchPerson(formik.values.ektefellesFnr);
     }, [formik.values.ektefellesFnr]);
+    const vilkårErOppfylt = totalFormue < 0.5 * G;
 
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
@@ -306,28 +309,38 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             feil={(formik.errors.verdier as FormikErrors<Verdier>)?.depositumskonto}
                         />
                         <div className={styles.totalFormueContainer}>
-                            <p className={styles.totalFormue}>
-                                {intl.formatMessage({ id: 'display.totalt' })} {totalFormue}
-                            </p>
+                            <div>
+                                <Normaltekst>{intl.formatMessage({ id: 'display.totalt' })}</Normaltekst>
+                                <Undertittel>{totalFormue} kr</Undertittel>
+                            </div>
 
-                            {totalFormue > 0.5 * G ? (
-                                <div>
-                                    <p className={styles.vilkårOppfyltText}>
-                                        {intl.formatMessage({ id: 'display.vilkårIkkeOppfylt' })}
+                            <div className={styles.status}>
+                                <VilkårvurderingStatusIcon
+                                    status={vilkårErOppfylt ? VilkårVurderingStatus.Ok : VilkårVurderingStatus.IkkeOk}
+                                />
+                                <div className={styles.statusInformasjon}>
+                                    <p>
+                                        {vilkårErOppfylt
+                                            ? intl.formatMessage({ id: 'display.vilkårOppfylt' })
+                                            : intl.formatMessage({ id: 'display.vilkårIkkeOppfylt' })}
                                     </p>
-                                    <hr></hr>
-                                    <hr></hr>
-                                </div>
-                            ) : (
-                                <div>
-                                    <p className={styles.vilkårOppfyltText}>
-                                        {intl.formatMessage({ id: 'display.vilkårOppfylt' })}
+                                    <p>
+                                        {vilkårErOppfylt
+                                            ? intl.formatMessage({ id: 'display.vilkårOppfyltGrunn' })
+                                            : intl.formatMessage({ id: 'display.vilkårIkkeOppfyltGrunn' })}
                                     </p>
-                                    <hr></hr>
-                                    <hr></hr>
                                 </div>
-                            )}
+                            </div>
                         </div>
+
+                        <Textarea
+                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                            name="begrunnelse"
+                            value={formik.values.begrunnelse || ''}
+                            onChange={formik.handleChange}
+                            feil={formik.errors.begrunnelse}
+                        />
+
                         <Checkbox
                             label={intl.formatMessage({ id: 'checkbox.henteMerInfo' })}
                             name="status"
@@ -343,13 +356,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 });
                             }}
                         />
-                        <Textarea
-                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
-                            name="begrunnelse"
-                            value={formik.values.begrunnelse || ''}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.begrunnelse}
-                        />
+
                         {pipe(
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(

@@ -12,10 +12,12 @@ export default {
     'display.fraSøknad.skylderNoenSøkerPengerBeløp': 'Skylder noen søker penger',
     'display.fraSøknad.depositumsBeløp': 'Depositumskonto',
 
-    'display.totalt': 'Totalt:',
+    'display.totalt': 'Total formue',
     'display.totalt.fyllUtAlleFelter': 'Alle feltene må være tall for å regne ut',
-    'display.vilkårOppfylt': 'Oppfylt vilkår, formue under 0.5G',
-    'display.vilkårIkkeOppfylt': 'Ikke oppfylt vilkår, formue over 0.5G',
+    'display.vilkårOppfylt': 'Oppfylt vilkår',
+    'display.vilkårOppfyltGrunn': 'Formue er lavere enn 0.5G',
+    'display.vilkårIkkeOppfylt': 'Ikke oppfylt vilkår',
+    'display.vilkårIkkeOppfyltGrunn': 'Formue er høyere enn 0.5G',
 
     'input.label.verdiIkkePrimærBolig': 'Verdi boliger som ikke er primærbolig',
     'input.label.verdiKjøretøy': 'Verdi bil(sekundær), campingvogn eller kjøretøy',

@@ -16,6 +16,7 @@ import {
     Formue,
     PersonligOppmøte,
     Bosituasjon,
+    Verdier,
 } from '~types/Behandlingsinformasjon';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
@@ -61,6 +62,8 @@ export const hentSisteVurderteVilkår = (behandlingsinformasjon: Behandlingsinfo
         )
     );
 };
+
+// TODO ai: See if we can simplify with getStructEq({...})
 export const eqUførhet: Eq<Nullable<Uførhet>> = {
     equals: (ufør1, ufør2) =>
         ufør1?.status === ufør2?.status &&
@@ -91,14 +94,19 @@ export const eqOppholdIUtlandet: Eq<Nullable<OppholdIUtlandet>> = {
 export const eqFormue: Eq<Nullable<Formue>> = {
     equals: (formue1, formue2) =>
         formue1?.status === formue2?.status &&
-        formue1?.verdiIkkePrimærbolig === formue2?.verdiIkkePrimærbolig &&
-        formue1?.verdiKjøretøy === formue2?.verdiKjøretøy &&
-        formue1?.innskudd === formue2?.innskudd &&
-        formue1?.verdipapir === formue2?.verdipapir &&
-        formue1?.pengerSkyldt === formue2?.pengerSkyldt &&
-        formue1?.kontanter === formue2?.kontanter &&
-        formue1?.depositumskonto === formue2?.depositumskonto &&
+        eqVerdier.equals(formue1?.verdier ?? null, formue2?.verdier ?? null) &&
+        eqVerdier.equals(formue1?.ektefellesVerdier ?? null, formue2?.ektefellesVerdier ?? null) &&
         formue1?.begrunnelse === formue2?.begrunnelse,
+};
+const eqVerdier: Eq<Nullable<Verdier>> = {
+    equals: (verdier1, verdier2) =>
+        verdier1?.verdiIkkePrimærbolig === verdier2?.verdiIkkePrimærbolig &&
+        verdier1?.verdiKjøretøy === verdier2?.verdiKjøretøy &&
+        verdier1?.innskudd === verdier2?.innskudd &&
+        verdier1?.verdipapir === verdier2?.verdipapir &&
+        verdier1?.pengerSkyldt === verdier2?.pengerSkyldt &&
+        verdier1?.kontanter === verdier2?.kontanter &&
+        verdier1?.depositumskonto === verdier2?.depositumskonto,
 };
 
 export const eqEktefelle: Eq<Nullable<{
