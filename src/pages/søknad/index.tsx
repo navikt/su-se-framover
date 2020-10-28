@@ -96,7 +96,9 @@ const index = () => {
             step: Søknadsteg.Oppsummering,
         },
     ].filter(
-        (s) => borMedEktefelleSamboer === DelerBoligMed.EKTEMAKE_SAMBOER || s.step !== Søknadsteg.EktefellesFormue
+        (s) =>
+            borMedEktefelleSamboer === DelerBoligMed.EKTEMAKE_SAMBOER ||
+            !(s.step === Søknadsteg.EktefellesFormue || s.step === Søknadsteg.EktefellesInntekt)
     );
     const aktivtSteg = steg.findIndex((s) => s.step === step);
 
