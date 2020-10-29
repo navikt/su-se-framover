@@ -17,6 +17,7 @@ interface Lukket {
 export enum LukkSøknadType {
     Trukket = 'Trukket',
     Bortfalt = 'Bortfalt',
+    Avvist = 'Avvist',
 }
 
 interface Saksbehandler {

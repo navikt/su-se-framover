@@ -1,7 +1,10 @@
+import { AvvistBrevConfig } from '~pages/saksbehandling/lukkSøknad/lukkSøknadUtils';
 import { Sak } from '~types/Sak';
 import { LukkSøknadType, SøknadInnhold } from '~types/Søknad';
 
 import apiClient, { ApiClientResult } from './apiClient';
+
+export type LukkSøknadBodyTypes = Record<string, string | AvvistBrevConfig | null>;
 
 export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientResult<SøknadInnhold>> {
     return apiClient({ url: '/soknad', method: 'POST', body: søknad });
@@ -10,7 +13,7 @@ export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientRes
 export async function lukkSøknad(arg: {
     søknadId: string;
     lukketSøknadType: LukkSøknadType;
-    body: Record<string, string>;
+    body: LukkSøknadBodyTypes;
 }): Promise<ApiClientResult<Sak>> {
     return apiClient({
         url: `/soknad/${arg.søknadId}/lukk`,
@@ -22,7 +25,7 @@ export async function lukkSøknad(arg: {
 export async function hentLukketSøknadsBrevutkast(arg: {
     søknadId: string;
     lukketSøknadType: LukkSøknadType;
-    body: Record<string, string>;
+    body: LukkSøknadBodyTypes;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/soknad/${arg.søknadId}/lukk/brevutkast`,
