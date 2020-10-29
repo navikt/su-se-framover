@@ -10,13 +10,14 @@ import { hentLukketSøknadBrevutkast } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { LukkSøknadType } from '~types/Søknad';
+import { LukkSøknadType, Søknad } from '~types/Søknad';
 
 import nb from './lukkSøknad-nb';
 import styles from './lukkSøknad.module.less';
 import { LukkSøknadFormData } from './lukkSøknadUtils';
 
 const Trukket = (props: {
+    søknad: Søknad;
     values: LukkSøknadFormData;
     errors: FormikErrors<LukkSøknadFormData>;
     setValues: (values: SetStateAction<LukkSøknadFormData>, shouldValidate?: boolean | undefined) => unknown;
@@ -50,7 +51,7 @@ const Trukket = (props: {
             });
         }
     }, [props.values]);
-
+    console.log(props.søknad);
     return (
         <div className={styles.trukketContainer}>
             <div className={styles.datoContainer}>
@@ -65,6 +66,7 @@ const Trukket = (props: {
                     }}
                     id={'datoSøkerTrakkSøknad'}
                     valgtDato={props.values.datoSøkerTrakkSøknad?.toString()}
+                    avgrensninger={{ minDato: props.søknad.opprettet, maksDato: new Date().toISOString() }}
                     onChange={(value) => {
                         if (!value) {
                             return;

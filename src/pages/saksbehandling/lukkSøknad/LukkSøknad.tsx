@@ -93,6 +93,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
 
             {formik.values.lukkSøknadType === LukkSøknadType.Trukket && (
                 <Trukket
+                    søknad={søknad}
                     values={formik.values}
                     errors={formik.errors}
                     handleChange={formik.handleChange}
