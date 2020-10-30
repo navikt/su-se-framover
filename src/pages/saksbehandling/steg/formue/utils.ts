@@ -70,3 +70,15 @@ function setInitialVerdier(verdier: Nullable<Verdier>, søknadsFormue: Nullable<
         depositumskonto: verdier?.depositumskonto ?? søknadsFormue?.depositumsBeløp ?? 0,
     };
 }
+
+export function resetVerdier(): Verdier {
+    return {
+        verdiIkkePrimærbolig: 0,
+        verdiKjøretøy: 0,
+        innskudd: 0,
+        pengerSkyldt: 0,
+        verdipapir: 0,
+        kontanter: 0,
+        depositumskonto: 0,
+    };
+}
