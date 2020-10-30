@@ -1,17 +1,29 @@
+import { Nullable } from '~lib/types';
+import { AvvistBrevConfig } from '~pages/saksbehandling/lukkSøknad/lukkSøknadUtils';
 import { Sak } from '~types/Sak';
-import { LukkSøknadType, SøknadInnhold } from '~types/Søknad';
+import { LukkSøknadBegrunnelse, SøknadInnhold } from '~types/Søknad';
 
 import apiClient, { ApiClientResult } from './apiClient';
+
+interface Trukket {
+    type: LukkSøknadBegrunnelse.Trukket;
+    datoSøkerTrakkSøknad: string;
+}
+interface Bortfalt {
+    type: LukkSøknadBegrunnelse.Bortfalt;
+}
+interface Avvist {
+    type: LukkSøknadBegrunnelse.Avvist;
+    brevConfig: Nullable<AvvistBrevConfig>;
+}
+
+export type LukkSøknadBodyTypes = Trukket | Bortfalt | Avvist;
 
 export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientResult<SøknadInnhold>> {
     return apiClient({ url: '/soknad', method: 'POST', body: søknad });
 }
 
-export async function lukkSøknad(arg: {
-    søknadId: string;
-    lukketSøknadType: LukkSøknadType;
-    body: Record<string, string>;
-}): Promise<ApiClientResult<Sak>> {
+export async function lukkSøknad(arg: { søknadId: string; body: LukkSøknadBodyTypes }): Promise<ApiClientResult<Sak>> {
     return apiClient({
         url: `/soknad/${arg.søknadId}/lukk`,
         method: 'POST',
@@ -21,8 +33,7 @@ export async function lukkSøknad(arg: {
 
 export async function hentLukketSøknadsBrevutkast(arg: {
     søknadId: string;
-    lukketSøknadType: LukkSøknadType;
-    body: Record<string, string>;
+    body: LukkSøknadBodyTypes;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/soknad/${arg.søknadId}/lukk/brevutkast`,
