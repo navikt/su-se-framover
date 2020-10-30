@@ -7,15 +7,16 @@ import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
-import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import søknadSlice, { ForVeilederDigitalSøknad } from '~/features/søknad/søknad.slice';
 import { Person } from '~api/personApi';
 import TextProvider, { Languages } from '~components/TextProvider';
 import { Vergemål } from '~features/søknad/types';
+import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Søknadstype } from '~types/Søknad';
 
-import { useI18n } from '../../../../lib/hooks';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
@@ -23,9 +24,10 @@ import sharedI18n from '../steg-shared-i18n';
 import messages from './forVeileder-nb';
 import styles from './forVeileder.module.less';
 
-type FormData = SøknadState['forVeileder'];
+type FormData = ForVeilederDigitalSøknad;
 
 const schema = yup.object<FormData>({
+    type: yup.string().required() as yup.Schema<Søknadstype.DigitalSøknad>,
     harSøkerMøttPersonlig: yup.boolean().nullable().required(),
     harFullmektigEllerVerge: yup.mixed<Nullable<Vergemål>>().nullable().defined().when('harSøkerMøttPersonlig', {
         is: false,
@@ -42,18 +44,15 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
         ? `${props.søker.telefonnummer.landskode} ${props.søker.telefonnummer.nummer}`
         : 'Ikke registrert telefonnummer';
 
-    const save = (values: FormData) =>
-        dispatch(
-            søknadSlice.actions.ForVeileder({
-                harSøkerMøttPersonlig: values.harSøkerMøttPersonlig,
-                harFullmektigEllerVerge: values.harFullmektigEllerVerge,
-            })
-        );
+    const save = (values: FormData) => dispatch(søknadSlice.actions.ForVeileder(values));
 
     const formik = useFormik<FormData>({
         initialValues: {
-            harSøkerMøttPersonlig: forVeileder.harSøkerMøttPersonlig,
-            harFullmektigEllerVerge: forVeileder.harFullmektigEllerVerge,
+            type: Søknadstype.DigitalSøknad,
+            harSøkerMøttPersonlig:
+                forVeileder.type === Søknadstype.DigitalSøknad ? forVeileder.harSøkerMøttPersonlig : null,
+            harFullmektigEllerVerge:
+                forVeileder.type === Søknadstype.DigitalSøknad ? forVeileder.harFullmektigEllerVerge : null,
         },
         onSubmit: (values) => {
             save(values);
@@ -89,53 +88,58 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
                         </AlertStripeInfo>
                     </Panel>
 
-                    <JaNeiSpørsmål
-                        id="harSøkerMøttPersonlig"
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="input.harSøkerMøttPersonlig.label" />}
-                        feil={null}
-                        state={formik.values.harSøkerMøttPersonlig}
-                        onChange={(val) => {
-                            formik.setValues({
-                                ...formik.values,
-                                harSøkerMøttPersonlig: val,
-                                harFullmektigEllerVerge: null,
-                            });
-                        }}
-                    />
+                    {formik.values.type === Søknadstype.DigitalSøknad ? (
+                        <>
+                            <JaNeiSpørsmål
+                                id="harSøkerMøttPersonlig"
+                                className={sharedStyles.sporsmal}
+                                legend={<FormattedMessage id="input.harSøkerMøttPersonlig.label" />}
+                                feil={formik.errors.harSøkerMøttPersonlig}
+                                state={formik.values.harSøkerMøttPersonlig}
+                                onChange={(val) => {
+                                    formik.setValues((values) => ({
+                                        ...values,
+                                        harSøkerMøttPersonlig: val,
+                                        harFullmektigEllerVerge: null,
+                                    }));
+                                }}
+                            />
 
-                    {formik.values.harSøkerMøttPersonlig === false && (
-                        <RadioPanelGruppe
-                            className={sharedStyles.sporsmal}
-                            feil={null}
-                            legend={<FormattedMessage id={'input.fullmektigEllerVerge.label'} />}
-                            name="fullmektigEllerVerge"
-                            radios={[
-                                {
-                                    label: <FormattedMessage id={'input.fullmektigEllerVerge.fullmektig.label'} />,
-                                    value: 'fullmektig',
-                                },
-                                {
-                                    label: <FormattedMessage id={'input.fullmektigEllerVerge.verge.label'} />,
-                                    value: 'verge',
-                                },
-                            ]}
-                            onChange={(_, value) => {
-                                formik.setValues({
-                                    ...formik.values,
-                                    harFullmektigEllerVerge: value,
-                                });
-                            }}
-                            checked={formik.values.harFullmektigEllerVerge?.toString()}
-                        />
-                    )}
+                            {formik.values.harSøkerMøttPersonlig === false && (
+                                <RadioPanelGruppe
+                                    className={sharedStyles.sporsmal}
+                                    feil={null}
+                                    legend={<FormattedMessage id={'input.fullmektigEllerVerge.label'} />}
+                                    name="fullmektigEllerVerge"
+                                    radios={[
+                                        {
+                                            label: (
+                                                <FormattedMessage id={'input.fullmektigEllerVerge.fullmektig.label'} />
+                                            ),
+                                            value: 'fullmektig',
+                                        },
+                                        {
+                                            label: <FormattedMessage id={'input.fullmektigEllerVerge.verge.label'} />,
+                                            value: 'verge',
+                                        },
+                                    ]}
+                                    onChange={(_, value) => {
+                                        formik.setValues((values) => ({
+                                            ...values,
+                                            harFullmektigEllerVerge: value,
+                                        }));
+                                    }}
+                                    checked={formik.values.harFullmektigEllerVerge?.toString()}
+                                />
+                            )}
 
-                    {formik.values.harFullmektigEllerVerge === 'fullmektig' && (
-                        <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
-                            Husk å legge ved legeattest/legeerklæring
-                        </AlertStripe>
-                    )}
-
+                            {formik.values.harFullmektigEllerVerge === 'fullmektig' && (
+                                <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
+                                    Husk å legge ved legeattest/legeerklæring
+                                </AlertStripe>
+                            )}
+                        </>
+                    ) : null}
                     <Feiloppsummering
                         className={sharedStyles.marginBottom}
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}

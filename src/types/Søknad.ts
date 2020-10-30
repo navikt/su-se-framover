@@ -1,4 +1,4 @@
-import { DelerBoligMed, Vergemål } from '~features/søknad/types';
+import { DelerBoligMed, GrunnForPapirinnsending, Vergemål } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 
 export interface Søknad {
@@ -63,9 +63,24 @@ export interface SøknadInnhold {
         formue: Formue;
         inntektOgPensjon: InntektOgPensjon;
     }>;
-    forNav: {
-        harFullmektigEllerVerge: Nullable<Vergemål>;
-    };
+    forNav: ForNav;
+}
+
+interface ForNavDigitalSøknad {
+    type: Søknadstype.DigitalSøknad;
+    harFullmektigEllerVerge: Nullable<Vergemål>;
+}
+interface ForNavPapirsøknad {
+    type: Søknadstype.Papirsøknad;
+    mottaksdatoForSøknad: string;
+    grunnForPapirinnsending: GrunnForPapirinnsending;
+    annenGrunn: Nullable<string>;
+}
+export type ForNav = ForNavDigitalSøknad | ForNavPapirsøknad;
+
+export enum Søknadstype {
+    DigitalSøknad = 'DigitalSøknad',
+    Papirsøknad = 'Papirsøknad',
 }
 
 interface Formue {

@@ -7,7 +7,10 @@ export enum Bosituasjon {
 
 export type TypeOppholdstillatelse = 'permanent' | 'midlertidig';
 
-export type Vergemål = 'fullmektig' | 'verge';
+export enum Vergemål {
+    Fullmektig = 'fullmektig',
+    Verge = 'verge',
+}
 
 export enum DelerBoligMed {
     EKTEMAKE_SAMBOER = 'EKTEMAKE_SAMBOER',
@@ -25,4 +28,10 @@ export interface EPSFormData {
     navn: Nullable<string>;
     fødselsdato: Nullable<string>;
     erUførFlyktning: Nullable<boolean>;
+}
+
+export enum GrunnForPapirinnsending {
+    VergeHarSøktPåVegneAvBruker = 'VergeHarSøktPåVegneAvBruker',
+    MidlertidigUnntakFraOppmøteplikt = 'MidlertidigUnntakFraOppmøteplikt',
+    Annet = 'Annet',
 }
