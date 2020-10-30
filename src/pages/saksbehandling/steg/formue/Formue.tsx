@@ -291,7 +291,11 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                 {intl.formatMessage({ id: 'knapp.endreSøkersFormue' })}
                                             </Knapp>
                                         ) : (
-                                            <Knapp htmlType="button" onClick={() => setInputToShow(null)}>
+                                            <Knapp
+                                                htmlType="button"
+                                                className={styles.toggleInput}
+                                                onClick={() => setInputToShow(null)}
+                                            >
                                                 Lagre
                                             </Knapp>
                                         )}
@@ -331,7 +335,11 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                             {intl.formatMessage({ id: 'knapp.endreEktefellesFormue' })}
                                         </Knapp>
                                     ) : (
-                                        <Knapp htmlType="button" onClick={() => setInputToShow(null)}>
+                                        <Knapp
+                                            className={styles.toggleInput}
+                                            htmlType="button"
+                                            onClick={() => setInputToShow(null)}
+                                        >
                                             Lagre
                                         </Knapp>
                                     )}

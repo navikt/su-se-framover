@@ -16,7 +16,7 @@ export function kalkulerFormue(verdier: Nullable<Verdier>) {
         verdier.kontanter,
     ].filter(Boolean) as number[];
 
-    return formuer.reduce((acc, formue) => acc + formue - (verdier.depositumskonto ?? 0), 0);
+    return formuer.reduce((acc, formue) => acc + formue, 0) - (verdier.depositumskonto ?? 0);
 }
 
 export function totalVerdiKjøretøy(
