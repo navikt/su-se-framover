@@ -38,9 +38,7 @@ const Vilkår = (props: { sak: Sak }) => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.framdriftsindikator}>
-                <Framdriftsindikator behandling={behandling} vilkår={vilkar} />
-            </div>
+            <Framdriftsindikator behandling={behandling} vilkår={vilkar} />
             <div className={styles.content}>
                 <Switch>
                     <Route path={vilkårUrl(Vilkårtype.Uførhet)}>

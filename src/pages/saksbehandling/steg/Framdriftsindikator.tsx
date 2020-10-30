@@ -12,9 +12,8 @@ const Item = (props: { vilkar: Vilkårtype; status: VilkårVurderingStatus }) =>
         <div className={styles.item}>
             <div className={styles.iconAndLineContainer}>
                 <VilkårvurderingStatusIcon status={props.status} />
-                <span className={styles.line} />
             </div>
-            <span>{vilkårTittelFormatted(props.vilkar)}</span>
+            <p>{vilkårTittelFormatted(props.vilkar)}</p>
         </div>
     );
 };
@@ -24,12 +23,10 @@ const Framdriftsindikator = (props: { behandling: Behandling; vilkår: Vilkårty
     const vilkårrekkefølge = mapToVilkårsinformasjon(behandlingsinformasjon);
 
     return (
-        <ol className={styles.container}>
-            {vilkårrekkefølge
-                .filter((v) => v.erStartet || props.vilkår === v.vilkårtype)
-                .map((v) => (
-                    <Item vilkar={v.vilkårtype} status={v.status} key={v.vilkårtype} />
-                ))}
+        <ol className={styles.framdriftsindikator}>
+            {vilkårrekkefølge.map((v) => (
+                <Item vilkar={v.vilkårtype} status={v.status} key={v.vilkårtype} />
+            ))}
         </ol>
     );
 };

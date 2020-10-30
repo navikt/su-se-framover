@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Undertittel, Element } from 'nav-frontend-typografi';
+import { Systemtittel, Element } from 'nav-frontend-typografi';
 import React from 'react';
 
 import styles from './faktablokk.module.less';
@@ -15,8 +15,8 @@ const Faktablokk = (props: {
     containerClassName?: string;
     faktaBlokkerClassName?: string;
 }) => (
-    <div>
-        <Undertittel className={styles.overskrift}>{props.tittel}</Undertittel>
+    <div className="styles.faktablokk">
+        <Systemtittel className={styles.overskrift}>{props.tittel}</Systemtittel>
         <div className={props.containerClassName}>
             {props.fakta.map((f) => (
                 <div className={classNames(props.faktaBlokkerClassName, styles.linje)} key={f.tittel}>
