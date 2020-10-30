@@ -101,7 +101,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         const formueValues: Formue = {
             status,
             verdier: values.verdier,
-            ektefellesVerdier: null,
+            ektefellesVerdier: null, // TODO ai: fix
             begrunnelse: values.begrunnelse,
         };
         const ektefelle = {
@@ -151,8 +151,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
 
     const totalFormue = useMemo(() => {
-        const totalt = kalkulerFormue(formik.values.verdier);
-        return isNaN(totalt) ? intl.formatMessage({ id: 'display.totalt.fyllUtAlleFelter' }) : totalt;
+        return kalkulerFormue(formik.values.verdier);
     }, [formik.values]);
 
     const totalFormueFraSøknad = useMemo(() => {
@@ -185,6 +184,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
         fetchPerson(formik.values.ektefellesFnr);
     }, [formik.values.ektefellesFnr]);
+
     const vilkårErOppfylt = totalFormue < 0.5 * G;
 
     return (
@@ -282,7 +282,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             inputName="verdier.verdipapir"
                             onChange={formik.handleChange}
                             defaultValue={formik.values.verdier?.verdipapir ?? 0}
-                            feil={(formik.errors.verdier as FormikErrors<Verdier>)?.verdipapir}
+                            feil={(formik.errors.verdier as FormikErrors<Verdier | undefined>)?.verdipapir}
                         />
                         <FormueInput
                             tittel={intl.formatMessage({ id: 'input.label.skylderNoenSøkerPenger' })}
@@ -290,7 +290,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             inputName="verdier.pengerSkyldt"
                             defaultValue={formik.values.verdier?.pengerSkyldt ?? 0}
                             onChange={formik.handleChange}
-                            feil={(formik.errors.verdier as FormikErrors<Verdier>)?.pengerSkyldt}
+                            feil={(formik.errors.verdier as FormikErrors<Verdier | undefined>)?.pengerSkyldt}
                         />
                         <FormueInput
                             tittel={intl.formatMessage({ id: 'input.label.kontanterOver1000' })}
@@ -298,7 +298,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             inputName="verdier.kontanter"
                             defaultValue={formik.values.verdier?.kontanter ?? 0}
                             onChange={formik.handleChange}
-                            feil={(formik.errors.verdier as FormikErrors<Verdier>)?.kontanter}
+                            feil={(formik.errors.verdier as FormikErrors<Verdier | undefined>)?.kontanter}
                         />
                         <FormueInput
                             tittel={intl.formatMessage({ id: 'input.label.depositumskonto' })}
