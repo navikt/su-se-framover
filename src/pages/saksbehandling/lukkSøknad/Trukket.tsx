@@ -1,47 +1,46 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { FormikErrors } from 'formik';
 import { Datovelger } from 'nav-datovelger';
 import { Fareknapp, Knapp } from 'nav-frontend-knapper';
 import { Label } from 'nav-frontend-skjema';
 import { Feilmelding } from 'nav-frontend-typografi';
-import React, { SetStateAction, SyntheticEvent, useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
+import { ApiError } from '~api/apiClient';
 import { hentLukketSøknadBrevutkast } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
-import * as Routes from '~lib/routes';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { LukkSøknadType, Søknad } from '~types/Søknad';
+import { useAppDispatch } from '~redux/Store';
+import { LukkSøknadBegrunnelse } from '~types/Søknad';
 
 import nb from './lukkSøknad-nb';
 import styles from './lukkSøknad.module.less';
-import { LukkSøknadFormData } from './lukkSøknadUtils';
 
-const Trukket = (props: {
-    søknad: Søknad;
-    values: LukkSøknadFormData;
-    errors: FormikErrors<LukkSøknadFormData>;
-    setValues: (values: SetStateAction<LukkSøknadFormData>, shouldValidate?: boolean | undefined) => unknown;
-    handleChange: (event: React.ChangeEvent<HTMLTextAreaElement> | SyntheticEvent<EventTarget, Event>) => void;
-}) => {
+interface TrukketProps {
+    lukkSøknadBegrunnelse: LukkSøknadBegrunnelse;
+    søknadOpprettet: string;
+    søknadId: string;
+    datoSøkerTrakkSøknad: string | null;
+    onDatoSøkerTrakkSøknadChange: (dato: string) => void;
+    feilmelding: string | undefined;
+    lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
+}
+
+const Trukket = (props: TrukketProps) => {
     const dispatch = useAppDispatch();
-    const urlParams = Routes.useRouteParams<typeof Routes.avsluttSøknadsbehandling>();
-    const { lukketSøknadBrevutkastStatus } = useAppSelector((s) => s.sak);
     const [clickedViewLetter, setClickedViewLetter] = useState<boolean>(false);
     const intl = useI18n({ messages: nb });
 
-    const trukketSøknadBrev = useCallback(() => {
-        if (RemoteData.isPending(lukketSøknadBrevutkastStatus)) {
+    const onSeBrevClick = useCallback(() => {
+        if (RemoteData.isPending(props.lukketSøknadBrevutkastStatus)) {
             return;
         }
 
-        if (props.values.lukkSøknadType === LukkSøknadType.Trukket && props.values.datoSøkerTrakkSøknad) {
+        if (props.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Trukket && props.datoSøkerTrakkSøknad) {
             dispatch(
                 hentLukketSøknadBrevutkast({
-                    søknadId: urlParams.soknadId,
-                    lukketSøknadType: props.values.lukkSøknadType,
+                    søknadId: props.søknadId,
                     body: {
-                        type: props.values.lukkSøknadType.toUpperCase(),
-                        datoSøkerTrakkSøknad: props.values.datoSøkerTrakkSøknad,
+                        type: props.lukkSøknadBegrunnelse,
+                        datoSøkerTrakkSøknad: props.datoSøkerTrakkSøknad,
                     },
                 })
             ).then((action) => {
@@ -50,8 +49,8 @@ const Trukket = (props: {
                 }
             });
         }
-    }, [props.values]);
-    console.log(props.søknad);
+    }, [props]);
+
     return (
         <div className={styles.trukketContainer}>
             <div className={styles.datoContainer}>
@@ -65,20 +64,17 @@ const Trukket = (props: {
                         id: 'datoSøkerTrakkSøknad',
                     }}
                     id={'datoSøkerTrakkSøknad'}
-                    valgtDato={props.values.datoSøkerTrakkSøknad?.toString()}
-                    avgrensninger={{ minDato: props.søknad.opprettet, maksDato: new Date().toISOString() }}
+                    valgtDato={props.datoSøkerTrakkSøknad?.toString()}
+                    avgrensninger={{ minDato: props.søknadOpprettet, maksDato: new Date().toISOString() }}
                     onChange={(value) => {
                         if (!value) {
                             return;
                         }
-                        props.setValues({
-                            ...props.values,
-                            datoSøkerTrakkSøknad: value,
-                        });
+                        props.onDatoSøkerTrakkSøknadChange(value);
                     }}
                 />
-                <Feilmelding>{props.errors.datoSøkerTrakkSøknad ?? ''}</Feilmelding>
-                {clickedViewLetter && props.values.datoSøkerTrakkSøknad === null && (
+                <Feilmelding>{props.feilmelding ?? ''}</Feilmelding>
+                {clickedViewLetter && props.datoSøkerTrakkSøknad === null && (
                     <Feilmelding>{intl.formatMessage({ id: 'display.feil.feltMåFyllesUt' })}</Feilmelding>
                 )}
             </div>
@@ -88,13 +84,13 @@ const Trukket = (props: {
                     htmlType="button"
                     onClick={() => {
                         setClickedViewLetter(true);
-                        trukketSøknadBrev();
+                        onSeBrevClick();
                     }}
-                    spinner={RemoteData.isPending(lukketSøknadBrevutkastStatus)}
+                    spinner={RemoteData.isPending(props.lukketSøknadBrevutkastStatus)}
                 >
                     {intl.formatMessage({ id: 'knapp.seBrev' })}
                 </Knapp>
-                <Fareknapp spinner={RemoteData.isPending(lukketSøknadBrevutkastStatus)}>
+                <Fareknapp spinner={RemoteData.isPending(props.lukketSøknadBrevutkastStatus)}>
                     {intl.formatMessage({ id: 'knapp.lukkSøknad' })}
                 </Fareknapp>
             </div>

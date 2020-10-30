@@ -1,11 +1,9 @@
-import { lukkSøknad } from '~features/saksoversikt/sak.slice';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { useAppDispatch } from '~redux/Store';
-import { LukkSøknadType } from '~types/Søknad';
+import { LukkSøknadBegrunnelse } from '~types/Søknad';
 
 export interface LukkSøknadFormData {
-    lukkSøknadType: Nullable<LukkSøknadType>;
+    lukkSøknadBegrunnelse: Nullable<LukkSøknadBegrunnelse>;
     datoSøkerTrakkSøknad: Nullable<string>;
     sendBrevForAvvist: Nullable<boolean>;
     typeBrev: Nullable<AvvistBrevtyper>;
@@ -13,7 +11,7 @@ export interface LukkSøknadFormData {
 }
 
 export const lukkSøknadInitialValues = {
-    lukkSøknadType: null,
+    lukkSøknadBegrunnelse: null,
     datoSøkerTrakkSøknad: null,
     sendBrevForAvvist: null,
     typeBrev: null,
@@ -30,28 +28,18 @@ export interface AvvistBrevConfig {
     fritekst: Nullable<string>;
 }
 
-export const setAvvistBrevConfigBody = (values: LukkSøknadFormData) => {
-    if (values.typeBrev) {
-        return {
-            brevtype: values.typeBrev,
-            fritekst: values.fritekst,
-        };
-    }
-    return null;
-};
-
 export const LukkSøknadValidationSchema = yup.object<LukkSøknadFormData>({
-    lukkSøknadType: yup
+    lukkSøknadBegrunnelse: yup
         .mixed()
-        .oneOf([LukkSøknadType.Trukket, LukkSøknadType.Bortfalt, LukkSøknadType.Avvist])
+        .oneOf([LukkSøknadBegrunnelse.Trukket, LukkSøknadBegrunnelse.Bortfalt, LukkSøknadBegrunnelse.Avvist])
         .required(),
     datoSøkerTrakkSøknad: yup.string().nullable().defined().when('lukkSøknadType', {
-        is: LukkSøknadType.Trukket,
+        is: LukkSøknadBegrunnelse.Trukket,
         then: yup.string().required(),
         otherwise: yup.string().nullable().defined(),
     }),
     sendBrevForAvvist: yup.boolean().nullable().defined().when('lukkSøknadType', {
-        is: LukkSøknadType.Avvist,
+        is: LukkSøknadBegrunnelse.Avvist,
         then: yup.boolean().required(),
     }),
     typeBrev: yup
@@ -72,36 +60,13 @@ export const LukkSøknadValidationSchema = yup.object<LukkSøknadFormData>({
         }),
 });
 
-export const dispatchLukkSøknad = (values: LukkSøknadFormData, søknadId: string) => {
-    const dispatch = useAppDispatch();
-
-    if (values.lukkSøknadType === LukkSøknadType.Trukket && values.datoSøkerTrakkSøknad) {
-        dispatch(
-            lukkSøknad({
-                søknadId: søknadId,
-                lukketSøknadType: values.lukkSøknadType,
-                body: {
-                    type: values.lukkSøknadType.toUpperCase(),
-                    datoSøkerTrakkSøknad: values.datoSøkerTrakkSøknad,
-                },
-            })
-        );
-    } else if (values.lukkSøknadType === LukkSøknadType.Bortfalt) {
-        lukkSøknad({
-            søknadId: søknadId,
-            lukketSøknadType: values.lukkSøknadType,
-            body: {
-                type: values.lukkSøknadType.toUpperCase(),
-            },
-        });
-    } else if (values.lukkSøknadType === LukkSøknadType.Avvist) {
-        lukkSøknad({
-            søknadId: søknadId,
-            lukketSøknadType: values.lukkSøknadType,
-            body: {
-                type: values.lukkSøknadType.toUpperCase(),
-                brevConfig: setAvvistBrevConfigBody(values),
-            },
-        });
+export const lukkSøknadBegrunnelseI18nId = (type: LukkSøknadBegrunnelse): string => {
+    switch (type) {
+        case LukkSøknadBegrunnelse.Trukket:
+            return 'lukking.begrunnelse.trukket';
+        case LukkSøknadBegrunnelse.Bortfalt:
+            return 'lukking.begrunnelse.bortfalt';
+        case LukkSøknadBegrunnelse.Avvist:
+            return 'lukking.begrunnelse.avvist';
     }
 };

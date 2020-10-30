@@ -17,6 +17,7 @@ export default {
 
     'display.søknadId': 'Søknad id:',
 
+    'display.søknad.fantIkkeSøknad': 'Fant ikke søknad med søknad id: ',
     'display.søknad.harBlittLukket': 'Søknaden har blitt lukket',
     'display.søknad.KunneIkkeLukkeSøknad': 'Kunne ikke lukke søknad',
 
@@ -24,4 +25,8 @@ export default {
 
     'knapp.lukkSøknad': 'Lukk søknad',
     'knapp.seBrev': 'Se brev',
+
+    'lukking.begrunnelse.trukket': 'Trukket',
+    'lukking.begrunnelse.bortfalt': 'Bortfalt',
+    'lukking.begrunnelse.avvist': 'Avvist',
 };

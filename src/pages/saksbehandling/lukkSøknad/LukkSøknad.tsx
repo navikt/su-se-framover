@@ -5,11 +5,12 @@ import { Fareknapp } from 'nav-frontend-knapper';
 import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 
+import { lukkSøknad } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { useAppSelector } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Sak } from '~types/Sak';
-import { LukkSøknadType } from '~types/Søknad';
+import { LukkSøknadBegrunnelse } from '~types/Søknad';
 
 import Avvist from './Avvist';
 import nb from './lukkSøknad-nb';
@@ -17,12 +18,13 @@ import styles from './lukkSøknad.module.less';
 import {
     lukkSøknadInitialValues,
     LukkSøknadValidationSchema,
-    dispatchLukkSøknad,
     LukkSøknadFormData,
+    lukkSøknadBegrunnelseI18nId,
 } from './lukkSøknadUtils';
 import Trukket from './Trukket';
 
 const LukkSøknad = (props: { sak: Sak }) => {
+    const dispatch = useAppDispatch();
     const { søknadLukketStatus, lukketSøknadBrevutkastStatus } = useAppSelector((s) => s.sak);
     const urlParams = Routes.useRouteParams<typeof Routes.avsluttSøknadsbehandling>();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
@@ -32,19 +34,63 @@ const LukkSøknad = (props: { sak: Sak }) => {
     const formik = useFormik<LukkSøknadFormData>({
         initialValues: lukkSøknadInitialValues,
         async onSubmit(values) {
-            if (!values.lukkSøknadType) {
+            if (!values.lukkSøknadBegrunnelse) {
                 return;
             }
-            dispatchLukkSøknad(values, urlParams.soknadId);
+            if (values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Trukket && values.datoSøkerTrakkSøknad) {
+                dispatch(
+                    lukkSøknad({
+                        søknadId: urlParams.soknadId,
+                        body: {
+                            type: values.lukkSøknadBegrunnelse,
+                            datoSøkerTrakkSøknad: values.datoSøkerTrakkSøknad,
+                        },
+                    })
+                );
+            } else if (values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Bortfalt) {
+                dispatch(
+                    lukkSøknad({
+                        søknadId: urlParams.soknadId,
+                        body: {
+                            type: values.lukkSøknadBegrunnelse,
+                        },
+                    })
+                );
+            } else if (values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Avvist) {
+                dispatch(
+                    lukkSøknad({
+                        søknadId: urlParams.soknadId,
+                        body: {
+                            type: values.lukkSøknadBegrunnelse,
+                            brevConfig: values.typeBrev
+                                ? {
+                                      brevtype: values.typeBrev,
+                                      fritekst: values.fritekst,
+                                  }
+                                : null,
+                        },
+                    })
+                );
+            }
         },
         validationSchema: LukkSøknadValidationSchema,
         validateOnChange: hasSubmitted,
     });
 
-    if (RemoteData.isSuccess(søknadLukketStatus) || søknad?.lukket !== null) {
+    if (!søknad) {
         return (
             <div>
-                <AlertStripeSuksess>Søknaden har blitt lukket</AlertStripeSuksess>
+                <AlertStripeFeil>
+                    {intl.formatMessage({ id: 'display.søknad.fantIkkeSøknad' })} {urlParams.soknadId}
+                </AlertStripeFeil>
+            </div>
+        );
+    }
+
+    if (RemoteData.isSuccess(søknadLukketStatus) || søknad.lukket !== null) {
+        return (
+            <div>
+                <AlertStripeSuksess>{intl.formatMessage({ id: 'display.søknad.harBlittLukket' })}</AlertStripeSuksess>
             </div>
         );
     }
@@ -67,7 +113,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
             <div className={styles.selectContainer}>
                 <Select
                     label={intl.formatMessage({ id: 'display.begrunnelseForLukking' })}
-                    name={'lukkSøknadType'}
+                    name={'lukkSøknadBegrunnelse'}
                     onChange={(e) => {
                         formik.setValues({
                             ...formik.values,
@@ -78,30 +124,34 @@ const LukkSøknad = (props: { sak: Sak }) => {
                         });
                         formik.handleChange(e);
                     }}
-                    feil={formik.errors.lukkSøknadType}
+                    feil={formik.errors.lukkSøknadBegrunnelse}
                 >
                     <option value="velgBegrunnelse">
                         {intl.formatMessage({ id: 'display.selector.velgBegrunnelse' })}
                     </option>
-                    {Object.values(LukkSøknadType).map((begrunnelse) => (
+                    {Object.values(LukkSøknadBegrunnelse).map((begrunnelse) => (
                         <option value={begrunnelse} key={begrunnelse}>
-                            {begrunnelse}
+                            {intl.formatMessage({ id: lukkSøknadBegrunnelseI18nId(begrunnelse) })}
                         </option>
                     ))}
                 </Select>
             </div>
 
-            {formik.values.lukkSøknadType === LukkSøknadType.Trukket && (
+            {formik.values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Trukket && (
                 <Trukket
-                    søknad={søknad}
-                    values={formik.values}
-                    errors={formik.errors}
-                    handleChange={formik.handleChange}
-                    setValues={formik.setValues}
+                    datoSøkerTrakkSøknad={formik.values.datoSøkerTrakkSøknad}
+                    søknadId={søknad.id}
+                    søknadOpprettet={søknad.opprettet}
+                    feilmelding={formik.errors.datoSøkerTrakkSøknad}
+                    lukkSøknadBegrunnelse={formik.values.lukkSøknadBegrunnelse}
+                    lukketSøknadBrevutkastStatus={lukketSøknadBrevutkastStatus}
+                    onDatoSøkerTrakkSøknadChange={(val) =>
+                        formik.setValues((values) => ({ ...values, datoSøkerTrakkSøknad: val }))
+                    }
                 />
             )}
 
-            {formik.values.lukkSøknadType === LukkSøknadType.Bortfalt && (
+            {formik.values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Bortfalt && (
                 <div className={styles.buttonsContainer}>
                     <Fareknapp spinner={RemoteData.isPending(lukketSøknadBrevutkastStatus)}>
                         {intl.formatMessage({ id: 'knapp.lukkSøknad' })}
@@ -109,12 +159,29 @@ const LukkSøknad = (props: { sak: Sak }) => {
                 </div>
             )}
 
-            {formik.values.lukkSøknadType === LukkSøknadType.Avvist && (
+            {formik.values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Avvist && (
                 <Avvist
-                    values={formik.values}
-                    errors={formik.errors}
-                    handleChange={formik.handleChange}
-                    setValues={formik.setValues}
+                    søknadId={søknad.id}
+                    lukkSøknadBegrunnelse={formik.values.lukkSøknadBegrunnelse}
+                    avvistFormData={{
+                        sendBrevForAvvist: formik.values.sendBrevForAvvist,
+                        typeBrev: formik.values.typeBrev,
+                        fritekst: formik.values.fritekst,
+                    }}
+                    feilmeldinger={{
+                        sendBrevForAvvist: formik.errors.sendBrevForAvvist,
+                        typeBrev: formik.errors.typeBrev,
+                        fritekst: formik.errors.fritekst,
+                    }}
+                    onValueChange={(val) =>
+                        formik.setValues((values) => ({
+                            ...values,
+                            sendBrevForAvvist: val.sendBrevForAvvist,
+                            typeBrev: val.typeBrev,
+                            fritekst: val.fritekst,
+                        }))
+                    }
+                    lukketSøknadBrevutkastStatus={lukketSøknadBrevutkastStatus}
                 />
             )}
 

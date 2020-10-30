@@ -16,7 +16,6 @@ import { UtledetSatsInfo } from '~types/Beregning';
 import { Fradrag } from '~types/Fradrag';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
-import { LukkSøknadType } from '~types/Søknad';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<Sak, { fnr: string } | { sakId: string }, { rejectValue: ApiError }>(
@@ -199,7 +198,6 @@ export const lukkSøknad = createAsyncThunk<
     Sak,
     {
         søknadId: string;
-        lukketSøknadType: LukkSøknadType;
         body: LukkSøknadBodyTypes;
     },
     { rejectValue: ApiError }
@@ -215,12 +213,14 @@ export const hentLukketSøknadBrevutkast = createAsyncThunk<
     { objectUrl: string },
     {
         søknadId: string;
-        lukketSøknadType: LukkSøknadType;
         body: LukkSøknadBodyTypes;
     },
     { rejectValue: ApiError }
->('soknad/hentLukketSøknadBrevutkast', async ({ søknadId, lukketSøknadType, body }, thunkApi) => {
-    const res = await søknadApi.hentLukketSøknadsBrevutkast({ søknadId, lukketSøknadType, body });
+>('soknad/hentLukketSøknadBrevutkast', async ({ søknadId, body }, thunkApi) => {
+    const res = await søknadApi.hentLukketSøknadsBrevutkast({
+        søknadId,
+        body,
+    });
     if (res.status === 'ok') {
         return { objectUrl: URL.createObjectURL(res.data) };
     }
