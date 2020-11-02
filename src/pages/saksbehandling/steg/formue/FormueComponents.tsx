@@ -1,4 +1,4 @@
-import { Input } from 'nav-frontend-skjema';
+import { Input, Label } from 'nav-frontend-skjema';
 import { Element, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
 
@@ -11,7 +11,7 @@ export const FormueInput = (props: {
     feil: string | undefined;
 }) => (
     <>
-        <h3> {props.tittel} </h3>
+        <Label htmlFor={props.inputName}> {props.tittel} </Label>
         <Input
             className={props.className}
             name={props.inputName}
