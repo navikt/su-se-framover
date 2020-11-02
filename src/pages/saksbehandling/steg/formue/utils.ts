@@ -43,12 +43,12 @@ export function kalkulerFormueFraSøknad(f: SøknadInnhold['formue']) {
     );
 }
 
-export function setInitialValues(behandlingsInfo: Behandlingsinformasjon, søknadsInnhold: SøknadInnhold) {
+export function getFormue(behandlingsInfo: Behandlingsinformasjon, søknadsInnhold: SøknadInnhold) {
     const behandlingsFormue = behandlingsInfo.formue;
 
     return {
-        verdier: setInitialVerdier(behandlingsInfo.formue?.verdier ?? null, søknadsInnhold.formue),
-        ektefellesVerdier: setInitialVerdier(
+        verdier: getVerdier(behandlingsInfo.formue?.verdier ?? null, søknadsInnhold.formue),
+        ektefellesVerdier: getVerdier(
             behandlingsInfo.formue?.ektefellesVerdier ?? null,
             søknadsInnhold.ektefelle?.formue ?? null
         ),
@@ -59,10 +59,7 @@ export function setInitialValues(behandlingsInfo: Behandlingsinformasjon, søkna
     };
 }
 
-function setInitialVerdier(
-    verdier: Nullable<FormueVerdier>,
-    søknadsFormue: Nullable<SøknadInnhold['formue']>
-): FormueVerdier {
+function getVerdier(verdier: Nullable<FormueVerdier>, søknadsFormue: Nullable<SøknadInnhold['formue']>): FormueVerdier {
     return {
         verdiIkkePrimærbolig: verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0,
         verdiKjøretøy: verdier?.verdiKjøretøy ?? totalVerdiKjøretøy(søknadsFormue?.kjøretøy ?? null) ?? 0,
@@ -74,7 +71,7 @@ function setInitialVerdier(
     };
 }
 
-export function resetVerdier(): FormueVerdier {
+export function getInitialVerdier(): FormueVerdier {
     return {
         verdiIkkePrimærbolig: 0,
         verdiKjøretøy: 0,

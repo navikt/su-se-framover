@@ -31,7 +31,7 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 import messages from './formue-nb';
 import styles from './formue.module.less';
 import { FormueInput, ShowSum } from './FormueComponents';
-import { setInitialValues, kalkulerFormue, kalkulerFormueFraSøknad, resetVerdier } from './utils';
+import { getInitialVerdier, getFormue, kalkulerFormue, kalkulerFormueFraSøknad } from './utils';
 
 type FormData = Formue & {
     borSøkerMedEktefelle: Nullable<boolean>;
@@ -116,7 +116,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const G = 101351;
 
     const formik = useFormik<FormData>({
-        initialValues: setInitialValues(behandlingsInfo, søknadInnhold),
+        initialValues: getFormue(behandlingsInfo, søknadInnhold),
         async onSubmit() {
             const res = await onSave(formik.values);
             if (!res) return;
@@ -223,7 +223,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                             ...formik.values,
                                             borSøkerMedEktefelle: false,
                                             ektefellesFnr: null,
-                                            ektefellesVerdier: resetVerdier(),
+                                            ektefellesVerdier: getInitialVerdier(),
                                         });
 
                                         setInputToShow('søker');
