@@ -1,7 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import fnrValidator from '@navikt/fnrvalidator';
-import { useFormik } from 'formik';
+import { FormikErrors, useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
+import { Knapp } from 'nav-frontend-knapper';
 import { Input, Textarea, Checkbox, RadioGruppe, Radio } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element } from 'nav-frontend-typografi';
@@ -11,15 +12,16 @@ import { useHistory } from 'react-router-dom';
 import { ErrorCode } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import { Personkort } from '~components/Personkort';
+import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
-import yup, { validateStringAsNumber } from '~lib/validering';
+import yup, { validatePositiveNumber } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { FormueStatus, Formue, Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
-import { SøknadInnhold } from '~types/Søknad';
+import { FormueStatus, Formue, FormueVerdier } from '~types/Behandlingsinformasjon';
+import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -28,50 +30,28 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './formue-nb';
 import styles from './formue.module.less';
+import { FormueInput, ShowSum } from './FormueComponents';
+import { getInitialVerdier, getFormue, kalkulerFormue, kalkulerFormueFraSøknad } from './utils';
 
-const FormueInput = (props: {
-    className: string;
-    tittel: string;
-    inputName: string;
-    defaultValues: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    feil: string | undefined;
-}) => (
-    <>
-        <h3> {props.tittel} </h3>
-        <Input
-            className={props.className}
-            name={props.inputName}
-            defaultValue={props.defaultValues}
-            feil={props.feil}
-            onChange={props.onChange}
-        />
-    </>
-);
-
-interface FormData {
-    status: FormueStatus;
-    verdiIkkePrimærbolig: string;
-    verdiKjøretøy: string;
-    innskudd: string;
-    verdipapir: string;
-    pengerSkyldt: string;
-    kontanter: string;
-    depositumskonto: string;
-    begrunnelse: Nullable<string>;
+type FormData = Formue & {
     borSøkerMedEktefelle: Nullable<boolean>;
     ektefellesFnr: Nullable<string>;
-}
+};
+
+const VerdierSchema: yup.ObjectSchema<FormueVerdier | undefined> = yup.object<FormueVerdier>({
+    verdiIkkePrimærbolig: validatePositiveNumber,
+    verdiKjøretøy: validatePositiveNumber,
+    innskudd: validatePositiveNumber,
+    verdipapir: validatePositiveNumber,
+    pengerSkyldt: validatePositiveNumber,
+    kontanter: validatePositiveNumber,
+    depositumskonto: validatePositiveNumber,
+});
 
 const schema = yup.object<FormData>({
-    verdiIkkePrimærbolig: validateStringAsNumber,
-    verdiKjøretøy: validateStringAsNumber,
-    innskudd: validateStringAsNumber,
-    verdipapir: validateStringAsNumber,
-    pengerSkyldt: validateStringAsNumber,
-    kontanter: validateStringAsNumber,
-    depositumskonto: validateStringAsNumber,
     status: yup.mixed().required().oneOf([FormueStatus.VilkårOppfylt, FormueStatus.MåInnhenteMerInformasjon]),
+    verdier: VerdierSchema.required(),
+    ektefellesVerdier: VerdierSchema.required(),
     begrunnelse: yup.string().defined(),
     borSøkerMedEktefelle: yup.boolean().required(),
     ektefellesFnr: yup.mixed<string>().when('borSøkerMedEktefelle', {
@@ -82,83 +62,15 @@ const schema = yup.object<FormData>({
     }),
 });
 
-function kalkulerFormue(formikValues: FormData) {
-    const formueArray = [
-        formikValues.verdiIkkePrimærbolig,
-        formikValues.verdiKjøretøy,
-        formikValues.innskudd,
-        formikValues.verdipapir,
-        formikValues.pengerSkyldt,
-        formikValues.kontanter,
-    ];
-
-    const totalt =
-        formueArray.reduce((acc, formue) => acc + parseInt(formue), 0) - parseInt(formikValues.depositumskonto, 10);
-    return totalt;
-}
-
-function totalVerdiKjøretøy(kjøretøyArray: Nullable<Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>>) {
-    if (kjøretøyArray === null) {
-        return 0;
-    }
-
-    return kjøretøyArray.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0);
-}
-
-function kalkulerFormueFraSøknad(f: SøknadInnhold['formue']) {
-    const formueFraSøknad = [
-        f.verdiPåBolig?.toString() ?? '0',
-        f.verdiPåEiendom?.toString() ?? '0',
-        totalVerdiKjøretøy(f.kjøretøy).toString(),
-        f.innskuddsBeløp?.toString() ?? '0',
-        f.verdipapirBeløp?.toString() ?? '0',
-        f.skylderNoenMegPengerBeløp?.toString() ?? '0',
-        f.kontanterBeløp?.toString() ?? '0',
-    ];
-
-    return (
-        formueFraSøknad.reduce((acc, formue) => acc + parseInt(formue, 10), 0) -
-        parseInt(f.depositumsBeløp?.toString() ?? '0', 10)
-    );
-}
-
-const setInitialValues = (behandlingsInfo: Behandlingsinformasjon, søknadsInnhold: SøknadInnhold): FormData => {
-    const behandlingsFormue = behandlingsInfo.formue;
-    const søknadsFormue = søknadsInnhold.formue;
-
-    return {
-        verdiIkkePrimærbolig:
-            behandlingsFormue?.verdiIkkePrimærbolig?.toString() ?? søknadsFormue.verdiPåBolig?.toString() ?? '0',
-        verdiKjøretøy:
-            behandlingsFormue?.verdiKjøretøy?.toString() ?? totalVerdiKjøretøy(søknadsFormue.kjøretøy).toString(),
-        innskudd:
-            behandlingsFormue?.innskudd?.toString() ??
-            (
-                parseInt(søknadsFormue.innskuddsBeløp?.toString() ?? '0', 10) +
-                parseInt(søknadsFormue.depositumsBeløp?.toString() ?? '0', 10)
-            ).toString(),
-        verdipapir: behandlingsFormue?.verdipapir?.toString() ?? søknadsFormue.verdipapirBeløp?.toString() ?? '0',
-        pengerSkyldt:
-            behandlingsFormue?.pengerSkyldt?.toString() ?? søknadsFormue.skylderNoenMegPengerBeløp?.toString() ?? '0',
-        kontanter: behandlingsFormue?.kontanter?.toString() ?? søknadsFormue.kontanterBeløp?.toString() ?? '0',
-        depositumskonto:
-            behandlingsFormue?.depositumskonto?.toString() ?? søknadsFormue.depositumsBeløp?.toString() ?? '0',
-        status: behandlingsFormue?.status ?? FormueStatus.VilkårOppfylt,
-        begrunnelse: behandlingsFormue?.begrunnelse ?? null,
-        borSøkerMedEktefelle: behandlingsInfo.ektefelle ? behandlingsInfo.ektefelle.fnr != null : null,
-        ektefellesFnr: behandlingsInfo.ektefelle?.fnr ?? null,
-    };
-};
-
 const Formue = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
+    const [eps, setEps] = useState<Nullable<personApi.Person>>();
+    const [personOppslagFeil, setPersonOppslagFeil] = useState<{ statusCode: number } | null>(null);
     const søknadInnhold = props.behandling.søknad.søknadInnhold;
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [eps, setEps] = useState<Nullable<personApi.Person>>();
-    const [personOppslagFeil, setPersonOppslagFeil] = useState<{ statusCode: number } | null>(null);
     const onSave = (values: FormData) => {
         const status =
             values.status === FormueStatus.MåInnhenteMerInformasjon
@@ -169,13 +81,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
         const formueValues: Formue = {
             status,
-            verdiIkkePrimærbolig: parseInt(values.verdiIkkePrimærbolig, 10),
-            verdiKjøretøy: parseInt(values.verdiKjøretøy, 10),
-            innskudd: parseInt(values.innskudd, 10),
-            verdipapir: parseInt(values.verdipapir, 10),
-            pengerSkyldt: parseInt(values.pengerSkyldt, 10),
-            kontanter: parseInt(values.kontanter, 10),
-            depositumskonto: parseInt(values.depositumskonto, 10),
+            verdier: values.verdier,
+            ektefellesVerdier: values.borSøkerMedEktefelle ? values.ektefellesVerdier : null,
             begrunnelse: values.begrunnelse,
         };
         const ektefelle = {
@@ -209,7 +116,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const G = 101351;
 
     const formik = useFormik<FormData>({
-        initialValues: setInitialValues(behandlingsInfo, søknadInnhold),
+        initialValues: getFormue(behandlingsInfo, søknadInnhold),
         async onSubmit() {
             const res = await onSave(formik.values);
             if (!res) return;
@@ -224,14 +131,19 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
     const history = useHistory();
 
-    const totalFormue = useMemo(() => {
-        const totalt = kalkulerFormue(formik.values);
-        return isNaN(totalt) ? intl.formatMessage({ id: 'display.totalt.fyllUtAlleFelter' }) : totalt;
-    }, [formik.values]);
+    const søkersFormue = useMemo(() => {
+        return kalkulerFormue(formik.values.verdier);
+    }, [formik.values.verdier]);
+
+    const ektefellesFormue = useMemo(() => {
+        return kalkulerFormue(formik.values.ektefellesVerdier);
+    }, [formik.values.ektefellesVerdier]);
 
     const totalFormueFraSøknad = useMemo(() => {
         return kalkulerFormueFraSøknad(søknadInnhold.formue);
     }, [søknadInnhold.formue]);
+
+    const totalFormue = søkersFormue + ektefellesFormue;
 
     useEffect(() => {
         async function fetchPerson(fnr: Nullable<string>) {
@@ -242,7 +154,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             }
 
             const res = await personApi.fetchPerson(fnr);
-            console.log(res);
             if (res.status === 'error') {
                 setPersonOppslagFeil({ statusCode: res.error.statusCode });
                 return;
@@ -260,6 +171,21 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
         fetchPerson(formik.values.ektefellesFnr);
     }, [formik.values.ektefellesFnr]);
+    const [inputToShow, setInputToShow] = useState<'søker' | 'ektefelle' | null>(
+        formik.values.borSøkerMedEktefelle ? null : 'søker'
+    );
+
+    const vilkårErOppfylt = totalFormue < 0.5 * G;
+
+    const keyNavnForFormue: Array<keyof FormueVerdier> = [
+        'verdiIkkePrimærbolig',
+        'verdiKjøretøy',
+        'innskudd',
+        'verdipapir',
+        'pengerSkyldt',
+        'kontanter',
+        'depositumskonto',
+    ];
 
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
@@ -278,25 +204,30 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                     label="Ja"
                                     name="borSøkerMedEktefelle"
                                     checked={Boolean(formik.values.borSøkerMedEktefelle)}
-                                    onChange={() =>
+                                    onChange={() => {
                                         formik.setValues({
                                             ...formik.values,
                                             borSøkerMedEktefelle: true,
                                             ektefellesFnr: null,
-                                        })
-                                    }
+                                        });
+
+                                        setInputToShow(null);
+                                    }}
                                 />
                                 <Radio
                                     label="Nei"
                                     name="borSøkerMedEktefelle"
                                     checked={formik.values.borSøkerMedEktefelle === false}
-                                    onChange={() =>
+                                    onChange={() => {
                                         formik.setValues({
                                             ...formik.values,
                                             borSøkerMedEktefelle: false,
                                             ektefellesFnr: null,
-                                        })
-                                    }
+                                            ektefellesVerdier: getInitialVerdier(),
+                                        });
+
+                                        setInputToShow('søker');
+                                    }}
                                 />
                             </RadioGruppe>
                             {formik.values.borSøkerMedEktefelle && (
@@ -326,85 +257,128 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 </>
                             )}
                         </div>
-                        <FormueInput
-                            tittel={intl.formatMessage({ id: 'input.label.verdiIkkePrimærBolig' })}
-                            className={styles.formueInput}
-                            inputName="verdiIkkePrimærbolig"
-                            defaultValues={formik.values.verdiIkkePrimærbolig}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.verdiIkkePrimærbolig}
-                        />
-                        <FormueInput
-                            tittel={intl.formatMessage({ id: 'input.label.verdiKjøretøy' })}
-                            className={styles.formueInput}
-                            inputName="verdiKjøretøy"
-                            defaultValues={formik.values.verdiKjøretøy}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.verdiKjøretøy}
-                        />
-                        <FormueInput
-                            tittel={intl.formatMessage({ id: 'input.label.inskuddPåKonto' })}
-                            className={styles.formueInput}
-                            inputName="innskudd"
-                            defaultValues={formik.values.innskudd}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.innskudd}
-                        />
-                        <FormueInput
-                            tittel={intl.formatMessage({ id: 'input.label.verdipapir' })}
-                            className={styles.formueInput}
-                            inputName="verdipapir"
-                            defaultValues={formik.values.verdipapir}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.verdipapir}
-                        />
-                        <FormueInput
-                            tittel={intl.formatMessage({ id: 'input.label.skylderNoenSøkerPenger' })}
-                            className={styles.formueInput}
-                            inputName="pengerSkyldt"
-                            defaultValues={formik.values.pengerSkyldt}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.pengerSkyldt}
-                        />
-                        <FormueInput
-                            tittel={intl.formatMessage({ id: 'input.label.kontanterOver1000' })}
-                            className={styles.formueInput}
-                            inputName="kontanter"
-                            defaultValues={formik.values.kontanter}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.kontanter}
-                        />
-                        <FormueInput
-                            tittel={intl.formatMessage({ id: 'input.label.depositumskonto' })}
-                            className={styles.formueInput}
-                            inputName="depositumskonto"
-                            defaultValues={formik.values.depositumskonto}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.depositumskonto}
-                        />
-                        <div className={styles.totalFormueContainer}>
-                            <p className={styles.totalFormue}>
-                                {intl.formatMessage({ id: 'display.totalt' })} {totalFormue}
-                            </p>
 
-                            {totalFormue > 0.5 * G ? (
-                                <div>
-                                    <p className={styles.vilkårOppfyltText}>
-                                        {intl.formatMessage({ id: 'display.vilkårIkkeOppfylt' })}
-                                    </p>
-                                    <hr></hr>
-                                    <hr></hr>
-                                </div>
-                            ) : (
-                                <div>
-                                    <p className={styles.vilkårOppfyltText}>
-                                        {intl.formatMessage({ id: 'display.vilkårOppfylt' })}
-                                    </p>
-                                    <hr></hr>
-                                    <hr></hr>
+                        <div className={styles.formueInputContainer}>
+                            <div className={styles.søkersFormue}>
+                                {inputToShow === 'søker' &&
+                                    keyNavnForFormue.map((keyNavn) => (
+                                        <FormueInput
+                                            key={keyNavn}
+                                            tittel={intl.formatMessage({ id: `input.label.${keyNavn}` })}
+                                            className={styles.formueInput}
+                                            inputName={`verdier.${keyNavn}`}
+                                            onChange={formik.handleChange}
+                                            defaultValue={formik.values.verdier?.[keyNavn] ?? 0}
+                                            feil={
+                                                (formik.errors.verdier as FormikErrors<FormueVerdier> | undefined)?.[
+                                                    keyNavn
+                                                ]
+                                            }
+                                        />
+                                    ))}
+
+                                {formik.values.borSøkerMedEktefelle && (
+                                    <>
+                                        <ShowSum
+                                            tittel={intl.formatMessage({ id: 'display.søkersFormue' })}
+                                            sum={søkersFormue}
+                                        />
+
+                                        {inputToShow !== 'søker' ? (
+                                            <Knapp
+                                                className={styles.toggleInput}
+                                                onClick={() => setInputToShow('søker')}
+                                                htmlType="button"
+                                            >
+                                                {intl.formatMessage({ id: 'knapp.endreSøkersFormue' })}
+                                            </Knapp>
+                                        ) : (
+                                            <Knapp
+                                                htmlType="button"
+                                                className={styles.toggleInput}
+                                                onClick={() => setInputToShow(null)}
+                                            >
+                                                Lagre
+                                            </Knapp>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+
+                            {formik.values.borSøkerMedEktefelle && (
+                                <div className={styles.ektefellesFormue}>
+                                    {inputToShow === 'ektefelle' &&
+                                        keyNavnForFormue.map((keyNavn) => (
+                                            <FormueInput
+                                                key={keyNavn}
+                                                tittel={intl.formatMessage({ id: `input.label.${keyNavn}` })}
+                                                className={styles.formueInput}
+                                                inputName={`ektefellesVerdier.${keyNavn}`}
+                                                onChange={formik.handleChange}
+                                                defaultValue={formik.values.ektefellesVerdier?.[keyNavn] ?? 0}
+                                                feil={
+                                                    (formik.errors.ektefellesVerdier as
+                                                        | FormikErrors<FormueVerdier>
+                                                        | undefined)?.[keyNavn]
+                                                }
+                                            />
+                                        ))}
+                                    <ShowSum
+                                        tittel={intl.formatMessage({ id: 'display.ektefellesFormue' })}
+                                        sum={ektefellesFormue}
+                                    />
+
+                                    {inputToShow !== 'ektefelle' ? (
+                                        <Knapp
+                                            className={styles.toggleInput}
+                                            onClick={() => setInputToShow('ektefelle')}
+                                            htmlType="button"
+                                        >
+                                            {intl.formatMessage({ id: 'knapp.endreEktefellesFormue' })}
+                                        </Knapp>
+                                    ) : (
+                                        <Knapp
+                                            className={styles.toggleInput}
+                                            htmlType="button"
+                                            onClick={() => setInputToShow(null)}
+                                        >
+                                            Lagre
+                                        </Knapp>
+                                    )}
                                 </div>
                             )}
                         </div>
+
+                        <div className={styles.totalFormueContainer}>
+                            <ShowSum tittel={intl.formatMessage({ id: 'display.totalt' })} sum={totalFormue} />
+
+                            <div className={styles.status}>
+                                <VilkårvurderingStatusIcon
+                                    status={vilkårErOppfylt ? VilkårVurderingStatus.Ok : VilkårVurderingStatus.IkkeOk}
+                                />
+                                <div className={styles.statusInformasjon}>
+                                    <p>
+                                        {vilkårErOppfylt
+                                            ? intl.formatMessage({ id: 'display.vilkårOppfylt' })
+                                            : intl.formatMessage({ id: 'display.vilkårIkkeOppfylt' })}
+                                    </p>
+                                    <p>
+                                        {vilkårErOppfylt
+                                            ? intl.formatMessage({ id: 'display.vilkårOppfyltGrunn' })
+                                            : intl.formatMessage({ id: 'display.vilkårIkkeOppfyltGrunn' })}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <Textarea
+                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                            name="begrunnelse"
+                            value={formik.values.begrunnelse || ''}
+                            onChange={formik.handleChange}
+                            feil={formik.errors.begrunnelse}
+                        />
+
                         <Checkbox
                             label={intl.formatMessage({ id: 'checkbox.henteMerInfo' })}
                             name="status"
@@ -420,13 +394,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 });
                             }}
                         />
-                        <Textarea
-                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
-                            name="begrunnelse"
-                            value={formik.values.begrunnelse || ''}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.begrunnelse}
-                        />
+
                         {pipe(
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(

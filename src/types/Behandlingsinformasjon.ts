@@ -68,6 +68,12 @@ export enum OppholdIUtlandetStatus {
 
 export interface Formue {
     status: FormueStatus;
+    verdier: Nullable<FormueVerdier>;
+    ektefellesVerdier: Nullable<FormueVerdier>;
+    begrunnelse: Nullable<string>;
+}
+
+export interface FormueVerdier {
     verdiIkkePrimærbolig: Nullable<number>;
     verdiKjøretøy: Nullable<number>;
     innskudd: Nullable<number>;
@@ -75,8 +81,8 @@ export interface Formue {
     pengerSkyldt: Nullable<number>;
     kontanter: Nullable<number>;
     depositumskonto: Nullable<number>;
-    begrunnelse: Nullable<string>;
 }
+
 export enum FormueStatus {
     VilkårOppfylt = 'VilkårOppfylt',
     VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',

@@ -1,6 +1,8 @@
 @import '~/styles/variables.less';
 
 .ektefellePartnerSamboer {
+    margin-bottom: @spacing-l;
+
     .fnrInput {
         margin-bottom: @spacing-s;
         display: flex;
@@ -12,26 +14,40 @@
     }
 }
 
-.formueInput {
-    width: 10em;
-    margin-bottom: @spacing-s;
+.formueInputContainer {
+    .formueInput {
+        width: 10em;
+        margin-bottom: @spacing-s;
+    }
+
+    .toggleInput {
+        margin: @spacing-xs 0;
+    }
+
+    .søkersFormue {
+        margin: @spacing-l 0;
+    }
 }
 
 .totalFormueContainer {
-    margin-bottom: @spacing;
-    .totalFormue {
-        font-weight: bold;
-        font-size: 20px;
-        margin-bottom: @spacing-xs;
-    }
+    display: flex;
+    flex-direction: row;
+    margin: @spacing 0;
 
-    .vilkårOppfyltText {
-        font-size: 25px;
+    .status {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-left: @spacing-l;
+
+        .statusInformasjon {
+            margin-left: @spacing-xxs;
+        }
     }
 }
 
 .henteMerInfoCheckbox {
-    margin-bottom: @spacing-xs;
+    margin-top: @spacing-xs;
 }
 
 .formueFraSøknad {
