@@ -1,6 +1,7 @@
 import { Input, Label } from 'nav-frontend-skjema';
 import { Element, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
+import { useIntl } from 'react-intl';
 
 export const FormueInput = (props: {
     className: string;
@@ -23,9 +24,13 @@ export const FormueInput = (props: {
     </>
 );
 
-export const ShowSum = ({ sum, tittel }: { sum: number; tittel: string }) => (
-    <div>
-        <Element>{tittel}</Element>
-        <Undertittel>{sum} kr</Undertittel>
-    </div>
-);
+export const ShowSum = ({ sum, tittel }: { sum: number; tittel: string }) => {
+    const intl = useIntl();
+
+    return (
+        <div>
+            <Element>{tittel}</Element>
+            <Undertittel>{`${intl.formatNumber(sum)} ,-`}</Undertittel>
+        </div>
+    );
+};
