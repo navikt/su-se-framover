@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Radio, RadioGruppe, Input } from 'nav-frontend-skjema';
+import { Radio, RadioGruppe, Input, Label } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
@@ -34,7 +34,7 @@ const UførhetInput = (props: {
     feil: string | undefined;
 }) => (
     <div>
-        <h3> {props.tittel} </h3>
+        <Label htmlFor={props.inputName}> {props.tittel} </Label>
         <span>
             <span className={styles.uføreInputContainer}>
                 <Input
@@ -43,6 +43,7 @@ const UførhetInput = (props: {
                     defaultValue={props.defaultValues}
                     bredde={props.bredde}
                     onChange={props.onChange}
+                    id={props.inputName}
                 />
                 <Normaltekst>{props.inputTekst}</Normaltekst>
             </span>

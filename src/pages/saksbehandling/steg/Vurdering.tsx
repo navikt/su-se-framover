@@ -1,5 +1,5 @@
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
-import { Innholdstittel } from 'nav-frontend-typografi';
+import { Systemtittel } from 'nav-frontend-typografi';
 import React from 'react';
 
 import { useI18n } from '~lib/hooks';
@@ -14,12 +14,14 @@ export const Vurdering = (props: {
         right: JSX.Element;
     };
 }) => (
-    <div className={styles.container}>
-        <Innholdstittel className={styles.tittel}>{props.tittel}</Innholdstittel>
-        <div className={styles.contentContainer}>
-            <div className={styles.left}>{props.children.left}</div>
-            <div className={styles.right}>{props.children.right}</div>
+    <div className={styles.contentContainer}>
+        <div className={styles.left}>
+            <Systemtittel tag="h1" className={styles.tittel}>
+                {props.tittel}
+            </Systemtittel>
+            {props.children.left}
         </div>
+        <div className={styles.right}>{props.children.right}</div>
     </div>
 );
 
