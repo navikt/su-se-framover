@@ -81,7 +81,6 @@ interface Formue {
 
 interface InntektOgPensjon {
     forventetInntekt: Nullable<number>;
-    tjenerPengerIUtlandetBeløp: Nullable<number>;
     andreYtelserINav: Nullable<string>;
     andreYtelserINavBeløp: Nullable<number>;
     søktAndreYtelserIkkeBehandletBegrunnelse: Nullable<string>;

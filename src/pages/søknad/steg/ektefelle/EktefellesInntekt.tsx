@@ -84,15 +84,6 @@ const schema = yup.object<FormData>({
             then: yup.array().min(1).required(),
             otherwise: yup.array().max(0),
         }),
-    tjenerPengerIUtlandet: yup.boolean().nullable().required(),
-    tjenerPengerIUtlandetBeløp: yup
-        .string()
-        .nullable()
-        .defined()
-        .when('tjenerPengerIUtlandet', {
-            is: true,
-            then: yup.string().nullable().min(1).required(),
-        }),
     andreYtelserINav: yup.boolean().nullable().required(),
     andreYtelserINavYtelse: yup
         .string()
@@ -340,6 +331,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.harForventetInntekt.label" />}
                             feil={formik.errors.harForventetInntekt}
                             state={formik.values.harForventetInntekt}
+                            description={intl.formatMessage({ id: 'hjelpetekst.harForventetInntekt.body' })}
                             onChange={(val) =>
                                 formik.setValues({
                                     ...formik.values,
@@ -357,33 +349,6 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 value={formik.values.forventetInntekt || ''}
                                 label={<FormattedMessage id="input.forventetInntekt.label" />}
                                 onChange={formik.handleChange}
-                            />
-                        )}
-
-                        <JaNeiSpørsmål
-                            id="tjenerPengerIUtlandet"
-                            className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.tjenerPengerIUtlandet.label" />}
-                            feil={formik.errors.tjenerPengerIUtlandet}
-                            state={formik.values.tjenerPengerIUtlandet}
-                            onChange={(val) =>
-                                formik.setValues({
-                                    ...formik.values,
-                                    tjenerPengerIUtlandet: val,
-                                    tjenerPengerIUtlandetBeløp: null,
-                                })
-                            }
-                        />
-
-                        {formik.values.tjenerPengerIUtlandet && (
-                            <Input
-                                className={sharedStyles.marginBottom}
-                                id="tjenerPengerIUtlandetBeløp"
-                                name="tjenerPengerIUtlandetBeløp"
-                                label={<FormattedMessage id="input.tjenerPengerIUtlandetBeløp.label" />}
-                                value={formik.values.tjenerPengerIUtlandetBeløp || ''}
-                                onChange={formik.handleChange}
-                                feil={formik.errors.tjenerPengerIUtlandetBeløp}
                             />
                         )}
 
