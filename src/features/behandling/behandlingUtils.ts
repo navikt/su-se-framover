@@ -16,7 +16,7 @@ import {
     Formue,
     PersonligOppmøte,
     Bosituasjon,
-    Verdier,
+    FormueVerdier,
 } from '~types/Behandlingsinformasjon';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
@@ -98,7 +98,7 @@ export const eqFormue: Eq<Nullable<Formue>> = {
         eqVerdier.equals(formue1?.ektefellesVerdier ?? null, formue2?.ektefellesVerdier ?? null) &&
         formue1?.begrunnelse === formue2?.begrunnelse,
 };
-const eqVerdier: Eq<Nullable<Verdier>> = {
+const eqVerdier: Eq<Nullable<FormueVerdier>> = {
     equals: (verdier1, verdier2) =>
         verdier1?.verdiIkkePrimærbolig === verdier2?.verdiIkkePrimærbolig &&
         verdier1?.verdiKjøretøy === verdier2?.verdiKjøretøy &&

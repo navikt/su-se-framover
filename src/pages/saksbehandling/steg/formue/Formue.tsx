@@ -20,7 +20,7 @@ import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup, { validatePositiveNumber } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { FormueStatus, Formue, Verdier } from '~types/Behandlingsinformasjon';
+import { FormueStatus, Formue, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import Faktablokk from '../Faktablokk';
@@ -38,7 +38,7 @@ type FormData = Formue & {
     ektefellesFnr: Nullable<string>;
 };
 
-const VerdierSchema: yup.ObjectSchema<Verdier | undefined> = yup.object<Verdier>({
+const VerdierSchema: yup.ObjectSchema<FormueVerdier | undefined> = yup.object<FormueVerdier>({
     verdiIkkePrimærbolig: validatePositiveNumber,
     verdiKjøretøy: validatePositiveNumber,
     innskudd: validatePositiveNumber,
@@ -177,7 +177,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
     const vilkårErOppfylt = totalFormue < 0.5 * G;
 
-    const keyNavnForFormue: Array<keyof Verdier> = [
+    const keyNavnForFormue: Array<keyof FormueVerdier> = [
         'verdiIkkePrimærbolig',
         'verdiKjøretøy',
         'innskudd',
@@ -270,7 +270,9 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                             onChange={formik.handleChange}
                                             defaultValue={formik.values.verdier?.[keyNavn] ?? 0}
                                             feil={
-                                                (formik.errors.verdier as FormikErrors<Verdier> | undefined)?.[keyNavn]
+                                                (formik.errors.verdier as FormikErrors<FormueVerdier> | undefined)?.[
+                                                    keyNavn
+                                                ]
                                             }
                                         />
                                     ))}
@@ -316,7 +318,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                 defaultValue={formik.values.ektefellesVerdier?.[keyNavn] ?? 0}
                                                 feil={
                                                     (formik.errors.ektefellesVerdier as
-                                                        | FormikErrors<Verdier>
+                                                        | FormikErrors<FormueVerdier>
                                                         | undefined)?.[keyNavn]
                                                 }
                                             />

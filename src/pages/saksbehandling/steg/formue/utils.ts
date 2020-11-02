@@ -1,8 +1,8 @@
 import { Nullable } from '~lib/types';
-import { Behandlingsinformasjon, FormueStatus, Verdier } from '~types/Behandlingsinformasjon';
+import { Behandlingsinformasjon, FormueStatus, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
-export function kalkulerFormue(verdier: Nullable<Verdier>) {
+export function kalkulerFormue(verdier: Nullable<FormueVerdier>) {
     if (!verdier) {
         return 0;
     }
@@ -59,7 +59,10 @@ export function setInitialValues(behandlingsInfo: Behandlingsinformasjon, søkna
     };
 }
 
-function setInitialVerdier(verdier: Nullable<Verdier>, søknadsFormue: Nullable<SøknadInnhold['formue']>): Verdier {
+function setInitialVerdier(
+    verdier: Nullable<FormueVerdier>,
+    søknadsFormue: Nullable<SøknadInnhold['formue']>
+): FormueVerdier {
     return {
         verdiIkkePrimærbolig: verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0,
         verdiKjøretøy: verdier?.verdiKjøretøy ?? totalVerdiKjøretøy(søknadsFormue?.kjøretøy ?? null) ?? 0,
@@ -71,7 +74,7 @@ function setInitialVerdier(verdier: Nullable<Verdier>, søknadsFormue: Nullable<
     };
 }
 
-export function resetVerdier(): Verdier {
+export function resetVerdier(): FormueVerdier {
     return {
         verdiIkkePrimærbolig: 0,
         verdiKjøretøy: 0,
