@@ -83,15 +83,6 @@ const schema = yup.object<FormData>({
             then: yup.array().min(1).required(),
             otherwise: yup.array().max(0),
         }),
-    tjenerPengerIUtlandet: yup.boolean().nullable().required(),
-    tjenerPengerIUtlandetBeløp: yup
-        .string()
-        .nullable()
-        .defined()
-        .when('tjenerPengerIUtlandet', {
-            is: true,
-            then: yup.string().nullable().min(1).required(),
-        }),
     andreYtelserINav: yup.boolean().nullable().required(),
     andreYtelserINavYtelse: yup
         .string()
@@ -247,8 +238,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
             harMottattSosialstønad: inntektFraStore.harMottattSosialstønad,
             mottarPensjon: inntektFraStore.mottarPensjon,
             pensjonsInntekt: inntektFraStore.pensjonsInntekt,
-            tjenerPengerIUtlandet: inntektFraStore.tjenerPengerIUtlandet,
-            tjenerPengerIUtlandetBeløp: inntektFraStore.tjenerPengerIUtlandetBeløp,
             andreYtelserINav: inntektFraStore.andreYtelserINav,
             andreYtelserINavYtelse: inntektFraStore.andreYtelserINavYtelse,
             andreYtelserINavBeløp: inntektFraStore.andreYtelserINavBeløp,
@@ -274,8 +263,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 harMottattSosialstønad: values.harMottattSosialstønad,
                 mottarPensjon: values.mottarPensjon,
                 pensjonsInntekt: values.pensjonsInntekt,
-                tjenerPengerIUtlandet: values.tjenerPengerIUtlandet,
-                tjenerPengerIUtlandetBeløp: values.tjenerPengerIUtlandetBeløp,
                 andreYtelserINav: values.andreYtelserINav,
                 andreYtelserINavYtelse: values.andreYtelserINavYtelse,
                 andreYtelserINavBeløp: values.andreYtelserINavBeløp,
@@ -371,6 +358,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             id="harForventetInntekt"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.harForventetInntekt.label" />}
+                            description={intl.formatMessage({ id: 'hjelpetekst.harForventetInntekt.body' })}
                             feil={formik.errors.harForventetInntekt}
                             state={formik.values.harForventetInntekt}
                             onChange={(val) =>
@@ -391,34 +379,6 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 value={formik.values.forventetInntekt || ''}
                                 label={<FormattedMessage id="input.forventetInntekt.label" />}
                                 onChange={formik.handleChange}
-                            />
-                        )}
-
-                        <JaNeiSpørsmål
-                            id="tjenerPengerIUtlandet"
-                            className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.tjenerPengerIUtlandet.label" />}
-                            feil={formik.errors.tjenerPengerIUtlandet}
-                            state={formik.values.tjenerPengerIUtlandet}
-                            onChange={(val) =>
-                                formik.setValues({
-                                    ...formik.values,
-                                    tjenerPengerIUtlandet: val,
-                                    tjenerPengerIUtlandetBeløp: null,
-                                })
-                            }
-                        />
-
-                        {formik.values.tjenerPengerIUtlandet && (
-                            <Input
-                                className={sharedStyles.marginBottom}
-                                id="tjenerPengerIUtlandetBeløp"
-                                name="tjenerPengerIUtlandetBeløp"
-                                bredde="S"
-                                label={<FormattedMessage id="input.tjenerPengerIUtlandetBeløp.label" />}
-                                value={formik.values.tjenerPengerIUtlandetBeløp || ''}
-                                onChange={formik.handleChange}
-                                feil={formik.errors.tjenerPengerIUtlandetBeløp}
                             />
                         )}
 

@@ -31,19 +31,6 @@ const InntektsOppsummering = ({
             )}
 
             <Oppsummeringsfelt
-                label={intl.formatMessage({ id: 'input.tjenerPengerIUtlandet.label' })}
-                verdi={
-                    inntekt.tjenerPengerIUtlandet ? 'Ja' : inntekt.tjenerPengerIUtlandet === false ? 'Nei' : 'Ubesvart'
-                }
-            />
-            {inntekt.tjenerPengerIUtlandet && (
-                <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.tjenerPengerIUtlandetBeløp.label' })}
-                    verdi={inntekt.tjenerPengerIUtlandetBeløp ? inntekt.tjenerPengerIUtlandetBeløp : 'Ubesvart'}
-                />
-            )}
-
-            <Oppsummeringsfelt
                 label={intl.formatMessage({ id: 'input.andreYtelserINAV.label' })}
                 verdi={inntekt.andreYtelserINav ? 'Ja' : inntekt.andreYtelserINav === false ? 'Nei' : 'Ubesvart'}
             />

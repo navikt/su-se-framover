@@ -51,8 +51,6 @@ export interface SøknadState {
     inntekt: {
         harForventetInntekt: Nullable<boolean>;
         forventetInntekt: Nullable<string>;
-        tjenerPengerIUtlandet: Nullable<boolean>;
-        tjenerPengerIUtlandetBeløp: Nullable<string>;
         andreYtelserINav: Nullable<boolean>;
         andreYtelserINavYtelse: Nullable<string>;
         andreYtelserINavBeløp: Nullable<string>;
@@ -103,8 +101,6 @@ const initialFormue: SøknadState['formue'] = {
 const initialInntekt: SøknadState['inntekt'] = {
     harForventetInntekt: null,
     forventetInntekt: null,
-    tjenerPengerIUtlandet: null,
-    tjenerPengerIUtlandetBeløp: null,
     andreYtelserINav: null,
     andreYtelserINavYtelse: null,
     andreYtelserINavBeløp: null,

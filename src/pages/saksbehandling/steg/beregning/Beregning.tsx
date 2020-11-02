@@ -311,12 +311,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     intl.formatMessage({ id: 'display.fraSøknad.nei' }),
                             },
                             {
-                                tittel: intl.formatMessage({ id: 'display.fraSøknad.tjenerPengerIUtland' }),
-                                verdi:
-                                    props.behandling.søknad.søknadInnhold.inntektOgPensjon.tjenerPengerIUtlandetBeløp?.toString() ??
-                                    intl.formatMessage({ id: 'display.fraSøknad.nei' }),
-                            },
-                            {
                                 tittel: intl.formatMessage({ id: 'display.fraSøknad.andreYtelserINav' }),
                                 verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINav
                                     ? `${intl.formatMessage({ id: 'display.fraSøknad.nei' })}, ${
