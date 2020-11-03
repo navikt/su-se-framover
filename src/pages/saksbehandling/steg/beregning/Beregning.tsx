@@ -338,7 +338,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 tittel: intl.formatMessage({
                                     id: 'display.fraSøknad.trygdeytelserIUtlandet',
                                 }),
-                                verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.trygdeytelserIUtlandet ? (
+                                verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.trygdeytelserIUtlandet
+                                    ?.length ? (
                                     <>
                                         {props.behandling.søknad.søknadInnhold.inntektOgPensjon.trygdeytelserIUtlandet.map(
                                             (ytelse, index) => (
@@ -358,7 +359,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 tittel: intl.formatMessage({
                                     id: 'display.fraSøknad.tjenestepensjon/pensjonssparing',
                                 }),
-                                verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.pensjon ? (
+                                verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.pensjon?.length ? (
                                     <>
                                         {props.behandling.søknad.søknadInnhold.inntektOgPensjon.pensjon.map(
                                             (p, index) => (
