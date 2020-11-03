@@ -10,7 +10,7 @@ export default {
     'input.trygdeytelserIUtlandet.label': 'Har du trygdeytelser i utlandet?',
     'input.trygdeytelserIUtlandetBeløp.label': 'Brutto beløp i lokal valuta per år',
     'input.trygdeytelserIUtlandetType.label': 'Hvilke ytelser?',
-    'input.trygdeytelserIUtlandetFraHvem.label': 'Hvem gir disse ytelsene?',
+    'input.trygdeytelserIUtlandetFra.label': 'Hvem gir disse ytelsene?',
     'input.andreYtelserINAV.label': 'Har du andre ytelser i NAV?',
     'input.andreYtelserINavYtelse.label': 'Hvilken ytelser?',
     'input.andreYtelserINavBeløp.label': 'Beløp i kroner per måned',

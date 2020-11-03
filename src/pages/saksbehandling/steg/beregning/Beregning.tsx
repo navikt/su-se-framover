@@ -338,17 +338,40 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 tittel: intl.formatMessage({
                                     id: 'display.fraSøknad.trygdeytelserIUtlandet',
                                 }),
-                                verdi:
-                                    props.behandling.søknad.søknadInnhold.inntektOgPensjon.tjenerPengerIUtlandetBeløp?.toString() ??
-                                    intl.formatMessage({ id: 'display.fraSøknad.nei' }),
+                                verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.trygdeytelserIUtlandet ? (
+                                    <>
+                                        {props.behandling.søknad.søknadInnhold.inntektOgPensjon.trygdeytelserIUtlandet.map(
+                                            (ytelse, index) => (
+                                                <div key={index}>
+                                                    <p>Beløp: {ytelse.beløp} i lokal valuta</p>
+                                                    <p>Type: {ytelse.type}</p>
+                                                    <p>Fra: {ytelse.fra}</p>
+                                                </div>
+                                            )
+                                        )}
+                                    </>
+                                ) : (
+                                    intl.formatMessage({ id: 'display.fraSøknad.nei' })
+                                ),
                             },
                             {
                                 tittel: intl.formatMessage({
                                     id: 'display.fraSøknad.tjenestepensjon/pensjonssparing',
                                 }),
-                                verdi:
-                                    props.behandling.søknad.søknadInnhold.inntektOgPensjon.trygdeytelserIUtlandet?.toString() ??
-                                    intl.formatMessage({ id: 'display.fraSøknad.nei' }),
+                                verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.pensjon ? (
+                                    <>
+                                        {props.behandling.søknad.søknadInnhold.inntektOgPensjon.pensjon.map(
+                                            (p, index) => (
+                                                <div key={index}>
+                                                    <p>Beløp: {p.beløp}</p>
+                                                    <p>Ordning: {p.ordning}</p>
+                                                </div>
+                                            )
+                                        )}
+                                    </>
+                                ) : (
+                                    intl.formatMessage({ id: 'display.fraSøknad.nei' })
+                                ),
                             },
                         ]}
                     />
