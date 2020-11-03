@@ -9,10 +9,8 @@ export interface SøknadState {
     flyktningstatus: {
         harOppholdstillatelse: Nullable<boolean>;
         typeOppholdstillatelse: Nullable<TypeOppholdstillatelse>;
-        oppholdstillatelseMindreEnnTreMåneder: Nullable<boolean>;
         erFlyktning: Nullable<boolean>;
         erNorskStatsborger: Nullable<boolean>;
-        oppholdstillatelseForlengelse: Nullable<boolean>;
         statsborgerskapAndreLand: Nullable<boolean>;
         statsborgerskapAndreLandFritekst: Nullable<string>;
     };
@@ -121,8 +119,6 @@ const initialState: SøknadState = {
         harOppholdstillatelse: null,
         typeOppholdstillatelse: null,
         erNorskStatsborger: null,
-        oppholdstillatelseMindreEnnTreMåneder: null,
-        oppholdstillatelseForlengelse: null,
         statsborgerskapAndreLand: null,
         statsborgerskapAndreLandFritekst: null,
     },

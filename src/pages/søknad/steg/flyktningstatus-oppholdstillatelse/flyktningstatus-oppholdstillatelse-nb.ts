@@ -7,9 +7,6 @@ export default {
     'input.hvilken.oppholdstillatelse.label': 'Er oppholdstillatelsen din permanent eller midlertidig?',
     'input.permanent.oppholdstillatelse.label': 'Permanent',
     'input.midlertidig.oppholdstillatelse.label': 'Midlertidig',
-    'input.midlertidig.oppholdstillatelse.opphører.label':
-        'Er det mindre enn tre måneder til oppholdstillatelsen din opphører?',
-    'input.oppholdtillatelse.forlengelse.label': 'Har du søkt om forlengelse?',
 
     'input.statsborger.andre.land.label': 'Har du statsborgerskap i andre land enn Norge?',
     'input.statsborger.andre.land.fritekst.label': 'Hvilke land har du statsborgerskap i?',
@@ -19,6 +16,9 @@ export default {
 
     'ikkeLovligOpphold.message':
         'For å ha rett på supplerende stønad må du ha lovlig opphold i Norge. Lovlig opphold er enten statsborgerskap eller oppholdstillatelse. Du kan fremdeles søke, men vil sannsynligvis få avslag.',
+
+    'midlertidigForlengelse.message':
+        'Hvis det er mindre enn tre måneder til den midlertidige oppholdstillatelsen din utgår anbefaler vi deg å søke om fornyelse. Hvis oppholdstillatelsen din går ut, mister du retten på supplerende stønad.',
 
     'hjelpetekst.tittel': 'Hvordan vet jeg om jeg er registrert flyktning?',
     'hjelpetekst.body':

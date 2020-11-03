@@ -38,8 +38,6 @@ export interface SøknadInnhold {
         erNorskStatsborger: boolean;
         harOppholdstillatelse: Nullable<boolean>;
         typeOppholdstillatelse: Nullable<string>;
-        oppholdstillatelseMindreEnnTreMåneder: Nullable<boolean>;
-        oppholdstillatelseForlengelse: Nullable<boolean>;
         statsborgerskapAndreLand: boolean;
         statsborgerskapAndreLandFritekst: Nullable<string>;
     };

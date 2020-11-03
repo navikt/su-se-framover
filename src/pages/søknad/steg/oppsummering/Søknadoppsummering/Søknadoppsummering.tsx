@@ -105,32 +105,6 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         />
                     )}
 
-                    {søknad.flyktningstatus.typeOppholdstillatelse === 'midlertidig' && (
-                        <Oppsummeringsfelt
-                            label={<FormattedMessage id="input.midlertidig.oppholdstillatelse.opphører.label" />}
-                            verdi={
-                                søknad.flyktningstatus.oppholdstillatelseMindreEnnTreMåneder
-                                    ? 'Ja'
-                                    : søknad.flyktningstatus.oppholdstillatelseMindreEnnTreMåneder === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
-                        />
-                    )}
-
-                    {søknad.flyktningstatus.oppholdstillatelseMindreEnnTreMåneder && (
-                        <Oppsummeringsfelt
-                            label={<FormattedMessage id="input.oppholdtillatelse.forlengelse.label" />}
-                            verdi={
-                                søknad.flyktningstatus.oppholdstillatelseForlengelse
-                                    ? 'Ja'
-                                    : søknad.flyktningstatus.oppholdstillatelseForlengelse === false
-                                    ? 'Nei'
-                                    : 'Ubesvart'
-                            }
-                        />
-                    )}
-
                     <Oppsummeringsfelt
                         label={<FormattedMessage id="input.statsborger.andre.land.label" />}
                         verdi={
