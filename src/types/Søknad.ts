@@ -85,7 +85,7 @@ interface InntektOgPensjon {
     andreYtelserINavBeløp: Nullable<number>;
     søktAndreYtelserIkkeBehandletBegrunnelse: Nullable<string>;
     sosialstønadBeløp: Nullable<number>;
-    trygdeytelserIUtlandet: Array<{ beløp: number; type: string; fra: string }>;
+    trygdeytelserIUtlandet: Nullable<Array<{ beløp: number; type: string; fra: string }>>;
     pensjon: Nullable<Array<{ ordning: string; beløp: number }>>;
 }
 
