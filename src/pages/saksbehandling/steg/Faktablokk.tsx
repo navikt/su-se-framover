@@ -18,10 +18,10 @@ const Faktablokk = (props: {
     <div className="styles.faktablokk">
         <Systemtittel className={styles.overskrift}>{props.tittel}</Systemtittel>
         <div className={props.containerClassName}>
-            {props.fakta.map((f) => (
-                <div className={classNames(props.faktaBlokkerClassName, styles.linje)} key={f.tittel}>
+            {props.fakta.map((f, index) => (
+                <div className={classNames(props.faktaBlokkerClassName, styles.linje)} key={index}>
                     <Element>{f.tittel}</Element>
-                    <span>{f.verdi}</span>
+                    <span className={styles.verdi}>{f.verdi}</span>
                 </div>
             ))}
         </div>

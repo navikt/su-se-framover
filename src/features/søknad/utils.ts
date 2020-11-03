@@ -25,7 +25,6 @@ export const toFormue = (formue: SøknadState['formue']) => {
 export const toInntekt = (inntekt: SøknadState['inntekt']) => {
     return {
         forventetInntekt: inntekt.harForventetInntekt ? Number(inntekt.forventetInntekt) : null,
-        tjenerPengerIUtlandetBeløp: inntekt.tjenerPengerIUtlandet ? Number(inntekt.tjenerPengerIUtlandetBeløp) : null,
         andreYtelserINav: inntekt.andreYtelserINav ? inntekt.andreYtelserINavYtelse : null,
         andreYtelserINavBeløp: inntekt.andreYtelserINav ? Number(inntekt.andreYtelserINavBeløp) : null,
         søktAndreYtelserIkkeBehandletBegrunnelse: inntekt.søktAndreYtelserIkkeBehandlet

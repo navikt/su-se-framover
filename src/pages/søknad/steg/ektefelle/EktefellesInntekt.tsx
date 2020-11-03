@@ -28,7 +28,7 @@ const kjøretøySchema = yup.object({
         unknown
     >) as yup.Schema<string>,
     type: yup.string().required(),
-    fraHvem: yup.string().required(),
+    fra: yup.string().required(),
 });
 
 const schema = yup.object<FormData>({
@@ -84,15 +84,6 @@ const schema = yup.object<FormData>({
             then: yup.array().min(1).required(),
             otherwise: yup.array().max(0),
         }),
-    tjenerPengerIUtlandet: yup.boolean().nullable().required(),
-    tjenerPengerIUtlandetBeløp: yup
-        .string()
-        .nullable()
-        .defined()
-        .when('tjenerPengerIUtlandet', {
-            is: true,
-            then: yup.string().nullable().min(1).required(),
-        }),
     andreYtelserINav: yup.boolean().nullable().required(),
     andreYtelserINavYtelse: yup
         .string()
@@ -137,10 +128,10 @@ const schema = yup.object<FormData>({
 });
 
 const TrygdeytelserInputFelter = (props: {
-    arr: Array<{ beløp: string; type: string; fraHvem: string }>;
-    errors: string | string[] | Array<FormikErrors<{ beløp: string; type: string; fraHvem: string }>> | undefined;
+    arr: Array<{ beløp: string; type: string; fra: string }>;
+    errors: string | string[] | Array<FormikErrors<{ beløp: string; type: string; fra: string }>> | undefined;
     feltnavn: string;
-    onChange: (element: { index: number; beløp: string; type: string; fraHvem: string }) => void;
+    onChange: (element: { index: number; beløp: string; type: string; fra: string }) => void;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
 }) => {
@@ -150,7 +141,7 @@ const TrygdeytelserInputFelter = (props: {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[idx] : null;
                 const beløpId = `${props.feltnavn}[${idx}].beløp`;
                 const typeId = `${props.feltnavn}[${idx}].type`;
-                const fraHvemId = `${props.feltnavn}[${idx}].fraHvem`;
+                const fraId = `${props.feltnavn}[${idx}].fra`;
 
                 return (
                     <div className={styles.trygdeytelserContainer} key={idx}>
@@ -166,7 +157,7 @@ const TrygdeytelserInputFelter = (props: {
                                             index: idx,
                                             beløp: e.target.value,
                                             type: input.type,
-                                            fraHvem: input.fraHvem,
+                                            fra: input.fra,
                                         });
                                     }}
                                 />
@@ -185,7 +176,7 @@ const TrygdeytelserInputFelter = (props: {
                                             index: idx,
                                             beløp: input.beløp,
                                             type: e.target.value,
-                                            fraHvem: input.fraHvem,
+                                            fra: input.fra,
                                         });
                                     }}
                                 />
@@ -195,21 +186,21 @@ const TrygdeytelserInputFelter = (props: {
                             </div>
                             <div>
                                 <Input
-                                    id={`${fraHvemId}`}
-                                    name={`${fraHvemId}`}
-                                    label={<FormattedMessage id="input.trygdeytelserIUtlandetFraHvem.label" />}
-                                    value={input.fraHvem}
+                                    id={`${fraId}`}
+                                    name={`${fraId}`}
+                                    label={<FormattedMessage id="input.trygdeytelserIUtlandetFra.label" />}
+                                    value={input.fra}
                                     onChange={(e) => {
                                         props.onChange({
                                             index: idx,
                                             beløp: input.beløp,
                                             type: input.type,
-                                            fraHvem: e.target.value,
+                                            fra: e.target.value,
                                         });
                                     }}
                                 />
                                 {errorForLinje && typeof errorForLinje === 'object' && (
-                                    <SkjemaelementFeilmelding>{errorForLinje.fraHvem}</SkjemaelementFeilmelding>
+                                    <SkjemaelementFeilmelding>{errorForLinje.fra}</SkjemaelementFeilmelding>
                                 )}
                             </div>
                         </div>
@@ -340,6 +331,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             legend={<FormattedMessage id="input.harForventetInntekt.label" />}
                             feil={formik.errors.harForventetInntekt}
                             state={formik.values.harForventetInntekt}
+                            description={intl.formatMessage({ id: 'hjelpetekst.harForventetInntekt.body' })}
                             onChange={(val) =>
                                 formik.setValues({
                                     ...formik.values,
@@ -357,33 +349,6 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 value={formik.values.forventetInntekt || ''}
                                 label={<FormattedMessage id="input.forventetInntekt.label" />}
                                 onChange={formik.handleChange}
-                            />
-                        )}
-
-                        <JaNeiSpørsmål
-                            id="tjenerPengerIUtlandet"
-                            className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.tjenerPengerIUtlandet.label" />}
-                            feil={formik.errors.tjenerPengerIUtlandet}
-                            state={formik.values.tjenerPengerIUtlandet}
-                            onChange={(val) =>
-                                formik.setValues({
-                                    ...formik.values,
-                                    tjenerPengerIUtlandet: val,
-                                    tjenerPengerIUtlandetBeløp: null,
-                                })
-                            }
-                        />
-
-                        {formik.values.tjenerPengerIUtlandet && (
-                            <Input
-                                className={sharedStyles.marginBottom}
-                                id="tjenerPengerIUtlandetBeløp"
-                                name="tjenerPengerIUtlandetBeløp"
-                                label={<FormattedMessage id="input.tjenerPengerIUtlandetBeløp.label" />}
-                                value={formik.values.tjenerPengerIUtlandetBeløp || ''}
-                                onChange={formik.handleChange}
-                                feil={formik.errors.tjenerPengerIUtlandetBeløp}
                             />
                         )}
 
@@ -488,7 +453,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     harTrygdeytelserIUtlandet: val,
-                                    trygdeytelserIUtlandet: val ? [{ beløp: '', type: '', fraHvem: '' }] : [],
+                                    trygdeytelserIUtlandet: val ? [{ beløp: '', type: '', fra: '' }] : [],
                                 })
                             }
                         />
@@ -505,7 +470,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                             {
                                                 beløp: '',
                                                 type: '',
-                                                fraHvem: '',
+                                                fra: '',
                                             },
                                         ],
                                     });
@@ -526,7 +491,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                                 ? {
                                                       beløp: val.beløp,
                                                       type: val.type,
-                                                      fraHvem: val.fraHvem,
+                                                      fra: val.fra,
                                                   }
                                                 : input
                                         ),

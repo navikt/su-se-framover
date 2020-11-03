@@ -1,5 +1,6 @@
 export default {
     'input.harForventetInntekt.label': 'Forventer du å ha arbeidsinntekt fremover?',
+    'hjelpetekst.harForventetInntekt.body': 'Gjelder all inntekt i Norge og utlandet.',
     'input.forventetInntekt.label': 'Forventet arbeidsinntekt i kroner per måned',
     'input.mottarPensjon.label': 'Har du tjenestepensjon eller pensjonssparing?',
     'input.pensjonsOrdning.label': 'Pensjonsgiver',
@@ -9,9 +10,7 @@ export default {
     'input.trygdeytelserIUtlandet.label': 'Har du trygdeytelser i utlandet?',
     'input.trygdeytelserIUtlandetBeløp.label': 'Brutto beløp i lokal valuta per år',
     'input.trygdeytelserIUtlandetType.label': 'Hvilke ytelser?',
-    'input.trygdeytelserIUtlandetFraHvem.label': 'Hvem gir disse ytelsene?',
-    'input.tjenerPengerIUtlandet.label': 'Tjener du penger i utlandet?',
-    'input.tjenerPengerIUtlandetBeløp.label': 'Beløp i kroner per måned',
+    'input.trygdeytelserIUtlandetFra.label': 'Hvem gir disse ytelsene?',
     'input.andreYtelserINAV.label': 'Har du andre ytelser i NAV?',
     'input.andreYtelserINavYtelse.label': 'Hvilke ytelser?',
     'input.andreYtelserINavBeløp.label': 'Beløp i kroner per måned',

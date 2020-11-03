@@ -21,6 +21,7 @@ export const JaNeiSpørsmål = (props: {
     className?: string;
     hjelpetekstTittel?: string;
     hjelpetekstBody?: string;
+    description?: string;
 }) => {
     const intl = useI18n({ messages: nb });
     return (
@@ -29,6 +30,7 @@ export const JaNeiSpørsmål = (props: {
                 className={classNames(styles.janeisporsmal, props.className)}
                 feil={props.feil}
                 legend={props.legend}
+                description={props.description}
             >
                 {props.hjelpetekstTittel && props.hjelpetekstBody && (
                     <Hjelpetekst tittel={props.hjelpetekstTittel} body={props.hjelpetekstBody} />

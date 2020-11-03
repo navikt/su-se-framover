@@ -8,7 +8,6 @@ export default {
     'display.checkbox.fraUtland': 'Fra utland',
     'display.finnerIkkeSatsBeløp': 'Sats er ikke tilgjengelig',
     'display.fraSøknad.forventerArbeidsinntekt': 'Forventer du å ha arbeidsinntekt fremover?',
-    'display.fraSøknad.tjenerPengerIUtland': 'Tjener du penger i utlandet?',
     'display.fraSøknad.andreYtelserINav': 'Har du andre ytelser i NAV?',
     'display.fraSøknad.sømtOmAndreTrygdeytelser': 'Har du søkt om andre trygdeytelser som ikke er behandlet?',
     'display.fraSøknad.mottattSosialstønadSiste3måneder':

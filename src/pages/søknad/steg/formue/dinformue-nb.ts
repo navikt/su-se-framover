@@ -21,7 +21,7 @@ export default {
     'input.harInnskuddPåKonto.label': 'Har du penger på konto?',
     'input.innskuddsBeløp.label': 'Beløp i kroner',
 
-    'input.harVerdipapir.label': 'Har du aksjer, aksjefond eller lignende?',
+    'input.harVerdipapir.label': 'Har du aksjer, aksjefond eller verdipapir?',
     'input.verdipapirBeløp.label': 'Samlet verdi i kroner',
 
     'input.skylderNoenMegPenger.label': 'Skylder noen deg mer enn 1000 kr?',

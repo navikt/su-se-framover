@@ -81,12 +81,11 @@ interface Formue {
 
 interface InntektOgPensjon {
     forventetInntekt: Nullable<number>;
-    tjenerPengerIUtlandetBeløp: Nullable<number>;
     andreYtelserINav: Nullable<string>;
     andreYtelserINavBeløp: Nullable<number>;
     søktAndreYtelserIkkeBehandletBegrunnelse: Nullable<string>;
     sosialstønadBeløp: Nullable<number>;
-    trygdeytelserIUtlandet: Array<{ beløp: number; type: string; fraHvem: string }>;
+    trygdeytelserIUtlandet: Array<{ beløp: number; type: string; fra: string }>;
     pensjon: Nullable<Array<{ ordning: string; beløp: number }>>;
 }
 
