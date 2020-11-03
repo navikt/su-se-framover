@@ -1,3 +1,4 @@
+import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Fradragstype } from '~types/Fradrag';
 
 export const fradragstypeResourceId = (f: Fradragstype): string => {
@@ -26,3 +27,11 @@ export const fradragstypeResourceId = (f: Fradragstype): string => {
             return 'fradrag.type.forventetinntekt';
     }
 };
+
+export const erIGyldigStatusForÅKunneBeregne = (behandling: Behandling) =>
+    [
+        Behandlingsstatus.BEREGNET_AVSLAG,
+        Behandlingsstatus.BEREGNET_INNVILGET,
+        Behandlingsstatus.SIMULERT,
+        Behandlingsstatus.VILKÅRSVURDERT_INNVILGET,
+    ].some((status) => status === behandling.status);
