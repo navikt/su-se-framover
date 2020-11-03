@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { FormikErrors } from 'formik';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { OppChevron, NedChevron } from 'nav-frontend-chevron';
 import { Radio, RadioGruppe, RadioPanel } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
@@ -76,15 +75,6 @@ const Hjelpetekst = (props: { tittel: string; body: string }) => {
             </button>
             <Collapse isOpened={visMer}>{props.body}</Collapse>
         </div>
-    );
-};
-
-export const AnbefalerIkkeSøke = (props: { className?: string }) => {
-    const intl = useI18n({ messages: nb });
-    return (
-        <AlertStripe type="advarsel" className={props.className}>
-            {intl.formatMessage({ id: 'anbefalerIkkeSøke.message' })}
-        </AlertStripe>
     );
 };
 

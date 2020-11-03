@@ -425,6 +425,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.søktAndreYtelserIkkeBehandlet.label" />}
                             feil={formik.errors.søktAndreYtelserIkkeBehandlet}
+                            description={intl.formatMessage({ id: 'hjelpetekst.søktAndreYtelserIkkeBehandlet.body' })}
                             state={formik.values.søktAndreYtelserIkkeBehandlet}
                             onChange={(val) =>
                                 formik.setValues({

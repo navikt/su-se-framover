@@ -6,7 +6,7 @@ import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
-import { AnbefalerIkkeSøke, JaNeiSpørsmål } from '~/components/FormElements';
+import { JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { TypeOppholdstillatelse } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
@@ -133,7 +133,9 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             }
                         />
                         {formik.values.erFlyktning === false && (
-                            <AnbefalerIkkeSøke className={sharedStyles.marginBottom} />
+                            <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
+                                {intl.formatMessage({ id: 'ikkeRegistrertFlyktning.message' })}
+                            </AlertStripe>
                         )}
                         <JaNeiSpørsmål
                             id={'erNorskStatsborger'}
@@ -198,7 +200,9 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             />
                         )}
                         {formik.values.harOppholdstillatelse === false && (
-                            <AnbefalerIkkeSøke className={sharedStyles.marginBottom} />
+                            <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
+                                {intl.formatMessage({ id: 'ikkeLovligOpphold.message' })}
+                            </AlertStripe>
                         )}
                         {formik.values.typeOppholdstillatelse === 'midlertidig' && (
                             <JaNeiSpørsmål

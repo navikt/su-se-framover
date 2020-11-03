@@ -14,6 +14,12 @@ export default {
     'input.statsborger.andre.land.label': 'Har du statsborgerskap i andre land enn Norge?',
     'input.statsborger.andre.land.fritekst.label': 'Hvilke land har du statsborgerskap i?',
 
+    'ikkeRegistrertFlyktning.message':
+        'Du må ha offisiell flyktningstatus for å ha rett på supplerende stønad. Du kan fremdeles søke, men vil sannsynligvis få avslag.',
+
+    'ikkeLovligOpphold.message':
+        'For å ha rett på supplerende stønad må du ha lovlig opphold i Norge. Lovlig opphold er enten statsborgerskap eller oppholdstillatelse. Du kan fremdeles søke, men vil sannsynligvis få avslag.',
+
     'hjelpetekst.tittel': 'Hvordan vet jeg om jeg er registrert flyktning?',
     'hjelpetekst.body':
         'En flyktning er en person som fyller kravene til å få beskyttelse (asyl) i Norge. Hvis du er registrert flyktning har du mottatt et vedtak fra UDI om dette. Har du ikke offisiell flyktningstatus, har du ikke rett på supplerende stønad for uføre.',
