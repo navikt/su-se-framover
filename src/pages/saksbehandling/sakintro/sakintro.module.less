@@ -1,35 +1,58 @@
 @import '~/styles/variables.less';
 
-.container {
+.sakintroContainer {
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+
+    .tittel {
+        padding-top: @spacing-xs;
+        padding-left: 10rem;
+    }
+
+    .tittelLinje {
+        width: 100%;
+        margin-bottom: @spacing-s;
+    }
 }
 
-.behandlingListItem {
+.søknadOgUtbetalingContainer {
+    padding-left: 10rem;
+    padding-right: 10rem;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
 }
 
-.tittel {
-    margin-bottom: @spacing-s;
+.søknadsContainer {
+    margin-bottom: @spacing;
+
+    .søknadsContainerTittel {
+        margin-bottom: @spacing-xs;
+    }
+
+    .søknad {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: @spacing-xxs;
+    }
 }
 
-.undertittel {
-    margin-bottom: @spacing-xs;
-}
-
-.søknader > li {
-    margin-bottom: @spacing-xs;
-}
-
-.førstegangsbehandling {
+.behandlingContainer {
     display: flex;
-    justify-content: space-between;
 }
 
-.stansUtbetalinger {
-    margin-bottom: @spacing-xs;
+.knapper {
+    display: flex;
+    align-items: flex-end;
+}
+
+.ikonContainer {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+
+    .ikon {
+        margin-right: @spacing-xxs;
+    }
 }

@@ -1,93 +1,182 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import * as DateFns from 'date-fns';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Knapp } from 'nav-frontend-knapper';
+import Ikon from 'nav-frontend-ikoner-assets';
+import { Fareknapp, Flatknapp, Knapp } from 'nav-frontend-knapper';
+import ModalWrapper from 'nav-frontend-modal';
 import Panel from 'nav-frontend-paneler';
-import React from 'react';
+import { Element, Undertittel } from 'nav-frontend-typografi';
+import React, { useState } from 'react';
+import { FormattedDate, IntlShape } from 'react-intl';
 
+import { Person } from '~api/personApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { useI18n } from '~lib/hooks';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { KanStansesEllerGjenopptas, Sak } from '~types/Sak';
+import { KanStansesEllerGjenopptas } from '~types/Sak';
+import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
 
+import messages from './utbetalinger-nb';
 import styles from './utbetalinger.module.less';
 
-const Utbetalinger = (props: { sak: Sak }) => {
-    const { sak } = props;
-    const dispatch = useAppDispatch();
+import { rootId } from '~indexUtils';
 
+export const Utbetalinger = (props: {
+    søker: Person;
+    sakId: string;
+    utbetalingsperioder: Utbetalingsperiode[];
+    kanStansesEllerGjenopptas: KanStansesEllerGjenopptas;
+}) => {
+    const intl = useI18n({ messages });
+    const dispatch = useAppDispatch();
+    const { utbetalingsperioder, kanStansesEllerGjenopptas, søker } = props;
     const { stansUtbetalingerStatus, gjenopptaUtbetalingerStatus } = useAppSelector((s) => s.sak);
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+    ModalWrapper.setAppElement(document.getElementById(rootId));
 
     // TODO jah: Vi skal legge til dette per utbetalingslinje i backend, slik at den følger den faktiske implementasjonen
     // Tidligste utbetaling må være etter eller lik den første neste måned (nåværende backend impl).
     const kanStanses =
-        sak.utbetalingerKanStansesEllerGjenopptas === KanStansesEllerGjenopptas.STANS &&
-        sak.utbetalinger.some(
+        kanStansesEllerGjenopptas === KanStansesEllerGjenopptas.STANS &&
+        utbetalingsperioder.some(
             (u) =>
                 !DateFns.isBefore(DateFns.parseISO(u.tilOgMed), DateFns.startOfMonth(DateFns.addMonths(new Date(), 1)))
         );
 
     return (
-        <div className={styles.container}>
-            <ul className={styles.utbetalinger}>
-                {sak.utbetalinger.map((u) => (
-                    <li key={u.id}>
-                        <Panel border>
-                            <div>
-                                <p>Fra og med: {u.fraOgMed}</p>
-                                <p>Til og med: {u.tilOgMed}</p>
-                                <p>Beløp: {u.beløp}</p>
-                                <p>Type: {u.type}</p>
-                            </div>
-                        </Panel>
-                    </li>
-                ))}
-            </ul>
-            {kanStanses && (
-                <Knapp
-                    onClick={() => {
-                        if (!RemoteData.isPending(stansUtbetalingerStatus)) {
-                            dispatch(
-                                sakSlice.stansUtbetalinger({
-                                    sakId: props.sak.id,
-                                })
-                            );
+        <div className={styles.utbetalingContainer}>
+            <Undertittel className={styles.tittel}>
+                {intl.formatMessage({ id: 'display.stønadsperioder.tittel' })}
+            </Undertittel>
+            <Panel border>
+                <div className={styles.stønadsperiodeHeader}>
+                    <Undertittel>
+                        {<FormattedDate value={utbetalingsperioder[0].fraOgMed} month="2-digit" year="numeric" />} -{' '}
+                        {
+                            <FormattedDate
+                                value={utbetalingsperioder[utbetalingsperioder.length - 1].tilOgMed}
+                                month="2-digit"
+                                year="numeric"
+                            />
                         }
-                    }}
-                    spinner={RemoteData.isPending(stansUtbetalingerStatus)}
-                    className={styles.stansUtbetalinger}
+                    </Undertittel>
+                    {kanStanses ? (
+                        <div className={styles.ikonContainer}>
+                            <Ikon className={styles.ikon} kind="ok-sirkel-fyll" width={'24px'} />
+                            <p> {intl.formatMessage({ id: 'display.stønadsperioder.aktiv' })}</p>
+                        </div>
+                    ) : (
+                        <div className={styles.ikonContainer}>
+                            <Ikon className={styles.ikon} kind="advarsel-sirkel-fyll" width={'24px'} />
+                            <p> {intl.formatMessage({ id: 'display.stønadsperioder.stoppet' })}</p>
+                        </div>
+                    )}
+                </div>
+                <div className={styles.utbetalingsperioderContainer}>
+                    <div>
+                        <Element className={styles.utbetalingsperiodeTittel}>
+                            {intl.formatMessage({ id: 'display.utbetalingsperiode.tittel' })}
+                        </Element>
+                        {utbetalingsperioder.map((u) => {
+                            return <Utbetalingsperiode utbetalingsperiode={u} key={u.id} intl={intl} />;
+                        })}
+                    </div>
+                    <div className={styles.utbetalingKnappContainer}>
+                        {kanStanses ? (
+                            <Fareknapp onClick={() => setModalOpen(true)}>
+                                {intl.formatMessage({ id: 'display.utbetalingsperiode.stoppUtbetaling' })}
+                            </Fareknapp>
+                        ) : (
+                            <Knapp
+                                onClick={() => {
+                                    if (
+                                        props.kanStansesEllerGjenopptas === KanStansesEllerGjenopptas.GJENOPPTA &&
+                                        !RemoteData.isPending(gjenopptaUtbetalingerStatus)
+                                    ) {
+                                        dispatch(
+                                            sakSlice.gjenopptaUtbetalinger({
+                                                sakId: props.sakId,
+                                            })
+                                        );
+                                    }
+                                }}
+                                spinner={RemoteData.isPending(gjenopptaUtbetalingerStatus)}
+                            >
+                                {intl.formatMessage({ id: 'display.utbetalingsperiode.gjenopptaUtbetaling' })}
+                            </Knapp>
+                        )}
+                    </div>
+                </div>
+                <ModalWrapper
+                    isOpen={modalOpen}
+                    closeButton={true}
+                    onRequestClose={() => setModalOpen(false)}
+                    contentLabel={'stansUtbetalinger'}
                 >
-                    Stans utbetalinger
-                </Knapp>
-            )}
-            {sak.utbetalingerKanStansesEllerGjenopptas === KanStansesEllerGjenopptas.GJENOPPTA && (
-                <Knapp
-                    onClick={() => {
-                        if (!RemoteData.isPending(gjenopptaUtbetalingerStatus)) {
-                            dispatch(
-                                sakSlice.gjenopptaUtbetalinger({
-                                    sakId: props.sak.id,
-                                })
-                            );
-                        }
-                    }}
-                    spinner={RemoteData.isPending(gjenopptaUtbetalingerStatus)}
-                    className={styles.stansUtbetalinger}
-                >
-                    Gjenoppta utbetalinger
-                </Knapp>
-            )}
-            {RemoteData.isFailure(stansUtbetalingerStatus) && (
-                <AlertStripe type="feil">Klarte ikke stanse utbetalingene.</AlertStripe>
-            )}
-            {RemoteData.isSuccess(stansUtbetalingerStatus) && (
-                <AlertStripe type="suksess">Utbetalingene er stanset.</AlertStripe>
-            )}
-            {RemoteData.isFailure(gjenopptaUtbetalingerStatus) && (
-                <AlertStripe type="feil">Klarte ikke gjenoppta utbetalingene.</AlertStripe>
-            )}
-            {RemoteData.isSuccess(gjenopptaUtbetalingerStatus) && (
-                <AlertStripe type="suksess">Utbetalingene er gjenopptatt.</AlertStripe>
-            )}
+                    <div className={styles.modalContainer}>
+                        <Undertittel>
+                            {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetalingerTil' })}
+                            {søker.navn.fornavn} {søker.navn.mellomnavn} {søker.navn.etternavn}
+                        </Undertittel>
+                        <p>{intl.formatMessage({ id: 'display.utbetalingsperiode.bekreftStans' })}</p>
+                        <div className={styles.modalKnappContainer}>
+                            <Flatknapp
+                                onClick={() => setModalOpen(false)}
+                                spinner={RemoteData.isPending(stansUtbetalingerStatus)}
+                            >
+                                {intl.formatMessage({ id: 'display.utbetalingsperiode.avbryt' })}
+                            </Flatknapp>
+                            <Fareknapp
+                                onClick={() => {
+                                    if (kanStanses && !RemoteData.isPending(stansUtbetalingerStatus)) {
+                                        dispatch(
+                                            sakSlice.stansUtbetalinger({
+                                                sakId: props.sakId,
+                                            })
+                                        );
+                                    }
+                                }}
+                            >
+                                {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetaling' })}
+                            </Fareknapp>
+                        </div>
+                        {RemoteData.isFailure(stansUtbetalingerStatus) && (
+                            <AlertStripe type="feil">
+                                {intl.formatMessage({ id: 'display.utbetalingsperiode.klarteIkkeStanseUtbetaling' })}
+                            </AlertStripe>
+                        )}
+                        {RemoteData.isSuccess(stansUtbetalingerStatus) && (
+                            <AlertStripe type="suksess">
+                                {intl.formatMessage({ id: 'display.utbetalingsperiode.stansetUtbetaling' })}
+                            </AlertStripe>
+                        )}
+                    </div>
+                </ModalWrapper>
+                {RemoteData.isFailure(gjenopptaUtbetalingerStatus) && (
+                    <AlertStripe type="feil">
+                        {intl.formatMessage({ id: 'display.utbetalingsperiode.klarteIkkeGjenopptaUtbetaling' })}
+                    </AlertStripe>
+                )}
+                {RemoteData.isSuccess(gjenopptaUtbetalingerStatus) && (
+                    <AlertStripe type="suksess">
+                        {intl.formatMessage({ id: 'display.utbetalingsperiode.gjenopptattUtbetaling' })}
+                    </AlertStripe>
+                )}
+            </Panel>
+        </div>
+    );
+};
+
+const Utbetalingsperiode = (props: { utbetalingsperiode: Utbetalingsperiode; intl: IntlShape }) => {
+    return (
+        <div className={styles.utbetalingsperiode}>
+            <p>
+                {<FormattedDate value={props.utbetalingsperiode.fraOgMed} month="2-digit" year="numeric" />} -{' '}
+                {<FormattedDate value={props.utbetalingsperiode.tilOgMed} month="2-digit" year="numeric" />}
+            </p>
+            <p>{props.utbetalingsperiode.beløp} kr</p>
+            <p>{props.intl.formatMessage({ id: 'display.utbetalingsperiode.ordinærSats' })}</p>
         </div>
     );
 };

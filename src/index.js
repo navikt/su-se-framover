@@ -4,6 +4,7 @@ import { render } from 'react-dom';
 
 import * as Amplitude from '~lib/tracking/amplitude';
 
+import { rootId } from './indexUtils';
 import Root from './Root';
 
 // eslint-disable-next-line no-undef
@@ -17,7 +18,7 @@ if (process.env.NODE_ENV !== 'development') {
 
 Amplitude.init();
 
-render(<Root />, document.getElementById('root'));
+render(<Root />, document.getElementById(rootId));
 
 /* eslint-disable no-undef */
 if (module.hot) {
