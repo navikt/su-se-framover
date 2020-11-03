@@ -22,7 +22,6 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; søker: Per
         <div className={sharedStyles.container}>
             <form
                 onSubmit={(e) => {
-                    console.log(søknadFraStore);
                     e.preventDefault();
                     dispatch(
                         innsendingSlice.sendSøknad({

@@ -242,7 +242,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             }
 
             const res = await personApi.fetchPerson(fnr);
-            console.log(res);
             if (res.status === 'error') {
                 setPersonOppslagFeil({ statusCode: res.error.statusCode });
                 return;
