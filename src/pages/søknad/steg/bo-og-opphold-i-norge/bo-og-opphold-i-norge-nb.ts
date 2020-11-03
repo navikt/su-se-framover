@@ -12,4 +12,6 @@ export default {
     'input.ektefelleEllerSamboerFødselsdato.label': 'Fødselsdatoen til ektefelle eller samboer',
     'input.ektefelleEllerSamboerUnder67År.label': 'Er ektefelle eller samboer under 67 år?',
     'input.ektefelleEllerSamboerUførFlyktning.label': 'Er ektefelle eller samboer ufør flyktning?',
+    'ikkeOppholdINorge.message':
+        'For å ha rett på supplerende stønad må du bo og oppholde deg i Norge. Du kan fortsatt søke, men vil sannsynligvis få avslag.',
 };

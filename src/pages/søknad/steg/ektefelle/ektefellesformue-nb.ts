@@ -3,19 +3,19 @@ export default {
     'input.oppgiBeløp.label': 'Oppgi beløp på formue',
     'input.eierDuBolig.label': 'Eier ektefelle/samboer egen bolig?',
     'input.borIBolig.label': 'Bor ektefelle/samboer i boligen?',
-    'input.verdiPåBolig.label': 'Hva er verdien på boligen?',
+    'input.verdiPåBolig.label': 'Verdi på boligen',
     'input.boligBrukesTil.label': 'Hva brukes boligen til?',
     'input.eierMerEnnEnBolig.label': 'Eier ektefelle/samboer mer enn en bolig i Norge eller utlandet?',
 
-    'input.verdiPåEiendom.label': 'Hva er samlet verdi av eiendommene?',
+    'input.verdiPåEiendom.label': 'Samlet verdi av eiendommene',
     'input.eiendomBrukesTil.label': 'Hva brukes eiendommene til?',
 
     'input.depositumskonto.label': 'Har ektefelle/samboer en depositumskonto?',
-    'input.depositumsBeløp.label': 'Hva er beløpet i depositumskontoen?',
+    'input.depositumsBeløp.label': 'Beløp på depositumskontoen',
     'input.kontonummer.label': 'Kontonummer',
 
     'input.eierKjøretøy.label': 'Eier ektefelle/samboer bil, campingvogn eller kjøretøy?',
-    'input.verdiPåKjøretøyTotal.label': 'Hva er verdien av kjøretøyet?',
+    'input.verdiPåKjøretøyTotal.label': 'Verdien av kjøretøyet',
     'input.kjøretøyDeEier.label': 'Kjøretøy',
 
     'input.harInnskuddPåKonto.label': 'Har ektefelle/samboer innskudd stående på konto?',

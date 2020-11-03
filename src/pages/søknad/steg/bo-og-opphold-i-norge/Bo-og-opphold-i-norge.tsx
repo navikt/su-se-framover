@@ -1,11 +1,12 @@
 import fnrValidator from '@navikt/fnrvalidator';
 import { useFormik } from 'formik';
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
-import { AnbefalerIkkeSøke, JaNeiSpørsmål } from '~/components/FormElements';
+import { JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { DelerBoligMed } from '~features/søknad/types';
 import { isValidDayMonthYearFormat } from '~lib/dateUtils';
@@ -124,7 +125,9 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             }}
                         />
                         {formik.values.borOgOppholderSegINorge === false && (
-                            <AnbefalerIkkeSøke className={sharedStyles.marginBottom} />
+                            <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
+                                {intl.formatMessage({ id: 'ikkeOppholdINorge.message' })}
+                            </AlertStripe>
                         )}
 
                         <JaNeiSpørsmål
