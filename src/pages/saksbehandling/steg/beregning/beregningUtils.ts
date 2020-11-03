@@ -28,7 +28,7 @@ export const fradragstypeResourceId = (f: Fradragstype): string => {
     }
 };
 
-export const erGyldigBehandlingsstatus = (behandling: Behandling) =>
+export const erIGyldigStatusForÅKunneBeregne = (behandling: Behandling) =>
     [
         Behandlingsstatus.BEREGNET_AVSLAG,
         Behandlingsstatus.BEREGNET_INNVILGET,
