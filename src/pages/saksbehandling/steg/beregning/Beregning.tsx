@@ -32,7 +32,7 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './beregning-nb';
 import styles from './beregning.module.less';
-import { erGyldigBehandlingsstatus } from './beregningUtils';
+import { erIGyldigStatusForÅKunneBeregne } from './beregningUtils';
 import VisBeregning from './VisBeregning';
 
 interface FormData {
@@ -56,7 +56,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         dispatch(sakSlice.getUtledetSatsInfo({ sakId: props.sakId, behandlingId: props.behandling.id }));
     }, []);
 
-    if (!erGyldigBehandlingsstatus(props.behandling)) {
+    if (!erIGyldigStatusForÅKunneBeregne(props.behandling)) {
         return <div>Behandlingen er ikke ferdig.</div>;
     }
 
