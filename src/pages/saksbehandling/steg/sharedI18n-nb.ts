@@ -12,6 +12,7 @@ export default {
     'knapp.tilbake': 'Tilbake',
     'knapp.neste': 'Neste',
     'knapp.lagreOgfortsettSenere': 'Lagre og fortsett senere',
+    'knapp.tilVedtaket': 'Gå til vedtaket',
 
     'radio.label.ja': 'Ja',
     'radio.label.nei': 'Nei',

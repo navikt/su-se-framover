@@ -64,6 +64,10 @@ const Vedtak = (props: Props) => {
         });
     };
 
+    const sisteVurderteVilkår = mapToVilkårsinformasjon(behandling.behandlingsinformasjon)
+        .reverse()
+        .find((vilkår) => vilkår.status !== VilkårVurderingStatus.IkkeVurdert);
+
     if (behandling.status === Behandlingsstatus.SIMULERT || erAvslått(behandling)) {
         return (
             <div>
@@ -94,7 +98,7 @@ const Vedtak = (props: Props) => {
                     <Link
                         to={
                             erAvslått(behandling) && behandling.status !== Behandlingsstatus.BEREGNET_AVSLAG
-                                ? vilkårUrl(Vilkårtype.PersonligOppmøte)
+                                ? vilkårUrl(sisteVurderteVilkår?.vilkårtype ?? Vilkårtype.PersonligOppmøte)
                                 : vilkårUrl(Vilkårtype.Beregning)
                         }
                         className="knapp"
