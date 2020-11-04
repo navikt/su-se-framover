@@ -6,6 +6,10 @@ export default {
     'button.fjernReiserad.label': 'Fjern rad',
     'button.leggTilReiserad.label': 'Legg til',
     'display.antallDagerIUtlandet': 'Dager i utland: ',
-    'display.fyllAntallDager': 'Fyll ut alle dato-felter for å regne antall dager',
-    'display.passert90Dager': 'Du har mer enn 90 dager i utenlandsopphold, og kan dermed få avslag på søknaden',
+    'display.passert90Dager':
+        'Du har planer om å oppholde deg i utlandet i mer enn 90 dager.' +
+        '<linebreak></linebreak>' +
+        'Da mister du retten til supplerende stønad den dagen du reiser til utlandet.' +
+        '<linebreak></linebreak>' +
+        'Utreisedagen og innreisedagen regnes som opphold i Norge.',
 };

@@ -223,48 +223,17 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
-    const DagerIUtlandet = () => {
+    const antallDagerIUtlandet = React.useMemo(() => {
         const harReistDager = formik.values.harReistTilUtlandetSiste90dager
             ? kalkulerTotaltAntallDagerIUtlandet(formik.values.harReistDatoer)
             : 0;
         const skalReiseDager = formik.values.skalReiseTilUtlandetNeste12Måneder
             ? kalkulerTotaltAntallDagerIUtlandet(formik.values.skalReiseDatoer)
             : 0;
-        const totalDagerIUtlandet = harReistDager + skalReiseDager;
+        return harReistDager + skalReiseDager;
+    }, [formik.values.harReistDatoer, formik.values.skalReiseDatoer]);
 
-        if (isNaN(totalDagerIUtlandet)) {
-            return (
-                <div className={styles.dagerIUtlandetContainer}>
-                    <p className={styles.dagerIUtland}>{intl.formatMessage({ id: 'display.fyllAntallDager' })}</p>
-                </div>
-            );
-        }
-
-        if (totalDagerIUtlandet > 90) {
-            return (
-                <div className={styles.dagerIUtlandetContainer}>
-                    <p className={styles.dagerIUtland}>
-                        {formik.values.harReistDatoer.length || formik.values.skalReiseDatoer.length
-                            ? intl.formatMessage({ id: 'display.antallDagerIUtlandet' }) + totalDagerIUtlandet
-                            : ''}
-                    </p>
-                    <AlertStripeAdvarsel>{intl.formatMessage({ id: 'display.passert90Dager' })}</AlertStripeAdvarsel>
-                </div>
-            );
-        }
-
-        return (
-            <div className={styles.dagerIUtlandetContainer}>
-                <p className={styles.dagerIUtland}>
-                    {' '}
-                    {formik.values.harReistDatoer.length || formik.values.skalReiseDatoer.length
-                        ? intl.formatMessage({ id: 'display.antallDagerIUtlandet' }) + totalDagerIUtlandet
-                        : ''}
-                </p>
-            </div>
-        );
-    };
-
+    console.log(antallDagerIUtlandet);
     return (
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
@@ -397,7 +366,18 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             />
                         )}
                     </div>
-                    <DagerIUtlandet />
+                    {antallDagerIUtlandet > 90 && (
+                        <AlertStripeAdvarsel className={styles.passert90DagerAdvarsel}>
+                            {intl.formatMessage(
+                                { id: 'display.passert90Dager' },
+                                {
+                                    // eslint-disable-next-line react/display-name
+                                    linebreak: () => <br />,
+                                }
+                            )}
+                        </AlertStripeAdvarsel>
+                    )}
+
                     <Feiloppsummering
                         className={sharedStyles.marginBottom}
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
