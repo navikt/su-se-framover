@@ -74,33 +74,43 @@ const ÅpneSøknader = (props: {
             <Ingress className={styles.søknadsContainerTittel}>
                 {props.intl.formatMessage({ id: 'display.åpneSøknader.tittel' })}
             </Ingress>
-            {props.åpneSøknader.map((s) => {
-                const behandlinger = props.behandlinger.filter((b) => b.søknad.id === s.id);
-                const isBehandlingerEmpty = behandlinger.length === 0;
+            <ol>
+                {props.åpneSøknader.map((s) => {
+                    const behandlinger = props.behandlinger.filter((b) => b.søknad.id === s.id);
+                    const isBehandlingerEmpty = behandlinger.length === 0;
 
-                return (
-                    <Panel border key={s.id} className={styles.søknad}>
-                        <div>
-                            <p> {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}</p>
-                            <p>
-                                {props.intl.formatMessage({ id: 'display.søknad.mottatt' })}{' '}
-                                {props.intl.formatDate(s.opprettet)}
-                            </p>
-                        </div>
-                        {isBehandlingerEmpty ? (
-                            <div className={styles.knapper}>
-                                <StartSøknadsbehandlingKnapper sakId={props.sakId} søknadId={s.id} intl={props.intl} />
-                            </div>
-                        ) : (
-                            <SøknadsbehandlingStartetKnapper
-                                sakId={props.sakId}
-                                intl={props.intl}
-                                behandlinger={behandlinger}
-                            />
-                        )}
-                    </Panel>
-                );
-            })}
+                    return (
+                        <li key={s.id}>
+                            <Panel border className={styles.søknad}>
+                                <div>
+                                    <p> {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}</p>
+                                    <p>
+                                        {props.intl.formatMessage({ id: 'display.søknad.mottatt' })}{' '}
+                                        {props.intl.formatDate(s.opprettet)}
+                                    </p>
+                                </div>
+                                {isBehandlingerEmpty ? (
+                                    <div className={styles.knapper}>
+                                        <StartSøknadsbehandlingKnapper
+                                            sakId={props.sakId}
+                                            søknadId={s.id}
+                                            intl={props.intl}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className={styles.knapper}>
+                                        <SøknadsbehandlingStartetKnapper
+                                            sakId={props.sakId}
+                                            intl={props.intl}
+                                            behandlinger={behandlinger}
+                                        />
+                                    </div>
+                                )}
+                            </Panel>
+                        </li>
+                    );
+                })}
+            </ol>
         </div>
     );
 };
@@ -162,9 +172,9 @@ const SøknadsbehandlingStartetKnapper = (props: { behandlinger: Behandling[]; s
     const user = useUserContext();
 
     return (
-        <>
+        <ol>
             {props.behandlinger.map((b) => (
-                <div key={b.id} className={styles.behandlingContainer}>
+                <li key={b.id} className={styles.behandlingContainer}>
                     {erTilAttestering(b) && (!user.isAttestant || user.navIdent === b.saksbehandler) ? (
                         <div className={styles.ikonContainer}>
                             <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
@@ -209,9 +219,9 @@ const SøknadsbehandlingStartetKnapper = (props: { behandlinger: Behandling[]; s
                             )
                         )}
                     </div>
-                </div>
+                </li>
             ))}
-        </>
+        </ol>
     );
 };
 
@@ -223,31 +233,35 @@ const AvslåtteSøknader = (props: { avslåtteSøknader: Søknad[]; intl: IntlSh
                     id: 'display.avslåtteSøknader.tittel',
                 })}
             </Ingress>
-            {props.avslåtteSøknader.map((søknad) => (
-                <Panel border key={søknad.id} className={styles.søknad}>
-                    <div>
-                        <p>
-                            {props.intl.formatMessage({
-                                id: 'display.søknad.typeSøknad',
-                            })}
-                        </p>
-                        <p>
-                            {props.intl.formatMessage({
-                                id: 'display.søknad.mottatt',
-                            })}{' '}
-                            {props.intl.formatDate(søknad.opprettet)}
-                        </p>
-                    </div>
-                    <div className={styles.ikonContainer}>
-                        <Ikon className={styles.ikon} kind="feil-sirkel-fyll" width={'24px'} />
-                        <p>
-                            {props.intl.formatMessage({
-                                id: 'display.søknad.avslått',
-                            })}
-                        </p>
-                    </div>
-                </Panel>
-            ))}
+            <ol>
+                {props.avslåtteSøknader.map((søknad) => (
+                    <li key={søknad.id}>
+                        <Panel border className={styles.søknad}>
+                            <div>
+                                <p>
+                                    {props.intl.formatMessage({
+                                        id: 'display.søknad.typeSøknad',
+                                    })}
+                                </p>
+                                <p>
+                                    {props.intl.formatMessage({
+                                        id: 'display.søknad.mottatt',
+                                    })}{' '}
+                                    {props.intl.formatDate(søknad.opprettet)}
+                                </p>
+                            </div>
+                            <div className={styles.ikonContainer}>
+                                <Ikon className={styles.ikon} kind="feil-sirkel-fyll" width={'24px'} />
+                                <p>
+                                    {props.intl.formatMessage({
+                                        id: 'display.søknad.avslått',
+                                    })}
+                                </p>
+                            </div>
+                        </Panel>
+                    </li>
+                ))}
+            </ol>
         </div>
     );
 };

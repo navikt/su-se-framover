@@ -19,8 +19,6 @@ import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
 import messages from './utbetalinger-nb';
 import styles from './utbetalinger.module.less';
 
-import { rootId } from '~indexUtils';
-
 export const Utbetalinger = (props: {
     søker: Person;
     sakId: string;
@@ -32,8 +30,6 @@ export const Utbetalinger = (props: {
     const { utbetalingsperioder, kanStansesEllerGjenopptas, søker } = props;
     const { stansUtbetalingerStatus, gjenopptaUtbetalingerStatus } = useAppSelector((s) => s.sak);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
-
-    ModalWrapper.setAppElement(document.getElementById(rootId));
 
     // TODO jah: Vi skal legge til dette per utbetalingslinje i backend, slik at den følger den faktiske implementasjonen
     // Tidligste utbetaling må være etter eller lik den første neste måned (nåværende backend impl).
@@ -52,14 +48,12 @@ export const Utbetalinger = (props: {
             <Panel border>
                 <div className={styles.stønadsperiodeHeader}>
                     <Undertittel>
-                        {<FormattedDate value={utbetalingsperioder[0].fraOgMed} month="2-digit" year="numeric" />} -{' '}
-                        {
-                            <FormattedDate
-                                value={utbetalingsperioder[utbetalingsperioder.length - 1].tilOgMed}
-                                month="2-digit"
-                                year="numeric"
-                            />
-                        }
+                        <FormattedDate value={utbetalingsperioder[0].fraOgMed} month="2-digit" year="numeric" /> -{' '}
+                        <FormattedDate
+                            value={utbetalingsperioder[utbetalingsperioder.length - 1].tilOgMed}
+                            month="2-digit"
+                            year="numeric"
+                        />
                     </Undertittel>
                     {kanStanses ? (
                         <div className={styles.ikonContainer}>
@@ -78,9 +72,15 @@ export const Utbetalinger = (props: {
                         <Element className={styles.utbetalingsperiodeTittel}>
                             {intl.formatMessage({ id: 'display.utbetalingsperiode.tittel' })}
                         </Element>
-                        {utbetalingsperioder.map((u) => {
-                            return <Utbetalingsperiode utbetalingsperiode={u} key={u.id} intl={intl} />;
-                        })}
+                        <ol>
+                            {utbetalingsperioder.map((u) => {
+                                return (
+                                    <li key={u.id}>
+                                        <UtbetalingsperiodeListItem utbetalingsperiode={u} intl={intl} />
+                                    </li>
+                                );
+                            })}
+                        </ol>
                     </div>
                     <div className={styles.utbetalingKnappContainer}>
                         {kanStanses ? (
@@ -168,12 +168,12 @@ export const Utbetalinger = (props: {
     );
 };
 
-const Utbetalingsperiode = (props: { utbetalingsperiode: Utbetalingsperiode; intl: IntlShape }) => {
+const UtbetalingsperiodeListItem = (props: { utbetalingsperiode: Utbetalingsperiode; intl: IntlShape }) => {
     return (
         <div className={styles.utbetalingsperiode}>
             <p>
-                {<FormattedDate value={props.utbetalingsperiode.fraOgMed} month="2-digit" year="numeric" />} -{' '}
-                {<FormattedDate value={props.utbetalingsperiode.tilOgMed} month="2-digit" year="numeric" />}
+                <FormattedDate value={props.utbetalingsperiode.fraOgMed} month="2-digit" year="numeric" /> -{' '}
+                <FormattedDate value={props.utbetalingsperiode.tilOgMed} month="2-digit" year="numeric" />
             </p>
             <p>{props.utbetalingsperiode.beløp} kr</p>
             <p>{props.intl.formatMessage({ id: 'display.utbetalingsperiode.ordinærSats' })}</p>
