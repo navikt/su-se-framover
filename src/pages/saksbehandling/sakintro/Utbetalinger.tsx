@@ -7,7 +7,7 @@ import ModalWrapper from 'nav-frontend-modal';
 import Panel from 'nav-frontend-paneler';
 import { Element, Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
-import { FormattedDate, IntlShape } from 'react-intl';
+import { IntlShape } from 'react-intl';
 
 import { Person } from '~api/personApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -48,12 +48,11 @@ export const Utbetalinger = (props: {
             <Panel border>
                 <div className={styles.stønadsperiodeHeader}>
                     <Undertittel>
-                        <FormattedDate value={utbetalingsperioder[0].fraOgMed} month="2-digit" year="numeric" /> -{' '}
-                        <FormattedDate
-                            value={utbetalingsperioder[utbetalingsperioder.length - 1].tilOgMed}
-                            month="2-digit"
-                            year="numeric"
-                        />
+                        {intl.formatDate(utbetalingsperioder[0].fraOgMed, { month: '2-digit', year: 'numeric' })} -{' '}
+                        {intl.formatDate(utbetalingsperioder[utbetalingsperioder.length - 1].tilOgMed, {
+                            month: '2-digit',
+                            year: 'numeric',
+                        })}
                     </Undertittel>
                     {kanStanses ? (
                         <div className={styles.ikonContainer}>
@@ -116,7 +115,7 @@ export const Utbetalinger = (props: {
                 >
                     <div className={styles.modalContainer}>
                         <Undertittel>
-                            {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetalingerTil' })}
+                            {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetalingerTil' })}{' '}
                             {søker.navn.fornavn} {søker.navn.mellomnavn} {søker.navn.etternavn}
                         </Undertittel>
                         <p>{intl.formatMessage({ id: 'display.utbetalingsperiode.bekreftStans' })}</p>
@@ -172,8 +171,8 @@ const UtbetalingsperiodeListItem = (props: { utbetalingsperiode: Utbetalingsperi
     return (
         <div className={styles.utbetalingsperiode}>
             <p>
-                <FormattedDate value={props.utbetalingsperiode.fraOgMed} month="2-digit" year="numeric" /> -{' '}
-                <FormattedDate value={props.utbetalingsperiode.tilOgMed} month="2-digit" year="numeric" />
+                {props.intl.formatDate(props.utbetalingsperiode.fraOgMed, { month: '2-digit', year: 'numeric' })} -{' '}
+                {props.intl.formatDate(props.utbetalingsperiode.tilOgMed, { month: '2-digit', year: 'numeric' })}
             </p>
             <p>{props.utbetalingsperiode.beløp} kr</p>
             <p>{props.intl.formatMessage({ id: 'display.utbetalingsperiode.ordinærSats' })}</p>
