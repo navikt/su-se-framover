@@ -366,7 +366,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             />
                         )}
                     </div>
-                    {antallDagerIUtlandet > 90 && (
+                    {antallDagerIUtlandet >= 90 && (
                         <AlertStripeAdvarsel className={styles.passert90DagerAdvarsel}>
                             {intl.formatMessage(
                                 { id: 'display.passert90Dager' },
