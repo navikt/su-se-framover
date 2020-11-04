@@ -1,6 +1,7 @@
 const variables = {
     SU_SE_BAKOVER_URL: 'http://localhost:8080',
     AMPLITUDE_API_KEY: '',
+    FEATURE_HENDELSESLOGG: false,
 };
 
 // eslint-disable-next-line

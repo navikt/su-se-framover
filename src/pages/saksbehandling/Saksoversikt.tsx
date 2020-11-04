@@ -14,6 +14,7 @@ import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
 import { getGender, showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import FeatureToggles from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -121,7 +122,7 @@ const Saksoversikt = () => {
                                             </Route>
                                             <Route path="*">
                                                 <Sakintro sak={sak} />
-                                                <Hendelseslogg sak={sak} />
+                                                {FeatureToggles.Hendelseslogg && <Hendelseslogg sak={sak} />}
                                             </Route>
                                         </Switch>
                                     </div>
