@@ -40,7 +40,7 @@ interface FormData {
 }
 
 const schema = yup.object<FormData>({
-    møttPersonlig: yup.boolean().required(),
+    møttPersonlig: yup.boolean().required().typeError('Du må svare for å gå videre til neste steg.'),
     grunnForManglendePersonligOppmøte: yup
         .mixed<GrunnForManglendePersonligOppmøte>()
         .nullable()

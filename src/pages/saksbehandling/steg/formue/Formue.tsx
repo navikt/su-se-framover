@@ -53,7 +53,7 @@ const schema = yup.object<FormData>({
     verdier: VerdierSchema.required(),
     ektefellesVerdier: VerdierSchema.required(),
     begrunnelse: yup.string().defined(),
-    borSøkerMedEktefelle: yup.boolean().required(),
+    borSøkerMedEktefelle: yup.boolean().required().typeError('Feltet må fylles ut'),
     ektefellesFnr: yup.mixed<string>().when('borSøkerMedEktefelle', {
         is: true,
         then: yup.mixed<string>().test('erGyldigFnr', 'Fnr er ikke gyldig', (fnr) => {
