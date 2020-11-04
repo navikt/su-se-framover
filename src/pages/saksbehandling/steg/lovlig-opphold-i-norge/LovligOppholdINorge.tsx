@@ -69,26 +69,6 @@ function createFaktaBlokkArray(intl: IntlShape, søknadsInnhold: SøknadInnhold)
         );
     }
 
-    if (søknadsInnhold.oppholdstillatelse.typeOppholdstillatelse === 'midlertidig') {
-        arr.push(
-            createFaktaBlokkObject(
-                søknadsInnhold.oppholdstillatelse.oppholdstillatelseMindreEnnTreMåneder,
-                intl.formatMessage({ id: 'display.fraSøknad.oppholdstillatelseMindreEnn3måneder' }),
-                intl
-            )
-        );
-    }
-
-    if (søknadsInnhold.oppholdstillatelse.oppholdstillatelseMindreEnnTreMåneder) {
-        arr.push(
-            createFaktaBlokkObject(
-                søknadsInnhold.oppholdstillatelse.oppholdstillatelseForlengelse,
-                intl.formatMessage({ id: 'display.fraSøknad.søktOmForlengelse' }),
-                intl
-            )
-        );
-    }
-
     if (søknadsInnhold.oppholdstillatelse.statsborgerskapAndreLand) {
         arr.push(
             createFaktaBlokkObject(

@@ -32,8 +32,6 @@ export const sendSøknad = createAsyncThunk<
             erNorskStatsborger: søknad.flyktningstatus.erNorskStatsborger!,
             harOppholdstillatelse: søknad.flyktningstatus.harOppholdstillatelse,
             typeOppholdstillatelse: søknad.flyktningstatus.typeOppholdstillatelse,
-            oppholdstillatelseMindreEnnTreMåneder: søknad.flyktningstatus.oppholdstillatelseMindreEnnTreMåneder,
-            oppholdstillatelseForlengelse: søknad.flyktningstatus.oppholdstillatelseForlengelse,
             statsborgerskapAndreLand: søknad.flyktningstatus.statsborgerskapAndreLand!,
             statsborgerskapAndreLandFritekst: søknad.flyktningstatus.statsborgerskapAndreLandFritekst,
         },

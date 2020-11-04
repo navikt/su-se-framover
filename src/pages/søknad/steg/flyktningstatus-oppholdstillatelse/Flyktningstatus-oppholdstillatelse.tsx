@@ -37,18 +37,6 @@ const schema = yup.object<FormData>({
             is: true,
             then: yup.mixed().nullable().oneOf(['permanent', 'midlertidig']).required(),
         }),
-    oppholdstillatelseMindreEnnTreMåneder: yup.boolean().nullable(true).defined().when('typeOppholdstillatelse', {
-        is: 'midlertidig',
-        then: yup.boolean().nullable().required(),
-    }),
-    oppholdstillatelseForlengelse: yup
-        .boolean()
-        .nullable(true)
-        .defined()
-        .when('oppholdstillatelseMindreEnnTreMåneder', {
-            is: true,
-            then: yup.boolean().nullable().required(),
-        }),
     statsborgerskapAndreLand: yup.boolean().nullable().required(),
     statsborgerskapAndreLandFritekst: yup
         .string()
@@ -73,8 +61,6 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                 erNorskStatsborger: values.erNorskStatsborger,
                 harOppholdstillatelse: values.harOppholdstillatelse,
                 typeOppholdstillatelse: values.typeOppholdstillatelse,
-                oppholdstillatelseMindreEnnTreMåneder: values.oppholdstillatelseMindreEnnTreMåneder,
-                oppholdstillatelseForlengelse: values.oppholdstillatelseForlengelse,
                 statsborgerskapAndreLand: values.statsborgerskapAndreLand,
                 statsborgerskapAndreLandFritekst: values.statsborgerskapAndreLandFritekst,
             })
@@ -86,8 +72,6 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
             erNorskStatsborger: flyktningstatusFraStore.erNorskStatsborger,
             harOppholdstillatelse: flyktningstatusFraStore.harOppholdstillatelse,
             typeOppholdstillatelse: flyktningstatusFraStore.typeOppholdstillatelse,
-            oppholdstillatelseMindreEnnTreMåneder: flyktningstatusFraStore.oppholdstillatelseMindreEnnTreMåneder,
-            oppholdstillatelseForlengelse: flyktningstatusFraStore.oppholdstillatelseForlengelse,
             statsborgerskapAndreLand: flyktningstatusFraStore.statsborgerskapAndreLand,
             statsborgerskapAndreLandFritekst: flyktningstatusFraStore.statsborgerskapAndreLandFritekst,
         },
@@ -149,8 +133,6 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                     erNorskStatsborger: val,
                                     harOppholdstillatelse: null,
                                     typeOppholdstillatelse: null,
-                                    oppholdstillatelseMindreEnnTreMåneder: null,
-                                    oppholdstillatelseForlengelse: null,
                                 })
                             }
                         />
@@ -166,8 +148,6 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                         ...formik.values,
                                         harOppholdstillatelse: val,
                                         typeOppholdstillatelse: null,
-                                        oppholdstillatelseMindreEnnTreMåneder: null,
-                                        oppholdstillatelseForlengelse: null,
                                     })
                                 }
                             />
@@ -192,8 +172,6 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                     formik.setValues({
                                         ...formik.values,
                                         typeOppholdstillatelse: value,
-                                        oppholdstillatelseMindreEnnTreMåneder: null,
-                                        oppholdstillatelseForlengelse: null,
                                     });
                                 }}
                                 checked={formik.values.typeOppholdstillatelse?.toString()}
@@ -204,42 +182,13 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 {intl.formatMessage({ id: 'ikkeLovligOpphold.message' })}
                             </AlertStripe>
                         )}
+
                         {formik.values.typeOppholdstillatelse === 'midlertidig' && (
-                            <JaNeiSpørsmål
-                                id={'oppholdstillatelseMindreEnnTreMåneder'}
-                                className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="input.midlertidig.oppholdstillatelse.opphører.label" />}
-                                feil={formik.errors.oppholdstillatelseMindreEnnTreMåneder}
-                                state={formik.values.oppholdstillatelseMindreEnnTreMåneder}
-                                onChange={(val) =>
-                                    formik.setValues({
-                                        ...formik.values,
-                                        oppholdstillatelseMindreEnnTreMåneder: val,
-                                        oppholdstillatelseForlengelse: null,
-                                    })
-                                }
-                            />
-                        )}
-                        {formik.values.oppholdstillatelseMindreEnnTreMåneder === true && (
-                            <JaNeiSpørsmål
-                                id={'oppholdstillatelseForlengelse'}
-                                className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="input.oppholdtillatelse.forlengelse.label" />}
-                                feil={formik.errors.oppholdstillatelseForlengelse}
-                                state={formik.values.oppholdstillatelseForlengelse}
-                                onChange={(val) =>
-                                    formik.setValues({
-                                        ...formik.values,
-                                        oppholdstillatelseForlengelse: val,
-                                    })
-                                }
-                            />
-                        )}
-                        {formik.values.oppholdstillatelseForlengelse === false && (
                             <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
-                                Du kan fremdeles søke, men du bør søke om forlengelse så snart som mulig.
+                                {intl.formatMessage({ id: 'midlertidigForlengelse.message' })}
                             </AlertStripe>
                         )}
+
                         <JaNeiSpørsmål
                             id={'statsborgerskapAndreLand'}
                             className={sharedStyles.sporsmal}
