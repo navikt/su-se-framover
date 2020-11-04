@@ -121,7 +121,7 @@ const Saksoversikt = () => {
                                                 </div>
                                             </Route>
                                             <Route path="*">
-                                                <Sakintro sak={sak} />
+                                                <Sakintro sak={sak} søker={søker} />
                                                 {FeatureToggles.Hendelseslogg && <Hendelseslogg sak={sak} />}
                                             </Route>
                                         </Switch>

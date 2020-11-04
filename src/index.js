@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/browser';
+import ModalWrapper from 'nav-frontend-modal';
 import * as React from 'react';
 import { render } from 'react-dom';
 
@@ -16,6 +17,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 Amplitude.init();
+ModalWrapper.setAppElement(document.getElementById('root'));
 
 render(<Root />, document.getElementById('root'));
 

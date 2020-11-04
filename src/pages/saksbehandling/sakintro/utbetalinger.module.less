@@ -1,12 +1,66 @@
 @import '~/styles/variables.less';
 
-.container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.utbetalingContainer {
+    margin-bottom: @spacing-xl;
 }
 
-.utbetalinger > li {
+.tittel {
     margin-bottom: @spacing-xs;
+}
+
+.stønadsperiodeHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: @spacing;
+}
+
+.ikonContainer {
+    display: flex;
+    align-items: center;
+
+    .ikon {
+        margin-right: @spacing-xxs;
+    }
+}
+
+.utbetalingsperioderContainer {
+    display: flex;
+    justify-content: space-between;
+
+    .utbetalingsperiodeTittel {
+        margin-bottom: @spacing-xs;
+    }
+
+    .utbetalingsperiode {
+        display: flex;
+        margin-bottom: @spacing-xs;
+
+        > :not(:last-child) {
+            margin-right: @spacing;
+        }
+
+        :nth-child(2) {
+            width: 60px;
+        }
+    }
+
+    .utbetalingKnappContainer {
+        display: flex;
+        align-items: flex-end;
+    }
+}
+
+.modalContainer {
+    display: flex;
+    flex-direction: column;
+    padding: @spacing-s @spacing-s;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+
+    .modalKnappContainer {
+        align-self: flex-end;
+    }
 }
