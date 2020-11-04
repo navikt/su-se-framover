@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik, FormikErrors } from 'formik';
-import { Datovelger } from 'nav-datovelger';
+import { Datepicker } from 'nav-datovelger';
 import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Label, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
@@ -116,14 +116,13 @@ const MultiTidsperiodevelger = (props: {
                             <Label htmlFor={utreisedatoId}>
                                 <FormattedMessage id="input.utreisedato.label" />
                             </Label>
-                            <Datovelger
-                                input={{
+                            <Datepicker
+                                inputProps={{
                                     name: 'utreisedato',
                                     placeholder: 'dd.mm.åååå',
-                                    id: utreisedatoId,
                                 }}
-                                valgtDato={periode.utreisedato}
-                                id={utreisedatoId}
+                                value={periode.utreisedato}
+                                inputId={utreisedatoId}
                                 onChange={(value) => {
                                     if (!value) {
                                         return;
@@ -144,15 +143,14 @@ const MultiTidsperiodevelger = (props: {
                             <Label htmlFor={innreisedatoId}>
                                 <FormattedMessage id="input.innreisedato.label" />
                             </Label>
-                            <Datovelger
-                                input={{
+                            <Datepicker
+                                inputId={innreisedatoId}
+                                inputProps={{
                                     name: 'innreisedato',
                                     placeholder: 'dd.mm.åååå',
-                                    id: innreisedatoId,
                                 }}
-                                valgtDato={periode.innreisedato}
-                                avgrensninger={{ minDato: periode.utreisedato }}
-                                id={innreisedatoId}
+                                value={periode.innreisedato}
+                                limitations={{ minDate: periode.utreisedato }}
                                 onChange={(value) => {
                                     if (!value) {
                                         return;

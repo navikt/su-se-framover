@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Datovelger } from 'nav-datovelger';
+import { Datepicker } from 'nav-datovelger';
 import { Fareknapp, Knapp } from 'nav-frontend-knapper';
 import { Label } from 'nav-frontend-skjema';
 import { Feilmelding } from 'nav-frontend-typografi';
@@ -57,15 +57,14 @@ const Trukket = (props: TrukketProps) => {
                 <Label htmlFor={'datoSøkerTrakkSøknad'}>
                     {intl.formatMessage({ id: 'display.trekking.datoSøkerTrakkSøknad' })}
                 </Label>
-                <Datovelger
-                    input={{
+                <Datepicker
+                    inputProps={{
                         name: 'datoSøkerTrakkSøknad',
                         placeholder: 'dd.mm.åååå',
-                        id: 'datoSøkerTrakkSøknad',
                     }}
-                    id={'datoSøkerTrakkSøknad'}
-                    valgtDato={props.datoSøkerTrakkSøknad?.toString()}
-                    avgrensninger={{ minDato: props.søknadOpprettet, maksDato: new Date().toISOString() }}
+                    inputId={'datoSøkerTrakkSøknad'}
+                    value={props.datoSøkerTrakkSøknad?.toString()}
+                    limitations={{ minDate: props.søknadOpprettet, maxDate: new Date().toISOString() }}
                     onChange={(value) => {
                         if (!value) {
                             return;
