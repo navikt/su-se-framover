@@ -298,6 +298,13 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                                     datoForUtskrivelse: value,
                                                 });
                                             }}
+                                            limitations={
+                                                formik.values.datoForInnlegelse
+                                                    ? {
+                                                          minDate: formik.values.datoForInnlegelse,
+                                                      }
+                                                    : undefined
+                                            }
                                             disabled={formik.values.fortsattInnlagt}
                                         />
                                     </div>

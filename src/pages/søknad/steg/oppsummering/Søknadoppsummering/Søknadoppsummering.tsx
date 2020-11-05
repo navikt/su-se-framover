@@ -194,7 +194,13 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
 
                     <Oppsummeringsfelt
                         label={<FormattedMessage id="input.innlagtPåInstitusjon.label" />}
-                        verdi={søknad.boOgOpphold.innlagtPåinstitusjon}
+                        verdi={
+                            søknad.boOgOpphold.innlagtPåinstitusjon
+                                ? 'Ja'
+                                : søknad.boOgOpphold.innlagtPåinstitusjon === false
+                                ? 'Nei'
+                                : 'Ubesvart'
+                        }
                     />
 
                     {søknad.boOgOpphold.innlagtPåinstitusjon && (
