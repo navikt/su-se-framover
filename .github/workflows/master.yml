@@ -34,7 +34,7 @@ jobs:
     deploy-to-dev:
         name: Deploy to NAIS
         needs: build
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/saksoversikt-fix'
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v1
