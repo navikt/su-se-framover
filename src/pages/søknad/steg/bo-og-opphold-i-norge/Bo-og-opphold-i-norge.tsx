@@ -1,7 +1,9 @@
 import fnrValidator from '@navikt/fnrvalidator';
+import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
+import { Datepicker } from 'nav-datovelger';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
+import { Checkbox, Feiloppsummering, Label, RadioPanelGruppe, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -20,6 +22,7 @@ import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
 
 import messages from './bo-og-opphold-i-norge-nb';
+import styles from './bo-og-opphold-i-norge.module.less';
 import EktefellePartnerSamboer from './EktefellePartnerSamboer';
 import { toEktefellePartnerSamboer } from './utils';
 
@@ -68,6 +71,35 @@ const schema = yup.object<FormData>({
                     return value.erUførFlyktning !== null;
                 }),
         }),
+    innlagtPåinstitusjon: yup.boolean().required().nullable(),
+    datoForInnlegelse: yup.string().nullable().defined().when('innlagtPåinstitusjon', {
+        is: true,
+        then: yup.string().required(),
+    }),
+    datoForUtskrivelse: yup
+        .string()
+        .nullable()
+        .defined()
+        .test({
+            name: 'datoForUtskivelse',
+            message: 'Dato for utskrivelse må være etter innlegelse',
+            test: function (val) {
+                const innlagtPåinstitusjon = this.parent.innlagtPåinstitusjon;
+                const datoForInnlegelse = this.parent.datoForInnlegelse;
+                const fortsattInnlagt = this.parent.fortsattInnlagt;
+
+                if (innlagtPåinstitusjon) {
+                    if (fortsattInnlagt) {
+                        return true;
+                    } else {
+                        return DateFns.isAfter(new Date(val), new Date(datoForInnlegelse));
+                    }
+                }
+
+                return true;
+            },
+        }),
+    fortsattInnlagt: yup.boolean(),
 });
 
 const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
@@ -83,6 +115,10 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 delerBoligMedPersonOver18: values.delerBoligMedPersonOver18,
                 delerBoligMed: values.delerBoligMed,
                 ektefellePartnerSamboer: values.ektefellePartnerSamboer,
+                innlagtPåinstitusjon: values.innlagtPåinstitusjon,
+                datoForInnlegelse: values.datoForInnlegelse,
+                datoForUtskrivelse: values.datoForUtskrivelse,
+                fortsattInnlagt: values.fortsattInnlagt,
             })
         );
     };
@@ -93,6 +129,10 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
             delerBoligMedPersonOver18: boOgOppholdFraStore.delerBoligMedPersonOver18,
             delerBoligMed: boOgOppholdFraStore.delerBoligMed,
             ektefellePartnerSamboer: boOgOppholdFraStore.ektefellePartnerSamboer,
+            innlagtPåinstitusjon: boOgOppholdFraStore.innlagtPåinstitusjon,
+            datoForInnlegelse: boOgOppholdFraStore.datoForInnlegelse,
+            datoForUtskrivelse: boOgOppholdFraStore.datoForUtskrivelse,
+            fortsattInnlagt: boOgOppholdFraStore.fortsattInnlagt,
         },
         onSubmit: (values) => {
             save(values);
@@ -189,6 +229,99 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 value={formik.values.ektefellePartnerSamboer}
                                 feil={formik.errors.ektefellePartnerSamboer}
                             />
+                        )}
+
+                        <JaNeiSpørsmål
+                            id="innlagtPåinstitusjon"
+                            className={sharedStyles.sporsmal}
+                            legend={<FormattedMessage id="input.innlagtPåInstitusjon.label" />}
+                            feil={formik.errors.innlagtPåinstitusjon}
+                            state={formik.values.innlagtPåinstitusjon}
+                            onChange={(val) => {
+                                formik.setValues({
+                                    ...formik.values,
+                                    innlagtPåinstitusjon: val,
+                                    datoForInnlegelse: null,
+                                    datoForUtskrivelse: null,
+                                    fortsattInnlagt: false,
+                                });
+                            }}
+                        />
+
+                        {formik.values.innlagtPåinstitusjon ? (
+                            <div>
+                                <div className={styles.datoForInnlegelseContainer}>
+                                    <Label htmlFor={'datoForInnlegelse'}>
+                                        <FormattedMessage id="input.datoForInnlegelse.label" />
+                                    </Label>
+                                    <Datepicker
+                                        inputProps={{
+                                            name: 'datoForInnlegelse',
+                                            placeholder: 'dd.mm.åååå',
+                                        }}
+                                        value={formik.values.datoForInnlegelse ?? ''}
+                                        inputId={'datoForInnlegelse'}
+                                        onChange={(value) => {
+                                            if (!value) {
+                                                return;
+                                            }
+                                            formik.setValues({
+                                                ...formik.values,
+                                                datoForInnlegelse: value,
+                                            });
+                                        }}
+                                    />
+                                    {formik.errors.datoForInnlegelse && (
+                                        <SkjemaelementFeilmelding>
+                                            {formik.errors.datoForInnlegelse}
+                                        </SkjemaelementFeilmelding>
+                                    )}
+                                </div>
+                                <div className={styles.datoForUtskrivelseContainer}>
+                                    <div className={styles.datoForUtskrivelse}>
+                                        <Label htmlFor={'datoForUtskrivelse'}>
+                                            <FormattedMessage id="input.datoForUtskrivelse.label" />
+                                        </Label>
+                                        <Datepicker
+                                            inputProps={{
+                                                name: 'datoForUtskrivelse',
+                                                placeholder: 'dd.mm.åååå',
+                                            }}
+                                            value={formik.values.datoForUtskrivelse ?? ''}
+                                            inputId={'datoForUtskrivelse'}
+                                            onChange={(value) => {
+                                                if (!value) {
+                                                    return;
+                                                }
+                                                formik.setValues({
+                                                    ...formik.values,
+                                                    datoForUtskrivelse: value,
+                                                });
+                                            }}
+                                            disabled={formik.values.fortsattInnlagt}
+                                        />
+                                    </div>
+                                    <Checkbox
+                                        name={'fortsattInnlagt'}
+                                        label={<FormattedMessage id={'input.fortsattInnlagt.label'} />}
+                                        checked={formik.values.fortsattInnlagt}
+                                        onChange={() =>
+                                            formik.setValues({
+                                                ...formik.values,
+                                                fortsattInnlagt: !formik.values.fortsattInnlagt,
+                                                datoForUtskrivelse: null,
+                                            })
+                                        }
+                                    />
+                                </div>
+                                {formik.errors.datoForUtskrivelse && (
+                                    <SkjemaelementFeilmelding>
+                                        {formik.errors.datoForUtskrivelse}
+                                    </SkjemaelementFeilmelding>
+                                )}
+                            </div>
+                        ) : (
+                            ''
                         )}
                     </div>
                     <Feiloppsummering

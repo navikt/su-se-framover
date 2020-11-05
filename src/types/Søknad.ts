@@ -46,6 +46,9 @@ export interface SøknadInnhold {
         delerBoligMedVoksne: boolean;
         delerBoligMed: Nullable<DelerBoligMed>;
         ektefellePartnerSamboer: EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr | null;
+        datoForInnlegelse: Nullable<string>;
+        datoForUtskrivelse: Nullable<string>;
+        fortsattInnlagt: boolean;
     };
     utenlandsopphold: {
         registrertePerioder: Nullable<Array<{ utreisedato: string; innreisedato: string }>>;

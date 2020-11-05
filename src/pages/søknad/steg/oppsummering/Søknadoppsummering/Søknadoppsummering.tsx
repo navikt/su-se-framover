@@ -191,6 +191,36 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                 />
                             </>
                         )}
+
+                    <Oppsummeringsfelt
+                        label={<FormattedMessage id="input.innlagtPåInstitusjon.label" />}
+                        verdi={søknad.boOgOpphold.innlagtPåinstitusjon}
+                    />
+
+                    {søknad.boOgOpphold.innlagtPåinstitusjon && (
+                        <>
+                            <Oppsummeringsfelt
+                                label={<FormattedMessage id="input.datoForInnlegelse.label" />}
+                                verdi={
+                                    søknad.boOgOpphold.datoForInnlegelse &&
+                                    reverseStr(søknad.boOgOpphold.datoForInnlegelse)
+                                }
+                            />
+
+                            {søknad.boOgOpphold.datoForUtskrivelse ? (
+                                <Oppsummeringsfelt
+                                    label={<FormattedMessage id="input.datoForUtskrivelse.label" />}
+                                    verdi={reverseStr(søknad.boOgOpphold.datoForUtskrivelse)}
+                                />
+                            ) : (
+                                <Oppsummeringsfelt
+                                    label={<FormattedMessage id="input.fortsattInnlagt.label" />}
+                                    verdi={søknad.boOgOpphold.fortsattInnlagt ? 'Ja' : 'Nei'}
+                                />
+                            )}
+                        </>
+                    )}
+
                     <EndreSvar path={Søknadsteg.BoOgOppholdINorge} søker={søker} />
                 </Ekspanderbartpanel>
 
