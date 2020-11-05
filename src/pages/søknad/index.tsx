@@ -216,6 +216,7 @@ const index = () => {
                                 <ForVeileder
                                     forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
                                     nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Oppsummering })}
+                                    søker={søker}
                                 />
                             ) : step === Søknadsteg.Oppsummering ? (
                                 <Oppsummering

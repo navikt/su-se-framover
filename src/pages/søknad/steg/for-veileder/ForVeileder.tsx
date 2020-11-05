@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import { Person } from '~api/personApi';
 import TextProvider, { Languages } from '~components/TextProvider';
 import { Vergemål } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
@@ -32,11 +33,12 @@ const schema = yup.object<FormData>({
     }),
 });
 
-const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string }) => {
+const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Person }) => {
     const history = useHistory();
     const forVeileder = useAppSelector((s) => s.soknad.forVeileder);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
+    const søker: Person = props.søker;
 
     const save = (values: FormData) =>
         dispatch(
@@ -71,7 +73,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 >
                     <Panel border className={styles.panelMargin}>
                         <p className={styles.boldP}>{intl.formatMessage({ id: 'info.telefon.tittel' })}</p>
-                        <p>2222 5555</p>
+                        <p>{`+${søker.telefonnummer.landskode} ${søker.telefonnummer.nummer}`}</p>
                         <AlertStripeInfo className={styles.marginTopXSS}>
                             {intl.formatMessage({ id: 'info.telefon.body' })}
                         </AlertStripeInfo>
