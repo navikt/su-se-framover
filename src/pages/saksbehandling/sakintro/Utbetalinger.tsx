@@ -31,6 +31,10 @@ export const Utbetalinger = (props: {
     const { stansUtbetalingerStatus, gjenopptaUtbetalingerStatus } = useAppSelector((s) => s.sak);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
+    if (utbetalingsperioder.length === 0) {
+        return <div></div>;
+    }
+
     // TODO jah: Vi skal legge til dette per utbetalingslinje i backend, slik at den følger den faktiske implementasjonen
     // Tidligste utbetaling må være etter eller lik den første neste måned (nåværende backend impl).
     const kanStanses =
