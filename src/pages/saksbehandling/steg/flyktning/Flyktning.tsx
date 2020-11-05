@@ -10,14 +10,17 @@ import { eqFlyktning } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Behandlingsstatus } from '~types/Behandling';
 import { Flyktning as FlyktningType, FlyktningStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
+import styles from '../vilkår.module.less';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './flyktning-nb';
@@ -44,6 +47,15 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
+    const goToVedtak = () => {
+        history.push(
+            Routes.saksbehandlingVedtak.createURL({
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+            })
+        );
+    };
+
     const formik = useFormik<FormData>({
         initialValues: {
             status: props.behandling.behandlingsinformasjon.flyktning?.status ?? null,
@@ -58,6 +70,11 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
             };
 
             if (eqFlyktning.equals(flyktningValues, props.behandling.behandlingsinformasjon.flyktning)) {
+                if (props.behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+                    goToVedtak();
+                    return;
+                }
+
                 history.push(props.nesteUrl);
                 return;
             }
@@ -72,6 +89,12 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                 })
             );
             if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+                if (res.payload.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+                    goToVedtak();
+
+                    return;
+                }
+
                 history.push(props.nesteUrl);
             }
         },
@@ -158,6 +181,13 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 () => null
                             )
                         )}
+
+                        {props.behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG && (
+                            <AlertStripe className={styles.avslagAdvarsel} type="info">
+                                {intl.formatMessage({ id: 'display.avslag.advarsel' })}
+                            </AlertStripe>
+                        )}
+
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
@@ -179,6 +209,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                     })
                                 );
                             }}
+                            behandling={props.behandling}
                         />
                     </form>
                 ),

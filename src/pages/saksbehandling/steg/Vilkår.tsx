@@ -36,6 +36,15 @@ const Vilkår = (props: { sak: Sak }) => {
             vilkar: vilkårType,
         });
 
+    const vedtakUrl = Routes.saksbehandlingVedtak.createURL({
+        sakId: urlParams.sakId,
+        behandlingId: behandling.id,
+    });
+
+    const saksoversiktUrl = Routes.saksoversiktValgtSak.createURL({
+        sakId: urlParams.sakId,
+    });
+
     return (
         <div className={styles.container}>
             <Framdriftsindikator behandling={behandling} vilkår={vilkar} />
@@ -44,9 +53,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={vilkårUrl(Vilkårtype.Uførhet)}>
                         <Uførhet
                             behandling={behandling}
-                            forrigeUrl={Routes.saksoversiktValgtSak.createURL({
-                                sakId: urlParams.sakId,
-                            })}
+                            forrigeUrl={saksoversiktUrl}
                             nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
                             sakId={urlParams.sakId}
                         />
@@ -105,10 +112,7 @@ const Vilkår = (props: { sak: Sak }) => {
                             forrigeUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
                             nesteUrl={
                                 behandling.status == Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
-                                    ? Routes.saksbehandlingVedtak.createURL({
-                                          sakId: urlParams.sakId,
-                                          behandlingId: behandling.id,
-                                      })
+                                    ? vedtakUrl
                                     : vilkårUrl(Vilkårtype.Beregning)
                             }
                             sakId={urlParams.sakId}
@@ -118,10 +122,7 @@ const Vilkår = (props: { sak: Sak }) => {
                         <Beregning
                             behandling={behandling}
                             forrigeUrl={vilkårUrl(Vilkårtype.Sats)}
-                            nesteUrl={Routes.saksbehandlingVedtak.createURL({
-                                sakId: urlParams.sakId,
-                                behandlingId: behandling.id,
-                            })}
+                            nesteUrl={vedtakUrl}
                             sakId={urlParams.sakId}
                         />
                     </Route>
