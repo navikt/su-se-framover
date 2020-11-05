@@ -9,7 +9,7 @@ import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useMemo, useState } from 'react';
 
 import * as Routes from '~/lib/routes';
-import { fetchBrev } from '~api/brevApi';
+import { fetchBrev } from '~api/pdfApi';
 import { Person } from '~api/personApi';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
 import { erAvslått, erIverksatt, erTilAttestering } from '~features/behandling/behandlingUtils';

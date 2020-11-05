@@ -1,11 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import { Knapp } from 'nav-frontend-knapper';
+import Lenke from 'nav-frontend-lenker';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { fetchSøknad } from '~api/pdfApi';
 import * as personSlice from '~features/person/person.slice';
 import * as søknadslice from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
@@ -52,7 +54,7 @@ const Kvittering = () => {
                         {intl.formatMessage({ id: 'knapp.tilbake' })}
                     </Knapp>
                 )}
-                <Hovedknapp
+                <Knapp
                     onClick={() => {
                         dispatch(personSlice.default.actions.resetSøker());
                         dispatch(søknadslice.default.actions.resetSøknad());
@@ -60,7 +62,18 @@ const Kvittering = () => {
                     }}
                 >
                     {intl.formatMessage({ id: 'kvittering.nySøknad' })}
-                </Hovedknapp>
+                </Knapp>
+
+                <Lenke
+                    href={'#'}
+                    onClick={() =>
+                        fetchSøknad('INSERT SØKNAD-ID HERE').then((res) => {
+                            if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
+                        })
+                    }
+                >
+                    Skriv ut søknad
+                </Lenke>
             </div>
         </div>
     );
