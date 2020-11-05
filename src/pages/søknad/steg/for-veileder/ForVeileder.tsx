@@ -38,7 +38,9 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
     const forVeileder = useAppSelector((s) => s.soknad.forVeileder);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
-    const søker: Person = props.søker;
+    const telefonnummer = props.søker.telefonnummer
+        ? `+${props.søker.telefonnummer.landskode} ${props.søker.telefonnummer.nummer}`
+        : 'Ikke registrert telefonnummer';
 
     const save = (values: FormData) =>
         dispatch(
@@ -73,7 +75,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
                 >
                     <Panel border className={styles.panelMargin}>
                         <p className={styles.boldP}>{intl.formatMessage({ id: 'info.telefon.tittel' })}</p>
-                        <p>{`+${søker.telefonnummer.landskode} ${søker.telefonnummer.nummer}`}</p>
+                        <p>{telefonnummer}</p>
                         <AlertStripeInfo className={styles.marginTopXSS}>
                             {intl.formatMessage({ id: 'info.telefon.body' })}
                         </AlertStripeInfo>
