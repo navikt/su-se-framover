@@ -47,6 +47,15 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
+    const goToVedtak = () => {
+        history.push(
+            Routes.saksbehandlingVedtak.createURL({
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+            })
+        );
+    };
+
     const formik = useFormik<FormData>({
         initialValues: {
             status: props.behandling.behandlingsinformasjon.flyktning?.status ?? null,
@@ -61,6 +70,11 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
             };
 
             if (eqFlyktning.equals(flyktningValues, props.behandling.behandlingsinformasjon.flyktning)) {
+                if (props.behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+                    goToVedtak();
+                    return;
+                }
+
                 history.push(props.nesteUrl);
                 return;
             }
@@ -76,12 +90,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
             );
             if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
                 if (res.payload.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
-                    history.push(
-                        Routes.saksbehandlingVedtak.createURL({
-                            sakId: props.sakId,
-                            behandlingId: props.behandling.id,
-                        })
-                    );
+                    goToVedtak();
 
                     return;
                 }
