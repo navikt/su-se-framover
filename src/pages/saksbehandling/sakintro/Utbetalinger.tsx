@@ -31,8 +31,6 @@ export const Utbetalinger = (props: {
     const { stansUtbetalingerStatus, gjenopptaUtbetalingerStatus } = useAppSelector((s) => s.sak);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-    console.log(utbetalingsperioder.length);
-
     if (utbetalingsperioder.length === 0) {
         return <div></div>;
     }
