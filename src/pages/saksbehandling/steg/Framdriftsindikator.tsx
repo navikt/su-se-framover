@@ -1,3 +1,4 @@
+import { Element } from 'nav-frontend-typografi';
 import React from 'react';
 
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
@@ -7,13 +8,17 @@ import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import styles from './framdriftsindikator.module.less';
 
-const Item = (props: { vilkar: Vilkårtype; status: VilkårVurderingStatus }) => {
+const Item = (props: { vilkar: Vilkårtype; status: VilkårVurderingStatus; aktivtVilkår: Vilkårtype }) => {
     return (
         <div className={styles.item}>
             <div className={styles.iconAndLineContainer}>
                 <VilkårvurderingStatusIcon status={props.status} />
             </div>
-            <p>{vilkårTittelFormatted(props.vilkar)}</p>
+            {props.vilkar === props.aktivtVilkår ? (
+                <Element>{vilkårTittelFormatted(props.vilkar)}</Element>
+            ) : (
+                <p>{vilkårTittelFormatted(props.vilkar)}</p>
+            )}
         </div>
     );
 };
@@ -25,7 +30,7 @@ const Framdriftsindikator = (props: { behandling: Behandling; vilkår: Vilkårty
     return (
         <ol className={styles.framdriftsindikator}>
             {vilkårrekkefølge.map((v) => (
-                <Item vilkar={v.vilkårtype} status={v.status} key={v.vilkårtype} />
+                <Item vilkar={v.vilkårtype} status={v.status} key={v.vilkårtype} aktivtVilkår={props.vilkår} />
             ))}
         </ol>
     );

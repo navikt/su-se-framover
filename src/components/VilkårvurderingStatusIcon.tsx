@@ -8,6 +8,8 @@ const iconWidth = '24px';
 export const VilkårvurderingStatusIcon = (props: { status: VilkårVurderingStatus; className?: string }) => {
     switch (props.status) {
         case VilkårVurderingStatus.IkkeVurdert:
+            return <div style={{ width: iconWidth }}></div>;
+        case VilkårVurderingStatus.Uavklart:
             return <Ikon kind="advarsel-sirkel-fyll" className={props.className} width={iconWidth} />;
         case VilkårVurderingStatus.IkkeOk:
             return <Ikon kind="feil-sirkel-fyll" className={props.className} width={iconWidth} />;

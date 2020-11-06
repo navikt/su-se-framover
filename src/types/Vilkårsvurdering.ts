@@ -12,6 +12,7 @@ export enum VilkårVurderingStatus {
     IkkeVurdert = 'IKKE_VURDERT',
     Ok = 'OK',
     IkkeOk = 'IKKE_OK',
+    Uavklart = 'UAVKLART',
 }
 
 export enum Vilkårtype {
