@@ -224,14 +224,10 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
     const antallDagerIUtlandet = React.useMemo(() => {
-        const harReistDager = formik.values.harReistTilUtlandetSiste90dager
-            ? kalkulerTotaltAntallDagerIUtlandet(formik.values.harReistDatoer)
-            : 0;
-        const skalReiseDager = formik.values.skalReiseTilUtlandetNeste12Måneder
+        return formik.values.skalReiseTilUtlandetNeste12Måneder
             ? kalkulerTotaltAntallDagerIUtlandet(formik.values.skalReiseDatoer)
             : 0;
-        return harReistDager + skalReiseDager;
-    }, [formik.values.harReistDatoer, formik.values.skalReiseDatoer]);
+    }, [formik.values.skalReiseDatoer]);
 
     return (
         <RawIntlProvider value={intl}>
