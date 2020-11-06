@@ -72,7 +72,7 @@ const schema = yup.object<FormData>({
                 }),
         }),
     innlagtPåinstitusjon: yup.boolean().required().nullable(),
-    datoForInnlegelse: yup.string().nullable().defined().when('innlagtPåinstitusjon', {
+    datoForInnleggelse: yup.string().nullable().defined().when('innlagtPåinstitusjon', {
         is: true,
         then: yup.string().required(),
     }),
@@ -82,17 +82,17 @@ const schema = yup.object<FormData>({
         .defined()
         .test({
             name: 'datoForUtskivelse',
-            message: 'Dato for utskrivelse må være etter innlegelse',
+            message: 'Dato for utskrivelse må være etter innleggelse',
             test: function (val) {
                 const innlagtPåinstitusjon = this.parent.innlagtPåinstitusjon;
-                const datoForInnlegelse = this.parent.datoForInnlegelse;
+                const datoForInnleggelse = this.parent.datoForInnleggelse;
                 const fortsattInnlagt = this.parent.fortsattInnlagt;
 
                 if (innlagtPåinstitusjon) {
                     if (fortsattInnlagt) {
                         return true;
                     } else {
-                        return DateFns.isAfter(new Date(val), new Date(datoForInnlegelse));
+                        return DateFns.isAfter(new Date(val), new Date(datoForInnleggelse));
                     }
                 }
 
@@ -116,7 +116,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 delerBoligMed: values.delerBoligMed,
                 ektefellePartnerSamboer: values.ektefellePartnerSamboer,
                 innlagtPåinstitusjon: values.innlagtPåinstitusjon,
-                datoForInnlegelse: values.datoForInnlegelse,
+                datoForInnleggelse: values.datoForInnleggelse,
                 datoForUtskrivelse: values.datoForUtskrivelse,
                 fortsattInnlagt: values.fortsattInnlagt,
             })
@@ -130,7 +130,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
             delerBoligMed: boOgOppholdFraStore.delerBoligMed,
             ektefellePartnerSamboer: boOgOppholdFraStore.ektefellePartnerSamboer,
             innlagtPåinstitusjon: boOgOppholdFraStore.innlagtPåinstitusjon,
-            datoForInnlegelse: boOgOppholdFraStore.datoForInnlegelse,
+            datoForInnleggelse: boOgOppholdFraStore.datoForInnleggelse,
             datoForUtskrivelse: boOgOppholdFraStore.datoForUtskrivelse,
             fortsattInnlagt: boOgOppholdFraStore.fortsattInnlagt,
         },
@@ -177,12 +177,12 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             feil={formik.errors.delerBoligMedPersonOver18}
                             state={formik.values.delerBoligMedPersonOver18}
                             onChange={(val) => {
-                                formik.setValues({
-                                    ...formik.values,
+                                formik.setValues((v) => ({
+                                    ...v,
                                     delerBoligMedPersonOver18: val,
                                     delerBoligMed: null,
                                     ektefellePartnerSamboer: null,
-                                });
+                                }));
                             }}
                         />
                         {formik.values.delerBoligMedPersonOver18 && (
@@ -241,7 +241,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     innlagtPåinstitusjon: val,
-                                    datoForInnlegelse: null,
+                                    datoForInnleggelse: null,
                                     datoForUtskrivelse: null,
                                     fortsattInnlagt: false,
                                 });
@@ -250,30 +250,30 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         {formik.values.innlagtPåinstitusjon ? (
                             <div>
-                                <div className={styles.datoForInnlegelseContainer}>
-                                    <Label htmlFor={'datoForInnlegelse'}>
-                                        <FormattedMessage id="input.datoForInnlegelse.label" />
+                                <div className={styles.datoForInnleggelseContainer}>
+                                    <Label htmlFor={'datoForInnleggelse'}>
+                                        <FormattedMessage id="input.datoForInnleggelse.label" />
                                     </Label>
                                     <Datepicker
                                         inputProps={{
-                                            name: 'datoForInnlegelse',
+                                            name: 'datoForInnleggelse',
                                             placeholder: 'dd.mm.åååå',
                                         }}
-                                        value={formik.values.datoForInnlegelse ?? ''}
-                                        inputId={'datoForInnlegelse'}
+                                        value={formik.values.datoForInnleggelse ?? ''}
+                                        inputId={'datoForInnleggelse'}
                                         onChange={(value) => {
                                             if (!value) {
                                                 return;
                                             }
-                                            formik.setValues({
-                                                ...formik.values,
-                                                datoForInnlegelse: value,
-                                            });
+                                            formik.setValues((v) => ({
+                                                ...v,
+                                                datoForInnleggelse: value,
+                                            }));
                                         }}
                                     />
-                                    {formik.errors.datoForInnlegelse && (
+                                    {formik.errors.datoForInnleggelse && (
                                         <SkjemaelementFeilmelding>
-                                            {formik.errors.datoForInnlegelse}
+                                            {formik.errors.datoForInnleggelse}
                                         </SkjemaelementFeilmelding>
                                     )}
                                 </div>
@@ -293,15 +293,15 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                                 if (!value) {
                                                     return;
                                                 }
-                                                formik.setValues({
-                                                    ...formik.values,
+                                                formik.setValues((v) => ({
+                                                    ...v,
                                                     datoForUtskrivelse: value,
-                                                });
+                                                }));
                                             }}
                                             limitations={
-                                                formik.values.datoForInnlegelse
+                                                formik.values.datoForInnleggelse
                                                     ? {
-                                                          minDate: formik.values.datoForInnlegelse,
+                                                          minDate: formik.values.datoForInnleggelse,
                                                       }
                                                     : undefined
                                             }
@@ -313,11 +313,11 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                         label={<FormattedMessage id={'input.fortsattInnlagt.label'} />}
                                         checked={formik.values.fortsattInnlagt}
                                         onChange={() =>
-                                            formik.setValues({
-                                                ...formik.values,
-                                                fortsattInnlagt: !formik.values.fortsattInnlagt,
+                                            formik.setValues((v) => ({
+                                                ...v,
+                                                fortsattInnlagt: !v.fortsattInnlagt,
                                                 datoForUtskrivelse: null,
-                                            })
+                                            }))
                                         }
                                     />
                                 </div>

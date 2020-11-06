@@ -20,7 +20,7 @@ export interface SøknadState {
         delerBoligMed: Nullable<DelerBoligMed>;
         ektefellePartnerSamboer: Nullable<EPSFormData>;
         innlagtPåinstitusjon: Nullable<boolean>;
-        datoForInnlegelse: Nullable<string>;
+        datoForInnleggelse: Nullable<string>;
         datoForUtskrivelse: Nullable<string>;
         fortsattInnlagt: boolean;
     };
@@ -132,7 +132,7 @@ const initialState: SøknadState = {
         delerBoligMed: null,
         ektefellePartnerSamboer: null,
         innlagtPåinstitusjon: null,
-        datoForInnlegelse: null,
+        datoForInnleggelse: null,
         datoForUtskrivelse: null,
         fortsattInnlagt: false,
     },

@@ -24,7 +24,7 @@ interface Saksbehandler {
     navIdent: string;
 }
 interface InnlagtPåInstitusjon {
-    datoForInnlegelse: Nullable<string>;
+    datoForInnleggelse: Nullable<string>;
     datoForUtskrivelse: Nullable<string>;
     fortsattInnlagt: boolean;
 }

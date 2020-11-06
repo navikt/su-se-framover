@@ -14,7 +14,7 @@ export default {
     'input.ektefelleEllerSamboerUførFlyktning.label': 'Er ektefelle eller samboer ufør flyktning?',
 
     'input.innlagtPåInstitusjon.label': 'Har du vært innlagt på institusjon de siste tre månedene?',
-    'input.datoForInnlegelse.label': 'Dato for innleggelse',
+    'input.datoForInnleggelse.label': 'Dato for innleggelse',
     'input.datoForUtskrivelse.label': 'Dato for utskrivelse',
     'input.fortsattInnlagt.label': 'Fortsatt innlagt',
 

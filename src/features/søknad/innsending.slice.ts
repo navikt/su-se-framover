@@ -42,7 +42,7 @@ export const sendSøknad = createAsyncThunk<
             ektefellePartnerSamboer: toEktefellePartnerSamboer(søknad.boOgOpphold.ektefellePartnerSamboer),
             innlagtPåInstitusjon: søknad.boOgOpphold.innlagtPåinstitusjon
                 ? {
-                      datoForInnlegelse: søknad.boOgOpphold.datoForInnlegelse,
+                      datoForInnleggelse: søknad.boOgOpphold.datoForInnleggelse,
                       datoForUtskrivelse: søknad.boOgOpphold.datoForUtskrivelse,
                       fortsattInnlagt: søknad.boOgOpphold.fortsattInnlagt,
                   }
