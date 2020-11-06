@@ -233,7 +233,6 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
         return harReistDager + skalReiseDager;
     }, [formik.values.harReistDatoer, formik.values.skalReiseDatoer]);
 
-    console.log(antallDagerIUtlandet);
     return (
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>

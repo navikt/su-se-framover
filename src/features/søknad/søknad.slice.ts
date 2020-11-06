@@ -19,6 +19,10 @@ export interface SøknadState {
         delerBoligMedPersonOver18: Nullable<boolean>;
         delerBoligMed: Nullable<DelerBoligMed>;
         ektefellePartnerSamboer: Nullable<EPSFormData>;
+        innlagtPåinstitusjon: Nullable<boolean>;
+        datoForInnleggelse: Nullable<string>;
+        datoForUtskrivelse: Nullable<string>;
+        fortsattInnlagt: boolean;
     };
     formue: {
         eierBolig: Nullable<boolean>;
@@ -127,6 +131,10 @@ const initialState: SøknadState = {
         delerBoligMedPersonOver18: null,
         delerBoligMed: null,
         ektefellePartnerSamboer: null,
+        innlagtPåinstitusjon: null,
+        datoForInnleggelse: null,
+        datoForUtskrivelse: null,
+        fortsattInnlagt: false,
     },
     formue: initialFormue,
     ektefelle: {

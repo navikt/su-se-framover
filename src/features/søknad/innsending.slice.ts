@@ -40,6 +40,13 @@ export const sendSøknad = createAsyncThunk<
             delerBoligMedVoksne: søknad.boOgOpphold.delerBoligMedPersonOver18!,
             delerBoligMed: søknad.boOgOpphold.delerBoligMed,
             ektefellePartnerSamboer: toEktefellePartnerSamboer(søknad.boOgOpphold.ektefellePartnerSamboer),
+            innlagtPåInstitusjon: søknad.boOgOpphold.innlagtPåinstitusjon
+                ? {
+                      datoForInnleggelse: søknad.boOgOpphold.datoForInnleggelse,
+                      datoForUtskrivelse: søknad.boOgOpphold.datoForUtskrivelse,
+                      fortsattInnlagt: søknad.boOgOpphold.fortsattInnlagt,
+                  }
+                : null,
         },
         utenlandsopphold: {
             registrertePerioder: søknad.utenlandsopphold.harReistDatoer,

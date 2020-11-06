@@ -23,6 +23,11 @@ export enum LukkSøknadBegrunnelse {
 interface Saksbehandler {
     navIdent: string;
 }
+interface InnlagtPåInstitusjon {
+    datoForInnleggelse: Nullable<string>;
+    datoForUtskrivelse: Nullable<string>;
+    fortsattInnlagt: boolean;
+}
 
 export interface SøknadInnhold {
     personopplysninger: {
@@ -46,6 +51,7 @@ export interface SøknadInnhold {
         delerBoligMedVoksne: boolean;
         delerBoligMed: Nullable<DelerBoligMed>;
         ektefellePartnerSamboer: EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr | null;
+        innlagtPåInstitusjon: Nullable<InnlagtPåInstitusjon>;
     };
     utenlandsopphold: {
         registrertePerioder: Nullable<Array<{ utreisedato: string; innreisedato: string }>>;

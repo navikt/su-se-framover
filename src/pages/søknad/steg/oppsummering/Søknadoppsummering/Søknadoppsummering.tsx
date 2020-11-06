@@ -1,6 +1,6 @@
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import React from 'react';
-import { RawIntlProvider, FormattedMessage } from 'react-intl';
+import { RawIntlProvider, FormattedMessage, FormattedDate } from 'react-intl';
 
 import stegMessages from '~/pages/søknad/nb';
 import boOgOppholdMessages from '~/pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
@@ -24,10 +24,6 @@ import InntektsOppsummering from '../components/InntektsOppsummering';
 import { Oppsummeringsfelt } from '../components/Oppsummeringsfelt';
 
 import styles from './oppsummering.module.less';
-
-const reverseStr = (str: string) => {
-    return str.split('-').reverse().join('-');
-};
 
 const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søker: Person }) => {
     const intl = useI18n({
@@ -191,6 +187,47 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                 />
                             </>
                         )}
+
+                    <Oppsummeringsfelt
+                        label={<FormattedMessage id="input.innlagtPåInstitusjon.label" />}
+                        verdi={
+                            søknad.boOgOpphold.innlagtPåinstitusjon
+                                ? 'Ja'
+                                : søknad.boOgOpphold.innlagtPåinstitusjon === false
+                                ? 'Nei'
+                                : 'Ubesvart'
+                        }
+                    />
+
+                    {søknad.boOgOpphold.innlagtPåinstitusjon && (
+                        <>
+                            <Oppsummeringsfelt
+                                label={<FormattedMessage id="input.datoForInnleggelse.label" />}
+                                verdi={
+                                    søknad.boOgOpphold.datoForInnleggelse && (
+                                        <FormattedDate value={søknad.boOgOpphold.datoForInnleggelse} />
+                                    )
+                                }
+                            />
+
+                            {søknad.boOgOpphold.datoForUtskrivelse ? (
+                                <Oppsummeringsfelt
+                                    label={<FormattedMessage id="input.datoForUtskrivelse.label" />}
+                                    verdi={
+                                        søknad.boOgOpphold.datoForInnleggelse && (
+                                            <FormattedDate value={søknad.boOgOpphold.datoForUtskrivelse} />
+                                        )
+                                    }
+                                />
+                            ) : (
+                                <Oppsummeringsfelt
+                                    label={<FormattedMessage id="input.fortsattInnlagt.label" />}
+                                    verdi={søknad.boOgOpphold.fortsattInnlagt ? 'Ja' : 'Nei'}
+                                />
+                            )}
+                        </>
+                    )}
+
                     <EndreSvar path={Søknadsteg.BoOgOppholdINorge} søker={søker} />
                 </Ekspanderbartpanel>
 
@@ -248,11 +285,11 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                             <div className={sharedStyles.inputFelterDiv} key={index}>
                                 <Oppsummeringsfelt
                                     label={<FormattedMessage id="input.utreisedato.label" />}
-                                    verdi={item.utreisedato ? reverseStr(item.utreisedato) : 'Ubesvart'}
+                                    verdi={item.utreisedato ? <FormattedDate value={item.utreisedato} /> : 'Ubesvart'}
                                 />
                                 <Oppsummeringsfelt
                                     label={<FormattedMessage id="input.innreisedato.label" />}
-                                    verdi={item.innreisedato ? reverseStr(item.innreisedato) : 'Ubesvart'}
+                                    verdi={item.innreisedato ? <FormattedDate value={item.innreisedato} /> : 'Ubesvart'}
                                 />
                             </div>
                         ))}
@@ -272,11 +309,11 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                             <div className={sharedStyles.inputFelterDiv} key={index}>
                                 <Oppsummeringsfelt
                                     label={<FormattedMessage id="input.utreisedato.label" />}
-                                    verdi={item.utreisedato ? reverseStr(item.utreisedato) : 'Ubesvart'}
+                                    verdi={item.utreisedato ? <FormattedDate value={item.utreisedato} /> : 'Ubesvart'}
                                 />
                                 <Oppsummeringsfelt
                                     label={<FormattedMessage id="input.innreisedato.label" />}
-                                    verdi={item.innreisedato ? reverseStr(item.innreisedato) : 'Ubesvart'}
+                                    verdi={item.innreisedato ? <FormattedDate value={item.innreisedato} /> : 'Ubesvart'}
                                 />
                             </div>
                         ))}
