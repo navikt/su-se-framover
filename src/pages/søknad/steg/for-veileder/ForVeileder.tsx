@@ -39,7 +39,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
     const telefonnummer = props.søker.telefonnummer
-        ? `+${props.søker.telefonnummer.landskode} ${props.søker.telefonnummer.nummer}`
+        ? `${props.søker.telefonnummer.landskode} ${props.søker.telefonnummer.nummer}`
         : 'Ikke registrert telefonnummer';
 
     const save = (values: FormData) =>
