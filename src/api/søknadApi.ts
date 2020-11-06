@@ -1,7 +1,7 @@
 import { Nullable } from '~lib/types';
 import { AvvistBrevConfig } from '~pages/saksbehandling/lukkSøknad/lukkSøknadUtils';
 import { Sak } from '~types/Sak';
-import { LukkSøknadBegrunnelse, SøknadInnhold } from '~types/Søknad';
+import { LukkSøknadBegrunnelse, Søknad, SøknadInnhold } from '~types/Søknad';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -19,7 +19,7 @@ interface Avvist {
 
 export type LukkSøknadBodyTypes = Trukket | Bortfalt | Avvist;
 
-export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientResult<SøknadInnhold>> {
+export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientResult<Søknad>> {
     return apiClient({ url: '/soknad', method: 'POST', body: søknad });
 }
 

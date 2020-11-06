@@ -27,6 +27,7 @@ const Kvittering = () => {
     const innsending = useAppSelector((s) => s.innsending);
     const dispatch = useAppDispatch();
     const history = useHistory();
+    const søknad = useAppSelector((state) => state.innsending.søknad);
 
     return (
         <div>
@@ -64,16 +65,18 @@ const Kvittering = () => {
                     {intl.formatMessage({ id: 'kvittering.nySøknad' })}
                 </Knapp>
 
-                <Lenke
-                    href={'#'}
-                    onClick={() =>
-                        fetchSøknad('INSERT SØKNAD-ID HERE').then((res) => {
-                            if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
-                        })
-                    }
-                >
-                    Skriv ut søknad
-                </Lenke>
+                {RemoteData.isSuccess(søknad) && (
+                    <Lenke
+                        href={'#'}
+                        onClick={() =>
+                            fetchSøknad(søknad.value.id).then((res) => {
+                                if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
+                            })
+                        }
+                    >
+                        Skriv ut søknad
+                    </Lenke>
+                )}
             </div>
         </div>
     );
