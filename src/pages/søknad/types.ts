@@ -9,6 +9,6 @@ export enum Søknadsteg {
     ReiseTilUtlandet = 'utenlandsreise',
     ForVeileder = 'for-veileder',
     Oppsummering = 'oppsummering',
-    LastOppDokumentasjon = 'dokumentasjon',
     Kvittering = 'kvittering',
+    InformasjonOmPapirsøknad = 'informasjon-om-papirsoknad',
 }

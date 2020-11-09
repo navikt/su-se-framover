@@ -9,6 +9,7 @@ import * as personSlice from '~features/person/person.slice';
 import søknadSlice from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Søknadstype } from '~types/Søknad';
 
 import sharedStyles from '../../steg-shared.module.less';
 
@@ -19,6 +20,7 @@ const index = (props: { nesteUrl: string }) => {
     const { søker } = useAppSelector((s) => s.søker);
     const dispatch = useAppDispatch();
     const history = useHistory();
+    const isPapirsøknad = history.location.search.includes('papirsoknad');
 
     const intl = useI18n({ messages: nb });
 
@@ -28,6 +30,9 @@ const index = (props: { nesteUrl: string }) => {
 
     const handleStartSøknadClick = () => {
         if (RemoteData.isSuccess(søker)) {
+            dispatch(
+                søknadSlice.actions.startSøknad(isPapirsøknad ? Søknadstype.Papirsøknad : Søknadstype.DigitalSøknad)
+            );
             history.push(props.nesteUrl);
         }
     };

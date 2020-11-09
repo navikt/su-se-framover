@@ -88,58 +88,52 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
                         </AlertStripeInfo>
                     </Panel>
 
-                    {formik.values.type === Søknadstype.DigitalSøknad ? (
-                        <>
-                            <JaNeiSpørsmål
-                                id="harSøkerMøttPersonlig"
-                                className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="input.harSøkerMøttPersonlig.label" />}
-                                feil={formik.errors.harSøkerMøttPersonlig}
-                                state={formik.values.harSøkerMøttPersonlig}
-                                onChange={(val) => {
-                                    formik.setValues((values) => ({
-                                        ...values,
-                                        harSøkerMøttPersonlig: val,
-                                        harFullmektigEllerVerge: null,
-                                    }));
-                                }}
-                            />
+                    <JaNeiSpørsmål
+                        id="harSøkerMøttPersonlig"
+                        className={sharedStyles.sporsmal}
+                        legend={<FormattedMessage id="input.harSøkerMøttPersonlig.label" />}
+                        feil={formik.errors.harSøkerMøttPersonlig}
+                        state={formik.values.harSøkerMøttPersonlig}
+                        onChange={(val) => {
+                            formik.setValues((values) => ({
+                                ...values,
+                                harSøkerMøttPersonlig: val,
+                                harFullmektigEllerVerge: null,
+                            }));
+                        }}
+                    />
 
-                            {formik.values.harSøkerMøttPersonlig === false && (
-                                <RadioPanelGruppe
-                                    className={sharedStyles.sporsmal}
-                                    feil={null}
-                                    legend={<FormattedMessage id={'input.fullmektigEllerVerge.label'} />}
-                                    name="fullmektigEllerVerge"
-                                    radios={[
-                                        {
-                                            label: (
-                                                <FormattedMessage id={'input.fullmektigEllerVerge.fullmektig.label'} />
-                                            ),
-                                            value: 'fullmektig',
-                                        },
-                                        {
-                                            label: <FormattedMessage id={'input.fullmektigEllerVerge.verge.label'} />,
-                                            value: 'verge',
-                                        },
-                                    ]}
-                                    onChange={(_, value) => {
-                                        formik.setValues((values) => ({
-                                            ...values,
-                                            harFullmektigEllerVerge: value,
-                                        }));
-                                    }}
-                                    checked={formik.values.harFullmektigEllerVerge?.toString()}
-                                />
-                            )}
+                    {formik.values.harSøkerMøttPersonlig === false && (
+                        <RadioPanelGruppe
+                            className={sharedStyles.sporsmal}
+                            feil={null}
+                            legend={<FormattedMessage id={'input.fullmektigEllerVerge.label'} />}
+                            name="fullmektigEllerVerge"
+                            radios={[
+                                {
+                                    label: <FormattedMessage id={'input.fullmektigEllerVerge.fullmektig.label'} />,
+                                    value: 'fullmektig',
+                                },
+                                {
+                                    label: <FormattedMessage id={'input.fullmektigEllerVerge.verge.label'} />,
+                                    value: 'verge',
+                                },
+                            ]}
+                            onChange={(_, value) => {
+                                formik.setValues((values) => ({
+                                    ...values,
+                                    harFullmektigEllerVerge: value,
+                                }));
+                            }}
+                            checked={formik.values.harFullmektigEllerVerge?.toString()}
+                        />
+                    )}
 
-                            {formik.values.harFullmektigEllerVerge === 'fullmektig' && (
-                                <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
-                                    Husk å legge ved legeattest/legeerklæring
-                                </AlertStripe>
-                            )}
-                        </>
-                    ) : null}
+                    {formik.values.harFullmektigEllerVerge === 'fullmektig' && (
+                        <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
+                            Husk å legge ved legeattest/legeerklæring
+                        </AlertStripe>
+                    )}
                     <Feiloppsummering
                         className={sharedStyles.marginBottom}
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
