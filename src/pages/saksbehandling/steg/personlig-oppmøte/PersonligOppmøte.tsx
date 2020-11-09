@@ -312,12 +312,6 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                 : [
                                       {
                                           tittel: intl.formatMessage({
-                                              id: 'display.fraSøknad.papirsøknad.mottaksdatoForSøknad',
-                                          }),
-                                          verdi: props.behandling.søknad.søknadInnhold.forNav.mottaksdatoForSøknad,
-                                      },
-                                      {
-                                          tittel: intl.formatMessage({
                                               id: 'display.fraSøknad.papirsøknad.grunnForPapirinnsending',
                                           }),
                                           verdi:
