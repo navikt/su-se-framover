@@ -2,7 +2,16 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Nullable } from '~lib/types';
 
-import { DelerBoligMed, EPSFormData, TypeOppholdstillatelse, Utenlandsopphold, Vergemål } from './types';
+import { Søknadstype } from '../../types/Søknad';
+
+import {
+    DelerBoligMed,
+    EPSFormData,
+    GrunnForPapirinnsending,
+    TypeOppholdstillatelse,
+    Utenlandsopphold,
+    Vergemål,
+} from './types';
 
 export interface SøknadState {
     harUførevedtak: Nullable<boolean>;
@@ -71,11 +80,23 @@ export interface SøknadState {
         skalReiseTilUtlandetNeste12Måneder: Nullable<boolean>;
         skalReiseDatoer: Utenlandsopphold[];
     };
-    forVeileder: {
-        harSøkerMøttPersonlig: Nullable<boolean>;
-        harFullmektigEllerVerge: Nullable<Vergemål>;
-    };
+    forVeileder: ForVeileder;
 }
+
+export interface ForVeilederDigitalSøknad {
+    type: Søknadstype.DigitalSøknad;
+    harSøkerMøttPersonlig: Nullable<boolean>;
+    harFullmektigEllerVerge: Nullable<Vergemål>;
+}
+
+export interface ForVeilederPapirsøknad {
+    type: Søknadstype.Papirsøknad;
+    mottaksdatoForSøknad: Nullable<string>;
+    grunnForPapirinnsending: Nullable<GrunnForPapirinnsending>;
+    annenGrunn: Nullable<string>;
+}
+
+type ForVeileder = ForVeilederDigitalSøknad | ForVeilederPapirsøknad;
 
 const initialFormue: SøknadState['formue'] = {
     eierBolig: null,
@@ -116,7 +137,7 @@ const initialInntekt: SøknadState['inntekt'] = {
     mottarPensjon: null,
 };
 
-const initialState: SøknadState = {
+const initialState = (type: Søknadstype = Søknadstype.DigitalSøknad): SøknadState => ({
     harUførevedtak: null,
     flyktningstatus: {
         erFlyktning: null,
@@ -148,18 +169,30 @@ const initialState: SøknadState = {
         skalReiseTilUtlandetNeste12Måneder: null,
         skalReiseDatoer: [],
     },
-    forVeileder: {
-        harSøkerMøttPersonlig: null,
-        harFullmektigEllerVerge: null,
-    },
-};
+    forVeileder:
+        type === Søknadstype.DigitalSøknad
+            ? {
+                  type: Søknadstype.DigitalSøknad,
+                  harSøkerMøttPersonlig: null,
+                  harFullmektigEllerVerge: null,
+              }
+            : {
+                  type: Søknadstype.Papirsøknad,
+                  mottaksdatoForSøknad: null,
+                  grunnForPapirinnsending: null,
+                  annenGrunn: null,
+              },
+});
 
 export default createSlice({
     name: 'soknad',
-    initialState,
+    initialState: initialState(),
     reducers: {
+        startSøknad(_state, action: PayloadAction<Søknadstype>) {
+            return initialState(action.payload);
+        },
         resetSøknad() {
-            return initialState;
+            return initialState();
         },
         harUførevedtakUpdated(state, action: PayloadAction<boolean | null>) {
             state.harUførevedtak = action.payload;

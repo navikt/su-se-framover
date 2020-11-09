@@ -6,13 +6,18 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { useParams, useHistory, Link } from 'react-router-dom';
 
+import { Person } from '~api/personApi';
 import { Personkort } from '~components/Personkort';
+import { useUserContext } from '~context/userContext';
+import { SøknadState } from '~features/søknad/søknad.slice';
 import { DelerBoligMed } from '~features/søknad/types';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
 import { trackEvent, søknadNesteSteg } from '~lib/tracking/trackingEvents';
 import { useAppSelector } from '~redux/Store';
+import { Rolle } from '~types/LoggedInUser';
+import { Søknadstype } from '~types/Søknad';
 
 import styles from './index.module.less';
 import messages from './nb';
@@ -22,6 +27,7 @@ import EktefellesInntekt from './steg/ektefelle/EktefellesInntekt';
 import FlyktningstatusOppholdstillatelse from './steg/flyktningstatus-oppholdstillatelse/Flyktningstatus-oppholdstillatelse';
 import ForVeileder from './steg/for-veileder/ForVeileder';
 import Formue from './steg/formue/DinFormue';
+import InformasjonOmPapirsøknad from './steg/informasjon-om-papirsøknad/InformasjonOmPapirsøknad';
 import Inngang from './steg/inngang/Inngang';
 import Inntekt from './steg/inntekt/Inntekt';
 import Kvittering from './steg/kvittering/Kvittering';
@@ -30,12 +36,121 @@ import Uførevedtak from './steg/uførevedtak/Uførevedtak';
 import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
 import { Søknadsteg } from './types';
 
+const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
+    switch (step) {
+        case Søknadsteg.Uførevedtak:
+            return (
+                <Uførevedtak
+                    forrigeUrl={routes.soknad.createURL({ step: null })}
+                    nesteUrl={routes.soknad.createURL({
+                        step: Søknadsteg.FlyktningstatusOppholdstillatelse,
+                    })}
+                />
+            );
+        case Søknadsteg.FlyktningstatusOppholdstillatelse:
+            return (
+                <FlyktningstatusOppholdstillatelse
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
+                />
+            );
+        case Søknadsteg.BoOgOppholdINorge:
+            return (
+                <BoOgOppholdINorge
+                    forrigeUrl={routes.soknad.createURL({
+                        step: Søknadsteg.FlyktningstatusOppholdstillatelse,
+                    })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.DinFormue })}
+                />
+            );
+        case Søknadsteg.DinFormue:
+            return (
+                <Formue
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
+                />
+            );
+        case Søknadsteg.DinInntekt:
+            return (
+                <Inntekt
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinFormue })}
+                    nesteUrl={
+                        søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
+                            ? routes.soknad.createURL({ step: Søknadsteg.EktefellesFormue })
+                            : routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })
+                    }
+                />
+            );
+        case Søknadsteg.EktefellesFormue:
+            return (
+                <EktefellesFormue
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.EktefellesInntekt })}
+                />
+            );
+        case Søknadsteg.EktefellesInntekt:
+            return (
+                <EktefellesInntekt
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.EktefellesFormue })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
+                />
+            );
+        case Søknadsteg.ReiseTilUtlandet:
+            return (
+                <Utenlandsopphold
+                    forrigeUrl={
+                        søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
+                            ? routes.soknad.createURL({ step: Søknadsteg.EktefellesInntekt })
+                            : routes.soknad.createURL({ step: Søknadsteg.DinInntekt })
+                    }
+                    nesteUrl={routes.soknad.createURL({
+                        step:
+                            søknad.forVeileder.type === Søknadstype.DigitalSøknad
+                                ? Søknadsteg.ForVeileder
+                                : Søknadsteg.InformasjonOmPapirsøknad,
+                    })}
+                />
+            );
+        case Søknadsteg.ForVeileder:
+            return (
+                <ForVeileder
+                    søker={søker}
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Oppsummering })}
+                />
+            );
+        case Søknadsteg.InformasjonOmPapirsøknad:
+            return (
+                <InformasjonOmPapirsøknad
+                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Oppsummering })}
+                />
+            );
+        case Søknadsteg.Oppsummering:
+            return (
+                <Oppsummering
+                    forrigeUrl={routes.soknad.createURL({
+                        step:
+                            søknad.forVeileder.type === Søknadstype.DigitalSøknad
+                                ? Søknadsteg.ForVeileder
+                                : Søknadsteg.InformasjonOmPapirsøknad,
+                    })}
+                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Kvittering })}
+                    søker={søker}
+                />
+            );
+        case Søknadsteg.Kvittering:
+            return <Kvittering />;
+    }
+};
+
 const index = () => {
     const { søker: søkerFraStore } = useAppSelector((s) => s.søker);
-    const borMedEktefelleSamboer = useAppSelector((s) => s.soknad.boOgOpphold.delerBoligMed);
+    const søknad = useAppSelector((s) => s.soknad);
     const { step } = useParams<{ step: Søknadsteg }>();
     const history = useHistory();
     const intl = useI18n({ messages });
+    const user = useUserContext();
 
     useEffect(() => {
         if (!RemoteData.isSuccess(søkerFraStore)) {
@@ -78,28 +193,31 @@ const index = () => {
         {
             label: intl.formatMessage({ id: 'steg.ektefellesFormue' }),
             step: Søknadsteg.EktefellesFormue,
+            onlyIf: søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
         },
         {
             label: intl.formatMessage({ id: 'steg.ektefellesInntekt' }),
             step: Søknadsteg.EktefellesInntekt,
+            onlyIf: søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
         },
         {
             label: intl.formatMessage({ id: 'steg.utenlandsopphold' }),
             step: Søknadsteg.ReiseTilUtlandet,
         },
-        {
-            label: intl.formatMessage({ id: 'steg.forVeileder' }),
-            step: Søknadsteg.ForVeileder,
-        },
+        søknad.forVeileder.type === Søknadstype.Papirsøknad && user.roller.includes(Rolle.Saksbehandler)
+            ? {
+                  label: intl.formatMessage({ id: 'steg.informasjonOmPapirsøknad' }),
+                  step: Søknadsteg.InformasjonOmPapirsøknad,
+              }
+            : {
+                  label: intl.formatMessage({ id: 'steg.forVeileder' }),
+                  step: Søknadsteg.ForVeileder,
+              },
         {
             label: intl.formatMessage({ id: 'steg.oppsummering' }),
             step: Søknadsteg.Oppsummering,
         },
-    ].filter(
-        (s) =>
-            borMedEktefelleSamboer === DelerBoligMed.EKTEMAKE_SAMBOER ||
-            !(s.step === Søknadsteg.EktefellesFormue || s.step === Søknadsteg.EktefellesInntekt)
-    );
+    ].filter((s) => (typeof s.onlyIf !== 'undefined' ? s.onlyIf : true));
     const aktivtSteg = steg.findIndex((s) => s.step === step);
 
     const manglendeData = () => (
@@ -160,75 +278,7 @@ const index = () => {
                                     )}
                                 </>
                             </div>
-                            {step === Søknadsteg.Uførevedtak ? (
-                                <Uførevedtak
-                                    forrigeUrl={routes.soknad.createURL({ step: null })}
-                                    nesteUrl={routes.soknad.createURL({
-                                        step: Søknadsteg.FlyktningstatusOppholdstillatelse,
-                                    })}
-                                />
-                            ) : step === Søknadsteg.FlyktningstatusOppholdstillatelse ? (
-                                <FlyktningstatusOppholdstillatelse
-                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })}
-                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
-                                />
-                            ) : step === Søknadsteg.BoOgOppholdINorge ? (
-                                <BoOgOppholdINorge
-                                    forrigeUrl={routes.soknad.createURL({
-                                        step: Søknadsteg.FlyktningstatusOppholdstillatelse,
-                                    })}
-                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.DinFormue })}
-                                />
-                            ) : step === Søknadsteg.DinFormue ? (
-                                <Formue
-                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
-                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
-                                />
-                            ) : step === Søknadsteg.DinInntekt ? (
-                                <Inntekt
-                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinFormue })}
-                                    nesteUrl={
-                                        borMedEktefelleSamboer === DelerBoligMed.EKTEMAKE_SAMBOER
-                                            ? routes.soknad.createURL({ step: Søknadsteg.EktefellesFormue })
-                                            : routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })
-                                    }
-                                />
-                            ) : step === Søknadsteg.EktefellesFormue ? (
-                                <EktefellesFormue
-                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
-                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.EktefellesInntekt })}
-                                />
-                            ) : step === Søknadsteg.EktefellesInntekt ? (
-                                <EktefellesInntekt
-                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.EktefellesFormue })}
-                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
-                                />
-                            ) : step === Søknadsteg.ReiseTilUtlandet ? (
-                                <Utenlandsopphold
-                                    forrigeUrl={
-                                        borMedEktefelleSamboer === DelerBoligMed.EKTEMAKE_SAMBOER
-                                            ? routes.soknad.createURL({ step: Søknadsteg.EktefellesInntekt })
-                                            : routes.soknad.createURL({ step: Søknadsteg.DinInntekt })
-                                    }
-                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ForVeileder })}
-                                />
-                            ) : step === Søknadsteg.ForVeileder ? (
-                                <ForVeileder
-                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
-                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Oppsummering })}
-                                    søker={søker}
-                                />
-                            ) : step === Søknadsteg.Oppsummering ? (
-                                <Oppsummering
-                                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ForVeileder })}
-                                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Kvittering })}
-                                    søker={søker}
-                                />
-                            ) : step === Søknadsteg.Kvittering ? (
-                                <Kvittering />
-                            ) : (
-                                '404'
-                            )}
+                            {showSteg(step, søknad, søker)}
                         </>
                     )
                 )

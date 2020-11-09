@@ -9,6 +9,7 @@ import { useHistory } from 'react-router-dom';
 import * as personSlice from '~features/person/person.slice';
 import * as søknadslice from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import styles from './kvittering.module.less';
@@ -55,7 +56,7 @@ const Kvittering = () => {
                     onClick={() => {
                         dispatch(personSlice.default.actions.resetSøker());
                         dispatch(søknadslice.default.actions.resetSøknad());
-                        history.push('inngang');
+                        history.push(Routes.soknad.createURL({ step: null }));
                     }}
                 >
                     {intl.formatMessage({ id: 'kvittering.nySøknad' })}

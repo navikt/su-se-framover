@@ -8,6 +8,7 @@ export default {
     'steg.ektefellesInntekt': 'Ektefelle/samboers inntekt',
     'steg.utenlandsopphold': 'Reise til utlandet',
     'steg.forVeileder': 'For veileder',
+    'steg.informasjonOmPapirsøknad': 'Informasjon om søknaden',
     'steg.oppsummering': 'Oppsummering',
     'steg.neste': 'Neste',
     'steg.forrige': 'Forrige',

@@ -7,7 +7,7 @@ import * as personApi from '~api/personApi';
 import * as søknadApi from '~api/søknadApi';
 import { toEktefellePartnerSamboer } from '~pages/søknad/steg/bo-og-opphold-i-norge/utils';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
-import { SøknadInnhold } from '~types/Søknad';
+import { SøknadInnhold, Søknadstype } from '~types/Søknad';
 
 import { SøknadState } from './søknad.slice';
 import { DelerBoligMed } from './types';
@@ -54,14 +54,18 @@ export const sendSøknad = createAsyncThunk<
         },
         inntektOgPensjon: toInntekt(søknad.inntekt),
         formue: toFormue(søknad.formue),
-        forNav: {
-            harFullmektigEllerVerge:
-                søknad.forVeileder.harFullmektigEllerVerge === 'fullmektig'
-                    ? 'fullmektig'
-                    : søknad.forVeileder.harFullmektigEllerVerge === 'verge'
-                    ? 'verge'
-                    : null,
-        },
+        forNav:
+            søknad.forVeileder.type === Søknadstype.DigitalSøknad
+                ? {
+                      type: Søknadstype.DigitalSøknad,
+                      harFullmektigEllerVerge: søknad.forVeileder.harFullmektigEllerVerge,
+                  }
+                : {
+                      type: Søknadstype.Papirsøknad,
+                      mottaksdatoForSøknad: søknad.forVeileder.mottaksdatoForSøknad!,
+                      grunnForPapirinnsending: søknad.forVeileder.grunnForPapirinnsending!,
+                      annenGrunn: søknad.forVeileder.annenGrunn,
+                  },
         ektefelle:
             søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
                 ? {
