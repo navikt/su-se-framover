@@ -2,7 +2,6 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
-import Lenke from 'nav-frontend-lenker';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -65,8 +64,7 @@ const Kvittering = () => {
                 </Knapp>
 
                 {RemoteData.isSuccess(søknad) && (
-                    <Lenke
-                        href={'#'}
+                    <Knapp
                         onClick={() =>
                             fetchSøknad(søknad.value.id).then((res) => {
                                 if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
@@ -74,7 +72,7 @@ const Kvittering = () => {
                         }
                     >
                         Skriv ut søknad
-                    </Lenke>
+                    </Knapp>
                 )}
             </div>
         </div>

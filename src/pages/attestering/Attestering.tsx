@@ -3,7 +3,6 @@ import { Gender, PersonCard } from '@navikt/nap-person-card';
 import { useFormik } from 'formik';
 import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
-import Lenke from 'nav-frontend-lenker';
 import { Feiloppsummering, RadioPanelGruppe, Select, Textarea } from 'nav-frontend-skjema';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useMemo, useState } from 'react';
@@ -192,8 +191,7 @@ const Attestering = () => {
                     </div>
                     <div>
                         <Innholdstittel>Vis brev kladd</Innholdstittel>
-                        <Lenke
-                            href={'#'}
+                        <Knapp
                             onClick={() =>
                                 fetchBrev(sak.value.id, urlParams.behandlingId).then((res) => {
                                     if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
@@ -201,7 +199,7 @@ const Attestering = () => {
                             }
                         >
                             Last ned brev
-                        </Lenke>
+                        </Knapp>
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>
