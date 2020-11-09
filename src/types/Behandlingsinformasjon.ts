@@ -1,4 +1,3 @@
-import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 
 import { Sats } from './Sats';
@@ -103,13 +102,12 @@ export enum PersonligOppmøteStatus {
 }
 
 export interface Bosituasjon {
-    delerBolig: boolean;
-    delerBoligMed: Nullable<DelerBoligMed>;
-    ektemakeEllerSamboerUnder67År: Nullable<boolean>;
+    epsFnr: Nullable<string>;
+    delerBolig: Nullable<boolean>;
     ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
     begrunnelse: Nullable<string>;
 }
 
-interface Ektefelle {
+export interface Ektefelle {
     fnr: Nullable<string>;
 }

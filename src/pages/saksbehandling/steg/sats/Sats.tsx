@@ -3,14 +3,17 @@ import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import React, { useState } from 'react';
+import { Element } from 'nav-frontend-typografi';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Sats as FaktiskSats } from '~/types/Sats';
+import { ApiError, ErrorCode } from '~api/apiClient';
+import { fetchPerson, Person } from '~api/personApi';
 import { SuperRadioGruppe } from '~components/FormElements';
+import { Personkort } from '~components/Personkort';
 import { eqBosituasjon } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
-import { DelerBoligMed } from '~features/søknad/types';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
@@ -24,73 +27,58 @@ import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './sats-nb';
+import styles from './sats.module.less';
 import { hentEktefellesAlder, hentEktefellesFnrEllerFødselsdato } from './utils';
 
 interface FormData {
+    epsFnr: Nullable<string>;
     delerSøkerBolig: Nullable<boolean>;
-    delerBoligMedHvem: Nullable<DelerBoligMed>;
-    erEktemakeEllerSamboerUnder67: Nullable<boolean>;
     mottarEktemakeEllerSamboerSU: Nullable<boolean>;
     begrunnelse: Nullable<string>;
 }
 
 const toBosituasjon = (values: FormData): Nullable<Bosituasjon> => {
-    if (values.delerSøkerBolig === null) {
+    if (values.delerSøkerBolig === null && values.epsFnr === null) {
         return null;
     }
+
     return {
+        epsFnr: values.epsFnr,
         delerBolig: values.delerSøkerBolig,
-        delerBoligMed: values.delerBoligMedHvem,
         ektemakeEllerSamboerUførFlyktning: values.mottarEktemakeEllerSamboerSU,
-        ektemakeEllerSamboerUnder67År: values.erEktemakeEllerSamboerUnder67,
         begrunnelse: null,
     };
 };
 
-const utledSats = (values: FormData) => {
-    if (values.delerSøkerBolig === null) {
-        return null;
-    }
-    if (!values.delerSøkerBolig) {
+const utledSats = (values: FormData, harEPS: boolean) => {
+    console.log(values);
+    if (!values.delerSøkerBolig && values.delerSøkerBolig !== null) {
         return FaktiskSats.Høy;
     }
-    switch (values.delerBoligMedHvem) {
-        case null:
-            return null;
-        case DelerBoligMed.VOKSNE_BARN:
-        case DelerBoligMed.ANNEN_VOKSEN:
-            return FaktiskSats.Ordinær;
-        case DelerBoligMed.EKTEMAKE_SAMBOER:
-            switch (values.erEktemakeEllerSamboerUnder67) {
-                case null:
-                    return null;
-                case false:
-                    return FaktiskSats.Ordinær;
-                case true:
-                    switch (values.mottarEktemakeEllerSamboerSU) {
-                        case null:
-                            return null;
-                        case false:
-                            return FaktiskSats.Høy;
-                        case true:
-                            return FaktiskSats.Ordinær;
-                    }
-            }
+
+    if (values.delerSøkerBolig && !harEPS) {
+        return FaktiskSats.Ordinær;
     }
+
+    if (harEPS) {
+        switch (values.mottarEktemakeEllerSamboerSU) {
+            case null:
+                return null;
+            case false:
+                return FaktiskSats.Høy;
+            case true:
+                return FaktiskSats.Ordinær;
+        }
+    }
+
+    return null;
 };
 
 const schema = yup.object<FormData>({
-    delerSøkerBolig: yup.boolean().required(),
-    delerBoligMedHvem: yup.mixed<DelerBoligMed>().when('delerSøkerBolig', {
-        is: true,
-        then: yup
-            .mixed()
-            .oneOf([DelerBoligMed.ANNEN_VOKSEN, DelerBoligMed.EKTEMAKE_SAMBOER, DelerBoligMed.VOKSNE_BARN]),
-    }),
-    erEktemakeEllerSamboerUnder67: yup.boolean().defined().when('delerBoligMedHvem', {
-        is: DelerBoligMed.EKTEMAKE_SAMBOER,
+    epsFnr: yup.string(),
+    delerSøkerBolig: yup.boolean().defined().when('epsFnr', {
+        is: null,
         then: yup.boolean().required(),
-        otherwise: yup.boolean().nullable().defined(),
     }),
     mottarEktemakeEllerSamboerSU: yup.boolean().defined().when('erEktemakeEllerSamboerUnder67', {
         is: true,
@@ -106,13 +94,31 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-
+    const [eps, setEPS] = useState<Person>();
+    const [fetchEpsError, setfetchEpsError] = useState<ApiError>();
     const eksisterendeBosituasjon = props.behandling.behandlingsinformasjon.bosituasjon;
+    const epsFnr = props.behandling.behandlingsinformasjon.ektefelle?.fnr;
+
+    useEffect(() => {
+        if (!epsFnr) {
+            return;
+        }
+        async function fetchEps(fnr: string) {
+            const res = await fetchPerson(fnr);
+            if (res.status === 'ok') {
+                setEPS(res.data);
+            } else {
+                setfetchEpsError(res.error);
+            }
+        }
+
+        fetchEps(epsFnr);
+    }, [epsFnr]);
+
     const formik = useFormik<FormData>({
         initialValues: {
+            epsFnr: props.behandling.behandlingsinformasjon.ektefelle?.fnr ?? null,
             delerSøkerBolig: eksisterendeBosituasjon?.delerBolig ?? null,
-            delerBoligMedHvem: eksisterendeBosituasjon?.delerBoligMed ?? null,
-            erEktemakeEllerSamboerUnder67: eksisterendeBosituasjon?.ektemakeEllerSamboerUnder67År ?? null,
             mottarEktemakeEllerSamboerSU: eksisterendeBosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null,
             begrunnelse: eksisterendeBosituasjon?.begrunnelse ?? null,
         },
@@ -127,12 +133,12 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     });
 
     const handleSave = (values: FormData) => {
-        const bosSituasjonValues = toBosituasjon(values);
-        if (!bosSituasjonValues) {
+        const boSituasjonValues = toBosituasjon(values);
+        if (!boSituasjonValues) {
             return;
         }
 
-        if (eqBosituasjon.equals(bosSituasjonValues, props.behandling.behandlingsinformasjon.bosituasjon)) {
+        if (eqBosituasjon.equals(boSituasjonValues, props.behandling.behandlingsinformasjon.bosituasjon)) {
             history.push(props.nesteUrl);
             return;
         }
@@ -142,46 +148,10 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    bosituasjon: bosSituasjonValues,
+                    bosituasjon: boSituasjonValues,
                 },
             })
         );
-    };
-
-    const handleChange = (values: FormData) => {
-        if (values.delerSøkerBolig !== true) {
-            formik.setValues({
-                delerSøkerBolig: values.delerSøkerBolig,
-                delerBoligMedHvem: null,
-                erEktemakeEllerSamboerUnder67: null,
-                mottarEktemakeEllerSamboerSU: null,
-                begrunnelse: values.begrunnelse,
-            });
-        } else if (values.delerBoligMedHvem !== DelerBoligMed.EKTEMAKE_SAMBOER) {
-            formik.setValues({
-                delerSøkerBolig: values.delerSøkerBolig,
-                delerBoligMedHvem: values.delerBoligMedHvem,
-                erEktemakeEllerSamboerUnder67: null,
-                mottarEktemakeEllerSamboerSU: null,
-                begrunnelse: values.begrunnelse,
-            });
-        } else if (values.erEktemakeEllerSamboerUnder67 !== true) {
-            formik.setValues({
-                delerSøkerBolig: values.delerSøkerBolig,
-                delerBoligMedHvem: values.delerBoligMedHvem,
-                erEktemakeEllerSamboerUnder67: values.erEktemakeEllerSamboerUnder67,
-                mottarEktemakeEllerSamboerSU: null,
-                begrunnelse: values.begrunnelse,
-            });
-        } else {
-            formik.setValues({
-                delerSøkerBolig: values.delerSøkerBolig,
-                delerBoligMedHvem: values.delerBoligMedHvem,
-                erEktemakeEllerSamboerUnder67: values.erEktemakeEllerSamboerUnder67,
-                mottarEktemakeEllerSamboerSU: values.mottarEktemakeEllerSamboerSU,
-                begrunnelse: values.begrunnelse,
-            });
-        }
     };
 
     return (
@@ -194,84 +164,66 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        <SuperRadioGruppe
-                            legend={intl.formatMessage({ id: 'radio.delerSøkerBoligOver18.legend' })}
-                            values={formik.values}
-                            errors={formik.errors}
-                            property="delerSøkerBolig"
-                            onChange={handleChange}
-                            options={[
-                                {
-                                    label: intl.formatMessage({ id: 'radio.label.ja' }),
-                                    radioValue: true,
-                                },
-                                {
-                                    label: intl.formatMessage({ id: 'radio.label.nei' }),
-                                    radioValue: false,
-                                },
-                            ]}
-                        />
-                        {formik.values.delerSøkerBolig && (
+                        <div>
+                            {eps && (
+                                <div className={styles.personkortContainer}>
+                                    <Element className={styles.personkortTittel}>
+                                        {intl.formatMessage({ id: 'display.eps.label' })}
+                                    </Element>
+                                    <Personkort person={eps} />
+                                </div>
+                            )}
+                            {fetchEpsError && (
+                                <AlertStripe type="feil">
+                                    {fetchEpsError.statusCode === ErrorCode.Unauthorized
+                                        ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
+                                        : fetchEpsError.statusCode === ErrorCode.NotFound
+                                        ? intl.formatMessage({ id: 'feilmelding.ikkeFunnet' })
+                                        : intl.formatMessage({ id: 'feilmelding.ukjent' })}
+                                </AlertStripe>
+                            )}
+                        </div>
+
+                        {!eps && !fetchEpsError ? (
                             <SuperRadioGruppe
-                                legend={intl.formatMessage({ id: 'radio.hvemDelerSøkerBoligMed.legend' })}
+                                legend={intl.formatMessage({ id: 'radio.delerSøkerBoligOver18.legend' })}
                                 values={formik.values}
                                 errors={formik.errors}
-                                onChange={handleChange}
-                                property="delerBoligMedHvem"
+                                property="delerSøkerBolig"
+                                onChange={(val) => {
+                                    formik.setValues((v) => ({
+                                        ...v,
+                                        delerSøkerBolig: val.delerSøkerBolig,
+                                    }));
+                                }}
                                 options={[
                                     {
-                                        label: intl.formatMessage({
-                                            id: 'radio.label.ektemakeEllerSamboer',
-                                        }),
-                                        radioValue: DelerBoligMed.EKTEMAKE_SAMBOER,
-                                    },
-                                    {
-                                        label: intl.formatMessage({
-                                            id: 'radio.label.voksneBarn',
-                                        }),
-                                        radioValue: DelerBoligMed.VOKSNE_BARN,
-                                    },
-                                    {
-                                        label: intl.formatMessage({
-                                            id: 'radio.label.annenVoksen',
-                                        }),
-                                        radioValue: DelerBoligMed.ANNEN_VOKSEN,
-                                    },
-                                ]}
-                            />
-                        )}
-                        {formik.values.delerBoligMedHvem === DelerBoligMed.EKTEMAKE_SAMBOER && (
-                            <SuperRadioGruppe
-                                legend={intl.formatMessage({ id: 'radio.ektemakeEllerSamboerUnder67år.legend' })}
-                                values={formik.values}
-                                errors={formik.errors}
-                                onChange={handleChange}
-                                property="erEktemakeEllerSamboerUnder67"
-                                options={[
-                                    {
-                                        label: intl.formatMessage({
-                                            id: 'radio.label.ja',
-                                        }),
+                                        label: intl.formatMessage({ id: 'radio.label.ja' }),
                                         radioValue: true,
                                     },
                                     {
-                                        label: intl.formatMessage({
-                                            id: 'radio.label.nei',
-                                        }),
+                                        label: intl.formatMessage({ id: 'radio.label.nei' }),
                                         radioValue: false,
                                     },
                                 ]}
                             />
+                        ) : (
+                            ''
                         )}
 
-                        {formik.values.erEktemakeEllerSamboerUnder67 === true && (
+                        {eps && (
                             <SuperRadioGruppe
                                 legend={intl.formatMessage({
                                     id: 'radio.ektemakeEllerSamboerUførFlyktning.legend',
                                 })}
                                 values={formik.values}
                                 errors={formik.errors}
-                                onChange={handleChange}
+                                onChange={(val) => {
+                                    formik.setValues((v) => ({
+                                        ...v,
+                                        mottarEktemakeEllerSamboerSU: val.mottarEktemakeEllerSamboerSU,
+                                    }));
+                                }}
                                 property="mottarEktemakeEllerSamboerSU"
                                 options={[
                                     {
@@ -289,11 +241,15 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 ]}
                             />
                         )}
-                        {utledSats(formik.values) && (
+
+                        {utledSats(formik.values, Boolean(eps)) && (
                             <>
                                 <hr />
                                 <span>
-                                    {`${intl.formatMessage({ id: 'display.sats' })} ${utledSats(formik.values)}`}
+                                    {`${intl.formatMessage({ id: 'display.sats' })} ${utledSats(
+                                        formik.values,
+                                        Boolean(eps)
+                                    )}`}
                                 </span>
                                 <hr />
                                 <hr />
