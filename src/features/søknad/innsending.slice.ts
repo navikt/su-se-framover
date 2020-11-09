@@ -83,12 +83,10 @@ export const sendSøknad = createAsyncThunk<
 });
 
 export interface InnsendingState {
-    søknadInnsendingState: RemoteData.RemoteData<ApiError, null>;
     søknad: RemoteData.RemoteData<ApiError, Søknad>;
 }
 
 const initialState: InnsendingState = {
-    søknadInnsendingState: RemoteData.initial,
     søknad: RemoteData.initial,
 };
 export default createSlice({
@@ -98,15 +96,12 @@ export default createSlice({
     extraReducers: (builder) => {
         handleAsyncThunk(builder, sendSøknad, {
             pending: (state) => {
-                state.søknadInnsendingState = RemoteData.pending;
                 state.søknad = RemoteData.pending;
             },
             fulfilled: (state, action) => {
-                state.søknadInnsendingState = RemoteData.success(null);
                 state.søknad = RemoteData.success(action.payload);
             },
             rejected: (state, action) => {
-                state.søknadInnsendingState = simpleRejectedActionToRemoteData(action);
                 state.søknad = simpleRejectedActionToRemoteData(action);
             },
         });

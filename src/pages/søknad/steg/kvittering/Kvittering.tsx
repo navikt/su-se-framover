@@ -24,7 +24,6 @@ const messages = {
 
 const Kvittering = () => {
     const intl = useI18n({ messages });
-    const innsending = useAppSelector((s) => s.innsending);
     const dispatch = useAppDispatch();
     const history = useHistory();
     const søknad = useAppSelector((state) => state.innsending.søknad);
@@ -32,7 +31,7 @@ const Kvittering = () => {
     return (
         <div>
             {pipe(
-                innsending.søknadInnsendingState,
+                søknad,
                 RemoteData.fold(
                     () => {
                         return null;
@@ -50,7 +49,7 @@ const Kvittering = () => {
             )}
 
             <div className={styles.nySøknadKnapp}>
-                {RemoteData.isFailure(innsending.søknadInnsendingState) && (
+                {RemoteData.isFailure(søknad) && (
                     <Knapp className={styles.marginRight} onClick={() => history.goBack()}>
                         {intl.formatMessage({ id: 'knapp.tilbake' })}
                     </Knapp>
