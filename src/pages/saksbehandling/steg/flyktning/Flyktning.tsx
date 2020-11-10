@@ -6,7 +6,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { eqFlyktning } from '~features/behandling/behandlingUtils';
+import { eqFlyktning, tidigAvslag } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
@@ -14,8 +14,8 @@ import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Behandling, Behandlingsstatus } from '~types/Behandling';
-import { Flyktning as FlyktningType, FlyktningStatus } from '~types/Behandlingsinformasjon';
+import { Behandlingsstatus } from '~types/Behandling';
+import { Behandlingsinformasjon, Flyktning as FlyktningType, FlyktningStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -47,19 +47,16 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
-    const hentBehandlingForTidigAvslag = (nyStatus: Nullable<FlyktningStatus>): Behandling => {
-        if (!nyStatus) {
-            return props.behandling;
+    const oppdatertBehandlingsinformasjon = (): Behandlingsinformasjon => {
+        if (!formik.values.status) {
+            return props.behandling.behandlingsinformasjon;
         }
 
         return {
-            ...props.behandling,
-            behandlingsinformasjon: {
-                ...props.behandling.behandlingsinformasjon,
-                flyktning: {
-                    ...formik.values,
-                    status: nyStatus,
-                },
+            ...props.behandling.behandlingsinformasjon,
+            flyktning: {
+                ...formik.values,
+                status: formik.values.status,
             },
         };
     };
@@ -225,7 +222,11 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                     })
                                 );
                             }}
-                            behandling={hentBehandlingForTidigAvslag(formik.values.status)}
+                            nesteKnappTekst={
+                                tidigAvslag(oppdatertBehandlingsinformasjon())
+                                    ? intl.formatMessage({ id: 'knapp.tilVedtaket' })
+                                    : undefined
+                            }
                         />
                     </form>
                 ),
