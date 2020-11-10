@@ -100,7 +100,6 @@ const Avvist = (props: AvvistProps) => {
                             props.onValueChange({
                                 ...props.avvistFormData,
                                 typeBrev: (e as React.ChangeEvent<HTMLInputElement>).target.value as AvvistBrevtyper,
-                                fritekst: null,
                             });
                         }}
                     />
