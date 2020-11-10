@@ -188,7 +188,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                             )
                         )}
 
-                        {props.behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG && (
+                        {vilGiTidligAvslag() && (
                             <AlertStripe className={styles.avslagAdvarsel} type="info">
                                 {intl.formatMessage({ id: 'display.avslag.advarsel' })}
                             </AlertStripe>
