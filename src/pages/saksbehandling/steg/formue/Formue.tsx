@@ -140,7 +140,13 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     }, [formik.values.ektefellesVerdier]);
 
     const totalFormueFraSøknad = useMemo(() => {
-        return kalkulerFormueFraSøknad(søknadInnhold.formue);
+        const søkersFormue = kalkulerFormueFraSøknad(søknadInnhold.formue);
+
+        if (søknadInnhold.ektefelle) {
+            return søkersFormue + kalkulerFormueFraSøknad(søknadInnhold.ektefelle.formue);
+        }
+
+        return søkersFormue;
     }, [søknadInnhold.formue]);
 
     const totalFormue = søkersFormue + ektefellesFormue;
