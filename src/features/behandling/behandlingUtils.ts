@@ -17,8 +17,6 @@ import {
     PersonligOppmøte,
     Bosituasjon,
     FormueVerdier,
-    FlyktningStatus,
-    UførhetStatus,
 } from '~types/Behandlingsinformasjon';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
@@ -130,14 +128,4 @@ export const eqBosituasjon: Eq<Nullable<Bosituasjon>> = {
         sats1?.ektemakeEllerSamboerUnder67År === sats2?.ektemakeEllerSamboerUnder67År &&
         sats1?.ektemakeEllerSamboerUførFlyktning === sats2?.ektemakeEllerSamboerUførFlyktning &&
         sats1?.begrunnelse === sats2?.begrunnelse,
-};
-
-export const tidigAvslag = (behandlingsinformasjon?: Behandlingsinformasjon) => {
-    if (!behandlingsinformasjon) return false;
-
-    const { uførhet, flyktning } = behandlingsinformasjon;
-
-    return (
-        uførhet?.status === UførhetStatus.VilkårIkkeOppfylt || flyktning?.status === FlyktningStatus.VilkårIkkeOppfylt
-    );
 };

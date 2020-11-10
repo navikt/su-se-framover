@@ -6,7 +6,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { eqFlyktning, tidigAvslag } from '~features/behandling/behandlingUtils';
+import { eqFlyktning } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
@@ -15,7 +15,7 @@ import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
-import { Behandlingsinformasjon, Flyktning as FlyktningType, FlyktningStatus } from '~types/Behandlingsinformasjon';
+import { Flyktning as FlyktningType, FlyktningStatus, UførhetStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -47,18 +47,11 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
-    const oppdatertBehandlingsinformasjon = (): Behandlingsinformasjon => {
-        if (!formik.values.status) {
-            return props.behandling.behandlingsinformasjon;
-        }
-
-        return {
-            ...props.behandling.behandlingsinformasjon,
-            flyktning: {
-                ...formik.values,
-                status: formik.values.status,
-            },
-        };
+    const vilGiTidligAvslag = (): boolean => {
+        return (
+            props.behandling.behandlingsinformasjon.uførhet?.status === UførhetStatus.VilkårIkkeOppfylt ||
+            formik.values?.status === FlyktningStatus.VilkårIkkeOppfylt
+        );
     };
     const goToVedtak = () => {
         history.push(
@@ -223,9 +216,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 );
                             }}
                             nesteKnappTekst={
-                                tidigAvslag(oppdatertBehandlingsinformasjon())
-                                    ? intl.formatMessage({ id: 'knapp.tilVedtaket' })
-                                    : undefined
+                                vilGiTidligAvslag() ? intl.formatMessage({ id: 'knapp.tilVedtaket' }) : undefined
                             }
                         />
                     </form>
