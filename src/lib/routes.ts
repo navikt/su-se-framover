@@ -21,9 +21,10 @@ export const home: Route<never> = {
     createURL: () => '/',
 };
 
-export const soknad: Route<{ step: Søknadsteg | null }> = {
+export const soknad: Route<{ step: Søknadsteg | null; papirsøknad?: boolean }> = {
     path: '/soknad/:step?',
-    createURL: (args) => (args.step ? `/soknad/${args.step}` : '/soknad'),
+    createURL: (args) =>
+        (args.step ? `/soknad/${args.step}` : '/soknad') + (args.papirsøknad ? '?papirsoknad=true' : ''),
 };
 
 export const saksoversiktIndex: Route<never> = {
