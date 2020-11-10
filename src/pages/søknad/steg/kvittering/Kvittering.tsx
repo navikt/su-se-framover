@@ -1,11 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { fetchSøknad } from '~api/pdfApi';
 import * as personSlice from '~features/person/person.slice';
 import * as søknadslice from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
@@ -22,14 +23,14 @@ const messages = {
 
 const Kvittering = () => {
     const intl = useI18n({ messages });
-    const innsending = useAppSelector((s) => s.innsending);
     const dispatch = useAppDispatch();
     const history = useHistory();
+    const søknad = useAppSelector((state) => state.innsending.søknad);
 
     return (
         <div>
             {pipe(
-                innsending.søknadInnsendingState,
+                søknad,
                 RemoteData.fold(
                     () => {
                         return null;
@@ -47,12 +48,12 @@ const Kvittering = () => {
             )}
 
             <div className={styles.nySøknadKnapp}>
-                {RemoteData.isFailure(innsending.søknadInnsendingState) && (
+                {RemoteData.isFailure(søknad) && (
                     <Knapp className={styles.marginRight} onClick={() => history.goBack()}>
                         {intl.formatMessage({ id: 'knapp.tilbake' })}
                     </Knapp>
                 )}
-                <Hovedknapp
+                <Knapp
                     onClick={() => {
                         dispatch(personSlice.default.actions.resetSøker());
                         dispatch(søknadslice.default.actions.resetSøknad());
@@ -60,7 +61,19 @@ const Kvittering = () => {
                     }}
                 >
                     {intl.formatMessage({ id: 'kvittering.nySøknad' })}
-                </Hovedknapp>
+                </Knapp>
+
+                {RemoteData.isSuccess(søknad) && (
+                    <Knapp
+                        onClick={() =>
+                            fetchSøknad(søknad.value.id).then((res) => {
+                                if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
+                            })
+                        }
+                    >
+                        Skriv ut søknad
+                    </Knapp>
+                )}
             </div>
         </div>
     );

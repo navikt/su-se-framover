@@ -8,3 +8,12 @@ export async function fetchBrev(sakId: string, behandlingId: string): Promise<Ap
         bodyTransformer: (res) => res.blob(),
     });
 }
+
+export async function fetchSøknad(søknadId: string): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/soknad/${søknadId}/utskrift`,
+        method: 'GET',
+        request: { headers: new Headers({ Accept: 'application/pdf' }) },
+        bodyTransformer: (res) => res.blob(),
+    });
+}

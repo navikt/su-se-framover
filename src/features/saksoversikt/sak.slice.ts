@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
 import * as behandlingApi from '~api/behandlingApi';
-import { fetchBrev } from '~api/brevApi';
+import { fetchBrev } from '~api/pdfApi';
 import * as sakApi from '~api/sakApi';
 import * as søknadApi from '~api/søknadApi';
 import { LukkSøknadBodyTypes } from '~api/søknadApi';

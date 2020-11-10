@@ -7,14 +7,14 @@ import * as personApi from '~api/personApi';
 import * as søknadApi from '~api/søknadApi';
 import { toEktefellePartnerSamboer } from '~pages/søknad/steg/bo-og-opphold-i-norge/utils';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
-import { SøknadInnhold, Søknadstype } from '~types/Søknad';
+import { SøknadInnhold, Søknadstype, Søknad } from '~types/Søknad';
 
 import { SøknadState } from './søknad.slice';
 import { DelerBoligMed } from './types';
 import { toFormue, toInntekt } from './utils';
 
 export const sendSøknad = createAsyncThunk<
-    SøknadInnhold,
+    Søknad,
     { søknad: SøknadState; søker: personApi.Person },
     { rejectValue: ApiError }
 >('innsending/fetch', async ({ søknad, søker }, thunkApi) => {
@@ -83,26 +83,26 @@ export const sendSøknad = createAsyncThunk<
 });
 
 export interface InnsendingState {
-    søknadInnsendingState: RemoteData.RemoteData<ApiError, null>;
+    søknad: RemoteData.RemoteData<ApiError, Søknad>;
 }
 
 const initialState: InnsendingState = {
-    søknadInnsendingState: RemoteData.initial,
+    søknad: RemoteData.initial,
 };
 export default createSlice({
     name: 'innsending',
-    initialState: initialState,
+    initialState,
     reducers: {},
     extraReducers: (builder) => {
         handleAsyncThunk(builder, sendSøknad, {
             pending: (state) => {
-                state.søknadInnsendingState = RemoteData.pending;
+                state.søknad = RemoteData.pending;
             },
-            fulfilled: (state) => {
-                state.søknadInnsendingState = RemoteData.success(null);
+            fulfilled: (state, action) => {
+                state.søknad = RemoteData.success(action.payload);
             },
             rejected: (state, action) => {
-                state.søknadInnsendingState = simpleRejectedActionToRemoteData(action);
+                state.søknad = simpleRejectedActionToRemoteData(action);
             },
         });
     },
