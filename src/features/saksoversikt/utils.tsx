@@ -1,6 +1,3 @@
-import Ikon from 'nav-frontend-ikoner-assets';
-import React from 'react';
-
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import {
@@ -50,17 +47,6 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
     }
 };
 
-export const statusIcon = (status: VilkårVurderingStatus) => {
-    switch (status) {
-        case VilkårVurderingStatus.IkkeVurdert:
-            return <Ikon kind="advarsel-sirkel-fyll" />;
-        case VilkårVurderingStatus.IkkeOk:
-            return <Ikon kind="feil-sirkel-fyll" />;
-        case VilkårVurderingStatus.Ok:
-            return <Ikon kind="ok-sirkel-fyll" />;
-    }
-};
-
 export interface Vilkårsinformasjon {
     status: VilkårVurderingStatus;
     vilkårtype: Vilkårtype;
@@ -82,8 +68,10 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
     return [
         {
             status:
-                uførhet === null || uførhet.status === UførhetStatus.HarUføresakTilBehandling
+                uførhet === null
                     ? VilkårVurderingStatus.IkkeVurdert
+                    : uførhet.status === UførhetStatus.HarUføresakTilBehandling
+                    ? VilkårVurderingStatus.Uavklart
                     : uførhet.status === UførhetStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
@@ -93,8 +81,10 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
         },
         {
             status:
-                flyktning === null || flyktning.status === FlyktningStatus.Uavklart
+                flyktning === null
                     ? VilkårVurderingStatus.IkkeVurdert
+                    : flyktning.status === FlyktningStatus.Uavklart
+                    ? VilkårVurderingStatus.Uavklart
                     : flyktning.status === FlyktningStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
@@ -106,6 +96,8 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
             status:
                 lovligOpphold === null
                     ? VilkårVurderingStatus.IkkeVurdert
+                    : lovligOpphold.status === LovligOppholdStatus.Uavklart
+                    ? VilkårVurderingStatus.Uavklart
                     : lovligOpphold.status === LovligOppholdStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
@@ -115,8 +107,10 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
         },
         {
             status:
-                fastOppholdINorge === null || fastOppholdINorge.status === FastOppholdINorgeStatus.Uavklart
+                fastOppholdINorge === null
                     ? VilkårVurderingStatus.IkkeVurdert
+                    : fastOppholdINorge.status === FastOppholdINorgeStatus.Uavklart
+                    ? VilkårVurderingStatus.Uavklart
                     : fastOppholdINorge.status === FastOppholdINorgeStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
@@ -137,8 +131,10 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
         },
         {
             status:
-                formue === null || formue.status === FormueStatus.MåInnhenteMerInformasjon
+                formue === null
                     ? VilkårVurderingStatus.IkkeVurdert
+                    : formue.status === FormueStatus.MåInnhenteMerInformasjon
+                    ? VilkårVurderingStatus.Uavklart
                     : formue.status === FormueStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,

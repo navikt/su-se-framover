@@ -11,10 +11,11 @@ import * as Routes from '~/lib/routes';
 import { fetchBrev } from '~api/pdfApi';
 import { Person } from '~api/personApi';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
+import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { erAvslått, erIverksatt, erTilAttestering } from '~features/behandling/behandlingUtils';
 import { getGender, showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { mapToVilkårsinformasjon, statusIcon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
+import { mapToVilkårsinformasjon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
@@ -57,7 +58,7 @@ const VilkårsvurderingInfoLinje = (props: {
         <div className={styles.infolinjeContainer}>
             <div className={styles.infolinje}>
                 <span className={styles.statusContainer}>
-                    <span className={styles.statusIcon}>{statusIcon(props.status)}</span>
+                    <VilkårvurderingStatusIcon className={styles.statusIcon} status={props.status} />
                 </span>
                 <div>
                     <span className={styles.infotittel}>{vilkårTittelFormatted(props.type)}:</span>

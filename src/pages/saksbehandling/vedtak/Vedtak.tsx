@@ -5,15 +5,11 @@ import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
+import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { erAvslått, erTilAttestering, harBeregning } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { lastNedBrev } from '~features/saksoversikt/sak.slice';
-import {
-    createVilkårUrl,
-    mapToVilkårsinformasjon,
-    statusIcon,
-    vilkårTittelFormatted,
-} from '~features/saksoversikt/utils';
+import { createVilkårUrl, mapToVilkårsinformasjon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import * as routes from '~lib/routes.ts';
 import { Nullable } from '~lib/types';
 import { VisSimulering } from '~pages/saksbehandling/simulering/simulering';
@@ -139,7 +135,7 @@ const VilkårsvurderingInfoLinje = (props: {
         <div className={styles.infolinjeContainer}>
             <div className={styles.infolinje}>
                 <span className={styles.statusContainer}>
-                    <span className={styles.statusIcon}>{statusIcon(props.status)}</span>
+                    <VilkårvurderingStatusIcon className={styles.statusIcon} status={props.status} />
                 </span>
                 <div>
                     <span className={styles.infotittel}>{vilkårTittelFormatted(props.type)}:</span>
