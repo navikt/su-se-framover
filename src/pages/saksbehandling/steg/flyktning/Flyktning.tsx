@@ -14,7 +14,7 @@ import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Behandlingsstatus } from '~types/Behandling';
+import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Flyktning as FlyktningType, FlyktningStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
@@ -47,6 +47,22 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
+    const hentBehandlingForTidigAvslag = (nyStatus: Nullable<FlyktningStatus>): Behandling => {
+        if (!nyStatus) {
+            return props.behandling;
+        }
+
+        return {
+            ...props.behandling,
+            behandlingsinformasjon: {
+                ...props.behandling.behandlingsinformasjon,
+                flyktning: {
+                    ...formik.values,
+                    status: nyStatus,
+                },
+            },
+        };
+    };
     const goToVedtak = () => {
         history.push(
             Routes.saksbehandlingVedtak.createURL({
@@ -209,7 +225,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                     })
                                 );
                             }}
-                            behandling={props.behandling}
+                            behandling={hentBehandlingForTidigAvslag(formik.values.status)}
                         />
                     </form>
                 ),
