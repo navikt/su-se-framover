@@ -1,5 +1,4 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import Header from '@navikt/nap-header';
 import Lenke from 'nav-frontend-lenker';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
@@ -15,7 +14,7 @@ import HomePage from '~pages/HomePage';
 import Saksoversikt from '~pages/saksbehandling/Saksoversikt';
 
 import ErrorBoundary from './components/ErrorBoundary';
-import Menyknapp from './components/Menyknapp';
+import Header from './components/header/Header';
 import * as meSlice from './features/me/me.slice';
 import * as Cookies from './lib/cookies';
 import { pipe } from './lib/fp';
@@ -23,7 +22,7 @@ import * as routes from './lib/routes';
 import Soknad from './pages/søknad';
 import Store, { useAppDispatch, useAppSelector } from './redux/Store';
 import styles from './root.module.less';
-
+import { LoggedInUser } from './types/LoggedInUser';
 import './externalStyles';
 
 const ScrollToTop = () => {
@@ -122,16 +121,12 @@ const ContentWrapper: React.FC = (props) => {
 
     return (
         <div>
-            <Header title="Supplerende stønad Ufør" titleHref={'/'}>
-                {RemoteData.isSuccess(loggedInUser) && (
-                    <Menyknapp
-                        navn={loggedInUser.value.navn}
-                        onLoggUtClick={() => {
-                            window.location.href = `${window.BASE_URL}/logout`;
-                        }}
-                    />
+            <Header
+                user={pipe(
+                    loggedInUser,
+                    RemoteData.getOrElse<unknown, LoggedInUser | null>(() => null)
                 )}
-            </Header>
+            />
             <div className={styles.contentContainer}>
                 {pipe(
                     loggedInUser,
