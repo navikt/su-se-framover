@@ -55,7 +55,9 @@ export function getFormue(behandlingsInfo: Behandlingsinformasjon, søknadsInnho
         ),
         status: behandlingsFormue?.status ?? FormueStatus.VilkårOppfylt,
         begrunnelse: behandlingsFormue?.begrunnelse ?? null,
-        borSøkerMedEktefelle: behandlingsInfo.ektefelle ? behandlingsInfo.ektefelle.fnr != null : null,
+        borSøkerMedEktefelle: behandlingsInfo.ektefelle
+            ? behandlingsInfo.ektefelle.fnr != null
+            : søknadsInnhold.boforhold.delerBoligMed === DelerBoligMed?.EKTEMAKE_SAMBOER,
         ektefellesFnr: behandlingsInfo.ektefelle?.fnr ?? null,
     };
 }
