@@ -3,7 +3,6 @@ import { Systemtittel } from 'nav-frontend-typografi';
 import React from 'react';
 
 import { useI18n } from '~lib/hooks';
-import { Behandling, Behandlingsstatus } from '~types/Behandling';
 
 import sharedI18n from './sharedI18n-nb';
 import styles from './vurdering.module.less';
@@ -30,7 +29,7 @@ export const Vurderingknapper = (props: {
     onTilbakeClick(): void;
     onNesteClick?(): void;
     onLagreOgFortsettSenereClick(): void;
-    behandling?: Behandling;
+    nesteKnappTekst?: string;
 }) => {
     const intl = useI18n({ messages: { ...sharedI18n } });
 
@@ -41,9 +40,7 @@ export const Vurderingknapper = (props: {
                     {intl.formatMessage({ id: 'knapp.tilbake' })}
                 </Knapp>
                 <Hovedknapp onClick={props.onNesteClick} htmlType={props.onNesteClick ? 'button' : 'submit'}>
-                    {props.behandling?.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
-                        ? intl.formatMessage({ id: 'knapp.tilVedtaket' })
-                        : intl.formatMessage({ id: 'knapp.neste' })}
+                    {props.nesteKnappTekst ? props.nesteKnappTekst : intl.formatMessage({ id: 'knapp.neste' })}
                 </Hovedknapp>
             </div>
             <Knapp onClick={props.onLagreOgFortsettSenereClick} htmlType="button">

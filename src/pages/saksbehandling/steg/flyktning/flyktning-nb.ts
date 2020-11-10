@@ -5,4 +5,6 @@ export default {
 
     'page.tittel': 'Flyktning',
     'radio.flyktning.legend': 'Er søker registrert flyktning etter utlendingslova §28?',
+
+    'knapp.tilVedtaket': 'Gå til vedtaket',
 };

@@ -15,7 +15,7 @@ import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
-import { Flyktning as FlyktningType, FlyktningStatus } from '~types/Behandlingsinformasjon';
+import { Flyktning as FlyktningType, FlyktningStatus, UførhetStatus } from '~types/Behandlingsinformasjon';
 
 import Faktablokk from '../Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -47,6 +47,12 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
+    const vilGiTidligAvslag = (): boolean => {
+        return (
+            props.behandling.behandlingsinformasjon.uførhet?.status === UførhetStatus.VilkårIkkeOppfylt ||
+            formik.values?.status === FlyktningStatus.VilkårIkkeOppfylt
+        );
+    };
     const goToVedtak = () => {
         history.push(
             Routes.saksbehandlingVedtak.createURL({
@@ -209,7 +215,9 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                     })
                                 );
                             }}
-                            behandling={props.behandling}
+                            nesteKnappTekst={
+                                vilGiTidligAvslag() ? intl.formatMessage({ id: 'knapp.tilVedtaket' }) : undefined
+                            }
                         />
                     </form>
                 ),
