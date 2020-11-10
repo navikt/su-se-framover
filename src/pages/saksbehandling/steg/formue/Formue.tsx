@@ -31,7 +31,7 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 import messages from './formue-nb';
 import styles from './formue.module.less';
 import { FormueInput, ShowSum } from './FormueComponents';
-import { getInitialVerdier, getFormue, kalkulerFormue, kalkulerFormueFraSøknad } from './utils';
+import { getInitialVerdier, getFormue, kalkulerFormue, kalkulerFormueFraSøknad, delerBoligMedToString } from './utils';
 
 type FormData = Formue & {
     borSøkerMedEktefelle: Nullable<boolean>;
@@ -427,19 +427,39 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             faktaBlokkerClassName={styles.formueFaktaBlokk}
                             fakta={[
                                 {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.ektefellesFnr' }),
-                                    verdi: søknadInnhold.boforhold.ektefellePartnerSamboer
-                                        ? søknadInnhold.boforhold.ektefellePartnerSamboer?.type === 'MedFnr'
-                                            ? søknadInnhold.boforhold.ektefellePartnerSamboer.fnr
-                                            : søknadInnhold.boforhold.ektefellePartnerSamboer.fødselsdato
-                                        : '-',
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.delerBoligMed' }),
+                                    verdi: delerBoligMedToString(søknadInnhold.boforhold.delerBoligMed),
                                 },
                                 {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.ektefellesNavn' }),
-                                    verdi:
-                                        søknadInnhold.boforhold.ektefellePartnerSamboer?.type === 'UtenFnr'
-                                            ? søknadInnhold.boforhold.ektefellePartnerSamboer.navn
-                                            : '-',
+                                    tittel: 'Ektefelle',
+                                    verdi: søknadInnhold.ektefelle ? (
+                                        <>
+                                            <p>
+                                                {`${intl.formatMessage({
+                                                    id: 'display.fraSøknad.ektefellesFnr',
+                                                })}: ${
+                                                    søknadInnhold.boforhold.ektefellePartnerSamboer
+                                                        ? søknadInnhold.boforhold.ektefellePartnerSamboer?.type ===
+                                                          'MedFnr'
+                                                            ? søknadInnhold.boforhold.ektefellePartnerSamboer.fnr
+                                                            : søknadInnhold.boforhold.ektefellePartnerSamboer
+                                                                  .fødselsdato
+                                                        : '-'
+                                                }`}
+                                            </p>
+                                            {søknadInnhold.boforhold.ektefellePartnerSamboer?.type === 'UtenFnr' && (
+                                                <p>{`${intl.formatMessage({
+                                                    id: 'display.fraSøknad.ektefellesNavn',
+                                                })}: ${søknadInnhold.boforhold.ektefellePartnerSamboer.navn}`}</p>
+                                            )}
+                                            <p>
+                                                Ektefelles totala formue:{' '}
+                                                {kalkulerFormueFraSøknad(søknadInnhold.ektefelle.formue).toString()}
+                                            </p>
+                                        </>
+                                    ) : (
+                                        'Ingen ektefelle'
+                                    ),
                                 },
                                 {
                                     tittel: intl.formatMessage({ id: 'display.fraSøknad.verdiPåBolig' }),

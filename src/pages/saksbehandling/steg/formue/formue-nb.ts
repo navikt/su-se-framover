@@ -1,6 +1,7 @@
 export default {
     'checkbox.henteMerInfo': 'Må hente mer informasjon',
 
+    'display.fraSøknad.delerBoligMed': 'Hvem deler du bolig med?',
     'display.fraSøknad.ektefellesFnr': 'Ektefelles fnr/fødselsdato',
     'display.fraSøknad.ektefellesNavn': 'Ektefelles navn (hvis oppgitt)',
     'display.fraSøknad.verdiPåBolig': 'Verdi på bolig',
