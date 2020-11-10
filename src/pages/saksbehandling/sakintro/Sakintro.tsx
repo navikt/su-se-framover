@@ -18,10 +18,23 @@ import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Sak } from '~types/Sak';
-import { Søknad } from '~types/Søknad';
+import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 
 import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
+
+const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
+    switch (type) {
+        case LukkSøknadBegrunnelse.Avvist:
+            return 'display.søknad.lukket.avvist';
+        case LukkSøknadBegrunnelse.Bortfalt:
+            return 'display.søknad.lukket.bortfalt';
+        case LukkSøknadBegrunnelse.Trukket:
+            return 'display.søknad.lukket.trukket';
+        default:
+            return 'display.søknad.lukket.ukjent';
+    }
+};
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
     const intl = useI18n({ messages });
@@ -48,7 +61,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         behandlinger={props.sak.behandlinger}
                         intl={intl}
                     />
-                    <AvslåtteSøknader avslåtteSøknader={avslåtteSøknader} intl={intl} />
+                    <LukkedeSøknader avslåtteSøknader={avslåtteSøknader} intl={intl} />
                     <Utbetalinger
                         sakId={props.sak.id}
                         søker={props.søker}
@@ -225,12 +238,12 @@ const SøknadsbehandlingStartetKnapper = (props: { behandlinger: Behandling[]; s
     );
 };
 
-const AvslåtteSøknader = (props: { avslåtteSøknader: Søknad[]; intl: IntlShape }) => {
+const LukkedeSøknader = (props: { avslåtteSøknader: Søknad[]; intl: IntlShape }) => {
     return (
         <div className={styles.søknadsContainer}>
             <Ingress className={styles.søknadsContainerTittel}>
                 {props.intl.formatMessage({
-                    id: 'display.avslåtteSøknader.tittel',
+                    id: 'display.lukkedeSøknader.tittel',
                 })}
             </Ingress>
             <ol>
@@ -252,9 +265,9 @@ const AvslåtteSøknader = (props: { avslåtteSøknader: Søknad[]; intl: IntlSh
                             </div>
                             <div className={styles.ikonContainer}>
                                 <Ikon className={styles.ikon} kind="feil-sirkel-fyll" width={'24px'} />
-                                <p>
+                                <p className={styles.ikonTekst}>
                                     {props.intl.formatMessage({
-                                        id: 'display.søknad.avslått',
+                                        id: lukketBegrunnelseResourceId(søknad.lukket?.type),
                                     })}
                                 </p>
                             </div>

@@ -3,7 +3,7 @@ export default {
     'display.attestering.iverksatt': 'Iverksatt',
     'display.attestering.tilAttestering': 'Til attestering',
 
-    'display.avslåtteSøknader.tittel': 'Avslåtte søknader',
+    'display.lukkedeSøknader.tittel': 'Lukket søknad',
 
     'display.behandling.fortsettBehandling': 'Fortsett behandling',
     'display.behandling.klarteIkkeStarteBehandling': 'Klarte ikke å starte behandling',
@@ -11,7 +11,10 @@ export default {
 
     'display.saksoversikt.tittel': 'Saksoversikt',
 
-    'display.søknad.avslått': 'Avslått',
+    'display.søknad.lukket.avvist': 'Avvist',
+    'display.søknad.lukket.bortfalt': 'Bortfalt',
+    'display.søknad.lukket.trukket': 'Trukket',
+    'display.søknad.lukket.ukjent': 'Ukjent lukking',
     'display.søknad.lukkSøknad': 'Lukk søknad',
     'display.søknad.mottatt': 'Mottatt:',
     'display.søknad.typeSøknad': 'Førstegangssøknad',

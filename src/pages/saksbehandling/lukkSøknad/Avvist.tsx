@@ -106,7 +106,7 @@ const Avvist = (props: AvvistProps) => {
                     />
                 </div>
             )}
-            {props.avvistFormData.typeBrev === AvvistBrevtyper.Fritekstsbrev && (
+            {props.avvistFormData.typeBrev && (
                 <div className={styles.textAreaContainer}>
                     <Textarea
                         label={intl.formatMessage({ id: 'display.avvist.fritekst' })}
