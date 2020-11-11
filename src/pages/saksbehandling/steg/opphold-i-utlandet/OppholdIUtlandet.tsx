@@ -40,13 +40,7 @@ const DatoFelt = (props: { label: React.ReactNode; verdi: string | React.ReactNo
 );
 
 const schema = yup.object<FormData>({
-    status: yup
-        .mixed()
-        .defined()
-        .oneOf(
-            [OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet, OppholdIUtlandetStatus.SkalHoldeSegINorge],
-            'Vennligst velg et alternativ '
-        ),
+    status: yup.mixed().defined().oneOf(Object.values(OppholdIUtlandetStatus), 'Vennligst velg et alternativ '),
     begrunnelse: yup.string().defined(),
 });
 
@@ -137,10 +131,10 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                                 label={intl.formatMessage({ id: 'radio.label.ja' })}
                                 name="status"
                                 onChange={() =>
-                                    formik.setValues({
-                                        ...formik.values,
+                                    formik.setValues((v) => ({
+                                        ...v,
                                         status: OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet,
-                                    })
+                                    }))
                                 }
                                 checked={formik.values.status === OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet}
                             />
@@ -148,12 +142,23 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                                 label={intl.formatMessage({ id: 'radio.label.nei' })}
                                 name="status"
                                 onChange={() =>
-                                    formik.setValues({
-                                        ...formik.values,
+                                    formik.setValues((v) => ({
+                                        ...v,
                                         status: OppholdIUtlandetStatus.SkalHoldeSegINorge,
-                                    })
+                                    }))
                                 }
                                 checked={formik.values.status === OppholdIUtlandetStatus.SkalHoldeSegINorge}
+                            />
+                            <Radio
+                                label={intl.formatMessage({ id: 'radio.label.uavklart' })}
+                                name="status"
+                                onChange={() =>
+                                    formik.setValues((v) => ({
+                                        ...v,
+                                        status: OppholdIUtlandetStatus.Uavklart,
+                                    }))
+                                }
+                                checked={formik.values.status === OppholdIUtlandetStatus.Uavklart}
                             />
                         </RadioGruppe>
                         <Textarea
@@ -162,10 +167,10 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                             feil={formik.errors.begrunnelse}
                             value={formik.values.begrunnelse ?? ''}
                             onChange={(e) => {
-                                formik.setValues({
-                                    ...formik.values,
+                                formik.setValues((v) => ({
+                                    ...v,
                                     begrunnelse: e.target.value ? e.target.value : null,
-                                });
+                                }));
                             }}
                         />
                         {pipe(
