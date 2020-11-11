@@ -62,7 +62,10 @@ export function getFormue(behandlingsInfo: Behandlingsinformasjon, søknadsInnho
     };
 }
 
-function getVerdier(verdier: Nullable<FormueVerdier>, søknadsFormue: Nullable<SøknadInnhold['formue']>): FormueVerdier {
+export function getVerdier(
+    verdier: Nullable<FormueVerdier>,
+    søknadsFormue: Nullable<SøknadInnhold['formue']>
+): FormueVerdier {
     return {
         verdiIkkePrimærbolig: verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0,
         verdiKjøretøy: verdier?.verdiKjøretøy ?? totalVerdiKjøretøy(søknadsFormue?.kjøretøy ?? null) ?? 0,
