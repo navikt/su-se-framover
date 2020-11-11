@@ -277,7 +277,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         </div>
 
                         <div className={styles.formueInputContainer}>
-                            <div className={styles.søkersFormue}>
+                            <div className={inputToShow === 'søker' ? styles.søkersFormue : undefined}>
                                 {inputToShow === 'søker' &&
                                     keyNavnForFormue.map((keyNavn) => (
                                         <FormueInput
@@ -324,7 +324,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             </div>
 
                             {formik.values.borSøkerMedEktefelle && (
-                                <div className={styles.ektefellesFormue}>
+                                <div className={inputToShow === 'ektefelle' ? styles.ektefellesFormue : undefined}>
                                     {inputToShow === 'ektefelle' &&
                                         keyNavnForFormue.map((keyNavn) => (
                                             <FormueInput
