@@ -16,4 +16,9 @@ export default {
     'radio.personligOppmøte.grunn.midlertidigUnntakFraOppmøteplikt': 'Midlertidig unntak fra oppmøteplikten',
     'radio.personligOppmøte.grunn.brukerIkkeMøttOppfyllerIkkeVilkår':
         'Bruker har ikke møtt, og oppfyller ikke vilkåret',
+
+    'button.tilVedtak.label': 'Gå til vedtaket',
+
+    'alert.ikkeFerdigbehandlet':
+        'Ett eller flere av vilkårene står som uavklart. Disse må vurderes før du kan gå videre.',
 };
