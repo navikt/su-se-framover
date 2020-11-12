@@ -3,6 +3,7 @@ import { pipe } from 'fp-ts/lib/function';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
+import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -41,8 +42,14 @@ const Kvittering = () => {
                     () => {
                         return <AlertStripe type="feil">En feil oppsto</AlertStripe>;
                     },
-                    () => {
-                        return <AlertStripe type="suksess">Søknad sendt!</AlertStripe>;
+                    (s) => {
+                        return (
+                            <AlertStripe type="suksess">
+                                <Normaltekst>Søknad sendt!</Normaltekst>
+                                <Normaltekst>Søknad-ID: {s.id}</Normaltekst>
+                                <Normaltekst>Sak-ID: {s.sakId}</Normaltekst>
+                            </AlertStripe>
+                        );
                     }
                 )
             )}
