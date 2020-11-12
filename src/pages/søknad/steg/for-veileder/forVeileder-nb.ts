@@ -1,5 +1,5 @@
 export default {
-    'info.telefon.tittel': 'Telefonnummer i kontakt- og reservasjonsregisteret',
+    'info.telefon.tittel': 'Kontaktinfo i kontakt- og reservasjonsregisteret',
     'info.telefon.body':
         'Hvis telefonnummeret ikke stemmer må dette oppdateres i kontakt-og reservasjonsregisteret av søkeren selv. Hvis søker ønsker å bli kontaktet på et annet telefonnummer kan dette gjøres ----------',
     'info.kontaktform.tittel': 'Kontaktform',

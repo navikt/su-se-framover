@@ -18,7 +18,11 @@ export enum Adressebeskyttelse {
 export interface Person {
     fnr: string;
     aktorId: string;
-    navn: { fornavn: string; mellomnavn: Nullable<string>; etternavn: string };
+    navn: {
+        fornavn: string;
+        mellomnavn: Nullable<string>;
+        etternavn: string;
+    };
     kjønn: Nullable<Kjønn>;
     telefonnummer: {
         landskode: string;
@@ -37,6 +41,13 @@ export interface Person {
     statsborgerskap: Nullable<string>;
     adressebeskyttelse: Nullable<Adressebeskyttelse>;
     skjermet: Nullable<boolean>;
+    kontaktinfo: Nullable<{
+        epostadresse: Nullable<string>;
+        mobiltelefonnummer: Nullable<string>;
+        reservert: boolean;
+        kanVarsles: boolean;
+        språk: Nullable<boolean>;
+    }>;
 }
 
 export async function fetchPerson(fnr: string): Promise<ApiClientResult<Person>> {

@@ -40,9 +40,15 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
     const forVeileder = useAppSelector((s) => s.soknad.forVeileder);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
-    const telefonnummer = props.søker.telefonnummer
-        ? `${props.søker.telefonnummer.landskode} ${props.søker.telefonnummer.nummer}`
+    const søker: Person = props.søker;
+    const telefonnummerPdl = søker.telefonnummer
+        ? `${søker.telefonnummer.landskode} ${søker.telefonnummer.nummer}`
         : 'Ikke registrert telefonnummer';
+
+    const kontaktinfo = søker.kontaktinfo;
+    const telefonnummerKrr = kontaktinfo?.mobiltelefonnummer;
+    const epostKrr = kontaktinfo?.epostadresse;
+    const digitalBruker: boolean = kontaktinfo != null && !kontaktinfo?.reservert && kontaktinfo?.kanVarsles;
 
     const save = (values: FormData) => dispatch(søknadSlice.actions.ForVeileder(values));
 
@@ -74,7 +80,9 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
                 >
                     <Panel border className={styles.panelMargin}>
                         <p className={styles.boldP}>{intl.formatMessage({ id: 'info.telefon.tittel' })}</p>
-                        <p>{telefonnummer}</p>
+                        <p>{telefonnummerKrr}</p>
+                        <p>{epostKrr}</p>
+                        <p>Telefonnummer i NAV: {telefonnummerPdl}</p>
                         <AlertStripeInfo className={styles.marginTopXSS}>
                             {intl.formatMessage({ id: 'info.telefon.body' })}
                         </AlertStripeInfo>
@@ -82,7 +90,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
 
                     <Panel border className={styles.panelMargin}>
                         <p className={styles.boldP}>{intl.formatMessage({ id: 'info.kontaktform.tittel' })}</p>
-                        <p>Digital</p>
+                        <p>{digitalBruker ? 'Digital' : 'Reservert mot digital kommunikasjon'}</p>
                         <AlertStripeInfo className={styles.marginTopXSS}>
                             {intl.formatMessage({ id: 'info.kontaktform.body' })}
                         </AlertStripeInfo>
