@@ -67,7 +67,7 @@ const schema = yup.object<FormData>({
         .number()
         .nullable()
         .defined()
-        .when('uførevedtak', {
+        .when('status', {
             is: UførhetStatus.VilkårOppfylt,
             then: yup.number().positive().min(1).max(100).required().typeError('Feltet må være et tall'),
             otherwise: yup.number().nullable().defined(),
@@ -76,7 +76,7 @@ const schema = yup.object<FormData>({
         .number()
         .nullable()
         .defined()
-        .when('uførevedtak', {
+        .when('status', {
             is: UførhetStatus.VilkårOppfylt,
             then: yup.number().positive().integer().min(0).required().typeError('Feltet må være et tall'),
             otherwise: yup.number().nullable().defined(),
@@ -131,7 +131,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         validateOnChange: hasSubmitted,
     });
     const history = useHistory();
-
+    console.log(formik.values);
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
@@ -149,7 +149,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                         >
                             <Radio
                                 label={intl.formatMessage({ id: 'radio.label.ja' })}
-                                name="uførevedtak"
+                                name="status"
                                 onChange={() =>
                                     formik.setValues({ ...formik.values, status: UførhetStatus.VilkårOppfylt })
                                 }
@@ -157,7 +157,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                             />
                             <Radio
                                 label={intl.formatMessage({ id: 'radio.label.nei' })}
-                                name="uførevedtak"
+                                name="status"
                                 onChange={() =>
                                     formik.setValues({
                                         status: UførhetStatus.VilkårIkkeOppfylt,
@@ -169,7 +169,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                             />
                             <Radio
                                 label={intl.formatMessage({ id: 'radio.label.uføresakTilBehandling' })}
-                                name="uførevedtak"
+                                name="status"
                                 onChange={() =>
                                     formik.setValues({
                                         status: UførhetStatus.HarUføresakTilBehandling,
