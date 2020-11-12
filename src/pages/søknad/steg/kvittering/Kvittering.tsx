@@ -7,7 +7,9 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { fetchSøknad } from '~api/pdfApi';
+import { Person } from '~api/personApi';
 import * as personSlice from '~features/person/person.slice';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 import * as søknadslice from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -21,11 +23,26 @@ const messages = {
     'knapp.tilbake': 'Tilbake',
 };
 
-const Kvittering = () => {
+const Kvittering = (props: { papirsøknad: boolean; søker: Person }) => {
     const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
     const history = useHistory();
-    const søknad = useAppSelector((state) => state.innsending.søknad);
+    const [sakId, setSakId] = React.useState<string | null>(null);
+    const [søknadId, setSøknadId] = React.useState<string | null>(null);
+    const { søknad, sak } = useAppSelector((state) => ({ søknad: state.innsending.søknad, sak: state.sak.sak }));
+
+    React.useEffect(() => {
+        if (RemoteData.isSuccess(søknad) && props.papirsøknad) {
+            if (RemoteData.isInitial(sak)) {
+                dispatch(sakSlice.fetchSak({ fnr: props.søker.fnr }));
+            }
+
+            if (RemoteData.isSuccess(sak)) {
+                setSøknadId(søknad.value.id);
+                setSakId(sak.value.id);
+            }
+        }
+    }, [søknad._tag, sak._tag]);
 
     return (
         <div>
@@ -42,7 +59,17 @@ const Kvittering = () => {
                         return <AlertStripe type="feil">En feil oppsto</AlertStripe>;
                     },
                     () => {
-                        return <AlertStripe type="suksess">Søknad sendt!</AlertStripe>;
+                        return (
+                            <AlertStripe type="suksess">
+                                <p>Søknad sendt!</p>
+                                {props.papirsøknad && (
+                                    <div>
+                                        <p>Sak-id: {sakId}</p>
+                                        <p>Søknads-id: {søknadId}</p>
+                                    </div>
+                                )}
+                            </AlertStripe>
+                        );
                     }
                 )
             )}

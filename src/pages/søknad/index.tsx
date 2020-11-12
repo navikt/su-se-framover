@@ -140,7 +140,7 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
                 />
             );
         case Søknadsteg.Kvittering:
-            return <Kvittering />;
+            return <Kvittering papirsøknad={søknad.forVeileder.type === Søknadstype.Papirsøknad} søker={søker} />;
     }
 };
 
