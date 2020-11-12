@@ -2,8 +2,9 @@ import { EtikettAdvarsel } from 'nav-frontend-etiketter';
 import * as React from 'react';
 
 import { Person, Adressebeskyttelse } from '~api/personApi';
+import { SatsBehandlingsinfo } from '~pages/saksbehandling/steg/sats/utils';
 
-export const PersonAdvarsel = (props: { person: Person }) => {
+export const PersonAdvarsel = (props: { person: Person | SatsBehandlingsinfo }) => {
     const { adressebeskyttelse, skjermet } = props.person;
 
     if (!adressebeskyttelse || adressebeskyttelse === Adressebeskyttelse.Ugradert) {

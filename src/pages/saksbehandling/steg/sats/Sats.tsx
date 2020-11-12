@@ -4,14 +4,12 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element } from 'nav-frontend-typografi';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Sats as FaktiskSats } from '~/types/Sats';
-import { ApiError, ErrorCode } from '~api/apiClient';
-import { fetchPerson, Person } from '~api/personApi';
 import { SuperRadioGruppe } from '~components/FormElements';
-import { Personkort } from '~components/Personkort';
+import { PersonkortEPS } from '~components/Personkort';
 import { eqBosituasjon } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
@@ -28,7 +26,7 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './sats-nb';
 import styles from './sats.module.less';
-import { hentEktefellesAlder, hentEktefellesFnrEllerFødselsdato } from './utils';
+import { SatsBehandlingsinfo, setSatsFaktablokk } from './utils';
 
 interface FormData {
     epsFnr: Nullable<string>;
@@ -50,10 +48,13 @@ const toBosituasjon = (values: FormData): Nullable<Bosituasjon> => {
     };
 };
 
-const utledSats = (values: FormData, harEPS: boolean) => {
-    console.log(values);
+const utledSats = (values: FormData, harEPS: boolean, epsAlder?: Nullable<number>) => {
     if (!values.delerSøkerBolig && values.delerSøkerBolig !== null) {
         return FaktiskSats.Høy;
+    }
+
+    if (harEPS && !epsAlder) {
+        return 'Feil skjedde ved å utlede sats';
     }
 
     if (values.delerSøkerBolig && !harEPS) {
@@ -61,16 +62,19 @@ const utledSats = (values: FormData, harEPS: boolean) => {
     }
 
     if (harEPS) {
-        switch (values.mottarEktemakeEllerSamboerSU) {
-            case null:
-                return null;
-            case false:
-                return FaktiskSats.Høy;
-            case true:
-                return FaktiskSats.Ordinær;
+        if (epsAlder && epsAlder < 67) {
+            switch (values.mottarEktemakeEllerSamboerSU) {
+                case null:
+                    return null;
+                case false:
+                    return FaktiskSats.Høy;
+                case true:
+                    return FaktiskSats.Ordinær;
+            }
+        } else {
+            return FaktiskSats.Ordinær;
         }
     }
-
     return null;
 };
 
@@ -94,32 +98,16 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [eps, setEPS] = useState<Person>();
-    const [fetchEpsError, setfetchEpsError] = useState<ApiError>();
     const eksisterendeBosituasjon = props.behandling.behandlingsinformasjon.bosituasjon;
-    const epsFnr = props.behandling.behandlingsinformasjon.ektefelle?.fnr;
-
-    useEffect(() => {
-        if (!epsFnr) {
-            return;
-        }
-        async function fetchEps(fnr: string) {
-            const res = await fetchPerson(fnr);
-            if (res.status === 'ok') {
-                setEPS(res.data);
-            } else {
-                setfetchEpsError(res.error);
-            }
-        }
-
-        fetchEps(epsFnr);
-    }, [epsFnr]);
+    const eps = props.behandling.behandlingsinformasjon.ektefelle as Nullable<SatsBehandlingsinfo>;
 
     const formik = useFormik<FormData>({
         initialValues: {
-            epsFnr: props.behandling.behandlingsinformasjon.ektefelle?.fnr ?? null,
-            delerSøkerBolig: eksisterendeBosituasjon?.delerBolig ?? null,
-            mottarEktemakeEllerSamboerSU: eksisterendeBosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null,
+            epsFnr: eps?.fnr ?? null,
+            delerSøkerBolig: eps ? null : eksisterendeBosituasjon?.delerBolig ?? null,
+            mottarEktemakeEllerSamboerSU: !eps
+                ? null
+                : eksisterendeBosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null,
             begrunnelse: eksisterendeBosituasjon?.begrunnelse ?? null,
         },
         validationSchema: schema,
@@ -170,21 +158,12 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                     <Element className={styles.personkortTittel}>
                                         {intl.formatMessage({ id: 'display.eps.label' })}
                                     </Element>
-                                    <Personkort person={eps} />
+                                    <PersonkortEPS eps={eps} />
                                 </div>
-                            )}
-                            {fetchEpsError && (
-                                <AlertStripe type="feil">
-                                    {fetchEpsError.statusCode === ErrorCode.Unauthorized
-                                        ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
-                                        : fetchEpsError.statusCode === ErrorCode.NotFound
-                                        ? intl.formatMessage({ id: 'feilmelding.ikkeFunnet' })
-                                        : intl.formatMessage({ id: 'feilmelding.ukjent' })}
-                                </AlertStripe>
                             )}
                         </div>
 
-                        {!eps && !fetchEpsError ? (
+                        {!eps && (
                             <SuperRadioGruppe
                                 legend={intl.formatMessage({ id: 'radio.delerSøkerBoligOver18.legend' })}
                                 values={formik.values}
@@ -207,11 +186,9 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                     },
                                 ]}
                             />
-                        ) : (
-                            ''
                         )}
 
-                        {eps && (
+                        {eps?.alder && eps.alder < 67 ? (
                             <SuperRadioGruppe
                                 legend={intl.formatMessage({
                                     id: 'radio.ektemakeEllerSamboerUførFlyktning.legend',
@@ -240,15 +217,18 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                     },
                                 ]}
                             />
+                        ) : (
+                            ''
                         )}
 
-                        {utledSats(formik.values, Boolean(eps)) && (
+                        {utledSats(formik.values, Boolean(eps), eps?.alder) && (
                             <>
                                 <hr />
                                 <span>
                                     {`${intl.formatMessage({ id: 'display.sats' })} ${utledSats(
                                         formik.values,
-                                        Boolean(eps)
+                                        Boolean(eps),
+                                        eps?.alder
                                     )}`}
                                 </span>
                                 <hr />
@@ -296,55 +276,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                         tittel={intl.formatMessage({
                             id: 'display.fraSøknad',
                         })}
-                        fakta={[
-                            {
-                                tittel: intl.formatMessage({
-                                    id: 'display.fraSøknad.hvemDelerSøkerBoligMed',
-                                }),
-                                verdi: props.behandling.søknad.søknadInnhold.boforhold.delerBoligMed ?? '-',
-                            },
-                            {
-                                tittel: intl.formatMessage({
-                                    id: 'display.fraSøknad.ektefelleEllerSamboerFnr',
-                                }),
-                                verdi: props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
-                                    ? hentEktefellesFnrEllerFødselsdato(
-                                          props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
-                                      )
-                                    : '-',
-                            },
-                            {
-                                tittel: intl.formatMessage({
-                                    id: 'display.fraSøknad.ektefelleEllerSamboerAlder',
-                                }),
-                                verdi: props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
-                                    ? hentEktefellesAlder(
-                                          props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
-                                      ).toString()
-                                    : '-',
-                            },
-                            {
-                                tittel: intl.formatMessage({
-                                    id: 'display.fraSøknad.ektefelleEllerSamboerNavn',
-                                }),
-                                verdi:
-                                    props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer?.type ===
-                                    'UtenFnr'
-                                        ? props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer.navn
-                                        : '-',
-                            },
-                            {
-                                tittel: intl.formatMessage({
-                                    id: 'display.fraSøknad.ektemakeEllerSamboerUførFlyktning',
-                                }),
-                                verdi: props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
-                                    ? props.behandling.søknad.søknadInnhold.boforhold.ektefellePartnerSamboer
-                                          .erUførFlyktning
-                                        ? 'Ja'
-                                        : 'Nei'
-                                    : '-',
-                            },
-                        ]}
+                        fakta={setSatsFaktablokk(props.behandling.søknad.søknadInnhold, intl, eps)}
                     />
                 ),
             }}

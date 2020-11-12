@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import { Person, Kjønn } from '~api/personApi';
 import { KjønnKvinne, KjønnMann, KjønnUkjent } from '~assets/Icons';
+import { Nullable } from '~lib/types';
+import { SatsBehandlingsinfo } from '~pages/saksbehandling/steg/sats/utils';
 
 import { showName } from '../features/person/personUtils';
 
@@ -31,6 +33,37 @@ export const Personkort = (props: { person: Person }) => {
                     <span>{`${props.person.fnr.substring(4, 6)}`}</span>
                 </div>
                 <PersonAdvarsel person={props.person} />
+            </div>
+        </div>
+    );
+};
+
+export const PersonkortEPS = (props: { eps: Nullable<SatsBehandlingsinfo> }) => {
+    if (!props.eps || !props.eps.navn || !props.eps.fnr) {
+        return <></>;
+    }
+
+    return (
+        <div className={styles.personkortContainer}>
+            <div>
+                <span className={styles.personkortSVG}>
+                    {props.eps.kjønn === Kjønn.Kvinne ? (
+                        <KjønnKvinne />
+                    ) : props.eps.kjønn === Kjønn.Mann ? (
+                        <KjønnMann />
+                    ) : (
+                        <KjønnUkjent />
+                    )}
+                </span>
+            </div>
+            <div>
+                <p>{`${props.eps.navn.fornavn} ${props.eps.navn.mellomnavn} ${props.eps.navn.etternavn}`}</p>
+                <div>
+                    <span>{`${props.eps.fnr.substring(0, 6)} `}</span>
+                    <span>{`${props.eps.fnr.substring(6, 11)}, `}</span>
+                    <span>{props.eps.alder} år</span>
+                </div>
+                <PersonAdvarsel person={props.eps} />
             </div>
         </div>
     );
