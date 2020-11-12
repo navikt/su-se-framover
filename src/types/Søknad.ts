@@ -3,6 +3,7 @@ import { Nullable } from '~lib/types';
 
 export interface Søknad {
     id: string;
+    sakId: string;
     søknadInnhold: SøknadInnhold;
     opprettet: string;
     lukket: Nullable<Lukket>;
