@@ -10,13 +10,13 @@ export default {
     'input.verdiPåEiendom.label': 'Samlet verdi av eiendommene',
     'input.eiendomBrukesTil.label': 'Hva brukes eiendommene til?',
 
-    'input.depositumskonto.label': 'Har ektefelle/samboer en depositumskonto?',
+    'input.depositumskonto.label': 'Har ektefelle/samboer en depositumskonto som leietaker?',
     'input.depositumsBeløp.label': 'Beløp på depositumskontoen',
     'input.kontonummer.label': 'Kontonummer',
 
     'input.eierKjøretøy.label': 'Eier ektefelle/samboer bil, campingvogn eller kjøretøy?',
     'input.verdiPåKjøretøyTotal.label': 'Verdien av kjøretøyet',
-    'input.kjøretøyDeEier.label': 'Kjøretøy',
+    'input.kjøretøyDeEier.label': 'Registreringsnummer',
 
     'input.harInnskuddPåKonto.label': 'Har ektefelle/samboer innskudd stående på konto?',
     'input.innskuddsBeløp.label': 'Hva er beløpet på innskuddet?',
@@ -24,10 +24,10 @@ export default {
     'input.harVerdipapir.label': 'Har ektefelle/samboer verdipapirer, aksjefond ++?',
     'input.verdipapirBeløp.label': 'Oppgi beløp i kroner',
 
-    'input.skylderNoenMegPenger.label': 'Skylder noen ektefelle/samboer penger?',
+    'input.skylderNoenMegPenger.label': 'Skylder noen ektefelle/samboer mer enn 5000 kr?',
     'input.skylderNoenMegPengerBeløp.label': 'Hvor mye i kroner?',
 
-    'input.harKontanterOver1000.label': 'Har ektefelle/samboer kontanter over 1000kr?',
+    'input.harKontanter.label': 'Har ektefelle/samboer kontanter over 5000 kr?',
     'input.kontanterBeløp.label': 'Hvor mye i kroner?',
 
     'button.fjernRad.label': 'Fjern rad',
