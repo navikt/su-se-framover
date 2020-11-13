@@ -21,8 +21,8 @@ export default {
     'input.harInnskuddPåKonto.label': 'Har ektefelle/samboer innskudd stående på konto?',
     'input.innskuddsBeløp.label': 'Hva er beløpet på innskuddet?',
 
-    'input.harVerdipapir.label': 'Har ektefelle/samboer verdipapirer, aksjefond ++?',
-    'input.verdipapirBeløp.label': 'Oppgi beløp i kroner',
+    'input.harVerdipapir.label': 'Har ektefelle/samboer aksjer, aksjefond eller verdipapir?',
+    'input.verdipapirBeløp.label': 'Samlet verdi i kroner',
 
     'input.skylderNoenMegPenger.label': 'Skylder noen ektefelle/samboer mer enn 5000 kr?',
     'input.skylderNoenMegPengerBeløp.label': 'Hvor mye i kroner?',

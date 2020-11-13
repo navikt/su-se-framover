@@ -15,9 +15,10 @@ import { useI18n } from '../../../../lib/hooks';
 import { Nullable } from '../../../../lib/types';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
-import messages from '../inntekt/inntekt-nb';
 import styles from '../inntekt/inntekt.module.less';
 import sharedI18n from '../steg-shared-i18n';
+
+import messages from './inntekt-nb';
 
 /* TODO AI: Make inntekt a more general component and use it */
 
