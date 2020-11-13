@@ -9,7 +9,7 @@
         "tdd": "jest --watch",
         "start-no-browser": "rimraf .parcel_cache && parcel serve src/index.html --cache-dir .parcel_cache",
         "start": "npm run start-no-browser -- --open",
-        "build": "npm run clean:dist && npm run lint && npm run test && parcel build src/index.html --out-dir dist/ --no-source-maps",
+        "build": "npm run clean:dist && npm run lint && npm run test && parcel build src/index.html --out-dir dist/",
         "clean:dist": "rimraf dist",
         "prettier": "prettier --write src",
         "tsc:watch": "tsc --watch --noEmit --project './tsconfig.json'"
