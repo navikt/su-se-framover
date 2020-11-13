@@ -10,13 +10,13 @@ export default {
     'input.verdiPåEiendom.label': 'Samlet verdi av eiendommene',
     'input.eiendomBrukesTil.label': 'Hva brukes eiendommene til?',
 
-    'input.depositumskonto.label': 'Har du en depositumskonto?',
+    'input.depositumskonto.label': 'Har du en depositumskonto som leietaker?',
     'input.depositumsBeløp.label': 'Beløp på depositumskontoen',
     'input.kontonummer.label': 'Kontonummer',
 
     'input.eierKjøretøy.label': 'Eier du bil, campingvogn eller andre kjøretøy?',
     'input.verdiPåKjøretøyTotal.label': 'Verdien av kjøretøyet',
-    'input.kjøretøyDeEier.label': 'Kjøretøy',
+    'input.kjøretøyDeEier.label': 'Registreringsnummer',
 
     'input.harInnskuddPåKonto.label': 'Har du penger på konto?',
     'input.innskuddsBeløp.label': 'Beløp i kroner',
@@ -24,10 +24,10 @@ export default {
     'input.harVerdipapir.label': 'Har du aksjer, aksjefond eller verdipapir?',
     'input.verdipapirBeløp.label': 'Samlet verdi i kroner',
 
-    'input.skylderNoenMegPenger.label': 'Skylder noen deg mer enn 1000 kr?',
+    'input.skylderNoenMegPenger.label': 'Skylder noen deg mer enn 5000 kr?',
     'input.skylderNoenMegPengerBeløp.label': 'Beløp i kroner',
 
-    'input.harKontanterOver1000.label': 'Har du mer enn 1000 kr i kontanter?',
+    'input.harKontanter.label': 'Har du mer enn 5000 kr i kontanter?',
     'input.kontanterBeløp.label': 'Beløp i kroner?',
 
     'button.fjernRad.label': 'Fjern rad',

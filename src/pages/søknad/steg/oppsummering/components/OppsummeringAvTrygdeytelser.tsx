@@ -7,7 +7,7 @@ export const OppsummeringAvTrygdeytelser = (props: {
     labelFirstEl: React.ReactNode;
     labelScndEl: React.ReactNode;
     labelThirdEl: React.ReactNode;
-    arr: Array<{ beløp: string; type: string; fra: string }>;
+    arr: Array<{ beløp: string; type: string; valuta: string }>;
 }) => {
     return (
         <div>
@@ -20,11 +20,11 @@ export const OppsummeringAvTrygdeytelser = (props: {
                         </div>
                         <div className={styles.oppsummeringElement}>
                             <Element>{props.labelScndEl}</Element>
-                            <Normaltekst>{el.type}</Normaltekst>
+                            <Normaltekst>{el.valuta}</Normaltekst>
                         </div>
                         <div className={styles.oppsummeringElement}>
                             <Element>{props.labelThirdEl}</Element>
-                            <Normaltekst>{el.fra}</Normaltekst>
+                            <Normaltekst>{el.type}</Normaltekst>
                         </div>
                     </div>
                 );

@@ -153,12 +153,12 @@ const schema = yup.object<FormData>({
             is: true,
             then: yup.number().typeError('skylderNoenMegPenger beløp må være et tall').nullable(false).positive(),
         }) as yup.Schema<Nullable<string>>,
-    harKontanterOver1000: yup.boolean().nullable().required(),
+    harKontanter: yup.boolean().nullable().required(),
     kontanterBeløp: yup
         .number()
         .nullable()
         .defined()
-        .when('harKontanterOver1000', {
+        .when('harKontanter', {
             is: true,
             then: yup
                 .number()
@@ -271,7 +271,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 verdipapirBeløp: values.verdipapirBeløp,
                 skylderNoenMegPenger: values.skylderNoenMegPenger,
                 skylderNoenMegPengerBeløp: values.skylderNoenMegPengerBeløp,
-                harKontanterOver1000: values.harKontanterOver1000,
+                harKontanter: values.harKontanter,
                 kontanterBeløp: values.kontanterBeløp,
             })
         );
@@ -297,7 +297,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
             verdipapirBeløp: formueFraStore.verdipapirBeløp,
             skylderNoenMegPenger: formueFraStore.skylderNoenMegPenger,
             skylderNoenMegPengerBeløp: formueFraStore.skylderNoenMegPengerBeløp,
-            harKontanterOver1000: formueFraStore.harKontanterOver1000,
+            harKontanter: formueFraStore.harKontanter,
             kontanterBeløp: formueFraStore.kontanterBeløp,
         },
         onSubmit: (values) => {
@@ -594,21 +594,21 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
 
                         <JaNeiSpørsmål
-                            id="harKontanterOver1000"
+                            id="harKontanter"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.harKontanterOver1000.label" />}
-                            feil={formik.errors.harKontanterOver1000}
-                            state={formik.values.harKontanterOver1000}
+                            legend={<FormattedMessage id="input.harKontanter.label" />}
+                            feil={formik.errors.harKontanter}
+                            state={formik.values.harKontanter}
                             onChange={(e) =>
                                 formik.setValues({
                                     ...formik.values,
-                                    harKontanterOver1000: e,
+                                    harKontanter: e,
                                     kontanterBeløp: null,
                                 })
                             }
                         />
 
-                        {formik.values.harKontanterOver1000 && (
+                        {formik.values.harKontanter && (
                             <Input
                                 className={sharedStyles.marginBottom}
                                 id="kontanterBeløp"

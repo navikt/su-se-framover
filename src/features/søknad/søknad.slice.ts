@@ -52,7 +52,7 @@ export interface SøknadState {
         verdipapirBeløp: Nullable<string>;
         skylderNoenMegPenger: Nullable<boolean>;
         skylderNoenMegPengerBeløp: Nullable<string>;
-        harKontanterOver1000: Nullable<boolean>;
+        harKontanter: Nullable<boolean>;
         kontanterBeløp: Nullable<string>;
     };
     ektefelle: {
@@ -70,7 +70,7 @@ export interface SøknadState {
         harMottattSosialstønad: Nullable<boolean>;
         sosialStønadBeløp: Nullable<string>;
         harTrygdeytelserIUtlandet: Nullable<boolean>;
-        trygdeytelserIUtlandet: Array<{ beløp: string; type: string; fra: string }>;
+        trygdeytelserIUtlandet: Array<{ beløp: string; type: string; valuta: string }>;
         mottarPensjon: Nullable<boolean>;
         pensjonsInntekt: Array<{ ordning: string; beløp: string }>;
     };
@@ -117,7 +117,7 @@ const initialFormue: SøknadState['formue'] = {
     verdipapirBeløp: null,
     skylderNoenMegPenger: null,
     skylderNoenMegPengerBeløp: null,
-    harKontanterOver1000: null,
+    harKontanter: null,
     kontanterBeløp: null,
 };
 

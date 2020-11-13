@@ -171,67 +171,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
 
                         <JaNeiSpørsmål
-                            id="delerBoligMedPersonOver18"
-                            className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.delerBoligMedPersonOver18.label" />}
-                            feil={formik.errors.delerBoligMedPersonOver18}
-                            state={formik.values.delerBoligMedPersonOver18}
-                            onChange={(val) => {
-                                formik.setValues((v) => ({
-                                    ...v,
-                                    delerBoligMedPersonOver18: val,
-                                    delerBoligMed: null,
-                                    ektefellePartnerSamboer: null,
-                                }));
-                            }}
-                        />
-                        {formik.values.delerBoligMedPersonOver18 && (
-                            <RadioPanelGruppe
-                                className={sharedStyles.sporsmal}
-                                feil={formik.errors.delerBoligMed}
-                                legend={<FormattedMessage id={'input.delerBoligMed.label'} />}
-                                name="delerBoligMed"
-                                radios={[
-                                    {
-                                        label: (
-                                            <FormattedMessage id={'input.delerBoligMedEktefelleEllerSamboer.label'} />
-                                        ),
-                                        value: DelerBoligMed.EKTEMAKE_SAMBOER,
-                                    },
-                                    {
-                                        label: <FormattedMessage id={'input.delerBoligMedBarnOver18.label'} />,
-                                        value: DelerBoligMed.VOKSNE_BARN,
-                                    },
-                                    {
-                                        label: <FormattedMessage id={'input.delerBoligMedAndreVoksne.label'} />,
-                                        value: DelerBoligMed.ANNEN_VOKSEN,
-                                    },
-                                ]}
-                                onChange={(_, value) => {
-                                    formik.setValues({
-                                        ...formik.values,
-                                        delerBoligMed: value,
-                                        ektefellePartnerSamboer: null,
-                                    });
-                                }}
-                                checked={formik.values.delerBoligMed?.toString()}
-                            />
-                        )}
-
-                        {formik.values.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
-                            <EktefellePartnerSamboer
-                                onChange={(eps) =>
-                                    formik.setValues((values) => ({
-                                        ...values,
-                                        ektefellePartnerSamboer: eps,
-                                    }))
-                                }
-                                value={formik.values.ektefellePartnerSamboer}
-                                feil={formik.errors.ektefellePartnerSamboer}
-                            />
-                        )}
-
-                        <JaNeiSpørsmål
                             id="innlagtPåinstitusjon"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.innlagtPåInstitusjon.label" />}
@@ -329,6 +268,67 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             </div>
                         ) : (
                             ''
+                        )}
+
+                        <JaNeiSpørsmål
+                            id="delerBoligMedPersonOver18"
+                            className={sharedStyles.sporsmal}
+                            legend={<FormattedMessage id="input.delerBoligMedPersonOver18.label" />}
+                            feil={formik.errors.delerBoligMedPersonOver18}
+                            state={formik.values.delerBoligMedPersonOver18}
+                            onChange={(val) => {
+                                formik.setValues((v) => ({
+                                    ...v,
+                                    delerBoligMedPersonOver18: val,
+                                    delerBoligMed: null,
+                                    ektefellePartnerSamboer: null,
+                                }));
+                            }}
+                        />
+                        {formik.values.delerBoligMedPersonOver18 && (
+                            <RadioPanelGruppe
+                                className={sharedStyles.sporsmal}
+                                feil={formik.errors.delerBoligMed}
+                                legend={<FormattedMessage id={'input.delerBoligMed.label'} />}
+                                name="delerBoligMed"
+                                radios={[
+                                    {
+                                        label: (
+                                            <FormattedMessage id={'input.delerBoligMedEktefelleEllerSamboer.label'} />
+                                        ),
+                                        value: DelerBoligMed.EKTEMAKE_SAMBOER,
+                                    },
+                                    {
+                                        label: <FormattedMessage id={'input.delerBoligMedBarnOver18.label'} />,
+                                        value: DelerBoligMed.VOKSNE_BARN,
+                                    },
+                                    {
+                                        label: <FormattedMessage id={'input.delerBoligMedAndreVoksne.label'} />,
+                                        value: DelerBoligMed.ANNEN_VOKSEN,
+                                    },
+                                ]}
+                                onChange={(_, value) => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        delerBoligMed: value,
+                                        ektefellePartnerSamboer: null,
+                                    });
+                                }}
+                                checked={formik.values.delerBoligMed?.toString()}
+                            />
+                        )}
+
+                        {formik.values.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
+                            <EktefellePartnerSamboer
+                                onChange={(eps) =>
+                                    formik.setValues((values) => ({
+                                        ...values,
+                                        ektefellePartnerSamboer: eps,
+                                    }))
+                                }
+                                value={formik.values.ektefellePartnerSamboer}
+                                feil={formik.errors.ektefellePartnerSamboer}
+                            />
                         )}
                     </div>
                     <Feiloppsummering
