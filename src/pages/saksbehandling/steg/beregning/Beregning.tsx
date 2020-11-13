@@ -351,7 +351,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                                 <div key={index}>
                                                     <p>Beløp: {ytelse.beløp} i lokal valuta</p>
                                                     <p>Type: {ytelse.type}</p>
-                                                    <p>Fra: {ytelse.fra}</p>
+                                                    <p>Valuta: {ytelse.valuta}</p>
                                                 </div>
                                             )
                                         )}
