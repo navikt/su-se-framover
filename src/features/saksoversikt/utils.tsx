@@ -122,6 +122,8 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
             status:
                 oppholdIUtlandet === null
                     ? VilkårVurderingStatus.IkkeVurdert
+                    : oppholdIUtlandet.status === OppholdIUtlandetStatus.Uavklart
+                    ? VilkårVurderingStatus.Uavklart
                     : oppholdIUtlandet.status === OppholdIUtlandetStatus.SkalHoldeSegINorge
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
@@ -152,7 +154,10 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
 };
 
 function statusForPersonligOppmøte(personligOppmøte: Nullable<PersonligOppmøte>): VilkårVurderingStatus {
-    switch (personligOppmøte?.status) {
+    if (!personligOppmøte?.status) {
+        return VilkårVurderingStatus.IkkeVurdert;
+    }
+    switch (personligOppmøte.status) {
         case PersonligOppmøteStatus.MøttPersonlig:
         case PersonligOppmøteStatus.IkkeMøttMenSykMedLegeerklæringOgFullmakt:
         case PersonligOppmøteStatus.IkkeMøttMenVerge:
@@ -162,8 +167,7 @@ function statusForPersonligOppmøte(personligOppmøte: Nullable<PersonligOppmøt
 
         case PersonligOppmøteStatus.IkkeMøttPersonlig:
             return VilkårVurderingStatus.IkkeOk;
-
-        default:
-            return VilkårVurderingStatus.IkkeVurdert;
+        case PersonligOppmøteStatus.Uavklart:
+            return VilkårVurderingStatus.Uavklart;
     }
 }

@@ -64,6 +64,7 @@ export interface OppholdIUtlandet {
 export enum OppholdIUtlandetStatus {
     SkalVæreMerEnn90DagerIUtlandet = 'SkalVæreMerEnn90DagerIUtlandet',
     SkalHoldeSegINorge = 'SkalHoldeSegINorge',
+    Uavklart = 'Uavklart',
 }
 
 export interface Formue {
@@ -100,6 +101,7 @@ export enum PersonligOppmøteStatus {
     IkkeMøttMenKortvarigSykMedLegeerklæring = 'IkkeMøttMenKortvarigSykMedLegeerklæring',
     IkkeMøttMenMidlertidigUnntakFraOppmøteplikt = 'IkkeMøttMenMidlertidigUnntakFraOppmøteplikt',
     IkkeMøttPersonlig = 'IkkeMøttPersonlig',
+    Uavklart = 'Uavklart',
 }
 
 export interface Bosituasjon {
