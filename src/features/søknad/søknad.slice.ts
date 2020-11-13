@@ -52,7 +52,7 @@ export interface SøknadState {
         verdipapirBeløp: Nullable<string>;
         skylderNoenMegPenger: Nullable<boolean>;
         skylderNoenMegPengerBeløp: Nullable<string>;
-        harKontanterOver1000: Nullable<boolean>;
+        harKontanter: Nullable<boolean>;
         kontanterBeløp: Nullable<string>;
     };
     ektefelle: {
@@ -117,7 +117,7 @@ const initialFormue: SøknadState['formue'] = {
     verdipapirBeløp: null,
     skylderNoenMegPenger: null,
     skylderNoenMegPengerBeløp: null,
-    harKontanterOver1000: null,
+    harKontanter: null,
     kontanterBeløp: null,
 };
 

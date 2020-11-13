@@ -465,7 +465,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                     verdi: søknadInnhold.formue.verdipapirBeløp?.toString() ?? '0',
                                 },
                                 {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.kontanterOver1000' }),
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.kontanter' }),
                                     verdi: søknadInnhold.formue.kontanterBeløp?.toString() ?? '0',
                                 },
                                 {

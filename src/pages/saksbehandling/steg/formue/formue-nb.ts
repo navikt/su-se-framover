@@ -8,7 +8,7 @@ export default {
     'display.fraSøknad.verdiPåKjøretøy': 'Verdi på Kjøretøy',
     'display.fraSøknad.innskuddsbeløp': 'Innskuddsbeløp',
     'display.fraSøknad.verdipapirbeløp': 'Verdipapirbeløp',
-    'display.fraSøknad.kontanterOver1000': 'Kontanter over 1000',
+    'display.fraSøknad.kontanter': 'Kontanter over 5000',
     'display.fraSøknad.skylderNoenSøkerPengerBeløp': 'Skylder noen søker penger',
     'display.fraSøknad.depositumsBeløp': 'Depositumskonto',
 
@@ -25,7 +25,7 @@ export default {
     'input.label.innskudd': 'Innskudd på konto (inkludert depositumskonto)',
     'input.label.verdipapir': 'Verdipapirer, aksjefond ++',
     'input.label.pengerSkyldt': 'Skylder noen søker penger?',
-    'input.label.kontanter': 'Kontanter over 1000',
+    'input.label.kontanter': 'Kontanter over 5000',
     'input.label.depositumskonto': 'Depositumskonto',
 
     'knapp.endreEktefellesFormue': 'Endre ektefelles formue',

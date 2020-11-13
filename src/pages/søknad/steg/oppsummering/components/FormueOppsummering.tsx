@@ -128,10 +128,10 @@ export const FormueOppsummering = ({
                 />
             )}
             <Oppsummeringsfelt
-                label={intl.formatMessage({ id: 'input.harKontanterOver1000.label' })}
-                verdi={formue.harKontanterOver1000 ? 'Ja' : formue.harKontanterOver1000 === false ? 'Nei' : 'Ubesvart'}
+                label={intl.formatMessage({ id: 'input.harKontanter.label' })}
+                verdi={formue.harKontanter ? 'Ja' : formue.harKontanter === false ? 'Nei' : 'Ubesvart'}
             />
-            {formue.harKontanterOver1000 && (
+            {formue.harKontanter && (
                 <Oppsummeringsfelt
                     label={intl.formatMessage({ id: 'input.kontanterBeløp.label' })}
                     verdi={formue.kontanterBeløp ? formue.kontanterBeløp : 'Ubesvart'}

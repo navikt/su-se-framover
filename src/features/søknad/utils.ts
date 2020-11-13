@@ -18,7 +18,7 @@ export const toFormue = (formue: SøknadState['formue']) => {
         verdipapirBeløp: formue.harVerdipapir ? Number(formue.verdipapirBeløp) : null,
 
         skylderNoenMegPengerBeløp: formue.skylderNoenMegPenger ? Number(formue.skylderNoenMegPengerBeløp) : null,
-        kontanterBeløp: formue.harKontanterOver1000 ? Number(formue.kontanterBeløp) : null,
+        kontanterBeløp: formue.harKontanter ? Number(formue.kontanterBeløp) : null,
     };
 };
 
