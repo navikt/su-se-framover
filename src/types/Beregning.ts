@@ -11,10 +11,6 @@ export interface Beregning {
     fradrag: Fradrag[];
 }
 
-export interface UtledetSatsInfo {
-    satsBeløp: number;
-}
-
 export interface Månedsberegning {
     id: string;
     sats: Sats;

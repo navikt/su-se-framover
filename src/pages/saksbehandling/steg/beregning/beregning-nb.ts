@@ -6,7 +6,6 @@ export default {
     'datovelger.tom.legend': 'Til og med',
 
     'display.checkbox.fraUtland': 'Fra utland',
-    'display.finnerIkkeSatsBeløp': 'Sats er ikke tilgjengelig',
     'display.fraSøknad.forventerArbeidsinntekt': 'Forventer du å ha arbeidsinntekt fremover?',
     'display.fraSøknad.andreYtelserINav': 'Har du andre ytelser i NAV?',
     'display.fraSøknad.sømtOmAndreTrygdeytelser': 'Har du søkt om andre trygdeytelser som ikke er behandlet?',
@@ -15,16 +14,12 @@ export default {
     'display.fraSøknad.trygdeytelserIUtlandet': 'Har du trygdeytelser i utlandet?',
     'display.fraSøknad.tjenestepensjon/pensjonssparing': 'Har du tjenestepensjon og/eller pensjonssparing?',
 
-    'display.forventerArbeidsinntekt': 'Forventet inntekt etter uføre (IEU):',
-
     'display.fradrag.type': 'Type',
     'display.fradrag.beløp': 'Beløp per år',
 
     'display.input.beløpIUtenlandskValuta': 'Beløp i utenlandsk valuta',
     'display.input.kurs': 'Kurs ved utregning',
     'display.input.valuta': 'Valuta',
-
-    'display.sats': 'sats:',
 
     'display.simulerer': 'Simulerer',
 

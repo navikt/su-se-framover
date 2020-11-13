@@ -2,7 +2,6 @@ import { formatISO } from 'date-fns';
 
 import { Behandling } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
-import { UtledetSatsInfo } from '~types/Beregning';
 import { Fradrag } from '~types/Fradrag';
 import { Sats } from '~types/Sats';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
@@ -22,16 +21,6 @@ export async function startBehandling(arg: { sakId: string; søknadId: string })
 export async function hentBehandling(sakId: string, behandlingId: string): Promise<ApiClientResult<Behandling>> {
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}`,
-        method: 'GET',
-    });
-}
-
-export async function getUtledetSatsInfo(
-    sakId: string,
-    behandlingId: string
-): Promise<ApiClientResult<UtledetSatsInfo>> {
-    return apiClient({
-        url: `/saker/${sakId}/behandlinger/${behandlingId}/utledetSatsInfo`,
         method: 'GET',
     });
 }

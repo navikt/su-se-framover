@@ -6,7 +6,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Feilmelding } from 'nav-frontend-typografi';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { useHistory } from 'react-router-dom';
 
@@ -47,14 +47,10 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [needsBeregning, setNeedsBeregning] = useState(false);
 
-    const { beregningStatus, simuleringStatus, utledetSatsInfo } = useAppSelector((state) => state.sak);
+    const { beregningStatus, simuleringStatus } = useAppSelector((state) => state.sak);
     const FradragUtenomForventetInntekt = (props.behandling.beregning?.fradrag ?? []).filter(
         (f) => f.type !== Fradragstype.ForventetInntekt
     );
-
-    useEffect(() => {
-        dispatch(sakSlice.getUtledetSatsInfo({ sakId: props.sakId, behandlingId: props.behandling.id }));
-    }, []);
 
     if (!erIGyldigStatusForÅKunneBeregne(props.behandling)) {
         return <div>Behandlingen er ikke ferdig.</div>;
@@ -150,21 +146,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        <div className={styles.utledetSatsOgForventetInntektContainer}>
-                            <p>
-                                {props.behandling.behandlingsinformasjon.utledetSats}{' '}
-                                {intl.formatMessage({ id: 'display.sats' })}{' '}
-                                {RemoteData.isSuccess(utledetSatsInfo)
-                                    ? intl.formatNumber(utledetSatsInfo.value.satsBeløp)
-                                    : intl.formatMessage({ id: 'display.finnerIkkeSatsBeløp' })}
-                            </p>
-                            <p>
-                                {intl.formatMessage({ id: 'display.forventerArbeidsinntekt' })}{' '}
-                                {props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt
-                                    ? props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt
-                                    : 0}
-                            </p>
-                        </div>
                         <div className={styles.datoContainer}>
                             <div>
                                 <p>{intl.formatMessage({ id: 'datovelger.fom.legend' })}</p>
