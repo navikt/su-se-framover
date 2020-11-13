@@ -99,9 +99,9 @@ const InntektsOppsummering = ({
             {inntekt.harTrygdeytelserIUtlandet && (
                 <OppsummeringAvTrygdeytelser
                     arr={inntekt.trygdeytelserIUtlandet}
-                    labelFirstEl="Brutto beløp i lokal valuta per år"
-                    labelScndEl="Hvilken ytelser?"
-                    labelThirdEl="Hvem gir disse ytelsene?"
+                    labelFirstEl={intl.formatMessage({ id: 'input.trygdeytelserIUtlandetBeløp.label' })}
+                    labelScndEl={intl.formatMessage({ id: 'input.trygdeytelserIUtlandetValuta.label' })}
+                    labelThirdEl={intl.formatMessage({ id: 'input.trygdeytelserIUtlandetType.label' })}
                 />
             )}
 
