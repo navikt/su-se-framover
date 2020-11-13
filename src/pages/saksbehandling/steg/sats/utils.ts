@@ -6,7 +6,7 @@ import { Nullable } from '~lib/types';
 import { Ektefelle } from '~types/Behandlingsinformasjon';
 import { EktefellePartnerSamboer, SøknadInnhold } from '~types/Søknad';
 
-export interface SatsBehandlingsinfo extends Ektefelle {
+export interface EPSMedAlder extends Ektefelle {
     alder: Nullable<number>;
 }
 
@@ -25,11 +25,7 @@ export const hentEktefellesAlder = (ektefelle: EktefellePartnerSamboer) => {
 export const hentEktefellesFnrEllerFødselsdato = (ektefelle: EktefellePartnerSamboer) =>
     ektefelle.type === 'MedFnr' ? ektefelle.fnr : ektefelle.fødselsdato;
 
-export const setSatsFaktablokk = (
-    søknadinnhold: SøknadInnhold,
-    intl: IntlShape,
-    eps: Nullable<SatsBehandlingsinfo>
-) => {
+export const setSatsFaktablokk = (søknadinnhold: SøknadInnhold, intl: IntlShape, eps: Nullable<EPSMedAlder>) => {
     const faktablokk = [];
 
     if (eps) {

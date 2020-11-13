@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Person, Kjønn } from '~api/personApi';
 import { KjønnKvinne, KjønnMann, KjønnUkjent } from '~assets/Icons';
 import { Nullable } from '~lib/types';
-import { SatsBehandlingsinfo } from '~pages/saksbehandling/steg/sats/utils';
+import { EPSMedAlder } from '~pages/saksbehandling/steg/sats/utils';
 
 import { showName } from '../features/person/personUtils';
 
@@ -38,9 +38,9 @@ export const Personkort = (props: { person: Person }) => {
     );
 };
 
-export const PersonkortEPS = (props: { eps: Nullable<SatsBehandlingsinfo> }) => {
+export const PersonkortEPS = (props: { eps: Nullable<EPSMedAlder> }) => {
     if (!props.eps || !props.eps.navn || !props.eps.fnr) {
-        return <></>;
+        return null;
     }
 
     return (

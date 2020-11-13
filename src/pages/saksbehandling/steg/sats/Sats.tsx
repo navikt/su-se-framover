@@ -26,7 +26,7 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './sats-nb';
 import styles from './sats.module.less';
-import { SatsBehandlingsinfo, setSatsFaktablokk } from './utils';
+import { EPSMedAlder, setSatsFaktablokk } from './utils';
 
 interface FormData {
     epsFnr: Nullable<string>;
@@ -99,7 +99,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const eksisterendeBosituasjon = props.behandling.behandlingsinformasjon.bosituasjon;
-    const eps = props.behandling.behandlingsinformasjon.ektefelle as Nullable<SatsBehandlingsinfo>;
+    const eps = props.behandling.behandlingsinformasjon.ektefelle as Nullable<EPSMedAlder>;
 
     const formik = useFormik<FormData>({
         initialValues: {
