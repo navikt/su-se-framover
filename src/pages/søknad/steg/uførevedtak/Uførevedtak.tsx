@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering } from 'nav-frontend-skjema';
 import * as React from 'react';
-import { FormattedMessage, RawIntlProvider } from 'react-intl';
+import { RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
@@ -39,10 +39,9 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string }) => {
         },
         validationSchema: schema,
     });
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
-
-    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     return (
         <div className={sharedStyles.container}>
@@ -60,7 +59,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string }) => {
                     <div className={sharedStyles.formContainer}>
                         <JaNeiSpørsmål
                             id="harUførevedtak"
-                            legend={<FormattedMessage id="input.uførevedtak.label" />}
+                            legend={intl.formatMessage({ id: 'input.uførevedtak.label' })}
                             feil={formik.errors.harUførevedtak}
                             state={formik.values.harUførevedtak}
                             onChange={(e) =>
@@ -73,8 +72,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string }) => {
                     </div>
                     {formik.values.harUførevedtak === false && (
                         <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
-                            Du kan fremdeles søke, men du vil sannsynligvis få avslag. Du må søke om uføre og motta
-                            vedtak før du kan søke om supplerende stønad for uføre
+                            {intl.formatMessage({ id: 'feilmelding.uførevedtak.label' })}
                         </AlertStripe>
                     )}
                     <div>
