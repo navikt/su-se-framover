@@ -10,10 +10,10 @@ export default {
     'input.sosialStønadBeløp.label': 'Beløp i kroner for alle tre månedene',
     'input.trygdeytelserIUtlandet.label': 'Har ektefelle/samboer trygdeytelser i utlandet?',
     'input.trygdeytelserIUtlandetBeløp.label': 'Brutto beløp i lokal valuta per år',
-    'input.trygdeytelserIUtlandetType.label': 'Ytelse',
-    'input.trygdeytelserIUtlandetValuta.label': 'Hvem gir ytelsen?',
+    'input.trygdeytelserIUtlandetType.label': 'Type ytelse',
+    'input.trygdeytelserIUtlandetValuta.label': 'Valuta',
     'input.andreYtelserINAV.label': 'Har ektefelle/samboer andre ytelser i NAV?',
-    'input.andreYtelserINavYtelse.label': 'Hvilke ytelser?',
+    'input.andreYtelserINavYtelse.label': 'Hvilke ytelser?',
     'input.andreYtelserINavBeløp.label': 'Beløp i kroner per måned',
     'input.søktAndreYtelserIkkeBehandlet.label':
         'Har ektefelle/samboer søkt om andre trygdeytelser som ikke er behandlet?',
