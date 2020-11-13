@@ -19,12 +19,12 @@ export const OppsummeringAvTrygdeytelser = (props: {
                             <Normaltekst>{el.beløp}</Normaltekst>
                         </div>
                         <div className={styles.oppsummeringElement}>
-                            <Element>{props.labelScndEl}</Element>
-                            <Normaltekst>{el.type}</Normaltekst>
-                        </div>
-                        <div className={styles.oppsummeringElement}>
                             <Element>{props.labelThirdEl}</Element>
                             <Normaltekst>{el.valuta}</Normaltekst>
+                        </div>
+                        <div className={styles.oppsummeringElement}>
+                            <Element>{props.labelScndEl}</Element>
+                            <Normaltekst>{el.type}</Normaltekst>
                         </div>
                     </div>
                 );
