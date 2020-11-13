@@ -23,12 +23,12 @@ import sharedI18n from '../steg-shared-i18n';
 
 type FormData = SøknadState['inntekt'];
 
-const kjøretøySchema = yup.object({
+const trygdeytelserIUtlandetSchema = yup.object({
     beløp: (yup.number().typeError('Beløp må være et tall').positive().label('Beløp').required() as yup.Schema<
         unknown
     >) as yup.Schema<string>,
     type: yup.string().required(),
-    fra: yup.string().required(),
+    valuta: yup.string().required(),
 });
 
 const schema = yup.object<FormData>({
@@ -118,7 +118,7 @@ const schema = yup.object<FormData>({
         }),
     harTrygdeytelserIUtlandet: yup.boolean().nullable().required(),
     trygdeytelserIUtlandet: yup
-        .array(kjøretøySchema.required())
+        .array(trygdeytelserIUtlandetSchema.required())
         .defined()
         .when('harTrygdeytelserIUtlandet', {
             is: true,
@@ -128,10 +128,10 @@ const schema = yup.object<FormData>({
 });
 
 const TrygdeytelserInputFelter = (props: {
-    arr: Array<{ beløp: string; type: string; fra: string }>;
-    errors: string | string[] | Array<FormikErrors<{ beløp: string; type: string; fra: string }>> | undefined;
+    arr: Array<{ beløp: string; type: string; valuta: string }>;
+    errors: string | string[] | Array<FormikErrors<{ beløp: string; type: string; valuta: string }>> | undefined;
     feltnavn: string;
-    onChange: (element: { index: number; beløp: string; type: string; fra: string }) => void;
+    onChange: (element: { index: number; beløp: string; type: string; valuta: string }) => void;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
 }) => {
@@ -141,7 +141,7 @@ const TrygdeytelserInputFelter = (props: {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[idx] : null;
                 const beløpId = `${props.feltnavn}[${idx}].beløp`;
                 const typeId = `${props.feltnavn}[${idx}].type`;
-                const fraId = `${props.feltnavn}[${idx}].fra`;
+                const valutaId = `${props.feltnavn}[${idx}].valuta`;
 
                 return (
                     <div className={styles.trygdeytelserContainer} key={idx}>
@@ -157,12 +157,31 @@ const TrygdeytelserInputFelter = (props: {
                                             index: idx,
                                             beløp: e.target.value,
                                             type: input.type,
-                                            fra: input.fra,
+                                            valuta: input.valuta,
                                         });
                                     }}
                                 />
                                 {errorForLinje && typeof errorForLinje === 'object' && (
                                     <SkjemaelementFeilmelding>{errorForLinje.beløp}</SkjemaelementFeilmelding>
+                                )}
+                            </div>
+                            <div>
+                                <Input
+                                    id={`${valutaId}`}
+                                    name={`${valutaId}`}
+                                    label={<FormattedMessage id="input.trygdeytelserIUtlandetValuta.label" />}
+                                    value={input.valuta}
+                                    onChange={(e) => {
+                                        props.onChange({
+                                            index: idx,
+                                            beløp: input.beløp,
+                                            type: input.type,
+                                            valuta: e.target.value,
+                                        });
+                                    }}
+                                />
+                                {errorForLinje && typeof errorForLinje === 'object' && (
+                                    <SkjemaelementFeilmelding>{errorForLinje.valuta}</SkjemaelementFeilmelding>
                                 )}
                             </div>
                             <div>
@@ -176,31 +195,12 @@ const TrygdeytelserInputFelter = (props: {
                                             index: idx,
                                             beløp: input.beløp,
                                             type: e.target.value,
-                                            fra: input.fra,
+                                            valuta: input.valuta,
                                         });
                                     }}
                                 />
                                 {errorForLinje && typeof errorForLinje === 'object' && (
                                     <SkjemaelementFeilmelding>{errorForLinje.type}</SkjemaelementFeilmelding>
-                                )}
-                            </div>
-                            <div>
-                                <Input
-                                    id={`${fraId}`}
-                                    name={`${fraId}`}
-                                    label={<FormattedMessage id="input.trygdeytelserIUtlandetFra.label" />}
-                                    value={input.fra}
-                                    onChange={(e) => {
-                                        props.onChange({
-                                            index: idx,
-                                            beløp: input.beløp,
-                                            type: input.type,
-                                            fra: e.target.value,
-                                        });
-                                    }}
-                                />
-                                {errorForLinje && typeof errorForLinje === 'object' && (
-                                    <SkjemaelementFeilmelding>{errorForLinje.fra}</SkjemaelementFeilmelding>
                                 )}
                             </div>
                         </div>
@@ -453,7 +453,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 formik.setValues({
                                     ...formik.values,
                                     harTrygdeytelserIUtlandet: val,
-                                    trygdeytelserIUtlandet: val ? [{ beløp: '', type: '', fra: '' }] : [],
+                                    trygdeytelserIUtlandet: val ? [{ beløp: '', type: '', valuta: '' }] : [],
                                 })
                             }
                         />
@@ -470,7 +470,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                             {
                                                 beløp: '',
                                                 type: '',
-                                                fra: '',
+                                                valuta: '',
                                             },
                                         ],
                                     });
@@ -491,7 +491,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                                 ? {
                                                       beløp: val.beløp,
                                                       type: val.type,
-                                                      fra: val.fra,
+                                                      valuta: val.valuta,
                                                   }
                                                 : input
                                         ),
