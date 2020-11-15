@@ -449,7 +449,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                     verdi: delerBoligMedToString(søknadInnhold.boforhold.delerBoligMed),
                                 },
                                 {
-                                    tittel: 'Ektefelle',
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.ektefelleTitle' }),
                                     verdi: søknadInnhold.ektefelle ? (
                                         <>
                                             <p>
@@ -471,8 +471,11 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                 })}: ${søknadInnhold.boforhold.ektefellePartnerSamboer.navn}`}</p>
                                             )}
                                             <p>
-                                                Ektefelles totala formue:{' '}
-                                                {kalkulerFormueFraSøknad(søknadInnhold.ektefelle.formue).toString()}
+                                                {`${intl.formatMessage({
+                                                    id: 'display.fraSøknad.ektefellesFormue',
+                                                })}: ${kalkulerFormueFraSøknad(
+                                                    søknadInnhold.ektefelle.formue
+                                                ).toString()}`}
                                             </p>
                                         </>
                                     ) : (
@@ -516,7 +519,9 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 },
                             ]}
                         />
-                        <p className={styles.formueFraSøknad}>Totalt: {totalFormueFraSøknad}</p>
+                        <p className={styles.formueFraSøknad}>
+                            {intl.formatMessage({ id: 'display.fraSøknad.totalt' })}: {totalFormueFraSøknad}
+                        </p>
                     </div>
                 ),
             }}
