@@ -3,11 +3,11 @@ export default {
     'input.oppgiBeløp.label': 'Oppgi beløp på formue',
     'input.eierDuBolig.label': 'Eier du en bolig?',
     'input.borIBolig.label': 'Bor du i boligen?',
-    'input.verdiPåBolig.label': 'Verdi på boligen',
+    'input.verdiPåBolig.label': 'Formuesverdi på boligen',
     'input.boligBrukesTil.label': 'Hva brukes boligen til?',
     'input.eierMerEnnEnBolig.label': 'Eier du andre eiendommer i Norge eller utlandet?',
 
-    'input.verdiPåEiendom.label': 'Samlet verdi av eiendommene',
+    'input.verdiPåEiendom.label': 'Samlet formuesverdi av eiendommene',
     'input.eiendomBrukesTil.label': 'Hva brukes eiendommene til?',
 
     'input.depositumskonto.label': 'Har du en depositumskonto som leietaker?',
