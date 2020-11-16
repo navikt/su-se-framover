@@ -1,23 +1,54 @@
-import { EtikettAdvarsel } from 'nav-frontend-etiketter';
+import Etikett, { EtikettBaseProps } from 'nav-frontend-etiketter';
 import * as React from 'react';
 
 import { Person, Adressebeskyttelse } from '~api/personApi';
 import { EPSMedAlder } from '~pages/saksbehandling/steg/sats/utils';
 
+import styles from './personAdvarsel.module.less';
+
+interface EtikettInfo {
+    text: string;
+    type: EtikettBaseProps['type'];
+}
+
 export const PersonAdvarsel = (props: { person: Person | EPSMedAlder }) => {
     const { adressebeskyttelse, skjermet } = props.person;
+    const etiketter: EtikettInfo[] = [];
 
     if (adressebeskyttelse && adressebeskyttelse !== Adressebeskyttelse.Ugradert) {
-        return <EtikettAdvarsel mini>{humanize(adressebeskyttelse)}</EtikettAdvarsel>;
-    } else if (skjermet) {
-        return <EtikettAdvarsel mini>Skjermet</EtikettAdvarsel>;
-    } else if ('vergemål' in props.person && props.person.vergemål) {
-        return <EtikettAdvarsel mini>Vergemål</EtikettAdvarsel>;
-    } else if ('fullmakt' in props.person && props.person.fullmakt) {
-        return <EtikettAdvarsel mini>Fullmakt</EtikettAdvarsel>;
-    } else {
-        return <></>;
+        etiketter.push({
+            text: humanize(adressebeskyttelse),
+            type: 'advarsel',
+        });
     }
+    if (skjermet) {
+        etiketter.push({
+            text: 'Skjermet',
+            type: 'advarsel',
+        });
+    }
+    if ('vergemål' in props.person && props.person.vergemål) {
+        etiketter.push({
+            text: 'Vergemål',
+            type: 'fokus',
+        });
+    }
+    if ('fullmakt' in props.person && props.person.fullmakt) {
+        etiketter.push({
+            text: 'Fullmakt',
+            type: 'fokus',
+        });
+    }
+
+    return (
+        <div>
+            {etiketter.map((etikett) => (
+                <Etikett className={styles.etikett} type={etikett.type} key={etikett.text} mini>
+                    {etikett.text}
+                </Etikett>
+            ))}
+        </div>
+    );
 };
 
 function humanize(upperSnakeCase: string): string {
