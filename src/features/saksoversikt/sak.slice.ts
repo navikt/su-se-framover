@@ -12,7 +12,6 @@ import { pipe } from '~lib/fp';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
-import { UtledetSatsInfo } from '~types/Beregning';
 import { Fradrag } from '~types/Fradrag';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
@@ -104,18 +103,6 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/informasjon', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreBehandlingsinformasjon(arg);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const getUtledetSatsInfo = createAsyncThunk<
-    UtledetSatsInfo,
-    { sakId: string; behandlingId: string },
-    { rejectValue: ApiError }
->('behandling/utledetSatsInfo', async ({ sakId, behandlingId }, thunkApi) => {
-    const res = await behandlingApi.getUtledetSatsInfo(sakId, behandlingId);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -238,7 +225,6 @@ interface SakState {
     simuleringStatus: RemoteData.RemoteData<ApiError, null>;
     sendtTilAttesteringStatus: RemoteData.RemoteData<ApiError, null>;
     attesteringStatus: RemoteData.RemoteData<ApiError, null>;
-    utledetSatsInfo: RemoteData.RemoteData<ApiError, UtledetSatsInfo>;
     lastNedBrevStatus: RemoteData.RemoteData<ApiError, null>;
     søknadLukketStatus: RemoteData.RemoteData<ApiError, null>;
     lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
@@ -255,7 +241,6 @@ const initialState: SakState = {
     simuleringStatus: RemoteData.initial,
     sendtTilAttesteringStatus: RemoteData.initial,
     attesteringStatus: RemoteData.initial,
-    utledetSatsInfo: RemoteData.initial,
     lastNedBrevStatus: RemoteData.initial,
     søknadLukketStatus: RemoteData.initial,
     lukketSøknadBrevutkastStatus: RemoteData.initial,
@@ -460,16 +445,6 @@ export default createSlice({
             rejected: (state, action) => {
                 state.lastNedBrevStatus = simpleRejectedActionToRemoteData(action);
             },
-        });
-
-        builder.addCase(getUtledetSatsInfo.pending, (state) => {
-            state.utledetSatsInfo = RemoteData.pending;
-        });
-        builder.addCase(getUtledetSatsInfo.rejected, (state, action) => {
-            state.utledetSatsInfo = simpleRejectedActionToRemoteData(action);
-        });
-        builder.addCase(getUtledetSatsInfo.fulfilled, (state, action) => {
-            state.utledetSatsInfo = RemoteData.success(action.payload);
         });
 
         handleAsyncThunk(builder, lukkSøknad, {
