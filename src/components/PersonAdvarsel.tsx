@@ -7,11 +7,17 @@ import { EPSMedAlder } from '~pages/saksbehandling/steg/sats/utils';
 export const PersonAdvarsel = (props: { person: Person | EPSMedAlder }) => {
     const { adressebeskyttelse, skjermet } = props.person;
 
-    if (!adressebeskyttelse || adressebeskyttelse === Adressebeskyttelse.Ugradert) {
-        return skjermet ? <EtikettAdvarsel mini>Skjermet</EtikettAdvarsel> : <></>;
+    if (adressebeskyttelse && adressebeskyttelse !== Adressebeskyttelse.Ugradert) {
+        return <EtikettAdvarsel mini>{humanize(adressebeskyttelse)}</EtikettAdvarsel>;
+    } else if (skjermet) {
+        return <EtikettAdvarsel mini>Skjermet</EtikettAdvarsel>;
+    } else if ('vergemål' in props.person && props.person.vergemål) {
+        return <EtikettAdvarsel mini>Vergemål</EtikettAdvarsel>;
+    } else if ('fullmakt' in props.person && props.person.fullmakt) {
+        return <EtikettAdvarsel mini>Fullmakt</EtikettAdvarsel>;
+    } else {
+        return <></>;
     }
-
-    return <EtikettAdvarsel mini>{humanize(adressebeskyttelse)}</EtikettAdvarsel>;
 };
 
 function humanize(upperSnakeCase: string): string {

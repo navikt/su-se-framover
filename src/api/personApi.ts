@@ -48,6 +48,8 @@ export interface Person {
         kanVarsles: boolean;
         språk: Nullable<boolean>;
     }>;
+    vergemål: Nullable<boolean>;
+    fullmakt: Nullable<boolean>;
 }
 
 export async function fetchPerson(fnr: string): Promise<ApiClientResult<Person>> {
