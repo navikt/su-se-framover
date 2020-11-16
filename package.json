@@ -43,7 +43,7 @@
         "@navikt/nap-person-card": "^1.1.4",
         "@navikt/nap-side-menu": "^1.0.7",
         "@reduxjs/toolkit": "^1.4.0",
-        "@sentry/browser": "^5.27.3",
+        "@sentry/browser": "^5.27.4",
         "@types/jest": "^26.0.15",
         "@types/jsonwebtoken": "^8.5.0",
         "@types/react-collapse": "^5.0.0",
