@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Textarea } from 'nav-frontend-skjema';
+import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
@@ -15,7 +15,7 @@ import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Bosituasjon } from '~types/Behandlingsinformasjon';
 
@@ -30,6 +30,7 @@ import { EPSMedAlder, setSatsFaktablokk } from './utils';
 
 interface FormData {
     epsFnr: Nullable<string>;
+    epsAlder: Nullable<number>;
     delerSøkerBolig: Nullable<boolean>;
     mottarEktemakeEllerSamboerSU: Nullable<boolean>;
     begrunnelse: Nullable<string>;
@@ -44,7 +45,7 @@ const toBosituasjon = (values: FormData): Nullable<Bosituasjon> => {
         epsFnr: values.epsFnr,
         delerBolig: values.delerSøkerBolig,
         ektemakeEllerSamboerUførFlyktning: values.mottarEktemakeEllerSamboerSU,
-        begrunnelse: null,
+        begrunnelse: values.begrunnelse,
     };
 };
 
@@ -79,16 +80,24 @@ const utledSats = (values: FormData, harEPS: boolean, epsAlder?: Nullable<number
 };
 
 const schema = yup.object<FormData>({
-    epsFnr: yup.string(),
+    epsFnr: yup.string().nullable().defined(),
+    epsAlder: yup.number().nullable().defined(),
     delerSøkerBolig: yup.boolean().defined().when('epsFnr', {
         is: null,
         then: yup.boolean().required(),
     }),
-    mottarEktemakeEllerSamboerSU: yup.boolean().defined().when('erEktemakeEllerSamboerUnder67', {
-        is: true,
-        then: yup.boolean().required(),
-        otherwise: yup.boolean().nullable().defined(),
-    }),
+    mottarEktemakeEllerSamboerSU: yup
+        .boolean()
+        .defined()
+        .test('eps mottar SU', 'Feltet må fylles ut', function (mottarSu) {
+            const { epsFnr, epsAlder } = this.parent;
+
+            if (epsFnr && epsAlder < 67) {
+                return mottarSu !== null;
+            }
+
+            return true;
+        }),
     begrunnelse: yup.string().defined(),
 });
 
@@ -104,10 +113,12 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const formik = useFormik<FormData>({
         initialValues: {
             epsFnr: eps?.fnr ?? null,
+            epsAlder: eps?.alder ?? null,
             delerSøkerBolig: eps ? null : eksisterendeBosituasjon?.delerBolig ?? null,
-            mottarEktemakeEllerSamboerSU: !eps
-                ? null
-                : eksisterendeBosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null,
+            mottarEktemakeEllerSamboerSU:
+                eps && eps.alder && eps?.alder >= 67
+                    ? null
+                    : eksisterendeBosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null,
             begrunnelse: eksisterendeBosituasjon?.begrunnelse ?? null,
         },
         validationSchema: schema,
@@ -162,7 +173,6 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 </div>
                             )}
                         </div>
-
                         {!eps && (
                             <SuperRadioGruppe
                                 legend={intl.formatMessage({ id: 'radio.delerSøkerBoligOver18.legend' })}
@@ -187,7 +197,6 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 ]}
                             />
                         )}
-
                         {eps?.alder && eps.alder < 67 ? (
                             <SuperRadioGruppe
                                 legend={intl.formatMessage({
@@ -220,7 +229,6 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                         ) : (
                             ''
                         )}
-
                         {utledSats(formik.values, Boolean(eps), eps?.alder) && (
                             <>
                                 <hr />
@@ -235,15 +243,17 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 <hr />
                             </>
                         )}
-                        <Textarea
-                            label={intl.formatMessage({
-                                id: 'input.label.begrunnelse',
-                            })}
-                            name="begrunnelse"
-                            value={formik.values.begrunnelse ?? ''}
-                            feil={formik.errors.begrunnelse}
-                            onChange={formik.handleChange}
-                        />
+                        <div className={styles.textareaContainer}>
+                            <Textarea
+                                label={intl.formatMessage({
+                                    id: 'input.label.begrunnelse',
+                                })}
+                                name="begrunnelse"
+                                value={formik.values.begrunnelse ?? ''}
+                                feil={formik.errors.begrunnelse}
+                                onChange={formik.handleChange}
+                            />
+                        </div>
                         {pipe(
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(
@@ -261,6 +271,12 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 () => null
                             )
                         )}
+                        <Feiloppsummering
+                            className={styles.feiloppsummering}
+                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                            hidden={!formikErrorsHarFeil(formik.errors)}
+                        />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
