@@ -106,6 +106,10 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                     formue: { ...formueValues },
                     ektefelle: {
                         fnr: values.ektefellesFnr,
+                        navn: eps ? eps.navn : null,
+                        kjønn: eps ? eps.kjønn : null,
+                        adressebeskyttelse: eps ? eps.adressebeskyttelse : null,
+                        skjermet: eps ? eps.skjermet : null,
                     },
                 },
             })
