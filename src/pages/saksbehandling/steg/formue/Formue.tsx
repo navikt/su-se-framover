@@ -31,7 +31,14 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 import messages from './formue-nb';
 import styles from './formue.module.less';
 import { FormueInput, ShowSum } from './FormueComponents';
-import { getInitialVerdier, getFormue, kalkulerFormue, kalkulerFormueFraSøknad } from './utils';
+import {
+    getInitialVerdier,
+    getFormue,
+    kalkulerFormue,
+    kalkulerFormueFraSøknad,
+    delerBoligMedToString,
+    getVerdier,
+} from './utils';
 
 type FormData = Formue & {
     borSøkerMedEktefelle: Nullable<boolean>;
@@ -144,10 +151,16 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     }, [formik.values.ektefellesVerdier]);
 
     const totalFormueFraSøknad = useMemo(() => {
-        return kalkulerFormueFraSøknad(søknadInnhold.formue);
+        const søkersFormueFraSøknad = kalkulerFormueFraSøknad(søknadInnhold.formue);
+
+        if (søknadInnhold.ektefelle) {
+            return søkersFormueFraSøknad + kalkulerFormueFraSøknad(søknadInnhold.ektefelle.formue);
+        }
+
+        return søkersFormueFraSøknad;
     }, [søknadInnhold.formue]);
 
-    const totalFormue = søkersFormue + ektefellesFormue;
+    const totalFormue = søkersFormue + (formik.values.borSøkerMedEktefelle ? ektefellesFormue : 0);
 
     useEffect(() => {
         async function fetchPerson(fnr: Nullable<string>) {
@@ -227,7 +240,12 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                             ...formik.values,
                                             borSøkerMedEktefelle: false,
                                             ektefellesFnr: null,
-                                            ektefellesVerdier: getInitialVerdier(),
+                                            ektefellesVerdier: søknadInnhold.ektefelle
+                                                ? getVerdier(
+                                                      formik.values.ektefellesVerdier,
+                                                      søknadInnhold.ektefelle?.formue
+                                                  )
+                                                : getInitialVerdier(),
                                         });
 
                                         setInputToShow('søker');
@@ -263,7 +281,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         </div>
 
                         <div className={styles.formueInputContainer}>
-                            <div className={styles.søkersFormue}>
+                            <div className={inputToShow === 'søker' ? styles.aktivFormueBlokk : undefined}>
                                 {inputToShow === 'søker' &&
                                     keyNavnForFormue.map((keyNavn) => (
                                         <FormueInput
@@ -310,7 +328,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             </div>
 
                             {formik.values.borSøkerMedEktefelle && (
-                                <div className={styles.ektefellesFormue}>
+                                <div className={inputToShow === 'ektefelle' ? styles.aktivFormueBlokk : undefined}>
                                     {inputToShow === 'ektefelle' &&
                                         keyNavnForFormue.map((keyNavn) => (
                                             <FormueInput
@@ -431,19 +449,42 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             faktaBlokkerClassName={styles.formueFaktaBlokk}
                             fakta={[
                                 {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.ektefellesFnr' }),
-                                    verdi: søknadInnhold.boforhold.ektefellePartnerSamboer
-                                        ? søknadInnhold.boforhold.ektefellePartnerSamboer?.type === 'MedFnr'
-                                            ? søknadInnhold.boforhold.ektefellePartnerSamboer.fnr
-                                            : søknadInnhold.boforhold.ektefellePartnerSamboer.fødselsdato
-                                        : '-',
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.delerBoligMed' }),
+                                    verdi: delerBoligMedToString(søknadInnhold.boforhold.delerBoligMed),
                                 },
                                 {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.ektefellesNavn' }),
-                                    verdi:
-                                        søknadInnhold.boforhold.ektefellePartnerSamboer?.type === 'UtenFnr'
-                                            ? søknadInnhold.boforhold.ektefellePartnerSamboer.navn
-                                            : '-',
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.ektefelleTitle' }),
+                                    verdi: søknadInnhold.ektefelle ? (
+                                        <>
+                                            <p>
+                                                {`${intl.formatMessage({
+                                                    id: 'display.fraSøknad.ektefellesFnr',
+                                                })}: ${
+                                                    søknadInnhold.boforhold.ektefellePartnerSamboer
+                                                        ? søknadInnhold.boforhold.ektefellePartnerSamboer?.type ===
+                                                          'MedFnr'
+                                                            ? søknadInnhold.boforhold.ektefellePartnerSamboer.fnr
+                                                            : søknadInnhold.boforhold.ektefellePartnerSamboer
+                                                                  .fødselsdato
+                                                        : '-'
+                                                }`}
+                                            </p>
+                                            {søknadInnhold.boforhold.ektefellePartnerSamboer?.type === 'UtenFnr' && (
+                                                <p>{`${intl.formatMessage({
+                                                    id: 'display.fraSøknad.ektefellesNavn',
+                                                })}: ${søknadInnhold.boforhold.ektefellePartnerSamboer.navn}`}</p>
+                                            )}
+                                            <p>
+                                                {`${intl.formatMessage({
+                                                    id: 'display.fraSøknad.ektefellesFormue',
+                                                })}: ${kalkulerFormueFraSøknad(
+                                                    søknadInnhold.ektefelle.formue
+                                                ).toString()}`}
+                                            </p>
+                                        </>
+                                    ) : (
+                                        'Ingen ektefelle'
+                                    ),
                                 },
                                 {
                                     tittel: intl.formatMessage({ id: 'display.fraSøknad.verdiPåBolig' }),
@@ -482,7 +523,9 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 },
                             ]}
                         />
-                        <p className={styles.formueFraSøknad}>Totalt: {totalFormueFraSøknad}</p>
+                        <p className={styles.formueFraSøknad}>
+                            {intl.formatMessage({ id: 'display.fraSøknad.totalt' })}: {totalFormueFraSøknad}
+                        </p>
                     </div>
                 ),
             }}

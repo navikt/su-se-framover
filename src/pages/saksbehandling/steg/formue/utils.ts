@@ -1,3 +1,4 @@
+import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import { Behandlingsinformasjon, FormueStatus, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
@@ -54,12 +55,17 @@ export function getFormue(behandlingsInfo: Behandlingsinformasjon, søknadsInnho
         ),
         status: behandlingsFormue?.status ?? FormueStatus.VilkårOppfylt,
         begrunnelse: behandlingsFormue?.begrunnelse ?? null,
-        borSøkerMedEktefelle: behandlingsInfo.ektefelle ? behandlingsInfo.ektefelle.fnr != null : null,
+        borSøkerMedEktefelle: behandlingsInfo.ektefelle
+            ? behandlingsInfo.ektefelle.fnr != null
+            : søknadsInnhold.boforhold.delerBoligMed === DelerBoligMed?.EKTEMAKE_SAMBOER,
         ektefellesFnr: behandlingsInfo.ektefelle?.fnr ?? null,
     };
 }
 
-function getVerdier(verdier: Nullable<FormueVerdier>, søknadsFormue: Nullable<SøknadInnhold['formue']>): FormueVerdier {
+export function getVerdier(
+    verdier: Nullable<FormueVerdier>,
+    søknadsFormue: Nullable<SøknadInnhold['formue']>
+): FormueVerdier {
     return {
         verdiIkkePrimærbolig: verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0,
         verdiKjøretøy: verdier?.verdiKjøretøy ?? totalVerdiKjøretøy(søknadsFormue?.kjøretøy ?? null) ?? 0,
@@ -81,4 +87,17 @@ export function getInitialVerdier(): FormueVerdier {
         kontanter: 0,
         depositumskonto: 0,
     };
+}
+
+export function delerBoligMedToString(delerBoligMed: Nullable<DelerBoligMed>) {
+    switch (delerBoligMed) {
+        case DelerBoligMed.ANNEN_VOKSEN:
+            return 'Annen voksen';
+        case DelerBoligMed.EKTEMAKE_SAMBOER:
+            return 'Ektefelle eller samboer';
+        case DelerBoligMed.VOKSNE_BARN:
+            return 'Voksne barn';
+        default:
+            return '-';
+    }
 }

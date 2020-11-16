@@ -1,8 +1,11 @@
 export default {
     'checkbox.henteMerInfo': 'Må hente mer informasjon',
 
+    'display.fraSøknad.delerBoligMed': 'Hvem deler du bolig med?',
+    'display.fraSøknad.ektefelleTitle': 'Ektefelle',
     'display.fraSøknad.ektefellesFnr': 'Ektefelles fnr/fødselsdato',
     'display.fraSøknad.ektefellesNavn': 'Ektefelles navn (hvis oppgitt)',
+    'display.fraSøknad.ektefellesFormue': 'Ektefelles totale formue',
     'display.fraSøknad.verdiPåBolig': 'Verdi på bolig',
     'display.fraSøknad.verdiPåEiendom': 'Verdi på eiendom',
     'display.fraSøknad.verdiPåKjøretøy': 'Verdi på Kjøretøy',
@@ -11,6 +14,7 @@ export default {
     'display.fraSøknad.kontanter': 'Kontanter over 5000',
     'display.fraSøknad.skylderNoenSøkerPengerBeløp': 'Skylder noen søker penger',
     'display.fraSøknad.depositumsBeløp': 'Depositumskonto',
+    'display.fraSøknad.totalt': 'Totalt',
 
     'display.totalt': 'Total formue',
     'display.søkersFormue': 'Søkers formue',
