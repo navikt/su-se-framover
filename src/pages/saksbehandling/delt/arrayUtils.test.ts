@@ -3,23 +3,21 @@ import { Sats } from '~types/Sats';
 
 import { groupMånedsberegninger } from './arrayUtils';
 
-const genererMånedsberegning = (id: string, beløp: number): Månedsberegning => {
+const genererMånedsberegning = (beløp: number): Månedsberegning => {
     return {
-        id,
         beløp,
         sats: Sats.Høy,
         fraOgMed: '1.1.2020',
         tilOgMed: '31.12.2020',
-        fradrag: 0,
         grunnbeløp: 1337,
     };
 };
 
 describe('groupMånedsberegninger', () => {
-    const måned1 = genererMånedsberegning('1', 100);
-    const måned2 = genererMånedsberegning('2', 100);
-    const måned3 = genererMånedsberegning('3', 69);
-    const måned4 = genererMånedsberegning('4', 69);
+    const måned1 = genererMånedsberegning(100);
+    const måned2 = genererMånedsberegning(100);
+    const måned3 = genererMånedsberegning(69);
+    const måned4 = genererMånedsberegning(69);
 
     it('should group adjacent månedsberegninger', () => {
         expect(groupMånedsberegninger([måned1, måned2, måned3, måned4])).toEqual([

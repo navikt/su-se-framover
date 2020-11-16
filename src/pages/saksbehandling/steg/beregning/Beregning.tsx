@@ -13,6 +13,7 @@ import { useHistory } from 'react-router-dom';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { toDateOrNull } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import {
@@ -89,6 +90,31 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 })),
             })
         );
+    };
+
+    const handleSave = async (nesteUrl: string) => {
+        if (
+            RemoteData.isSuccess(beregningStatus) ||
+            (props.behandling.beregning && RemoteData.isInitial(beregningStatus))
+        ) {
+            if (props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG) {
+                history.push(nesteUrl);
+                return;
+            }
+
+            const res = await dispatch(
+                sakSlice.startSimulering({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                })
+            );
+
+            if (sakSlice.startSimulering.fulfilled.match(res)) {
+                history.push(nesteUrl);
+            }
+        } else {
+            setNeedsBeregning(true);
+        }
     };
 
     const byttDato = (keyNavn: keyof Pick<FormData, 'fom' | 'tom'>, dato: Date | [Date, Date] | null) => {
@@ -256,32 +282,11 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
-                            onNesteClick={async () => {
-                                if (
-                                    RemoteData.isSuccess(beregningStatus) ||
-                                    (props.behandling.beregning && RemoteData.isInitial(beregningStatus))
-                                ) {
-                                    if (props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG) {
-                                        history.push(props.nesteUrl);
-                                        return;
-                                    }
-
-                                    const res = await dispatch(
-                                        sakSlice.startSimulering({
-                                            sakId: props.sakId,
-                                            behandlingId: props.behandling.id,
-                                        })
-                                    );
-
-                                    if (sakSlice.startSimulering.fulfilled.match(res)) {
-                                        history.push(props.nesteUrl);
-                                    }
-                                } else {
-                                    setNeedsBeregning(true);
-                                }
+                            onNesteClick={() => {
+                                handleSave(props.nesteUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                formik.submitForm();
+                                handleSave(Routes.saksoversiktIndex.createURL());
                             }}
                         />
                     </form>

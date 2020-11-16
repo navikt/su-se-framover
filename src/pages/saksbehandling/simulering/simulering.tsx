@@ -54,10 +54,10 @@ const Utbetalingssimulering = (props: { simulering: Simulering }) => {
                                 )
                             );
                         })}
-                        <p className={styles.totalBeløp}>
-                            Totalbeløp: {intl.formatNumber(props.simulering.totalBruttoYtelse)},-
-                        </p>
                     </tbody>
+                    <tfoot className={styles.totalBeløp}>
+                        Totalbeløp: {intl.formatNumber(props.simulering.totalBruttoYtelse)},-
+                    </tfoot>
                 </table>
             )}
         </>

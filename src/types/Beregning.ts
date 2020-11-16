@@ -12,11 +12,9 @@ export interface Beregning {
 }
 
 export interface Månedsberegning {
-    id: string;
     sats: Sats;
     beløp: number;
     grunnbeløp: number;
     fraOgMed: string;
     tilOgMed: string;
-    fradrag: number;
 }

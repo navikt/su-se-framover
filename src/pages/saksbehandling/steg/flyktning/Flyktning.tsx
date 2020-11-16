@@ -62,47 +62,51 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         );
     };
 
+    const handleSave = async (values: FormData, nesteUrl: string) => {
+        if (!values.status) return;
+
+        const flyktningValues: FlyktningType = {
+            status: values.status,
+            begrunnelse: values.begrunnelse,
+        };
+
+        if (eqFlyktning.equals(flyktningValues, props.behandling.behandlingsinformasjon.flyktning)) {
+            if (props.behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+                goToVedtak();
+                return;
+            }
+
+            history.push(nesteUrl);
+            return;
+        }
+
+        const res = await dispatch(
+            lagreBehandlingsinformasjon({
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+                behandlingsinformasjon: {
+                    flyktning: { ...flyktningValues },
+                },
+            })
+        );
+        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+            if (res.payload.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+                goToVedtak();
+
+                return;
+            }
+
+            history.push(nesteUrl);
+        }
+    };
+
     const formik = useFormik<FormData>({
         initialValues: {
             status: props.behandling.behandlingsinformasjon.flyktning?.status ?? null,
             begrunnelse: props.behandling.behandlingsinformasjon.flyktning?.begrunnelse ?? null,
         },
         async onSubmit(values) {
-            if (!values.status) return;
-
-            const flyktningValues: FlyktningType = {
-                status: values.status,
-                begrunnelse: values.begrunnelse,
-            };
-
-            if (eqFlyktning.equals(flyktningValues, props.behandling.behandlingsinformasjon.flyktning)) {
-                if (props.behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
-                    goToVedtak();
-                    return;
-                }
-
-                history.push(props.nesteUrl);
-                return;
-            }
-
-            const res = await dispatch(
-                lagreBehandlingsinformasjon({
-                    sakId: props.sakId,
-                    behandlingId: props.behandling.id,
-                    behandlingsinformasjon: {
-                        flyktning: { ...flyktningValues },
-                    },
-                })
-            );
-            if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
-                if (res.payload.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
-                    goToVedtak();
-
-                    return;
-                }
-
-                history.push(props.nesteUrl);
-            }
+            handleSave(values, props.nesteUrl);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -199,21 +203,11 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                if (!formik.values.status) return;
-
-                                dispatch(
-                                    lagreBehandlingsinformasjon({
-                                        sakId: props.sakId,
-                                        behandlingId: props.behandling.id,
-                                        behandlingsinformasjon: {
-                                            ...props.behandling.behandlingsinformasjon,
-                                            flyktning: {
-                                                status: formik.values.status,
-                                                begrunnelse: formik.values.begrunnelse,
-                                            },
-                                        },
-                                    })
-                                );
+                                formik.validateForm().then((res) => {
+                                    if (Object.keys(res).length === 0) {
+                                        handleSave(formik.values, Routes.saksoversiktIndex.createURL());
+                                    }
+                                });
                             }}
                             nesteKnappTekst={
                                 vilGiTidligAvslag() ? intl.formatMessage({ id: 'knapp.tilVedtaket' }) : undefined

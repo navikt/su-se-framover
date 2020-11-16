@@ -17,6 +17,7 @@ import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { validatePositiveNumber } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -78,7 +79,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const onSave = (values: FormData) => {
+
+    const handleSave = async (values: FormData, nesteUrl: string) => {
         const status =
             values.status === FormueStatus.MåInnhenteMerInformasjon
                 ? FormueStatus.MåInnhenteMerInformasjon
@@ -101,11 +103,11 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             eqFormue.equals(formueValues, props.behandling.behandlingsinformasjon.formue) &&
             eqEktefelle.equals(ektefelle, props.behandling.behandlingsinformasjon.ektefelle)
         ) {
-            history.push(props.nesteUrl);
+            history.push(nesteUrl);
             return;
         }
 
-        return dispatch(
+        const res = await dispatch(
             lagreBehandlingsinformasjon({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
@@ -121,6 +123,12 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                 },
             })
         );
+
+        if (!res) return;
+
+        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+            history.push(nesteUrl);
+        }
     };
 
     // TODO ai: implementera detta i backend
@@ -129,12 +137,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const formik = useFormik<FormData>({
         initialValues: getFormue(behandlingsInfo, søknadInnhold),
         async onSubmit() {
-            const res = await onSave(formik.values);
-            if (!res) return;
-
-            if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
-                history.push(props.nesteUrl);
-            }
+            handleSave(formik.values, props.nesteUrl);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -438,7 +441,13 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
-                            onLagreOgFortsettSenereClick={() => onSave(formik.values)}
+                            onLagreOgFortsettSenereClick={() => {
+                                formik.validateForm().then((res) => {
+                                    if (Object.keys(res).length === 0) {
+                                        handleSave(formik.values, Routes.saksoversiktIndex.createURL());
+                                    }
+                                });
+                            }}
                         />
                     </form>
                 ),

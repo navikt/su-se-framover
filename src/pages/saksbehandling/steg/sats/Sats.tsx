@@ -14,6 +14,7 @@ import { eqBosituasjon } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -124,25 +125,22 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
         validationSchema: schema,
         validateOnChange: hasSubmitted,
         async onSubmit(values) {
-            const res = await handleSave(values);
-            if (res && lagreBehandlingsinformasjon.fulfilled.match(res)) {
-                history.push(props.nesteUrl);
-            }
+            handleSave(values, props.nesteUrl);
         },
     });
 
-    const handleSave = (values: FormData) => {
+    const handleSave = async (values: FormData, nesteUrl: string) => {
         const boSituasjonValues = toBosituasjon(values);
         if (!boSituasjonValues) {
             return;
         }
 
         if (eqBosituasjon.equals(boSituasjonValues, props.behandling.behandlingsinformasjon.bosituasjon)) {
-            history.push(props.nesteUrl);
+            history.push(nesteUrl);
             return;
         }
 
-        return dispatch(
+        const res = await dispatch(
             lagreBehandlingsinformasjon({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
@@ -151,6 +149,10 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 },
             })
         );
+
+        if (res && lagreBehandlingsinformasjon.fulfilled.match(res)) {
+            history.push(nesteUrl);
+        }
     };
 
     return (
@@ -282,7 +284,11 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                handleSave(formik.values);
+                                formik.validateForm().then((res) => {
+                                    if (Object.keys(res).length === 0) {
+                                        handleSave(formik.values, Routes.saksoversiktIndex.createURL());
+                                    }
+                                });
                             }}
                         />
                     </form>
