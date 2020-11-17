@@ -16,6 +16,15 @@ export default {
     'display.fraSøknad.depositumsBeløp': 'Depositumskonto',
     'display.fraSøknad.totalt': 'Totalt',
 
+    'display.fraSøknad.ektefelle.verdiPåBolig': 'Ektefelles verdi på bolig',
+    'display.fraSøknad.ektefelle.verdiPåEiendom': 'Ektefelles verdi på eiendom',
+    'display.fraSøknad.ektefelle.verdiPåKjøretøy': 'Ektefelles verdi på kjøretøy',
+    'display.fraSøknad.ektefelle.innskuddsbeløp': 'Ektefelles innskuddsbeløp',
+    'display.fraSøknad.ektefelle.verdipapirbeløp': 'Ektefelles verdipapirbeløp',
+    'display.fraSøknad.ektefelle.kontanter': 'Ektefelles kontanter (kun over 5000)',
+    'display.fraSøknad.ektefelle.skylderNoenEktefellePengerBeløp': 'Skylder noen ektefelle penger',
+    'display.fraSøknad.ektefelle.depositumsBeløp': 'Ektefelles depositumskonto',
+
     'display.totalt': 'Total formue',
     'display.søkersFormue': 'Søkers formue',
     'display.ektefellesFormue': 'Ektefelles/samboers formue',
