@@ -167,7 +167,7 @@ const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
             {!disabled && person && (
                 <div className={styles.result}>
                     <GenderIcon kjønn={person.kjønn} />
-                    <p className={styles.name}>{showName(person)}</p>
+                    <p className={styles.name}>{showName(person.navn)}</p>
                 </div>
             )}
             {!disabled && harIkkeTilgang && (

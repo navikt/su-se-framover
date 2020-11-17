@@ -96,7 +96,7 @@ const Saksoversikt = () => {
                                         <PersonCard
                                             fodselsnummer={søker.fnr}
                                             gender={gender}
-                                            name={showName(søker)}
+                                            name={showName(søker.navn)}
                                             renderLabelContent={(): JSX.Element => <PersonAdvarsel person={søker} />}
                                         />
                                         <Søkefelt />

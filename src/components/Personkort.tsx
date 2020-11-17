@@ -25,7 +25,7 @@ export const Personkort = (props: { person: Person }) => {
                 </span>
             </div>
             <div>
-                <p>{showName(props.person)}</p>
+                <p>{showName(props.person.navn)}</p>
                 <div>
                     <span>{`${props.person.fnr} - `}</span>
                     <span>{`${props.person.fnr.substring(0, 2)}.`}</span>
@@ -57,7 +57,7 @@ export const PersonkortEPS = (props: { eps: Nullable<EPSMedAlder> }) => {
                 </span>
             </div>
             <div>
-                <p>{`${props.eps.navn.fornavn} ${props.eps.navn.mellomnavn ?? ''} ${props.eps.navn.etternavn}`}</p>
+                <p>{showName(props.eps.navn)}</p>
                 <div>
                     <span>{`${props.eps.fnr.substring(0, 6)} `}</span>
                     <span>{`${props.eps.fnr.substring(6, 11)}, `}</span>

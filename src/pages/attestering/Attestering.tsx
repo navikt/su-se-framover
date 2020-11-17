@@ -168,7 +168,7 @@ const Attestering = () => {
                                 <PersonCard
                                     fodselsnummer={s.fnr}
                                     gender={gender}
-                                    name={showName(s)}
+                                    name={showName(s.navn)}
                                     renderLabelContent={(): JSX.Element => <PersonAdvarsel person={s} />}
                                 />
                                 <Søkefelt />
