@@ -24,7 +24,7 @@ import LukkSøknad from './lukkSøknad/LukkSøknad';
 import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
-import Vilkår from './steg/Vilkår';
+import Vilkår from './steg/vilkår/Vilkår';
 import Søkefelt from './søkefelt/Søkefelt';
 import Vedtak from './vedtak/Vedtak';
 

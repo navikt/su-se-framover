@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
+import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
@@ -15,12 +15,13 @@ import { kalkulerTotaltAntallDagerIUtlandet, Utlandsdatoer } from '~lib/dateUtil
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { OppholdIUtlandet as OppholdIUtlandetType, OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
 
-import Faktablokk from '../Faktablokk';
+import Faktablokk from '../faktablokk/Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
@@ -161,18 +162,20 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                                 checked={formik.values.status === OppholdIUtlandetStatus.Uavklart}
                             />
                         </RadioGruppe>
-                        <Textarea
-                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
-                            name="begrunnelse"
-                            feil={formik.errors.begrunnelse}
-                            value={formik.values.begrunnelse ?? ''}
-                            onChange={(e) => {
-                                formik.setValues((v) => ({
-                                    ...v,
-                                    begrunnelse: e.target.value ? e.target.value : null,
-                                }));
-                            }}
-                        />
+                        <div className={sharedStyles.textareaContainer}>
+                            <Textarea
+                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                                name="begrunnelse"
+                                feil={formik.errors.begrunnelse}
+                                value={formik.values.begrunnelse ?? ''}
+                                onChange={(e) => {
+                                    formik.setValues((v) => ({
+                                        ...v,
+                                        begrunnelse: e.target.value ? e.target.value : null,
+                                    }));
+                                }}
+                            />
+                        </div>
                         {pipe(
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(
@@ -190,6 +193,11 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                                 () => null
                             )
                         )}
+                        <Feiloppsummering
+                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                            hidden={!formikErrorsHarFeil(formik.errors)}
+                        />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);

@@ -10,6 +10,7 @@ import { erAvslått, erTilAttestering, harBeregning } from '~features/behandling
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { lastNedBrev } from '~features/saksoversikt/sak.slice';
 import { createVilkårUrl, mapToVilkårsinformasjon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
+import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes.ts';
 import { Nullable } from '~lib/types';
 import { VisSimulering } from '~pages/saksbehandling/simulering/simulering';
@@ -19,14 +20,16 @@ import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
+import messages from './vedtak-nb';
 import styles from './vedtak.module.less';
-
 type Props = {
     sak: Sak;
 };
 
 const Vedtak = (props: Props) => {
     const { sak } = props;
+    const intl = useI18n({ messages });
+
     const dispatch = useAppDispatch();
     const { sendtTilAttesteringStatus, lastNedBrevStatus } = useAppSelector((s) => s.sak);
     const { sakId, behandlingId } = routes.useRouteParams<typeof routes.saksoversiktValgtBehandling>();
@@ -45,11 +48,18 @@ const Vedtak = (props: Props) => {
     }, [sak.id, behandlingId]);
 
     if (!behandling) {
-        return <AlertStripe type="feil">Fant ikke behandlingsid</AlertStripe>;
+        return <AlertStripe type="feil">{intl.formatMessage({ id: 'feilmelding.fantIkkeBehandlingsId' })}</AlertStripe>;
     }
 
     if (erTilAttestering(behandling)) {
-        return <div>Vedtak er sendt til Attestering</div>;
+        return (
+            <AlertStripeSuksess className={styles.vedtakSendtTilAttesteringAlertStripe}>
+                <p>{intl.formatMessage({ id: 'vedtak.sendtTilAttestering' })}</p>
+                <Link to={routes.saksoversiktIndex.createURL()}>
+                    {intl.formatMessage({ id: 'vedtak.sendtTilAttestering.lenkeSaksoversikt' })}
+                </Link>
+            </AlertStripeSuksess>
+        );
     }
 
     const vilkårUrl = (vilkårType: Vilkårtype) => {
@@ -68,7 +78,7 @@ const Vedtak = (props: Props) => {
         return (
             <div>
                 <div className={styles.vedtakContainer}>
-                    <Innholdstittel>Vedtak</Innholdstittel>
+                    <Innholdstittel>{intl.formatMessage({ id: 'page.tittel' })}</Innholdstittel>
 
                     {behandling.status === Behandlingsstatus.SIMULERT && (
                         <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>
@@ -80,13 +90,13 @@ const Vedtak = (props: Props) => {
                     {harBeregning(behandling) ? (
                         <VisSimuleringOgBeregning sak={sak} behandling={behandling} />
                     ) : (
-                        <>Det er ikke gjort en beregning</>
+                        <>{intl.formatMessage({ id: 'feilmelding.ikkeGjortEnBeregning' })}</>
                     )}
 
                     <div>
-                        <Innholdstittel>Utkast vedtaksbrev</Innholdstittel>
+                        <Innholdstittel>{intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}</Innholdstittel>
                         <Knapp spinner={RemoteData.isPending(lastNedBrevStatus)} htmlType="button" onClick={hentBrev}>
-                            Vis
+                            {intl.formatMessage({ id: 'knapp.vis' })}
                         </Knapp>
                     </div>
                 </div>
@@ -99,7 +109,7 @@ const Vedtak = (props: Props) => {
                         }
                         className="knapp"
                     >
-                        Tilbake
+                        {intl.formatMessage({ id: 'knapp.tilbake' })}
                     </Link>
                     <Hovedknapp
                         spinner={RemoteData.isPending(sendtTilAttesteringStatus)}
@@ -108,14 +118,17 @@ const Vedtak = (props: Props) => {
                         }
                         htmlType="button"
                     >
-                        Send til attestering
+                        {intl.formatMessage({ id: 'knapp.sendTilAttestering' })}
                     </Hovedknapp>
                 </div>
                 {RemoteData.isFailure(sendtTilAttesteringStatus) && (
                     <AlertStripeFeil>
                         <div>
-                            <p>Sendingen Failet</p>
-                            <p>Error code: {sendtTilAttesteringStatus.error.statusCode}</p>
+                            {intl.formatMessage({ id: 'feilmelding.sendingFeilet' })}
+                            <p>
+                                {intl.formatMessage({ id: 'feilmelding.errorkode' })}{' '}
+                                {sendtTilAttesteringStatus.error.statusCode}
+                            </p>
                         </div>
                     </AlertStripeFeil>
                 )}

@@ -25,7 +25,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Fradragstype } from '~types/Fradrag';
 
-import Faktablokk from '../Faktablokk';
+import Faktablokk from '../faktablokk/Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';

@@ -3,7 +3,7 @@ import fnrValidator from '@navikt/fnrvalidator';
 import { FormikErrors, useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
-import { Input, Textarea, Checkbox, RadioGruppe, Radio } from 'nav-frontend-skjema';
+import { Input, Textarea, Checkbox, RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element } from 'nav-frontend-typografi';
 import React, { useState, useMemo, useEffect } from 'react';
@@ -18,12 +18,12 @@ import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
-import yup, { validatePositiveNumber } from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering, validatePositiveNumber } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FormueStatus, Formue, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
-import Faktablokk from '../Faktablokk';
+import Faktablokk from '../faktablokk/Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
@@ -434,6 +434,12 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 () => null
                             )
                         )}
+                        <Feiloppsummering
+                            className={styles.feiloppsummering}
+                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                            hidden={!formikErrorsHarFeil(formik.errors)}
+                        />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);

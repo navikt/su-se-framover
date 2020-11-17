@@ -239,6 +239,8 @@ const SøknadsbehandlingStartetKnapper = (props: { behandlinger: Behandling[]; s
 };
 
 const LukkedeSøknader = (props: { avslåtteSøknader: Søknad[]; intl: IntlShape }) => {
+    if (props.avslåtteSøknader.length === 0) return null;
+
     return (
         <div className={styles.søknadsContainer}>
             <Ingress className={styles.søknadsContainerTittel}>

@@ -19,7 +19,7 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Bosituasjon } from '~types/Behandlingsinformasjon';
 
-import Faktablokk from '../Faktablokk';
+import Faktablokk from '../faktablokk/Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
@@ -272,7 +272,6 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                             )
                         )}
                         <Feiloppsummering
-                            className={styles.feiloppsummering}
                             tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                             feil={formikErrorsTilFeiloppsummering(formik.errors)}
                             hidden={!formikErrorsHarFeil(formik.errors)}

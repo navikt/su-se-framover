@@ -6,8 +6,12 @@ function label(data: Partial<yup.TestMessageParams>) {
     return data.label ?? 'Feltet';
 }
 
-export const validatePositiveNumber = yup.number().required().min(0).typeError('Feltet må være et tall');
-export const validateStringAsNumber = (yup
+export const validatePositiveNumber = yup
+    .number()
+    .required('Feltet må fylles ut')
+    .min(0)
+    .typeError('Feltet må være et tall');
+export const validateStringAsPositiveNumber = (yup
     .number()
     .required('Feltet må fylles ut')
     .moreThan(-1, 'Feltet må være et positivt tall høyere enn 0')

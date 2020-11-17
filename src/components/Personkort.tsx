@@ -57,7 +57,7 @@ export const PersonkortEPS = (props: { eps: Nullable<EPSMedAlder> }) => {
                 </span>
             </div>
             <div>
-                <p>{`${props.eps.navn.fornavn} ${props.eps.navn.mellomnavn} ${props.eps.navn.etternavn}`}</p>
+                <p>{`${props.eps.navn.fornavn} ${props.eps.navn.mellomnavn ?? ''} ${props.eps.navn.etternavn}`}</p>
                 <div>
                     <span>{`${props.eps.fnr.substring(0, 6)} `}</span>
                     <span>{`${props.eps.fnr.substring(6, 11)}, `}</span>
