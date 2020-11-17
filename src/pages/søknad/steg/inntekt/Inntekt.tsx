@@ -55,9 +55,9 @@ const schema = yup.object<FormData>({
             is: true,
             then: yup
                 .number()
-                .typeError('Beløp på andre ytelser må være et tall')
-                .label('Beløp på andre ytelser')
-                .nullable(false)
+                .typeError('Beløp på sosialstønad må være et tall')
+                .label('Beløp på sosialstønad')
+                .nullable()
                 .positive(),
             otherwise: yup.number(),
         }) as yup.Schema<Nullable<string>>,
