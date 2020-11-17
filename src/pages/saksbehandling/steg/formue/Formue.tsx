@@ -474,6 +474,34 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                     id: 'display.fraSøknad.ektefellesNavn',
                                                 })}: ${søknadInnhold.boforhold.ektefellePartnerSamboer.navn}`}</p>
                                             )}
+                                            {
+                                                // TODO ai: very very temporary solution for showing formue for ektefelle
+                                                [
+                                                    ['verdiPåBolig', søknadInnhold.ektefelle.formue.verdiPåBolig],
+                                                    ['verdiPåEiendom', søknadInnhold.ektefelle.formue.verdiPåEiendom],
+                                                    [
+                                                        'verdiPåKjøretøy',
+                                                        søknadInnhold.ektefelle.formue.kjøretøy?.reduce(
+                                                            (acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy,
+                                                            0
+                                                        ),
+                                                    ],
+                                                    ['innskuddsbeløp', søknadInnhold.ektefelle.formue.innskuddsBeløp],
+                                                    ['verdipapirbeløp', søknadInnhold.ektefelle.formue.verdipapirBeløp],
+                                                    [
+                                                        'skylderNoenEktefellePengerBeløp',
+                                                        søknadInnhold.ektefelle.formue.verdiPåBolig,
+                                                    ],
+                                                    ['depositumsBeløp', søknadInnhold.ektefelle.formue.verdiPåBolig],
+                                                ].map(([translationKey, verdi]) => (
+                                                    <p key={translationKey}>
+                                                        {intl.formatMessage({
+                                                            id: `display.fraSøknad.ektefelle.${translationKey}`,
+                                                        })}
+                                                        : {verdi}
+                                                    </p>
+                                                ))
+                                            }
                                             <p>
                                                 {`${intl.formatMessage({
                                                     id: 'display.fraSøknad.ektefellesFormue',
