@@ -92,7 +92,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    oppholdIUtlandet: { ...oppholdIUtlandetValues },
+                    oppholdIUtlandet: oppholdIUtlandetValues,
                 },
             })
         );

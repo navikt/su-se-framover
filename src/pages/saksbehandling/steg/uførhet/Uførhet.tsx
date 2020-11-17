@@ -109,7 +109,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    uførhet: { ...uføreValues },
+                    uførhet: uføreValues,
                 },
             })
         );

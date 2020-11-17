@@ -112,7 +112,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    formue: { ...formueValues },
+                    formue: formueValues,
                     ektefelle: {
                         fnr: values.ektefellesFnr,
                         navn: eps ? eps.navn : null,

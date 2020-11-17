@@ -131,7 +131,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
                     ...props.behandling.behandlingsinformasjon,
-                    lovligOpphold: { ...lovligOppholdValues },
+                    lovligOpphold: lovligOppholdValues,
                 },
             })
         );

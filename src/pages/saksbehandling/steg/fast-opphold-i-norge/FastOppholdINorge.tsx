@@ -104,7 +104,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    fastOppholdINorge: { ...fastOppholdValues },
+                    fastOppholdINorge: fastOppholdValues,
                 },
             })
         );
