@@ -6,7 +6,7 @@ export default {
     'input.pensjonsOrdning.label': 'Pensjonsgiver',
     'input.pensjonsBeløp.label': 'Beløp per måned',
     'input.harMottattSosialstønad.label': 'Har du mottatt sosialstønad i løpet av de siste tre månedene?',
-    'input.sosialStønadBeløp.label': 'Beløp i kroner for alle tre månedene',
+    'input.sosialStønadBeløp.label': 'Beløp i kroner for alle tre månedene (valgfri)',
     'input.trygdeytelserIUtlandet.label': 'Har du trygdeytelser i utlandet?',
     'input.trygdeytelserIUtlandetBeløp.label': 'Beløp i lokal valuta per måned',
     'input.trygdeytelserIUtlandetType.label': 'Type ytelse',
