@@ -217,7 +217,9 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                         </div>
 
                         <div className={styles.startBeregningContainer}>
-                            <Knapp htmlType="submit">{intl.formatMessage({ id: 'knapp.startBeregning' })}</Knapp>
+                            <Knapp htmlType="submit" spinner={RemoteData.isPending(beregningStatus)}>
+                                {intl.formatMessage({ id: 'knapp.startBeregning' })}
+                            </Knapp>
                         </div>
 
                         {props.behandling.beregning && (
