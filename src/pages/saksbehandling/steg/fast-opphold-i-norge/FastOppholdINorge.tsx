@@ -11,6 +11,7 @@ import { eqFastOppholdINorge } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -79,52 +80,37 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             begrunnelse: props.behandling.behandlingsinformasjon.fastOppholdINorge?.begrunnelse ?? null,
         },
         async onSubmit(values) {
-            if (!values.status) return;
-
-            const fastOppholdValues: FastOppholdINorgeType = {
-                status: values.status,
-                begrunnelse: values.begrunnelse,
-            };
-
-            if (
-                eqFastOppholdINorge.equals(fastOppholdValues, props.behandling.behandlingsinformasjon.fastOppholdINorge)
-            ) {
-                history.push(props.nesteUrl);
-                return;
-            }
-
-            const res = await dispatch(
-                lagreBehandlingsinformasjon({
-                    sakId: props.sakId,
-                    behandlingId: props.behandling.id,
-                    behandlingsinformasjon: {
-                        fastOppholdINorge: { ...fastOppholdValues },
-                    },
-                })
-            );
-            if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
-                history.push(props.nesteUrl);
-            }
+            handleSave(values, props.nesteUrl);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
     });
     const history = useHistory();
-    const updateBehandlingsinformasjon = () => {
-        if (!formik.values.status) return;
+    const handleSave = async (values: FormData, nesteUrl: string) => {
+        if (!values.status) return;
 
-        dispatch(
+        const fastOppholdValues: FastOppholdINorgeType = {
+            status: values.status,
+            begrunnelse: values.begrunnelse,
+        };
+
+        if (eqFastOppholdINorge.equals(fastOppholdValues, props.behandling.behandlingsinformasjon.fastOppholdINorge)) {
+            history.push(nesteUrl);
+            return;
+        }
+
+        const res = await dispatch(
             lagreBehandlingsinformasjon({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    fastOppholdINorge: {
-                        status: formik.values.status,
-                        begrunnelse: formik.values.begrunnelse,
-                    },
+                    fastOppholdINorge: fastOppholdValues,
                 },
             })
         );
+        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+            history.push(nesteUrl);
+        }
     };
 
     return (
@@ -205,7 +191,13 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
-                            onLagreOgFortsettSenereClick={updateBehandlingsinformasjon}
+                            onLagreOgFortsettSenereClick={() => {
+                                formik.validateForm().then((res) => {
+                                    if (Object.keys(res).length === 0) {
+                                        handleSave(formik.values, Routes.saksoversiktIndex.createURL());
+                                    }
+                                });
+                            }}
                         />
                     </form>
                 ),

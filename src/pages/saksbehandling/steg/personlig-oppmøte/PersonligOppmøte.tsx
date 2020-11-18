@@ -198,21 +198,59 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
-    const updateBehandlingsinformasjon = (personligOppmøte: PersonligOppmøteType) => {
-        if (eqPersonligOppmøte.equals(personligOppmøte, props.behandling.behandlingsinformasjon.personligOppmøte)) {
-            history.push(props.nesteUrl);
+    const handleSave = async (values: FormData, nesteUrl: string) => {
+        const personligOppmøteStatus = toPersonligOppmøteStatus(values);
+        if (!personligOppmøteStatus) {
             return;
         }
 
-        return dispatch(
+        if (
+            eqPersonligOppmøte.equals(
+                { status: personligOppmøteStatus, begrunnelse: values.begrunnelse },
+                props.behandling.behandlingsinformasjon.personligOppmøte
+            )
+        ) {
+            history.push(nesteUrl);
+            return;
+        }
+
+        const vilkårsinformasjon = tilOppdatertVilkårsinformasjon(values, props.behandling.behandlingsinformasjon);
+
+        if (
+            vilkårsinformasjon !== 'personligOppmøteIkkeVurdert' &&
+            erVurdertUtenAvslagMenIkkeFerdigbehandlet(vilkårsinformasjon) &&
+            advarselRef.current
+        ) {
+            advarselRef.current.focus();
+            return;
+        }
+
+        const res = await dispatch(
             lagreBehandlingsinformasjon({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    personligOppmøte: personligOppmøte,
+                    personligOppmøte: {
+                        status: personligOppmøteStatus,
+                        begrunnelse: values.begrunnelse,
+                    },
                 },
             })
         );
+
+        if (!res) return;
+
+        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+            if (res.payload.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+                return history.push(
+                    Routes.saksbehandlingVedtak.createURL({
+                        sakId: props.sakId,
+                        behandlingId: props.behandling.id,
+                    })
+                );
+            }
+            history.push(nesteUrl);
+        }
     };
 
     const advarselRef = useRef<HTMLDivElement>(null);
@@ -220,40 +258,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const formik = useFormik<FormData>({
         initialValues: getInitialFormValues(props.behandling.behandlingsinformasjon.personligOppmøte),
         async onSubmit(values) {
-            const personligOppmøte = toPersonligOppmøteStatus(values);
-            if (!personligOppmøte) {
-                return;
-            }
-
-            const vilkårsinformasjon = tilOppdatertVilkårsinformasjon(values, props.behandling.behandlingsinformasjon);
-
-            if (
-                vilkårsinformasjon !== 'personligOppmøteIkkeVurdert' &&
-                erVurdertUtenAvslagMenIkkeFerdigbehandlet(vilkårsinformasjon) &&
-                advarselRef.current
-            ) {
-                advarselRef.current.focus();
-                return;
-            }
-
-            const res = await updateBehandlingsinformasjon({
-                status: personligOppmøte,
-                begrunnelse: values.begrunnelse,
-            });
-
-            if (!res) return;
-
-            if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
-                if (res.payload.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
-                    return history.push(
-                        Routes.saksbehandlingVedtak.createURL({
-                            sakId: props.sakId,
-                            behandlingId: props.behandling.id,
-                        })
-                    );
-                }
-                history.push(props.nesteUrl);
-            }
+            handleSave(values, props.nesteUrl);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -391,12 +396,10 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                const personligOppmøteStatus = toPersonligOppmøteStatus(formik.values);
-                                if (!personligOppmøteStatus) return;
-
-                                updateBehandlingsinformasjon({
-                                    status: personligOppmøteStatus,
-                                    begrunnelse: formik.values.begrunnelse,
+                                formik.validateForm().then((res) => {
+                                    if (Object.keys(res).length === 0) {
+                                        handleSave(formik.values, Routes.saksoversiktIndex.createURL());
+                                    }
                                 });
                             }}
                             nesteKnappTekst={

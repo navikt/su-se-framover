@@ -111,7 +111,7 @@ const VisBeregning = (props: Props) => {
                             Option.fold(
                                 () => null,
                                 ([head, last]) => (
-                                    <tr key={head.id + last.id}>
+                                    <tr key={head.fraOgMed + last.tilOgMed}>
                                         <td>{`${intl.formatDate(head.fraOgMed)} - ${intl.formatDate(
                                             last.tilOgMed
                                         )}`}</td>

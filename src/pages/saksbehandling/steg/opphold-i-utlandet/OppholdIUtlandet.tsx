@@ -14,6 +14,7 @@ import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { kalkulerTotaltAntallDagerIUtlandet, Utlandsdatoer } from '~lib/dateUtils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -71,42 +72,42 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
+    const handleSave = async (values: FormData, nesteUrl: string) => {
+        if (!values.status) return;
+
+        const oppholdIUtlandetValues: OppholdIUtlandetType = {
+            status: values.status,
+            begrunnelse: values.begrunnelse,
+        };
+
+        if (
+            eqOppholdIUtlandet.equals(oppholdIUtlandetValues, props.behandling.behandlingsinformasjon.oppholdIUtlandet)
+        ) {
+            history.push(nesteUrl);
+            return;
+        }
+
+        const res = await dispatch(
+            lagreBehandlingsinformasjon({
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+                behandlingsinformasjon: {
+                    oppholdIUtlandet: oppholdIUtlandetValues,
+                },
+            })
+        );
+
+        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+            history.push(nesteUrl);
+        }
+    };
     const formik = useFormik<FormData>({
         initialValues: {
             status: props.behandling.behandlingsinformasjon.oppholdIUtlandet?.status ?? null,
             begrunnelse: props.behandling.behandlingsinformasjon.oppholdIUtlandet?.begrunnelse ?? null,
         },
         async onSubmit(values) {
-            if (!values.status) return;
-
-            const oppholdIUtlandetValues: OppholdIUtlandetType = {
-                status: values.status,
-                begrunnelse: values.begrunnelse,
-            };
-
-            if (
-                eqOppholdIUtlandet.equals(
-                    oppholdIUtlandetValues,
-                    props.behandling.behandlingsinformasjon.oppholdIUtlandet
-                )
-            ) {
-                history.push(props.nesteUrl);
-                return;
-            }
-
-            const res = await dispatch(
-                lagreBehandlingsinformasjon({
-                    sakId: props.sakId,
-                    behandlingId: props.behandling.id,
-                    behandlingsinformasjon: {
-                        oppholdIUtlandet: { ...oppholdIUtlandetValues },
-                    },
-                })
-            );
-
-            if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
-                history.push(props.nesteUrl);
-            }
+            handleSave(values, props.nesteUrl);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -195,20 +196,11 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                if (!formik.values.status) return;
-
-                                dispatch(
-                                    lagreBehandlingsinformasjon({
-                                        sakId: props.sakId,
-                                        behandlingId: props.behandling.id,
-                                        behandlingsinformasjon: {
-                                            oppholdIUtlandet: {
-                                                status: formik.values.status,
-                                                begrunnelse: formik.values.begrunnelse,
-                                            },
-                                        },
-                                    })
-                                );
+                                formik.validateForm().then((res) => {
+                                    if (Object.keys(res).length === 0) {
+                                        handleSave(formik.values, Routes.saksoversiktIndex.createURL());
+                                    }
+                                });
                             }}
                         />
                     </form>

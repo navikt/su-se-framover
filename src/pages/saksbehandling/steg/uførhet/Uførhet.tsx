@@ -11,6 +11,7 @@ import { eqUførhet } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -88,7 +89,8 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const onSave = (values: FormData) => {
+
+    const handleSave = async (values: FormData, nesteUrl: string) => {
         if (!values.status) return;
 
         const uføreValues: UførhetType = {
@@ -98,19 +100,25 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         };
 
         if (eqUførhet.equals(uføreValues, props.behandling.behandlingsinformasjon.uførhet)) {
-            history.push(props.nesteUrl);
+            history.push(nesteUrl);
             return;
         }
 
-        return dispatch(
+        const res = await dispatch(
             lagreBehandlingsinformasjon({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    uførhet: { ...uføreValues },
+                    uførhet: uføreValues,
                 },
             })
         );
+
+        if (!res) return;
+
+        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+            history.push(nesteUrl);
+        }
     };
 
     const formik = useFormik<FormData>({
@@ -120,18 +128,13 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
             forventetInntekt: props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt?.toString() ?? null,
         },
         async onSubmit(values) {
-            const res = await onSave(values);
-            if (!res) return;
-
-            if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
-                history.push(props.nesteUrl);
-            }
+            handleSave(values, props.nesteUrl);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
     });
     const history = useHistory();
-    console.log(formik.values);
+
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
@@ -223,7 +226,13 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
-                            onLagreOgFortsettSenereClick={() => onSave(formik.values)}
+                            onLagreOgFortsettSenereClick={() => {
+                                formik.validateForm().then((res) => {
+                                    if (Object.keys(res).length === 0) {
+                                        handleSave(formik.values, Routes.saksoversiktIndex.createURL());
+                                    }
+                                });
+                            }}
                         />
                     </form>
                 ),
