@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Textarea } from 'nav-frontend-skjema';
+import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -15,7 +15,7 @@ import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 import {
@@ -26,7 +26,7 @@ import {
 import { Søknadstype } from '~types/Søknad';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
-import Faktablokk from '../Faktablokk';
+import Faktablokk from '../faktablokk/Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
@@ -391,6 +391,11 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                 )}
                         </div>
 
+                        <Feiloppsummering
+                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                            hidden={!formikErrorsHarFeil(formik.errors)}
+                        />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
+import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
@@ -13,13 +13,14 @@ import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FastOppholdINorge as FastOppholdINorgeType, FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
-import Faktablokk from '../Faktablokk';
+import Faktablokk from '../faktablokk/Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
@@ -158,18 +159,20 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 }
                             />
                         </RadioGruppe>
-                        <Textarea
-                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
-                            name="begrunnelse"
-                            feil={formik.errors.begrunnelse}
-                            value={formik.values.begrunnelse ?? ''}
-                            onChange={(e) => {
-                                formik.setValues({
-                                    ...formik.values,
-                                    begrunnelse: e.target.value ? e.target.value : null,
-                                });
-                            }}
-                        />
+                        <div className={sharedStyles.textareaContainer}>
+                            <Textarea
+                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                                name="begrunnelse"
+                                feil={formik.errors.begrunnelse}
+                                value={formik.values.begrunnelse ?? ''}
+                                onChange={(e) => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        begrunnelse: e.target.value ? e.target.value : null,
+                                    });
+                                }}
+                            />
+                        </div>
                         {pipe(
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(
@@ -187,6 +190,11 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 () => null
                             )
                         )}
+                        <Feiloppsummering
+                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                            hidden={!formikErrorsHarFeil(formik.errors)}
+                        />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);

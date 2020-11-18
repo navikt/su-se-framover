@@ -2,10 +2,10 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Gender } from '@navikt/nap-person-card';
 
 import { ApiError } from '~api/apiClient';
-import { Kjønn, Person } from '~api/personApi';
+import { Kjønn, Navn, Person } from '~api/personApi';
 
-export function showName(p: Person) {
-    return `${p.navn.fornavn}${p.navn.mellomnavn ? ` ${p.navn.mellomnavn} ` : ' '}${p.navn.etternavn}`;
+export function showName(navn: Navn) {
+    return `${navn.fornavn}${navn.mellomnavn ? ` ${navn.mellomnavn} ` : ' '}${navn.etternavn}`;
 }
 
 export const getGender = (søker: RemoteData.RemoteData<ApiError, Person>) => {

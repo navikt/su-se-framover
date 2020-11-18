@@ -7,16 +7,17 @@ import { Behandlingsstatus } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
-import Beregning from './beregning/Beregning';
-import FastOppholdINorge from './fast-opphold-i-norge/FastOppholdINorge';
-import Flyktning from './flyktning/Flyktning';
-import Formue from './formue/Formue';
-import Framdriftsindikator from './Framdriftsindikator';
-import LovligOppholdINorge from './lovlig-opphold-i-norge/LovligOppholdINorge';
-import OppholdIUtlandet from './opphold-i-utlandet/OppholdIUtlandet';
-import PersonligOppmøte from './personlig-oppmøte/PersonligOppmøte';
-import Sats from './sats/Sats';
-import Uførhet from './uførhet/Uførhet';
+import Beregning from '../beregning/Beregning';
+import FastOppholdINorge from '../fast-opphold-i-norge/FastOppholdINorge';
+import Flyktning from '../flyktning/Flyktning';
+import Formue from '../formue/Formue';
+import Framdriftsindikator from '../framdriftsindikator/Framdriftsindikator';
+import LovligOppholdINorge from '../lovlig-opphold-i-norge/LovligOppholdINorge';
+import OppholdIUtlandet from '../opphold-i-utlandet/OppholdIUtlandet';
+import PersonligOppmøte from '../personlig-oppmøte/PersonligOppmøte';
+import Sats from '../sats/Sats';
+import Uførhet from '../uførhet/Uførhet';
+
 import styles from './vilkår.module.less';
 
 const Vilkår = (props: { sak: Sak }) => {
@@ -47,7 +48,7 @@ const Vilkår = (props: { sak: Sak }) => {
 
     return (
         <div className={styles.container}>
-            <Framdriftsindikator behandling={behandling} vilkår={vilkar} />
+            <Framdriftsindikator sakId={props.sak.id} behandling={behandling} vilkår={vilkar} />
             <div className={styles.content}>
                 <Switch>
                     <Route path={vilkårUrl(Vilkårtype.Uførhet)}>

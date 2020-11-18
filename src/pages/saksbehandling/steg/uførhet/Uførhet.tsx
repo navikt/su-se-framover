@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Radio, RadioGruppe, Input, Label } from 'nav-frontend-skjema';
+import { Radio, RadioGruppe, Input, Label, Feiloppsummering } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
@@ -13,11 +13,11 @@ import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Uførhet as UførhetType, UførhetStatus } from '~types/Behandlingsinformasjon';
 
-import Faktablokk from '../Faktablokk';
+import Faktablokk from '../faktablokk/Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
@@ -34,7 +34,7 @@ const UførhetInput = (props: {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     feil: string | undefined;
 }) => (
-    <div>
+    <div className={styles.uføreAndFeilmeldingInputContainer}>
         <Label htmlFor={props.inputName}> {props.tittel} </Label>
         <span>
             <span className={styles.uføreInputContainer}>
@@ -222,6 +222,11 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                 () => null
                             )
                         )}
+                        <Feiloppsummering
+                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                            hidden={!formikErrorsHarFeil(formik.errors)}
+                        />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);

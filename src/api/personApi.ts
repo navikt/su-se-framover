@@ -15,14 +15,16 @@ export enum Adressebeskyttelse {
     StrengtFortroligUtland = 'STRENGT_FORTROLIG_UTLAND',
 }
 
+export interface Navn {
+    fornavn: string;
+    mellomnavn: Nullable<string>;
+    etternavn: string;
+}
+
 export interface Person {
     fnr: string;
     aktorId: string;
-    navn: {
-        fornavn: string;
-        mellomnavn: Nullable<string>;
-        etternavn: string;
-    };
+    navn: Navn;
     kjønn: Nullable<Kjønn>;
     telefonnummer: {
         landskode: string;

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
+import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -12,15 +12,15 @@ import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Flyktning as FlyktningType, FlyktningStatus, UførhetStatus } from '~types/Behandlingsinformasjon';
 
-import Faktablokk from '../Faktablokk';
+import Faktablokk from '../faktablokk/Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-import styles from '../vilkår.module.less';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './flyktning-nb';
@@ -161,18 +161,20 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 defaultChecked={formik.values.status === FlyktningStatus.Uavklart}
                             />
                         </RadioGruppe>
-                        <Textarea
-                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
-                            name="begrunnelse"
-                            value={formik.values.begrunnelse || ''}
-                            onChange={(e) => {
-                                formik.setValues({
-                                    ...formik.values,
-                                    begrunnelse: e.target.value ? e.target.value : null,
-                                });
-                            }}
-                            feil={formik.errors.begrunnelse}
-                        />
+                        <div className={sharedStyles.textareaContainer}>
+                            <Textarea
+                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                                name="begrunnelse"
+                                value={formik.values.begrunnelse || ''}
+                                onChange={(e) => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        begrunnelse: e.target.value ? e.target.value : null,
+                                    });
+                                }}
+                                feil={formik.errors.begrunnelse}
+                            />
+                        </div>
 
                         {pipe(
                             lagreBehandlingsinformasjonStatus,
@@ -193,11 +195,16 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                         )}
 
                         {vilGiTidligAvslag() && (
-                            <AlertStripe className={styles.avslagAdvarsel} type="info">
+                            <AlertStripe className={sharedStyles.avslagAdvarsel} type="info">
                                 {intl.formatMessage({ id: 'display.avslag.advarsel' })}
                             </AlertStripe>
                         )}
 
+                        <Feiloppsummering
+                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                            hidden={!formikErrorsHarFeil(formik.errors)}
+                        />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);

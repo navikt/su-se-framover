@@ -14,7 +14,6 @@ export default {
     'feilmelding.ikkeTilgang': 'Du har ikke tilgang til å se informasjon om denne brukeren',
     'feilmelding.ikkeFunnet': 'Fant ikke noen bruker med det fødselsnummeret',
     'feilmelding.ukjent': 'En feil skjedde',
-    'feiloppsummering.title': 'For å gå videre må du rette opp følgende:',
 
     'page.tittel': 'Sats',
 

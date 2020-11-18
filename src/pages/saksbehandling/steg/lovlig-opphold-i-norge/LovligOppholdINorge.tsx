@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
+import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
@@ -13,13 +13,14 @@ import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { LovligOpphold, LovligOppholdStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
-import Faktablokk from '../Faktablokk';
+import Faktablokk from '../faktablokk/Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
+import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
@@ -201,18 +202,20 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 checked={formik.values.status === LovligOppholdStatus.Uavklart}
                             />
                         </RadioGruppe>
-                        <Textarea
-                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
-                            name="begrunnelse"
-                            value={formik.values.begrunnelse || ''}
-                            onChange={(e) => {
-                                formik.setValues({
-                                    ...formik.values,
-                                    begrunnelse: e.target.value ? e.target.value : null,
-                                });
-                            }}
-                            feil={formik.errors.begrunnelse}
-                        />
+                        <div className={sharedStyles.textareaContainer}>
+                            <Textarea
+                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                                name="begrunnelse"
+                                value={formik.values.begrunnelse || ''}
+                                onChange={(e) => {
+                                    formik.setValues({
+                                        ...formik.values,
+                                        begrunnelse: e.target.value ? e.target.value : null,
+                                    });
+                                }}
+                                feil={formik.errors.begrunnelse}
+                            />
+                        </div>
 
                         {pipe(
                             lagreBehandlingsinformasjonStatus,
@@ -231,6 +234,11 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                 () => null
                             )
                         )}
+                        <Feiloppsummering
+                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                            hidden={!formikErrorsHarFeil(formik.errors)}
+                        />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);

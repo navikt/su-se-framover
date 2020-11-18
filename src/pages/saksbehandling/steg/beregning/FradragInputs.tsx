@@ -8,7 +8,7 @@ import { IntlShape } from 'react-intl';
 
 import { TrashBin } from '~assets/Icons';
 import { Nullable, KeyDict } from '~lib/types';
-import yup, { validateStringAsNumber } from '~lib/validering';
+import yup, { validateStringAsPositiveNumber } from '~lib/validering';
 import InntektFraUtland from '~pages/saksbehandling/steg/beregning/InntektFraUtland';
 import { Fradrag, Fradragstype, UtenlandskInntekt } from '~types/Fradrag';
 
@@ -105,15 +105,15 @@ const utenlandskInntekt = yup
     .when('fraUtland', {
         is: true,
         then: yup.object<UtenlandskInntektFormData>({
-            beløpIUtenlandskValuta: validateStringAsNumber,
+            beløpIUtenlandskValuta: validateStringAsPositiveNumber,
             valuta: yup.string().required(),
-            kurs: validateStringAsNumber,
+            kurs: validateStringAsPositiveNumber,
         }),
         otherwise: yup.object<UtenlandskInntektFormData>(),
     });
 
 export const fradragSchema = yup.object<FradragFormData>({
-    beløp: validateStringAsNumber,
+    beløp: validateStringAsPositiveNumber,
     type: yup.string().defined().oneOf(Object.values(Fradragstype), 'Du må velge en fradragstype'),
     fraUtland: yup.boolean(),
     utenlandskInntekt: utenlandskInntekt,

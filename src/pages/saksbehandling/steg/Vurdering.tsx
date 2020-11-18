@@ -21,7 +21,9 @@ export const Vurdering = (props: {
             </Systemtittel>
             {props.children.left}
         </div>
-        <div className={styles.right}>{props.children.right}</div>
+        <div className={styles.rightContainer}>
+            <div className={styles.right}>{props.children.right}</div>
+        </div>
     </div>
 );
 
