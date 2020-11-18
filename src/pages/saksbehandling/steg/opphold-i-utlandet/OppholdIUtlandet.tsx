@@ -206,7 +206,10 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                             onLagreOgFortsettSenereClick={() => {
                                 formik.validateForm().then((res) => {
                                     if (Object.keys(res).length === 0) {
-                                        handleSave(formik.values, Routes.saksoversiktIndex.createURL());
+                                        handleSave(
+                                            formik.values,
+                                            Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })
+                                        );
                                     }
                                 });
                             }}

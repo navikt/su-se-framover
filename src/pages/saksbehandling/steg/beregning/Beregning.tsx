@@ -288,7 +288,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 handleSave(props.nesteUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                handleSave(Routes.saksoversiktIndex.createURL());
+                                handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
                             }}
                         />
                     </form>

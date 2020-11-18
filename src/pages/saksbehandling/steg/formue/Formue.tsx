@@ -321,7 +321,13 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                             <Knapp
                                                 htmlType="button"
                                                 className={styles.toggleInput}
-                                                onClick={() => setInputToShow(null)}
+                                                onClick={() => {
+                                                    formik.validateForm().then((res) => {
+                                                        if (Object.keys(res).length === 0) {
+                                                            setInputToShow(null);
+                                                        }
+                                                    });
+                                                }}
                                             >
                                                 Lagre
                                             </Knapp>
@@ -365,7 +371,13 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                         <Knapp
                                             className={styles.toggleInput}
                                             htmlType="button"
-                                            onClick={() => setInputToShow(null)}
+                                            onClick={() => {
+                                                formik.validateForm().then((res) => {
+                                                    if (Object.keys(res).length === 0) {
+                                                        setInputToShow(null);
+                                                    }
+                                                });
+                                            }}
                                         >
                                             Lagre
                                         </Knapp>
@@ -449,7 +461,10 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             onLagreOgFortsettSenereClick={() => {
                                 formik.validateForm().then((res) => {
                                     if (Object.keys(res).length === 0) {
-                                        handleSave(formik.values, Routes.saksoversiktIndex.createURL());
+                                        handleSave(
+                                            formik.values,
+                                            Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })
+                                        );
                                     }
                                 });
                             }}
