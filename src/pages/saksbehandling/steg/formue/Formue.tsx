@@ -435,7 +435,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             )
                         )}
                         <Feiloppsummering
-                            className={styles.feiloppsummering}
                             tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                             feil={formikErrorsTilFeiloppsummering(formik.errors)}
                             hidden={!formikErrorsHarFeil(formik.errors)}

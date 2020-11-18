@@ -104,6 +104,7 @@ const Attestering = () => {
     const dispatch = useAppDispatch();
     const urlParams = Routes.useRouteParams<typeof Routes.attestering>();
     const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
+    const [fetchingBrev, setFetchingBrev] = useState<boolean>(false);
 
     if (!RemoteData.isSuccess(sak)) {
         return <AlertStripe type="feil">Fant ikke sak</AlertStripe>;
@@ -193,11 +194,16 @@ const Attestering = () => {
                     <div>
                         <Innholdstittel>Vis brev kladd</Innholdstittel>
                         <Knapp
-                            onClick={() =>
+                            spinner={fetchingBrev}
+                            onClick={() => {
+                                setFetchingBrev(true);
                                 fetchBrev(sak.value.id, urlParams.behandlingId).then((res) => {
-                                    if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
-                                })
-                            }
+                                    if (res.status === 'ok') {
+                                        window.open(URL.createObjectURL(res.data));
+                                    }
+                                    setFetchingBrev(false);
+                                });
+                            }}
                         >
                             Last ned brev
                         </Knapp>
