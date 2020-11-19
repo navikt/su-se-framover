@@ -255,7 +255,8 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             eqPersonligOppmøte.equals(
                 { status: personligOppmøteStatus, begrunnelse: values.begrunnelse },
                 props.behandling.behandlingsinformasjon.personligOppmøte
-            )
+            ) &&
+            props.behandling.status !== Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
         ) {
             history.push(nesteUrl);
             return;
