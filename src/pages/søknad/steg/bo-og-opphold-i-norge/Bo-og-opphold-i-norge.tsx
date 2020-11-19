@@ -1,3 +1,4 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import fnrValidator from '@navikt/fnrvalidator';
 import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
@@ -10,6 +11,7 @@ import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import { Adresse } from '~api/personApi';
 import { DelerBoligMed } from '~features/søknad/types';
 import { isValidDayMonthYearFormat } from '~lib/dateUtils';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
@@ -100,10 +102,15 @@ const schema = yup.object<FormData>({
             },
         }),
     fortsattInnlagt: yup.boolean(),
+    borPåAdresse: yup.mixed<Adresse>().nullable(),
 });
 
 const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
-    const boOgOppholdFraStore = useAppSelector((s) => s.soknad.boOgOpphold);
+    const {
+        søker: { søker },
+        soknad,
+    } = useAppSelector((s) => s);
+    const boOgOppholdFraStore = soknad.boOgOpphold;
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -119,6 +126,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 datoForInnleggelse: values.datoForInnleggelse,
                 datoForUtskrivelse: values.datoForUtskrivelse,
                 fortsattInnlagt: values.fortsattInnlagt,
+                borPåAdresse: values.borPåAdresse,
             })
         );
     };
@@ -133,6 +141,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
             datoForInnleggelse: boOgOppholdFraStore.datoForInnleggelse,
             datoForUtskrivelse: boOgOppholdFraStore.datoForUtskrivelse,
             fortsattInnlagt: boOgOppholdFraStore.fortsattInnlagt,
+            borPåAdresse: boOgOppholdFraStore.borPåAdresse,
         },
         onSubmit: (values) => {
             save(values);
@@ -143,6 +152,14 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
     });
 
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    let adresser: Array<{ label: string; value: string }> = [];
+
+    if (RemoteData.isSuccess(søker) && søker.value.adresse) {
+        adresser = søker.value.adresse?.map((a) => ({
+            label: `${a.adresselinje}, ${a.postnummer}, ${a.poststed}`,
+            value: a.adresselinje,
+        }));
+    }
 
     return (
         <RawIntlProvider value={intl}>
@@ -169,6 +186,28 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 {intl.formatMessage({ id: 'ikkeOppholdINorge.message' })}
                             </AlertStripe>
                         )}
+
+                        <RadioPanelGruppe
+                            className={sharedStyles.sporsmal}
+                            feil={formik.errors.borPåAdresse}
+                            legend={'Where do ya liveee?'}
+                            name="adresse"
+                            radios={[
+                                ...adresser,
+                                {
+                                    label: 'Bor på en annen adresse',
+                                    value: 0,
+                                },
+                                {
+                                    label: 'Har ikke fast bosted',
+                                    value: 0,
+                                },
+                            ]}
+                            onChange={() => {
+                                null;
+                            }}
+                            checked={formik.values.delerBoligMed?.toString()}
+                        />
 
                         <JaNeiSpørsmål
                             id="innlagtPåinstitusjon"
