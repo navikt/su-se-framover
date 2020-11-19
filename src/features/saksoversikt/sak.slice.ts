@@ -125,8 +125,8 @@ export const startBeregning = createAsyncThunk<
     Behandling,
     { sakId: string; behandlingId: string; sats: Sats; fom: Date; tom: Date; fradrag: Fradrag[] },
     { rejectValue: ApiError }
->('beregning/start', async ({ sakId, behandlingId, sats, fom, tom, fradrag }, thunkApi) => {
-    const res = await behandlingApi.startBeregning(sakId, behandlingId, { sats, fom, tom, fradrag });
+>('beregning/start', async ({ sakId, behandlingId, fom, tom, fradrag }, thunkApi) => {
+    const res = await behandlingApi.startBeregning(sakId, behandlingId, { fom, tom, fradrag });
     if (res.status === 'ok') {
         return res.data;
     }

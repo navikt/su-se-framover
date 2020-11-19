@@ -3,7 +3,6 @@ import { formatISO } from 'date-fns';
 import { Behandling } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
-import { Sats } from '~types/Sats';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -29,18 +28,16 @@ export async function startBeregning(
     sakId: string,
     behandlingId: string,
     arg: {
-        sats: Sats;
         fom: Date;
         tom: Date;
         fradrag: Fradrag[];
     }
 ): Promise<ApiClientResult<Behandling>> {
-    const { sats, fom, tom } = arg;
+    const { fom, tom } = arg;
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}/beregn`,
         method: 'POST',
         body: {
-            sats,
             fraOgMed: formatISO(fom, { representation: 'date' }),
             tilOgMed: formatISO(tom, { representation: 'date' }),
             fradrag: arg.fradrag,

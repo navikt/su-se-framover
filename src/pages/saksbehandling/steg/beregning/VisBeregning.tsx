@@ -7,7 +7,6 @@ import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import messages from '~pages/saksbehandling/steg/beregning/beregning-nb';
 import { Beregning } from '~types/Beregning';
-import { Fradragstype, Fradrag } from '~types/Fradrag';
 
 import { groupMånedsberegninger } from '../../delt/arrayUtils';
 import { InfoLinje } from '../../delt/Infolinje/Infolinje';
@@ -20,30 +19,12 @@ interface Props {
     forventetinntekt: number;
 }
 
-const fradragMedDenHøyesteAvArbeidsinntektOgForventetinntekt = (
-    fradrag: Fradrag[],
-    forventetinntekt: number
-): Fradrag[] => {
-    const { left: fradragUtenomArbeidsinntekt, right: arbeidsinntekt } = pipe(
-        fradrag,
-        arr.partition((f) => f.type === Fradragstype.Arbeidsinntekt)
-    );
-    const totalArbeidsinntekt = arbeidsinntekt.reduce((acc, currentInntekt) => acc + currentInntekt.beløp, 0);
-
-    if (totalArbeidsinntekt >= forventetinntekt) {
-        return fradrag;
-    }
-
-    return fradragUtenomArbeidsinntekt;
-};
-
 const VisBeregning = (props: Props) => {
     const intl = useI18n({ messages });
     const { beregning } = props;
     const totalbeløp = beregning.månedsberegninger.reduce((acc, val) => acc + val.beløp, 0);
     const gruppertMånedsberegninger = groupMånedsberegninger(beregning.månedsberegninger);
-    const fradrag = fradragMedDenHøyesteAvArbeidsinntektOgForventetinntekt(beregning.fradrag, props.forventetinntekt);
-
+    const fradrag = beregning.fradrag;
     return (
         <div>
             {fradrag.length > 0 && (
@@ -59,8 +40,8 @@ const VisBeregning = (props: Props) => {
                                     <InfoLinje
                                         tittel={
                                             f.utenlandskInntekt
-                                                ? `Utenlandsk ${fradragstype.toLowerCase()}`
-                                                : fradragstype
+                                                ? `Utenlandsk ${fradragstype.toLowerCase()} ${f.tilhører}`
+                                                : `${fradragstype} ${f.tilhører}`
                                         }
                                         value={intl.formatNumber(f.beløp, { currency: 'NOK' })}
                                     />

@@ -20,6 +20,7 @@ export interface FradragFormData {
     beløp: Nullable<string>;
     fraUtland: boolean;
     utenlandskInntekt: UtenlandskInntektFormData;
+    tilhørerEPS: boolean;
 }
 
 export interface UtenlandskInntektFormData {
@@ -33,6 +34,7 @@ const FradragObjectKeys: KeyDict<FradragFormData> = {
     beløp: 'beløp',
     fraUtland: 'fraUtland',
     utenlandskInntekt: 'utenlandskInntekt',
+    tilhørerEPS: 'tilhørerEPS',
 };
 
 const UtenlandskInntektKeys: KeyDict<UtenlandskInntekt> = {
@@ -117,6 +119,7 @@ export const fradragSchema = yup.object<FradragFormData>({
     type: yup.string().defined().oneOf(Object.values(Fradragstype), 'Du må velge en fradragstype'),
     fraUtland: yup.boolean(),
     utenlandskInntekt: utenlandskInntekt,
+    tilhørerEPS: yup.boolean(),
 });
 
 export const isValidFradrag = (f: unknown): f is Fradrag => fradragSchema.isValidSync(f);
@@ -141,6 +144,7 @@ export const FradragInputs = (props: {
                 const typeId = `${name}.${FradragObjectKeys.type}`;
                 const belopId = `${name}.${FradragObjectKeys.beløp}`;
                 const fraUtlandId = `${name}.${FradragObjectKeys.fraUtland}`;
+                const tilhørerEPSId = `${name}.${FradragObjectKeys.tilhørerEPS}`;
                 const beløpIUtenlandskValuta = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.beløpIUtenlandskValuta}`;
                 const valutaId = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.valuta}`;
                 const kursId = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.kurs}`;
@@ -184,6 +188,14 @@ export const FradragInputs = (props: {
                                 >
                                     <TrashBin width={'10'} height={'10'} />
                                 </Knapp>
+                            </div>
+                            <div className={styles.checkboxContainer}>
+                                <Checkbox
+                                    label={props.intl.formatMessage({ id: 'display.checkbox.tilhørerEPS' })}
+                                    name={tilhørerEPSId}
+                                    checked={fradrag.tilhørerEPS}
+                                    onChange={props.onChange}
+                                />
                             </div>
                             <div className={styles.utenlandOgPeriodeContainer}>
                                 <div className={styles.checkboxContainer}>
