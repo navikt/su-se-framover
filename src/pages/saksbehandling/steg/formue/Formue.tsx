@@ -84,7 +84,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const handleSave = async (values: FormData, nesteUrl: string) => {
-        console.log(fetchingEPS);
         if (fetchingEPS && values.ektefellesFnr !== null) return;
 
         const status =
