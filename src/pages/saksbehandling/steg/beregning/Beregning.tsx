@@ -24,7 +24,7 @@ import {
 } from '~pages/saksbehandling/steg/beregning/FradragInputs';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
-import { Fradragstype } from '~types/Fradrag';
+import { Fradragstype, FradragTilhører } from '~types/Fradrag';
 
 import Faktablokk from '../faktablokk/Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -86,6 +86,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                               kurs: Number.parseFloat(f.utenlandskInntekt.kurs),
                           }
                         : null,
+                    tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
                     /* eslint-enable @typescript-eslint/no-non-null-assertion */
                 })),
             })
@@ -144,6 +145,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                     kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
                 },
                 type: f.type,
+                tilhørerEPS: false,
             })),
         },
         onSubmit(values) {
@@ -242,6 +244,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                                     valuta: '',
                                                     kurs: '',
                                                 },
+                                                tilhørerEPS: false,
                                             },
                                         ],
                                     });

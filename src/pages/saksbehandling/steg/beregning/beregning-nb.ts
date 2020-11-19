@@ -7,6 +7,7 @@ export default {
     'datovelger.tom.legend': 'Til og med',
 
     'display.checkbox.fraUtland': 'Fra utland',
+    'display.checkbox.tilhørerEPS': 'Ektefelle/samboer',
     'display.fraSøknad.forventerArbeidsinntekt': 'Forventer du å ha arbeidsinntekt fremover?',
     'display.fraSøknad.andreYtelserINav': 'Har du andre ytelser i NAV?',
     'display.fraSøknad.sømtOmAndreTrygdeytelser': 'Har du søkt om andre trygdeytelser som ikke er behandlet?',

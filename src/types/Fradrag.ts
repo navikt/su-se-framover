@@ -4,12 +4,18 @@ export interface Fradrag {
     type: Fradragstype;
     beløp: number;
     utenlandskInntekt: Nullable<UtenlandskInntekt>;
+    tilhører: FradragTilhører;
 }
 
 export interface UtenlandskInntekt {
     beløpIUtenlandskValuta: number;
     valuta: string;
     kurs: number;
+}
+
+export enum FradragTilhører {
+    Bruker = 'BRUKER',
+    EPS = 'EPS',
 }
 
 export enum Fradragstype {
