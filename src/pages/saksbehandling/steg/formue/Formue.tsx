@@ -57,7 +57,10 @@ const VerdierSchema: yup.ObjectSchema<FormueVerdier | undefined> = yup.object<Fo
 });
 
 const schema = yup.object<FormData>({
-    status: yup.mixed().required().oneOf([FormueStatus.VilkårOppfylt, FormueStatus.MåInnhenteMerInformasjon]),
+    status: yup
+        .mixed()
+        .required()
+        .oneOf([FormueStatus.VilkårOppfylt, FormueStatus.MåInnhenteMerInformasjon, FormueStatus.VilkårIkkeOppfylt]),
     verdier: VerdierSchema.required(),
     ektefellesVerdier: VerdierSchema.required(),
     begrunnelse: yup.string().defined(),
@@ -215,8 +218,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         'kontanter',
         'depositumskonto',
     ];
-    //console.log('errors: ', formik.errors);
-    //console.log('values: ', formik.values);
+    console.log('values: ', formik.values);
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
