@@ -62,6 +62,36 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         );
     };
 
+    const handleLagreOgFortsettSenere = async (values: FormData) => {
+        if (!values.status) return;
+
+        const flyktningValues: FlyktningType = {
+            status: values.status,
+            begrunnelse: values.begrunnelse,
+        };
+
+        if (eqFlyktning.equals(flyktningValues, props.behandling.behandlingsinformasjon.flyktning)) {
+            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+            return;
+        }
+
+        const res = await dispatch(
+            lagreBehandlingsinformasjon({
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+                behandlingsinformasjon: {
+                    flyktning: flyktningValues,
+                },
+            })
+        );
+
+        if (!res) return;
+
+        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+        }
+    };
+
     const handleSave = async (values: FormData, nesteUrl: string) => {
         if (!values.status) return;
 
@@ -89,13 +119,12 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                 },
             })
         );
+
         if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
             if (res.payload.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
                 goToVedtak();
-
                 return;
             }
-
             history.push(nesteUrl);
         }
     };
@@ -212,10 +241,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                             onLagreOgFortsettSenereClick={() => {
                                 formik.validateForm().then((res) => {
                                     if (Object.keys(res).length === 0) {
-                                        handleSave(
-                                            formik.values,
-                                            Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })
-                                        );
+                                        handleLagreOgFortsettSenere(formik.values);
                                     }
                                 });
                             }}

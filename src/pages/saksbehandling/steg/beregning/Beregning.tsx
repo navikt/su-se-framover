@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { lastDayOfMonth } from 'date-fns';
 import { useFormik } from 'formik';
 import { pipe } from 'fp-ts/lib/function';
-import AlertStripe from 'nav-frontend-alertstriper';
+import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Feilmelding } from 'nav-frontend-typografi';
@@ -90,6 +90,13 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 })),
             })
         );
+    };
+
+    const handleLagreOgFortsettSenere = (values: FormData) => {
+        startBeregning(values);
+        if (RemoteData.isSuccess(beregningStatus)) {
+            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+        }
     };
 
     const handleSave = async (nesteUrl: string) => {
@@ -258,6 +265,11 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 />
                             </div>
                         )}
+                        {RemoteData.isFailure(beregningStatus) && (
+                            <AlertStripeFeil>
+                                {intl.formatMessage({ id: 'alert.feil.beregningFeilet' })}
+                            </AlertStripeFeil>
+                        )}
                         {needsBeregning && !props.behandling.beregning && (
                             <AlertStripe type="advarsel">
                                 {intl.formatMessage({ id: 'alert.advarsel.kjørBeregningFørst' })}
@@ -274,7 +286,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 ),
                                 () => (
                                     <AlertStripe type="feil">
-                                        {intl.formatMessage({ id: 'display.simuleringFeilet' })}
+                                        {intl.formatMessage({ id: 'alert.feil.simuleringFeilet' })}
                                     </AlertStripe>
                                 ),
                                 () => null
@@ -288,7 +300,11 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 handleSave(props.nesteUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+                                formik.validateForm().then((res) => {
+                                    if (Object.keys(res).length === 0) {
+                                        handleLagreOgFortsettSenere(formik.values);
+                                    }
+                                });
                             }}
                         />
                     </form>

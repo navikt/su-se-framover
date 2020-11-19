@@ -1,5 +1,6 @@
 export default {
     'alert.advarsel.kjørBeregningFørst': 'Du må kjøre en beregning før du kan gå videre',
+    'alert.feil.beregningFeilet': 'Beregning feilet',
     'alert.feil.simuleringFeilet': 'Simulering feilet',
 
     'datovelger.fom.legend': 'Fra og med',

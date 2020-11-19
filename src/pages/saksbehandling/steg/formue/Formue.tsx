@@ -5,7 +5,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Input, Textarea, Checkbox, RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Element } from 'nav-frontend-typografi';
+import { Element, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -74,6 +74,9 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [eps, setEps] = useState<Nullable<personApi.Person>>();
+    const [fetchingEPS, setFetchingEPS] = useState<boolean>(false);
+    const [kanEndreAnnenPersonsFormue, setKanEndreAnnenPersonsFormue] = useState<boolean>(true);
+    const [åpnerAnnenPersonsFormueMenViserInput, setÅpnerAnnenPersonsFormueMenViserInput] = useState<boolean>(false);
     const [personOppslagFeil, setPersonOppslagFeil] = useState<{ statusCode: number } | null>(null);
     const søknadInnhold = props.behandling.søknad.søknadInnhold;
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
@@ -81,6 +84,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const handleSave = async (values: FormData, nesteUrl: string) => {
+        if (fetchingEPS) return;
+
         const status =
             values.status === FormueStatus.MåInnhenteMerInformasjon
                 ? FormueStatus.MåInnhenteMerInformasjon
@@ -167,6 +172,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
     useEffect(() => {
         async function fetchPerson(fnr: Nullable<string>) {
+            setFetchingEPS(true);
             setEps(null);
             setPersonOppslagFeil(null);
             if (!fnr || fnrValidator.fnr(fnr).status === 'invalid') {
@@ -176,6 +182,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             const res = await personApi.fetchPerson(fnr);
             if (res.status === 'error') {
                 setPersonOppslagFeil({ statusCode: res.error.statusCode });
+                setFetchingEPS(false);
                 return;
             }
             if (res.status === 'ok') {
@@ -185,12 +192,14 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                     ...formik.values,
                     ektefellesFnr: ektefelle.fnr,
                 });
+                setFetchingEPS(false);
                 setEps(ektefelle);
             }
         }
 
         fetchPerson(formik.values.ektefellesFnr);
     }, [formik.values.ektefellesFnr]);
+
     const [inputToShow, setInputToShow] = useState<'søker' | 'ektefelle' | null>(
         formik.values.borSøkerMedEktefelle ? null : 'søker'
     );
@@ -310,13 +319,29 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                         />
 
                                         {inputToShow !== 'søker' ? (
-                                            <Knapp
-                                                className={styles.toggleInput}
-                                                onClick={() => setInputToShow('søker')}
-                                                htmlType="button"
-                                            >
-                                                {intl.formatMessage({ id: 'knapp.endreSøkersFormue' })}
-                                            </Knapp>
+                                            <div>
+                                                <Knapp
+                                                    className={styles.toggleInput}
+                                                    onClick={() => {
+                                                        if (kanEndreAnnenPersonsFormue) {
+                                                            setInputToShow('søker');
+                                                            setKanEndreAnnenPersonsFormue(false);
+                                                        } else {
+                                                            setÅpnerAnnenPersonsFormueMenViserInput(true);
+                                                        }
+                                                    }}
+                                                    htmlType="button"
+                                                >
+                                                    {intl.formatMessage({ id: 'knapp.endreSøkersFormue' })}
+                                                </Knapp>
+                                                {åpnerAnnenPersonsFormueMenViserInput && (
+                                                    <Feilmelding>
+                                                        {intl.formatMessage({
+                                                            id: 'feil.åpnerAnnenPersonFormueMenViserInput',
+                                                        })}
+                                                    </Feilmelding>
+                                                )}
+                                            </div>
                                         ) : (
                                             <Knapp
                                                 htmlType="button"
@@ -325,6 +350,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                     formik.validateForm().then((res) => {
                                                         if (Object.keys(res).length === 0) {
                                                             setInputToShow(null);
+                                                            setKanEndreAnnenPersonsFormue(true);
+                                                            setÅpnerAnnenPersonsFormueMenViserInput(false);
                                                         }
                                                     });
                                                 }}
@@ -360,13 +387,29 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                     />
 
                                     {inputToShow !== 'ektefelle' ? (
-                                        <Knapp
-                                            className={styles.toggleInput}
-                                            onClick={() => setInputToShow('ektefelle')}
-                                            htmlType="button"
-                                        >
-                                            {intl.formatMessage({ id: 'knapp.endreEktefellesFormue' })}
-                                        </Knapp>
+                                        <div>
+                                            <Knapp
+                                                className={styles.toggleInput}
+                                                onClick={() => {
+                                                    if (kanEndreAnnenPersonsFormue) {
+                                                        setInputToShow('ektefelle');
+                                                        setKanEndreAnnenPersonsFormue(false);
+                                                    } else {
+                                                        setÅpnerAnnenPersonsFormueMenViserInput(true);
+                                                    }
+                                                }}
+                                                htmlType="button"
+                                            >
+                                                {intl.formatMessage({ id: 'knapp.endreEktefellesFormue' })}
+                                            </Knapp>
+                                            {åpnerAnnenPersonsFormueMenViserInput && (
+                                                <Feilmelding>
+                                                    {intl.formatMessage({
+                                                        id: 'feil.åpnerAnnenPersonFormueMenViserInput',
+                                                    })}
+                                                </Feilmelding>
+                                            )}
+                                        </div>
                                     ) : (
                                         <Knapp
                                             className={styles.toggleInput}
@@ -375,6 +418,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                 formik.validateForm().then((res) => {
                                                     if (Object.keys(res).length === 0) {
                                                         setInputToShow(null);
+                                                        setKanEndreAnnenPersonsFormue(true);
+                                                        setÅpnerAnnenPersonsFormueMenViserInput(false);
                                                     }
                                                 });
                                             }}

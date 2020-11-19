@@ -198,7 +198,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
-    const handleSave = async (values: FormData, nesteUrl: string) => {
+    const handleLagreOgFortsettSenere = async (values: FormData) => {
         const personligOppmøteStatus = toPersonligOppmøteStatus(values);
         if (!personligOppmøteStatus) {
             return;
@@ -210,7 +210,33 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                 props.behandling.behandlingsinformasjon.personligOppmøte
             )
         ) {
-            history.push(nesteUrl);
+            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+            return;
+        }
+
+        const res = await dispatch(
+            lagreBehandlingsinformasjon({
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+                behandlingsinformasjon: {
+                    personligOppmøte: {
+                        status: personligOppmøteStatus,
+                        begrunnelse: values.begrunnelse,
+                    },
+                },
+            })
+        );
+
+        if (!res) return;
+
+        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+        }
+    };
+
+    const handleSave = async (values: FormData, nesteUrl: string) => {
+        const personligOppmøteStatus = toPersonligOppmøteStatus(values);
+        if (!personligOppmøteStatus) {
             return;
         }
 
@@ -222,6 +248,16 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             advarselRef.current
         ) {
             advarselRef.current.focus();
+            return;
+        }
+
+        if (
+            eqPersonligOppmøte.equals(
+                { status: personligOppmøteStatus, begrunnelse: values.begrunnelse },
+                props.behandling.behandlingsinformasjon.personligOppmøte
+            )
+        ) {
+            history.push(nesteUrl);
             return;
         }
 
@@ -403,10 +439,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                             onLagreOgFortsettSenereClick={() => {
                                 formik.validateForm().then((res) => {
                                     if (Object.keys(res).length === 0) {
-                                        handleSave(
-                                            formik.values,
-                                            Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })
-                                        );
+                                        handleLagreOgFortsettSenere(formik.values);
                                     }
                                 });
                             }}
