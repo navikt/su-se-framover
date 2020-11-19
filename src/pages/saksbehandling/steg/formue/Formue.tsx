@@ -84,7 +84,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const handleSave = async (values: FormData, nesteUrl: string) => {
-        if (fetchingEPS) return;
+        console.log(fetchingEPS);
+        if (fetchingEPS && values.ektefellesFnr !== null) return;
 
         const status =
             values.status === FormueStatus.MåInnhenteMerInformasjon
@@ -215,7 +216,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         'kontanter',
         'depositumskonto',
     ];
-
+    //console.log('errors: ', formik.errors);
+    //console.log('values: ', formik.values);
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
