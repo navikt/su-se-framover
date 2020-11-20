@@ -79,18 +79,25 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
                     }}
                 >
                     <Panel border className={styles.panelMargin}>
-                        <p className={styles.boldP}>{intl.formatMessage({ id: 'info.telefon.tittel' })}</p>
-                        <p>{telefonnummerKrr}</p>
-                        <p>{epostKrr}</p>
-                        <p>Telefonnummer i NAV: {telefonnummerPdl}</p>
+                        <div className={styles.infoboks}>
+                            <p className={styles.boldP}>{intl.formatMessage({ id: 'info.kontaktinfo.tittel' })}</p>
+                            <p>{telefonnummerKrr}</p>
+                            <p>{epostKrr}</p>
+                        </div>
+                        <div className={styles.infoboks}>
+                            <p className={styles.boldP}>{intl.formatMessage({ id: 'info.telefon.tittel' })}</p>
+                            <p>{telefonnummerPdl}</p>
+                        </div>
                         <AlertStripeInfo className={styles.marginTopXSS}>
                             {intl.formatMessage({ id: 'info.telefon.body' })}
                         </AlertStripeInfo>
                     </Panel>
 
                     <Panel border className={styles.panelMargin}>
-                        <p className={styles.boldP}>{intl.formatMessage({ id: 'info.kontaktform.tittel' })}</p>
-                        <p>{digitalBruker ? 'Digital' : 'Reservert mot digital kommunikasjon'}</p>
+                        <div className={styles.infoboks}>
+                            <p className={styles.boldP}>{intl.formatMessage({ id: 'info.kontaktform.tittel' })}</p>
+                            <p>{digitalBruker ? 'Digital' : 'Reservert mot digital kommunikasjon'}</p>
+                        </div>
                         <AlertStripeInfo className={styles.marginTopXSS}>
                             {intl.formatMessage({ id: 'info.kontaktform.body' })}
                         </AlertStripeInfo>
