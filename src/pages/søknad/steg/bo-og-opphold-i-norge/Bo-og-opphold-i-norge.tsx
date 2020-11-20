@@ -4,14 +4,22 @@ import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
 import { Datepicker } from 'nav-datovelger';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Checkbox, Feiloppsummering, Label, RadioPanelGruppe, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
+import {
+    Checkbox,
+    Feiloppsummering,
+    Label,
+    Radio,
+    RadioGruppe,
+    RadioPanelGruppe,
+    SkjemaelementFeilmelding,
+} from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
-import { Adresse } from '~api/personApi';
+import { Adresse, IngenAdresseGrunn } from '~api/personApi';
 import { DelerBoligMed } from '~features/søknad/types';
 import { isValidDayMonthYearFormat } from '~lib/dateUtils';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
@@ -103,6 +111,7 @@ const schema = yup.object<FormData>({
         }),
     fortsattInnlagt: yup.boolean(),
     borPåAdresse: yup.mixed<Adresse>().nullable(),
+    ingenAdresseGrunn: yup.mixed<IngenAdresseGrunn>().nullable(),
 });
 
 const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
@@ -110,6 +119,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
         søker: { søker },
         soknad,
     } = useAppSelector((s) => s);
+
     const boOgOppholdFraStore = soknad.boOgOpphold;
     const dispatch = useAppDispatch();
     const history = useHistory();
@@ -127,6 +137,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 datoForUtskrivelse: values.datoForUtskrivelse,
                 fortsattInnlagt: values.fortsattInnlagt,
                 borPåAdresse: values.borPåAdresse,
+                ingenAdresseGrunn: values.ingenAdresseGrunn,
             })
         );
     };
@@ -142,6 +153,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
             datoForUtskrivelse: boOgOppholdFraStore.datoForUtskrivelse,
             fortsattInnlagt: boOgOppholdFraStore.fortsattInnlagt,
             borPåAdresse: boOgOppholdFraStore.borPåAdresse,
+            ingenAdresseGrunn: boOgOppholdFraStore.ingenAdresseGrunn,
         },
         onSubmit: (values) => {
             save(values);
@@ -152,12 +164,12 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
     });
 
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-    let adresser: Array<{ label: string; value: string }> = [];
+    let adresser: Array<{ label: string; radioValue: Adresse }> = [];
 
     if (RemoteData.isSuccess(søker) && søker.value.adresse) {
         adresser = søker.value.adresse?.map((a) => ({
             label: `${a.adresselinje}, ${a.postnummer}, ${a.poststed}`,
-            value: a.adresselinje,
+            radioValue: a,
         }));
     }
 
@@ -187,27 +199,51 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             </AlertStripe>
                         )}
 
-                        <RadioPanelGruppe
-                            className={sharedStyles.sporsmal}
-                            feil={formik.errors.borPåAdresse}
-                            legend={'Where do ya liveee?'}
-                            name="adresse"
-                            radios={[
-                                ...adresser,
-                                {
-                                    label: 'Bor på en annen adresse',
-                                    value: 0,
-                                },
-                                {
-                                    label: 'Har ikke fast bosted',
-                                    value: 0,
-                                },
-                            ]}
-                            onChange={() => {
-                                null;
-                            }}
-                            checked={formik.values.delerBoligMed?.toString()}
-                        />
+                        <RadioGruppe legend={'where ya live'} feil={formik.errors.borPåAdresse}>
+                            {adresser.map((a) => (
+                                <Radio
+                                    key={a.radioValue.adresselinje}
+                                    label={a.label}
+                                    name="ingenAdresseGrunn"
+                                    onChange={() =>
+                                        formik.setValues({
+                                            ...formik.values,
+                                            borPåAdresse: a.radioValue,
+                                            ingenAdresseGrunn: null,
+                                        })
+                                    }
+                                    defaultChecked={formik.values.borPåAdresse === a.radioValue}
+                                />
+                            ))}
+                            <Radio
+                                label={'Ingen fast'}
+                                name="ingenAdresseGrunn"
+                                onChange={() =>
+                                    formik.setValues({
+                                        ...formik.values,
+                                        borPåAdresse: null,
+                                        ingenAdresseGrunn: IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED,
+                                    })
+                                }
+                                defaultChecked={
+                                    formik.values.ingenAdresseGrunn === IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED
+                                }
+                            />
+                            <Radio
+                                label={'Annen adresse'}
+                                name="ingenAdresseGrunn"
+                                onChange={() =>
+                                    formik.setValues({
+                                        ...formik.values,
+                                        borPåAdresse: null,
+                                        ingenAdresseGrunn: IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE,
+                                    })
+                                }
+                                defaultChecked={
+                                    formik.values.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE
+                                }
+                            />
+                        </RadioGruppe>
 
                         <JaNeiSpørsmål
                             id="innlagtPåinstitusjon"

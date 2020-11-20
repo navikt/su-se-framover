@@ -15,6 +15,11 @@ export enum Adressebeskyttelse {
     StrengtFortroligUtland = 'STRENGT_FORTROLIG_UTLAND',
 }
 
+export enum IngenAdresseGrunn {
+    BOR_PÅ_ANNEN_ADRESSE = 'BOR_PÅ_ANNEN_ADRESSE',
+    HAR_IKKE_FAST_BOSTED = 'HAR_IKKE_FAST_BOSTED',
+}
+
 export interface Navn {
     fornavn: string;
     mellomnavn: Nullable<string>;
