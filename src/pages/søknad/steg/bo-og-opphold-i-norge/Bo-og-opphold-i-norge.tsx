@@ -18,8 +18,8 @@ import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
-import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
-import { Adresse, IngenAdresseGrunn } from '~api/personApi';
+import søknadSlice, { AdresseFraSøknad, SøknadState } from '~/features/søknad/søknad.slice';
+import { IngenAdresseGrunn } from '~api/personApi';
 import { DelerBoligMed } from '~features/søknad/types';
 import { isValidDayMonthYearFormat } from '~lib/dateUtils';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
@@ -110,7 +110,16 @@ const schema = yup.object<FormData>({
             },
         }),
     fortsattInnlagt: yup.boolean(),
-    borPåAdresse: yup.mixed<Adresse>().nullable(),
+    borPåAdresse: yup
+        .mixed<AdresseFraSøknad>()
+        .nullable()
+        .test({
+            name: 'borPåAdresse',
+            message: 'En av borPåAdresse eller ingenAdresseGrunn må vare satt',
+            test: function () {
+                return Boolean(this.parent.borPåAdresse || this.parent.ingenAdresseGrunn);
+            },
+        }),
     ingenAdresseGrunn: yup.mixed<IngenAdresseGrunn>().nullable(),
 });
 
@@ -164,12 +173,16 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
     });
 
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-    let adresser: Array<{ label: string; radioValue: Adresse }> = [];
+    let adresser: Array<{ label: string; radioValue: AdresseFraSøknad }> = [];
 
     if (RemoteData.isSuccess(søker) && søker.value.adresse) {
         adresser = søker.value.adresse?.map((a) => ({
             label: `${a.adresselinje}, ${a.postnummer}, ${a.poststed}`,
-            radioValue: a,
+            radioValue: {
+                adresselinje: a.adresselinje,
+                postnummer: a.postnummer,
+                poststed: a.poststed,
+            },
         }));
     }
 
