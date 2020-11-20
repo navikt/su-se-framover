@@ -274,7 +274,7 @@ const index = () => {
                                     </div>
                                     <Undertittel>{steg.find((s) => s.step === step)?.label}</Undertittel>
                                     {(step === Søknadsteg.DinInntekt || step === Søknadsteg.EktefellesInntekt) && (
-                                        <p>Oppgi brutto beløp (før skatt).</p>
+                                        <p>{intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' })}</p>
                                     )}
                                 </>
                             </div>

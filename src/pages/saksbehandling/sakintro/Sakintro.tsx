@@ -52,7 +52,6 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
             <Innholdstittel className={styles.tittel}>
                 {intl.formatMessage({ id: 'display.saksoversikt.tittel' })}
             </Innholdstittel>
-            <hr className={styles.tittelLinje} />
             {props.sak.søknader.length > 0 ? (
                 <div className={styles.søknadOgUtbetalingContainer}>
                     <ÅpneSøknader

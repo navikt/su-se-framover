@@ -4,6 +4,7 @@ export default {
     'steg.boOgOppholdINorge': 'Bo og opphold i Norge',
     'steg.formue': 'Din formue',
     'steg.inntekt': 'Din inntekt',
+    'steg.inntekt.hjelpetekst': 'Oppgi brutto beløp (før skatt).',
     'steg.ektefellesFormue': 'Ektefelle/samboers formue',
     'steg.ektefellesInntekt': 'Ektefelle/samboers inntekt',
     'steg.utenlandsopphold': 'Reise til utlandet',
