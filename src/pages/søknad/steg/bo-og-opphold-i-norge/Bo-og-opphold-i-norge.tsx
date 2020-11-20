@@ -8,8 +8,8 @@ import {
     Checkbox,
     Feiloppsummering,
     Label,
-    Radio,
     RadioGruppe,
+    RadioPanel,
     RadioPanelGruppe,
     SkjemaelementFeilmelding,
 } from 'nav-frontend-skjema';
@@ -201,48 +201,53 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         <RadioGruppe legend={'where ya live'} feil={formik.errors.borPåAdresse}>
                             {adresser.map((a) => (
-                                <Radio
-                                    key={a.radioValue.adresselinje}
-                                    label={a.label}
+                                <div className={styles.adresse} key={a.radioValue.adresselinje}>
+                                    <RadioPanel
+                                        label={a.label}
+                                        name="ingenAdresseGrunn"
+                                        onChange={() =>
+                                            formik.setValues({
+                                                ...formik.values,
+                                                borPåAdresse: a.radioValue,
+                                                ingenAdresseGrunn: null,
+                                            })
+                                        }
+                                        defaultChecked={formik.values.borPåAdresse === a.radioValue}
+                                    />
+                                </div>
+                            ))}
+                            <div className={styles.adresse}>
+                                <RadioPanel
+                                    label={'Ingen fast'}
                                     name="ingenAdresseGrunn"
                                     onChange={() =>
                                         formik.setValues({
                                             ...formik.values,
-                                            borPåAdresse: a.radioValue,
-                                            ingenAdresseGrunn: null,
+                                            borPåAdresse: null,
+                                            ingenAdresseGrunn: IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED,
                                         })
                                     }
-                                    defaultChecked={formik.values.borPåAdresse === a.radioValue}
+                                    defaultChecked={
+                                        formik.values.ingenAdresseGrunn === IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED
+                                    }
                                 />
-                            ))}
-                            <Radio
-                                label={'Ingen fast'}
-                                name="ingenAdresseGrunn"
-                                onChange={() =>
-                                    formik.setValues({
-                                        ...formik.values,
-                                        borPåAdresse: null,
-                                        ingenAdresseGrunn: IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED,
-                                    })
-                                }
-                                defaultChecked={
-                                    formik.values.ingenAdresseGrunn === IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED
-                                }
-                            />
-                            <Radio
-                                label={'Annen adresse'}
-                                name="ingenAdresseGrunn"
-                                onChange={() =>
-                                    formik.setValues({
-                                        ...formik.values,
-                                        borPåAdresse: null,
-                                        ingenAdresseGrunn: IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE,
-                                    })
-                                }
-                                defaultChecked={
-                                    formik.values.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE
-                                }
-                            />
+                            </div>
+                            <div className={styles.adresse}>
+                                <RadioPanel
+                                    label={'Annen adresse'}
+                                    name="ingenAdresseGrunn"
+                                    onChange={() =>
+                                        formik.setValues({
+                                            ...formik.values,
+                                            borPåAdresse: null,
+                                            ingenAdresseGrunn: IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE,
+                                        })
+                                    }
+                                    defaultChecked={
+                                        formik.values.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE
+                                    }
+                                />
+                            </div>
                         </RadioGruppe>
 
                         <JaNeiSpørsmål
