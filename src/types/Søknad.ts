@@ -1,3 +1,5 @@
+import { IngenAdresseGrunn } from '~api/personApi';
+import { AdresseFraSøknad } from '~features/søknad/søknad.slice';
 import { DelerBoligMed, GrunnForPapirinnsending, Vergemål } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 
@@ -53,6 +55,8 @@ export interface SøknadInnhold {
         delerBoligMed: Nullable<DelerBoligMed>;
         ektefellePartnerSamboer: EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr | null;
         innlagtPåInstitusjon: Nullable<InnlagtPåInstitusjon>;
+        borPåAdresse: Nullable<AdresseFraSøknad>;
+        ingenAdresseGrunn: Nullable<IngenAdresseGrunn>;
     };
     utenlandsopphold: {
         registrertePerioder: Nullable<Array<{ utreisedato: string; innreisedato: string }>>;

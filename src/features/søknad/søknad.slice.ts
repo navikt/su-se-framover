@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { IngenAdresseGrunn } from '~api/personApi';
+import { Adresse, IngenAdresseGrunn } from '~api/personApi';
 import { Nullable } from '~lib/types';
 
 import { Søknadstype } from '../../types/Søknad';
@@ -39,7 +39,7 @@ export interface SøknadState {
         datoForInnleggelse: Nullable<string>;
         datoForUtskrivelse: Nullable<string>;
         fortsattInnlagt: boolean;
-        borPåAdresse: Nullable<AdresseFraSøknad>;
+        borPåAdresse: Nullable<Adresse>;
         ingenAdresseGrunn: Nullable<IngenAdresseGrunn>;
     };
     formue: {

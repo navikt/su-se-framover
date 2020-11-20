@@ -1,4 +1,7 @@
-import { SøknadState } from './søknad.slice';
+import { Adresse } from '~api/personApi';
+import { Nullable } from '~lib/types';
+
+import { AdresseFraSøknad, SøknadState } from './søknad.slice';
 
 export const toFormue = (formue: SøknadState['formue']) => {
     return {
@@ -37,4 +40,14 @@ export const toInntekt = (inntekt: SøknadState['inntekt']) => {
         })),
         pensjon: inntekt.pensjonsInntekt.map((p) => ({ ...p, beløp: Number(p.beløp) })),
     };
+};
+
+export const toAdresseFraSøknad = (adresse: Nullable<Adresse>): Nullable<AdresseFraSøknad> => {
+    return adresse
+        ? {
+              adresselinje: adresse.adresselinje,
+              postnummer: adresse.postnummer,
+              poststed: adresse.poststed,
+          }
+        : null;
 };
