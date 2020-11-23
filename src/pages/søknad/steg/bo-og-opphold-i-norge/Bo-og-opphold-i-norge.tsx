@@ -124,10 +124,10 @@ const schema = yup.object<FormData>({
 });
 
 const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
-    const {
-        søker: { søker },
-        soknad,
-    } = useAppSelector((s) => s);
+    const { søker, soknad } = useAppSelector((s) => ({
+        søker: s.søker.søker,
+        soknad: s.soknad
+    }));
 
     const boOgOppholdFraStore = soknad.boOgOpphold;
     const dispatch = useAppDispatch();
