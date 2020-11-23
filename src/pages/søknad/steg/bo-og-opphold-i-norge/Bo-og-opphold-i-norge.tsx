@@ -382,11 +382,11 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                         label={a.label}
                                         name="ingenAdresseGrunn"
                                         onChange={() =>
-                                            formik.setValues({
-                                                ...formik.values,
+                                            formik.setValues((v) => ({
+                                                ...v,
                                                 borPåAdresse: a.radioValue,
                                                 ingenAdresseGrunn: null,
-                                            })
+                                            }))
                                         }
                                         checked={formik.values.borPåAdresse === a.radioValue}
                                     />
