@@ -372,9 +372,9 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         <RadioGruppe
                             legend={intl.formatMessage({ id: 'input.adresse.tittel' })}
                             feil={formik.errors.borPåAdresse}
+                            description={intl.formatMessage({ id: 'input.adresse.undertittel' })}
                         >
-                            <p className={styles.undertittelForAdresse}>
-                                {intl.formatMessage({ id: 'input.adresse.undertittel' })}
+                                
                             </p>
                             {adresser.map((a) => (
                                 <div className={styles.adresse} key={a.radioValue.adresselinje}>
