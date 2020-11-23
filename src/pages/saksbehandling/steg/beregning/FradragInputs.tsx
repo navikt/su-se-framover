@@ -151,7 +151,7 @@ export const FradragInputs = (props: {
 
                 return (
                     <Panel key={index} border className={styles.fradragItemContainer}>
-                        <SkjemaGruppe legend={`Fradrag ${index + 1}`}>
+                        <SkjemaGruppe>
                             <div className={styles.fradragTypeOgBelopContainer}>
                                 <FradragsSelection
                                     label={props.intl.formatMessage({ id: 'display.fradrag.type' })}
@@ -193,53 +193,49 @@ export const FradragInputs = (props: {
                                 <Checkbox
                                     label={props.intl.formatMessage({ id: 'display.checkbox.tilhørerEPS' })}
                                     name={tilhørerEPSId}
+                                    className={styles.checkbox}
                                     checked={fradrag.tilhørerEPS}
                                     onChange={props.onChange}
                                 />
+                                <Checkbox
+                                    label={props.intl.formatMessage({ id: 'display.checkbox.fraUtland' })}
+                                    name={fraUtlandId}
+                                    checked={fradrag.fraUtland}
+                                    className={styles.checkbox}
+                                    onChange={(e) => {
+                                        props.onChange(e);
+                                        if (fradrag.fraUtland) {
+                                            props.setFieldValue(beløpIUtenlandskValuta, '');
+                                            props.setFieldValue(valutaId, '');
+                                            props.setFieldValue(kursId, '');
+                                        }
+                                    }}
+                                />
                             </div>
-                            <div className={styles.utenlandOgPeriodeContainer}>
-                                <div className={styles.checkboxContainer}>
-                                    <Checkbox
-                                        label={props.intl.formatMessage({ id: 'display.checkbox.fraUtland' })}
-                                        name={fraUtlandId}
-                                        checked={fradrag.fraUtland}
-                                        onChange={(e) => {
-                                            props.onChange(e);
-                                            if (fradrag.fraUtland) {
-                                                props.setFieldValue(beløpIUtenlandskValuta, '');
-                                                props.setFieldValue(valutaId, '');
-                                                props.setFieldValue(kursId, '');
-                                            }
-                                        }}
-                                    />
-                                </div>
-                                <div className={styles.utenlandsinntektOgPeriodeComponentContainer}>
-                                    {fradrag.fraUtland && (
-                                        <InntektFraUtland
-                                            utenlandsBeløpId={beløpIUtenlandskValuta}
-                                            valutaId={valutaId}
-                                            kursId={kursId}
-                                            fradrag={fradrag}
-                                            onChange={props.onChange}
-                                            utenlandskInntektErrors={
-                                                errorForLinje &&
-                                                typeof errorForLinje === 'object' &&
-                                                errorForLinje.utenlandskInntekt
-                                                    ? errorForLinje.utenlandskInntekt
-                                                    : undefined
-                                            }
-                                            intl={props.intl}
-                                        />
-                                    )}
-                                </div>
-                            </div>
+                            {fradrag.fraUtland && (
+                                <InntektFraUtland
+                                    utenlandsBeløpId={beløpIUtenlandskValuta}
+                                    valutaId={valutaId}
+                                    kursId={kursId}
+                                    fradrag={fradrag}
+                                    onChange={props.onChange}
+                                    utenlandskInntektErrors={
+                                        errorForLinje &&
+                                        typeof errorForLinje === 'object' &&
+                                        errorForLinje.utenlandskInntekt
+                                            ? errorForLinje.utenlandskInntekt
+                                            : undefined
+                                    }
+                                    intl={props.intl}
+                                />
+                            )}
                         </SkjemaGruppe>
                     </Panel>
                 );
             })}
 
             <div className={styles.leggTilNyttFradragContainer}>
-                <Knapp onClick={() => props.onLeggTilClick()} htmlType="button">
+                <Knapp onClick={() => props.onLeggTilClick()} htmlType="button" mini>
                     {props.intl.formatMessage({ id: 'knapp.fradrag.leggtil' })}
                 </Knapp>
             </div>

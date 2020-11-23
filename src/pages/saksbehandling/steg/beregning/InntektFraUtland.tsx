@@ -24,12 +24,12 @@ const InntektFraUtland = (props: {
     const valuta = props.fradrag.utenlandskInntekt.valuta;
 
     return (
-        <div className={styles.inntektFraUtlandContainer}>
+        <div className={styles.utlandOgPeriodeContainer}>
             <Input
                 label={props.intl.formatMessage({ id: 'display.input.beløpIUtenlandskValuta' })}
                 name={props.utenlandsBeløpId}
                 value={props.fradrag.utenlandskInntekt?.beløpIUtenlandskValuta ?? ''}
-                bredde={'M'}
+                bredde="S"
                 onChange={props.onChange}
                 feil={beløpIUtenlandskValutaError}
             />
@@ -54,7 +54,7 @@ const InntektFraUtland = (props: {
                 label={props.intl.formatMessage({ id: 'display.input.kurs' })}
                 name={props.kursId}
                 value={props.fradrag.utenlandskInntekt?.kurs ?? ''}
-                bredde={'S'}
+                bredde="S"
                 onChange={props.onChange}
                 feil={kursError}
             />

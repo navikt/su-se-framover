@@ -49,6 +49,7 @@ export default {
     'knapp.fradrag.leggtil': 'Legg til fradrag',
     'knapp.fradrag.fjern': 'Fjern fradrag',
     'knapp.startBeregning': 'Start beregning',
+    'knapp.startNyBeregning': 'Ny beregning',
 
     'page.tittel': 'Beregning',
 
