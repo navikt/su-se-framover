@@ -5,7 +5,7 @@ import { pipe } from 'fp-ts/lib/function';
 import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Feilmelding } from 'nav-frontend-typografi';
+import { Undertittel, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { useHistory } from 'react-router-dom';
@@ -181,9 +181,10 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        <div className={styles.datoContainer}>
-                            <div>
-                                <p>{intl.formatMessage({ id: 'datovelger.fom.legend' })}</p>
+                        <Undertittel>Periode</Undertittel>
+                        <div className={styles.container}>
+                            <div className={styles.datoContainer}>
+                                <label htmlFor="fom">{intl.formatMessage({ id: 'datovelger.fom.legend' })}</label>
                                 <DatePicker
                                     id="fom"
                                     selected={formik.values.fom}
@@ -198,8 +199,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 />
                                 {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
                             </div>
-                            <div>
-                                <p>{intl.formatMessage({ id: 'datovelger.tom.legend' })}</p>
+                            <div className={styles.datoContainer}>
+                                <label htmlFor="tom">{intl.formatMessage({ id: 'datovelger.tom.legend' })}</label>
                                 <DatePicker
                                     id="tom"
                                     selected={formik.values.tom}
@@ -216,7 +217,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             </div>
                         </div>
 
-                        <div className={styles.fradragInputsContainer}>
+                        <Undertittel>Fradrag</Undertittel>
+                        <div className={styles.container}>
                             <FradragInputs
                                 feltnavn="fradrag"
                                 fradrag={formik.values.fradrag}
@@ -251,23 +253,23 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 }}
                             />
                         </div>
-
-                        <div className={styles.startBeregningContainer}>
-                            <Knapp htmlType="submit" spinner={RemoteData.isPending(beregningStatus)}>
-                                {intl.formatMessage({ id: 'knapp.startBeregning' })}
-                            </Knapp>
-                        </div>
-
-                        {props.behandling.beregning && (
-                            <div className={styles.visBeregningContainer}>
+                        <Undertittel>Beregning</Undertittel>
+                        <div className={styles.beregningsContainer}>
+                            {props.behandling.beregning && (
                                 <VisBeregning
                                     beregning={props.behandling.beregning}
                                     forventetinntekt={
                                         props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt ?? 0
                                     }
                                 />
-                            </div>
-                        )}
+                            )}
+                            <Knapp htmlType="submit" spinner={RemoteData.isPending(beregningStatus)} mini>
+                                {props.behandling.beregning
+                                    ? intl.formatMessage({ id: 'knapp.startNyBeregning' })
+                                    : intl.formatMessage({ id: 'knapp.startBeregning' })}
+                            </Knapp>
+                        </div>
+
                         {RemoteData.isFailure(beregningStatus) && (
                             <AlertStripeFeil>
                                 {intl.formatMessage({ id: 'alert.feil.beregningFeilet' })}

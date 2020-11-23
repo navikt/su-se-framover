@@ -1,7 +1,7 @@
 @import '~/styles/variables.less';
 
 .fradragContainer {
-    margin-bottom: @spacing;
+    width: 100%;
 }
 
 .fradragItemContainer {
@@ -10,7 +10,7 @@
 
 .fradragTypeOgBelopContainer {
     display: flex;
-    margin-bottom: @spacing;
+    margin-bottom: @spacing-s;
     justify-content: flex-start;
 
     > :not(:last-child) {
@@ -31,28 +31,23 @@
     }
 }
 
-.utenlandOgPeriodeContainer {
+.checkboxContainer {
     display: flex;
-    flex-direction: column;
-
-    .checkboxContainer {
-        display: flex;
-        justify-content: space-around;
-    }
-
-    .utenlandsinntektOgPeriodeComponentContainer {
-        display: flex;
-        justify-content: space-around;
+    .checkbox {
+        padding-right: @spacing-xs;
     }
 }
 
-.inntektFraUtlandContainer {
-    margin-bottom: @spacing-xxs;
+.utlandOgPeriodeContainer {
+    display: flex;
+    justify-content: space-between;
+    div:not(:last-child) {
+        margin-right: @spacing-xxs;
+    }
 }
 
 .leggTilNyttFradragContainer {
     display: flex;
-    justify-content: flex-end;
 }
 
 .inputOgtekstContainer {
