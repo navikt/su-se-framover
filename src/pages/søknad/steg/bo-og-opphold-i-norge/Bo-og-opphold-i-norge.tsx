@@ -126,7 +126,7 @@ const schema = yup.object<FormData>({
 const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const { søker, soknad } = useAppSelector((s) => ({
         søker: s.søker.søker,
-        soknad: s.soknad
+        soknad: s.soknad,
     }));
 
     const boOgOppholdFraStore = soknad.boOgOpphold;
@@ -374,8 +374,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             feil={formik.errors.borPåAdresse}
                             description={intl.formatMessage({ id: 'input.adresse.undertittel' })}
                         >
-                                
-                            </p>
                             {adresser.map((a) => (
                                 <div className={styles.adresse} key={a.radioValue.adresselinje}>
                                     <RadioPanel
