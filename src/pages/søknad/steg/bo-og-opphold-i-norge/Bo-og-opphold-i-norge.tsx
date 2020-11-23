@@ -20,11 +20,9 @@ import { useHistory } from 'react-router-dom';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { Adresse, IngenAdresseGrunn } from '~api/personApi';
-import { DelerBoligMed } from '~features/søknad/types';
-import { isValidDayMonthYearFormat } from '~lib/dateUtils';
+import { DelerBoligMed, EPSFormData } from '~features/søknad/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { EktefellePartnerSamboerMedFnr, EktefellePartnerSamboerUtenFnr } from '~types/Søknad';
 
 import { useI18n } from '../../../../lib/hooks';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
@@ -57,27 +55,23 @@ const schema = yup.object<FormData>({
                 .required(),
         }),
     ektefellePartnerSamboer: yup
-        .mixed<null>()
+        .mixed<EPSFormData>()
         .nullable()
         .defined()
         .when('delerBoligMed', {
             is: DelerBoligMed.EKTEMAKE_SAMBOER,
             then: yup
-                .mixed<EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr>()
+                .mixed<EPSFormData>()
                 .required()
                 .test('isValidEktefelleData', 'Ugyldig informasjon om ektefelle', (value) => {
                     const eps = toEktefellePartnerSamboer(value);
 
-                    switch (eps?.type) {
-                        case 'MedFnr':
-                            return eps.fnr.length === 11 && fnrValidator.fnr(eps.fnr).status === 'valid';
-                        case 'UtenFnr':
-                            return isValidDayMonthYearFormat(eps.fødselsdato) && eps.navn?.length > 0;
-                        default:
-                            return false;
-                    }
+                    if (!eps) return false;
+
+                    return eps.fnr.length === 11 && fnrValidator.fnr(eps.fnr).status === 'valid';
                 })
                 .test('UførhetFyltInn', 'Må fylles inn', (value) => {
+                    if (!value) return false;
                     return value.erUførFlyktning !== null;
                 }),
         }),

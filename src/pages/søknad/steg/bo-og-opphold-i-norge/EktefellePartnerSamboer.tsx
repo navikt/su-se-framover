@@ -1,6 +1,6 @@
 import fnrValidator from '@navikt/fnrvalidator';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Checkbox, Input, Radio, RadioGruppe } from 'nav-frontend-skjema';
+import { Input, Radio, RadioGruppe } from 'nav-frontend-skjema';
 import React, { useEffect, useState } from 'react';
 
 import * as personApi from '~api/personApi';
@@ -8,14 +8,12 @@ import { Person } from '~api/personApi';
 import { KjønnKvinne, KjønnMann, KjønnUkjent } from '~assets/Icons';
 import { showName } from '~features/person/personUtils';
 import { EPSFormData } from '~features/søknad/types';
-import { isValidDayMonthYearFormat } from '~lib/dateUtils';
 import { Nullable } from '~lib/types';
 
 import { useI18n } from '../../../../lib/hooks';
 
 import messages from './bo-og-opphold-i-norge-nb';
 import styles from './ektefelle-partner-samboer.module.less';
-import { initialEPS } from './utils';
 
 interface Props {
     onChange: (eps: EPSFormData) => void;
@@ -23,15 +21,13 @@ interface Props {
     feil?: string;
 }
 const EktefellePartnerSamboer = (props: Props) => {
-    const [fnrErUkjent, setFnrErUkjent] = useState(false);
-    const epsFormData = props.value ?? initialEPS;
+    const epsFormData = props.value ?? { fnr: null, erUførFlyktning: null };
 
     const intl = useI18n({ messages });
 
     return (
         <div>
             <FnrInput
-                disabled={fnrErUkjent}
                 fnr={epsFormData.fnr}
                 onFnrChange={(fnr) => {
                     props.onChange({
@@ -39,53 +35,8 @@ const EktefellePartnerSamboer = (props: Props) => {
                         fnr,
                     });
                 }}
-                feil={!fnrErUkjent && props.feil}
+                feil={props.feil}
             />
-            <Checkbox
-                onChange={(e) => {
-                    const { checked } = e.target;
-                    setFnrErUkjent(checked);
-
-                    props.onChange({
-                        ...epsFormData,
-                        navn: null,
-                        fødselsdato: null,
-                        fnr: null,
-                    });
-                }}
-                checked={fnrErUkjent}
-                label="Vet ikke fødselsnummeret"
-            />
-
-            {fnrErUkjent && (
-                <div className={styles.ukjentFnr}>
-                    <Input
-                        value={epsFormData.navn ?? ''}
-                        label={intl.formatMessage({ id: 'input.ektefelleEllerSamboerNavn.label' })}
-                        onChange={(e) => {
-                            props.onChange({
-                                ...epsFormData,
-                                navn: e.target.value,
-                            });
-                        }}
-                        feil={!epsFormData.navn && props.feil}
-                    />
-                    <Input
-                        value={epsFormData.fødselsdato ?? ''}
-                        label={intl.formatMessage({ id: 'input.ektefelleEllerSamboerFødselsdato.label' })}
-                        description="DD.MM.ÅÅÅÅ"
-                        bredde="S"
-                        maxLength={10}
-                        onChange={(e) => {
-                            props.onChange({
-                                ...epsFormData,
-                                fødselsdato: e.target.value,
-                            });
-                        }}
-                        feil={!isValidDayMonthYearFormat(epsFormData.fødselsdato) && props.feil}
-                    />
-                </div>
-            )}
 
             <div className={styles.ufør}>
                 <RadioGruppe
@@ -121,12 +72,11 @@ const EktefellePartnerSamboer = (props: Props) => {
 };
 
 interface FnrInputProps {
-    disabled: boolean;
     fnr: Nullable<string>;
     onFnrChange: (fnr: string) => void;
     feil?: React.ReactNode;
 }
-const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
+const FnrInput = ({ fnr, onFnrChange, feil }: FnrInputProps) => {
     const [person, setPerson] = useState<Person | null>(null);
     const [harIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
     const intl = useI18n({ messages });
@@ -159,18 +109,17 @@ const FnrInput = ({ disabled, fnr, onFnrChange, feil }: FnrInputProps) => {
                 description={intl.formatMessage({ id: 'input.ektefelleEllerSamboerFnrDescription.label' })}
                 onChange={(e) => onFnrChange(e.target.value)}
                 value={fnr ?? ''}
-                disabled={disabled}
                 maxLength={11}
                 feil={feil}
             />
 
-            {!disabled && person && (
+            {person && (
                 <div className={styles.result}>
                     <GenderIcon kjønn={person.kjønn} />
                     <p className={styles.name}>{showName(person.navn)}</p>
                 </div>
             )}
-            {!disabled && harIkkeTilgang && (
+            {harIkkeTilgang && (
                 <div>
                     <AlertStripe type="feil"> Du har ikke tilgang til å se informasjon om denne brukeren </AlertStripe>
                 </div>

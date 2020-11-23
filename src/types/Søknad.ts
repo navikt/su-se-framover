@@ -53,7 +53,7 @@ export interface SøknadInnhold {
         borOgOppholderSegINorge: boolean;
         delerBoligMedVoksne: boolean;
         delerBoligMed: Nullable<DelerBoligMed>;
-        ektefellePartnerSamboer: EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr | null;
+        ektefellePartnerSamboer: Nullable<EktefellePartnerSamboer>;
         innlagtPåInstitusjon: Nullable<InnlagtPåInstitusjon>;
         borPåAdresse: Nullable<AdresseFraSøknad>;
         ingenAdresseGrunn: Nullable<IngenAdresseGrunn>;
@@ -113,17 +113,7 @@ interface InntektOgPensjon {
     pensjon: Nullable<Array<{ ordning: string; beløp: number }>>;
 }
 
-interface EktefellePartnerSamboerBase<T extends 'MedFnr' | 'UtenFnr'> {
+export interface EktefellePartnerSamboer {
     erUførFlyktning: boolean;
-    type: T;
-}
-
-export interface EktefellePartnerSamboerMedFnr extends EktefellePartnerSamboerBase<'MedFnr'> {
     fnr: string;
 }
-export interface EktefellePartnerSamboerUtenFnr extends EktefellePartnerSamboerBase<'UtenFnr'> {
-    navn: string;
-    fødselsdato: string;
-}
-
-export type EktefellePartnerSamboer = EktefellePartnerSamboerMedFnr | EktefellePartnerSamboerUtenFnr;

@@ -14,32 +14,17 @@ export interface EPSMedAlder extends Ektefelle {
 
 export const hentEktefellesAlder = (ektefelle: EktefellePartnerSamboer) => {
     const today = new Date();
-    const parseEktefellesFødselsdato = (fødselsdato: string, format: string) => parse(fødselsdato, format, new Date());
+    const parseEktefellesFødselsdato = (ektefelleFødselsdato: string, format: string) =>
+        parse(ektefelleFødselsdato, format, new Date());
 
-    if (ektefelle.type === 'MedFnr') {
-        const fødselsdato = ektefelle.fnr.substr(0, 6);
-        return differenceInYears(today, parseEktefellesFødselsdato(fødselsdato, 'ddMMyy'));
-    }
-
-    return differenceInYears(today, parseEktefellesFødselsdato(ektefelle.fødselsdato, 'dd.MM.yyyy'));
+    const fødselsdato = ektefelle.fnr.substr(0, 6);
+    return differenceInYears(today, parseEktefellesFødselsdato(fødselsdato, 'ddMMyy'));
 };
-
-export const hentEpsFnrEllerFødselsdato = (ektefelle: EktefellePartnerSamboer) =>
-    ektefelle.type === 'MedFnr' ? ektefelle.fnr : ektefelle.fødselsdato;
 
 export const setSatsFaktablokk = (søknadinnhold: SøknadInnhold, intl: IntlShape, eps: Nullable<EPSMedAlder>) => {
     const faktablokk = [];
 
     if (eps) {
-        faktablokk.push({
-            tittel: intl.formatMessage({
-                id: 'display.fraSøknad.ektefelleEllerSamboerNavn',
-            }),
-            verdi:
-                søknadinnhold.boforhold.ektefellePartnerSamboer?.type === 'UtenFnr'
-                    ? søknadinnhold.boforhold.ektefellePartnerSamboer.navn
-                    : '-',
-        });
         faktablokk.push({
             tittel: intl.formatMessage({
                 id: 'display.fraSøknad.ektemakeEllerSamboerUførFlyktning',

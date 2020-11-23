@@ -73,7 +73,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const [eps, setEps] = useState<Nullable<personApi.Person>>();
     const [fetchingEPS, setFetchingEPS] = useState<boolean>(false);
     const [kanEndreAnnenPersonsFormue, setKanEndreAnnenPersonsFormue] = useState<boolean>(true);
-    const [åpnerAnnenPersonsFormueMenViserInput, setÅpnerAnnenPersonsFormueMenViserInput] = useState<boolean>(false);
+    const [åpnerNyFormueBlokkMenViserEnBlokk, setÅpnerNyFormueBlokkMenViserEnBlokk] = useState<boolean>(false);
     const [personOppslagFeil, setPersonOppslagFeil] = useState<{ statusCode: number } | null>(null);
     const søknadInnhold = props.behandling.søknad.søknadInnhold;
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
@@ -322,14 +322,14 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                             setInputToShow('søker');
                                                             setKanEndreAnnenPersonsFormue(false);
                                                         } else {
-                                                            setÅpnerAnnenPersonsFormueMenViserInput(true);
+                                                            setÅpnerNyFormueBlokkMenViserEnBlokk(true);
                                                         }
                                                     }}
                                                     htmlType="button"
                                                 >
                                                     {intl.formatMessage({ id: 'knapp.endreSøkersFormue' })}
                                                 </Knapp>
-                                                {åpnerAnnenPersonsFormueMenViserInput && (
+                                                {åpnerNyFormueBlokkMenViserEnBlokk && (
                                                     <Feilmelding>
                                                         {intl.formatMessage({
                                                             id: 'feil.åpnerAnnenPersonFormueMenViserInput',
@@ -346,7 +346,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                         if (Object.keys(res).length === 0) {
                                                             setInputToShow(null);
                                                             setKanEndreAnnenPersonsFormue(true);
-                                                            setÅpnerAnnenPersonsFormueMenViserInput(false);
+                                                            setÅpnerNyFormueBlokkMenViserEnBlokk(false);
                                                         }
                                                     });
                                                 }}
@@ -390,14 +390,14 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                         setInputToShow('ektefelle');
                                                         setKanEndreAnnenPersonsFormue(false);
                                                     } else {
-                                                        setÅpnerAnnenPersonsFormueMenViserInput(true);
+                                                        setÅpnerNyFormueBlokkMenViserEnBlokk(true);
                                                     }
                                                 }}
                                                 htmlType="button"
                                             >
                                                 {intl.formatMessage({ id: 'knapp.endreEktefellesFormue' })}
                                             </Knapp>
-                                            {åpnerAnnenPersonsFormueMenViserInput && (
+                                            {åpnerNyFormueBlokkMenViserEnBlokk && (
                                                 <Feilmelding>
                                                     {intl.formatMessage({
                                                         id: 'feil.åpnerAnnenPersonFormueMenViserInput',
@@ -414,7 +414,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                     if (Object.keys(res).length === 0) {
                                                         setInputToShow(null);
                                                         setKanEndreAnnenPersonsFormue(true);
-                                                        setÅpnerAnnenPersonsFormueMenViserInput(false);
+                                                        setÅpnerNyFormueBlokkMenViserEnBlokk(false);
                                                     }
                                                 });
                                             }}
@@ -526,23 +526,10 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                     verdi: søknadInnhold.ektefelle ? (
                                         <>
                                             <p>
-                                                {`${intl.formatMessage({
-                                                    id: 'display.fraSøknad.epsFnr',
-                                                })}: ${
-                                                    søknadInnhold.boforhold.ektefellePartnerSamboer
-                                                        ? søknadInnhold.boforhold.ektefellePartnerSamboer?.type ===
-                                                          'MedFnr'
-                                                            ? søknadInnhold.boforhold.ektefellePartnerSamboer.fnr
-                                                            : søknadInnhold.boforhold.ektefellePartnerSamboer
-                                                                  .fødselsdato
-                                                        : '-'
+                                                {`${intl.formatMessage({ id: 'display.fraSøknad.epsFnr' })}: ${
+                                                    søknadInnhold.boforhold.ektefellePartnerSamboer?.fnr
                                                 }`}
                                             </p>
-                                            {søknadInnhold.boforhold.ektefellePartnerSamboer?.type === 'UtenFnr' && (
-                                                <p>{`${intl.formatMessage({
-                                                    id: 'display.fraSøknad.ektefellesNavn',
-                                                })}: ${søknadInnhold.boforhold.ektefellePartnerSamboer.navn}`}</p>
-                                            )}
                                             {
                                                 // TODO ai: very very temporary solution for showing formue for ektefelle
                                                 [

@@ -55,7 +55,7 @@ export function getFormue(behandlingsInfo: Behandlingsinformasjon, søknadsInnho
         borSøkerMedEPS:
             behandlingsFormue?.borSøkerMedEPS ??
             søknadsInnhold.boforhold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
-        epsFnr: behandlingsInfo.ektefelle?.fnr ?? null,
+        epsFnr: behandlingsInfo.ektefelle?.fnr ?? søknadsInnhold.boforhold.ektefellePartnerSamboer?.fnr ?? null,
     };
 }
 

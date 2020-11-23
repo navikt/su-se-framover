@@ -25,8 +25,6 @@ export interface Utenlandsopphold {
 
 export interface EPSFormData {
     fnr: Nullable<string>;
-    navn: Nullable<string>;
-    fødselsdato: Nullable<string>;
     erUførFlyktning: Nullable<boolean>;
 }
 
