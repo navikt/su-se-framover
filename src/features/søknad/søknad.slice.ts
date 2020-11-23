@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { Adresse, IngenAdresseGrunn } from '~api/personApi';
 import { Nullable } from '~lib/types';
 
 import { Søknadstype } from '../../types/Søknad';
@@ -12,6 +13,12 @@ import {
     Utenlandsopphold,
     Vergemål,
 } from './types';
+
+export interface AdresseFraSøknad {
+    adresselinje: string;
+    postnummer: Nullable<string>;
+    poststed: Nullable<string>;
+}
 
 export interface SøknadState {
     harUførevedtak: Nullable<boolean>;
@@ -32,6 +39,8 @@ export interface SøknadState {
         datoForInnleggelse: Nullable<string>;
         datoForUtskrivelse: Nullable<string>;
         fortsattInnlagt: boolean;
+        borPåAdresse: Nullable<Adresse>;
+        ingenAdresseGrunn: Nullable<IngenAdresseGrunn>;
     };
     formue: {
         eierBolig: Nullable<boolean>;
@@ -156,6 +165,8 @@ const initialState = (type: Søknadstype = Søknadstype.DigitalSøknad): Søknad
         datoForInnleggelse: null,
         datoForUtskrivelse: null,
         fortsattInnlagt: false,
+        borPåAdresse: null,
+        ingenAdresseGrunn: null,
     },
     formue: initialFormue,
     ektefelle: {

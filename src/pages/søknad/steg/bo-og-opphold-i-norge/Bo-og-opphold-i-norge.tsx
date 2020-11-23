@@ -1,15 +1,25 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import fnrValidator from '@navikt/fnrvalidator';
 import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
 import { Datepicker } from 'nav-datovelger';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Checkbox, Feiloppsummering, Label, RadioPanelGruppe, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
+import {
+    Checkbox,
+    Feiloppsummering,
+    Label,
+    RadioGruppe,
+    RadioPanel,
+    RadioPanelGruppe,
+    SkjemaelementFeilmelding,
+} from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import { Adresse, IngenAdresseGrunn } from '~api/personApi';
 import { DelerBoligMed } from '~features/søknad/types';
 import { isValidDayMonthYearFormat } from '~lib/dateUtils';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
@@ -100,10 +110,26 @@ const schema = yup.object<FormData>({
             },
         }),
     fortsattInnlagt: yup.boolean(),
+    borPåAdresse: yup
+        .mixed<Adresse>()
+        .nullable()
+        .test({
+            name: 'borPåAdresse',
+            message: 'En av borPåAdresse eller ingenAdresseGrunn må vare satt',
+            test: function () {
+                return Boolean(this.parent.borPåAdresse || this.parent.ingenAdresseGrunn);
+            },
+        }),
+    ingenAdresseGrunn: yup.mixed<IngenAdresseGrunn>().nullable(),
 });
 
 const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
-    const boOgOppholdFraStore = useAppSelector((s) => s.soknad.boOgOpphold);
+    const { søker, soknad } = useAppSelector((s) => ({
+        søker: s.søker.søker,
+        soknad: s.soknad,
+    }));
+
+    const boOgOppholdFraStore = soknad.boOgOpphold;
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -119,6 +145,8 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 datoForInnleggelse: values.datoForInnleggelse,
                 datoForUtskrivelse: values.datoForUtskrivelse,
                 fortsattInnlagt: values.fortsattInnlagt,
+                borPåAdresse: values.borPåAdresse,
+                ingenAdresseGrunn: values.ingenAdresseGrunn,
             })
         );
     };
@@ -133,6 +161,8 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
             datoForInnleggelse: boOgOppholdFraStore.datoForInnleggelse,
             datoForUtskrivelse: boOgOppholdFraStore.datoForUtskrivelse,
             fortsattInnlagt: boOgOppholdFraStore.fortsattInnlagt,
+            borPåAdresse: boOgOppholdFraStore.borPåAdresse,
+            ingenAdresseGrunn: boOgOppholdFraStore.ingenAdresseGrunn,
         },
         onSubmit: (values) => {
             save(values);
@@ -143,6 +173,14 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
     });
 
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    let adresser: Array<{ label: string; radioValue: Adresse }> = [];
+
+    if (RemoteData.isSuccess(søker) && søker.value.adresse) {
+        adresser = søker.value.adresse?.map((a) => ({
+            label: `${a.adresselinje}, ${a.postnummer}, ${a.poststed}`,
+            radioValue: a,
+        }));
+    }
 
     return (
         <RawIntlProvider value={intl}>
@@ -330,6 +368,57 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 feil={formik.errors.ektefellePartnerSamboer}
                             />
                         )}
+
+                        <RadioGruppe
+                            legend={intl.formatMessage({ id: 'input.adresse.tittel' })}
+                            feil={formik.errors.borPåAdresse}
+                            description={intl.formatMessage({ id: 'input.adresse.undertittel' })}
+                        >
+                            {adresser.map((a) => (
+                                <div className={styles.adresse} key={a.radioValue.adresselinje}>
+                                    <RadioPanel
+                                        label={a.label}
+                                        name="ingenAdresseGrunn"
+                                        onChange={() =>
+                                            formik.setValues((v) => ({
+                                                ...v,
+                                                borPåAdresse: a.radioValue,
+                                                ingenAdresseGrunn: null,
+                                            }))
+                                        }
+                                        checked={formik.values.borPåAdresse === a.radioValue}
+                                    />
+                                </div>
+                            ))}
+                            <div className={styles.adresse}>
+                                <RadioPanel
+                                    label={intl.formatMessage({ id: 'input.adresse.ingenAdresse.harIkkeFastBosted' })}
+                                    name="ingenAdresseGrunn"
+                                    onChange={() =>
+                                        formik.setValues({
+                                            ...formik.values,
+                                            borPåAdresse: null,
+                                            ingenAdresseGrunn: IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED,
+                                        })
+                                    }
+                                    checked={formik.values.ingenAdresseGrunn === IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED}
+                                />
+                            </div>
+                            <div className={styles.adresse}>
+                                <RadioPanel
+                                    label={intl.formatMessage({ id: 'input.adresse.ingenAdresse.borPåAnnenAdresse' })}
+                                    name="ingenAdresseGrunn"
+                                    onChange={() =>
+                                        formik.setValues({
+                                            ...formik.values,
+                                            borPåAdresse: null,
+                                            ingenAdresseGrunn: IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE,
+                                        })
+                                    }
+                                    checked={formik.values.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE}
+                                />
+                            </div>
+                        </RadioGruppe>
                     </div>
                     <Feiloppsummering
                         className={sharedStyles.marginBottom}

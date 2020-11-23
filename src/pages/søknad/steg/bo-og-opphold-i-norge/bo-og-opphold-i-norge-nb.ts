@@ -13,6 +13,11 @@ export default {
     'input.ektefelleEllerSamboerUnder67År.label': 'Er ektefelle eller samboer under 67 år?',
     'input.ektefelleEllerSamboerUførFlyktning.label': 'Er ektefelle eller samboer ufør flyktning?',
 
+    'input.adresse.tittel': 'Hva er adressen din?',
+    'input.adresse.undertittel': 'Her er adressene vi finner som er registrert på deg. Velg den du bor på.',
+    'input.adresse.ingenAdresse.borPåAnnenAdresse': 'Bor på en annen adresse',
+    'input.adresse.ingenAdresse.harIkkeFastBosted': 'Har ikke fast bosted',
+
     'input.innlagtPåInstitusjon.label': 'Har du vært innlagt på institusjon de siste tre månedene?',
     'input.datoForInnleggelse.label': 'Dato for innleggelse',
     'input.datoForUtskrivelse.label': 'Dato for utskrivelse',

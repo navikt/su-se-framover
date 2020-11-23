@@ -11,7 +11,7 @@ import { SøknadInnhold, Søknadstype, Søknad } from '~types/Søknad';
 
 import { SøknadState } from './søknad.slice';
 import { DelerBoligMed } from './types';
-import { toFormue, toInntekt } from './utils';
+import { toAdresseFraSøknad, toFormue, toInntekt } from './utils';
 
 export const sendSøknad = createAsyncThunk<
     Søknad,
@@ -47,6 +47,8 @@ export const sendSøknad = createAsyncThunk<
                       fortsattInnlagt: søknad.boOgOpphold.fortsattInnlagt,
                   }
                 : null,
+            borPåAdresse: toAdresseFraSøknad(søknad.boOgOpphold.borPåAdresse),
+            ingenAdresseGrunn: søknad.boOgOpphold.ingenAdresseGrunn,
         },
         utenlandsopphold: {
             registrertePerioder: søknad.utenlandsopphold.harReistDatoer,

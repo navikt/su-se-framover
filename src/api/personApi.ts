@@ -15,10 +15,26 @@ export enum Adressebeskyttelse {
     StrengtFortroligUtland = 'STRENGT_FORTROLIG_UTLAND',
 }
 
+export enum IngenAdresseGrunn {
+    BOR_PÅ_ANNEN_ADRESSE = 'BOR_PÅ_ANNEN_ADRESSE',
+    HAR_IKKE_FAST_BOSTED = 'HAR_IKKE_FAST_BOSTED',
+}
+
 export interface Navn {
     fornavn: string;
     mellomnavn: Nullable<string>;
     etternavn: string;
+}
+
+export interface Adresse {
+    adresselinje: string;
+    postnummer: Nullable<string>;
+    poststed: Nullable<string>;
+    bruksenhet: Nullable<string>;
+    kommunenummer: Nullable<string>;
+    kommunenavn: Nullable<string>;
+    adressetype: string;
+    adresseformat: string;
 }
 
 export interface Person {
@@ -30,16 +46,7 @@ export interface Person {
         landskode: string;
         nummer: string;
     };
-    adresse: {
-        adressenavn: Nullable<string>;
-        husnummer: Nullable<string>;
-        husbokstav: Nullable<string>;
-        postnummer: Nullable<string>;
-        poststed: Nullable<string>;
-        bruksenhet: Nullable<string>;
-        kommunenummer: Nullable<string>;
-        kommunenavn: Nullable<string>;
-    };
+    adresse: Nullable<Adresse[]>;
     statsborgerskap: Nullable<string>;
     adressebeskyttelse: Nullable<Adressebeskyttelse>;
     skjermet: Nullable<boolean>;
