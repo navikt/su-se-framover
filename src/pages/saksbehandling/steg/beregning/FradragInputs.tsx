@@ -125,6 +125,7 @@ export const fradragSchema = yup.object<FradragFormData>({
 export const isValidFradrag = (f: unknown): f is Fradrag => fradragSchema.isValidSync(f);
 
 export const FradragInputs = (props: {
+    harEps: boolean;
     fradrag: FradragFormData[];
     feltnavn: string;
     errors: string | string[] | Array<FormikErrors<FradragFormData>> | undefined;
@@ -190,13 +191,15 @@ export const FradragInputs = (props: {
                                 </Knapp>
                             </div>
                             <div className={styles.checkboxContainer}>
-                                <Checkbox
-                                    label={props.intl.formatMessage({ id: 'display.checkbox.tilhørerEPS' })}
-                                    name={tilhørerEPSId}
-                                    className={styles.checkbox}
-                                    checked={fradrag.tilhørerEPS}
-                                    onChange={props.onChange}
-                                />
+                                {props.harEps && (
+                                    <Checkbox
+                                        label={props.intl.formatMessage({ id: 'display.checkbox.tilhørerEPS' })}
+                                        name={tilhørerEPSId}
+                                        className={styles.checkbox}
+                                        checked={fradrag.tilhørerEPS}
+                                        onChange={props.onChange}
+                                    />
+                                )}
                                 <Checkbox
                                     label={props.intl.formatMessage({ id: 'display.checkbox.fraUtland' })}
                                     name={fraUtlandId}
