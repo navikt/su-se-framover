@@ -145,7 +145,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                     kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
                 },
                 type: f.type,
-                tilhørerEPS: false,
+                tilhørerEPS: f.tilhører === FradragTilhører.EPS,
             })),
         },
         onSubmit(values) {
