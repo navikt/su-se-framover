@@ -6,6 +6,8 @@ import { Nullable } from '~lib/types';
 import { Ektefelle } from '~types/Behandlingsinformasjon';
 import { EktefellePartnerSamboer, SøknadInnhold } from '~types/Søknad';
 
+import { delerBoligMedFormatted } from '../sharedUtils';
+
 export interface EPSMedAlder extends Ektefelle {
     alder: Nullable<number>;
 }
@@ -22,7 +24,7 @@ export const hentEktefellesAlder = (ektefelle: EktefellePartnerSamboer) => {
     return differenceInYears(today, parseEktefellesFødselsdato(ektefelle.fødselsdato, 'dd.MM.yyyy'));
 };
 
-export const hentEktefellesFnrEllerFødselsdato = (ektefelle: EktefellePartnerSamboer) =>
+export const hentEpsFnrEllerFødselsdato = (ektefelle: EktefellePartnerSamboer) =>
     ektefelle.type === 'MedFnr' ? ektefelle.fnr : ektefelle.fødselsdato;
 
 export const setSatsFaktablokk = (søknadinnhold: SøknadInnhold, intl: IntlShape, eps: Nullable<EPSMedAlder>) => {
@@ -58,7 +60,7 @@ export const setSatsFaktablokk = (søknadinnhold: SøknadInnhold, intl: IntlShap
             tittel: intl.formatMessage({
                 id: 'display.fraSøknad.hvemDelerSøkerBoligMed',
             }),
-            verdi: søknadinnhold.boforhold.delerBoligMed,
+            verdi: delerBoligMedFormatted(søknadinnhold.boforhold.delerBoligMed),
         });
     }
 

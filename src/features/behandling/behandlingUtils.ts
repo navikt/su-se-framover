@@ -95,7 +95,7 @@ export const eqFormue: Eq<Nullable<Formue>> = {
     equals: (formue1, formue2) =>
         formue1?.status === formue2?.status &&
         eqVerdier.equals(formue1?.verdier ?? null, formue2?.verdier ?? null) &&
-        eqVerdier.equals(formue1?.ektefellesVerdier ?? null, formue2?.ektefellesVerdier ?? null) &&
+        eqVerdier.equals(formue1?.epsVerdier ?? null, formue2?.epsVerdier ?? null) &&
         formue1?.begrunnelse === formue2?.begrunnelse,
 };
 const eqVerdier: Eq<Nullable<FormueVerdier>> = {

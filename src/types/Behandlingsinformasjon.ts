@@ -70,7 +70,8 @@ export enum OppholdIUtlandetStatus {
 export interface Formue {
     status: FormueStatus;
     verdier: Nullable<FormueVerdier>;
-    ektefellesVerdier: Nullable<FormueVerdier>;
+    borSøkerMedEPS: boolean;
+    epsVerdier: Nullable<FormueVerdier>;
     begrunnelse: Nullable<string>;
 }
 
