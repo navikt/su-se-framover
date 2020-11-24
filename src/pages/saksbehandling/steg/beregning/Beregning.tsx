@@ -316,81 +316,163 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                     </form>
                 ),
                 right: (
-                    <Faktablokk
-                        tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
-                        fakta={[
-                            {
-                                tittel: intl.formatMessage({ id: 'display.fraSøknad.forventerArbeidsinntekt' }),
-                                verdi:
-                                    props.behandling.søknad.søknadInnhold.inntektOgPensjon.forventetInntekt?.toString() ??
-                                    intl.formatMessage({ id: 'display.fraSøknad.nei' }),
-                            },
-                            {
-                                tittel: intl.formatMessage({ id: 'display.fraSøknad.andreYtelserINav' }),
-                                verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINav
-                                    ? `${intl.formatMessage({ id: 'display.fraSøknad.nei' })}, ${
-                                          props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINav
-                                      }: ${
-                                          props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINavBeløp
-                                      }`
-                                    : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
-                            },
-                            {
-                                tittel: intl.formatMessage({ id: 'display.fraSøknad.sømtOmAndreTrygdeytelser' }),
-                                verdi:
-                                    props.behandling.søknad.søknadInnhold.inntektOgPensjon.søktAndreYtelserIkkeBehandletBegrunnelse?.toString() ??
-                                    intl.formatMessage({ id: 'display.fraSøknad.nei' }),
-                            },
-                            {
-                                tittel: intl.formatMessage({
-                                    id: 'display.fraSøknad.mottattSosialstønadSiste3måneder',
-                                }),
-                                verdi:
-                                    props.behandling.søknad.søknadInnhold.inntektOgPensjon.sosialstønadBeløp?.toString() ??
-                                    intl.formatMessage({ id: 'display.fraSøknad.nei' }),
-                            },
-                            {
-                                tittel: intl.formatMessage({
-                                    id: 'display.fraSøknad.trygdeytelserIUtlandet',
-                                }),
-                                verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.trygdeytelserIUtlandet
-                                    ?.length ? (
-                                    <>
-                                        {props.behandling.søknad.søknadInnhold.inntektOgPensjon.trygdeytelserIUtlandet.map(
-                                            (ytelse, index) => (
-                                                <div key={index}>
-                                                    <p>Beløp: {ytelse.beløp} i lokal valuta</p>
-                                                    <p>Valuta: {ytelse.valuta}</p>
-                                                    <p>Type: {ytelse.type}</p>
-                                                </div>
-                                            )
-                                        )}
-                                    </>
-                                ) : (
-                                    intl.formatMessage({ id: 'display.fraSøknad.nei' })
-                                ),
-                            },
-                            {
-                                tittel: intl.formatMessage({
-                                    id: 'display.fraSøknad.tjenestepensjon/pensjonssparing',
-                                }),
-                                verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.pensjon?.length ? (
-                                    <>
-                                        {props.behandling.søknad.søknadInnhold.inntektOgPensjon.pensjon.map(
-                                            (p, index) => (
-                                                <div key={index}>
-                                                    <p>Beløp: {p.beløp}</p>
-                                                    <p>Ordning: {p.ordning}</p>
-                                                </div>
-                                            )
-                                        )}
-                                    </>
-                                ) : (
-                                    intl.formatMessage({ id: 'display.fraSøknad.nei' })
-                                ),
-                            },
-                        ]}
-                    />
+                    <div>
+                        <Faktablokk
+                            tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
+                            fakta={[
+                                {
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.forventerArbeidsinntekt' }),
+                                    verdi:
+                                        props.behandling.søknad.søknadInnhold.inntektOgPensjon.forventetInntekt?.toString() ??
+                                        intl.formatMessage({ id: 'display.fraSøknad.nei' }),
+                                },
+                                {
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.andreYtelserINav' }),
+                                    verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINav
+                                        ? `${intl.formatMessage({ id: 'display.fraSøknad.nei' })}, ${
+                                              props.behandling.søknad.søknadInnhold.inntektOgPensjon.andreYtelserINav
+                                          }: ${
+                                              props.behandling.søknad.søknadInnhold.inntektOgPensjon
+                                                  .andreYtelserINavBeløp
+                                          }`
+                                        : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
+                                },
+                                {
+                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.sømtOmAndreTrygdeytelser' }),
+                                    verdi:
+                                        props.behandling.søknad.søknadInnhold.inntektOgPensjon.søktAndreYtelserIkkeBehandletBegrunnelse?.toString() ??
+                                        intl.formatMessage({ id: 'display.fraSøknad.nei' }),
+                                },
+                                {
+                                    tittel: intl.formatMessage({
+                                        id: 'display.fraSøknad.mottattSosialstønadSiste3måneder',
+                                    }),
+                                    verdi:
+                                        props.behandling.søknad.søknadInnhold.inntektOgPensjon.sosialstønadBeløp?.toString() ??
+                                        intl.formatMessage({ id: 'display.fraSøknad.nei' }),
+                                },
+                                {
+                                    tittel: intl.formatMessage({
+                                        id: 'display.fraSøknad.trygdeytelserIUtlandet',
+                                    }),
+                                    verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.trygdeytelserIUtlandet
+                                        ?.length ? (
+                                        <>
+                                            {props.behandling.søknad.søknadInnhold.inntektOgPensjon.trygdeytelserIUtlandet.map(
+                                                (ytelse, index) => (
+                                                    <div key={index}>
+                                                        <p>Beløp: {ytelse.beløp} i lokal valuta</p>
+                                                        <p>Valuta: {ytelse.valuta}</p>
+                                                        <p>Type: {ytelse.type}</p>
+                                                    </div>
+                                                )
+                                            )}
+                                        </>
+                                    ) : (
+                                        intl.formatMessage({ id: 'display.fraSøknad.nei' })
+                                    ),
+                                },
+                                {
+                                    tittel: intl.formatMessage({
+                                        id: 'display.fraSøknad.tjenestepensjon/pensjonssparing',
+                                    }),
+                                    verdi: props.behandling.søknad.søknadInnhold.inntektOgPensjon.pensjon?.length ? (
+                                        <>
+                                            {props.behandling.søknad.søknadInnhold.inntektOgPensjon.pensjon.map(
+                                                (p, index) => (
+                                                    <div key={index}>
+                                                        <p>Beløp: {p.beløp}</p>
+                                                        <p>Ordning: {p.ordning}</p>
+                                                    </div>
+                                                )
+                                            )}
+                                        </>
+                                    ) : (
+                                        intl.formatMessage({ id: 'display.fraSøknad.nei' })
+                                    ),
+                                },
+                            ]}
+                        />
+                        {props.behandling.søknad.søknadInnhold.ektefelle !== null && (
+                            <Faktablokk
+                                tittel={intl.formatMessage({ id: 'display.fraSøknad.es' })}
+                                fakta={[
+                                    {
+                                        tittel: intl.formatMessage({
+                                            id: 'display.fraSøknad.es.forventerArbeidsinntekt',
+                                        }),
+                                        verdi:
+                                            props.behandling.søknad.søknadInnhold.ektefelle.inntektOgPensjon.forventetInntekt?.toString() ??
+                                            intl.formatMessage({ id: 'display.fraSøknad.nei' }),
+                                    },
+                                    {
+                                        tittel: intl.formatMessage({ id: 'display.fraSøknad.es.andreYtelserINav' }),
+                                        verdi: props.behandling.søknad.søknadInnhold.ektefelle.inntektOgPensjon
+                                            .andreYtelserINav
+                                            ? `${props.behandling.søknad.søknadInnhold.ektefelle.inntektOgPensjon.andreYtelserINav}: ${props.behandling.søknad.søknadInnhold.ektefelle.inntektOgPensjon.andreYtelserINavBeløp}`
+                                            : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
+                                    },
+                                    {
+                                        tittel: intl.formatMessage({
+                                            id: 'display.fraSøknad.es.sømtOmAndreTrygdeytelser',
+                                        }),
+                                        verdi:
+                                            props.behandling.søknad.søknadInnhold.ektefelle.inntektOgPensjon.søktAndreYtelserIkkeBehandletBegrunnelse?.toString() ??
+                                            intl.formatMessage({ id: 'display.fraSøknad.nei' }),
+                                    },
+                                    {
+                                        tittel: intl.formatMessage({
+                                            id: 'display.fraSøknad.es.mottattSosialstønadSiste3måneder',
+                                        }),
+                                        verdi:
+                                            props.behandling.søknad.søknadInnhold.ektefelle.inntektOgPensjon.sosialstønadBeløp?.toString() ??
+                                            intl.formatMessage({ id: 'display.fraSøknad.nei' }),
+                                    },
+                                    {
+                                        tittel: intl.formatMessage({
+                                            id: 'display.fraSøknad.es.trygdeytelserIUtlandet',
+                                        }),
+                                        verdi: props.behandling.søknad.søknadInnhold.ektefelle.inntektOgPensjon
+                                            .trygdeytelserIUtlandet?.length ? (
+                                            <>
+                                                {props.behandling.søknad.søknadInnhold.ektefelle.inntektOgPensjon.trygdeytelserIUtlandet.map(
+                                                    (ytelse, index) => (
+                                                        <div key={index}>
+                                                            <p>Beløp: {ytelse.beløp} i lokal valuta</p>
+                                                            <p>Valuta: {ytelse.valuta}</p>
+                                                            <p>Type: {ytelse.type}</p>
+                                                        </div>
+                                                    )
+                                                )}
+                                            </>
+                                        ) : (
+                                            intl.formatMessage({ id: 'display.fraSøknad.nei' })
+                                        ),
+                                    },
+                                    {
+                                        tittel: intl.formatMessage({
+                                            id: 'display.fraSøknad.es.tjenestepensjon/pensjonssparing',
+                                        }),
+                                        verdi: props.behandling.søknad.søknadInnhold.ektefelle.inntektOgPensjon.pensjon
+                                            ?.length ? (
+                                            <>
+                                                {props.behandling.søknad.søknadInnhold.ektefelle.inntektOgPensjon.pensjon.map(
+                                                    (p, index) => (
+                                                        <div key={index}>
+                                                            <p>Beløp: {p.beløp}</p>
+                                                            <p>Ordning: {p.ordning}</p>
+                                                        </div>
+                                                    )
+                                                )}
+                                            </>
+                                        ) : (
+                                            intl.formatMessage({ id: 'display.fraSøknad.nei' })
+                                        ),
+                                    },
+                                ]}
+                            />
+                        )}
+                    </div>
                 ),
             }}
         </Vurdering>
