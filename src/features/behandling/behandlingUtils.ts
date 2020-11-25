@@ -109,11 +109,9 @@ const eqVerdier: Eq<Nullable<FormueVerdier>> = {
         verdier1?.depositumskonto === verdier2?.depositumskonto,
 };
 
-export const eqEktefelle: Eq<
-    Nullable<{
-        fnr: Nullable<string>;
-    }>
-> = {
+export const eqEktefelle: Eq<Nullable<{
+    fnr: Nullable<string>;
+}>> = {
     equals: (ektefelle1, ektefelle2) => ektefelle1?.fnr === ektefelle2?.fnr,
 };
 
