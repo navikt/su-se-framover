@@ -61,7 +61,7 @@ export default async function apiClient<T>(arg: {
         ...arg.request,
         method: arg.method,
         headers: {
-            ...arg.request?.headers,
+            ...(arg.request ? arg.request.headers : null),
             ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
             'X-Correlation-ID': correlationId,
         },
