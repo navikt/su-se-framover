@@ -17,6 +17,8 @@ export default {
     'input.adresse.undertittel': 'Her er adressene vi finner som er registrert på deg. Velg den du bor på.',
     'input.adresse.ingenAdresse.borPåAnnenAdresse': 'Bor på en annen adresse',
     'input.adresse.ingenAdresse.harIkkeFastBosted': 'Har ikke fast bosted',
+    'advarsel.adresse.ingenAdresse':
+        'Hvis du ikke bor på noen av adressene som finnes registrert på deg må du oppdatere adressen i Folkeregisteret.',
 
     'input.innlagtPåInstitusjon.label': 'Har du vært innlagt på institusjon de siste tre månedene?',
     'input.datoForInnleggelse.label': 'Dato for innleggelse',

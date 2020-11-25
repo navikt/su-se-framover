@@ -419,6 +419,11 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 />
                             </div>
                         </RadioGruppe>
+                        {formik.values.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE && (
+                            <AlertStripe type="advarsel">
+                                {intl.formatMessage({ id: 'advarsel.adresse.ingenAdresse' })}
+                            </AlertStripe>
+                        )}
                     </div>
                     <Feiloppsummering
                         className={sharedStyles.marginBottom}
