@@ -1,14 +1,15 @@
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
-import { Element } from 'nav-frontend-typografi';
 import React from 'react';
 
 import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import messages from '~pages/saksbehandling/steg/beregning/beregning-nb';
 import { Beregning } from '~types/Beregning';
+import { Fradrag } from '~types/Fradrag';
+import { Sats } from '~types/Sats';
 
-import { groupMånedsberegninger } from '../../delt/arrayUtils';
+import { groupBy, groupMånedsberegninger } from '../../delt/arrayUtils';
 import { InfoLinje } from '../../delt/Infolinje/Infolinje';
 
 import * as BeregningUtils from './beregningUtils';
@@ -22,14 +23,38 @@ interface Props {
 const VisBeregning = (props: Props) => {
     const intl = useI18n({ messages });
     const { beregning } = props;
-    const totalbeløp = beregning.månedsberegninger.reduce((acc, val) => acc + val.beløp, 0);
     const gruppertMånedsberegninger = groupMånedsberegninger(beregning.månedsberegninger);
-    const fradrag = beregning.fradrag;
+
+    const fradragBenyttetIBeregning = beregning.månedsberegninger.flatMap((månedsberegning) => {
+        return månedsberegning.fradrag;
+    });
+
+    const fradragGruppertEtterType = groupBy(fradragBenyttetIBeregning, (f) => f.type);
+
+    const fradrag: Fradrag[] = Object.values(fradragGruppertEtterType).map((f) => {
+        return {
+            beløp: f.reduce((acc, val) => acc + val.beløp, 0),
+            type: f[0].type,
+            tilhører: f[0].tilhører,
+            utenlandskInntekt: null,
+        };
+    });
     return (
         <div>
             {fradrag.length > 0 && (
                 <div>
-                    <Element className={styles.fradragHeading}>Fradrag:</Element>
+                    <InfoLinje
+                        tittel={intl.formatMessage({
+                            id:
+                                beregning.sats === Sats.Høy
+                                    ? 'display.visBeregning.sats.høy'
+                                    : 'display.visBeregning.sats.ordinær',
+                        })}
+                        value={intl.formatNumber(
+                            beregning.månedsberegninger.reduce((acc, val) => acc + val.satsbeløp, 0),
+                            { currency: 'NOK' }
+                        )}
+                    />
                     <ul>
                         {fradrag.map((f, idx) => {
                             const fradragstype = intl.formatMessage({
@@ -43,7 +68,7 @@ const VisBeregning = (props: Props) => {
                                                 ? `Utenlandsk ${fradragstype.toLowerCase()} ${f.tilhører}`
                                                 : `${fradragstype} ${f.tilhører}`
                                         }
-                                        value={intl.formatNumber(f.beløp, { currency: 'NOK' })}
+                                        value={`-${intl.formatNumber(f.beløp, { currency: 'NOK' })}`}
                                     />
                                     {f.utenlandskInntekt && (
                                         <div>
@@ -75,6 +100,13 @@ const VisBeregning = (props: Props) => {
                             );
                         })}
                     </ul>
+                    <InfoLinje
+                        tittel="Totalbeløp (avrundet)"
+                        value={intl.formatNumber(
+                            beregning.månedsberegninger.reduce((acc, val) => acc + val.beløp, 0),
+                            { currency: 'NOK' }
+                        )}
+                    />
                 </div>
             )}
             <table className="tabell">
@@ -105,7 +137,6 @@ const VisBeregning = (props: Props) => {
                     })}
                 </tbody>
             </table>
-            <p className={styles.totalBeløp}>Totalbeløp: {intl.formatNumber(totalbeløp)},-</p>
         </div>
     );
 };

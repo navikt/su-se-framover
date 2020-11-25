@@ -10,6 +10,8 @@ const genererMånedsberegning = (beløp: number): Månedsberegning => {
         fraOgMed: '1.1.2020',
         tilOgMed: '31.12.2020',
         grunnbeløp: 1337,
+        satsbeløp: 1337.0,
+        fradrag: [],
     };
 };
 

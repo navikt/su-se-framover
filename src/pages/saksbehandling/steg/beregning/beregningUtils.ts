@@ -25,6 +25,8 @@ export const fradragstypeResourceId = (f: Fradragstype): string => {
             return 'fradrag.type.kapitalinntekt';
         case Fradragstype.ForventetInntekt:
             return 'fradrag.type.forventetinntekt';
+        case Fradragstype.BeregnetFradragEPS:
+            return 'fradrag.type.beregnetFradragEPS';
     }
 };
 

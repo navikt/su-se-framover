@@ -30,4 +30,5 @@ export enum Fradragstype {
     BidragEtterEkteskapsloven = 'BidragEtterEkteskapsloven',
     Kapitalinntekt = 'Kapitalinntekt',
     ForventetInntekt = 'ForventetInntekt',
+    BeregnetFradragEPS = 'BeregnetFradragEPS',
 }

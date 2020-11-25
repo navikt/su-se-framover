@@ -39,6 +39,8 @@ export default {
     'display.visBeregning.beløpIUtenlandskValuta': 'Beløp i utenlandsk valuta',
     'display.visBeregning.valuta': 'Valuta',
     'display.visBeregning.kurs': 'Kurs',
+    'display.visBeregning.sats.høy': 'Høy sats',
+    'display.visBeregning.sats.ordinær': 'Ordinær sats',
 
     'feiloppsummering.title': 'For å gå videre må du rette opp følgende:',
 
@@ -56,6 +58,7 @@ export default {
     'fradrag.type.bidragetterekteskapsloven': 'Bidrag etter ekteskapsloven',
     'fradrag.type.kapitalinntekt': 'Kapitalinntekt',
     'fradrag.type.forventetinntekt': 'Forventet inntekt',
+    'fradrag.type.beregnetFradragEPS': 'Beregnet fradrag EPS',
 
     'knapp.fradrag.leggtil': 'Legg til fradrag',
     'knapp.fradrag.fjern': 'Fjern fradrag',
