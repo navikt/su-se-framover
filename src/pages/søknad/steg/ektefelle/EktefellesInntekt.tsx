@@ -25,9 +25,12 @@ import messages from './inntekt-nb';
 type FormData = SøknadState['inntekt'];
 
 const trygdeytelserIUtlandetSchema = yup.object({
-    beløp: (yup.number().typeError('Beløp må være et tall').positive().label('Beløp').required() as yup.Schema<
-        unknown
-    >) as yup.Schema<string>,
+    beløp: (yup
+        .number()
+        .typeError('Beløp må være et tall')
+        .positive()
+        .label('Beløp')
+        .required() as yup.Schema<unknown>) as yup.Schema<string>,
     type: yup.string().required(),
     valuta: yup.string().required(),
 });
