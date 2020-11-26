@@ -414,6 +414,25 @@ export default createSlice({
                 state.attesteringStatus = simpleRejectedActionToRemoteData(action);
             },
         });
+        handleAsyncThunk(builder, attesteringUnderkjenn, {
+            pending: (state) => {
+                state.attesteringStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.attesteringStatus = RemoteData.success(null);
+
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.attesteringStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
 
         handleAsyncThunk(builder, sendTilAttestering, {
             pending: (state) => {
