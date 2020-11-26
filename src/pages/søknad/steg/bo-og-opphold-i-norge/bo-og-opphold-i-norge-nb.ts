@@ -8,9 +8,6 @@ export default {
     'input.delerBoligMedAndreVoksne.label': 'Andre voksne',
     'input.ektefelleEllerSamboerFnr.label': 'Fødselsnummeret til ektefelle eller samboer',
     'input.ektefelleEllerSamboerFnrDescription.label': '11 siffer',
-    'input.ektefelleEllerSamboerNavn.label': 'Navnet til ektefelle eller samboer',
-    'input.ektefelleEllerSamboerFødselsdato.label': 'Fødselsdatoen til ektefelle eller samboer',
-    'input.ektefelleEllerSamboerUnder67År.label': 'Er ektefelle eller samboer under 67 år?',
     'input.ektefelleEllerSamboerUførFlyktning.label': 'Er ektefelle eller samboer ufør flyktning?',
 
     'input.adresse.tittel': 'Hva er adressen din?',

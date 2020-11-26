@@ -49,16 +49,13 @@ export function getFormue(behandlingsInfo: Behandlingsinformasjon, søknadsInnho
 
     return {
         verdier: getVerdier(behandlingsInfo.formue?.verdier ?? null, søknadsInnhold.formue),
-        ektefellesVerdier: getVerdier(
-            behandlingsInfo.formue?.ektefellesVerdier ?? null,
-            søknadsInnhold.ektefelle?.formue ?? null
-        ),
+        epsVerdier: getVerdier(behandlingsInfo.formue?.epsVerdier ?? null, søknadsInnhold.ektefelle?.formue ?? null),
         status: behandlingsFormue?.status ?? FormueStatus.VilkårOppfylt,
         begrunnelse: behandlingsFormue?.begrunnelse ?? null,
-        borSøkerMedEktefelle: behandlingsInfo.ektefelle
-            ? behandlingsInfo.ektefelle.fnr != null
-            : søknadsInnhold.boforhold.delerBoligMed === DelerBoligMed?.EKTEMAKE_SAMBOER,
-        ektefellesFnr: behandlingsInfo.ektefelle?.fnr ?? null,
+        borSøkerMedEPS:
+            behandlingsFormue?.borSøkerMedEPS ??
+            søknadsInnhold.boforhold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
+        epsFnr: behandlingsInfo.ektefelle?.fnr ?? søknadsInnhold.boforhold.ektefellePartnerSamboer?.fnr ?? null,
     };
 }
 
@@ -87,17 +84,4 @@ export function getInitialVerdier(): FormueVerdier {
         kontanter: 0,
         depositumskonto: 0,
     };
-}
-
-export function delerBoligMedToString(delerBoligMed: Nullable<DelerBoligMed>) {
-    switch (delerBoligMed) {
-        case DelerBoligMed.ANNEN_VOKSEN:
-            return 'Annen voksen';
-        case DelerBoligMed.EKTEMAKE_SAMBOER:
-            return 'Ektefelle eller samboer';
-        case DelerBoligMed.VOKSNE_BARN:
-            return 'Voksne barn';
-        default:
-            return '-';
-    }
 }

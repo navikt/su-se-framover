@@ -26,24 +26,18 @@ import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import Faktablokk from '../faktablokk/Faktablokk';
 import sharedI18n from '../sharedI18n-nb';
+import { delerBoligMedFormatted } from '../sharedUtils';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './formue-nb';
 import styles from './formue.module.less';
 import { FormueInput, ShowSum } from './FormueComponents';
-import {
-    getInitialVerdier,
-    getFormue,
-    kalkulerFormue,
-    kalkulerFormueFraSøknad,
-    delerBoligMedToString,
-    getVerdier,
-} from './utils';
+import { getInitialVerdier, getFormue, kalkulerFormue, kalkulerFormueFraSøknad, getVerdier } from './utils';
 
 type FormData = Formue & {
-    borSøkerMedEktefelle: Nullable<boolean>;
-    ektefellesFnr: Nullable<string>;
+    borSøkerMedEPS: Nullable<boolean>;
+    epsFnr: Nullable<string>;
 };
 
 const VerdierSchema: yup.ObjectSchema<FormueVerdier | undefined> = yup.object<FormueVerdier>({
@@ -62,10 +56,10 @@ const schema = yup.object<FormData>({
         .required()
         .oneOf([FormueStatus.VilkårOppfylt, FormueStatus.MåInnhenteMerInformasjon, FormueStatus.VilkårIkkeOppfylt]),
     verdier: VerdierSchema.required(),
-    ektefellesVerdier: VerdierSchema.required(),
+    epsVerdier: VerdierSchema.required(),
     begrunnelse: yup.string().defined(),
-    borSøkerMedEktefelle: yup.boolean().required().typeError('Feltet må fylles ut'),
-    ektefellesFnr: yup.mixed<string>().when('borSøkerMedEktefelle', {
+    borSøkerMedEPS: yup.boolean().required().typeError('Feltet må fylles ut'),
+    epsFnr: yup.mixed<string>().when('borSøkerMedEPS', {
         is: true,
         then: yup.mixed<string>().test('erGyldigFnr', 'Fnr er ikke gyldig', (fnr) => {
             return fnr && fnrValidator.fnr(fnr).status === 'valid';
@@ -79,7 +73,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const [eps, setEps] = useState<Nullable<personApi.Person>>();
     const [fetchingEPS, setFetchingEPS] = useState<boolean>(false);
     const [kanEndreAnnenPersonsFormue, setKanEndreAnnenPersonsFormue] = useState<boolean>(true);
-    const [åpnerAnnenPersonsFormueMenViserInput, setÅpnerAnnenPersonsFormueMenViserInput] = useState<boolean>(false);
+    const [åpnerNyFormueBlokkMenViserEnBlokk, setÅpnerNyFormueBlokkMenViserEnBlokk] = useState<boolean>(false);
     const [personOppslagFeil, setPersonOppslagFeil] = useState<{ statusCode: number } | null>(null);
     const søknadInnhold = props.behandling.søknad.søknadInnhold;
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
@@ -87,7 +81,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const handleSave = async (values: FormData, nesteUrl: string) => {
-        if (fetchingEPS && values.ektefellesFnr !== null) return;
+        if (fetchingEPS && values.epsFnr !== null) return;
 
         const status =
             values.status === FormueStatus.MåInnhenteMerInformasjon
@@ -99,12 +93,13 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         const formueValues: Formue = {
             status,
             verdier: values.verdier,
-            ektefellesVerdier: values.borSøkerMedEktefelle ? values.ektefellesVerdier : null,
+            borSøkerMedEPS: values.borSøkerMedEPS,
+            epsVerdier: values.borSøkerMedEPS ? values.epsVerdier : null,
             begrunnelse: values.begrunnelse,
         };
         const ektefelle = {
-            harEktefellePartnerSamboer: values.borSøkerMedEktefelle,
-            fnr: values.ektefellesFnr,
+            harEktefellePartnerSamboer: values.borSøkerMedEPS,
+            fnr: values.epsFnr,
         };
 
         if (
@@ -122,7 +117,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                 behandlingsinformasjon: {
                     formue: formueValues,
                     ektefelle: {
-                        fnr: values.ektefellesFnr,
+                        fnr: values.epsFnr,
                         navn: eps ? eps.navn : null,
                         kjønn: eps ? eps.kjønn : null,
                         adressebeskyttelse: eps ? eps.adressebeskyttelse : null,
@@ -158,8 +153,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     }, [formik.values.verdier]);
 
     const ektefellesFormue = useMemo(() => {
-        return kalkulerFormue(formik.values.ektefellesVerdier);
-    }, [formik.values.ektefellesVerdier]);
+        return kalkulerFormue(formik.values.epsVerdier);
+    }, [formik.values.epsVerdier]);
 
     const totalFormueFraSøknad = useMemo(() => {
         const søkersFormueFraSøknad = kalkulerFormueFraSøknad(søknadInnhold.formue);
@@ -171,7 +166,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         return søkersFormueFraSøknad;
     }, [søknadInnhold.formue]);
 
-    const totalFormue = søkersFormue + (formik.values.borSøkerMedEktefelle ? ektefellesFormue : 0);
+    const totalFormue = søkersFormue + (formik.values.borSøkerMedEPS ? ektefellesFormue : 0);
 
     useEffect(() => {
         async function fetchPerson(fnr: Nullable<string>) {
@@ -193,18 +188,18 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
                 formik.setValues({
                     ...formik.values,
-                    ektefellesFnr: ektefelle.fnr,
+                    epsFnr: ektefelle.fnr,
                 });
                 setFetchingEPS(false);
                 setEps(ektefelle);
             }
         }
 
-        fetchPerson(formik.values.ektefellesFnr);
-    }, [formik.values.ektefellesFnr]);
+        fetchPerson(formik.values.epsFnr);
+    }, [formik.values.epsFnr]);
 
     const [inputToShow, setInputToShow] = useState<'søker' | 'ektefelle' | null>(
-        formik.values.borSøkerMedEktefelle ? null : 'søker'
+        formik.values.borSøkerMedEPS ? null : 'søker'
     );
 
     const vilkårErOppfylt = totalFormue < 0.5 * G;
@@ -218,7 +213,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         'kontanter',
         'depositumskonto',
     ];
-    console.log('values: ', formik.values);
+
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
@@ -231,16 +226,16 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                     >
                         <div className={styles.ektefellePartnerSamboer}>
                             <Element>Bor søker med en ektefelle eller samboer?</Element>
-                            <RadioGruppe feil={formik.errors.borSøkerMedEktefelle}>
+                            <RadioGruppe feil={formik.errors.borSøkerMedEPS}>
                                 <Radio
                                     label="Ja"
-                                    name="borSøkerMedEktefelle"
-                                    checked={Boolean(formik.values.borSøkerMedEktefelle)}
+                                    name="borSøkerMedEPS"
+                                    checked={Boolean(formik.values.borSøkerMedEPS)}
                                     onChange={() => {
                                         formik.setValues({
                                             ...formik.values,
-                                            borSøkerMedEktefelle: true,
-                                            ektefellesFnr: null,
+                                            borSøkerMedEPS: true,
+                                            epsFnr: null,
                                         });
 
                                         setInputToShow(null);
@@ -248,18 +243,15 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 />
                                 <Radio
                                     label="Nei"
-                                    name="borSøkerMedEktefelle"
-                                    checked={formik.values.borSøkerMedEktefelle === false}
+                                    name="borSøkerMedEPS"
+                                    checked={formik.values.borSøkerMedEPS === false}
                                     onChange={() => {
                                         formik.setValues({
                                             ...formik.values,
-                                            borSøkerMedEktefelle: false,
-                                            ektefellesFnr: null,
-                                            ektefellesVerdier: søknadInnhold.ektefelle
-                                                ? getVerdier(
-                                                      formik.values.ektefellesVerdier,
-                                                      søknadInnhold.ektefelle?.formue
-                                                  )
+                                            borSøkerMedEPS: false,
+                                            epsFnr: null,
+                                            epsVerdier: søknadInnhold.ektefelle
+                                                ? getVerdier(formik.values.epsVerdier, søknadInnhold.ektefelle?.formue)
                                                 : getInitialVerdier(),
                                         });
 
@@ -267,16 +259,16 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                     }}
                                 />
                             </RadioGruppe>
-                            {formik.values.borSøkerMedEktefelle && (
+                            {formik.values.borSøkerMedEPS && (
                                 <>
                                     <Element>Ektefelle/samboers fødselsnummer</Element>
                                     <div className={styles.fnrInput}>
                                         <Input
-                                            name="ektefellesFnr"
-                                            defaultValue={formik.values.ektefellesFnr ?? ''}
+                                            name="epsFnr"
+                                            defaultValue={formik.values.epsFnr ?? ''}
                                             onChange={formik.handleChange}
                                             bredde="S"
-                                            feil={formik.errors.ektefellesFnr}
+                                            feil={formik.errors.epsFnr}
                                         />
                                         <div className={styles.result}>
                                             {eps && <Personkort person={eps} />}
@@ -314,7 +306,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                         />
                                     ))}
 
-                                {formik.values.borSøkerMedEktefelle && (
+                                {formik.values.borSøkerMedEPS && (
                                     <>
                                         <ShowSum
                                             tittel={intl.formatMessage({ id: 'display.søkersFormue' })}
@@ -330,14 +322,14 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                             setInputToShow('søker');
                                                             setKanEndreAnnenPersonsFormue(false);
                                                         } else {
-                                                            setÅpnerAnnenPersonsFormueMenViserInput(true);
+                                                            setÅpnerNyFormueBlokkMenViserEnBlokk(true);
                                                         }
                                                     }}
                                                     htmlType="button"
                                                 >
                                                     {intl.formatMessage({ id: 'knapp.endreSøkersFormue' })}
                                                 </Knapp>
-                                                {åpnerAnnenPersonsFormueMenViserInput && (
+                                                {åpnerNyFormueBlokkMenViserEnBlokk && (
                                                     <Feilmelding>
                                                         {intl.formatMessage({
                                                             id: 'feil.åpnerAnnenPersonFormueMenViserInput',
@@ -354,7 +346,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                         if (Object.keys(res).length === 0) {
                                                             setInputToShow(null);
                                                             setKanEndreAnnenPersonsFormue(true);
-                                                            setÅpnerAnnenPersonsFormueMenViserInput(false);
+                                                            setÅpnerNyFormueBlokkMenViserEnBlokk(false);
                                                         }
                                                     });
                                                 }}
@@ -366,7 +358,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 )}
                             </div>
 
-                            {formik.values.borSøkerMedEktefelle && (
+                            {formik.values.borSøkerMedEPS && (
                                 <div className={inputToShow === 'ektefelle' ? styles.aktivFormueBlokk : undefined}>
                                     {inputToShow === 'ektefelle' &&
                                         keyNavnForFormue.map((keyNavn) => (
@@ -376,9 +368,9 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                 className={styles.formueInput}
                                                 inputName={`ektefellesVerdier.${keyNavn}`}
                                                 onChange={formik.handleChange}
-                                                defaultValue={formik.values.ektefellesVerdier?.[keyNavn] ?? 0}
+                                                defaultValue={formik.values.epsVerdier?.[keyNavn] ?? 0}
                                                 feil={
-                                                    (formik.errors.ektefellesVerdier as
+                                                    (formik.errors.epsVerdier as
                                                         | FormikErrors<FormueVerdier>
                                                         | undefined)?.[keyNavn]
                                                 }
@@ -398,14 +390,14 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                         setInputToShow('ektefelle');
                                                         setKanEndreAnnenPersonsFormue(false);
                                                     } else {
-                                                        setÅpnerAnnenPersonsFormueMenViserInput(true);
+                                                        setÅpnerNyFormueBlokkMenViserEnBlokk(true);
                                                     }
                                                 }}
                                                 htmlType="button"
                                             >
                                                 {intl.formatMessage({ id: 'knapp.endreEktefellesFormue' })}
                                             </Knapp>
-                                            {åpnerAnnenPersonsFormueMenViserInput && (
+                                            {åpnerNyFormueBlokkMenViserEnBlokk && (
                                                 <Feilmelding>
                                                     {intl.formatMessage({
                                                         id: 'feil.åpnerAnnenPersonFormueMenViserInput',
@@ -422,7 +414,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                     if (Object.keys(res).length === 0) {
                                                         setInputToShow(null);
                                                         setKanEndreAnnenPersonsFormue(true);
-                                                        setÅpnerAnnenPersonsFormueMenViserInput(false);
+                                                        setÅpnerNyFormueBlokkMenViserEnBlokk(false);
                                                     }
                                                 });
                                             }}
@@ -527,30 +519,17 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             fakta={[
                                 {
                                     tittel: intl.formatMessage({ id: 'display.fraSøknad.delerBoligMed' }),
-                                    verdi: delerBoligMedToString(søknadInnhold.boforhold.delerBoligMed),
+                                    verdi: delerBoligMedFormatted(søknadInnhold.boforhold.delerBoligMed),
                                 },
                                 {
                                     tittel: intl.formatMessage({ id: 'display.fraSøknad.ektefelleTitle' }),
                                     verdi: søknadInnhold.ektefelle ? (
                                         <>
                                             <p>
-                                                {`${intl.formatMessage({
-                                                    id: 'display.fraSøknad.ektefellesFnr',
-                                                })}: ${
-                                                    søknadInnhold.boforhold.ektefellePartnerSamboer
-                                                        ? søknadInnhold.boforhold.ektefellePartnerSamboer?.type ===
-                                                          'MedFnr'
-                                                            ? søknadInnhold.boforhold.ektefellePartnerSamboer.fnr
-                                                            : søknadInnhold.boforhold.ektefellePartnerSamboer
-                                                                  .fødselsdato
-                                                        : '-'
+                                                {`${intl.formatMessage({ id: 'display.fraSøknad.epsFnr' })}: ${
+                                                    søknadInnhold.boforhold.ektefellePartnerSamboer?.fnr
                                                 }`}
                                             </p>
-                                            {søknadInnhold.boforhold.ektefellePartnerSamboer?.type === 'UtenFnr' && (
-                                                <p>{`${intl.formatMessage({
-                                                    id: 'display.fraSøknad.ektefellesNavn',
-                                                })}: ${søknadInnhold.boforhold.ektefellePartnerSamboer.navn}`}</p>
-                                            )}
                                             {
                                                 // TODO ai: very very temporary solution for showing formue for ektefelle
                                                 [
