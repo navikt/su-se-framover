@@ -3,7 +3,7 @@ export default {
 
     'display.fraSøknad.delerBoligMed': 'Hvem deler du bolig med?',
     'display.fraSøknad.ektefelleTitle': 'Ektefelle',
-    'display.fraSøknad.epsFnr': 'Ektefelles fnr/fødselsdato',
+    'display.fraSøknad.epsFnr': 'Ektefelles fødselsnummer',
     'display.fraSøknad.ektefellesNavn': 'Ektefelles navn (hvis oppgitt)',
     'display.fraSøknad.ektefellesFormue': 'Ektefelles totale formue',
     'display.fraSøknad.verdiPåBolig': 'Verdi på bolig',
