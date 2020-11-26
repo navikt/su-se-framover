@@ -316,7 +316,6 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
         <div className={sharedStyles.container}>
             <RawIntlProvider value={intl}>
                 <form
-                    className={sharedStyles.marginBottomContainer}
                     onSubmit={(e) => {
                         setHasSubmitted(true);
                         formik.handleSubmit(e);
