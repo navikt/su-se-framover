@@ -70,12 +70,12 @@ const createFaktaBlokkArray = (søknadsInnhold: SøknadInnhold, intl: IntlShape)
     arr.push({
         tittel: 'Adresse',
         verdi:
-            søknadsInnhold.boforhold.borPåAdresse ??
-            søknadsInnhold.boforhold.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE
+            søknadsInnhold.boforhold.borPåAdresse?.adresselinje ??
+            (søknadsInnhold.boforhold.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE
                 ? intl.formatMessage({ id: 'adresse.borPåAnnenAdresse' })
                 : søknadsInnhold.boforhold.ingenAdresseGrunn === IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED
                 ? intl.formatMessage({ id: 'adresse.ikkeFastBosted' })
-                : 'Ubesvart',
+                : 'Ubesvart'),
     });
     return arr;
 };
