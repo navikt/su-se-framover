@@ -3,7 +3,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
-import { Innholdstittel, Ingress } from 'nav-frontend-typografi';
+import { Ingress, Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
@@ -215,7 +215,8 @@ const SøknadsbehandlingStartetKnapper = (props: { behandlinger: Behandling[]; s
                             </Link>
                         ) : (
                             !erTilAttestering(b) &&
-                            !erIverksatt(b) && (
+                            !erIverksatt(b) &&
+                            user.navIdent !== b.attestant && (
                                 <Link
                                     className="knapp knapp--mini"
                                     to={Routes.saksbehandlingVilkårsvurdering.createURL({
