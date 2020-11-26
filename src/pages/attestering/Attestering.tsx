@@ -4,27 +4,31 @@ import { useFormik } from 'formik';
 import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, RadioPanelGruppe, Select, Textarea } from 'nav-frontend-skjema';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { IntlShape } from 'react-intl';
+import { Link } from 'react-router-dom';
 
-import * as Routes from '~/lib/routes';
 import { fetchBrev } from '~api/pdfApi';
 import { Person } from '~api/personApi';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { erAvslått, erIverksatt, erTilAttestering } from '~features/behandling/behandlingUtils';
+import * as personSlice from '~features/person/person.slice';
 import { getGender, showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { VisSimulering } from '~pages/saksbehandling/simulering/simulering';
 import VisBeregning from '~pages/saksbehandling/steg/beregning/VisBeregning';
 import Søkefelt from '~pages/saksbehandling/søkefelt/Søkefelt';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Behandling } from '~types/Behandling';
+import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
@@ -97,30 +101,39 @@ interface FormData {
     grunn?: string;
     begrunnelse?: string;
 }
-const Attestering = () => {
+
+function getTextId(grunn: Grunn) {
+    switch (grunn) {
+        case Grunn.FEIL_I_BEREGNING:
+            return 'input.grunn.value.feilIBeregning';
+        case Grunn.FEIL_I_PERIODE:
+            return 'input.grunn.value.feilIPeriode';
+    }
+}
+
+const Attesteringsinnhold = ({
+    intl,
+    ...props
+}: {
+    behandling: Behandling;
+    sak: Sak;
+    søker: Person;
+    intl: IntlShape;
+}) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const attesteringStatus = useAppSelector((s) => s.sak.attesteringStatus);
-    const intl = useI18n({ messages });
-    const dispatch = useAppDispatch();
-    const urlParams = Routes.useRouteParams<typeof Routes.attestering>();
-    const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
     const [fetchingBrev, setFetchingBrev] = useState<boolean>(false);
 
-    if (!RemoteData.isSuccess(sak)) {
-        return <AlertStripe type="feil">Fant ikke sak</AlertStripe>;
-    }
-    const behandling = sak.value.behandlinger.find((x) => x.id === urlParams.behandlingId);
-    if (!behandling) {
-        return <AlertStripe type="feil">Fant ikke behandlingsid</AlertStripe>;
-    }
+    const dispatch = useAppDispatch();
+
     const formik = useFormik<FormData>({
         initialValues: {},
         onSubmit: (values) => {
             if (values.beslutning) {
                 dispatch(
                     sakSlice.startAttestering({
-                        sakId: sak.value.id,
-                        behandlingId: behandling.id,
+                        sakId: props.sak.id,
+                        behandlingId: props.behandling.id,
                     })
                 );
                 return;
@@ -129,8 +142,8 @@ const Attestering = () => {
             if (values.begrunnelse) {
                 dispatch(
                     sakSlice.attesteringUnderkjenn({
-                        sakId: sak.value.id,
-                        behandlingId: behandling.id,
+                        sakId: props.sak.id,
+                        behandlingId: props.behandling.id,
                         begrunnelse: values.begrunnelse,
                     })
                 );
@@ -138,58 +151,81 @@ const Attestering = () => {
         },
         validationSchema: yup.object<FormData>({
             beslutning: yup.boolean().required(),
-            grunn: yup.mixed<keyof typeof Grunn>().when('beslutning', {
+            grunn: yup.mixed<Grunn>().when('beslutning', {
                 is: false,
-                then: yup.mixed<keyof typeof Grunn>().oneOf([Grunn.FEIL_I_BEREGNING, Grunn.FEIL_I_PERIODE]).required(),
+                then: yup.mixed<Grunn>().oneOf([Grunn.FEIL_I_BEREGNING, Grunn.FEIL_I_PERIODE]).required(),
             }),
-
-            begrunnelse: yup.string(),
+            begrunnelse: yup.string().when('beslutning', {
+                is: false,
+                then: yup.string().required(),
+            }),
         }),
         validateOnChange: hasSubmitted,
     });
 
+    const gender = useMemo<Gender>(() => getGender(props.søker), [props.søker]);
+
     const { errors } = formik;
-    if (!erTilAttestering(behandling) && !erIverksatt(behandling)) {
-        return <div>Behandlingen er ikke klar for attestering.</div>;
+
+    if (RemoteData.isSuccess(attesteringStatus)) {
+        return (
+            <div className={styles.content}>
+                <AlertStripe type="suksess">
+                    <p>
+                        {intl.formatMessage({
+                            id: [Behandlingsstatus.IVERKSATT_INNVILGET, Behandlingsstatus.IVERKSATT_AVSLAG].includes(
+                                props.behandling.status
+                            )
+                                ? 'status.iverksatt'
+                                : 'status.sendtTilbake',
+                        })}
+                    </p>
+                    <Link to={Routes.saksoversiktIndex.createURL()}>
+                        {intl.formatMessage({ id: 'lenke.saksoversikt' })}
+                    </Link>
+                </AlertStripe>
+            </div>
+        );
     }
 
-    const gender = useMemo<Gender>(() => getGender(søker), [søker._tag]);
+    if (!erTilAttestering(props.behandling) && !erIverksatt(props.behandling)) {
+        return (
+            <div className={styles.content}>
+                <AlertStripe type="feil">
+                    <p>{intl.formatMessage({ id: 'feil.ikkeKlarForAttestering' })}</p>
+                    <Link to={Routes.saksoversiktIndex.createURL()}>
+                        {intl.formatMessage({ id: 'lenke.saksoversikt' })}
+                    </Link>
+                </AlertStripe>
+            </div>
+        );
+    }
 
     return (
-        <>
+        <div className={styles.container}>
             <div className={styles.headerContainer}>
-                {pipe(
-                    søker,
-                    RemoteData.fold(
-                        () => null,
-                        () => null,
-                        () => null,
-                        (s: Person) => (
-                            <>
-                                <PersonCard
-                                    fodselsnummer={s.fnr}
-                                    gender={gender}
-                                    name={showName(s.navn)}
-                                    renderLabelContent={(): JSX.Element => <PersonAdvarsel person={s} />}
-                                />
-                                <Søkefelt />
-                            </>
-                        )
-                    )
-                )}
+                <PersonCard
+                    fodselsnummer={props.søker.fnr}
+                    gender={gender}
+                    name={showName(props.søker.navn)}
+                    renderLabelContent={(): JSX.Element => <PersonAdvarsel person={props.søker} />}
+                />
+                <Søkefelt />
             </div>
-            <div>
+            <div className={styles.content}>
                 <div className={styles.vedtakContainer}>
                     <Innholdstittel>Vedtak</Innholdstittel>
                     <div>
-                        {!erAvslått(behandling) && <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>}
-                        {erAvslått(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
+                        {!erAvslått(props.behandling) && (
+                            <AlertStripeSuksess>{props.behandling.status}</AlertStripeSuksess>
+                        )}
+                        {erAvslått(props.behandling) && <AlertStripeFeil>{props.behandling.status}</AlertStripeFeil>}
                     </div>
                     <div>
-                        <VilkårsOppsummering behandling={behandling} />
+                        <VilkårsOppsummering behandling={props.behandling} />
                     </div>
                     <div>
-                        <VisDersomSimulert sak={sak.value} behandling={behandling} />
+                        <VisDersomSimulert sak={props.sak} behandling={props.behandling} />
                     </div>
                     <div>
                         <Innholdstittel>Vis brev kladd</Innholdstittel>
@@ -197,7 +233,7 @@ const Attestering = () => {
                             spinner={fetchingBrev}
                             onClick={() => {
                                 setFetchingBrev(true);
-                                fetchBrev(sak.value.id, urlParams.behandlingId).then((res) => {
+                                fetchBrev(props.sak.id, props.behandling.id).then((res) => {
                                     if (res.status === 'ok') {
                                         window.open(URL.createObjectURL(res.data));
                                     }
@@ -210,7 +246,7 @@ const Attestering = () => {
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>
-                    {erTilAttestering(behandling) && (
+                    {erTilAttestering(props.behandling) && (
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
@@ -219,7 +255,7 @@ const Attestering = () => {
                             }}
                         >
                             <RadioPanelGruppe
-                                className={styles.sats}
+                                className={styles.formElement}
                                 name={intl.formatMessage({ id: 'attestering.beslutning' })}
                                 legend={intl.formatMessage({ id: 'attestering.beslutning' })}
                                 radios={[
@@ -240,35 +276,42 @@ const Attestering = () => {
                                         : undefined
                                 }
                                 onChange={(_, value) =>
-                                    formik.setValues({ ...formik.values, beslutning: value === 'godkjenn' })
+                                    formik.setValues((v) => ({ ...v, beslutning: value === 'godkjenn' }))
                                 }
                                 feil={errors.beslutning}
                             />
                             {formik.values.beslutning === false && (
                                 <>
                                     <Select
-                                        label="Velg grunn"
+                                        label={intl.formatMessage({ id: 'input.grunn.label' })}
                                         onChange={(value) =>
-                                            formik.setValues({ ...formik.values, grunn: value.target.value })
+                                            formik.setValues((v) => ({ ...v, grunn: value.target.value }))
                                         }
                                         value={formik.values.grunn ?? ''}
                                         feil={errors.grunn}
+                                        className={styles.formElement}
                                     >
-                                        <option value=""> Grunn </option>
+                                        <option value="" disabled>
+                                            {intl.formatMessage({ id: 'input.grunn.value.default' })}
+                                        </option>
                                         {Object.values(Grunn).map((grunn, index) => (
                                             <option value={grunn} key={index}>
-                                                {grunn}
+                                                {intl.formatMessage({
+                                                    id: getTextId(grunn),
+                                                })}
                                             </option>
                                         ))}
                                     </Select>
 
-                                    <Textarea
-                                        label="Begrunnelse"
-                                        name="begrunnelse"
-                                        value={formik.values.begrunnelse ?? ''}
-                                        feil={formik.errors.begrunnelse}
-                                        onChange={formik.handleChange}
-                                    />
+                                    <div className={styles.formElement}>
+                                        <Textarea
+                                            label={intl.formatMessage({ id: 'input.begrunnelse.label' })}
+                                            name="begrunnelse"
+                                            value={formik.values.begrunnelse ?? ''}
+                                            feil={formik.errors.begrunnelse}
+                                            onChange={formik.handleChange}
+                                        />
+                                    </div>
                                 </>
                             )}
                             <Feiloppsummering
@@ -285,10 +328,46 @@ const Attestering = () => {
                             </Knapp>
                         </form>
                     )}
-                    {RemoteData.isSuccess(attesteringStatus) && <p>Attestering utført!</p>}
                 </div>
             </div>
-        </>
+        </div>
+    );
+};
+
+const Attestering = () => {
+    const dispatch = useAppDispatch();
+    const urlParams = Routes.useRouteParams<typeof Routes.attestering>();
+    const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
+    const intl = useI18n({ messages });
+
+    useEffect(() => {
+        if (RemoteData.isInitial(sak)) {
+            dispatch(sakSlice.fetchSak({ sakId: urlParams.sakId }));
+        }
+    }, [sak._tag]);
+
+    useEffect(() => {
+        if (RemoteData.isSuccess(sak) && RemoteData.isInitial(søker)) {
+            dispatch(personSlice.fetchPerson({ fnr: sak.value.fnr }));
+        }
+    }, [søker._tag, sak._tag]);
+
+    return pipe(
+        RemoteData.combine(søker, sak),
+        RemoteData.fold(
+            () => null,
+            () => <NavFrontendSpinner />,
+            (_err) => <AlertStripe type="feil">{intl.formatMessage({ id: 'feil.generisk' })}</AlertStripe>,
+            ([søkerValue, sakValue]) => {
+                const behandling = sakValue.behandlinger.find((x) => x.id === urlParams.behandlingId);
+                if (!behandling) {
+                    return (
+                        <AlertStripe type="feil">{intl.formatMessage({ id: 'feil.fantIkkeBehandling' })}</AlertStripe>
+                    );
+                }
+                return <Attesteringsinnhold behandling={behandling} søker={søkerValue} sak={sakValue} intl={intl} />;
+            }
+        )
     );
 };
 

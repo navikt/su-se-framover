@@ -53,7 +53,15 @@ const Saksoversikt = () => {
         }
     }, [sak._tag, søker._tag]);
 
-    const gender = useMemo<Gender>(() => getGender(søker), [søker._tag]);
+    const gender = useMemo<Gender>(
+        () =>
+            pipe(
+                søker,
+                RemoteData.map(getGender),
+                RemoteData.getOrElse((): Gender => Gender.unknown)
+            ),
+        [søker._tag]
+    );
 
     const rerouteToSak = (id: string) => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: id }));
 

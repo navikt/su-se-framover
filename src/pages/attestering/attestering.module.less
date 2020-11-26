@@ -1,5 +1,12 @@
 @import '~/styles/variables.less';
 
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .headerContainer {
     display: flex;
     align-items: center;
@@ -66,9 +73,12 @@
     margin-top: @spacing-s;
 }
 
-.container {
-    display: flex;
-    flex-direction: column;
+.content {
+    padding-top: @spacing;
+}
+
+.grunnContainer {
+    margin-bottom: @spacing;
 }
 
 .feiloppsummering {
@@ -86,6 +96,6 @@
     margin-bottom: @spacing-xl;
 }
 
-.sats {
+.formElement {
     margin-bottom: @spacing;
 }
