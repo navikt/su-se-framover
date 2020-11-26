@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
+import { IngenAdresseGrunn } from '~api/personApi';
 import { eqFastOppholdINorge } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
@@ -66,6 +67,16 @@ const createFaktaBlokkArray = (søknadsInnhold: SøknadInnhold, intl: IntlShape)
                 intl.formatMessage({ id: 'display.fraSøknad.ikkeRegistert' }),
         });
     }
+    arr.push({
+        tittel: 'Adresse',
+        verdi:
+            søknadsInnhold.boforhold.borPåAdresse ??
+            søknadsInnhold.boforhold.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE
+                ? intl.formatMessage({ id: 'adresse.borPåAnnenAdresse' })
+                : søknadsInnhold.boforhold.ingenAdresseGrunn === IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED
+                ? intl.formatMessage({ id: 'adresse.ikkeFastBosted' })
+                : 'Ubesvart',
+    });
     return arr;
 };
 
