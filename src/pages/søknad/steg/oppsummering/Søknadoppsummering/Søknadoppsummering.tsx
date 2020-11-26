@@ -23,7 +23,9 @@ import { FormueOppsummering } from '../components/FormueOppsummering';
 import InntektsOppsummering from '../components/InntektsOppsummering';
 import { Oppsummeringsfelt } from '../components/Oppsummeringsfelt';
 
+import oppsummeringMessages from './oppsummering-nb';
 import styles from './oppsummering.module.less';
+import { ingenAdresseGrunnTekst } from './OppsummeringUtils';
 
 const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søker: Person }) => {
     const intl = useI18n({
@@ -33,6 +35,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
             ...flyktningstatusMessages,
             ...boOgOppholdMessages,
             ...utenlandsoppholdMessages,
+            ...oppsummeringMessages,
         },
     });
 
@@ -227,6 +230,15 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                             )}
                         </>
                     )}
+
+                    <Oppsummeringsfelt
+                        label={intl.formatMessage({ id: 'boOgOpphold.adresse' })}
+                        verdi={
+                            søknad.boOgOpphold.borPåAdresse?.adresselinje ??
+                            ingenAdresseGrunnTekst(søknad.boOgOpphold.ingenAdresseGrunn, intl) ??
+                            'Ubesvart'
+                        }
+                    />
 
                     <EndreSvar path={Søknadsteg.BoOgOppholdINorge} søker={søker} />
                 </Ekspanderbartpanel>
