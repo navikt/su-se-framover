@@ -47,7 +47,7 @@ const Kvittering = () => {
                             <AlertStripe type="suksess">
                                 <Normaltekst>Søknad sendt!</Normaltekst>
                                 <Normaltekst>Søknad-ID: {s.søknad.id}</Normaltekst>
-                                <Normaltekst>Sak-ID: {s.saksnummer}</Normaltekst>
+                                <Normaltekst>Saksnummer: {s.saksnummer}</Normaltekst>
                             </AlertStripe>
                         );
                     }
