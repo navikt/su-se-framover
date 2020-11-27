@@ -5,6 +5,7 @@ import { AdresseFraSøknad, SøknadState } from './søknad.slice';
 
 export const toFormue = (formue: SøknadState['formue']) => {
     return {
+        eierBolig: formue.eierBolig,
         borIBolig: formue.eierBolig ? formue.borIBolig : null,
         verdiPåBolig: formue.borIBolig ? null : Number(formue.verdiPåBolig),
         boligBrukesTil: formue.borIBolig ? null : formue.boligBrukesTil,
