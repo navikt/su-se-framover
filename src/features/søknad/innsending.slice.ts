@@ -7,14 +7,14 @@ import * as personApi from '~api/personApi';
 import * as søknadApi from '~api/søknadApi';
 import { toEktefellePartnerSamboer } from '~pages/søknad/steg/bo-og-opphold-i-norge/utils';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
-import { SøknadInnhold, Søknadstype, Søknad } from '~types/Søknad';
+import { SøknadInnhold, Søknadstype } from '~types/Søknad';
 
 import { SøknadState } from './søknad.slice';
 import { DelerBoligMed } from './types';
 import { toAdresseFraSøknad, toFormue, toInntekt } from './utils';
 
 export const sendSøknad = createAsyncThunk<
-    Søknad,
+    søknadApi.OpprettetSøknad,
     { søknad: SøknadState; søker: personApi.Person },
     { rejectValue: ApiError }
 >('innsending/fetch', async ({ søknad, søker }, thunkApi) => {
@@ -85,7 +85,7 @@ export const sendSøknad = createAsyncThunk<
 });
 
 export interface InnsendingState {
-    søknad: RemoteData.RemoteData<ApiError, Søknad>;
+    søknad: RemoteData.RemoteData<ApiError, søknadApi.OpprettetSøknad>;
 }
 
 const initialState: InnsendingState = {
