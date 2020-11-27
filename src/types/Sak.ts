@@ -5,6 +5,7 @@ import { Søknad } from './Søknad';
 
 export interface Sak {
     id: string;
+    saksnummer: number;
     fnr: string;
     behandlinger: Behandling[];
     søknader: Søknad[];
