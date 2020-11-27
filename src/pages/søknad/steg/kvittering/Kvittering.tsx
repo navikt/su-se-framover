@@ -46,8 +46,8 @@ const Kvittering = () => {
                         return (
                             <AlertStripe type="suksess">
                                 <Normaltekst>Søknad sendt!</Normaltekst>
-                                <Normaltekst>Søknad-ID: {s.id}</Normaltekst>
-                                <Normaltekst>Sak-ID: {s.sakId}</Normaltekst>
+                                <Normaltekst>Søknad-ID: {s.søknad.id}</Normaltekst>
+                                <Normaltekst>Sak-ID: {s.saksnummer}</Normaltekst>
                             </AlertStripe>
                         );
                     }
@@ -73,7 +73,7 @@ const Kvittering = () => {
                 {RemoteData.isSuccess(søknad) && (
                     <Knapp
                         onClick={() =>
-                            fetchSøknad(søknad.value.id).then((res) => {
+                            fetchSøknad(søknad.value.søknad.id).then((res) => {
                                 if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
                             })
                         }
