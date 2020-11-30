@@ -76,7 +76,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Uførhet,
-            begrunnelse: null,
+            begrunnelse: uførhet?.begrunnelse ?? null,
             erStartet: uførhet !== null,
         },
         {
