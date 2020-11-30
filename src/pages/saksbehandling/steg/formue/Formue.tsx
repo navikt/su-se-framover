@@ -366,7 +366,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                 key={keyNavn}
                                                 tittel={intl.formatMessage({ id: `input.label.${keyNavn}` })}
                                                 className={styles.formueInput}
-                                                inputName={`ektefellesVerdier.${keyNavn}`}
+                                                inputName={`epsVerdier.${keyNavn}`}
                                                 onChange={formik.handleChange}
                                                 defaultValue={formik.values.epsVerdier?.[keyNavn] ?? 0}
                                                 feil={
