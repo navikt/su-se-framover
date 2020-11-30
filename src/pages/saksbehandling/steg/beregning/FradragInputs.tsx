@@ -89,7 +89,7 @@ const FradragsSelection = (props: {
             className={props.className}
         >
             <option value="">{props.intl.formatMessage({ id: 'fradrag.type.emptyLabel' })}</option>
-            {Object.values(Fradragstype)
+            {velgbareFradragstyper
                 .filter((type) => type !== Fradragstype.ForventetInntekt)
                 .map((f) => (
                     <option value={f} key={f}>
@@ -114,9 +114,11 @@ const utenlandskInntekt = yup
         otherwise: yup.object<UtenlandskInntektFormData>(),
     });
 
+const velgbareFradragstyper = Object.values(Fradragstype).filter((f) => f !== Fradragstype.BeregnetFradragEPS);
+
 export const fradragSchema = yup.object<FradragFormData>({
     beløp: validateStringAsPositiveNumber,
-    type: yup.string().defined().oneOf(Object.values(Fradragstype), 'Du må velge en fradragstype'),
+    type: yup.string().defined().oneOf(velgbareFradragstyper, 'Du må velge en fradragstype'),
     fraUtland: yup.boolean(),
     utenlandskInntekt: utenlandskInntekt,
     tilhørerEPS: yup.boolean(),
