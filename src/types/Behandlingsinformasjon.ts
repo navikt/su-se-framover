@@ -20,6 +20,7 @@ export interface Uførhet {
     status: UførhetStatus;
     uføregrad: Nullable<number>;
     forventetInntekt: Nullable<number>;
+    begrunnelse: Nullable<string>;
 }
 export enum UførhetStatus {
     VilkårOppfylt = 'VilkårOppfylt',
