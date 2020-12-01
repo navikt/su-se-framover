@@ -33,7 +33,7 @@ export default {
     'display.vilkårIkkeOppfylt': 'Ikke oppfylt vilkår',
     'display.vilkårIkkeOppfyltGrunn': 'Formue er høyere enn 0.5G',
 
-    'feil.åpnerAnnenPersonFormueMenViserInput': 'Du må lagre den åpne formue blokken før du kan åpne ny blokk',
+    'feil.åpnerAnnenPersonFormueMenViserInput': 'Du må lagre den andre formuen før du kan endre denne.',
 
     'input.label.verdiIkkePrimærbolig': 'Verdi boliger som ikke er primærbolig',
     'input.label.verdiKjøretøy': 'Verdi bil(sekundær), campingvogn eller kjøretøy',
