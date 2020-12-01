@@ -24,10 +24,10 @@ export default {
     'input.harVerdipapir.label': 'Har ektefelle/samboer aksjer, aksjefond eller verdipapir?',
     'input.verdipapirBeløp.label': 'Samlet verdi i kroner',
 
-    'input.skylderNoenMegPenger.label': 'Skylder noen ektefelle/samboer mer enn 5000 kr?',
+    'input.skylderNoenMegPenger.label': 'Skylder noen ektefelle/samboer mer enn 1000 kr?',
     'input.skylderNoenMegPengerBeløp.label': 'Hvor mye i kroner?',
 
-    'input.harKontanter.label': 'Har ektefelle/samboer kontanter over 5000 kr?',
+    'input.harKontanter.label': 'Har ektefelle/samboer kontanter over 1000 kr?',
     'input.kontanterBeløp.label': 'Hvor mye i kroner?',
 
     'button.fjernRad.label': 'Fjern rad',

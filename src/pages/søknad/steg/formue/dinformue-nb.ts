@@ -24,10 +24,10 @@ export default {
     'input.harVerdipapir.label': 'Har du aksjer, aksjefond eller verdipapir?',
     'input.verdipapirBeløp.label': 'Samlet verdi i kroner',
 
-    'input.skylderNoenMegPenger.label': 'Skylder noen deg mer enn 5000 kr?',
+    'input.skylderNoenMegPenger.label': 'Skylder noen deg mer enn 1000 kr?',
     'input.skylderNoenMegPengerBeløp.label': 'Beløp i kroner',
 
-    'input.harKontanter.label': 'Har du mer enn 5000 kr i kontanter?',
+    'input.harKontanter.label': 'Har du mer enn 1000 kr i kontanter?',
     'input.kontanterBeløp.label': 'Beløp i kroner?',
 
     'button.fjernRad.label': 'Fjern rad',
