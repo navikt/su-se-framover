@@ -1,7 +1,4 @@
 export default {
-    'display.fraSøknad.hvemHarMøtt': 'Hvem har møtt opp?',
-    'display.fraSøknad.personligOppmøte': 'Personlig',
-    'display.fraSøknad.papirsøknad.grunnForPapirinnsending': 'Grunn for papirinnsending',
     'page.tittel': 'Personlig oppmøte',
 
     'radio.personligOppmøte.legend': 'Har bruker møtt personlig?',

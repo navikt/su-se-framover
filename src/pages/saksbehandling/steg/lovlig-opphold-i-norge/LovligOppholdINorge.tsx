@@ -4,7 +4,6 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
-import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { eqLovligOppholdINorge } from '~features/behandling/behandlingUtils';
@@ -16,16 +15,14 @@ import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { LovligOpphold, LovligOppholdStatus } from '~types/Behandlingsinformasjon';
-import { SøknadInnhold } from '~types/Søknad';
 
-import Faktablokk from '../faktablokk/Faktablokk';
+import LovligOppholdFaktablokk from '../faktablokk/faktablokker/LovligOppholdFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './lovligOppholdINorge-nb';
-import styles from './LovligOppholdINorge.module.less';
 
 interface FormData {
     status: Nullable<LovligOppholdStatus>;
@@ -42,70 +39,6 @@ const schema = yup.object<FormData>({
         ),
     begrunnelse: yup.string().defined(),
 });
-
-function createFaktaBlokkArray(intl: IntlShape, søknadsInnhold: SøknadInnhold) {
-    const arr = [
-        createFaktaBlokkObject(
-            søknadsInnhold.oppholdstillatelse.erNorskStatsborger,
-            intl.formatMessage({ id: 'display.fraSøknad.erNorskStatsborger' }),
-            intl
-        ),
-    ];
-
-    if (!søknadsInnhold.oppholdstillatelse.erNorskStatsborger) {
-        arr.push(
-            createFaktaBlokkObject(
-                søknadsInnhold.oppholdstillatelse.harOppholdstillatelse,
-                intl.formatMessage({ id: 'display.fraSøknad.harOppholdstillatelse' }),
-                intl
-            )
-        );
-    }
-    if (søknadsInnhold.oppholdstillatelse.harOppholdstillatelse) {
-        arr.push(
-            createFaktaBlokkObject(
-                søknadsInnhold.oppholdstillatelse.typeOppholdstillatelse,
-                intl.formatMessage({ id: 'display.fraSøknad.typeOppholdstillatelse' }),
-                intl
-            )
-        );
-    }
-
-    if (søknadsInnhold.oppholdstillatelse.statsborgerskapAndreLand) {
-        arr.push(
-            createFaktaBlokkObject(
-                søknadsInnhold.oppholdstillatelse.statsborgerskapAndreLandFritekst,
-                intl.formatMessage({ id: 'display.fraSøknad.statsborgerskapAndreLand' }),
-                intl
-            )
-        );
-    }
-
-    return arr;
-}
-
-function createFaktaBlokkObject(oppholdstillatelsePair: Nullable<boolean | string>, tittel: string, intl: IntlShape) {
-    if (typeof oppholdstillatelsePair === 'string') {
-        return {
-            tittel: tittel,
-            verdi: oppholdstillatelsePair.valueOf(),
-        };
-    } else if (typeof oppholdstillatelsePair === 'boolean') {
-        return {
-            tittel: tittel,
-            verdi: oppholdstillatelsePair.valueOf()
-                ? intl.formatMessage({ id: 'display.fraSøknad.ja' })
-                : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
-        };
-    } else {
-        return {
-            tittel: tittel,
-            verdi: oppholdstillatelsePair
-                ? intl.formatMessage({ id: 'display.fraSøknad.ja' })
-                : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
-        };
-    }
-}
 
 const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
@@ -154,8 +87,6 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         validateOnChange: hasSubmitted,
     });
     const history = useHistory();
-
-    createFaktaBlokkArray(intl, props.behandling.søknad.søknadInnhold);
 
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
@@ -256,14 +187,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                         />
                     </form>
                 ),
-                right: (
-                    <Faktablokk
-                        tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
-                        containerClassName={styles.lovligOppholdFaktaBlokkContainer}
-                        faktaBlokkerClassName={styles.lovligOppholdFaktaBlokk}
-                        fakta={createFaktaBlokkArray(intl, props.behandling.søknad.søknadInnhold)}
-                    />
-                ),
+                right: <LovligOppholdFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
         </Vurdering>
     );

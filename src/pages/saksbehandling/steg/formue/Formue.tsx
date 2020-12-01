@@ -24,16 +24,15 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FormueStatus, Formue, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
-import Faktablokk from '../faktablokk/Faktablokk';
+import FormueFaktablokk from '../faktablokk/faktablokker/FormueFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
-import { delerBoligMedFormatted } from '../sharedUtils';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './formue-nb';
 import styles from './formue.module.less';
 import { FormueInput, ShowSum } from './FormueComponents';
-import { getInitialVerdier, getFormue, kalkulerFormue, kalkulerFormueFraSøknad, getVerdier } from './utils';
+import { getInitialVerdier, getFormue, kalkulerFormue, getVerdier } from './utils';
 
 type FormData = Formue & {
     borSøkerMedEPS: Nullable<boolean>;
@@ -155,16 +154,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const ektefellesFormue = useMemo(() => {
         return kalkulerFormue(formik.values.epsVerdier);
     }, [formik.values.epsVerdier]);
-
-    const totalFormueFraSøknad = useMemo(() => {
-        const søkersFormueFraSøknad = kalkulerFormueFraSøknad(søknadInnhold.formue);
-
-        if (søknadInnhold.ektefelle) {
-            return søkersFormueFraSøknad + kalkulerFormueFraSøknad(søknadInnhold.ektefelle.formue);
-        }
-
-        return søkersFormueFraSøknad;
-    }, [søknadInnhold.formue]);
 
     const totalFormue = søkersFormue + (formik.values.borSøkerMedEPS ? ektefellesFormue : 0);
 
@@ -511,107 +500,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         />
                     </form>
                 ),
-                right: (
-                    <div>
-                        <Faktablokk
-                            tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
-                            faktaBlokkerClassName={styles.formueFaktaBlokk}
-                            fakta={[
-                                {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.delerBoligMed' }),
-                                    verdi: delerBoligMedFormatted(søknadInnhold.boforhold.delerBoligMed),
-                                },
-                                {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.ektefelleTitle' }),
-                                    verdi: søknadInnhold.ektefelle ? (
-                                        <>
-                                            <p>
-                                                {`${intl.formatMessage({ id: 'display.fraSøknad.epsFnr' })}: ${
-                                                    søknadInnhold.boforhold.ektefellePartnerSamboer?.fnr
-                                                }`}
-                                            </p>
-                                            {
-                                                // TODO ai: very very temporary solution for showing formue for ektefelle
-                                                [
-                                                    ['verdiPåBolig', søknadInnhold.ektefelle.formue.verdiPåBolig],
-                                                    ['verdiPåEiendom', søknadInnhold.ektefelle.formue.verdiPåEiendom],
-                                                    [
-                                                        'verdiPåKjøretøy',
-                                                        søknadInnhold.ektefelle.formue.kjøretøy?.reduce(
-                                                            (acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy,
-                                                            0
-                                                        ),
-                                                    ],
-                                                    ['innskuddsbeløp', søknadInnhold.ektefelle.formue.innskuddsBeløp],
-                                                    ['verdipapirbeløp', søknadInnhold.ektefelle.formue.verdipapirBeløp],
-                                                    [
-                                                        'skylderNoenEktefellePengerBeløp',
-                                                        søknadInnhold.ektefelle.formue.verdiPåBolig,
-                                                    ],
-                                                    ['depositumsBeløp', søknadInnhold.ektefelle.formue.verdiPåBolig],
-                                                ].map(([translationKey, verdi]) => (
-                                                    <p key={translationKey}>
-                                                        {intl.formatMessage({
-                                                            id: `display.fraSøknad.ektefelle.${translationKey}`,
-                                                        })}
-                                                        : {verdi}
-                                                    </p>
-                                                ))
-                                            }
-                                            <p>
-                                                {`${intl.formatMessage({
-                                                    id: 'display.fraSøknad.ektefellesFormue',
-                                                })}: ${kalkulerFormueFraSøknad(
-                                                    søknadInnhold.ektefelle.formue
-                                                ).toString()}`}
-                                            </p>
-                                        </>
-                                    ) : (
-                                        'Ingen ektefelle'
-                                    ),
-                                },
-                                {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.verdiPåBolig' }),
-                                    verdi: søknadInnhold.formue.verdiPåBolig?.toString() ?? '0',
-                                },
-                                {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.verdiPåEiendom' }),
-                                    verdi: søknadInnhold.formue.verdiPåEiendom?.toString() ?? '0',
-                                },
-                                {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.verdiPåKjøretøy' }),
-                                    verdi:
-                                        søknadInnhold.formue.kjøretøy
-                                            ?.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0)
-                                            .toString() ?? '0',
-                                },
-                                {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.innskuddsbeløp' }),
-                                    verdi: søknadInnhold.formue.innskuddsBeløp?.toString() ?? '0',
-                                },
-                                {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.verdipapirbeløp' }),
-                                    verdi: søknadInnhold.formue.verdipapirBeløp?.toString() ?? '0',
-                                },
-                                {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.kontanter' }),
-                                    verdi: søknadInnhold.formue.kontanterBeløp?.toString() ?? '0',
-                                },
-                                {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.skylderNoenSøkerPengerBeløp' }),
-                                    verdi: søknadInnhold.formue.skylderNoenMegPengerBeløp?.toString() ?? '0',
-                                },
-                                {
-                                    tittel: intl.formatMessage({ id: 'display.fraSøknad.depositumsBeløp' }),
-                                    verdi: søknadInnhold.formue.depositumsBeløp?.toString() ?? '0',
-                                },
-                            ]}
-                        />
-                        <p className={styles.formueFraSøknad}>
-                            {intl.formatMessage({ id: 'display.fraSøknad.totalt' })}: {totalFormueFraSøknad}
-                        </p>
-                    </div>
-                ),
+                right: <FormueFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
         </Vurdering>
     );

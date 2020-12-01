@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Flyktning as FlyktningType, FlyktningStatus, UførhetStatus } from '~types/Behandlingsinformasjon';
 
-import Faktablokk from '../faktablokk/Faktablokk';
+import FlyktningFaktablokk from '../faktablokk/faktablokker/FlyktningFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -251,19 +251,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                         />
                     </form>
                 ),
-                right: (
-                    <Faktablokk
-                        tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
-                        fakta={[
-                            {
-                                tittel: intl.formatMessage({ id: 'display.fraSøknad.registrertFlyktning' }),
-                                verdi: props.behandling.søknad.søknadInnhold.flyktningsstatus.registrertFlyktning
-                                    ? intl.formatMessage({ id: 'display.fraSøknad.ja' })
-                                    : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
-                            },
-                        ]}
-                    />
-                ),
+                right: <FlyktningFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
         </Vurdering>
     );

@@ -77,6 +77,7 @@ const Vedtak = (props: Props) => {
     if (behandling.status === Behandlingsstatus.SIMULERT || erAvslått(behandling)) {
         return (
             <div className={styles.vedtakContainer}>
+                {console.log('hehehe', behandling.vilkårsvurderinger)}
                 <div>
                     <Innholdstittel>{intl.formatMessage({ id: 'page.tittel' })}</Innholdstittel>
 

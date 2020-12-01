@@ -27,7 +27,7 @@ export const setSatsFaktablokk = (søknadinnhold: SøknadInnhold, intl: IntlShap
     if (eps) {
         faktablokk.push({
             tittel: intl.formatMessage({
-                id: 'display.fraSøknad.ektemakeEllerSamboerUførFlyktning',
+                id: 'sats.ektemakeEllerSamboerUførFlyktning',
             }),
             verdi: søknadinnhold?.boforhold.ektefellePartnerSamboer
                 ? søknadinnhold.boforhold.ektefellePartnerSamboer.erUførFlyktning
@@ -43,7 +43,7 @@ export const setSatsFaktablokk = (søknadinnhold: SøknadInnhold, intl: IntlShap
     ) {
         faktablokk.push({
             tittel: intl.formatMessage({
-                id: 'display.fraSøknad.hvemDelerSøkerBoligMed',
+                id: 'sats.hvemDelerSøkerBoligMed',
             }),
             verdi: delerBoligMedFormatted(søknadinnhold.boforhold.delerBoligMed),
         });
@@ -52,10 +52,10 @@ export const setSatsFaktablokk = (søknadinnhold: SøknadInnhold, intl: IntlShap
     if (!søknadinnhold.boforhold.delerBoligMedVoksne && !eps) {
         faktablokk.push({
             tittel: intl.formatMessage({
-                id: 'display.fraSøknad.hvemDelerSøkerBoligMed',
+                id: 'sats.hvemDelerSøkerBoligMed',
             }),
             verdi: intl.formatMessage({
-                id: 'display.fraSøknad.hvemDelerSøkerBoligMed.ingen',
+                id: 'sats.hvemDelerSøkerBoligMed.ingen',
             }),
         });
     }

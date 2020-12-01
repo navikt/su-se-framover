@@ -1,6 +1,4 @@
 export default {
-    'display.fraSøknad.vedtakOmUføretrygd': 'Har du fått vedtak om uføretrygd?',
-
     'input.label.uføregrad': 'Uføregrad',
     'input.label.forventetInntekt': 'Forventet inntekt per år',
 

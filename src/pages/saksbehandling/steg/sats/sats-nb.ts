@@ -1,11 +1,6 @@
 export default {
     'display.eps.label': 'Ektefelle/samboer',
 
-    'display.fraSøknad.harOppholdstillatelse': 'Har oppholdstillatelse?',
-    'display.fraSøknad.hvemDelerSøkerBoligMed': 'Hvem deler søker bolig med?',
-    'display.fraSøknad.hvemDelerSøkerBoligMed.ingen': 'Ingen',
-    'display.fraSøknad.ektemakeEllerSamboerUførFlyktning':
-        'Mottar ektemake eller samboer supplerende stønad for uføre flyktninger?',
     'display.sats': 'Sats:',
 
     'feilmelding.ikkeTilgang': 'Du har ikke tilgang til å se informasjon om denne brukeren',
