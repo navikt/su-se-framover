@@ -3,7 +3,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
-import { Ingress, Innholdstittel, Element, Normaltekst } from 'nav-frontend-typografi';
+import { Ingress, Innholdstittel, Element, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
@@ -95,18 +95,22 @@ const ÅpneSøknader = (props: {
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
                                     <div>
-                                        <Normaltekst>
+                                        <Undertittel>
                                             {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
-                                        </Normaltekst>
-                                        <Normaltekst>
-                                            {props.intl.formatMessage({ id: 'display.søknad.mottatt' })}
-                                            {props.intl.formatDate(s.opprettet)}
-                                        </Normaltekst>
+                                        </Undertittel>
+                                        <div className={styles.dato}>
+                                            <Element>
+                                                {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
+                                            </Element>
+                                            <Normaltekst>{props.intl.formatDate(s.opprettet)}</Normaltekst>
+                                        </div>
                                     </div>
                                     <div className={styles.knapper}>
-                                        <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
-                                            {props.intl.formatMessage({ id: 'behandling.attestering.advarsel' })}
-                                        </AlertStripe>
+                                        {behandling?.attestering?.underkjennelse && (
+                                            <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
+                                                {props.intl.formatMessage({ id: 'behandling.attestering.advarsel' })}
+                                            </AlertStripe>
+                                        )}
 
                                         {!behandling ? (
                                             <StartSøknadsbehandlingKnapper
