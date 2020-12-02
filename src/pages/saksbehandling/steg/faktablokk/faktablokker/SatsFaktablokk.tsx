@@ -2,14 +2,18 @@ import React from 'react';
 
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
-import { SøknadInnhold } from '~types/Søknad';
 
 import { EPSMedAlder, setSatsFaktablokk } from '../../sats/utils';
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
+import { FaktablokkProps } from './faktablokkUtils';
 
-const SatsFaktablokk = (props: { søknadInnhold: SøknadInnhold; eps: Nullable<EPSMedAlder> }) => {
+interface SatsProps extends FaktablokkProps {
+    eps: Nullable<EPSMedAlder>;
+}
+
+const SatsFaktablokk = (props: SatsProps) => {
     const intl = useI18n({ messages });
 
     return (
@@ -17,6 +21,7 @@ const SatsFaktablokk = (props: { søknadInnhold: SøknadInnhold; eps: Nullable<E
             tittel={intl.formatMessage({
                 id: 'display.fraSøknad',
             })}
+            tittelType={props.tittelType}
             fakta={setSatsFaktablokk(props.søknadInnhold, intl, props.eps)}
         />
     );

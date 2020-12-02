@@ -1,8 +1,9 @@
 import classNames from 'classnames';
-import { Systemtittel, Element } from 'nav-frontend-typografi';
+import { Systemtittel, Element, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
 
 import styles from './faktablokk.module.less';
+import { FaktablokkTitteltype } from './faktablokker/faktablokkUtils';
 
 export interface Fakta {
     tittel: string;
@@ -11,12 +12,17 @@ export interface Fakta {
 
 const Faktablokk = (props: {
     tittel: string;
+    tittelType?: FaktablokkTitteltype;
     fakta: Fakta[];
     containerClassName?: string;
     faktaBlokkerClassName?: string;
 }) => (
     <div className="styles.faktablokk">
-        <Systemtittel className={styles.overskrift}>{props.tittel}</Systemtittel>
+        {props.tittelType === FaktablokkTitteltype.undertittel ? (
+            <Undertittel className={styles.overskrift}>{props.tittel}</Undertittel>
+        ) : (
+            <Systemtittel className={styles.overskrift}>{props.tittel}</Systemtittel>
+        )}
         <div className={props.containerClassName}>
             {props.fakta.map((f, index) => (
                 <div className={classNames(props.faktaBlokkerClassName, styles.linje)} key={index}>

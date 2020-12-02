@@ -1,5 +1,5 @@
 export default {
-    'vilkår.fraSøknad': 'Fra søkand',
+    'page.tittel': 'Vilkår',
 
     'vilkår.begrunnelse': 'Begrunnelse',
 };

@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 
 import { useI18n } from '~lib/hooks';
-import { SøknadInnhold } from '~types/Søknad';
 
 import { kalkulerFormueFraSøknad } from '../../formue/utils';
 import { delerBoligMedFormatted } from '../../sharedUtils';
@@ -9,8 +8,9 @@ import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
 import styles from './faktablokker.module.less';
+import { FaktablokkProps } from './faktablokkUtils';
 
-const FormueFaktablokk = (props: { søknadInnhold: SøknadInnhold }) => {
+const FormueFaktablokk = (props: FaktablokkProps) => {
     const intl = useI18n({ messages });
 
     const totalFormueFraSøknad = useMemo(() => {
@@ -27,6 +27,7 @@ const FormueFaktablokk = (props: { søknadInnhold: SøknadInnhold }) => {
         <div>
             <Faktablokk
                 tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
+                tittelType={props.tittelType}
                 faktaBlokkerClassName={styles.formueFaktaBlokk}
                 fakta={[
                     {

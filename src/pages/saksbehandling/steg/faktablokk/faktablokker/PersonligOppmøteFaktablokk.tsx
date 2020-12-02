@@ -2,18 +2,20 @@ import React from 'react';
 
 import { GrunnForPapirinnsending } from '~features/søknad/types';
 import { useI18n } from '~lib/hooks';
-import { SøknadInnhold, Søknadstype } from '~types/Søknad';
+import { Søknadstype } from '~types/Søknad';
 
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
+import { FaktablokkProps } from './faktablokkUtils';
 
-const PersonligOppmøteFaktablokk = (props: { søknadInnhold: SøknadInnhold }) => {
+const PersonligOppmøteFaktablokk = (props: FaktablokkProps) => {
     const intl = useI18n({ messages });
 
     return (
         <Faktablokk
             tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
+            tittelType={props.tittelType}
             fakta={
                 props.søknadInnhold.forNav.type === Søknadstype.DigitalSøknad
                     ? [

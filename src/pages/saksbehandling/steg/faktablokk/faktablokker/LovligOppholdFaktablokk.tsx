@@ -9,13 +9,15 @@ import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
 import styles from './faktablokker.module.less';
+import { FaktablokkProps } from './faktablokkUtils';
 
-const LovligOppholdFaktablokk = (props: { søknadInnhold: SøknadInnhold }) => {
+const LovligOppholdFaktablokk = (props: FaktablokkProps) => {
     const intl = useI18n({ messages });
 
     return (
         <Faktablokk
             tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
+            tittelType={props.tittelType}
             containerClassName={styles.lovligOppholdFaktaBlokkContainer}
             faktaBlokkerClassName={styles.lovligOppholdFaktaBlokk}
             fakta={createFaktaBlokkArray(intl, props.søknadInnhold)}

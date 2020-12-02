@@ -1,18 +1,19 @@
 import React from 'react';
 
 import { useI18n } from '~lib/hooks';
-import { SøknadInnhold } from '~types/Søknad';
 
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
+import { FaktablokkProps } from './faktablokkUtils';
 
-const FlyktningFaktablokk = (props: { søknadInnhold: SøknadInnhold }) => {
+const FlyktningFaktablokk = (props: FaktablokkProps) => {
     const intl = useI18n({ messages });
 
     return (
         <Faktablokk
             tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
+            tittelType={props.tittelType}
             fakta={[
                 {
                     tittel: intl.formatMessage({ id: 'flyktning.registrertFlyktning' }),

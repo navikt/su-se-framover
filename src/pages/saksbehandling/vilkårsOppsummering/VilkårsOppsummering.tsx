@@ -1,63 +1,111 @@
-import { Undertittel } from 'nav-frontend-typografi';
+import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
 
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
-import { mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
+import { mapToVilkårsinformasjon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
-import { Søknad } from '~types/Søknad';
-import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import { SøknadInnhold } from '~types/Søknad';
+import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+
+import { FaktablokkTitteltype } from '../steg/faktablokk/faktablokker/faktablokkUtils';
+import FastOppholdFaktablokk from '../steg/faktablokk/faktablokker/FastOppholdFaktablokk';
+import FlyktningFaktablokk from '../steg/faktablokk/faktablokker/FlyktningFaktablokk';
+import FormueFaktablokk from '../steg/faktablokk/faktablokker/FormueFaktablokk';
+import LovligOppholdFaktablokk from '../steg/faktablokk/faktablokker/LovligOppholdFaktablokk';
+import PersonligOppmøteFaktablokk from '../steg/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
+import UførhetFaktablokk from '../steg/faktablokk/faktablokker/UførhetFaktablokk';
+import UtenlandsOppholdFaktablokk from '../steg/faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
 
 import messages from './vilkårsOppsummering-nb';
 import styles from './vilkårsOppsummering.module.less';
 
-const VilkårsOppsummering = (props: { søknad: Søknad; behandlingsinformasjon: Behandlingsinformasjon }) => {
-    const vilkårsinformasjon = mapToVilkårsinformasjon(props.behandlingsinformasjon);
-    console.log(props);
-    console.log(vilkårsinformasjon);
-    console.log(VilkårsBlokk);
-    return <div></div>;
-};
-
-interface SpmOgSvar {
-    spm: string;
-    svar: string | number | boolean;
-}
-
-const VilkårsBlokk = (props: {
-    status: Nullable<VilkårVurderingStatus>;
-    tittel: string;
-    spmOgSvar: SpmOgSvar[];
-    begrunnelse: string;
+const VilkårsOppsummering = (props: {
+    søknadInnhold: SøknadInnhold;
+    behandlingsinformasjon: Behandlingsinformasjon;
 }) => {
-    console.log(props);
-
     const intl = useI18n({ messages });
+    const vilkårsinformasjon = mapToVilkårsinformasjon(props.behandlingsinformasjon);
 
     return (
         <div>
-            <div>
-                {props.status ? <VilkårvurderingStatusIcon status={props.status} /> : null}
-                <p>{props.tittel}</p>
+            <Systemtittel className={styles.tittel}>{intl.formatMessage({ id: 'page.tittel' })}</Systemtittel>
+            <div className={styles.vilkårsblokkerContainer}>
+                {vilkårsinformasjon.map((v) => (
+                    <VilkårsBlokk
+                        key={v.vilkårtype}
+                        tittel={vilkårTittelFormatted(v.vilkårtype)}
+                        status={v.status}
+                        fraSøknadComponent={mapVilkårtypeToFaktablokk(v.vilkårtype, props.søknadInnhold)}
+                        begrunnelse={v.begrunnelse}
+                    />
+                ))}
             </div>
-            <div className={styles.blokkContainer}>
-                <ol className={styles.leftBlokkContainer}>
-                    <Undertittel>{intl.formatMessage({ id: 'vilkår.fraSøknad' })}</Undertittel>
-                    {props.spmOgSvar.map((spmOgSvar, idx) => (
-                        <li key={idx}>
-                            <p>{spmOgSvar.spm}</p>
-                            <p>{spmOgSvar.svar}</p>
-                        </li>
-                    ))}
-                </ol>
-                <div className={styles.rightBlokkContainer}>
-                    <Undertittel>{intl.formatMessage({ id: 'vilkår.begrunnelse' })}</Undertittel>
+        </div>
+    );
+};
+
+const VilkårsBlokk = (props: {
+    status: VilkårVurderingStatus;
+    tittel: string;
+    fraSøknadComponent: Nullable<JSX.Element>;
+    begrunnelse: Nullable<string>;
+}) => {
+    const intl = useI18n({ messages });
+
+    return (
+        <div className={styles.blokkContainer}>
+            <div className={styles.blokkHeader}>
+                {props.status ? <VilkårvurderingStatusIcon className={styles.ikon} status={props.status} /> : null}
+                {props.tittel}
+            </div>
+            <div className={styles.pairBlokkContainer}>
+                <div className={styles.blokk}>{props.fraSøknadComponent}</div>
+                <div className={styles.blokk}>
+                    <Undertittel className={styles.blokkOverskrift}>
+                        {intl.formatMessage({ id: 'vilkår.begrunnelse' })}
+                    </Undertittel>
                     <p>{props.begrunnelse}</p>
                 </div>
             </div>
         </div>
     );
+};
+
+const mapVilkårtypeToFaktablokk = (vilkårtype: Vilkårtype, søknadInnhold: SøknadInnhold) => {
+    switch (vilkårtype) {
+        case Vilkårtype.Uførhet:
+            return <UførhetFaktablokk søknadInnhold={søknadInnhold} tittelType={FaktablokkTitteltype.undertittel} />;
+        case Vilkårtype.Flyktning:
+            return <FlyktningFaktablokk søknadInnhold={søknadInnhold} tittelType={FaktablokkTitteltype.undertittel} />;
+        case Vilkårtype.LovligOpphold:
+            return (
+                <LovligOppholdFaktablokk søknadInnhold={søknadInnhold} tittelType={FaktablokkTitteltype.undertittel} />
+            );
+        case Vilkårtype.FastOppholdINorge:
+            return (
+                <FastOppholdFaktablokk søknadInnhold={søknadInnhold} tittelType={FaktablokkTitteltype.undertittel} />
+            );
+        case Vilkårtype.OppholdIUtlandet:
+            return (
+                <UtenlandsOppholdFaktablokk
+                    søknadInnhold={søknadInnhold}
+                    tittelType={FaktablokkTitteltype.undertittel}
+                />
+            );
+        case Vilkårtype.Formue:
+            return <FormueFaktablokk søknadInnhold={søknadInnhold} tittelType={FaktablokkTitteltype.undertittel} />;
+        case Vilkårtype.PersonligOppmøte:
+            return (
+                <PersonligOppmøteFaktablokk
+                    søknadInnhold={søknadInnhold}
+                    tittelType={FaktablokkTitteltype.undertittel}
+                />
+            );
+        default:
+            return null;
+    }
 };
 
 export default VilkårsOppsummering;

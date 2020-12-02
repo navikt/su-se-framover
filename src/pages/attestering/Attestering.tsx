@@ -13,65 +13,24 @@ import { Link } from 'react-router-dom';
 import { fetchBrev } from '~api/pdfApi';
 import { Person } from '~api/personApi';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
-import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { erAvslått, erIverksatt, erTilAttestering } from '~features/behandling/behandlingUtils';
 import * as personSlice from '~features/person/person.slice';
 import { getGender, showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { mapToVilkårsinformasjon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { VisSimulering } from '~pages/saksbehandling/simulering/simulering';
 import VisBeregning from '~pages/saksbehandling/steg/beregning/VisBeregning';
 import Søkefelt from '~pages/saksbehandling/søkefelt/Søkefelt';
+import VilkårsOppsummering from '~pages/saksbehandling/vilkårsOppsummering/VilkårsOppsummering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
-import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import messages from './attestering-nb';
 import styles from './attestering.module.less';
-
-const VilkårsOppsummering = (props: { behandling: Behandling }) => {
-    const vilkårsinformasjon = mapToVilkårsinformasjon(props.behandling.behandlingsinformasjon);
-
-    return (
-        <div>
-            <Innholdstittel className={styles.tittel}>Vilkårsvurderinger</Innholdstittel>
-            {vilkårsinformasjon.map((v) => (
-                <VilkårsvurderingInfoLinje
-                    type={v.vilkårtype}
-                    status={v.status}
-                    key={v.vilkårtype}
-                    begrunnelse={v.begrunnelse}
-                />
-            ))}
-        </div>
-    );
-};
-
-const VilkårsvurderingInfoLinje = (props: {
-    type: Vilkårtype;
-    status: VilkårVurderingStatus;
-    begrunnelse?: Nullable<string>;
-}) => {
-    return (
-        <div className={styles.infolinjeContainer}>
-            <div className={styles.infolinje}>
-                <span className={styles.statusContainer}>
-                    <VilkårvurderingStatusIcon className={styles.statusIcon} status={props.status} />
-                </span>
-                <div>
-                    <span className={styles.infotittel}>{vilkårTittelFormatted(props.type)}:</span>
-                    <p>{props.begrunnelse ?? ''}</p>
-                </div>
-            </div>
-        </div>
-    );
-};
 
 const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
     if (props.behandling.beregning && !erAvslått(props.behandling)) {
@@ -226,7 +185,10 @@ const Attesteringsinnhold = ({
                         {erAvslått(props.behandling) && <AlertStripeFeil>{props.behandling.status}</AlertStripeFeil>}
                     </div>
                     <div>
-                        <VilkårsOppsummering behandling={props.behandling} />
+                        <VilkårsOppsummering
+                            søknadInnhold={props.behandling.søknad.søknadInnhold}
+                            behandlingsinformasjon={props.behandling.behandlingsinformasjon}
+                        />
                     </div>
                     <div>
                         <VisDersomSimulert sak={props.sak} behandling={props.behandling} />

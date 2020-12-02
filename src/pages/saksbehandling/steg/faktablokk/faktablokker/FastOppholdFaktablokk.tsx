@@ -8,10 +8,17 @@ import { SøknadInnhold } from '~types/Søknad';
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
+import { FaktablokkProps } from './faktablokkUtils';
 
-const FastOppholdFaktablokk = (props: { søknadInnhold: SøknadInnhold }) => {
+const FastOppholdFaktablokk = (props: FaktablokkProps) => {
     const intl = useI18n({ messages });
-    return <Faktablokk tittel="Fra søknad" fakta={createFaktaBlokkArray(props.søknadInnhold, intl)} />;
+    return (
+        <Faktablokk
+            tittel="Fra søknad"
+            tittelType={props.tittelType}
+            fakta={createFaktaBlokkArray(props.søknadInnhold, intl)}
+        />
+    );
 };
 
 const createFaktaBlokkArray = (søknadsInnhold: SøknadInnhold, intl: IntlShape) => {

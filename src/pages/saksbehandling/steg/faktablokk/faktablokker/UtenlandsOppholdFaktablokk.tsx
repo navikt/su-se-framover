@@ -5,19 +5,20 @@ import { IntlShape } from 'react-intl';
 
 import { kalkulerTotaltAntallDagerIUtlandet, Utlandsdatoer } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
-import { SøknadInnhold } from '~types/Søknad';
 
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
 import styles from './faktablokker.module.less';
+import { FaktablokkProps } from './faktablokkUtils';
 
-const UtenlandsOppholdFaktablokk = (props: { søknadInnhold: SøknadInnhold }) => {
+const UtenlandsOppholdFaktablokk = (props: FaktablokkProps) => {
     const intl = useI18n({ messages });
 
     return (
         <Faktablokk
             tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
+            tittelType={props.tittelType}
             fakta={[
                 {
                     tittel: intl.formatMessage({ id: 'utenlandsOpphold.antallDagerSiste90' }),
