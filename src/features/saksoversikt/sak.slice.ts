@@ -10,7 +10,7 @@ import { LukkSøknadBodyTypes } from '~api/søknadApi';
 import * as utbetalingApi from '~api/utbetalingApi';
 import { pipe } from '~lib/fp';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
-import { Behandling } from '~types/Behandling';
+import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
 import { Sak } from '~types/Sak';
@@ -171,10 +171,10 @@ export const startAttestering = createAsyncThunk<
 
 export const attesteringUnderkjenn = createAsyncThunk<
     Behandling,
-    { sakId: string; behandlingId: string; begrunnelse: string },
+    { sakId: string; behandlingId: string; grunn: UnderkjennelseGrunn; kommentar: string },
     { rejectValue: ApiError }
->('behandling/underkjenn', async ({ sakId, behandlingId, begrunnelse }, thunkApi) => {
-    const res = await behandlingApi.underkjenn({ sakId, behandlingId, begrunnelse });
+>('behandling/underkjenn', async ({ sakId, behandlingId, grunn, kommentar }, thunkApi) => {
+    const res = await behandlingApi.underkjenn({ sakId, behandlingId, grunn, kommentar });
     if (res.status === 'ok') {
         return res.data;
     }

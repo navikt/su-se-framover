@@ -28,7 +28,7 @@ import { VisSimulering } from '~pages/saksbehandling/simulering/simulering';
 import VisBeregning from '~pages/saksbehandling/steg/beregning/VisBeregning';
 import Søkefelt from '~pages/saksbehandling/søkefelt/Søkefelt';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Behandling, Behandlingsstatus } from '~types/Behandling';
+import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
@@ -92,22 +92,25 @@ const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
     }
     return <>Det er ikke gjort en beregning</>;
 };
-enum Grunn {
-    FEIL_I_BEREGNING = 'FEIL_I_BEREGNING',
-    FEIL_I_PERIODE = 'FEIL_I_PERIODE',
-}
+
 interface FormData {
     beslutning?: boolean;
-    grunn?: string;
-    begrunnelse?: string;
+    grunn?: UnderkjennelseGrunn;
+    kommentar?: string;
 }
 
-function getTextId(grunn: Grunn) {
+function getTextId(grunn: UnderkjennelseGrunn) {
     switch (grunn) {
-        case Grunn.FEIL_I_BEREGNING:
-            return 'input.grunn.value.feilIBeregning';
-        case Grunn.FEIL_I_PERIODE:
-            return 'input.grunn.value.feilIPeriode';
+        case UnderkjennelseGrunn.BEREGNINGEN_ER_FEIL:
+            return 'input.grunn.value.beregningErFeil';
+        case UnderkjennelseGrunn.DOKUMENTASJON_MANGLER:
+            return 'input.grunn.value.dokumentasjonMangler';
+        case UnderkjennelseGrunn.VEDTAKSBREVET_ER_FEIL:
+            return 'input.grunn.value.vedtaksbrevetErFeil';
+        case UnderkjennelseGrunn.INNGANGSVILKÅRENE_ER_FEILVURDERT:
+            return 'input.grunn.value.inngangsvilkåreneErFeil';
+        case UnderkjennelseGrunn.ANDRE_FORHOLD:
+            return 'input.grunn.value.andreForhold';
     }
 }
 
@@ -139,23 +142,33 @@ const Attesteringsinnhold = ({
                 return;
             }
 
-            if (values.begrunnelse) {
+            if (values.kommentar && values.grunn) {
                 dispatch(
                     sakSlice.attesteringUnderkjenn({
                         sakId: props.sak.id,
                         behandlingId: props.behandling.id,
-                        begrunnelse: values.begrunnelse,
+                        grunn: values.grunn,
+                        kommentar: values.kommentar,
                     })
                 );
             }
         },
         validationSchema: yup.object<FormData>({
             beslutning: yup.boolean().required(),
-            grunn: yup.mixed<Grunn>().when('beslutning', {
+            grunn: yup.mixed<UnderkjennelseGrunn>().when('beslutning', {
                 is: false,
-                then: yup.mixed<Grunn>().oneOf([Grunn.FEIL_I_BEREGNING, Grunn.FEIL_I_PERIODE]).required(),
+                then: yup
+                    .mixed<UnderkjennelseGrunn>()
+                    .oneOf([
+                        UnderkjennelseGrunn.INNGANGSVILKÅRENE_ER_FEILVURDERT,
+                        UnderkjennelseGrunn.BEREGNINGEN_ER_FEIL,
+                        UnderkjennelseGrunn.DOKUMENTASJON_MANGLER,
+                        UnderkjennelseGrunn.VEDTAKSBREVET_ER_FEIL,
+                        UnderkjennelseGrunn.ANDRE_FORHOLD,
+                    ])
+                    .required(),
             }),
-            begrunnelse: yup.string().when('beslutning', {
+            kommentar: yup.string().when('beslutning', {
                 is: false,
                 then: yup.string().required(),
             }),
@@ -285,7 +298,12 @@ const Attesteringsinnhold = ({
                                     <Select
                                         label={intl.formatMessage({ id: 'input.grunn.label' })}
                                         onChange={(value) =>
-                                            formik.setValues((v) => ({ ...v, grunn: value.target.value }))
+                                            formik.setValues((v) => ({
+                                                ...v,
+                                                grunn: v
+                                                    ? UnderkjennelseGrunn[value.target.value as UnderkjennelseGrunn]
+                                                    : undefined,
+                                            }))
                                         }
                                         value={formik.values.grunn ?? ''}
                                         feil={errors.grunn}
@@ -294,7 +312,7 @@ const Attesteringsinnhold = ({
                                         <option value="" disabled>
                                             {intl.formatMessage({ id: 'input.grunn.value.default' })}
                                         </option>
-                                        {Object.values(Grunn).map((grunn, index) => (
+                                        {Object.values(UnderkjennelseGrunn).map((grunn, index) => (
                                             <option value={grunn} key={index}>
                                                 {intl.formatMessage({
                                                     id: getTextId(grunn),
@@ -305,10 +323,10 @@ const Attesteringsinnhold = ({
 
                                     <div className={styles.formElement}>
                                         <Textarea
-                                            label={intl.formatMessage({ id: 'input.begrunnelse.label' })}
-                                            name="begrunnelse"
-                                            value={formik.values.begrunnelse ?? ''}
-                                            feil={formik.errors.begrunnelse}
+                                            label={intl.formatMessage({ id: 'input.kommentar.label' })}
+                                            name="kommentar"
+                                            value={formik.values.kommentar ?? ''}
+                                            feil={formik.errors.kommentar}
                                             onChange={formik.handleChange}
                                         />
                                     </div>

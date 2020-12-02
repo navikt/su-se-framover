@@ -15,7 +15,7 @@ export interface Behandling {
     status: Behandlingsstatus;
     simulering: Nullable<Simulering>;
     opprettet: string;
-    attestant: Nullable<string>;
+    attestering: Nullable<Attestering>;
     saksbehandler: Nullable<string>;
     hendelser: Nullable<Hendelse[]>;
     satsBeløp: Nullable<number>;
@@ -39,4 +39,22 @@ export interface Hendelse {
     underoverskrift: string;
     tidspunkt: string;
     melding: string;
+}
+
+export interface Attestering {
+    attestant: string;
+    underkjennelse: Nullable<Underkjennelse>;
+}
+
+export interface Underkjennelse {
+    grunn: UnderkjennelseGrunn;
+    kommentar: string;
+}
+
+export enum UnderkjennelseGrunn {
+    INNGANGSVILKÅRENE_ER_FEILVURDERT = 'INNGANGSVILKÅRENE_ER_FEILVURDERT',
+    BEREGNINGEN_ER_FEIL = 'BEREGNINGEN_ER_FEIL',
+    DOKUMENTASJON_MANGLER = 'DOKUMENTASJON_MANGLER',
+    VEDTAKSBREVET_ER_FEIL = 'VEDTAKSBREVET_ER_FEIL',
+    ANDRE_FORHOLD = 'ANDRE_FORHOLD',
 }

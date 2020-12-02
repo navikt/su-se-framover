@@ -10,9 +10,12 @@ export default {
 
     'input.grunn.label': 'Grunn',
     'input.grunn.value.default': 'Velg grunn',
-    'input.grunn.value.feilIBeregning': 'Feil i beregning',
-    'input.grunn.value.feilIPeriode': 'Feil i periode',
-    'input.begrunnelse.label': 'Begrunnelse',
+    'input.grunn.value.beregningErFeil': 'Beregning er feil',
+    'input.grunn.value.dokumentasjonMangler': 'Dokumentasjon mangler',
+    'input.grunn.value.vedtaksbrevetErFeil': 'Vedtaksbrevet er feil',
+    'input.grunn.value.inngangsvilkåreneErFeil': 'Inngangsvilkårene er feilvurdert',
+    'input.grunn.value.andreForhold': 'Andre forhold',
+    'input.kommentar.label': 'Kommentar',
 
     'status.sendtTilbake': 'Saken er sendt tilbake til vurdering',
     'status.iverksatt': 'Vedtaket er iverksatt',

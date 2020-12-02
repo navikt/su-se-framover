@@ -8,6 +8,13 @@ export default {
     'display.behandling.fortsettBehandling': 'Fortsett behandling',
     'display.behandling.klarteIkkeStarteBehandling': 'Klarte ikke å starte behandling',
     'display.behandling.startBehandling': 'Start behandling',
+    'behandling.attestering.advarsel': 'Sendt tilbake fra attestering',
+
+    'behandling.underkjent.dokumentasjonMangler': 'Dokumentasjon mangler',
+    'behandling.underkjent.beregningenErFeil': 'Beregningen er feil',
+    'behandling.underkjent.InngangsvilkåreneErFeilvurdert': 'Inngangsvilkårene er feilvurdert',
+    'behandling.underkjent.vedtaksbrevetErFeil': 'Vedtaksbrevet er feil',
+    'behandling.underkjent.andreForhold': 'Andre forhold',
 
     'display.saksoversikt.tittel': 'Saksoversikt',
 

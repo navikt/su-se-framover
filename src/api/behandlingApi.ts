@@ -1,6 +1,6 @@
 import { formatISO } from 'date-fns';
 
-import { Behandling } from '~types/Behandling';
+import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
@@ -103,12 +103,18 @@ export async function iverksett(arg: { sakId: string; behandlingId: string }) {
     });
 }
 
-export async function underkjenn(arg: { sakId: string; behandlingId: string; begrunnelse: string }) {
+export async function underkjenn(arg: {
+    sakId: string;
+    behandlingId: string;
+    grunn: UnderkjennelseGrunn;
+    kommentar: string;
+}) {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/underkjenn`,
         method: 'PATCH',
         body: {
-            begrunnelse: arg.begrunnelse,
+            grunn: arg.grunn,
+            kommentar: arg.kommentar,
         },
     });
 }
