@@ -24,6 +24,20 @@
     }
 }
 
+.modalContainer {
+    display: flex;
+    flex-direction: column;
+    padding: @spacing-s @spacing-s;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+
+    .modalKnappContainer {
+        align-self: flex-end;
+    }
+}
+
 .utbetalingsperioderContainer {
     display: flex;
     justify-content: space-between;
@@ -48,19 +62,5 @@
     .utbetalingKnappContainer {
         display: flex;
         align-items: flex-end;
-    }
-}
-
-.modalContainer {
-    display: flex;
-    flex-direction: column;
-    padding: @spacing-s @spacing-s;
-
-    > :not(:last-child) {
-        margin-bottom: @spacing-s;
-    }
-
-    .modalKnappContainer {
-        align-self: flex-end;
     }
 }
