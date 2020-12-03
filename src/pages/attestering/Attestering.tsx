@@ -157,16 +157,7 @@ const Attesteringsinnhold = ({
             beslutning: yup.boolean().required(),
             grunn: yup.mixed<UnderkjennelseGrunn>().when('beslutning', {
                 is: false,
-                then: yup
-                    .mixed<UnderkjennelseGrunn>()
-                    .oneOf([
-                        UnderkjennelseGrunn.INNGANGSVILKÅRENE_ER_FEILVURDERT,
-                        UnderkjennelseGrunn.BEREGNINGEN_ER_FEIL,
-                        UnderkjennelseGrunn.DOKUMENTASJON_MANGLER,
-                        UnderkjennelseGrunn.VEDTAKSBREVET_ER_FEIL,
-                        UnderkjennelseGrunn.ANDRE_FORHOLD,
-                    ])
-                    .required(),
+                then: yup.mixed<UnderkjennelseGrunn>().oneOf(Object.values(UnderkjennelseGrunn)).required(),
             }),
             kommentar: yup.string().when('beslutning', {
                 is: false,
@@ -297,12 +288,10 @@ const Attesteringsinnhold = ({
                                 <>
                                     <Select
                                         label={intl.formatMessage({ id: 'input.grunn.label' })}
-                                        onChange={(value) =>
+                                        onChange={(event) =>
                                             formik.setValues((v) => ({
                                                 ...v,
-                                                grunn: v
-                                                    ? UnderkjennelseGrunn[value.target.value as UnderkjennelseGrunn]
-                                                    : undefined,
+                                                grunn: v ? (event.target.value as UnderkjennelseGrunn) : undefined,
                                             }))
                                         }
                                         value={formik.values.grunn ?? ''}
