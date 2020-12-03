@@ -1,7 +1,7 @@
 import { currencies } from 'country-data-list';
 import { FormikErrors } from 'formik';
 import { Input, Label, Select, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
-import React, { useRef } from 'react';
+import React from 'react';
 import { IntlShape } from 'react-intl';
 
 import { UtenlandskInntekt } from '~types/Fradrag';
@@ -10,16 +10,15 @@ import { UtenlandskInntektFormData } from './beregningstegTypes';
 import styles from './fradragInputs.module.less';
 
 const InntektFraUtland = (props: {
+    name: string;
     value: UtenlandskInntektFormData;
     onChange: (e: UtenlandskInntektFormData) => void;
     errors: FormikErrors<UtenlandskInntekt> | undefined;
     intl: IntlShape;
 }) => {
-    const rand = useRef(Math.random());
-
-    const beløpId = `beløp-${rand.current}`;
-    const kursId = `kurs-${rand.current}`;
-    const valutaId = `valuta-${rand.current}`;
+    const beløpId = `${props.name}.beløp`;
+    const kursId = `${props.name}.kurs`;
+    const valutaId = `${props.name}.valuta`;
 
     return (
         <div className={styles.utlandOgPeriodeContainer}>

@@ -47,6 +47,7 @@ const InputWithFollowText = (props: {
         <span className={styles.inputOgtekstContainer}>
             <Input
                 className={styles.inputWithFollowTextInputfelt}
+                id={props.inputName}
                 name={props.inputName}
                 value={props.value}
                 bredde={props.bredde}
@@ -139,6 +140,7 @@ export const FradragInputs = (props: {
                 const belopId = `${name}.${FradragObjectKeys.beløp}`;
                 const fraUtlandId = `${name}.${FradragObjectKeys.fraUtland}`;
                 const tilhørerEPSId = `${name}.${FradragObjectKeys.tilhørerEPS}`;
+                const utenlandskInntektId = `${name}.${FradragObjectKeys.utenlandskInntekt}`;
 
                 return (
                     <Panel key={index} border className={styles.fradragItemContainer}>
@@ -213,6 +215,7 @@ export const FradragInputs = (props: {
                             </div>
                             {fradrag.fraUtland && (
                                 <InntektFraUtland
+                                    name={utenlandskInntektId}
                                     value={fradrag.utenlandskInntekt}
                                     onChange={(v) => {
                                         const beløp = Number.parseFloat(v.kurs) * Number(v.beløpIUtenlandskValuta);
