@@ -6,39 +6,39 @@ import { IntlShape } from 'react-intl';
 
 import { UtenlandskInntekt } from '~types/Fradrag';
 
-import { FradragFormData } from './FradragInputs';
+import { UtenlandskInntektFormData } from './beregningstegTypes';
 import styles from './fradragInputs.module.less';
 
 const InntektFraUtland = (props: {
-    utenlandsBeløpId: string;
-    valutaId: string;
-    kursId: string;
-    fradrag: FradragFormData;
-    onChange: (e: React.ChangeEvent<HTMLElement>) => void;
-    utenlandskInntektErrors: FormikErrors<UtenlandskInntekt> | undefined;
+    value: UtenlandskInntektFormData;
+    onChange: (e: UtenlandskInntektFormData) => void;
+    errors: FormikErrors<UtenlandskInntekt> | undefined;
     intl: IntlShape;
 }) => {
-    const beløpIUtenlandskValutaError = props.utenlandskInntektErrors?.beløpIUtenlandskValuta;
-    const valutaError = props.utenlandskInntektErrors?.valuta;
-    const kursError = props.utenlandskInntektErrors?.kurs;
-    const valuta = props.fradrag.utenlandskInntekt.valuta;
-
     return (
         <div className={styles.utlandOgPeriodeContainer}>
             <Input
                 label={props.intl.formatMessage({ id: 'display.input.beløpIUtenlandskValuta' })}
-                name={props.utenlandsBeløpId}
-                value={props.fradrag.utenlandskInntekt?.beløpIUtenlandskValuta ?? ''}
+                value={props.value.beløpIUtenlandskValuta}
                 bredde="S"
-                onChange={props.onChange}
-                feil={beløpIUtenlandskValutaError}
+                onChange={(a) =>
+                    props.onChange({
+                        ...props.value,
+                        beløpIUtenlandskValuta: a.target.value,
+                    })
+                }
+                feil={props.errors?.beløpIUtenlandskValuta}
             />
             <Select
                 label={props.intl.formatMessage({ id: 'display.input.valuta' })}
-                name={props.valutaId}
-                value={valuta ?? ''}
-                onChange={props.onChange}
-                feil={valutaError}
+                value={props.value.valuta}
+                onChange={(a) =>
+                    props.onChange({
+                        ...props.value,
+                        valuta: a.target.value,
+                    })
+                }
+                feil={props.errors?.valuta}
                 bredde="s"
             >
                 <option value="" disabled={true}>
@@ -52,11 +52,15 @@ const InntektFraUtland = (props: {
             </Select>
             <Input
                 label={props.intl.formatMessage({ id: 'display.input.kurs' })}
-                name={props.kursId}
-                value={props.fradrag.utenlandskInntekt?.kurs ?? ''}
+                value={props.value.kurs}
                 bredde="S"
-                onChange={props.onChange}
-                feil={kursError}
+                onChange={(a) =>
+                    props.onChange({
+                        ...props.value,
+                        kurs: a.target.value,
+                    })
+                }
+                feil={props.errors?.kurs}
             />
         </div>
     );

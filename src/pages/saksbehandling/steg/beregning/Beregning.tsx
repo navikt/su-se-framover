@@ -226,12 +226,14 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 errors={formik.errors.fradrag}
                                 intl={intl}
                                 onChange={formik.handleChange}
-                                setFieldValue={formik.setFieldValue}
+                                onFradragChange={(index, value) => {
+                                    formik.setFieldValue(`fradrag[${index}]`, value);
+                                }}
                                 onFjernClick={(index) => {
-                                    formik.setValues({
-                                        ...formik.values,
+                                    formik.setValues((v) => ({
+                                        ...v,
                                         fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
-                                    });
+                                    }));
                                 }}
                                 onLeggTilClick={() => {
                                     formik.setValues({
