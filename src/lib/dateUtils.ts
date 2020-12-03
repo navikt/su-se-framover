@@ -7,6 +7,12 @@ export const formatDateTime = (time: string, intl: IntlShape) => {
     return `${intl.formatDate(time)} ${intl.formatTime(time)}`;
 };
 
+export const formatMonthYear = (date: string, intl: IntlShape) =>
+    intl.formatDate(date, {
+        year: 'numeric',
+        month: '2-digit',
+    });
+
 export type Utlandsdatoer = Nullable<Array<{ utreisedato: string; innreisedato: string }>>;
 
 export const kalkulerTotaltAntallDagerIUtlandet = (datesArray: Utlandsdatoer) => {
