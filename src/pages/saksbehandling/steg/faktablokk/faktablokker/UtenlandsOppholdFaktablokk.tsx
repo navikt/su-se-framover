@@ -5,6 +5,7 @@ import { IntlShape } from 'react-intl';
 
 import { kalkulerTotaltAntallDagerIUtlandet, Utlandsdatoer } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
+import { Nullable } from '~lib/types';
 
 import Faktablokk from '../Faktablokk';
 
@@ -45,7 +46,7 @@ const UtenlandsOppholdFaktablokk = (props: FaktablokkProps) => {
     );
 };
 
-const visDatoer = (datesArray: Utlandsdatoer, intl: IntlShape) => {
+const visDatoer = (datesArray: Nullable<Utlandsdatoer>, intl: IntlShape) => {
     if (!datesArray || datesArray?.length === 0) return intl.formatMessage({ id: 'fraSøknad.ikkeRegistert' });
 
     return (

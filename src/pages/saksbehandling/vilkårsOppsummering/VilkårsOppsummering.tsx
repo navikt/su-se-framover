@@ -37,7 +37,7 @@ const VilkårsOppsummering = (props: {
                         key={v.vilkårtype}
                         tittel={vilkårTittelFormatted(v.vilkårtype)}
                         status={v.status}
-                        fraSøknadComponent={mapVilkårtypeToFaktablokk(v.vilkårtype, props.søknadInnhold)}
+                        vilkårFaktablokk={mapVilkårtypeToFaktablokk(v.vilkårtype, props.søknadInnhold)}
                         begrunnelse={v.begrunnelse}
                     />
                 ))}
@@ -49,7 +49,7 @@ const VilkårsOppsummering = (props: {
 const VilkårsBlokk = (props: {
     status: VilkårVurderingStatus;
     tittel: string;
-    fraSøknadComponent: Nullable<JSX.Element>;
+    vilkårFaktablokk: JSX.Element;
     begrunnelse: Nullable<string>;
 }) => {
     const intl = useI18n({ messages });
@@ -61,7 +61,7 @@ const VilkårsBlokk = (props: {
                 {props.tittel}
             </div>
             <div className={styles.pairBlokkContainer}>
-                <div className={styles.blokk}>{props.fraSøknadComponent}</div>
+                <div className={styles.blokk}>{props.vilkårFaktablokk}</div>
                 <div className={styles.blokk}>
                     <Undertittel className={styles.blokkOverskrift}>
                         {intl.formatMessage({ id: 'vilkår.begrunnelse' })}
@@ -104,7 +104,7 @@ const mapVilkårtypeToFaktablokk = (vilkårtype: Vilkårtype, søknadInnhold: S�
                 />
             );
         default:
-            return null;
+            return <></>;
     }
 };
 
