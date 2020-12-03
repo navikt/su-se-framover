@@ -291,7 +291,7 @@ const Attesteringsinnhold = ({
                                         onChange={(event) =>
                                             formik.setValues((v) => ({
                                                 ...v,
-                                                grunn: v ? (event.target.value as UnderkjennelseGrunn) : undefined,
+                                                grunn: event.target.value as UnderkjennelseGrunn,
                                             }))
                                         }
                                         value={formik.values.grunn ?? ''}
