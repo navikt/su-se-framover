@@ -3,7 +3,6 @@ import { Systemtittel, Element, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
 
 import styles from './faktablokk.module.less';
-import { FaktablokkTitteltype } from './faktablokker/faktablokkUtils';
 
 export interface Fakta {
     tittel: string;
@@ -12,13 +11,13 @@ export interface Fakta {
 
 const Faktablokk = (props: {
     tittel: string;
-    tittelType?: FaktablokkTitteltype;
+    brukUndertittel?: boolean;
     fakta: Fakta[];
     containerClassName?: string;
     faktaBlokkerClassName?: string;
 }) => (
     <div className="styles.faktablokk">
-        {props.tittelType === FaktablokkTitteltype.undertittel ? (
+        {props.brukUndertittel ? (
             <Undertittel className={styles.overskrift}>{props.tittel}</Undertittel>
         ) : (
             <Systemtittel className={styles.overskrift}>{props.tittel}</Systemtittel>

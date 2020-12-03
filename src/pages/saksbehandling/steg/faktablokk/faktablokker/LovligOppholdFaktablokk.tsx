@@ -17,7 +17,7 @@ const LovligOppholdFaktablokk = (props: FaktablokkProps) => {
     return (
         <Faktablokk
             tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
-            tittelType={props.tittelType}
+            brukUndertittel={props.brukUndertittel}
             containerClassName={styles.lovligOppholdFaktaBlokkContainer}
             faktaBlokkerClassName={styles.lovligOppholdFaktaBlokk}
             fakta={createListOfFakta(intl, props.søknadInnhold)}

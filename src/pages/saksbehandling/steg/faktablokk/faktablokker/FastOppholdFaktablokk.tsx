@@ -15,7 +15,7 @@ const FastOppholdFaktablokk = (props: FaktablokkProps) => {
     return (
         <Faktablokk
             tittel="Fra søknad"
-            tittelType={props.tittelType}
+            brukUndertittel={props.brukUndertittel}
             fakta={createFaktaBlokkArray(props.søknadInnhold, intl)}
         />
     );

@@ -21,7 +21,7 @@ const SatsFaktablokk = (props: SatsProps) => {
             tittel={intl.formatMessage({
                 id: 'display.fraSøknad',
             })}
-            tittelType={props.tittelType}
+            brukUndertittel={props.brukUndertittel}
             fakta={setSatsFaktablokk(props.søknadInnhold, intl, props.eps)}
         />
     );

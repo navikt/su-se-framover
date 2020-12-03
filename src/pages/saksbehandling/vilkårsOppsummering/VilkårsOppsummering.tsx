@@ -9,7 +9,6 @@ import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
-import { FaktablokkTitteltype } from '../steg/faktablokk/faktablokker/faktablokkUtils';
 import FastOppholdFaktablokk from '../steg/faktablokk/faktablokker/FastOppholdFaktablokk';
 import FlyktningFaktablokk from '../steg/faktablokk/faktablokker/FlyktningFaktablokk';
 import FormueFaktablokk from '../steg/faktablokk/faktablokker/FormueFaktablokk';
@@ -76,33 +75,19 @@ const VilkårsBlokk = (props: {
 const mapVilkårtypeToFaktablokk = (vilkårtype: Vilkårtype, søknadInnhold: SøknadInnhold) => {
     switch (vilkårtype) {
         case Vilkårtype.Uførhet:
-            return <UførhetFaktablokk søknadInnhold={søknadInnhold} tittelType={FaktablokkTitteltype.undertittel} />;
+            return <UførhetFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
         case Vilkårtype.Flyktning:
-            return <FlyktningFaktablokk søknadInnhold={søknadInnhold} tittelType={FaktablokkTitteltype.undertittel} />;
+            return <FlyktningFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
         case Vilkårtype.LovligOpphold:
-            return (
-                <LovligOppholdFaktablokk søknadInnhold={søknadInnhold} tittelType={FaktablokkTitteltype.undertittel} />
-            );
+            return <LovligOppholdFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
         case Vilkårtype.FastOppholdINorge:
-            return (
-                <FastOppholdFaktablokk søknadInnhold={søknadInnhold} tittelType={FaktablokkTitteltype.undertittel} />
-            );
+            return <FastOppholdFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
         case Vilkårtype.OppholdIUtlandet:
-            return (
-                <UtenlandsOppholdFaktablokk
-                    søknadInnhold={søknadInnhold}
-                    tittelType={FaktablokkTitteltype.undertittel}
-                />
-            );
+            return <UtenlandsOppholdFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
         case Vilkårtype.Formue:
-            return <FormueFaktablokk søknadInnhold={søknadInnhold} tittelType={FaktablokkTitteltype.undertittel} />;
+            return <FormueFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
         case Vilkårtype.PersonligOppmøte:
-            return (
-                <PersonligOppmøteFaktablokk
-                    søknadInnhold={søknadInnhold}
-                    tittelType={FaktablokkTitteltype.undertittel}
-                />
-            );
+            return <PersonligOppmøteFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
         default:
             return <></>;
     }

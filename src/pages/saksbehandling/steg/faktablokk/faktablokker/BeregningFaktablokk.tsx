@@ -14,7 +14,7 @@ const BeregningFaktablokk = (props: FaktablokkProps) => {
         <div>
             <Faktablokk
                 tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
-                tittelType={props.tittelType}
+                brukUndertittel={props.brukUndertittel}
                 fakta={[
                     {
                         tittel: intl.formatMessage({ id: 'beregning.forventerArbeidsinntekt' }),

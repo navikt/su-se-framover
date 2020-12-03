@@ -27,7 +27,7 @@ const FormueFaktablokk = (props: FaktablokkProps) => {
         <div>
             <Faktablokk
                 tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
-                tittelType={props.tittelType}
+                brukUndertittel={props.brukUndertittel}
                 faktaBlokkerClassName={styles.formueFaktaBlokk}
                 fakta={[
                     {

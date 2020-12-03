@@ -15,7 +15,7 @@ const PersonligOppmøteFaktablokk = (props: FaktablokkProps) => {
     return (
         <Faktablokk
             tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
-            tittelType={props.tittelType}
+            brukUndertittel={props.brukUndertittel}
             fakta={
                 props.søknadInnhold.forNav.type === Søknadstype.DigitalSøknad
                     ? [
