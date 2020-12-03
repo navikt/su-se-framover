@@ -12,6 +12,8 @@ const genererMånedsberegning = (beløp: number): Månedsberegning => {
         grunnbeløp: 1337,
         satsbeløp: 1337.0,
         fradrag: [],
+        epsFribeløp: 0.0,
+        epsInputFradrag: [],
     };
 };
 
