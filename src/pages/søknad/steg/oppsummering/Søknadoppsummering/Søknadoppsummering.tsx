@@ -158,10 +158,10 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                       })
                                     : søknad.boOgOpphold.delerBoligMed === DelerBoligMed.VOKSNE_BARN
                                     ? intl.formatMessage({
-                                          id: 'input.delerBoligMedAndreVoksne.label',
+                                          id: 'input.delerBoligMedBarnOver18.label',
                                       })
                                     : intl.formatMessage({
-                                          id: 'input.delerBoligMedBarnOver18.label',
+                                          id: 'input.delerBoligMedAndreVoksne.label',
                                       })
                             }
                         />
