@@ -91,7 +91,7 @@ const ÅpneSøknader = (props: {
                     const behandling = props.behandlinger.find((b) => b.søknad.id === s.id);
 
                     return (
-                        <li key={s.id}>
+                        <div key={s.id}>
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
                                     <div>
@@ -142,7 +142,7 @@ const ÅpneSøknader = (props: {
                                     </div>
                                 )}
                             </Panel>
-                        </li>
+                        </div>
                     );
                 })}
             </ol>
@@ -226,7 +226,7 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
     const { b } = props;
 
     return (
-        <li className={styles.behandlingContainer}>
+        <div className={styles.behandlingContainer}>
             {erTilAttestering(b) && (!user.isAttestant || user.navIdent === b.saksbehandler) && (
                 <div className={styles.ikonContainer}>
                     <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
@@ -270,7 +270,7 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
                     )
                 )}
             </div>
-        </li>
+        </div>
     );
 };
 
