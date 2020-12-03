@@ -58,7 +58,12 @@ export default {
     'fradrag.type.bidragetterekteskapsloven': 'Bidrag etter ekteskapsloven',
     'fradrag.type.kapitalinntekt': 'Kapitalinntekt',
     'fradrag.type.forventetinntekt': 'Forventet inntekt',
-    'fradrag.type.beregnetFradragEPS': 'Beregnet fradrag EPS',
+    'fradrag.type.beregnetFradragEPS': 'Ektefelle/samboer totalt',
+
+    'fradrag.utenlandsk.årsbeløp': 'Årsbeløp i utenlandsk valuta',
+    'fradrag.utenlandsk.kurs': 'Kurs',
+
+    'fradrag.eps.fribeløp': 'Fribeløp',
 
     'knapp.fradrag.leggtil': 'Legg til fradrag',
     'knapp.fradrag.fjern': 'Fjern fradrag',

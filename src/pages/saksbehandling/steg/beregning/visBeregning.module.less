@@ -27,3 +27,35 @@
 .forventetinntektFradrag {
     margin-top: @spacing-s;
 }
+
+.beregningdetaljer {
+    .linje {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .totalt {
+        margin-bottom: @spacing;
+    }
+
+    .periodeoverskrift {
+        margin-bottom: @spacing-xxs;
+    }
+
+    .fradragliste {
+        width: 100%;
+        margin-bottom: @spacing;
+
+        li {
+            line-height: 2.5rem;
+        }
+    }
+
+    .detaljertfradrag {
+        width: 100%;
+    }
+
+    .detaljertFradragliste {
+        padding-left: @spacing-xs;
+    }
+}

@@ -19,4 +19,6 @@ export interface Månedsberegning {
     tilOgMed: string;
     fradrag: Fradrag[];
     satsbeløp: number;
+    epsFribeløp: number;
+    epsInputFradrag: Fradrag[];
 }
