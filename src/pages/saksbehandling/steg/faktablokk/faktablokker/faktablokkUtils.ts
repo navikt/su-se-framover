@@ -6,6 +6,5 @@ export interface FaktablokkProps {
 }
 
 export enum FaktablokkTitteltype {
-    systemtittel = 'Systemtittel',
     undertittel = 'Undertittel',
 }
