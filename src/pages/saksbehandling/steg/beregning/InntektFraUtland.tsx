@@ -1,7 +1,7 @@
 import { currencies } from 'country-data-list';
 import { FormikErrors } from 'formik';
-import { Input, Select } from 'nav-frontend-skjema';
-import React from 'react';
+import { Input, Label, Select, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
+import React, { useRef } from 'react';
 import { IntlShape } from 'react-intl';
 
 import { UtenlandskInntekt } from '~types/Fradrag';
@@ -15,22 +15,33 @@ const InntektFraUtland = (props: {
     errors: FormikErrors<UtenlandskInntekt> | undefined;
     intl: IntlShape;
 }) => {
+    const rand = useRef(Math.random());
+
+    const beløpId = `beløp-${rand.current}`;
+    const kursId = `kurs-${rand.current}`;
+    const valutaId = `valuta-${rand.current}`;
+
     return (
         <div className={styles.utlandOgPeriodeContainer}>
+            <Label htmlFor={beløpId}>{props.intl.formatMessage({ id: 'display.input.beløpIUtenlandskValuta' })}</Label>
             <Input
-                label={props.intl.formatMessage({ id: 'display.input.beløpIUtenlandskValuta' })}
+                id={beløpId}
                 value={props.value.beløpIUtenlandskValuta}
-                bredde="S"
                 onChange={(a) =>
                     props.onChange({
                         ...props.value,
                         beløpIUtenlandskValuta: a.target.value,
                     })
                 }
-                feil={props.errors?.beløpIUtenlandskValuta}
             />
+            {props.errors?.beløpIUtenlandskValuta ? (
+                <SkjemaelementFeilmelding>{props.errors.beløpIUtenlandskValuta}</SkjemaelementFeilmelding>
+            ) : (
+                <span />
+            )}
+            <Label htmlFor={valutaId}>{props.intl.formatMessage({ id: 'display.input.valuta' })}</Label>
             <Select
-                label={props.intl.formatMessage({ id: 'display.input.valuta' })}
+                id={valutaId}
                 value={props.value.valuta}
                 onChange={(a) =>
                     props.onChange({
@@ -39,7 +50,6 @@ const InntektFraUtland = (props: {
                     })
                 }
                 feil={props.errors?.valuta}
-                bredde="s"
             >
                 <option value="" disabled={true}>
                     Velg valuta..
@@ -50,18 +60,23 @@ const InntektFraUtland = (props: {
                     </option>
                 ))}
             </Select>
+            {props.errors?.valuta ? (
+                <SkjemaelementFeilmelding>{props.errors.valuta}</SkjemaelementFeilmelding>
+            ) : (
+                <span />
+            )}
+            <Label htmlFor={kursId}>{props.intl.formatMessage({ id: 'display.input.kurs' })}</Label>
             <Input
-                label={props.intl.formatMessage({ id: 'display.input.kurs' })}
+                id={kursId}
                 value={props.value.kurs}
-                bredde="S"
                 onChange={(a) =>
                     props.onChange({
                         ...props.value,
                         kurs: a.target.value,
                     })
                 }
-                feil={props.errors?.kurs}
             />
+            {props.errors?.kurs ? <SkjemaelementFeilmelding>{props.errors.kurs}</SkjemaelementFeilmelding> : <span />}
         </div>
     );
 };
