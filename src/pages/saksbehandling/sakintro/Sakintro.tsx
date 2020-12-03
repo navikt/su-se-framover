@@ -3,7 +3,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
-import { Ingress, Innholdstittel } from 'nav-frontend-typografi';
+import { Ingress, Innholdstittel, Element, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
@@ -16,7 +16,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Behandling, Behandlingsstatus } from '~types/Behandling';
+import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 
@@ -88,43 +88,84 @@ const ÅpneSøknader = (props: {
             </Ingress>
             <ol>
                 {props.åpneSøknader.map((s) => {
-                    const behandlinger = props.behandlinger.filter((b) => b.søknad.id === s.id);
-                    const isBehandlingerEmpty = behandlinger.length === 0;
+                    const behandling = props.behandlinger.find((b) => b.søknad.id === s.id);
 
                     return (
-                        <li key={s.id}>
+                        <div key={s.id}>
                             <Panel border className={styles.søknad}>
-                                <div>
-                                    <p> {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}</p>
-                                    <p>
-                                        {props.intl.formatMessage({ id: 'display.søknad.mottatt' })}{' '}
-                                        {props.intl.formatDate(s.opprettet)}
-                                    </p>
-                                </div>
-                                {isBehandlingerEmpty ? (
-                                    <div className={styles.knapper}>
-                                        <StartSøknadsbehandlingKnapper
-                                            sakId={props.sakId}
-                                            søknadId={s.id}
-                                            intl={props.intl}
-                                        />
+                                <div className={styles.info}>
+                                    <div>
+                                        <Undertittel>
+                                            {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
+                                        </Undertittel>
+                                        <div className={styles.dato}>
+                                            <Element>
+                                                {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
+                                            </Element>
+                                            <Normaltekst>{props.intl.formatDate(s.opprettet)}</Normaltekst>
+                                        </div>
                                     </div>
-                                ) : (
                                     <div className={styles.knapper}>
-                                        <SøknadsbehandlingStartetKnapper
-                                            sakId={props.sakId}
-                                            intl={props.intl}
-                                            behandlinger={behandlinger}
-                                        />
+                                        {behandling?.attestering?.underkjennelse && (
+                                            <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
+                                                {props.intl.formatMessage({ id: 'behandling.attestering.advarsel' })}
+                                            </AlertStripe>
+                                        )}
+
+                                        {!behandling ? (
+                                            <StartSøknadsbehandlingKnapper
+                                                sakId={props.sakId}
+                                                søknadId={s.id}
+                                                intl={props.intl}
+                                            />
+                                        ) : (
+                                            <SøknadsbehandlingStartetKnapper
+                                                sakId={props.sakId}
+                                                intl={props.intl}
+                                                b={behandling}
+                                            />
+                                        )}
+                                    </div>
+                                </div>
+                                {behandling?.attestering?.underkjennelse && (
+                                    <div className={styles.underkjennelse}>
+                                        <div className={styles.underkjenningsinfo}>
+                                            <Element>Sendt tilbake fordi</Element>
+                                            <Normaltekst>
+                                                {grunnToText(behandling.attestering.underkjennelse.grunn, props.intl)}
+                                            </Normaltekst>
+                                        </div>
+                                        <div className={styles.underkjenningsinfo}>
+                                            <Element>Kommentar</Element>
+                                            <Normaltekst>{behandling.attestering.underkjennelse.kommentar}</Normaltekst>
+                                        </div>
                                     </div>
                                 )}
                             </Panel>
-                        </li>
+                        </div>
                     );
                 })}
             </ol>
         </div>
     );
+};
+const grunnToText = (grunn: UnderkjennelseGrunn, intl: IntlShape): string => {
+    switch (grunn) {
+        case UnderkjennelseGrunn.DOKUMENTASJON_MANGLER:
+            return intl.formatMessage({ id: 'behandling.underkjent.dokumentasjonMangler' });
+
+        case UnderkjennelseGrunn.BEREGNINGEN_ER_FEIL:
+            return intl.formatMessage({ id: 'behandling.underkjent.beregningenErFeil' });
+
+        case UnderkjennelseGrunn.INNGANGSVILKÅRENE_ER_FEILVURDERT:
+            return intl.formatMessage({ id: 'behandling.underkjent.InngangsvilkåreneErFeilvurdert' });
+
+        case UnderkjennelseGrunn.VEDTAKSBREVET_ER_FEIL:
+            return intl.formatMessage({ id: 'behandling.underkjent.vedtaksbrevetErFeil' });
+
+        case UnderkjennelseGrunn.ANDRE_FORHOLD:
+            return intl.formatMessage({ id: 'behandling.underkjent.andreForhold' });
+    }
 };
 
 const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: string; intl: IntlShape }) => {
@@ -180,61 +221,56 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
     );
 };
 
-const SøknadsbehandlingStartetKnapper = (props: { behandlinger: Behandling[]; sakId: string; intl: IntlShape }) => {
+const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string; intl: IntlShape }) => {
     const user = useUserContext();
+    const { b } = props;
 
     return (
-        <ol>
-            {props.behandlinger.map((b) => (
-                <li key={b.id} className={styles.behandlingContainer}>
-                    {erTilAttestering(b) && (!user.isAttestant || user.navIdent === b.saksbehandler) ? (
-                        <div className={styles.ikonContainer}>
-                            <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
-                            <p>
-                                {props.intl.formatMessage({
-                                    id: 'display.attestering.tilAttestering',
-                                })}
-                            </p>
-                        </div>
-                    ) : (
-                        ''
-                    )}
+        <div className={styles.behandlingContainer}>
+            {erTilAttestering(b) && (!user.isAttestant || user.navIdent === b.saksbehandler) && (
+                <div className={styles.ikonContainer}>
+                    <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
+                    <p>
+                        {props.intl.formatMessage({
+                            id: 'display.attestering.tilAttestering',
+                        })}
+                    </p>
+                </div>
+            )}
 
-                    <div className={styles.knapper}>
-                        {erTilAttestering(b) && user.isAttestant && user.navIdent !== b.saksbehandler ? (
-                            <Link
-                                className="knapp knapp--mini"
-                                to={Routes.attestering.createURL({
-                                    sakId: props.sakId,
-                                    behandlingId: b.id,
-                                })}
-                            >
-                                {props.intl.formatMessage({
-                                    id: 'display.attestering.attester',
-                                })}
-                            </Link>
-                        ) : (
-                            !erTilAttestering(b) &&
-                            !erIverksatt(b) &&
-                            user.navIdent !== b.attestant && (
-                                <Link
-                                    className="knapp knapp--mini"
-                                    to={Routes.saksbehandlingVilkårsvurdering.createURL({
-                                        sakId: props.sakId,
-                                        behandlingId: b.id,
-                                        vilkar: hentSisteVurderteVilkår(b.behandlingsinformasjon),
-                                    })}
-                                >
-                                    {props.intl.formatMessage({
-                                        id: 'display.behandling.fortsettBehandling',
-                                    })}
-                                </Link>
-                            )
-                        )}
-                    </div>
-                </li>
-            ))}
-        </ol>
+            <div className={styles.knapper}>
+                {erTilAttestering(b) && user.isAttestant && user.navIdent !== b.saksbehandler ? (
+                    <Link
+                        className="knapp knapp--mini"
+                        to={Routes.attestering.createURL({
+                            sakId: props.sakId,
+                            behandlingId: b.id,
+                        })}
+                    >
+                        {props.intl.formatMessage({
+                            id: 'display.attestering.attester',
+                        })}
+                    </Link>
+                ) : (
+                    !erTilAttestering(b) &&
+                    !erIverksatt(b) &&
+                    user.navIdent !== b.attestering?.attestant && (
+                        <Link
+                            className="knapp knapp--mini"
+                            to={Routes.saksbehandlingVilkårsvurdering.createURL({
+                                sakId: props.sakId,
+                                behandlingId: b.id,
+                                vilkar: hentSisteVurderteVilkår(b.behandlingsinformasjon),
+                            })}
+                        >
+                            {props.intl.formatMessage({
+                                id: 'display.behandling.fortsettBehandling',
+                            })}
+                        </Link>
+                    )
+                )}
+            </div>
+        </div>
     );
 };
 
