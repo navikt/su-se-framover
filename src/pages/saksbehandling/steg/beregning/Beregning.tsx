@@ -172,8 +172,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     });
     const history = useHistory();
 
-    console.log({ errs: formik.errors, asdf: formikErrorsTilFeiloppsummering(formik.errors) });
-
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
