@@ -22,7 +22,9 @@ const InntektFraUtland = (props: {
 
     return (
         <div className={styles.utlandOgPeriodeContainer}>
-            <Label htmlFor={beløpId}>{props.intl.formatMessage({ id: 'display.input.beløpIUtenlandskValuta' })}</Label>
+            <Label htmlFor={beløpId} className={styles.label}>
+                {props.intl.formatMessage({ id: 'display.input.beløpIUtenlandskValuta' })}
+            </Label>
             <Input
                 id={beløpId}
                 value={props.value.beløpIUtenlandskValuta}
@@ -33,12 +35,12 @@ const InntektFraUtland = (props: {
                     })
                 }
             />
-            {props.errors?.beløpIUtenlandskValuta ? (
+            {props.errors?.beløpIUtenlandskValuta && (
                 <SkjemaelementFeilmelding>{props.errors.beløpIUtenlandskValuta}</SkjemaelementFeilmelding>
-            ) : (
-                <span />
             )}
-            <Label htmlFor={valutaId}>{props.intl.formatMessage({ id: 'display.input.valuta' })}</Label>
+            <Label htmlFor={valutaId} className={styles.label}>
+                {props.intl.formatMessage({ id: 'display.input.valuta' })}
+            </Label>
             <Select
                 id={valutaId}
                 value={props.value.valuta}
@@ -59,12 +61,10 @@ const InntektFraUtland = (props: {
                     </option>
                 ))}
             </Select>
-            {props.errors?.valuta ? (
-                <SkjemaelementFeilmelding>{props.errors.valuta}</SkjemaelementFeilmelding>
-            ) : (
-                <span />
-            )}
-            <Label htmlFor={kursId}>{props.intl.formatMessage({ id: 'display.input.kurs' })}</Label>
+            {props.errors?.valuta && <SkjemaelementFeilmelding>{props.errors.valuta}</SkjemaelementFeilmelding>}
+            <Label htmlFor={kursId} className={styles.label}>
+                {props.intl.formatMessage({ id: 'display.input.kurs' })}
+            </Label>
             <Input
                 id={kursId}
                 value={props.value.kurs}
@@ -75,7 +75,7 @@ const InntektFraUtland = (props: {
                     })
                 }
             />
-            {props.errors?.kurs ? <SkjemaelementFeilmelding>{props.errors.kurs}</SkjemaelementFeilmelding> : <span />}
+            {props.errors?.kurs && <SkjemaelementFeilmelding>{props.errors.kurs}</SkjemaelementFeilmelding>}
         </div>
     );
 };
