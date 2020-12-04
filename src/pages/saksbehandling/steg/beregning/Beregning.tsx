@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
+import { Feiloppsummering } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Undertittel, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
@@ -15,7 +16,7 @@ import { toDateOrNull } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import {
     FradragFormData,
     isValidFradrag,
@@ -226,12 +227,14 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 errors={formik.errors.fradrag}
                                 intl={intl}
                                 onChange={formik.handleChange}
-                                setFieldValue={formik.setFieldValue}
+                                onFradragChange={(index, value) => {
+                                    formik.setFieldValue(`fradrag[${index}]`, value);
+                                }}
                                 onFjernClick={(index) => {
-                                    formik.setValues({
-                                        ...formik.values,
+                                    formik.setValues((v) => ({
+                                        ...v,
                                         fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
-                                    });
+                                    }));
                                 }}
                                 onLeggTilClick={() => {
                                     formik.setValues({
@@ -268,6 +271,13 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     forventetinntekt={
                                         props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt ?? 0
                                     }
+                                />
+                            )}
+                            {formik.errors && (
+                                <Feiloppsummering
+                                    feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                                    tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                                    hidden={!formikErrorsHarFeil(formik.errors)}
                                 />
                             )}
                             <Knapp htmlType="submit" spinner={RemoteData.isPending(beregningStatus)} mini>

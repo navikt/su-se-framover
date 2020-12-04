@@ -80,22 +80,18 @@ export function formikErrorsTilFeiloppsummering<T extends Record<string, any>>(
                     return [];
                 }
                 if (typeof x === 'string') {
-                    return {
-                        skjemaelementId: `${key}[${index}]`,
-                        feilmelding: x,
-                    };
+                    return [
+                        {
+                            skjemaelementId: `${key}[${index}]`,
+                            feilmelding: x,
+                        },
+                    ];
                 }
-                return Object.entries(x).map(([k, v]) => ({
-                    skjemaelementId: `${key}[${index}].${k}`,
-                    feilmelding: v,
-                }));
+                return formikErrorsTilFeiloppsummering(withFullPathKey(`${key}[${index}]`, x));
             });
         }
         if (typeof val === 'object') {
-            return Object.entries(val).map(([k, v]) => ({
-                skjemaelementId: `${key}.${k}`,
-                feilmelding: v,
-            }));
+            return formikErrorsTilFeiloppsummering(withFullPathKey(key, val));
         }
         return {
             skjemaelementId: key,
@@ -103,6 +99,15 @@ export function formikErrorsTilFeiloppsummering<T extends Record<string, any>>(
         };
     });
 }
+
+const withFullPathKey = (basePath: string, x: Record<string, unknown>) =>
+    Object.entries(x).reduce(
+        (acc, [k, v]) => ({
+            ...acc,
+            [`${basePath}.${k}`]: v,
+        }),
+        {}
+    );
 
 export function formikErrorsHarFeil<T>(errors: FormikErrors<T>) {
     return Object.values(errors).length > 0;

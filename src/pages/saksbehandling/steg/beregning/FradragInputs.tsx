@@ -10,8 +10,9 @@ import { TrashBin } from '~assets/Icons';
 import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsPositiveNumber } from '~lib/validering';
 import InntektFraUtland from '~pages/saksbehandling/steg/beregning/InntektFraUtland';
-import { Fradrag, Fradragstype, UtenlandskInntekt } from '~types/Fradrag';
+import { Fradrag, Fradragstype } from '~types/Fradrag';
 
+import { UtenlandskInntektFormData } from './beregningstegTypes';
 import * as BeregningUtils from './beregningUtils';
 import styles from './fradragInputs.module.less';
 
@@ -23,24 +24,12 @@ export interface FradragFormData {
     tilhørerEPS: boolean;
 }
 
-export interface UtenlandskInntektFormData {
-    beløpIUtenlandskValuta: string;
-    valuta: string;
-    kurs: string;
-}
-
 const FradragObjectKeys: KeyDict<FradragFormData> = {
     type: 'type',
     beløp: 'beløp',
     fraUtland: 'fraUtland',
     utenlandskInntekt: 'utenlandskInntekt',
     tilhørerEPS: 'tilhørerEPS',
-};
-
-const UtenlandskInntektKeys: KeyDict<UtenlandskInntekt> = {
-    beløpIUtenlandskValuta: 'beløpIUtenlandskValuta',
-    valuta: 'valuta',
-    kurs: 'kurs',
 };
 
 const InputWithFollowText = (props: {
@@ -51,16 +40,19 @@ const InputWithFollowText = (props: {
     bredde?: InputProps['bredde'];
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     feil: string | undefined;
+    disabled?: boolean;
 }) => (
     <div>
         <h3>{props.tittel}</h3>
         <span className={styles.inputOgtekstContainer}>
             <Input
                 className={styles.inputWithFollowTextInputfelt}
+                id={props.inputName}
                 name={props.inputName}
                 value={props.value}
                 bredde={props.bredde}
                 onChange={props.onChange}
+                disabled={props.disabled}
             />
             <Normaltekst>{props.inputTekst}</Normaltekst>
         </span>
@@ -133,9 +125,9 @@ export const FradragInputs = (props: {
     errors: string | string[] | Array<FormikErrors<FradragFormData>> | undefined;
     intl: IntlShape;
     onChange: (e: React.ChangeEvent<unknown>) => void;
-    setFieldValue: (field: string, value: Date | [Date, Date] | null | string) => void;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
+    onFradragChange: (index: number, value: FradragFormData) => void;
 }) => {
     return (
         <div className={styles.fradragContainer}>
@@ -148,9 +140,7 @@ export const FradragInputs = (props: {
                 const belopId = `${name}.${FradragObjectKeys.beløp}`;
                 const fraUtlandId = `${name}.${FradragObjectKeys.fraUtland}`;
                 const tilhørerEPSId = `${name}.${FradragObjectKeys.tilhørerEPS}`;
-                const beløpIUtenlandskValuta = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.beløpIUtenlandskValuta}`;
-                const valutaId = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.valuta}`;
-                const kursId = `${name}.${FradragObjectKeys.utenlandskInntekt}.${UtenlandskInntektKeys.kurs}`;
+                const utenlandskInntektId = `${name}.${FradragObjectKeys.utenlandskInntekt}`;
 
                 return (
                     <Panel key={index} border className={styles.fradragItemContainer}>
@@ -183,6 +173,7 @@ export const FradragInputs = (props: {
                                             ? errorForLinje.beløp
                                             : undefined
                                     }
+                                    disabled={fradrag.fraUtland}
                                 />
                                 <Knapp
                                     className={styles.søppelbøtteContainer}
@@ -208,23 +199,33 @@ export const FradragInputs = (props: {
                                     checked={fradrag.fraUtland}
                                     className={styles.checkbox}
                                     onChange={(e) => {
-                                        props.onChange(e);
-                                        if (fradrag.fraUtland) {
-                                            props.setFieldValue(beløpIUtenlandskValuta, '');
-                                            props.setFieldValue(valutaId, '');
-                                            props.setFieldValue(kursId, '');
+                                        if (!e.target.checked) {
+                                            props.onFradragChange(index, {
+                                                ...fradrag,
+                                                utenlandskInntekt: {
+                                                    beløpIUtenlandskValuta: '',
+                                                    kurs: '',
+                                                    valuta: '',
+                                                },
+                                            });
                                         }
+                                        props.onChange(e);
                                     }}
                                 />
                             </div>
                             {fradrag.fraUtland && (
                                 <InntektFraUtland
-                                    utenlandsBeløpId={beløpIUtenlandskValuta}
-                                    valutaId={valutaId}
-                                    kursId={kursId}
-                                    fradrag={fradrag}
-                                    onChange={props.onChange}
-                                    utenlandskInntektErrors={
+                                    name={utenlandskInntektId}
+                                    value={fradrag.utenlandskInntekt}
+                                    onChange={(v) => {
+                                        const beløp = Number.parseFloat(v.kurs) * Number(v.beløpIUtenlandskValuta);
+                                        props.onFradragChange(index, {
+                                            ...fradrag,
+                                            utenlandskInntekt: v,
+                                            beløp: Number.isNaN(beløp) ? '' : beløp.toString(),
+                                        });
+                                    }}
+                                    errors={
                                         errorForLinje &&
                                         typeof errorForLinje === 'object' &&
                                         errorForLinje.utenlandskInntekt
