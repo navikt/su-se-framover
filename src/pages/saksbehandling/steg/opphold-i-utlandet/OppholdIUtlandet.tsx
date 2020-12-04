@@ -1,17 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Element, Normaltekst } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
-import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { eqOppholdIUtlandet } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
-import { kalkulerTotaltAntallDagerIUtlandet, Utlandsdatoer } from '~lib/dateUtils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -20,52 +16,23 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { OppholdIUtlandet as OppholdIUtlandetType, OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
 
-import Faktablokk from '../faktablokk/Faktablokk';
+import UtenlandsOppholdFaktablokk from '../faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './oppholdIUtlandet-nb';
-import styles from './OppholdIUtlandet.module.less';
 
 interface FormData {
     status: Nullable<OppholdIUtlandetStatus>;
     begrunnelse: Nullable<string>;
 }
 
-const DatoFelt = (props: { label: React.ReactNode; verdi: string | React.ReactNode }) => (
-    <div>
-        <Element>{props.label}</Element>
-        <Normaltekst>{props.verdi}</Normaltekst>
-    </div>
-);
-
 const schema = yup.object<FormData>({
     status: yup.mixed().defined().oneOf(Object.values(OppholdIUtlandetStatus), 'Vennligst velg et alternativ '),
     begrunnelse: yup.string().defined(),
 });
-
-const visDatoer = (datesArray: Utlandsdatoer, intl: IntlShape) => {
-    if (!datesArray || datesArray?.length === 0) return intl.formatMessage({ id: 'display.fraSøknad.ikkeRegistert' });
-
-    return (
-        <div>
-            {datesArray.map((datoRad, index) => (
-                <div key={index} className={styles.datoFelterContainer}>
-                    <DatoFelt
-                        label={'Utreisedato'}
-                        verdi={DateFns.parseISO(datoRad.utreisedato).toLocaleDateString()}
-                    />
-                    <DatoFelt
-                        label={'Innreisedato'}
-                        verdi={DateFns.parseISO(datoRad.innreisedato).toLocaleDateString()}
-                    />
-                </div>
-            ))}
-        </div>
-    );
-};
 
 const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
@@ -216,39 +183,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                         />
                     </form>
                 ),
-                right: (
-                    <Faktablokk
-                        tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
-                        fakta={[
-                            {
-                                tittel: intl.formatMessage({ id: 'display.fraSøknad.antallDagerSiste90' }),
-                                verdi: kalkulerTotaltAntallDagerIUtlandet(
-                                    props.behandling.søknad.søknadInnhold.utenlandsopphold.registrertePerioder
-                                ).toString(),
-                            },
-                            {
-                                tittel: intl.formatMessage({ id: 'display.fraSøknad.antallDagerPlanlagt' }),
-                                verdi: kalkulerTotaltAntallDagerIUtlandet(
-                                    props.behandling.søknad.søknadInnhold.utenlandsopphold.planlagtePerioder
-                                ).toString(),
-                            },
-                            {
-                                tittel: intl.formatMessage({ id: 'display.fraSøknad.datoerSiste90' }),
-                                verdi: visDatoer(
-                                    props.behandling.søknad.søknadInnhold.utenlandsopphold.registrertePerioder,
-                                    intl
-                                ),
-                            },
-                            {
-                                tittel: intl.formatMessage({ id: 'display.fraSøknad.datoerPlanlagt' }),
-                                verdi: visDatoer(
-                                    props.behandling.søknad.søknadInnhold.utenlandsopphold.planlagtePerioder,
-                                    intl
-                                ),
-                            },
-                        ]}
-                    />
-                ),
+                right: <UtenlandsOppholdFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
         </Vurdering>
     );

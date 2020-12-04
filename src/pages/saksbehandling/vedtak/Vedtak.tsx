@@ -5,20 +5,20 @@ import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
-import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { erAvslått, erTilAttestering, harBeregning } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { lastNedBrev } from '~features/saksoversikt/sak.slice';
-import { createVilkårUrl, mapToVilkårsinformasjon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
+import { createVilkårUrl, mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes.ts';
-import { Nullable } from '~lib/types';
 import { VisSimulering } from '~pages/saksbehandling/simulering/simulering';
 import VisBeregning from '~pages/saksbehandling/steg/beregning/VisBeregning';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+
+import VilkårsOppsummering from '../vilkårsOppsummering/VilkårsOppsummering';
 
 import messages from './vedtak-nb';
 import styles from './vedtak.module.less';
@@ -78,14 +78,21 @@ const Vedtak = (props: Props) => {
         return (
             <div className={styles.vedtakContainer}>
                 <div>
-                    <Innholdstittel>{intl.formatMessage({ id: 'page.tittel' })}</Innholdstittel>
+                    <Innholdstittel className={styles.pageTittel}>
+                        {intl.formatMessage({ id: 'page.tittel' })}
+                    </Innholdstittel>
 
-                    {behandling.status === Behandlingsstatus.SIMULERT && (
-                        <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>
-                    )}
-                    {erAvslått(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
+                    <div className={styles.statusContainer}>
+                        {behandling.status === Behandlingsstatus.SIMULERT && (
+                            <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>
+                        )}
+                        {erAvslått(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
+                    </div>
 
-                    <VilkårsOppsummering behandling={behandling} />
+                    <VilkårsOppsummering
+                        søknadInnhold={behandling.søknad.søknadInnhold}
+                        behandlingsinformasjon={behandling.behandlingsinformasjon}
+                    />
 
                     {harBeregning(behandling) ? (
                         <VisSimuleringOgBeregning sak={sak} behandling={behandling} />
@@ -137,44 +144,6 @@ const Vedtak = (props: Props) => {
     }
 
     return <div>Behandlingen er ikke ferdig</div>;
-};
-
-const VilkårsvurderingInfoLinje = (props: {
-    type: Vilkårtype;
-    status: VilkårVurderingStatus;
-    begrunnelse: Nullable<string>;
-}) => {
-    return (
-        <div className={styles.infolinjeContainer}>
-            <div className={styles.infolinje}>
-                <span className={styles.statusContainer}>
-                    <VilkårvurderingStatusIcon className={styles.statusIcon} status={props.status} />
-                </span>
-                <div>
-                    <span className={styles.infotittel}>{vilkårTittelFormatted(props.type)}:</span>
-                    <p>{props.begrunnelse ?? ''}</p>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const VilkårsOppsummering = (props: { behandling: Behandling }) => {
-    const vilkårsinformasjon = mapToVilkårsinformasjon(props.behandling.behandlingsinformasjon);
-
-    return (
-        <div>
-            <Innholdstittel className={styles.tittel}>Vilkårsvurderinger</Innholdstittel>
-            {vilkårsinformasjon.map((v, index) => (
-                <VilkårsvurderingInfoLinje
-                    type={v.vilkårtype}
-                    status={v.status}
-                    key={index}
-                    begrunnelse={v.begrunnelse ?? null}
-                />
-            ))}
-        </div>
-    );
 };
 
 const VisSimuleringOgBeregning = (props: { sak: Sak; behandling: Behandling }) => (

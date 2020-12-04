@@ -1,9 +1,4 @@
 export default {
-    'display.fraSøknad': 'Fra søknad',
-    'display.fraSøknad.ja': 'Ja',
-    'display.fraSøknad.nei': 'Nei',
-    'display.fraSøknad.ikkeRegistert': 'Ikke registert fra søknad',
-
     'display.lagre.lagrer': 'Lagrer...',
     'display.lagre.lagringFeilet': 'En feil skjedde under lagring',
 

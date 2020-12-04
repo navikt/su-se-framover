@@ -1,42 +1,24 @@
 @import '~/styles/variables.less';
 
-.infolinjeContainer {
-    margin-bottom: @spacing-xs;
-
-    .infolinje {
-        display: flex;
-        align-items: center;
-
-        .infotittel {
-            font-weight: 600;
-        }
-        .statusContainer {
-            display: flex;
-            align-items: center;
-
-            .statusIcon {
-                display: flex;
-                align-items: center;
-                margin-right: @spacing-xxs;
-            }
-        }
-    }
-}
-
 .vedtakContainer {
     margin-bottom: @spacing-xl;
+
     > :not(:last-child) {
         margin-bottom: @spacing;
     }
 }
 
+.pageTittel {
+    margin-bottom: @spacing;
+}
+
+.statusContainer {
+    margin-bottom: @spacing;
+}
+
 .navigeringContainer {
     display: flex;
     justify-content: space-between;
-}
-
-.tittel {
-    margin-bottom: @spacing-s;
 }
 
 .vedtakSendtTilAttesteringAlertStripe {

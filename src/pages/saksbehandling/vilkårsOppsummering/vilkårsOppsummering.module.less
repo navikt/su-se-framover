@@ -1,0 +1,48 @@
+@import '~/styles/variables.less';
+
+.tittel {
+    margin-bottom: @spacing-s;
+}
+
+.blokkOverskrift {
+    margin-bottom: @spacing-s;
+}
+
+.vilkårsblokkerContainer {
+    display: grid;
+    grid-template-columns: 1024px;
+    align-items: start;
+}
+
+.blokkContainer {
+    border: 1px solid lightgrey;
+    margin-bottom: @spacing;
+    margin-right: @spacing-s;
+
+    .blokkHeader {
+        align-self: flex-start;
+        display: flex;
+        align-items: center;
+        padding: @spacing-xs;
+        border-bottom: 1px solid lightgrey;
+
+        .ikon {
+            margin-right: @spacing-xxs;
+        }
+    }
+
+    .pairBlokkContainer {
+        display: grid;
+        grid-template-columns: 50% 50%;
+
+        > :not(:last-child) {
+            border-right: 1px solid lightgrey;
+        }
+
+        .blokk {
+            margin: 0;
+            padding: @spacing-xs 0;
+            padding-left: @spacing-xs;
+        }
+    }
+}

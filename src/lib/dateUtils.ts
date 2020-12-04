@@ -13,9 +13,9 @@ export const formatMonthYear = (date: string, intl: IntlShape) =>
         month: '2-digit',
     });
 
-export type Utlandsdatoer = Nullable<Array<{ utreisedato: string; innreisedato: string }>>;
+export type Utlandsdatoer = Array<{ utreisedato: string; innreisedato: string }>;
 
-export const kalkulerTotaltAntallDagerIUtlandet = (datesArray: Utlandsdatoer) => {
+export const kalkulerTotaltAntallDagerIUtlandet = (datesArray: Nullable<Utlandsdatoer>) => {
     if (!datesArray) return 0;
 
     return (

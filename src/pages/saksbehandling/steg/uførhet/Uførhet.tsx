@@ -17,7 +17,7 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Uførhet as UførhetType, UførhetStatus } from '~types/Behandlingsinformasjon';
 
-import Faktablokk from '../faktablokk/Faktablokk';
+import UførhetFaktablokk from '../faktablokk/faktablokker/UførhetFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -262,19 +262,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                         />
                     </form>
                 ),
-                right: (
-                    <Faktablokk
-                        tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
-                        fakta={[
-                            {
-                                tittel: intl.formatMessage({ id: 'display.fraSøknad.vedtakOmUføretrygd' }),
-                                verdi: props.behandling.søknad.søknadInnhold.uførevedtak.harUførevedtak
-                                    ? intl.formatMessage({ id: 'display.fraSøknad.ja' })
-                                    : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
-                            },
-                        ]}
-                    />
-                ),
+                right: <UførhetFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
         </Vurdering>
     );

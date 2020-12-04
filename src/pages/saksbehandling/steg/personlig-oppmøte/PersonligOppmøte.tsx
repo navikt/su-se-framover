@@ -10,7 +10,6 @@ import { eqPersonligOppmøte } from '~/features/behandling/behandlingUtils';
 import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksoversikt/utils';
-import { GrunnForPapirinnsending } from '~features/søknad/types';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -23,10 +22,9 @@ import {
     PersonligOppmøte as PersonligOppmøteType,
     Behandlingsinformasjon,
 } from '~types/Behandlingsinformasjon';
-import { Søknadstype } from '~types/Søknad';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
-import Faktablokk from '../faktablokk/Faktablokk';
+import PersonligOppmøteFaktablokk from '../faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
@@ -453,38 +451,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                         />
                     </form>
                 ),
-                right: (
-                    <Faktablokk
-                        tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
-                        fakta={
-                            props.behandling.søknad.søknadInnhold.forNav.type === Søknadstype.DigitalSøknad
-                                ? [
-                                      {
-                                          tittel: intl.formatMessage({ id: 'display.fraSøknad.hvemHarMøtt' }),
-                                          verdi:
-                                              props.behandling.søknad.søknadInnhold.forNav.harFullmektigEllerVerge ===
-                                              null
-                                                  ? intl.formatMessage({ id: 'display.fraSøknad.personligOppmøte' })
-                                                  : props.behandling.søknad.søknadInnhold.forNav
-                                                        .harFullmektigEllerVerge,
-                                      },
-                                  ]
-                                : [
-                                      {
-                                          tittel: intl.formatMessage({
-                                              id: 'display.fraSøknad.papirsøknad.grunnForPapirinnsending',
-                                          }),
-                                          verdi:
-                                              props.behandling.søknad.søknadInnhold.forNav.grunnForPapirinnsending ===
-                                              GrunnForPapirinnsending.Annet
-                                                  ? props.behandling.søknad.søknadInnhold.forNav.annenGrunn ?? '-'
-                                                  : props.behandling.søknad.søknadInnhold.forNav
-                                                        .grunnForPapirinnsending,
-                                      },
-                                  ]
-                        }
-                    />
-                ),
+                right: <PersonligOppmøteFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
         </Vurdering>
     );

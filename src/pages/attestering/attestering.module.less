@@ -6,17 +6,31 @@
     flex-direction: column;
     align-items: center;
     margin-bottom: 80px;
+
+    .headerContainer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding-right: @spacing-xs;
+        border-bottom: 2px solid @navLysGra;
+    }
 }
 
-.headerContainer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
+.content {
+    padding-top: @spacing;
 
-    padding-right: @spacing-xs;
+    .vedtakContainer {
+        margin-bottom: @spacing-xl;
+        > :not(:last-child) {
+            margin-bottom: @spacing;
+        }
+    }
 
-    border-bottom: 2px solid @navLysGra;
+    .navigeringContainer {
+        display: flex;
+        justify-content: space-between;
+    }
 }
 
 .beregningOgOppdragContainer {
@@ -27,74 +41,12 @@
     }
 }
 
-.tittel {
-    margin-bottom: @spacing-s;
-}
-
-.undertittel {
-    margin-bottom: 16px;
-}
-
-.infolinjeContainer {
-    margin-bottom: @spacing-xs;
-
-    .infolinje {
-        display: flex;
-        align-items: center;
-
-        .infotittel {
-            font-weight: 600;
-        }
-        .statusContainer {
-            display: flex;
-            align-items: center;
-
-            .statusIcon {
-                display: flex;
-                align-items: center;
-                margin-right: @spacing-xxs;
-            }
-        }
-    }
-}
-
-.vedtakContainer {
-    margin-bottom: @spacing-xl;
-    > :not(:last-child) {
-        margin-bottom: @spacing;
-    }
-}
-
-.navigeringContainer {
-    display: flex;
-    justify-content: space-between;
-}
-
 .sendInnAttestering {
     margin-top: @spacing-s;
 }
 
-.content {
-    padding-top: @spacing;
-}
-
-.grunnContainer {
-    margin-bottom: @spacing;
-}
-
 .feiloppsummering {
     margin-bottom: @spacing-l;
-}
-
-.beregningContainer {
-    display: flex;
-    flex-direction: row;
-
-    .startBeregningKnapp {
-        margin-right: @spacing-s;
-    }
-
-    margin-bottom: @spacing-xl;
 }
 
 .formElement {

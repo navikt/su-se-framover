@@ -20,14 +20,14 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Bosituasjon } from '~types/Behandlingsinformasjon';
 
-import Faktablokk from '../faktablokk/Faktablokk';
+import SatsFaktablokk from '../faktablokk/faktablokker/SatsFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './sats-nb';
 import styles from './sats.module.less';
-import { EPSMedAlder, setSatsFaktablokk } from './utils';
+import { EPSMedAlder } from './utils';
 
 interface FormData {
     epsFnr: Nullable<string>;
@@ -295,14 +295,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                         />
                     </form>
                 ),
-                right: (
-                    <Faktablokk
-                        tittel={intl.formatMessage({
-                            id: 'display.fraSøknad',
-                        })}
-                        fakta={setSatsFaktablokk(props.behandling.søknad.søknadInnhold, intl, eps)}
-                    />
-                ),
+                right: <SatsFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} eps={eps} />,
             }}
         </Vurdering>
     );

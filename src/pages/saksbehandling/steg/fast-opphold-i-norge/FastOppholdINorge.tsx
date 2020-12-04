@@ -4,10 +4,8 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
-import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
-import { IngenAdresseGrunn } from '~api/personApi';
 import { eqFastOppholdINorge } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
@@ -17,9 +15,8 @@ import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FastOppholdINorge as FastOppholdINorgeType, FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
-import { SøknadInnhold } from '~types/Søknad';
 
-import Faktablokk from '../faktablokk/Faktablokk';
+import FastOppholdFaktablokk from '../faktablokk/faktablokker/FastOppholdFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -46,39 +43,6 @@ const schema = yup.object<FormData>({
         ),
     begrunnelse: yup.string().defined(),
 });
-
-const createFaktaBlokkArray = (søknadsInnhold: SøknadInnhold, intl: IntlShape) => {
-    const arr = [];
-    arr.push({
-        tittel: 'Er søker norsk statsborger?',
-        verdi: søknadsInnhold.oppholdstillatelse.erNorskStatsborger ? 'Ja' : 'Nei',
-    });
-    if (!søknadsInnhold.oppholdstillatelse.erNorskStatsborger) {
-        arr.push({
-            tittel: 'Har oppholdstillatelse?',
-            verdi: søknadsInnhold.oppholdstillatelse.harOppholdstillatelse
-                ? intl.formatMessage({ id: 'display.fraSøknad.ja' })
-                : intl.formatMessage({ id: 'display.fraSøknad.nei' }),
-        });
-        arr.push({
-            tittel: 'Type oppholdstillatelse',
-            verdi:
-                søknadsInnhold.oppholdstillatelse.typeOppholdstillatelse ??
-                intl.formatMessage({ id: 'display.fraSøknad.ikkeRegistert' }),
-        });
-    }
-    arr.push({
-        tittel: 'Adresse',
-        verdi:
-            søknadsInnhold.boforhold.borPåAdresse?.adresselinje ??
-            (søknadsInnhold.boforhold.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE
-                ? intl.formatMessage({ id: 'adresse.borPåAnnenAdresse' })
-                : søknadsInnhold.boforhold.ingenAdresseGrunn === IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED
-                ? intl.formatMessage({ id: 'adresse.ikkeFastBosted' })
-                : 'Ubesvart'),
-    });
-    return arr;
-};
 
 const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
@@ -223,12 +187,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                         />
                     </form>
                 ),
-                right: (
-                    <Faktablokk
-                        tittel="Fra søknad"
-                        fakta={createFaktaBlokkArray(props.behandling.søknad.søknadInnhold, intl)}
-                    />
-                ),
+                right: <FastOppholdFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
         </Vurdering>
     );
