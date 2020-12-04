@@ -10,6 +10,7 @@ import {
     PersonligOppmøteStatus,
     OppholdIUtlandetStatus,
     PersonligOppmøte,
+    InstitusjonsoppholdStatus,
 } from '~types/Behandlingsinformasjon';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
@@ -36,6 +37,8 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
             return 'Uførhet';
         case Vilkårtype.LovligOpphold:
             return 'Lovlig Opphold';
+        case Vilkårtype.Institusjonsopphold:
+            return 'Institusjonsopphold';
         case Vilkårtype.FastOppholdINorge:
             return 'Opphold i Norge';
         case Vilkårtype.OppholdIUtlandet:
@@ -60,6 +63,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
         flyktning,
         lovligOpphold,
         fastOppholdINorge,
+        institusjonsopphold,
         oppholdIUtlandet,
         formue,
         personligOppmøte,
@@ -117,6 +121,19 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
             vilkårtype: Vilkårtype.FastOppholdINorge,
             begrunnelse: behandlingsinformasjon.fastOppholdINorge?.begrunnelse ?? null,
             erStartet: fastOppholdINorge !== null,
+        },
+        {
+            status:
+                institusjonsopphold === null
+                    ? VilkårVurderingStatus.IkkeVurdert
+                    : institusjonsopphold.status === InstitusjonsoppholdStatus.Uavklart
+                    ? VilkårVurderingStatus.Uavklart
+                    : institusjonsopphold.status === InstitusjonsoppholdStatus.VilkårOppfylt
+                    ? VilkårVurderingStatus.Ok
+                    : VilkårVurderingStatus.IkkeOk,
+            vilkårtype: Vilkårtype.Institusjonsopphold,
+            begrunnelse: behandlingsinformasjon.institusjonsopphold?.begrunnelse ?? null,
+            erStartet: institusjonsopphold !== null,
         },
         {
             status:

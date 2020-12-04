@@ -12,6 +12,7 @@ import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 import FastOppholdFaktablokk from '../steg/faktablokk/faktablokker/FastOppholdFaktablokk';
 import FlyktningFaktablokk from '../steg/faktablokk/faktablokker/FlyktningFaktablokk';
 import FormueFaktablokk from '../steg/faktablokk/faktablokker/FormueFaktablokk';
+import InstitusjonsoppholdBlokk from '../steg/faktablokk/faktablokker/InstitusjonsoppholdBlokk';
 import LovligOppholdFaktablokk from '../steg/faktablokk/faktablokker/LovligOppholdFaktablokk';
 import PersonligOppmøteFaktablokk from '../steg/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import UførhetFaktablokk from '../steg/faktablokk/faktablokker/UførhetFaktablokk';
@@ -82,6 +83,8 @@ const mapVilkårtypeToFaktablokk = (vilkårtype: Vilkårtype, søknadInnhold: S�
             return <LovligOppholdFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
         case Vilkårtype.FastOppholdINorge:
             return <FastOppholdFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
+        case Vilkårtype.Institusjonsopphold:
+            return <InstitusjonsoppholdBlokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
         case Vilkårtype.OppholdIUtlandet:
             return <UtenlandsOppholdFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
         case Vilkårtype.Formue:
