@@ -6,6 +6,7 @@ import { mapToVilkårsinformasjon, vilkårTittelFormatted } from '~features/saks
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
+import { Sats } from '~types/Sats';
 import { SøknadInnhold } from '~types/Søknad';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
@@ -15,8 +16,10 @@ import FormueFaktablokk from '../steg/faktablokk/faktablokker/FormueFaktablokk';
 import InstitusjonsoppholdBlokk from '../steg/faktablokk/faktablokker/InstitusjonsoppholdBlokk';
 import LovligOppholdFaktablokk from '../steg/faktablokk/faktablokker/LovligOppholdFaktablokk';
 import PersonligOppmøteFaktablokk from '../steg/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
+import SatsFaktablokk from '../steg/faktablokk/faktablokker/SatsFaktablokk';
 import UførhetFaktablokk from '../steg/faktablokk/faktablokker/UførhetFaktablokk';
 import UtenlandsOppholdFaktablokk from '../steg/faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
+import { EPSMedAlder } from '../steg/sats/utils';
 
 import messages from './vilkårsOppsummering-nb';
 import styles from './vilkårsOppsummering.module.less';
@@ -41,13 +44,32 @@ const VilkårsOppsummering = (props: {
                         begrunnelse={v.begrunnelse}
                     />
                 ))}
+
+                {
+                    <VilkårsBlokk
+                        tittel={intl.formatMessage({
+                            id:
+                                props.behandlingsinformasjon.utledetSats === Sats.Høy
+                                    ? 'bosituasjon.sats.høy'
+                                    : 'bosituasjon.sats.ordinær',
+                        })}
+                        vilkårFaktablokk={
+                            <SatsFaktablokk
+                                søknadInnhold={props.søknadInnhold}
+                                eps={props.behandlingsinformasjon.ektefelle as Nullable<EPSMedAlder>}
+                                brukUndertittel
+                            />
+                        }
+                        begrunnelse={props.behandlingsinformasjon.bosituasjon?.begrunnelse ?? ''}
+                    />
+                }
             </div>
         </div>
     );
 };
 
 const VilkårsBlokk = (props: {
-    status: VilkårVurderingStatus;
+    status?: VilkårVurderingStatus;
     tittel: string;
     vilkårFaktablokk: JSX.Element;
     begrunnelse: Nullable<string>;
