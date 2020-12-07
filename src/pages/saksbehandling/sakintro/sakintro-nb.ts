@@ -16,7 +16,7 @@ export default {
     'behandling.underkjent.vedtaksbrevetErFeil': 'Vedtaksbrevet er feil',
     'behandling.underkjent.andreForhold': 'Andre forhold',
 
-    'display.saksoversikt.tittel': 'Saksoversikt',
+    'display.saksoversikt.tittel': 'Saksnummer',
 
     'display.søknad.lukket.avvist': 'Avvist',
     'display.søknad.lukket.bortfalt': 'Bortfalt',
