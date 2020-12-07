@@ -134,7 +134,7 @@
         "@babel/preset-react": "^7.12.7",
         "@hot-loader/react-dom": "^17.0.1",
         "@testing-library/react": "^11.2.2",
-        "@testing-library/react-hooks": "^3.4.2",
+        "@testing-library/react-hooks": "^3.5.0",
         "@types/amplitude-js": "^6.0.0",
         "@types/classnames": "^2.2.11",
         "@types/js-cookie": "^2.2.6",
