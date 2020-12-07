@@ -43,34 +43,31 @@ const FormueFaktablokk = (props: FaktablokkProps) => {
                                         props.søknadInnhold.boforhold.ektefellePartnerSamboer?.fnr
                                     }`}
                                 </p>
-                                {
-                                    // TODO ai: very very temporary solution for showing formue for ektefelle
+                                {[
+                                    ['verdiPåBolig', props.søknadInnhold.ektefelle.formue.verdiPåBolig],
+                                    ['verdiPåEiendom', props.søknadInnhold.ektefelle.formue.verdiPåEiendom],
                                     [
-                                        ['verdiPåBolig', props.søknadInnhold.ektefelle.formue.verdiPåBolig],
-                                        ['verdiPåEiendom', props.søknadInnhold.ektefelle.formue.verdiPåEiendom],
-                                        [
-                                            'verdiPåKjøretøy',
-                                            props.søknadInnhold.ektefelle.formue.kjøretøy?.reduce(
-                                                (acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy,
-                                                0
-                                            ),
-                                        ],
-                                        ['innskuddsbeløp', props.søknadInnhold.ektefelle.formue.innskuddsBeløp],
-                                        ['verdipapirbeløp', props.søknadInnhold.ektefelle.formue.verdipapirBeløp],
-                                        [
-                                            'skylderNoenEktefellePengerBeløp',
-                                            props.søknadInnhold.ektefelle.formue.verdiPåBolig,
-                                        ],
-                                        ['depositumsBeløp', props.søknadInnhold.ektefelle.formue.verdiPåBolig],
-                                    ].map(([translationKey, verdi]) => (
-                                        <p key={translationKey}>
-                                            {intl.formatMessage({
-                                                id: `formue.ektefelle.${translationKey}`,
-                                            })}
-                                            : {verdi}
-                                        </p>
-                                    ))
-                                }
+                                        'verdiPåKjøretøy',
+                                        props.søknadInnhold.ektefelle.formue.kjøretøy?.reduce(
+                                            (acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy,
+                                            0
+                                        ),
+                                    ],
+                                    ['innskuddsbeløp', props.søknadInnhold.ektefelle.formue.innskuddsBeløp],
+                                    ['verdipapirbeløp', props.søknadInnhold.ektefelle.formue.verdipapirBeløp],
+                                    [
+                                        'skylderNoenEktefellePengerBeløp',
+                                        props.søknadInnhold.ektefelle.formue.verdiPåBolig,
+                                    ],
+                                    ['depositumsBeløp', props.søknadInnhold.ektefelle.formue.verdiPåBolig],
+                                ].map(([translationKey, verdi]) => (
+                                    <p key={translationKey}>
+                                        {intl.formatMessage({
+                                            id: `formue.ektefelle.${translationKey}`,
+                                        })}
+                                        : {verdi}
+                                    </p>
+                                ))}
                                 <p>
                                     {`${intl.formatMessage({
                                         id: 'formue.ektefellesFormue',

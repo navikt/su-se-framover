@@ -20,8 +20,6 @@ import sharedI18n from '../steg-shared-i18n';
 
 import messages from './inntekt-nb';
 
-/* TODO AI: Make inntekt a more general component and use it */
-
 type FormData = SøknadState['inntekt'];
 
 const trygdeytelserIUtlandetSchema = yup.object({
