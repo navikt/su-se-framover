@@ -50,7 +50,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
     return (
         <div className={styles.sakintroContainer}>
             <Innholdstittel className={styles.tittel}>
-                {intl.formatMessage({ id: 'display.saksoversikt.tittel' })}
+                {intl.formatMessage({ id: 'display.saksoversikt.tittel' })}: {props.sak.saksnummer}
             </Innholdstittel>
             {props.sak.søknader.length > 0 ? (
                 <div className={styles.søknadOgUtbetalingContainer}>
