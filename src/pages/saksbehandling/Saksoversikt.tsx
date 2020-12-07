@@ -123,7 +123,7 @@ const Saksoversikt = () => {
                                                             <Vedtak sak={sak} />
                                                         </Route>
                                                         <Route path={Routes.saksbehandlingVilkårsvurdering.path}>
-                                                            <Vilkår sak={sak} />
+                                                            <Vilkår sak={sak} søker={søker} />
                                                         </Route>
                                                     </Switch>
                                                 </div>

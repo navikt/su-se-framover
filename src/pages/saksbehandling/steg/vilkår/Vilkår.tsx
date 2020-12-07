@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
+import { Person } from '~api/personApi';
 import { createVilkårUrl } from '~features/saksoversikt/utils';
 import * as Routes from '~lib/routes';
 import { Behandlingsstatus } from '~types/Behandling';
@@ -21,7 +22,7 @@ import Uførhet from '../uførhet/Uførhet';
 
 import styles from './vilkår.module.less';
 
-const Vilkår = (props: { sak: Sak }) => {
+const Vilkår = (props: { sak: Sak; søker: Person }) => {
     const { vilkar = Vilkårtype.Uførhet, ...urlParams } = Routes.useRouteParams<
         typeof Routes.saksbehandlingVilkårsvurdering
     >();
@@ -55,6 +56,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={vilkårUrl(Vilkårtype.Uførhet)}>
                         <Uførhet
                             behandling={behandling}
+                            søker={props.søker}
                             forrigeUrl={saksoversiktUrl}
                             nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
                             sakId={urlParams.sakId}
@@ -63,6 +65,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={vilkårUrl(Vilkårtype.Flyktning)}>
                         <Flyktning
                             behandling={behandling}
+                            søker={props.søker}
                             forrigeUrl={vilkårUrl(Vilkårtype.Uførhet)}
                             nesteUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
                             sakId={urlParams.sakId}
@@ -71,6 +74,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={vilkårUrl(Vilkårtype.LovligOpphold)}>
                         <LovligOppholdINorge
                             behandling={behandling}
+                            søker={props.søker}
                             forrigeUrl={vilkårUrl(Vilkårtype.Flyktning)}
                             nesteUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
                             sakId={urlParams.sakId}
@@ -79,6 +83,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={vilkårUrl(Vilkårtype.FastOppholdINorge)}>
                         <FastOppholdINorge
                             behandling={behandling}
+                            søker={props.søker}
                             forrigeUrl={vilkårUrl(Vilkårtype.LovligOpphold)}
                             nesteUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
                             sakId={urlParams.sakId}
@@ -87,6 +92,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={vilkårUrl(Vilkårtype.Institusjonsopphold)}>
                         <Institusjonsopphold
                             behandling={behandling}
+                            søker={props.søker}
                             forrigeUrl={vilkårUrl(Vilkårtype.FastOppholdINorge)}
                             nesteUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
                             sakId={urlParams.sakId}
@@ -95,6 +101,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={vilkårUrl(Vilkårtype.OppholdIUtlandet)}>
                         <OppholdIUtlandet
                             behandling={behandling}
+                            søker={props.søker}
                             forrigeUrl={vilkårUrl(Vilkårtype.Institusjonsopphold)}
                             nesteUrl={vilkårUrl(Vilkårtype.Formue)}
                             sakId={urlParams.sakId}
@@ -103,6 +110,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={vilkårUrl(Vilkårtype.Formue)}>
                         <Formue
                             behandling={behandling}
+                            søker={props.søker}
                             forrigeUrl={vilkårUrl(Vilkårtype.OppholdIUtlandet)}
                             nesteUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
                             sakId={urlParams.sakId}
@@ -111,6 +119,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={vilkårUrl(Vilkårtype.PersonligOppmøte)}>
                         <PersonligOppmøte
                             behandling={behandling}
+                            søker={props.søker}
                             forrigeUrl={vilkårUrl(Vilkårtype.Formue)}
                             nesteUrl={vilkårUrl(Vilkårtype.Sats)}
                             sakId={urlParams.sakId}
@@ -119,6 +128,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={vilkårUrl(Vilkårtype.Sats)}>
                         <Sats
                             behandling={behandling}
+                            søker={props.søker}
                             forrigeUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
                             nesteUrl={
                                 behandling.status == Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
@@ -131,6 +141,7 @@ const Vilkår = (props: { sak: Sak }) => {
                     <Route path={vilkårUrl(Vilkårtype.Beregning)}>
                         <Beregning
                             behandling={behandling}
+                            søker={props.søker}
                             forrigeUrl={vilkårUrl(Vilkårtype.Sats)}
                             nesteUrl={vedtakUrl}
                             sakId={urlParams.sakId}

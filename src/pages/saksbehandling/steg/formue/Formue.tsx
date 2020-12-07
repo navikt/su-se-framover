@@ -3,18 +3,22 @@ import fnrValidator from '@navikt/fnrvalidator';
 import { FormikErrors, useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
+import ModalWrapper from 'nav-frontend-modal';
 import { Input, Textarea, Checkbox, RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Element, Feilmelding } from 'nav-frontend-typografi';
+import Tekstomrade, { BoldRule, HighlightRule, LinebreakRule } from 'nav-frontend-tekstomrade';
+import { Element, Feilmelding, Undertittel } from 'nav-frontend-typografi';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ErrorCode } from '~api/apiClient';
+import { ApiError, ErrorCode } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import { Personkort } from '~components/Personkort';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';
-import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import personSlice from '~features/person/person.slice';
+import { showName } from '~features/person/personUtils';
+import sakSlice, { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -69,18 +73,18 @@ const schema = yup.object<FormData>({
 const Formue = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
-    const [eps, setEps] = useState<Nullable<personApi.Person>>();
-    const [fetchingEPS, setFetchingEPS] = useState<boolean>(false);
+
+    const [eps, setEps] = useState<RemoteData.RemoteData<ApiError, personApi.Person>>(RemoteData.initial);
+
     const [kanEndreAnnenPersonsFormue, setKanEndreAnnenPersonsFormue] = useState<boolean>(true);
     const [åpnerNyFormueBlokkMenViserEnBlokk, setÅpnerNyFormueBlokkMenViserEnBlokk] = useState<boolean>(false);
-    const [personOppslagFeil, setPersonOppslagFeil] = useState<{ statusCode: number } | null>(null);
     const søknadInnhold = props.behandling.søknad.søknadInnhold;
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const handleSave = async (values: FormData, nesteUrl: string) => {
-        if (fetchingEPS && values.epsFnr !== null) return;
+        if (RemoteData.isPending(eps) && values.epsFnr !== null) return;
 
         const status =
             values.status === FormueStatus.MåInnhenteMerInformasjon
@@ -115,13 +119,15 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
                     formue: formueValues,
-                    ektefelle: {
-                        fnr: values.epsFnr,
-                        navn: eps ? eps.navn : null,
-                        kjønn: eps ? eps.kjønn : null,
-                        adressebeskyttelse: eps ? eps.adressebeskyttelse : null,
-                        skjermet: eps ? eps.skjermet : null,
-                    },
+                    ektefelle: RemoteData.isSuccess(eps)
+                        ? {
+                              fnr: eps.value.fnr,
+                              navn: eps.value.navn,
+                              kjønn: eps.value.kjønn,
+                              adressebeskyttelse: eps.value.adressebeskyttelse,
+                              skjermet: eps.value.skjermet,
+                          }
+                        : { fnr: values.epsFnr, navn: null, kjønn: null, adressebeskyttelse: null, skjermet: null },
                 },
             })
         );
@@ -159,32 +165,24 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
     useEffect(() => {
         async function fetchPerson(fnr: Nullable<string>) {
-            setFetchingEPS(true);
-            setEps(null);
-            setPersonOppslagFeil(null);
             if (!fnr || fnrValidator.fnr(fnr).status === 'invalid') {
                 return;
             }
+            setEps(RemoteData.pending);
 
             const res = await personApi.fetchPerson(fnr);
             if (res.status === 'error') {
-                setPersonOppslagFeil({ statusCode: res.error.statusCode });
-                setFetchingEPS(false);
-                return;
-            }
-            if (res.status === 'ok') {
-                const ektefelle = res.data;
-
-                formik.setValues({
-                    ...formik.values,
-                    epsFnr: ektefelle.fnr,
-                });
-                setFetchingEPS(false);
-                setEps(ektefelle);
+                setEps(RemoteData.failure(res.error));
+            } else {
+                setEps(RemoteData.success(res.data));
             }
         }
 
-        fetchPerson(formik.values.epsFnr);
+        if (fnrValidator.fnr(formik.values.epsFnr || '').status === 'valid') {
+            fetchPerson(formik.values.epsFnr);
+        } else {
+            setEps(RemoteData.initial);
+        }
     }, [formik.values.epsFnr]);
 
     const [inputToShow, setInputToShow] = useState<'søker' | 'ektefelle' | null>(
@@ -260,15 +258,69 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                             feil={formik.errors.epsFnr}
                                         />
                                         <div className={styles.result}>
-                                            {eps && <Personkort person={eps} />}
-                                            {personOppslagFeil && (
-                                                <AlertStripe type="feil">
-                                                    {personOppslagFeil.statusCode === ErrorCode.Unauthorized
-                                                        ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
-                                                        : personOppslagFeil.statusCode === ErrorCode.NotFound
-                                                        ? intl.formatMessage({ id: 'feilmelding.ikkeFunnet' })
-                                                        : intl.formatMessage({ id: 'feilmelding.ukjent' })}
-                                                </AlertStripe>
+                                            {pipe(
+                                                eps,
+                                                RemoteData.fold(
+                                                    () => null,
+                                                    () => <NavFrontendSpinner />,
+                                                    (err) => (
+                                                        <AlertStripe type="feil">
+                                                            {err.statusCode === ErrorCode.Unauthorized ? (
+                                                                <ModalWrapper
+                                                                    isOpen={true}
+                                                                    onRequestClose={() => {
+                                                                        return;
+                                                                    }}
+                                                                    contentLabel={intl.formatMessage({
+                                                                        id: 'modal.skjerming.ariaBeskrivelse',
+                                                                    })}
+                                                                    closeButton={false}
+                                                                    contentClass={styles.modalInnhold}
+                                                                >
+                                                                    <Undertittel>
+                                                                        {intl.formatMessage({
+                                                                            id: 'modal.skjerming.heading',
+                                                                        })}
+                                                                    </Undertittel>
+                                                                    <Tekstomrade
+                                                                        className={styles.modalTekst}
+                                                                        rules={[BoldRule, HighlightRule, LinebreakRule]}
+                                                                    >
+                                                                        {intl.formatMessage(
+                                                                            {
+                                                                                id: 'modal.skjerming.innhold',
+                                                                            },
+                                                                            {
+                                                                                navn: showName(props.søker.navn),
+                                                                                fnr:
+                                                                                    søknadInnhold.personopplysninger
+                                                                                        .fnr,
+                                                                            }
+                                                                        )}
+                                                                    </Tekstomrade>
+                                                                    <Knapp
+                                                                        htmlType="button"
+                                                                        onClick={() => {
+                                                                            handleSave(
+                                                                                formik.values,
+                                                                                Routes.home.createURL()
+                                                                            );
+                                                                            dispatch(sakSlice.actions.resetSak());
+                                                                            dispatch(personSlice.actions.resetSøker());
+                                                                        }}
+                                                                    >
+                                                                        OK
+                                                                    </Knapp>
+                                                                </ModalWrapper>
+                                                            ) : err.statusCode === ErrorCode.NotFound ? (
+                                                                intl.formatMessage({ id: 'feilmelding.ikkeFunnet' })
+                                                            ) : (
+                                                                intl.formatMessage({ id: 'feilmelding.ukjent' })
+                                                            )}
+                                                        </AlertStripe>
+                                                    ),
+                                                    (person) => <Personkort person={person} />
+                                                )
                                             )}
                                         </div>
                                     </div>
