@@ -81,7 +81,6 @@ const schema = yup.object<FormData>({
                 .positive(),
             otherwise: yup.number(),
         }) as yup.Schema<Nullable<string>>,
-    //TODO: andre typer kontonummer ?
     kontonummer: yup
         .number()
         .nullable()

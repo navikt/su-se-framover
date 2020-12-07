@@ -65,14 +65,14 @@
     display: flex;
 }
 
-.advarsel {
-    margin-right: @spacing;
-}
-
 .knapper {
     display: flex;
     align-items: flex-end;
     align-items: center;
+
+    > :not(:last-child) {
+        margin-right: @spacing;
+    }
 }
 
 .ikonContainer {

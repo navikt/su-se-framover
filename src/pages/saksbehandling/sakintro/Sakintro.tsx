@@ -107,7 +107,7 @@ const ÅpneSøknader = (props: {
                                     </div>
                                     <div className={styles.knapper}>
                                         {behandling?.attestering?.underkjennelse && (
-                                            <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
+                                            <AlertStripe type="advarsel" form="inline">
                                                 {props.intl.formatMessage({ id: 'behandling.attestering.advarsel' })}
                                             </AlertStripe>
                                         )}
