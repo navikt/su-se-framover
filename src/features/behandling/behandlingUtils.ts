@@ -17,6 +17,7 @@ import {
     PersonligOppmøte,
     Bosituasjon,
     FormueVerdier,
+    Institusjonsopphold,
 } from '~types/Behandlingsinformasjon';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
@@ -84,6 +85,12 @@ export const eqLovligOppholdINorge: Eq<Nullable<LovligOpphold>> = {
 export const eqFastOppholdINorge: Eq<Nullable<FastOppholdINorge>> = {
     equals: (fastOpphold1, fastOpphold2) =>
         fastOpphold1?.status === fastOpphold2?.status && fastOpphold1?.begrunnelse === fastOpphold2?.begrunnelse,
+};
+
+export const eqInstitusjonsopphold: Eq<Nullable<Institusjonsopphold>> = {
+    equals: (institusjonsopphold1, institusjonsopphold2) =>
+        institusjonsopphold1?.status === institusjonsopphold2?.status &&
+        institusjonsopphold1?.begrunnelse === institusjonsopphold2?.begrunnelse,
 };
 
 export const eqOppholdIUtlandet: Eq<Nullable<OppholdIUtlandet>> = {

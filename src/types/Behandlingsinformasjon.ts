@@ -8,6 +8,7 @@ export interface Behandlingsinformasjon {
     flyktning: Nullable<Flyktning>;
     lovligOpphold: Nullable<LovligOpphold>;
     fastOppholdINorge: Nullable<FastOppholdINorge>;
+    institusjonsopphold: Nullable<Institusjonsopphold>;
     oppholdIUtlandet: Nullable<OppholdIUtlandet>;
     formue: Nullable<Formue>;
     personligOppmøte: Nullable<PersonligOppmøte>;
@@ -53,6 +54,16 @@ export interface FastOppholdINorge {
     begrunnelse: Nullable<string>;
 }
 export enum FastOppholdINorgeStatus {
+    VilkårOppfylt = 'VilkårOppfylt',
+    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
+    Uavklart = 'Uavklart',
+}
+
+export interface Institusjonsopphold {
+    status: InstitusjonsoppholdStatus;
+    begrunnelse: Nullable<string>;
+}
+export enum InstitusjonsoppholdStatus {
     VilkårOppfylt = 'VilkårOppfylt',
     VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
     Uavklart = 'Uavklart',

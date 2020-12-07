@@ -54,6 +54,12 @@ export default {
     'fraSøknad.nei': 'Nei',
     'fraSøknad.ikkeRegistert': 'Ikke registert fra søknad',
 
+    'institusjonsopphold.innlagtPåInstitusjonSiste3Måneder':
+        'Har du vært innlagt på institusjon de siste tre månedene?',
+    'institusjonsopphold.datoForInnleggelse': 'Dato for innleggelse',
+    'institusjonsopphold.datoForUtskrivelse': 'Dato for utskrivelse',
+    'institusjonsopphold.fortsattInnlagt': 'Fortsatt innlagt',
+
     'lovligOpphold.erNorskStatsborger': 'Er du norsk statsborger?',
     'lovligOpphold.harOppholdstillatelse': 'Har søker oppholdstillatelse i Norge?',
     'lovligOpphold.typeOppholdstillatelse': 'Oppholdstillatelse?',
