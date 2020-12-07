@@ -10,7 +10,7 @@ export default {
     'display.checkbox.tilhørerEPS': 'Ektefelle/samboer',
 
     'display.fradrag.type': 'Type',
-    'display.fradrag.beløp': 'Beløp per mnd',
+    'display.fradrag.beløp': 'Beløp per år',
 
     'display.input.beløpIUtenlandskValuta': 'Beløp i utenlandsk valuta',
     'display.input.kurs': 'Kurs ved utregning',
