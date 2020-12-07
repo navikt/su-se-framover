@@ -27,4 +27,12 @@ export default {
     'feilmelding.ukjent': 'En feil skjedde',
 
     'page.tittel': 'Formue',
+
+    'modal.skjerming.ariaBeskrivelse': 'Advarsel om at søkers ektefelle har en type skjerming',
+    'modal.skjerming.heading': 'Ektefelle/samboer har en type skjerming',
+    'modal.skjerming.innhold': `
+    Ektellen/samboeren til {navn} ({fnr}) har en type *skjerming* (fortrolig adresse, strengt fortrolig adresse eller skjerming).
+
+    Derfor mister du tilgang til saken og den må behandles av noen med riktig tilgang.
+    `,
 };
