@@ -1,9 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Knapp } from 'nav-frontend-knapper';
+import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Normaltekst } from 'nav-frontend-typografi';
+import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -14,13 +14,8 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
+import messages from './kvittering-nb';
 import styles from './kvittering.module.less';
-
-const messages = {
-    'kvittering.søknadSendt': 'Søknaden er sendt!',
-    'kvittering.nySøknad': 'Ny søknad',
-    'knapp.tilbake': 'Tilbake',
-};
 
 const Kvittering = () => {
     const intl = useI18n({ messages });
@@ -40,48 +35,74 @@ const Kvittering = () => {
                         return <NavFrontendSpinner />;
                     },
                     () => {
-                        return <AlertStripe type="feil">En feil oppsto</AlertStripe>;
+                        return (
+                            <>
+                                <AlertStripe type="feil">En feil oppsto</AlertStripe>
+
+                                <div className={styles.nySøknadKnapp}>
+                                    <Knapp className={styles.marginRight} onClick={() => history.goBack()}>
+                                        {intl.formatMessage({ id: 'knapp.tilbake' })}
+                                    </Knapp>
+
+                                    <Knapp
+                                        onClick={() => {
+                                            dispatch(personSlice.default.actions.resetSøker());
+                                            dispatch(søknadslice.default.actions.resetSøknad());
+                                            history.push(Routes.soknad.createURL({ step: null }));
+                                        }}
+                                    >
+                                        {intl.formatMessage({ id: 'kvittering.avslutt' })}
+                                    </Knapp>
+                                </div>
+                            </>
+                        );
                     },
                     (s) => {
                         return (
-                            <AlertStripe type="suksess">
-                                <Normaltekst>Søknad sendt!</Normaltekst>
-                                <Normaltekst>Søknad-ID: {s.søknad.id}</Normaltekst>
-                                <Normaltekst>Saksnummer: {s.saksnummer}</Normaltekst>
-                            </AlertStripe>
+                            <>
+                                <AlertStripe type="suksess">
+                                    <Normaltekst>{intl.formatMessage({ id: 'kvittering.søknadMottatt' })}</Normaltekst>
+                                    <Normaltekst>Saksnummer: {s.saksnummer}</Normaltekst>
+                                </AlertStripe>
+
+                                <div className={styles.tilVeileder}>
+                                    <Undertittel tag="h3">
+                                        {intl.formatMessage({ id: 'kvittering.tilVeileder.heading' })}
+                                    </Undertittel>
+                                    <ol>
+                                        <li>{intl.formatMessage({ id: 'kvittering.tilVeileder.punkt1' })}</li>
+                                        <li>{intl.formatMessage({ id: 'kvittering.tilVeileder.punkt2' })}</li>
+                                        <li>{intl.formatMessage({ id: 'kvittering.tilVeileder.punkt3' })}</li>
+                                    </ol>
+                                </div>
+
+                                <div className={styles.nySøknadKnapp}>
+                                    <Hovedknapp
+                                        className={styles.marginRight}
+                                        onClick={() =>
+                                            fetchSøknad(s.søknad.id).then((res) => {
+                                                if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
+                                            })
+                                        }
+                                    >
+                                        {intl.formatMessage({ id: 'kvittering.skrivUtSøknad' })}
+                                    </Hovedknapp>
+
+                                    <Knapp
+                                        onClick={() => {
+                                            dispatch(personSlice.default.actions.resetSøker());
+                                            dispatch(søknadslice.default.actions.resetSøknad());
+                                            history.push(Routes.soknad.createURL({ step: null }));
+                                        }}
+                                    >
+                                        {intl.formatMessage({ id: 'kvittering.avslutt' })}
+                                    </Knapp>
+                                </div>
+                            </>
                         );
                     }
                 )
             )}
-
-            <div className={styles.nySøknadKnapp}>
-                {RemoteData.isFailure(søknad) && (
-                    <Knapp className={styles.marginRight} onClick={() => history.goBack()}>
-                        {intl.formatMessage({ id: 'knapp.tilbake' })}
-                    </Knapp>
-                )}
-                <Knapp
-                    onClick={() => {
-                        dispatch(personSlice.default.actions.resetSøker());
-                        dispatch(søknadslice.default.actions.resetSøknad());
-                        history.push(Routes.soknad.createURL({ step: null }));
-                    }}
-                >
-                    {intl.formatMessage({ id: 'kvittering.nySøknad' })}
-                </Knapp>
-
-                {RemoteData.isSuccess(søknad) && (
-                    <Knapp
-                        onClick={() =>
-                            fetchSøknad(søknad.value.søknad.id).then((res) => {
-                                if (res.status === 'ok') window.open(URL.createObjectURL(res.data));
-                            })
-                        }
-                    >
-                        Skriv ut søknad
-                    </Knapp>
-                )}
-            </div>
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import Stegindikator from 'nav-frontend-stegindikator';
-import { Innholdstittel, Undertittel, Feilmelding } from 'nav-frontend-typografi';
+import { Undertittel, Feilmelding, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useParams, useHistory, Link } from 'react-router-dom';
@@ -243,40 +243,43 @@ const index = () => {
                         <>
                             <div className={styles.headerContainer}>
                                 <div className={styles.sidetittelContainer}>
-                                    <Innholdstittel>Søknad for</Innholdstittel>
+                                    <Systemtittel>Søknad for</Systemtittel>
                                 </div>
 
                                 <div className={styles.personkortContainer}>
                                     <Personkort person={søker} />
                                 </div>
-                                <>
-                                    <div className={styles.stegindikatorContainer}>
-                                        <Stegindikator
-                                            steg={steg.map((s, index) => ({
-                                                index,
-                                                label: s.label,
-                                            }))}
-                                            aktivtSteg={aktivtSteg}
-                                            visLabel={false}
-                                            onChange={
-                                                process.env.NODE_ENV === 'development'
-                                                    ? (index) => {
-                                                          const nyttSteg = steg[index];
-                                                          if (nyttSteg) {
-                                                              history.push(
-                                                                  routes.soknad.createURL({ step: nyttSteg.step })
-                                                              );
+
+                                {step !== Søknadsteg.Kvittering && (
+                                    <>
+                                        <div className={styles.stegindikatorContainer}>
+                                            <Stegindikator
+                                                steg={steg.map((s, index) => ({
+                                                    index,
+                                                    label: s.label,
+                                                }))}
+                                                aktivtSteg={aktivtSteg}
+                                                visLabel={false}
+                                                onChange={
+                                                    process.env.NODE_ENV === 'development'
+                                                        ? (index) => {
+                                                              const nyttSteg = steg[index];
+                                                              if (nyttSteg) {
+                                                                  history.push(
+                                                                      routes.soknad.createURL({ step: nyttSteg.step })
+                                                                  );
+                                                              }
                                                           }
-                                                      }
-                                                    : undefined
-                                            }
-                                        />
-                                    </div>
-                                    <Undertittel>{steg.find((s) => s.step === step)?.label}</Undertittel>
-                                    {(step === Søknadsteg.DinInntekt || step === Søknadsteg.EktefellesInntekt) && (
-                                        <p>{intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' })}</p>
-                                    )}
-                                </>
+                                                        : undefined
+                                                }
+                                            />
+                                        </div>
+                                        <Undertittel tag="h3">{steg.find((s) => s.step === step)?.label}</Undertittel>
+                                        {(step === Søknadsteg.DinInntekt || step === Søknadsteg.EktefellesInntekt) && (
+                                            <p>{intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' })}</p>
+                                        )}
+                                    </>
+                                )}
                             </div>
                             {showSteg(step, søknad, søker)}
                         </>

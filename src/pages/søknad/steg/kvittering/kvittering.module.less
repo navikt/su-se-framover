@@ -2,11 +2,24 @@
 
 .nySøknadKnapp {
     display: flex;
-    align-items: center;
+    justify-content: center;
     flex-direction: row;
-    margin-top: @spacing-l;
+    margin-top: @spacing-xl;
 }
 
 .marginRight {
     margin-right: @spacing;
+}
+
+.tilVeileder {
+    margin-top: @spacing-l;
+    h3 {
+        margin-bottom: @spacing-xs;
+    }
+    ol {
+        list-style: decimal inside;
+        li {
+            margin-bottom: @spacing-xs;
+        }
+    }
 }
