@@ -1,16 +1,16 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Gender, PersonCard } from '@navikt/nap-person-card';
 import { useFormik } from 'formik';
-import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, RadioPanelGruppe, Select, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
+import { Systemtittel } from 'nav-frontend-typografi';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useEffect, useMemo, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
 
-import { fetchBrev } from '~api/pdfApi';
 import { Person } from '~api/personApi';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
 import { erAvslått, erIverksatt, erTilAttestering } from '~features/behandling/behandlingUtils';
@@ -21,9 +21,9 @@ import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { VisSimulering } from '~pages/saksbehandling/simulering/simulering';
-import VisBeregning from '~pages/saksbehandling/steg/beregning/VisBeregning';
+import VisBeregningOgSimulering from '~pages/saksbehandling/steg/beregningOgSimulering/BeregningOgSimulering';
 import Søkefelt from '~pages/saksbehandling/søkefelt/Søkefelt';
+import Behandlingsoppsummering from '~pages/saksbehandling/vedtak/Behandlingsoppsummering';
 import VilkårsOppsummering from '~pages/saksbehandling/vilkårsOppsummering/VilkårsOppsummering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
@@ -31,26 +31,6 @@ import { Sak } from '~types/Sak';
 
 import messages from './attestering-nb';
 import styles from './attestering.module.less';
-
-const VisDersomSimulert = (props: { sak: Sak; behandling: Behandling }) => {
-    if (props.behandling.beregning && !erAvslått(props.behandling)) {
-        return (
-            <div className={styles.beregningOgOppdragContainer}>
-                <div className={styles.beregningContainer}>
-                    <VisBeregning
-                        beregning={props.behandling.beregning}
-                        forventetinntekt={props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt ?? 0}
-                    />
-                </div>
-                <div>
-                    <Innholdstittel>Oppdragssimulering</Innholdstittel>
-                    <VisSimulering sak={props.sak} behandling={props.behandling} />
-                </div>
-            </div>
-        );
-    }
-    return <>Det er ikke gjort en beregning</>;
-};
 
 interface FormData {
     beslutning?: boolean;
@@ -84,8 +64,6 @@ const Attesteringsinnhold = ({
 }) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const attesteringStatus = useAppSelector((s) => s.sak.attesteringStatus);
-    const [fetchingBrev, setFetchingBrev] = useState<boolean>(false);
-
     const dispatch = useAppDispatch();
 
     const formik = useFormik<FormData>({
@@ -177,13 +155,13 @@ const Attesteringsinnhold = ({
             </div>
             <div className={styles.content}>
                 <div className={styles.vedtakContainer}>
-                    <Innholdstittel>Vedtak</Innholdstittel>
-                    <div>
-                        {!erAvslått(props.behandling) && (
-                            <AlertStripeSuksess>{props.behandling.status}</AlertStripeSuksess>
-                        )}
-                        {erAvslått(props.behandling) && <AlertStripeFeil>{props.behandling.status}</AlertStripeFeil>}
+                    <div className={styles.tittelContainer}>
+                        <Innholdstittel className={styles.pageTittel}>
+                            {intl.formatMessage({ id: 'page.tittel' })}
+                        </Innholdstittel>
                     </div>
+
+                    <Behandlingsoppsummering sakId={props.sak.id} behandling={props.behandling} />
                     <div>
                         <VilkårsOppsummering
                             søknadInnhold={props.behandling.søknad.søknadInnhold}
@@ -191,24 +169,9 @@ const Attesteringsinnhold = ({
                         />
                     </div>
                     <div>
-                        <VisDersomSimulert sak={props.sak} behandling={props.behandling} />
-                    </div>
-                    <div>
-                        <Innholdstittel>Vis brev kladd</Innholdstittel>
-                        <Knapp
-                            spinner={fetchingBrev}
-                            onClick={() => {
-                                setFetchingBrev(true);
-                                fetchBrev(props.sak.id, props.behandling.id).then((res) => {
-                                    if (res.status === 'ok') {
-                                        window.open(URL.createObjectURL(res.data));
-                                    }
-                                    setFetchingBrev(false);
-                                });
-                            }}
-                        >
-                            Last ned brev
-                        </Knapp>
+                        {props.behandling.beregning && !erAvslått(props.behandling) ? (
+                            <VisBeregningOgSimulering sak={props.sak} behandling={props.behandling} />
+                        ) : null}
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>
@@ -223,7 +186,9 @@ const Attesteringsinnhold = ({
                             <RadioPanelGruppe
                                 className={styles.formElement}
                                 name={intl.formatMessage({ id: 'attestering.beslutning' })}
-                                legend={intl.formatMessage({ id: 'attestering.beslutning' })}
+                                legend={
+                                    <Systemtittel>{intl.formatMessage({ id: 'attestering.beslutning' })}</Systemtittel>
+                                }
                                 radios={[
                                     {
                                         label: intl.formatMessage({ id: 'attestering.beslutning.godkjenn' }),

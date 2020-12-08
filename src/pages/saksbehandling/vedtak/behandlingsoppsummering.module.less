@@ -1,0 +1,34 @@
+@import '~/styles/variables.less';
+
+.behandlingsinfoContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.behandlingUnderkjentContainer {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: @spacing;
+
+    .grunnOgKommentarContainer {
+        display: grid;
+        grid-template-columns: 15rem 15em 15em;
+        margin-bottom: @spacing-s;
+    }
+}
+
+.tilleggsinfoContainer {
+    display: grid;
+    grid-template-columns: 15em 15em 15em;
+}
+
+.ikonContainer {
+    display: flex;
+    align-self: flex-start;
+    align-items: center;
+    margin-bottom: @spacing-xs;
+
+    .ikon {
+        margin-right: @spacing-xs;
+    }
+}

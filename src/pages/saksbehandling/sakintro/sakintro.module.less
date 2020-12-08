@@ -29,7 +29,7 @@
     .søknad {
         width: 100%;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: space-between;
         margin-bottom: @spacing-xxs;
         padding-top: @spacing-s;
@@ -42,6 +42,22 @@
             justify-content: space-between;
             white-space: pre;
 
+            .underkjennelseContainer {
+                margin-top: @spacing-xxs;
+
+                .underkjennelse {
+                    display: flex;
+                    flex-direction: row;
+
+                    .underkjenningsinfo {
+                        display: flex;
+                        flex-direction: column;
+                        margin-right: @spacing;
+                        margin-top: @spacing-xs;
+                    }
+                }
+            }
+
             .dato {
                 display: flex;
             }
@@ -49,20 +65,16 @@
     }
 }
 
-.underkjennelse {
-    display: flex;
-    flex-direction: row;
-
-    .underkjenningsinfo {
-        display: flex;
-        flex-direction: column;
-        margin-right: @spacing;
-        margin-top: @spacing;
-    }
-}
-
 .behandlingContainer {
     display: flex;
+}
+
+.advarsel {
+    margin-right: @spacing;
+}
+
+.startBehandlingKnapp {
+    margin-right: @spacing-xs;
 }
 
 .knapper {

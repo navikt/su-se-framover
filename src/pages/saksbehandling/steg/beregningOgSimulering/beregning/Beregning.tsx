@@ -22,15 +22,15 @@ import {
     isValidFradrag,
     fradragSchema,
     FradragInputs,
-} from '~pages/saksbehandling/steg/beregning/FradragInputs';
+} from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/FradragInputs';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Fradragstype, FradragTilhører } from '~types/Fradrag';
 
-import BeregningFaktablokk from '../faktablokk/faktablokker/BeregningFaktablokk';
-import sharedI18n from '../sharedI18n-nb';
-import { VilkårsvurderingBaseProps } from '../types';
-import { Vurdering, Vurderingknapper } from '../Vurdering';
+import BeregningFaktablokk from '../../faktablokk/faktablokker/BeregningFaktablokk';
+import sharedI18n from '../../sharedI18n-nb';
+import { VilkårsvurderingBaseProps } from '../../types';
+import { Vurdering, Vurderingknapper } from '../../Vurdering';
 
 import messages from './beregning-nb';
 import styles from './beregning.module.less';

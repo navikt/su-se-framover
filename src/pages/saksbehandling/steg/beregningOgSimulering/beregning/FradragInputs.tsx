@@ -9,7 +9,7 @@ import { IntlShape } from 'react-intl';
 import { TrashBin } from '~assets/Icons';
 import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsPositiveNumber } from '~lib/validering';
-import InntektFraUtland from '~pages/saksbehandling/steg/beregning/InntektFraUtland';
+import InntektFraUtland from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/InntektFraUtland';
 import { Fradrag, Fradragstype } from '~types/Fradrag';
 
 import { UtenlandskInntektFormData } from './beregningstegTypes';

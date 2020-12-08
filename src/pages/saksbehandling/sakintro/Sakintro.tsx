@@ -16,7 +16,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
+import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 
@@ -32,7 +32,7 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
         case LukkSøknadBegrunnelse.Trukket:
             return 'display.søknad.lukket.trukket';
         default:
-            return 'display.søknad.lukket.ukjent';
+            return undefined;
     }
 };
 
@@ -44,7 +44,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
     });
     const avslåtteSøknader = props.sak.søknader.filter((søknad) => {
         const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
-        return søknad.lukket !== null || (behandling && behandling.status === Behandlingsstatus.IVERKSATT_AVSLAG);
+        return søknad.lukket !== null || (behandling && erIverksatt(behandling));
     });
 
     return (
@@ -104,14 +104,42 @@ const ÅpneSøknader = (props: {
                                             </Element>
                                             <Normaltekst>{props.intl.formatDate(s.opprettet)}</Normaltekst>
                                         </div>
+                                        {behandling?.attestering?.underkjennelse && (
+                                            <div className={styles.underkjennelseContainer}>
+                                                <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
+                                                    {props.intl.formatMessage({
+                                                        id: 'behandling.attestering.advarsel',
+                                                    })}
+                                                </AlertStripe>
+                                                <div className={styles.underkjennelse}>
+                                                    <div className={styles.underkjenningsinfo}>
+                                                        <Element>
+                                                            {props.intl.formatMessage({
+                                                                id: 'display.attestering.sendtTilbakeFordi',
+                                                            })}
+                                                        </Element>
+                                                        <Normaltekst>
+                                                            {grunnToText(
+                                                                behandling.attestering.underkjennelse.grunn,
+                                                                props.intl
+                                                            )}
+                                                        </Normaltekst>
+                                                    </div>
+                                                    <div className={styles.underkjenningsinfo}>
+                                                        <Element>
+                                                            {props.intl.formatMessage({
+                                                                id: 'display.attestering.kommentar',
+                                                            })}
+                                                        </Element>
+                                                        <Normaltekst>
+                                                            {behandling.attestering.underkjennelse.kommentar}
+                                                        </Normaltekst>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                     <div className={styles.knapper}>
-                                        {behandling?.attestering?.underkjennelse && (
-                                            <AlertStripe type="advarsel" form="inline">
-                                                {props.intl.formatMessage({ id: 'behandling.attestering.advarsel' })}
-                                            </AlertStripe>
-                                        )}
-
                                         {!behandling ? (
                                             <StartSøknadsbehandlingKnapper
                                                 sakId={props.sakId}
@@ -127,20 +155,6 @@ const ÅpneSøknader = (props: {
                                         )}
                                     </div>
                                 </div>
-                                {behandling?.attestering?.underkjennelse && (
-                                    <div className={styles.underkjennelse}>
-                                        <div className={styles.underkjenningsinfo}>
-                                            <Element>Sendt tilbake fordi</Element>
-                                            <Normaltekst>
-                                                {grunnToText(behandling.attestering.underkjennelse.grunn, props.intl)}
-                                            </Normaltekst>
-                                        </div>
-                                        <div className={styles.underkjenningsinfo}>
-                                            <Element>Kommentar</Element>
-                                            <Normaltekst>{behandling.attestering.underkjennelse.kommentar}</Normaltekst>
-                                        </div>
-                                    </div>
-                                )}
                             </Panel>
                         </div>
                     );
@@ -176,6 +190,7 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
     return (
         <div>
             <Hovedknapp
+                className={styles.startBehandlingKnapp}
                 mini
                 onClick={async () => {
                     const startBehandlingRes = await dispatch(
@@ -288,18 +303,18 @@ const LukkedeSøknader = (props: { avslåtteSøknader: Søknad[]; intl: IntlShap
                 {props.avslåtteSøknader.map((søknad) => (
                     <li key={søknad.id}>
                         <Panel border className={styles.søknad}>
-                            <div>
-                                <p>
-                                    {props.intl.formatMessage({
-                                        id: 'display.søknad.typeSøknad',
-                                    })}
-                                </p>
-                                <p>
-                                    {props.intl.formatMessage({
-                                        id: 'display.søknad.mottatt',
-                                    })}{' '}
-                                    {props.intl.formatDate(søknad.opprettet)}
-                                </p>
+                            <div className={styles.info}>
+                                <div>
+                                    <Undertittel>
+                                        {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
+                                    </Undertittel>
+                                    <div className={styles.dato}>
+                                        <Element>
+                                            {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
+                                        </Element>
+                                        <Normaltekst>{props.intl.formatDate(søknad.opprettet)}</Normaltekst>
+                                    </div>
+                                </div>
                             </div>
                             <div className={styles.ikonContainer}>
                                 <Ikon className={styles.ikon} kind="feil-sirkel-fyll" width={'24px'} />

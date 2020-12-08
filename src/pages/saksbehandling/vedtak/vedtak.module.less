@@ -1,26 +1,27 @@
 @import '~/styles/variables.less';
 
 .vedtakContainer {
-    margin-bottom: @spacing-xl;
+    margin-bottom: 80px;
+
+    .vedtakSendtTilAttesteringAlertStripe {
+        margin-top: @spacing;
+    }
 
     > :not(:last-child) {
         margin-bottom: @spacing;
     }
 }
 
-.pageTittel {
-    margin-bottom: @spacing;
-}
+.tittelContainer {
+    border-bottom: 1px solid @navLysGra;
+    margin: @spacing 0;
 
-.statusContainer {
-    margin-bottom: @spacing;
+    .pageTittel {
+        margin-bottom: @spacing-xs;
+    }
 }
 
 .navigeringContainer {
     display: flex;
     justify-content: space-between;
-}
-
-.vedtakSendtTilAttesteringAlertStripe {
-    margin-top: @spacing;
 }

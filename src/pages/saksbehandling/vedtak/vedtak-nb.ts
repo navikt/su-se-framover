@@ -1,5 +1,11 @@
 export default {
-    'brev.utkastVedtaksbrev': 'Utkast vedtaksbrev',
+    'behandlet.av': 'Behandlet av',
+
+    'behandling.ikkeFerdig': 'Behandlingen er ikke ferdig',
+    'behandling.søknadsdato': 'Søknadsdato',
+    'behandling.saksbehandlingsdato': 'Saksbehandlingsdato',
+
+    'brev.utkastVedtaksbrev': 'Utkast til vedtaksbrev',
 
     'feilmelding.behandlingIkkeFerdig': 'Behandlingen er ikke ferdig',
     'feilmelding.errorkode': 'Error kode:',
@@ -9,12 +15,16 @@ export default {
 
     'knapp.sendTilAttestering': 'Send til attestering',
     'knapp.tilbake': 'Tilbake',
-    'knapp.vis': 'Vis',
+    'knapp.vis': 'Vis brev',
 
-    'oppsumering.vilkårsvurderinger.tittel': 'Vilkårsvurderinger',
+    'oppsummering.vilkårsvurderinger.tittel': 'Vilkårsvurderinger',
+
+    'page.tittel': 'Vedtak',
+
+    'underkjent.grunn': 'Grunn',
+    'underkjent.kommentar': 'Kommentar',
+    'underkjent.sendtTilbakeFraAttestering': 'Sendt tilbake fra attestering',
 
     'vedtak.sendtTilAttestering': 'Vedtak er sendt til Attestering',
     'vedtak.sendtTilAttestering.lenkeSaksoversikt': 'Til saksoversikt',
-
-    'page.tittel': 'Vedtak',
 };

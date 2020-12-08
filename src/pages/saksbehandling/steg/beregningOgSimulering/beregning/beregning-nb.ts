@@ -54,6 +54,8 @@ export default {
 
     'page.tittel': 'Beregning',
 
+    'simulering.tittel': 'Simulering',
+
     'utbetaling.tabellheader.periode': 'Periode',
     'utbetaling.tabellheader.beløp': 'Beløp',
     'utbetaling.tabellheader.grunnbeløp': 'Grunnbeløp',
