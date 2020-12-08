@@ -185,6 +185,12 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         }
     }, [formik.values.epsFnr]);
 
+    const handleEpsSkjermingModalContinueClick = async () => {
+        await handleSave(formik.values, Routes.home.createURL());
+        dispatch(sakSlice.actions.resetSak());
+        dispatch(personSlice.actions.resetSøker());
+    };
+
     const [inputToShow, setInputToShow] = useState<'søker' | 'ektefelle' | null>(
         formik.values.borSøkerMedEPS ? null : 'søker'
     );
@@ -300,14 +306,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                                     </Tekstomrade>
                                                                     <Knapp
                                                                         htmlType="button"
-                                                                        onClick={() => {
-                                                                            handleSave(
-                                                                                formik.values,
-                                                                                Routes.home.createURL()
-                                                                            );
-                                                                            dispatch(sakSlice.actions.resetSak());
-                                                                            dispatch(personSlice.actions.resetSøker());
-                                                                        }}
+                                                                        onClick={handleEpsSkjermingModalContinueClick}
                                                                     >
                                                                         OK
                                                                     </Knapp>
