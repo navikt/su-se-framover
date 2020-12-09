@@ -1,5 +1,10 @@
 import { IntlShape } from 'react-intl';
 
+import { Adresse } from '~api/personApi';
+import { AdresseFraSøknad } from '~features/søknad/søknad.slice';
+
+import { Nullable } from './types';
+
 export function formatCurrency(
     intl: IntlShape,
     amount: number,
@@ -20,4 +25,34 @@ export function formatCurrency(
             minimumFractionDigits: mergedOptions.numDecimals,
         }) + ' kr'
     );
+}
+
+function hentGateadresse(adresse: Adresse | AdresseFraSøknad): string {
+    const { adresselinje } = adresse;
+
+    if ('bruksenhet' in adresse && adresse.bruksenhet) {
+        return `${adresselinje} ${adresse.bruksenhet}`;
+    }
+
+    return adresselinje;
+}
+
+function hentPostadresse(adresse: Adresse | AdresseFraSøknad): Nullable<string> {
+    const { postnummer, poststed } = adresse;
+    if (postnummer && poststed) {
+        return `${postnummer} ${poststed}`;
+    } else if (postnummer) {
+        return postnummer;
+    } else if (poststed) {
+        return poststed;
+    }
+
+    return null;
+}
+
+export function formatAdresse(adresse: Adresse | AdresseFraSøknad): string {
+    const gateadresse = hentGateadresse(adresse);
+    const postadresse = hentPostadresse(adresse);
+
+    return postadresse ? `${gateadresse}, ${postadresse}` : gateadresse;
 }
