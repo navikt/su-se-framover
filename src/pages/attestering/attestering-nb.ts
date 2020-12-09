@@ -17,6 +17,8 @@ export default {
     'input.grunn.value.andreForhold': 'Andre forhold',
     'input.kommentar.label': 'Kommentar',
 
+    'page.tittel': 'Attestering',
+
     'status.sendtTilbake': 'Saken er sendt tilbake til vurdering',
     'status.iverksatt': 'Vedtaket er iverksatt',
     'status.feilet': 'Attestering feilet',

@@ -2,6 +2,8 @@ export default {
     'display.attestering.attester': 'Attester',
     'display.attestering.iverksatt': 'Iverksatt',
     'display.attestering.tilAttestering': 'Til attestering',
+    'display.attestering.sendtTilbakeFordi': 'Sendt tilbake fordi',
+    'display.attestering.kommentar': 'Kommentar',
 
     'display.lukkedeSøknader.tittel': 'Lukket søknad',
 
@@ -21,7 +23,6 @@ export default {
     'display.søknad.lukket.avvist': 'Avvist',
     'display.søknad.lukket.bortfalt': 'Bortfalt',
     'display.søknad.lukket.trukket': 'Trukket',
-    'display.søknad.lukket.ukjent': 'Ukjent lukking',
     'display.søknad.lukkSøknad': 'Lukk søknad',
     'display.søknad.mottatt': 'Mottatt',
     'display.søknad.typeSøknad': 'Førstegangssøknad',

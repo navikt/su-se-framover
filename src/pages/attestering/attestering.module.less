@@ -18,10 +18,9 @@
 }
 
 .content {
-    padding-top: @spacing;
-
     .vedtakContainer {
-        margin-bottom: @spacing-xl;
+        margin-bottom: @spacing;
+
         > :not(:last-child) {
             margin-bottom: @spacing;
         }
@@ -33,11 +32,12 @@
     }
 }
 
-.beregningOgOppdragContainer {
-    display: flex;
+.tittelContainer {
+    border-bottom: 1px solid @navLysGra;
+    margin: @spacing 0;
 
-    .beregningContainer {
-        margin-right: @spacing;
+    .pageTittel {
+        margin-bottom: @spacing-xs;
     }
 }
 

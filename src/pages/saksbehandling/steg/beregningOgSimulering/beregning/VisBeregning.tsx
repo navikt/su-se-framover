@@ -2,19 +2,19 @@ import classNames from 'classnames';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
 import * as Ord from 'fp-ts/Ord';
-import { Element, Normaltekst, Undertekst } from 'nav-frontend-typografi';
+import { Element, Normaltekst, Systemtittel, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
 import { formatMonthYear } from '~lib/dateUtils';
 import { formatCurrency } from '~lib/formatUtils';
 import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
-import messages from '~pages/saksbehandling/steg/beregning/beregning-nb';
+import messages from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/beregning-nb';
 import { Beregning, Månedsberegning } from '~types/Beregning';
 import { Fradrag, Fradragstype } from '~types/Fradrag';
 import { Sats } from '~types/Sats';
 
-import { groupBy, groupMånedsberegninger } from '../../delt/arrayUtils';
+import { groupBy, groupMånedsberegninger } from '../../../delt/arrayUtils';
 
 import * as BeregningUtils from './beregningUtils';
 import styles from './visBeregning.module.less';
@@ -70,6 +70,9 @@ const VisBeregning = (props: Props) => {
 
     return (
         <div className={styles.beregningdetaljer}>
+            <Systemtittel className={styles.visBeregningTittel}>
+                {intl.formatMessage({ id: 'page.tittel' })}
+            </Systemtittel>
             <Element className={classNames(styles.totalt, styles.linje)}>
                 <span>Totalt beløp</span>
                 <span>

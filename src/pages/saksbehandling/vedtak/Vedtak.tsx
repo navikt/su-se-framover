@@ -1,27 +1,27 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
-import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
-import React, { useCallback } from 'react';
+import { Hovedknapp } from 'nav-frontend-knapper';
+import { Innholdstittel } from 'nav-frontend-typografi/';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { erAvslått, erTilAttestering, harBeregning } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { lastNedBrev } from '~features/saksoversikt/sak.slice';
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes.ts';
-import { VisSimulering } from '~pages/saksbehandling/simulering/simulering';
-import VisBeregning from '~pages/saksbehandling/steg/beregning/VisBeregning';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
-import { Behandling, Behandlingsstatus } from '~types/Behandling';
+import { Behandlingsstatus } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
+import VisBeregningOgSimulering from '../steg/beregningOgSimulering/BeregningOgSimulering';
 import VilkårsOppsummering from '../vilkårsOppsummering/VilkårsOppsummering';
 
+import Behandlingsoppsummering from './Behandlingsoppsummering';
 import messages from './vedtak-nb';
 import styles from './vedtak.module.less';
+
 type Props = {
     sak: Sak;
 };
@@ -31,21 +31,9 @@ const Vedtak = (props: Props) => {
     const intl = useI18n({ messages });
 
     const dispatch = useAppDispatch();
-    const { sendtTilAttesteringStatus, lastNedBrevStatus } = useAppSelector((s) => s.sak);
+    const { sendtTilAttesteringStatus } = useAppSelector((s) => s.sak);
     const { sakId, behandlingId } = routes.useRouteParams<typeof routes.saksoversiktValgtBehandling>();
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
-
-    const hentBrev = useCallback(() => {
-        if (RemoteData.isPending(lastNedBrevStatus)) {
-            return;
-        }
-
-        dispatch(lastNedBrev({ sakId: sak.id, behandlingId: behandlingId })).then((action) => {
-            if (lastNedBrev.fulfilled.match(action)) {
-                window.open(action.payload.objectUrl);
-            }
-        });
-    }, [sak.id, behandlingId]);
 
     if (!behandling) {
         return <AlertStripe type="feil">{intl.formatMessage({ id: 'feilmelding.fantIkkeBehandlingsId' })}</AlertStripe>;
@@ -78,16 +66,13 @@ const Vedtak = (props: Props) => {
         return (
             <div className={styles.vedtakContainer}>
                 <div>
-                    <Innholdstittel className={styles.pageTittel}>
-                        {intl.formatMessage({ id: 'page.tittel' })}
-                    </Innholdstittel>
-
-                    <div className={styles.statusContainer}>
-                        {behandling.status === Behandlingsstatus.SIMULERT && (
-                            <AlertStripeSuksess>{behandling.status}</AlertStripeSuksess>
-                        )}
-                        {erAvslått(behandling) && <AlertStripeFeil>{behandling.status}</AlertStripeFeil>}
+                    <div className={styles.tittelContainer}>
+                        <Innholdstittel className={styles.pageTittel}>
+                            {intl.formatMessage({ id: 'page.tittel' })}
+                        </Innholdstittel>
                     </div>
+
+                    <Behandlingsoppsummering sakId={sak.id} behandling={behandling} />
 
                     <VilkårsOppsummering
                         søknadInnhold={behandling.søknad.søknadInnhold}
@@ -95,17 +80,10 @@ const Vedtak = (props: Props) => {
                     />
 
                     {harBeregning(behandling) ? (
-                        <VisSimuleringOgBeregning sak={sak} behandling={behandling} />
+                        <VisBeregningOgSimulering sak={sak} behandling={behandling} />
                     ) : (
                         <>{intl.formatMessage({ id: 'feilmelding.ikkeGjortEnBeregning' })}</>
                     )}
-
-                    <div>
-                        <Innholdstittel>{intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}</Innholdstittel>
-                        <Knapp spinner={RemoteData.isPending(lastNedBrevStatus)} htmlType="button" onClick={hentBrev}>
-                            {intl.formatMessage({ id: 'knapp.vis' })}
-                        </Knapp>
-                    </div>
                 </div>
                 <div className={styles.navigeringContainer}>
                     <Link
@@ -143,25 +121,7 @@ const Vedtak = (props: Props) => {
         );
     }
 
-    return <div>Behandlingen er ikke ferdig</div>;
+    return <div>{intl.formatMessage({ id: 'behandling.ikkeFerdig' })}</div>;
 };
-
-const VisSimuleringOgBeregning = (props: { sak: Sak; behandling: Behandling }) => (
-    <div>
-        {props.behandling.beregning && (
-            <>
-                <VisBeregning
-                    beregning={props.behandling.beregning}
-                    forventetinntekt={props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt ?? 0}
-                />
-                {props.behandling.status !== Behandlingsstatus.BEREGNET_AVSLAG && (
-                    <div>
-                        <VisSimulering sak={props.sak} behandling={props.behandling} />
-                    </div>
-                )}
-            </>
-        )}
-    </div>
-);
 
 export default Vedtak;
