@@ -48,7 +48,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
         return søknad.lukket === null && (!behandling || !erIverksatt(behandling));
     });
 
-    const lukkedeOgFerdigBehandledeSøknader = props.sak.søknader.filter((søknad) => {
+    const lukkedeOgAvslåtteSøknader = props.sak.søknader.filter((søknad) => {
         const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
         return søknad.lukket !== null || (behandling && erAvslått(behandling));
     });
@@ -67,7 +67,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         intl={intl}
                     />
                     <LukkedeOgFerdigBehandledeSøknader
-                        lukkedeOgFerdigBehandledeSøknader={lukkedeOgFerdigBehandledeSøknader}
+                        lukkedeOgAvslåtteSøknader={lukkedeOgAvslåtteSøknader}
                         intl={intl}
                     />
                     <Utbetalinger
@@ -298,8 +298,8 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
     );
 };
 
-const LukkedeOgFerdigBehandledeSøknader = (props: { lukkedeOgFerdigBehandledeSøknader: Søknad[]; intl: IntlShape }) => {
-    if (props.lukkedeOgFerdigBehandledeSøknader.length === 0) return null;
+const LukkedeOgFerdigBehandledeSøknader = (props: { lukkedeOgAvslåtteSøknader: Søknad[]; intl: IntlShape }) => {
+    if (props.lukkedeOgAvslåtteSøknader.length === 0) return null;
 
     return (
         <div className={styles.søknadsContainer}>
@@ -309,7 +309,7 @@ const LukkedeOgFerdigBehandledeSøknader = (props: { lukkedeOgFerdigBehandledeS�
                 })}
             </Ingress>
             <ol>
-                {props.lukkedeOgFerdigBehandledeSøknader.map((søknad) => (
+                {props.lukkedeOgAvslåtteSøknader.map((søknad) => (
                     <li key={søknad.id}>
                         <Panel border className={styles.søknad}>
                             <div className={styles.info}>
