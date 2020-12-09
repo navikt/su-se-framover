@@ -11,7 +11,7 @@ export default {
 
     'display.feil.feltMåFyllesUt': 'Feltet må fylles ut',
 
-    'display.sakId': 'Sak id:',
+    'display.saksnummer': 'Saksnummer:',
 
     'display.selector.velgBegrunnelse': 'Velg begrunnelse',
 
