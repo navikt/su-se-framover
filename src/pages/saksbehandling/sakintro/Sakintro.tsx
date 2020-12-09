@@ -10,7 +10,12 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
 import { useUserContext } from '~context/userContext';
-import { erIverksatt, erTilAttestering, hentSisteVurderteVilkår } from '~features/behandling/behandlingUtils';
+import {
+    erAvslått,
+    erIverksatt,
+    erTilAttestering,
+    hentSisteVurderteVilkår,
+} from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -32,7 +37,7 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
         case LukkSøknadBegrunnelse.Trukket:
             return 'display.søknad.lukket.trukket';
         default:
-            return undefined;
+            return 'Avslått';
     }
 };
 
@@ -45,7 +50,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
 
     const lukkedeOgFerdigBehandledeSøknader = props.sak.søknader.filter((søknad) => {
         const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
-        return søknad.lukket !== null || (behandling && erIverksatt(behandling));
+        return søknad.lukket !== null || (behandling && erAvslått(behandling));
     });
 
     return (
