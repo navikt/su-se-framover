@@ -13,8 +13,7 @@ describe('Adresser blir riktig formatert', () => {
     };
 
     it('returns correctly formatted address', () => {
-        const expected = `${adresse.adresselinje} ${adresse.bruksenhet}, ${adresse.postnummer} ${adresse.poststed}`;
-        expect(formatAdresse(adresse)).toBe(expected);
+        expect(formatAdresse(adresse)).toBe('Brugata 55 H0305, 0183 Oslo');
     });
 
     it('returns only gateadresse for adresse with only adresselinje', () => {
@@ -25,7 +24,7 @@ describe('Adresser blir riktig formatert', () => {
             bruksenhet: null,
         };
 
-        expect(formatAdresse(testAdresse)).toBe(adresse.adresselinje);
+        expect(formatAdresse(testAdresse)).toBe('Brugata 55');
     });
 
     it('returns gateadresse with bruksenhet', () => {
@@ -35,8 +34,7 @@ describe('Adresser blir riktig formatert', () => {
             poststed: null,
         };
 
-        const expected = `${testAdresse.adresselinje} ${testAdresse.bruksenhet}`;
-        expect(formatAdresse(testAdresse)).toBe(expected);
+        expect(formatAdresse(testAdresse)).toBe('Brugata 55 H0305');
     });
 
     it('returns adresselinje with postadresse', () => {
@@ -45,8 +43,7 @@ describe('Adresser blir riktig formatert', () => {
             bruksenhet: null,
         };
 
-        const expected = `${testAdresse.adresselinje}, ${testAdresse.postnummer} ${testAdresse.poststed}`;
-        expect(formatAdresse(testAdresse)).toBe(expected);
+        expect(formatAdresse(testAdresse)).toBe('Brugata 55, 0183 Oslo');
     });
 
     it('returns adresselinje with poststed', () => {
@@ -56,7 +53,6 @@ describe('Adresser blir riktig formatert', () => {
             postnummer: null,
         };
 
-        const expected = `${testAdresse.adresselinje}, ${testAdresse.poststed}`;
-        expect(formatAdresse(testAdresse)).toBe(expected);
+        expect(formatAdresse(testAdresse)).toBe('Brugata 55, Oslo');
     });
 });
