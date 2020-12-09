@@ -42,7 +42,8 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
         const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
         return søknad.lukket === null && (!behandling || !erIverksatt(behandling));
     });
-    const avslåtteSøknader = props.sak.søknader.filter((søknad) => {
+
+    const lukkedeOgFerdigBehandledeSøknader = props.sak.søknader.filter((søknad) => {
         const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
         return søknad.lukket !== null || (behandling && erIverksatt(behandling));
     });
@@ -60,7 +61,10 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         behandlinger={props.sak.behandlinger}
                         intl={intl}
                     />
-                    <LukkedeSøknader avslåtteSøknader={avslåtteSøknader} intl={intl} />
+                    <LukkedeOgFerdigBehandledeSøknader
+                        lukkedeOgFerdigBehandledeSøknader={lukkedeOgFerdigBehandledeSøknader}
+                        intl={intl}
+                    />
                     <Utbetalinger
                         sakId={props.sak.id}
                         søker={props.søker}
@@ -289,8 +293,8 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
     );
 };
 
-const LukkedeSøknader = (props: { avslåtteSøknader: Søknad[]; intl: IntlShape }) => {
-    if (props.avslåtteSøknader.length === 0) return null;
+const LukkedeOgFerdigBehandledeSøknader = (props: { lukkedeOgFerdigBehandledeSøknader: Søknad[]; intl: IntlShape }) => {
+    if (props.lukkedeOgFerdigBehandledeSøknader.length === 0) return null;
 
     return (
         <div className={styles.søknadsContainer}>
@@ -300,7 +304,7 @@ const LukkedeSøknader = (props: { avslåtteSøknader: Søknad[]; intl: IntlShap
                 })}
             </Ingress>
             <ol>
-                {props.avslåtteSøknader.map((søknad) => (
+                {props.lukkedeOgFerdigBehandledeSøknader.map((søknad) => (
                     <li key={søknad.id}>
                         <Panel border className={styles.søknad}>
                             <div className={styles.info}>

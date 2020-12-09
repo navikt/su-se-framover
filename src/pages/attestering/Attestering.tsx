@@ -169,9 +169,9 @@ const Attesteringsinnhold = ({
                         />
                     </div>
                     <div>
-                        {props.behandling.beregning && !erAvslått(props.behandling) ? (
+                        {props.behandling.beregning && !erAvslått(props.behandling) && (
                             <VisBeregningOgSimulering sak={props.sak} behandling={props.behandling} />
-                        ) : null}
+                        )}
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>

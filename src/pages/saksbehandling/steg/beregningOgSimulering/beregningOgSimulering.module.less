@@ -3,8 +3,5 @@
 .beregningOgSimuleringContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
-
-    > :not(:last-child) {
-        margin-right: @spacing;
-    }
+    column-gap: @spacing;
 }
