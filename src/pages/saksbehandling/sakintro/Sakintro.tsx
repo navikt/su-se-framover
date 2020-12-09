@@ -87,6 +87,8 @@ const ÅpneSøknader = (props: {
     sakId: string;
     intl: IntlShape;
 }) => {
+    if (props.åpneSøknader.length === 0) return null;
+
     return (
         <div className={styles.søknadsContainer}>
             <Ingress className={styles.søknadsContainerTittel}>
