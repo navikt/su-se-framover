@@ -36,13 +36,13 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
         case Vilkårtype.Uførhet:
             return 'Uførhet';
         case Vilkårtype.LovligOpphold:
-            return 'Lovlig Opphold';
+            return 'Lovlig opphold';
         case Vilkårtype.Institusjonsopphold:
             return 'Institusjonsopphold';
         case Vilkårtype.FastOppholdINorge:
             return 'Opphold i Norge';
         case Vilkårtype.OppholdIUtlandet:
-            return 'Opphold i Utlandet';
+            return 'Opphold i utlandet';
         case Vilkårtype.Sats:
             return 'Sats';
         case Vilkårtype.Beregning:
