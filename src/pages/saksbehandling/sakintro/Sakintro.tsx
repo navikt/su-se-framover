@@ -66,10 +66,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         behandlinger={props.sak.behandlinger}
                         intl={intl}
                     />
-                    <LukkedeOgFerdigBehandledeSøknader
-                        lukkedeOgAvslåtteSøknader={lukkedeOgAvslåtteSøknader}
-                        intl={intl}
-                    />
+                    <LukkedeOgAvslåtteSøknader lukkedeOgAvslåtteSøknader={lukkedeOgAvslåtteSøknader} intl={intl} />
                     <Utbetalinger
                         sakId={props.sak.id}
                         søker={props.søker}
@@ -298,7 +295,7 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
     );
 };
 
-const LukkedeOgFerdigBehandledeSøknader = (props: { lukkedeOgAvslåtteSøknader: Søknad[]; intl: IntlShape }) => {
+const LukkedeOgAvslåtteSøknader = (props: { lukkedeOgAvslåtteSøknader: Søknad[]; intl: IntlShape }) => {
     if (props.lukkedeOgAvslåtteSøknader.length === 0) return null;
 
     return (
