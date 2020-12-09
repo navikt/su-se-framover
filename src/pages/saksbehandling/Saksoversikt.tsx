@@ -6,7 +6,7 @@ import React, { useEffect, useMemo } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
-import { ErrorCode } from '~api/apiClient';
+import { ApiError, ErrorCode } from '~api/apiClient';
 import Hendelseslogg from '~components/Hendelseslogg';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
 import Personsøk from '~components/Personsøk/Personsøk';
@@ -65,6 +65,24 @@ const Saksoversikt = () => {
 
     const rerouteToSak = (id: string) => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: id }));
 
+    const visErrorMelding = (error: ApiError): string => {
+        switch (error.statusCode) {
+            case ErrorCode.Unauthorized:
+                return intl.formatMessage({ id: 'feilmelding.ikkeTilgang' });
+            case ErrorCode.NotFound:
+                return intl.formatMessage({
+                    id: 'feilmelding.fantIkkeSak',
+                });
+            default:
+                return intl.formatMessage(
+                    { id: 'feilmelding.generisk' },
+                    {
+                        statusCode: error.statusCode,
+                    }
+                );
+        }
+    };
+
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
             <Switch>
@@ -76,16 +94,7 @@ const Saksoversikt = () => {
                             () => <NavFrontendSpinner />,
                             () =>
                                 RemoteData.isFailure(søker) ? (
-                                    <AlertStripe type="feil">
-                                        {søker.error.statusCode === ErrorCode.Unauthorized
-                                            ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
-                                            : intl.formatMessage(
-                                                  { id: 'feilmelding.generisk' },
-                                                  {
-                                                      statusCode: søker.error.statusCode,
-                                                  }
-                                              )}
-                                    </AlertStripe>
+                                    <AlertStripe type="feil">{visErrorMelding(søker.error)}</AlertStripe>
                                 ) : (
                                     RemoteData.isFailure(sak) && (
                                         <AlertStripe type="feil">
@@ -153,18 +162,7 @@ const Saksoversikt = () => {
                             person={søker}
                         />
                         {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
-                            <AlertStripe type="feil">
-                                {sak.error.statusCode === ErrorCode.NotFound
-                                    ? intl.formatMessage({
-                                          id: 'feilmelding.fantIkkeSak',
-                                      })
-                                    : intl.formatMessage(
-                                          { id: 'feilmelding.generisk' },
-                                          {
-                                              statusCode: sak.error.statusCode,
-                                          }
-                                      )}
-                            </AlertStripe>
+                            <AlertStripe type="feil">{visErrorMelding(sak.error)}</AlertStripe>
                         )}
                     </div>
                 </Route>
