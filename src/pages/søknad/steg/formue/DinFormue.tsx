@@ -40,8 +40,8 @@ const schema = yup.object<FormData>({
         .number()
         .nullable()
         .defined()
-        .when('harFormue', {
-            is: true,
+        .when('borIBolig', {
+            is: false,
             then: yup
                 .number()
                 .typeError('Verdi på bolig må være et tall')
@@ -370,6 +370,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     name="verdiPåBolig"
                                     label={<FormattedMessage id="input.verdiPåBolig.label" />}
                                     value={formik.values.verdiPåBolig || ''}
+                                    feil={formik.errors.verdiPåBolig}
                                     onChange={formik.handleChange}
                                 />
                                 <Input
@@ -377,6 +378,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     name="boligBrukesTil"
                                     label={<FormattedMessage id="input.boligBrukesTil.label" />}
                                     value={formik.values.boligBrukesTil || ''}
+                                    feil={formik.errors.boligBrukesTil}
                                     onChange={formik.handleChange}
                                 />
                             </div>
@@ -407,6 +409,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     name="depositumsBeløp"
                                     label={<FormattedMessage id="input.depositumsBeløp.label" />}
                                     value={formik.values.depositumsBeløp || ''}
+                                    feil={formik.errors.depositumsBeløp}
                                     onChange={formik.handleChange}
                                 />
                                 <Input
@@ -414,6 +417,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     name="kontonummer"
                                     label={<FormattedMessage id="input.kontonummer.label" />}
                                     value={formik.values.kontonummer || ''}
+                                    feil={formik.errors.kontonummer}
                                     onChange={formik.handleChange}
                                 />
                             </div>
@@ -437,13 +441,14 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             />
                         )}
 
-                        {formik.values.eierMerEnnEnBolig && (
+                        {formik.values.eierBolig && formik.values.eierMerEnnEnBolig && (
                             <div className={sharedStyles.inputFelterDiv}>
                                 <Input
                                     id="verdiPåEiendom"
                                     name="verdiPåEiendom"
                                     label={<FormattedMessage id="input.verdiPåEiendom.label" />}
                                     value={formik.values.verdiPåEiendom || ''}
+                                    feil={formik.errors.verdiPåEiendom}
                                     onChange={formik.handleChange}
                                 />
                                 <Input
@@ -451,6 +456,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     name="eiendomBrukesTil"
                                     label={<FormattedMessage id="input.eiendomBrukesTil.label" />}
                                     value={formik.values.eiendomBrukesTil || ''}
+                                    feil={formik.errors.eiendomBrukesTil}
                                     onChange={formik.handleChange}
                                 />
                             </div>
@@ -532,6 +538,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 name="innskuddsBeløp"
                                 bredde="S"
                                 label={<FormattedMessage id="input.innskuddsBeløp.label" />}
+                                feil={formik.errors.innskuddsBeløp}
                                 value={formik.values.innskuddsBeløp || ''}
                                 onChange={formik.handleChange}
                             />
@@ -560,6 +567,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 bredde="S"
                                 label={<FormattedMessage id="input.verdipapirBeløp.label" />}
                                 value={formik.values.verdipapirBeløp || ''}
+                                feil={formik.errors.verdipapirBeløp}
                                 onChange={formik.handleChange}
                             />
                         )}
@@ -587,6 +595,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 bredde="S"
                                 label={<FormattedMessage id="input.skylderNoenMegPengerBeløp.label" />}
                                 value={formik.values.skylderNoenMegPengerBeløp || ''}
+                                feil={formik.errors.skylderNoenMegPengerBeløp}
                                 onChange={formik.handleChange}
                             />
                         )}
@@ -614,6 +623,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 bredde="S"
                                 label={<FormattedMessage id="input.kontanterBeløp.label" />}
                                 value={formik.values.kontanterBeløp || ''}
+                                feil={formik.errors.kontanterBeløp}
                                 onChange={formik.handleChange}
                             />
                         )}
