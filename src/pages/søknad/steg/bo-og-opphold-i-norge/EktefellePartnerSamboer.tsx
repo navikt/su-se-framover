@@ -36,6 +36,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                     });
                 }}
                 feil={props.feil}
+                autoComplete="off"
             />
 
             <div className={styles.ufør}>
@@ -75,8 +76,9 @@ interface FnrInputProps {
     fnr: Nullable<string>;
     onFnrChange: (fnr: string) => void;
     feil?: React.ReactNode;
+    autoComplete?: string;
 }
-const FnrInput = ({ fnr, onFnrChange, feil }: FnrInputProps) => {
+const FnrInput = ({ fnr, onFnrChange, feil, autoComplete }: FnrInputProps) => {
     const [person, setPerson] = useState<Person | null>(null);
     const [harIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
     const intl = useI18n({ messages });
@@ -111,6 +113,7 @@ const FnrInput = ({ fnr, onFnrChange, feil }: FnrInputProps) => {
                 value={fnr ?? ''}
                 maxLength={11}
                 feil={feil}
+                autoComplete={autoComplete}
             />
 
             {person && (
