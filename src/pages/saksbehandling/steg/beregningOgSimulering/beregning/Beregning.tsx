@@ -46,7 +46,6 @@ interface FormData {
 const Beregning = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [hasSubmitted, setHasSubmitted] = useState(false);
     const [needsBeregning, setNeedsBeregning] = useState(false);
 
     const { beregningStatus, simuleringStatus } = useAppSelector((state) => state.sak);
@@ -168,7 +167,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 }),
             fradrag: yup.array(fradragSchema.required()).defined(),
         }),
-        validateOnChange: hasSubmitted,
+        validateOnChange: false,
     });
     const history = useHistory();
 
@@ -178,7 +177,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 left: (
                     <form
                         onSubmit={(e) => {
-                            setHasSubmitted(true);
                             formik.handleSubmit(e);
                         }}
                     >
