@@ -21,6 +21,7 @@ import { JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { Adresse, IngenAdresseGrunn } from '~api/personApi';
 import { DelerBoligMed, EPSFormData } from '~features/søknad/types';
+import { formatAdresse } from '~lib/formatUtils';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
@@ -171,7 +172,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
     if (RemoteData.isSuccess(søker) && søker.value.adresse) {
         adresser = søker.value.adresse?.map((a) => ({
-            label: `${a.adresselinje}, ${a.postnummer}, ${a.poststed}`,
+            label: formatAdresse(a),
             radioValue: a,
         }));
     }

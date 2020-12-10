@@ -14,6 +14,7 @@ import utenlandsoppholdMessages from '~/pages/søknad/steg/utenlandsopphold/uten
 import { Person } from '~api/personApi';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { DelerBoligMed } from '~features/søknad/types';
+import { formatAdresse } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import { Søknadsteg } from '~pages/søknad/types';
 
@@ -225,9 +226,9 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                     <Oppsummeringsfelt
                         label={intl.formatMessage({ id: 'boOgOpphold.adresse' })}
                         verdi={
-                            søknad.boOgOpphold.borPåAdresse?.adresselinje ??
-                            ingenAdresseGrunnTekst(søknad.boOgOpphold.ingenAdresseGrunn, intl) ??
-                            'Ubesvart'
+                            søknad.boOgOpphold.borPåAdresse
+                                ? formatAdresse(søknad.boOgOpphold.borPåAdresse)
+                                : ingenAdresseGrunnTekst(søknad.boOgOpphold.ingenAdresseGrunn, intl) ?? 'Ubesvart'
                         }
                     />
 
