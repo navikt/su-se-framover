@@ -4,6 +4,7 @@ import Stegindikator from 'nav-frontend-stegindikator';
 import { Undertittel, Feilmelding, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useEffect } from 'react';
+import { IntlShape } from 'react-intl';
 import { useParams, useHistory, Link } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
@@ -35,6 +36,28 @@ import Oppsummering from './steg/oppsummering/Oppsummering';
 import Uførevedtak from './steg/uførevedtak/Uførevedtak';
 import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
 import { Søknadsteg } from './types';
+
+const Steg = (props: { title: string; step: Søknadsteg; søknad: SøknadState; søker: Person; intl: IntlShape }) => {
+    const sectionRef = React.useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        if (sectionRef.current) {
+            sectionRef.current.focus();
+        }
+    }, [props.step]);
+    return (
+        <section aria-labelledby="steg-heading">
+            <div className={styles.stegHeadingContainer} ref={sectionRef} tabIndex={-1}>
+                <Undertittel tag="h3" id="steg-heading">
+                    {props.title}
+                </Undertittel>
+                {(props.step === Søknadsteg.DinInntekt || props.step === Søknadsteg.EktefellesInntekt) && (
+                    <p>{props.intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' })}</p>
+                )}
+            </div>
+            {showSteg(props.step, props.søknad, props.søker)}
+        </section>
+    );
+};
 
 const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
     switch (step) {
@@ -165,10 +188,6 @@ const index = () => {
         );
     }, [step]);
 
-    if (!step) {
-        return <Inngang nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })} />;
-    }
-
     const steg = [
         {
             label: intl.formatMessage({ id: 'steg.uforevedtak' }),
@@ -231,6 +250,10 @@ const index = () => {
         </div>
     );
 
+    if (!step) {
+        return <Inngang nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })} />;
+    }
+
     return (
         <div className={styles.container}>
             {pipe(
@@ -242,13 +265,13 @@ const index = () => {
                     (søker) => (
                         <>
                             <div className={styles.headerContainer}>
-                                <div className={styles.sidetittelContainer}>
-                                    <Systemtittel>Søknad for</Systemtittel>
-                                </div>
+                                <Systemtittel>
+                                    <div className={styles.sidetittelContainer}>Søknad for</div>
 
-                                <div className={styles.personkortContainer}>
-                                    <Personkort person={søker} />
-                                </div>
+                                    <div className={styles.personkortContainer}>
+                                        <Personkort person={søker} />
+                                    </div>
+                                </Systemtittel>
 
                                 {step !== Søknadsteg.Kvittering && (
                                     <>
@@ -274,14 +297,16 @@ const index = () => {
                                                 }
                                             />
                                         </div>
-                                        <Undertittel tag="h3">{steg.find((s) => s.step === step)?.label}</Undertittel>
-                                        {(step === Søknadsteg.DinInntekt || step === Søknadsteg.EktefellesInntekt) && (
-                                            <p>{intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' })}</p>
-                                        )}
                                     </>
                                 )}
                             </div>
-                            {showSteg(step, søknad, søker)}
+                            <Steg
+                                title={steg.find((s) => s.step === step)?.label || ''}
+                                step={step}
+                                søknad={søknad}
+                                søker={søker}
+                                intl={intl}
+                            />
                         </>
                     )
                 )
