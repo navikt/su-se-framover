@@ -78,6 +78,7 @@ const Personsøk = (props: PersonsøkProps) => {
                             name="fnr"
                             className={styles.inputfelt}
                             autoFocus
+                            autoComplete="on"
                             onChange={(e) => {
                                 setFnr(e.target.value);
                             }}
