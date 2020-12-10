@@ -352,6 +352,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         {formik.values.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
                             <EktefellePartnerSamboer
+                                id="ektefellePartnerSamboer"
                                 onChange={(eps) =>
                                     formik.setValues((values) => ({
                                         ...values,

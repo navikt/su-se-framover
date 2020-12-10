@@ -16,6 +16,7 @@ import messages from './bo-og-opphold-i-norge-nb';
 import styles from './ektefelle-partner-samboer.module.less';
 
 interface Props {
+    id: string;
     onChange: (eps: EPSFormData) => void;
     value: Nullable<EPSFormData>;
     feil?: string;
@@ -26,7 +27,7 @@ const EktefellePartnerSamboer = (props: Props) => {
     const intl = useI18n({ messages });
 
     return (
-        <div>
+        <div id={props.id} tabIndex={-1}>
             <FnrInput
                 fnr={epsFormData.fnr}
                 onFnrChange={(fnr) => {
