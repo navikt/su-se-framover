@@ -181,15 +181,16 @@ const KjøretøyInputFelter = (props: {
         <div>
             {props.arr.map((input, idx) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[idx] : null;
-                const kjøretøyId = `${props.feltnavn}[${idx}].kjøretøy`;
-                const kjøretøyVerdiId = `${props.feltnavn}[${idx}].kjøretøyVerdi`;
+                const idLink = (key: keyof typeof input) => `${props.feltnavn}[${idx}].${key}`;
+                const kjøretøyId = idLink('kjøretøyDeEier');
+                const kjøretøyVerdiId = idLink('verdiPåKjøretøy');
 
                 return (
                     <div className={sharedStyles.inputFelterDiv} key={idx}>
                         <div>
                             <Input
-                                id={`${kjøretøyId}`}
-                                name={`${kjøretøyId}`}
+                                id={kjøretøyId}
+                                name={kjøretøyId}
                                 label={<FormattedMessage id="input.kjøretøyDeEier.label" />}
                                 value={input.kjøretøyDeEier}
                                 onChange={(e) =>
@@ -199,6 +200,7 @@ const KjøretøyInputFelter = (props: {
                                         verdiPåKjøretøy: input.verdiPåKjøretøy,
                                     })
                                 }
+                                autoComplete="off"
                             />
                             {errorForLinje && typeof errorForLinje === 'object' && (
                                 <SkjemaelementFeilmelding>{errorForLinje.kjøretøyDeEier}</SkjemaelementFeilmelding>
@@ -206,8 +208,8 @@ const KjøretøyInputFelter = (props: {
                         </div>
                         <div>
                             <Input
-                                id={`${kjøretøyVerdiId}`}
-                                name={`${kjøretøyVerdiId}`}
+                                id={kjøretøyVerdiId}
+                                name={kjøretøyVerdiId}
                                 label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
                                 value={input.verdiPåKjøretøy}
                                 onChange={(e) => {
@@ -217,6 +219,7 @@ const KjøretøyInputFelter = (props: {
                                         verdiPåKjøretøy: e.target.value,
                                     });
                                 }}
+                                autoComplete="off"
                             />
                             {errorForLinje && typeof errorForLinje === 'object' && (
                                 <SkjemaelementFeilmelding>{errorForLinje.verdiPåKjøretøy}</SkjemaelementFeilmelding>
