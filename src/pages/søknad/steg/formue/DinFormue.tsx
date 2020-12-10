@@ -374,6 +374,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     label={<FormattedMessage id="input.verdiPåBolig.label" />}
                                     value={formik.values.verdiPåBolig || ''}
                                     onChange={formik.handleChange}
+                                    autoComplete="off"
                                 />
                                 <Input
                                     id="boligBrukesTil"
@@ -381,6 +382,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     label={<FormattedMessage id="input.boligBrukesTil.label" />}
                                     value={formik.values.boligBrukesTil || ''}
                                     onChange={formik.handleChange}
+                                    autoComplete="off"
                                 />
                             </div>
                         )}
@@ -411,6 +413,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     label={<FormattedMessage id="input.depositumsBeløp.label" />}
                                     value={formik.values.depositumsBeløp || ''}
                                     onChange={formik.handleChange}
+                                    autoComplete="off"
                                 />
                                 <Input
                                     id="kontonummer"
@@ -418,6 +421,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     label={<FormattedMessage id="input.kontonummer.label" />}
                                     value={formik.values.kontonummer || ''}
                                     onChange={formik.handleChange}
+                                    autoComplete="off"
                                 />
                             </div>
                         )}
@@ -448,6 +452,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     label={<FormattedMessage id="input.verdiPåEiendom.label" />}
                                     value={formik.values.verdiPåEiendom || ''}
                                     onChange={formik.handleChange}
+                                    autoComplete="off"
                                 />
                                 <Input
                                     id="eiendomBrukesTil"
@@ -455,6 +460,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     label={<FormattedMessage id="input.eiendomBrukesTil.label" />}
                                     value={formik.values.eiendomBrukesTil || ''}
                                     onChange={formik.handleChange}
+                                    autoComplete="off"
                                 />
                             </div>
                         )}
@@ -564,6 +570,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 label={<FormattedMessage id="input.verdipapirBeløp.label" />}
                                 value={formik.values.verdipapirBeløp || ''}
                                 onChange={formik.handleChange}
+                                autoComplete="off"
                             />
                         )}
 
@@ -591,6 +598,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 label={<FormattedMessage id="input.skylderNoenMegPengerBeløp.label" />}
                                 value={formik.values.skylderNoenMegPengerBeløp || ''}
                                 onChange={formik.handleChange}
+                                autoComplete="off"
                             />
                         )}
 
@@ -618,6 +626,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 label={<FormattedMessage id="input.kontanterBeløp.label" />}
                                 value={formik.values.kontanterBeløp || ''}
                                 onChange={formik.handleChange}
+                                autoComplete="off"
                             />
                         )}
                     </div>
