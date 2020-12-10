@@ -3,30 +3,27 @@ import { Nullable } from '~lib/types';
 import { Behandlingsinformasjon, FormueStatus, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
+export const keyNavnForFormue: Array<keyof FormueVerdier> = [
+    'verdiIkkePrimærbolig',
+    'verdiEiendommer',
+    'verdiKjøretøy',
+    'innskudd',
+    'verdipapir',
+    'pengerSkyldt',
+    'kontanter',
+    'depositumskonto',
+];
+
 export function kalkulerFormue(verdier: Nullable<FormueVerdier>) {
     if (!verdier) {
         return 0;
     }
-
-    const formuer = [
-        verdier.verdiIkkePrimærbolig,
-        verdier.verdiKjøretøy,
-        verdier.innskudd,
-        verdier.verdipapir,
-        verdier.pengerSkyldt,
-        verdier.kontanter,
-    ].filter(Boolean) as number[];
+    const formuer = keyNavnForFormue.map((keyNavn) => verdier[keyNavn]).filter(Boolean) as number[];
 
     return formuer.reduce((acc, formue) => acc + formue, 0) - (verdier.depositumskonto ?? 0);
 }
 
-export function totalVerdiKjøretøy(
-    kjøretøyArray: Nullable<Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>>
-) {
-    if (kjøretøyArray === null) {
-        return 0;
-    }
-
+export function totalVerdiKjøretøy(kjøretøyArray: Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>) {
     return kjøretøyArray.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0);
 }
 
@@ -35,7 +32,8 @@ export function kalkulerFormueFraSøknad(f: SøknadInnhold['formue']) {
         [
             f.verdiPåBolig ?? 0,
             f.verdiPåEiendom ?? 0,
-            totalVerdiKjøretøy(f.kjøretøy),
+            f.verdiPåEiendom ?? 0,
+            totalVerdiKjøretøy(f.kjøretøy ?? []),
             f.innskuddsBeløp ?? 0,
             f.verdipapirBeløp ?? 0,
             f.skylderNoenMegPengerBeløp ?? 0,
@@ -65,7 +63,8 @@ export function getVerdier(
 ): FormueVerdier {
     return {
         verdiIkkePrimærbolig: verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0,
-        verdiKjøretøy: verdier?.verdiKjøretøy ?? totalVerdiKjøretøy(søknadsFormue?.kjøretøy ?? null) ?? 0,
+        verdiEiendommer: verdier?.verdiEiendommer ?? søknadsFormue?.verdiPåEiendom ?? 0,
+        verdiKjøretøy: verdier?.verdiKjøretøy ?? totalVerdiKjøretøy(søknadsFormue?.kjøretøy ?? []) ?? 0,
         innskudd: verdier?.innskudd ?? (søknadsFormue?.innskuddsBeløp ?? 0) + (søknadsFormue?.depositumsBeløp ?? 0),
         verdipapir: verdier?.verdipapir ?? søknadsFormue?.verdipapirBeløp ?? 0,
         pengerSkyldt: verdier?.pengerSkyldt ?? søknadsFormue?.skylderNoenMegPengerBeløp ?? 0,
@@ -75,13 +74,8 @@ export function getVerdier(
 }
 
 export function getInitialVerdier(): FormueVerdier {
-    return {
-        verdiIkkePrimærbolig: 0,
-        verdiKjøretøy: 0,
-        innskudd: 0,
-        pengerSkyldt: 0,
-        verdipapir: 0,
-        kontanter: 0,
-        depositumskonto: 0,
-    };
+    return keyNavnForFormue.reduce(
+        (verdier: Partial<FormueVerdier>, key: keyof Partial<FormueVerdier>) => ((verdier[key] = 0), verdier),
+        {}
+    ) as FormueVerdier;
 }

@@ -12,6 +12,7 @@ export default {
     'feil.åpnerAnnenPersonFormueMenViserInput': 'Du må lagre den andre formuen før du kan endre denne.',
 
     'input.label.verdiIkkePrimærbolig': 'Verdi boliger som ikke er primærbolig',
+    'input.label.verdiEiendommer': 'Verdi på eiendommene',
     'input.label.verdiKjøretøy': 'Verdi bil(sekundær), campingvogn eller kjøretøy',
     'input.label.innskudd': 'Innskudd på konto (inkludert depositumskonto)',
     'input.label.verdipapir': 'Verdipapirer, aksjefond ++',
