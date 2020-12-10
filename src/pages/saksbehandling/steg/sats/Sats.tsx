@@ -177,6 +177,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                         </div>
                         {!eps && (
                             <SuperRadioGruppe
+                                id="delerSøkerBolig"
                                 legend={intl.formatMessage({ id: 'radio.delerSøkerBoligOver18.legend' })}
                                 values={formik.values}
                                 errors={formik.errors}
@@ -201,6 +202,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                         )}
                         {eps?.alder && eps.alder < 67 ? (
                             <SuperRadioGruppe
+                                id="mottarEktemakeEllerSamboerSU"
                                 legend={intl.formatMessage({
                                     id: 'radio.ektemakeEllerSamboerUførFlyktning.legend',
                                 })}

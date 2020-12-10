@@ -318,6 +318,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                     >
                         <div className={styles.formElement}>
                             <SuperRadioGruppe
+                                id="møttPersonlig"
                                 legend={intl.formatMessage({ id: 'radio.personligOppmøte.legend' })}
                                 values={formik.values}
                                 errors={formik.errors}
@@ -342,6 +343,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                         {formik.values.møttPersonlig === HarMøttPersonlig.Nei && (
                             <div className={styles.formElement}>
                                 <SuperRadioGruppe
+                                    id="grunnForManglendePersonligOppmøte"
                                     legend={intl.formatMessage({ id: 'radio.personligOppmøte.grunn.legend' })}
                                     values={formik.values}
                                     errors={formik.errors}
