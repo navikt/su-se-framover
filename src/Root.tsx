@@ -15,6 +15,7 @@ import Saksoversikt from '~pages/saksbehandling/Saksoversikt';
 
 import ErrorBoundary from './components/ErrorBoundary';
 import Header from './components/header/Header';
+import WithDocTitle from './components/WithDocTitle';
 import * as meSlice from './features/me/me.slice';
 import * as Cookies from './lib/cookies';
 import { pipe } from './lib/fp';
@@ -52,16 +53,16 @@ const Root = () => {
                                 <ScrollToTop />
                                 <Switch>
                                     <Route exact path={routes.home.path}>
-                                        <HomePage />
+                                        <WithDocTitle title="Hjem" Page={HomePage} />
                                     </Route>
                                     <Route path={routes.soknad.path}>
-                                        <Soknad />
+                                        <WithDocTitle title="Søknad" Page={Soknad} />
                                     </Route>
                                     <Route path={routes.saksoversiktIndex.path}>
-                                        <Saksoversikt />
+                                        <WithDocTitle title="Saksbehandling" Page={Saksoversikt} />
                                     </Route>
                                     <Route path={routes.attestering.path}>
-                                        <Attestering />
+                                        <WithDocTitle title="Attestering" Page={Attestering} />
                                     </Route>
                                     <Route>404</Route>
                                 </Switch>
