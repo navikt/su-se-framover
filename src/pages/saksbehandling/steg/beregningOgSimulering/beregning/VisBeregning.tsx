@@ -45,7 +45,7 @@ const DetaljertFradrag = (props: {
         label: string;
         verdi: string;
     };
-    detaljer: Array<{ label: string; verdi: string }>;
+    detaljer: Array<{ label: string; verdi: string; epsUtland?: boolean }>;
 }) => (
     <div className={styles.detaljertfradrag}>
         <Normaltekst className={styles.linje}>
@@ -54,7 +54,7 @@ const DetaljertFradrag = (props: {
         </Normaltekst>
         <ul className={styles.detaljertFradragliste}>
             {props.detaljer.map((d) => (
-                <li key={d.label} className={styles.linje}>
+                <li key={d.label} className={d.epsUtland ? styles.linjeEpsUtland : styles.linje}>
                     <Undertekst>{d.label}</Undertekst>
                     <Undertekst>{d.verdi}</Undertekst>
                 </li>
@@ -143,13 +143,47 @@ const VisBeregning = (props: Props) => {
                                                     label: intl.formatMessage({
                                                         id: BeregningUtils.fradragstypeResourceId(fradrag.type),
                                                     }),
-                                                    verdi: formatCurrency(intl, fradrag.beløp),
+                                                    verdi: formatCurrency(intl, -fradrag.beløp),
                                                 }}
                                                 detaljer={[
-                                                    ...månedsberegninger[0].epsInputFradrag.map((f) => ({
-                                                        label: f.type,
-                                                        verdi: formatCurrency(intl, -f.beløp),
-                                                    })),
+                                                    ...månedsberegninger[0].epsInputFradrag.flatMap((f) => {
+                                                        if (!f.utenlandskInntekt) {
+                                                            return {
+                                                                label: intl.formatMessage({
+                                                                    id: BeregningUtils.fradragstypeResourceId(f.type),
+                                                                }),
+                                                                verdi: formatCurrency(intl, -f.beløp),
+                                                            };
+                                                        }
+                                                        return [
+                                                            {
+                                                                label: intl.formatMessage({
+                                                                    id: BeregningUtils.fradragstypeResourceId(f.type),
+                                                                }),
+                                                                verdi: formatCurrency(intl, -f.beløp),
+                                                            },
+                                                            {
+                                                                label: intl.formatMessage({
+                                                                    id: 'fradrag.utenlandsk.beløp',
+                                                                }),
+                                                                verdi: formatCurrency(
+                                                                    intl,
+                                                                    f.utenlandskInntekt.beløpIUtenlandskValuta,
+                                                                    {
+                                                                        currency: f.utenlandskInntekt.valuta,
+                                                                    }
+                                                                ),
+                                                                epsUtland: true,
+                                                            },
+                                                            {
+                                                                label: intl.formatMessage({
+                                                                    id: 'fradrag.utenlandsk.kurs',
+                                                                }),
+                                                                verdi: intl.formatNumber(f.utenlandskInntekt.kurs),
+                                                                epsUtland: true,
+                                                            },
+                                                        ];
+                                                    }),
                                                     {
                                                         label: intl.formatMessage({
                                                             id: 'fradrag.eps.fribeløp',
@@ -169,7 +203,7 @@ const VisBeregning = (props: Props) => {
                                                 detaljer={[
                                                     {
                                                         label: intl.formatMessage({
-                                                            id: 'fradrag.utenlandsk.årsbeløp',
+                                                            id: 'fradrag.utenlandsk.beløp',
                                                         }),
                                                         verdi: formatCurrency(
                                                             intl,
