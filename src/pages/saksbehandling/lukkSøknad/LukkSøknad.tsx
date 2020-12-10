@@ -104,7 +104,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
         >
             <div>
                 <p>
-                    {intl.formatMessage({ id: 'display.sakId' })} {urlParams.sakId}
+                    {intl.formatMessage({ id: 'display.saksnummer' })} {props.sak.saksnummer}
                 </p>
                 <p>
                     {intl.formatMessage({ id: 'display.søknadId' })} {urlParams.soknadId}
@@ -148,12 +148,13 @@ const LukkSøknad = (props: { sak: Sak }) => {
                     onDatoSøkerTrakkSøknadChange={(val) =>
                         formik.setValues((values) => ({ ...values, datoSøkerTrakkSøknad: val }))
                     }
+                    søknadLukketStatus={søknadLukketStatus}
                 />
             )}
 
             {formik.values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Bortfalt && (
                 <div className={styles.buttonsContainer}>
-                    <Fareknapp spinner={RemoteData.isPending(lukketSøknadBrevutkastStatus)}>
+                    <Fareknapp spinner={RemoteData.isPending(søknadLukketStatus)}>
                         {intl.formatMessage({ id: 'knapp.lukkSøknad' })}
                     </Fareknapp>
                 </div>
@@ -181,6 +182,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
                             fritekst: val.fritekst,
                         }))
                     }
+                    søknadLukketStatus={søknadLukketStatus}
                     lukketSøknadBrevutkastStatus={lukketSøknadBrevutkastStatus}
                 />
             )}

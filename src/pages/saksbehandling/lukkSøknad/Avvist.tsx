@@ -28,6 +28,7 @@ interface AvvistProps {
     lukkSøknadBegrunnelse: LukkSøknadBegrunnelse;
     avvistFormData: AvvistFormData;
     lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
+    søknadLukketStatus: RemoteData.RemoteData<ApiError, null>;
     feilmeldinger: FormikErrors<AvvistFormData>;
     onValueChange: (value: AvvistFormData) => void;
 }
@@ -129,7 +130,7 @@ const Avvist = (props: AvvistProps) => {
                         {intl.formatMessage({ id: 'knapp.seBrev' })}
                     </Knapp>
                 )}
-                <Fareknapp spinner={RemoteData.isPending(props.lukketSøknadBrevutkastStatus)}>
+                <Fareknapp spinner={RemoteData.isPending(props.søknadLukketStatus)}>
                     {intl.formatMessage({ id: 'knapp.lukkSøknad' })}
                 </Fareknapp>
             </div>

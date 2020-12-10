@@ -22,6 +22,7 @@ interface TrukketProps {
     onDatoSøkerTrakkSøknadChange: (dato: string) => void;
     feilmelding: string | undefined;
     lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
+    søknadLukketStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const Trukket = (props: TrukketProps) => {
@@ -89,7 +90,7 @@ const Trukket = (props: TrukketProps) => {
                 >
                     {intl.formatMessage({ id: 'knapp.seBrev' })}
                 </Knapp>
-                <Fareknapp spinner={RemoteData.isPending(props.lukketSøknadBrevutkastStatus)}>
+                <Fareknapp spinner={RemoteData.isPending(props.søknadLukketStatus)}>
                     {intl.formatMessage({ id: 'knapp.lukkSøknad' })}
                 </Fareknapp>
             </div>
