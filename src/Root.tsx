@@ -121,13 +121,16 @@ const ContentWrapper: React.FC = (props) => {
 
     return (
         <div>
+            <a href="#main-content" className="sr-only sr-only-focusable">
+                Hopp til innhold
+            </a>
             <Header
                 user={pipe(
                     loggedInUser,
                     RemoteData.getOrElse<unknown, LoggedInUser | null>(() => null)
                 )}
             />
-            <div className={styles.contentContainer}>
+            <main className={styles.contentContainer} id="main-content" tabIndex={-1}>
                 {pipe(
                     loggedInUser,
                     RemoteData.fold(
@@ -156,7 +159,7 @@ const ContentWrapper: React.FC = (props) => {
                         (u) => <UserProvider user={u}>{props.children}</UserProvider>
                     )
                 )}
-            </div>
+            </main>
         </div>
     );
 };
