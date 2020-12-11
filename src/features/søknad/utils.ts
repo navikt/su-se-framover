@@ -49,6 +49,7 @@ export const toAdresseFraSøknad = (adresse: Nullable<Adresse>): Nullable<Adress
               adresselinje: adresse.adresselinje,
               postnummer: adresse.postnummer,
               poststed: adresse.poststed,
+              bruksenhet: adresse.bruksenhet,
           }
         : null;
 };

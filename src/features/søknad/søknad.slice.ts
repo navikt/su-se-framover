@@ -18,6 +18,7 @@ export interface AdresseFraSøknad {
     adresselinje: string;
     postnummer: Nullable<string>;
     poststed: Nullable<string>;
+    bruksenhet: Nullable<string>;
 }
 
 export interface SøknadState {
