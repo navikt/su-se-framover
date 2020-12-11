@@ -12,13 +12,13 @@ export default {
     'display.fradrag.type': 'Type',
     'display.fradrag.beløp': 'Beløp per måned',
 
-    'display.input.beløpIUtenlandskValuta': 'Beløp i utenlandsk valuta',
+    'display.input.beløpIUtenlandskValuta': 'Månedsbeløp i utenlandsk valuta',
     'display.input.kurs': 'Kurs ved utregning',
     'display.input.valuta': 'Valuta',
 
     'display.simulerer': 'Simulerer',
 
-    'display.visBeregning.beløpIUtenlandskValuta': 'Beløp i utenlandsk valuta',
+    'display.visBeregning.beløpIUtenlandskValuta': 'Månedsbeløp i utenlandsk valuta',
     'display.visBeregning.valuta': 'Valuta',
     'display.visBeregning.kurs': 'Kurs',
     'display.visBeregning.sats.høy': 'Høy sats',
@@ -42,7 +42,7 @@ export default {
     'fradrag.type.forventetinntekt': 'Forventet inntekt',
     'fradrag.type.beregnetFradragEPS': 'Ektefelle/samboer totalt',
 
-    'fradrag.utenlandsk.årsbeløp': 'Årsbeløp i utenlandsk valuta',
+    'fradrag.utenlandsk.beløp': 'Månedsbeløp i utenlandsk valuta',
     'fradrag.utenlandsk.kurs': 'Kurs',
 
     'fradrag.eps.fribeløp': 'Fribeløp',

@@ -218,7 +218,9 @@ export const FradragInputs = (props: {
                                     name={utenlandskInntektId}
                                     value={fradrag.utenlandskInntekt}
                                     onChange={(v) => {
-                                        const beløp = Number.parseFloat(v.kurs) * Number(v.beløpIUtenlandskValuta);
+                                        const beløp = Math.round(
+                                            Number.parseFloat(v.kurs) * Number(v.beløpIUtenlandskValuta)
+                                        );
                                         props.onFradragChange(index, {
                                             ...fradrag,
                                             utenlandskInntekt: v,
