@@ -45,7 +45,7 @@ const Steg = (props: { title: string; step: Søknadsteg; søknad: SøknadState; 
         }
     }, [props.step]);
     return (
-        <section aria-labelledby="steg-heading">
+        <section aria-labelledby="steg-heading" className={styles.stegContainer}>
             <div className={styles.stegHeadingContainer} ref={sectionRef} tabIndex={-1}>
                 <Undertittel tag="h3" id="steg-heading">
                     {props.title}
