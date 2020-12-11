@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 
 import { Person } from '~api/personApi';
+import { showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -120,17 +121,15 @@ export const Utbetalinger = (props: {
                     <div className={styles.modalContainer}>
                         <Undertittel>
                             {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetalingerTil' })}{' '}
-                            {søker.navn.fornavn} {søker.navn.mellomnavn} {søker.navn.etternavn}
+                            {showName(søker.navn)}
                         </Undertittel>
                         <p>{intl.formatMessage({ id: 'display.utbetalingsperiode.bekreftStans' })}</p>
                         <div className={styles.modalKnappContainer}>
-                            <Flatknapp
-                                onClick={() => setModalOpen(false)}
-                                spinner={RemoteData.isPending(stansUtbetalingerStatus)}
-                            >
+                            <Flatknapp onClick={() => setModalOpen(false)}>
                                 {intl.formatMessage({ id: 'display.utbetalingsperiode.avbryt' })}
                             </Flatknapp>
                             <Fareknapp
+                                spinner={RemoteData.isPending(stansUtbetalingerStatus)}
                                 onClick={() => {
                                     if (kanStanses && !RemoteData.isPending(stansUtbetalingerStatus)) {
                                         dispatch(
@@ -162,7 +161,7 @@ export const Utbetalinger = (props: {
                     </AlertStripe>
                 )}
                 {RemoteData.isSuccess(gjenopptaUtbetalingerStatus) && (
-                    <AlertStripe type="suksess">
+                    <AlertStripe type="suksess" className={styles.utbetalingGjenopptatt}>
                         {intl.formatMessage({ id: 'display.utbetalingsperiode.gjenopptattUtbetaling' })}
                     </AlertStripe>
                 )}

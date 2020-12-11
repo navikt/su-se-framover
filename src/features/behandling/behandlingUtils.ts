@@ -37,6 +37,9 @@ export function erIverksatt(behandling: Behandling): boolean {
         (status) => behandling.status === status
     );
 }
+export function erIverksattAvslag(behandling: Behandling): boolean {
+    return behandling.status === Behandlingsstatus.IVERKSATT_AVSLAG;
+}
 
 export function erAvslått(behandling: Behandling): boolean {
     return [

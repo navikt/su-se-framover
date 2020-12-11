@@ -85,7 +85,9 @@ const Behandlingsoppsummering = (props: { sakId: string; behandling: Behandling 
                 ) : props.behandling.status === Behandlingsstatus.TIL_ATTESTERING_INNVILGET ? (
                     <Ikon kind="ok-sirkel-fyll" className={styles.ikon} width={iconWidth} />
                 ) : null}
-                {erAvslått(props.behandling) && <Ikon kind="feil-sirkel-fyll" width={iconWidth} />}
+                {erAvslått(props.behandling) && (
+                    <Ikon kind="feil-sirkel-fyll" className={styles.ikon} width={iconWidth} />
+                )}
                 <p>
                     {intl.formatMessage({ id: 'behandlet.av' })} {user.navn}
                 </p>
