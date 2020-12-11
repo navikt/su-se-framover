@@ -1,4 +1,4 @@
-import { Adressebeskyttelse, Kjønn } from '~api/personApi';
+import { Adressebeskyttelse, Kjønn, Navn } from '~api/personApi';
 import { Nullable } from '~lib/types';
 
 import { Sats } from './Sats';
@@ -127,7 +127,7 @@ export interface Bosituasjon {
 
 export interface Ektefelle {
     fnr: Nullable<string>;
-    navn: Nullable<{ fornavn: string; mellomnavn: Nullable<string>; etternavn: string }>;
+    navn: Nullable<Navn>;
     kjønn: Nullable<Kjønn>;
     adressebeskyttelse: Nullable<Adressebeskyttelse>;
     skjermet: Nullable<boolean>;
