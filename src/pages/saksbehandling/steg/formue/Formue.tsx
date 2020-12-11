@@ -36,7 +36,7 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 import messages from './formue-nb';
 import styles from './formue.module.less';
 import { FormueInput, ShowSum } from './FormueComponents';
-import { getInitialVerdier, getFormue, kalkulerFormue, getVerdier } from './utils';
+import { getInitialVerdier, getFormue, kalkulerFormue, getVerdier, keyNavnForFormue } from './utils';
 
 type FormData = Formue & {
     borSøkerMedEPS: Nullable<boolean>;
@@ -45,6 +45,7 @@ type FormData = Formue & {
 
 const VerdierSchema: yup.ObjectSchema<FormueVerdier | undefined> = yup.object<FormueVerdier>({
     verdiIkkePrimærbolig: validatePositiveNumber,
+    verdiEiendommer: validatePositiveNumber,
     verdiKjøretøy: validatePositiveNumber,
     innskudd: validatePositiveNumber,
     verdipapir: validatePositiveNumber,
@@ -196,16 +197,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     );
 
     const vilkårErOppfylt = totalFormue < 0.5 * G;
-
-    const keyNavnForFormue: Array<keyof FormueVerdier> = [
-        'verdiIkkePrimærbolig',
-        'verdiKjøretøy',
-        'innskudd',
-        'verdipapir',
-        'pengerSkyldt',
-        'kontanter',
-        'depositumskonto',
-    ];
 
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>

@@ -89,6 +89,7 @@ export interface Formue {
 
 export interface FormueVerdier {
     verdiIkkePrimærbolig: Nullable<number>;
+    verdiEiendommer: Nullable<number>;
     verdiKjøretøy: Nullable<number>;
     innskudd: Nullable<number>;
     verdipapir: Nullable<number>;
