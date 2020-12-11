@@ -181,15 +181,16 @@ const KjøretøyInputFelter = (props: {
         <div>
             {props.arr.map((input, idx) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[idx] : null;
-                const kjøretøyId = `${props.feltnavn}[${idx}].kjøretøy`;
-                const kjøretøyVerdiId = `${props.feltnavn}[${idx}].kjøretøyVerdi`;
+                const idLink = (key: keyof typeof input) => `${props.feltnavn}[${idx}].${key}`;
+                const kjøretøyId = idLink('kjøretøyDeEier');
+                const kjøretøyVerdiId = idLink('verdiPåKjøretøy');
 
                 return (
                     <div className={sharedStyles.inputFelterDiv} key={idx}>
                         <div>
                             <Input
-                                id={`${kjøretøyId}`}
-                                name={`${kjøretøyId}`}
+                                id={kjøretøyId}
+                                name={kjøretøyId}
                                 label={<FormattedMessage id="input.kjøretøyDeEier.label" />}
                                 value={input.kjøretøyDeEier}
                                 onChange={(e) =>
@@ -199,6 +200,7 @@ const KjøretøyInputFelter = (props: {
                                         verdiPåKjøretøy: input.verdiPåKjøretøy,
                                     })
                                 }
+                                autoComplete="off"
                             />
                             {errorForLinje && typeof errorForLinje === 'object' && (
                                 <SkjemaelementFeilmelding>{errorForLinje.kjøretøyDeEier}</SkjemaelementFeilmelding>
@@ -206,8 +208,8 @@ const KjøretøyInputFelter = (props: {
                         </div>
                         <div>
                             <Input
-                                id={`${kjøretøyVerdiId}`}
-                                name={`${kjøretøyVerdiId}`}
+                                id={kjøretøyVerdiId}
+                                name={kjøretøyVerdiId}
                                 label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
                                 value={input.verdiPåKjøretøy}
                                 onChange={(e) => {
@@ -217,6 +219,7 @@ const KjøretøyInputFelter = (props: {
                                         verdiPåKjøretøy: e.target.value,
                                     });
                                 }}
+                                autoComplete="off"
                             />
                             {errorForLinje && typeof errorForLinje === 'object' && (
                                 <SkjemaelementFeilmelding>{errorForLinje.verdiPåKjøretøy}</SkjemaelementFeilmelding>
@@ -372,6 +375,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     value={formik.values.verdiPåBolig || ''}
                                     feil={formik.errors.verdiPåBolig}
                                     onChange={formik.handleChange}
+                                    autoComplete="off"
                                 />
                                 <Input
                                     id="boligBrukesTil"
@@ -380,6 +384,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     value={formik.values.boligBrukesTil || ''}
                                     feil={formik.errors.boligBrukesTil}
                                     onChange={formik.handleChange}
+                                    autoComplete="off"
                                 />
                             </div>
                         )}
@@ -411,6 +416,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     value={formik.values.depositumsBeløp || ''}
                                     feil={formik.errors.depositumsBeløp}
                                     onChange={formik.handleChange}
+                                    autoComplete="off"
                                 />
                                 <Input
                                     id="kontonummer"
@@ -419,6 +425,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     value={formik.values.kontonummer || ''}
                                     feil={formik.errors.kontonummer}
                                     onChange={formik.handleChange}
+                                    autoComplete="off"
                                 />
                             </div>
                         )}
@@ -450,6 +457,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     value={formik.values.verdiPåEiendom || ''}
                                     feil={formik.errors.verdiPåEiendom}
                                     onChange={formik.handleChange}
+                                    autoComplete="off"
                                 />
                                 <Input
                                     id="eiendomBrukesTil"
@@ -458,6 +466,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     value={formik.values.eiendomBrukesTil || ''}
                                     feil={formik.errors.eiendomBrukesTil}
                                     onChange={formik.handleChange}
+                                    autoComplete="off"
                                 />
                             </div>
                         )}
@@ -569,6 +578,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 value={formik.values.verdipapirBeløp || ''}
                                 feil={formik.errors.verdipapirBeløp}
                                 onChange={formik.handleChange}
+                                autoComplete="off"
                             />
                         )}
 
@@ -597,6 +607,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 value={formik.values.skylderNoenMegPengerBeløp || ''}
                                 feil={formik.errors.skylderNoenMegPengerBeløp}
                                 onChange={formik.handleChange}
+                                autoComplete="off"
                             />
                         )}
 
@@ -625,6 +636,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 value={formik.values.kontanterBeløp || ''}
                                 feil={formik.errors.kontanterBeløp}
                                 onChange={formik.handleChange}
+                                autoComplete="off"
                             />
                         )}
                     </div>

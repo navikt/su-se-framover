@@ -16,6 +16,7 @@ import messages from './bo-og-opphold-i-norge-nb';
 import styles from './ektefelle-partner-samboer.module.less';
 
 interface Props {
+    id: string;
     onChange: (eps: EPSFormData) => void;
     value: Nullable<EPSFormData>;
     feil?: string;
@@ -26,7 +27,7 @@ const EktefellePartnerSamboer = (props: Props) => {
     const intl = useI18n({ messages });
 
     return (
-        <div>
+        <div id={props.id} tabIndex={-1}>
             <FnrInput
                 fnr={epsFormData.fnr}
                 onFnrChange={(fnr) => {
@@ -36,6 +37,7 @@ const EktefellePartnerSamboer = (props: Props) => {
                     });
                 }}
                 feil={props.feil}
+                autoComplete="off"
             />
 
             <div className={styles.ufør}>
@@ -75,8 +77,9 @@ interface FnrInputProps {
     fnr: Nullable<string>;
     onFnrChange: (fnr: string) => void;
     feil?: React.ReactNode;
+    autoComplete?: string;
 }
-const FnrInput = ({ fnr, onFnrChange, feil }: FnrInputProps) => {
+const FnrInput = ({ fnr, onFnrChange, feil, autoComplete }: FnrInputProps) => {
     const [person, setPerson] = useState<Person | null>(null);
     const [harIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
     const intl = useI18n({ messages });
@@ -111,6 +114,7 @@ const FnrInput = ({ fnr, onFnrChange, feil }: FnrInputProps) => {
                 value={fnr ?? ''}
                 maxLength={11}
                 feil={feil}
+                autoComplete={autoComplete}
             />
 
             {person && (

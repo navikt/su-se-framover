@@ -4,7 +4,7 @@ import { useFormik, FormikErrors } from 'formik';
 import { Datepicker } from 'nav-datovelger';
 import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
-import { Feiloppsummering, Label, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
+import { Feiloppsummering, Label, SkjemaelementFeilmelding, SkjemaGruppe } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -94,6 +94,7 @@ const schema = yup.object<FormData>({
 const MultiTidsperiodevelger = (props: {
     perioder: Array<{ utreisedato: string; innreisedato: string }>;
     errors: string | string[] | Array<FormikErrors<{ utreisedato: string; innreisedato: string }>> | undefined;
+    legend: string;
     feltnavn: string;
     onChange: (element: { index: number; utreisedato: string; innreisedato: string }) => void;
     onLeggTilClick: () => void;
@@ -107,14 +108,18 @@ const MultiTidsperiodevelger = (props: {
             const innreisedatoId = `${baseId}.innreisedato`;
             return (
                 <div key={baseId} id={baseId} className={styles.reiseradContainer}>
-                    <div
+                    <SkjemaGruppe
                         className={classNames(styles.reiserad, {
                             [styles.feltfeil]: errorForLinje && typeof errorForLinje === 'object',
                         })}
+                        legend={<span className="sr-only">{props.legend}</span>}
                     >
                         <div>
                             <Label htmlFor={utreisedatoId}>
                                 <FormattedMessage id="input.utreisedato.label" />
+                                <span className="sr-only">
+                                    <FormattedMessage id="input.forUtenlandsoppholdX.label" values={{ x: index + 1 }} />
+                                </span>
                             </Label>
                             <Datepicker
                                 inputProps={{
@@ -142,6 +147,9 @@ const MultiTidsperiodevelger = (props: {
                         <div>
                             <Label htmlFor={innreisedatoId}>
                                 <FormattedMessage id="input.innreisedato.label" />
+                                <span className="sr-only">
+                                    <FormattedMessage id="input.forUtenlandsoppholdX.label" values={{ x: index + 1 }} />
+                                </span>
                             </Label>
                             <Datepicker
                                 inputId={innreisedatoId}
@@ -171,7 +179,7 @@ const MultiTidsperiodevelger = (props: {
                         >
                             <FormattedMessage id="button.fjernReiserad.label" />
                         </Knapp>
-                    </div>
+                    </SkjemaGruppe>
                     {errorForLinje && typeof errorForLinje === 'string' && (
                         <SkjemaelementFeilmelding>{errorForLinje}</SkjemaelementFeilmelding>
                     )}
@@ -245,7 +253,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 >
                     <div className={sharedStyles.formContainer}>
                         <JaNeiSpørsmål
-                            id={'harreist'}
+                            id="harReistTilUtlandetSiste90dager"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.harReistSiste90.label" />}
                             feil={formik.errors.harReistTilUtlandetSiste90dager}
@@ -265,6 +273,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         {formik.values.harReistTilUtlandetSiste90dager && (
                             <MultiTidsperiodevelger
+                                legend={intl.formatMessage({ id: 'gruppe.tidligereUtenlandsopphold.legend' })}
                                 feltnavn="harReistDatoer"
                                 perioder={formik.values.harReistDatoer}
                                 errors={formik.errors.harReistDatoer}
@@ -303,7 +312,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
 
                         <JaNeiSpørsmål
-                            id="skalreise"
+                            id="skalReiseTilUtlandetNeste12Måneder"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.skalReiseNeste12.label" />}
                             feil={formik.errors.skalReiseTilUtlandetNeste12Måneder}
@@ -323,6 +332,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         {formik.values.skalReiseTilUtlandetNeste12Måneder && (
                             <MultiTidsperiodevelger
+                                legend={intl.formatMessage({ id: 'gruppe.kommendeUtenlandsopphold.legend' })}
                                 feltnavn="skalReiseDatoer"
                                 perioder={formik.values.skalReiseDatoer}
                                 errors={formik.errors.skalReiseDatoer}

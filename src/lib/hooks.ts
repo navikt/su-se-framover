@@ -9,3 +9,9 @@ export const useI18n = (args: { messages: Record<string, string> }) => {
 
     return intl;
 };
+
+export const useDocTitle = (title: string) => {
+    React.useEffect(() => {
+        document.title = `${title} – Supplerende Stønad`;
+    }, [title]);
+};

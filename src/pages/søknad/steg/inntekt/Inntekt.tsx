@@ -141,17 +141,18 @@ const TrygdeytelserInputFelter = (props: {
         <div>
             {props.arr.map((input, idx) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[idx] : null;
-                const beløpId = `${props.feltnavn}[${idx}].beløp`;
-                const typeId = `${props.feltnavn}[${idx}].type`;
-                const valutaId = `${props.feltnavn}[${idx}].valuta`;
+                const feltId = (felt: keyof typeof input) => `${props.feltnavn}[${idx}].${felt}`;
+                const beløpId = feltId('beløp');
+                const typeId = feltId('type');
+                const valutaId = feltId('valuta');
 
                 return (
                     <div className={styles.trygdeytelserContainer} key={idx}>
                         <div className={styles.trippleFelter}>
                             <div>
                                 <Input
-                                    id={`${beløpId}`}
-                                    name={`${beløpId}`}
+                                    id={beløpId}
+                                    name={beløpId}
                                     label={<FormattedMessage id="input.trygdeytelserIUtlandetBeløp.label" />}
                                     value={input.beløp}
                                     onChange={(e) => {
@@ -162,6 +163,7 @@ const TrygdeytelserInputFelter = (props: {
                                             valuta: input.valuta,
                                         });
                                     }}
+                                    autoComplete="off"
                                 />
                                 {errorForLinje && typeof errorForLinje === 'object' && (
                                     <SkjemaelementFeilmelding>{errorForLinje.beløp}</SkjemaelementFeilmelding>
@@ -169,8 +171,8 @@ const TrygdeytelserInputFelter = (props: {
                             </div>
                             <div>
                                 <Input
-                                    id={`${valutaId}`}
-                                    name={`${valutaId}`}
+                                    id={valutaId}
+                                    name={valutaId}
                                     label={<FormattedMessage id="input.trygdeytelserIUtlandetValuta.label" />}
                                     value={input.valuta}
                                     onChange={(e) => {
@@ -181,6 +183,7 @@ const TrygdeytelserInputFelter = (props: {
                                             valuta: e.target.value,
                                         });
                                     }}
+                                    autoComplete="on"
                                 />
                                 {errorForLinje && typeof errorForLinje === 'object' && (
                                     <SkjemaelementFeilmelding>{errorForLinje.valuta}</SkjemaelementFeilmelding>
@@ -188,8 +191,8 @@ const TrygdeytelserInputFelter = (props: {
                             </div>
                             <div>
                                 <Input
-                                    id={`${typeId}`}
-                                    name={`${typeId}`}
+                                    id={typeId}
+                                    name={typeId}
                                     label={<FormattedMessage id="input.trygdeytelserIUtlandetType.label" />}
                                     value={input.type}
                                     onChange={(e) => {
@@ -200,6 +203,7 @@ const TrygdeytelserInputFelter = (props: {
                                             valuta: input.valuta,
                                         });
                                     }}
+                                    autoComplete="off"
                                 />
                                 {errorForLinje && typeof errorForLinje === 'object' && (
                                     <SkjemaelementFeilmelding>{errorForLinje.type}</SkjemaelementFeilmelding>
@@ -280,54 +284,61 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
     const pensjonsInntekter = () => {
         return (
             <div>
-                {formik.values.pensjonsInntekt.map((item: { ordning: string; beløp: string }, index: number) => (
-                    <div className={sharedStyles.inputFelterDiv} key={index}>
-                        <Input
-                            className={sharedStyles.inputFelt}
-                            label={<FormattedMessage id="input.pensjonsOrdning.label" />}
-                            value={item.ordning}
-                            onChange={(e) =>
-                                formik.setValues({
-                                    ...formik.values,
-                                    pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
-                                        idx === index ? { ordning: e.target.value, beløp: item.beløp } : i
-                                    ),
-                                })
-                            }
-                        />
-                        <Input
-                            className={sharedStyles.inputFelt}
-                            label={<FormattedMessage id="input.pensjonsBeløp.label" />}
-                            value={item.beløp}
-                            onChange={(e) =>
-                                formik.setValues({
-                                    ...formik.values,
-                                    pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
-                                        idx === index ? { ordning: item.ordning, beløp: e.target.value } : i
-                                    ),
-                                })
-                            }
-                        />
-                        {formik.values.pensjonsInntekt.length > 1 && (
-                            <Lenke
-                                href="#"
-                                className={sharedStyles.fjernFeltLink}
-                                onClick={(e) => {
-                                    e.preventDefault();
+                {formik.values.pensjonsInntekt.map((item: { ordning: string; beløp: string }, index: number) => {
+                    const feltId = (key: keyof typeof item) => `pensjonsInntekt[${index}].${key}`;
+                    return (
+                        <div className={sharedStyles.inputFelterDiv} key={index}>
+                            <Input
+                                id={feltId('ordning')}
+                                className={sharedStyles.inputFelt}
+                                label={<FormattedMessage id="input.pensjonsOrdning.label" />}
+                                value={item.ordning}
+                                onChange={(e) =>
                                     formik.setValues({
                                         ...formik.values,
-                                        pensjonsInntekt: [
-                                            ...formik.values.pensjonsInntekt.slice(0, index),
-                                            ...formik.values.pensjonsInntekt.slice(index + 1),
-                                        ],
-                                    });
-                                }}
-                            >
-                                Fjern felt
-                            </Lenke>
-                        )}
-                    </div>
-                ))}
+                                        pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
+                                            idx === index ? { ordning: e.target.value, beløp: item.beløp } : i
+                                        ),
+                                    })
+                                }
+                                autoComplete="on"
+                            />
+                            <Input
+                                id={feltId('beløp')}
+                                className={sharedStyles.inputFelt}
+                                label={<FormattedMessage id="input.pensjonsBeløp.label" />}
+                                value={item.beløp}
+                                onChange={(e) =>
+                                    formik.setValues({
+                                        ...formik.values,
+                                        pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
+                                            idx === index ? { ordning: item.ordning, beløp: e.target.value } : i
+                                        ),
+                                    })
+                                }
+                                autoComplete="off"
+                            />
+                            {formik.values.pensjonsInntekt.length > 1 && (
+                                <Lenke
+                                    href="#"
+                                    className={sharedStyles.fjernFeltLink}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        formik.setValues({
+                                            ...formik.values,
+                                            pensjonsInntekt: [
+                                                ...formik.values.pensjonsInntekt.slice(0, index),
+                                                ...formik.values.pensjonsInntekt.slice(index + 1),
+                                            ],
+                                        });
+                                    }}
+                                >
+                                    Fjern felt
+                                </Lenke>
+                            )}
+                        </div>
+                    );
+                })}
                 <div className={sharedStyles.leggTilFeltKnapp}>
                     <Knapp
                         onClick={(e) => {
@@ -381,11 +392,12 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 value={formik.values.forventetInntekt || ''}
                                 label={<FormattedMessage id="input.forventetInntekt.label" />}
                                 onChange={formik.handleChange}
+                                autoComplete="off"
                             />
                         )}
 
                         <JaNeiSpørsmål
-                            id="andreYtelserINAV"
+                            id="andreYtelserINav"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.andreYtelserINAV.label" />}
                             feil={formik.errors.andreYtelserINav}
@@ -410,6 +422,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     value={formik.values.andreYtelserINavYtelse || ''}
                                     onChange={formik.handleChange}
                                     feil={formik.errors.andreYtelserINavYtelse}
+                                    autoComplete="off"
                                 />
                                 <Input
                                     id="andreYtelserINavBeløp"
@@ -418,6 +431,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     value={formik.values.andreYtelserINavBeløp || ''}
                                     onChange={formik.handleChange}
                                     feil={formik.errors.andreYtelserINavBeløp}
+                                    autoComplete="off"
                                 />
                             </div>
                         )}
@@ -448,6 +462,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 value={formik.values.søktAndreYtelserIkkeBehandletBegrunnelse || ''}
                                 onChange={formik.handleChange}
                                 feil={formik.errors.søktAndreYtelserIkkeBehandletBegrunnelse}
+                                autoComplete="off"
                             />
                         )}
 
@@ -475,11 +490,12 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 value={formik.values.sosialStønadBeløp || ''}
                                 onChange={formik.handleChange}
                                 feil={formik.errors.sosialStønadBeløp}
+                                autoComplete="off"
                             />
                         )}
 
                         <JaNeiSpørsmål
-                            id="trygdeytelserIUtlandet"
+                            id="harTrygdeytelserIUtlandet"
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.trygdeytelserIUtlandet.label" />}
                             feil={formik.errors.harTrygdeytelserIUtlandet}

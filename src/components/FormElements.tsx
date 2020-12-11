@@ -24,7 +24,7 @@ export const JaNeiSpørsmål = (props: {
 }) => {
     const intl = useI18n({ messages: nb });
     return (
-        <div id={props.id}>
+        <div id={props.id} tabIndex={-1}>
             <RadioGruppe
                 className={classNames(styles.janeisporsmal, props.className)}
                 feil={props.feil}
@@ -41,6 +41,7 @@ export const JaNeiSpørsmål = (props: {
                             name={props.id}
                             onClick={() => props.onChange(true)}
                             checked={props.state === null ? false : props.state}
+                            autoComplete="off"
                         />
                     </div>
                     <div className={styles.svar}>
@@ -49,6 +50,7 @@ export const JaNeiSpørsmål = (props: {
                             name={props.id}
                             onClick={() => props.onChange(false)}
                             checked={props.state === null ? false : !props.state}
+                            autoComplete="off"
                         />
                     </div>
                 </div>
@@ -99,6 +101,7 @@ export const SuperRadio = <T, U extends Extract<keyof T, string>>(props: {
 );
 
 export const SuperRadioGruppe = <T, U extends Extract<keyof T, string>>(props: {
+    id: string;
     legend: string;
     values: T;
     errors: FormikErrors<T>;
@@ -106,16 +109,18 @@ export const SuperRadioGruppe = <T, U extends Extract<keyof T, string>>(props: {
     options: Array<{ label: string; radioValue: T[U] }>;
     onChange: (a: T) => void;
 }) => (
-    <RadioGruppe legend={props.legend} feil={props.errors[props.property]}>
-        {props.options.map((e) => (
-            <SuperRadio
-                key={`${props.property}${e.radioValue}`}
-                label={e.label}
-                values={props.values}
-                onChange={props.onChange}
-                property={props.property}
-                radioValue={e.radioValue}
-            />
-        ))}
-    </RadioGruppe>
+    <div id={props.id} tabIndex={-1}>
+        <RadioGruppe legend={props.legend} feil={props.errors[props.property]}>
+            {props.options.map((e) => (
+                <SuperRadio
+                    key={`${props.property}${e.radioValue}`}
+                    label={e.label}
+                    values={props.values}
+                    onChange={props.onChange}
+                    property={props.property}
+                    radioValue={e.radioValue}
+                />
+            ))}
+        </RadioGruppe>
+    </div>
 );
