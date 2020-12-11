@@ -74,8 +74,8 @@ export function getVerdier(
 }
 
 export function getInitialVerdier(): FormueVerdier {
-    return keyNavnForFormue.reduce(
-        (verdier: Partial<FormueVerdier>, key: keyof Partial<FormueVerdier>) => ((verdier[key] = 0), verdier),
-        {}
-    ) as FormueVerdier;
+    const verdier: Partial<FormueVerdier> = {};
+
+    keyNavnForFormue.forEach((keyNavn) => (verdier[keyNavn] = 0));
+    return verdier as FormueVerdier;
 }
