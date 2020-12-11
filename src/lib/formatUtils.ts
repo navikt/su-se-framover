@@ -18,13 +18,18 @@ export function formatCurrency(
         numDecimals: 2,
         ...options,
     };
-    return (
-        intl.formatNumber(amount, {
-            currency: mergedOptions.currency,
-            maximumFractionDigits: mergedOptions.numDecimals,
-            minimumFractionDigits: mergedOptions.numDecimals,
-        }) + ' kr'
-    );
+    return mergedOptions.currency === 'NOK'
+        ? intl.formatNumber(amount, {
+              currency: mergedOptions.currency,
+              maximumFractionDigits: mergedOptions.numDecimals,
+              minimumFractionDigits: mergedOptions.numDecimals,
+          }) + ' kr'
+        : intl.formatNumber(amount, {
+              style: 'currency',
+              currency: mergedOptions.currency,
+              maximumFractionDigits: mergedOptions.numDecimals,
+              minimumFractionDigits: mergedOptions.numDecimals,
+          });
 }
 
 function hentGateadresse(adresse: Adresse | AdresseFraSøknad): string {
