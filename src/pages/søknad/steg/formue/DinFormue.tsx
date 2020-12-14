@@ -342,6 +342,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     borIBolig: null,
                                     verdiPåBolig: null,
                                     boligBrukesTil: null,
+                                    eierMerEnnEnBolig: null,
                                     harDepositumskonto: null,
                                     depositumsBeløp: null,
                                     kontonummer: null,
