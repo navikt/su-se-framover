@@ -224,7 +224,7 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                         );
                     }
                     if (response.payload) {
-                        setRequest(RemoteData.failure(response.payload!));
+                        setRequest(RemoteData.failure(response.payload));
                     }
                 }}
                 spinner={RemoteData.isPending(request)}
