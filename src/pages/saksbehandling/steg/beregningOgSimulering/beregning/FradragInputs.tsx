@@ -131,8 +131,6 @@ export const FradragInputs = (props: {
 }) => {
     return (
         <div className={styles.fradragContainer}>
-            {typeof props.errors === 'string' && props.errors}
-
             {props.fradrag.map((fradrag, index) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : null;
                 const name = `${props.feltnavn}[${index}]`;

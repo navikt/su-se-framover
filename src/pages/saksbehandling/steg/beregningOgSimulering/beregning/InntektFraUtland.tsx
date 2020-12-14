@@ -1,6 +1,6 @@
 import { currencies } from 'country-data-list';
 import { FormikErrors } from 'formik';
-import { Input, Label, Select, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
+import { Input, Label, Select } from 'nav-frontend-skjema';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
@@ -34,10 +34,8 @@ const InntektFraUtland = (props: {
                         beløpIUtenlandskValuta: a.target.value,
                     })
                 }
+                feil={props.errors?.beløpIUtenlandskValuta}
             />
-            {props.errors?.beløpIUtenlandskValuta && (
-                <SkjemaelementFeilmelding>{props.errors.beløpIUtenlandskValuta}</SkjemaelementFeilmelding>
-            )}
             <Label htmlFor={valutaId} className={styles.label}>
                 {props.intl.formatMessage({ id: 'display.input.valuta' })}
             </Label>
@@ -61,7 +59,6 @@ const InntektFraUtland = (props: {
                     </option>
                 ))}
             </Select>
-            {props.errors?.valuta && <SkjemaelementFeilmelding>{props.errors.valuta}</SkjemaelementFeilmelding>}
             <Label htmlFor={kursId} className={styles.label}>
                 {props.intl.formatMessage({ id: 'display.input.kurs' })}
             </Label>
@@ -74,8 +71,8 @@ const InntektFraUtland = (props: {
                         kurs: a.target.value,
                     })
                 }
+                feil={props.errors?.kurs}
             />
-            {props.errors?.kurs && <SkjemaelementFeilmelding>{props.errors.kurs}</SkjemaelementFeilmelding>}
         </div>
     );
 };
