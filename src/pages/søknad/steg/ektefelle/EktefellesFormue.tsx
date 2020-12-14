@@ -1,6 +1,6 @@
 import { useFormik, FormikErrors } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
-import { Input, SkjemaelementFeilmelding, Feiloppsummering } from 'nav-frontend-skjema';
+import { Input, Feiloppsummering } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -191,6 +191,9 @@ const KjøretøyInputFelter = (props: {
                                 id={`${kjøretøyVerdiId}`}
                                 name={`${kjøretøyVerdiId}`}
                                 label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
+                                feil={
+                                    errorForLinje && typeof errorForLinje === 'object' && errorForLinje.verdiPåKjøretøy
+                                }
                                 value={input.verdiPåKjøretøy}
                                 onChange={(e) => {
                                     props.onChange({
@@ -200,9 +203,6 @@ const KjøretøyInputFelter = (props: {
                                     });
                                 }}
                             />
-                            {errorForLinje && typeof errorForLinje === 'object' && (
-                                <SkjemaelementFeilmelding>{errorForLinje.verdiPåKjøretøy}</SkjemaelementFeilmelding>
-                            )}
                         </div>
                         <div>
                             <Input
@@ -210,6 +210,9 @@ const KjøretøyInputFelter = (props: {
                                 name={`${kjøretøyId}`}
                                 label={<FormattedMessage id="input.kjøretøyDeEier.label" />}
                                 value={input.kjøretøyDeEier}
+                                feil={
+                                    errorForLinje && typeof errorForLinje === 'object' && errorForLinje.kjøretøyDeEier
+                                }
                                 onChange={(e) =>
                                     props.onChange({
                                         index: idx,
@@ -218,9 +221,6 @@ const KjøretøyInputFelter = (props: {
                                     })
                                 }
                             />
-                            {errorForLinje && typeof errorForLinje === 'object' && (
-                                <SkjemaelementFeilmelding>{errorForLinje.kjøretøyDeEier}</SkjemaelementFeilmelding>
-                            )}
                         </div>
                         {props.arr.length > 1 && (
                             <Knapp
@@ -332,6 +332,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     name="verdiPåBolig"
                                     label={<FormattedMessage id="input.verdiPåBolig.label" />}
                                     value={formik.values.verdiPåBolig || ''}
+                                    feil={formik.errors.verdiPåBolig}
                                     onChange={formik.handleChange}
                                 />
                                 <Input
@@ -339,6 +340,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     name="boligBrukesTil"
                                     label={<FormattedMessage id="input.boligBrukesTil.label" />}
                                     value={formik.values.boligBrukesTil || ''}
+                                    feil={formik.errors.boligBrukesTil}
                                     onChange={formik.handleChange}
                                 />
                             </div>
@@ -369,6 +371,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     name="depositumsBeløp"
                                     label={<FormattedMessage id="input.depositumsBeløp.label" />}
                                     value={formik.values.depositumsBeløp || ''}
+                                    feil={formik.errors.depositumsBeløp}
                                     onChange={formik.handleChange}
                                 />
                                 <Input
@@ -376,6 +379,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     name="kontonummer"
                                     label={<FormattedMessage id="input.kontonummer.label" />}
                                     value={formik.values.kontonummer || ''}
+                                    feil={formik.errors.kontonummer}
                                     onChange={formik.handleChange}
                                 />
                             </div>
@@ -406,6 +410,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     name="verdiPåEiendom"
                                     label={<FormattedMessage id="input.verdiPåEiendom.label" />}
                                     value={formik.values.verdiPåEiendom || ''}
+                                    feil={formik.errors.verdiPåEiendom}
                                     onChange={formik.handleChange}
                                 />
                                 <Input
@@ -413,6 +418,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     name="eiendomBrukesTil"
                                     label={<FormattedMessage id="input.eiendomBrukesTil.label" />}
                                     value={formik.values.eiendomBrukesTil || ''}
+                                    feil={formik.errors.eiendomBrukesTil}
                                     onChange={formik.handleChange}
                                 />
                             </div>
@@ -494,6 +500,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 name="innskuddsBeløp"
                                 label={<FormattedMessage id="input.innskuddsBeløp.label" />}
                                 value={formik.values.innskuddsBeløp || ''}
+                                feil={formik.errors.innskuddsBeløp}
                                 onChange={formik.handleChange}
                             />
                         )}
@@ -520,6 +527,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 name="verdipapirBeløp"
                                 label={<FormattedMessage id="input.verdipapirBeløp.label" />}
                                 value={formik.values.verdipapirBeløp || ''}
+                                feil={formik.errors.verdipapirBeløp}
                                 onChange={formik.handleChange}
                             />
                         )}
@@ -546,6 +554,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 name="skylderNoenMegPengerBeløp"
                                 label={<FormattedMessage id="input.skylderNoenMegPengerBeløp.label" />}
                                 value={formik.values.skylderNoenMegPengerBeløp || ''}
+                                feil={formik.errors.skylderNoenMegPengerBeløp}
                                 onChange={formik.handleChange}
                             />
                         )}
@@ -572,6 +581,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 name="kontanterBeløp"
                                 label={<FormattedMessage id="input.kontanterBeløp.label" />}
                                 value={formik.values.kontanterBeløp || ''}
+                                feil={formik.errors.kontanterBeløp}
                                 onChange={formik.handleChange}
                             />
                         )}

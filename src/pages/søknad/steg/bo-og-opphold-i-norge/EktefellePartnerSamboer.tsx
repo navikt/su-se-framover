@@ -19,7 +19,7 @@ interface Props {
     id: string;
     onChange: (eps: EPSFormData) => void;
     value: Nullable<EPSFormData>;
-    feil?: string;
+    feil?: string | EPSFormData;
 }
 const EktefellePartnerSamboer = (props: Props) => {
     const epsFormData = props.value ?? { fnr: null, erUførFlyktning: null };
@@ -36,14 +36,14 @@ const EktefellePartnerSamboer = (props: Props) => {
                         fnr,
                     });
                 }}
-                feil={props.feil}
+                feil={(props.feil && typeof props.feil === 'object' && props.feil.fnr) || props.feil}
                 autoComplete="off"
             />
 
             <div className={styles.ufør}>
                 <RadioGruppe
                     legend={intl.formatMessage({ id: 'input.ektefelleEllerSamboerUførFlyktning.label' })}
-                    feil={epsFormData.erUførFlyktning === null && props.feil}
+                    feil={(props.feil && typeof props.feil === 'object' && props.feil.erUførFlyktning) || props.feil}
                 >
                     <Radio
                         checked={Boolean(epsFormData.erUførFlyktning)}

@@ -1,16 +1,32 @@
 @import '~/styles/variables.less';
 
+.innlagtPåInstitusjonFelter {
+    margin-bottom: @spacing;
+}
+
 .datoForInnleggelseContainer {
     margin-bottom: @spacing-s;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .datepickerContainer {
+        border: 2px solid #ba3a26;
+        border-radius: 7px;
+    }
 }
 
 .datoForUtskrivelseContainer {
     display: flex;
     align-items: flex-end;
-    margin-bottom: @spacing;
 
     .datoForUtskrivelse {
         margin-right: @spacing-s;
+
+        .datepickerContainer {
+            border: 2px solid #ba3a26;
+            border-radius: 7px;
+        }
     }
 }
 

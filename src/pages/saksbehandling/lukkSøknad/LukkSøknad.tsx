@@ -101,6 +101,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
                 setHasSubmitted(true);
                 formik.handleSubmit(e);
             }}
+            className={styles.formContainer}
         >
             <div>
                 <p>

@@ -33,7 +33,6 @@ import sharedI18n from '../steg-shared-i18n';
 import messages from './bo-og-opphold-i-norge-nb';
 import styles from './bo-og-opphold-i-norge.module.less';
 import EktefellePartnerSamboer from './EktefellePartnerSamboer';
-import { toEktefellePartnerSamboer } from './utils';
 
 type FormData = SøknadState['boOgOpphold'];
 
@@ -55,27 +54,42 @@ const schema = yup.object<FormData>({
                 ])
                 .required(),
         }),
-    ektefellePartnerSamboer: yup
-        .mixed<EPSFormData>()
-        .nullable()
-        .defined()
-        .when('delerBoligMed', {
-            is: DelerBoligMed.EKTEMAKE_SAMBOER,
-            then: yup
-                .mixed<EPSFormData>()
-                .required()
-                .test('isValidEktefelleData', 'Ugyldig informasjon om ektefelle', (value) => {
-                    const eps = toEktefellePartnerSamboer(value);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore: Siden EPS er Nullable, med verdier som er nullable, er det litt vanskelig å få riktig feilmelding på riktige inputs.
+    //Yup sin otherwise i when() fanger ikke denne opp noe godt.
+    ektefellePartnerSamboer: yup.object<EPSFormData>().when('delerBoligMed', {
+        is: DelerBoligMed.EKTEMAKE_SAMBOER,
+        then: yup
+            .object<EPSFormData>({
+                fnr: yup
+                    .string()
+                    .required()
+                    .length(11)
+                    .typeError('Feltet må fylles ut')
+                    .test({
+                        name: 'fnr',
+                        message: 'Ugyldig fødselsnummer',
+                        test: function (value) {
+                            if (!value) return false;
 
-                    if (!eps) return false;
-
-                    return eps.fnr.length === 11 && fnrValidator.fnr(eps.fnr).status === 'valid';
-                })
-                .test('UførhetFyltInn', 'Må fylles inn', (value) => {
-                    if (!value) return false;
-                    return value.erUførFlyktning !== null;
-                }),
-        }),
+                            return fnrValidator.fnr(value).status === 'valid';
+                        },
+                    }),
+                erUførFlyktning: yup
+                    .boolean()
+                    .required()
+                    .typeError('Feltet må fylles ut')
+                    .test({
+                        name: 'fnr',
+                        message: 'Feltet må fylles ut',
+                        test: function (value) {
+                            return value !== null;
+                        },
+                    }),
+            })
+            .typeError('Feltene må fylles ut'),
+        otherwise: yup.object<EPSFormData>().defined().nullable(),
+    }),
     innlagtPåinstitusjon: yup.boolean().required().nullable(),
     datoForInnleggelse: yup
         .string()
@@ -100,7 +114,24 @@ const schema = yup.object<FormData>({
         .defined()
         .typeError('Dato må være på formatet dd.mm.yyyy')
         .test({
-            name: 'datoForUtskivelse',
+            name: 'datoForUtskivelse er fyllt ut',
+            message: 'Feltet må fylles ut',
+            test: function (val) {
+                const innlagtPåinstitusjon = this.parent.innlagtPåinstitusjon;
+                const fortsattInnlagt = this.parent.fortsattInnlagt;
+
+                if (innlagtPåinstitusjon) {
+                    if (fortsattInnlagt) {
+                        return true;
+                    } else {
+                        if (!val) return false;
+                    }
+                }
+                return true;
+            },
+        })
+        .test({
+            name: 'datoForUtskivelse er etter innleggelse',
             message: 'Dato for utskrivelse må være etter innleggelse',
             test: function (val) {
                 const innlagtPåinstitusjon = this.parent.innlagtPåinstitusjon;
@@ -237,29 +268,31 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             }}
                         />
 
-                        {formik.values.innlagtPåinstitusjon ? (
-                            <div>
+                        {formik.values.innlagtPåinstitusjon && (
+                            <div className={styles.innlagtPåInstitusjonFelter}>
                                 <div className={styles.datoForInnleggelseContainer}>
                                     <Label htmlFor={'datoForInnleggelse'}>
                                         <FormattedMessage id="input.datoForInnleggelse.label" />
                                     </Label>
-                                    <Datepicker
-                                        inputProps={{
-                                            name: 'datoForInnleggelse',
-                                            placeholder: 'dd.mm.åååå',
-                                        }}
-                                        value={formik.values.datoForInnleggelse ?? ''}
-                                        inputId={'datoForInnleggelse'}
-                                        onChange={(value) => {
-                                            if (!value) {
-                                                return;
-                                            }
-                                            formik.setValues((v) => ({
-                                                ...v,
-                                                datoForInnleggelse: value,
-                                            }));
-                                        }}
-                                    />
+                                    <div className={formik.errors.datoForInnleggelse && styles.datepickerContainer}>
+                                        <Datepicker
+                                            inputProps={{
+                                                name: 'datoForInnleggelse',
+                                                placeholder: 'dd.mm.åååå',
+                                            }}
+                                            value={formik.values.datoForInnleggelse ?? ''}
+                                            inputId={'datoForInnleggelse'}
+                                            onChange={(value) => {
+                                                if (!value) {
+                                                    return;
+                                                }
+                                                formik.setValues((v) => ({
+                                                    ...v,
+                                                    datoForInnleggelse: value,
+                                                }));
+                                            }}
+                                        />
+                                    </div>
                                     {formik.errors.datoForInnleggelse && (
                                         <SkjemaelementFeilmelding>
                                             {formik.errors.datoForInnleggelse}
@@ -271,31 +304,33 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                         <Label htmlFor={'datoForUtskrivelse'}>
                                             <FormattedMessage id="input.datoForUtskrivelse.label" />
                                         </Label>
-                                        <Datepicker
-                                            inputProps={{
-                                                name: 'datoForUtskrivelse',
-                                                placeholder: 'dd.mm.åååå',
-                                            }}
-                                            value={formik.values.datoForUtskrivelse ?? ''}
-                                            inputId={'datoForUtskrivelse'}
-                                            onChange={(value) => {
-                                                if (!value) {
-                                                    return;
+                                        <div className={formik.errors.datoForUtskrivelse && styles.datepickerContainer}>
+                                            <Datepicker
+                                                inputProps={{
+                                                    name: 'datoForUtskrivelse',
+                                                    placeholder: 'dd.mm.åååå',
+                                                }}
+                                                value={formik.values.datoForUtskrivelse ?? ''}
+                                                inputId={'datoForUtskrivelse'}
+                                                onChange={(value) => {
+                                                    if (!value) {
+                                                        return;
+                                                    }
+                                                    formik.setValues((v) => ({
+                                                        ...v,
+                                                        datoForUtskrivelse: value,
+                                                    }));
+                                                }}
+                                                limitations={
+                                                    formik.values.datoForInnleggelse
+                                                        ? {
+                                                              minDate: formik.values.datoForInnleggelse,
+                                                          }
+                                                        : undefined
                                                 }
-                                                formik.setValues((v) => ({
-                                                    ...v,
-                                                    datoForUtskrivelse: value,
-                                                }));
-                                            }}
-                                            limitations={
-                                                formik.values.datoForInnleggelse
-                                                    ? {
-                                                          minDate: formik.values.datoForInnleggelse,
-                                                      }
-                                                    : undefined
-                                            }
-                                            disabled={formik.values.fortsattInnlagt}
-                                        />
+                                                disabled={formik.values.fortsattInnlagt}
+                                            />
+                                        </div>
                                     </div>
                                     <Checkbox
                                         name={'fortsattInnlagt'}
@@ -316,8 +351,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     </SkjemaelementFeilmelding>
                                 )}
                             </div>
-                        ) : (
-                            ''
                         )}
 
                         <JaNeiSpørsmål
