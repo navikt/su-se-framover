@@ -299,6 +299,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     eierBolig: e,
                                     borIBolig: null,
                                     verdiPåBolig: null,
+                                    eierMerEnnEnBolig: null,
                                     boligBrukesTil: null,
                                     harDepositumskonto: null,
                                     depositumsBeløp: null,
