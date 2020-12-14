@@ -45,6 +45,8 @@ export const Utbetalinger = (props: {
                 !DateFns.isBefore(DateFns.parseISO(u.tilOgMed), DateFns.startOfMonth(DateFns.addMonths(new Date(), 1)))
         );
 
+    const kanGjenopptas = kanStansesEllerGjenopptas === KanStansesEllerGjenopptas.GJENOPPTA;
+
     return (
         <div className={styles.utbetalingContainer}>
             <Undertittel className={styles.tittel}>
@@ -59,15 +61,15 @@ export const Utbetalinger = (props: {
                             year: 'numeric',
                         })}
                     </Undertittel>
-                    {kanStanses ? (
-                        <div className={styles.ikonContainer}>
-                            <Ikon className={styles.ikon} kind="ok-sirkel-fyll" width={'24px'} />
-                            <p> {intl.formatMessage({ id: 'display.stønadsperioder.aktiv' })}</p>
-                        </div>
-                    ) : (
+                    {kanGjenopptas ? (
                         <div className={styles.ikonContainer}>
                             <Ikon className={styles.ikon} kind="advarsel-sirkel-fyll" width={'24px'} />
                             <p> {intl.formatMessage({ id: 'display.stønadsperioder.stoppet' })}</p>
+                        </div>
+                    ) : (
+                        <div className={styles.ikonContainer}>
+                            <Ikon className={styles.ikon} kind="ok-sirkel-fyll" width={'24px'} />
+                            <p> {intl.formatMessage({ id: 'display.stønadsperioder.aktiv' })}</p>
                         </div>
                     )}
                 </div>
@@ -87,17 +89,10 @@ export const Utbetalinger = (props: {
                         </ol>
                     </div>
                     <div className={styles.utbetalingKnappContainer}>
-                        {kanStanses ? (
-                            <Fareknapp onClick={() => setModalOpen(true)}>
-                                {intl.formatMessage({ id: 'display.utbetalingsperiode.stoppUtbetaling' })}
-                            </Fareknapp>
-                        ) : (
+                        {kanGjenopptas ? (
                             <Knapp
                                 onClick={() => {
-                                    if (
-                                        props.kanStansesEllerGjenopptas === KanStansesEllerGjenopptas.GJENOPPTA &&
-                                        !RemoteData.isPending(gjenopptaUtbetalingerStatus)
-                                    ) {
+                                    if (kanGjenopptas && !RemoteData.isPending(gjenopptaUtbetalingerStatus)) {
                                         dispatch(
                                             sakSlice.gjenopptaUtbetalinger({
                                                 sakId: props.sakId,
@@ -109,6 +104,12 @@ export const Utbetalinger = (props: {
                             >
                                 {intl.formatMessage({ id: 'display.utbetalingsperiode.gjenopptaUtbetaling' })}
                             </Knapp>
+                        ) : (
+                            kanStanses && (
+                                <Fareknapp onClick={() => setModalOpen(true)}>
+                                    {intl.formatMessage({ id: 'display.utbetalingsperiode.stoppUtbetaling' })}
+                                </Fareknapp>
+                            )
                         )}
                     </div>
                 </div>
