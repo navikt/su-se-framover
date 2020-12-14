@@ -9,7 +9,6 @@ import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
-import { startBehandling } from '~api/behandlingApi';
 import { Person } from '~api/personApi';
 import { useUserContext } from '~context/userContext';
 import {
@@ -18,9 +17,11 @@ import {
     erTilAttestering,
     hentSisteVurderteVilkår,
 } from '~features/behandling/behandlingUtils';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
+import { useAppDispatch } from '~redux/Store';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
@@ -197,6 +198,7 @@ const grunnToText = (grunn: UnderkjennelseGrunn, intl: IntlShape): string => {
 
 const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: string; intl: IntlShape }) => {
     const [request, setRequest] = useState<RemoteData.RemoteData<ApiError, Behandling>>(RemoteData.initial);
+    const dispatch = useAppDispatch();
     const history = useHistory();
 
     return (
@@ -206,20 +208,24 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                 mini
                 onClick={async () => {
                     setRequest(RemoteData.pending);
-                    const response = await startBehandling({
-                        sakId: props.sakId,
-                        søknadId: props.søknadId,
-                    });
+                    const response = await dispatch(
+                        sakSlice.startBehandling({
+                            sakId: props.sakId,
+                            søknadId: props.søknadId,
+                        })
+                    );
 
-                    if (response.status === 'ok') {
+                    if (response.payload && 'id' in response.payload) {
                         return history.push(
                             Routes.saksbehandlingVilkårsvurdering.createURL({
                                 sakId: props.sakId,
-                                behandlingId: response.data.id,
+                                behandlingId: response.payload.id,
                             })
                         );
                     }
-                    return setRequest(RemoteData.failure(response.error));
+                    if (response.payload) {
+                        setRequest(RemoteData.failure(response.payload!));
+                    }
                 }}
                 spinner={RemoteData.isPending(request)}
             >
