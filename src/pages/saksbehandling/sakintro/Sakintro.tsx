@@ -4,10 +4,12 @@ import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
 import { Ingress, Innholdstittel, Element, Normaltekst, Undertittel } from 'nav-frontend-typografi';
-import React from 'react';
+import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
+import { ApiError } from '~api/apiClient';
+import { startBehandling } from '~api/behandlingApi';
 import { Person } from '~api/personApi';
 import { useUserContext } from '~context/userContext';
 import {
@@ -16,11 +18,9 @@ import {
     erTilAttestering,
     hentSisteVurderteVilkår,
 } from '~features/behandling/behandlingUtils';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
@@ -196,9 +196,8 @@ const grunnToText = (grunn: UnderkjennelseGrunn, intl: IntlShape): string => {
 };
 
 const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: string; intl: IntlShape }) => {
-    const dispatch = useAppDispatch();
+    const [request, setRequest] = useState<RemoteData.RemoteData<ApiError, Behandling>>(RemoteData.initial);
     const history = useHistory();
-    const startBehandlingStatus = useAppSelector((s) => s.sak.startBehandlingStatus);
 
     return (
         <div>
@@ -206,22 +205,23 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                 className={styles.startBehandlingKnapp}
                 mini
                 onClick={async () => {
-                    const startBehandlingRes = await dispatch(
-                        sakSlice.startBehandling({
-                            sakId: props.sakId,
-                            søknadId: props.søknadId,
-                        })
-                    );
-                    if (startBehandlingRes.payload && 'id' in startBehandlingRes.payload) {
-                        history.push(
+                    setRequest(RemoteData.pending);
+                    const response = await startBehandling({
+                        sakId: props.sakId,
+                        søknadId: props.søknadId,
+                    });
+
+                    if (response.status === 'ok') {
+                        return history.push(
                             Routes.saksbehandlingVilkårsvurdering.createURL({
                                 sakId: props.sakId,
-                                behandlingId: startBehandlingRes.payload.id,
+                                behandlingId: response.data.id,
                             })
                         );
                     }
+                    return setRequest(RemoteData.failure(response.error));
                 }}
-                spinner={RemoteData.isPending(startBehandlingStatus)}
+                spinner={RemoteData.isPending(request)}
             >
                 {props.intl.formatMessage({
                     id: 'display.behandling.startBehandling',
@@ -238,8 +238,8 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                     id: 'display.søknad.lukkSøknad',
                 })}
             </Link>
-            {RemoteData.isFailure(startBehandlingStatus) && (
-                <AlertStripe type="feil">
+            {RemoteData.isFailure(request) && (
+                <AlertStripe className={styles.feil} type="feil">
                     {props.intl.formatMessage({
                         id: 'display.behandling.klarteIkkeStarteBehandling',
                     })}
