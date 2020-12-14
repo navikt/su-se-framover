@@ -77,14 +77,28 @@ const schema = yup.object<FormData>({
                 }),
         }),
     innlagtPåinstitusjon: yup.boolean().required().nullable(),
-    datoForInnleggelse: yup.string().nullable().defined().when('innlagtPåinstitusjon', {
-        is: true,
-        then: yup.string().required(),
-    }),
+    datoForInnleggelse: yup
+        .string()
+        .nullable()
+        .defined()
+        .when('innlagtPåinstitusjon', {
+            is: true,
+            then: yup
+                .string()
+                .required()
+                .test({
+                    name: 'datoFormattering',
+                    message: 'Dato må være formatert på dd.mm.yyyy',
+                    test: function (val) {
+                        return DateFns.isValid(DateFns.parse(val, 'yyyy-MM-dd', new Date()));
+                    },
+                }),
+        }),
     datoForUtskrivelse: yup
         .string()
         .nullable()
         .defined()
+        .typeError('Dato må være på formatet dd.mm.yyyy')
         .test({
             name: 'datoForUtskivelse',
             message: 'Dato for utskrivelse må være etter innleggelse',
@@ -97,7 +111,10 @@ const schema = yup.object<FormData>({
                     if (fortsattInnlagt) {
                         return true;
                     } else {
-                        return DateFns.isAfter(new Date(val), new Date(datoForInnleggelse));
+                        return DateFns.isAfter(
+                            DateFns.parse(val, 'yyyy-MM-dd', new Date()),
+                            new Date(datoForInnleggelse)
+                        );
                     }
                 }
 

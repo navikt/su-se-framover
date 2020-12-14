@@ -5,6 +5,8 @@ export default {
     'display.attestering.sendtTilbakeFordi': 'Sendt tilbake fordi',
     'display.attestering.kommentar': 'Kommentar',
 
+    'display.avslåtteSøknader.tittel': 'Avslåtte søknad',
+
     'display.lukkedeSøknader.tittel': 'Lukket søknad',
 
     'display.behandling.fortsettBehandling': 'Fortsett behandling',
@@ -20,9 +22,11 @@ export default {
 
     'display.saksoversikt.tittel': 'Saksnummer',
 
+    'display.søknad.avslått': 'Avslått',
     'display.søknad.lukket.avvist': 'Avvist',
     'display.søknad.lukket.bortfalt': 'Bortfalt',
     'display.søknad.lukket.trukket': 'Trukket',
+    'display.søknad.lukket.ukjentLukking': 'Ukjent lukking',
     'display.søknad.lukkSøknad': 'Lukk søknad',
     'display.søknad.mottatt': 'Mottatt',
     'display.søknad.typeSøknad': 'Førstegangssøknad',

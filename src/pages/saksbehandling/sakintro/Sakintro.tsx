@@ -11,8 +11,8 @@ import { Link, useHistory } from 'react-router-dom';
 import { Person } from '~api/personApi';
 import { useUserContext } from '~context/userContext';
 import {
-    erAvslått,
     erIverksatt,
+    erIverksattAvslag,
     erTilAttestering,
     hentSisteVurderteVilkår,
 } from '~features/behandling/behandlingUtils';
@@ -37,7 +37,7 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
         case LukkSøknadBegrunnelse.Trukket:
             return 'display.søknad.lukket.trukket';
         default:
-            return 'Avslått';
+            return 'display.søknad.lukket.ukjentLukking';
     }
 };
 
@@ -48,9 +48,13 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
         return søknad.lukket === null && (!behandling || !erIverksatt(behandling));
     });
 
-    const lukkedeOgAvslåtteSøknader = props.sak.søknader.filter((søknad) => {
+    const lukkedeSøknader = props.sak.søknader.filter((søknad) => {
+        return søknad.lukket !== null;
+    });
+
+    const avslåtteSøknader = props.sak.søknader.filter((søknad) => {
         const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
-        return søknad.lukket !== null || (behandling && erAvslått(behandling));
+        return behandling && erIverksattAvslag(behandling);
     });
 
     return (
@@ -66,13 +70,14 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         behandlinger={props.sak.behandlinger}
                         intl={intl}
                     />
-                    <LukkedeOgAvslåtteSøknader lukkedeOgAvslåtteSøknader={lukkedeOgAvslåtteSøknader} intl={intl} />
                     <Utbetalinger
                         sakId={props.sak.id}
                         søker={props.søker}
                         utbetalingsperioder={props.sak.utbetalinger}
                         kanStansesEllerGjenopptas={props.sak.utbetalingerKanStansesEllerGjenopptas}
                     />
+                    <AvslåtteSøknader avslåtteSøknader={avslåtteSøknader} intl={intl} />
+                    <LukkedeSøknader lukkedeSøknader={lukkedeSøknader} intl={intl} />
                 </div>
             ) : (
                 'Ingen søknader'
@@ -297,8 +302,8 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
     );
 };
 
-const LukkedeOgAvslåtteSøknader = (props: { lukkedeOgAvslåtteSøknader: Søknad[]; intl: IntlShape }) => {
-    if (props.lukkedeOgAvslåtteSøknader.length === 0) return null;
+const LukkedeSøknader = (props: { lukkedeSøknader: Søknad[]; intl: IntlShape }) => {
+    if (props.lukkedeSøknader.length === 0) return null;
 
     return (
         <div className={styles.søknadsContainer}>
@@ -308,7 +313,7 @@ const LukkedeOgAvslåtteSøknader = (props: { lukkedeOgAvslåtteSøknader: Søkn
                 })}
             </Ingress>
             <ol>
-                {props.lukkedeOgAvslåtteSøknader.map((søknad) => (
+                {props.lukkedeSøknader.map((søknad) => (
                     <li key={søknad.id}>
                         <Panel border className={styles.søknad}>
                             <div className={styles.info}>
@@ -329,6 +334,49 @@ const LukkedeOgAvslåtteSøknader = (props: { lukkedeOgAvslåtteSøknader: Søkn
                                 <p className={styles.ikonTekst}>
                                     {props.intl.formatMessage({
                                         id: lukketBegrunnelseResourceId(søknad.lukket?.type),
+                                    })}
+                                </p>
+                            </div>
+                        </Panel>
+                    </li>
+                ))}
+            </ol>
+        </div>
+    );
+};
+
+const AvslåtteSøknader = (props: { avslåtteSøknader: Søknad[]; intl: IntlShape }) => {
+    if (props.avslåtteSøknader.length === 0) return null;
+
+    return (
+        <div className={styles.søknadsContainer}>
+            <Ingress className={styles.søknadsContainerTittel}>
+                {props.intl.formatMessage({
+                    id: 'display.avslåtteSøknader.tittel',
+                })}
+            </Ingress>
+            <ol>
+                {props.avslåtteSøknader.map((søknad) => (
+                    <li key={søknad.id}>
+                        <Panel border className={styles.søknad}>
+                            <div className={styles.info}>
+                                <div>
+                                    <Undertittel>
+                                        {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
+                                    </Undertittel>
+                                    <div className={styles.dato}>
+                                        <Element>
+                                            {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
+                                        </Element>
+                                        <Normaltekst>{props.intl.formatDate(søknad.opprettet)}</Normaltekst>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={styles.ikonContainer}>
+                                <Ikon className={styles.ikon} kind="feil-sirkel-fyll" width={'24px'} />
+                                <p className={styles.ikonTekst}>
+                                    {props.intl.formatMessage({
+                                        id: 'display.søknad.avslått',
                                     })}
                                 </p>
                             </div>

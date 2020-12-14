@@ -29,15 +29,19 @@ type FormData = SøknadState['utenlandsopphold'];
 const isValidUtenlandsopphold = (val: DateFns.Interval) => DateFns.isAfter(val.end, val.start);
 
 const reiseSchema = yup
-    .object<UtenlandsoppholdType>({ utreisedato: yup.string().required(), innreisedato: yup.string().required() })
+    .object<UtenlandsoppholdType>({
+        utreisedato: yup.string().required(),
+        innreisedato: yup.string().required(),
+    })
     .test({
         name: 'Utenlandsopphold',
         message: 'Utreisedato må være før innreisedato',
-        test: (val) =>
-            isValidUtenlandsopphold({
-                start: new Date(val.utreisedato),
-                end: new Date(val.innreisedato),
-            }),
+        test: (val) => {
+            return isValidUtenlandsopphold({
+                start: DateFns.parse(val.utreisedato, 'yyyy-MM-dd', new Date()),
+                end: DateFns.parse(val.innreisedato, 'yyyy-MM-dd', new Date()),
+            });
+        },
     });
 
 const testOverlappendeUtenlandsopphold: yup.TestFunction<UtenlandsoppholdType[] | null | undefined> = (opphold) => {
