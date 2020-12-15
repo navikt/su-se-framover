@@ -56,7 +56,7 @@ const schema = yup.object<FormData>({
         }),
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore: Siden EPS er Nullable, med verdier som er nullable, er det litt vanskelig å få riktig feilmelding på riktige inputs.
-    //Yup sin otherwise i when() fanger ikke denne opp noe godt.
+    //Yup sin otherwise i when() fanger ikke typingen godt nok, men valideringen i seg selv funker.
     ektefellePartnerSamboer: yup.object<EPSFormData>().when('delerBoligMed', {
         is: DelerBoligMed.EKTEMAKE_SAMBOER,
         then: yup
