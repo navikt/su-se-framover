@@ -1,8 +1,8 @@
 {
-    "ingress": "https://su-se-framover.nais.preprod.local",
+    "ingress": "https://supplerendestonad.dev.adeo.no",
     "env": {
-        "SU_SE_BAKOVER_URL": "https://su-se-bakover.nais.preprod.local",
-        "DOMAIN": "nais.preprod.local",
+        "SU_SE_BAKOVER_URL": "https://su-se-bakover.dev.adeo.no",
+        "DOMAIN": "dev.adeo.no",
         "AMPLITUDE_API_KEY": "feb0ead20059b4be531bfa6e076906ab",
         "FEATURE_HENDELSESLOGG": false
     }
