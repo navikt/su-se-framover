@@ -1,9 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import classNames from 'classnames';
 import { useFormik } from 'formik';
 import { AlertStripeSuksess, AlertStripeFeil } from 'nav-frontend-alertstriper';
-import { Fareknapp } from 'nav-frontend-knapper';
+import { Fareknapp, Knapp } from 'nav-frontend-knapper';
 import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { lukkSøknad } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
@@ -25,6 +27,7 @@ import Trukket from './Trukket';
 
 const LukkSøknad = (props: { sak: Sak }) => {
     const dispatch = useAppDispatch();
+    const history = useHistory();
     const { søknadLukketStatus, lukketSøknadBrevutkastStatus } = useAppSelector((s) => s.sak);
     const urlParams = Routes.useRouteParams<typeof Routes.avsluttSøknadsbehandling>();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
@@ -154,7 +157,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
             )}
 
             {formik.values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Bortfalt && (
-                <div className={styles.buttonsContainer}>
+                <div className={classNames(styles.bortfaltContainer, styles.buttonsContainer)}>
                     <Fareknapp spinner={RemoteData.isPending(søknadLukketStatus)}>
                         {intl.formatMessage({ id: 'knapp.lukkSøknad' })}
                     </Fareknapp>
@@ -164,6 +167,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
             {formik.values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Avvist && (
                 <Avvist
                     søknadId={søknad.id}
+                    validateForm={() => formik.validateForm()}
                     lukkSøknadBegrunnelse={formik.values.lukkSøknadBegrunnelse}
                     avvistFormData={{
                         sendBrevForAvvist: formik.values.sendBrevForAvvist,
@@ -187,6 +191,14 @@ const LukkSøknad = (props: { sak: Sak }) => {
                     lukketSøknadBrevutkastStatus={lukketSøknadBrevutkastStatus}
                 />
             )}
+            <div className={styles.tilbakeKnappContainer}>
+                <Knapp
+                    htmlType="button"
+                    onClick={() => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId }))}
+                >
+                    {intl.formatMessage({ id: 'knapp.tilbake' })}
+                </Knapp>
+            </div>
 
             <div>
                 {RemoteData.isFailure(lukketSøknadBrevutkastStatus) && (

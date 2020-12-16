@@ -15,7 +15,7 @@ import { LukkSøknadBegrunnelse } from '~types/Søknad';
 
 import nb from './lukkSøknad-nb';
 import styles from './lukkSøknad.module.less';
-import { AvvistBrevtyper } from './lukkSøknadUtils';
+import { AvvistBrevtyper, LukkSøknadFormData } from './lukkSøknadUtils';
 
 interface AvvistFormData {
     sendBrevForAvvist: Nullable<boolean>;
@@ -26,6 +26,7 @@ interface AvvistFormData {
 interface AvvistProps {
     søknadId: string;
     lukkSøknadBegrunnelse: LukkSøknadBegrunnelse;
+    validateForm: () => Promise<FormikErrors<LukkSøknadFormData>>;
     avvistFormData: AvvistFormData;
     lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
     søknadLukketStatus: RemoteData.RemoteData<ApiError, null>;
@@ -123,7 +124,11 @@ const Avvist = (props: AvvistProps) => {
                         className={styles.seBrevKnapp}
                         htmlType="button"
                         onClick={() => {
-                            onSeBrevClick();
+                            props.validateForm().then((res) => {
+                                if (Object.keys(res).length === 0) {
+                                    onSeBrevClick();
+                                }
+                            });
                         }}
                         spinner={RemoteData.isPending(props.lukketSøknadBrevutkastStatus)}
                     >

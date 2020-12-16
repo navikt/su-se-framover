@@ -23,6 +23,7 @@ export default {
 
     'display.trekking.datoSøkerTrakkSøknad': 'Dato søker trakk søknad',
 
+    'knapp.tilbake': 'Tilbake',
     'knapp.lukkSøknad': 'Lukk søknad',
     'knapp.seBrev': 'Se brev',
 
