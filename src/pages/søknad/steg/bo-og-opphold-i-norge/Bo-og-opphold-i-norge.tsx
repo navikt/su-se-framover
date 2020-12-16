@@ -75,17 +75,7 @@ const schema = yup.object<FormData>({
                             return fnrValidator.fnr(value).status === 'valid';
                         },
                     }),
-                erUførFlyktning: yup
-                    .boolean()
-                    .required()
-                    .typeError('Feltet må fylles ut')
-                    .test({
-                        name: 'erUførFlyktning',
-                        message: 'Feltet må fylles ut',
-                        test: function (value) {
-                            return value !== null;
-                        },
-                    }),
+                erUførFlyktning: yup.boolean().required().typeError('Feltet må fylles ut'),
             })
             .typeError('Feltene må fylles ut'),
         otherwise: yup.object<EPSFormData>().defined().nullable(),
