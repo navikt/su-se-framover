@@ -260,6 +260,14 @@ const Attesteringsinnhold = ({
                             >
                                 {intl.formatMessage({ id: 'attestering.knapp.send' })}
                             </Knapp>
+                            {RemoteData.isFailure(attesteringStatus) && (
+                                <div className={styles.sendInnAttesteringFeilet}>
+                                    <AlertStripe type="feil">
+                                        <p>{intl.formatMessage({ id: 'status.feilet' })}</p>
+                                        <p>{attesteringStatus.error.body?.message || ''}</p>
+                                    </AlertStripe>
+                                </div>
+                            )}
                         </form>
                     )}
                 </div>

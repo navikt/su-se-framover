@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { ActionReducerMapBuilder, AsyncThunk, CaseReducer, PayloadAction } from '@reduxjs/toolkit';
 
-import { ApiError, ErrorCode } from '../api/apiClient';
+import { ApiError } from '~api/apiClient';
 
 export const handleAsyncThunk = <State, A, B, C>(
     builder: ActionReducerMapBuilder<State>,
@@ -20,8 +20,7 @@ export const simpleRejectedActionToRemoteData = <ActionType extends string, M, E
 ): RemoteData.RemoteData<ApiError, never> =>
     RemoteData.failure(
         action.payload ?? {
-            code: ErrorCode.Unknown,
-            body: action,
+            body: null,
             correlationId: '',
             statusCode: -1,
         }

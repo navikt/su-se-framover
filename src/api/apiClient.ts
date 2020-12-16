@@ -13,7 +13,11 @@ export enum ErrorCode {
 export interface ApiError {
     statusCode: ErrorCode | number;
     correlationId: string;
-    body: unknown;
+    body: ErrorMessage | null;
+}
+
+export interface ErrorMessage {
+    message: string;
 }
 
 export type ApiClientResult<T> = { status: 'ok'; data: T; statusCode: number } | { status: 'error'; error: ApiError };
