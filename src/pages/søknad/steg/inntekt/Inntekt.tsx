@@ -336,7 +336,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                         });
                                     }}
                                 >
-                                    Fjern felt
+                                    {intl.formatMessage({ id: 'button.fjernRad.label' })}
                                 </Knapp>
                             )}
                         </div>

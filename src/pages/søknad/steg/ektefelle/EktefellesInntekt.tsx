@@ -1,6 +1,5 @@
 import { useFormik, FormikErrors } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
-import Lenke from 'nav-frontend-lenker';
 import { Feiloppsummering, Input, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
@@ -288,8 +287,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 }
                             />
                             {formik.values.pensjonsInntekt.length > 1 && (
-                                <Lenke
-                                    href="#"
+                                <Knapp
                                     className={sharedStyles.fjernFeltLink}
                                     onClick={(e) => {
                                         e.preventDefault();
@@ -302,8 +300,8 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                         });
                                     }}
                                 >
-                                    Fjern felt
-                                </Lenke>
+                                    {intl.formatMessage({ id: 'button.fjernRad.label' })}
+                                </Knapp>
                             )}
                         </div>
                     );
