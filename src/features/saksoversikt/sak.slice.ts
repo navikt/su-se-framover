@@ -218,7 +218,6 @@ interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
     stansUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
     gjenopptaUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
-    startBehandlingStatus: RemoteData.RemoteData<ApiError, null>;
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<ApiError, null>;
     lagreBehandlingsinformasjonStatus: RemoteData.RemoteData<ApiError, null>;
     beregningStatus: RemoteData.RemoteData<ApiError, null>;
@@ -234,7 +233,6 @@ const initialState: SakState = {
     sak: RemoteData.initial,
     stansUtbetalingerStatus: RemoteData.initial,
     gjenopptaUtbetalingerStatus: RemoteData.initial,
-    startBehandlingStatus: RemoteData.initial,
     lagreVilkårsvurderingStatus: RemoteData.initial,
     lagreBehandlingsinformasjonStatus: RemoteData.initial,
     beregningStatus: RemoteData.initial,
@@ -292,26 +290,6 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.gjenopptaUtbetalingerStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-
-        handleAsyncThunk(builder, startBehandling, {
-            pending: (state) => {
-                state.startBehandlingStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.startBehandlingStatus = RemoteData.success(null);
-
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        behandlinger: [...sak.behandlinger, action.payload],
-                    }))
-                );
-            },
-            rejected: (state, action) => {
-                state.startBehandlingStatus = simpleRejectedActionToRemoteData(action);
             },
         });
 
