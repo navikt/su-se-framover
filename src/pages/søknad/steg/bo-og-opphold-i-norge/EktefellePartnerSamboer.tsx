@@ -1,6 +1,6 @@
 import fnrValidator from '@navikt/fnrvalidator';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Input, Radio, RadioGruppe } from 'nav-frontend-skjema';
+import { Input, Radio, RadioGruppe, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import React, { useEffect, useState } from 'react';
 
 import * as personApi from '~api/personApi';
@@ -27,7 +27,7 @@ const EktefellePartnerSamboer = (props: Props) => {
     const intl = useI18n({ messages });
 
     return (
-        <div id={props.id} tabIndex={-1}>
+        <div id={props.id} tabIndex={-1} className={styles.epsFormContainer}>
             <FnrInput
                 fnr={epsFormData.fnr}
                 onFnrChange={(fnr) => {
@@ -36,14 +36,14 @@ const EktefellePartnerSamboer = (props: Props) => {
                         fnr,
                     });
                 }}
-                feil={(props.feil && typeof props.feil === 'object' && props.feil.fnr) || props.feil}
+                feil={typeof props.feil === 'object' && props.feil.fnr}
                 autoComplete="off"
             />
 
             <div className={styles.ufør}>
                 <RadioGruppe
                     legend={intl.formatMessage({ id: 'input.ektefelleEllerSamboerUførFlyktning.label' })}
-                    feil={(props.feil && typeof props.feil === 'object' && props.feil.erUførFlyktning) || props.feil}
+                    feil={typeof props.feil === 'object' && props.feil.erUførFlyktning}
                 >
                     <Radio
                         checked={Boolean(epsFormData.erUførFlyktning)}
@@ -69,6 +69,9 @@ const EktefellePartnerSamboer = (props: Props) => {
                     />
                 </RadioGruppe>
             </div>
+            {typeof props.feil === 'string' && (
+                <SkjemaelementFeilmelding>Feltene må fylles ut</SkjemaelementFeilmelding>
+            )}
         </div>
     );
 };

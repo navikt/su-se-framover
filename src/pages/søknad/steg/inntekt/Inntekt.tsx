@@ -1,6 +1,5 @@
 import { useFormik, FormikErrors } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
-import Lenke from 'nav-frontend-lenker';
 import { Feiloppsummering, Input, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
@@ -324,8 +323,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 autoComplete="off"
                             />
                             {formik.values.pensjonsInntekt.length > 1 && (
-                                <Lenke
-                                    href="#"
+                                <Knapp
                                     className={sharedStyles.fjernFeltLink}
                                     onClick={(e) => {
                                         e.preventDefault();
@@ -339,7 +337,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     }}
                                 >
                                     Fjern felt
-                                </Lenke>
+                                </Knapp>
                             )}
                         </div>
                     );

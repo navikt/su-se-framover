@@ -80,7 +80,7 @@ const schema = yup.object<FormData>({
                     .required()
                     .typeError('Feltet må fylles ut')
                     .test({
-                        name: 'fnr',
+                        name: 'erUførFlyktning',
                         message: 'Feltet må fylles ut',
                         test: function (value) {
                             return value !== null;
@@ -120,12 +120,8 @@ const schema = yup.object<FormData>({
                 const innlagtPåinstitusjon = this.parent.innlagtPåinstitusjon;
                 const fortsattInnlagt = this.parent.fortsattInnlagt;
 
-                if (innlagtPåinstitusjon) {
-                    if (fortsattInnlagt) {
-                        return true;
-                    } else {
-                        if (!val) return false;
-                    }
+                if (innlagtPåinstitusjon && !fortsattInnlagt && !val) {
+                    return false;
                 }
                 return true;
             },
@@ -274,25 +270,24 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     <Label htmlFor={'datoForInnleggelse'}>
                                         <FormattedMessage id="input.datoForInnleggelse.label" />
                                     </Label>
-                                    <div className={formik.errors.datoForInnleggelse && styles.datepickerContainer}>
-                                        <Datepicker
-                                            inputProps={{
-                                                name: 'datoForInnleggelse',
-                                                placeholder: 'dd.mm.åååå',
-                                            }}
-                                            value={formik.values.datoForInnleggelse ?? ''}
-                                            inputId={'datoForInnleggelse'}
-                                            onChange={(value) => {
-                                                if (!value) {
-                                                    return;
-                                                }
-                                                formik.setValues((v) => ({
-                                                    ...v,
-                                                    datoForInnleggelse: value,
-                                                }));
-                                            }}
-                                        />
-                                    </div>
+                                    <Datepicker
+                                        inputProps={{
+                                            name: 'datoForInnleggelse',
+                                            placeholder: 'dd.mm.åååå',
+                                            'aria-invalid': formik.errors.datoForInnleggelse ? true : false,
+                                        }}
+                                        value={formik.values.datoForInnleggelse ?? ''}
+                                        inputId={'datoForInnleggelse'}
+                                        onChange={(value) => {
+                                            if (!value) {
+                                                return;
+                                            }
+                                            formik.setValues((v) => ({
+                                                ...v,
+                                                datoForInnleggelse: value,
+                                            }));
+                                        }}
+                                    />
                                     {formik.errors.datoForInnleggelse && (
                                         <SkjemaelementFeilmelding>
                                             {formik.errors.datoForInnleggelse}
@@ -304,33 +299,32 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                         <Label htmlFor={'datoForUtskrivelse'}>
                                             <FormattedMessage id="input.datoForUtskrivelse.label" />
                                         </Label>
-                                        <div className={formik.errors.datoForUtskrivelse && styles.datepickerContainer}>
-                                            <Datepicker
-                                                inputProps={{
-                                                    name: 'datoForUtskrivelse',
-                                                    placeholder: 'dd.mm.åååå',
-                                                }}
-                                                value={formik.values.datoForUtskrivelse ?? ''}
-                                                inputId={'datoForUtskrivelse'}
-                                                onChange={(value) => {
-                                                    if (!value) {
-                                                        return;
-                                                    }
-                                                    formik.setValues((v) => ({
-                                                        ...v,
-                                                        datoForUtskrivelse: value,
-                                                    }));
-                                                }}
-                                                limitations={
-                                                    formik.values.datoForInnleggelse
-                                                        ? {
-                                                              minDate: formik.values.datoForInnleggelse,
-                                                          }
-                                                        : undefined
+                                        <Datepicker
+                                            inputProps={{
+                                                name: 'datoForUtskrivelse',
+                                                placeholder: 'dd.mm.åååå',
+                                                'aria-invalid': formik.errors.datoForUtskrivelse ? true : false,
+                                            }}
+                                            value={formik.values.datoForUtskrivelse ?? ''}
+                                            inputId={'datoForUtskrivelse'}
+                                            onChange={(value) => {
+                                                if (!value) {
+                                                    return;
                                                 }
-                                                disabled={formik.values.fortsattInnlagt}
-                                            />
-                                        </div>
+                                                formik.setValues((v) => ({
+                                                    ...v,
+                                                    datoForUtskrivelse: value,
+                                                }));
+                                            }}
+                                            limitations={
+                                                formik.values.datoForInnleggelse
+                                                    ? {
+                                                          minDate: formik.values.datoForInnleggelse,
+                                                      }
+                                                    : undefined
+                                            }
+                                            disabled={formik.values.fortsattInnlagt}
+                                        />
                                     </div>
                                     <Checkbox
                                         name={'fortsattInnlagt'}

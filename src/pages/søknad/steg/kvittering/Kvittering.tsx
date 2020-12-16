@@ -32,7 +32,11 @@ const Kvittering = () => {
                         return null;
                     },
                     () => {
-                        return <NavFrontendSpinner />;
+                        return (
+                            <div className={styles.senderSøknadSpinnerContainer}>
+                                <NavFrontendSpinner />
+                            </div>
+                        );
                     },
                     () => {
                         return (
