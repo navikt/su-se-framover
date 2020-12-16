@@ -2,7 +2,7 @@ apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
    name: su-se-framover
-   namespace: default
+   namespace: supstonad
    labels:
       team: supstonad
 spec:
