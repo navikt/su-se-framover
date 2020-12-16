@@ -1,5 +1,5 @@
 {
-    "ingress": "https://su-se-framover.nais.adeo.no",
+    "ingress": "https://supplerendestonad.nais.adeo.no",
     "env": {
         "SU_SE_BAKOVER_URL": "https://su-se-bakover.nais.adeo.no",
         "DOMAIN": "nais.adeo.no",
