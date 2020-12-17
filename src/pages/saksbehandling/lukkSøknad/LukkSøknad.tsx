@@ -1,7 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import classNames from 'classnames';
 import { useFormik } from 'formik';
 import { AlertStripeSuksess, AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Fareknapp } from 'nav-frontend-knapper';
+import Lenke from 'nav-frontend-lenker';
 import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 
@@ -101,6 +103,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
                 setHasSubmitted(true);
                 formik.handleSubmit(e);
             }}
+            className={styles.formContainer}
         >
             <div>
                 <p>
@@ -153,7 +156,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
             )}
 
             {formik.values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Bortfalt && (
-                <div className={styles.buttonsContainer}>
+                <div className={classNames(styles.bortfaltContainer, styles.buttonsContainer)}>
                     <Fareknapp spinner={RemoteData.isPending(søknadLukketStatus)}>
                         {intl.formatMessage({ id: 'knapp.lukkSøknad' })}
                     </Fareknapp>
@@ -163,6 +166,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
             {formik.values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Avvist && (
                 <Avvist
                     søknadId={søknad.id}
+                    validateForm={() => formik.validateForm()}
                     lukkSøknadBegrunnelse={formik.values.lukkSøknadBegrunnelse}
                     avvistFormData={{
                         sendBrevForAvvist: formik.values.sendBrevForAvvist,
@@ -186,6 +190,11 @@ const LukkSøknad = (props: { sak: Sak }) => {
                     lukketSøknadBrevutkastStatus={lukketSøknadBrevutkastStatus}
                 />
             )}
+            <div className={styles.tilbakeKnappContainer}>
+                <Lenke href={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })} className="knapp">
+                    {intl.formatMessage({ id: 'knapp.tilbake' })}
+                </Lenke>
+            </div>
 
             <div>
                 {RemoteData.isFailure(lukketSøknadBrevutkastStatus) && (

@@ -121,7 +121,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
                     {formik.values.harSøkerMøttPersonlig === false && (
                         <RadioPanelGruppe
                             className={sharedStyles.sporsmal}
-                            feil={null}
+                            feil={formik.errors.harFullmektigEllerVerge}
                             legend={<FormattedMessage id={'input.fullmektigEllerVerge.label'} />}
                             name="fullmektigEllerVerge"
                             radios={[

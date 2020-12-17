@@ -1,6 +1,6 @@
 import { useFormik, FormikErrors } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
-import { Input, SkjemaelementFeilmelding, Feiloppsummering } from 'nav-frontend-skjema';
+import { Input, Feiloppsummering } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -193,6 +193,9 @@ const KjøretøyInputFelter = (props: {
                                 name={kjøretøyId}
                                 label={<FormattedMessage id="input.kjøretøyDeEier.label" />}
                                 value={input.kjøretøyDeEier}
+                                feil={
+                                    errorForLinje && typeof errorForLinje === 'object' && errorForLinje.kjøretøyDeEier
+                                }
                                 onChange={(e) =>
                                     props.onChange({
                                         index: idx,
@@ -202,9 +205,6 @@ const KjøretøyInputFelter = (props: {
                                 }
                                 autoComplete="off"
                             />
-                            {errorForLinje && typeof errorForLinje === 'object' && (
-                                <SkjemaelementFeilmelding>{errorForLinje.kjøretøyDeEier}</SkjemaelementFeilmelding>
-                            )}
                         </div>
                         <div>
                             <Input
@@ -212,6 +212,9 @@ const KjøretøyInputFelter = (props: {
                                 name={kjøretøyVerdiId}
                                 label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
                                 value={input.verdiPåKjøretøy}
+                                feil={
+                                    errorForLinje && typeof errorForLinje === 'object' && errorForLinje.verdiPåKjøretøy
+                                }
                                 onChange={(e) => {
                                     props.onChange({
                                         index: idx,
@@ -221,9 +224,6 @@ const KjøretøyInputFelter = (props: {
                                 }}
                                 autoComplete="off"
                             />
-                            {errorForLinje && typeof errorForLinje === 'object' && (
-                                <SkjemaelementFeilmelding>{errorForLinje.verdiPåKjøretøy}</SkjemaelementFeilmelding>
-                            )}
                         </div>
                         {props.arr.length > 1 && (
                             <Knapp

@@ -57,6 +57,7 @@ export const LukkSøknadValidationSchema = yup.object<LukkSøknadFormData>({
         .when('typeBrev', {
             is: AvvistBrevtyper.Fritekstsbrev,
             then: yup.string().required().min(1),
+            otherwise: yup.string().defined().nullable(),
         }),
 });
 
