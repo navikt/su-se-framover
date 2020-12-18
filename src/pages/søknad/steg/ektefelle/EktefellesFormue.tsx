@@ -40,8 +40,8 @@ const schema = yup.object<FormData>({
         .number()
         .nullable()
         .defined()
-        .when('harFormue', {
-            is: true,
+        .when('borIBolig', {
+            is: false,
             then: yup
                 .number()
                 .typeError('Verdi på bolig må være et tall')
