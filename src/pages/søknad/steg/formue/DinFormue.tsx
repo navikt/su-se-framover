@@ -204,9 +204,6 @@ const KjøretøyInputFelter = (props: {
                                     })
                                 }
                                 autoComplete="off"
-                                feil={
-                                    errorForLinje && typeof errorForLinje === 'object' && errorForLinje.kjøretøyDeEier
-                                }
                             />
                         </div>
                         <div>
@@ -226,9 +223,6 @@ const KjøretøyInputFelter = (props: {
                                     });
                                 }}
                                 autoComplete="off"
-                                feil={
-                                    errorForLinje && typeof errorForLinje === 'object' && errorForLinje.verdiPåKjøretøy
-                                }
                             />
                         </div>
                         {props.arr.length > 1 && (

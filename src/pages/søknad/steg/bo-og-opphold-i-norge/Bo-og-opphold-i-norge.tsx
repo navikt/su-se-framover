@@ -259,7 +259,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     </Label>
                                     <Datepicker
                                         inputProps={{
-                                            'aria-invalid': !!formik.errors.datoForInnleggelse,
                                             name: keyOf<FormData>('datoForInnleggelse'),
                                             placeholder: 'dd.mm.åååå',
                                             'aria-invalid': formik.errors.datoForInnleggelse ? true : false,
@@ -289,7 +288,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                         </Label>
                                         <Datepicker
                                             inputProps={{
-                                                'aria-invalid': !!formik.errors.datoForUtskrivelse,
                                                 name: keyOf<FormData>('datoForUtskrivelse'),
                                                 placeholder: 'dd.mm.åååå',
                                                 'aria-invalid': formik.errors.datoForUtskrivelse ? true : false,
