@@ -24,38 +24,37 @@ export const JaNeiSpørsmål = (props: {
 }) => {
     const intl = useI18n({ messages: nb });
     return (
-        <div id={props.id} tabIndex={-1}>
-            <RadioGruppe
-                className={classNames(styles.janeisporsmal, props.className)}
-                feil={props.feil}
-                legend={props.legend}
-                description={props.description}
-            >
-                {props.hjelpetekstTittel && props.hjelpetekstBody && (
-                    <Hjelpetekst tittel={props.hjelpetekstTittel} body={props.hjelpetekstBody} />
-                )}
-                <div className={styles.svarContainer}>
-                    <div className={styles.svar}>
-                        <RadioPanel
-                            label={intl.formatMessage({ id: 'jaNeiSpørsmal.label.ja' })}
-                            name={props.id}
-                            onChange={() => props.onChange(true)}
-                            checked={props.state === null ? false : props.state}
-                            autoComplete="off"
-                        />
-                    </div>
-                    <div className={styles.svar}>
-                        <RadioPanel
-                            label={intl.formatMessage({ id: 'jaNeiSpørsmal.label.nei' })}
-                            name={props.id}
-                            onChange={() => props.onChange(false)}
-                            checked={props.state === null ? false : !props.state}
-                            autoComplete="off"
-                        />
-                    </div>
+        <RadioGruppe
+            className={classNames(styles.janeisporsmal, props.className)}
+            feil={props.feil}
+            legend={props.legend}
+            description={props.description}
+        >
+            {props.hjelpetekstTittel && props.hjelpetekstBody && (
+                <Hjelpetekst tittel={props.hjelpetekstTittel} body={props.hjelpetekstBody} />
+            )}
+            <div className={styles.svarContainer}>
+                <div className={styles.svar}>
+                    <RadioPanel
+                        id={props.id}
+                        label={intl.formatMessage({ id: 'jaNeiSpørsmal.label.ja' })}
+                        name={props.id}
+                        onChange={() => props.onChange(true)}
+                        checked={props.state === null ? false : props.state}
+                        autoComplete="off"
+                    />
                 </div>
-            </RadioGruppe>
-        </div>
+                <div className={styles.svar}>
+                    <RadioPanel
+                        label={intl.formatMessage({ id: 'jaNeiSpørsmal.label.nei' })}
+                        name={props.id}
+                        onChange={() => props.onChange(false)}
+                        checked={props.state === null ? false : !props.state}
+                        autoComplete="off"
+                    />
+                </div>
+            </div>
+        </RadioGruppe>
     );
 };
 
@@ -81,6 +80,7 @@ const Hjelpetekst = (props: { tittel: string; body: string }) => {
 };
 
 export const SuperRadio = <T, U extends Extract<keyof T, string>>(props: {
+    id?: string;
     values: T;
     label: string;
     property: U;
@@ -88,6 +88,7 @@ export const SuperRadio = <T, U extends Extract<keyof T, string>>(props: {
     onChange: (a: T) => void;
 }) => (
     <Radio
+        id={props.id}
         label={props.label}
         name={props.property}
         onChange={() =>
@@ -109,18 +110,17 @@ export const SuperRadioGruppe = <T, U extends Extract<keyof T, string>>(props: {
     options: Array<{ label: string; radioValue: T[U] }>;
     onChange: (a: T) => void;
 }) => (
-    <div id={props.id} tabIndex={-1}>
-        <RadioGruppe legend={props.legend} feil={props.errors[props.property]}>
-            {props.options.map((e) => (
-                <SuperRadio
-                    key={`${props.property}${e.radioValue}`}
-                    label={e.label}
-                    values={props.values}
-                    onChange={props.onChange}
-                    property={props.property}
-                    radioValue={e.radioValue}
-                />
-            ))}
-        </RadioGruppe>
-    </div>
+    <RadioGruppe legend={props.legend} feil={props.errors[props.property]}>
+        {props.options.map((e, idx) => (
+            <SuperRadio
+                id={idx === 0 ? props.id : undefined}
+                key={`${props.property}${e.radioValue}`}
+                label={e.label}
+                values={props.values}
+                onChange={props.onChange}
+                property={props.property}
+                radioValue={e.radioValue}
+            />
+        ))}
+    </RadioGruppe>
 );
