@@ -5,7 +5,10 @@ export enum Bosituasjon {
     BorMedNoenOver18 = 'bor-med-noen-over-18',
 }
 
-export type TypeOppholdstillatelse = 'permanent' | 'midlertidig';
+export enum TypeOppholdstillatelse {
+    Permanent = 'permanent',
+    Midlertidig = 'midlertidig',
+}
 
 export enum Vergemål {
     Fullmektig = 'fullmektig',
