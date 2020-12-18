@@ -1,4 +1,5 @@
 import fnrValidator from '@navikt/fnrvalidator';
+import { FormikErrors } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Input, Radio, RadioGruppe, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import React, { useEffect, useState } from 'react';
@@ -8,9 +9,8 @@ import { Person } from '~api/personApi';
 import { KjønnKvinne, KjønnMann, KjønnUkjent } from '~assets/Icons';
 import { showName } from '~features/person/personUtils';
 import { EPSFormData } from '~features/søknad/types';
-import { Nullable } from '~lib/types';
-
-import { useI18n } from '../../../../lib/hooks';
+import { useI18n } from '~lib/hooks';
+import { keyOf, Nullable } from '~lib/types';
 
 import messages from './bo-og-opphold-i-norge-nb';
 import styles from './ektefelle-partner-samboer.module.less';
@@ -19,7 +19,7 @@ interface Props {
     id: string;
     onChange: (eps: EPSFormData) => void;
     value: Nullable<EPSFormData>;
-    feil?: string | EPSFormData;
+    feil?: FormikErrors<EPSFormData>;
 }
 const EktefellePartnerSamboer = (props: Props) => {
     const epsFormData = props.value ?? { fnr: null, erUførFlyktning: null };
@@ -27,8 +27,9 @@ const EktefellePartnerSamboer = (props: Props) => {
     const intl = useI18n({ messages });
 
     return (
-        <div id={props.id} tabIndex={-1} className={styles.epsFormContainer}>
+        <div>
             <FnrInput
+                inputId={`${props.id}.${keyOf<EPSFormData>('fnr')}`}
                 fnr={epsFormData.fnr}
                 onFnrChange={(fnr) => {
                     props.onChange({
@@ -36,16 +37,17 @@ const EktefellePartnerSamboer = (props: Props) => {
                         fnr,
                     });
                 }}
-                feil={typeof props.feil === 'object' && props.feil.fnr}
+                feil={props.feil?.fnr}
                 autoComplete="off"
             />
 
             <div className={styles.ufør}>
                 <RadioGruppe
                     legend={intl.formatMessage({ id: 'input.ektefelleEllerSamboerUførFlyktning.label' })}
-                    feil={typeof props.feil === 'object' && props.feil.erUførFlyktning}
+                    feil={props.feil?.erUførFlyktning}
                 >
                     <Radio
+                        id={`${props.id}.${keyOf<EPSFormData>('erUførFlyktning')}`}
                         checked={Boolean(epsFormData.erUførFlyktning)}
                         onChange={() =>
                             props.onChange({
@@ -77,12 +79,13 @@ const EktefellePartnerSamboer = (props: Props) => {
 };
 
 interface FnrInputProps {
+    inputId: string;
     fnr: Nullable<string>;
     onFnrChange: (fnr: string) => void;
     feil?: React.ReactNode;
     autoComplete?: string;
 }
-const FnrInput = ({ fnr, onFnrChange, feil, autoComplete }: FnrInputProps) => {
+const FnrInput = ({ inputId, fnr, onFnrChange, feil, autoComplete }: FnrInputProps) => {
     const [person, setPerson] = useState<Person | null>(null);
     const [harIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
     const intl = useI18n({ messages });
@@ -111,6 +114,7 @@ const FnrInput = ({ fnr, onFnrChange, feil, autoComplete }: FnrInputProps) => {
     return (
         <div className={styles.fnrInput}>
             <Input
+                id={inputId}
                 label={intl.formatMessage({ id: 'input.ektefelleEllerSamboerFnr.label' })}
                 description={intl.formatMessage({ id: 'input.ektefelleEllerSamboerFnrDescription.label' })}
                 onChange={(e) => onFnrChange(e.target.value)}

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import fnrValidator from '@navikt/fnrvalidator';
 import * as DateFns from 'date-fns';
-import { useFormik } from 'formik';
+import { FormikErrors, useFormik } from 'formik';
 import { Datepicker } from 'nav-datovelger';
 import AlertStripe from 'nav-frontend-alertstriper';
 import {
@@ -37,6 +37,23 @@ import EktefellePartnerSamboer from './EktefellePartnerSamboer';
 
 type FormData = SøknadState['boOgOpphold'];
 
+const epsFormDataSchema = yup
+    .object<EPSFormData>({
+        fnr: yup
+            .string()
+            .nullable()
+            .defined()
+            .test(
+                'isValidEktefelle',
+                'Ugyldig fødselsnummer',
+                (value) =>
+                    typeof value === 'string' && value.length === 11 && fnrValidator.fnr(value).status === 'valid'
+            )
+            .typeError('Ugyldig fødselsnummer'),
+        erUførFlyktning: yup.boolean().required().typeError('Feltet må fylles ut'),
+    })
+    .defined();
+
 const schema = yup.object<FormData>({
     borOgOppholderSegINorge: yup.boolean().nullable().required(),
     delerBoligMedPersonOver18: yup.boolean().nullable().required(),
@@ -51,32 +68,15 @@ const schema = yup.object<FormData>({
                 .oneOf<DelerBoligMed>(Object.values(DelerBoligMed), 'Du må velge hvem du deler bolig med')
                 .required(),
         }),
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore: Siden EPS er Nullable, med verdier som er nullable, er det litt vanskelig å få riktig feilmelding på riktige inputs.
-    //Yup sin otherwise i when() fanger ikke typingen godt nok, men valideringen i seg selv funker.
-    ektefellePartnerSamboer: yup.object<EPSFormData>().when('delerBoligMed', {
-        is: DelerBoligMed.EKTEMAKE_SAMBOER,
-        then: yup
-            .object<EPSFormData>({
-                fnr: yup
-                    .string()
-                    .required()
-                    .length(11)
-                    .typeError('Feltet må fylles ut')
-                    .test({
-                        name: 'fnr',
-                        message: 'Ugyldig fødselsnummer',
-                        test: function (value) {
-                            if (!value) return false;
-
-                            return fnrValidator.fnr(value).status === 'valid';
-                        },
-                    }),
-                erUførFlyktning: yup.boolean().required().typeError('Feltet må fylles ut'),
-            })
-            .typeError('Feltene må fylles ut'),
-        otherwise: yup.object<EPSFormData>().defined().nullable(),
-    }),
+    ektefellePartnerSamboer: yup
+        .mixed<EPSFormData>()
+        .when(keyOf<FormData>('delerBoligMed'), {
+            is: DelerBoligMed.EKTEMAKE_SAMBOER,
+            then: epsFormDataSchema,
+            otherwise: yup.mixed().nullable().defined(),
+        })
+        .nullable()
+        .defined(),
     innlagtPåinstitusjon: yup.boolean().required().nullable(),
     datoForInnleggelse: yup
         .string()
@@ -378,7 +378,13 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     formik.setValues((v) => ({
                                         ...v,
                                         delerBoligMed: value,
-                                        ektefellePartnerSamboer: null,
+                                        ektefellePartnerSamboer:
+                                            value === DelerBoligMed.EKTEMAKE_SAMBOER
+                                                ? {
+                                                      fnr: null,
+                                                      erUførFlyktning: null,
+                                                  }
+                                                : null,
                                     }));
                                 }}
                                 checked={formik.values.delerBoligMed?.toString()}
@@ -395,7 +401,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     }))
                                 }
                                 value={formik.values.ektefellePartnerSamboer}
-                                feil={formik.errors.ektefellePartnerSamboer}
+                                feil={formik.errors.ektefellePartnerSamboer as FormikErrors<EPSFormData>}
                             />
                         )}
 
