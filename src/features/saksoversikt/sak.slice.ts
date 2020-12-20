@@ -56,6 +56,7 @@ export const startBehandling = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/start', async ({ sakId, søknadId }, thunkApi) => {
     const res = await behandlingApi.startBehandling({ sakId, søknadId });
+    console.log(res);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -262,6 +263,24 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.sak = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, startBehandling, {
+            pending: (state) => {
+                state;
+            },
+            fulfilled: (state, action) => {
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: [...sak.behandlinger, action.payload],
+                    }))
+                );
+            },
+            rejected: (state) => {
+                state;
             },
         });
 
