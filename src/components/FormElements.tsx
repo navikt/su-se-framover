@@ -39,7 +39,7 @@ export const JaNeiSpørsmål = (props: {
                         <RadioPanel
                             label={intl.formatMessage({ id: 'jaNeiSpørsmal.label.ja' })}
                             name={props.id}
-                            onClick={() => props.onChange(true)}
+                            onChange={() => props.onChange(true)}
                             checked={props.state === null ? false : props.state}
                             autoComplete="off"
                         />
@@ -48,7 +48,7 @@ export const JaNeiSpørsmål = (props: {
                         <RadioPanel
                             label={intl.formatMessage({ id: 'jaNeiSpørsmal.label.nei' })}
                             name={props.id}
-                            onClick={() => props.onChange(false)}
+                            onChange={() => props.onChange(false)}
                             checked={props.state === null ? false : !props.state}
                             autoComplete="off"
                         />
