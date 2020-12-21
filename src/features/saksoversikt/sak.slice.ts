@@ -268,7 +268,7 @@ export default createSlice({
 
         handleAsyncThunk(builder, startBehandling, {
             pending: (state) => {
-                state;
+                state.sak = { ...state.sak };
             },
             fulfilled: (state, action) => {
                 state.sak = pipe(
@@ -280,7 +280,7 @@ export default createSlice({
                 );
             },
             rejected: (state) => {
-                state;
+                state.sak = { ...state.sak };
             },
         });
 
