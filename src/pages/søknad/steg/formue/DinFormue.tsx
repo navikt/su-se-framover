@@ -529,7 +529,13 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         <JaNeiSpørsmål
                             id="harInnskuddPåKonto"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.harInnskuddPåKonto.label" />}
+                            legend={
+                                formik.values.harDepositumskonto ? (
+                                    <FormattedMessage id="input.harInnskuddPåKonto.depositum.label" />
+                                ) : (
+                                    <FormattedMessage id="input.harInnskuddPåKonto.label" />
+                                )
+                            }
                             feil={formik.errors.harInnskuddPåKonto}
                             state={formik.values.harInnskuddPåKonto}
                             onChange={(e) =>

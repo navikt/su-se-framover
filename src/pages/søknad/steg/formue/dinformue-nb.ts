@@ -19,6 +19,7 @@ export default {
     'input.kjøretøyDeEier.label': 'Registreringsnummer',
 
     'input.harInnskuddPåKonto.label': 'Har du penger på konto?',
+    'input.harInnskuddPåKonto.depositum.label': 'Har du penger på konto (inkludert depositumskonto)?',
     'input.innskuddsBeløp.label': 'Beløp i kroner',
 
     'input.harVerdipapir.label': 'Har du aksjer, aksjefond eller verdipapir?',
