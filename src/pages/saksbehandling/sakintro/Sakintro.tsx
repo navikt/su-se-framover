@@ -22,7 +22,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
-import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
+import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 
@@ -49,6 +49,11 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
         return søknad.lukket === null && (!behandling || !erIverksatt(behandling));
     });
 
+    const godkjenteBehandlinger = props.sak.søknader.filter((søknad) => {
+        const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
+        return søknad.lukket === null && behandling?.status === Behandlingsstatus.IVERKSATT_INNVILGET;
+    });
+
     const lukkedeSøknader = props.sak.søknader.filter((søknad) => {
         return søknad.lukket !== null;
     });
@@ -68,6 +73,12 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                     <ÅpneSøknader
                         sakId={props.sak.id}
                         åpneSøknader={åpneSøknader}
+                        behandlinger={props.sak.behandlinger}
+                        intl={intl}
+                    />
+                    <ÅpneSøknader
+                        sakId={props.sak.id}
+                        åpneSøknader={godkjenteBehandlinger}
                         behandlinger={props.sak.behandlinger}
                         intl={intl}
                     />
