@@ -2,7 +2,6 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import Lenke from 'nav-frontend-lenker';
 import Panel from 'nav-frontend-paneler';
 import { Ingress, Innholdstittel, Element, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
@@ -225,14 +224,14 @@ const GodkjenteSøknader = (props: {
                                         <AlertStripe type="suksess" form="inline">
                                             Godkjent
                                         </AlertStripe>
-                                        <Lenke
-                                            href={Routes.saksbehandlingOppsummering.createURL({
+                                        <Link
+                                            to={Routes.saksbehandlingOppsummering.createURL({
                                                 sakId: props.sakId,
                                                 behandlingId: behandling.id,
                                             })}
                                         >
                                             Se oppsummering
-                                        </Lenke>
+                                        </Link>
                                     </div>
                                 </div>
                             </Panel>
