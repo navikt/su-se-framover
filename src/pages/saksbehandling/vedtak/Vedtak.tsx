@@ -15,10 +15,10 @@ import { Behandlingsstatus } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
+import { BehandlingStatus } from '../behandlingsoppsummering/behandlingsoppsummering';
 import VisBeregningOgSimulering from '../steg/beregningOgSimulering/BeregningOgSimulering';
 import VilkårsOppsummering from '../vilkårsOppsummering/VilkårsOppsummering';
 
-import Behandlingsoppsummering from './Behandlingsoppsummering';
 import messages from './vedtak-nb';
 import styles from './vedtak.module.less';
 
@@ -72,7 +72,7 @@ const Vedtak = (props: Props) => {
                         </Innholdstittel>
                     </div>
 
-                    <Behandlingsoppsummering sakId={sak.id} behandling={behandling} />
+                    <BehandlingStatus sakId={sak.id} behandling={behandling} />
 
                     <VilkårsOppsummering
                         søknadInnhold={behandling.søknad.søknadInnhold}

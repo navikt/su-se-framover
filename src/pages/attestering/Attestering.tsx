@@ -21,9 +21,9 @@ import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import { BehandlingStatus } from '~pages/saksbehandling/behandlingsoppsummering/behandlingsoppsummering';
 import VisBeregningOgSimulering from '~pages/saksbehandling/steg/beregningOgSimulering/BeregningOgSimulering';
 import Søkefelt from '~pages/saksbehandling/søkefelt/Søkefelt';
-import Behandlingsoppsummering from '~pages/saksbehandling/vedtak/Behandlingsoppsummering';
 import VilkårsOppsummering from '~pages/saksbehandling/vilkårsOppsummering/VilkårsOppsummering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
@@ -161,7 +161,7 @@ const Attesteringsinnhold = ({
                         </Innholdstittel>
                     </div>
 
-                    <Behandlingsoppsummering sakId={props.sak.id} behandling={props.behandling} />
+                    <BehandlingStatus sakId={props.sak.id} behandling={props.behandling} />
                     <div>
                         <VilkårsOppsummering
                             søknadInnhold={props.behandling.søknad.søknadInnhold}
