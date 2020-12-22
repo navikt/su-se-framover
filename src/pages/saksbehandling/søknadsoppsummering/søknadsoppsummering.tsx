@@ -14,11 +14,7 @@ const Søknadsoppsummering = (props: Props) => {
     console.log(behandlingId, behandling);
 
     if (!behandling) {
-        return (
-            <>
-                Fant ikke behandling: {behandlingId} : {behandling}
-            </>
-        );
+        return <div>{props.sak.id}</div>;
     }
 
     return (
