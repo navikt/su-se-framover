@@ -11,7 +11,6 @@ interface Props {
 const Behandlingsoppsummering = (props: Props) => {
     const { behandlingId } = Routes.useRouteParams<typeof Routes.saksbehandlingOppsummering>();
     const behandling = props.sak.behandlinger.find((behandling) => behandling.id === behandlingId);
-    console.log(behandlingId, behandling);
 
     if (!behandling) {
         return <div>{props.sak.id}</div>;

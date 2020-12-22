@@ -135,15 +135,16 @@ const Saksoversikt = () => {
                                                         <Route path={Routes.saksbehandlingVilkårsvurdering.path}>
                                                             <Vilkår sak={sak} søker={søker} />
                                                         </Route>
+                                                        <Route path={Routes.saksbehandlingOppsummering.path}>
+                                                            <div className={styles.mainContent}>
+                                                                <Behandlingsoppsummering sak={sak} />
+                                                                <div>jesus christ</div>
+                                                            </div>
+                                                        </Route>
                                                     </Switch>
                                                 </div>
                                             </Route>
-                                            <Route path={Routes.saksbehandlingOppsummering.path}>
-                                                <div className={styles.mainContent}>
-                                                    <Behandlingsoppsummering sak={sak} />
-                                                    <div>LOL</div>
-                                                </div>
-                                            </Route>
+
                                             <Route path="*">
                                                 <Sakintro sak={sak} søker={søker} />
                                                 {FeatureToggles.Hendelseslogg && <Hendelseslogg sak={sak} />}
