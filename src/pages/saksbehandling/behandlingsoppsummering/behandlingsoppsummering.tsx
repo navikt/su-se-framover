@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Knapp } from 'nav-frontend-knapper';
-import { Element } from 'nav-frontend-typografi';
+import { Element, Innholdstittel } from 'nav-frontend-typografi';
 import React, { useCallback } from 'react';
 
 import { useUserContext } from '~context/userContext';
@@ -64,6 +64,38 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
         return (
             <div className={styles.tilleggsinfoContainer}>
                 <div>
+                    <Element> Status </Element>
+                    <div className={styles.ikonContainer}>
+                        {[
+                            Behandlingsstatus.TIL_ATTESTERING_INNVILGET,
+                            Behandlingsstatus.SIMULERT,
+                            Behandlingsstatus.IVERKSATT_INNVILGET,
+                        ].includes(props.behandling.status) && (
+                            <Ikon kind="ok-sirkel-fyll" className={styles.ikon} width={iconWidth} />
+                        )}
+                        {erAvslått(props.behandling) && (
+                            <Ikon kind="feil-sirkel-fyll" className={styles.ikon} width={iconWidth} />
+                        )}
+                        Status tekst
+                    </div>
+                </div>
+                <div>
+                    <Element> {intl.formatMessage({ id: 'behandlet.av' })}</Element>
+                    <p>{props.behandling.saksbehandler || user.navn}</p>
+                </div>
+                {props.behandling.status === Behandlingsstatus.IVERKSATT_INNVILGET ||
+                    (props.behandling.status === Behandlingsstatus.IVERKSATT_AVSLAG && (
+                        <div>
+                            <Element> {intl.formatMessage({ id: 'attestert.av' })}</Element>
+                            <p>{props.behandling.attestering?.attestant}</p>
+                        </div>
+                    ))}
+                <div>
+                    <Element> {intl.formatMessage({ id: 'behandling.søknadsdato' })}</Element>
+                    <p>{intl.formatDate(props.behandling.søknad.opprettet)}</p>
+                </div>
+
+                <div>
                     <Element> {intl.formatMessage({ id: 'behandling.søknadsdato' })}</Element>
                     <p>{intl.formatDate(props.behandling.søknad.opprettet)}</p>
                 </div>
@@ -91,11 +123,11 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
                 <div className={styles.grunnOgKommentarContainer}>
                     <div>
                         <Element>{intl.formatMessage({ id: 'underkjent.grunn' })}</Element>
-                        <p>{props.behandling.attestering?.underkjennelse?.grunn}</p>
+                        <p>{props.behandling.attestering.underkjennelse?.grunn}</p>
                     </div>
                     <div>
                         <Element>{intl.formatMessage({ id: 'underkjent.kommentar' })}</Element>
-                        <p>{props.behandling.attestering?.underkjennelse?.kommentar}</p>
+                        <p>{props.behandling.attestering.underkjennelse?.kommentar}</p>
                     </div>
                 </div>
                 <Tilleggsinfo />
@@ -105,22 +137,10 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
 
     return (
         <div className={styles.behandlingsinfoContainer}>
-            <div className={styles.ikonContainer}>
-                {[
-                    Behandlingsstatus.TIL_ATTESTERING_INNVILGET,
-                    Behandlingsstatus.SIMULERT,
-                    Behandlingsstatus.IVERKSATT_INNVILGET,
-                ].includes(props.behandling.status) && (
-                    <Ikon kind="ok-sirkel-fyll" className={styles.ikon} width={iconWidth} />
-                )}
-
-                {erAvslått(props.behandling) && (
-                    <Ikon kind="feil-sirkel-fyll" className={styles.ikon} width={iconWidth} />
-                )}
-
-                <p>
-                    {intl.formatMessage({ id: 'behandlet.av' })} {user.navn}
-                </p>
+            <div className={styles.tittelContainer}>
+                <Innholdstittel className={styles.pageTittel}>
+                    {intl.formatMessage({ id: 'page.tittel' })}
+                </Innholdstittel>
             </div>
             <Tilleggsinfo />
         </div>

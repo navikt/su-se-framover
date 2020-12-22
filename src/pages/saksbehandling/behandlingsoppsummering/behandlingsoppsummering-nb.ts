@@ -1,5 +1,6 @@
 export default {
     'behandlet.av': 'Behandlet av',
+    'attestert.av': 'Attestert av',
 
     'behandling.ikkeFerdig': 'Behandlingen er ikke ferdig',
     'behandling.søknadsdato': 'Søknadsdato',
