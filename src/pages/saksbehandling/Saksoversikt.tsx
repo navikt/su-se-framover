@@ -136,10 +136,7 @@ const Saksoversikt = () => {
                                                             <Vilkår sak={sak} søker={søker} />
                                                         </Route>
                                                         <Route path={Routes.saksbehandlingOppsummering.path}>
-                                                            <div className={styles.mainContent}>
-                                                                <Behandlingsoppsummering sak={sak} />
-                                                                <div>jesus christ</div>
-                                                            </div>
+                                                            <Behandlingsoppsummering sak={sak} />
                                                         </Route>
                                                     </Switch>
                                                 </div>
