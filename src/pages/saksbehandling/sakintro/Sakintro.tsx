@@ -2,6 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
+import Lenke from 'nav-frontend-lenker';
 import Panel from 'nav-frontend-paneler';
 import { Ingress, Innholdstittel, Element, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
@@ -76,17 +77,17 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         behandlinger={props.sak.behandlinger}
                         intl={intl}
                     />
-                    <ÅpneSøknader
-                        sakId={props.sak.id}
-                        åpneSøknader={godkjenteBehandlinger}
-                        behandlinger={props.sak.behandlinger}
-                        intl={intl}
-                    />
                     <Utbetalinger
                         sakId={props.sak.id}
                         søker={props.søker}
                         utbetalingsperioder={props.sak.utbetalinger}
                         kanStansesEllerGjenopptas={props.sak.utbetalingerKanStansesEllerGjenopptas}
+                    />
+                    <GodkjenteSøknader
+                        sakId={props.sak.id}
+                        åpneSøknader={godkjenteBehandlinger}
+                        behandlinger={props.sak.behandlinger}
+                        intl={intl}
                     />
                     <AvslåtteSøknader avslåtteSøknader={avslåtteSøknader} intl={intl} />
                     <LukkedeSøknader lukkedeSøknader={lukkedeSøknader} intl={intl} />
@@ -188,6 +189,51 @@ const ÅpneSøknader = (props: {
         </div>
     );
 };
+
+const GodkjenteSøknader = (props: {
+    åpneSøknader: Søknad[];
+    behandlinger: Behandling[];
+    sakId: string;
+    intl: IntlShape;
+}) => {
+    if (props.åpneSøknader.length === 0) return null;
+
+    return (
+        <div className={styles.søknadsContainer}>
+            <Ingress className={styles.søknadsContainerTittel}>Godkjente søknader</Ingress>
+            <ol>
+                {props.åpneSøknader.map((s) => {
+                    return (
+                        <div key={s.id}>
+                            <Panel border className={styles.søknad}>
+                                <div className={styles.info}>
+                                    <div>
+                                        <Undertittel>
+                                            {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
+                                        </Undertittel>
+                                        <div className={styles.dato}>
+                                            <Element>
+                                                {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
+                                            </Element>
+                                            <Normaltekst>{props.intl.formatDate(s.opprettet)}</Normaltekst>
+                                        </div>
+                                    </div>
+                                    <div className={styles.knapper}>
+                                        <AlertStripe type="suksess" form="inline">
+                                            Godkjent
+                                        </AlertStripe>
+                                        <Lenke href="/">a</Lenke>
+                                    </div>
+                                </div>
+                            </Panel>
+                        </div>
+                    );
+                })}
+            </ol>
+        </div>
+    );
+};
+
 const grunnToText = (grunn: UnderkjennelseGrunn, intl: IntlShape): string => {
     switch (grunn) {
         case UnderkjennelseGrunn.DOKUMENTASJON_MANGLER:
