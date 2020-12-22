@@ -203,6 +203,9 @@ const GodkjenteSøknader = (props: {
             <Ingress className={styles.søknadsContainerTittel}>Godkjente søknader</Ingress>
             <ol>
                 {props.åpneSøknader.map((s) => {
+                    const behandling = props.behandlinger.find((b) => b.søknad.id === s.id);
+                    if (!behandling) return <></>;
+
                     return (
                         <div key={s.id}>
                             <Panel border className={styles.søknad}>
@@ -218,11 +221,18 @@ const GodkjenteSøknader = (props: {
                                             <Normaltekst>{props.intl.formatDate(s.opprettet)}</Normaltekst>
                                         </div>
                                     </div>
-                                    <div className={styles.knapper}>
+                                    <div className={(styles.knapper, styles.flexColumn)}>
                                         <AlertStripe type="suksess" form="inline">
                                             Godkjent
                                         </AlertStripe>
-                                        <Lenke href="/">a</Lenke>
+                                        <Lenke
+                                            href={Routes.saksbehandlingOppsummering.createURL({
+                                                sakId: props.sakId,
+                                                behandlingId: behandling.id,
+                                            })}
+                                        >
+                                            Se oppsummering
+                                        </Lenke>
                                     </div>
                                 </div>
                             </Panel>
