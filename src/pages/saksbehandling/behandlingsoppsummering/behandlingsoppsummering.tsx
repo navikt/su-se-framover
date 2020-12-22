@@ -8,6 +8,7 @@ import { useUserContext } from '~context/userContext';
 import { erAvslått } from '~features/behandling/behandlingUtils';
 import { lastNedBrev } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Sak } from '~types/Sak';
@@ -24,7 +25,8 @@ interface Props {
 }
 
 const Behandlingsoppsummering = (props: Props) => {
-    const behandling = props.sak.behandlinger.find((behandling) => behandling.id === props.sak.id);
+    const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
+    const behandling = props.sak.behandlinger.find((behandling) => behandling.id === urlParams.behandlingId);
     if (!behandling) {
         return <></>;
     }
