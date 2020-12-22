@@ -20,13 +20,13 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
+import Behandlingsoppsummering from './behandlingsoppsummering/behandlingsoppsummering';
 import LukkSøknad from './lukkSøknad/LukkSøknad';
 import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
 import Vilkår from './steg/vilkår/Vilkår';
 import Søkefelt from './søkefelt/Søkefelt';
-import Søknadsoppsummering from './søknadsoppsummering/søknadsoppsummering';
 import Vedtak from './vedtak/Vedtak';
 
 const Saksoversikt = () => {
@@ -140,7 +140,8 @@ const Saksoversikt = () => {
                                             </Route>
                                             <Route path={Routes.saksbehandlingOppsummering.path}>
                                                 <div className={styles.mainContent}>
-                                                    <Søknadsoppsummering sak={sak} />
+                                                    <Behandlingsoppsummering sak={sak} />
+                                                    <div>LOL</div>
                                                 </div>
                                             </Route>
                                             <Route path="*">

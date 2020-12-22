@@ -8,7 +8,7 @@ import VilkårsOppsummering from '../vilkårsOppsummering/VilkårsOppsummering';
 interface Props {
     sak: Sak;
 }
-const Søknadsoppsummering = (props: Props) => {
+const Behandlingsoppsummering = (props: Props) => {
     const { behandlingId } = Routes.useRouteParams<typeof Routes.saksbehandlingOppsummering>();
     const behandling = props.sak.behandlinger.find((behandling) => behandling.id === behandlingId);
     console.log(behandlingId, behandling);
@@ -25,4 +25,4 @@ const Søknadsoppsummering = (props: Props) => {
     );
 };
 
-export default Søknadsoppsummering;
+export default Behandlingsoppsummering;
