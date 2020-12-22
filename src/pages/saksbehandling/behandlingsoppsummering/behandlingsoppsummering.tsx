@@ -33,7 +33,7 @@ const Behandlingsoppsummering = (props: Props) => {
 
     return (
         <>
-            <BehandlingStatus sakId={props.sak.id} behandling={behandling} />;
+            <BehandlingStatus sakId={props.sak.id} behandling={behandling} />
             <VilkårsOppsummering
                 søknadInnhold={behandling.søknad.søknadInnhold}
                 behandlingsinformasjon={behandling.behandlingsinformasjon}
@@ -106,14 +106,18 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
     return (
         <div className={styles.behandlingsinfoContainer}>
             <div className={styles.ikonContainer}>
-                {props.behandling.status === Behandlingsstatus.SIMULERT ? (
+                {[
+                    Behandlingsstatus.TIL_ATTESTERING_INNVILGET,
+                    Behandlingsstatus.SIMULERT,
+                    Behandlingsstatus.IVERKSATT_INNVILGET,
+                ].includes(props.behandling.status) && (
                     <Ikon kind="ok-sirkel-fyll" className={styles.ikon} width={iconWidth} />
-                ) : props.behandling.status === Behandlingsstatus.TIL_ATTESTERING_INNVILGET ? (
-                    <Ikon kind="ok-sirkel-fyll" className={styles.ikon} width={iconWidth} />
-                ) : null}
+                )}
+
                 {erAvslått(props.behandling) && (
                     <Ikon kind="feil-sirkel-fyll" className={styles.ikon} width={iconWidth} />
                 )}
+
                 <p>
                     {intl.formatMessage({ id: 'behandlet.av' })} {user.navn}
                 </p>
