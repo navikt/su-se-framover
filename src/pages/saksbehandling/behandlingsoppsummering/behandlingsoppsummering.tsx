@@ -71,11 +71,10 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
                     <Element> {intl.formatMessage({ id: 'behandlet.av' })}</Element>
                     <p>{props.behandling.saksbehandler || user.navn}</p>
                 </div>
-                {(props.behandling.status === Behandlingsstatus.IVERKSATT_INNVILGET ||
-                    props.behandling.status === Behandlingsstatus.IVERKSATT_AVSLAG) && (
+                {props.behandling.attestering?.attestant && (
                     <div>
                         <Element> {intl.formatMessage({ id: 'attestert.av' })}</Element>
-                        <p>{props.behandling.attestering?.attestant}</p>
+                        <p>{props.behandling.attestering.attestant}</p>
                     </div>
                 )}
 
