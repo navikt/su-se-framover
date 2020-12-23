@@ -83,13 +83,13 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
                     <Element> {intl.formatMessage({ id: 'behandlet.av' })}</Element>
                     <p>{props.behandling.saksbehandler || user.navn}</p>
                 </div>
-                {props.behandling.status === Behandlingsstatus.IVERKSATT_INNVILGET ||
-                    (props.behandling.status === Behandlingsstatus.IVERKSATT_AVSLAG && (
-                        <div>
-                            <Element> {intl.formatMessage({ id: 'attestert.av' })}</Element>
-                            <p>{props.behandling.attestering?.attestant}</p>
-                        </div>
-                    ))}
+                {(props.behandling.status === Behandlingsstatus.IVERKSATT_INNVILGET ||
+                    props.behandling.status === Behandlingsstatus.IVERKSATT_AVSLAG) && (
+                    <div>
+                        <Element> {intl.formatMessage({ id: 'attestert.av' })}</Element>
+                        <p>{props.behandling.attestering?.attestant}</p>
+                    </div>
+                )}
                 <div>
                     <Element> {intl.formatMessage({ id: 'behandling.søknadsdato' })}</Element>
                     <p>{intl.formatDate(props.behandling.søknad.opprettet)}</p>
@@ -105,7 +105,7 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
                 </div>
                 <div>
                     <Element>{intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}</Element>
-                    <Knapp spinner={RemoteData.isPending(lastNedBrevStatus)} htmlType="button" onClick={hentBrev}>
+                    <Knapp spinner={RemoteData.isPending(lastNedBrevStatus)} mini htmlType="button" onClick={hentBrev}>
                         {intl.formatMessage({ id: 'knapp.vis' })}
                     </Knapp>
                 </div>

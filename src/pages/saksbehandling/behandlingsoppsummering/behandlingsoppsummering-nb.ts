@@ -1,6 +1,6 @@
 export default {
-    'behandlet.av': 'Behandlet av',
-    'attestert.av': 'Attestert av',
+    'behandlet.av': 'Saksbehandler',
+    'attestert.av': 'Attestant',
 
     'behandling.ikkeFerdig': 'Behandlingen er ikke ferdig',
     'behandling.søknadsdato': 'Søknadsdato',
@@ -20,7 +20,7 @@ export default {
 
     'oppsummering.vilkårsvurderinger.tittel': 'Vilkårsvurderinger',
 
-    'page.tittel': 'Vedtak',
+    'page.tittel': 'Oppsummering',
 
     'underkjent.grunn': 'Grunn',
     'underkjent.kommentar': 'Kommentar',
