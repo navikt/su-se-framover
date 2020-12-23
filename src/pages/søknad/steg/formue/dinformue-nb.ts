@@ -29,7 +29,7 @@ export default {
     'input.skylderNoenMegPengerBeløp.label': 'Beløp i kroner',
 
     'input.harKontanter.label': 'Har du mer enn 1000 kr i kontanter?',
-    'input.kontanterBeløp.label': 'Beløp i kroner?',
+    'input.kontanterBeløp.label': 'Beløp i kroner',
 
     'button.fjernRad.label': 'Fjern rad',
     'button.leggTil.label': 'Legg til',

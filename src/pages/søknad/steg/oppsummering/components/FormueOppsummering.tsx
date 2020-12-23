@@ -98,7 +98,11 @@ export const FormueOppsummering = ({
             )}
 
             <Oppsummeringsfelt
-                label={intl.formatMessage({ id: 'input.harInnskuddPåKonto.label' })}
+                label={
+                    formue.harDepositumskonto
+                        ? intl.formatMessage({ id: 'input.harInnskuddPåKonto.depositum.label' })
+                        : intl.formatMessage({ id: 'input.harInnskuddPåKonto.label' })
+                }
                 verdi={formue.harInnskuddPåKonto ? 'Ja' : formue.harInnskuddPåKonto === false ? 'Nei' : 'Ubesvart'}
             />
             {formue.harInnskuddPåKonto && (
