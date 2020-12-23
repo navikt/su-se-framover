@@ -1,27 +1,23 @@
 @import '~/styles/variables.less';
 
-.behandlingsinfoContainer {
-    display: flex;
-    justify-content: space-between;
-}
-
 .behandlingUnderkjentContainer {
     display: flex;
     flex-direction: column;
-    margin-bottom: @spacing;
 
     .grunnOgKommentarContainer {
         display: grid;
-        grid-template-columns: 15rem 15em 15em;
+        grid-template-columns: auto auto 1fr;
+        gap: @spacing;
         margin-bottom: @spacing-s;
     }
 }
 
 .tilleggsinfoContainer {
     display: flex;
+    margin-bottom: @spacing-l;
 
     > :not(:last-child) {
-        margin-right: @spacing-s;
+        margin-right: @spacing;
     }
 }
 

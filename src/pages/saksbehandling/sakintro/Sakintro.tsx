@@ -225,6 +225,7 @@ const GodkjenteSøknader = (props: {
                                             Godkjent
                                         </AlertStripe>
                                         <Link
+                                            className="knapp"
                                             to={Routes.saksbehandlingOppsummering.createURL({
                                                 sakId: props.sakId,
                                                 behandlingId: behandling.id,

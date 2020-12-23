@@ -26,6 +26,11 @@ export default {
     'underkjent.grunn': 'Grunn',
     'underkjent.kommentar': 'Kommentar',
     'underkjent.sendtTilbakeFraAttestering': 'Sendt tilbake fra attestering',
+    'underkjent.grunn.InngangsvilkåreneErFeilvurdert': 'Inngangsvilkårene er feilvurdert',
+    'underkjent.grunn.BeregningenErFeil': 'Beregningen er feil',
+    'underkjent.grunn.DokumentasjonenMangler': 'Dokumentasjonen mangler',
+    'underkjent.grunn.VedtaksbrevetErFeil': 'Vedtaksbrevet er feil',
+    'underkjent.grunn.AndreForhold': 'Andre forhold',
 
     'vedtak.sendtTilAttestering': 'Vedtak er sendt til Attestering',
     'vedtak.sendtTilAttestering.lenkeSaksoversikt': 'Til saksoversikt',

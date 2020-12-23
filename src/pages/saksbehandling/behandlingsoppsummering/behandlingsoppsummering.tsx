@@ -10,7 +10,7 @@ import { lastNedBrev } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Behandling, Behandlingsstatus } from '~types/Behandling';
+import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 
 import VilkårsOppsummering from '../vilkårsOppsummering/VilkårsOppsummering';
@@ -106,7 +106,7 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
                 <div className={styles.grunnOgKommentarContainer}>
                     <div>
                         <Element>{intl.formatMessage({ id: 'underkjent.grunn' })}</Element>
-                        <p>{props.behandling.attestering.underkjennelse?.grunn}</p>
+                        <p>{underkjentGrunnTilTekst(props.behandling.attestering.underkjennelse?.grunn, intl)}</p>
                     </div>
                     <div>
                         <Element>{intl.formatMessage({ id: 'underkjent.kommentar' })}</Element>
@@ -118,13 +118,7 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
         );
     }
 
-    return (
-        <>
-            <div className={styles.behandlingsinfoContainer}>
-                <Tilleggsinfo />
-            </div>
-        </>
-    );
+    return <Tilleggsinfo />;
 };
 
 function statusTilTekst(behandlingsstatus: Behandlingsstatus, intl: IntlShape): string {
@@ -139,6 +133,23 @@ function statusTilTekst(behandlingsstatus: Behandlingsstatus, intl: IntlShape): 
         case Behandlingsstatus.VILKÅRSVURDERT_INNVILGET:
         case Behandlingsstatus.IVERKSATT_INNVILGET:
             return intl.formatMessage({ id: 'vurdering.innvilgelse' });
+        default:
+            return '';
+    }
+}
+
+function underkjentGrunnTilTekst(grunn: UnderkjennelseGrunn, intl: IntlShape): string {
+    switch (grunn) {
+        case UnderkjennelseGrunn.INNGANGSVILKÅRENE_ER_FEILVURDERT:
+            return intl.formatMessage({ id: 'underkjent.grunn.InngangsvilkåreneErFeilvurdert' });
+        case UnderkjennelseGrunn.BEREGNINGEN_ER_FEIL:
+            return intl.formatMessage({ id: 'underkjent.grunn.BeregningenErFeil' });
+        case UnderkjennelseGrunn.DOKUMENTASJON_MANGLER:
+            return intl.formatMessage({ id: 'underkjent.grunn.DokumentasjonenMangler' });
+        case UnderkjennelseGrunn.VEDTAKSBREVET_ER_FEIL:
+            return intl.formatMessage({ id: 'underkjent.grunn.VedtaksbrevetErFeil' });
+        case UnderkjennelseGrunn.ANDRE_FORHOLD:
+            return intl.formatMessage({ id: 'underkjent.grunn.AndreForhold' });
         default:
             return '';
     }
