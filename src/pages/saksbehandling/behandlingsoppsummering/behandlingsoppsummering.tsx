@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Knapp } from 'nav-frontend-knapper';
-import { Element, Innholdstittel } from 'nav-frontend-typografi';
+import { Element } from 'nav-frontend-typografi';
 import React, { useCallback } from 'react';
 import { IntlShape } from 'react-intl';
 
@@ -78,10 +78,6 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
                         <p>{props.behandling.attestering?.attestant}</p>
                     </div>
                 )}
-                <div>
-                    <Element> {intl.formatMessage({ id: 'behandling.søknadsdato' })}</Element>
-                    <p>{intl.formatDate(props.behandling.søknad.opprettet)}</p>
-                </div>
 
                 <div>
                     <Element> {intl.formatMessage({ id: 'behandling.søknadsdato' })}</Element>
@@ -125,11 +121,6 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
 
     return (
         <>
-            <div className={styles.tittelContainer}>
-                <Innholdstittel className={styles.pageTittel}>
-                    {intl.formatMessage({ id: 'page.tittel' })}
-                </Innholdstittel>
-            </div>
             <div className={styles.behandlingsinfoContainer}>
                 <Tilleggsinfo />
             </div>

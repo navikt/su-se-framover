@@ -2,6 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { PersonCard, Gender } from '@navikt/nap-person-card';
 import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
+import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect, useMemo } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
@@ -137,6 +138,11 @@ const Saksoversikt = () => {
                                                         </Route>
                                                         <Route path={Routes.saksbehandlingOppsummering.path}>
                                                             <div className={styles.mainContent}>
+                                                                <div className={styles.tittelContainer}>
+                                                                    <Innholdstittel className={styles.pageTittel}>
+                                                                        {intl.formatMessage({ id: 'page.tittel' })}
+                                                                    </Innholdstittel>
+                                                                </div>
                                                                 <Behandlingsoppsummering sak={sak} />
                                                             </div>
                                                         </Route>

@@ -23,8 +23,6 @@ export default {
 
     'oppsummering.vilkårsvurderinger.tittel': 'Vilkårsvurderinger',
 
-    'page.tittel': 'Oppsummering',
-
     'underkjent.grunn': 'Grunn',
     'underkjent.kommentar': 'Kommentar',
     'underkjent.sendtTilbakeFraAttestering': 'Sendt tilbake fra attestering',
