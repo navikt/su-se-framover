@@ -140,7 +140,9 @@ const Saksoversikt = () => {
                                                             <div className={styles.mainContent}>
                                                                 <div className={styles.tittelContainer}>
                                                                     <Innholdstittel className={styles.pageTittel}>
-                                                                        {intl.formatMessage({ id: 'page.tittel' })}
+                                                                        {intl.formatMessage({
+                                                                            id: 'page.behandlingsoppsummering.tittel',
+                                                                        })}
                                                                     </Innholdstittel>
                                                                 </div>
                                                                 <Behandlingsoppsummering sak={sak} />
