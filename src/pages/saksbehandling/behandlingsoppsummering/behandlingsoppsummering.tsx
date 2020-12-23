@@ -136,14 +136,16 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
     }
 
     return (
-        <div className={styles.behandlingsinfoContainer}>
+        <>
             <div className={styles.tittelContainer}>
                 <Innholdstittel className={styles.pageTittel}>
                     {intl.formatMessage({ id: 'page.tittel' })}
                 </Innholdstittel>
             </div>
-            <Tilleggsinfo />
-        </div>
+            <div className={styles.behandlingsinfoContainer}>
+                <Tilleggsinfo />
+            </div>
+        </>
     );
 };
 

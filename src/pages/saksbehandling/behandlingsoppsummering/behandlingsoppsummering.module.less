@@ -1,17 +1,17 @@
 @import '~/styles/variables.less';
 
+.tittelContainer {
+    border-bottom: 1px solid @navLysGra;
+    margin: @spacing 0;
+
+    .pageTittel {
+        margin-bottom: @spacing-xs;
+    }
+}
+
 .behandlingsinfoContainer {
     display: flex;
     justify-content: space-between;
-
-    .tittelContainer {
-        border-bottom: 1px solid @navLysGra;
-        margin: @spacing 0;
-
-        .pageTittel {
-            margin-bottom: @spacing-xs;
-        }
-    }
 }
 
 .behandlingUnderkjentContainer {
@@ -27,8 +27,11 @@
 }
 
 .tilleggsinfoContainer {
-    display: grid;
-    grid-template-columns: 15em 15em 15em;
+    display: flex;
+
+    > :not(:last-child) {
+        margin-right: @spacing-xs;
+    }
 }
 
 .ikonContainer {
