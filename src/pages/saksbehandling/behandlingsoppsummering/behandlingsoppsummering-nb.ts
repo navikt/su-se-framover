@@ -2,6 +2,9 @@ export default {
     'behandlet.av': 'Saksbehandler',
     'attestert.av': 'Attestant',
 
+    'vurdering.innvilgelse': 'Innvilgelse',
+    'vurdering.avslag': 'Avslag',
+
     'behandling.ikkeFerdig': 'Behandlingen er ikke ferdig',
     'behandling.søknadsdato': 'Søknadsdato',
     'behandling.saksbehandlingsdato': 'Saksbehandlingsdato',

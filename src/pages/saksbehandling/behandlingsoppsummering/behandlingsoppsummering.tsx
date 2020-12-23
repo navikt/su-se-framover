@@ -3,9 +3,9 @@ import Ikon from 'nav-frontend-ikoner-assets';
 import { Knapp } from 'nav-frontend-knapper';
 import { Element, Innholdstittel } from 'nav-frontend-typografi';
 import React, { useCallback } from 'react';
+import { IntlShape } from 'react-intl';
 
 import { useUserContext } from '~context/userContext';
-import { erAvslått } from '~features/behandling/behandlingUtils';
 import { lastNedBrev } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -64,20 +64,8 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
         return (
             <div className={styles.tilleggsinfoContainer}>
                 <div>
-                    <Element> Status </Element>
-                    <div className={styles.ikonContainer}>
-                        {[
-                            Behandlingsstatus.TIL_ATTESTERING_INNVILGET,
-                            Behandlingsstatus.SIMULERT,
-                            Behandlingsstatus.IVERKSATT_INNVILGET,
-                        ].includes(props.behandling.status) && (
-                            <Ikon kind="ok-sirkel-fyll" className={styles.ikon} width={iconWidth} />
-                        )}
-                        {erAvslått(props.behandling) && (
-                            <Ikon kind="feil-sirkel-fyll" className={styles.ikon} width={iconWidth} />
-                        )}
-                        Status tekst
-                    </div>
+                    <Element> Vurdering </Element>
+                    <p>{statusTilTekst(props.behandling.status, intl)}</p>
                 </div>
                 <div>
                     <Element> {intl.formatMessage({ id: 'behandlet.av' })}</Element>
@@ -148,5 +136,22 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
         </>
     );
 };
+
+function statusTilTekst(behandlingsstatus: Behandlingsstatus, intl: IntlShape): string {
+    switch (behandlingsstatus) {
+        case Behandlingsstatus.VILKÅRSVURDERT_AVSLAG:
+        case Behandlingsstatus.BEREGNET_AVSLAG:
+        case Behandlingsstatus.TIL_ATTESTERING_AVSLAG:
+        case Behandlingsstatus.IVERKSATT_AVSLAG:
+            return intl.formatMessage({ id: 'vurdering.avslag' });
+        case Behandlingsstatus.TIL_ATTESTERING_INNVILGET:
+        case Behandlingsstatus.SIMULERT:
+        case Behandlingsstatus.VILKÅRSVURDERT_INNVILGET:
+        case Behandlingsstatus.IVERKSATT_INNVILGET:
+            return intl.formatMessage({ id: 'vurdering.innvilgelse' });
+        default:
+            return '';
+    }
+}
 
 export default Behandlingsoppsummering;
