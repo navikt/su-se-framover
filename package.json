@@ -44,7 +44,7 @@
         "@navikt/nap-header": "^1.0.10",
         "@navikt/nap-person-card": "^1.1.4",
         "@navikt/nap-side-menu": "^1.0.7",
-        "@reduxjs/toolkit": "^1.4.0",
+        "@reduxjs/toolkit": "^1.5.0",
         "@sentry/browser": "^5.27.4",
         "@types/jest": "^26.0.19",
         "@types/jsonwebtoken": "^8.5.0",
