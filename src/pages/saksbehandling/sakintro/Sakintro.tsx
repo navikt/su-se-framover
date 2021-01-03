@@ -221,9 +221,6 @@ const GodkjenteSøknader = (props: {
                                         </div>
                                     </div>
                                     <div className={(styles.knapper, styles.flexColumn)}>
-                                        <AlertStripe type="suksess" form="inline">
-                                            Godkjent
-                                        </AlertStripe>
                                         <Link
                                             className="knapp"
                                             to={Routes.saksbehandlingOppsummering.createURL({
