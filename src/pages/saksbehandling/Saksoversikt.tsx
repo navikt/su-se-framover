@@ -2,6 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { PersonCard, Gender } from '@navikt/nap-person-card';
 import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
+import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect, useMemo } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
@@ -20,6 +21,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
+import Behandlingsoppsummering from './behandlingsoppsummering/behandlingsoppsummering';
 import LukkSøknad from './lukkSøknad/LukkSøknad';
 import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
@@ -134,9 +136,22 @@ const Saksoversikt = () => {
                                                         <Route path={Routes.saksbehandlingVilkårsvurdering.path}>
                                                             <Vilkår sak={sak} søker={søker} />
                                                         </Route>
+                                                        <Route path={Routes.saksbehandlingOppsummering.path}>
+                                                            <div className={styles.mainContent}>
+                                                                <div className={styles.tittelContainer}>
+                                                                    <Innholdstittel className={styles.pageTittel}>
+                                                                        {intl.formatMessage({
+                                                                            id: 'page.behandlingsoppsummering.tittel',
+                                                                        })}
+                                                                    </Innholdstittel>
+                                                                </div>
+                                                                <Behandlingsoppsummering sak={sak} />
+                                                            </div>
+                                                        </Route>
                                                     </Switch>
                                                 </div>
                                             </Route>
+
                                             <Route path="*">
                                                 <Sakintro sak={sak} søker={søker} />
                                                 {FeatureToggles.Hendelseslogg && <Hendelseslogg sak={sak} />}

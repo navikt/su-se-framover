@@ -22,7 +22,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
-import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
+import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 
@@ -47,6 +47,11 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
     const åpneSøknader = props.sak.søknader.filter((søknad) => {
         const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
         return søknad.lukket === null && (!behandling || !erIverksatt(behandling));
+    });
+
+    const godkjenteBehandlinger = props.sak.søknader.filter((søknad) => {
+        const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
+        return søknad.lukket === null && behandling?.status === Behandlingsstatus.IVERKSATT_INNVILGET;
     });
 
     const lukkedeSøknader = props.sak.søknader.filter((søknad) => {
@@ -76,6 +81,12 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         søker={props.søker}
                         utbetalingsperioder={props.sak.utbetalinger}
                         kanStansesEllerGjenopptas={props.sak.utbetalingerKanStansesEllerGjenopptas}
+                    />
+                    <GodkjenteSøknader
+                        sakId={props.sak.id}
+                        åpneSøknader={godkjenteBehandlinger}
+                        behandlinger={props.sak.behandlinger}
+                        intl={intl}
                     />
                     <AvslåtteSøknader avslåtteSøknader={avslåtteSøknader} intl={intl} />
                     <LukkedeSøknader lukkedeSøknader={lukkedeSøknader} intl={intl} />
@@ -177,6 +188,62 @@ const ÅpneSøknader = (props: {
         </div>
     );
 };
+
+const GodkjenteSøknader = (props: {
+    åpneSøknader: Søknad[];
+    behandlinger: Behandling[];
+    sakId: string;
+    intl: IntlShape;
+}) => {
+    if (props.åpneSøknader.length === 0) return null;
+
+    return (
+        <div className={styles.søknadsContainer}>
+            <Ingress className={styles.søknadsContainerTittel}>Godkjente søknader</Ingress>
+            <ol>
+                {props.åpneSøknader.map((s) => {
+                    const behandling = props.behandlinger.find((b) => b.søknad.id === s.id);
+                    if (!behandling) return <></>;
+
+                    return (
+                        <div key={s.id}>
+                            <Panel border className={styles.søknad}>
+                                <div className={styles.info}>
+                                    <div>
+                                        <Undertittel>
+                                            {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
+                                        </Undertittel>
+                                        <div className={styles.dato}>
+                                            <Element>
+                                                {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
+                                            </Element>
+                                            <Normaltekst>{props.intl.formatDate(s.opprettet)}</Normaltekst>
+                                        </div>
+                                    </div>
+                                    <div className={(styles.knapper, styles.flexColumn)}>
+                                        <AlertStripe type="suksess" form="inline">
+                                            Godkjent
+                                        </AlertStripe>
+                                        <Link
+                                            className="knapp"
+                                            to={Routes.saksbehandlingOppsummering.createURL({
+                                                sakId: props.sakId,
+                                                behandlingId: behandling.id,
+                                            })}
+                                        >
+                                            Se oppsummering
+                                        </Link>
+                                    </div>
+                                </div>
+                            </Panel>
+                        </div>
+                    );
+                })}
+            </ol>
+        </div>
+    );
+};
+
 const grunnToText = (grunn: UnderkjennelseGrunn, intl: IntlShape): string => {
     switch (grunn) {
         case UnderkjennelseGrunn.DOKUMENTASJON_MANGLER:
