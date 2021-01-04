@@ -10,7 +10,8 @@ export default {
     'display.lukkedeSøknader.tittel': 'Lukket søknad',
 
     'display.behandling.fortsettBehandling': 'Fortsett behandling',
-    'display.behandling.klarteIkkeStarteBehandling': 'Klarte ikke å starte behandling',
+    'display.behandling.oppgaveFinnesIkkeIGosys':
+        'Søknaden kan ikke behandles fordi det ikke finnes en tilknyttet oppgave i Gosys',
     'display.behandling.startBehandling': 'Start behandling',
     'behandling.attestering.advarsel': 'Sendt tilbake fra attestering',
 

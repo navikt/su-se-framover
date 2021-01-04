@@ -266,52 +266,54 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
     const history = useHistory();
 
     return (
-        <div>
-            <Hovedknapp
-                className={styles.startBehandlingKnapp}
-                mini
-                onClick={async () => {
-                    setRequest(RemoteData.pending);
-                    const response = await dispatch(
-                        sakSlice.startBehandling({
-                            sakId: props.sakId,
-                            søknadId: props.søknadId,
-                        })
-                    );
-
-                    if (response.payload && 'id' in response.payload) {
-                        return history.push(
-                            Routes.saksbehandlingVilkårsvurdering.createURL({
+        <div className={styles.startSøknadsbehandlingKnapperContainer}>
+            <div className={styles.startSøknadsbehandlingKnapper}>
+                <Hovedknapp
+                    className={styles.startBehandlingKnapp}
+                    mini
+                    onClick={async () => {
+                        setRequest(RemoteData.pending);
+                        const response = await dispatch(
+                            sakSlice.startBehandling({
                                 sakId: props.sakId,
-                                behandlingId: response.payload.id,
+                                søknadId: props.søknadId,
                             })
                         );
-                    }
-                    if (response.payload) {
-                        setRequest(RemoteData.failure(response.payload));
-                    }
-                }}
-                spinner={RemoteData.isPending(request)}
-            >
-                {props.intl.formatMessage({
-                    id: 'display.behandling.startBehandling',
-                })}
-            </Hovedknapp>
-            <Link
-                className="knapp knapp--fare knapp--mini"
-                to={Routes.avsluttSøknadsbehandling.createURL({
-                    sakId: props.sakId,
-                    soknadId: props.søknadId,
-                })}
-            >
-                {props.intl.formatMessage({
-                    id: 'display.søknad.lukkSøknad',
-                })}
-            </Link>
+
+                        if (response.payload && 'id' in response.payload) {
+                            return history.push(
+                                Routes.saksbehandlingVilkårsvurdering.createURL({
+                                    sakId: props.sakId,
+                                    behandlingId: response.payload.id,
+                                })
+                            );
+                        }
+                        if (response.payload) {
+                            setRequest(RemoteData.failure(response.payload));
+                        }
+                    }}
+                    spinner={RemoteData.isPending(request)}
+                >
+                    {props.intl.formatMessage({
+                        id: 'display.behandling.startBehandling',
+                    })}
+                </Hovedknapp>
+                <Link
+                    className="knapp knapp--fare knapp--mini"
+                    to={Routes.avsluttSøknadsbehandling.createURL({
+                        sakId: props.sakId,
+                        soknadId: props.søknadId,
+                    })}
+                >
+                    {props.intl.formatMessage({
+                        id: 'display.søknad.lukkSøknad',
+                    })}
+                </Link>
+            </div>
             {RemoteData.isFailure(request) && (
                 <AlertStripe className={styles.feil} type="feil">
                     {props.intl.formatMessage({
-                        id: 'display.behandling.klarteIkkeStarteBehandling',
+                        id: 'display.behandling.oppgaveFinnesIkkeIGosys',
                     })}
                 </AlertStripe>
             )}

@@ -56,7 +56,6 @@ export const startBehandling = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/start', async ({ sakId, søknadId }, thunkApi) => {
     const res = await behandlingApi.startBehandling({ sakId, søknadId });
-    console.log(res);
     if (res.status === 'ok') {
         return res.data;
     }
