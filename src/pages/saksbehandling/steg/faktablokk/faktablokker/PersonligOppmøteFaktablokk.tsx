@@ -33,9 +33,13 @@ const PersonligOppmøteFaktablokk = (props: FaktablokkProps) => {
                                   id: 'personligOppmøte.papirsøknad.grunnForPapirinnsending',
                               }),
                               verdi:
-                                  props.søknadInnhold.forNav.grunnForPapirinnsending === GrunnForPapirinnsending.Annet
-                                      ? props.søknadInnhold.forNav.annenGrunn ?? '-'
-                                      : props.søknadInnhold.forNav.grunnForPapirinnsending,
+                                  props.søknadInnhold.forNav.grunnForPapirinnsending ===
+                                  GrunnForPapirinnsending.VergeHarSøktPåVegneAvBruker
+                                      ? 'Verge har søkt på vegne av bruker '
+                                      : props.søknadInnhold.forNav.grunnForPapirinnsending ===
+                                        GrunnForPapirinnsending.MidlertidigUnntakFraOppmøteplikt
+                                      ? 'Midlertidig unntak for oppmøteplikt'
+                                      : props.søknadInnhold.forNav.annenGrunn ?? '-',
                           },
                       ]
             }
