@@ -9,11 +9,11 @@ import { useHistory } from 'react-router-dom';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { TypeOppholdstillatelse } from '~features/søknad/types';
-import { Nullable } from '~lib/types';
+import { useI18n } from '~lib/hooks';
+import { keyOf, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
-import { useI18n } from '../../../../lib/hooks';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
@@ -35,7 +35,11 @@ const schema = yup.object<FormData>({
         .defined()
         .when('harOppholdstillatelse', {
             is: true,
-            then: yup.mixed().nullable().oneOf(['permanent', 'midlertidig']).required(),
+            then: yup
+                .mixed()
+                .nullable()
+                .oneOf(Object.values(TypeOppholdstillatelse), 'Du må velge type oppholdstillatelse')
+                .required(),
         }),
     statsborgerskapAndreLand: yup.boolean().nullable().required(),
     statsborgerskapAndreLandFritekst: yup
@@ -102,7 +106,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                 >
                     <div className={sharedStyles.formContainer}>
                         <JaNeiSpørsmål
-                            id={'erFlyktning'}
+                            id={keyOf<FormData>('erFlyktning')}
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.flyktning.label" />}
                             hjelpetekstTittel={intl.formatMessage({ id: 'hjelpetekst.tittel' })}
@@ -122,7 +126,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             </AlertStripe>
                         )}
                         <JaNeiSpørsmål
-                            id={'erNorskStatsborger'}
+                            id={keyOf<FormData>('erNorskStatsborger')}
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.norsk.statsborger.label" />}
                             feil={formik.errors.erNorskStatsborger}
@@ -138,7 +142,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                         />
                         {formik.values.erNorskStatsborger === false && (
                             <JaNeiSpørsmål
-                                id={'harOppholdstillatelse'}
+                                id={keyOf<FormData>('harOppholdstillatelse')}
                                 className={sharedStyles.sporsmal}
                                 legend={<FormattedMessage id="input.oppholdstillatelse.label" />}
                                 feil={formik.errors.harOppholdstillatelse}
@@ -157,15 +161,16 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 className={sharedStyles.sporsmal}
                                 feil={null}
                                 legend={<FormattedMessage id={'input.hvilken.oppholdstillatelse.label'} />}
-                                name="typeOppholdstillatelse"
+                                name={keyOf<FormData>('typeOppholdstillatelse')}
                                 radios={[
                                     {
+                                        id: keyOf<FormData>('typeOppholdstillatelse'),
                                         label: <FormattedMessage id={'input.permanent.oppholdstillatelse.label'} />,
-                                        value: 'permanent',
+                                        value: TypeOppholdstillatelse.Permanent,
                                     },
                                     {
                                         label: <FormattedMessage id={'input.midlertidig.oppholdstillatelse.label'} />,
-                                        value: 'midlertidig',
+                                        value: TypeOppholdstillatelse.Midlertidig,
                                     },
                                 ]}
                                 onChange={(_, value) => {
@@ -190,7 +195,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                         )}
 
                         <JaNeiSpørsmål
-                            id={'statsborgerskapAndreLand'}
+                            id={keyOf<FormData>('statsborgerskapAndreLand')}
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.statsborger.andre.land.label" />}
                             feil={formik.errors.statsborgerskapAndreLand}
@@ -205,8 +210,8 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                         />
                         {formik.values.statsborgerskapAndreLand && (
                             <Input
-                                id="statsborgerskapAndreLandFritekst"
-                                name="statsborgerskapAndreLandFritekst"
+                                id={keyOf<FormData>('statsborgerskapAndreLandFritekst')}
+                                name={keyOf<FormData>('statsborgerskapAndreLandFritekst')}
                                 label={<FormattedMessage id="input.statsborger.andre.land.fritekst.label" />}
                                 feil={formik.errors.statsborgerskapAndreLandFritekst}
                                 value={formik.values.statsborgerskapAndreLandFritekst || ''}

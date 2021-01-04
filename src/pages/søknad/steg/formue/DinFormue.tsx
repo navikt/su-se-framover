@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
-import { Nullable } from '~lib/types';
+import { keyOf, Nullable } from '~lib/types';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
@@ -40,7 +40,7 @@ const schema = yup.object<FormData>({
         .number()
         .nullable()
         .defined()
-        .when('borIBolig', {
+        .when(keyOf<FormData>('borIBolig'), {
             is: false,
             then: yup
                 .number()
@@ -54,11 +54,11 @@ const schema = yup.object<FormData>({
         .string()
         .nullable()
         .defined()
-        .when('borIBolig', {
+        .when(keyOf<FormData>('borIBolig'), {
             is: false,
             then: yup.string().nullable().min(1).required(),
         }),
-    eierMerEnnEnBolig: yup.boolean().nullable().defined().when('eierBolig', {
+    eierMerEnnEnBolig: yup.boolean().nullable().defined().when(keyOf<FormData>('eierBolig'), {
         is: true,
         then: yup.boolean().nullable().required(),
     }),
@@ -66,12 +66,12 @@ const schema = yup.object<FormData>({
         .boolean()
         .nullable()
         .defined()
-        .when('eierBolig', { is: false, then: yup.boolean().nullable().required() }),
+        .when(keyOf<FormData>('eierBolig'), { is: false, then: yup.boolean().nullable().required() }),
     depositumsBeløp: yup
         .number()
         .nullable()
         .defined()
-        .when('harDepositumskonto', {
+        .when(keyOf<FormData>('harDepositumskonto'), {
             is: true,
             then: yup
                 .number()
@@ -85,16 +85,16 @@ const schema = yup.object<FormData>({
         .number()
         .nullable()
         .defined()
-        .when('harDepositumskonto', {
+        .when(keyOf<FormData>('harDepositumskonto'), {
             is: true,
-            then: yup.number().typeError('kontonummer må være et tall').label('kontonummer').nullable(false).positive(),
+            then: yup.number().typeError('Kontonummer må være et tall').label('kontonummer').nullable(false).positive(),
             otherwise: yup.number(),
         }) as yup.Schema<Nullable<string>>,
     verdiPåEiendom: yup
         .number()
         .nullable()
         .defined()
-        .when('eierMerEnnEnBolig', {
+        .when(keyOf<FormData>('eierMerEnnEnBolig'), {
             is: true,
             then: yup
                 .number()
@@ -108,7 +108,7 @@ const schema = yup.object<FormData>({
         .string()
         .nullable()
         .defined()
-        .when('eierMerEnnEnBolig', {
+        .when(keyOf<FormData>('eierMerEnnEnBolig'), {
             is: true,
             then: yup.string().nullable().min(1).required(),
         }),
@@ -116,7 +116,7 @@ const schema = yup.object<FormData>({
     kjøretøy: yup
         .array(kjøretøySchema.required())
         .defined()
-        .when('eierKjøretøy', {
+        .when(keyOf<FormData>('eierKjøretøy'), {
             is: true,
             then: yup.array().min(1).required(),
             otherwise: yup.array().max(0),
@@ -127,7 +127,7 @@ const schema = yup.object<FormData>({
         .nullable()
         .label('Beløp på innskuddet')
         .defined()
-        .when('harInnskuddPåKonto', {
+        .when(keyOf<FormData>('harInnskuddPåKonto'), {
             is: true,
             then: yup.number().typeError('Beløp på innskuddet må være et tall').nullable(false).positive().required(),
             otherwise: yup.number(),
@@ -138,7 +138,7 @@ const schema = yup.object<FormData>({
         .nullable()
         .defined()
         .label('Beløp på verdipapir')
-        .when('harVerdipapir', {
+        .when(keyOf<FormData>('harVerdipapir'), {
             is: true,
             then: yup.number().typeError('Beløp på verdipapir må være et tall').nullable(false).positive(),
         }) as yup.Schema<Nullable<string>>,
@@ -148,16 +148,16 @@ const schema = yup.object<FormData>({
         .nullable()
         .label('skylderNoenMegPenger beløp')
         .defined()
-        .when('skylderNoenMegPenger', {
+        .when(keyOf<FormData>('skylderNoenMegPenger'), {
             is: true,
-            then: yup.number().typeError('skylderNoenMegPenger beløp må være et tall').nullable(false).positive(),
+            then: yup.number().typeError('Beløpet må være et tall').nullable(false).positive(),
         }) as yup.Schema<Nullable<string>>,
     harKontanter: yup.boolean().nullable().required(),
     kontanterBeløp: yup
         .number()
         .nullable()
         .defined()
-        .when('harKontanter', {
+        .when(keyOf<FormData>('harKontanter'), {
             is: true,
             then: yup
                 .number()
@@ -330,14 +330,14 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                 >
                     <div className={sharedStyles.formContainer}>
                         <JaNeiSpørsmål
-                            id="eierBolig"
+                            id={keyOf<FormData>('eierBolig')}
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.eierDuBolig.label" />}
                             feil={formik.errors.eierBolig}
                             state={formik.values.eierBolig}
                             onChange={(e) =>
-                                formik.setValues({
-                                    ...formik.values,
+                                formik.setValues((v) => ({
+                                    ...v,
                                     eierBolig: e,
                                     borIBolig: null,
                                     verdiPåBolig: null,
@@ -346,23 +346,23 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     harDepositumskonto: null,
                                     depositumsBeløp: null,
                                     kontonummer: null,
-                                })
+                                }))
                             }
                         />
                         {formik.values.eierBolig && (
                             <JaNeiSpørsmål
-                                id="borIBolig"
+                                id={keyOf<FormData>('borIBolig')}
                                 className={sharedStyles.sporsmal}
                                 legend={<FormattedMessage id="input.borIBolig.label" />}
                                 feil={formik.errors.borIBolig}
                                 state={formik.values.borIBolig}
                                 onChange={(e) =>
-                                    formik.setValues({
-                                        ...formik.values,
+                                    formik.setValues((v) => ({
+                                        ...v,
                                         borIBolig: e,
                                         verdiPåBolig: null,
                                         boligBrukesTil: null,
-                                    })
+                                    }))
                                 }
                             />
                         )}
@@ -370,8 +370,8 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         {formik.values.borIBolig === false && (
                             <div className={sharedStyles.inputFelterDiv}>
                                 <Input
-                                    id="verdiPåBolig"
-                                    name="verdiPåBolig"
+                                    id={keyOf<FormData>('verdiPåBolig')}
+                                    name={keyOf<FormData>('verdiPåBolig')}
                                     label={<FormattedMessage id="input.verdiPåBolig.label" />}
                                     value={formik.values.verdiPåBolig || ''}
                                     feil={formik.errors.verdiPåBolig}
@@ -379,8 +379,8 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     autoComplete="off"
                                 />
                                 <Input
-                                    id="boligBrukesTil"
-                                    name="boligBrukesTil"
+                                    id={keyOf<FormData>('boligBrukesTil')}
+                                    name={keyOf<FormData>('boligBrukesTil')}
                                     label={<FormattedMessage id="input.boligBrukesTil.label" />}
                                     value={formik.values.boligBrukesTil || ''}
                                     feil={formik.errors.boligBrukesTil}
@@ -392,18 +392,18 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         {formik.values.eierBolig === false && (
                             <JaNeiSpørsmål
-                                id="depositumskonto"
+                                id={keyOf<FormData>('harDepositumskonto')}
                                 className={sharedStyles.sporsmal}
                                 legend={<FormattedMessage id="input.depositumskonto.label" />}
                                 feil={formik.errors.harDepositumskonto}
                                 state={formik.values.harDepositumskonto}
                                 onChange={(e) =>
-                                    formik.setValues({
-                                        ...formik.values,
+                                    formik.setValues((v) => ({
+                                        ...v,
                                         harDepositumskonto: e,
                                         depositumsBeløp: null,
                                         kontonummer: null,
-                                    })
+                                    }))
                                 }
                             />
                         )}
@@ -411,7 +411,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         {formik.values.harDepositumskonto && (
                             <div className={sharedStyles.inputFelterDiv}>
                                 <Input
-                                    id="depositumsBeløp"
+                                    id={keyOf<FormData>('depositumsBeløp')}
                                     name="depositumsBeløp"
                                     label={<FormattedMessage id="input.depositumsBeløp.label" />}
                                     value={formik.values.depositumsBeløp || ''}
@@ -420,8 +420,8 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     autoComplete="off"
                                 />
                                 <Input
-                                    id="kontonummer"
-                                    name="kontonummer"
+                                    id={keyOf<FormData>('kontonummer')}
+                                    name={keyOf<FormData>('kontonummer')}
                                     label={<FormattedMessage id="input.kontonummer.label" />}
                                     value={formik.values.kontonummer || ''}
                                     feil={formik.errors.kontonummer}
@@ -433,18 +433,18 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
 
                         {formik.values.eierBolig && (
                             <JaNeiSpørsmål
-                                id="eierMerEnnEnBolig"
+                                id={keyOf<FormData>('eierMerEnnEnBolig')}
                                 className={sharedStyles.sporsmal}
                                 legend={<FormattedMessage id="input.eierMerEnnEnBolig.label" />}
                                 feil={formik.errors.eierMerEnnEnBolig}
                                 state={formik.values.eierMerEnnEnBolig}
                                 onChange={(e) =>
-                                    formik.setValues({
-                                        ...formik.values,
+                                    formik.setValues((v) => ({
+                                        ...v,
                                         eierMerEnnEnBolig: e,
                                         verdiPåEiendom: null,
                                         eiendomBrukesTil: null,
-                                    })
+                                    }))
                                 }
                             />
                         )}
@@ -452,8 +452,8 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         {formik.values.eierBolig && formik.values.eierMerEnnEnBolig && (
                             <div className={sharedStyles.inputFelterDiv}>
                                 <Input
-                                    id="verdiPåEiendom"
-                                    name="verdiPåEiendom"
+                                    id={keyOf<FormData>('verdiPåEiendom')}
+                                    name={keyOf<FormData>('verdiPåEiendom')}
                                     label={<FormattedMessage id="input.verdiPåEiendom.label" />}
                                     value={formik.values.verdiPåEiendom || ''}
                                     feil={formik.errors.verdiPåEiendom}
@@ -461,8 +461,8 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     autoComplete="off"
                                 />
                                 <Input
-                                    id="eiendomBrukesTil"
-                                    name="eiendomBrukesTil"
+                                    id={keyOf<FormData>('eiendomBrukesTil')}
+                                    name={keyOf<FormData>('eiendomBrukesTil')}
                                     label={<FormattedMessage id="input.eiendomBrukesTil.label" />}
                                     value={formik.values.eiendomBrukesTil || ''}
                                     feil={formik.errors.eiendomBrukesTil}
@@ -473,17 +473,17 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
 
                         <JaNeiSpørsmål
-                            id="eierKjøretøy"
+                            id={keyOf<FormData>('eierKjøretøy')}
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.eierKjøretøy.label" />}
                             feil={formik.errors.eierKjøretøy}
                             state={formik.values.eierKjøretøy}
                             onChange={(e) =>
-                                formik.setValues({
-                                    ...formik.values,
+                                formik.setValues((v) => ({
+                                    ...v,
                                     eierKjøretøy: e,
                                     kjøretøy: e ? [{ verdiPåKjøretøy: '', kjøretøyDeEier: '' }] : [],
-                                })
+                                }))
                             }
                         />
 
@@ -491,10 +491,10 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             <KjøretøyInputFelter
                                 arr={formik.values.kjøretøy}
                                 errors={formik.errors.kjøretøy}
-                                feltnavn={'kjøretøy'}
+                                feltnavn={keyOf<FormData>('kjøretøy')}
                                 onLeggTilClick={() => {
-                                    formik.setValues({
-                                        ...formik.values,
+                                    formik.setValues((v) => ({
+                                        ...v,
                                         kjøretøy: [
                                             ...formik.values.kjøretøy,
                                             {
@@ -502,7 +502,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                                 kjøretøyDeEier: '',
                                             },
                                         ],
-                                    });
+                                    }));
                                 }}
                                 onFjernClick={(index) => {
                                     formik.setValues({
@@ -527,7 +527,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
 
                         <JaNeiSpørsmål
-                            id="harInnskuddPåKonto"
+                            id={keyOf<FormData>('harInnskuddPåKonto')}
                             className={sharedStyles.sporsmal}
                             legend={
                                 formik.values.harDepositumskonto ? (
@@ -539,19 +539,19 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                             feil={formik.errors.harInnskuddPåKonto}
                             state={formik.values.harInnskuddPåKonto}
                             onChange={(e) =>
-                                formik.setValues({
-                                    ...formik.values,
+                                formik.setValues((v) => ({
+                                    ...v,
                                     harInnskuddPåKonto: e,
                                     innskuddsBeløp: null,
-                                })
+                                }))
                             }
                         />
 
                         {formik.values.harInnskuddPåKonto && (
                             <Input
                                 className={sharedStyles.marginBottom}
-                                id="innskuddsBeløp"
-                                name="innskuddsBeløp"
+                                id={keyOf<FormData>('innskuddsBeløp')}
+                                name={keyOf<FormData>('innskuddsBeløp')}
                                 bredde="S"
                                 label={<FormattedMessage id="input.innskuddsBeløp.label" />}
                                 feil={formik.errors.innskuddsBeløp}
@@ -561,25 +561,25 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
 
                         <JaNeiSpørsmål
-                            id="harVerdipapir"
+                            id={keyOf<FormData>('harVerdipapir')}
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.harVerdipapir.label" />}
                             feil={formik.errors.harVerdipapir}
                             state={formik.values.harVerdipapir}
                             onChange={(e) =>
-                                formik.setValues({
-                                    ...formik.values,
+                                formik.setValues((v) => ({
+                                    ...v,
                                     harVerdipapir: e,
                                     verdipapirBeløp: null,
-                                })
+                                }))
                             }
                         />
 
                         {formik.values.harVerdipapir && (
                             <Input
                                 className={sharedStyles.marginBottom}
-                                id="verdipapirBeløp"
-                                name="verdipapirBeløp"
+                                id={keyOf<FormData>('verdipapirBeløp')}
+                                name={keyOf<FormData>('verdipapirBeløp')}
                                 bredde="S"
                                 label={<FormattedMessage id="input.verdipapirBeløp.label" />}
                                 value={formik.values.verdipapirBeløp || ''}
@@ -590,25 +590,25 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
 
                         <JaNeiSpørsmål
-                            id="skylderNoenMegPenger"
+                            id={keyOf<FormData>('skylderNoenMegPenger')}
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.skylderNoenMegPenger.label" />}
                             feil={formik.errors.skylderNoenMegPenger}
                             state={formik.values.skylderNoenMegPenger}
                             onChange={(e) =>
-                                formik.setValues({
-                                    ...formik.values,
+                                formik.setValues((v) => ({
+                                    ...v,
                                     skylderNoenMegPenger: e,
                                     skylderNoenMegPengerBeløp: null,
-                                })
+                                }))
                             }
                         />
 
                         {formik.values.skylderNoenMegPenger && (
                             <Input
                                 className={sharedStyles.marginBottom}
-                                id="skylderNoenMegPengerBeløp"
-                                name="skylderNoenMegPengerBeløp"
+                                id={keyOf<FormData>('skylderNoenMegPengerBeløp')}
+                                name={keyOf<FormData>('skylderNoenMegPengerBeløp')}
                                 bredde="S"
                                 label={<FormattedMessage id="input.skylderNoenMegPengerBeløp.label" />}
                                 value={formik.values.skylderNoenMegPengerBeløp || ''}
@@ -619,25 +619,25 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                         )}
 
                         <JaNeiSpørsmål
-                            id="harKontanter"
+                            id={keyOf<FormData>('harKontanter')}
                             className={sharedStyles.sporsmal}
                             legend={<FormattedMessage id="input.harKontanter.label" />}
                             feil={formik.errors.harKontanter}
                             state={formik.values.harKontanter}
                             onChange={(e) =>
-                                formik.setValues({
-                                    ...formik.values,
+                                formik.setValues((v) => ({
+                                    ...v,
                                     harKontanter: e,
                                     kontanterBeløp: null,
-                                })
+                                }))
                             }
                         />
 
                         {formik.values.harKontanter && (
                             <Input
                                 className={sharedStyles.marginBottom}
-                                id="kontanterBeløp"
-                                name="kontanterBeløp"
+                                id={keyOf<FormData>('kontanterBeløp')}
+                                name={keyOf<FormData>('kontanterBeløp')}
                                 bredde="S"
                                 label={<FormattedMessage id="input.kontanterBeløp.label" />}
                                 value={formik.values.kontanterBeløp || ''}

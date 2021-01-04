@@ -62,6 +62,10 @@ const Trukket = (props: TrukketProps) => {
                     inputProps={{
                         name: 'datoSøkerTrakkSøknad',
                         placeholder: 'dd.mm.åååå',
+                        'aria-invalid':
+                            props.feilmelding || (clickedViewLetter && props.datoSøkerTrakkSøknad === null)
+                                ? true
+                                : false,
                     }}
                     inputId={'datoSøkerTrakkSøknad'}
                     value={props.datoSøkerTrakkSøknad?.toString()}

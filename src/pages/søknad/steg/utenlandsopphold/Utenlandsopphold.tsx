@@ -129,6 +129,10 @@ const MultiTidsperiodevelger = (props: {
                                 inputProps={{
                                     name: 'utreisedato',
                                     placeholder: 'dd.mm.åååå',
+                                    'aria-invalid':
+                                        errorForLinje && typeof errorForLinje === 'object' && errorForLinje.utreisedato
+                                            ? true
+                                            : false,
                                 }}
                                 value={periode.utreisedato}
                                 inputId={utreisedatoId}
@@ -160,6 +164,10 @@ const MultiTidsperiodevelger = (props: {
                                 inputProps={{
                                     name: 'innreisedato',
                                     placeholder: 'dd.mm.åååå',
+                                    'aria-invalid':
+                                        errorForLinje && typeof errorForLinje === 'object' && errorForLinje.innreisedato
+                                            ? true
+                                            : false,
                                 }}
                                 value={periode.innreisedato}
                                 limitations={{ minDate: periode.utreisedato }}
