@@ -1,0 +1,19 @@
+name: Test av tag and release
+
+on: workflow_dispatch
+
+jobs:
+    tag_and_release:
+        name: Create tag and release
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Bump version and push tag
+              uses: mathieudutour/github-tag-action@v5.1
+              with:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Create a GitHub release
+              uses: 'marvinpinto/action-automatic-releases@latest'
+              with:
+                  repo_token: '${{ secrets.GITHUB_TOKEN }}'
+                  prerelease: false
