@@ -5,7 +5,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect, useMemo } from 'react';
 import { IntlProvider } from 'react-intl';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Link, Route, Switch, useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
 import Hendelseslogg from '~components/Hendelseslogg';
@@ -137,16 +137,22 @@ const Saksoversikt = () => {
                                                             <Vilkår sak={sak} søker={søker} />
                                                         </Route>
                                                         <Route path={Routes.saksbehandlingOppsummering.path}>
-                                                            <div className={styles.mainContent}>
-                                                                <div className={styles.tittelContainer}>
-                                                                    <Innholdstittel className={styles.pageTittel}>
-                                                                        {intl.formatMessage({
-                                                                            id: 'page.behandlingsoppsummering.tittel',
-                                                                        })}
-                                                                    </Innholdstittel>
-                                                                </div>
-                                                                <Behandlingsoppsummering sak={sak} />
+                                                            <div className={styles.tittelContainer}>
+                                                                <Innholdstittel className={styles.pageTittel}>
+                                                                    {intl.formatMessage({
+                                                                        id: 'page.behandlingsoppsummering.tittel',
+                                                                    })}
+                                                                </Innholdstittel>
                                                             </div>
+                                                            <Behandlingsoppsummering sak={sak} />
+                                                            <Link
+                                                                to={Routes.saksoversiktValgtSak.createURL({
+                                                                    sakId: sak.id,
+                                                                })}
+                                                                className={['knapp', styles.backButton].join(' ')}
+                                                            >
+                                                                {intl.formatMessage({ id: 'knapp.tilbake' })}
+                                                            </Link>
                                                         </Route>
                                                     </Switch>
                                                 </div>
