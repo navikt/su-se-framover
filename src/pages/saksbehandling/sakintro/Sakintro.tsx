@@ -265,53 +265,69 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
     const dispatch = useAppDispatch();
     const history = useHistory();
 
-    return (
-        <div>
-            <Hovedknapp
-                className={styles.startBehandlingKnapp}
-                mini
-                onClick={async () => {
-                    setRequest(RemoteData.pending);
-                    const response = await dispatch(
-                        sakSlice.startBehandling({
-                            sakId: props.sakId,
-                            søknadId: props.søknadId,
-                        })
-                    );
+    const requestErrorMessageFormatted = (request: RemoteData.RemoteFailure<ApiError>) => {
+        if (request.error.body?.message.includes('Fant ikke søknad')) {
+            return 'display.behandling.klarteIkkeStarteBehandling.fantIkkeSøknad';
+        } else if (request.error.body?.message.includes('mangler oppgave')) {
+            return 'display.behandling.klarteIkkeStarteBehandling.manglerOppgave';
+        } else if (request.error.body?.message.includes('har allerede en behandling')) {
+            return 'display.behandling.klarteIkkeStarteBehandling.harEnBehandling';
+        } else if (request.error.body?.message.includes('er lukket')) {
+            return 'display.behandling.klarteIkkeStarteBehandling.erLukket';
+        } else {
+            return 'display.behandling.klarteIkkeStarteBehandling';
+        }
+    };
 
-                    if (response.payload && 'id' in response.payload) {
-                        return history.push(
-                            Routes.saksbehandlingVilkårsvurdering.createURL({
+    return (
+        <div className={styles.startSøknadsbehandlingKnapperContainer}>
+            <div className={styles.startSøknadsbehandlingKnapper}>
+                <Hovedknapp
+                    className={styles.startBehandlingKnapp}
+                    mini
+                    onClick={async () => {
+                        setRequest(RemoteData.pending);
+                        const response = await dispatch(
+                            sakSlice.startBehandling({
                                 sakId: props.sakId,
-                                behandlingId: response.payload.id,
+                                søknadId: props.søknadId,
                             })
                         );
-                    }
-                    if (response.payload) {
-                        setRequest(RemoteData.failure(response.payload));
-                    }
-                }}
-                spinner={RemoteData.isPending(request)}
-            >
-                {props.intl.formatMessage({
-                    id: 'display.behandling.startBehandling',
-                })}
-            </Hovedknapp>
-            <Link
-                className="knapp knapp--fare knapp--mini"
-                to={Routes.avsluttSøknadsbehandling.createURL({
-                    sakId: props.sakId,
-                    soknadId: props.søknadId,
-                })}
-            >
-                {props.intl.formatMessage({
-                    id: 'display.søknad.lukkSøknad',
-                })}
-            </Link>
+
+                        if (response.payload && 'id' in response.payload) {
+                            return history.push(
+                                Routes.saksbehandlingVilkårsvurdering.createURL({
+                                    sakId: props.sakId,
+                                    behandlingId: response.payload.id,
+                                })
+                            );
+                        }
+                        if (response.payload) {
+                            setRequest(RemoteData.failure(response.payload));
+                        }
+                    }}
+                    spinner={RemoteData.isPending(request)}
+                >
+                    {props.intl.formatMessage({
+                        id: 'display.behandling.startBehandling',
+                    })}
+                </Hovedknapp>
+                <Link
+                    className="knapp knapp--fare knapp--mini"
+                    to={Routes.avsluttSøknadsbehandling.createURL({
+                        sakId: props.sakId,
+                        soknadId: props.søknadId,
+                    })}
+                >
+                    {props.intl.formatMessage({
+                        id: 'display.søknad.lukkSøknad',
+                    })}
+                </Link>
+            </div>
             {RemoteData.isFailure(request) && (
                 <AlertStripe className={styles.feil} type="feil">
                     {props.intl.formatMessage({
-                        id: 'display.behandling.klarteIkkeStarteBehandling',
+                        id: requestErrorMessageFormatted(request),
                     })}
                 </AlertStripe>
             )}
