@@ -1,6 +1,9 @@
 name: Test av tag and release
 
-on: workflow_dispatch
+on:
+    push:
+        branches:
+            - tag-test
 
 jobs:
     tag_and_release:
