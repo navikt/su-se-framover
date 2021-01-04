@@ -82,6 +82,7 @@ const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string
                         inputProps={{
                             name: 'utreisedato',
                             placeholder: 'dd.mm.åååå',
+                            'aria-invalid': formik.errors.mottaksdatoForSøknad ? true : false,
                         }}
                         value={formik.values.mottaksdatoForSøknad ?? undefined}
                         inputId="mottaksdato"
