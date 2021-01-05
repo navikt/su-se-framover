@@ -6,6 +6,7 @@ import React, { useCallback } from 'react';
 import { IntlShape } from 'react-intl';
 
 import { useUserContext } from '~context/userContext';
+import { erAvslått } from '~features/behandling/behandlingUtils';
 import { lastNedBrev } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -13,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 
+import VisBeregningOgSimulering from '../steg/beregningOgSimulering/BeregningOgSimulering';
 import VilkårsOppsummering from '../vilkårsOppsummering/VilkårsOppsummering';
 
 import messages from './behandlingsoppsummering-nb';
@@ -38,6 +40,9 @@ const Behandlingsoppsummering = (props: Props) => {
                 søknadInnhold={behandling.søknad.søknadInnhold}
                 behandlingsinformasjon={behandling.behandlingsinformasjon}
             />
+            {behandling.beregning && !erAvslått(behandling) && (
+                <VisBeregningOgSimulering sak={props.sak} behandling={behandling} />
+            )}
         </>
     );
 };
