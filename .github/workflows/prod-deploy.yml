@@ -18,3 +18,7 @@ jobs:
                   CLUSTER: prod-fss
                   RESOURCE: nais.yml
                   VARS: nais-prod.json
+            - name: Bump version and push tag
+              uses: mathieudutour/github-tag-action@v5.1
+              with:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
