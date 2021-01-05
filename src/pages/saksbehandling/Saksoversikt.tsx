@@ -149,7 +149,7 @@ const Saksoversikt = () => {
                                                                 to={Routes.saksoversiktValgtSak.createURL({
                                                                     sakId: sak.id,
                                                                 })}
-                                                                className={['knapp', styles.backButton].join(' ')}
+                                                                className={classNames('knapp', styles.backButton)}
                                                             >
                                                                 {intl.formatMessage({ id: 'knapp.tilbake' })}
                                                             </Link>
