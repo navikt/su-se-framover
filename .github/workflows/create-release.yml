@@ -1,4 +1,4 @@
-name: Test av tag and release
+name: Lag release ved ny tag
 
 on:
     push:
@@ -6,8 +6,8 @@ on:
             - 'v*'
 
 jobs:
-    tag_and_release:
-        name: Create tag and release
+    create_release:
+        name: Create release
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
