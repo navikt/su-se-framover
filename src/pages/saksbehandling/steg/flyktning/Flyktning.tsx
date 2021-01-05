@@ -144,7 +144,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         validateOnChange: hasSubmitted,
     });
     const history = useHistory();
-    console.log(props.behandling);
+
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
