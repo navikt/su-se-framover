@@ -101,7 +101,10 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         };
 
         if (eqFlyktning.equals(flyktningValues, props.behandling.behandlingsinformasjon.flyktning)) {
-            if (props.behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+            if (
+                props.behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ||
+                props.behandling.status === Behandlingsstatus.SIMULERT
+            ) {
                 goToVedtak();
                 return;
             }
@@ -141,7 +144,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         validateOnChange: hasSubmitted,
     });
     const history = useHistory();
-
+    console.log(props.behandling);
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
