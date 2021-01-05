@@ -101,7 +101,10 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         };
 
         if (eqFlyktning.equals(flyktningValues, props.behandling.behandlingsinformasjon.flyktning)) {
-            if (props.behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+            if (
+                props.behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ||
+                (props.behandling.status === Behandlingsstatus.SIMULERT && props.behandling.attestering)
+            ) {
                 goToVedtak();
                 return;
             }

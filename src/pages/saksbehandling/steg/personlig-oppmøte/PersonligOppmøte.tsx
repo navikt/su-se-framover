@@ -249,6 +249,15 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
+        if (props.behandling.attestering && props.behandling.status === Behandlingsstatus.SIMULERT) {
+            return history.push(
+                Routes.saksbehandlingVedtak.createURL({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                })
+            );
+        }
+
         if (
             eqPersonligOppmøte.equals(
                 { status: personligOppmøteStatus, begrunnelse: values.begrunnelse },
