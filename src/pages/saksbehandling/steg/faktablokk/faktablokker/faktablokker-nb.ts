@@ -73,6 +73,8 @@ export default {
     'personligOppmøte.hvemHarMøtt': 'Hvem har møtt opp?',
     'personligOppmøte.personligOppmøte': 'Personlig',
     'personligOppmøte.papirsøknad.grunnForPapirinnsending': 'Grunn for papirinnsending',
+    'personligOppmøte.papirsøknad.vergeSøktPåVegneAvBruker': 'Verge har søkt på vegne av bruker',
+    'personligOppmøte.papirsøknad.midlertidigUnntakForOppmøteplikt': 'Midlertidig unntak for oppmøteplikt',
 
     'uførhet.vedtakOmUføretrygd': 'Har du fått vedtak om uføretrygd?',
 
