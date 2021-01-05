@@ -35,10 +35,14 @@ const PersonligOppmøteFaktablokk = (props: FaktablokkProps) => {
                               verdi:
                                   props.søknadInnhold.forNav.grunnForPapirinnsending ===
                                   GrunnForPapirinnsending.VergeHarSøktPåVegneAvBruker
-                                      ? 'Verge har søkt på vegne av bruker '
+                                      ? intl.formatMessage({
+                                            id: 'personligOppmøte.papirsøknad.vergeSøktPåVegneAvBruker',
+                                        })
                                       : props.søknadInnhold.forNav.grunnForPapirinnsending ===
                                         GrunnForPapirinnsending.MidlertidigUnntakFraOppmøteplikt
-                                      ? 'Midlertidig unntak for oppmøteplikt'
+                                      ? intl.formatMessage({
+                                            id: 'personligOppmøte.papirsøknad.midlertidigUnntakForOppmøteplikt',
+                                        })
                                       : props.søknadInnhold.forNav.annenGrunn ?? '-',
                           },
                       ]
