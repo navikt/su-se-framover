@@ -2,8 +2,8 @@ name: Test av tag and release
 
 on:
     push:
-        branches:
-            - tag-test
+        tags:
+            - 'v*'
 
 jobs:
     tag_and_release:
@@ -11,10 +11,6 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - name: Bump version and push tag
-              uses: mathieudutour/github-tag-action@v5.1
-              with:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: Create a GitHub release
               uses: 'marvinpinto/action-automatic-releases@latest'
               with:
