@@ -34,7 +34,7 @@ const Behandlingsoppsummering = (props: Props) => {
     }
 
     return (
-        <>
+        <div className={styles.oppsummeringContainer}>
             <BehandlingStatus sakId={props.sak.id} behandling={behandling} />
             <VilkårsOppsummering
                 søknadInnhold={behandling.søknad.søknadInnhold}
@@ -43,7 +43,7 @@ const Behandlingsoppsummering = (props: Props) => {
             {behandling.beregning && !erAvslått(behandling) && (
                 <VisBeregningOgSimulering sak={props.sak} behandling={behandling} />
             )}
-        </>
+        </div>
     );
 };
 

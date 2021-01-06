@@ -45,24 +45,22 @@ const VilkårsOppsummering = (props: {
                     />
                 ))}
 
-                {
-                    <VilkårsBlokk
-                        tittel={intl.formatMessage({
-                            id:
-                                props.behandlingsinformasjon.utledetSats === Sats.Høy
-                                    ? 'bosituasjon.sats.høy'
-                                    : 'bosituasjon.sats.ordinær',
-                        })}
-                        vilkårFaktablokk={
-                            <SatsFaktablokk
-                                søknadInnhold={props.søknadInnhold}
-                                eps={props.behandlingsinformasjon.ektefelle as Nullable<EPSMedAlder>}
-                                brukUndertittel
-                            />
-                        }
-                        begrunnelse={props.behandlingsinformasjon.bosituasjon?.begrunnelse ?? ''}
-                    />
-                }
+                <VilkårsBlokk
+                    tittel={intl.formatMessage({
+                        id:
+                            props.behandlingsinformasjon.utledetSats === Sats.Høy
+                                ? 'bosituasjon.sats.høy'
+                                : 'bosituasjon.sats.ordinær',
+                    })}
+                    vilkårFaktablokk={
+                        <SatsFaktablokk
+                            søknadInnhold={props.søknadInnhold}
+                            eps={props.behandlingsinformasjon.ektefelle as Nullable<EPSMedAlder>}
+                            brukUndertittel
+                        />
+                    }
+                    begrunnelse={props.behandlingsinformasjon.bosituasjon?.begrunnelse ?? ''}
+                />
             </div>
         </div>
     );
