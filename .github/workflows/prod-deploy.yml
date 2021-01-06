@@ -10,7 +10,6 @@ env:
 jobs:
     deploy_to_prod:
         name: Deploy to prod
-        if: github.ref == 'refs/heads/master'
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v1
