@@ -52,14 +52,16 @@ const Utbetalingssimulering = (props: { simulering: Simulering }) => {
                         () => ({
                             tittel: '?',
                             beløp: 0,
+                            key: '?',
                         }),
                         ([head, last]) => ({
                             tittel: `${formatMonthYear(head.fraOgMed, intl)} - ${formatMonthYear(last.tilOgMed, intl)}`,
                             beløp: head.bruttoYtelse,
+                            key: head.fraOgMed + head.tilOgMed,
                         })
                     ),
-                    ({ tittel, beløp }) => (
-                        <Element tag="h3" className={classNames(styles.periodeoverskrift, styles.linje)}>
+                    ({ tittel, beløp, key }) => (
+                        <Element tag="h3" className={classNames(styles.periodeoverskrift, styles.linje)} key={key}>
                             <span>{tittel}</span>
                             <span>
                                 {formatCurrency(intl, beløp, {
