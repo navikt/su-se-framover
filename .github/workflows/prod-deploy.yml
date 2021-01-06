@@ -1,6 +1,8 @@
-name: Manuell deploy til prod
+name: Deploy til prod ved release
 
-on: workflow_dispatch
+on:
+    release:
+        types: [published]
 
 env:
     IMAGE: docker.pkg.github.com/${{ github.repository }}/su-se-framover:${{ github.sha }}
@@ -18,7 +20,3 @@ jobs:
                   CLUSTER: prod-fss
                   RESOURCE: nais.yml
                   VARS: nais-prod.json
-            - name: Bump version and push tag
-              uses: mathieudutour/github-tag-action@v5.1
-              with:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
