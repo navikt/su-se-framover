@@ -45,13 +45,14 @@ jobs:
                   RESOURCE: nais.yml
                   VARS: nais-dev.json
 
-    generate-pre-release:
-        name: Generate/update pre-release
+    generate-draft-release:
+        name: Generate/update draft release
         runs-on: ubuntu-latest
         steps:
-            - uses: 'marvinpinto/action-automatic-releases@latest'
+            # Drafts your next Release notes as Pull Requests are merged into "master"
+            - uses: release-drafter/release-drafter@v5
               with:
-                  repo_token: ${{ secrets.GITHUB_TOKEN }}
-                  automatic_release_tag: 'latest'
-                  prerelease: true
-                  title: Development build
+                  # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
+                  # config-name: my-config.yml
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
