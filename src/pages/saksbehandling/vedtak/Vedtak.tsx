@@ -5,13 +5,19 @@ import { Innholdstittel } from 'nav-frontend-typografi/';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { erAvslått, erTilAttestering, harBeregning } from '~features/behandling/behandlingUtils';
+import {
+    erAvslått,
+    erTilAttestering,
+    erUnderkjent,
+    erSimulert,
+    erBeregnetAvslag,
+    harBeregning,
+} from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes.ts';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
-import { Behandlingsstatus } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
@@ -62,7 +68,7 @@ const Vedtak = (props: Props) => {
         .reverse()
         .find((vilkår) => vilkår.status !== VilkårVurderingStatus.IkkeVurdert);
 
-    if (behandling.status === Behandlingsstatus.SIMULERT || erAvslått(behandling)) {
+    if (erSimulert(behandling) || erAvslått(behandling) || erUnderkjent(behandling)) {
         return (
             <div className={styles.vedtakContainer}>
                 <div>
@@ -88,7 +94,7 @@ const Vedtak = (props: Props) => {
                 <div className={styles.navigeringContainer}>
                     <Link
                         to={
-                            erAvslått(behandling) && behandling.status !== Behandlingsstatus.BEREGNET_AVSLAG
+                            erAvslått(behandling) && !erBeregnetAvslag(behandling)
                                 ? vilkårUrl(sisteVurderteVilkår?.vilkårtype ?? Vilkårtype.PersonligOppmøte)
                                 : vilkårUrl(Vilkårtype.Beregning)
                         }

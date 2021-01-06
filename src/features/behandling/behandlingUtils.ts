@@ -55,6 +55,18 @@ export function harBeregning(behandling: Behandling): boolean {
     );
 }
 
+export const erBeregnetAvslag = (behandling: Behandling) => {
+    return behandling.status === Behandlingsstatus.BEREGNET_AVSLAG;
+};
+
+export const erSimulert = (behandling: Behandling) => {
+    return behandling.status === Behandlingsstatus.SIMULERT;
+};
+
+export const erUnderkjent = (behandling: Behandling) => {
+    return behandling.status === Behandlingsstatus.UNDERKJENT;
+};
+
 export const hentSisteVurderteVilkår = (behandlingsinformasjon: Behandlingsinformasjon) => {
     return pipe(
         behandlingsinformasjon,

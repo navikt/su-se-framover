@@ -6,7 +6,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { eqPersonligOppmøte } from '~/features/behandling/behandlingUtils';
+import { eqPersonligOppmøte, erUnderkjent } from '~/features/behandling/behandlingUtils';
 import { SuperRadioGruppe } from '~components/FormElements';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksoversikt/utils';
@@ -249,7 +249,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        if (props.behandling.attestering && props.behandling.status === Behandlingsstatus.SIMULERT) {
+        if (erUnderkjent(props.behandling)) {
             return history.push(
                 Routes.saksbehandlingVedtak.createURL({
                     sakId: props.sakId,
