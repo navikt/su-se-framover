@@ -64,7 +64,7 @@ export const erSimulert = (behandling: Behandling) => {
 };
 
 export const erUnderkjent = (behandling: Behandling) => {
-    return behandling.status === Behandlingsstatus.UNDERKJENT;
+    return behandling.status === Behandlingsstatus.ATTESTERING_UNDERKJENT;
 };
 
 export const hentSisteVurderteVilkår = (behandlingsinformasjon: Behandlingsinformasjon) => {

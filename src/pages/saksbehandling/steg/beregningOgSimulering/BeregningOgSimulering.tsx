@@ -15,7 +15,7 @@ const VisBeregningOgSimulering = (props: { sak: Sak; behandling: Behandling }) =
                 beregning={props.behandling.beregning}
                 forventetinntekt={props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt ?? 0}
             />
-            {!!erBeregnetAvslag(props.behandling) && <VisSimulering sak={props.sak} behandling={props.behandling} />}
+            {!erBeregnetAvslag(props.behandling) && <VisSimulering sak={props.sak} behandling={props.behandling} />}
         </div>
     ) : null;
 
