@@ -1,4 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Knapp } from 'nav-frontend-knapper';
 import { Element } from 'nav-frontend-typografi';
@@ -67,35 +68,47 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
 
     const Tilleggsinfo = () => {
         return (
-            <div className={styles.tilleggsinfoContainer}>
-                <div>
-                    <Element>{intl.formatMessage({ id: 'vurdering.tittel' })}</Element>
-                    <p>{statusTilTekst(props.behandling.status, intl)}</p>
-                </div>
-                <div>
-                    <Element> {intl.formatMessage({ id: 'behandlet.av' })}</Element>
-                    <p>{props.behandling.saksbehandler || user.navn}</p>
-                </div>
-                {props.behandling.attestering?.attestant && (
+            <div>
+                <div className={styles.tilleggsinfoContainer}>
                     <div>
-                        <Element> {intl.formatMessage({ id: 'attestert.av' })}</Element>
-                        <p>{props.behandling.attestering.attestant}</p>
+                        <Element>{intl.formatMessage({ id: 'vurdering.tittel' })}</Element>
+                        <p>{statusTilTekst(props.behandling.status, intl)}</p>
                     </div>
-                )}
+                    <div>
+                        <Element> {intl.formatMessage({ id: 'behandlet.av' })}</Element>
+                        <p>{props.behandling.saksbehandler || user.navn}</p>
+                    </div>
+                    {props.behandling.attestering?.attestant && (
+                        <div>
+                            <Element> {intl.formatMessage({ id: 'attestert.av' })}</Element>
+                            <p>{props.behandling.attestering.attestant}</p>
+                        </div>
+                    )}
 
-                <div>
-                    <Element> {intl.formatMessage({ id: 'behandling.søknadsdato' })}</Element>
-                    <p>{intl.formatDate(props.behandling.søknad.opprettet)}</p>
+                    <div>
+                        <Element> {intl.formatMessage({ id: 'behandling.søknadsdato' })}</Element>
+                        <p>{intl.formatDate(props.behandling.søknad.opprettet)}</p>
+                    </div>
+                    <div>
+                        <Element> {intl.formatMessage({ id: 'behandling.saksbehandlingsdato' })}</Element>
+                        <p>{intl.formatDate(props.behandling.opprettet)}</p>
+                    </div>
+                    <div>
+                        <Element>{intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}</Element>
+                        <Knapp
+                            spinner={RemoteData.isPending(lastNedBrevStatus)}
+                            mini
+                            htmlType="button"
+                            onClick={hentBrev}
+                        >
+                            {intl.formatMessage({ id: 'knapp.vis' })}
+                        </Knapp>
+                    </div>
                 </div>
-                <div>
-                    <Element> {intl.formatMessage({ id: 'behandling.saksbehandlingsdato' })}</Element>
-                    <p>{intl.formatDate(props.behandling.opprettet)}</p>
-                </div>
-                <div>
-                    <Element>{intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}</Element>
-                    <Knapp spinner={RemoteData.isPending(lastNedBrevStatus)} mini htmlType="button" onClick={hentBrev}>
-                        {intl.formatMessage({ id: 'knapp.vis' })}
-                    </Knapp>
+                <div className={styles.brevutkastFeil}>
+                    {RemoteData.isFailure(lastNedBrevStatus) && (
+                        <AlertStripeFeil>{lastNedBrevStatus.error.body?.message}</AlertStripeFeil>
+                    )}
                 </div>
             </div>
         );
