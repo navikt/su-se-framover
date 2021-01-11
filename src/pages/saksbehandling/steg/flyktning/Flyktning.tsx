@@ -6,7 +6,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { eqFlyktning, erUnderkjent } from '~features/behandling/behandlingUtils';
+import { eqFlyktning, erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
@@ -101,7 +101,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         };
 
         if (eqFlyktning.equals(flyktningValues, props.behandling.behandlingsinformasjon.flyktning)) {
-            if (props.behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG || erUnderkjent(props.behandling)) {
+            if (erVilkårsvurderingerVurdertAvslag(props.behandling) || erUnderkjent(props.behandling)) {
                 goToVedtak();
                 return;
             }

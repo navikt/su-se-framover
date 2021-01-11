@@ -267,7 +267,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                 { status: personligOppmøteStatus, begrunnelse: values.begrunnelse },
                 props.behandling.behandlingsinformasjon.personligOppmøte
             ) &&
-            props.behandling.status !== Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
+            !erVilkårsvurderingerVurdertAvslag(props.behandling)
         ) {
             history.push(nesteUrl);
             return;

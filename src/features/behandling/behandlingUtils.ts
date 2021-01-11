@@ -86,6 +86,7 @@ export const erTidligAvslag = (behandling: Behandling) => {
 
 export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) => {
     return (
+        behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ||
         behandling.behandlingsinformasjon.uførhet?.status === UførhetStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.flyktning?.status === FlyktningStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.lovligOpphold?.status === LovligOppholdStatus.VilkårIkkeOppfylt ||
