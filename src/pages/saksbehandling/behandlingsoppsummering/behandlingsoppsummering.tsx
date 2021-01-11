@@ -69,7 +69,7 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
         return (
             <div className={styles.tilleggsinfoContainer}>
                 <div>
-                    <Element> Vurdering </Element>
+                    <Element>{intl.formatMessage({ id: 'vurdering.tittel' })}</Element>
                     <p>{statusTilTekst(props.behandling.status, intl)}</p>
                 </div>
                 <div>
@@ -132,11 +132,13 @@ function statusTilTekst(behandlingsstatus: Behandlingsstatus, intl: IntlShape): 
         case Behandlingsstatus.BEREGNET_AVSLAG:
         case Behandlingsstatus.TIL_ATTESTERING_AVSLAG:
         case Behandlingsstatus.IVERKSATT_AVSLAG:
+        case Behandlingsstatus.UNDERKJENT_AVSLAG:
             return intl.formatMessage({ id: 'vurdering.avslag' });
         case Behandlingsstatus.TIL_ATTESTERING_INNVILGET:
         case Behandlingsstatus.SIMULERT:
         case Behandlingsstatus.VILKÅRSVURDERT_INNVILGET:
         case Behandlingsstatus.IVERKSATT_INNVILGET:
+        case Behandlingsstatus.UNDERKJENT_INNVILGET:
             return intl.formatMessage({ id: 'vurdering.innvilgelse' });
         default:
             return '';

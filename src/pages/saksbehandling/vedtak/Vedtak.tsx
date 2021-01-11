@@ -12,6 +12,8 @@ import {
     erSimulert,
     erBeregnetAvslag,
     harBeregning,
+    erTidligAvslag,
+    erVilkårsvurderingerVurdertAvslag,
 } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
@@ -68,6 +70,28 @@ const Vedtak = (props: Props) => {
         .reverse()
         .find((vilkår) => vilkår.status !== VilkårVurderingStatus.IkkeVurdert);
 
+    const handleTilbake = () => {
+        if (erUnderkjent(behandling)) {
+            return routeTilSisteLovligStegEtterUnderkjenning();
+        } else {
+            if (erAvslått(behandling) && !erBeregnetAvslag(behandling)) {
+                return vilkårUrl(sisteVurderteVilkår?.vilkårtype ?? Vilkårtype.PersonligOppmøte);
+            } else {
+                return vilkårUrl(Vilkårtype.Beregning);
+            }
+        }
+    };
+
+    const routeTilSisteLovligStegEtterUnderkjenning = () => {
+        if (erTidligAvslag(behandling)) {
+            return vilkårUrl(Vilkårtype.Flyktning);
+        } else if (erVilkårsvurderingerVurdertAvslag(behandling)) {
+            return vilkårUrl(sisteVurderteVilkår?.vilkårtype ?? Vilkårtype.PersonligOppmøte);
+        } else {
+            return vilkårUrl(Vilkårtype.Beregning);
+        }
+    };
+
     if (erSimulert(behandling) || erAvslått(behandling) || erUnderkjent(behandling)) {
         return (
             <div className={styles.vedtakContainer}>
@@ -92,14 +116,7 @@ const Vedtak = (props: Props) => {
                     )}
                 </div>
                 <div className={styles.navigeringContainer}>
-                    <Link
-                        to={
-                            erAvslått(behandling) && !erBeregnetAvslag(behandling)
-                                ? vilkårUrl(sisteVurderteVilkår?.vilkårtype ?? Vilkårtype.PersonligOppmøte)
-                                : vilkårUrl(Vilkårtype.Beregning)
-                        }
-                        className="knapp"
-                    >
+                    <Link to={handleTilbake()} className="knapp">
                         {intl.formatMessage({ id: 'knapp.tilbake' })}
                     </Link>
                     <Hovedknapp

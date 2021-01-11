@@ -18,6 +18,14 @@ import {
     Bosituasjon,
     FormueVerdier,
     Institusjonsopphold,
+    UførhetStatus,
+    FlyktningStatus,
+    LovligOppholdStatus,
+    FastOppholdINorgeStatus,
+    InstitusjonsoppholdStatus,
+    OppholdIUtlandetStatus,
+    FormueStatus,
+    PersonligOppmøteStatus,
 } from '~types/Behandlingsinformasjon';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
@@ -64,7 +72,30 @@ export const erSimulert = (behandling: Behandling) => {
 };
 
 export const erUnderkjent = (behandling: Behandling) => {
-    return behandling.status === Behandlingsstatus.ATTESTERING_UNDERKJENT;
+    return [Behandlingsstatus.UNDERKJENT_INNVILGET, Behandlingsstatus.UNDERKJENT_AVSLAG].some(
+        (status) => behandling.status === status
+    );
+};
+
+export const erTidligAvslag = (behandling: Behandling) => {
+    return (
+        behandling.behandlingsinformasjon.uførhet?.status === UførhetStatus.VilkårIkkeOppfylt ||
+        behandling.behandlingsinformasjon.flyktning?.status === FlyktningStatus.VilkårIkkeOppfylt
+    );
+};
+
+export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) => {
+    return (
+        behandling.behandlingsinformasjon.uførhet?.status === UførhetStatus.VilkårIkkeOppfylt ||
+        behandling.behandlingsinformasjon.flyktning?.status === FlyktningStatus.VilkårIkkeOppfylt ||
+        behandling.behandlingsinformasjon.lovligOpphold?.status === LovligOppholdStatus.VilkårIkkeOppfylt ||
+        behandling.behandlingsinformasjon.fastOppholdINorge?.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt ||
+        behandling.behandlingsinformasjon.institusjonsopphold?.status === InstitusjonsoppholdStatus.VilkårIkkeOppfylt ||
+        behandling.behandlingsinformasjon.oppholdIUtlandet?.status ===
+            OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet ||
+        behandling.behandlingsinformasjon.formue?.status === FormueStatus.VilkårIkkeOppfylt ||
+        behandling.behandlingsinformasjon.personligOppmøte?.status === PersonligOppmøteStatus.IkkeMøttPersonlig
+    );
 };
 
 export const hentSisteVurderteVilkår = (behandlingsinformasjon: Behandlingsinformasjon) => {

@@ -2,6 +2,7 @@ export default {
     'behandlet.av': 'Saksbehandler',
     'attestert.av': 'Attestant',
 
+    'vurdering.tittel': 'Vurdering',
     'vurdering.innvilgelse': 'Innvilgelse',
     'vurdering.avslag': 'Avslag',
 

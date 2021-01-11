@@ -36,5 +36,6 @@ export const erIGyldigStatusForÅKunneBeregne = (behandling: Behandling) =>
         Behandlingsstatus.BEREGNET_INNVILGET,
         Behandlingsstatus.SIMULERT,
         Behandlingsstatus.VILKÅRSVURDERT_INNVILGET,
-        Behandlingsstatus.ATTESTERING_UNDERKJENT,
+        Behandlingsstatus.UNDERKJENT_AVSLAG,
+        Behandlingsstatus.UNDERKJENT_INNVILGET,
     ].some((status) => status === behandling.status);
