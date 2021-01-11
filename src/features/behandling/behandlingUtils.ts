@@ -77,13 +77,6 @@ export const erUnderkjent = (behandling: Behandling) => {
     );
 };
 
-export const erTidligAvslag = (behandling: Behandling) => {
-    return (
-        behandling.behandlingsinformasjon.uførhet?.status === UførhetStatus.VilkårIkkeOppfylt ||
-        behandling.behandlingsinformasjon.flyktning?.status === FlyktningStatus.VilkårIkkeOppfylt
-    );
-};
-
 export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) => {
     return (
         behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ||

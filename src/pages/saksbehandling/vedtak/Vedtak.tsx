@@ -12,7 +12,6 @@ import {
     erSimulert,
     erBeregnetAvslag,
     harBeregning,
-    erTidligAvslag,
     erVilkårsvurderingerVurdertAvslag,
 } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -71,25 +70,10 @@ const Vedtak = (props: Props) => {
         .find((vilkår) => vilkår.status !== VilkårVurderingStatus.IkkeVurdert);
 
     const handleTilbake = () => {
-        if (erUnderkjent(behandling)) {
-            return routeTilSisteLovligStegEtterUnderkjenning();
-        } else {
-            if (erAvslått(behandling) && !erBeregnetAvslag(behandling)) {
-                return vilkårUrl(sisteVurderteVilkår?.vilkårtype ?? Vilkårtype.PersonligOppmøte);
-            } else {
-                return vilkårUrl(Vilkårtype.Beregning);
-            }
-        }
-    };
-
-    const routeTilSisteLovligStegEtterUnderkjenning = () => {
-        if (erTidligAvslag(behandling)) {
-            return vilkårUrl(Vilkårtype.Flyktning);
-        } else if (erVilkårsvurderingerVurdertAvslag(behandling)) {
+        if (erVilkårsvurderingerVurdertAvslag(behandling) && !erBeregnetAvslag(behandling))
             return vilkårUrl(sisteVurderteVilkår?.vilkårtype ?? Vilkårtype.PersonligOppmøte);
-        } else {
-            return vilkårUrl(Vilkårtype.Beregning);
-        }
+
+        return vilkårUrl(Vilkårtype.Beregning);
     };
 
     if (erSimulert(behandling) || erAvslått(behandling) || erUnderkjent(behandling)) {
