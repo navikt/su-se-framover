@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { useHistory } from 'react-router-dom';
 
+import { erBeregnetAvslag } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { toDateOrNull } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
@@ -24,7 +25,6 @@ import {
     FradragInputs,
 } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/FradragInputs';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Behandlingsstatus } from '~types/Behandling';
 import { Fradragstype, FradragTilhører } from '~types/Fradrag';
 
 import BeregningFaktablokk from '../../faktablokk/faktablokker/BeregningFaktablokk';
@@ -105,7 +105,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             RemoteData.isSuccess(beregningStatus) ||
             (props.behandling.beregning && RemoteData.isInitial(beregningStatus))
         ) {
-            if (props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG) {
+            if (erBeregnetAvslag(props.behandling)) {
                 history.push(nesteUrl);
                 return;
             }

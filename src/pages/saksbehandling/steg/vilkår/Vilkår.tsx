@@ -2,9 +2,9 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
+import { erVilkårsvurderingerVurdertAvslag } from '~features/behandling/behandlingUtils';
 import { createVilkårUrl } from '~features/saksoversikt/utils';
 import * as Routes from '~lib/routes';
-import { Behandlingsstatus } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
@@ -131,7 +131,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
                             søker={props.søker}
                             forrigeUrl={vilkårUrl(Vilkårtype.PersonligOppmøte)}
                             nesteUrl={
-                                behandling.status == Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
+                                erVilkårsvurderingerVurdertAvslag(behandling)
                                     ? vedtakUrl
                                     : vilkårUrl(Vilkårtype.Beregning)
                             }

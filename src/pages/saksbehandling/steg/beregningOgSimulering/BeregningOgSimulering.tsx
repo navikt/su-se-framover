@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Behandling, Behandlingsstatus } from '~types/Behandling';
+import { erBeregnetAvslag } from '~features/behandling/behandlingUtils';
+import { Behandling } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 
 import VisBeregning from './beregning/VisBeregning';
@@ -14,9 +15,7 @@ const VisBeregningOgSimulering = (props: { sak: Sak; behandling: Behandling }) =
                 beregning={props.behandling.beregning}
                 forventetinntekt={props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt ?? 0}
             />
-            {props.behandling.status !== Behandlingsstatus.BEREGNET_AVSLAG && (
-                <VisSimulering sak={props.sak} behandling={props.behandling} />
-            )}
+            {!erBeregnetAvslag(props.behandling) && <VisSimulering sak={props.sak} behandling={props.behandling} />}
         </div>
     ) : null;
 

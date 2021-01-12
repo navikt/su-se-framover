@@ -19,6 +19,9 @@ export default {
     'display.behandling.klarteIkkeStarteBehandling.erLukket': 'Søknaden er lukket',
 
     'display.behandling.startBehandling': 'Start behandling',
+
+    'display.godkjenteSøknader.tittel': 'Godkjente søknader',
+
     'behandling.attestering.advarsel': 'Sendt tilbake fra attestering',
 
     'behandling.underkjent.dokumentasjonMangler': 'Dokumentasjon mangler',

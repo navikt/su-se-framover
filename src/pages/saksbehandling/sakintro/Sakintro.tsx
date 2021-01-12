@@ -199,7 +199,9 @@ const GodkjenteSøknader = (props: {
 
     return (
         <div className={styles.søknadsContainer}>
-            <Ingress className={styles.søknadsContainerTittel}>Godkjente søknader</Ingress>
+            <Ingress className={styles.søknadsContainerTittel}>
+                {props.intl.formatMessage({ id: 'display.godkjenteSøknader.tittel' })}
+            </Ingress>
             <ol>
                 {props.åpneSøknader.map((s) => {
                     const behandling = props.behandlinger.find((b) => b.søknad.id === s.id);
