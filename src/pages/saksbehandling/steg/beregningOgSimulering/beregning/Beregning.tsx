@@ -77,6 +77,10 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 fradrag: values.fradrag.map((f) => ({
                     //valdiering sikrer at feltet ikke er null
                     /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                    periode:
+                        f.periode?.fraOgMed && f.periode.tilOgMed
+                            ? { fraOgMed: f.periode.fraOgMed, tilOgMed: f.periode.tilOgMed }
+                            : null,
                     beløp: parseInt(f.beløp!, 10),
                     type: f.type!,
                     utenlandskInntekt: f.fraUtland
@@ -137,6 +141,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             fom: toDateOrNull(props.behandling.beregning?.fraOgMed),
             tom: toDateOrNull(props.behandling.beregning?.tilOgMed),
             fradrag: FradragUtenomForventetInntekt.map((f) => ({
+                periode: f.periode,
                 fraUtland: f.utenlandskInntekt !== null,
                 beløp: f.beløp.toString(),
                 utenlandskInntekt: {
@@ -234,12 +239,20 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                         fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
                                     }));
                                 }}
+                                beregningsDato={
+                                    formik.values.fom &&
+                                    formik.values.tom && {
+                                        fom: formik.values.fom,
+                                        tom: formik.values.tom,
+                                    }
+                                }
                                 onLeggTilClick={() => {
                                     formik.setValues({
                                         ...formik.values,
                                         fradrag: [
                                             ...formik.values.fradrag,
                                             {
+                                                periode: null,
                                                 beløp: null,
                                                 type: null,
                                                 fraUtland: false,

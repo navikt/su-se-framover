@@ -37,6 +37,7 @@ const getBenyttedeMånedsfradragForPeriode = (månedsberegninger: Månedsberegni
                 type: f[0].type,
                 tilhører: f[0].tilhører,
                 utenlandskInntekt: f[0].utenlandskInntekt,
+                periode: f[0].periode,
             }))
     );
 
