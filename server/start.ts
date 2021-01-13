@@ -85,8 +85,7 @@ export default function startServer() {
     app.use(routes());
 
     const port = Config.server.port;
-    const host = Config.server.host;
-    app.listen(port, host, () => {
-        console.log(`Listening on http://${host}:${port}`);
+    app.listen(port, () => {
+        console.log(`Listening on http://:${port}`);
     });
 }
