@@ -5,8 +5,9 @@ import cors from 'cors';
 import express from 'express';
 import exphbs from 'express-handlebars';
 import helmet from 'helmet';
+import pino from 'pino';
 import pinoColada from 'pino-colada';
-import pino from 'pino-http';
+import pinoHttp from 'pino-http';
 
 import * as Config from './config';
 import routes from './routes';
@@ -15,7 +16,7 @@ export default function startServer() {
     const app = express();
 
     app.use(
-        pino({
+        pinoHttp({
             ...(Config.server.isDev
                 ? {
                       prettyPrint: true,
@@ -27,6 +28,7 @@ export default function startServer() {
                     return { level };
                 },
             },
+            timestamp: pino.stdTimeFunctions.isoTime,
             genReqId(req) {
                 return req.headers['X-Correlation-ID'] || req.id;
             },
