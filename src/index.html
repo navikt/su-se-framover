@@ -5,18 +5,11 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
-        <style type="text/css">
-            #root {
-                height: 100%;
-            }
-        </style>
     </head>
     <body>
         <div id="root"></div>
-        <script nonce="**CSP_NONCE**">
-            window.BASE_URL = '{{SU_SE_BAKOVER_URL}}';
-            window.AMPLITUDE_API_KEY = '{{AMPLITUDE_API_KEY}}';
-            window.FEATURE_HENDELSESLOGG = '{{FEATURE_HENDELSESLOGG}}';
+        <script id="FRONTEND_CONFIG" type="application/json" nonce="{{CSP_NONCE}}">
+            {{{CONFIG}}}
         </script>
         <script src="index.js"></script>
     </body>

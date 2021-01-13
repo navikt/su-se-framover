@@ -1,5 +1,7 @@
+import Config from '~/config';
+
 const FeatureToggles = {
-    Hendelseslogg: window.FEATURE_HENDELSESLOGG === 'true',
+    Hendelseslogg: Config.FEATURE_HENDELSESLOGG === 'true',
 };
 
 export default FeatureToggles;

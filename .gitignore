@@ -2,6 +2,7 @@ node_modules
 .cache
 .parcel_cache
 dist
+server/dist
 .idea/
 .eslintcache
 .DS_STORE

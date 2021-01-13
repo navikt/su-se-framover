@@ -4,63 +4,63 @@ Frontend for Su-Se som slår opp informasjon om brukere som har søkt om suppler
 
 ## Kjøre lokalt
 
-Første gang: kjør `npm install` for å laste ned avhengighetene
+Første gang:
 
-`npm run start` for å starte appen
+```sh
+$ cp .env.template .env # for å sette opp lokale miljøvariabler
+$ npm install # installerer avhengigheter
+```
+
+Starte for lokal utvikling:
+
+```sh
+$ npm start
+```
+
+Denne starter opp `express`-serveren med `parcel`-middleware som ordner med bygging av frontenden.
 
 ## Bygge prod-versjon
 
-`npm run build` for å kompilere
+### Frontend
+
+```sh
+$ npm run build
+```
+
+Output havner da i `./dist`-mappen.
+
+### Backend
+
+```sh
+$ cd server
+$ npm run build
+```
+
+Output havner da i `./server/dist`-mappen.
+
+#### Teknisk
+
+Frontend bygges hvor som helst, da output derfra bare er statiske filer (`.html`, `.css`, `.js` osv).
+For backend sin del så er den f.eks. avhengig av `node_modules`, så det er greit om den bygges (og avhengigheter installeres) der den skal kjøre.
+Dette gjøres nå i [./Dockerfile]().
 
 ## Miljøvariabler
 
 Vi er avhengige av noen variabler som varierer med miljø; for eksempel URL til su-se-bakover.
-Siden frontend bare bygges én gang og deployes til forskjellige miljøer kan vi ikke bruke `process.env` direkte (da de bare er compile-time).
-
-Vi bruker en kombinasjon av https://www.npmjs.com/package/posthtml-expressions og `envsubst` i [./docker-entrypoint.sh]() for å få til dette.
+Disse styres gjennom `.env` lokalt og på vanlig måte i miljøene.
 
 ### Legge til ny variabel
 
-1. Legg den til på `window` i [./src/index.html]()
-1. Legg den til i `variables` i [./posthtml.config.js]()
-    - Verdien på denne er default-verdien som brukes lokalt
-    - Hvis verdien skal være forskjellig for utviklerne, kan det være praktisk å definere den i `.env`
-1. Legg til den faktiske verdien i [./nais-dev.json]() og [./nais-prod.json]()
+1. Legg den til i [./.env]() (og [./.env.template]()), [./nais-dev.json]() og [./nais-prod.json]()
     - **Merk**: Hvis verdien er hemmelig så må man heller legge den inn i `Vault` enn i `nais.json`-filene
+2. Legg den til i [./server/config.ts](); enten i `server`- eller `client`-verdien, avhengig av hvor den skal brukes
 
-Merk: variabelnavnet må være identisk med navnet på miljøvariabelen
+### Miljøvariabler for frontend (teknisk)
 
-#### Eksempel:
+Det er satt opp slik at denne konfigurasjonen settes i en `script`-tag av typen `application/json`, som så lastes inn og parses runtime (i frontend).
 
-```js
-// src/index.html
-window.MIN_VARIABEL = '{{MIN_VARIABEL}}';
+Under lokalutvikling gjøres dette av `posthtml` (med `posthtml-expressions`) som en del av Parcel-bygget.
+Ute i miljøene gjøres det gjennom bruk av `handlebars`.
+Vi utnytter at både `posthtml-expressions` og `handlebars` har samme syntax for å sette inn "unescaped" verdier (`{{{verdi}}}`).
 
-// posthtml.config.js
-const variables = {
-    // ...
-    MIN_VARIABEL: 'fin verdi som brukes lokalt'
-    // eller
-    MIN_VARIABEL: process.env.MIN_VARIABEL // i kombinasjon med å definere den i .env-filen
-};
-
-// nais-dev.json
-{
-  // ...
-  "env": {
-    // ...
-    "MIN_VARIABEL": "denne brukes i test"
-  }
-}
-
-// nais-prod.json
-{
-  // ...
-  "env": {
-    // ...
-    "MIN_VARIABEL": "denne brukes i prod"
-  }
-}
-```
-
-Man kan nå fint bruke `window.MIN_VARIABEL` i frontendkoden.
+Se [./src/index.html](), [./posthtml.config.js](), [./server/config.ts]() og [./server/routes.ts]() for mer info.

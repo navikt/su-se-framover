@@ -1,10 +1,23 @@
-FROM openresty/openresty:centos
+FROM navikt/node-express:12.2.0-alpine
 
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d/nais.conf
-COPY nginx.app.conf /etc/nginx/conf.d/app.conf
-COPY dist/* /app/www/
+ENV NODE_ENV production
+ENV BASE_DIR /app
+ENV FRONTEND_DIR ${BASE_DIR}/frontend
+ENV BACKEND_DIR ${BASE_DIR}/server
+ENV PORT 80
 
-COPY docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["nginx", "-g", "daemon off;"]
+RUN mkdir -p ${BASE_DIR}
+
+COPY dist ${FRONTEND_DIR}
+COPY server ${BACKEND_DIR}
+# Trengs av server-bygget
+COPY tsconfig.json ${BASE_DIR}/
+
+WORKDIR ${BACKEND_DIR}
+RUN npm ci
+RUN npm run build
+
+EXPOSE ${PORT}
+
+ENTRYPOINT [ "sh", "-c" ]
+CMD ["npm start"]
