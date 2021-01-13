@@ -125,7 +125,18 @@ export const fradragSchema = yup.object<FradragFormData>({
         .object()
         .shape({
             fraOgMed: yup.string().required().typeError('Dato må fylles inn'),
-            tilOgMed: yup.string().required().typeError('Dato må fylles inn'),
+            tilOgMed: yup
+                .string()
+                .required()
+                .typeError('Dato må fylles inn')
+                .test(
+                    'Ogyldig datokombinasjon',
+                    'Til og med dato må være senere enn fra og med dato',
+                    function (tilOgMed) {
+                        const fraOgMed = this.parent.fraOgMed as Nullable<Date>;
+                        return Boolean(fraOgMed && tilOgMed && this.parent.fraOgMed < tilOgMed);
+                    }
+                ),
         })
         .defined(),
 });
@@ -278,55 +289,62 @@ export const FradragInputs = (props: {
                             )}
                             {visDelerAvPeriode && (
                                 <div className={styles.periode}>
-                                    <Label htmlFor={periode} className={styles.label}>
-                                        {props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.fom' })}
-                                    </Label>
+                                    <div className={styles.fraOgMed}>
+                                        <Label htmlFor={periode} className={styles.label}>
+                                            {props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.fom' })}
+                                        </Label>
 
-                                    <DatePicker
-                                        id={`fradrag[${index}].periode.fraOgMed`}
-                                        selected={fradrag.periode?.fraOgMed ? new Date(fradrag.periode.fraOgMed) : null}
-                                        onChange={(e) =>
-                                            props.onFradragChange(index, {
-                                                ...fradrag,
-                                                periode: {
-                                                    tilOgMed: fradrag.periode?.tilOgMed ?? null,
-                                                    fraOgMed: toStringDateOrNull(e as Nullable<Date>),
-                                                },
-                                            })
-                                        }
-                                        dateFormat="MM/yyyy"
-                                        showMonthYearPicker
-                                        maxDate={props.beregningsDato?.tom}
-                                        minDate={props.beregningsDato?.fom}
-                                    />
+                                        <DatePicker
+                                            id={`fradrag[${index}].periode.fraOgMed`}
+                                            selected={
+                                                fradrag.periode?.fraOgMed ? new Date(fradrag.periode.fraOgMed) : null
+                                            }
+                                            onChange={(e) =>
+                                                props.onFradragChange(index, {
+                                                    ...fradrag,
+                                                    periode: {
+                                                        tilOgMed: fradrag.periode?.tilOgMed ?? null,
+                                                        fraOgMed: toStringDateOrNull(e as Nullable<Date>),
+                                                    },
+                                                })
+                                            }
+                                            dateFormat="MM/yyyy"
+                                            showMonthYearPicker
+                                            maxDate={props.beregningsDato?.tom}
+                                            minDate={props.beregningsDato?.fom}
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label htmlFor={periode} className={styles.label}>
+                                            {props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.tom' })}
+                                        </Label>
 
-                                    <Label htmlFor={periode} className={styles.label}>
-                                        {props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.tom' })}
-                                    </Label>
-
-                                    <DatePicker
-                                        id={`fradrag[${index}].periode.tilOgMed`}
-                                        selected={fradrag.periode?.tilOgMed ? new Date(fradrag.periode.tilOgMed) : null}
-                                        onChange={(e) =>
-                                            props.onFradragChange(index, {
-                                                ...fradrag,
-                                                periode: {
-                                                    fraOgMed: fradrag.periode?.fraOgMed ?? null,
-                                                    tilOgMed: toLastDayOfMonthString(e as Nullable<Date>),
-                                                },
-                                            })
-                                        }
-                                        dateFormat="MM/yyyy"
-                                        showMonthYearPicker
-                                        selectsEnd={true}
-                                        endDate={props.beregningsDato?.tom}
-                                        minDate={
-                                            fradrag.periode?.fraOgMed
-                                                ? new Date(fradrag.periode.fraOgMed)
-                                                : props.beregningsDato?.fom
-                                        }
-                                        maxDate={props.beregningsDato?.tom}
-                                    />
+                                        <DatePicker
+                                            id={`fradrag[${index}].periode.tilOgMed`}
+                                            selected={
+                                                fradrag.periode?.tilOgMed ? new Date(fradrag.periode.tilOgMed) : null
+                                            }
+                                            onChange={(e) =>
+                                                props.onFradragChange(index, {
+                                                    ...fradrag,
+                                                    periode: {
+                                                        fraOgMed: fradrag.periode?.fraOgMed ?? null,
+                                                        tilOgMed: toLastDayOfMonthString(e as Nullable<Date>),
+                                                    },
+                                                })
+                                            }
+                                            dateFormat="MM/yyyy"
+                                            showMonthYearPicker
+                                            selectsEnd={true}
+                                            endDate={props.beregningsDato?.tom}
+                                            minDate={
+                                                fradrag.periode?.fraOgMed
+                                                    ? new Date(fradrag.periode.fraOgMed)
+                                                    : props.beregningsDato?.fom
+                                            }
+                                            maxDate={props.beregningsDato?.tom}
+                                        />
+                                    </div>
                                 </div>
                             )}
                         </SkjemaGruppe>

@@ -45,7 +45,7 @@ export default {
     'fradrag.utenlandsk.beløp': 'Månedsbeløp i utenlandsk valuta',
     'fradrag.utenlandsk.kurs': 'Kurs',
 
-    'fradrag.delerAvPeriode': 'Deler av periode',
+    'fradrag.delerAvPeriode': 'Deler av perioden',
     'fradrag.delerAvPeriode.fom': 'Fra og med',
     'fradrag.delerAvPeriode.tom': 'Til og med',
 
