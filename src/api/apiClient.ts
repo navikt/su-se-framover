@@ -1,5 +1,6 @@
 import { guid } from 'nav-frontend-js-utils';
 
+import Config from '~/config';
 import * as Cookies from '~lib/cookies';
 import { CookieName } from '~lib/cookies';
 
@@ -61,7 +62,7 @@ export default async function apiClient<T>(arg: {
         });
     }
 
-    const res = await fetch(`${window.BASE_URL}${arg.url}`, {
+    const res = await fetch(`${Config.SU_SE_BAKOVER_URL}${arg.url}`, {
         ...arg.request,
         method: arg.method,
         headers: {
@@ -74,7 +75,7 @@ export default async function apiClient<T>(arg: {
 
     if (res.status === 401) {
         if (refreshToken) {
-            const refreshRes = await fetch(`${window.BASE_URL}/auth/refresh`, {
+            const refreshRes = await fetch(`${Config.SU_SE_BAKOVER_URL}/auth/refresh`, {
                 headers: {
                     refresh_token: refreshToken,
                     'X-Correlation-ID': correlationId,

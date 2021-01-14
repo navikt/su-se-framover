@@ -1,21 +1,17 @@
-const variables = {
-    SU_SE_BAKOVER_URL: 'http://localhost:8080',
-    AMPLITUDE_API_KEY: '',
-    FEATURE_HENDELSESLOGG: false,
-};
+// eslint-disable-next-line @typescript-eslint/no-var-requires,no-undef
+const Config = require('./server/config');
 
 // eslint-disable-next-line
 module.exports = {
     plugins: {
         'posthtml-expressions': {
-            locals: Object.entries(variables).reduce(
-                (acc, [key, val]) => ({
-                    ...acc,
-                    // eslint-disable-next-line no-undef
-                    [key]: process.env.NODE_ENV === 'production' ? `$${key}` : val,
-                }),
-                {}
-            ),
+            locals:
+                // eslint-disable-next-line no-undef
+                process.env.NODE_ENV !== 'production'
+                    ? {
+                          CONFIG: JSON.stringify(Config.client),
+                      }
+                    : {},
         },
     },
 };

@@ -1,5 +1,7 @@
 import amplitude from 'amplitude-js';
 
+import Config from '~/config';
+
 let amplitudeClient: amplitude.AmplitudeClient | null = null;
 
 export function init() {
@@ -8,7 +10,7 @@ export function init() {
     }
 
     amplitudeClient = amplitude.getInstance();
-    amplitudeClient.init(window.AMPLITUDE_API_KEY, undefined, {
+    amplitudeClient.init(Config.AMPLITUDE_API_KEY, undefined, {
         apiEndpoint: 'amplitude.nav.no/collect',
         saveEvents: true,
         includeUtm: true,

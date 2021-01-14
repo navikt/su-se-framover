@@ -11,11 +11,11 @@ spec:
    replicas:
       min: 1
    liveness:
-      path: isalive
-      port: 8080
+      path: isAlive
+      port: 80
    readiness:
-      path: isready
-      port: 8080
+      path: isReady
+      port: 80
    ingresses:
       - {{ingress}}
    env:

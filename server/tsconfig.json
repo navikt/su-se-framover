@@ -1,0 +1,14 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "target": "ES5",
+        "lib": ["ES2019"],
+        "outDir": "./dist",
+        "sourceMap": true,
+        "typeRoots": ["../node_modules/@types", "./typings"],
+        "moduleResolution": "node",
+        "baseUrl": "./",
+        "paths": {}
+    },
+    "include": ["./**/*"]
+}

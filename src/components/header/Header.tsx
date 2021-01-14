@@ -2,6 +2,7 @@ import NavHeader from '@navikt/nap-header';
 import Lenke from 'nav-frontend-lenker';
 import React from 'react';
 
+import Config from '~/config';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { LoggedInUser, Rolle } from '~types/LoggedInUser';
@@ -31,7 +32,7 @@ const Header = (props: Props) => {
                     <Menyknapp
                         navn={props.user.navn}
                         onLoggUtClick={() => {
-                            window.location.href = `${window.BASE_URL}/logout`;
+                            window.location.href = `${Config.SU_SE_BAKOVER_URL}/logout`;
                         }}
                     />
                 </div>

@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, useLocation, useHistory } from 'react-router-dom';
 
 import { ErrorCode } from '~/api/apiClient';
+import Config from '~/config';
 import { UserProvider } from '~context/userContext';
 import Attestering from '~pages/attestering/Attestering';
 import HomePage from '~pages/HomePage';
@@ -147,7 +148,7 @@ const ContentWrapper: React.FC = (props) => {
                                             : 'En feil oppstod'}
                                     </Innholdstittel>
                                     <Lenke
-                                        href={`${window.BASE_URL}/login`}
+                                        href={`${Config.SU_SE_BAKOVER_URL}/login`}
                                         onClick={() => {
                                             Cookies.set(Cookies.CookieName.LoginRedirectUrl, window.location.pathname);
                                         }}

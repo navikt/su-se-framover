@@ -20,7 +20,9 @@ jobs:
               with:
                   node-version: '12.x'
             - name: install deps
-              run: npm install
+              run: npm ci
+            - name: lint and typecheck
+              run: npm run lint-and-typecheck
             - name: build client
               run: npm run build
             - name: Build and publish Docker image
