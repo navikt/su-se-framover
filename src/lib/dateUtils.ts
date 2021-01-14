@@ -42,3 +42,9 @@ export const isValidDayMonthYearFormat = (date: Nullable<string>): boolean => {
 
     return DateFns.isValid(DateFns.parse(date, 'dd.MM.yyyy', new Date()));
 };
+
+export const toStringDateOrNull = (date: Date | null) => {
+    if (!date) return null;
+
+    return DateFns.format(date, 'yyyy-MM-dd');
+};

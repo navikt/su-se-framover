@@ -1,4 +1,5 @@
-import { format, lastDayOfMonth } from 'date-fns';
+import { lastDayOfMonth } from 'date-fns';
+import * as DateFns from 'date-fns';
 import { FormikErrors } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
@@ -9,6 +10,7 @@ import DatePicker from 'react-datepicker';
 import { IntlShape } from 'react-intl';
 
 import { TrashBin } from '~assets/Icons';
+import { toStringDateOrNull } from '~lib/dateUtils';
 import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsPositiveNumber } from '~lib/validering';
 import InntektFraUtland from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/InntektFraUtland';
@@ -133,8 +135,8 @@ export const fradragSchema = yup.object<FradragFormData>({
                     'Ugyldig datokombinasjon',
                     'Til-og-med-dato må være senere enn fra-og-med-dato',
                     function (tilOgMed) {
-                        const fraOgMed = this.parent.fraOgMed as Nullable<Date>;
-                        return Boolean(fraOgMed && tilOgMed && this.parent.fraOgMed < tilOgMed);
+                        const fraOgMed = this.parent.fraOgMed as Nullable<string>;
+                        return Boolean(fraOgMed && tilOgMed && DateFns.isAfter(new Date(fraOgMed), new Date(tilOgMed)));
                     }
                 ),
         })
@@ -360,12 +362,6 @@ export const FradragInputs = (props: {
         </div>
     );
 };
-
-function toStringDateOrNull(date: Date | null) {
-    if (!date) return null;
-
-    return format(date, 'yyyy-MM-dd');
-}
 
 function toLastDayOfMonthString(date: Date | null) {
     if (!date) return null;
