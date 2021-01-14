@@ -320,7 +320,7 @@ export const FradragInputs = (props: {
                                         </Label>
 
                                         <DatePicker
-                                            id={`fradrag[${index}].periode.tilOgMed`}
+                                            id={`${periode}.tilOgMed`}
                                             selected={
                                                 fradrag.periode?.tilOgMed ? new Date(fradrag.periode.tilOgMed) : null
                                             }
