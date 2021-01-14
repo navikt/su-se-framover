@@ -130,7 +130,7 @@ export const fradragSchema = yup.object<FradragFormData>({
                 .required()
                 .typeError('Dato må fylles inn')
                 .test(
-                    'Ogyldig datokombinasjon',
+                    'Ugyldig datokombinasjon',
                     'Til og med dato må være senere enn fra og med dato',
                     function (tilOgMed) {
                         const fraOgMed = this.parent.fraOgMed as Nullable<Date>;
