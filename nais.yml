@@ -8,6 +8,9 @@ metadata:
 spec:
    port: 80
    image: {{ image }}
+   azure:
+      application:
+          enabled: true
    replicas:
       min: 1
    liveness:
