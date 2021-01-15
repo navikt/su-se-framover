@@ -354,6 +354,7 @@ export default createSlice({
         handleAsyncThunk(builder, startBeregning, {
             pending: (state) => {
                 state.beregningStatus = RemoteData.pending;
+                state.simuleringStatus = RemoteData.initial;
             },
             fulfilled: (state, action) => {
                 state.beregningStatus = RemoteData.success(null);
