@@ -136,7 +136,11 @@ export const fradragSchema = yup.object<FradragFormData>({
                     'Til-og-med-dato må være senere enn fra-og-med-dato',
                     function (tilOgMed) {
                         const fraOgMed = this.parent.fraOgMed as Nullable<string>;
-                        return Boolean(fraOgMed && tilOgMed && DateFns.isAfter(new Date(fraOgMed), new Date(tilOgMed)));
+                        return Boolean(
+                            fraOgMed &&
+                                tilOgMed &&
+                                DateFns.isAfter(lastDayOfMonth(new Date(tilOgMed)), new Date(fraOgMed))
+                        );
                     }
                 ),
         })
