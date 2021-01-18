@@ -9,10 +9,15 @@ import pino from 'pino';
 import pinoColada from 'pino-colada';
 import pinoHttp from 'pino-http';
 
+import setupAuth, { ensureAuthenticated } from './auth';
+import startMockOauthServer from './auth/mockServer';
 import * as Config from './config';
 import routes from './routes';
+import setupSession from './session';
 
-export default function startServer() {
+export default async function startServer() {
+    const authDiscoverUrl = Config.server.isDev ? await startMockOauthServer() : Config.auth.discoverUrl;
+
     const app = express();
 
     app.use(
@@ -62,7 +67,8 @@ export default function startServer() {
                           defaultSrc: ["'self'", 'data:'],
                           scriptSrc: [
                               "'self'",
-                              (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as any).locals.cspNonce}'`,
+                              (_req: IncomingMessage, res: ServerResponse) =>
+                                  `'nonce-${((res as unknown) as { locals: { cspNonce: string } }).locals.cspNonce}'`,
                           ],
                           styleSrc: ["'self'", 'fonts.googleapis.com', 'data: ', "'unsafe-inline'"],
                           connectSrc: [
@@ -83,6 +89,19 @@ export default function startServer() {
             allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'X-Requested-With'],
         })
     );
+
+    // Session
+    setupSession(app);
+
+    await setupAuth(app, authDiscoverUrl);
+
+    app.get('/authenticated/test', ensureAuthenticated, (_req, res) => {
+        if (_req.isAuthenticated()) {
+            res.send('hello protected');
+        } else {
+            res.status(401).send(':(');
+        }
+    });
 
     app.use(routes());
 
