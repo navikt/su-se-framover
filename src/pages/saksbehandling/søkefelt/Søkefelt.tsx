@@ -3,6 +3,7 @@ import React from 'react';
 
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { removeSpaces } from '~lib/formatUtils';
 import { useAppDispatch } from '~redux/Store';
 
 const Søkefelt = () => {
@@ -14,7 +15,7 @@ const Søkefelt = () => {
             name="fnr"
             placeholder="Fødselsnummer"
             maxLength={11}
-            onChange={(e) => setFnr(e.target.value)}
+            onChange={(e) => setFnr(removeSpaces(e.target.value))}
             onKeyDown={async (e) => {
                 if (e.keyCode === 13) {
                     dispatch(personSlice.fetchPerson({ fnr }));

@@ -9,6 +9,7 @@ import { FormattedMessage, RawIntlProvider } from 'react-intl';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
 import { Person } from '~api/personApi';
+import { removeSpaces } from '~lib/formatUtils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 
@@ -80,7 +81,7 @@ const Personsøk = (props: PersonsøkProps) => {
                             autoFocus
                             autoComplete="on"
                             onChange={(e) => {
-                                setFnr(e.target.value);
+                                setFnr(removeSpaces(e.target.value));
                             }}
                             value={fnr}
                         />

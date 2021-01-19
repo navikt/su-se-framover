@@ -19,6 +19,7 @@ import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';
 import personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
 import sakSlice, { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import { removeSpaces } from '~lib/formatUtils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -249,8 +250,13 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                     <div className={styles.fnrInput}>
                                         <Input
                                             name="epsFnr"
-                                            defaultValue={formik.values.epsFnr ?? ''}
-                                            onChange={formik.handleChange}
+                                            value={formik.values.epsFnr ?? ''}
+                                            onChange={(e) =>
+                                                formik.setValues((values) => ({
+                                                    ...values,
+                                                    epsFnr: removeSpaces(e.target.value),
+                                                }))
+                                            }
                                             bredde="S"
                                             feil={formik.errors.epsFnr}
                                         />

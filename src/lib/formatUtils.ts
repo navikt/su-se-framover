@@ -61,3 +61,7 @@ export function formatAdresse(adresse: Adresse | AdresseFraSøknad): string {
 
     return postadresse ? `${gateadresse}, ${postadresse}` : gateadresse;
 }
+
+export function removeSpaces(text: string): string {
+    return text.replace(/\s+/g, '');
+}
