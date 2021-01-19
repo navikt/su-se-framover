@@ -41,6 +41,7 @@ export default {
     'fradrag.type.kapitalinntekt': 'Kapitalinntekt',
     'fradrag.type.forventetinntekt': 'Forventet inntekt',
     'fradrag.type.beregnetFradragEPS': 'Ektefelle/samboer totalt',
+    'fradrag.type.underMinstenivå': 'Beløp under minstegrense for utbetaling',
 
     'fradrag.utenlandsk.beløp': 'Månedsbeløp i utenlandsk valuta',
     'fradrag.utenlandsk.kurs': 'Kurs',

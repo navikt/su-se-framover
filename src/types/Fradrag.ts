@@ -37,4 +37,5 @@ export enum Fradragstype {
     Kapitalinntekt = 'Kapitalinntekt',
     ForventetInntekt = 'ForventetInntekt',
     BeregnetFradragEPS = 'BeregnetFradragEPS',
+    UnderMinstenivå = 'UnderMinstenivå',
 }

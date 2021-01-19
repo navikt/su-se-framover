@@ -115,7 +115,9 @@ const utenlandskInntekt = yup
         otherwise: yup.object<UtenlandskInntektFormData>(),
     });
 
-const velgbareFradragstyper = Object.values(Fradragstype).filter((f) => f !== Fradragstype.BeregnetFradragEPS);
+const velgbareFradragstyper = Object.values(Fradragstype).filter(
+    (f) => ![Fradragstype.BeregnetFradragEPS, Fradragstype.UnderMinstenivå].includes(f)
+);
 
 export const fradragSchema = yup.object<FradragFormData>({
     beløp: validateStringAsPositiveNumber,
