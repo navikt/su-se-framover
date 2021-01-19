@@ -6,6 +6,7 @@ import { Fareknapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
 import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { lukkSøknad } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
@@ -92,7 +93,12 @@ const LukkSøknad = (props: { sak: Sak }) => {
     if (RemoteData.isSuccess(søknadLukketStatus) || søknad.lukket !== null) {
         return (
             <div>
-                <AlertStripeSuksess>{intl.formatMessage({ id: 'display.søknad.harBlittLukket' })}</AlertStripeSuksess>
+                <AlertStripeSuksess className={styles.søknadHarBlittLukket}>
+                    <p>{intl.formatMessage({ id: 'display.søknad.harBlittLukket' })}</p>
+                    <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
+                        {intl.formatMessage({ id: 'display.tilSaksoversikt' })}
+                    </Link>
+                </AlertStripeSuksess>
             </div>
         );
     }

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import søknadSlice from '~/features/søknad/søknad.slice';
 import me from '~features/me/me.slice';
 import person from '~features/person/person.slice';
+import revurdering from '~features/revurdering/revurdering.slice';
 import sakSlice from '~features/saksoversikt/sak.slice';
 import innsending from '~features/søknad/innsending.slice';
 
@@ -14,6 +15,7 @@ const store = configureStore({
         sak: sakSlice.reducer,
         innsending: innsending.reducer,
         me: me.reducer,
+        revurdering: revurdering.reducer,
     },
 });
 

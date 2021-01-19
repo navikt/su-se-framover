@@ -1,0 +1,29 @@
+@import '~/styles/variables.less';
+
+.beregningContainer {
+    display: flex;
+
+    > :not(:last-child) {
+        margin-right: @spacing-xl;
+    }
+}
+
+.brevContainer {
+    margin-bottom: @spacing;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+
+    .textAreaContainer {
+        width: 30rem;
+    }
+
+    .seBrevContainer {
+        width: 30em;
+
+        > :first-child {
+            margin-bottom: @spacing-s;
+        }
+    }
+}

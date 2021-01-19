@@ -44,4 +44,7 @@ export default {
     'display.utbetalinger.tittel': 'Utbetalinger',
 
     'display.åpneSøknader.tittel': 'Åpne søknader',
+
+    'knapp.revurder': 'Revurder',
+    'knapp.stoppUtbetaling': 'Stopp utbetaling',
 };

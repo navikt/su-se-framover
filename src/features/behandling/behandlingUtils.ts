@@ -49,6 +49,10 @@ export function erIverksattAvslag(behandling: Behandling): boolean {
     return behandling.status === Behandlingsstatus.IVERKSATT_AVSLAG;
 }
 
+export function erIverksattInnvilget(behandling: Behandling): boolean {
+    return behandling.status === Behandlingsstatus.IVERKSATT_INNVILGET;
+}
+
 export function erAvslått(behandling: Behandling): boolean {
     return [
         Behandlingsstatus.TIL_ATTESTERING_AVSLAG,
