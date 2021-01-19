@@ -2,7 +2,6 @@ import Etikett, { EtikettBaseProps } from 'nav-frontend-etiketter';
 import * as React from 'react';
 
 import { Person, Adressebeskyttelse } from '~api/personApi';
-import { EPSMedAlder } from '~pages/saksbehandling/steg/sats/utils';
 
 import styles from './personAdvarsel.module.less';
 
@@ -11,7 +10,7 @@ interface EtikettInfo {
     type: EtikettBaseProps['type'];
 }
 
-export const PersonAdvarsel = (props: { person: Person | EPSMedAlder }) => {
+export const PersonAdvarsel = (props: { person: Person }) => {
     const { adressebeskyttelse, skjermet } = props.person;
     const etiketter: EtikettInfo[] = [];
 

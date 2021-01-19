@@ -42,6 +42,8 @@ export interface Person {
     aktorId: string;
     navn: Navn;
     kjønn: Nullable<Kjønn>;
+    fødselsdato: Nullable<Date>;
+    alder: Nullable<number>;
     telefonnummer: {
         landskode: string;
         nummer: string;

@@ -125,6 +125,7 @@ const FnrInput = ({ inputId, fnr, onFnrChange, feil, autoComplete }: FnrInputPro
             />
 
             {person && (
+                // TODO: Burde bruke personkort?
                 <div className={styles.result}>
                     <GenderIcon kjønn={person.kjønn} />
                     <p className={styles.name}>{showName(person.navn)}</p>

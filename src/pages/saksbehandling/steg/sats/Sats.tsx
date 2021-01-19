@@ -8,8 +8,9 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Sats as FaktiskSats } from '~/types/Sats';
+import { Person } from '~api/personApi';
 import { SuperRadioGruppe } from '~components/FormElements';
-import { PersonkortEPS } from '~components/Personkort';
+import { Personkort } from '~components/Personkort';
 import { eqBosituasjon } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
@@ -18,7 +19,7 @@ import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Bosituasjon } from '~types/Behandlingsinformasjon';
+import { Bosituasjon, isPerson } from '~types/Behandlingsinformasjon';
 
 import SatsFaktablokk from '../faktablokk/faktablokker/SatsFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -27,23 +28,20 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './sats-nb';
 import styles from './sats.module.less';
-import { EPSMedAlder } from './utils';
 
 interface FormData {
-    epsFnr: Nullable<string>;
-    epsAlder: Nullable<number>;
     delerSøkerBolig: Nullable<boolean>;
     mottarEktemakeEllerSamboerSU: Nullable<boolean>;
     begrunnelse: Nullable<string>;
 }
 
-const toBosituasjon = (values: FormData): Nullable<Bosituasjon> => {
-    if (values.delerSøkerBolig === null && values.epsFnr === null) {
+const toBosituasjon = (values: FormData, eps: Nullable<Person>): Nullable<Bosituasjon> => {
+    if (values.delerSøkerBolig === null && eps === null) {
         return null;
     }
 
     return {
-        epsFnr: values.epsFnr,
+        epsAlder: eps?.alder ?? null, // TODO: Denne burde bruke ektefelle, og ikke lagre alder her, men krever en opprydding i Behandlingsinformasjon i backend
         delerBolig: values.delerSøkerBolig,
         ektemakeEllerSamboerUførFlyktning: values.mottarEktemakeEllerSamboerSU,
         begrunnelse: values.begrunnelse,
@@ -56,7 +54,7 @@ const utledSats = (values: FormData, harEPS: boolean, epsAlder?: Nullable<number
     }
 
     if (harEPS && !epsAlder) {
-        return 'Feil skjedde ved å utlede sats';
+        return 'Feil skjedde under utleding av sats';
     }
 
     if (values.delerSøkerBolig && !harEPS) {
@@ -81,8 +79,6 @@ const utledSats = (values: FormData, harEPS: boolean, epsAlder?: Nullable<number
 };
 
 const schema = yup.object<FormData>({
-    epsFnr: yup.string().nullable().defined(),
-    epsAlder: yup.number().nullable().defined(),
     delerSøkerBolig: yup.boolean().defined().when('epsFnr', {
         is: null,
         then: yup.boolean().required(),
@@ -109,15 +105,13 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const eksisterendeBosituasjon = props.behandling.behandlingsinformasjon.bosituasjon;
-    const eps = props.behandling.behandlingsinformasjon.ektefelle as Nullable<EPSMedAlder>;
+    const eps = props.behandling.behandlingsinformasjon.ektefelle as Nullable<Person>;
 
     const formik = useFormik<FormData>({
         initialValues: {
-            epsFnr: eps?.fnr ?? null,
-            epsAlder: eps?.alder ?? null,
             delerSøkerBolig: eps ? null : eksisterendeBosituasjon?.delerBolig ?? null,
             mottarEktemakeEllerSamboerSU:
-                eps && eps.alder && eps?.alder >= 67
+                eps && isPerson(eps) && eps.alder && eps.alder >= 67
                     ? null
                     : eksisterendeBosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null,
             begrunnelse: eksisterendeBosituasjon?.begrunnelse ?? null,
@@ -130,7 +124,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     });
 
     const handleSave = async (values: FormData, nesteUrl: string) => {
-        const boSituasjonValues = toBosituasjon(values);
+        const boSituasjonValues = toBosituasjon(values, eps);
         if (!boSituasjonValues) {
             return;
         }
@@ -171,7 +165,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                     <Element className={styles.personkortTittel}>
                                         {intl.formatMessage({ id: 'display.eps.label' })}
                                     </Element>
-                                    <PersonkortEPS eps={eps} />
+                                    <Personkort person={eps} />
                                 </div>
                             )}
                         </div>
