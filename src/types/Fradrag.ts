@@ -1,10 +1,16 @@
 import { Nullable } from '~lib/types';
 
 export interface Fradrag {
+    periode: Nullable<Periode>;
     type: Fradragstype;
     beløp: number;
     utenlandskInntekt: Nullable<UtenlandskInntekt>;
     tilhører: FradragTilhører;
+}
+
+export interface Periode {
+    fraOgMed: string;
+    tilOgMed: string;
 }
 
 export interface UtenlandskInntekt {
@@ -31,4 +37,5 @@ export enum Fradragstype {
     Kapitalinntekt = 'Kapitalinntekt',
     ForventetInntekt = 'ForventetInntekt',
     BeregnetFradragEPS = 'BeregnetFradragEPS',
+    UnderMinstenivå = 'UnderMinstenivå',
 }

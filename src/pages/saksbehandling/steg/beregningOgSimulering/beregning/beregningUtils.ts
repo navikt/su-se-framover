@@ -27,6 +27,8 @@ export const fradragstypeResourceId = (f: Fradragstype): string => {
             return 'fradrag.type.forventetinntekt';
         case Fradragstype.BeregnetFradragEPS:
             return 'fradrag.type.beregnetFradragEPS';
+        case Fradragstype.UnderMinstenivå:
+            return 'fradrag.type.underMinstenivå';
     }
 };
 
