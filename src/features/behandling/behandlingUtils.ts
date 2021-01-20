@@ -173,7 +173,7 @@ export const eqPersonligOppmøte: Eq<Nullable<PersonligOppmøte>> = {
 
 export const eqBosituasjon: Eq<Nullable<Bosituasjon>> = {
     equals: (sats1, sats2) =>
-        sats1?.epsFnr === sats2?.epsFnr &&
+        sats1?.epsAlder === sats2?.epsAlder &&
         sats1?.delerBolig === sats2?.delerBolig &&
         sats1?.ektemakeEllerSamboerUførFlyktning === sats2?.ektemakeEllerSamboerUførFlyktning &&
         sats1?.begrunnelse === sats2?.begrunnelse,

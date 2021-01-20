@@ -126,10 +126,15 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                               fnr: eps.value.fnr,
                               navn: eps.value.navn,
                               kjønn: eps.value.kjønn,
+                              fødselsdato: eps.value.fødselsdato,
+                              alder: eps.value.alder,
                               adressebeskyttelse: eps.value.adressebeskyttelse,
                               skjermet: eps.value.skjermet,
                           }
-                        : { fnr: values.epsFnr, navn: null, kjønn: null, adressebeskyttelse: null, skjermet: null },
+                        : {
+                              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                              fnr: values.epsFnr!,
+                          },
                 },
             })
         );

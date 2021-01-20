@@ -2,15 +2,16 @@ import React from 'react';
 
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
+import { Ektefelle } from '~types/Behandlingsinformasjon';
 
-import { EPSMedAlder, setSatsFaktablokk } from '../../sats/utils';
+import { setSatsFaktablokk } from '../../sats/utils';
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
 import { FaktablokkProps } from './faktablokkUtils';
 
 interface SatsProps extends FaktablokkProps {
-    eps: Nullable<EPSMedAlder>;
+    eps: Nullable<Ektefelle>;
 }
 
 const SatsFaktablokk = (props: SatsProps) => {

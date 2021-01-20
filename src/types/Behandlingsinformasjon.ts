@@ -1,4 +1,4 @@
-import { Adressebeskyttelse, Kjønn, Navn } from '~api/personApi';
+import { Person } from '~api/personApi';
 import { Nullable } from '~lib/types';
 
 import { Sats } from './Sats';
@@ -119,16 +119,15 @@ export enum PersonligOppmøteStatus {
 }
 
 export interface Bosituasjon {
-    epsFnr: Nullable<string>;
+    epsAlder: Nullable<number>;
     delerBolig: Nullable<boolean>;
     ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
     begrunnelse: Nullable<string>;
 }
 
-export interface Ektefelle {
-    fnr: Nullable<string>;
-    navn: Nullable<Navn>;
-    kjønn: Nullable<Kjønn>;
-    adressebeskyttelse: Nullable<Adressebeskyttelse>;
-    skjermet: Nullable<boolean>;
+export type Ektefelle = Person | Pick<Person, 'fnr'>;
+// Ektefelle vil i noen tilfeller kun ha fnr, siden vi oppdaget diskresjonskode e.l.
+// når vi slo opp personen og da kun lagrer fnr og avbryter saksbehandlingen
+export function isPerson(ektefelle: Ektefelle): ektefelle is Person {
+    return 'navn' in ektefelle;
 }

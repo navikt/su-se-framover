@@ -5,7 +5,7 @@ import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { mapToVilkårsinformasjon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
-import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
+import { Behandlingsinformasjon, Ektefelle } from '~types/Behandlingsinformasjon';
 import { Sats } from '~types/Sats';
 import { SøknadInnhold } from '~types/Søknad';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
@@ -19,7 +19,6 @@ import PersonligOppmøteFaktablokk from '../steg/faktablokk/faktablokker/Personl
 import SatsFaktablokk from '../steg/faktablokk/faktablokker/SatsFaktablokk';
 import UførhetFaktablokk from '../steg/faktablokk/faktablokker/UførhetFaktablokk';
 import UtenlandsOppholdFaktablokk from '../steg/faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
-import { EPSMedAlder } from '../steg/sats/utils';
 
 import messages from './vilkårsOppsummering-nb';
 import styles from './vilkårsOppsummering.module.less';
@@ -55,7 +54,7 @@ const VilkårsOppsummering = (props: {
                     vilkårFaktablokk={
                         <SatsFaktablokk
                             søknadInnhold={props.søknadInnhold}
-                            eps={props.behandlingsinformasjon.ektefelle as Nullable<EPSMedAlder>}
+                            eps={props.behandlingsinformasjon.ektefelle as Nullable<Ektefelle>}
                             brukUndertittel
                         />
                     }
