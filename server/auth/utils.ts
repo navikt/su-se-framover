@@ -30,6 +30,28 @@ export async function ensureAuthenticated(req: Request, res: Response, next: Nex
     }
 }
 
+export async function getOnBehalfOfAccessToken(authClient: OpenIdClient.Client, req: Request) {
+    if (!req.user) {
+        return null;
+    }
+    const grantBody: OpenIdClient.GrantBody = {
+        grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+        client_assertion_type: 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+        requested_token_use: 'on_behalf_of',
+        // oauth2-mock-server vil sette hva enn vi sender inn som scope her som audience i tokenet
+        // mens AAD vil sette klient-ID-en som audience.
+        // Vi trikser det derfor til her heller enn at su-se-bakover må ha noe spesialhåndtering
+        scope: Config.server.isDev
+            ? Config.auth.suSeBakoverClientId
+            : `api://${Config.auth.suSeBakoverClientId}/.default`,
+        assertion: req.user.tokenSets[tokenSetSelfId].access_token,
+    };
+
+    const tokenSet = await authClient.grant(grantBody);
+    req.user.tokenSets[Config.auth.suSeBakoverClientId] = tokenSet;
+    return tokenSet.access_token;
+}
+
 export async function getOpenIdClient(issuerUrl: string) {
     try {
         const issuer = await OpenIdClient.Issuer.discover(issuerUrl);

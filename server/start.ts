@@ -12,6 +12,7 @@ import pinoHttp from 'pino-http';
 import setupAuth from './auth';
 import * as AuthUtils from './auth/utils';
 import * as Config from './config';
+import setupProxy from './proxy';
 import routes from './routes';
 import setupSession from './session';
 
@@ -94,13 +95,7 @@ export default async function startServer() {
     const authClient = await AuthUtils.getOpenIdClient(Config.auth.discoverUrl);
     await setupAuth(app, authClient);
 
-    app.get('/authenticated/test', ensureAuthenticated, (_req, res) => {
-        if (_req.isAuthenticated()) {
-            res.send('hello protected');
-        } else {
-            res.status(401).send(':(');
-        }
-    });
+    app.use(setupProxy(authClient));
 
     app.use(routes());
 
