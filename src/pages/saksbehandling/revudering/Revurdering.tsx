@@ -20,7 +20,6 @@ import ValgAvPeriode from './valgAvPeriode/ValgAvPeriode';
 export interface RevurderingFormData {
     fom: Nullable<Date>;
     tom: Nullable<Date>;
-    forventetInntekt: Nullable<number>;
     //TODO: muligens må fjernes når vi finner ut mer om hvordan brev skal fungere for revurdering
     behandlingId: Nullable<string>;
 }
@@ -30,7 +29,6 @@ const Revurdering = (props: { sak: Sak }) => {
     const [formData, setFormData] = useState<RevurderingFormData>({
         fom: null,
         tom: null,
-        forventetInntekt: null,
         behandlingId: null,
     });
 
@@ -98,7 +96,6 @@ const Revurdering = (props: { sak: Sak }) => {
                 <Route path={createRevurderingsPath(props.sak.id, RevurderingSteg.Oppsummering)}>
                     <RevurderingsOppsummering
                         sakId={props.sak.id}
-                        forventetInntekt={formData.forventetInntekt}
                         //TODO: muligens må fjernes når vi finner ut mer om hvordan brev skal fungere for revurdering
                         behandlingId={formData.behandlingId}
                     />

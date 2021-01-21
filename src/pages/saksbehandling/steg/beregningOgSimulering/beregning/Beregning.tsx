@@ -287,14 +287,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 : ''}
                         </Undertittel>
                         <div className={styles.beregningsContainer}>
-                            {props.behandling.beregning && (
-                                <VisBeregning
-                                    beregning={props.behandling.beregning}
-                                    forventetinntekt={
-                                        props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt ?? 0
-                                    }
-                                />
-                            )}
+                            {props.behandling.beregning && <VisBeregning beregning={props.behandling.beregning} />}
                             {formik.errors && (
                                 <Feiloppsummering
                                     feil={formikErrorsTilFeiloppsummering(formik.errors)}

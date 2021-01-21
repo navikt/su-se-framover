@@ -22,7 +22,6 @@ import styles from './visBeregning.module.less';
 interface Props {
     beregningsTittel?: string;
     beregning: Beregning;
-    forventetinntekt: number;
 }
 
 const getFradragsnøkkel = (f: Fradrag) => f.type + (f.utenlandskInntekt ? `-${f.utenlandskInntekt.valuta}` : '');

@@ -36,7 +36,6 @@ const schema = yup.object<OppsummeringFormData>({
 
 const RevurderingsOppsummering = (props: {
     sakId: string;
-    forventetInntekt: Nullable<number>;
     //TODO: muligens må fjernes når vi finner ut mer om hvordan brev skal fungere for revurdering
     behandlingId: Nullable<string>;
 }) => {
@@ -47,7 +46,7 @@ const RevurderingsOppsummering = (props: {
     const { beregnOgSimulerStatus, revurderingsVedtakStatus, sendTilAttesteringStatus } = useAppSelector(
         (state) => state.revurdering
     );
-    if (!RemoteData.isSuccess(beregnOgSimulerStatus) || !props.forventetInntekt) {
+    if (!RemoteData.isSuccess(beregnOgSimulerStatus)) {
         return (
             <div className={sharedStyles.revurderingContainer}>
                 <Innholdstittel className={sharedStyles.tittel}>
@@ -109,7 +108,8 @@ const RevurderingsOppsummering = (props: {
         validationSchema: schema,
         validateOnChange: hasSubmitted,
     });
-
+    console.log(beregnOgSimulerStatus.value);
+    console.log(formik.values);
     return (
         <form
             className={sharedStyles.revurderingContainer}
@@ -126,14 +126,12 @@ const RevurderingsOppsummering = (props: {
                     <VisBeregning
                         beregningsTittel={intl.formatMessage({ id: 'oppsummering.gammelBeregning.tittel' })}
                         beregning={formik.values.gammelBeregning}
-                        forventetinntekt={props.forventetInntekt}
                     />
 
                     {RemoteData.isSuccess(beregnOgSimulerStatus) && (
                         <VisBeregning
                             beregningsTittel={intl.formatMessage({ id: 'oppsummering.nyBeregning.tittel' })}
-                            beregning={formik.values.gammelBeregning}
-                            forventetinntekt={props.forventetInntekt}
+                            beregning={formik.values.nyBeregning}
                         />
                     )}
                 </div>
