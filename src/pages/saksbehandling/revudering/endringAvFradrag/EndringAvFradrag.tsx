@@ -43,10 +43,7 @@ const EndringAvFradrag = (props: {
     sakId: string;
     periode: { fom: Nullable<Date>; tom: Nullable<Date> };
     innvilgedeBehandlinger: Behandling[];
-    leggTilVerdi: (
-        keynavn: 'gammelBeregning' | 'forventetInntekt' | 'behandlingId',
-        value: string | Beregning | number
-    ) => void;
+    leggTilVerdi: (keynavn: 'forventetInntekt' | 'behandlingId', value: string | Beregning | number) => void;
 }) => {
     const history = useHistory();
     const dispatch = useAppDispatch();
@@ -134,7 +131,7 @@ const EndringAvFradrag = (props: {
     const formik = useFormik<EndringAvFradragFormData>({
         initialValues: {
             fradrag: RemoteData.isSuccess(beregnOgSimuler)
-                ? fradragUtenForventetInntekt(FradragTilFradragFormData(beregnOgSimuler.value.fradrag))
+                ? fradragUtenForventetInntekt(FradragTilFradragFormData(beregnOgSimuler.value.beregning.fradrag))
                 : fradragUtenForventetInntekt(
                       FradragTilFradragFormData(
                           /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
@@ -148,7 +145,6 @@ const EndringAvFradrag = (props: {
                 return;
             }
             /* eslint-disable @typescript-eslint/no-non-null-assertion */
-            props.leggTilVerdi('gammelBeregning', behandling.beregning!);
             props.leggTilVerdi('forventetInntekt', behandling.behandlingsinformasjon.uførhet!.forventetInntekt!);
             /* eslint-enable @typescript-eslint/no-non-null-assertion */
             //TODO: muligens må fjernes når vi finner ut mer om hvordan brev skal fungere for revurdering

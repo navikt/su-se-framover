@@ -12,7 +12,7 @@ import * as pdfApi from '../../api/pdfApi';
 import * as revurderingApi from '../../api/revurderingApi';
 
 export const beregnOgSimuler = createAsyncThunk<
-    Beregning,
+    { beregning: Beregning; revurdert: Beregning },
     { sakId: string; behandlingId: string; fom: Date; tom: Date; fradrag: Fradrag[] },
     { rejectValue: ApiError }
 >('revurdering/beregnOgSimuler', async ({ sakId, behandlingId, fom, tom, fradrag }, thunkApi) => {
@@ -48,7 +48,7 @@ export const sendTilAttestering = createAsyncThunk<
 });
 
 interface RevurderingState {
-    beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, Beregning>;
+    beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, { beregning: Beregning; revurdert: Beregning }>;
     revurderingsVedtakStatus: RemoteData.RemoteData<ApiError, null>;
     sendTilAttesteringStatus: RemoteData.RemoteData<ApiError, Sak>;
 }

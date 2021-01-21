@@ -15,7 +15,7 @@ export async function beregnOgSimuler(
         tom: Date;
         fradrag: Fradrag[];
     }
-): Promise<ApiClientResult<Beregning>> {
+): Promise<ApiClientResult<{ beregning: Beregning; revurdert: Beregning }>> {
     const { fom, tom } = arg;
     return apiClient({
         url: `/saker/${sakId}/revurdering/beregnOgSimuler`,

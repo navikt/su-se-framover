@@ -36,7 +36,6 @@ const schema = yup.object<OppsummeringFormData>({
 
 const RevurderingsOppsummering = (props: {
     sakId: string;
-    gammelBeregning: Nullable<Beregning>;
     forventetInntekt: Nullable<number>;
     //TODO: muligens må fjernes når vi finner ut mer om hvordan brev skal fungere for revurdering
     behandlingId: Nullable<string>;
@@ -48,8 +47,7 @@ const RevurderingsOppsummering = (props: {
     const { beregnOgSimulerStatus, revurderingsVedtakStatus, sendTilAttesteringStatus } = useAppSelector(
         (state) => state.revurdering
     );
-
-    if (!RemoteData.isSuccess(beregnOgSimulerStatus) || !props.gammelBeregning || !props.forventetInntekt) {
+    if (!RemoteData.isSuccess(beregnOgSimulerStatus) || !props.forventetInntekt) {
         return (
             <div className={sharedStyles.revurderingContainer}>
                 <Innholdstittel className={sharedStyles.tittel}>
@@ -93,11 +91,12 @@ const RevurderingsOppsummering = (props: {
 
     const formik = useFormik({
         initialValues: {
-            gammelBeregning: props.gammelBeregning,
-            nyBeregning: beregnOgSimulerStatus.value,
+            gammelBeregning: beregnOgSimulerStatus.value.beregning,
+            nyBeregning: beregnOgSimulerStatus.value.revurdert,
             tekstTilVedtaksbrev: null,
         },
         async onSubmit(values) {
+            console.log(values);
             dispatch(
                 revurderingSlice.sendTilAttestering({
                     sakId: props.sakId,
@@ -126,14 +125,17 @@ const RevurderingsOppsummering = (props: {
                 <div className={styles.beregningContainer}>
                     <VisBeregning
                         beregningsTittel={intl.formatMessage({ id: 'oppsummering.gammelBeregning.tittel' })}
-                        beregning={props.gammelBeregning}
+                        beregning={formik.values.gammelBeregning}
                         forventetinntekt={props.forventetInntekt}
                     />
-                    <VisBeregning
-                        beregningsTittel={intl.formatMessage({ id: 'oppsummering.nyBeregning.tittel' })}
-                        beregning={beregnOgSimulerStatus.value}
-                        forventetinntekt={props.forventetInntekt}
-                    />
+
+                    {RemoteData.isSuccess(beregnOgSimulerStatus) && (
+                        <VisBeregning
+                            beregningsTittel={intl.formatMessage({ id: 'oppsummering.nyBeregning.tittel' })}
+                            beregning={formik.values.gammelBeregning}
+                            forventetinntekt={props.forventetInntekt}
+                        />
+                    )}
                 </div>
                 <div className={styles.brevContainer}>
                     <div className={styles.textAreaContainer}>
