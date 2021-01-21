@@ -6,8 +6,7 @@ import React, { useEffect, useState } from 'react';
 
 import * as personApi from '~api/personApi';
 import { Person } from '~api/personApi';
-import { KjønnKvinne, KjønnMann, KjønnUkjent } from '~assets/Icons';
-import { showName } from '~features/person/personUtils';
+import { Personkort } from '~components/Personkort';
 import { EPSFormData } from '~features/søknad/types';
 import { useI18n } from '~lib/hooks';
 import { keyOf, Nullable } from '~lib/types';
@@ -125,10 +124,8 @@ const FnrInput = ({ inputId, fnr, onFnrChange, feil, autoComplete }: FnrInputPro
             />
 
             {person && (
-                // TODO: Burde bruke personkort?
-                <div className={styles.result}>
-                    <GenderIcon kjønn={person.kjønn} />
-                    <p className={styles.name}>{showName(person.navn)}</p>
+                <div className={styles.personkort}>
+                    <Personkort person={person} />
                 </div>
             )}
             {harIkkeTilgang && (
@@ -138,16 +135,6 @@ const FnrInput = ({ inputId, fnr, onFnrChange, feil, autoComplete }: FnrInputPro
             )}
         </div>
     );
-};
-
-const GenderIcon = ({ kjønn }: { kjønn: Nullable<personApi.Kjønn> }) => {
-    if (kjønn === personApi.Kjønn.Mann) {
-        return <KjønnMann />;
-    } else if (kjønn === personApi.Kjønn.Kvinne) {
-        return <KjønnKvinne />;
-    } else {
-        return <KjønnUkjent />;
-    }
 };
 
 export default EktefellePartnerSamboer;
