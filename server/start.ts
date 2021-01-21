@@ -9,15 +9,13 @@ import pino from 'pino';
 import pinoColada from 'pino-colada';
 import pinoHttp from 'pino-http';
 
-import setupAuth, { ensureAuthenticated } from './auth';
-import startMockOauthServer from './auth/mockServer';
+import setupAuth from './auth';
+import * as AuthUtils from './auth/utils';
 import * as Config from './config';
 import routes from './routes';
 import setupSession from './session';
 
 export default async function startServer() {
-    const authDiscoverUrl = Config.server.isDev ? await startMockOauthServer() : Config.auth.discoverUrl;
-
     const app = express();
 
     app.use(
@@ -93,7 +91,8 @@ export default async function startServer() {
     // Session
     setupSession(app);
 
-    await setupAuth(app, authDiscoverUrl);
+    const authClient = await AuthUtils.getOpenIdClient(Config.auth.discoverUrl);
+    await setupAuth(app, authClient);
 
     app.get('/authenticated/test', ensureAuthenticated, (_req, res) => {
         if (_req.isAuthenticated()) {
