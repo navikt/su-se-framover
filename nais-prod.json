@@ -1,5 +1,6 @@
 {
     "ingress": "https://supplerendestonad.nais.adeo.no",
+    "tenant": "nav.no",
     "env": {
         "SU_SE_BAKOVER_URL": "https://su-se-bakover.nais.adeo.no",
         "DOMAIN": "nais.adeo.no",

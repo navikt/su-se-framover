@@ -1,5 +1,6 @@
 {
     "ingress": "https://supplerendestonad.dev.adeo.no",
+    "tenant": "trygdeetaten.no",
     "env": {
         "SU_SE_BAKOVER_URL": "https://su-se-bakover.dev.adeo.no",
         "DOMAIN": "dev.adeo.no",
