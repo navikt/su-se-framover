@@ -2,6 +2,7 @@
     "ingress": "https://supplerendestonad.nais.adeo.no",
     "env": {
         "SU_SE_BAKOVER_URL": "https://su-se-bakover.nais.adeo.no",
+        "SU_SE_BAKOVER_CLIENT_ID": "b366a302-0cf8-4dd0-9bbf-1d9d9686bdc9",
         "DOMAIN": "nais.adeo.no",
         "AMPLITUDE_API_KEY": "a9a60eb3e832909758c46016e1714d3e",
         "FEATURE_HENDELSESLOGG": false,
