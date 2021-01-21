@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { lastDayOfMonth } from 'date-fns';
+import { addMonths, lastDayOfMonth } from 'date-fns';
 import { useFormik } from 'formik';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
@@ -130,10 +130,19 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     };
 
     const byttDato = (keyNavn: keyof Pick<FormData, 'fom' | 'tom'>, dato: Date | [Date, Date] | null) => {
-        formik.setValues({
-            ...formik.values,
-            [keyNavn]: Array.isArray(dato) ? dato[0] : dato,
-        });
+        const maybeDate = Array.isArray(dato) ? dato[0] : dato;
+        if (keyNavn === 'fom' && formik.values.tom == null && maybeDate != null) {
+            formik.setValues({
+                ...formik.values,
+                ['fom']: maybeDate,
+                ['tom']: addMonths(maybeDate, 11),
+            });
+        } else {
+            formik.setValues({
+                ...formik.values,
+                [keyNavn]: maybeDate,
+            });
+        }
     };
 
     const formik = useFormik<FormData>({
@@ -199,7 +208,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     selectsEnd
                                     startDate={formik.values.fom}
                                     endDate={formik.values.tom}
-                                    minDate={formik.values.fom}
+                                    minDate={new Date(2021, 0)}
                                 />
                                 {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
                             </div>
@@ -215,7 +224,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     selectsEnd
                                     startDate={formik.values.fom}
                                     endDate={formik.values.tom}
-                                    minDate={formik.values.fom}
+                                    minDate={new Date(2021, 0)}
                                 />
                                 {formik.errors.tom && <Feilmelding>{formik.errors.tom}</Feilmelding>}
                             </div>
