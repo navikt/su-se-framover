@@ -11,7 +11,7 @@ export default function setupSession(app: Express) {
         session({
             cookie: {
                 maxAge: SESSION_MAX_AGE_MILLIS,
-                sameSite: 'strict',
+                sameSite: 'lax',
                 httpOnly: true,
             },
             secret: Config.server.sessionKey,
