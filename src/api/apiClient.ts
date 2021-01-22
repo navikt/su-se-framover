@@ -1,9 +1,5 @@
 import { guid } from 'nav-frontend-js-utils';
 
-import Config from '~/config';
-import * as Cookies from '~lib/cookies';
-import { CookieName } from '~lib/cookies';
-
 export enum ErrorCode {
     Unauthorized = 403,
     NotAuthenticated = 401,
@@ -47,74 +43,20 @@ export default async function apiClient<T>(arg: {
     body?: Record<string, any>;
     request?: Partial<Request>;
     successStatusCodes?: number[];
-    extraData?: { accessToken: string; correlationId: string; numAttempts: number };
+    extraData?: { correlationId: string };
     bodyTransformer?: (res: Response) => Promise<T>;
 }): Promise<ApiClientResult<T>> {
-    const accessToken = arg.extraData?.accessToken ?? Cookies.get(Cookies.CookieName.AccessToken);
-    const refreshToken = Cookies.get(Cookies.CookieName.RefreshToken);
     const correlationId = arg.extraData?.correlationId ?? guid();
 
-    if ((arg.extraData?.numAttempts ?? 0) > 1) {
-        return error({
-            statusCode: ErrorCode.Unknown,
-            body: null,
-            correlationId,
-        });
-    }
-
-    const res = await fetch(`${Config.SU_SE_BAKOVER_URL}${arg.url}`, {
+    const res = await fetch(`/api/${arg.url}`, {
         ...arg.request,
         method: arg.method,
         headers: {
             ...(arg.request ? arg.request.headers : null),
-            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
             'X-Correlation-ID': correlationId,
         },
         body: arg.body ? JSON.stringify(arg.body) : undefined,
     });
-
-    if (res.status === 401) {
-        if (refreshToken) {
-            const refreshRes = await fetch(`${Config.SU_SE_BAKOVER_URL}/auth/refresh`, {
-                headers: {
-                    refresh_token: refreshToken,
-                    'X-Correlation-ID': correlationId,
-                },
-            });
-
-            const nyttAccessToken = refreshRes.headers.get('access_token');
-            const nyttRefreshToken = refreshRes.headers.get('refresh_token');
-
-            if (nyttRefreshToken) {
-                Cookies.set(CookieName.RefreshToken, nyttRefreshToken);
-            }
-            if (nyttAccessToken) {
-                Cookies.set(CookieName.AccessToken, nyttAccessToken);
-
-                return apiClient({
-                    ...arg,
-                    extraData: {
-                        ...arg.extraData,
-                        accessToken: nyttAccessToken,
-                        correlationId,
-                        numAttempts: (arg.extraData?.numAttempts ?? 0) + 1,
-                    },
-                });
-            }
-        }
-
-        return error({
-            statusCode: res.status,
-            correlationId,
-            body: null,
-        });
-    } else if (res.status === 403) {
-        return error({
-            statusCode: res.status,
-            correlationId,
-            body: null,
-        });
-    }
 
     if (res.ok || arg.successStatusCodes?.includes(res.status)) {
         if (arg.bodyTransformer) {
