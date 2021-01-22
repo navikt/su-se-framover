@@ -14,6 +14,7 @@ $ npm install # installerer avhengigheter
 Starte for lokal utvikling:
 
 ```sh
+$ ./start-oauth-server.sh # se Mock-oauth-server-avsnittet for mer info
 $ npm start
 ```
 
