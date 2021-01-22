@@ -25,7 +25,7 @@ For autentisering lokalt så bruker vi https://github.com/navikt/mock-oauth2-ser
 Kjør opp denne med
 
 ```sh
-$ ./start-oauth-sever.sh
+$ ./start-oauth-server.sh
 ```
 
 Den vil spørre deg om Github-brukernavn.
