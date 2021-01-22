@@ -9,10 +9,14 @@ import pino from 'pino';
 import pinoColada from 'pino-colada';
 import pinoHttp from 'pino-http';
 
+import setupAuth from './auth';
+import * as AuthUtils from './auth/utils';
 import * as Config from './config';
+import setupProxy from './proxy';
 import routes from './routes';
+import setupSession from './session';
 
-export default function startServer() {
+export default async function startServer() {
     const app = express();
 
     app.use(
@@ -62,7 +66,8 @@ export default function startServer() {
                           defaultSrc: ["'self'", 'data:'],
                           scriptSrc: [
                               "'self'",
-                              (_req: IncomingMessage, res: ServerResponse) => `'nonce-${(res as any).locals.cspNonce}'`,
+                              (_req: IncomingMessage, res: ServerResponse) =>
+                                  `'nonce-${((res as unknown) as { locals: { cspNonce: string } }).locals.cspNonce}'`,
                           ],
                           styleSrc: ["'self'", 'fonts.googleapis.com', 'data: ', "'unsafe-inline'"],
                           connectSrc: [
@@ -83,6 +88,14 @@ export default function startServer() {
             allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'X-Requested-With'],
         })
     );
+
+    // Session
+    setupSession(app);
+
+    const authClient = await AuthUtils.getOpenIdClient(Config.auth.discoverUrl);
+    await setupAuth(app, authClient);
+
+    app.use(setupProxy(authClient));
 
     app.use(routes());
 

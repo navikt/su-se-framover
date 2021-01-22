@@ -19,6 +19,29 @@ $ npm start
 
 Denne starter opp `express`-serveren med `parcel`-middleware som ordner med bygging av frontenden.
 
+### Mock oauth server
+
+For autentisering lokalt så bruker vi https://github.com/navikt/mock-oauth2-server.
+Kjør opp denne med
+
+```sh
+$ ./start-oauth-server.sh
+```
+
+Vi bruker Docker for å kjøre den, konfigurert i [./docker-copmpose.yml]().
+Imaget hentes fra docker.pkg.github.com, og man må da være innlogget mot det repoet.
+For innloggingen må man oppgi Github-brukernavn og et personlig access-token.
+Vi bruker allerede et PAT i [https://github.com/navikt/su-se-bakover]() for å hente pakker der, så [./start-oauth-server.sh]() vil prøve å hente ut dette tokenet automagisk (fra `~/.gradle/gradle.properties`).
+Man trenger da altså kun å skrive inn Github-brukernavnet sitt.
+Dersom scriptet ikke klarer å finne tokenet vil man bli spurt om å skrive det inn.
+
+Hvis scriptet ikke funker så kan prosessen gjøres manuelt:
+
+```sh
+$ docker login https://docker.pkg.github.com
+$ docker-compose up
+```
+
 ## Bygge prod-versjon
 
 ### Frontend

@@ -3,8 +3,10 @@
     "tenant": "trygdeetaten.no",
     "env": {
         "SU_SE_BAKOVER_URL": "https://su-se-bakover.dev.adeo.no",
+        "SU_SE_BAKOVER_CLIENT_ID": "26a62d18-70ce-48a6-9f4d-664607bd5188",
         "DOMAIN": "dev.adeo.no",
         "AMPLITUDE_API_KEY": "feb0ead20059b4be531bfa6e076906ab",
-        "FEATURE_HENDELSESLOGG": false
+        "FEATURE_HENDELSESLOGG": false,
+        "AUTH_REDIRECT_URI": "https://supplerendestonad.dev.adeo.no/oauth2/callback"
     }
 }

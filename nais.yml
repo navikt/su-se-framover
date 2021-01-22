@@ -22,6 +22,8 @@ spec:
       port: 80
    ingresses:
       - {{ingress}}
+   vault:
+      enabled: true
    env:
       {{#each env}}
        - name: {{@key}}
