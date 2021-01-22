@@ -6,6 +6,7 @@ import { Nullable } from '~lib/types';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Beregning } from '~types/Beregning';
 import { Fradrag } from '~types/Fradrag';
+import { OpprettetRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 
 import * as pdfApi from '../../api/pdfApi';
@@ -13,10 +14,10 @@ import * as revurderingApi from '../../api/revurderingApi';
 
 export const beregnOgSimuler = createAsyncThunk<
     { beregning: Beregning; revurdert: Beregning },
-    { sakId: string; behandlingId: string; fom: Date; tom: Date; fradrag: Fradrag[] },
+    { sakId: string; revurderingId: string; fom: Date; tom: Date; fradrag: Fradrag[] },
     { rejectValue: ApiError }
->('revurdering/beregnOgSimuler', async ({ sakId, behandlingId, fom, tom, fradrag }, thunkApi) => {
-    const res = await revurderingApi.beregnOgSimuler(sakId, { behandlingId, fom, tom, fradrag });
+>('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, fom, tom, fradrag }, thunkApi) => {
+    const res = await revurderingApi.beregnOgSimuler(sakId, { revurderdingId: revurderingId, fom, tom, fradrag });
     if (res.status === 'ok') {
         return res.data;
     }
@@ -47,16 +48,30 @@ export const sendTilAttestering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const opprettRevurdering = createAsyncThunk<
+    OpprettetRevurdering,
+    { sakId: string; periode: { fom: Date; tom: Date } },
+    { rejectValue: ApiError }
+>('revurdering/opprettRevurdering', async ({ sakId, periode }, thunkApi) => {
+    const res = await revurderingApi.opprettRevurdering(sakId, periode);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 interface RevurderingState {
     beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, { beregning: Beregning; revurdert: Beregning }>;
     revurderingsVedtakStatus: RemoteData.RemoteData<ApiError, null>;
     sendTilAttesteringStatus: RemoteData.RemoteData<ApiError, Sak>;
+    opprettRevurderingStatus: RemoteData.RemoteData<ApiError, OpprettetRevurdering>;
 }
 
 const initialState: RevurderingState = {
     beregnOgSimulerStatus: RemoteData.initial,
     revurderingsVedtakStatus: RemoteData.initial,
     sendTilAttesteringStatus: RemoteData.initial,
+    opprettRevurderingStatus: RemoteData.initial,
 };
 
 export default createSlice({
@@ -97,6 +112,18 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.sendTilAttesteringStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, opprettRevurdering, {
+            pending: (state) => {
+                state.opprettRevurderingStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.opprettRevurderingStatus = RemoteData.success(action.payload);
+            },
+            rejected: (state, action) => {
+                state.opprettRevurderingStatus = simpleRejectedActionToRemoteData(action);
             },
         });
     },

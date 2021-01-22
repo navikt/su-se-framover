@@ -1,5 +1,4 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import * as DateFns from 'date-fns';
 import { lastDayOfMonth } from 'date-fns';
 import { useFormik } from 'formik';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
@@ -21,9 +20,8 @@ import {
 } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/FradragInputs';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Behandling } from '~types/Behandling';
-import { Beregning } from '~types/Beregning';
 import { Fradragstype, FradragTilhører } from '~types/Fradrag';
+import { OpprettetRevurdering } from '~types/Revurdering';
 
 import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregning-nb';
 import messages from '../revurdering-nb';
@@ -42,8 +40,7 @@ const schema = yup.object<EndringAvFradragFormData>({
 const EndringAvFradrag = (props: {
     sakId: string;
     periode: { fom: Nullable<Date>; tom: Nullable<Date> };
-    innvilgedeBehandlinger: Behandling[];
-    leggTilVerdi: (keynavn: 'forventetInntekt' | 'behandlingId', value: string | Beregning | number) => void;
+    revurdering: Nullable<OpprettetRevurdering>;
 }) => {
     const history = useHistory();
     const dispatch = useAppDispatch();
@@ -51,7 +48,7 @@ const EndringAvFradrag = (props: {
     const intl = useI18n({ messages: { ...messages, ...fradragMessages } });
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
 
-    if (!props.periode.fom || !props.periode.tom) {
+    if (!props.periode.fom || !props.periode.tom || !props.revurdering) {
         return (
             <div className={sharedStyles.revurderingContainer}>
                 <Innholdstittel className={sharedStyles.tittel}>
@@ -79,28 +76,11 @@ const EndringAvFradrag = (props: {
         );
     }
 
-    const getBehandlingForPeriode = (periode: { fom: Date; tom: Date }) => {
-        const innvilgedeBehandlinger = props.innvilgedeBehandlinger.filter((b) => {
-            return (
-                /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                //Innvilgede behandlinger har alltid en beregning
-                (DateFns.isBefore(DateFns.parseISO(b.beregning!.fraOgMed), periode.fom) ||
-                    DateFns.isEqual(DateFns.parseISO(b.beregning!.fraOgMed), periode.fom)) &&
-                (DateFns.isAfter(DateFns.parseISO(b.beregning!.tilOgMed), periode.tom) ||
-                    DateFns.isEqual(DateFns.parseISO(b.beregning!.tilOgMed), periode.tom))
-                /* eslint-enable @typescript-eslint/no-non-null-assertion */
-            );
-        });
-        return innvilgedeBehandlinger[0];
-    };
-
-    const behandling = getBehandlingForPeriode({ fom: props.periode.fom, tom: props.periode.tom });
-
-    const beregnOgSimulerRevurdering = (values: EndringAvFradragFormData) => {
+    const beregnOgSimulerRevurdering = (values: EndringAvFradragFormData, revurdering: OpprettetRevurdering) => {
         return dispatch(
             revurderingSlice.beregnOgSimuler({
                 sakId: props.sakId,
-                behandlingId: behandling.id,
+                revurderingId: revurdering.id,
                 //valdiering sikrer at feltet ikke er null
                 /* eslint-disable @typescript-eslint/no-non-null-assertion */
                 fom: props.periode.fom!,
@@ -131,24 +111,20 @@ const EndringAvFradrag = (props: {
     const formik = useFormik<EndringAvFradragFormData>({
         initialValues: {
             fradrag: RemoteData.isSuccess(beregnOgSimuler)
-                ? fradragUtenForventetInntekt(FradragTilFradragFormData(beregnOgSimuler.value.beregning.fradrag))
+                ? fradragUtenForventetInntekt(FradragTilFradragFormData(beregnOgSimuler.value.revurdert.fradrag))
                 : fradragUtenForventetInntekt(
-                      FradragTilFradragFormData(
-                          /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
-                          getBehandlingForPeriode({ fom: props.periode.fom, tom: props.periode.tom }).beregning!.fradrag
-                      )
+                      FradragTilFradragFormData(props.revurdering.tilRevurdering.beregning?.fradrag ?? [])
                   ),
         },
         async onSubmit(values) {
-            const beregnOgSimuler = await beregnOgSimulerRevurdering(values);
+            if (!props.revurdering) {
+                return;
+            }
+
+            const beregnOgSimuler = await beregnOgSimulerRevurdering(values, props.revurdering);
             if (revurderingSlice.beregnOgSimuler.rejected.match(beregnOgSimuler)) {
                 return;
             }
-            /* eslint-disable @typescript-eslint/no-non-null-assertion */
-            props.leggTilVerdi('forventetInntekt', behandling.behandlingsinformasjon.uførhet!.forventetInntekt!);
-            /* eslint-enable @typescript-eslint/no-non-null-assertion */
-            //TODO: muligens må fjernes når vi finner ut mer om hvordan brev skal fungere for revurdering
-            props.leggTilVerdi('behandlingId', behandling.id);
 
             history.push(Routes.revurderValgtSak.createURL({ sakId: props.sakId, steg: RevurderingSteg.Oppsummering }));
         },

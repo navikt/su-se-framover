@@ -5,7 +5,7 @@ import { Link, Route, Switch } from 'react-router-dom';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import { Beregning } from '~types/Beregning';
+import { OpprettetRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 
 import { RevurderingSteg } from '../types';
@@ -21,7 +21,7 @@ export interface RevurderingFormData {
     fom: Nullable<Date>;
     tom: Nullable<Date>;
     //TODO: muligens må fjernes når vi finner ut mer om hvordan brev skal fungere for revurdering
-    behandlingId: Nullable<string>;
+    revurdering: Nullable<OpprettetRevurdering>;
 }
 
 const Revurdering = (props: { sak: Sak }) => {
@@ -29,7 +29,7 @@ const Revurdering = (props: { sak: Sak }) => {
     const [formData, setFormData] = useState<RevurderingFormData>({
         fom: null,
         tom: null,
-        behandlingId: null,
+        revurdering: null,
     });
 
     const byttDato = (fom: Date | [Date, Date] | null, tom: Date | [Date, Date] | null) => {
@@ -40,10 +40,10 @@ const Revurdering = (props: { sak: Sak }) => {
         }));
     };
 
-    const leggTilVerdi = (keynavn: 'forventetInntekt' | 'behandlingId', value: string | Beregning | number) => {
+    const leggTilVerdi = (value: OpprettetRevurdering) => {
         setFormData((formData) => ({
             ...formData,
-            [keynavn]: value,
+            revurdering: value,
         }));
     };
 
@@ -83,21 +83,21 @@ const Revurdering = (props: { sak: Sak }) => {
                         }
                         periode={{ fraOgMed: formData.fom, TilOgMed: formData.tom }}
                         byttDato={byttDato}
+                        leggTilVerdi={(asd) => leggTilVerdi(asd)}
                     />
                 </Route>
                 <Route path={createRevurderingsPath(props.sak.id, RevurderingSteg.EndringAvFradrag)}>
                     <EndringAvFradrag
                         sakId={props.sak.id}
                         periode={{ fom: formData.fom, tom: formData.tom }}
-                        innvilgedeBehandlinger={getInnvilgedeBehandlinger(props.sak)}
-                        leggTilVerdi={leggTilVerdi}
+                        revurdering={formData.revurdering}
                     />
                 </Route>
                 <Route path={createRevurderingsPath(props.sak.id, RevurderingSteg.Oppsummering)}>
                     <RevurderingsOppsummering
                         sakId={props.sak.id}
                         //TODO: muligens må fjernes når vi finner ut mer om hvordan brev skal fungere for revurdering
-                        behandlingId={formData.behandlingId}
+                        behandlingId={formData.revurdering?.tilRevurdering.id ?? null}
                     />
                 </Route>
             </Switch>

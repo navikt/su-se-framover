@@ -6,12 +6,15 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Link, useHistory } from 'react-router-dom';
 
+import * as revurderingSlice from '~features/revurdering/revurdering.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
+import { useAppDispatch } from '~redux/Store';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
+import { OpprettetRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 
 import messages from '../revurdering-nb';
@@ -34,6 +37,7 @@ const ValgAvPeriode = (props: {
     sak: Sak;
     sakId: string;
     innvilgedeBehandlinger: Behandling[];
+    leggTilVerdi: (asd: OpprettetRevurdering) => void;
     førsteUtbetalingISak: Date;
     sisteUtbetalingISak: Date;
     periode: { fraOgMed: Nullable<Date>; TilOgMed: Nullable<Date> };
@@ -42,12 +46,14 @@ const ValgAvPeriode = (props: {
     const intl = useI18n({ messages });
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const history = useHistory();
+    const dispatch = useAppDispatch();
+
     const formik = useFormik<ValgAvPeriodeFormData>({
         initialValues: {
             fom: props.periode.fraOgMed,
             tom: props.periode.TilOgMed,
         },
-        onSubmit(values) {
+        async onSubmit(values) {
             if (!values.fom || !values.tom) {
                 return;
             }
@@ -56,9 +62,26 @@ const ValgAvPeriode = (props: {
                 erPeriodenFremoverITid({ fom: values.fom, tom: values.tom })
             ) {
                 props.byttDato(values.fom, values.tom);
-                history.push(
-                    Routes.revurderValgtSak.createURL({ sakId: props.sakId, steg: RevurderingSteg.EndringAvFradrag })
+                const response = await dispatch(
+                    revurderingSlice.opprettRevurdering({
+                        sakId: props.sakId,
+                        periode: {
+                            fom: values.fom,
+                            tom: values.tom,
+                        },
+                    })
                 );
+
+                if (revurderingSlice.opprettRevurdering.fulfilled.match(response)) {
+                    props.leggTilVerdi(response.payload);
+
+                    history.push(
+                        Routes.revurderValgtSak.createURL({
+                            sakId: props.sakId,
+                            steg: RevurderingSteg.EndringAvFradrag,
+                        })
+                    );
+                }
             }
             return;
         },
