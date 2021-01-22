@@ -209,6 +209,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     startDate={formik.values.fom}
                                     endDate={formik.values.tom}
                                     minDate={new Date(2021, 0)}
+                                    autoComplete="off"
                                 />
                                 {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
                             </div>
@@ -225,6 +226,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     startDate={formik.values.fom}
                                     endDate={formik.values.tom}
                                     minDate={new Date(2021, 0)}
+                                    autoComplete="off"
                                 />
                                 {formik.errors.tom && <Feilmelding>{formik.errors.tom}</Feilmelding>}
                             </div>

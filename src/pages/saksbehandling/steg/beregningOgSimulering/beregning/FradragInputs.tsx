@@ -320,6 +320,7 @@ export const FradragInputs = (props: {
                                             showMonthYearPicker
                                             maxDate={props.beregningsDato?.tom}
                                             minDate={props.beregningsDato?.fom}
+                                            autoComplete="off"
                                         />
                                     </div>
                                     <div>
@@ -351,6 +352,7 @@ export const FradragInputs = (props: {
                                                     : props.beregningsDato?.fom
                                             }
                                             maxDate={props.beregningsDato?.tom}
+                                            autoComplete="off"
                                         />
                                     </div>
                                 </div>
