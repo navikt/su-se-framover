@@ -96,6 +96,7 @@ const Revurdering = (props: { sak: Sak }) => {
                 <Route path={createRevurderingsPath(props.sak.id, RevurderingSteg.Oppsummering)}>
                     <RevurderingsOppsummering
                         sakId={props.sak.id}
+                        revurdering={formData.revurdering}
                         //TODO: muligens må fjernes når vi finner ut mer om hvordan brev skal fungere for revurdering
                         behandlingId={formData.revurdering?.tilRevurdering.id ?? null}
                     />

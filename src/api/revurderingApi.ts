@@ -1,10 +1,8 @@
 import { formatISO } from 'date-fns';
 
-import { Nullable } from '~lib/types';
 import { Beregning } from '~types/Beregning';
 import { Fradrag } from '~types/Fradrag';
-import { OpprettetRevurdering } from '~types/Revurdering';
-import { Sak } from '~types/Sak';
+import { OpprettetRevurdering, TilAttesteringRevurdering } from '~types/Revurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -49,30 +47,10 @@ export async function beregnOgSimuler(
 
 export async function sendTilAttestering(
     sakId: string,
-    arg: {
-        gammelBeregning: Beregning;
-        nyBeregning: Beregning;
-        tekstTilVedtaksbrev: Nullable<string>;
-    }
-): Promise<ApiClientResult<Sak>> {
-    console.log('sender til attestering: ', sakId, arg.gammelBeregning, arg.nyBeregning, arg.tekstTilVedtaksbrev);
-    return {
-        status: 'error',
-        error: {
-            statusCode: 9001,
-            correlationId: 'en eller annen correlation Id',
-            body: {
-                message: 'not yet implemented',
-            },
-        },
-    };
-    /*    return apiClient({
-        url: `/saker/${sakId}/revurdering/sendTilAttestering`,
+    revurderingId: string
+): Promise<ApiClientResult<TilAttesteringRevurdering>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurdering/${revurderingId}/tilAttestering`,
         method: 'POST',
-        body: {
-            gammelBeregning: gammelBeregning,
-            nyBeregning: nyBeregning,
-            tekstTilVedtaksbrev: tekstTilVedtaksbrev,
-        },
-    });*/
+    });
 }

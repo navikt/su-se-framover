@@ -15,7 +15,7 @@ import yup from '~lib/validering';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
-import { Beregning } from '~types/Beregning';
+import { OpprettetRevurdering } from '~types/Revurdering';
 
 import messages from '../revurdering-nb';
 import sharedStyles from '../revurdering.module.less';
@@ -23,14 +23,10 @@ import sharedStyles from '../revurdering.module.less';
 import styles from './revurderingsOppsummering.module.less';
 
 interface OppsummeringFormData {
-    gammelBeregning: Nullable<Beregning>;
-    nyBeregning: Beregning;
     tekstTilVedtaksbrev: Nullable<string>;
 }
 
 const schema = yup.object<OppsummeringFormData>({
-    gammelBeregning: yup.object<Beregning>().required(),
-    nyBeregning: yup.object<Beregning>().required(),
     tekstTilVedtaksbrev: yup.string().nullable().defined(),
 });
 
@@ -38,6 +34,7 @@ const RevurderingsOppsummering = (props: {
     sakId: string;
     //TODO: muligens må fjernes når vi finner ut mer om hvordan brev skal fungere for revurdering
     behandlingId: Nullable<string>;
+    revurdering: Nullable<OpprettetRevurdering>;
 }) => {
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const intl = useI18n({ messages });
@@ -46,7 +43,8 @@ const RevurderingsOppsummering = (props: {
     const { beregnOgSimulerStatus, revurderingsVedtakStatus, sendTilAttesteringStatus } = useAppSelector(
         (state) => state.revurdering
     );
-    if (!RemoteData.isSuccess(beregnOgSimulerStatus)) {
+
+    if (!RemoteData.isSuccess(beregnOgSimulerStatus) || !props.revurdering) {
         return (
             <div className={sharedStyles.revurderingContainer}>
                 <Innholdstittel className={sharedStyles.tittel}>
@@ -95,21 +93,21 @@ const RevurderingsOppsummering = (props: {
             tekstTilVedtaksbrev: null,
         },
         async onSubmit(values) {
+            if (!props.revurdering?.id) {
+                return;
+            }
             console.log(values);
             dispatch(
                 revurderingSlice.sendTilAttestering({
                     sakId: props.sakId,
-                    gammelBeregning: values.gammelBeregning,
-                    nyBeregning: values.nyBeregning,
-                    tekstTilVedtaksbrev: values.tekstTilVedtaksbrev,
+                    revurderingId: props.revurdering.id,
                 })
             );
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
     });
-    console.log(beregnOgSimulerStatus.value);
-    console.log(formik.values);
+
     return (
         <form
             className={sharedStyles.revurderingContainer}

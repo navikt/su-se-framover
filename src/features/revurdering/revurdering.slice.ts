@@ -2,15 +2,25 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
-import { Nullable } from '~lib/types';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Beregning } from '~types/Beregning';
 import { Fradrag } from '~types/Fradrag';
-import { OpprettetRevurdering } from '~types/Revurdering';
-import { Sak } from '~types/Sak';
+import { OpprettetRevurdering, TilAttesteringRevurdering } from '~types/Revurdering';
 
 import * as pdfApi from '../../api/pdfApi';
 import * as revurderingApi from '../../api/revurderingApi';
+
+export const opprettRevurdering = createAsyncThunk<
+    OpprettetRevurdering,
+    { sakId: string; periode: { fom: Date; tom: Date } },
+    { rejectValue: ApiError }
+>('revurdering/opprettRevurdering', async ({ sakId, periode }, thunkApi) => {
+    const res = await revurderingApi.opprettRevurdering(sakId, periode);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
 
 export const beregnOgSimuler = createAsyncThunk<
     { beregning: Beregning; revurdert: Beregning },
@@ -18,6 +28,18 @@ export const beregnOgSimuler = createAsyncThunk<
     { rejectValue: ApiError }
 >('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, fom, tom, fradrag }, thunkApi) => {
     const res = await revurderingApi.beregnOgSimuler(sakId, { revurderdingId: revurderingId, fom, tom, fradrag });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const sendTilAttestering = createAsyncThunk<
+    TilAttesteringRevurdering,
+    { sakId: string; revurderingId: string },
+    { rejectValue: ApiError }
+>('revurdering/sendtTilAttestering', async ({ sakId, revurderingId }, thunkApi) => {
+    const res = await revurderingApi.sendTilAttestering(sakId, revurderingId);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -36,42 +58,18 @@ export const fetchRevurderingsVedtak = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const sendTilAttestering = createAsyncThunk<
-    Sak,
-    { sakId: string; gammelBeregning: Beregning; nyBeregning: Beregning; tekstTilVedtaksbrev: Nullable<string> },
-    { rejectValue: ApiError }
->('revurdering/sendtTilAttestering', async ({ sakId, gammelBeregning, nyBeregning, tekstTilVedtaksbrev }, thunkApi) => {
-    const res = await revurderingApi.sendTilAttestering(sakId, { gammelBeregning, nyBeregning, tekstTilVedtaksbrev });
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const opprettRevurdering = createAsyncThunk<
-    OpprettetRevurdering,
-    { sakId: string; periode: { fom: Date; tom: Date } },
-    { rejectValue: ApiError }
->('revurdering/opprettRevurdering', async ({ sakId, periode }, thunkApi) => {
-    const res = await revurderingApi.opprettRevurdering(sakId, periode);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
 interface RevurderingState {
-    beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, { beregning: Beregning; revurdert: Beregning }>;
-    revurderingsVedtakStatus: RemoteData.RemoteData<ApiError, null>;
-    sendTilAttesteringStatus: RemoteData.RemoteData<ApiError, Sak>;
     opprettRevurderingStatus: RemoteData.RemoteData<ApiError, OpprettetRevurdering>;
+    beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, { beregning: Beregning; revurdert: Beregning }>;
+    sendTilAttesteringStatus: RemoteData.RemoteData<ApiError, TilAttesteringRevurdering>;
+    revurderingsVedtakStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: RevurderingState = {
-    beregnOgSimulerStatus: RemoteData.initial,
-    revurderingsVedtakStatus: RemoteData.initial,
-    sendTilAttesteringStatus: RemoteData.initial,
     opprettRevurderingStatus: RemoteData.initial,
+    beregnOgSimulerStatus: RemoteData.initial,
+    sendTilAttesteringStatus: RemoteData.initial,
+    revurderingsVedtakStatus: RemoteData.initial,
 };
 
 export default createSlice({
