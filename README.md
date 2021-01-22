@@ -28,9 +28,19 @@ Kjør opp denne med
 $ ./start-oauth-server.sh
 ```
 
-Den vil spørre deg om Github-brukernavn.
-Den trenger også et personlig access token, som den prøver å lese ut fra `~/.gradle/gradle.properties` (fordi vi uansett må ha ett der for å kunne bygge [https://github.com/navikt/su-se-bakover]()).
-Hvis man ikke har lagt det inn der så vil man bli promptet til å skrive det inn av skriptet.
+Vi bruker Docker for å kjøre den, konfigurert i [./docker-copmpose.yml]().
+Imaget hentes fra docker.pkg.github.com, og man må da være innlogget mot det repoet.
+For innloggingen må man oppgi Github-brukernavn og et personlig access-token.
+Vi bruker allerede et PAT i [https://github.com/navikt/su-se-bakover]() for å hente pakker der, så [./start-oauth-server.sh]() vil prøve å hente ut dette tokenet automagisk (fra `~/.gradle/gradle.properties`).
+Man trenger da altså kun å skrive inn Github-brukernavnet sitt.
+Dersom scriptet ikke klarer å finne tokenet vil man bli spurt om å skrive det inn.
+
+Hvis scriptet ikke funker så kan prosessen gjøres manuelt:
+
+```sh
+$ docker login https://docker.pkg.github.com
+$ docker-compose up
+```
 
 ## Bygge prod-versjon
 
