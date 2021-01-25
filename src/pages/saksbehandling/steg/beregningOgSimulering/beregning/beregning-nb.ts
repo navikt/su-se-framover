@@ -14,6 +14,7 @@ export default {
 
     'display.input.beløpIUtenlandskValuta': 'Månedsbeløp i utenlandsk valuta',
     'display.input.kurs': 'Kurs ved utregning',
+    'display.input.kurs.desimal': 'Skriv desimal med punktum',
     'display.input.valuta': 'Valuta',
 
     'display.simulerer': 'Simulerer',

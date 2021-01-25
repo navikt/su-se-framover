@@ -59,9 +59,12 @@ const InntektFraUtland = (props: {
                     </option>
                 ))}
             </Select>
-            <Label htmlFor={kursId} className={styles.label}>
-                {props.intl.formatMessage({ id: 'display.input.kurs' })}
-            </Label>
+            <div className={styles.labelAndDescription}>
+                <Label htmlFor={kursId} className={styles.label}>
+                    {props.intl.formatMessage({ id: 'display.input.kurs' })}
+                </Label>
+                <p className={styles.description}>{props.intl.formatMessage({ id: 'display.input.kurs.desimal' })}</p>
+            </div>
             <Input
                 id={kursId}
                 value={props.value.kurs}
