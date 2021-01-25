@@ -5,7 +5,7 @@ import { ApiError } from '~api/apiClient';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Beregning } from '~types/Beregning';
 import { Fradrag } from '~types/Fradrag';
-import { OpprettetRevurdering, TilAttesteringRevurdering } from '~types/Revurdering';
+import { OpprettetRevurdering } from '~types/Revurdering';
 
 import * as pdfApi from '../../api/pdfApi';
 import * as revurderingApi from '../../api/revurderingApi';
@@ -34,18 +34,6 @@ export const beregnOgSimuler = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const sendTilAttestering = createAsyncThunk<
-    TilAttesteringRevurdering,
-    { sakId: string; revurderingId: string },
-    { rejectValue: ApiError }
->('revurdering/sendtTilAttestering', async ({ sakId, revurderingId }, thunkApi) => {
-    const res = await revurderingApi.sendTilAttestering(sakId, revurderingId);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
 export const fetchRevurderingsVedtak = createAsyncThunk<
     { objectUrl: string },
     { sakId: string; behandlingId: string },
@@ -61,14 +49,12 @@ export const fetchRevurderingsVedtak = createAsyncThunk<
 interface RevurderingState {
     opprettRevurderingStatus: RemoteData.RemoteData<ApiError, OpprettetRevurdering>;
     beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, { beregning: Beregning; revurdert: Beregning }>;
-    sendTilAttesteringStatus: RemoteData.RemoteData<ApiError, TilAttesteringRevurdering>;
     revurderingsVedtakStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: RevurderingState = {
     opprettRevurderingStatus: RemoteData.initial,
     beregnOgSimulerStatus: RemoteData.initial,
-    sendTilAttesteringStatus: RemoteData.initial,
     revurderingsVedtakStatus: RemoteData.initial,
 };
 
@@ -98,18 +84,6 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.revurderingsVedtakStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-
-        handleAsyncThunk(builder, sendTilAttestering, {
-            pending: (state) => {
-                state.sendTilAttesteringStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.sendTilAttesteringStatus = RemoteData.success(action.payload);
-            },
-            rejected: (state, action) => {
-                state.sendTilAttesteringStatus = simpleRejectedActionToRemoteData(action);
             },
         });
 

@@ -1,12 +1,14 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
+import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { Textarea } from 'nav-frontend-skjema';
 import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
 import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { ApiError } from '~api/apiClient';
+import { sendTilAttestering } from '~api/revurderingApi';
 import * as revurderingSlice from '~features/revurdering/revurdering.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -15,7 +17,7 @@ import yup from '~lib/validering';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
-import { OpprettetRevurdering } from '~types/Revurdering';
+import { OpprettetRevurdering, TilAttesteringRevurdering } from '~types/Revurdering';
 
 import messages from '../revurdering-nb';
 import sharedStyles from '../revurdering.module.less';
@@ -39,10 +41,25 @@ const RevurderingsOppsummering = (props: {
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
+    const [sendtTilAttesteringStatus, setSendtTilAttesteringStatus] = useState<
+        RemoteData.RemoteData<ApiError, TilAttesteringRevurdering>
+    >(RemoteData.initial);
 
-    const { beregnOgSimulerStatus, revurderingsVedtakStatus, sendTilAttesteringStatus } = useAppSelector(
-        (state) => state.revurdering
-    );
+    const { beregnOgSimulerStatus, revurderingsVedtakStatus } = useAppSelector((state) => state.revurdering);
+
+    const hentBrev = useCallback(() => {
+        if (RemoteData.isPending(revurderingsVedtakStatus)) {
+            return;
+        }
+
+        dispatch(
+            revurderingSlice.fetchRevurderingsVedtak({ sakId: props.sakId, behandlingId: props.behandlingId! })
+        ).then((action) => {
+            if (revurderingSlice.fetchRevurderingsVedtak.fulfilled.match(action)) {
+                window.open(action.payload.objectUrl);
+            }
+        });
+    }, [props.sakId]);
 
     if (!RemoteData.isSuccess(beregnOgSimulerStatus) || !props.revurdering) {
         return (
@@ -72,41 +89,42 @@ const RevurderingsOppsummering = (props: {
         );
     }
 
-    const hentBrev = useCallback(() => {
-        if (RemoteData.isPending(revurderingsVedtakStatus)) {
-            return;
-        }
-
-        dispatch(
-            revurderingSlice.fetchRevurderingsVedtak({ sakId: props.sakId, behandlingId: props.behandlingId! })
-        ).then((action) => {
-            if (revurderingSlice.fetchRevurderingsVedtak.fulfilled.match(action)) {
-                window.open(action.payload.objectUrl);
-            }
-        });
-    }, [props.sakId]);
-
     const formik = useFormik({
         initialValues: {
             gammelBeregning: beregnOgSimulerStatus.value.beregning,
             nyBeregning: beregnOgSimulerStatus.value.revurdert,
             tekstTilVedtaksbrev: null,
         },
-        async onSubmit(values) {
+        async onSubmit() {
             if (!props.revurdering?.id) {
                 return;
             }
-            console.log(values);
-            dispatch(
-                revurderingSlice.sendTilAttestering({
-                    sakId: props.sakId,
-                    revurderingId: props.revurdering.id,
-                })
-            );
+
+            setSendtTilAttesteringStatus(RemoteData.pending);
+            const res = await sendTilAttestering(props.sakId, props.revurdering.id);
+
+            if (res.status === 'error') {
+                setSendtTilAttesteringStatus(RemoteData.failure(res.error));
+                return;
+            }
+            setSendtTilAttesteringStatus(RemoteData.success(res.data));
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
     });
+
+    if (RemoteData.isSuccess(sendtTilAttesteringStatus)) {
+        return (
+            <div className={styles.sendtTilAttesteringContainer}>
+                <AlertStripeSuksess>
+                    <p>{intl.formatMessage({ id: 'oppsummering.sendtTilAttestering' })}</p>
+                    <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}>
+                        {intl.formatMessage({ id: 'oppsummering.tilSaksoversikt' })}
+                    </Link>
+                </AlertStripeSuksess>
+            </div>
+        );
+    }
 
     return (
         <form
@@ -157,9 +175,9 @@ const RevurderingsOppsummering = (props: {
                         )}
                     </div>
                 </div>
-                {RemoteData.isFailure(sendTilAttesteringStatus) && (
+                {RemoteData.isFailure(sendtTilAttesteringStatus) && (
                     <AlertStripeFeil className={sharedStyles.alertstripe}>
-                        {sendTilAttesteringStatus.error.body?.message}
+                        {sendtTilAttesteringStatus.error.body?.message}
                     </AlertStripeFeil>
                 )}
                 <div className={sharedStyles.knappContainer}>

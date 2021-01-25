@@ -12,6 +12,8 @@ export default {
     'oppsummering.gammelBeregning.tittel': 'Gammel beregning',
     'oppsummering.nyBeregning.tittel': 'Ny beregning',
     'oppsummering.tekstTilVedtaksbrev.tittel': 'Tekst til vedtaksbrev',
+    'oppsummering.tilSaksoversikt': 'Til saksoversikt',
+    'oppsummering.sendtTilAttestering': 'Revurdering er sendt til attestering',
 
     'revurdering.tittel': 'Revurdering',
     'revurdering.noeGikkGalt': 'Noe gikk galt. Gå tilbake og prøv igjen',
