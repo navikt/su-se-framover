@@ -12,6 +12,7 @@ spec:
       application:
           enabled: true
           tenant: {{ tenant }}
+   webproxy: true
    replicas:
       min: 1
    liveness:
