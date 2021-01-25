@@ -183,7 +183,9 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: Nullable<
                     >
                         {intl.formatMessage({ id: 'knapp.forrige' })}
                     </Link>
-                    <Hovedknapp>{intl.formatMessage({ id: 'knapp.sendTilAttestering' })}</Hovedknapp>
+                    <Hovedknapp spinner={RemoteData.isPending(sendtTilAttesteringStatus)}>
+                        {intl.formatMessage({ id: 'knapp.sendTilAttestering' })}
+                    </Hovedknapp>
                 </div>
             </div>
         </form>
