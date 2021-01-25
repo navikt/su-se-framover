@@ -5,7 +5,7 @@ function envVar({ name, defaultValue }: { name: string; defaultValue?: string })
     if (fromEnv) {
         return fromEnv;
     }
-    if (defaultValue) {
+    if (typeof defaultValue === 'string') {
         return defaultValue;
     }
     throw new Error(`Missing required environment variable ${name}`);
@@ -16,6 +16,7 @@ export const server = {
     host: envVar({ name: 'HOST', defaultValue: 'localhost' }),
     port: Number.parseInt(envVar({ name: 'PORT', defaultValue: '1234' })),
     suSeBakoverUrl: envVar({ name: 'SU_SE_BAKOVER_URL', defaultValue: 'http://localhost:8080' }),
+    proxy: envVar({ name: 'HTTP_PROXY', defaultValue: '' }),
 
     frontendDir: envVar({ name: 'FRONTEND_DIR', defaultValue: path.join(__dirname, 'frontend') }),
 
@@ -32,9 +33,9 @@ export const server = {
 export const auth = {
     discoverUrl: envVar({
         name: 'AZURE_APP_WELL_KNOWN_URL',
-        defaultValue: server.isDev ? 'http://localhost:4321/default' : '',
+        defaultValue: server.isDev ? 'http://localhost:4321/default' : undefined,
     }),
-    clientId: envVar({ name: 'AZURE_APP_CLIENT_ID', defaultValue: server.isDev ? 'supstonad' : '' }),
+    clientId: envVar({ name: 'AZURE_APP_CLIENT_ID', defaultValue: server.isDev ? 'supstonad' : undefined }),
     jwks: server.isDev
         ? // Generert med https://mkjwk.org/ (key size: 2048, key use: signature, algorithm: RS256, key id: sha-256)
           {
