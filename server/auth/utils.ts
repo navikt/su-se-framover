@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import * as OpenIdClient from 'openid-client';
 
 import * as Config from '../config';
@@ -54,6 +55,15 @@ export async function getOnBehalfOfAccessToken(authClient: OpenIdClient.Client, 
 
 export async function getOpenIdClient(issuerUrl: string) {
     try {
+        if (Config.server.proxy) {
+            const proxyAgent = new HttpsProxyAgent(Config.server.proxy);
+            OpenIdClient.custom.setHttpOptionsDefaults({
+                agent: {
+                    http: proxyAgent,
+                    https: proxyAgent,
+                },
+            });
+        }
         const issuer = await OpenIdClient.Issuer.discover(issuerUrl);
 
         return new issuer.Client(
