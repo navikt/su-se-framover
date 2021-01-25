@@ -311,7 +311,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 
                         {RemoteData.isFailure(beregningStatus) && (
                             <AlertStripeFeil>
-                                {intl.formatMessage({ id: 'alert.feil.beregningFeilet' })}
+                                <p>{intl.formatMessage({ id: 'alert.feil.beregningFeilet' })}</p>
+                                <p>{beregningStatus.error.body?.message || ''}</p>
                             </AlertStripeFeil>
                         )}
                         {needsBeregning && !props.behandling.beregning && (
