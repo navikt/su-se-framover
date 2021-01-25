@@ -19,4 +19,4 @@ RUN npm run build
 
 EXPOSE ${PORT}
 
-CMD ["NODE_ENV=production npm", "start"]
+CMD ["npm", "start"]

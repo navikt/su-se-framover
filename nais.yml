@@ -29,3 +29,5 @@ spec:
        - name: {{@key}}
          value: "{{this}}"
       {{/each}}
+      - name: NODE_ENV
+        value: production
