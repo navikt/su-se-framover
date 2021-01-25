@@ -19,5 +19,4 @@ RUN npm run build
 
 EXPOSE ${PORT}
 
-ENTRYPOINT [ "sh", "-c" ]
-CMD ["NODE_ENV=production npm start"]
+CMD ["NODE_ENV=production npm", "start"]
