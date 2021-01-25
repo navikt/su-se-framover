@@ -56,6 +56,7 @@ export const FradragTilFradragFormData = (fradrag: Fradrag[]): FradragFormData[]
                 kurs: fradrag.utenlandskInntekt?.kurs.toString() ?? '',
             },
             tilhørerEPS: fradrag.tilhører === FradragTilhører.EPS,
+            periode: fradrag.periode,
         };
     });
     return fradragFormData;
