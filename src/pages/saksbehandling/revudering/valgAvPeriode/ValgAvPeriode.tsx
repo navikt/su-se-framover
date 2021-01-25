@@ -148,6 +148,7 @@ const ValgAvPeriode = (props: {
                                 endDate={formik.values.tom}
                                 minDate={props.førsteUtbetalingISak}
                                 maxDate={props.sisteUtbetalingISak}
+                                autoComplete="off"
                             />
                             {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
                         </div>
@@ -174,6 +175,7 @@ const ValgAvPeriode = (props: {
                                 endDate={formik.values.tom}
                                 minDate={formik.values.fom}
                                 maxDate={props.sisteUtbetalingISak}
+                                autoComplete="off"
                             />
                             {formik.errors.tom && <Feilmelding>{formik.errors.tom}</Feilmelding>}
                         </div>

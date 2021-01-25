@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~api/apiClient';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Beregning } from '~types/Beregning';
-import { Fradrag } from '~types/Fradrag';
+import { Fradrag, Periode } from '~types/Fradrag';
 import { OpprettetRevurdering } from '~types/Revurdering';
 
 import * as pdfApi from '../../api/pdfApi';
@@ -24,10 +24,14 @@ export const opprettRevurdering = createAsyncThunk<
 
 export const beregnOgSimuler = createAsyncThunk<
     { beregning: Beregning; revurdert: Beregning },
-    { sakId: string; revurderingId: string; fom: Date; tom: Date; fradrag: Fradrag[] },
+    { sakId: string; revurderingId: string; periode: Periode; fradrag: Fradrag[] },
     { rejectValue: ApiError }
->('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, fom, tom, fradrag }, thunkApi) => {
-    const res = await revurderingApi.beregnOgSimuler(sakId, { revurderdingId: revurderingId, fom, tom, fradrag });
+>('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode, fradrag }, thunkApi) => {
+    const res = await revurderingApi.beregnOgSimuler(sakId, {
+        revurderingId: revurderingId,
+        stønadsperiode: periode,
+        fradrag: fradrag,
+    });
     if (res.status === 'ok') {
         return res.data;
     }

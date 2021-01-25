@@ -83,9 +83,15 @@ const EndringAvFradrag = (props: {
                 revurderingId: revurdering.id,
                 //valdiering sikrer at feltet ikke er null
                 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                fom: props.periode.fom!,
-                tom: lastDayOfMonth(props.periode.tom!),
+                periode: {
+                    fraOgMed: props.periode.fom!.toISOString(),
+                    tilOgMed: lastDayOfMonth(props.periode.tom!).toISOString(),
+                },
                 fradrag: values.fradrag.map((f) => ({
+                    periode:
+                        f.periode?.fraOgMed && f.periode.tilOgMed
+                            ? { fraOgMed: f.periode.fraOgMed, tilOgMed: f.periode.tilOgMed }
+                            : null,
                     beløp: parseInt(f.beløp!, 10),
                     type: f.type!,
                     utenlandskInntekt: f.fraUtland
@@ -176,6 +182,7 @@ const EndringAvFradrag = (props: {
                                 fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
                             }));
                         }}
+                        beregningsDato={{ fom: props.periode.fom, tom: props.periode.tom }}
                         onLeggTilClick={() => {
                             formik.setValues({
                                 ...formik.values,
@@ -190,6 +197,7 @@ const EndringAvFradrag = (props: {
                                             valuta: '',
                                             kurs: '',
                                         },
+                                        periode: null,
                                         tilhørerEPS: false,
                                     },
                                 ],
