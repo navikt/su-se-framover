@@ -32,12 +32,7 @@ const schema = yup.object<OppsummeringFormData>({
     tekstTilVedtaksbrev: yup.string().nullable().defined(),
 });
 
-const RevurderingsOppsummering = (props: {
-    sakId: string;
-    //TODO: muligens må fjernes når vi finner ut mer om hvordan brev skal fungere for revurdering
-    behandlingId: Nullable<string>;
-    revurdering: Nullable<OpprettetRevurdering>;
-}) => {
+const RevurderingsOppsummering = (props: { sakId: string; revurdering: Nullable<OpprettetRevurdering> }) => {
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
@@ -52,9 +47,7 @@ const RevurderingsOppsummering = (props: {
             return;
         }
 
-        dispatch(
-            revurderingSlice.fetchRevurderingsVedtak({ sakId: props.sakId, behandlingId: props.behandlingId! })
-        ).then((action) => {
+        dispatch(revurderingSlice.fetchRevurderingsVedtak({ sakId: props.sakId })).then((action) => {
             if (revurderingSlice.fetchRevurderingsVedtak.fulfilled.match(action)) {
                 window.open(action.payload.objectUrl);
             }

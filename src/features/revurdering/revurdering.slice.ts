@@ -36,10 +36,10 @@ export const beregnOgSimuler = createAsyncThunk<
 
 export const fetchRevurderingsVedtak = createAsyncThunk<
     { objectUrl: string },
-    { sakId: string; behandlingId: string },
+    { sakId: string },
     { rejectValue: ApiError }
->('revurdering/revurderingsVedtak', async ({ sakId, behandlingId }, thunkApi) => {
-    const res = await pdfApi.fetchRevurderingsVedtak(sakId, behandlingId);
+>('revurdering/revurderingsVedtak', async ({ sakId }, thunkApi) => {
+    const res = await pdfApi.fetchRevurderingsVedtak(sakId);
     if (res.status === 'ok') {
         return { objectUrl: URL.createObjectURL(res.data) };
     }
