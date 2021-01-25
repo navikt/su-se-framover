@@ -25,7 +25,7 @@ export const server = {
     isDev: envVar({ name: 'NODE_ENV' }) === 'development',
     isProd: envVar({ name: 'NODE_ENV' }) === 'production',
 
-    mockOauthServerPort: Number.parseInt(envVar({ name: 'LOCAL_AUTH_SERVER_PORT', defaultValue: '' })),
+    mockOauthServerPort: Number.parseInt(envVar({ name: 'LOCAL_AUTH_SERVER_PORT', defaultValue: '4321' })),
 };
 
 // For auth
