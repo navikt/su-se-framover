@@ -27,7 +27,7 @@ export async function beregnOgSimuler(
     sakId: string,
     arg: {
         revurderingId: string;
-        stønadsperiode: Periode;
+        periode: Periode;
         fradrag: Fradrag[];
     }
 ): Promise<ApiClientResult<{ beregning: Beregning; revurdert: Beregning }>> {
@@ -36,13 +36,11 @@ export async function beregnOgSimuler(
         method: 'POST',
         body: {
             revurderingId: arg.revurderingId,
-            nyBeregningForSøknadsbehandlingJson: {
-                stønadsperiode: {
-                    fraOgMed: formatISO(new Date(arg.stønadsperiode.fraOgMed), { representation: 'date' }),
-                    tilOgMed: formatISO(new Date(arg.stønadsperiode.tilOgMed), { representation: 'date' }),
-                },
-                fradrag: arg.fradrag,
+            periode: {
+                fraOgMed: formatISO(new Date(arg.periode.fraOgMed), { representation: 'date' }),
+                tilOgMed: formatISO(new Date(arg.periode.tilOgMed), { representation: 'date' }),
             },
+            fradrag: arg.fradrag,
         },
     });
 }

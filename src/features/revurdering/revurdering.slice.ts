@@ -28,9 +28,9 @@ export const beregnOgSimuler = createAsyncThunk<
     { rejectValue: ApiError }
 >('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode, fradrag }, thunkApi) => {
     const res = await revurderingApi.beregnOgSimuler(sakId, {
-        revurderingId: revurderingId,
-        stønadsperiode: periode,
-        fradrag: fradrag,
+        revurderingId,
+        periode,
+        fradrag,
     });
     if (res.status === 'ok') {
         return res.data;
@@ -65,7 +65,13 @@ const initialState: RevurderingState = {
 export default createSlice({
     name: 'revurdering',
     initialState: initialState,
-    reducers: {},
+    reducers: {
+        reset(state) {
+            state.beregnOgSimulerStatus = RemoteData.initial;
+            state.opprettRevurderingStatus = RemoteData.initial;
+            state.revurderingsVedtakStatus = RemoteData.initial;
+        },
+    },
     extraReducers: (builder) => {
         handleAsyncThunk(builder, beregnOgSimuler, {
             pending: (state) => {

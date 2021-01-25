@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { ApiError } from '~api/apiClient';
 import { sendTilAttestering } from '~api/revurderingApi';
 import * as revurderingSlice from '~features/revurdering/revurdering.slice';
+import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -54,38 +55,8 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: Nullable<
         });
     }, [props.sakId]);
 
-    if (!RemoteData.isSuccess(beregnOgSimulerStatus) || !props.revurdering) {
-        return (
-            <div className={sharedStyles.revurderingContainer}>
-                <Innholdstittel className={sharedStyles.tittel}>
-                    {intl.formatMessage({ id: 'oppsummering.tittel' })}
-                </Innholdstittel>
-                <div className={sharedStyles.mainContentContainer}>
-                    <div>
-                        <Feilmelding className={sharedStyles.feilmelding}>
-                            {intl.formatMessage({ id: 'revurdering.noeGikkGalt' })}
-                        </Feilmelding>
-                    </div>
-                    <div className={sharedStyles.knappContainer}>
-                        <Link
-                            className="knapp"
-                            to={Routes.revurderValgtSak.createURL({
-                                sakId: props.sakId,
-                                steg: RevurderingSteg.EndringAvFradrag,
-                            })}
-                        >
-                            {intl.formatMessage({ id: 'knapp.forrige' })}
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     const formik = useFormik({
         initialValues: {
-            gammelBeregning: beregnOgSimulerStatus.value.beregning,
-            nyBeregning: beregnOgSimulerStatus.value.revurdert,
             tekstTilVedtaksbrev: null,
         },
         async onSubmit() {
@@ -101,10 +72,37 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: Nullable<
                 return;
             }
             setSendtTilAttesteringStatus(RemoteData.success(res.data));
+            dispatch(revurderingSlice.default.actions.reset());
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
     });
+
+    const VisFeilmelding = () => (
+        <div className={sharedStyles.revurderingContainer}>
+            <Innholdstittel className={sharedStyles.tittel}>
+                {intl.formatMessage({ id: 'oppsummering.tittel' })}
+            </Innholdstittel>
+            <div className={sharedStyles.mainContentContainer}>
+                <div>
+                    <Feilmelding className={sharedStyles.feilmelding}>
+                        {intl.formatMessage({ id: 'revurdering.noeGikkGalt' })}
+                    </Feilmelding>
+                </div>
+                <div className={sharedStyles.knappContainer}>
+                    <Link
+                        className="knapp"
+                        to={Routes.revurderValgtSak.createURL({
+                            sakId: props.sakId,
+                            steg: RevurderingSteg.EndringAvFradrag,
+                        })}
+                    >
+                        {intl.formatMessage({ id: 'knapp.forrige' })}
+                    </Link>
+                </div>
+            </div>
+        </div>
+    );
 
     if (RemoteData.isSuccess(sendtTilAttesteringStatus)) {
         return (
@@ -119,76 +117,84 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: Nullable<
         );
     }
 
-    return (
-        <form
-            className={sharedStyles.revurderingContainer}
-            onSubmit={(e) => {
-                setHasSubmitted(true);
-                formik.handleSubmit(e);
-            }}
-        >
-            <Innholdstittel className={sharedStyles.tittel}>
-                {intl.formatMessage({ id: 'oppsummering.tittel' })}
-            </Innholdstittel>
-            <div className={sharedStyles.mainContentContainer}>
-                <div className={styles.beregningContainer}>
-                    <VisBeregning
-                        beregningsTittel={intl.formatMessage({ id: 'oppsummering.gammelBeregning.tittel' })}
-                        beregning={formik.values.gammelBeregning}
-                    />
+    return pipe(
+        beregnOgSimulerStatus,
+        RemoteData.fold(
+            () => <VisFeilmelding />,
+            () => null,
+            () => <VisFeilmelding />,
+            (beregninger) => (
+                <form
+                    className={sharedStyles.revurderingContainer}
+                    onSubmit={(e) => {
+                        setHasSubmitted(true);
+                        formik.handleSubmit(e);
+                    }}
+                >
+                    <Innholdstittel className={sharedStyles.tittel}>
+                        {intl.formatMessage({ id: 'oppsummering.tittel' })}
+                    </Innholdstittel>
+                    <div className={sharedStyles.mainContentContainer}>
+                        <div className={styles.beregningContainer}>
+                            <VisBeregning
+                                beregningsTittel={intl.formatMessage({ id: 'oppsummering.gammelBeregning.tittel' })}
+                                beregning={beregninger.beregning}
+                            />
 
-                    {RemoteData.isSuccess(beregnOgSimulerStatus) && (
-                        <VisBeregning
-                            beregningsTittel={intl.formatMessage({ id: 'oppsummering.nyBeregning.tittel' })}
-                            beregning={formik.values.nyBeregning}
-                        />
-                    )}
-                </div>
-                <div className={styles.brevContainer}>
-                    <div className={styles.textAreaContainer}>
-                        <Textarea
-                            label={intl.formatMessage({ id: 'oppsummering.tekstTilVedtaksbrev.tittel' })}
-                            name="tekstTilVedtaksbrev"
-                            placeholder="Skriv inn innholdstekst i tekstfeltet her."
-                            value={formik.values.tekstTilVedtaksbrev ?? ''}
-                            feil={formik.errors.tekstTilVedtaksbrev}
-                            onChange={formik.handleChange}
-                        />
-                    </div>
-                    <div className={styles.seBrevContainer}>
-                        <Knapp
-                            onClick={hentBrev}
-                            htmlType="button"
-                            spinner={RemoteData.isPending(revurderingsVedtakStatus)}
-                        >
-                            {intl.formatMessage({ id: 'knapp.seVedtaksbrev' })}
-                        </Knapp>
-                        {RemoteData.isFailure(revurderingsVedtakStatus) && (
-                            <AlertStripeFeil>{revurderingsVedtakStatus.error.body?.message}</AlertStripeFeil>
+                            {RemoteData.isSuccess(beregnOgSimulerStatus) && (
+                                <VisBeregning
+                                    beregningsTittel={intl.formatMessage({ id: 'oppsummering.nyBeregning.tittel' })}
+                                    beregning={beregninger.revurdert}
+                                />
+                            )}
+                        </div>
+                        <div className={styles.brevContainer}>
+                            <div className={styles.textAreaContainer}>
+                                <Textarea
+                                    label={intl.formatMessage({ id: 'oppsummering.tekstTilVedtaksbrev.tittel' })}
+                                    name="tekstTilVedtaksbrev"
+                                    placeholder="Skriv inn innholdstekst i tekstfeltet her."
+                                    value={formik.values.tekstTilVedtaksbrev ?? ''}
+                                    feil={formik.errors.tekstTilVedtaksbrev}
+                                    onChange={formik.handleChange}
+                                />
+                            </div>
+                            <div className={styles.seBrevContainer}>
+                                <Knapp
+                                    onClick={hentBrev}
+                                    htmlType="button"
+                                    spinner={RemoteData.isPending(revurderingsVedtakStatus)}
+                                >
+                                    {intl.formatMessage({ id: 'knapp.seVedtaksbrev' })}
+                                </Knapp>
+                                {RemoteData.isFailure(revurderingsVedtakStatus) && (
+                                    <AlertStripeFeil>{revurderingsVedtakStatus.error.body?.message}</AlertStripeFeil>
+                                )}
+                            </div>
+                        </div>
+                        {RemoteData.isFailure(sendtTilAttesteringStatus) && (
+                            <AlertStripeFeil className={sharedStyles.alertstripe}>
+                                {sendtTilAttesteringStatus.error.body?.message}
+                            </AlertStripeFeil>
                         )}
+                        <div className={sharedStyles.knappContainer}>
+                            <Link
+                                className="knapp"
+                                to={Routes.revurderValgtSak.createURL({
+                                    sakId: props.sakId,
+                                    steg: RevurderingSteg.EndringAvFradrag,
+                                })}
+                            >
+                                {intl.formatMessage({ id: 'knapp.forrige' })}
+                            </Link>
+                            <Hovedknapp spinner={RemoteData.isPending(sendtTilAttesteringStatus)}>
+                                {intl.formatMessage({ id: 'knapp.sendTilAttestering' })}
+                            </Hovedknapp>
+                        </div>
                     </div>
-                </div>
-                {RemoteData.isFailure(sendtTilAttesteringStatus) && (
-                    <AlertStripeFeil className={sharedStyles.alertstripe}>
-                        {sendtTilAttesteringStatus.error.body?.message}
-                    </AlertStripeFeil>
-                )}
-                <div className={sharedStyles.knappContainer}>
-                    <Link
-                        className="knapp"
-                        to={Routes.revurderValgtSak.createURL({
-                            sakId: props.sakId,
-                            steg: RevurderingSteg.EndringAvFradrag,
-                        })}
-                    >
-                        {intl.formatMessage({ id: 'knapp.forrige' })}
-                    </Link>
-                    <Hovedknapp spinner={RemoteData.isPending(sendtTilAttesteringStatus)}>
-                        {intl.formatMessage({ id: 'knapp.sendTilAttestering' })}
-                    </Hovedknapp>
-                </div>
-            </div>
-        </form>
+                </form>
+            )
+        )
     );
 };
 
