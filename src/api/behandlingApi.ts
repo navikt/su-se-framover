@@ -38,8 +38,10 @@ export async function startBeregning(
         url: `/saker/${sakId}/behandlinger/${behandlingId}/beregn`,
         method: 'POST',
         body: {
-            fraOgMed: formatISO(fom, { representation: 'date' }),
-            tilOgMed: formatISO(tom, { representation: 'date' }),
+            stønadsperiode: {
+                fraOgMed: formatISO(fom, { representation: 'date' }),
+                tilOgMed: formatISO(tom, { representation: 'date' }),
+            },
             fradrag: arg.fradrag,
         },
     });
