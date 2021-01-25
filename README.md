@@ -14,20 +14,22 @@ $ npm install # installerer avhengigheter
 Starte for lokal utvikling:
 
 ```sh
-$ ./start-oauth-server.sh # se Mock-oauth-server-avsnittet for mer info
+$ ./start-dev.sh # starter Redis og mock-oauth2-server (se under for mer info)
 $ npm start
 ```
 
-Denne starter opp `express`-serveren med `parcel`-middleware som ordner med bygging av frontenden.
+`./start-dev.sh` kjører opp Redis og [#mock-oauth2-server](#mock-oauth2-server).
 
-### Mock oauth server
+`npm start` starter opp `express`-serveren med `parcel`-middleware som ordner med bygging av frontenden.
+
+### Redis
+
+Brukes for å cache bruker-sessions.
+Lokalt oppsett ligger i [./docker-compose.yml](), mens nais-oppsettet ligger i [./nais.yml]().
+
+### Mock oauth2 server
 
 For autentisering lokalt så bruker vi https://github.com/navikt/mock-oauth2-server.
-Kjør opp denne med
-
-```sh
-$ ./start-oauth-server.sh
-```
 
 Vi bruker Docker for å kjøre den, konfigurert i [./docker-copmpose.yml]().
 Imaget hentes fra docker.pkg.github.com, og man må da være innlogget mot det repoet.

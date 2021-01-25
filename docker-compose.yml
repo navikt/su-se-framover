@@ -7,3 +7,12 @@ services:
         hostname: localhost
         environment:
             SERVER_PORT: 4321
+    redis:
+        image: bitnami/redis:6.0
+        ports:
+            - 6379:6379
+        container_name: redis
+        restart: on-failure
+        mem_limit: 64m
+        environment:
+            REDIS_PASSWORD: subar
