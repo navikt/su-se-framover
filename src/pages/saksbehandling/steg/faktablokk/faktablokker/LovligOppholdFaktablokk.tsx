@@ -65,7 +65,7 @@ function createListOfFakta(intl: IntlShape, søknadsInnhold: SøknadInnhold) {
 }
 
 const booleanToJaNei = (verdi: Nullable<boolean>, tittel: string, intl: IntlShape) => {
-    if (!verdi) return { tittel: tittel, verdi: '' };
+    if (verdi == null) return { tittel: tittel, verdi: '' };
 
     return {
         tittel: tittel,
