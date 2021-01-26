@@ -43,17 +43,26 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: Nullable<
 
     const { beregnOgSimulerStatus, revurderingsVedtakStatus } = useAppSelector((state) => state.revurdering);
 
-    const hentBrev = useCallback(() => {
-        if (RemoteData.isPending(revurderingsVedtakStatus)) {
-            return;
-        }
-
-        dispatch(revurderingSlice.fetchRevurderingsVedtak({ sakId: props.sakId })).then((action) => {
-            if (revurderingSlice.fetchRevurderingsVedtak.fulfilled.match(action)) {
-                window.open(action.payload.objectUrl);
+    const hentBrev = useCallback(
+        (fritekst: Nullable<string>) => {
+            if (RemoteData.isPending(revurderingsVedtakStatus)) {
+                return;
             }
-        });
-    }, [props.sakId]);
+
+            dispatch(
+                revurderingSlice.fetchRevurderingsVedtak({
+                    sakId: props.sakId,
+                    revurderingId: props.revurdering?.id ?? '',
+                    fritekst,
+                })
+            ).then((action) => {
+                if (revurderingSlice.fetchRevurderingsVedtak.fulfilled.match(action)) {
+                    window.open(action.payload.objectUrl);
+                }
+            });
+        },
+        [props.sakId]
+    );
 
     const formik = useFormik({
         initialValues: {
@@ -161,7 +170,7 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: Nullable<
                             </div>
                             <div className={styles.seBrevContainer}>
                                 <Knapp
-                                    onClick={hentBrev}
+                                    onClick={() => hentBrev(formik.values.tekstTilVedtaksbrev)}
                                     htmlType="button"
                                     spinner={RemoteData.isPending(revurderingsVedtakStatus)}
                                 >

@@ -2,6 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
+import { Nullable } from '~lib/types';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Beregning } from '~types/Beregning';
 import { Fradrag, Periode } from '~types/Fradrag';
@@ -40,10 +41,10 @@ export const beregnOgSimuler = createAsyncThunk<
 
 export const fetchRevurderingsVedtak = createAsyncThunk<
     { objectUrl: string },
-    { sakId: string },
+    { sakId: string; revurderingId: string; fritekst: Nullable<string> },
     { rejectValue: ApiError }
->('revurdering/revurderingsVedtak', async ({ sakId }, thunkApi) => {
-    const res = await pdfApi.fetchRevurderingsVedtak(sakId);
+>('revurdering/revurderingsVedtak', async ({ sakId, revurderingId, fritekst }, thunkApi) => {
+    const res = await pdfApi.fetchRevurderingsVedtak(sakId, revurderingId, fritekst);
     if (res.status === 'ok') {
         return { objectUrl: URL.createObjectURL(res.data) };
     }
