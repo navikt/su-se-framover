@@ -33,7 +33,9 @@ spec:
       - name: NODE_ENV
         value: production
       - name: REDIS_HOST
-        value: su-se-framover-redis.supstonad.svc.nais.local
+        value: su-se-framover-redis
+      - name: SU_SE_BAKOVER_URL
+        value: http://su-se-bakover
   envFrom:
     - secret: redis-password
 ---
