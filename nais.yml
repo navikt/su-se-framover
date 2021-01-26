@@ -1,34 +1,34 @@
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
-   name: su-se-framover
-   namespace: supstonad
-   labels:
-      team: supstonad
+  name: su-se-framover
+  namespace: supstonad
+  labels:
+    team: supstonad
 spec:
-   port: 80
-   image: {{ image }}
-   azure:
-      application:
-          enabled: true
-          tenant: {{ tenant }}
-   webproxy: true
-   replicas:
-      min: 1
-   liveness:
-      path: isAlive
-      port: 80
-   readiness:
-      path: isReady
-      port: 80
-   ingresses:
-      - {{ingress}}
-   vault:
+  port: 80
+  image: {{ image }}
+  azure:
+    application:
       enabled: true
-   env:
-      {{#each env}}
-       - name: {{@key}}
-         value: "{{this}}"
-      {{/each}}
-       - name: NODE_ENV
-         value: production
+      tenant: {{ tenant }}
+  webproxy: true
+  replicas:
+    min: 1
+  liveness:
+    path: isAlive
+    port: 80
+  readiness:
+    path: isReady
+    port: 80
+  ingresses:
+    - {{ingress}}
+  vault:
+    enabled: true
+  env:
+    {{#each env}}
+      - name: {{@key}}
+        value: "{{this}}"
+    {{/each}}
+      - name: NODE_ENV
+        value: production
