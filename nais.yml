@@ -32,3 +32,33 @@ spec:
     {{/each}}
       - name: NODE_ENV
         value: production
+      - name: REDIS_HOST
+        value: su-se-framover-redis.supstonad.svc.nais.local
+  envFrom:
+    - secret: redis-password
+---
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  labels:
+    team: supstonad
+  name: su-se-framover-redis
+  namespace: supstonad
+spec:
+  image: bitnami/redis:6.0
+  port: 6379
+  replicas: # A single Redis-app doesn't scale
+    min: 1
+    max: 1 # More replicas doesn't sync
+  resources: # you need to monitor the resource usage yourself
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  service:
+    port: 6379
+    protocol: redis
+  envFrom:
+    - secret: redis-password
