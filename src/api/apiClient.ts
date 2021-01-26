@@ -48,7 +48,7 @@ export default async function apiClient<T>(arg: {
 }): Promise<ApiClientResult<T>> {
     const correlationId = arg.extraData?.correlationId ?? guid();
 
-    const res = await fetch(`/api/${arg.url}`, {
+    const res = await fetch(`/api/${arg.url.startsWith('/') ? arg.url.slice(1) : arg.url}`, {
         ...arg.request,
         method: arg.method,
         headers: {
