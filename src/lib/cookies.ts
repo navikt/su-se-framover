@@ -1,8 +1,6 @@
 import Cookies from 'js-cookie';
 
 export enum CookieName {
-    AccessToken = 'access_token',
-    RefreshToken = 'refresh_token',
     LoginRedirectUrl = 'login_redirect_url',
 }
 

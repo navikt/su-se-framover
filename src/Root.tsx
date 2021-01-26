@@ -5,7 +5,7 @@ import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect, Fragment } from 'react';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route, useLocation, useHistory } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom';
 
 import { ErrorCode } from '~/api/apiClient';
 import Config from '~/config';
@@ -42,12 +42,6 @@ const Root = () => {
         <Provider store={Store}>
             <ErrorBoundary>
                 <Router>
-                    <Route path="/auth/complete">
-                        <AuthComplete />
-                    </Route>
-                    <Route path="/logout/complete">
-                        <LogoutComplete />
-                    </Route>
                     <Route>
                         <ContentWrapper>
                             <Fragment>
@@ -74,40 +68,6 @@ const Root = () => {
             </ErrorBoundary>
         </Provider>
     );
-};
-
-const AuthComplete = () => {
-    const location = useLocation();
-    const history = useHistory();
-
-    useEffect(() => {
-        const tokens = location.hash.split('#');
-
-        const accessToken = tokens[1];
-        const refreshToken = tokens[2];
-        if (!accessToken || !refreshToken) {
-            console.error('On /auth/complete but no accesstoken/refreshtoken found');
-            return;
-        }
-        Cookies.set(Cookies.CookieName.AccessToken, accessToken);
-        Cookies.set(Cookies.CookieName.RefreshToken, refreshToken);
-        const redirectUrl = Cookies.take(Cookies.CookieName.LoginRedirectUrl);
-        history.push(redirectUrl ?? '/');
-    }, []);
-
-    return null;
-};
-
-const LogoutComplete = () => {
-    const history = useHistory();
-
-    useEffect(() => {
-        Cookies.remove(Cookies.CookieName.AccessToken);
-        Cookies.remove(Cookies.CookieName.RefreshToken);
-        history.push('/');
-    }, []);
-
-    return null;
 };
 
 const ContentWrapper: React.FC = (props) => {
@@ -148,7 +108,7 @@ const ContentWrapper: React.FC = (props) => {
                                             : 'En feil oppstod'}
                                     </Innholdstittel>
                                     <Lenke
-                                        href={`${Config.SU_SE_BAKOVER_URL}/login`}
+                                        href={Config.LOGIN_URL}
                                         onClick={() => {
                                             Cookies.set(Cookies.CookieName.LoginRedirectUrl, window.location.pathname);
                                         }}

@@ -32,7 +32,7 @@ const Header = (props: Props) => {
                     <Menyknapp
                         navn={props.user.navn}
                         onLoggUtClick={() => {
-                            window.location.href = `${Config.SU_SE_BAKOVER_URL}/logout`;
+                            window.location.href = Config.LOGOUT_URL;
                         }}
                     />
                 </div>

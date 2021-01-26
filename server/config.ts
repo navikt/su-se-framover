@@ -77,7 +77,8 @@ export const auth = {
 
 // Config that is exposed to the frontend
 export const client = {
-    SU_SE_BAKOVER_URL: envVar({ name: 'SU_SE_BAKOVER_URL' }),
+    LOGIN_URL: '/login',
+    LOGOUT_URL: '/logout',
     AMPLITUDE_API_KEY: envVar({ name: 'AMPLITUDE_API_KEY' }),
     FEATURE_HENDELSESLOGG: envVar({ name: 'FEATURE_HENDELSESLOGG' }),
 };
