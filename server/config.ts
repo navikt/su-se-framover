@@ -75,6 +75,12 @@ export const auth = {
     tokenEndpointAuthSigningAlg: 'RS256',
 };
 
+export const redis = {
+    host: envVar({ name: 'REDIS_HOST', defaultValue: '' }),
+    port: Number.parseInt(envVar({ name: 'REDIS_PORT', defaultValue: '6379' })),
+    password: envVar({ name: 'REDIS_PASSWORD', defaultValue: server.isDev ? '' : undefined }),
+};
+
 // Config that is exposed to the frontend
 export const client = {
     LOGIN_URL: '/login',
