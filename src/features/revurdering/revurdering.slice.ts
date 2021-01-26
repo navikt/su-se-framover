@@ -68,9 +68,7 @@ export default createSlice({
     initialState: initialState,
     reducers: {
         reset(state) {
-            state.beregnOgSimulerStatus = RemoteData.initial;
-            state.opprettRevurderingStatus = RemoteData.initial;
-            state.revurderingsVedtakStatus = RemoteData.initial;
+            return initialState;
         },
     },
     extraReducers: (builder) => {
