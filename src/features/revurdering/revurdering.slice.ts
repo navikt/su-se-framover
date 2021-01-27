@@ -4,16 +4,15 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~api/apiClient';
 import { Nullable } from '~lib/types';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
-import { Beregning } from '~types/Beregning';
 import { Fradrag, Periode } from '~types/Fradrag';
-import { OpprettetRevurdering } from '~types/Revurdering';
+import { OpprettetRevurdering, SimulertRevurdering } from '~types/Revurdering';
 
 import * as pdfApi from '../../api/pdfApi';
 import * as revurderingApi from '../../api/revurderingApi';
 
 export const opprettRevurdering = createAsyncThunk<
     OpprettetRevurdering,
-    { sakId: string; periode: { fom: Date; tom: Date } },
+    { sakId: string; periode: Periode },
     { rejectValue: ApiError }
 >('revurdering/opprettRevurdering', async ({ sakId, periode }, thunkApi) => {
     const res = await revurderingApi.opprettRevurdering(sakId, periode);
@@ -24,8 +23,8 @@ export const opprettRevurdering = createAsyncThunk<
 });
 
 export const beregnOgSimuler = createAsyncThunk<
-    { beregning: Beregning; revurdert: Beregning },
-    { sakId: string; revurderingId: string; periode: Periode; fradrag: Fradrag[] },
+    SimulertRevurdering,
+    { sakId: string; revurderingId: string; periode: Periode<string>; fradrag: Fradrag[] },
     { rejectValue: ApiError }
 >('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode, fradrag }, thunkApi) => {
     const res = await revurderingApi.beregnOgSimuler(sakId, {
@@ -53,7 +52,7 @@ export const fetchRevurderingsVedtak = createAsyncThunk<
 
 interface RevurderingState {
     opprettRevurderingStatus: RemoteData.RemoteData<ApiError, OpprettetRevurdering>;
-    beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, { beregning: Beregning; revurdert: Beregning }>;
+    beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, SimulertRevurdering>;
     revurderingsVedtakStatus: RemoteData.RemoteData<ApiError, null>;
 }
 

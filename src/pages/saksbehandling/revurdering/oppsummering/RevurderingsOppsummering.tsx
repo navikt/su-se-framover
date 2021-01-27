@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { Textarea } from 'nav-frontend-skjema';
-import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
+import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -18,10 +18,11 @@ import yup from '~lib/validering';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
-import { OpprettetRevurdering, TilAttesteringRevurdering } from '~types/Revurdering';
+import { SimulertRevurdering, TilAttesteringRevurdering } from '~types/Revurdering';
 
 import messages from '../revurdering-nb';
 import sharedStyles from '../revurdering.module.less';
+import { VisFeilmelding } from '../VisFeilMelding';
 
 import styles from './revurderingsOppsummering.module.less';
 
@@ -33,7 +34,7 @@ const schema = yup.object<OppsummeringFormData>({
     tekstTilVedtaksbrev: yup.string().nullable().defined(),
 });
 
-const RevurderingsOppsummering = (props: { sakId: string; revurdering: Nullable<OpprettetRevurdering> }) => {
+const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertRevurdering }) => {
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
@@ -87,32 +88,6 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: Nullable<
         validateOnChange: hasSubmitted,
     });
 
-    const VisFeilmelding = () => (
-        <div className={sharedStyles.revurderingContainer}>
-            <Innholdstittel className={sharedStyles.tittel}>
-                {intl.formatMessage({ id: 'oppsummering.tittel' })}
-            </Innholdstittel>
-            <div className={sharedStyles.mainContentContainer}>
-                <div>
-                    <Feilmelding className={sharedStyles.feilmelding}>
-                        {intl.formatMessage({ id: 'revurdering.noeGikkGalt' })}
-                    </Feilmelding>
-                </div>
-                <div className={sharedStyles.knappContainer}>
-                    <Link
-                        className="knapp"
-                        to={Routes.revurderValgtSak.createURL({
-                            sakId: props.sakId,
-                            steg: RevurderingSteg.EndringAvFradrag,
-                        })}
-                    >
-                        {intl.formatMessage({ id: 'knapp.forrige' })}
-                    </Link>
-                </div>
-            </div>
-        </div>
-    );
-
     if (RemoteData.isSuccess(sendtTilAttesteringStatus)) {
         return (
             <div className={styles.sendtTilAttesteringContainer}>
@@ -125,14 +100,18 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: Nullable<
             </div>
         );
     }
+    const forrigeURL = Routes.revurderValgtSak.createURL({
+        sakId: props.sakId,
+        steg: RevurderingSteg.Periode,
+    });
 
     return pipe(
         beregnOgSimulerStatus,
         RemoteData.fold(
-            () => <VisFeilmelding />,
+            () => <VisFeilmelding forrigeURL={forrigeURL} />,
             () => null,
-            () => <VisFeilmelding />,
-            (beregninger) => (
+            () => <VisFeilmelding forrigeURL={forrigeURL} />,
+            (simulertRevurdering) => (
                 <form
                     className={sharedStyles.revurderingContainer}
                     onSubmit={(e) => {
@@ -147,13 +126,13 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: Nullable<
                         <div className={styles.beregningContainer}>
                             <VisBeregning
                                 beregningsTittel={intl.formatMessage({ id: 'oppsummering.gammelBeregning.tittel' })}
-                                beregning={beregninger.beregning}
+                                beregning={simulertRevurdering.beregninger.beregning}
                             />
 
                             {RemoteData.isSuccess(beregnOgSimulerStatus) && (
                                 <VisBeregning
                                     beregningsTittel={intl.formatMessage({ id: 'oppsummering.nyBeregning.tittel' })}
-                                    beregning={beregninger.revurdert}
+                                    beregning={simulertRevurdering.beregninger.revurdert}
                                 />
                             )}
                         </div>

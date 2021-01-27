@@ -1,16 +1,16 @@
 import { Nullable } from '~lib/types';
 
 export interface Fradrag {
-    periode: Nullable<Periode>;
+    periode: Nullable<Periode<string>>;
     type: Fradragstype;
     beløp: number;
     utenlandskInntekt: Nullable<UtenlandskInntekt>;
     tilhører: FradragTilhører;
 }
 
-export interface Periode {
-    fraOgMed: string;
-    tilOgMed: string;
+export interface Periode<T = Date> {
+    fraOgMed: T;
+    tilOgMed: T;
 }
 
 export interface UtenlandskInntekt {

@@ -1,24 +1,20 @@
 import { formatISO } from 'date-fns';
 
-import { Beregning } from '~types/Beregning';
 import { Fradrag, Periode } from '~types/Fradrag';
-import { OpprettetRevurdering, TilAttesteringRevurdering } from '~types/Revurdering';
+import { OpprettetRevurdering, SimulertRevurdering, TilAttesteringRevurdering } from '~types/Revurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
 export async function opprettRevurdering(
     sakId: string,
-    periode: {
-        fom: Date;
-        tom: Date;
-    }
+    periode: Periode
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurdering/opprett`,
         method: 'POST',
         body: {
-            fraOgMed: formatISO(periode.fom, { representation: 'date' }),
-            tilOgMed: formatISO(periode.tom, { representation: 'date' }),
+            fraOgMed: formatISO(periode.fraOgMed, { representation: 'date' }),
+            tilOgMed: formatISO(periode.tilOgMed, { representation: 'date' }),
         },
     });
 }
@@ -27,10 +23,10 @@ export async function beregnOgSimuler(
     sakId: string,
     arg: {
         revurderingId: string;
-        periode: Periode;
+        periode: Periode<string>;
         fradrag: Fradrag[];
     }
-): Promise<ApiClientResult<{ beregning: Beregning; revurdert: Beregning }>> {
+): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurdering/beregnOgSimuler`,
         method: 'POST',

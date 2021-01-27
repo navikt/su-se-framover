@@ -19,6 +19,8 @@ export default {
     'revurdering.noeGikkGalt': 'Noe gikk galt. Gå tilbake og prøv igjen',
     'revurdering.kanIkkeRevurdere': 'Det finnes ingen perioder for revurdering',
 
+    'periode.feilmelding.fraOgMed': 'Fra og med dato må fylles inn',
+    'periode.feilmelding.tilOgMed': 'Til og med dato må fylles inn',
     'periode.feilmelding.erInnenforFlerePerioder': 'Perioden er ikke innenfor én stønadsperiode',
     'periode.feilmelding.erIkkeFremoverITid': 'Du kan kun revurdere perioder fremover i tid',
 
