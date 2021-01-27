@@ -1,18 +1,15 @@
 import { Behandling } from './Behandling';
 import { Beregning } from './Beregning';
 
-export interface OpprettetRevurdering {
+export interface Revurdering {
     id: string;
     status: RevurderingsStatus;
     opprettet: string;
     tilRevurdering: Behandling;
 }
+export type OpprettetRevurdering = Revurdering & Record<string, never>;
 
-export interface TilAttesteringRevurdering {
-    id: string;
-    status: RevurderingsStatus;
-    opprettet: string;
-    tilRevurdering: Behandling;
+export interface TilAttesteringRevurdering extends Revurdering {
     beregninger: {
         beregning: Beregning;
         revurdert: Beregning;

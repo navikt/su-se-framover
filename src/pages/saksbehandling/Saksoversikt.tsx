@@ -25,7 +25,7 @@ import { useAppSelector, useAppDispatch } from '~redux/Store';
 
 import Behandlingsoppsummering from './behandlingsoppsummering/behandlingsoppsummering';
 import LukkSøknad from './lukkSøknad/LukkSøknad';
-import Revurdering from './revudering/Revurdering';
+import Revurdering from './revurdering/Revurdering';
 import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
