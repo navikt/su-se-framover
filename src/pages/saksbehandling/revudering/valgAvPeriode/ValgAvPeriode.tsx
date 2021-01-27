@@ -203,15 +203,9 @@ const ValgAvPeriode = (props: {
                     })
                     .map((b) => (
                         <p key={b.id}>
-                            {intl.formatDate(b.beregning?.fraOgMed, {
-                                year: 'numeric',
-                                month: '2-digit',
-                            })}{' '}
+                            {DateUtils.formatMonthYear(b.beregning?.fraOgMed ?? '', intl)}{' '}
                             -{' '}
-                            {intl.formatDate(b.beregning?.tilOgMed, {
-                                year: 'numeric',
-                                month: '2-digit',
-                            })}
+                            {DateUtils.formatMonthYear(b.beregning?.tilOgMed ?? '', intl)}
                         </p>
                     ))}
             </div>
