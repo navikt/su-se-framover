@@ -54,7 +54,7 @@ export default async function setup(app: Express, authClient: OpenIdClient.Clien
     app.use(passport.initialize());
     app.use(passport.session());
 
-    const authName = Config.server.isDev ? 'localAuth' : 'aad';
+    const authName = Config.isDev ? 'localAuth' : 'aad';
     const authStrategy = await getStrategy(authClient);
 
     passport.use(authName, authStrategy);

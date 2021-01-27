@@ -1,30 +1,53 @@
 import path from 'path';
 
-function envVar({ name, defaultValue }: { name: string; defaultValue?: string }): string {
+function envVar({
+    name,
+    defaultValue,
+}: {
+    name: string;
+    defaultValue?:
+        | string
+        | {
+              dev?: string;
+              prod?: string;
+          };
+}): string {
     const fromEnv = process.env[name];
     if (fromEnv) {
         return fromEnv;
     }
     if (typeof defaultValue === 'string') {
         return defaultValue;
+    } else if (typeof defaultValue === 'object') {
+        if (isDev && typeof defaultValue.dev === 'string') {
+            return defaultValue.dev;
+        }
+        if (isProd && typeof defaultValue.prod === 'string') {
+            return defaultValue.prod;
+        }
     }
     throw new Error(`Missing required environment variable ${name}`);
 }
+
+export const isDev = envVar({ name: 'NODE_ENV' }) === 'development';
+export const isProd = envVar({ name: 'NODE_ENV' }) === 'production';
 
 // Config used internally in the server
 export const server = {
     host: envVar({ name: 'HOST', defaultValue: 'localhost' }),
     port: Number.parseInt(envVar({ name: 'PORT', defaultValue: '1234' })),
     suSeBakoverUrl: envVar({ name: 'SU_SE_BAKOVER_URL', defaultValue: 'http://localhost:8080' }),
-    proxy: envVar({ name: 'HTTP_PROXY', defaultValue: '' }),
+    proxy: envVar({
+        name: 'HTTP_PROXY',
+        defaultValue: {
+            dev: '',
+        },
+    }),
 
     frontendDir: envVar({ name: 'FRONTEND_DIR', defaultValue: path.join(__dirname, 'frontend') }),
 
     sessionKey: envVar({ name: 'SESSION_KEY' }),
     sessionCookieName: envVar({ name: 'SESSION_COOKIE_NAME', defaultValue: 'supstonad-login-cookie' }),
-
-    isDev: envVar({ name: 'NODE_ENV' }) === 'development',
-    isProd: envVar({ name: 'NODE_ENV' }) === 'production',
 
     mockOauthServerPort: Number.parseInt(envVar({ name: 'LOCAL_AUTH_SERVER_PORT', defaultValue: '4321' })),
 };
@@ -33,10 +56,10 @@ export const server = {
 export const auth = {
     discoverUrl: envVar({
         name: 'AZURE_APP_WELL_KNOWN_URL',
-        defaultValue: server.isDev ? 'http://localhost:4321/default' : undefined,
+        defaultValue: { dev: `http://localhost:${server.mockOauthServerPort}/default` },
     }),
-    clientId: envVar({ name: 'AZURE_APP_CLIENT_ID', defaultValue: server.isDev ? 'supstonad' : undefined }),
-    jwks: server.isDev
+    clientId: envVar({ name: 'AZURE_APP_CLIENT_ID', defaultValue: { dev: 'supstonad' } }),
+    jwks: isDev
         ? // Generert med https://mkjwk.org/ (key size: 2048, key use: signature, algorithm: RS256, key id: sha-256)
           {
               keys: [
@@ -78,7 +101,7 @@ export const auth = {
 export const redis = {
     host: envVar({ name: 'REDIS_HOST', defaultValue: '' }),
     port: Number.parseInt(envVar({ name: 'REDIS_PORT', defaultValue: '6379' })),
-    password: envVar({ name: 'REDIS_PASSWORD', defaultValue: server.isDev ? '' : undefined }),
+    password: envVar({ name: 'REDIS_PASSWORD', defaultValue: { dev: '' } }),
 };
 
 // Config that is exposed to the frontend

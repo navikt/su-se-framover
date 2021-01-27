@@ -42,9 +42,7 @@ export async function getOnBehalfOfAccessToken(authClient: OpenIdClient.Client, 
         // oauth2-mock-server vil sette hva enn vi sender inn som scope her som audience i tokenet
         // mens AAD vil sette klient-ID-en som audience.
         // Vi trikser det derfor til her heller enn at su-se-bakover må ha noe spesialhåndtering
-        scope: Config.server.isDev
-            ? Config.auth.suSeBakoverClientId
-            : `api://${Config.auth.suSeBakoverClientId}/.default`,
+        scope: Config.isDev ? Config.auth.suSeBakoverClientId : `api://${Config.auth.suSeBakoverClientId}/.default`,
         assertion: req.user.tokenSets[tokenSetSelfId].access_token,
     };
 

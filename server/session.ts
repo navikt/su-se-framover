@@ -32,7 +32,7 @@ export default function setupSession(app: Express) {
                 maxAge: SESSION_MAX_AGE_MILLIS,
                 sameSite: 'lax',
                 httpOnly: true,
-                secure: Config.server.isProd,
+                secure: Config.isProd,
             },
             secret: Config.server.sessionKey,
             name: Config.server.sessionCookieName,

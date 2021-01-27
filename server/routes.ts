@@ -19,7 +19,7 @@ function setup() {
         res.send('READY');
     });
 
-    if (Config.server.isDev) {
+    if (Config.isDev) {
         router.use(parcelBundlerMiddleware());
     } else {
         router.use(

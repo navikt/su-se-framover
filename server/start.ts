@@ -21,7 +21,7 @@ export default async function startServer() {
 
     app.use(
         pinoHttp({
-            ...(Config.server.isDev
+            ...(Config.isDev
                 ? {
                       prettyPrint: true,
                       prettifier: pinoColada,
@@ -60,7 +60,7 @@ export default async function startServer() {
 
     app.use(
         helmet({
-            contentSecurityPolicy: !Config.server.isDev
+            contentSecurityPolicy: !Config.isDev
                 ? {
                       directives: {
                           defaultSrc: ["'self'", 'data:'],
