@@ -67,7 +67,7 @@ export default createSlice({
     name: 'revurdering',
     initialState: initialState,
     reducers: {
-        reset(state) {
+        reset() {
             return initialState;
         },
     },

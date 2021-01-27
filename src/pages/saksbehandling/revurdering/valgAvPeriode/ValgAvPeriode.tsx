@@ -7,6 +7,7 @@ import DatePicker from 'react-datepicker';
 import { Link, useHistory } from 'react-router-dom';
 
 import * as revurderingSlice from '~features/revurdering/revurdering.slice';
+import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -203,8 +204,7 @@ const ValgAvPeriode = (props: {
                     })
                     .map((b) => (
                         <p key={b.id}>
-                            {DateUtils.formatMonthYear(b.beregning?.fraOgMed ?? '', intl)}{' '}
-                            -{' '}
+                            {DateUtils.formatMonthYear(b.beregning?.fraOgMed ?? '', intl)} -{' '}
                             {DateUtils.formatMonthYear(b.beregning?.tilOgMed ?? '', intl)}
                         </p>
                     ))}
