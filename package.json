@@ -4,7 +4,7 @@
     "description": "Frontend for saksbehandlingsstøtteverktøy for supplerende stønad",
     "scripts": {
         "postinstall": "cd server && npm install",
-        "start": "nodemon",
+        "start": "rimraf ./.cache && nodemon",
         "test": "jest --passWithNoTests",
         "build": "npm run clean:dist && npm run build:client",
         "build:server": "tsc --project ./server/tsconfig.json",
