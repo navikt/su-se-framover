@@ -9,6 +9,7 @@ import { IntlProvider } from 'react-intl';
 import { Link, Route, Switch, useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
+import { FeatureToggle } from '~api/featureToggleApi';
 import Hendelseslogg from '~components/Hendelseslogg';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
 import Personsøk from '~components/Personsøk/Personsøk';
@@ -16,7 +17,7 @@ import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
 import { getGender, showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import FeatureToggles from '~lib/featureToggles';
+import { useFeatureToggle } from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -65,6 +66,8 @@ const Saksoversikt = () => {
             ),
         [søker._tag]
     );
+
+    const featureHendelseslogg = useFeatureToggle(FeatureToggle.Hendelseslogg);
 
     const rerouteToSak = (id: string) => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: id }));
 
@@ -161,7 +164,7 @@ const Saksoversikt = () => {
 
                                             <Route path="*">
                                                 <Sakintro sak={sak} søker={søker} />
-                                                {FeatureToggles.Hendelseslogg && <Hendelseslogg sak={sak} />}
+                                                {featureHendelseslogg && <Hendelseslogg sak={sak} />}
                                             </Route>
                                         </Switch>
                                     </div>
