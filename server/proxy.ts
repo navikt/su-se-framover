@@ -20,6 +20,12 @@ export default function setup(authClient: OpenIdClient.Client) {
                 options.headers['Authorization'] = `Bearer ${accessToken}`;
                 return options;
             },
+            proxyErrorHandler: (err, res, next) => {
+                if (err && err.code === 'ECONNREFUSED') {
+                    return res.status(500).send({ message: 'Could not contact su-se-bakover' });
+                }
+                next(err);
+            },
         })
     );
 
