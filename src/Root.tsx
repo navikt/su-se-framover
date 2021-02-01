@@ -19,6 +19,7 @@ import Header from './components/header/Header';
 import WithDocTitle from './components/WithDocTitle';
 import * as meSlice from './features/me/me.slice';
 import * as Cookies from './lib/cookies';
+import { FeatureToggleProvider } from './lib/featureToggles';
 import { pipe } from './lib/fp';
 import * as routes from './lib/routes';
 import Soknad from './pages/søknad';
@@ -41,30 +42,32 @@ const Root = () => {
     return (
         <Provider store={Store}>
             <ErrorBoundary>
-                <Router>
-                    <Route>
-                        <ContentWrapper>
-                            <Fragment>
-                                <ScrollToTop />
-                                <Switch>
-                                    <Route exact path={routes.home.path}>
-                                        <WithDocTitle title="Hjem" Page={HomePage} />
-                                    </Route>
-                                    <Route path={routes.soknad.path}>
-                                        <WithDocTitle title="Søknad" Page={Soknad} />
-                                    </Route>
-                                    <Route path={routes.saksoversiktIndex.path}>
-                                        <WithDocTitle title="Saksbehandling" Page={Saksoversikt} />
-                                    </Route>
-                                    <Route path={routes.attestering.path}>
-                                        <WithDocTitle title="Attestering" Page={Attestering} />
-                                    </Route>
-                                    <Route>404</Route>
-                                </Switch>
-                            </Fragment>
-                        </ContentWrapper>
-                    </Route>
-                </Router>
+                <FeatureToggleProvider>
+                    <Router>
+                        <Route>
+                            <ContentWrapper>
+                                <Fragment>
+                                    <ScrollToTop />
+                                    <Switch>
+                                        <Route exact path={routes.home.path}>
+                                            <WithDocTitle title="Hjem" Page={HomePage} />
+                                        </Route>
+                                        <Route path={routes.soknad.path}>
+                                            <WithDocTitle title="Søknad" Page={Soknad} />
+                                        </Route>
+                                        <Route path={routes.saksoversiktIndex.path}>
+                                            <WithDocTitle title="Saksbehandling" Page={Saksoversikt} />
+                                        </Route>
+                                        <Route path={routes.attestering.path}>
+                                            <WithDocTitle title="Attestering" Page={Attestering} />
+                                        </Route>
+                                        <Route>404</Route>
+                                    </Switch>
+                                </Fragment>
+                            </ContentWrapper>
+                        </Route>
+                    </Router>
+                </FeatureToggleProvider>
             </ErrorBoundary>
         </Provider>
     );
