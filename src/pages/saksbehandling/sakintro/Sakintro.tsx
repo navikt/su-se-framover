@@ -3,7 +3,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
-import { Ingress, Innholdstittel, Element, Normaltekst, Undertittel } from 'nav-frontend-typografi';
+import { Element, Ingress, Innholdstittel, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
@@ -88,7 +88,12 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         behandlinger={props.sak.behandlinger}
                         intl={intl}
                     />
-                    <AvslåtteSøknader avslåtteSøknader={avslåtteSøknader} intl={intl} />
+                    <AvslåtteSøknader
+                        sakId={props.sak.id}
+                        avslåtteSøknader={avslåtteSøknader}
+                        behandlinger={props.sak.behandlinger}
+                        intl={intl}
+                    />
                     <LukkedeSøknader lukkedeSøknader={lukkedeSøknader} intl={intl} />
                 </div>
             ) : (
@@ -433,7 +438,12 @@ const LukkedeSøknader = (props: { lukkedeSøknader: Søknad[]; intl: IntlShape 
     );
 };
 
-const AvslåtteSøknader = (props: { avslåtteSøknader: Søknad[]; intl: IntlShape }) => {
+const AvslåtteSøknader = (props: {
+    sakId: string;
+    behandlinger: Behandling[];
+    avslåtteSøknader: Søknad[];
+    intl: IntlShape;
+}) => {
     if (props.avslåtteSøknader.length === 0) return null;
 
     return (
@@ -444,33 +454,41 @@ const AvslåtteSøknader = (props: { avslåtteSøknader: Søknad[]; intl: IntlSh
                 })}
             </Ingress>
             <ol>
-                {props.avslåtteSøknader.map((søknad) => (
-                    <li key={søknad.id}>
-                        <Panel border className={styles.søknad}>
-                            <div className={styles.info}>
-                                <div>
-                                    <Undertittel>
-                                        {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
-                                    </Undertittel>
-                                    <div className={styles.dato}>
-                                        <Element>
-                                            {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
-                                        </Element>
-                                        <Normaltekst>{props.intl.formatDate(søknad.opprettet)}</Normaltekst>
+                {props.avslåtteSøknader.map((søknad) => {
+                    const behandling = props.behandlinger.find((b) => b.søknad.id === søknad.id);
+                    if (!behandling) return <></>;
+
+                    return (
+                        <li key={søknad.id}>
+                            <Panel border className={styles.søknad}>
+                                <div className={styles.info}>
+                                    <div>
+                                        <Undertittel>
+                                            {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
+                                        </Undertittel>
+                                        <div className={styles.dato}>
+                                            <Element>
+                                                {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
+                                            </Element>
+                                            <Normaltekst>{props.intl.formatDate(søknad.opprettet)}</Normaltekst>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className={styles.ikonContainer}>
-                                <Ikon className={styles.ikon} kind="feil-sirkel-fyll" width={'24px'} />
-                                <p className={styles.ikonTekst}>
-                                    {props.intl.formatMessage({
-                                        id: 'display.søknad.avslått',
-                                    })}
-                                </p>
-                            </div>
-                        </Panel>
-                    </li>
-                ))}
+                                <div className={(styles.knapper, styles.flexColumn)}>
+                                    <Link
+                                        className="knapp"
+                                        to={Routes.saksbehandlingOppsummering.createURL({
+                                            sakId: props.sakId,
+                                            behandlingId: behandling.id,
+                                        })}
+                                    >
+                                        Se oppsummering
+                                    </Link>
+                                </div>
+                            </Panel>
+                        </li>
+                    );
+                })}
             </ol>
         </div>
     );

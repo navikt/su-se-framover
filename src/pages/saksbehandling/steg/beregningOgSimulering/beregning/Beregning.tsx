@@ -11,7 +11,7 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { useHistory } from 'react-router-dom';
 
-import { erBeregnetAvslag } from '~features/behandling/behandlingUtils';
+import { kanSimuleres } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { toDateOrNull } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
@@ -109,7 +109,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             RemoteData.isSuccess(beregningStatus) ||
             (props.behandling.beregning && RemoteData.isInitial(beregningStatus))
         ) {
-            if (erBeregnetAvslag(props.behandling)) {
+            if (kanSimuleres(props.behandling)) {
                 history.push(nesteUrl);
                 return;
             }

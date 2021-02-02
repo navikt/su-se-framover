@@ -8,24 +8,24 @@ import { Nullable } from '~lib/types';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import {
     Behandlingsinformasjon,
-    Flyktning,
-    LovligOpphold,
-    Uførhet,
-    FastOppholdINorge,
-    OppholdIUtlandet,
-    Formue,
-    PersonligOppmøte,
     Bosituasjon,
+    FastOppholdINorge,
+    FastOppholdINorgeStatus,
+    Flyktning,
+    FlyktningStatus,
+    Formue,
+    FormueStatus,
     FormueVerdier,
     Institusjonsopphold,
-    UførhetStatus,
-    FlyktningStatus,
-    LovligOppholdStatus,
-    FastOppholdINorgeStatus,
     InstitusjonsoppholdStatus,
+    LovligOpphold,
+    LovligOppholdStatus,
+    OppholdIUtlandet,
     OppholdIUtlandetStatus,
-    FormueStatus,
+    PersonligOppmøte,
     PersonligOppmøteStatus,
+    Uførhet,
+    UførhetStatus,
 } from '~types/Behandlingsinformasjon';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
@@ -54,21 +54,34 @@ export function erAvslått(behandling: Behandling): boolean {
         Behandlingsstatus.TIL_ATTESTERING_AVSLAG,
         Behandlingsstatus.VILKÅRSVURDERT_AVSLAG,
         Behandlingsstatus.BEREGNET_AVSLAG,
+        Behandlingsstatus.UNDERKJENT_AVSLAG,
+        Behandlingsstatus.IVERKSATT_AVSLAG,
     ].some((status) => behandling.status === status);
 }
 
 export function harBeregning(behandling: Behandling): boolean {
-    return [Behandlingsstatus.BEREGNET_AVSLAG, Behandlingsstatus.BEREGNET_INNVILGET, Behandlingsstatus.SIMULERT].some(
-        (status) => behandling.status === status
-    );
+    return behandling.beregning != null;
 }
 
 export const erBeregnetAvslag = (behandling: Behandling) => {
-    return behandling.status === Behandlingsstatus.BEREGNET_AVSLAG;
+    return (
+        behandling.beregning != null &&
+        (behandling.status === Behandlingsstatus.BEREGNET_AVSLAG ||
+            behandling.status === Behandlingsstatus.UNDERKJENT_AVSLAG)
+    );
+};
+
+export const kanSimuleres = (behandling: Behandling) => {
+    return (
+        behandling.beregning != null &&
+        (behandling.status == Behandlingsstatus.BEREGNET_INNVILGET ||
+            behandling.status == Behandlingsstatus.SIMULERT ||
+            behandling.status == Behandlingsstatus.UNDERKJENT_INNVILGET)
+    );
 };
 
 export const erSimulert = (behandling: Behandling) => {
-    return behandling.status === Behandlingsstatus.SIMULERT;
+    return behandling.simulering != null && behandling.status === Behandlingsstatus.SIMULERT;
 };
 
 export const erUnderkjent = (behandling: Behandling) => {
