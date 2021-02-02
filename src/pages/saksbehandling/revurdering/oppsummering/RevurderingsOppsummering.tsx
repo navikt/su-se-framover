@@ -62,7 +62,7 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
                 }
             });
         },
-        [props.sakId]
+        [props.sakId, revurderingsVedtakStatus]
     );
 
     const formik = useFormik({
@@ -141,7 +141,9 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
                                 <Textarea
                                     label={intl.formatMessage({ id: 'oppsummering.tekstTilVedtaksbrev.tittel' })}
                                     name="tekstTilVedtaksbrev"
-                                    placeholder="Skriv inn innholdstekst i tekstfeltet her."
+                                    placeholder={intl.formatMessage({
+                                        id: 'oppsummering.tekstTilVedtaksbrev.placeholder',
+                                    })}
                                     value={formik.values.tekstTilVedtaksbrev ?? ''}
                                     feil={formik.errors.tekstTilVedtaksbrev}
                                     onChange={formik.handleChange}

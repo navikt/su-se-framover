@@ -45,18 +45,18 @@ export const erIGyldigStatusForÅKunneBeregne = (behandling: Behandling) =>
     ].some((status) => status === behandling.status);
 
 export const FradragTilFradragFormData = (fradrag: Fradrag[]): FradragFormData[] => {
-    const fradragFormData: FradragFormData[] = fradrag.map((fradrag) => {
+    const fradragFormData: FradragFormData[] = fradrag.map((f) => {
         return {
-            type: fradrag.type || null,
-            beløp: fradrag.beløp.toString() || null,
-            fraUtland: fradrag.utenlandskInntekt !== null,
+            type: f.type || null,
+            beløp: f.beløp.toString() || null,
+            fraUtland: f.utenlandskInntekt !== null,
             utenlandskInntekt: {
-                beløpIUtenlandskValuta: fradrag.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',
-                valuta: fradrag.utenlandskInntekt?.valuta ?? '',
-                kurs: fradrag.utenlandskInntekt?.kurs.toString() ?? '',
+                beløpIUtenlandskValuta: f.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',
+                valuta: f.utenlandskInntekt?.valuta ?? '',
+                kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
             },
-            tilhørerEPS: fradrag.tilhører === FradragTilhører.EPS,
-            periode: fradrag.periode,
+            tilhørerEPS: f.tilhører === FradragTilhører.EPS,
+            periode: f.periode,
         };
     });
     return fradragFormData;

@@ -6,6 +6,7 @@ import { Ingress, Innholdstittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { formatMonthYear } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
@@ -83,15 +84,8 @@ const EndringAvFradrag = (props: {
                 <Ingress>{intl.formatMessage({ id: 'periode.overskrift' })}</Ingress>
                 <div className={styles.periodeContainer}>
                     <p>
-                        {intl.formatDate(props.periode.fraOgMed, {
-                            year: 'numeric',
-                            month: '2-digit',
-                        })}{' '}
-                        -{' '}
-                        {intl.formatDate(props.periode.tilOgMed, {
-                            year: 'numeric',
-                            month: '2-digit',
-                        })}
+                        {`${formatMonthYear(props.periode.fraOgMed.toString(), intl)} -
+                        ${formatMonthYear(props.periode.tilOgMed.toString(), intl)} `}
                     </p>
                 </div>
                 <div className={styles.fradragInputsContainer}>

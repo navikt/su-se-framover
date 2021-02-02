@@ -19,7 +19,7 @@ import EndringAvFradrag from './endringAvFradrag/EndringAvFradrag';
 import RevurderingsOppsummering from './oppsummering/RevurderingsOppsummering';
 import messages from './revurdering-nb';
 import styles from './revurdering.module.less';
-import { createRevurderingsPath, erRevurderingSimulert } from './revurderingUtils';
+import { erRevurderingSimulert } from './revurderingUtils';
 import ValgAvPeriode from './valgAvPeriode/ValgAvPeriode';
 import { VisFeilmelding } from './VisFeilMelding';
 
@@ -39,6 +39,10 @@ const Revurdering = (props: { sak: Sak }) => {
         periode: null,
         revurdering: null,
     });
+
+    const createRevurderingsPath = (steg: RevurderingSteg) => {
+        return Routes.revurderValgtSak.createURL({ sakId: props.sak.id, steg: steg });
+    };
 
     const opprettRevurdering = async (periode: Periode) => {
         const response = await dispatch(
@@ -129,7 +133,7 @@ const Revurdering = (props: { sak: Sak }) => {
     return (
         <div className={styles.pageContainer}>
             <Switch>
-                <Route path={createRevurderingsPath(props.sak.id, RevurderingSteg.Periode)}>
+                <Route path={createRevurderingsPath(RevurderingSteg.Periode)}>
                     <ValgAvPeriode
                         sakId={props.sak.id}
                         førsteUtbetalingISak={new Date(props.sak.utbetalinger[0].fraOgMed)}
@@ -140,7 +144,7 @@ const Revurdering = (props: { sak: Sak }) => {
                         periode={formData.periode}
                     />
                 </Route>
-                <Route path={createRevurderingsPath(props.sak.id, RevurderingSteg.EndringAvFradrag)}>
+                <Route path={createRevurderingsPath(RevurderingSteg.EndringAvFradrag)}>
                     {formData.periode && formData.revurdering ? (
                         <EndringAvFradrag
                             sakId={props.sak.id}
@@ -149,16 +153,14 @@ const Revurdering = (props: { sak: Sak }) => {
                             beregnOgSimulerRevurdering={beregnOgSimulerRevurdering}
                         />
                     ) : (
-                        <VisFeilmelding forrigeURL={createRevurderingsPath(props.sak.id, RevurderingSteg.Periode)} />
+                        <VisFeilmelding forrigeURL={createRevurderingsPath(RevurderingSteg.Periode)} />
                     )}
                 </Route>
-                <Route path={createRevurderingsPath(props.sak.id, RevurderingSteg.Oppsummering)}>
+                <Route path={createRevurderingsPath(RevurderingSteg.Oppsummering)}>
                     {formData.revurdering && erRevurderingSimulert(formData.revurdering) ? (
                         <RevurderingsOppsummering sakId={props.sak.id} revurdering={formData.revurdering} />
                     ) : (
-                        <VisFeilmelding
-                            forrigeURL={createRevurderingsPath(props.sak.id, RevurderingSteg.EndringAvFradrag)}
-                        />
+                        <VisFeilmelding forrigeURL={createRevurderingsPath(RevurderingSteg.EndringAvFradrag)} />
                     )}
                 </Route>
             </Switch>
