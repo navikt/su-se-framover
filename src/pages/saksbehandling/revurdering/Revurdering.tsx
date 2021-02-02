@@ -57,9 +57,7 @@ const Revurdering = (props: { sak: Sak }) => {
     };
 
     const opprettRevurderingHvisPeriodenErGyldig = async (periode: Nullable<Periode>) => {
-        console.log('A');
         if (revurderingHarGyldigPeriode(periode)) {
-            console.log('B');
             const response = await dispatch(
                 revurderingSlice.opprettRevurdering({
                     sakId: props.sak.id,
