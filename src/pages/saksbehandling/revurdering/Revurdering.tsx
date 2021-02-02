@@ -19,12 +19,7 @@ import EndringAvFradrag from './endringAvFradrag/EndringAvFradrag';
 import RevurderingsOppsummering from './oppsummering/RevurderingsOppsummering';
 import messages from './revurdering-nb';
 import styles from './revurdering.module.less';
-import {
-    createRevurderingsPath,
-    erPeriodenFremoverITid,
-    erRevurderingSimulert,
-    harKunEnBehandlingInnenforRevurderingsperiode,
-} from './revurderingUtils';
+import { createRevurderingsPath, erRevurderingSimulert } from './revurderingUtils';
 import ValgAvPeriode from './valgAvPeriode/ValgAvPeriode';
 import { VisFeilmelding } from './VisFeilMelding';
 
@@ -45,39 +40,26 @@ const Revurdering = (props: { sak: Sak }) => {
         revurdering: null,
     });
 
-    const revurderingHarGyldigPeriode = (periode: Nullable<Periode>): periode is Periode => {
-        if (!periode) {
-            return false;
-        }
-
-        return (
-            erPeriodenFremoverITid(periode) &&
-            harKunEnBehandlingInnenforRevurderingsperiode(props.sak.behandlinger, periode)
+    const opprettRevurdering = async (periode: Periode) => {
+        const response = await dispatch(
+            revurderingSlice.opprettRevurdering({
+                sakId: props.sak.id,
+                periode: periode,
+            })
         );
-    };
 
-    const opprettRevurderingHvisPeriodenErGyldig = async (periode: Nullable<Periode>) => {
-        if (revurderingHarGyldigPeriode(periode)) {
-            const response = await dispatch(
-                revurderingSlice.opprettRevurdering({
+        if (revurderingSlice.opprettRevurdering.fulfilled.match(response)) {
+            setFormData({
+                periode: periode,
+                revurdering: response.payload,
+            });
+
+            history.push(
+                Routes.revurderValgtSak.createURL({
                     sakId: props.sak.id,
-                    periode: periode,
+                    steg: RevurderingSteg.EndringAvFradrag,
                 })
             );
-
-            if (revurderingSlice.opprettRevurdering.fulfilled.match(response)) {
-                setFormData({
-                    periode: periode,
-                    revurdering: response.payload,
-                });
-
-                history.push(
-                    Routes.revurderValgtSak.createURL({
-                        sakId: props.sak.id,
-                        steg: RevurderingSteg.EndringAvFradrag,
-                    })
-                );
-            }
         }
     };
 
@@ -154,7 +136,7 @@ const Revurdering = (props: { sak: Sak }) => {
                         sisteUtbetalingISak={
                             new Date(props.sak.utbetalinger[props.sak.utbetalinger.length - 1].tilOgMed)
                         }
-                        opprettRevurderingHvisPeriodenErGyldig={opprettRevurderingHvisPeriodenErGyldig}
+                        opprettRevurderingHvisPeriodenErGyldig={opprettRevurdering}
                         periode={formData.periode}
                     />
                 </Route>
