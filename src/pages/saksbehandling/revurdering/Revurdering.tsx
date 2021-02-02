@@ -45,7 +45,7 @@ const Revurdering = (props: { sak: Sak }) => {
         revurdering: null,
     });
 
-    const revurderingHarGyldigPeriode = (periode: Nullable<Periode>): periode is Nullable<Periode> & Periode => {
+    const revurderingHarGyldigPeriode = (periode: Nullable<Periode>): periode is Periode => {
         if (!periode) {
             return false;
         }
