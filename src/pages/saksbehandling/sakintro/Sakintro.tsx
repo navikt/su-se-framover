@@ -10,6 +10,7 @@ import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
+import { FeatureToggle } from '~api/featureToggleApi';
 import { Person } from '~api/personApi';
 import { useUserContext } from '~context/userContext';
 import {
@@ -19,6 +20,7 @@ import {
     hentSisteVurderteVilkår,
 } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { useFeatureToggle } from '~lib/featureToggles';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
@@ -71,6 +73,8 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
         return behandling && erIverksattAvslag(behandling);
     });
 
+    const revurderingToggle = useFeatureToggle(FeatureToggle.Revurdering);
+
     return (
         <div className={styles.sakintroContainer}>
             <div className={styles.pageHeader}>
@@ -78,12 +82,17 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                     {intl.formatMessage({ id: 'display.saksoversikt.tittel' })}: {props.sak.saksnummer}
                 </Innholdstittel>
                 <div className={styles.headerKnapper}>
-                    <Link
-                        to={Routes.revurderValgtSak.createURL({ sakId: props.sak.id, steg: RevurderingSteg.Periode })}
-                        className={classNames('knapp', styles.headerKnapp)}
-                    >
-                        {intl.formatMessage({ id: 'knapp.revurder' })}
-                    </Link>
+                    {revurderingToggle && (
+                        <Link
+                            to={Routes.revurderValgtSak.createURL({
+                                sakId: props.sak.id,
+                                steg: RevurderingSteg.Periode,
+                            })}
+                            className={classNames('knapp', styles.headerKnapp)}
+                        >
+                            {intl.formatMessage({ id: 'knapp.revurder' })}
+                        </Link>
+                    )}
                 </div>
             </div>
 
