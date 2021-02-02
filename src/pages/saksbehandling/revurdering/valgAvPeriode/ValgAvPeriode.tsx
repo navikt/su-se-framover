@@ -135,7 +135,6 @@ const ValgAvPeriode = (props: {
                     </Link>
                     <Hovedknapp>{intl.formatMessage({ id: 'knapp.neste' })}</Hovedknapp>
                 </div>
-                {/* TODO AI: Check error-meldinger */}
                 {hasSubmitted && RemoteData.isFailure(opprettRevurderingStatus) && (
                     <AlertStripe type="feil">{opprettRevurderingStatus.error.body?.message}</AlertStripe>
                 )}
