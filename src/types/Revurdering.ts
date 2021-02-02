@@ -7,7 +7,7 @@ export interface Revurdering {
     opprettet: string;
     tilRevurdering: Behandling;
 }
-export type OpprettetRevurdering = Revurdering & Record<string, never>;
+export type OpprettetRevurdering = Revurdering;
 
 export interface TilAttesteringRevurdering extends Revurdering {
     beregninger: {

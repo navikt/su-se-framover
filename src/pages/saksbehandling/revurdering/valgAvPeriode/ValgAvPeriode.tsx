@@ -133,7 +133,9 @@ const ValgAvPeriode = (props: {
                     <Link className="knapp" to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}>
                         {intl.formatMessage({ id: 'knapp.avslutt' })}
                     </Link>
-                    <Hovedknapp>{intl.formatMessage({ id: 'knapp.neste' })}</Hovedknapp>
+                    <Hovedknapp spinner={RemoteData.isPending(opprettRevurderingStatus)}>
+                        {intl.formatMessage({ id: 'knapp.neste' })}
+                    </Hovedknapp>
                 </div>
                 {hasSubmitted && RemoteData.isFailure(opprettRevurderingStatus) && (
                     <AlertStripe type="feil">{opprettRevurderingStatus.error.body?.message}</AlertStripe>
