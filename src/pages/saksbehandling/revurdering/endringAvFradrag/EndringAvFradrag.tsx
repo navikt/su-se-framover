@@ -90,8 +90,7 @@ const EndringAvFradrag = (props: {
                 </div>
                 <div className={styles.fradragInputsContainer}>
                     <FradragInputs
-                        //TODO: Få inn EPS fra back-end
-                        harEps={true}
+                        harEps={props.revurdering.tilRevurdering.behandlingsinformasjon.ektefelle ? true : false}
                         feltnavn="fradrag"
                         fradrag={formik.values.fradrag}
                         errors={formik.errors.fradrag}
