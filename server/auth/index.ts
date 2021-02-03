@@ -65,7 +65,16 @@ export default async function setup(app: Express, authClient: OpenIdClient.Clien
         done(null, user as Express.User);
     });
 
-    app.get('/login', passport.authenticate(authName, { failureRedirect: '/login-failed' }));
+    app.get(
+        '/login',
+        (req, _res, next) => {
+            if (typeof req.query.redirectTo === 'string') {
+                req.session.redirectTo = req.query.redirectTo;
+            }
+            next();
+        },
+        passport.authenticate(authName, { failureRedirect: '/login-failed' })
+    );
     app.get('/logout', (req, res) => {
         req.logout();
         res.redirect('/');
