@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
-import { SaksbehandlingMenyvalg } from '../pages/saksbehandling/types';
+import { RevurderingSteg, SaksbehandlingMenyvalg } from '../pages/saksbehandling/types';
 import { Søknadsteg } from '../pages/søknad/types';
 
 interface Route<T> {
@@ -94,4 +94,9 @@ export const saksbehandlingOppsummering: Route<{
 export const attestering: Route<{ sakId: string; behandlingId: string }> = {
     path: '/attestering/:sakId/:behandlingId/',
     createURL: (args) => `/attestering/${args.sakId}/${args.behandlingId}`,
+};
+
+export const revurderValgtSak: Route<{ sakId: string; steg: RevurderingSteg }> = {
+    path: `/saksoversikt/:sakId/revurder/:RevurderingSteg/`,
+    createURL: ({ sakId, steg }) => `/saksoversikt/${sakId}/revurder/${steg}`,
 };

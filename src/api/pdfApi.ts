@@ -17,3 +17,19 @@ export async function fetchSøknad(søknadId: string): Promise<ApiClientResult<B
         bodyTransformer: (res) => res.blob(),
     });
 }
+
+export async function fetchRevurderingsVedtak(
+    sakId: string,
+    revurderingId: string,
+    fritekst: string | null
+): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/brevutkast`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/pdf' }) },
+        body: {
+            fritekst,
+        },
+        bodyTransformer: (res) => res.blob(),
+    });
+}

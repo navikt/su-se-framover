@@ -1,4 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import classNames from 'classnames';
 import AlertStripe from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
@@ -9,6 +10,7 @@ import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
+import { FeatureToggle } from '~api/featureToggleApi';
 import { Person } from '~api/personApi';
 import { useUserContext } from '~context/userContext';
 import {
@@ -18,6 +20,7 @@ import {
     hentSisteVurderteVilkår,
 } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { useFeatureToggle } from '~lib/featureToggles';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
@@ -25,6 +28,8 @@ import { useAppDispatch } from '~redux/Store';
 import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
+
+import { RevurderingSteg } from '../types';
 
 import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
@@ -44,10 +49,15 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
     const intl = useI18n({ messages });
-    const åpneSøknader = props.sak.søknader.filter((søknad) => {
-        const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
-        return søknad.lukket === null && (!behandling || !erIverksatt(behandling));
-    });
+
+    const åpneSøknader = props.sak.søknader
+        .filter((søknad) => {
+            const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
+            return søknad.lukket === null && (!behandling || !erIverksatt(behandling));
+        })
+        .sort((a: Søknad, b: Søknad) => {
+            return Date.parse(a.opprettet) - Date.parse(b.opprettet);
+        });
 
     const godkjenteBehandlinger = props.sak.søknader.filter((søknad) => {
         const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
@@ -63,11 +73,29 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
         return behandling && erIverksattAvslag(behandling);
     });
 
+    const revurderingToggle = useFeatureToggle(FeatureToggle.Revurdering);
+
     return (
         <div className={styles.sakintroContainer}>
-            <Innholdstittel className={styles.tittel}>
-                {intl.formatMessage({ id: 'display.saksoversikt.tittel' })}: {props.sak.saksnummer}
-            </Innholdstittel>
+            <div className={styles.pageHeader}>
+                <Innholdstittel className={styles.tittel}>
+                    {intl.formatMessage({ id: 'display.saksoversikt.tittel' })}: {props.sak.saksnummer}
+                </Innholdstittel>
+                <div className={styles.headerKnapper}>
+                    {revurderingToggle && (
+                        <Link
+                            to={Routes.revurderValgtSak.createURL({
+                                sakId: props.sak.id,
+                                steg: RevurderingSteg.Periode,
+                            })}
+                            className={classNames('knapp', styles.headerKnapp)}
+                        >
+                            {intl.formatMessage({ id: 'knapp.revurder' })}
+                        </Link>
+                    )}
+                </div>
+            </div>
+
             {props.sak.søknader.length > 0 ? (
                 <div className={styles.søknadOgUtbetalingContainer}>
                     <ÅpneSøknader

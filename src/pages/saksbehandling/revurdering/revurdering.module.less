@@ -1,0 +1,43 @@
+@import '~/styles/variables.less';
+
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.revurderingContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: @spacing-xxl;
+
+    .tittel {
+        padding: @spacing-xs 10rem;
+        border-bottom: 1px solid @navLysGra;
+        margin-bottom: @spacing;
+    }
+
+    .mainContentContainer {
+        padding-left: 10rem;
+        padding-right: 10rem;
+        display: flex;
+        align-self: flex-start;
+        flex-direction: column;
+
+        .knappContainer {
+            > :not(:last-child) {
+                margin-right: @spacing;
+            }
+        }
+
+        .feilmelding {
+            margin-bottom: @spacing;
+        }
+
+        .alertstripe {
+            margin-bottom: @spacing;
+        }
+    }
+}

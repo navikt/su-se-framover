@@ -7,3 +7,9 @@ export enum SaksbehandlingMenyvalg {
     Vedtaksbrev = 'vedtaksbrev',
     Oppsummering = 'oppsummering',
 }
+
+export enum RevurderingSteg {
+    Periode = 'periode',
+    EndringAvFradrag = 'endringAvFradrag',
+    Oppsummering = 'oppsummering',
+}

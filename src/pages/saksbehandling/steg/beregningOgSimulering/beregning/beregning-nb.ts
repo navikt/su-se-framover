@@ -19,6 +19,8 @@ export default {
 
     'display.simulerer': 'Simulerer',
 
+    'display.totaltBeløp': 'Totalt beløp',
+
     'display.visBeregning.beløpIUtenlandskValuta': 'Månedsbeløp i utenlandsk valuta',
     'display.visBeregning.valuta': 'Valuta',
     'display.visBeregning.kurs': 'Kurs',

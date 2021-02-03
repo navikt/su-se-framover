@@ -20,8 +20,8 @@ import * as BeregningUtils from './beregningUtils';
 import styles from './visBeregning.module.less';
 
 interface Props {
+    beregningsTittel?: string;
     beregning: Beregning;
-    forventetinntekt: number;
 }
 
 const getFradragsnøkkel = (f: Fradrag) => f.type + (f.utenlandskInntekt ? `-${f.utenlandskInntekt.valuta}` : '');
@@ -72,10 +72,10 @@ const VisBeregning = (props: Props) => {
     return (
         <div className={styles.beregningdetaljer}>
             <Systemtittel className={styles.visBeregningTittel}>
-                {intl.formatMessage({ id: 'page.tittel' })}
+                {props.beregningsTittel ? props.beregningsTittel : intl.formatMessage({ id: 'page.tittel' })}
             </Systemtittel>
             <Element className={classNames(styles.totalt, styles.linje)}>
-                <span>Totalt beløp</span>
+                <span>{intl.formatMessage({ id: 'display.totaltBeløp' })}</span>
                 <span>
                     {formatCurrency(
                         intl,

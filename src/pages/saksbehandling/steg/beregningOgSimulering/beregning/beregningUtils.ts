@@ -1,5 +1,7 @@
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
-import { Fradragstype } from '~types/Fradrag';
+import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
+
+import { FradragFormData } from './FradragInputs';
 
 export const fradragstypeResourceId = (f: Fradragstype): string => {
     switch (f) {
@@ -41,3 +43,21 @@ export const erIGyldigStatusForÅKunneBeregne = (behandling: Behandling) =>
         Behandlingsstatus.UNDERKJENT_AVSLAG,
         Behandlingsstatus.UNDERKJENT_INNVILGET,
     ].some((status) => status === behandling.status);
+
+export const FradragTilFradragFormData = (fradrag: Fradrag[]): FradragFormData[] => {
+    const fradragFormData: FradragFormData[] = fradrag.map((f) => {
+        return {
+            type: f.type || null,
+            beløp: f.beløp.toString() || null,
+            fraUtland: f.utenlandskInntekt !== null,
+            utenlandskInntekt: {
+                beløpIUtenlandskValuta: f.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',
+                valuta: f.utenlandskInntekt?.valuta ?? '',
+                kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
+            },
+            tilhørerEPS: f.tilhører === FradragTilhører.EPS,
+            periode: f.periode,
+        };
+    });
+    return fradragFormData;
+};

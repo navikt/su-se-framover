@@ -25,6 +25,7 @@ import { useAppSelector, useAppDispatch } from '~redux/Store';
 
 import Behandlingsoppsummering from './behandlingsoppsummering/behandlingsoppsummering';
 import LukkSøknad from './lukkSøknad/LukkSøknad';
+import Revurdering from './revurdering/Revurdering';
 import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
@@ -129,6 +130,11 @@ const Saksoversikt = () => {
                                             <Route path={Routes.avsluttSøknadsbehandling.path}>
                                                 <div className={styles.mainContent}>
                                                     <LukkSøknad sak={sak} />
+                                                </div>
+                                            </Route>
+                                            <Route path={Routes.revurderValgtSak.path}>
+                                                <div className={styles.mainContent}>
+                                                    <Revurdering sak={sak} />
                                                 </div>
                                             </Route>
                                             <Route path={Routes.saksoversiktValgtBehandling.path}>

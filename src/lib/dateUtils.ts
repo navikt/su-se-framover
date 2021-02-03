@@ -1,6 +1,8 @@
 import * as DateFns from 'date-fns';
 import { IntlShape } from 'react-intl';
 
+import { Periode } from '~types/Fradrag';
+
 import { Nullable } from './types';
 
 export const formatDateTime = (time: string, intl: IntlShape) => {
@@ -47,4 +49,11 @@ export const toStringDateOrNull = (date: Date | null) => {
     if (!date) return null;
 
     return DateFns.format(date, 'yyyy-MM-dd');
+};
+
+export const erPeriodeInnenforEnStønadsperiode = (periode: Periode, stønadsperiode: Periode) => {
+    return (
+        !DateFns.isBefore(periode.fraOgMed, stønadsperiode.fraOgMed) &&
+        !DateFns.isAfter(periode.tilOgMed, stønadsperiode.tilOgMed)
+    );
 };
