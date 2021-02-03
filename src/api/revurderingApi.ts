@@ -10,7 +10,7 @@ export async function opprettRevurdering(
     periode: Periode
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
-        url: `/saker/${sakId}/revurdering/opprett`,
+        url: `/saker/${sakId}/revurderinger/opprett`,
         method: 'POST',
         body: {
             fraOgMed: formatISO(periode.fraOgMed, { representation: 'date' }),
@@ -28,10 +28,9 @@ export async function beregnOgSimuler(
     }
 ): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
-        url: `/saker/${sakId}/revurdering/beregnOgSimuler`,
+        url: `/saker/${sakId}/revurderinger/${arg.revurderingId}/beregnOgSimuler`,
         method: 'POST',
         body: {
-            revurderingId: arg.revurderingId,
             periode: {
                 fraOgMed: formatISO(new Date(arg.periode.fraOgMed), { representation: 'date' }),
                 tilOgMed: formatISO(new Date(arg.periode.tilOgMed), { representation: 'date' }),
@@ -46,7 +45,7 @@ export async function sendTilAttestering(
     revurderingId: string
 ): Promise<ApiClientResult<TilAttesteringRevurdering>> {
     return apiClient({
-        url: `/saker/${sakId}/revurdering/${revurderingId}/tilAttestering`,
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/tilAttestering`,
         method: 'POST',
     });
 }

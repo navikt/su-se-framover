@@ -24,7 +24,7 @@ export async function fetchRevurderingsVedtak(
     fritekst: string | null
 ): Promise<ApiClientResult<Blob>> {
     return apiClient({
-        url: `/saker/${sakId}/revurdering/${revurderingId}/brevutkast`,
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/brevutkast`,
         method: 'POST',
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
         body: {
