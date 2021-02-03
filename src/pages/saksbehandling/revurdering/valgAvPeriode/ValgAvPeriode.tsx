@@ -129,6 +129,11 @@ const ValgAvPeriode = (props: {
                         </div>
                     </div>
                 </div>
+                {hasSubmitted && RemoteData.isFailure(opprettRevurderingStatus) && (
+                    <AlertStripe type="feil" className={sharedStyles.alertstripe}>
+                        {opprettRevurderingStatus.error.body?.message}
+                    </AlertStripe>
+                )}
                 <div className={sharedStyles.knappContainer}>
                     <Link className="knapp" to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}>
                         {intl.formatMessage({ id: 'knapp.avslutt' })}
@@ -137,9 +142,6 @@ const ValgAvPeriode = (props: {
                         {intl.formatMessage({ id: 'knapp.neste' })}
                     </Hovedknapp>
                 </div>
-                {hasSubmitted && RemoteData.isFailure(opprettRevurderingStatus) && (
-                    <AlertStripe type="feil">{opprettRevurderingStatus.error.body?.message}</AlertStripe>
-                )}
             </div>
         </form>
     );

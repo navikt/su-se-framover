@@ -27,11 +27,11 @@ import { VisFeilmelding } from '../VisFeilMelding';
 import styles from './revurderingsOppsummering.module.less';
 
 interface OppsummeringFormData {
-    tekstTilVedtaksbrev?: string;
+    tekstTilVedtaksbrev?: Nullable<string>;
 }
 
 const schema = yup.object<OppsummeringFormData>({
-    tekstTilVedtaksbrev: yup.string(),
+    tekstTilVedtaksbrev: yup.string().nullable(),
 });
 
 const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertRevurdering }) => {
