@@ -4,9 +4,9 @@ import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { Ingress, Innholdstittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
-import { formatMonthYear } from '~lib/dateUtils';
+import * as revurderingSlice from '~features/revurdering/revurdering.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
@@ -17,8 +17,8 @@ import {
     fradragSchema,
 } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/FradragInputs';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
-import { useAppSelector } from '~redux/Store';
-import { Fradragstype, Periode } from '~types/Fradrag';
+import { useAppSelector, useAppDispatch } from '~redux/Store';
+import { Fradragstype, FradragTilhører } from '~types/Fradrag';
 import { Revurdering } from '~types/Revurdering';
 
 import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregning-nb';
@@ -36,20 +36,60 @@ const schema = yup.object<EndringAvFradragFormData>({
     fradrag: yup.array(fradragSchema.required()).defined(),
 });
 
-const EndringAvFradrag = (props: {
-    sakId: string;
-    periode: Periode;
-    revurdering: Revurdering;
-    beregnOgSimulerRevurdering: (fradrag: FradragFormData[]) => void;
-}) => {
+const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) => {
     const { beregnOgSimulerStatus: beregnOgSimuler } = useAppSelector((state) => state.revurdering);
     const intl = useI18n({ messages: { ...messages, ...fradragMessages } });
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+    const dispatch = useAppDispatch();
+    const history = useHistory();
 
     const fradragUtenForventetInntekt = (fradrag: FradragFormData[]) => {
         return fradrag.filter((f) => {
             return f.type !== Fradragstype.ForventetInntekt;
         });
+    };
+
+    const beregnOgSimulerRevurdering = async (fradrag: FradragFormData[]) => {
+        const response = await dispatch(
+            revurderingSlice.beregnOgSimuler({
+                sakId: props.sakId,
+                revurderingId: props.revurdering.id,
+                //valdiering sikrer at feltet ikke er null
+                /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                periode: {
+                    fraOgMed: props.revurdering.periode.fraOgMed,
+                    tilOgMed: props.revurdering.periode.tilOgMed,
+                },
+                fradrag: fradrag.map((f: FradragFormData) => ({
+                    periode:
+                        f.periode?.fraOgMed && f.periode.tilOgMed
+                            ? { fraOgMed: f.periode.fraOgMed, tilOgMed: f.periode.tilOgMed }
+                            : null,
+                    beløp: Number.parseInt(f.beløp!, 10),
+                    type: f.type!,
+                    utenlandskInntekt: f.fraUtland
+                        ? {
+                              beløpIUtenlandskValuta: Number.parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
+                              valuta: f.utenlandskInntekt.valuta,
+                              kurs: Number.parseFloat(f.utenlandskInntekt.kurs),
+                          }
+                        : null,
+                    tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
+                    /* eslint-enable @typescript-eslint/no-non-null-assertion */
+                })),
+            })
+        );
+        if (revurderingSlice.beregnOgSimuler.fulfilled.match(response)) {
+            //setFormData((values) => ({ ...values, revurdering: response.payload }));
+
+            history.push(
+                Routes.revurderValgtRevurdering.createURL({
+                    sakId: props.sakId,
+                    steg: RevurderingSteg.Oppsummering,
+                    revurderingId: props.revurdering.id,
+                })
+            );
+        }
     };
 
     const formik = useFormik<EndringAvFradragFormData>({
@@ -63,7 +103,7 @@ const EndringAvFradrag = (props: {
                   ),
         },
         onSubmit(values) {
-            props.beregnOgSimulerRevurdering(values.fradrag);
+            beregnOgSimulerRevurdering(values.fradrag);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -84,8 +124,8 @@ const EndringAvFradrag = (props: {
                 <Ingress>{intl.formatMessage({ id: 'periode.overskrift' })}</Ingress>
                 <div className={styles.periodeContainer}>
                     <p>
-                        {`${formatMonthYear(props.periode.fraOgMed.toString(), intl)} -
-                        ${formatMonthYear(props.periode.tilOgMed.toString(), intl)} `}
+                        {`${props.revurdering.periode.fraOgMed} -
+                        ${props.revurdering.periode.tilOgMed} `}
                     </p>
                 </div>
                 <div className={styles.fradragInputsContainer}>
@@ -105,7 +145,10 @@ const EndringAvFradrag = (props: {
                                 fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
                             }));
                         }}
-                        beregningsDato={{ fom: props.periode.fraOgMed, tom: props.periode.tilOgMed }}
+                        beregningsDato={{
+                            fom: new Date(props.revurdering.periode.fraOgMed),
+                            tom: new Date(props.revurdering.periode.tilOgMed),
+                        }}
                         onLeggTilClick={() => {
                             formik.setValues({
                                 ...formik.values,
@@ -136,7 +179,11 @@ const EndringAvFradrag = (props: {
                 <div className={sharedStyles.knappContainer}>
                     <Link
                         className="knapp"
-                        to={Routes.revurderValgtSak.createURL({ sakId: props.sakId, steg: RevurderingSteg.Periode })}
+                        to={Routes.revurderValgtRevurdering.createURL({
+                            sakId: props.sakId,
+                            steg: RevurderingSteg.Periode,
+                            revurderingId: props.revurdering.id,
+                        })}
                     >
                         {intl.formatMessage({ id: 'knapp.forrige' })}
                     </Link>

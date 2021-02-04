@@ -1,11 +1,14 @@
 import { Behandling } from './Behandling';
 import { Beregning } from './Beregning';
+import { Periode } from './Fradrag';
 
 export interface Revurdering {
     id: string;
     status: RevurderingsStatus;
     opprettet: string;
+    periode: Periode<string>;
     tilRevurdering: Behandling;
+    saksbehandler: string;
 }
 export type OpprettetRevurdering = Revurdering;
 

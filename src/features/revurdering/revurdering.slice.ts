@@ -5,22 +5,10 @@ import { ApiError } from '~api/apiClient';
 import { Nullable } from '~lib/types';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Fradrag, Periode } from '~types/Fradrag';
-import { OpprettetRevurdering, SimulertRevurdering } from '~types/Revurdering';
+import { SimulertRevurdering } from '~types/Revurdering';
 
 import * as pdfApi from '../../api/pdfApi';
 import * as revurderingApi from '../../api/revurderingApi';
-
-export const opprettRevurdering = createAsyncThunk<
-    OpprettetRevurdering,
-    { sakId: string; periode: Periode },
-    { rejectValue: ApiError }
->('revurdering/opprettRevurdering', async ({ sakId, periode }, thunkApi) => {
-    const res = await revurderingApi.opprettRevurdering(sakId, periode);
-    if (res.status === 'ok') {
-        return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
 
 export const beregnOgSimuler = createAsyncThunk<
     SimulertRevurdering,
@@ -51,13 +39,11 @@ export const fetchRevurderingsVedtak = createAsyncThunk<
 });
 
 interface RevurderingState {
-    opprettRevurderingStatus: RemoteData.RemoteData<ApiError, OpprettetRevurdering>;
     beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, SimulertRevurdering>;
     revurderingsVedtakStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: RevurderingState = {
-    opprettRevurderingStatus: RemoteData.initial,
     beregnOgSimulerStatus: RemoteData.initial,
     revurderingsVedtakStatus: RemoteData.initial,
 };
@@ -92,18 +78,6 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.revurderingsVedtakStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-
-        handleAsyncThunk(builder, opprettRevurdering, {
-            pending: (state) => {
-                state.opprettRevurderingStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.opprettRevurderingStatus = RemoteData.success(action.payload);
-            },
-            rejected: (state, action) => {
-                state.opprettRevurderingStatus = simpleRejectedActionToRemoteData(action);
             },
         });
     },

@@ -1,6 +1,7 @@
 import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
 
 import { Behandling } from './Behandling';
+import { Revurdering } from './Revurdering';
 import { Søknad } from './Søknad';
 
 export interface Sak {
@@ -11,6 +12,7 @@ export interface Sak {
     søknader: Søknad[];
     utbetalinger: Utbetalingsperiode[];
     utbetalingerKanStansesEllerGjenopptas: KanStansesEllerGjenopptas;
+    revurderinger: Revurdering[];
 }
 
 export enum KanStansesEllerGjenopptas {

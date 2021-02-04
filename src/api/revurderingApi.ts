@@ -19,6 +19,33 @@ export async function opprettRevurdering(
     });
 }
 
+export async function oppdaterRevurderingsPeriode(
+    sakId: string,
+    revurderingsId: string,
+    periode: Periode
+): Promise<ApiClientResult<OpprettetRevurdering>> {
+    console.log('oppdaterer revurderingsperiode med data: ', sakId, revurderingsId, periode);
+    return {
+        status: 'error',
+        error: {
+            statusCode: 9001,
+            correlationId: 'string',
+            body: {
+                message: 'its over 9000!',
+            },
+        },
+    };
+
+    /*return apiClient({
+        url: `/saker/${sakId}/revurderinger/opprett`,
+        method: 'POST',
+        body: {
+            fraOgMed: formatISO(periode.fraOgMed, { representation: 'date' }),
+            tilOgMed: formatISO(periode.tilOgMed, { representation: 'date' }),
+        },
+    });*/
+}
+
 export async function beregnOgSimuler(
     sakId: string,
     arg: {

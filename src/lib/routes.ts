@@ -96,7 +96,17 @@ export const attestering: Route<{ sakId: string; behandlingId: string }> = {
     createURL: (args) => `/attestering/${args.sakId}/${args.behandlingId}`,
 };
 
-export const revurderValgtSak: Route<{ sakId: string; steg: RevurderingSteg }> = {
-    path: `/saksoversikt/:sakId/revurder/:RevurderingSteg/`,
-    createURL: ({ sakId, steg }) => `/saksoversikt/${sakId}/revurder/${steg}`,
+export const revurderValgtSak: Route<{ sakId: string }> = {
+    path: `/saksoversikt/:sakId/revurder/`,
+    createURL: ({ sakId }) => `/saksoversikt/${sakId}/revurder`,
+};
+
+export const revurderValgtRevurdering: Route<{ sakId: string; steg: RevurderingSteg; revurderingId: string }> = {
+    path: `/saksoversikt/:sakId/revurdering/:revurderingId/:revurderingSteg/`,
+    createURL: ({ sakId, steg, revurderingId }) => `/saksoversikt/${sakId}/revurdering/${revurderingId}/${steg}`,
+};
+
+export const attesterRevurdering: Route<{ sakId: string; revurderingId: string }> = {
+    path: '/attesterRevurdering/:sakId/:revurderingId/',
+    createURL: (args) => `/attestering/${args.sakId}/${args.revurderingId}`,
 };

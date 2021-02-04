@@ -100,9 +100,10 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
             </div>
         );
     }
-    const forrigeURL = Routes.revurderValgtSak.createURL({
+    const forrigeURL = Routes.revurderValgtRevurdering.createURL({
         sakId: props.sakId,
-        steg: RevurderingSteg.Periode,
+        steg: RevurderingSteg.EndringAvFradrag,
+        revurderingId: props.revurdering.id,
     });
 
     return pipe(
@@ -168,13 +169,7 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
                             </AlertStripeFeil>
                         )}
                         <div className={sharedStyles.knappContainer}>
-                            <Link
-                                className="knapp"
-                                to={Routes.revurderValgtSak.createURL({
-                                    sakId: props.sakId,
-                                    steg: RevurderingSteg.EndringAvFradrag,
-                                })}
-                            >
+                            <Link className="knapp" to={forrigeURL}>
                                 {intl.formatMessage({ id: 'knapp.forrige' })}
                             </Link>
                             <Hovedknapp spinner={RemoteData.isPending(sendtTilAttesteringStatus)}>
