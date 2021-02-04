@@ -27,6 +27,7 @@ import {
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Fradragstype, FradragTilhører } from '~types/Fradrag';
 
+import { Beregning } from '../../../../../types/Beregning';
 import BeregningFaktablokk from '../../faktablokk/faktablokker/BeregningFaktablokk';
 import sharedI18n from '../../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../../types';
@@ -43,31 +44,50 @@ interface FormData {
     fradrag: FradragFormData[];
 }
 
+function getInitialValues(beregning: Nullable<Beregning>): FormData {
+    const fradragUtenomForventetInntekt = (beregning?.fradrag ?? []).filter(
+        (f) => f.type !== Fradragstype.ForventetInntekt
+    );
+    return {
+        fom: toDateOrNull(beregning?.fraOgMed),
+        tom: toDateOrNull(beregning?.tilOgMed),
+        fradrag: fradragUtenomForventetInntekt.map((f) => ({
+            periode: f.periode,
+            fraUtland: f.utenlandskInntekt !== null,
+            beløp: f.beløp.toString(),
+            utenlandskInntekt: {
+                beløpIUtenlandskValuta: f.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',
+                valuta: f.utenlandskInntekt?.valuta.toString() ?? '',
+                kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
+            },
+            type: f.type,
+            tilhørerEPS: f.tilhører === FradragTilhører.EPS,
+        })),
+    };
+}
+
 const Beregning = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [needsBeregning, setNeedsBeregning] = useState(false);
 
     const { beregningStatus, simuleringStatus } = useAppSelector((state) => state.sak);
-    const FradragUtenomForventetInntekt = (props.behandling.beregning?.fradrag ?? []).filter(
-        (f) => f.type !== Fradragstype.ForventetInntekt
-    );
 
     if (!erIGyldigStatusForÅKunneBeregne(props.behandling)) {
         return <div>Behandlingen er ikke ferdig.</div>;
     }
 
-    const startBeregning = (values: FormData) => {
+    const startBeregning = async (values: FormData) => {
         if (!values.fom || !values.tom || !props.behandling.behandlingsinformasjon.utledetSats) {
-            return;
+            return null;
         }
 
         const fradrag = values.fradrag.filter(isValidFradrag);
         if (fradrag.length !== values.fradrag.length) {
-            return;
+            return null;
         }
 
-        dispatch(
+        const res = await dispatch(
             sakSlice.startBeregning({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
@@ -95,37 +115,17 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 })),
             })
         );
+
+        if (sakSlice.startBeregning.fulfilled.match(res)) {
+            return res.payload;
+        }
+        return null;
     };
 
     const handleLagreOgFortsettSenere = (values: FormData) => {
         startBeregning(values);
         if (RemoteData.isSuccess(beregningStatus)) {
             history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
-        }
-    };
-
-    const handleSave = async (nesteUrl: string) => {
-        if (
-            RemoteData.isSuccess(beregningStatus) ||
-            (props.behandling.beregning && RemoteData.isInitial(beregningStatus))
-        ) {
-            if (kanSimuleres(props.behandling)) {
-                history.push(nesteUrl);
-                return;
-            }
-
-            const res = await dispatch(
-                sakSlice.startSimulering({
-                    sakId: props.sakId,
-                    behandlingId: props.behandling.id,
-                })
-            );
-
-            if (sakSlice.startSimulering.fulfilled.match(res)) {
-                history.push(nesteUrl);
-            }
-        } else {
-            setNeedsBeregning(true);
         }
     };
 
@@ -146,24 +146,13 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     };
 
     const formik = useFormik<FormData>({
-        initialValues: {
-            fom: toDateOrNull(props.behandling.beregning?.fraOgMed),
-            tom: toDateOrNull(props.behandling.beregning?.tilOgMed),
-            fradrag: FradragUtenomForventetInntekt.map((f) => ({
-                periode: f.periode,
-                fraUtland: f.utenlandskInntekt !== null,
-                beløp: f.beløp.toString(),
-                utenlandskInntekt: {
-                    beløpIUtenlandskValuta: f.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',
-                    valuta: f.utenlandskInntekt?.valuta.toString() ?? '',
-                    kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
-                },
-                type: f.type,
-                tilhørerEPS: f.tilhører === FradragTilhører.EPS,
-            })),
-        },
-        onSubmit(values) {
-            startBeregning(values);
+        initialValues: getInitialValues(props.behandling.beregning),
+        async onSubmit(values, helpers) {
+            const b = await startBeregning(values);
+            if (b) {
+                setNeedsBeregning(false);
+                helpers.resetForm({ values: getInitialValues(b.beregning) });
+            }
         },
         validationSchema: yup.object<FormData>({
             fom: yup.date().nullable().required(),
@@ -184,6 +173,39 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         validateOnChange: false,
     });
     const history = useHistory();
+
+    const handleSave = async (nesteUrl: string) => {
+        const formikErrors = await formik.validateForm();
+        if (Object.values(formikErrors).length > 0) {
+            return;
+        }
+        if (formik.dirty) {
+            setNeedsBeregning(true);
+            return;
+        }
+        if (
+            RemoteData.isSuccess(beregningStatus) ||
+            (props.behandling.beregning && RemoteData.isInitial(beregningStatus))
+        ) {
+            if (!kanSimuleres(props.behandling)) {
+                history.push(nesteUrl);
+                return;
+            }
+
+            const res = await dispatch(
+                sakSlice.startSimulering({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                })
+            );
+
+            if (sakSlice.startSimulering.fulfilled.match(res)) {
+                history.push(nesteUrl);
+            }
+        } else {
+            setNeedsBeregning(true);
+        }
+    };
 
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
@@ -293,6 +315,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     feil={formikErrorsTilFeiloppsummering(formik.errors)}
                                     tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                                     hidden={!formikErrorsHarFeil(formik.errors)}
+                                    className={styles.feiloppsummering}
                                 />
                             )}
                             <Knapp htmlType="submit" spinner={RemoteData.isPending(beregningStatus)} mini>
@@ -308,7 +331,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 <p>{beregningStatus.error.body?.message || ''}</p>
                             </AlertStripeFeil>
                         )}
-                        {needsBeregning && !props.behandling.beregning && (
+                        {needsBeregning && (
                             <AlertStripe type="advarsel">
                                 {intl.formatMessage({ id: 'alert.advarsel.kjørBeregningFørst' })}
                             </AlertStripe>
