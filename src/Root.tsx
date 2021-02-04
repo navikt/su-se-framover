@@ -111,7 +111,7 @@ const ContentWrapper: React.FC = (props) => {
                                             : 'En feil oppstod'}
                                     </Innholdstittel>
                                     <Lenke
-                                        href={Config.LOGIN_URL}
+                                        href={`${Config.LOGIN_URL}?redirectTo=${window.location.pathname}`}
                                         onClick={() => {
                                             Cookies.set(Cookies.CookieName.LoginRedirectUrl, window.location.pathname);
                                         }}
