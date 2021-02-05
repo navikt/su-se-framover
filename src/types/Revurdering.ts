@@ -12,7 +12,7 @@ export interface Revurdering {
 }
 export type OpprettetRevurdering = Revurdering;
 
-export interface RevurderingTilAttestering extends Revurdering {
+export interface SimulertRevurdering extends Revurdering {
     beregninger: {
         beregning: Beregning;
         revurdert: Beregning;
@@ -20,7 +20,7 @@ export interface RevurderingTilAttestering extends Revurdering {
     saksbehandler: string;
 }
 
-export interface SimulertRevurdering extends Revurdering {
+export interface RevurderingTilAttestering extends Revurdering {
     beregninger: {
         beregning: Beregning;
         revurdert: Beregning;

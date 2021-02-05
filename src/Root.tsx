@@ -26,6 +26,7 @@ import Soknad from './pages/søknad';
 import Store, { useAppDispatch, useAppSelector } from './redux/Store';
 import styles from './root.module.less';
 import { LoggedInUser } from './types/LoggedInUser';
+
 import './externalStyles';
 
 const ScrollToTop = () => {
