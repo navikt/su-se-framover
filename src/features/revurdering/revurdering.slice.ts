@@ -4,22 +4,17 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~api/apiClient';
 import { Nullable } from '~lib/types';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
-import { Fradrag, Periode } from '~types/Fradrag';
-import { SimulertRevurdering } from '~types/Revurdering';
+import { RevurderingTilAttestering } from '~types/Revurdering';
 
 import * as pdfApi from '../../api/pdfApi';
 import * as revurderingApi from '../../api/revurderingApi';
 
-export const beregnOgSimuler = createAsyncThunk<
-    SimulertRevurdering,
-    { sakId: string; revurderingId: string; periode: Periode<string>; fradrag: Fradrag[] },
+export const sendRevurderingTilAttestering = createAsyncThunk<
+    RevurderingTilAttestering,
+    { sakId: string; revurderingId: string },
     { rejectValue: ApiError }
->('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode, fradrag }, thunkApi) => {
-    const res = await revurderingApi.beregnOgSimuler(sakId, {
-        revurderingId,
-        periode,
-        fradrag,
-    });
+>('revurdering/sendTilAttestering', async ({ sakId, revurderingId }, thunkApi) => {
+    const res = await revurderingApi.sendTilAttestering(sakId, revurderingId);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -39,36 +34,18 @@ export const fetchRevurderingsVedtak = createAsyncThunk<
 });
 
 interface RevurderingState {
-    beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, SimulertRevurdering>;
     revurderingsVedtakStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: RevurderingState = {
-    beregnOgSimulerStatus: RemoteData.initial,
     revurderingsVedtakStatus: RemoteData.initial,
 };
 
 export default createSlice({
     name: 'revurdering',
     initialState: initialState,
-    reducers: {
-        reset() {
-            return initialState;
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
-        handleAsyncThunk(builder, beregnOgSimuler, {
-            pending: (state) => {
-                state.beregnOgSimulerStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.beregnOgSimulerStatus = RemoteData.success(action.payload);
-            },
-            rejected: (state, action) => {
-                state.beregnOgSimulerStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-
         handleAsyncThunk(builder, fetchRevurderingsVedtak, {
             pending: (state) => {
                 state.revurderingsVedtakStatus = RemoteData.pending;

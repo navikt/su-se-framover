@@ -12,7 +12,7 @@ export interface Revurdering {
 }
 export type OpprettetRevurdering = Revurdering;
 
-export interface TilAttesteringRevurdering extends Revurdering {
+export interface RevurderingTilAttestering extends Revurdering {
     beregninger: {
         beregning: Beregning;
         revurdert: Beregning;

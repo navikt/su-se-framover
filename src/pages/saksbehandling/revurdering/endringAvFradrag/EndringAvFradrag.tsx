@@ -6,7 +6,7 @@ import { Ingress, Innholdstittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import * as revurderingSlice from '~features/revurdering/revurdering.slice';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
@@ -37,7 +37,7 @@ const schema = yup.object<EndringAvFradragFormData>({
 });
 
 const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) => {
-    const { beregnOgSimulerStatus: beregnOgSimuler } = useAppSelector((state) => state.revurdering);
+    const { beregnOgSimulerStatus: beregnOgSimuler } = useAppSelector((state) => state.sak);
     const intl = useI18n({ messages: { ...messages, ...fradragMessages } });
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const dispatch = useAppDispatch();
@@ -51,7 +51,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
 
     const beregnOgSimulerRevurdering = async (fradrag: FradragFormData[]) => {
         const response = await dispatch(
-            revurderingSlice.beregnOgSimuler({
+            sakSlice.beregnOgSimuler({
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
                 //valdiering sikrer at feltet ikke er null
@@ -79,7 +79,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                 })),
             })
         );
-        if (revurderingSlice.beregnOgSimuler.fulfilled.match(response)) {
+        if (sakSlice.beregnOgSimuler.fulfilled.match(response)) {
             //setFormData((values) => ({ ...values, revurdering: response.payload }));
 
             history.push(

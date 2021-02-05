@@ -8,12 +8,13 @@ import * as sakApi from '~api/sakApi';
 import * as søknadApi from '~api/søknadApi';
 import { LukkSøknadBodyTypes } from '~api/søknadApi';
 import * as utbetalingApi from '~api/utbetalingApi';
+import { sendRevurderingTilAttestering } from '~features/revurdering/revurdering.slice';
 import { pipe } from '~lib/fp';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag, Periode } from '~types/Fradrag';
-import { OpprettetRevurdering } from '~types/Revurdering';
+import { OpprettetRevurdering, SimulertRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
@@ -241,6 +242,22 @@ export const oppdaterRevurderingsPeriode = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const beregnOgSimuler = createAsyncThunk<
+    SimulertRevurdering,
+    { sakId: string; revurderingId: string; periode: Periode<string>; fradrag: Fradrag[] },
+    { rejectValue: ApiError }
+>('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode, fradrag }, thunkApi) => {
+    const res = await revurderingApi.beregnOgSimuler(sakId, {
+        revurderingId,
+        periode,
+        fradrag,
+    });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
     stansUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
@@ -256,6 +273,7 @@ interface SakState {
     lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
     opprettRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
     oppdaterRevurderingsPeriodeStatus: RemoteData.RemoteData<ApiError, null>;
+    beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: SakState = {
@@ -273,6 +291,7 @@ const initialState: SakState = {
     lukketSøknadBrevutkastStatus: RemoteData.initial,
     opprettRevurderingStatus: RemoteData.initial,
     oppdaterRevurderingsPeriodeStatus: RemoteData.initial,
+    beregnOgSimulerStatus: RemoteData.initial,
 };
 
 export default createSlice({
@@ -542,7 +561,7 @@ export default createSlice({
 
         handleAsyncThunk(builder, oppdaterRevurderingsPeriode, {
             pending: (state) => {
-                state.sak = RemoteData.pending;
+                state.oppdaterRevurderingsPeriodeStatus = RemoteData.pending;
             },
             fulfilled: (state, action) => {
                 state.oppdaterRevurderingsPeriodeStatus = RemoteData.success(null);
@@ -556,7 +575,45 @@ export default createSlice({
                 );
             },
             rejected: (state, action) => {
-                state.sak = simpleRejectedActionToRemoteData(action);
+                state.oppdaterRevurderingsPeriodeStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, beregnOgSimuler, {
+            pending: (state) => {
+                state.beregnOgSimulerStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.beregnOgSimulerStatus = RemoteData.success(null);
+
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.beregnOgSimulerStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, sendRevurderingTilAttestering, {
+            pending: () => {
+                return;
+            },
+            fulfilled: (state, action) => {
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                    }))
+                );
+            },
+            rejected: () => {
+                return;
             },
         });
     },

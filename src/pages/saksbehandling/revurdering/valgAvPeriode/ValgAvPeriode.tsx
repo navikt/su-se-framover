@@ -49,8 +49,6 @@ const ValgAvPeriode = (props: {
         },
         async onSubmit({ fraOgMed, tilOgMed }) {
             if (fraOgMed && tilOgMed) {
-                console.log('oppdaterer periode');
-
                 history.push(
                     Routes.revurderValgtRevurdering.createURL({
                         sakId: props.sakId,

@@ -81,7 +81,6 @@ const Revurdering = (props: { sak: Sak }) => {
                     <EndringAvFradrag sakId={props.sak.id} revurdering={påbegyntRevurdering} />
                 </Route>
                 <Route path={createRevurderingsPath(RevurderingSteg.Oppsummering)}>
-                    {console.log(påbegyntRevurdering)}
                     {erRevurderingSimulert(påbegyntRevurdering) ? (
                         <RevurderingsOppsummering sakId={props.sak.id} revurdering={påbegyntRevurdering} />
                     ) : (
