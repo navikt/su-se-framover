@@ -76,3 +76,13 @@ export async function sendTilAttestering(
         method: 'POST',
     });
 }
+
+export async function iverksett(
+    sakId: string,
+    revurderingId: string
+): Promise<ApiClientResult<RevurderingTilAttestering>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/iverksett`,
+        method: 'POST',
+    });
+}

@@ -8,7 +8,7 @@ import * as sakApi from '~api/sakApi';
 import * as søknadApi from '~api/søknadApi';
 import { LukkSøknadBodyTypes } from '~api/søknadApi';
 import * as utbetalingApi from '~api/utbetalingApi';
-import { sendRevurderingTilAttestering } from '~features/revurdering/revurdering.slice';
+import { iverksettRevurdering, sendRevurderingTilAttestering } from '~features/revurdering/revurdering.slice';
 import { pipe } from '~lib/fp';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
@@ -600,6 +600,24 @@ export default createSlice({
         });
 
         handleAsyncThunk(builder, sendRevurderingTilAttestering, {
+            pending: () => {
+                return;
+            },
+            fulfilled: (state, action) => {
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                    }))
+                );
+            },
+            rejected: () => {
+                return;
+            },
+        });
+
+        handleAsyncThunk(builder, iverksettRevurdering, {
             pending: () => {
                 return;
             },

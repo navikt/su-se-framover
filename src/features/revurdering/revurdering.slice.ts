@@ -21,6 +21,18 @@ export const sendRevurderingTilAttestering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const iverksettRevurdering = createAsyncThunk<
+    any,
+    { sakId: string; revurderingId: string },
+    { rejectValue: ApiError }
+>('revurdering/iverksett', async ({ sakId, revurderingId }, thunkApi) => {
+    const res = await revurderingApi.iverksett(sakId, revurderingId);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const fetchRevurderingsVedtak = createAsyncThunk<
     { objectUrl: string },
     { sakId: string; revurderingId: string; fritekst: Nullable<string> },

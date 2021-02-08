@@ -7,6 +7,7 @@ import { RadioPanelGruppe, Textarea, Select } from 'nav-frontend-skjema';
 import { Innholdstittel, Systemtittel } from 'nav-frontend-typografi';
 import React, { useMemo, useState } from 'react';
 
+import * as revurderingSlice from '~features/revurdering/revurdering.slice';
 import { ApiError } from '~api/apiClient';
 import { Person } from '~api/personApi';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
@@ -17,6 +18,7 @@ import yup from '~lib/validering';
 import { erRevurderingTilAttestering } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import Søkefelt from '~pages/saksbehandling/søkefelt/Søkefelt';
+import { useAppDispatch } from '~redux/Store';
 import { RevurderingTilAttestering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 
@@ -67,6 +69,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.attesterRevurdering>();
     const intl = useI18n({ messages });
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
+    const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>();
     const [sendtBeslutning, setSendtBeslutning] = useState<RemoteData.RemoteData<ApiError, RevurderingTilAttestering>>(
         RemoteData.initial
@@ -79,9 +82,17 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
 
     const formik = useFormik<FormData>({
         initialValues: {},
-        onSubmit: (values) => {
-            setSendtBeslutning(RemoteData.pending);
-            console.log('submitting', values);
+        onSubmit: async (values) => {
+            const res = await dispatch(
+                revurderingSlice.iverksettRevurdering({
+                    sakId: props.sak.id,
+                    revurderingId: revurdering.id,
+                })
+            );
+
+            if (revurderingSlice.iverksettRevurdering.fulfilled.match(res)) {
+                console.log('yay');
+            }
         },
         validateOnChange: hasSubmitted,
         validationSchema: schema,
