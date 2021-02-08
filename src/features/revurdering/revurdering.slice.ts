@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~api/apiClient';
 import { Nullable } from '~lib/types';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
-import { RevurderingTilAttestering } from '~types/Revurdering';
+import { RevurderingTilAttestering, IverksattRevurdering } from '~types/Revurdering';
 
 import * as pdfApi from '../../api/pdfApi';
 import * as revurderingApi from '../../api/revurderingApi';
@@ -22,7 +22,7 @@ export const sendRevurderingTilAttestering = createAsyncThunk<
 });
 
 export const iverksettRevurdering = createAsyncThunk<
-    any,
+    IverksattRevurdering,
     { sakId: string; revurderingId: string },
     { rejectValue: ApiError }
 >('revurdering/iverksett', async ({ sakId, revurderingId }, thunkApi) => {

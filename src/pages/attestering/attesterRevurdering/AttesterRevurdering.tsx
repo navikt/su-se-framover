@@ -1,17 +1,18 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { PersonCard, Gender } from '@navikt/nap-person-card';
 import { useFormik } from 'formik';
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
+import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { RadioPanelGruppe, Textarea, Select } from 'nav-frontend-skjema';
 import { Innholdstittel, Systemtittel } from 'nav-frontend-typografi';
 import React, { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import * as revurderingSlice from '~features/revurdering/revurdering.slice';
 import { ApiError } from '~api/apiClient';
 import { Person } from '~api/personApi';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
 import { getGender, showName } from '~features/person/personUtils';
+import * as revurderingSlice from '~features/revurdering/revurdering.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
@@ -19,7 +20,7 @@ import { erRevurderingTilAttestering } from '~pages/saksbehandling/revurdering/r
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import Søkefelt from '~pages/saksbehandling/søkefelt/Søkefelt';
 import { useAppDispatch } from '~redux/Store';
-import { RevurderingTilAttestering } from '~types/Revurdering';
+import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 
 import SharedStyles from '../sharedStyles.module.less';
@@ -71,32 +72,57 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>();
-    const [sendtBeslutning, setSendtBeslutning] = useState<RemoteData.RemoteData<ApiError, RevurderingTilAttestering>>(
+    const [sendtBeslutning, setSendtBeslutning] = useState<RemoteData.RemoteData<ApiError, IverksattRevurdering>>(
         RemoteData.initial
     );
 
-    if (!revurdering || !erRevurderingTilAttestering(revurdering)) {
-        return <AlertStripeFeil>{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</AlertStripeFeil>;
-    }
     const gender = useMemo<Gender>(() => getGender(props.søker), [props.søker]);
 
     const formik = useFormik<FormData>({
         initialValues: {},
         onSubmit: async (values) => {
-            const res = await dispatch(
-                revurderingSlice.iverksettRevurdering({
-                    sakId: props.sak.id,
-                    revurderingId: revurdering.id,
-                })
-            );
+            if (values.beslutning) {
+                setSendtBeslutning(RemoteData.pending);
+                const res = await dispatch(
+                    revurderingSlice.iverksettRevurdering({
+                        sakId: props.sak.id,
+                        revurderingId: urlParams.revurderingId,
+                    })
+                );
 
-            if (revurderingSlice.iverksettRevurdering.fulfilled.match(res)) {
-                console.log('yay');
+                if (revurderingSlice.iverksettRevurdering.fulfilled.match(res)) {
+                    setSendtBeslutning(RemoteData.success(res.payload));
+                }
+
+                if (revurderingSlice.iverksettRevurdering.rejected.match(res)) {
+                    //TODO: fix at res.payload kan være undefined?
+                    if (!res.payload) return;
+                    setSendtBeslutning(RemoteData.failure(res.payload));
+                }
             }
+
+            //TODO: add underkjenning
         },
         validateOnChange: hasSubmitted,
         validationSchema: schema,
     });
+
+    if (RemoteData.isSuccess(sendtBeslutning)) {
+        return (
+            <div className={styles.sendtTilAttesteringContainer}>
+                <AlertStripeSuksess>
+                    <p>{intl.formatMessage({ id: 'attester.iverksatt' })}</p>
+                    <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
+                        {intl.formatMessage({ id: 'attester.tilSaksoversikt' })}
+                    </Link>
+                </AlertStripeSuksess>
+            </div>
+        );
+    }
+
+    if (!revurdering || !erRevurderingTilAttestering(revurdering)) {
+        return <AlertStripeFeil>{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</AlertStripeFeil>;
+    }
 
     return (
         <form

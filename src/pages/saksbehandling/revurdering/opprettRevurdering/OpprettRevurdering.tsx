@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { Ingress, Innholdstittel, Feilmelding } from 'nav-frontend-typografi';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import DatePicker from 'react-datepicker';
 import { useHistory, Link } from 'react-router-dom';
 
@@ -13,6 +13,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
+import { finnSisteUtbetalingsdato } from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Periode } from '~types/Fradrag';
 import { Sak } from '~types/Sak';
@@ -82,6 +83,10 @@ const opprettRevurdering = (props: { sak: Sak }) => {
               }
             : null;
 
+    const sisteUtbetalingsDato = useMemo<Date>(() => finnSisteUtbetalingsdato(props.sak.utbetalinger), [
+        props.sak.utbetalinger,
+    ]);
+
     return (
         <form
             className={sharedStyles.revurderingContainer}
@@ -115,7 +120,7 @@ const opprettRevurdering = (props: { sak: Sak }) => {
                                 startDate={periode?.fraOgMed}
                                 endDate={periode?.tilOgMed}
                                 minDate={new Date(props.sak.utbetalinger[0].fraOgMed)}
-                                maxDate={new Date(props.sak.utbetalinger[props.sak.utbetalinger.length - 1].tilOgMed)}
+                                maxDate={sisteUtbetalingsDato}
                                 autoComplete="off"
                             />
                             {formik.errors.fraOgMed && <Feilmelding>{formik.errors.fraOgMed}</Feilmelding>}
@@ -142,7 +147,7 @@ const opprettRevurdering = (props: { sak: Sak }) => {
                                 startDate={formik.values.fraOgMed}
                                 endDate={formik.values.tilOgMed}
                                 minDate={formik.values.fraOgMed}
-                                maxDate={new Date(props.sak.utbetalinger[props.sak.utbetalinger.length - 1].tilOgMed)}
+                                maxDate={sisteUtbetalingsDato}
                                 autoComplete="off"
                             />
                             {formik.errors.tilOgMed && <Feilmelding>{formik.errors.tilOgMed}</Feilmelding>}

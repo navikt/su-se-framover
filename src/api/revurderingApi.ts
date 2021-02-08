@@ -1,7 +1,12 @@
 import { formatISO } from 'date-fns';
 
 import { Fradrag, Periode } from '~types/Fradrag';
-import { OpprettetRevurdering, SimulertRevurdering, RevurderingTilAttestering } from '~types/Revurdering';
+import {
+    OpprettetRevurdering,
+    SimulertRevurdering,
+    RevurderingTilAttestering,
+    IverksattRevurdering,
+} from '~types/Revurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -77,10 +82,7 @@ export async function sendTilAttestering(
     });
 }
 
-export async function iverksett(
-    sakId: string,
-    revurderingId: string
-): Promise<ApiClientResult<RevurderingTilAttestering>> {
+export async function iverksett(sakId: string, revurderingId: string): Promise<ApiClientResult<IverksattRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/iverksett`,
         method: 'POST',

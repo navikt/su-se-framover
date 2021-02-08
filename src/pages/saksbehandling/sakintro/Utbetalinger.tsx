@@ -6,12 +6,13 @@ import { Fareknapp, Flatknapp, Knapp } from 'nav-frontend-knapper';
 import ModalWrapper from 'nav-frontend-modal';
 import Panel from 'nav-frontend-paneler';
 import { Element, Undertittel } from 'nav-frontend-typografi';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { IntlShape } from 'react-intl';
 
 import { Person } from '~api/personApi';
 import { showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { formatMonthYear } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { KanStansesEllerGjenopptas } from '~types/Sak';
@@ -19,6 +20,11 @@ import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
 
 import messages from './utbetalinger-nb';
 import styles from './utbetalinger.module.less';
+
+export const finnSisteUtbetalingsdato = (utbetalingsperioder: Utbetalingsperiode[]) => {
+    const sortertUtbetalingsperioder = utbetalingsperioder.map((u) => new Date(u.tilOgMed)).sort(DateFns.compareDesc);
+    return sortertUtbetalingsperioder[0];
+};
 
 export const Utbetalinger = (props: {
     søker: Person;
@@ -47,6 +53,10 @@ export const Utbetalinger = (props: {
 
     const kanGjenopptas = kanStansesEllerGjenopptas === KanStansesEllerGjenopptas.GJENOPPTA;
 
+    const sisteUtbetalingsDato = useMemo<Date>(() => finnSisteUtbetalingsdato(utbetalingsperioder), [
+        utbetalingsperioder,
+    ]);
+
     return (
         <div className={styles.utbetalingContainer}>
             <Undertittel className={styles.tittel}>
@@ -56,10 +66,7 @@ export const Utbetalinger = (props: {
                 <div className={styles.stønadsperiodeHeader}>
                     <Undertittel>
                         {intl.formatDate(utbetalingsperioder[0].fraOgMed, { month: '2-digit', year: 'numeric' })} -{' '}
-                        {intl.formatDate(utbetalingsperioder[utbetalingsperioder.length - 1].tilOgMed, {
-                            month: '2-digit',
-                            year: 'numeric',
-                        })}
+                        {formatMonthYear(sisteUtbetalingsDato.toString(), intl)}
                     </Undertittel>
                     {kanGjenopptas ? (
                         <div className={styles.ikonContainer}>

@@ -1,11 +1,12 @@
 import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
 
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 
+import { finnSisteUtbetalingsdato } from '../sakintro/Utbetalinger';
 import { RevurderingSteg } from '../types';
 
 import EndringAvFradrag from './endringAvFradrag/EndringAvFradrag';
@@ -58,6 +59,10 @@ const Revurdering = (props: { sak: Sak }) => {
         );
     }
 
+    const sisteUtbetalingsDato = useMemo<Date>(() => finnSisteUtbetalingsdato(props.sak.utbetalinger), [
+        props.sak.utbetalinger,
+    ]);
+
     return (
         <div className={styles.pageContainer}>
             <Switch>
@@ -72,9 +77,7 @@ const Revurdering = (props: { sak: Sak }) => {
                         sakId={props.sak.id}
                         revurdering={påbegyntRevurdering}
                         førsteUtbetalingISak={new Date(props.sak.utbetalinger[0].fraOgMed)}
-                        sisteUtbetalingISak={
-                            new Date(props.sak.utbetalinger[props.sak.utbetalinger.length - 1].tilOgMed)
-                        }
+                        sisteUtbetalingISak={sisteUtbetalingsDato}
                     />
                 </Route>
                 <Route path={createRevurderingsPath(RevurderingSteg.EndringAvFradrag)}>

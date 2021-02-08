@@ -56,7 +56,6 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
     const intl = useI18n({ messages });
-
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {
             const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);

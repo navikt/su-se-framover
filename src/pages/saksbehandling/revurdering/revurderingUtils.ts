@@ -8,8 +8,6 @@ export const erRevurderingSimulert = (revurdering: Revurdering): revurdering is 
 export const erRevurderingTilAttestering = (r: Revurdering): r is SimulertRevurdering =>
     r.status === RevurderingsStatus.TIL_ATTESTERING;
 
-//TODO: implementer iverksetting backend
 export const erRevurderingIverksatt = (r: Revurdering) => {
-    console.log(r);
-    return false;
+    return r.status === RevurderingsStatus.IVERKSATT;
 };

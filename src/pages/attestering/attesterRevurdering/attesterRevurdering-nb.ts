@@ -17,6 +17,9 @@ export default {
     'input.grunn.value.andreForhold': 'Andre forhold',
     'input.kommentar.label': 'Kommentar',
 
+    'attester.iverksatt': 'Revurdering er iverksatt',
+    'attester.tilSaksoversikt': 'Til saksoversikt',
+
     'knapp.tekst': 'Send beslutning',
 
     'page.tittel': 'Attestering',

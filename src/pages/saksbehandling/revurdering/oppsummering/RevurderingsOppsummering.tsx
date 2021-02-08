@@ -77,6 +77,7 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
             );
 
             if (revurderingSlice.sendRevurderingTilAttestering.rejected.match(res)) {
+                //TODO: fix at res.payload kan være undefined?
                 if (!res.payload) return;
                 setSendtTilAttesteringStatus(RemoteData.failure(res.payload));
             }

@@ -20,7 +20,7 @@ export interface SimulertRevurdering extends Revurdering {
     saksbehandler: string;
 }
 
-export interface RevurderingTilAttestering extends Revurdering {
+export interface RevurderingTilAttestering extends SimulertRevurdering {
     beregninger: {
         beregning: Beregning;
         revurdert: Beregning;
@@ -28,9 +28,14 @@ export interface RevurderingTilAttestering extends Revurdering {
     saksbehandler: string;
 }
 
+export interface IverksattRevurdering extends RevurderingTilAttestering {
+    attestant: string;
+}
+
 export enum RevurderingsStatus {
     OPPRETTET = 'OPPRETTET',
     BEREGNET = 'BEREGNET',
     SIMULERT = 'SIMULERT',
     TIL_ATTESTERING = 'TIL_ATTESTERING',
+    IVERKSATT = 'IVERKSATT',
 }
