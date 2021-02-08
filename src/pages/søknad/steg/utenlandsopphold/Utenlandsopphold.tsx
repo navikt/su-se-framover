@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik, FormikErrors } from 'formik';
-import { Datepicker } from 'nav-datovelger';
+import { Datepicker, DatepickerLimitations } from 'nav-datovelger';
 import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Label, SkjemaelementFeilmelding, SkjemaGruppe } from 'nav-frontend-skjema';
@@ -27,6 +27,12 @@ import styles from './utenlandsopphold.module.less';
 type FormData = SøknadState['utenlandsopphold'];
 
 const isValidUtenlandsopphold = (val: DateFns.Interval) => DateFns.isAfter(val.end, val.start);
+
+const isTodayOrBefore = (val: string) =>
+    DateFns.isBefore(DateFns.startOfDay(new Date(val)), DateFns.endOfDay(new Date()));
+
+const isTodayOrLater = (val: string) =>
+    DateFns.isAfter(DateFns.endOfDay(new Date(val)), DateFns.startOfDay(new Date()));
 
 const reiseSchema = yup
     .object<UtenlandsoppholdType>({
@@ -66,6 +72,22 @@ const testOverlappendeUtenlandsopphold: yup.TestFunction<UtenlandsoppholdType[] 
     );
 };
 
+const testInnreise: yup.TestFunction<UtenlandsoppholdType[] | null | undefined> = (opphold) => {
+    if (!opphold) {
+        return false;
+    }
+
+    return opphold.every((o) => isTodayOrBefore(o.innreisedato));
+};
+
+const testUtreise: yup.TestFunction<UtenlandsoppholdType[] | null | undefined> = (opphold) => {
+    if (!opphold) {
+        return false;
+    }
+
+    return opphold.every((o) => isTodayOrLater(o.utreisedato));
+};
+
 const schema = yup.object<FormData>({
     harReistTilUtlandetSiste90dager: yup.boolean().nullable().required(),
     harReistDatoer: yup
@@ -77,6 +99,7 @@ const schema = yup.object<FormData>({
                 .array<UtenlandsoppholdType>()
                 .min(1, 'Legg til felt hvis det er utenlandsopphold')
                 .test('Overlapping', 'Utenlandsopphold kan ikke overlappe', testOverlappendeUtenlandsopphold)
+                .test('Innreisedato', 'Reise du har vært på må være dagens dato eller tidligere', testInnreise)
                 .required(),
             otherwise: yup.array().max(0),
         }),
@@ -90,6 +113,7 @@ const schema = yup.object<FormData>({
                 .array<UtenlandsoppholdType>()
                 .min(1)
                 .test('Overlapping', 'Utenlandsopphold kan ikke overlappe', testOverlappendeUtenlandsopphold)
+                .test('Utreisedato', 'Planlagt reise må skje senere enn dagens dato', testUtreise)
                 .required(),
             otherwise: yup.array().max(0),
         }),
@@ -100,6 +124,7 @@ const MultiTidsperiodevelger = (props: {
     errors: string | string[] | Array<FormikErrors<{ utreisedato: string; innreisedato: string }>> | undefined;
     legend: string;
     feltnavn: string;
+    limitations?: { innreise?: DatepickerLimitations; utreise?: DatepickerLimitations };
     onChange: (element: { index: number; utreisedato: string; innreisedato: string }) => void;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
@@ -135,6 +160,7 @@ const MultiTidsperiodevelger = (props: {
                                             : false,
                                 }}
                                 value={periode.utreisedato}
+                                limitations={props.limitations?.utreise}
                                 inputId={utreisedatoId}
                                 onChange={(value) => {
                                     if (!value) {
@@ -170,7 +196,7 @@ const MultiTidsperiodevelger = (props: {
                                             : false,
                                 }}
                                 value={periode.innreisedato}
-                                limitations={{ minDate: periode.utreisedato }}
+                                limitations={{ ...props.limitations?.innreise, minDate: periode.utreisedato }}
                                 onChange={(value) => {
                                     if (!value) {
                                         return;
@@ -288,6 +314,10 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 legend={intl.formatMessage({ id: 'gruppe.tidligereUtenlandsopphold.legend' })}
                                 feltnavn="harReistDatoer"
                                 perioder={formik.values.harReistDatoer}
+                                limitations={{
+                                    utreise: { maxDate: new Date().toISOString() },
+                                    innreise: { maxDate: new Date().toISOString() },
+                                }}
                                 errors={formik.errors.harReistDatoer}
                                 onLeggTilClick={() => {
                                     formik.setValues({
@@ -347,6 +377,10 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 legend={intl.formatMessage({ id: 'gruppe.kommendeUtenlandsopphold.legend' })}
                                 feltnavn="skalReiseDatoer"
                                 perioder={formik.values.skalReiseDatoer}
+                                limitations={{
+                                    utreise: { minDate: new Date().toISOString() },
+                                    innreise: { minDate: new Date().toISOString() },
+                                }}
                                 errors={formik.errors.skalReiseDatoer}
                                 onLeggTilClick={() => {
                                     formik.setValues({
