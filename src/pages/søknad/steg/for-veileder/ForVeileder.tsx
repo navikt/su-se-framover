@@ -81,8 +81,14 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
                     <Panel border className={styles.panelMargin}>
                         <div className={styles.infoboks}>
                             <p className={styles.boldP}>{intl.formatMessage({ id: 'info.kontaktinfo.tittel' })}</p>
-                            <p>{telefonnummerKrr}</p>
-                            <p>{epostKrr}</p>
+                            {kontaktinfo ? (
+                                <div>
+                                    <p>{telefonnummerKrr}</p>
+                                    <p>{epostKrr}</p>
+                                </div>
+                            ) : (
+                                <p>{intl.formatMessage({ id: 'info.kontaktinfo.mangler' })}</p>
+                            )}
                         </div>
                         <div className={styles.infoboks}>
                             <p className={styles.boldP}>{intl.formatMessage({ id: 'info.telefon.tittel' })}</p>
@@ -96,7 +102,11 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
                     <Panel border className={styles.panelMargin}>
                         <div className={styles.infoboks}>
                             <p className={styles.boldP}>{intl.formatMessage({ id: 'info.kontaktform.tittel' })}</p>
-                            <p>{digitalBruker ? 'Digital' : 'Reservert mot digital kommunikasjon'}</p>
+                            {kontaktinfo ? (
+                                <p>{digitalBruker ? 'Digital' : 'Reservert mot digital kommunikasjon'}</p>
+                            ) : (
+                                <p>{intl.formatMessage({ id: 'info.kontaktinfo.mangler' })}</p>
+                            )}
                         </div>
                         <AlertStripeInfo className={styles.marginTopXSS}>
                             {intl.formatMessage({ id: 'info.kontaktform.body' })}
