@@ -32,7 +32,7 @@ export async function getOrRefreshOnBehalfOfToken(
     }
     if (selfTokenSet.expired()) {
         log.debug('getOrRefreshOnBehalfOfToken: self token has expired, refreshing all tokens.');
-        const refreshedSelfTokenSet = await refreshSelfTokenSet(authClient, selfTokenSet);
+        const refreshedSelfTokenSet = await authClient.refresh(selfTokenSet);
         tokenSets[tokenSetSelfId] = refreshedSelfTokenSet;
         const newOnBehalfOftoken = await fetchOnBehalfOfToken(authClient, refreshedSelfTokenSet);
         tokenSets[Config.auth.suSeBakoverClientId] = newOnBehalfOftoken;
@@ -55,8 +55,8 @@ export async function getOrRefreshOnBehalfOfToken(
     return tokenSets[Config.auth.suSeBakoverClientId];
 }
 
-async function fetchOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet2: TokenSet): Promise<TokenSet> {
-    if (!tokenSet2.access_token) {
+async function fetchOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet: TokenSet): Promise<TokenSet> {
+    if (!tokenSet.access_token) {
         return Promise.reject('Could not get on-behalf-of token because the access_token was undefined');
     }
     const grantBody: OpenIdClient.GrantBody = {
@@ -67,13 +67,9 @@ async function fetchOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet2: 
         // mens AAD vil sette klient-ID-en som audience.
         // Vi trikser det derfor til her heller enn at su-se-bakover må ha noe spesialhåndtering
         scope: Config.isDev ? Config.auth.suSeBakoverClientId : `api://${Config.auth.suSeBakoverClientId}/.default`,
-        assertion: tokenSet2.access_token,
+        assertion: tokenSet.access_token,
     };
     return await authClient.grant(grantBody);
-}
-
-async function refreshSelfTokenSet(authClient: OpenIdClient.Client, tokenSet: TokenSet): Promise<TokenSet> {
-    return await authClient.refresh(tokenSet);
 }
 
 export async function getOpenIdClient(issuerUrl: string) {
@@ -99,7 +95,7 @@ export async function getOpenIdClient(issuerUrl: string) {
             Config.auth.jwks
         );
     } catch (e) {
-        console.error('klarte ikke oppdage issuer', issuerUrl);
+        console.error('Could not discover issuer', issuerUrl);
         throw e;
     }
 }

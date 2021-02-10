@@ -42,9 +42,9 @@ async function getStrategy(authClient: OpenIdClient.Client) {
                     },
                 });
             }
-            // Passport kalles bare denne funksjonen for å mappe en ny innlogging til et User-objekt, så man skal ikke havne her.
+            // Passport kaller bare denne funksjonen for å mappe en ny innlogging til et User-objekt, så man skal ikke havne her.
             console.error(
-                'OpenIdClient.Strategy: Failed to map tokenSet to User because the tokenSet had already expired.'
+                'OpenIdClient.Strategy: Failed to map tokenSet to User because the tokenSet has already expired.'
             );
             done(null, undefined);
         }
