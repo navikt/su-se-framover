@@ -217,6 +217,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 value={formik.values.statsborgerskapAndreLandFritekst || ''}
                                 onChange={formik.handleChange}
                                 autoComplete="off"
+                                autoFocus
                             />
                         )}
                     </div>

@@ -204,6 +204,7 @@ const KjøretøyInputFelter = (props: {
                                     })
                                 }
                                 autoComplete="off"
+                                autoFocus
                             />
                         </div>
                         <div>
@@ -377,6 +378,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     feil={formik.errors.verdiPåBolig}
                                     onChange={formik.handleChange}
                                     autoComplete="off"
+                                    autoFocus
                                 />
                                 <Input
                                     id={keyOf<FormData>('boligBrukesTil')}
@@ -418,6 +420,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     feil={formik.errors.depositumsBeløp}
                                     onChange={formik.handleChange}
                                     autoComplete="off"
+                                    autoFocus
                                 />
                                 <Input
                                     id={keyOf<FormData>('kontonummer')}
@@ -459,6 +462,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     feil={formik.errors.verdiPåEiendom}
                                     onChange={formik.handleChange}
                                     autoComplete="off"
+                                    autoFocus
                                 />
                                 <Input
                                     id={keyOf<FormData>('eiendomBrukesTil')}
@@ -557,6 +561,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 feil={formik.errors.innskuddsBeløp}
                                 value={formik.values.innskuddsBeløp || ''}
                                 onChange={formik.handleChange}
+                                autoFocus
                             />
                         )}
 
@@ -586,6 +591,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 feil={formik.errors.verdipapirBeløp}
                                 onChange={formik.handleChange}
                                 autoComplete="off"
+                                autoFocus
                             />
                         )}
 
@@ -615,6 +621,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 feil={formik.errors.skylderNoenMegPengerBeløp}
                                 onChange={formik.handleChange}
                                 autoComplete="off"
+                                autoFocus
                             />
                         )}
 
@@ -644,6 +651,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 feil={formik.errors.kontanterBeløp}
                                 onChange={formik.handleChange}
                                 autoComplete="off"
+                                autoFocus
                             />
                         )}
                     </div>
