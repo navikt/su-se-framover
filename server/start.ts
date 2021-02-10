@@ -18,13 +18,14 @@ import setupSession from './session';
 
 export default async function startServer() {
     const app = express();
-
+    console.info(`Using log level: ${Config.server.logLevel}`);
     app.use(
         pinoHttp({
             ...(Config.isDev
                 ? {
                       prettyPrint: true,
                       prettifier: pinoColada,
+                      level: Config.server.logLevel,
                   }
                 : {}),
             formatters: {
@@ -101,6 +102,6 @@ export default async function startServer() {
 
     const port = Config.server.port;
     app.listen(port, () => {
-        console.log(`Listening on http://:${port}`);
+        console.info(`Listening on http://:${port}`);
     });
 }

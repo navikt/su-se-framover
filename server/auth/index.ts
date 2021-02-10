@@ -12,14 +12,12 @@ declare module 'express-session' {
     }
 }
 
+export type TokenSets = { [key: string]: OpenIdClient.TokenSet };
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Express {
         interface User {
-            claims: OpenIdClient.IdTokenClaims;
-            tokenSets: {
-                [key: string]: OpenIdClient.TokenSet;
-            };
+            tokenSets: TokenSets;
         }
     }
 }
@@ -35,17 +33,20 @@ async function getStrategy(authClient: OpenIdClient.Client) {
             },
             usePKCE: 'S256',
         },
-        (tokenSet: OpenIdClient.TokenSet, done: (err: unknown, user?: unknown) => void) => {
-            if (tokenSet.expired()) {
-                return done(null, false);
+        (tokenSet: OpenIdClient.TokenSet, done: (err: null, user?: Express.User) => void) => {
+            if (!tokenSet.expired()) {
+                console.debug('OpenIdClient.Strategy: Mapping tokenSet to User.');
+                return done(null, {
+                    tokenSets: {
+                        [AuthUtils.tokenSetSelfId]: tokenSet,
+                    },
+                });
             }
-            const user: Express.User = {
-                tokenSets: {
-                    [AuthUtils.tokenSetSelfId]: tokenSet,
-                },
-                claims: tokenSet.claims(),
-            };
-            done(null, user);
+            // Passport kalles bare denne funksjonen for å mappe en ny innlogging til et User-objekt, så man skal ikke havne her.
+            console.error(
+                'OpenIdClient.Strategy: Failed to map tokenSet to User because the tokenSet had already expired.'
+            );
+            done(null, undefined);
         }
     );
 }

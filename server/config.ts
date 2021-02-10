@@ -50,6 +50,7 @@ export const server = {
     sessionCookieName: envVar({ name: 'SESSION_COOKIE_NAME', defaultValue: 'supstonad-login-cookie' }),
 
     mockOauthServerPort: Number.parseInt(envVar({ name: 'LOCAL_AUTH_SERVER_PORT', defaultValue: '4321' })),
+    logLevel: envVar({ name: 'LOG_LEVEL', defaultValue: 'info' }),
 };
 
 // For auth

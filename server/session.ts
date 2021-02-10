@@ -36,10 +36,11 @@ export default function setupSession(app: Express) {
             },
             secret: Config.server.sessionKey,
             name: Config.server.sessionCookieName,
-            resave: false,
+            resave: true,
             saveUninitialized: false,
             unset: 'destroy',
             store: getRedisStore(),
+            rolling: true,
         })
     );
 }
