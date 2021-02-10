@@ -154,6 +154,7 @@ const TrygdeytelserInputFelter = (props: {
                                     name={beløpId}
                                     label={<FormattedMessage id="input.trygdeytelserIUtlandetBeløp.label" />}
                                     value={input.beløp}
+                                    autoFocus
                                     onChange={(e) => {
                                         props.onChange({
                                             index: idx,
@@ -301,6 +302,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                         ),
                                     }))
                                 }
+                                autoFocus
                                 autoComplete="on"
                                 feil={feltError('ordning')}
                             />
@@ -392,6 +394,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 bredde="S"
                                 className={sharedStyles.marginBottom}
                                 value={formik.values.forventetInntekt || ''}
+                                autoFocus
                                 label={<FormattedMessage id="input.forventetInntekt.label" />}
                                 onChange={formik.handleChange}
                                 autoComplete="off"
@@ -421,6 +424,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     name={keyOf<FormData>('andreYtelserINavYtelse')}
                                     label={<FormattedMessage id="input.andreYtelserINavYtelse.label" />}
                                     value={formik.values.andreYtelserINavYtelse || ''}
+                                    autoFocus
                                     onChange={formik.handleChange}
                                     feil={formik.errors.andreYtelserINavYtelse}
                                     autoComplete="off"
@@ -461,6 +465,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 bredde="XXL"
                                 label={<FormattedMessage id="input.søktAndreYtelserIkkeBehandletBegrunnelse.label" />}
                                 value={formik.values.søktAndreYtelserIkkeBehandletBegrunnelse || ''}
+                                autoFocus
                                 onChange={formik.handleChange}
                                 feil={formik.errors.søktAndreYtelserIkkeBehandletBegrunnelse}
                                 autoComplete="off"
@@ -489,6 +494,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 bredde="S"
                                 label={<FormattedMessage id="input.sosialStønadBeløp.label" />}
                                 value={formik.values.sosialStønadBeløp || ''}
+                                autoFocus
                                 onChange={formik.handleChange}
                                 feil={formik.errors.sosialStønadBeløp}
                                 autoComplete="off"
