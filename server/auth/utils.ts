@@ -1,39 +1,63 @@
-import { NextFunction, Request, Response } from 'express';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import * as OpenIdClient from 'openid-client';
+import { TokenSet } from 'openid-client';
+import pino from 'pino';
 
 import * as Config from '../config';
 
+import { TokenSets } from './index';
+
 export const tokenSetSelfId = 'self';
 
-function getTokenSetsFromSession(req: Request) {
-    return req.user?.tokenSets ?? null;
-}
-
-function hasValidAccessToken(req: Request) {
-    const tokenSets = getTokenSetsFromSession(req);
-    if (!tokenSets) {
-        return false;
-    }
-    const tokenSet = tokenSets.self;
-    if (!tokenSet) {
-        return false;
-    }
-    return new OpenIdClient.TokenSet(tokenSet).expired() === false;
-}
-
-export async function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
-    if (req.isAuthenticated() && hasValidAccessToken(req)) {
-        next();
-    } else {
-        req.session.redirectTo = req.url;
-        res.redirect('/login');
-    }
-}
-
-export async function getOnBehalfOfAccessToken(authClient: OpenIdClient.Client, req: Request) {
-    if (!req.user) {
+function getTokenSetById(tokenSets: TokenSets, id: string): TokenSet | null {
+    if (!(id in tokenSets)) {
+        // Denne skal være initielt satt av passport
         return null;
+    }
+    if (tokenSets[id] instanceof OpenIdClient.TokenSet) {
+        return tokenSets[id];
+    }
+    // Denne kan være et object (f.eks. hvis den er hentet fra redis)
+    return new OpenIdClient.TokenSet(tokenSets[id]);
+}
+
+export async function getOrRefreshOnBehalfOfToken(
+    authClient: OpenIdClient.Client,
+    tokenSets: TokenSets,
+    log: pino.Logger
+): Promise<TokenSet> {
+    const selfTokenSet = getTokenSetById(tokenSets, tokenSetSelfId);
+    if (!selfTokenSet) {
+        throw Error('Mangler self-token i tokenSets');
+    }
+    if (selfTokenSet.expired()) {
+        log.debug('getOrRefreshOnBehalfOfToken: self token has expired, refreshing all tokens.');
+        const refreshedSelfTokenSet = await authClient.refresh(selfTokenSet);
+        tokenSets[tokenSetSelfId] = refreshedSelfTokenSet;
+        const newOnBehalfOftoken = await fetchOnBehalfOfToken(authClient, refreshedSelfTokenSet);
+        tokenSets[Config.auth.suSeBakoverClientId] = newOnBehalfOftoken;
+        return newOnBehalfOftoken;
+    }
+    const onBehalfOfToken = getTokenSetById(tokenSets, Config.auth.suSeBakoverClientId);
+    if (!onBehalfOfToken) {
+        log.debug('getOrRefreshOnBehalfOfToken: on-behalf-of token is missing, creating.');
+        const newOnBehalfOftoken = await fetchOnBehalfOfToken(authClient, selfTokenSet);
+        tokenSets[Config.auth.suSeBakoverClientId] = newOnBehalfOftoken;
+        return newOnBehalfOftoken;
+    }
+    if (onBehalfOfToken.expired()) {
+        log.debug('getOrRefreshOnBehalfOfToken: on-behalf-of token has expired, re-creating.');
+        const newOnBehalfOftoken = await fetchOnBehalfOfToken(authClient, selfTokenSet);
+        tokenSets[Config.auth.suSeBakoverClientId] = newOnBehalfOftoken;
+        return newOnBehalfOftoken;
+    }
+    log.debug('getOrRefreshOnBehalfOfToken: using cached on-behalf-of token');
+    return tokenSets[Config.auth.suSeBakoverClientId];
+}
+
+async function fetchOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet: TokenSet): Promise<TokenSet> {
+    if (!tokenSet.access_token) {
+        return Promise.reject('Could not get on-behalf-of token because the access_token was undefined');
     }
     const grantBody: OpenIdClient.GrantBody = {
         grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
@@ -43,12 +67,9 @@ export async function getOnBehalfOfAccessToken(authClient: OpenIdClient.Client, 
         // mens AAD vil sette klient-ID-en som audience.
         // Vi trikser det derfor til her heller enn at su-se-bakover må ha noe spesialhåndtering
         scope: Config.isDev ? Config.auth.suSeBakoverClientId : `api://${Config.auth.suSeBakoverClientId}/.default`,
-        assertion: req.user.tokenSets[tokenSetSelfId].access_token,
+        assertion: tokenSet.access_token,
     };
-
-    const tokenSet = await authClient.grant(grantBody);
-    req.user.tokenSets[Config.auth.suSeBakoverClientId] = tokenSet;
-    return tokenSet.access_token;
+    return await authClient.grant(grantBody);
 }
 
 export async function getOpenIdClient(issuerUrl: string) {
@@ -74,7 +95,7 @@ export async function getOpenIdClient(issuerUrl: string) {
             Config.auth.jwks
         );
     } catch (e) {
-        console.log('klarte ikke oppdage issuer', issuerUrl);
+        console.error('Could not discover issuer', issuerUrl);
         throw e;
     }
 }

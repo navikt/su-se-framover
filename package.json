@@ -130,6 +130,7 @@
         "reset-css": "^5.0.1",
         "styles": "^0.2.1",
         "ts-transformer-keys": "^0.4.3",
+        "uuid": "^8.3.2",
         "yup": "^0.29.3"
     },
     "devDependencies": {
@@ -145,6 +146,7 @@
         "@types/parcel-env": "0.0.0",
         "@types/react-redux": "^7.1.15",
         "@types/react-router-dom": "^5.1.6",
+        "@types/uuid": "^8.3.0",
         "@types/yup": "^0.29.11",
         "@typescript-eslint/eslint-plugin": "^4.14.1",
         "@typescript-eslint/parser": "^4.14.0",
