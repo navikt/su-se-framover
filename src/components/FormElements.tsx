@@ -6,7 +6,8 @@ import React, { useState } from 'react';
 import { Collapse } from 'react-collapse';
 
 import { useI18n } from '~lib/hooks';
-import { trackEvent, søknadHjelpeTekstKlikk } from '~lib/tracking/trackingEvents';
+import { trackEvent } from '~lib/tracking/amplitude';
+import { søknadHjelpeTekstKlikk } from '~lib/tracking/trackingEvents';
 
 import nb from './formElements-nb';
 import styles from './formElements.module.less';
