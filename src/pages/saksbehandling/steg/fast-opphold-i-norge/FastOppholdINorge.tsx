@@ -16,7 +16,7 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FastOppholdINorge as FastOppholdINorgeType, FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
 
-import FastOppholdFaktablokk from '../faktablokk/faktablokker/FastOppholdFaktablokk';
+import { FastOppholdFaktablokk } from '../faktablokk/faktablokker/FastOppholdFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';

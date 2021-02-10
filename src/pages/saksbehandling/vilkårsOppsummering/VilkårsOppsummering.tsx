@@ -1,117 +1,142 @@
-import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
+import { Systemtittel } from 'nav-frontend-typografi';
 import React from 'react';
 
-import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
-import { mapToVilkårsinformasjon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
+import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
-import { Nullable } from '~lib/types';
-import { Behandlingsinformasjon, Ektefelle } from '~types/Behandlingsinformasjon';
-import { Sats } from '~types/Sats';
+import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
-import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 
-import FastOppholdFaktablokk from '../steg/faktablokk/faktablokker/FastOppholdFaktablokk';
-import FlyktningFaktablokk from '../steg/faktablokk/faktablokker/FlyktningFaktablokk';
-import FormueFaktablokk from '../steg/faktablokk/faktablokker/FormueFaktablokk';
-import InstitusjonsoppholdBlokk from '../steg/faktablokk/faktablokker/InstitusjonsoppholdBlokk';
-import LovligOppholdFaktablokk from '../steg/faktablokk/faktablokker/LovligOppholdFaktablokk';
-import PersonligOppmøteFaktablokk from '../steg/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
-import SatsFaktablokk from '../steg/faktablokk/faktablokker/SatsFaktablokk';
-import UførhetFaktablokk from '../steg/faktablokk/faktablokker/UførhetFaktablokk';
-import UtenlandsOppholdFaktablokk from '../steg/faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
+import { Behandlingsstatus } from '../../../types/Behandling';
+import { FastOppholdVilkårsblokk } from '../steg/faktablokk/faktablokker/FastOppholdFaktablokk';
+import { FlyktningVilkårsblokk } from '../steg/faktablokk/faktablokker/FlyktningFaktablokk';
+import { FormueVilkårsblokk } from '../steg/faktablokk/faktablokker/FormueFaktablokk';
+import { InstitusjonsoppholdVilkårsblokk } from '../steg/faktablokk/faktablokker/InstitusjonsoppholdBlokk';
+import { LovligOppholdVilkårsblokk } from '../steg/faktablokk/faktablokker/LovligOppholdFaktablokk';
+import { PersonligOppmøteVilkårsblokk } from '../steg/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
+import { SatsVilkårsblokk } from '../steg/faktablokk/faktablokker/SatsFaktablokk';
+import { UførhetVilkårsblokk } from '../steg/faktablokk/faktablokker/UførhetFaktablokk';
+import { UtenlandsoppholdVilkårsblokk } from '../steg/faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
 
 import messages from './vilkårsOppsummering-nb';
 import styles from './vilkårsOppsummering.module.less';
 
+function shouldShowSats(status: Behandlingsstatus) {
+    return [
+        Behandlingsstatus.VILKÅRSVURDERT_INNVILGET,
+        Behandlingsstatus.BEREGNET_INNVILGET,
+        Behandlingsstatus.SIMULERT,
+        Behandlingsstatus.TIL_ATTESTERING_INNVILGET,
+        Behandlingsstatus.UNDERKJENT_INNVILGET,
+        Behandlingsstatus.IVERKSATT_INNVILGET,
+    ].includes(status);
+}
+
 const VilkårsOppsummering = (props: {
     søknadInnhold: SøknadInnhold;
     behandlingsinformasjon: Behandlingsinformasjon;
+    behandlingstatus: Behandlingsstatus;
 }) => {
     const intl = useI18n({ messages });
     const vilkårsinformasjon = mapToVilkårsinformasjon(props.behandlingsinformasjon);
 
     return (
-        <div>
+        <div className={styles.container}>
             <Systemtittel className={styles.tittel}>{intl.formatMessage({ id: 'page.tittel' })}</Systemtittel>
             <div className={styles.vilkårsblokkerContainer}>
                 {vilkårsinformasjon.map((v) => (
-                    <VilkårsBlokk
+                    <Vilkårsting
                         key={v.vilkårtype}
-                        tittel={vilkårTittelFormatted(v.vilkårtype)}
-                        status={v.status}
-                        vilkårFaktablokk={mapVilkårtypeToFaktablokk(v.vilkårtype, props.søknadInnhold)}
-                        begrunnelse={v.begrunnelse}
+                        info={v}
+                        søknadInnhold={props.søknadInnhold}
+                        behandlingsinformasjon={props.behandlingsinformasjon}
                     />
                 ))}
-
-                <VilkårsBlokk
-                    tittel={intl.formatMessage({
-                        id:
-                            props.behandlingsinformasjon.utledetSats === Sats.Høy
-                                ? 'bosituasjon.sats.høy'
-                                : 'bosituasjon.sats.ordinær',
-                    })}
-                    vilkårFaktablokk={
-                        <SatsFaktablokk
-                            søknadInnhold={props.søknadInnhold}
-                            eps={props.behandlingsinformasjon.ektefelle as Nullable<Ektefelle>}
-                            brukUndertittel
-                        />
-                    }
-                    begrunnelse={props.behandlingsinformasjon.bosituasjon?.begrunnelse ?? ''}
-                />
+                {shouldShowSats(props.behandlingstatus) && (
+                    <SatsVilkårsblokk
+                        bosituasjon={props.behandlingsinformasjon.bosituasjon}
+                        ektefelle={props.behandlingsinformasjon.ektefelle}
+                        sats={props.behandlingsinformasjon.utledetSats}
+                        søknadInnhold={props.søknadInnhold}
+                    />
+                )}
             </div>
         </div>
     );
 };
 
-const VilkårsBlokk = (props: {
-    status?: VilkårVurderingStatus;
-    tittel: string;
-    vilkårFaktablokk: JSX.Element;
-    begrunnelse: Nullable<string>;
+const Vilkårsting = (props: {
+    info: Vilkårsinformasjon;
+    søknadInnhold: SøknadInnhold;
+    behandlingsinformasjon: Behandlingsinformasjon;
 }) => {
-    const intl = useI18n({ messages });
-
-    return (
-        <div className={styles.blokkContainer}>
-            <div className={styles.blokkHeader}>
-                {props.status ? <VilkårvurderingStatusIcon className={styles.ikon} status={props.status} /> : null}
-                {props.tittel}
-            </div>
-            <div className={styles.pairBlokkContainer}>
-                <div className={styles.blokk}>{props.vilkårFaktablokk}</div>
-                <div className={styles.blokk}>
-                    <Undertittel className={styles.blokkOverskrift}>
-                        {intl.formatMessage({ id: 'vilkår.begrunnelse' })}
-                    </Undertittel>
-                    <p>{props.begrunnelse}</p>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const mapVilkårtypeToFaktablokk = (vilkårtype: Vilkårtype, søknadInnhold: SøknadInnhold) => {
-    switch (vilkårtype) {
+    switch (props.info.vilkårtype) {
         case Vilkårtype.Uførhet:
-            return <UførhetFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
+            return (
+                <UførhetVilkårsblokk
+                    info={props.info}
+                    søknadInnhold={props.søknadInnhold}
+                    behandlingsinformasjon={props.behandlingsinformasjon.uførhet}
+                />
+            );
         case Vilkårtype.Flyktning:
-            return <FlyktningFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
+            return (
+                <FlyktningVilkårsblokk
+                    info={props.info}
+                    søknadInnhold={props.søknadInnhold}
+                    behandlingsinformasjon={props.behandlingsinformasjon.flyktning}
+                />
+            );
         case Vilkårtype.LovligOpphold:
-            return <LovligOppholdFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
+            return (
+                <LovligOppholdVilkårsblokk
+                    info={props.info}
+                    søknadInnhold={props.søknadInnhold}
+                    behandlingsinformasjon={props.behandlingsinformasjon.lovligOpphold}
+                />
+            );
         case Vilkårtype.FastOppholdINorge:
-            return <FastOppholdFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
+            return (
+                <FastOppholdVilkårsblokk
+                    info={props.info}
+                    søknadInnhold={props.søknadInnhold}
+                    behandlingsinformasjon={props.behandlingsinformasjon.fastOppholdINorge}
+                />
+            );
         case Vilkårtype.Institusjonsopphold:
-            return <InstitusjonsoppholdBlokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
+            return (
+                <InstitusjonsoppholdVilkårsblokk
+                    info={props.info}
+                    søknadInnhold={props.søknadInnhold}
+                    behandlingsinformasjon={props.behandlingsinformasjon.institusjonsopphold}
+                />
+            );
         case Vilkårtype.OppholdIUtlandet:
-            return <UtenlandsOppholdFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
+            return (
+                <UtenlandsoppholdVilkårsblokk
+                    info={props.info}
+                    søknadInnhold={props.søknadInnhold}
+                    behandlingsinformasjon={props.behandlingsinformasjon.oppholdIUtlandet}
+                />
+            );
         case Vilkårtype.Formue:
-            return <FormueFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
+            return (
+                <FormueVilkårsblokk
+                    info={props.info}
+                    søknadInnhold={props.søknadInnhold}
+                    behandlingsinformasjon={props.behandlingsinformasjon.formue}
+                />
+            );
         case Vilkårtype.PersonligOppmøte:
-            return <PersonligOppmøteFaktablokk søknadInnhold={søknadInnhold} brukUndertittel={true} />;
+            return (
+                <PersonligOppmøteVilkårsblokk
+                    info={props.info}
+                    søknadInnhold={props.søknadInnhold}
+                    behandlingsinformasjon={props.behandlingsinformasjon.personligOppmøte}
+                />
+            );
         default:
-            return <></>;
+            return null;
     }
 };
 

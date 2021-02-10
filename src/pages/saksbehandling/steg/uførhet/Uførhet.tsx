@@ -17,7 +17,7 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Uførhet as UførhetType, UførhetStatus } from '~types/Behandlingsinformasjon';
 
-import UførhetFaktablokk from '../faktablokk/faktablokker/UførhetFaktablokk';
+import { UførhetFaktablokk } from '../faktablokk/faktablokker/UførhetFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';

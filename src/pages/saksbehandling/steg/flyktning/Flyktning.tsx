@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Flyktning as FlyktningType, FlyktningStatus, UførhetStatus } from '~types/Behandlingsinformasjon';
 
-import FlyktningFaktablokk from '../faktablokk/faktablokker/FlyktningFaktablokk';
+import { FlyktningFaktablokk } from '../faktablokk/faktablokker/FlyktningFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';

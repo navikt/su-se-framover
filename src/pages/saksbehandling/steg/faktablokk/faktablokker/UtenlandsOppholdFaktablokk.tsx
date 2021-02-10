@@ -1,87 +1,112 @@
 import * as DateFns from 'date-fns';
-import { Element, Normaltekst } from 'nav-frontend-typografi';
+import AlertStripe from 'nav-frontend-alertstriper';
 import React from 'react';
-import { IntlShape } from 'react-intl';
 
-import { kalkulerTotaltAntallDagerIUtlandet, Utlandsdatoer } from '~lib/dateUtils';
+import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
+import { kalkulerTotaltAntallDagerIUtlandet } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
-import { Nullable } from '~lib/types';
+import { keyOf } from '~lib/types';
+import { OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
 
-import Faktablokk, { Fakta } from '../Faktablokk';
+import Vilkårsblokk from '../../../vilkårsOppsummering/VilkårsBlokk';
+import saksbehandlingMessages from '../../opphold-i-utlandet/oppholdIUtlandet-nb';
+import Faktablokk, { customFakta, FaktaSpacing } from '../Faktablokk';
 
 import messages from './faktablokker-nb';
 import styles from './faktablokker.module.less';
-import { FaktablokkProps } from './faktablokkUtils';
+import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
 
-const UtenlandsOppholdFaktablokk = (props: FaktablokkProps) => {
-    const intl = useI18n({ messages });
-
-    const fakta: Fakta[] = [
-        {
-            tittel: intl.formatMessage({ id: 'utenlandsOpphold.antallDagerSiste90' }),
-            verdi: kalkulerTotaltAntallDagerIUtlandet(
-                props.søknadInnhold.utenlandsopphold.registrertePerioder
-            ).toString(),
+export const UtenlandsOppholdFaktablokk = (props: FaktablokkProps) => {
+    const intl = useI18n({
+        messages: {
+            ...messages,
         },
-        {
-            tittel: intl.formatMessage({ id: 'utenlandsOpphold.antallDagerPlanlagt' }),
-            verdi: kalkulerTotaltAntallDagerIUtlandet(
-                props.søknadInnhold.utenlandsopphold.planlagtePerioder
-            ).toString(),
-        },
-    ];
-
-    const datoerSiste90 = props.søknadInnhold.utenlandsopphold.registrertePerioder;
-    if (datoerSiste90 && datoerSiste90.length > 0) {
-        fakta.push({
-            tittel: intl.formatMessage({ id: 'utenlandsOpphold.datoerSiste90' }),
-            verdi: visDatoer(datoerSiste90, intl),
-        });
-    }
-
-    const datoerPlanlagt = props.søknadInnhold.utenlandsopphold.planlagtePerioder;
-    if (datoerPlanlagt && datoerPlanlagt.length > 0) {
-        fakta.push({
-            tittel: intl.formatMessage({ id: 'utenlandsOpphold.datoerPlanlagt' }),
-            verdi: visDatoer(datoerPlanlagt, intl),
-        });
-    }
+    });
 
     return (
         <Faktablokk
             tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
-            brukUndertittel={props.brukUndertittel}
-            fakta={fakta}
+            fakta={[
+                {
+                    tittel: intl.formatMessage({
+                        id: 'utenlandsOpphold.antallDagerSiste90',
+                    }),
+                    verdi: kalkulerTotaltAntallDagerIUtlandet(
+                        props.søknadInnhold.utenlandsopphold.registrertePerioder
+                    ).toString(),
+                },
+                ...(props.søknadInnhold.utenlandsopphold.registrertePerioder === null
+                    ? []
+                    : [reisedatoer(props.søknadInnhold.utenlandsopphold.registrertePerioder), FaktaSpacing]),
+                {
+                    tittel: intl.formatMessage({
+                        id: 'utenlandsOpphold.antallDagerPlanlagt',
+                    }),
+                    verdi: kalkulerTotaltAntallDagerIUtlandet(
+                        props.søknadInnhold.utenlandsopphold.planlagtePerioder
+                    ).toString(),
+                },
+                ...(props.søknadInnhold.utenlandsopphold.planlagtePerioder === null
+                    ? []
+                    : [reisedatoer(props.søknadInnhold.utenlandsopphold.planlagtePerioder), FaktaSpacing]),
+            ]}
         />
     );
 };
 
-const visDatoer = (datesArray: Nullable<Utlandsdatoer>, intl: IntlShape) => {
-    if (!datesArray || datesArray?.length === 0) return intl.formatMessage({ id: 'fraSøknad.ikkeRegistert' });
-
-    return (
-        <div>
-            {datesArray.map((datoRad, index) => (
-                <div key={index} className={styles.datoFelterContainer}>
-                    <DatoFelt
-                        label={'Utreisedato'}
-                        verdi={DateFns.parseISO(datoRad.utreisedato).toLocaleDateString()}
-                    />
-                    <DatoFelt
-                        label={'Innreisedato'}
-                        verdi={DateFns.parseISO(datoRad.innreisedato).toLocaleDateString()}
-                    />
-                </div>
+function reisedatoer(rader: Array<{ utreisedato: string; innreisedato: string }>) {
+    return customFakta(
+        <ul className={styles.reisedatoer}>
+            {rader.map((r, idx) => (
+                <li key={idx}>{`${formatDate(r.utreisedato)} - ${formatDate(r.innreisedato)}`}</li>
             ))}
-        </div>
+        </ul>
+    );
+}
+
+function formatDate(date: string) {
+    return DateFns.parseISO(date).toLocaleDateString();
+}
+
+export const UtenlandsoppholdVilkårsblokk = (props: VilkårsblokkProps<'oppholdIUtlandet'>) => {
+    const intl = useI18n({
+        messages: {
+            ...messages,
+            ...saksbehandlingMessages,
+        },
+    });
+    return (
+        <Vilkårsblokk
+            tittel={vilkårTittelFormatted(props.info.vilkårtype)}
+            status={props.info.status}
+            søknadfaktablokk={<UtenlandsOppholdFaktablokk søknadInnhold={props.søknadInnhold} />}
+            saksbehandlingfaktablokk={
+                props.behandlingsinformasjon === null ? (
+                    <AlertStripe type="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</AlertStripe>
+                ) : (
+                    <Faktablokk
+                        tittel={intl.formatMessage({ id: 'display.fraSaksbehandling' })}
+                        fakta={[
+                            {
+                                tittel: intl.formatMessage({
+                                    id: keyOf<typeof saksbehandlingMessages>('radio.oppholdIUtland.legend'),
+                                }),
+                                verdi:
+                                    props.behandlingsinformasjon.status ===
+                                    OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet
+                                        ? intl.formatMessage({ id: 'fraSøknad.ja' })
+                                        : props.behandlingsinformasjon.status ===
+                                          OppholdIUtlandetStatus.SkalHoldeSegINorge
+                                        ? intl.formatMessage({ id: 'fraSøknad.nei' })
+                                        : intl.formatMessage({
+                                              id: 'fraSøknad.uavklart',
+                                          }),
+                            },
+                        ]}
+                    />
+                )
+            }
+            begrunnelse={props.info.begrunnelse}
+        />
     );
 };
-
-const DatoFelt = (props: { label: React.ReactNode; verdi: string | React.ReactNode }) => (
-    <div>
-        <Element>{props.label}</Element>
-        <Normaltekst>{props.verdi}</Normaltekst>
-    </div>
-);
-
-export default UtenlandsOppholdFaktablokk;

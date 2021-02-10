@@ -1,36 +1,63 @@
 import classNames from 'classnames';
-import { Systemtittel, Element, Undertittel } from 'nav-frontend-typografi';
+import { Element, Normaltekst, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
 import styles from './faktablokk.module.less';
 
-export interface Fakta {
-    tittel: string;
-    verdi: string | JSX.Element;
+export const FaktaSpacing: Fakta = { faktatype: 'spacing' };
+export function customFakta(element: JSX.Element): CustomFakta {
+    return { faktatype: 'custom', element: element };
 }
 
-const Faktablokk = (props: {
-    tittel: string;
-    brukUndertittel?: boolean;
-    fakta: Fakta[];
-    containerClassName?: string;
-    faktaBlokkerClassName?: string;
-}) => (
-    <div className="styles.faktablokk">
-        {props.brukUndertittel ? (
-            <Undertittel className={styles.overskrift}>{props.tittel}</Undertittel>
-        ) : (
-            <Systemtittel className={styles.overskrift}>{props.tittel}</Systemtittel>
-        )}
-        <div className={props.containerClassName}>
-            {props.fakta.map((f, index) => (
-                <div className={classNames(props.faktaBlokkerClassName, styles.linje)} key={index}>
-                    <Element>{f.tittel}</Element>
-                    <span className={styles.verdi}>{f.verdi}</span>
-                </div>
-            ))}
-        </div>
+interface FaktaSpacing {
+    faktatype: 'spacing';
+}
+interface CustomFakta {
+    faktatype: 'custom';
+    element: JSX.Element;
+}
+
+export type Fakta =
+    | {
+          tittel: string;
+          verdi: string | JSX.Element;
+      }
+    | FaktaSpacing
+    | CustomFakta;
+
+function isFaktaspacing(f: Fakta): f is FaktaSpacing {
+    return 'faktatype' in f && f.faktatype === 'spacing';
+}
+function isCustomfakta(f: Fakta): f is CustomFakta {
+    return 'faktatype' in f && f.faktatype === 'custom';
+}
+
+const Faktablokk = (props: { tittel: string; fakta: Fakta[] }) => (
+    <div>
+        <Undertekst className={styles.overskrift}>{props.tittel}</Undertekst>
+        <Faktaliste fakta={props.fakta} />
     </div>
+);
+
+const Faktaliste = (props: { fakta: Fakta[] }) => (
+    <ul className={classNames(styles.fakta)}>
+        {props.fakta.map((f, index) =>
+            isFaktaspacing(f) ? (
+                <li key={index} className={styles.faktaSpacing}></li>
+            ) : isCustomfakta(f) ? (
+                <li key={index}>{f.element}</li>
+            ) : (
+                <li key={index}>
+                    <Normaltekst tag="span" className={styles.tittel}>
+                        {f.tittel}
+                    </Normaltekst>
+                    <Element tag="span" className={styles.verdi}>
+                        {f.verdi}
+                    </Element>
+                </li>
+            )
+        )}
+    </ul>
 );
 
 export default Faktablokk;

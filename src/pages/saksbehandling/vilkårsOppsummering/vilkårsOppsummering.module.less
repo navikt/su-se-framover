@@ -1,7 +1,15 @@
 @import '~/styles/variables.less';
 
+.container {
+    // padding: 0 @spacing;
+}
+
 .tittel {
     margin-bottom: @spacing-s;
+}
+
+.faktaContainer {
+    margin-bottom: @spacing;
 }
 
 .blokkOverskrift {
@@ -9,13 +17,12 @@
 }
 
 .vilkårsblokkerContainer {
-    display: grid;
-    grid-template-columns: 1024px;
-    align-items: start;
+    display: flex;
+    flex-direction: column;
 }
 
 .blokkContainer {
-    border: 1px solid lightgrey;
+    width: 100%;
     margin-bottom: @spacing;
 
     .blokkHeader {
@@ -23,7 +30,6 @@
         display: flex;
         align-items: center;
         padding: @spacing-xs;
-        border-bottom: 1px solid lightgrey;
 
         .ikon {
             margin-right: @spacing-xxs;
@@ -31,17 +37,30 @@
     }
 
     .pairBlokkContainer {
-        display: grid;
-        grid-template-columns: 50% 50%;
-
-        > :not(:last-child) {
-            border-right: 1px solid lightgrey;
-        }
+        display: flex;
+        border: 1px solid lightgrey;
 
         .blokk {
+            width: 50%;
             margin: 0;
-            padding: @spacing-xs 0;
-            padding-left: @spacing-xs;
+            padding: @spacing-xs;
+
+            &:not(:last-child) {
+                border-right: 1px solid lightgrey;
+            }
+        }
+
+        @media only screen and (max-width: @screen-md) {
+            flex-direction: column;
+
+            .blokk {
+                width: 100%;
+
+                &:not(:last-child) {
+                    border-right: none;
+                    border-bottom: 1px solid lightgrey;
+                }
+            }
         }
     }
 }
