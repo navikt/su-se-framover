@@ -1,4 +1,4 @@
-import { guid } from 'nav-frontend-js-utils';
+import { v4 as uuid } from 'uuid';
 
 export enum ErrorCode {
     Unauthorized = 403,
@@ -46,7 +46,7 @@ export default async function apiClient<T>(arg: {
     extraData?: { correlationId: string };
     bodyTransformer?: (res: Response) => Promise<T>;
 }): Promise<ApiClientResult<T>> {
-    const correlationId = arg.extraData?.correlationId ?? guid();
+    const correlationId = arg.extraData?.correlationId ?? uuid();
 
     const res = await fetch(`/api/${arg.url.startsWith('/') ? arg.url.slice(1) : arg.url}`, {
         ...arg.request,
