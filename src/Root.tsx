@@ -18,7 +18,6 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Header from './components/header/Header';
 import WithDocTitle from './components/WithDocTitle';
 import * as meSlice from './features/me/me.slice';
-import * as Cookies from './lib/cookies';
 import { FeatureToggleProvider } from './lib/featureToggles';
 import { pipe } from './lib/fp';
 import * as routes from './lib/routes';
@@ -110,12 +109,7 @@ const ContentWrapper: React.FC = (props) => {
                                             ? 'Ikke tilgang'
                                             : 'En feil oppstod'}
                                     </Innholdstittel>
-                                    <Lenke
-                                        href={`${Config.LOGIN_URL}?redirectTo=${window.location.pathname}`}
-                                        onClick={() => {
-                                            Cookies.set(Cookies.CookieName.LoginRedirectUrl, window.location.pathname);
-                                        }}
-                                    >
+                                    <Lenke href={`${Config.LOGIN_URL}?redirectTo=${window.location.pathname}`}>
                                         Logg inn på nytt
                                     </Lenke>
                                 </div>

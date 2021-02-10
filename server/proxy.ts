@@ -38,7 +38,9 @@ export default function setup(authClient: OpenIdClient.Client) {
         const user = req.user;
         if (!user) {
             req.log.debug('Missing user in route, waiting for middleware authentication');
-            res.status(401).send('Not authenticated');
+            res.status(401)
+                .header('WWW-Authenticate', 'OAuth realm=supstonad, charset="UTF-8"')
+                .send('Not authenticated');
             return;
         }
 
