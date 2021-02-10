@@ -5,7 +5,7 @@ import * as redis from 'redis';
 
 import * as Config from './config';
 
-const SESSION_MAX_AGE_MILLIS = 60 * 60 * 1000;
+const SESSION_MAX_AGE_MILLIS = 60 * 60 * 1000 * 2;
 
 function getRedisStore() {
     const RedisStore = connectRedis(session);
