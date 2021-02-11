@@ -4,7 +4,8 @@ import { useHistory } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
 import * as innsendingSlice from '~features/søknad/innsending.slice';
-import { trackEvent, søknadSendInn } from '~lib/tracking/trackingEvents';
+import { trackEvent } from '~lib/tracking/amplitude';
+import { søknadSendInn } from '~lib/tracking/trackingEvents';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
