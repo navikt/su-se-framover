@@ -54,7 +54,7 @@ export default function setup(authClient: OpenIdClient.Client) {
                 return proxy(req.log, onBehalfOfToken.access_token)(req, res, next);
             })
             .catch((error) => {
-                req.log.error('Failed to refresh tokens', error);
+                req.log.error('Failed to refresh tokens. Original error: %s', error);
                 res.status(500).send('Failed to fetch/refresh access tokens on behalf of user');
             });
     });
