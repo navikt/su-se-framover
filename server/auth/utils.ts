@@ -1,9 +1,10 @@
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import * as OpenIdClient from 'openid-client';
 import { TokenSet } from 'openid-client';
-import pino from 'pino';
+import { Logger } from 'pino';
 
 import * as Config from '../config';
+import { logger } from '../logger';
 
 import { TokenSets } from './index';
 
@@ -24,40 +25,79 @@ function getTokenSetById(tokenSets: TokenSets, id: string): TokenSet | null {
 export async function getOrRefreshOnBehalfOfToken(
     authClient: OpenIdClient.Client,
     tokenSets: TokenSets,
-    log: pino.Logger
+    log: Logger
 ): Promise<TokenSet> {
-    const selfTokenSet = getTokenSetById(tokenSets, tokenSetSelfId);
-    if (!selfTokenSet) {
-        throw Error('Mangler self-token i tokenSets');
-    }
-    if (selfTokenSet.expired()) {
-        log.debug('getOrRefreshOnBehalfOfToken: self token has expired, refreshing all tokens.');
-        const refreshedSelfTokenSet = await authClient.refresh(selfTokenSet);
-        tokenSets[tokenSetSelfId] = refreshedSelfTokenSet;
-        const newOnBehalfOftoken = await fetchOnBehalfOfToken(authClient, refreshedSelfTokenSet);
-        tokenSets[Config.auth.suSeBakoverClientId] = newOnBehalfOftoken;
-        return newOnBehalfOftoken;
+    const selfToken = getTokenSetById(tokenSets, tokenSetSelfId);
+    if (!selfToken) {
+        throw Error(
+            'getOrRefreshOnBehalfOfToken: Missing self-token in tokenSets. This should have been set by the middleware.'
+        );
     }
     const onBehalfOfToken = getTokenSetById(tokenSets, Config.auth.suSeBakoverClientId);
     if (!onBehalfOfToken) {
-        log.debug('getOrRefreshOnBehalfOfToken: on-behalf-of token is missing, creating.');
-        const newOnBehalfOftoken = await fetchOnBehalfOfToken(authClient, selfTokenSet);
+        log.debug('getOrRefreshOnBehalfOfToken: creating missing on-behalf-of token.');
+        const token = await getOrRefreshSelfTokenIfExpired(authClient, selfToken, tokenSets, log);
+        const newOnBehalfOftoken = await requestOnBehalfOfToken(authClient, token);
         tokenSets[Config.auth.suSeBakoverClientId] = newOnBehalfOftoken;
         return newOnBehalfOftoken;
     }
     if (onBehalfOfToken.expired()) {
-        log.debug('getOrRefreshOnBehalfOfToken: on-behalf-of token has expired, re-creating.');
-        const newOnBehalfOftoken = await fetchOnBehalfOfToken(authClient, selfTokenSet);
-        tokenSets[Config.auth.suSeBakoverClientId] = newOnBehalfOftoken;
-        return newOnBehalfOftoken;
+        log.debug('getOrRefreshOnBehalfOfToken: on-behalf-of token has expired, requesting new using refresh_token.');
+        const refreshedOnBehalfOfToken = await getOrRefreshOnBehalfOfTokenIfExpired(
+            authClient,
+            selfToken,
+            onBehalfOfToken,
+            tokenSets,
+            log
+        );
+        tokenSets[Config.auth.suSeBakoverClientId] = refreshedOnBehalfOfToken;
+        return refreshedOnBehalfOfToken;
     }
+
     log.debug('getOrRefreshOnBehalfOfToken: using cached on-behalf-of token');
     return tokenSets[Config.auth.suSeBakoverClientId];
 }
 
-async function fetchOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet: TokenSet): Promise<TokenSet> {
+async function getOrRefreshSelfTokenIfExpired(
+    authClient: OpenIdClient.Client,
+    selfToken: TokenSet,
+    tokenSets: TokenSets,
+    log: Logger
+): Promise<TokenSet> {
+    if (selfToken.expired()) {
+        // Dette vil i praksis ikke forekomme. Da middlewaren akkurat har hentet et nytt self token med 1 times varighet.
+        log.debug('getOrRefreshOnBehalfOfToken: self token has expired, requesting new using refresh_token.');
+        const refreshedSelfToken = await authClient.refresh(selfToken);
+        tokenSets[tokenSetSelfId] = refreshedSelfToken;
+        return refreshedSelfToken;
+    }
+    return selfToken;
+}
+
+async function getOrRefreshOnBehalfOfTokenIfExpired(
+    authClient: OpenIdClient.Client,
+    selfToken: TokenSet,
+    onBehalfOfToken: TokenSet,
+    tokenSets: TokenSets,
+    log: Logger
+) {
+    if (onBehalfOfToken.refresh_token) {
+        return await authClient.refresh(onBehalfOfToken);
+    } else {
+        if (Config.isProd) {
+            log.error(
+                'The on-behalf-of token is missing a refresh_token. This should not happen. Check if the API towards Azure has changed.'
+            );
+        }
+        // The current mock-implementation does not support refresh_token on the on-behalf-of token. So we have to refresh it instead.
+        const token = await getOrRefreshSelfTokenIfExpired(authClient, selfToken, tokenSets, log);
+        return await requestOnBehalfOfToken(authClient, token);
+    }
+}
+
+async function requestOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet: TokenSet): Promise<TokenSet> {
     if (!tokenSet.access_token) {
-        return Promise.reject('Could not get on-behalf-of token because the access_token was undefined');
+        throw Error('Could not get on-behalf-of token because the access_token was undefined');
     }
     const grantBody: OpenIdClient.GrantBody = {
         grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
@@ -66,7 +106,10 @@ async function fetchOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet: T
         // oauth2-mock-server vil sette hva enn vi sender inn som scope her som audience i tokenet
         // mens AAD vil sette klient-ID-en som audience.
         // Vi trikser det derfor til her heller enn at su-se-bakover må ha noe spesialhåndtering
-        scope: Config.isDev ? Config.auth.suSeBakoverClientId : `api://${Config.auth.suSeBakoverClientId}/.default`,
+        scope:
+            `offline_access ` + Config.isDev
+                ? Config.auth.suSeBakoverClientId
+                : `${Config.auth.suSeBakoverClientId}/.default`,
         assertion: tokenSet.access_token,
     };
     return await authClient.grant(grantBody);
@@ -95,7 +138,7 @@ export async function getOpenIdClient(issuerUrl: string) {
             Config.auth.jwks
         );
     } catch (e) {
-        console.error('Could not discover issuer', issuerUrl);
+        logger.error('Could not discover issuer', issuerUrl);
         throw e;
     }
 }
