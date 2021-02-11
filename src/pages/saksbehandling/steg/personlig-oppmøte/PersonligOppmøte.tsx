@@ -428,7 +428,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
 
                         <div
                             ref={advarselRef}
-                            tabIndex={0}
+                            tabIndex={-1}
                             aria-live="polite"
                             aria-atomic="true"
                             className={styles.alertstripe}

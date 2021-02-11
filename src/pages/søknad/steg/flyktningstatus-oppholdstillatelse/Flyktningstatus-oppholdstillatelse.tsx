@@ -217,6 +217,8 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 value={formik.values.statsborgerskapAndreLandFritekst || ''}
                                 onChange={formik.handleChange}
                                 autoComplete="off"
+                                // Dette elementet vises ikke ved sidelast
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
                                 autoFocus
                             />
                         )}
