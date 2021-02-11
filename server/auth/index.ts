@@ -29,7 +29,7 @@ async function getStrategy(authClient: OpenIdClient.Client) {
             params: {
                 response_type: Config.auth.responseType,
                 response_mode: Config.auth.responseMode,
-                scope: `openid ${Config.auth.clientId}/.default`,
+                scope: `openid offline_access ${Config.auth.clientId}/.default`,
             },
             usePKCE: 'S256',
         },
