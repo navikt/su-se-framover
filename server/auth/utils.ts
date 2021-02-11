@@ -43,17 +43,13 @@ export async function getOrRefreshOnBehalfOfToken(
     }
     if (onBehalfOfToken.expired()) {
         log.debug('getOrRefreshOnBehalfOfToken: on-behalf-of token has expired, requesting new using refresh_token.');
-        const refreshedOnBehalfOfToken = await (async () => {
-            if (onBehalfOfToken.refresh_token) {
-                return await authClient.refresh(onBehalfOfToken);
-            } else {
-                log.error(
-                    'Dev only: Requesting new on-behalf-of token instead of refreshing it. The current auth mock does not support on-behalf-of with refresh_token.'
-                );
-                const token = await getOrRefreshSelfTokenIfExpired(authClient, selfToken, tokenSets, log);
-                return await requestOnBehalfOfToken(authClient, token);
-            }
-        })();
+        const refreshedOnBehalfOfToken = await getOrRefreshOnBehalfOfTokenIfExpired(
+            authClient,
+            selfToken,
+            onBehalfOfToken,
+            tokenSets,
+            log
+        );
         tokenSets[Config.auth.suSeBakoverClientId] = refreshedOnBehalfOfToken;
         return refreshedOnBehalfOfToken;
     }
@@ -76,6 +72,25 @@ async function getOrRefreshSelfTokenIfExpired(
         return refreshedSelfToken;
     }
     return selfToken;
+}
+
+async function getOrRefreshOnBehalfOfTokenIfExpired(
+    authClient: OpenIdClient.Client,
+    selfToken: TokenSet,
+    onBehalfOfToken: TokenSet,
+    tokenSets: TokenSets,
+    log: Logger
+) {
+    if (onBehalfOfToken.refresh_token) {
+        return await authClient.refresh(onBehalfOfToken);
+    } else {
+        // Dette skal ikke forekomme i miljøet. Dersom det gjør det har vi enten gjort noe feil eller Azure har endret on-behalf-of APIet sitt.
+        log.error(
+            'Dev only: Requesting new on-behalf-of token instead of refreshing it. The current auth mock does not support on-behalf-of with refresh_token.'
+        );
+        const token = await getOrRefreshSelfTokenIfExpired(authClient, selfToken, tokenSets, log);
+        return await requestOnBehalfOfToken(authClient, token);
+    }
 }
 
 async function requestOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet: TokenSet): Promise<TokenSet> {
