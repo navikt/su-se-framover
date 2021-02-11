@@ -1,9 +1,10 @@
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import * as OpenIdClient from 'openid-client';
 import { TokenSet } from 'openid-client';
-import pino from 'pino';
+import { Logger } from 'pino';
 
 import * as Config from '../config';
+import { logger } from '../logger';
 
 import { TokenSets } from './index';
 
@@ -24,7 +25,7 @@ function getTokenSetById(tokenSets: TokenSets, id: string): TokenSet | null {
 export async function getOrRefreshOnBehalfOfToken(
     authClient: OpenIdClient.Client,
     tokenSets: TokenSets,
-    log: pino.Logger
+    log: Logger
 ): Promise<TokenSet> {
     const selfToken = getTokenSetById(tokenSets, tokenSetSelfId);
     if (!selfToken) {
@@ -65,7 +66,7 @@ async function getOrRefreshSelfTokenIfExpired(
     authClient: OpenIdClient.Client,
     selfToken: TokenSet,
     tokenSets: TokenSets,
-    log: pino.Logger
+    log: Logger
 ): Promise<TokenSet> {
     if (selfToken.expired()) {
         // Dette vil i praksis ikke forekomme. Da middlewaren akkurat har hentet et nytt self token med 1 times varighet.
@@ -120,7 +121,7 @@ export async function getOpenIdClient(issuerUrl: string) {
             Config.auth.jwks
         );
     } catch (e) {
-        console.error('Could not discover issuer', issuerUrl);
+        logger.error('Could not discover issuer', issuerUrl);
         throw e;
     }
 }

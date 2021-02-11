@@ -1,7 +1,7 @@
 import express from 'express';
 import expressHttpProxy from 'express-http-proxy';
 import * as OpenIdClient from 'openid-client';
-import pino from 'pino';
+import { Logger } from 'pino';
 
 import * as AuthUtils from './auth/utils';
 import * as Config from './config';
@@ -9,7 +9,7 @@ import * as Config from './config';
 export default function setup(authClient: OpenIdClient.Client) {
     const router = express.Router();
 
-    const proxy = (log: pino.Logger, accessToken?: string) =>
+    const proxy = (log: Logger, accessToken?: string) =>
         expressHttpProxy(Config.server.suSeBakoverUrl, {
             parseReqBody: false,
             proxyReqOptDecorator: async (options) => {
@@ -54,7 +54,7 @@ export default function setup(authClient: OpenIdClient.Client) {
                 return proxy(req.log, onBehalfOfToken.access_token)(req, res, next);
             })
             .catch((error) => {
-                req.log.error('Failed to refresh tokens. Original error: %s', error);
+                req.log.error('Failed to renew token(s). Original error: %s', error);
                 res.status(500).send('Failed to fetch/refresh access tokens on behalf of user');
             });
     });
