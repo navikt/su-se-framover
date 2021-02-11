@@ -1,68 +1,71 @@
-import React from 'react';
+import AlertStripe from 'nav-frontend-alertstriper';
+import React, { useMemo } from 'react';
 import { IntlShape } from 'react-intl';
 
+import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
-import { Nullable } from '~lib/types';
-import { SøknadInnhold } from '~types/Søknad';
+import { keyOf, Nullable } from '~lib/types';
+import søknadMessages from '~pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
+import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';
 
+import Vilkårsblokk from '../../../vilkårsOppsummering/VilkårsBlokk';
+import saksbehandlingMessages from '../../lovlig-opphold-i-norge/lovligOppholdINorge-nb';
 import Faktablokk from '../Faktablokk';
 
 import messages from './faktablokker-nb';
-import styles from './faktablokker.module.less';
-import { FaktablokkProps } from './faktablokkUtils';
+import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
 
-const LovligOppholdFaktablokk = (props: FaktablokkProps) => {
-    const intl = useI18n({ messages });
+export const LovligOppholdFaktablokk = (props: FaktablokkProps) => {
+    const intl = useI18n({
+        messages: {
+            ...messages,
+            ...søknadMessages,
+        },
+    });
 
-    return (
-        <Faktablokk
-            tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
-            brukUndertittel={props.brukUndertittel}
-            containerClassName={styles.lovligOppholdFaktaBlokkContainer}
-            faktaBlokkerClassName={styles.lovligOppholdFaktaBlokk}
-            fakta={createListOfFakta(intl, props.søknadInnhold)}
-        />
-    );
-};
+    const søknadMessage = (s: keyof typeof søknadMessages) => intl.formatMessage({ id: s });
 
-function createListOfFakta(intl: IntlShape, søknadsInnhold: SøknadInnhold) {
-    const arr = [
-        booleanToJaNei(
-            søknadsInnhold.oppholdstillatelse.erNorskStatsborger,
-            intl.formatMessage({ id: 'lovligOpphold.erNorskStatsborger' }),
-            intl
-        ),
-    ];
-
-    if (!søknadsInnhold.oppholdstillatelse.erNorskStatsborger) {
-        arr.push(
+    const fakta = useMemo(() => {
+        const arr = [
             booleanToJaNei(
-                søknadsInnhold.oppholdstillatelse.harOppholdstillatelse,
-                intl.formatMessage({ id: 'lovligOpphold.harOppholdstillatelse' }),
+                props.søknadInnhold.oppholdstillatelse.erNorskStatsborger,
+                søknadMessage('input.norsk.statsborger.label'),
                 intl
-            )
-        );
-    }
-    if (søknadsInnhold.oppholdstillatelse.harOppholdstillatelse) {
-        arr.push(
-            createFakta(
-                søknadsInnhold.oppholdstillatelse.typeOppholdstillatelse,
-                intl.formatMessage({ id: 'lovligOpphold.typeOppholdstillatelse' })
-            )
-        );
-    }
+            ),
+        ];
 
-    if (søknadsInnhold.oppholdstillatelse.statsborgerskapAndreLand) {
-        arr.push(
-            createFakta(
-                søknadsInnhold.oppholdstillatelse.statsborgerskapAndreLandFritekst,
-                intl.formatMessage({ id: 'lovligOpphold.statsborgerskapAndreLand' })
-            )
-        );
-    }
+        if (!props.søknadInnhold.oppholdstillatelse.erNorskStatsborger) {
+            arr.push(
+                booleanToJaNei(
+                    props.søknadInnhold.oppholdstillatelse.harOppholdstillatelse,
+                    søknadMessage('input.oppholdstillatelse.label'),
+                    intl
+                )
+            );
+        }
+        if (props.søknadInnhold.oppholdstillatelse.harOppholdstillatelse) {
+            arr.push(
+                createFakta(
+                    props.søknadInnhold.oppholdstillatelse.typeOppholdstillatelse,
+                    søknadMessage('input.hvilken.oppholdstillatelse.label')
+                )
+            );
+        }
 
-    return arr;
-}
+        if (props.søknadInnhold.oppholdstillatelse.statsborgerskapAndreLand) {
+            arr.push(
+                createFakta(
+                    props.søknadInnhold.oppholdstillatelse.statsborgerskapAndreLandFritekst,
+                    søknadMessage('input.statsborger.andre.land.fritekst.label')
+                )
+            );
+        }
+
+        return arr;
+    }, [props.søknadInnhold, intl]);
+
+    return <Faktablokk tittel={intl.formatMessage({ id: 'display.fraSøknad' })} fakta={fakta} />;
+};
 
 const booleanToJaNei = (verdi: Nullable<boolean>, tittel: string, intl: IntlShape) => {
     if (verdi == null) return { tittel: tittel, verdi: '' };
@@ -84,4 +87,42 @@ const createFakta = (verdi: Nullable<string>, tittel: string) => {
     };
 };
 
-export default LovligOppholdFaktablokk;
+export const LovligOppholdVilkårsblokk = (props: VilkårsblokkProps<'lovligOpphold'>) => {
+    const intl = useI18n({
+        messages: {
+            ...messages,
+            ...saksbehandlingMessages,
+        },
+    });
+
+    return (
+        <Vilkårsblokk
+            tittel={vilkårTittelFormatted(props.info.vilkårtype)}
+            søknadfaktablokk={<LovligOppholdFaktablokk søknadInnhold={props.søknadInnhold} />}
+            saksbehandlingfaktablokk={
+                props.behandlingsinformasjon === null ? (
+                    <AlertStripe type="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</AlertStripe>
+                ) : (
+                    <Faktablokk
+                        tittel={intl.formatMessage({ id: 'display.fraSaksbehandling' })}
+                        fakta={[
+                            {
+                                tittel: intl.formatMessage({
+                                    id: keyOf<typeof saksbehandlingMessages>('radio.lovligOpphold.legend'),
+                                }),
+                                verdi:
+                                    props.behandlingsinformasjon.status === LovligOppholdStatus.VilkårOppfylt
+                                        ? intl.formatMessage({ id: 'fraSøknad.ja' })
+                                        : props.behandlingsinformasjon.status === LovligOppholdStatus.VilkårIkkeOppfylt
+                                        ? intl.formatMessage({ id: 'fraSøknad.nei' })
+                                        : intl.formatMessage({ id: 'fraSøknad.uavklart' }),
+                            },
+                        ]}
+                    />
+                )
+            }
+            status={props.info.status}
+            begrunnelse={props.info.begrunnelse}
+        />
+    );
+};

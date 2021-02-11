@@ -1,19 +1,27 @@
 @import '~/styles/variables.less';
 
 .overskrift {
-    margin-bottom: @spacing-s;
+    margin-bottom: @spacing-xxs;
+    color: @navgra60;
 }
 
-.linje:not(:last-child) {
-    margin-bottom: @spacing-xs;
-}
-
-.faktablokk {
-    background-color: @navLysBla;
-}
-
-.verdi {
-    div:not(:last-child) {
-        margin-bottom: @spacing-xxs;
+.fakta {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    li {
+        display: flex;
+        .tittel {
+            width: 60%;
+            padding-right: @spacing-xs;
+        }
+        .verdi {
+            width: 40%;
+        }
     }
+}
+
+.faktaSpacing {
+    height: @spacing;
+    visibility: hidden;
 }

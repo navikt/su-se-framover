@@ -19,7 +19,7 @@ import {
     Institusjonsopphold as InstitusjonsoppholdType,
 } from '~types/Behandlingsinformasjon';
 
-import InstitusjonsoppholdBlokk from '../faktablokk/faktablokker/InstitusjonsoppholdBlokk';
+import { InstitusjonsoppholdBlokk } from '../faktablokk/faktablokker/InstitusjonsoppholdBlokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -199,12 +199,7 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
                         />
                     </form>
                 ),
-                right: (
-                    <InstitusjonsoppholdBlokk
-                        søknadInnhold={props.behandling.søknad.søknadInnhold}
-                        brukUndertittel={true}
-                    />
-                ),
+                right: <InstitusjonsoppholdBlokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
         </Vurdering>
     );

@@ -16,7 +16,7 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { LovligOpphold, LovligOppholdStatus } from '~types/Behandlingsinformasjon';
 
-import LovligOppholdFaktablokk from '../faktablokk/faktablokker/LovligOppholdFaktablokk';
+import { LovligOppholdFaktablokk } from '../faktablokk/faktablokker/LovligOppholdFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';

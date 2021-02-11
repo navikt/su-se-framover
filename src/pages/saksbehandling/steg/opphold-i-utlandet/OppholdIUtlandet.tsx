@@ -16,7 +16,7 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { OppholdIUtlandet as OppholdIUtlandetType, OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
 
-import UtenlandsOppholdFaktablokk from '../faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
+import { UtenlandsOppholdFaktablokk } from '../faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';

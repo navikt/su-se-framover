@@ -1,14 +1,5 @@
 @import '~/styles/variables.less';
 
-.lovligOppholdFaktaBlokk {
-    margin-bottom: @spacing-xxs;
-}
-
-.lovligOppholdFaktaBlokkContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-}
-
 .datoFelterContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -20,6 +11,30 @@
     font-size: 18px;
 }
 
-.formueFaktaBlokk {
-    margin-bottom: @spacing-xxs;
+.formueForBrukerOgEps {
+    display: flex;
+
+    .søker:not(:only-child) {
+        padding-right: @spacing-xs;
+        width: 50%;
+    }
+    .eps {
+        padding-left: @spacing-xs;
+        width: 50%;
+    }
+    .breakPls {
+        hyphens: auto;
+    }
+}
+
+.formueForBrukerOgEpsHeading {
+    font-weight: initial;
+
+    span:first-child:not(:last-child) {
+        border-right: 1px solid currentColor;
+    }
+}
+
+.reisedatoer {
+    padding-left: @spacing-xs;
 }

@@ -28,7 +28,7 @@ import {
 } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
-import PersonligOppmøteFaktablokk from '../faktablokk/faktablokker/PersonligOppmøteFaktablokk';
+import { PersonligOppmøteFaktablokk } from '../faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
