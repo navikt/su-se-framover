@@ -84,10 +84,12 @@ async function getOrRefreshOnBehalfOfTokenIfExpired(
     if (onBehalfOfToken.refresh_token) {
         return await authClient.refresh(onBehalfOfToken);
     } else {
-        // Dette skal ikke forekomme i miljøet. Dersom det gjør det har vi enten gjort noe feil eller Azure har endret on-behalf-of APIet sitt.
-        log.error(
-            'Dev only: Requesting new on-behalf-of token instead of refreshing it. The current auth mock does not support on-behalf-of with refresh_token.'
-        );
+        if (Config.isProd) {
+            log.error(
+                'The on-behalf-of token is missing a refresh_token. This should not happen. Check if the API towards Azure has changed.'
+            );
+        }
+        // The current mock-implementation does not support refresh_token on the on-behalf-of token. So we have to refresh it instead.
         const token = await getOrRefreshSelfTokenIfExpired(authClient, selfToken, tokenSets, log);
         return await requestOnBehalfOfToken(authClient, token);
     }
