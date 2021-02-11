@@ -41,19 +41,6 @@ export const FormueFaktablokk = (props: FaktablokkProps) => {
                 tittel={message('display.fraSøknad')}
                 fakta={[
                     {
-                        tittel: message('formue.delerBoligMed'),
-                        verdi: delerBoligMedFormatted(props.søknadInnhold.boforhold.delerBoligMed),
-                    },
-                    ...(props.søknadInnhold.boforhold.ektefellePartnerSamboer === null
-                        ? []
-                        : [
-                              {
-                                  tittel: message('formue.epsFnr'),
-                                  verdi: props.søknadInnhold.boforhold.ektefellePartnerSamboer.fnr,
-                              },
-                          ]),
-                    FaktaSpacing,
-                    {
                         tittel: message('formue.tittel'),
                         verdi: (
                             <div
@@ -74,6 +61,19 @@ export const FormueFaktablokk = (props: FaktablokkProps) => {
                         tittel: intl.formatMessage({ id: 'formue.totalt' }),
                         verdi: formatCurrency(intl, totalFormueFraSøknad),
                     },
+                    FaktaSpacing,
+                    {
+                        tittel: message('formue.delerBoligMed'),
+                        verdi: delerBoligMedFormatted(props.søknadInnhold.boforhold.delerBoligMed),
+                    },
+                    ...(props.søknadInnhold.boforhold.ektefellePartnerSamboer === null
+                        ? []
+                        : [
+                              {
+                                  tittel: message('formue.epsFnr'),
+                                  verdi: props.søknadInnhold.boforhold.ektefellePartnerSamboer.fnr,
+                              },
+                          ]),
                 ]}
             />
         </div>
@@ -240,7 +240,6 @@ export const FormueVilkårsblokk = (props: VilkårsblokkProps<'formue'>) => {
                         <Faktablokk
                             tittel={message('display.fraSaksbehandling')}
                             fakta={[
-                                FaktaSpacing,
                                 {
                                     tittel: message('formue.tittel'),
                                     verdi: (
