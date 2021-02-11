@@ -18,6 +18,7 @@ import setupSession from './session';
 
 export default async function startServer() {
     const app = express();
+    const fnrReplacePattern = [/^(\/api\/person\/)(\d{11})()/, /^(.*fnr=)(\d{11})()/];
     console.info(`Using log level: ${Config.server.logLevel}`);
     app.use(
         pinoHttp({
@@ -37,7 +38,19 @@ export default async function startServer() {
             genReqId(req) {
                 return req.headers['X-Correlation-ID'] || req.id;
             },
-            redact: ['req.headers', 'res.headers'],
+            redact: {
+                paths: ['req.headers', 'res.headers', 'req.url'],
+                censor: (value) => {
+                    if (typeof value === 'string') {
+                        return fnrReplacePattern.reduce((acc, regex) => acc.replace(regex, '$1***********$3'), value);
+                    }
+                    return '[Redacted]';
+                },
+            },
+            autoLogging: {
+                getPath: (req) => (/^\/api\/(?!toggles)/.test(req.url ?? '') ? req.url : 'ignore'),
+                ignorePaths: ['ignore'],
+            },
         })
     );
 
