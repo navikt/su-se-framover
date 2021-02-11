@@ -27,6 +27,25 @@ $ npm start
 Brukes for å cache bruker-sessions.
 Lokalt oppsett ligger i [./docker-compose.yml](), mens nais-oppsettet ligger i [./nais.yml]().
 
+#### Koble til
+
+Vi har erfart at det er lettere å bruke et GUI-verktøy når det kommer til Redis.
+
+-   Linux: https://docs.redisdesktop.com/en/latest/install/
+-   Mac: brew install --cask redisinsight
+
+##### Lokalt
+
+-   Antar at du har kjørt `./start-dev.sh` og at docker-containeren kjører lokalt.
+-   Koble til med hostname: localhost/127.0.0.1, port: 6379, default username og passord: subar (ligger i docker-compose.yml)
+
+##### Via naisdevice i preprod
+
+-   kubectx dev-fss
+-   kubectl --namespace=supstonad get pods # kopier ut redis pod-navnet
+-   kubectl --namespace=supstonad port-forward <pod> 6379:6379 # din_port:nais_port
+-   Kobler til med hostname: localhost, port: <din_port>, default username og passord finner du ved å kjøre `env` inne i podden.
+
 ### Mock oauth2 server
 
 For autentisering lokalt så bruker vi https://github.com/navikt/mock-oauth2-server.
