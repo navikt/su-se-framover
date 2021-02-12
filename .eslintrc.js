@@ -14,6 +14,7 @@ module.exports = {
         'plugin:import/typescript',
         'plugin:@typescript-eslint/recommended',
         'prettier/@typescript-eslint',
+        'plugin:jsx-a11y/recommended',
     ],
     globals: {
         Atomics: 'readonly',
@@ -33,7 +34,7 @@ module.exports = {
         'import/resolver': { typescript: {} },
         'import/internal-regex': '^~',
     },
-    plugins: ['react', '@typescript-eslint'],
+    plugins: ['react', '@typescript-eslint', 'jsx-a11y'],
     rules: {
         '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
         '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
