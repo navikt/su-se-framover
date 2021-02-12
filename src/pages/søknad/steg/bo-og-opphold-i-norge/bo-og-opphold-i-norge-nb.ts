@@ -1,4 +1,7 @@
 export default {
+    'ektefelleEllerSamboer.feil.ikkeTilgang': 'Du har ikke tilgang til å se informasjon om denne brukeren',
+    'ektefelleEllerSamboer.feil.felteneMåFyllesUt': 'Feltene må fylles ut',
+
     'input.opphold-i-norge.label': 'Bor og oppholder du deg i Norge?',
     'input.folkereg-adresse.label': 'Bor på folkereg adresse?',
     'input.delerBoligMedPersonOver18.label': 'Deler du bolig med noen over 18 år?',
