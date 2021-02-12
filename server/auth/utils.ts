@@ -43,13 +43,7 @@ export async function getOrRefreshOnBehalfOfToken(
     }
     if (onBehalfOfToken.expired()) {
         log.debug('getOrRefreshOnBehalfOfToken: on-behalf-of token has expired, requesting new using refresh_token.');
-        const refreshedOnBehalfOfToken = await getOrRefreshOnBehalfOfTokenIfExpired(
-            authClient,
-            selfToken,
-            onBehalfOfToken,
-            tokenSets,
-            log
-        );
+        const refreshedOnBehalfOfToken = await requestOnBehalfOfToken(authClient, onBehalfOfToken);
         tokenSets[Config.auth.suSeBakoverClientId] = refreshedOnBehalfOfToken;
         return refreshedOnBehalfOfToken;
     }
@@ -74,27 +68,6 @@ async function getOrRefreshSelfTokenIfExpired(
     return selfToken;
 }
 
-async function getOrRefreshOnBehalfOfTokenIfExpired(
-    authClient: OpenIdClient.Client,
-    selfToken: TokenSet,
-    onBehalfOfToken: TokenSet,
-    tokenSets: TokenSets,
-    log: Logger
-) {
-    if (onBehalfOfToken.refresh_token) {
-        return await authClient.refresh(onBehalfOfToken);
-    } else {
-        if (Config.isProd) {
-            log.error(
-                'The on-behalf-of token is missing a refresh_token. This should not happen. Check if the API towards Azure has changed.'
-            );
-        }
-        // The current mock-implementation does not support refresh_token on the on-behalf-of token. So we have to refresh it instead.
-        const token = await getOrRefreshSelfTokenIfExpired(authClient, selfToken, tokenSets, log);
-        return await requestOnBehalfOfToken(authClient, token);
-    }
-}
-
 async function requestOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet: TokenSet): Promise<TokenSet> {
     if (!tokenSet.access_token) {
         throw Error('Could not get on-behalf-of token because the access_token was undefined');
@@ -106,10 +79,7 @@ async function requestOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet:
         // oauth2-mock-server vil sette hva enn vi sender inn som scope her som audience i tokenet
         // mens AAD vil sette klient-ID-en som audience.
         // Vi trikser det derfor til her heller enn at su-se-bakover må ha noe spesialhåndtering
-        scope:
-            `offline_access ` + Config.isDev
-                ? Config.auth.suSeBakoverClientId
-                : `${Config.auth.suSeBakoverClientId}/.default`,
+        scope: Config.isDev ? Config.auth.suSeBakoverClientId : `${Config.auth.suSeBakoverClientId}/.default`,
         assertion: tokenSet.access_token,
     };
     return await authClient.grant(grantBody);
