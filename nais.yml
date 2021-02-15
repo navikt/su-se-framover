@@ -12,6 +12,9 @@ spec:
     application:
       enabled: true
       tenant: {{ tenant }}
+      replyURLs:
+        - "http://localhost/oauth2/callback"
+        - "{{ingress}}/oauth2/callback"
   webproxy: true
   replicas:
     min: 1
