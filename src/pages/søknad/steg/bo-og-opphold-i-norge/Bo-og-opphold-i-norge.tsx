@@ -50,7 +50,15 @@ const epsFormDataSchema = yup
                     typeof value === 'string' && value.length === 11 && fnrValidator.fnr(value).status === 'valid'
             )
             .typeError('Ugyldig fødselsnummer'),
-        erUførFlyktning: yup.boolean().required().typeError('Feltet må fylles ut'),
+        alder: yup.number().nullable().defined(),
+        erUførFlyktning: yup
+            .boolean()
+            .when('alder', {
+                is: (val) => val < 67,
+                then: yup.boolean().required(),
+                otherwise: yup.boolean().nullable().defined(),
+            })
+            .defined(),
     })
     .defined();
 
@@ -381,6 +389,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                                 ? {
                                                       fnr: null,
                                                       erUførFlyktning: null,
+                                                      alder: null,
                                                   }
                                                 : null,
                                     }));

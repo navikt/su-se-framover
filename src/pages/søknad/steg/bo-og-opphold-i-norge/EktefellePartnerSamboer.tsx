@@ -2,7 +2,7 @@ import fnrValidator from '@navikt/fnrvalidator';
 import { FormikErrors } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Input, Radio, RadioGruppe, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 
 import * as personApi from '~api/personApi';
 import { Person } from '~api/personApi';
@@ -21,9 +21,13 @@ interface Props {
     feil?: FormikErrors<EPSFormData>;
 }
 const EktefellePartnerSamboer = (props: Props) => {
-    const epsFormData = props.value ?? { fnr: null, erUførFlyktning: null };
+    const epsFormData: EPSFormData = props.value ?? { fnr: null, alder: null, erUførFlyktning: null };
 
     const intl = useI18n({ messages });
+
+    const erEpsUnder67 = useMemo(() => {
+        return epsFormData.alder && epsFormData.alder < 67;
+    }, [epsFormData.fnr, epsFormData.alder]);
 
     return (
         <div>
@@ -38,40 +42,50 @@ const EktefellePartnerSamboer = (props: Props) => {
                 }}
                 feil={props.feil?.fnr}
                 autoComplete="off"
+                onAlderChange={(alder) => {
+                    props.onChange({
+                        ...epsFormData,
+                        alder: alder,
+                    });
+                }}
             />
 
             <div className={styles.ufør}>
-                <RadioGruppe
-                    legend={intl.formatMessage({ id: 'input.ektefelleEllerSamboerUførFlyktning.label' })}
-                    feil={props.feil?.erUførFlyktning}
-                >
-                    <Radio
-                        id={`${props.id}.${keyOf<EPSFormData>('erUførFlyktning')}`}
-                        checked={Boolean(epsFormData.erUførFlyktning)}
-                        onChange={() =>
-                            props.onChange({
-                                ...epsFormData,
-                                erUførFlyktning: true,
-                            })
-                        }
-                        label="Ja"
-                        name="erUfør"
-                    />
-                    <Radio
-                        checked={epsFormData.erUførFlyktning === false}
-                        onChange={() =>
-                            props.onChange({
-                                ...epsFormData,
-                                erUførFlyktning: false,
-                            })
-                        }
-                        label="Nei"
-                        name="erUfør"
-                    />
-                </RadioGruppe>
+                {erEpsUnder67 && (
+                    <RadioGruppe
+                        legend={intl.formatMessage({ id: 'input.ektefelleEllerSamboerUførFlyktning.label' })}
+                        feil={props.feil?.erUførFlyktning}
+                    >
+                        <Radio
+                            id={`${props.id}.${keyOf<EPSFormData>('erUførFlyktning')}`}
+                            checked={Boolean(epsFormData.erUførFlyktning)}
+                            onChange={() =>
+                                props.onChange({
+                                    ...epsFormData,
+                                    erUførFlyktning: true,
+                                })
+                            }
+                            label="Ja"
+                            name="erUfør"
+                        />
+                        <Radio
+                            checked={epsFormData.erUførFlyktning === false}
+                            onChange={() =>
+                                props.onChange({
+                                    ...epsFormData,
+                                    erUførFlyktning: false,
+                                })
+                            }
+                            label="Nei"
+                            name="erUfør"
+                        />
+                    </RadioGruppe>
+                )}
             </div>
             {typeof props.feil === 'string' && (
-                <SkjemaelementFeilmelding>Feltene må fylles ut</SkjemaelementFeilmelding>
+                <SkjemaelementFeilmelding>
+                    {intl.formatMessage({ id: 'ektefelleEllerSamboer.feil.felteneMåFyllesUt' })}
+                </SkjemaelementFeilmelding>
             )}
         </div>
     );
@@ -83,8 +97,9 @@ interface FnrInputProps {
     onFnrChange: (fnr: string) => void;
     feil?: React.ReactNode;
     autoComplete?: string;
+    onAlderChange: (alder: Nullable<number>) => void;
 }
-const FnrInput = ({ inputId, fnr, onFnrChange, feil, autoComplete }: FnrInputProps) => {
+const FnrInput = ({ inputId, fnr, onFnrChange, feil, autoComplete, onAlderChange }: FnrInputProps) => {
     const [person, setPerson] = useState<Person | null>(null);
     const [harIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
     const intl = useI18n({ messages });
@@ -97,6 +112,7 @@ const FnrInput = ({ inputId, fnr, onFnrChange, feil, autoComplete }: FnrInputPro
         }
         if (res.status === 'ok') {
             setPerson(res.data);
+            onAlderChange(res.data.alder);
         }
     }
 
@@ -130,7 +146,9 @@ const FnrInput = ({ inputId, fnr, onFnrChange, feil, autoComplete }: FnrInputPro
             )}
             {harIkkeTilgang && (
                 <div>
-                    <AlertStripe type="feil"> Du har ikke tilgang til å se informasjon om denne brukeren </AlertStripe>
+                    <AlertStripe type="feil">
+                        {intl.formatMessage({ id: 'ektefelleEllerSamboer.feil.ikkeTilgang' })}
+                    </AlertStripe>
                 </div>
             )}
         </div>
