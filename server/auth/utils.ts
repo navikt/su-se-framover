@@ -33,23 +33,23 @@ export async function getOrRefreshOnBehalfOfToken(
             'getOrRefreshOnBehalfOfToken: Missing self-token in tokenSets. This should have been set by the middleware.'
         );
     }
-    const onBehalfOfToken = getTokenSetById(tokenSets, Config.auth.suSeBakoverClientId);
+    const onBehalfOfToken = getTokenSetById(tokenSets, Config.auth.suSeBakoverUri);
     if (!onBehalfOfToken) {
         log.debug('getOrRefreshOnBehalfOfToken: creating missing on-behalf-of token.');
         const token = await getOrRefreshSelfTokenIfExpired(authClient, selfToken, tokenSets, log);
         const newOnBehalfOftoken = await requestOnBehalfOfToken(authClient, token);
-        tokenSets[Config.auth.suSeBakoverClientId] = newOnBehalfOftoken;
+        tokenSets[Config.auth.suSeBakoverUri] = newOnBehalfOftoken;
         return newOnBehalfOftoken;
     }
     if (onBehalfOfToken.expired()) {
         log.debug('getOrRefreshOnBehalfOfToken: on-behalf-of token has expired, requesting new using refresh_token.');
         const refreshedOnBehalfOfToken = await requestOnBehalfOfToken(authClient, onBehalfOfToken);
-        tokenSets[Config.auth.suSeBakoverClientId] = refreshedOnBehalfOfToken;
+        tokenSets[Config.auth.suSeBakoverUri] = refreshedOnBehalfOfToken;
         return refreshedOnBehalfOfToken;
     }
 
     log.debug('getOrRefreshOnBehalfOfToken: using cached on-behalf-of token');
-    return tokenSets[Config.auth.suSeBakoverClientId];
+    return tokenSets[Config.auth.suSeBakoverUri];
 }
 
 async function getOrRefreshSelfTokenIfExpired(
@@ -79,7 +79,7 @@ async function requestOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet:
         // oauth2-mock-server vil sette hva enn vi sender inn som scope her som audience i tokenet
         // mens AAD vil sette klient-ID-en som audience.
         // Vi trikser det derfor til her heller enn at su-se-bakover må ha noe spesialhåndtering
-        scope: Config.isDev ? Config.auth.suSeBakoverClientId : `${Config.auth.suSeBakoverClientId}/.default`,
+        scope: Config.isDev ? Config.auth.suSeBakoverUri : `${Config.auth.suSeBakoverUri}/.default`,
         assertion: tokenSet.access_token,
     };
     return await authClient.grant(grantBody);

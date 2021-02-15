@@ -91,7 +91,7 @@ export const auth = {
 
     redirectUri: envVar({ name: 'AUTH_REDIRECT_URI' }),
 
-    suSeBakoverClientId: envVar({ name: 'SU_SE_BAKOVER_CLIENT_ID' }),
+    suSeBakoverUri: envVar({ name: 'SU_SE_BAKOVER_URI' }),
 
     tokenEndpointAuthMethod: 'private_key_jwt',
     responseType: 'code',
