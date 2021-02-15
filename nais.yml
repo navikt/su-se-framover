@@ -20,6 +20,9 @@ spec:
           - id: {{ env.AZURE_GROUP_SAKSBEHANDLER }}
           - id: {{ env.AZURE_GROUP_VEILEDER }}
           - id: {{ env.AZURE_GROUP_DRIFT }}
+      replyURLs:
+        - "http://localhost/oauth2/callback"
+        - "{{ingress}}/oauth2/callback"
   webproxy: true
   replicas:
     min: 1
