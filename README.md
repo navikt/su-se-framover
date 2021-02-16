@@ -74,6 +74,7 @@ $ docker pull docker.pkg.github.com/navikt/mock-oauth2-server/mock-oauth2-server
 
 Dersom man har behov for å gå direkte mot Azure kan man legge inn inn verdiene fra `.env.azure.template` (og hente resterende verdier fra Kubernetes).
 Merk at `AZURE_APP_CLIENT_JWKS` roteres for hver deploy/restart.
+En må legge inn `AZURE_APP_WELL_KNOWN_URL` i `su-se-bakover` sin .env fil.
 
 Dersom en får `The reply URL specified in the request does not match the reply URLs configured for the application` bør man dobbeltsjekke i Azure Portal at localhost er registrert som en gyldig reply URL.
 
