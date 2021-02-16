@@ -21,10 +21,19 @@ export const home: Route<never> = {
     createURL: () => '/',
 };
 
-export const soknad: Route<{ step: Søknadsteg | null; papirsøknad?: boolean }> = {
-    path: '/soknad/:step?',
-    createURL: (args) =>
-        (args.step ? `/soknad/${args.step}` : '/soknad') + (args.papirsøknad ? '?papirsoknad=true' : ''),
+export const soknad: Route<{ papirsøknad?: boolean }> = {
+    path: '/soknad',
+    createURL: (args) => '/soknad' + (args.papirsøknad ? '?papirsoknad=true' : ''),
+};
+
+export const soknadsInfo: Route<never> = {
+    path: '/soknad/informasjon-om-su/',
+    createURL: () => '/soknad/informasjon-om-su/',
+};
+
+export const soknadsutfylling: Route<{ step: Søknadsteg; papirsøknad?: boolean }> = {
+    path: '/soknad/utfylling/:step',
+    createURL: (args) => `/soknad/utfylling/${args.step}`,
 };
 
 export const saksoversiktIndex: Route<never> = {

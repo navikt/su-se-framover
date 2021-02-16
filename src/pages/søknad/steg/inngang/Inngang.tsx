@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Hovedknapp } from 'nav-frontend-knapper';
+import { Sidetittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -40,6 +41,7 @@ const index = (props: { nesteUrl: string }) => {
     return (
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
+                <Sidetittel className={styles.tittel}>{intl.formatMessage({ id: 'page.tittel' })}</Sidetittel>
                 <div className={styles.search}>
                     <Personsøk
                         onReset={() => {
@@ -50,7 +52,6 @@ const index = (props: { nesteUrl: string }) => {
                         }}
                         person={søker}
                     />
-
                     {RemoteData.isSuccess(søker) && (
                         <div className={styles.successknapper}>
                             <Hovedknapp htmlType="button" onClick={handleStartSøknadClick}>

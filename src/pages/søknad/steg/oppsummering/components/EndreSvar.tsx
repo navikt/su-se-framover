@@ -17,7 +17,7 @@ export const EndreSvar = (props: { path: Søknadsteg; søker: Person }) => {
     return (
         <Link
             className={styles.endreSvarContainer}
-            to={routes.soknad.createURL({ step: props.path })}
+            to={routes.soknadsutfylling.createURL({ step: props.path })}
             onClick={() => trackEvent(søknadOppsummeringEndreSvarKlikk({ ident: props.søker.aktorId }))}
         >
             <span className={styles.marginRight}>
