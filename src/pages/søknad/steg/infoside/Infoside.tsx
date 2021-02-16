@@ -4,78 +4,91 @@ import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
-import { useI18n } from '~lib/hooks';
-
 import messages from './infoside-nb';
 import styles from './infoside.module.less';
 
 const Infoside = (props: { nesteUrl: string }) => {
-    const intl = useI18n({ messages });
     const merOmSuForUføreLink =
         'https://www.nav.no/no/person/pensjon/andre-pensjonsordninger/supplerende-stonad-for-ufore-flyktninger';
 
     return (
         <IntlProvider locale="nb" messages={messages}>
             <div className={styles.pageContainer}>
-                <Sidetittel className={styles.tittel}>{intl.formatMessage({ id: 'page.tittel' })}</Sidetittel>
+                <Sidetittel className={styles.tittel}>
+                    <FormattedMessage id="page.tittel" />
+                </Sidetittel>
 
                 <div>
-                    <p>{intl.formatMessage({ id: 'suppstønadInfo.kanFåSupp' })}</p>
-                    <p>{intl.formatMessage({ id: 'suppstønadInfo.garantertSamletInntekt' })}</p>
-                    <p className={styles.paragraphSpacing}>{intl.formatMessage({ id: 'suppstønadInfo.inntekt' })}</p>
+                    <p>
+                        <FormattedMessage id="suppstønadInfo.kanFåSupp" />
+                    </p>
+                    <p>
+                        <FormattedMessage id="suppstønadInfo.garantertSamletInntekt" />
+                    </p>
+                    <p className={styles.paragraphSpacing}>
+                        <FormattedMessage id="suppstønadInfo.inntekt" />
+                    </p>
                     <Lenke target="_blank" href={merOmSuForUføreLink}>
                         <p className={styles.paragraphSpacing}>
-                            {intl.formatMessage({ id: 'suppstønad.merOmSuForUføre' })}
+                            <FormattedMessage id="suppstønad.merOmSuForUføre" />
                         </p>
                     </Lenke>
                 </div>
 
                 <section className={styles.section}>
-                    <Ingress>{intl.formatMessage({ id: 'riktigeOpplysninger.girOssRiktigeOpplysninger' })}</Ingress>
+                    <Ingress>
+                        <FormattedMessage id="riktigeOpplysninger.girOssRiktigeOpplysninger" />
+                    </Ingress>
                     <p className={styles.paragraphSpacing}>
-                        {intl.formatMessage({ id: 'riktigeOpplysninger.behandleDinSøknad' })}
+                        <FormattedMessage id="riktigeOpplysninger.behandleDinSøknad" />
                     </p>
                     <p className={styles.paragraphSpacing}>
-                        {intl.formatMessage({ id: 'riktigeOpplysninger.hvisDuFårSU' })}
+                        <FormattedMessage id="riktigeOpplysninger.hvisDuFårSU" />
                     </p>
                 </section>
 
                 <section className={styles.section}>
-                    <Ingress>{intl.formatMessage({ id: 'sendeInnDokumentasjon.måSendeInnDok' })}</Ingress>
+                    <Ingress>
+                        <FormattedMessage id="sendeInnDokumentasjon.måSendeInnDok" />
+                    </Ingress>
                     <p className={styles.paragraphSpacing}>
-                        {intl.formatMessage({ id: 'sendeInnDokumentasjon.dokGjelder' })}
+                        <FormattedMessage id="sendeInnDokumentasjon.dokGjelder" />
                     </p>
                     <p className={styles.paragraphSpacing}>
-                        {intl.formatMessage({ id: 'sendeInnDokumentasjon.måLeggesVed' })}
+                        <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed" />
                     </p>
                     <ul className={styles.list}>
                         <li className={styles.listItem}>
-                            {intl.formatMessage({ id: 'sendeInnDokumentasjon.måLeggesVed.punkt1' })}
+                            <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed.punkt1" />
                         </li>
                         <li className={styles.listItem}>
-                            {intl.formatMessage({ id: 'sendeInnDokumentasjon.måLeggesVed.punkt2' })}
+                            <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed.punkt2" />
                         </li>
                     </ul>
 
                     <p className={styles.paragraphSpacing}>
-                        {intl.formatMessage({ id: 'sendeInnDokumentasjon.kanskjeLeggesVed' })}
+                        <FormattedMessage id="sendeInnDokumentasjon.kanskjeLeggesVed" />
                     </p>
                     <ul className={styles.list}>
                         <li className={styles.listItem}>
-                            {intl.formatMessage({ id: 'sendeInnDokumentasjon.kanskjeLeggesVed.punkt1' })}
+                            <FormattedMessage id="sendeInnDokumentasjon.kanskjeLeggesVed.punkt1" />
                         </li>
                         <li className={styles.listItem}>
-                            {intl.formatMessage({ id: 'sendeInnDokumentasjon.kanskjeLeggesVed.punkt2' })}
+                            <FormattedMessage id="sendeInnDokumentasjon.kanskjeLeggesVed.punkt2" />
                         </li>
                     </ul>
                 </section>
 
                 <section className={styles.section}>
-                    <Ingress>{intl.formatMessage({ id: 'henterInnInfo.viHenterInnInfo' })}</Ingress>
+                    <Ingress>
+                        <FormattedMessage id="henterInnInfo.viHenterInnInfo" />
+                    </Ingress>
                     <p className={styles.paragraphSpacing}>
-                        {intl.formatMessage({ id: 'henterInnInfo.henterInfoForAvgjøreRettTilSøknad' })}
+                        <FormattedMessage id="henterInnInfo.henterInfoForAvgjøreRettTilSøknad" />
                     </p>
-                    <p className={styles.paragraphSpacing}>{intl.formatMessage({ id: 'henterInnInfo.viHenter' })}</p>
+                    <p className={styles.paragraphSpacing}>
+                        <FormattedMessage id="henterInnInfo.viHenter" />
+                    </p>
                     <ul className={styles.list}>
                         <li className={styles.listItem}>
                             <FormattedMessage
@@ -106,23 +119,25 @@ const Infoside = (props: { nesteUrl: string }) => {
                         </li>
                     </ul>
                     <p className={styles.paragraphSpacing}>
-                        {intl.formatMessage({ id: 'henterInnInfo.brukerTidligereOpplysninger' })}
+                        <FormattedMessage id="henterInnInfo.brukerTidligereOpplysninger" />
                     </p>
                 </section>
 
                 <section className={styles.section}>
-                    <Ingress>{intl.formatMessage({ id: 'slikSøkerDu' })}</Ingress>
+                    <Ingress>
+                        <FormattedMessage id="slikSøkerDu" />
+                    </Ingress>
                     <p className={styles.paragraphSpacing}>
-                        {intl.formatMessage({ id: 'slikSøkerDu.blirIkkeLagret' })}
+                        <FormattedMessage id="slikSøkerDu.blirIkkeLagret" />
                     </p>
                     <p className={styles.paragraphSpacing}>
-                        {intl.formatMessage({ id: 'slikSøkerDu.manglerDuDokumentasjon' })}
+                        <FormattedMessage id="slikSøkerDu.manglerDuDokumentasjon" />
                     </p>
                 </section>
 
                 <div className={styles.knappContainer}>
                     <Link className="knapp knapp--hoved" to={props.nesteUrl}>
-                        {intl.formatMessage({ id: 'knapp.startUtfylling' })}
+                        <FormattedMessage id="knapp.startUtfylling" />
                     </Link>
                 </div>
             </div>
