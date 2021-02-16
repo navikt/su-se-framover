@@ -1,4 +1,5 @@
-import { Knapp, Hovedknapp } from 'nav-frontend-knapper';
+import { Knapp, Hovedknapp, Flatknapp } from 'nav-frontend-knapper';
+import ModalWrapper from 'nav-frontend-modal';
 import { Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -20,30 +21,59 @@ const Bunnknapper = (props: {
     avbryt: {
         toRoute: string;
     };
-}) => (
-    <TextProvider messages={{ [Languages.nb]: messages }}>
-        <div className={styles.container}>
-            <Hovedknapp htmlType="submit" className={styles.navKnapp}>
-                {props.next?.label ?? <FormattedMessage id="steg.neste" />}
-            </Hovedknapp>
-            {props.previous && (
-                <Knapp
-                    htmlType="button"
-                    className={styles.navKnapp}
-                    onClick={() => {
-                        props.previous?.onClick();
-                    }}
-                >
-                    {props.previous.label ?? <FormattedMessage id="steg.forrige" />}
-                </Knapp>
-            )}
-        </div>
-        <Link className={styles.avbrytknappContainer} to={props.avbryt.toRoute}>
-            <Undertittel>
-                <FormattedMessage id="steg.avbryt" />
-            </Undertittel>
-        </Link>
-    </TextProvider>
-);
+}) => {
+    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+    return (
+        <TextProvider messages={{ [Languages.nb]: messages }}>
+            <div className={styles.container}>
+                <Hovedknapp htmlType="submit" className={styles.navKnapp}>
+                    {props.next?.label ?? <FormattedMessage id="steg.neste" />}
+                </Hovedknapp>
+                {props.previous && (
+                    <Knapp
+                        htmlType="button"
+                        className={styles.navKnapp}
+                        onClick={() => {
+                            props.previous?.onClick();
+                        }}
+                    >
+                        {props.previous.label ?? <FormattedMessage id="steg.forrige" />}
+                    </Knapp>
+                )}
+            </div>
+            <div className={styles.avbrytknappContainer}>
+                <Flatknapp htmlType="button" onClick={() => setModalOpen(true)}>
+                    <FormattedMessage id="steg.avbryt" />
+                </Flatknapp>
+            </div>
+            <ModalWrapper
+                isOpen={modalOpen}
+                closeButton={true}
+                onRequestClose={() => setModalOpen(false)}
+                contentLabel={'lukkSøknad'}
+            >
+                <div className={styles.modalContainer}>
+                    <Undertittel className={styles.modalTittel}>
+                        <FormattedMessage id="modal.tittel" />
+                    </Undertittel>
+                    <p>
+                        <FormattedMessage id="modal.infoTekst.p1" />
+                    </p>
+                    <p>
+                        <FormattedMessage id="modal.infoTekst.p2" />
+                    </p>
+                    <div className={styles.modalKnappContainer}>
+                        <Flatknapp onClick={() => setModalOpen(false)}>
+                            <FormattedMessage id="steg.avbryt" />
+                        </Flatknapp>
+                        <Link className="knapp knapp--fare" to={props.avbryt.toRoute}>
+                            <FormattedMessage id="modal.lukkSøknad" />
+                        </Link>
+                    </div>
+                </div>
+            </ModalWrapper>
+        </TextProvider>
+    );
+};
 
 export default Bunnknapper;

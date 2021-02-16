@@ -17,6 +17,21 @@
 .avbrytknappContainer {
     display: flex;
     justify-content: center;
+    align-self: center;
     margin-top: @spacing;
-    color: @navBla;
+}
+
+.modalContainer {
+    display: flex;
+    flex-direction: column;
+    padding: @spacing-s;
+
+    .modalTittel {
+        margin-bottom: @spacing-xs;
+    }
+
+    .modalKnappContainer {
+        margin-top: @spacing;
+        align-self: flex-end;
+    }
 }
