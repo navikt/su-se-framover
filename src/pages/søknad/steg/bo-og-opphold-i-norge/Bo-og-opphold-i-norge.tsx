@@ -149,7 +149,7 @@ const schema = yup.object<FormData>({
     ingenAdresseGrunn: yup.mixed<IngenAdresseGrunn>().nullable(),
 });
 
-const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
+const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const { søker, soknad } = useAppSelector((s) => ({
         søker: s.søker.søker,
         soknad: s.soknad,
@@ -476,6 +476,9 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 save(formik.values);
                                 history.push(props.forrigeUrl);
                             },
+                        }}
+                        avbryt={{
+                            toRoute: props.avbrytUrl,
                         }}
                     />
                 </form>

@@ -1,6 +1,8 @@
 import { Knapp, Hovedknapp } from 'nav-frontend-knapper';
+import { Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Link } from 'react-router-dom';
 
 import TextProvider, { Languages } from '~components/TextProvider';
 
@@ -14,6 +16,9 @@ const Bunnknapper = (props: {
     };
     next?: {
         label?: React.ReactNode;
+    };
+    avbryt: {
+        toRoute: string;
     };
 }) => (
     <TextProvider messages={{ [Languages.nb]: messages }}>
@@ -33,6 +38,11 @@ const Bunnknapper = (props: {
                 </Knapp>
             )}
         </div>
+        <Link className={styles.avbrytknappContainer} to={props.avbryt.toRoute}>
+            <Undertittel>
+                <FormattedMessage id="steg.avbryt" />
+            </Undertittel>
+        </Link>
     </TextProvider>
 );
 

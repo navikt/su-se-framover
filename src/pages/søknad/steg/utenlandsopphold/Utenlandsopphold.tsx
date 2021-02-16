@@ -233,7 +233,7 @@ const MultiTidsperiodevelger = (props: {
     </div>
 );
 
-const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
+const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const utenlandsopphold = useAppSelector((s) => s.soknad.utenlandsopphold);
     const dispatch = useAppDispatch();
     const history = useHistory();
@@ -441,6 +441,9 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 save(formik.values);
                                 history.push(props.forrigeUrl);
                             },
+                        }}
+                        avbryt={{
+                            toRoute: props.avbrytUrl,
                         }}
                     />
                 </form>

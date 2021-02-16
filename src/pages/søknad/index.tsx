@@ -39,7 +39,14 @@ import Uførevedtak from './steg/uførevedtak/Uførevedtak';
 import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
 import { Søknadsteg } from './types';
 
-const Steg = (props: { title: string; step: Søknadsteg; søknad: SøknadState; søker: Person; intl: IntlShape }) => {
+const Steg = (props: {
+    title: string;
+    step: Søknadsteg;
+    søknad: SøknadState;
+    søker: Person;
+    intl: IntlShape;
+    erSaksbehandler: boolean;
+}) => {
     const sectionRef = React.useRef<HTMLDivElement>(null);
     useEffect(() => {
         if (sectionRef.current) {
@@ -57,12 +64,17 @@ const Steg = (props: { title: string; step: Søknadsteg; søknad: SøknadState; 
                     <p>{props.intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' })}</p>
                 )}
             </div>
-            {showSteg(props.step, props.søknad, props.søker)}
+            {showSteg(props.step, props.søknad, props.søker, props.erSaksbehandler)}
         </section>
     );
 };
 
-const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
+const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person, erSaksbehandler: boolean) => {
+    const avbrytUrl =
+        søknad.forVeileder.type === Søknadstype.Papirsøknad && erSaksbehandler
+            ? routes.soknad.createURL({ papirsøknad: true })
+            : routes.soknad.createURL({});
+
     switch (step) {
         case Søknadsteg.Uførevedtak:
             return (
@@ -71,6 +83,7 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
                     nesteUrl={routes.soknadsutfylling.createURL({
                         step: Søknadsteg.FlyktningstatusOppholdstillatelse,
                     })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.FlyktningstatusOppholdstillatelse:
@@ -78,6 +91,7 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
                 <FlyktningstatusOppholdstillatelse
                     forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Uførevedtak })}
                     nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.BoOgOppholdINorge:
@@ -87,6 +101,7 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
                         step: Søknadsteg.FlyktningstatusOppholdstillatelse,
                     })}
                     nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.DinFormue })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.DinFormue:
@@ -94,6 +109,7 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
                 <Formue
                     forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
                     nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.DinInntekt })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.DinInntekt:
@@ -105,6 +121,7 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
                             ? routes.soknadsutfylling.createURL({ step: Søknadsteg.EktefellesFormue })
                             : routes.soknadsutfylling.createURL({ step: Søknadsteg.ReiseTilUtlandet })
                     }
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.EktefellesFormue:
@@ -112,6 +129,7 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
                 <EktefellesFormue
                     forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.DinInntekt })}
                     nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.EktefellesInntekt })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.EktefellesInntekt:
@@ -119,6 +137,7 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
                 <EktefellesInntekt
                     forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.EktefellesFormue })}
                     nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.ReiseTilUtlandet:
@@ -135,6 +154,7 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
                                 ? Søknadsteg.ForVeileder
                                 : Søknadsteg.InformasjonOmPapirsøknad,
                     })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.ForVeileder:
@@ -143,6 +163,7 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
                     søker={søker}
                     forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
                     nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Oppsummering })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.InformasjonOmPapirsøknad:
@@ -150,6 +171,7 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
                 <InformasjonOmPapirsøknad
                     forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
                     nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Oppsummering })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.Oppsummering:
@@ -162,6 +184,7 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
                                 : Søknadsteg.InformasjonOmPapirsøknad,
                     })}
                     nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Kvittering })}
+                    avbrytUrl={avbrytUrl}
                     søker={søker}
                 />
             );
@@ -306,6 +329,7 @@ const StartUtfylling = () => {
                                 søknad={søknad}
                                 søker={søker}
                                 intl={intl}
+                                erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
                             />
                         </>
                     )
