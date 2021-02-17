@@ -28,11 +28,11 @@ const Infoside = (props: { nesteUrl: string }) => {
                     <p className={styles.paragraphSpacing}>
                         <FormattedMessage id="suppstønadInfo.inntekt" />
                     </p>
-                    <Lenke target="_blank" href={merOmSuForUføreLink}>
-                        <p className={styles.paragraphSpacing}>
+                    <div className={styles.paragraphSpacing}>
+                        <Lenke target="_blank" href={merOmSuForUføreLink}>
                             <FormattedMessage id="suppstønad.merOmSuForUføre" />
-                        </p>
-                    </Lenke>
+                        </Lenke>
+                    </div>
                 </div>
 
                 <section className={styles.section}>
