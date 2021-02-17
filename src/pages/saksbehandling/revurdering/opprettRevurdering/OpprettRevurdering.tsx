@@ -1,5 +1,4 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
@@ -15,7 +14,6 @@ import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { finnSisteUtbetalingsdato } from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Periode } from '~types/Fradrag';
 import { Sak } from '~types/Sak';
 
 import { RevurderingSteg } from '../../types';
@@ -25,12 +23,10 @@ import styles from '../valgAvPeriode/valgAvPeriode.module.less'; //TODO
 
 interface OpprettRevurderingFormData {
     fraOgMed: Nullable<Date>;
-    tilOgMed: Nullable<Date>;
 }
 
 const schema = yup.object<OpprettRevurderingFormData>({
     fraOgMed: yup.date().nullable().required(),
-    tilOgMed: yup.date().nullable().required(),
 });
 
 const opprettRevurdering = (props: { sak: Sak }) => {
@@ -42,11 +38,11 @@ const opprettRevurdering = (props: { sak: Sak }) => {
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const opprettRevurderingStatus = useAppSelector((state) => state.sak.opprettRevurderingStatus);
 
-    const opprettRevurdering = async (periode: Periode) => {
+    const opprettRevurdering = async (fraOgMed: Date) => {
         const response = await dispatch(
             sakSlice.opprettRevurdering({
                 sakId: props.sak.id,
-                periode: periode,
+                fraOgMed,
             })
         );
 
@@ -64,24 +60,17 @@ const opprettRevurdering = (props: { sak: Sak }) => {
     const formik = useFormik<OpprettRevurderingFormData>({
         initialValues: {
             fraOgMed: null,
-            tilOgMed: null,
         },
-        async onSubmit({ fraOgMed, tilOgMed }) {
-            if (fraOgMed && tilOgMed) {
-                opprettRevurdering({ fraOgMed, tilOgMed });
+        async onSubmit({ fraOgMed }) {
+            if (fraOgMed) {
+                opprettRevurdering(fraOgMed);
             }
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
     });
 
-    const periode =
-        formik.values.fraOgMed && formik.values.tilOgMed
-            ? {
-                  fraOgMed: formik.values.fraOgMed,
-                  tilOgMed: formik.values.tilOgMed,
-              }
-            : null;
+    const periode = formik.values.fraOgMed ? { fraOgMed: formik.values.fraOgMed } : null;
 
     const sisteUtbetalingsDato = useMemo<Date>(() => finnSisteUtbetalingsdato(props.sak.utbetalinger), [
         props.sak.utbetalinger,
@@ -118,39 +107,11 @@ const opprettRevurdering = (props: { sak: Sak }) => {
                                 isClearable
                                 selectsEnd
                                 startDate={periode?.fraOgMed}
-                                endDate={periode?.tilOgMed}
                                 minDate={new Date(props.sak.utbetalinger[0].fraOgMed)}
                                 maxDate={sisteUtbetalingsDato}
                                 autoComplete="off"
                             />
                             {formik.errors.fraOgMed && <Feilmelding>{formik.errors.fraOgMed}</Feilmelding>}
-                        </div>
-                        <div className={styles.datoContainer}>
-                            <label htmlFor="tom">{intl.formatMessage({ id: 'datovelger.tom.legend' })}</label>
-                            <DatePicker
-                                id="tom"
-                                selected={formik.values.tilOgMed}
-                                onChange={(date) => {
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        tilOgMed: Array.isArray(date)
-                                            ? DateFns.lastDayOfMonth(date[0])
-                                            : date !== null
-                                            ? DateFns.lastDayOfMonth(date)
-                                            : date,
-                                    }));
-                                }}
-                                dateFormat="MM/yyyy"
-                                showMonthYearPicker
-                                isClearable
-                                selectsEnd
-                                startDate={formik.values.fraOgMed}
-                                endDate={formik.values.tilOgMed}
-                                minDate={formik.values.fraOgMed}
-                                maxDate={sisteUtbetalingsDato}
-                                autoComplete="off"
-                            />
-                            {formik.errors.tilOgMed && <Feilmelding>{formik.errors.tilOgMed}</Feilmelding>}
                         </div>
                     </div>
                 </div>

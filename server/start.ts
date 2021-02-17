@@ -5,40 +5,20 @@ import cors from 'cors';
 import express from 'express';
 import exphbs from 'express-handlebars';
 import helmet from 'helmet';
-import pino from 'pino';
-import pinoColada from 'pino-colada';
-import pinoHttp from 'pino-http';
 
 import setupAuth from './auth';
 import * as AuthUtils from './auth/utils';
 import * as Config from './config';
+import { httpLogger, logger } from './logger';
 import setupProxy from './proxy';
 import routes from './routes';
 import setupSession from './session';
 
 export default async function startServer() {
     const app = express();
+    logger.info(`Using log level: ${Config.server.logLevel}`);
 
-    app.use(
-        pinoHttp({
-            ...(Config.isDev
-                ? {
-                      prettyPrint: true,
-                      prettifier: pinoColada,
-                  }
-                : {}),
-            formatters: {
-                level(level, _number) {
-                    return { level };
-                },
-            },
-            timestamp: pino.stdTimeFunctions.isoTime,
-            genReqId(req) {
-                return req.headers['X-Correlation-ID'] || req.id;
-            },
-            redact: ['req.headers', 'res.headers'],
-        })
-    );
+    app.use(httpLogger);
 
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
@@ -101,6 +81,6 @@ export default async function startServer() {
 
     const port = Config.server.port;
     app.listen(port, () => {
-        console.log(`Listening on http://:${port}`);
+        logger.info(`Listening on http://:${port}`);
     });
 }

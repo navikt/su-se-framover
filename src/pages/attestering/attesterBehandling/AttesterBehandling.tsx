@@ -163,6 +163,7 @@ const Attesteringsinnhold = ({
                 <VilkårsOppsummering
                     søknadInnhold={props.behandling.søknad.søknadInnhold}
                     behandlingsinformasjon={props.behandling.behandlingsinformasjon}
+                    behandlingstatus={props.behandling.status}
                 />
 
                 {props.behandling.beregning && !erAvslått(props.behandling) && (

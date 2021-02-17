@@ -164,6 +164,9 @@ const TrygdeytelserInputFelter = (props: {
                                     }}
                                     autoComplete="off"
                                     feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.beløp}
+                                    // Dette elementet vises ikke ved sidelast
+                                    // eslint-disable-next-line jsx-a11y/no-autofocus
+                                    autoFocus
                                 />
                             </div>
                             <div>
@@ -301,6 +304,9 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                         ),
                                     }))
                                 }
+                                // Dette elementet vises ikke ved sidelast
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
+                                autoFocus
                                 autoComplete="on"
                                 feil={feltError('ordning')}
                             />
@@ -395,6 +401,9 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 label={<FormattedMessage id="input.forventetInntekt.label" />}
                                 onChange={formik.handleChange}
                                 autoComplete="off"
+                                // Dette elementet vises ikke ved sidelast
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
+                                autoFocus
                             />
                         )}
 
@@ -424,6 +433,9 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                     onChange={formik.handleChange}
                                     feil={formik.errors.andreYtelserINavYtelse}
                                     autoComplete="off"
+                                    // Dette elementet vises ikke ved sidelast
+                                    // eslint-disable-next-line jsx-a11y/no-autofocus
+                                    autoFocus
                                 />
                                 <Input
                                     id={keyOf<FormData>('andreYtelserINavBeløp')}
@@ -464,6 +476,9 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 onChange={formik.handleChange}
                                 feil={formik.errors.søktAndreYtelserIkkeBehandletBegrunnelse}
                                 autoComplete="off"
+                                // Dette elementet vises ikke ved sidelast
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
+                                autoFocus
                             />
                         )}
 
@@ -492,6 +507,9 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 onChange={formik.handleChange}
                                 feil={formik.errors.sosialStønadBeløp}
                                 autoComplete="off"
+                                // Dette elementet vises ikke ved sidelast
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
+                                autoFocus
                             />
                         )}
 

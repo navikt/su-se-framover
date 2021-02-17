@@ -1,7 +1,4 @@
 export default {
-    'adresse.borPåAnnenAdresse': 'Bor på en annen adresse',
-    'adresse.ikkeFastBosted': 'Har ikke fast bosted',
-
     'beregning.forventerArbeidsinntekt': 'Forventer du å ha arbeidsinntekt fremover?',
     'beregning.andreYtelserINav': 'Har du andre ytelser i NAV?',
     'beregning.sømtOmAndreTrygdeytelser': 'Har du søkt om andre trygdeytelser som ikke er behandlet?',
@@ -19,13 +16,19 @@ export default {
     'beregning.es.tjenestepensjon/pensjonssparing': 'Har ektefelle/samboer tjenestepensjon og/eller pensjonssparing?',
 
     'display.fraSøknad': 'Fra søknad',
+    'display.fraSaksbehandling': 'Fra saksbehandling',
+    'display.ikkeVurdert': 'Ikke vurdert',
 
+    'fastOpphold.adresse': 'Adresse',
     'fastOpphold.erNorskStatsborger': 'Er søker norsk statsborger?',
     'fastOpphold.harOppholdstillatelse': 'Har oppholdstillatelse?',
     'fastOpphold.typeOppholdstillatelse': 'Type oppholdstillatelse',
 
     'flyktning.registrertFlyktning': 'Er du registrert flyktning?',
 
+    'formue.tittel': 'Formue',
+    'formue.heading.søker': 'Søker',
+    'formue.heading.eps': 'Ektefelle/samboer',
     'formue.delerBoligMed': 'Hvem deler du bolig med?',
     'formue.ektefelleTitle': 'Ektefelle',
     'formue.epsFnr': 'Ektefelles fødselsnummer',
@@ -52,19 +55,10 @@ export default {
 
     'fraSøknad.ja': 'Ja',
     'fraSøknad.nei': 'Nei',
+    'fraSøknad.uavklart': 'Uavklart',
     'fraSøknad.ikkeRegistert': 'Ikke registert fra søknad',
 
-    'institusjonsopphold.innlagtPåInstitusjonSiste3Måneder':
-        'Har du vært innlagt på institusjon de siste tre månedene?',
-    'institusjonsopphold.datoForInnleggelse': 'Dato for innleggelse',
-    'institusjonsopphold.datoForUtskrivelse': 'Dato for utskrivelse',
-    'institusjonsopphold.fortsattInnlagt': 'Fortsatt innlagt',
-
-    'lovligOpphold.erNorskStatsborger': 'Er du norsk statsborger?',
-    'lovligOpphold.harOppholdstillatelse': 'Har søker oppholdstillatelse i Norge?',
-    'lovligOpphold.typeOppholdstillatelse': 'Oppholdstillatelse?',
-    'lovligOpphold.statsborgerskapAndreLand': 'Statsborgerskap fra andre land',
-
+    'sats.tittel': 'Sats',
     'sats.harOppholdstillatelse': 'Har oppholdstillatelse?',
     'sats.hvemDelerSøkerBoligMed': 'Hvem deler søker bolig med?',
     'sats.hvemDelerSøkerBoligMed.ingen': 'Ingen',
@@ -83,4 +77,10 @@ export default {
     'utenlandsOpphold.datoerSiste90': 'Datoer for opphold i siste 90 dager',
     'utenlandsOpphold.datoerPlanlagt': 'Planlagt opphold i utlandet',
     'utenlandsOpphold.ikkeRegistert': 'Det er ikke registert noen datoer',
+    'utenlandsOpphold.utreisedato': 'Det er ikke registert noen datoer',
+    'utenlandsOpphold.innreisedato': 'Det er ikke registert noen datoer',
+
+    'bosituasjon.vurderingAvSats': 'Vurdering av sats',
+    'bosituasjon.sats.høy': 'Høy',
+    'bosituasjon.sats.ordinær': 'Ordinær',
 };

@@ -37,6 +37,7 @@ const Behandlingsoppsummering = (props: Props) => {
         <div className={styles.oppsummeringContainer}>
             <BehandlingStatus sakId={props.sak.id} behandling={behandling} />
             <VilkårsOppsummering
+                behandlingstatus={behandling.status}
                 søknadInnhold={behandling.søknad.søknadInnhold}
                 behandlingsinformasjon={behandling.behandlingsinformasjon}
             />

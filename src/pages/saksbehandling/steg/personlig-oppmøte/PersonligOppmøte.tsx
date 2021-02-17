@@ -28,7 +28,7 @@ import {
 } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
-import PersonligOppmøteFaktablokk from '../faktablokk/faktablokker/PersonligOppmøteFaktablokk';
+import { PersonligOppmøteFaktablokk } from '../faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
@@ -428,7 +428,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
 
                         <div
                             ref={advarselRef}
-                            tabIndex={0}
+                            tabIndex={-1}
                             aria-live="polite"
                             aria-atomic="true"
                             className={styles.alertstripe}

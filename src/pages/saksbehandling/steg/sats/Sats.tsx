@@ -21,7 +21,7 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Bosituasjon, isPerson } from '~types/Behandlingsinformasjon';
 
-import SatsFaktablokk from '../faktablokk/faktablokker/SatsFaktablokk';
+import { SatsFaktablokk } from '../faktablokk/faktablokker/SatsFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';

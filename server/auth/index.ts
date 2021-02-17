@@ -1,3 +1,5 @@
+import http from 'http';
+
 import { Express } from 'express';
 import * as OpenIdClient from 'openid-client';
 import passport from 'passport';
@@ -12,14 +14,12 @@ declare module 'express-session' {
     }
 }
 
+export type TokenSets = { [key: string]: OpenIdClient.TokenSet };
 declare global {
     // eslint-disable-next-line @typescript-eslint/no-namespace
     namespace Express {
         interface User {
-            claims: OpenIdClient.IdTokenClaims;
-            tokenSets: {
-                [key: string]: OpenIdClient.TokenSet;
-            };
+            tokenSets: TokenSets;
         }
     }
 }
@@ -31,21 +31,29 @@ async function getStrategy(authClient: OpenIdClient.Client) {
             params: {
                 response_type: Config.auth.responseType,
                 response_mode: Config.auth.responseMode,
-                scope: `openid ${Config.auth.clientId}/.default`,
+                scope: `openid offline_access ${Config.auth.clientId}/.default`,
             },
             usePKCE: 'S256',
+            passReqToCallback: true,
         },
-        (tokenSet: OpenIdClient.TokenSet, done: (err: unknown, user?: unknown) => void) => {
-            if (tokenSet.expired()) {
-                return done(null, false);
+        (
+            req: http.IncomingMessage,
+            tokenSet: OpenIdClient.TokenSet,
+            done: (err: null, user?: Express.User) => void
+        ) => {
+            if (!tokenSet.expired()) {
+                req.log.debug('OpenIdClient.Strategy: Mapping tokenSet to User.');
+                return done(null, {
+                    tokenSets: {
+                        [AuthUtils.tokenSetSelfId]: tokenSet,
+                    },
+                });
             }
-            const user: Express.User = {
-                tokenSets: {
-                    [AuthUtils.tokenSetSelfId]: tokenSet,
-                },
-                claims: tokenSet.claims(),
-            };
-            done(null, user);
+            // Passport kaller bare denne funksjonen for å mappe en ny innlogging til et User-objekt, så man skal ikke havne her.
+            req.log.error(
+                'OpenIdClient.Strategy: Failed to map tokenSet to User because the tokenSet has already expired.'
+            );
+            done(null, undefined);
         }
     );
 }
@@ -65,7 +73,16 @@ export default async function setup(app: Express, authClient: OpenIdClient.Clien
         done(null, user as Express.User);
     });
 
-    app.get('/login', passport.authenticate(authName, { failureRedirect: '/login-failed' }));
+    app.get(
+        '/login',
+        (req, _res, next) => {
+            if (typeof req.query.redirectTo === 'string') {
+                req.session.redirectTo = req.query.redirectTo;
+            }
+            next();
+        },
+        passport.authenticate(authName, { failureRedirect: '/login-failed' })
+    );
     app.get('/logout', (req, res) => {
         req.logout();
         res.redirect('/');

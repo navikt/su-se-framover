@@ -1,4 +1,6 @@
-import { guid } from 'nav-frontend-js-utils';
+import { v4 as uuid } from 'uuid';
+
+import Config from '~config';
 
 export enum ErrorCode {
     Unauthorized = 403,
@@ -46,7 +48,7 @@ export default async function apiClient<T>(arg: {
     extraData?: { correlationId: string };
     bodyTransformer?: (res: Response) => Promise<T>;
 }): Promise<ApiClientResult<T>> {
-    const correlationId = arg.extraData?.correlationId ?? guid();
+    const correlationId = arg.extraData?.correlationId ?? uuid();
 
     const res = await fetch(`/api/${arg.url.startsWith('/') ? arg.url.slice(1) : arg.url}`, {
         ...arg.request,
@@ -63,6 +65,10 @@ export default async function apiClient<T>(arg: {
             return success<T>(await arg.bodyTransformer(res), res.status);
         }
         return success<T>(await res.json(), res.status);
+    }
+
+    if (res.status === ErrorCode.NotAuthenticated && res.headers.get('WWW-Authenticate')) {
+        window.location.href = `${Config.LOGIN_URL}?redirectTo=${window.location.pathname}`;
     }
 
     return error({

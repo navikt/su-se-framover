@@ -78,12 +78,14 @@ const Personsøk = (props: PersonsøkProps) => {
                             id="fnr"
                             name="fnr"
                             className={styles.inputfelt}
-                            autoFocus
                             autoComplete="on"
                             onChange={(e) => {
                                 setFnr(removeSpaces(e.target.value));
                             }}
                             value={fnr}
+                            // Så lenge denne er det eneste på siden sin så ønsker vi at den skal autofokuseres
+                            // eslint-disable-next-line jsx-a11y/no-autofocus
+                            autoFocus
                         />
                         <Søkeknapp htmlType="submit">
                             <span>

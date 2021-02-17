@@ -5,7 +5,8 @@ import { Person } from '~api/personApi';
 import { PencilIcon } from '~assets/Icons';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
-import { søknadOppsummeringEndreSvarKlikk, trackEvent } from '~lib/tracking/trackingEvents';
+import { trackEvent } from '~lib/tracking/amplitude';
+import { søknadOppsummeringEndreSvarKlikk } from '~lib/tracking/trackingEvents';
 import { Søknadsteg } from '~pages/søknad/types';
 
 import messages from '../Søknadoppsummering/oppsummering-nb';

@@ -17,7 +17,7 @@ import {
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
-import * as routes from '~lib/routes.ts';
+import * as routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Sak } from '~types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
@@ -89,6 +89,7 @@ const Vedtak = (props: Props) => {
                     <BehandlingStatus sakId={sak.id} behandling={behandling} />
 
                     <VilkårsOppsummering
+                        behandlingstatus={behandling.status}
                         søknadInnhold={behandling.søknad.søknadInnhold}
                         behandlingsinformasjon={behandling.behandlingsinformasjon}
                     />

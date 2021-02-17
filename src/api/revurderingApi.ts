@@ -12,14 +12,13 @@ import apiClient, { ApiClientResult } from './apiClient';
 
 export async function opprettRevurdering(
     sakId: string,
-    periode: Periode
+    fraOgMed: Date
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/opprett`,
         method: 'POST',
         body: {
-            fraOgMed: formatISO(periode.fraOgMed, { representation: 'date' }),
-            tilOgMed: formatISO(periode.tilOgMed, { representation: 'date' }),
+            fraOgMed: formatISO(fraOgMed, { representation: 'date' }),
         },
     });
 }
@@ -29,6 +28,7 @@ export async function oppdaterRevurderingsPeriode(
     revurderingsId: string,
     periode: Periode
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
+    // TODO ai: Fix
     console.log('oppdaterer revurderingsperiode med data: ', sakId, revurderingsId, periode);
     return {
         status: 'error',
@@ -40,15 +40,6 @@ export async function oppdaterRevurderingsPeriode(
             },
         },
     };
-
-    /*return apiClient({
-        url: `/saker/${sakId}/revurderinger/opprett`,
-        method: 'POST',
-        body: {
-            fraOgMed: formatISO(periode.fraOgMed, { representation: 'date' }),
-            tilOgMed: formatISO(periode.tilOgMed, { representation: 'date' }),
-        },
-    });*/
 }
 
 export async function beregnOgSimuler(

@@ -22,12 +22,31 @@ $ npm start
 
 `npm start` starter opp `express`-serveren med `parcel`-middleware som ordner med bygging av frontenden.
 
-### Redis
+## Redis
 
 Brukes for å cache bruker-sessions.
 Lokalt oppsett ligger i [./docker-compose.yml](), mens nais-oppsettet ligger i [./nais.yml]().
 
-### Mock oauth2 server
+### Koble til
+
+Vi har erfart at det er lettere å bruke et GUI-verktøy når det kommer til Redis.
+
+-   Linux: https://docs.redisdesktop.com/en/latest/install/
+-   Mac: brew install --cask redisinsight
+
+#### Lokalt
+
+-   Antar at du har kjørt `./start-dev.sh` og at docker-containeren kjører lokalt.
+-   Koble til med hostname: localhost/127.0.0.1, port: 6379, default username og passord: subar (ligger i docker-compose.yml)
+
+#### Via naisdevice i preprod
+
+-   kubectx dev-fss
+-   kubectl --namespace=supstonad get pods # kopier ut redis pod-navnet
+-   kubectl --namespace=supstonad port-forward <pod> 6379:6379 # din_port:nais_port
+-   Kobler til med hostname: localhost, port: <din_port>, default username og passord finner du ved å kjøre `env` inne i podden.
+
+## Mock oauth2 server
 
 For autentisering lokalt så bruker vi https://github.com/navikt/mock-oauth2-server.
 
@@ -50,6 +69,14 @@ Dersom docker-compose ikke er knyttet riktig til docker's credentials kan man kj
 ```sh
 $ docker pull docker.pkg.github.com/navikt/mock-oauth2-server/mock-oauth2-server:0.2.3
 ```
+
+## Azure
+
+Dersom man har behov for å gå direkte mot Azure kan man legge inn inn verdiene fra `.env.azure.template` (og hente resterende verdier fra Kubernetes).
+Merk at `AZURE_APP_CLIENT_JWKS` roteres for hver deploy/restart.
+En må legge inn `AZURE_APP_WELL_KNOWN_URL` i `su-se-bakover` sin .env fil.
+
+Dersom en får `The reply URL specified in the request does not match the reply URLs configured for the application` bør man dobbeltsjekke i Azure Portal at localhost er registrert som en gyldig reply URL.
 
 ## Bygge prod-versjon
 

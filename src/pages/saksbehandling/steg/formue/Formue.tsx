@@ -29,7 +29,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FormueStatus, Formue, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
-import FormueFaktablokk from '../faktablokk/faktablokker/FormueFaktablokk';
+import { FormueFaktablokk } from '../faktablokk/faktablokker/FormueFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';

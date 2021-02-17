@@ -1,5 +1,9 @@
 import path from 'path';
 
+function hasEnvVar(name: string): boolean {
+    return process.env[name] !== undefined;
+}
+
 function envVar({
     name,
     defaultValue,
@@ -50,6 +54,7 @@ export const server = {
     sessionCookieName: envVar({ name: 'SESSION_COOKIE_NAME', defaultValue: 'supstonad-login-cookie' }),
 
     mockOauthServerPort: Number.parseInt(envVar({ name: 'LOCAL_AUTH_SERVER_PORT', defaultValue: '4321' })),
+    logLevel: envVar({ name: 'LOG_LEVEL', defaultValue: 'info' }),
 };
 
 // For auth
@@ -59,8 +64,9 @@ export const auth = {
         defaultValue: { dev: `http://localhost:${server.mockOauthServerPort}/default` },
     }),
     clientId: envVar({ name: 'AZURE_APP_CLIENT_ID', defaultValue: { dev: 'supstonad' } }),
-    jwks: isDev
-        ? // Generert med https://mkjwk.org/ (key size: 2048, key use: signature, algorithm: RS256, key id: sha-256)
+    jwks: hasEnvVar('AZURE_APP_JWKS')
+        ? JSON.parse(envVar({ name: 'AZURE_APP_JWKS' }))
+        : // Generert med https://mkjwk.org/ (key size: 2048, key use: signature, algorithm: RS256, key id: sha-256)
           {
               keys: [
                   {
@@ -85,12 +91,11 @@ export const auth = {
                           'l3OFarvFs2MQOk3c3JmFjcDEBd0CKXxMSfM5x6J0NVLrnqev6btfWytNse8RMIFBc_w3tnw1yb0o1bnVQOf5htywbgdCwRSFlXc8DBQ35doAyhlrkcTuQqCiLkCyUTY5NEMgLTp1OzonrCgthIhYK_cPFboxK2e_ZT1II8otylbp93iA84a3LGYVj-AgQuhb6wfKGtL5aiug9nPrEVinnGqv3VhNf5uwlOZ77UbQSGvlNnc59ZzAump3R8mdnM8m1TcOxae2c-8Ru00rgNF9r4OxZFCLPsVQJvaY0XTmshNNH-4OJmAbjHcTpzwyfUWyCDlv_pvC5fuD6-paPGpG2Q',
                   },
               ],
-          }
-        : JSON.parse(envVar({ name: 'AZURE_APP_JWKS' })),
+          },
 
     redirectUri: envVar({ name: 'AUTH_REDIRECT_URI' }),
 
-    suSeBakoverClientId: envVar({ name: 'SU_SE_BAKOVER_CLIENT_ID' }),
+    suSeBakoverUri: envVar({ name: 'SU_SE_BAKOVER_URI' }),
 
     tokenEndpointAuthMethod: 'private_key_jwt',
     responseType: 'code',
