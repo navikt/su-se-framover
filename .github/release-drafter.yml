@@ -7,3 +7,5 @@ template: |
 categories:
     - title: '🧶 Avhengighetsoppdateringer'
       label: 'dependencies'
+    - title: '🛠  Teknisk'
+      label: 'tech'
