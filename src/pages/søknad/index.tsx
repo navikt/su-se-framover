@@ -5,7 +5,7 @@ import { Undertittel, Feilmelding, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { IntlShape } from 'react-intl';
-import { useParams, useHistory, Link } from 'react-router-dom';
+import { useParams, useHistory, Link, Switch, Route } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
 import { Personkort } from '~components/Personkort';
@@ -30,6 +30,7 @@ import FlyktningstatusOppholdstillatelse from './steg/flyktningstatus-oppholdsti
 import ForVeileder from './steg/for-veileder/ForVeileder';
 import Formue from './steg/formue/DinFormue';
 import InformasjonOmPapirsøknad from './steg/informasjon-om-papirsøknad/InformasjonOmPapirsøknad';
+import Infoside from './steg/infoside/Infoside';
 import Inngang from './steg/inngang/Inngang';
 import Inntekt from './steg/inntekt/Inntekt';
 import Kvittering from './steg/kvittering/Kvittering';
@@ -38,13 +39,21 @@ import Uførevedtak from './steg/uførevedtak/Uførevedtak';
 import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
 import { Søknadsteg } from './types';
 
-const Steg = (props: { title: string; step: Søknadsteg; søknad: SøknadState; søker: Person; intl: IntlShape }) => {
+const Steg = (props: {
+    title: string;
+    step: Søknadsteg;
+    søknad: SøknadState;
+    søker: Person;
+    intl: IntlShape;
+    erSaksbehandler: boolean;
+}) => {
     const sectionRef = React.useRef<HTMLDivElement>(null);
     useEffect(() => {
         if (sectionRef.current) {
             sectionRef.current.focus();
         }
     }, [props.step]);
+
     return (
         <section aria-labelledby="steg-heading" className={styles.stegContainer}>
             <div className={styles.stegHeadingContainer} ref={sectionRef} tabIndex={-1}>
@@ -55,68 +64,80 @@ const Steg = (props: { title: string; step: Søknadsteg; søknad: SøknadState; 
                     <p>{props.intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' })}</p>
                 )}
             </div>
-            {showSteg(props.step, props.søknad, props.søker)}
+            {showSteg(props.step, props.søknad, props.søker, props.erSaksbehandler)}
         </section>
     );
 };
 
-const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
+const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person, erSaksbehandler: boolean) => {
+    const avbrytUrl =
+        søknad.forVeileder.type === Søknadstype.Papirsøknad && erSaksbehandler
+            ? routes.soknad.createURL({ papirsøknad: true })
+            : routes.soknad.createURL({});
+
     switch (step) {
         case Søknadsteg.Uførevedtak:
             return (
                 <Uførevedtak
-                    forrigeUrl={routes.soknad.createURL({ step: null })}
-                    nesteUrl={routes.soknad.createURL({
+                    forrigeUrl={routes.soknad.createURL({})}
+                    nesteUrl={routes.soknadsutfylling.createURL({
                         step: Søknadsteg.FlyktningstatusOppholdstillatelse,
                     })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.FlyktningstatusOppholdstillatelse:
             return (
                 <FlyktningstatusOppholdstillatelse
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
+                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Uførevedtak })}
+                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.BoOgOppholdINorge:
             return (
                 <BoOgOppholdINorge
-                    forrigeUrl={routes.soknad.createURL({
+                    forrigeUrl={routes.soknadsutfylling.createURL({
                         step: Søknadsteg.FlyktningstatusOppholdstillatelse,
                     })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.DinFormue })}
+                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.DinFormue })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.DinFormue:
             return (
                 <Formue
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
+                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.BoOgOppholdINorge })}
+                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.DinInntekt })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.DinInntekt:
             return (
                 <Inntekt
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinFormue })}
+                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.DinFormue })}
                     nesteUrl={
                         søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
-                            ? routes.soknad.createURL({ step: Søknadsteg.EktefellesFormue })
-                            : routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })
+                            ? routes.soknadsutfylling.createURL({ step: Søknadsteg.EktefellesFormue })
+                            : routes.soknadsutfylling.createURL({ step: Søknadsteg.ReiseTilUtlandet })
                     }
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.EktefellesFormue:
             return (
                 <EktefellesFormue
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.DinInntekt })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.EktefellesInntekt })}
+                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.DinInntekt })}
+                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.EktefellesInntekt })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.EktefellesInntekt:
             return (
                 <EktefellesInntekt
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.EktefellesFormue })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
+                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.EktefellesFormue })}
+                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.ReiseTilUtlandet:
@@ -124,42 +145,46 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
                 <Utenlandsopphold
                     forrigeUrl={
                         søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
-                            ? routes.soknad.createURL({ step: Søknadsteg.EktefellesInntekt })
-                            : routes.soknad.createURL({ step: Søknadsteg.DinInntekt })
+                            ? routes.soknadsutfylling.createURL({ step: Søknadsteg.EktefellesInntekt })
+                            : routes.soknadsutfylling.createURL({ step: Søknadsteg.DinInntekt })
                     }
-                    nesteUrl={routes.soknad.createURL({
+                    nesteUrl={routes.soknadsutfylling.createURL({
                         step:
                             søknad.forVeileder.type === Søknadstype.DigitalSøknad
                                 ? Søknadsteg.ForVeileder
                                 : Søknadsteg.InformasjonOmPapirsøknad,
                     })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.ForVeileder:
             return (
                 <ForVeileder
                     søker={søker}
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Oppsummering })}
+                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
+                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Oppsummering })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.InformasjonOmPapirsøknad:
             return (
                 <InformasjonOmPapirsøknad
-                    forrigeUrl={routes.soknad.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Oppsummering })}
+                    forrigeUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.ReiseTilUtlandet })}
+                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Oppsummering })}
+                    avbrytUrl={avbrytUrl}
                 />
             );
         case Søknadsteg.Oppsummering:
             return (
                 <Oppsummering
-                    forrigeUrl={routes.soknad.createURL({
+                    forrigeUrl={routes.soknadsutfylling.createURL({
                         step:
                             søknad.forVeileder.type === Søknadstype.DigitalSøknad
                                 ? Søknadsteg.ForVeileder
                                 : Søknadsteg.InformasjonOmPapirsøknad,
                     })}
-                    nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Kvittering })}
+                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Kvittering })}
+                    avbrytUrl={avbrytUrl}
                     søker={søker}
                 />
             );
@@ -168,13 +193,13 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person) => {
     }
 };
 
-const index = () => {
+const StartUtfylling = () => {
     const { søker: søkerFraStore } = useAppSelector((s) => s.søker);
     const søknad = useAppSelector((s) => s.soknad);
     const { step } = useParams<{ step: Søknadsteg }>();
-    const history = useHistory();
     const intl = useI18n({ messages });
     const user = useUserContext();
+    const history = useHistory();
 
     useEffect(() => {
         if (!RemoteData.isSuccess(søkerFraStore)) {
@@ -245,15 +270,11 @@ const index = () => {
             <Feilmelding className={styles.feilmeldingTekst}>
                 {intl.formatMessage({ id: 'feilmelding.tekst' })}
             </Feilmelding>
-            <Link to={routes.soknad.createURL({ step: null })} className="knapp">
+            <Link to={routes.soknad.createURL({})} className="knapp">
                 {intl.formatMessage({ id: 'feilmelding.knapp' })}
             </Link>
         </div>
     );
-
-    if (!step) {
-        return <Inngang nesteUrl={routes.soknad.createURL({ step: Søknadsteg.Uførevedtak })} />;
-    }
 
     return (
         <div className={styles.container}>
@@ -273,7 +294,6 @@ const index = () => {
                                         <Personkort person={søker} />
                                     </div>
                                 </Systemtittel>
-
                                 {step !== Søknadsteg.Kvittering && (
                                     <>
                                         <div className={styles.stegindikatorContainer}>
@@ -290,7 +310,9 @@ const index = () => {
                                                               const nyttSteg = steg[index];
                                                               if (nyttSteg) {
                                                                   history.push(
-                                                                      routes.soknad.createURL({ step: nyttSteg.step })
+                                                                      routes.soknadsutfylling.createURL({
+                                                                          step: nyttSteg.step,
+                                                                      })
                                                                   );
                                                               }
                                                           }
@@ -307,12 +329,38 @@ const index = () => {
                                 søknad={søknad}
                                 søker={søker}
                                 intl={intl}
+                                erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
                             />
                         </>
                     )
                 )
             )}
         </div>
+    );
+};
+
+const index = () => {
+    const history = useHistory();
+    const isPapirsøknad = history.location.search.includes('papirsoknad');
+
+    return (
+        <Switch>
+            <Route exact={true} path={routes.soknad.path}>
+                <Inngang
+                    nesteUrl={
+                        isPapirsøknad
+                            ? routes.soknadsutfylling.createURL({ step: Søknadsteg.Uførevedtak, papirsøknad: true })
+                            : routes.soknadsInfo.createURL()
+                    }
+                />
+            </Route>
+            <Route exact={true} path={routes.soknadsInfo.path}>
+                <Infoside nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Uførevedtak })} />
+            </Route>
+            <Route exact={true} path={routes.soknadsutfylling.path}>
+                <StartUtfylling />
+            </Route>
+        </Switch>
     );
 };
 

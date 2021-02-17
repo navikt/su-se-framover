@@ -228,7 +228,7 @@ const TrygdeytelserInputFelter = (props: {
     );
 };
 
-const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
+const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const inntektFraStore = useAppSelector((s) => s.soknad.inntekt);
     const dispatch = useAppDispatch();
     const history = useHistory();
@@ -603,6 +603,9 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 save(formik.values);
                                 history.push(props.forrigeUrl);
                             },
+                        }}
+                        avbryt={{
+                            toRoute: props.avbrytUrl,
                         }}
                     />
                 </form>

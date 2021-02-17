@@ -25,7 +25,7 @@ const schema = yup.object<FormData>({
     harUførevedtak: yup.boolean().nullable().required(),
 });
 
-const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string }) => {
+const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: string }) => {
     const harVedtakFraStore = useAppSelector((s) => s.soknad.harUførevedtak);
     const dispatch = useAppDispatch();
     const history = useHistory();
@@ -91,6 +91,9 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string }) => {
                                 dispatch(søknadSlice.actions.harUførevedtakUpdated(formik.values.harUførevedtak));
                                 history.push(props.forrigeUrl);
                             },
+                        }}
+                        avbryt={{
+                            toRoute: props.avbrytUrl,
                         }}
                     />
                 </form>

@@ -227,7 +227,7 @@ const TrygdeytelserInputFelter = (props: {
     );
 };
 
-const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
+const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const ektefelle = useAppSelector((s) => s.soknad.ektefelle);
     const dispatch = useAppDispatch();
     const history = useHistory();
@@ -543,6 +543,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 history.push(props.forrigeUrl);
                             },
                         }}
+                        avbryt={{ toRoute: props.avbrytUrl }}
                     />
                 </form>
             </div>

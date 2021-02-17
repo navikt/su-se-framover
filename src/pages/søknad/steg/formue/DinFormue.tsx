@@ -250,7 +250,7 @@ const KjøretøyInputFelter = (props: {
     );
 };
 
-const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
+const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const formueFraStore = useAppSelector((s) => s.soknad.formue);
     const dispatch = useAppDispatch();
     const history = useHistory();
@@ -684,6 +684,9 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 save(formik.values);
                                 history.push(props.forrigeUrl);
                             },
+                        }}
+                        avbryt={{
+                            toRoute: props.avbrytUrl,
                         }}
                     />
                 </form>

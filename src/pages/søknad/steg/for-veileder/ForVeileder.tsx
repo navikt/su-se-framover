@@ -35,7 +35,7 @@ const schema = yup.object<FormData>({
     }),
 });
 
-const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Person }) => {
+const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; søker: Person }) => {
     const history = useHistory();
     const forVeileder = useAppSelector((s) => s.soknad.forVeileder);
     const dispatch = useAppDispatch();
@@ -170,6 +170,9 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; søker: Pers
                             onClick: () => {
                                 history.push(props.forrigeUrl);
                             },
+                        }}
+                        avbryt={{
+                            toRoute: props.avbrytUrl,
                         }}
                     />
                 </form>

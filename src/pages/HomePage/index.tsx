@@ -13,7 +13,7 @@ const HomePage = () => {
 
     React.useEffect(() => {
         if (user.roller.length === 1 && user.roller[0] === Rolle.Veileder) {
-            history.replace(Routes.soknad.createURL({ step: null }));
+            history.replace(Routes.soknad.createURL({}));
         } else if (user.roller.every((r) => [Rolle.Saksbehandler, Rolle.Attestant].includes(r))) {
             history.replace(Routes.saksoversiktIndex.createURL());
         }
@@ -23,7 +23,7 @@ const HomePage = () => {
         <div className={styles.container}>
             <h1 className={styles.header}>Jeg er...</h1>
             <div className={styles.linkContainer}>
-                <Link to={Routes.soknad.createURL({ step: null })} className={`${styles.link} knapp`}>
+                <Link to={Routes.soknad.createURL({})} className={`${styles.link} knapp`}>
                     Veileder
                 </Link>
                 <Link to={Routes.saksoversiktIndex.createURL()} className={`${styles.link} knapp`}>
