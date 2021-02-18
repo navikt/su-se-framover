@@ -41,7 +41,11 @@ const index = (props: { nesteUrl: string }) => {
     return (
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>
-                <Sidetittel className={styles.tittel}>{intl.formatMessage({ id: 'page.tittel' })}</Sidetittel>
+                <Sidetittel className={styles.tittel}>
+                    {intl.formatMessage(
+                        isPapirsøknad ? { id: 'page.tittel.papirSøknad' } : { id: 'page.tittel.digitalSøknad' }
+                    )}
+                </Sidetittel>
                 <div className={styles.search}>
                     <Personsøk
                         onReset={() => {
