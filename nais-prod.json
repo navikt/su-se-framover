@@ -6,7 +6,7 @@
         "AZURE_GROUP_VEILEDER": "4b1ccffd-b1e1-41a7-9f3a-d4acb6d53b05",
         "AZURE_GROUP_SAKSBEHANDLER": "654d28c0-b02b-4c50-86a0-896cf64e79f0",
         "AZURE_GROUP_DRIFT": "6c5cb261-d91e-40a8-a925-458bfdd9d033",
-        "SU_SE_BAKOVER_URI": "prod-fss.supstonad.su-se-bakover",
+        "SU_SE_BAKOVER_AAD_APP_NAME": "prod-fss.supstonad.su-se-bakover",
         "AMPLITUDE_API_KEY": "a9a60eb3e832909758c46016e1714d3e",
         "FEATURE_HENDELSESLOGG": false,
         "AUTH_REDIRECT_URI": "https://supplerendestonad.nais.adeo.no/oauth2/callback"
