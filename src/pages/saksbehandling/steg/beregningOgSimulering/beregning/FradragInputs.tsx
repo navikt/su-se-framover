@@ -298,7 +298,7 @@ export const FradragInputs = (props: {
                                     intl={props.intl}
                                 />
                             )}
-                            {visDelerAvPeriode && (
+                            {props.showDelerAvPeriode && (
                                 <div className={styles.periode}>
                                     <div className={styles.fraOgMed}>
                                         <Label htmlFor={periode} className={styles.label}>

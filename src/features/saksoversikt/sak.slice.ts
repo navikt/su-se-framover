@@ -232,10 +232,10 @@ export const opprettRevurdering = createAsyncThunk<
 
 export const oppdaterRevurderingsPeriode = createAsyncThunk<
     OpprettetRevurdering,
-    { sakId: string; revurderingsId: string; periode: Periode },
+    { sakId: string; revurderingId: string; fraOgMed: Date },
     { rejectValue: ApiError }
->('revurdering/oppdaterRevurderingsPeriode', async ({ sakId, revurderingsId, periode }, thunkApi) => {
-    const res = await revurderingApi.oppdaterRevurderingsPeriode(sakId, revurderingsId, periode);
+>('revurdering/oppdaterRevurderingsPeriode', async ({ sakId, revurderingId, fraOgMed }, thunkApi) => {
+    const res = await revurderingApi.oppdaterRevurderingsPeriode(sakId, revurderingId, fraOgMed);
     if (res.status === 'ok') {
         return res.data;
     }

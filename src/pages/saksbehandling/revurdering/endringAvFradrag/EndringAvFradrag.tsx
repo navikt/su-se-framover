@@ -61,10 +61,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                     tilOgMed: props.revurdering.periode.tilOgMed,
                 },
                 fradrag: fradrag.map((f: FradragFormData) => ({
-                    periode:
-                        f.periode?.fraOgMed && f.periode.tilOgMed
-                            ? { fraOgMed: f.periode.fraOgMed, tilOgMed: f.periode.tilOgMed }
-                            : null,
+                    periode: null,
                     beløp: Number.parseInt(f.beløp!, 10),
                     type: f.type!,
                     utenlandskInntekt: f.fraUtland

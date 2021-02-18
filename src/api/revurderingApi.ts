@@ -25,21 +25,14 @@ export async function opprettRevurdering(
 
 export async function oppdaterRevurderingsPeriode(
     sakId: string,
-    revurderingsId: string,
-    periode: Periode
+    revurderingId: string,
+    fraOgMed: Date
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
-    // TODO ai: Fix
-    console.log('oppdaterer revurderingsperiode med data: ', sakId, revurderingsId, periode);
-    return {
-        status: 'error',
-        error: {
-            statusCode: 9001,
-            correlationId: 'string',
-            body: {
-                message: 'its over 9000!',
-            },
-        },
-    };
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/oppdaterPeriode`,
+        method: 'POST',
+        body: { fraOgMed: formatISO(fraOgMed, { representation: 'date' }) },
+    });
 }
 
 export async function beregnOgSimuler(
