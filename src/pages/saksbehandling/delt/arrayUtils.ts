@@ -1,9 +1,4 @@
-import { Månedsberegning } from '~types/Beregning';
 import { SimulertPeriode } from '~types/Simulering';
-
-export const groupMånedsberegninger = (månedsberegninger: Månedsberegning[]) => {
-    return groupByKeyValue(månedsberegninger, 'beløp');
-};
 
 export const groupSimuleringsperioder = (simuleringsperioder: SimulertPeriode[]) => {
     return groupByKeyValue(simuleringsperioder, 'bruttoYtelse');
@@ -23,11 +18,4 @@ function groupByKeyValue<T>(arr: T[], key: keyof T) {
 
         return [...groups, [currentValue]];
     }, [] as T[][]);
-}
-
-export function groupBy<T>(arr: T[], keyFunction: (element: T) => string): Record<string, T[]> {
-    return arr.reduce(
-        (acc, element) => ({ ...acc, [keyFunction(element)]: [...(acc[keyFunction(element)] ?? []), element] }),
-        {} as Record<string, T[]>
-    );
 }
