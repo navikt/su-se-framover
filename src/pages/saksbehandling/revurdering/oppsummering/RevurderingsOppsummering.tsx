@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
-import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel } from 'nav-frontend-typografi';
@@ -16,10 +16,11 @@ import yup from '~lib/validering';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
-import { SimulertRevurdering, RevurderingTilAttestering } from '~types/Revurdering';
+import { SimulertRevurdering, RevurderingTilAttestering, BeregnetAvslag } from '~types/Revurdering';
 
 import messages from '../revurdering-nb';
 import sharedStyles from '../revurdering.module.less';
+import { erRevurderingBeregnetAvslag } from '../revurderingUtils';
 
 import styles from './revurderingsOppsummering.module.less';
 
@@ -31,7 +32,7 @@ const schema = yup.object<OppsummeringFormData>({
     tekstTilVedtaksbrev: yup.string().nullable(),
 });
 
-const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertRevurdering }) => {
+const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertRevurdering | BeregnetAvslag }) => {
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
@@ -107,6 +108,19 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
         steg: RevurderingSteg.EndringAvFradrag,
         revurderingId: props.revurdering.id,
     });
+
+    if (erRevurderingBeregnetAvslag(props.revurdering)) {
+        return (
+            <div>
+                <AlertStripeAdvarsel>
+                    {intl.formatMessage({ id: 'oppsummering.størreEllerLik10Prosent' })}
+                </AlertStripeAdvarsel>
+                <Link className="knapp" to={forrigeURL}>
+                    {intl.formatMessage({ id: 'knapp.forrige' })}
+                </Link>
+            </div>
+        );
+    }
 
     return (
         <form
