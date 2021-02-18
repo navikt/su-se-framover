@@ -10,31 +10,43 @@ export interface Revurdering {
     tilRevurdering: Behandling;
     saksbehandler: string;
 }
+interface Beregninger {
+    beregning: Beregning;
+    revurdert: Beregning;
+}
+
 export type OpprettetRevurdering = Revurdering;
 
+export interface BeregnetInnvilget extends Revurdering {
+    status: RevurderingsStatus.BEREGNET_INNVILGET;
+    beregninger: Beregninger;
+}
+
+export interface BeregnetAvslag extends Revurdering {
+    status: RevurderingsStatus.BEREGNET_AVSLAG;
+    beregninger: Beregninger;
+}
+
 export interface SimulertRevurdering extends Revurdering {
-    beregninger: {
-        beregning: Beregning;
-        revurdert: Beregning;
-    };
-    saksbehandler: string;
+    status: RevurderingsStatus.SIMULERT;
+    beregninger: Beregninger;
 }
 
-export interface RevurderingTilAttestering extends SimulertRevurdering {
-    beregninger: {
-        beregning: Beregning;
-        revurdert: Beregning;
-    };
-    saksbehandler: string;
+export interface RevurderingTilAttestering extends Revurdering {
+    status: RevurderingsStatus.TIL_ATTESTERING;
+    beregninger: Beregninger;
 }
 
-export interface IverksattRevurdering extends RevurderingTilAttestering {
+export interface IverksattRevurdering extends Revurdering {
+    status: RevurderingsStatus.IVERKSATT;
+    beregninger: Beregninger;
     attestant: string;
 }
 
 export enum RevurderingsStatus {
     OPPRETTET = 'OPPRETTET',
-    BEREGNET = 'BEREGNET',
+    BEREGNET_INNVILGET = 'BEREGNET_INNVILGET',
+    BEREGNET_AVSLAG = 'BEREGNET_AVSLAG',
     SIMULERT = 'SIMULERT',
     TIL_ATTESTERING = 'TIL_ATTESTERING',
     IVERKSATT = 'IVERKSATT',

@@ -13,7 +13,7 @@ import EndringAvFradrag from './endringAvFradrag/EndringAvFradrag';
 import RevurderingsOppsummering from './oppsummering/RevurderingsOppsummering';
 import messages from './revurdering-nb';
 import styles from './revurdering.module.less';
-import { erRevurderingSimulert } from './revurderingUtils';
+import { erRevurderingSimulert, erRevurderingBeregnetAvslag } from './revurderingUtils';
 import ValgAvPeriode from './valgAvPeriode/ValgAvPeriode';
 import { VisFeilmelding } from './VisFeilMelding';
 
@@ -84,7 +84,7 @@ const Revurdering = (props: { sak: Sak }) => {
                     <EndringAvFradrag sakId={props.sak.id} revurdering={påbegyntRevurdering} />
                 </Route>
                 <Route path={createRevurderingsPath(RevurderingSteg.Oppsummering)}>
-                    {erRevurderingSimulert(påbegyntRevurdering) ? (
+                    {erRevurderingSimulert(påbegyntRevurdering) || erRevurderingBeregnetAvslag(påbegyntRevurdering) ? (
                         <RevurderingsOppsummering sakId={props.sak.id} revurdering={påbegyntRevurdering} />
                     ) : (
                         <VisFeilmelding
