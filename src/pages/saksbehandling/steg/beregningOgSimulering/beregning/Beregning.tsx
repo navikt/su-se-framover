@@ -25,9 +25,10 @@ import {
     FradragInputs,
 } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/FradragInputs';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Behandlingsstatus } from '~types/Behandling';
+import { Beregning } from '~types/Beregning';
 import { Fradragstype, FradragTilhører } from '~types/Fradrag';
 
-import { Beregning } from '../../../../../types/Beregning';
 import BeregningFaktablokk from '../../faktablokk/faktablokker/BeregningFaktablokk';
 import sharedI18n from '../../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../../types';
@@ -323,6 +324,18 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     ? intl.formatMessage({ id: 'knapp.startNyBeregning' })
                                     : intl.formatMessage({ id: 'knapp.startBeregning' })}
                             </Knapp>
+
+                            {props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG && (
+                                <AlertStripe type="advarsel" className={styles.avslagadvarsel}>
+                                    {intl.formatMessage({
+                                        id:
+                                            props.behandling.beregning &&
+                                            props.behandling.beregning.månedsberegninger.some((m) => m.beløp > 0)
+                                                ? 'beregning.nullutbetalingIStartEllerSlutt'
+                                                : 'beregning.førerTilAvslag',
+                                    })}
+                                </AlertStripe>
+                            )}
                         </div>
 
                         {RemoteData.isFailure(beregningStatus) && (

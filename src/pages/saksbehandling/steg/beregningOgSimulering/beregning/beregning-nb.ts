@@ -62,6 +62,10 @@ export default {
 
     'page.tittel': 'Beregning',
 
+    'beregning.førerTilAvslag': 'Denne beregningen fører til avslag.',
+    'beregning.nullutbetalingIStartEllerSlutt':
+        'Denne beregningen fører til avslag fordi første og/eller siste måned er beregnet til en utbetaling på 0 NOK. Vurdèr om perioden burde endres.',
+
     'simulering.tittel': 'Simulering',
 
     'utbetaling.tabellheader.periode': 'Periode',
