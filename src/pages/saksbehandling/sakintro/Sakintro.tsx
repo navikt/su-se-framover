@@ -111,7 +111,9 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         behandlinger={props.sak.behandlinger}
                         intl={intl}
                     />
-                    <Revurderinger sakId={props.sak.id} revurderinger={revurderinger} intl={intl} />
+                    {revurderingToggle && (
+                        <Revurderinger sakId={props.sak.id} revurderinger={revurderinger} intl={intl} />
+                    )}
                     <Utbetalinger
                         sakId={props.sak.id}
                         søker={props.søker}
