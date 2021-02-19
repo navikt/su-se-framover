@@ -3,29 +3,53 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
-import { vilkårTittelFormatted, mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksoversikt/utils';
+import {
+    vilkårTittelFormatted,
+    mapToVilkårsinformasjon,
+    Vilkårsinformasjon,
+    mapToBeregningsInformasjon,
+} from '~features/saksoversikt/utils';
+import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Behandling } from '~types/Behandling';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
+import messages from './Framdrifsindikator-nb';
 import styles from './framdriftsindikator.module.less';
 
 const Framdriftsindikator = (props: { sakId: string; behandling: Behandling; vilkår: Vilkårtype }) => {
     const { behandlingsinformasjon } = props.behandling;
     const vilkårrekkefølge = mapToVilkårsinformasjon(behandlingsinformasjon);
+    const beregningsrekkefølge = mapToBeregningsInformasjon(props.behandling);
+    const intl = useI18n({ messages });
 
     return (
-        <ol className={styles.framdriftsindikator}>
-            {vilkårrekkefølge.map((v) => (
-                <Vilkår
-                    sakId={props.sakId}
-                    behandlingId={props.behandling.id}
-                    vilkår={v}
-                    key={v.vilkårtype}
-                    aktivtVilkår={props.vilkår}
-                />
-            ))}
-        </ol>
+        <div>
+            <ol className={styles.framdriftsindikator}>
+                <Element className={styles.olTittel}>{intl.formatMessage({ id: 'vilkår' })}</Element>
+                {vilkårrekkefølge.map((v) => (
+                    <Vilkår
+                        sakId={props.sakId}
+                        behandlingId={props.behandling.id}
+                        vilkår={v}
+                        key={v.vilkårtype}
+                        aktivtVilkår={props.vilkår}
+                    />
+                ))}
+            </ol>
+            <ol className={styles.framdriftsindikator}>
+                <Element className={styles.olTittel}>{intl.formatMessage({ id: 'beregning' })}</Element>
+                {beregningsrekkefølge.map((v) => (
+                    <Vilkår
+                        sakId={props.sakId}
+                        behandlingId={props.behandling.id}
+                        vilkår={v}
+                        key={v.vilkårtype}
+                        aktivtVilkår={props.vilkår}
+                    />
+                ))}
+            </ol>
+        </div>
     );
 };
 
