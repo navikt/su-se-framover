@@ -291,7 +291,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                         />
                     </form>
                 ),
-                right: <SatsFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} eps={eps} />,
+                right: <SatsFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
         </Vurdering>
     );

@@ -3,8 +3,8 @@ import React from 'react';
 import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { DelerBoligMed } from '~features/søknad/types';
 import { useI18n } from '~lib/hooks';
-import { keyOf, Nullable } from '~lib/types';
-import { Behandlingsinformasjon, Ektefelle } from '~types/Behandlingsinformasjon';
+import { keyOf } from '~lib/types';
+import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Sats } from '~types/Sats';
 import { SøknadInnhold } from '~types/Søknad';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
@@ -17,16 +17,12 @@ import Faktablokk from '../Faktablokk';
 import messages from './faktablokker-nb';
 import { FaktablokkProps } from './faktablokkUtils';
 
-interface SatsProps extends FaktablokkProps {
-    eps: Nullable<Ektefelle>;
-}
-
-export const SatsFaktablokk = (props: SatsProps) => {
+export const SatsFaktablokk = (props: FaktablokkProps) => {
     const intl = useI18n({ messages });
 
     const fakta = [];
 
-    if (props.eps) {
+    if (props.søknadInnhold.boforhold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER) {
         fakta.push({
             tittel: intl.formatMessage({
                 id: 'sats.ektemakeEllerSamboerUførFlyktning',
@@ -53,7 +49,7 @@ export const SatsFaktablokk = (props: SatsProps) => {
         });
     }
 
-    if (!props.søknadInnhold.boforhold.delerBoligMedVoksne && !props.eps) {
+    if (!props.søknadInnhold.boforhold.delerBoligMedVoksne) {
         fakta.push({
             tittel: intl.formatMessage({
                 id: 'sats.hvemDelerSøkerBoligMed',
@@ -90,7 +86,7 @@ export const SatsVilkårsblokk = (props: {
     return (
         <Vilkårsblokk
             tittel={vilkårTittelFormatted(Vilkårtype.Sats)}
-            søknadfaktablokk={<SatsFaktablokk søknadInnhold={props.søknadInnhold} eps={props.ektefelle} />}
+            søknadfaktablokk={<SatsFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
                 <Faktablokk
                     tittel={intl.formatMessage({ id: 'display.fraSaksbehandling' })}
