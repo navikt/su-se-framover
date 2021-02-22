@@ -2,9 +2,9 @@ import { Behandling } from './Behandling';
 import { Beregning } from './Beregning';
 import { Periode } from './Fradrag';
 
-export interface Revurdering {
+export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
     id: string;
-    status: RevurderingsStatus;
+    status: T;
     opprettet: string;
     periode: Periode<string>;
     tilRevurdering: Behandling;
@@ -15,30 +15,25 @@ interface Beregninger {
     revurdert: Beregning;
 }
 
-export type OpprettetRevurdering = Revurdering;
+export type OpprettetRevurdering = Revurdering<RevurderingsStatus.OPPRETTET>;
 
-export interface BeregnetInnvilget extends Revurdering {
-    status: RevurderingsStatus.BEREGNET_INNVILGET;
+export interface BeregnetInnvilget extends Revurdering<RevurderingsStatus.BEREGNET_INNVILGET> {
     beregninger: Beregninger;
 }
 
-export interface BeregnetAvslag extends Revurdering {
-    status: RevurderingsStatus.BEREGNET_AVSLAG;
+export interface BeregnetAvslag extends Revurdering<RevurderingsStatus.BEREGNET_AVSLAG> {
     beregninger: Beregninger;
 }
 
-export interface SimulertRevurdering extends Revurdering {
-    status: RevurderingsStatus.SIMULERT;
+export interface SimulertRevurdering extends Revurdering<RevurderingsStatus.SIMULERT> {
     beregninger: Beregninger;
 }
 
-export interface RevurderingTilAttestering extends Revurdering {
-    status: RevurderingsStatus.TIL_ATTESTERING;
+export interface RevurderingTilAttestering extends Revurdering<RevurderingsStatus.TIL_ATTESTERING> {
     beregninger: Beregninger;
 }
 
-export interface IverksattRevurdering extends Revurdering {
-    status: RevurderingsStatus.IVERKSATT;
+export interface IverksattRevurdering extends Revurdering<RevurderingsStatus.IVERKSATT> {
     beregninger: Beregninger;
     attestant: string;
 }
