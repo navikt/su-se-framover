@@ -29,7 +29,7 @@ import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behan
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 
-import { Revurdering as RevurderingType } from '../../../types/Revurdering';
+import { Revurdering } from '../../../types/Revurdering';
 import {
     erRevurderingTilAttestering,
     erRevurderingIverksatt,
@@ -232,7 +232,7 @@ const ÅpneSøknader = (props: {
     );
 };
 
-const Revurderinger = (props: { sakId: string; revurderinger: RevurderingType[]; intl: IntlShape }) => {
+const Revurderinger = (props: { sakId: string; revurderinger: Revurdering[]; intl: IntlShape }) => {
     if (props.revurderinger.length === 0) return null;
 
     return (
@@ -265,7 +265,7 @@ const Revurderinger = (props: { sakId: string; revurderinger: RevurderingType[];
     );
 };
 
-const RevurderingStartetKnapper = (props: { r: RevurderingType; sakId: string; intl: IntlShape }) => {
+const RevurderingStartetKnapper = (props: { r: Revurdering; sakId: string; intl: IntlShape }) => {
     const user = useUserContext();
     const { r } = props;
 
@@ -298,7 +298,6 @@ const RevurderingStartetKnapper = (props: { r: RevurderingType; sakId: string; i
                 ) : (
                     !erRevurderingTilAttestering(r) &&
                     !erRevurderingIverksatt(r) && (
-                        /*user.navIdent !== r.attestering?.attestant && (*/
                         <Link
                             className="knapp knapp--mini"
                             to={Routes.revurderValgtRevurdering.createURL({
@@ -314,7 +313,6 @@ const RevurderingStartetKnapper = (props: { r: RevurderingType; sakId: string; i
                             Fortsett revurdering
                         </Link>
                     )
-                    //)
                 )}
             </div>
         </div>

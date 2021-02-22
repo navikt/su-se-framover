@@ -21,9 +21,18 @@ import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
 import messages from './utbetalinger-nb';
 import styles from './utbetalinger.module.less';
 
+const sorterUtbetalingsperioder = (
+    utbetalingsperioder: Utbetalingsperiode[],
+    sortFn: (dateLeft: number | Date, dateRight: number | Date) => number
+): Date[] => {
+    return utbetalingsperioder.map((u) => new Date(u.tilOgMed)).sort(sortFn);
+};
 export const finnSisteUtbetalingsdato = (utbetalingsperioder: Utbetalingsperiode[]) => {
-    const sortertUtbetalingsperioder = utbetalingsperioder.map((u) => new Date(u.tilOgMed)).sort(DateFns.compareDesc);
-    return sortertUtbetalingsperioder[0];
+    return sorterUtbetalingsperioder(utbetalingsperioder, DateFns.compareDesc)[0];
+};
+
+export const finnFørsteUtbetalingsdato = (utbetalingsperioder: Utbetalingsperiode[]) => {
+    return sorterUtbetalingsperioder(utbetalingsperioder, DateFns.compareAsc)[0];
 };
 
 export const Utbetalinger = (props: {

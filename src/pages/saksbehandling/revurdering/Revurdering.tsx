@@ -6,7 +6,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 
-import { finnSisteUtbetalingsdato } from '../sakintro/Utbetalinger';
+import { finnFørsteUtbetalingsdato, finnSisteUtbetalingsdato } from '../sakintro/Utbetalinger';
 import { RevurderingSteg } from '../types';
 
 import EndringAvFradrag from './endringAvFradrag/EndringAvFradrag';
@@ -62,6 +62,9 @@ const Revurdering = (props: { sak: Sak }) => {
     const sisteUtbetalingsDato = useMemo<Date>(() => finnSisteUtbetalingsdato(props.sak.utbetalinger), [
         props.sak.utbetalinger,
     ]);
+    const førsteUtbetalingsDato = useMemo<Date>(() => finnFørsteUtbetalingsdato(props.sak.utbetalinger), [
+        props.sak.utbetalinger,
+    ]);
 
     return (
         <div className={styles.pageContainer}>
@@ -76,7 +79,7 @@ const Revurdering = (props: { sak: Sak }) => {
                     <ValgAvPeriode
                         sakId={props.sak.id}
                         revurdering={påbegyntRevurdering}
-                        førsteUtbetalingISak={new Date(props.sak.utbetalinger[0].fraOgMed)}
+                        førsteUtbetalingISak={førsteUtbetalingsDato}
                         sisteUtbetalingISak={sisteUtbetalingsDato}
                     />
                 </Route>

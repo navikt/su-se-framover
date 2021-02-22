@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Link, useHistory } from 'react-router-dom';
 
-import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { oppdaterRevurderingsPeriode } from '~features/revurdering/revurderingActions';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -46,13 +46,13 @@ const ValgAvPeriode = (props: {
         async onSubmit({ fraOgMed }) {
             if (fraOgMed) {
                 const response = await dispatch(
-                    sakSlice.oppdaterRevurderingsPeriode({
+                    oppdaterRevurderingsPeriode({
                         sakId: props.sakId,
                         revurderingId: props.revurdering.id,
                         fraOgMed,
                     })
                 );
-                if (sakSlice.oppdaterRevurderingsPeriode.fulfilled.match(response)) {
+                if (oppdaterRevurderingsPeriode.fulfilled.match(response)) {
                     history.push(
                         Routes.revurderValgtRevurdering.createURL({
                             sakId: props.sakId,

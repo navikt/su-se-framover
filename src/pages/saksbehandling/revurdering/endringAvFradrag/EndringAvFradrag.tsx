@@ -6,7 +6,7 @@ import { Ingress, Innholdstittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { beregnOgSimuler } from '~features/revurdering/revurderingActions';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
@@ -37,7 +37,7 @@ const schema = yup.object<EndringAvFradragFormData>({
 });
 
 const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) => {
-    const { beregnOgSimulerStatus: beregnOgSimuler } = useAppSelector((state) => state.sak);
+    const { beregnOgSimulerStatus } = useAppSelector((state) => state.sak);
     const intl = useI18n({ messages: { ...messages, ...fradragMessages } });
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const dispatch = useAppDispatch();
@@ -51,7 +51,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
 
     const beregnOgSimulerRevurdering = async (fradrag: FradragFormData[]) => {
         const response = await dispatch(
-            sakSlice.beregnOgSimuler({
+            beregnOgSimuler({
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
                 //valdiering sikrer at feltet ikke er null
@@ -76,9 +76,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                 })),
             })
         );
-        if (sakSlice.beregnOgSimuler.fulfilled.match(response)) {
-            //setFormData((values) => ({ ...values, revurdering: response.payload }));
-
+        if (beregnOgSimuler.fulfilled.match(response)) {
             history.push(
                 Routes.revurderValgtRevurdering.createURL({
                     sakId: props.sakId,
@@ -168,9 +166,9 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                         }}
                     />
                 </div>
-                {RemoteData.isFailure(beregnOgSimuler) && (
+                {RemoteData.isFailure(beregnOgSimulerStatus) && (
                     <AlertStripeFeil className={sharedStyles.alertstripe}>
-                        {beregnOgSimuler.error.body?.message}
+                        {beregnOgSimulerStatus.error.body?.message}
                     </AlertStripeFeil>
                 )}
                 <div className={sharedStyles.knappContainer}>
@@ -184,7 +182,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                     >
                         {intl.formatMessage({ id: 'knapp.forrige' })}
                     </Link>
-                    <Hovedknapp spinner={RemoteData.isPending(beregnOgSimuler)}>
+                    <Hovedknapp spinner={RemoteData.isPending(beregnOgSimulerStatus)}>
                         {intl.formatMessage({ id: 'knapp.neste' })}
                     </Hovedknapp>
                 </div>

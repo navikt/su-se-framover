@@ -562,40 +562,25 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, sendRevurderingTilAttestering, {
-            pending: () => {
-                return;
-            },
-            fulfilled: (state, action) => {
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
-                    }))
-                );
-            },
-            rejected: () => {
-                return;
-            },
+        // TODO ai: Se på om vi kan baka dessa 2 till 1.
+        builder.addCase(sendRevurderingTilAttestering.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                }))
+            );
         });
 
-        handleAsyncThunk(builder, iverksettRevurdering, {
-            pending: () => {
-                return;
-            },
-            fulfilled: (state, action) => {
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
-                    }))
-                );
-            },
-            rejected: () => {
-                return;
-            },
+        builder.addCase(iverksettRevurdering.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                }))
+            );
         });
     },
 });

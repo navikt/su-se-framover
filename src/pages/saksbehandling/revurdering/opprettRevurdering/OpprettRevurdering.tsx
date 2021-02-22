@@ -7,7 +7,7 @@ import React, { useState, useMemo } from 'react';
 import DatePicker from 'react-datepicker';
 import { useHistory, Link } from 'react-router-dom';
 
-import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { opprettRevurdering } from '~features/revurdering/revurderingActions';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -29,7 +29,7 @@ const schema = yup.object<OpprettRevurderingFormData>({
     fraOgMed: yup.date().nullable().required(),
 });
 
-const opprettRevurdering = (props: { sak: Sak }) => {
+const OpprettRevurdering = (props: { sak: Sak }) => {
     const history = useHistory();
 
     const dispatch = useAppDispatch();
@@ -38,15 +38,15 @@ const opprettRevurdering = (props: { sak: Sak }) => {
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const opprettRevurderingStatus = useAppSelector((state) => state.sak.opprettRevurderingStatus);
 
-    const opprettRevurdering = async (fraOgMed: Date) => {
+    const handleOpprettRevurdering = async (fraOgMed: Date) => {
         const response = await dispatch(
-            sakSlice.opprettRevurdering({
+            opprettRevurdering({
                 sakId: props.sak.id,
                 fraOgMed,
             })
         );
 
-        if (sakSlice.opprettRevurdering.fulfilled.match(response)) {
+        if (opprettRevurdering.fulfilled.match(response)) {
             history.push(
                 Routes.revurderValgtRevurdering.createURL({
                     sakId: props.sak.id,
@@ -63,7 +63,7 @@ const opprettRevurdering = (props: { sak: Sak }) => {
         },
         async onSubmit({ fraOgMed }) {
             if (fraOgMed) {
-                opprettRevurdering(fraOgMed);
+                handleOpprettRevurdering(fraOgMed);
             }
         },
         validationSchema: schema,
@@ -133,4 +133,4 @@ const opprettRevurdering = (props: { sak: Sak }) => {
     );
 };
 
-export default opprettRevurdering;
+export default OpprettRevurdering;
