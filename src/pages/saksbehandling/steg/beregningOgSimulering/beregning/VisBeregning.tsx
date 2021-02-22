@@ -5,16 +5,15 @@ import * as Ord from 'fp-ts/Ord';
 import { Element, Normaltekst, Systemtittel, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
+import { groupBy, groupByEq } from '~lib/arrayUtils';
 import { formatMonthYear } from '~lib/dateUtils';
 import { formatCurrency } from '~lib/formatUtils';
 import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import messages from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/beregning-nb';
-import { Beregning, Månedsberegning } from '~types/Beregning';
+import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~types/Beregning';
 import { Fradrag, Fradragstype } from '~types/Fradrag';
 import { Sats } from '~types/Sats';
-
-import { groupBy, groupMånedsberegninger } from '../../../delt/arrayUtils';
 
 import * as BeregningUtils from './beregningUtils';
 import styles from './visBeregning.module.less';
@@ -24,20 +23,20 @@ interface Props {
     beregning: Beregning;
 }
 
-const getFradragsnøkkel = (f: Fradrag) => f.type + (f.utenlandskInntekt ? `-${f.utenlandskInntekt.valuta}` : '');
+const getFradragsnøkkel = (f: Fradrag) =>
+    [f.type, f.utenlandskInntekt?.kurs ?? '', f.utenlandskInntekt?.valuta ?? '', f.tilhører].join('-');
 
-const getBenyttedeMånedsfradragForPeriode = (månedsberegninger: Månedsberegning[]): Fradrag[] =>
+const getBenyttedeFradrag = (månedsberegning: Månedsberegning): Fradrag[] =>
     pipe(
-        månedsberegninger,
-        (ms) => ms.flatMap((m) => m.fradrag),
+        månedsberegning.fradrag,
         (fradrag) => groupBy(fradrag, getFradragsnøkkel),
         (grupperteFradrag) =>
-            Object.values(grupperteFradrag).map<Fradrag>((f) => ({
-                beløp: f[0].beløp,
-                type: f[0].type,
-                tilhører: f[0].tilhører,
-                utenlandskInntekt: f[0].utenlandskInntekt,
-                periode: f[0].periode,
+            Object.values(grupperteFradrag).map<Fradrag>((fradrag) => ({
+                beløp: fradrag.reduce((acc, f) => acc + f.beløp, 0),
+                type: fradrag[0].type,
+                tilhører: fradrag[0].tilhører,
+                utenlandskInntekt: fradrag[0].utenlandskInntekt,
+                periode: fradrag[0].periode,
             }))
     );
 
@@ -67,8 +66,6 @@ const DetaljertFradrag = (props: {
 const VisBeregning = (props: Props) => {
     const intl = useI18n({ messages });
 
-    const gruppertMånedsberegninger = groupMånedsberegninger(props.beregning.månedsberegninger);
-
     return (
         <div className={styles.beregningdetaljer}>
             <Systemtittel className={styles.visBeregningTittel}>
@@ -86,57 +83,59 @@ const VisBeregning = (props: Props) => {
                     )}
                 </span>
             </Element>
-            {gruppertMånedsberegninger.map((månedsberegninger) => (
-                <div key={månedsberegninger[0].fraOgMed}>
-                    {pipe(
-                        combineOptions(arr.head(månedsberegninger), arr.last(månedsberegninger)),
-                        Option.fold(
-                            () => ({
-                                tittel: '?',
-                                beløp: 0,
-                            }),
-                            ([head, last]) => ({
-                                tittel: `${formatMonthYear(head.fraOgMed, intl)} - ${formatMonthYear(
-                                    last.tilOgMed,
-                                    intl
-                                )}`,
-                                beløp: head.beløp,
-                            })
-                        ),
-                        ({ tittel, beløp }) => (
-                            <Element tag="h3" className={classNames(styles.periodeoverskrift, styles.linje)}>
-                                <span>{tittel}</span>
-                                <span>
-                                    {formatCurrency(intl, beløp, {
-                                        numDecimals: 0,
-                                    })}{' '}
-                                    i mnd
-                                </span>
-                            </Element>
-                        )
-                    )}
-
-                    <ol className={styles.fradragliste}>
-                        <li className={styles.linje}>
-                            <span>
-                                {intl.formatMessage({
-                                    id:
-                                        månedsberegninger[0].sats === Sats.Høy
-                                            ? 'display.visBeregning.sats.høy'
-                                            : 'display.visBeregning.sats.ordinær',
-                                })}
-                            </span>
-                            <span>{formatCurrency(intl, månedsberegninger[0].satsbeløp)}</span>
-                        </li>
+            {pipe(
+                props.beregning.månedsberegninger,
+                groupByEq(eqMånedsberegningBortsettFraPeriode),
+                arr.map((månedsberegninger) => (
+                    <div key={månedsberegninger[0].fraOgMed}>
                         {pipe(
-                            månedsberegninger,
-                            getBenyttedeMånedsfradragForPeriode,
-                            arr.sortBy([
-                                Ord.ord.contramap(Ord.ordString, (f: Fradrag) => f.tilhører),
-                                Ord.ord.contramap(Ord.ordString, (f: Fradrag) => f.type),
-                            ]),
-                            (m) =>
-                                m.map((fradrag) => (
+                            combineOptions(arr.head(månedsberegninger), arr.last(månedsberegninger)),
+                            Option.fold(
+                                () => ({
+                                    tittel: '?',
+                                    beløp: 0,
+                                }),
+                                ([head, last]) => ({
+                                    tittel: `${formatMonthYear(head.fraOgMed, intl)} - ${formatMonthYear(
+                                        last.tilOgMed,
+                                        intl
+                                    )}`,
+                                    beløp: head.beløp,
+                                })
+                            ),
+                            ({ tittel, beløp }) => (
+                                <Element tag="h3" className={classNames(styles.periodeoverskrift, styles.linje)}>
+                                    <span>{tittel}</span>
+                                    <span>
+                                        {formatCurrency(intl, beløp, {
+                                            numDecimals: 0,
+                                        })}{' '}
+                                        i mnd
+                                    </span>
+                                </Element>
+                            )
+                        )}
+
+                        <ol className={styles.fradragliste}>
+                            <li className={styles.linje}>
+                                <span>
+                                    {intl.formatMessage({
+                                        id:
+                                            månedsberegninger[0].sats === Sats.Høy
+                                                ? 'display.visBeregning.sats.høy'
+                                                : 'display.visBeregning.sats.ordinær',
+                                    })}
+                                </span>
+                                <span>{formatCurrency(intl, månedsberegninger[0].satsbeløp)}</span>
+                            </li>
+                            {pipe(
+                                månedsberegninger[0],
+                                getBenyttedeFradrag,
+                                arr.sortBy([
+                                    Ord.ord.contramap(Ord.ordString, (f: Fradrag) => f.tilhører),
+                                    Ord.ord.contramap(Ord.ordString, (f: Fradrag) => f.type),
+                                ]),
+                                arr.map((fradrag) => (
                                     <li key={getFradragsnøkkel(fradrag)} className={styles.linje}>
                                         {fradrag.type === Fradragstype.BeregnetFradragEPS ? (
                                             <DetaljertFradrag
@@ -232,10 +231,11 @@ const VisBeregning = (props: Props) => {
                                         )}
                                     </li>
                                 ))
-                        )}
-                    </ol>
-                </div>
-            ))}
+                            )}
+                        </ol>
+                    </div>
+                ))
+            )}
         </div>
     );
 };

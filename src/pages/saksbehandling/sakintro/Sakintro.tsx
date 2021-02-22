@@ -17,7 +17,7 @@ import {
     erIverksatt,
     erIverksattAvslag,
     erTilAttestering,
-    hentSisteVurderteVilkår,
+    hentSisteVurdertSaksbehandlingssteg,
 } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
@@ -506,7 +506,7 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
                             to={Routes.saksbehandlingVilkårsvurdering.createURL({
                                 sakId: props.sakId,
                                 behandlingId: b.id,
-                                vilkar: hentSisteVurderteVilkår(b.behandlingsinformasjon),
+                                vilkar: hentSisteVurdertSaksbehandlingssteg(b),
                             })}
                         >
                             {props.intl.formatMessage({

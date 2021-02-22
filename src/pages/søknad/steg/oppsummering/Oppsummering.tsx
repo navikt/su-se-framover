@@ -13,7 +13,7 @@ import sharedStyles from '../../steg-shared.module.less';
 
 import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
 
-const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; søker: Person }) => {
+const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; søker: Person }) => {
     const history = useHistory();
     const søknadFraStore = useAppSelector((s) => s.soknad);
 
@@ -44,6 +44,9 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; søker: Per
                     }}
                     next={{
                         label: <FormattedMessage id="steg.sendInn" />,
+                    }}
+                    avbryt={{
+                        toRoute: props.avbrytUrl,
                     }}
                 />
             </form>

@@ -1,5 +1,6 @@
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
+import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import {
     Behandlingsinformasjon,
     UførhetStatus,
@@ -166,6 +167,37 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
             vilkårtype: Vilkårtype.PersonligOppmøte,
             begrunnelse: behandlingsinformasjon.personligOppmøte?.begrunnelse ?? null,
             erStartet: personligOppmøte !== null,
+        },
+    ];
+};
+
+export const vilkårsinformasjonForBeregningssteg = (behandling: Behandling): Vilkårsinformasjon[] => {
+    const { utledetSats } = behandling.behandlingsinformasjon;
+
+    return [
+        {
+            status:
+                utledetSats === null
+                    ? VilkårVurderingStatus.IkkeVurdert
+                    : //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
+                    behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
+                    ? VilkårVurderingStatus.IkkeVurdert
+                    : VilkårVurderingStatus.Ok,
+            vilkårtype: Vilkårtype.Sats,
+            begrunnelse: null,
+            //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
+            erStartet: behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ? false : utledetSats !== null,
+        },
+        {
+            status:
+                behandling.beregning === null
+                    ? VilkårVurderingStatus.IkkeVurdert
+                    : behandling.status === Behandlingsstatus.BEREGNET_AVSLAG
+                    ? VilkårVurderingStatus.IkkeOk
+                    : VilkårVurderingStatus.Ok,
+            vilkårtype: Vilkårtype.Beregning,
+            begrunnelse: null,
+            erStartet: behandling.beregning !== null,
         },
     ];
 };

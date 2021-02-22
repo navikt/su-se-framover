@@ -33,7 +33,7 @@ const schema = yup.object<FormData>({
     }),
 });
 
-const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string }) => {
+const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const history = useHistory();
     const forVeileder = useAppSelector((s) => s.soknad.forVeileder);
     const dispatch = useAppDispatch();
@@ -150,6 +150,9 @@ const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string
                         onClick: () => {
                             history.push(props.forrigeUrl);
                         },
+                    }}
+                    avbryt={{
+                        toRoute: props.avbrytUrl,
                     }}
                 />
             </form>

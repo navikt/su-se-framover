@@ -1,4 +1,6 @@
-import { Nullable } from '~lib/types';
+import { eqNumber, eqString, getStructEq } from 'fp-ts/lib/Eq';
+
+import { eqNullable, Nullable } from '~lib/types';
 
 export interface Fradrag {
     periode: Nullable<Periode<string>>;
@@ -7,6 +9,19 @@ export interface Fradrag {
     utenlandskInntekt: Nullable<UtenlandskInntekt>;
     tilhører: FradragTilhører;
 }
+
+const eqUtenlandskInntekt = getStructEq<UtenlandskInntekt>({
+    beløpIUtenlandskValuta: eqNumber,
+    kurs: eqNumber,
+    valuta: eqString,
+});
+
+export const eqFradragBortsettFraPeriode = getStructEq<Omit<Fradrag, 'periode'>>({
+    type: eqString,
+    beløp: eqNumber,
+    utenlandskInntekt: eqNullable(eqUtenlandskInntekt),
+    tilhører: eqString,
+});
 
 export interface Periode<T = Date> {
     fraOgMed: T;

@@ -52,7 +52,7 @@ const schema = yup.object<FormData>({
         }),
 });
 
-const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl: string }) => {
+const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const flyktningstatusFraStore = useAppSelector((s) => s.soknad.flyktningstatus);
     const dispatch = useAppDispatch();
     const history = useHistory();
@@ -237,6 +237,9 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                                 save(formik.values);
                                 history.push(props.forrigeUrl);
                             },
+                        }}
+                        avbryt={{
+                            toRoute: props.avbrytUrl,
                         }}
                     />
                 </form>

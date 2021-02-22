@@ -30,6 +30,7 @@ export default {
     'formue.heading.søker': 'Søker',
     'formue.heading.eps': 'Ektefelle/samboer',
     'formue.delerBoligMed': 'Hvem deler du bolig med?',
+    'formue.delerBoligMed.ingen': 'Ingen',
     'formue.ektefelleTitle': 'Ektefelle',
     'formue.epsFnr': 'Ektefelles fødselsnummer',
     'formue.ektefellesNavn': 'Ektefelles navn (hvis oppgitt)',

@@ -64,7 +64,9 @@ export const FormueFaktablokk = (props: FaktablokkProps) => {
                     FaktaSpacing,
                     {
                         tittel: message('formue.delerBoligMed'),
-                        verdi: delerBoligMedFormatted(props.søknadInnhold.boforhold.delerBoligMed),
+                        verdi: props.søknadInnhold.boforhold.delerBoligMed
+                            ? delerBoligMedFormatted(props.søknadInnhold.boforhold.delerBoligMed)
+                            : intl.formatMessage({ id: 'formue.delerBoligMed.ingen' }),
                     },
                     ...(props.søknadInnhold.boforhold.ektefellePartnerSamboer === null
                         ? []

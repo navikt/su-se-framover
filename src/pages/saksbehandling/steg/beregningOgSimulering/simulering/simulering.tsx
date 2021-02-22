@@ -1,11 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import classNames from 'classnames';
+import * as DateFns from 'date-fns';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Systemtittel, Element } from 'nav-frontend-typografi';
 import React from 'react';
 
+import { groupWhile } from '~lib/arrayUtils';
 import { formatMonthYear } from '~lib/dateUtils';
 import { formatCurrency } from '~lib/formatUtils';
 import { combineOptions, pipe } from '~lib/fp';
@@ -16,7 +18,6 @@ import { Behandling } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Simulering } from '~types/Simulering';
 
-import { groupSimuleringsperioder } from '../../../delt/arrayUtils';
 import styles from '../beregning/visBeregning.module.less';
 
 interface Props {
@@ -26,7 +27,6 @@ interface Props {
 
 const Utbetalingssimulering = (props: { simulering: Simulering }) => {
     const intl = useI18n({ messages });
-    const gruppertSimuleringsperioder = groupSimuleringsperioder(props.simulering.perioder);
 
     return (
         <div className={styles.beregningdetaljer}>
@@ -45,34 +45,47 @@ const Utbetalingssimulering = (props: { simulering: Simulering }) => {
                     )}
                 </span>
             </Element>
-            {gruppertSimuleringsperioder.map((gruppe) => {
-                return pipe(
-                    combineOptions(arr.head(gruppe), arr.last(gruppe)),
-                    Option.fold(
-                        () => ({
-                            tittel: '?',
-                            beløp: 0,
-                            key: '?',
-                        }),
-                        ([head, last]) => ({
-                            tittel: `${formatMonthYear(head.fraOgMed, intl)} - ${formatMonthYear(last.tilOgMed, intl)}`,
-                            beløp: head.bruttoYtelse,
-                            key: head.fraOgMed + head.tilOgMed,
-                        })
-                    ),
-                    ({ tittel, beløp, key }) => (
-                        <Element tag="h3" className={classNames(styles.periodeoverskrift, styles.linje)} key={key}>
-                            <span>{tittel}</span>
-                            <span>
-                                {formatCurrency(intl, beløp, {
-                                    numDecimals: 0,
-                                })}{' '}
-                                i mnd
-                            </span>
-                        </Element>
-                    )
-                );
-            })}
+            {pipe(
+                props.simulering.perioder,
+                groupWhile(
+                    (curr, prev) =>
+                        DateFns.differenceInCalendarMonths(
+                            DateFns.parseISO(curr.fraOgMed),
+                            DateFns.parseISO(prev.tilOgMed)
+                        ) <= 1
+                ),
+                arr.map((gruppe) => {
+                    return pipe(
+                        combineOptions(arr.head(gruppe), arr.last(gruppe)),
+                        Option.fold(
+                            () => ({
+                                tittel: '?',
+                                beløp: 0,
+                                key: '?',
+                            }),
+                            ([head, last]) => ({
+                                tittel: `${formatMonthYear(head.fraOgMed, intl)} - ${formatMonthYear(
+                                    last.tilOgMed,
+                                    intl
+                                )}`,
+                                beløp: head.bruttoYtelse,
+                                key: head.fraOgMed + head.tilOgMed,
+                            })
+                        ),
+                        ({ tittel, beløp, key }) => (
+                            <Element tag="h3" className={classNames(styles.periodeoverskrift, styles.linje)} key={key}>
+                                <span>{tittel}</span>
+                                <span>
+                                    {formatCurrency(intl, beløp, {
+                                        numDecimals: 0,
+                                    })}{' '}
+                                    i mnd
+                                </span>
+                            </Element>
+                        )
+                    );
+                })
+            )}
         </div>
     );
 };

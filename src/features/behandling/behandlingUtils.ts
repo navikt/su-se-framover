@@ -1,13 +1,16 @@
-import * as Array from 'fp-ts/Array';
+import * as Arr from 'fp-ts/Array';
 import { Eq } from 'fp-ts/lib/Eq';
 import { pipe } from 'fp-ts/lib/function';
 import * as Option from 'fp-ts/Option';
 
-import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksoversikt/utils';
+import {
+    mapToVilkårsinformasjon,
+    Vilkårsinformasjon,
+    vilkårsinformasjonForBeregningssteg,
+} from '~features/saksoversikt/utils';
 import { Nullable } from '~lib/types';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import {
-    Behandlingsinformasjon,
     Bosituasjon,
     FastOppholdINorge,
     FastOppholdINorgeStatus,
@@ -109,11 +112,17 @@ export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) => {
     );
 };
 
-export const hentSisteVurderteVilkår = (behandlingsinformasjon: Behandlingsinformasjon) => {
+const hentSaksbehandlingssteger = (behandling: Behandling) => {
+    const vilkårsinformasjon = mapToVilkårsinformasjon(behandling.behandlingsinformasjon);
+    const satsOgBeregningssteg = vilkårsinformasjonForBeregningssteg(behandling);
+    return [...vilkårsinformasjon, ...satsOgBeregningssteg];
+};
+
+export const hentSisteVurdertSaksbehandlingssteg = (behandling: Behandling) => {
     return pipe(
-        behandlingsinformasjon,
-        mapToVilkårsinformasjon,
-        Array.findLast((v: Vilkårsinformasjon) => v.erStartet),
+        behandling,
+        hentSaksbehandlingssteger,
+        Arr.findLast((v: Vilkårsinformasjon) => v.erStartet),
         Option.fold(
             () => Vilkårtype.Uførhet,
             (x) => x.vilkårtype

@@ -244,7 +244,7 @@ const KjøretøyInputFelter = (props: {
     );
 };
 
-const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
+const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const ektefelle = useAppSelector((s) => s.soknad.ektefelle);
     const dispatch = useAppDispatch();
     const history = useHistory();
@@ -606,6 +606,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string }) => {
                                 history.push(props.forrigeUrl);
                             },
                         }}
+                        avbryt={{ toRoute: props.avbrytUrl }}
                     />
                 </form>
             </RawIntlProvider>
