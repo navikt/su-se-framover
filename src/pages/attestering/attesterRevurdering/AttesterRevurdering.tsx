@@ -12,7 +12,7 @@ import { ApiError } from '~api/apiClient';
 import { Person } from '~api/personApi';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
 import { getGender, showName } from '~features/person/personUtils';
-import * as revurderingSlice from '~features/revurdering/revurdering.slice';
+import * as revurderingSlice from '~features/revurdering/revurderingActions';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';

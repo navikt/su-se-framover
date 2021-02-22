@@ -8,14 +8,14 @@ import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
-import * as revurderingSlice from '~features/revurdering/revurdering.slice';
+import * as revurderingSlice from '~features/revurdering/revurderingActions';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
+import { useAppDispatch } from '~redux/Store';
 import { SimulertRevurdering, RevurderingTilAttestering, BeregnetAvslag } from '~types/Revurdering';
 
 import messages from '../revurdering-nb';
@@ -39,14 +39,16 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
     const [sendtTilAttesteringStatus, setSendtTilAttesteringStatus] = useState<
         RemoteData.RemoteData<ApiError, RevurderingTilAttestering>
     >(RemoteData.initial);
-
-    const { revurderingsVedtakStatus } = useAppSelector((state) => state.revurdering);
+    const [hentBrevStatus, setHentBrevStatus] = useState<RemoteData.RemoteData<ApiError | undefined, null>>(
+        RemoteData.initial
+    );
 
     const hentBrev = useCallback(
         (fritekst: Nullable<string>) => {
-            if (RemoteData.isPending(revurderingsVedtakStatus)) {
+            if (RemoteData.isPending(hentBrevStatus)) {
                 return;
             }
+            setHentBrevStatus(RemoteData.pending);
 
             dispatch(
                 revurderingSlice.fetchRevurderingsVedtak({
@@ -56,11 +58,14 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
                 })
             ).then((action) => {
                 if (revurderingSlice.fetchRevurderingsVedtak.fulfilled.match(action)) {
+                    setHentBrevStatus(RemoteData.success(null));
                     window.open(action.payload.objectUrl);
+                } else {
+                    setHentBrevStatus(RemoteData.failure(action.payload));
                 }
             });
         },
-        [props.sakId, revurderingsVedtakStatus]
+        [props.sakId, hentBrevStatus]
     );
 
     const formik = useFormik({
@@ -162,12 +167,15 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
                         <Knapp
                             onClick={() => hentBrev(formik.values.tekstTilVedtaksbrev)}
                             htmlType="button"
-                            spinner={RemoteData.isPending(revurderingsVedtakStatus)}
+                            spinner={RemoteData.isPending(hentBrevStatus)}
                         >
                             {intl.formatMessage({ id: 'knapp.seVedtaksbrev' })}
                         </Knapp>
-                        {RemoteData.isFailure(revurderingsVedtakStatus) && (
-                            <AlertStripeFeil>{revurderingsVedtakStatus.error.body?.message}</AlertStripeFeil>
+                        {RemoteData.isFailure(hentBrevStatus) && (
+                            <AlertStripeFeil>
+                                {hentBrevStatus?.error?.body?.message ||
+                                    intl.formatMessage({ id: 'oppsummering.ukjentFeil' })}
+                            </AlertStripeFeil>
                         )}
                     </div>
                 </div>
