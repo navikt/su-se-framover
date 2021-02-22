@@ -171,7 +171,7 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
     ];
 };
 
-export const mapToBeregningsInformasjon = (behandling: Behandling): Vilkårsinformasjon[] => {
+export const vilkårsinformasjonForBeregningssteg = (behandling: Behandling): Vilkårsinformasjon[] => {
     const { utledetSats } = behandling.behandlingsinformasjon;
 
     return [

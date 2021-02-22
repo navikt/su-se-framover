@@ -7,7 +7,7 @@ import {
     vilkårTittelFormatted,
     mapToVilkårsinformasjon,
     Vilkårsinformasjon,
-    mapToBeregningsInformasjon,
+    vilkårsinformasjonForBeregningssteg,
 } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -20,7 +20,7 @@ import styles from './framdriftsindikator.module.less';
 const Framdriftsindikator = (props: { sakId: string; behandling: Behandling; vilkår: Vilkårtype }) => {
     const { behandlingsinformasjon } = props.behandling;
     const vilkårrekkefølge = mapToVilkårsinformasjon(behandlingsinformasjon);
-    const beregningsrekkefølge = mapToBeregningsInformasjon(props.behandling);
+    const beregningsrekkefølge = vilkårsinformasjonForBeregningssteg(props.behandling);
     const intl = useI18n({ messages });
 
     return (
