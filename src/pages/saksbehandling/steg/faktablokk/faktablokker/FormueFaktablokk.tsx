@@ -4,7 +4,7 @@ import { Element } from 'nav-frontend-typografi';
 import React, { useMemo } from 'react';
 import { IntlShape } from 'react-intl';
 
-import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
+import { Vilkårsinformasjon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { formatCurrency } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import { Behandlingsinformasjon, FormueStatus } from '~types/Behandlingsinformasjon';
@@ -18,7 +18,7 @@ import Faktablokk, { Fakta, FaktaSpacing } from '../Faktablokk';
 
 import messages from './faktablokker-nb';
 import styles from './faktablokker.module.less';
-import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
+import { FaktablokkProps } from './faktablokkUtils';
 
 export const FormueFaktablokk = (props: FaktablokkProps) => {
     const intl = useI18n({ messages });
@@ -206,7 +206,12 @@ function formuelinje(f: { intl: IntlShape; harEktefelle: boolean; tittel: string
     };
 }
 
-export const FormueVilkårsblokk = (props: VilkårsblokkProps<'formue'>) => {
+export const FormueVilkårsblokk = (props: {
+    info: Vilkårsinformasjon;
+    søknadInnhold: SøknadInnhold;
+    formue: Behandlingsinformasjon['formue'];
+    ektefelle: Behandlingsinformasjon['ektefelle'];
+}) => {
     const intl = useI18n({
         messages: {
             ...messages,
@@ -214,17 +219,17 @@ export const FormueVilkårsblokk = (props: VilkårsblokkProps<'formue'>) => {
         },
     });
     const totalFormue = useMemo(() => {
-        if (!props.behandlingsinformasjon) {
+        if (!props.formue) {
             return 0;
         }
-        const søkersFormueFraSøknad = kalkulerFormue(props.behandlingsinformasjon.verdier);
+        const søkersFormueFraSøknad = kalkulerFormue(props.formue.verdier);
 
         if (props.søknadInnhold.ektefelle) {
-            return søkersFormueFraSøknad + kalkulerFormue(props.behandlingsinformasjon.epsVerdier);
+            return søkersFormueFraSøknad + kalkulerFormue(props.formue.epsVerdier);
         }
 
         return søkersFormueFraSøknad;
-    }, [props.behandlingsinformasjon?.verdier, props.behandlingsinformasjon?.epsVerdier]);
+    }, [props.formue?.verdier, props.formue?.epsVerdier]);
 
     const message = (s: keyof typeof messages) => intl.formatMessage({ id: s });
     const saksbehandlingMessage = (s: keyof typeof saksbehandlingMessages) => intl.formatMessage({ id: s });
@@ -235,7 +240,7 @@ export const FormueVilkårsblokk = (props: VilkårsblokkProps<'formue'>) => {
             status={props.info.status}
             søknadfaktablokk={<FormueFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
-                props.behandlingsinformasjon === null ? (
+                props.formue === null ? (
                     <AlertStripe type="info">{message('display.ikkeVurdert')}</AlertStripe>
                 ) : (
                     <div>
@@ -252,7 +257,7 @@ export const FormueVilkårsblokk = (props: VilkårsblokkProps<'formue'>) => {
                                             )}
                                         >
                                             <span className={styles.søker}>{message('formue.heading.søker')}</span>
-                                            {props.behandlingsinformasjon.borSøkerMedEPS && (
+                                            {props.formue.borSøkerMedEPS && (
                                                 <span className={classNames(styles.eps, styles.breakPls)}>
                                                     {message('formue.heading.eps')}
                                                 </span>
@@ -260,22 +265,35 @@ export const FormueVilkårsblokk = (props: VilkårsblokkProps<'formue'>) => {
                                         </div>
                                     ),
                                 },
-                                ...saksbehandlingfakta(props.behandlingsinformasjon, intl),
+                                ...saksbehandlingfakta(props.formue, intl),
                                 FaktaSpacing,
                                 {
                                     tittel: message('formue.totalt'),
                                     verdi: formatCurrency(intl, totalFormue),
                                 },
                                 FaktaSpacing,
+                                {
+                                    tittel: saksbehandlingMessage('input.label.borSøkerMedEktefelle'),
+                                    verdi: props.formue.borSøkerMedEPS ? 'Ja' : 'Nei',
+                                },
+                                ...(props.ektefelle
+                                    ? [
+                                          {
+                                              tittel: saksbehandlingMessage('input.label.ektefellesFødselsnummer'),
+                                              verdi: props.ektefelle?.fnr,
+                                          },
+                                      ]
+                                    : []),
+                                FaktaSpacing,
                             ]}
                         />
                         <div>
-                            {props.behandlingsinformasjon.status === FormueStatus.VilkårOppfylt ? (
+                            {props.formue.status === FormueStatus.VilkårOppfylt ? (
                                 <>
                                     <Element>{saksbehandlingMessage('display.vilkårOppfylt')}</Element>
                                     <p>{saksbehandlingMessage('display.vilkårOppfyltGrunn')}</p>
                                 </>
-                            ) : props.behandlingsinformasjon.status === FormueStatus.VilkårIkkeOppfylt ? (
+                            ) : props.formue.status === FormueStatus.VilkårIkkeOppfylt ? (
                                 <>
                                     <p>{saksbehandlingMessage('display.vilkårIkkeOppfylt')}</p>
                                     <p>{saksbehandlingMessage('display.vilkårIkkeOppfyltGrunn')}</p>

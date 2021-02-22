@@ -215,7 +215,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         }}
                     >
                         <div className={styles.ektefellePartnerSamboer}>
-                            <Element>Bor søker med en ektefelle eller samboer?</Element>
+                            <Element>{intl.formatMessage({ id: 'input.label.borSøkerMedEktefelle' })}</Element>
                             <RadioGruppe feil={formik.errors.borSøkerMedEPS}>
                                 <Radio
                                     label="Ja"
@@ -251,7 +251,9 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             </RadioGruppe>
                             {formik.values.borSøkerMedEPS && (
                                 <>
-                                    <Element>Ektefelle/samboers fødselsnummer</Element>
+                                    <Element>
+                                        {intl.formatMessage({ id: 'input.label.ektefellesFødselsnummer' })}
+                                    </Element>
                                     <div className={styles.fnrInput}>
                                         <Input
                                             name="epsFnr"
