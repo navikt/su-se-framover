@@ -19,6 +19,8 @@ export default {
     'input.label.pengerSkyldt': 'Skylder noen søker penger?',
     'input.label.kontanter': 'Kontanter over 1000',
     'input.label.depositumskonto': 'Depositumskonto',
+    'input.label.borSøkerMedEktefelle': 'Bor søker med en ektefelle eller samboer?',
+    'input.label.ektefellesFødselsnummer': 'Ektefelle/samboers fødselsnummer',
 
     'knapp.endreEktefellesFormue': 'Endre ektefelles formue',
     'knapp.endreSøkersFormue': 'Endre søkers formue',

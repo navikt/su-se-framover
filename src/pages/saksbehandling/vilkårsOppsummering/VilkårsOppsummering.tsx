@@ -124,7 +124,8 @@ const Vilkårsting = (props: {
                 <FormueVilkårsblokk
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
-                    behandlingsinformasjon={props.behandlingsinformasjon.formue}
+                    formue={props.behandlingsinformasjon.formue}
+                    ektefelle={props.behandlingsinformasjon.ektefelle}
                 />
             );
         case Vilkårtype.PersonligOppmøte:
