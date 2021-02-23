@@ -29,6 +29,13 @@ import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behan
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 
+import { Revurdering } from '../../../types/Revurdering';
+import {
+    erRevurderingTilAttestering,
+    erRevurderingIverksatt,
+    erRevurderingSimulert,
+    erRevurderingOpprettet,
+} from '../revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
 import messages from './sakintro-nb';
@@ -49,7 +56,6 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
     const intl = useI18n({ messages });
-
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {
             const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
@@ -73,6 +79,8 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
         return behandling && erIverksattAvslag(behandling);
     });
 
+    const revurderinger = props.sak.revurderinger;
+
     const revurderingToggle = useFeatureToggle(FeatureToggle.Revurdering);
 
     return (
@@ -86,7 +94,6 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         <Link
                             to={Routes.revurderValgtSak.createURL({
                                 sakId: props.sak.id,
-                                steg: RevurderingSteg.Periode,
                             })}
                             className={classNames('knapp', styles.headerKnapp)}
                         >
@@ -104,6 +111,9 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         behandlinger={props.sak.behandlinger}
                         intl={intl}
                     />
+                    {revurderingToggle && (
+                        <Revurderinger sakId={props.sak.id} revurderinger={revurderinger} intl={intl} />
+                    )}
                     <Utbetalinger
                         sakId={props.sak.id}
                         søker={props.søker}
@@ -218,6 +228,93 @@ const ÅpneSøknader = (props: {
                     );
                 })}
             </ol>
+        </div>
+    );
+};
+
+const Revurderinger = (props: { sakId: string; revurderinger: Revurdering[]; intl: IntlShape }) => {
+    if (props.revurderinger.length === 0) return null;
+
+    return (
+        <div className={styles.søknadsContainer}>
+            <Ingress className={styles.søknadsContainerTittel}>Revurderinger</Ingress>
+            <ol>
+                {props.revurderinger.map((r) => {
+                    return (
+                        <div key={r.id}>
+                            <Panel border className={styles.søknad}>
+                                <div className={styles.info}>
+                                    <div>
+                                        <Undertittel>Revurdering</Undertittel>
+                                        <div className={styles.dato}>
+                                            <Element>Opprettet: </Element>
+                                            <Normaltekst>{props.intl.formatDate(r.opprettet)}</Normaltekst>
+                                        </div>
+                                    </div>
+                                    <div className={styles.knapper}>
+                                        <p>{r.status}</p>
+                                        <RevurderingStartetKnapper sakId={props.sakId} r={r} intl={props.intl} />
+                                    </div>
+                                </div>
+                            </Panel>
+                        </div>
+                    );
+                })}
+            </ol>
+        </div>
+    );
+};
+
+const RevurderingStartetKnapper = (props: { r: Revurdering; sakId: string; intl: IntlShape }) => {
+    const user = useUserContext();
+    const { r } = props;
+
+    return (
+        <div className={styles.behandlingContainer}>
+            {erRevurderingTilAttestering(r) && (!user.isAttestant || user.navIdent === r.saksbehandler) && (
+                <div className={styles.ikonContainer}>
+                    <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
+                    <p>
+                        {props.intl.formatMessage({
+                            id: 'display.attestering.tilAttestering',
+                        })}
+                    </p>
+                </div>
+            )}
+
+            <div className={styles.knapper}>
+                {erRevurderingTilAttestering(r) && user.isAttestant && user.navIdent !== r.saksbehandler ? (
+                    <Link
+                        className="knapp knapp--mini"
+                        to={Routes.attesterRevurdering.createURL({
+                            sakId: props.sakId,
+                            revurderingId: r.id,
+                        })}
+                    >
+                        {props.intl.formatMessage({
+                            id: 'display.attestering.attester',
+                        })}
+                    </Link>
+                ) : (
+                    !erRevurderingTilAttestering(r) &&
+                    !erRevurderingIverksatt(r) && (
+                        <Link
+                            className="knapp knapp--mini"
+                            to={Routes.revurderValgtRevurdering.createURL({
+                                sakId: props.sakId,
+                                steg: erRevurderingSimulert(r)
+                                    ? RevurderingSteg.Oppsummering
+                                    : erRevurderingOpprettet(r)
+                                    ? RevurderingSteg.EndringAvFradrag
+                                    : RevurderingSteg.Periode,
+                                revurderingId: r.id,
+                            })}
+                        >
+                            Fortsett revurdering
+                        </Link>
+                    )
+                )}
+            </div>
         </div>
     );
 };
@@ -391,7 +488,7 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
                 {erTilAttestering(b) && user.isAttestant && user.navIdent !== b.saksbehandler ? (
                     <Link
                         className="knapp knapp--mini"
-                        to={Routes.attestering.createURL({
+                        to={Routes.attesterBehandling.createURL({
                             sakId: props.sakId,
                             behandlingId: b.id,
                         })}

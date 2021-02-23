@@ -1,33 +1,48 @@
 import { Behandling } from './Behandling';
 import { Beregning } from './Beregning';
+import { Periode } from './Fradrag';
 
-export interface Revurdering {
+export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
     id: string;
-    status: RevurderingsStatus;
+    status: T;
     opprettet: string;
+    periode: Periode<string>;
     tilRevurdering: Behandling;
-}
-export type OpprettetRevurdering = Revurdering;
-
-export interface TilAttesteringRevurdering extends Revurdering {
-    beregninger: {
-        beregning: Beregning;
-        revurdert: Beregning;
-    };
     saksbehandler: string;
 }
+interface Beregninger {
+    beregning: Beregning;
+    revurdert: Beregning;
+}
 
-export interface SimulertRevurdering extends Revurdering {
-    beregninger: {
-        beregning: Beregning;
-        revurdert: Beregning;
-    };
-    saksbehandler: string;
+export type OpprettetRevurdering = Revurdering<RevurderingsStatus.OPPRETTET>;
+
+export interface BeregnetInnvilget extends Revurdering<RevurderingsStatus.BEREGNET_INNVILGET> {
+    beregninger: Beregninger;
+}
+
+export interface BeregnetAvslag extends Revurdering<RevurderingsStatus.BEREGNET_AVSLAG> {
+    beregninger: Beregninger;
+}
+
+export interface SimulertRevurdering extends Revurdering<RevurderingsStatus.SIMULERT> {
+    beregninger: Beregninger;
+}
+
+export interface RevurderingTilAttestering extends Revurdering<RevurderingsStatus.TIL_ATTESTERING> {
+    beregninger: Beregninger;
+}
+
+export interface IverksattRevurdering extends Revurdering<RevurderingsStatus.IVERKSATT> {
+    beregninger: Beregninger;
+    attestant: string;
 }
 
 export enum RevurderingsStatus {
     OPPRETTET = 'OPPRETTET',
-    BEREGNET = 'BEREGNET',
+    BEREGNET_INNVILGET = 'BEREGNET_INNVILGET',
+    BEREGNET_AVSLAG = 'BEREGNET_AVSLAG',
     SIMULERT = 'SIMULERT',
     TIL_ATTESTERING = 'TIL_ATTESTERING',
+    IVERKSATT = 'IVERKSATT',
 }

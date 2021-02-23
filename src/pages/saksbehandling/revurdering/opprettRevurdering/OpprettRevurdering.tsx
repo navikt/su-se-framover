@@ -2,75 +2,79 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { Innholdstittel, Ingress, Feilmelding } from 'nav-frontend-typografi';
-import React, { useState } from 'react';
+import { Ingress, Innholdstittel, Feilmelding } from 'nav-frontend-typografi';
+import React, { useState, useMemo } from 'react';
 import DatePicker from 'react-datepicker';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
-import { oppdaterRevurderingsPeriode } from '~features/revurdering/revurderingActions';
+import { opprettRevurdering } from '~features/revurdering/revurderingActions';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { RevurderingSteg } from '~pages/saksbehandling/types';
+import { finnSisteUtbetalingsdato } from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Revurdering } from '~types/Revurdering';
+import { Sak } from '~types/Sak';
 
+import { RevurderingSteg } from '../../types';
 import messages from '../revurdering-nb';
 import sharedStyles from '../revurdering.module.less';
+import styles from '../valgAvPeriode/valgAvPeriode.module.less'; //TODO
 
-import styles from './valgAvPeriode.module.less';
-
-interface ValgAvPeriodeFormData {
+interface OpprettRevurderingFormData {
     fraOgMed: Nullable<Date>;
 }
 
-const schema = yup.object<ValgAvPeriodeFormData>({ fraOgMed: yup.date().nullable().required() });
+const schema = yup.object<OpprettRevurderingFormData>({
+    fraOgMed: yup.date().nullable().required(),
+});
 
-const ValgAvPeriode = (props: {
-    sakId: string;
-    revurdering: Revurdering;
-    førsteUtbetalingISak: Date;
-    sisteUtbetalingISak: Date;
-}) => {
-    const intl = useI18n({ messages });
+const OpprettRevurdering = (props: { sak: Sak }) => {
     const history = useHistory();
-    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
-    const oppdaterRevurderingsPeriodeStatus = useAppSelector((state) => state.sak.oppdaterRevurderingsPeriodeStatus);
+
     const dispatch = useAppDispatch();
 
-    const formik = useFormik<ValgAvPeriodeFormData>({
+    const intl = useI18n({ messages });
+    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+    const opprettRevurderingStatus = useAppSelector((state) => state.sak.opprettRevurderingStatus);
+
+    const handleOpprettRevurdering = async (fraOgMed: Date) => {
+        const response = await dispatch(
+            opprettRevurdering({
+                sakId: props.sak.id,
+                fraOgMed,
+            })
+        );
+
+        if (opprettRevurdering.fulfilled.match(response)) {
+            history.push(
+                Routes.revurderValgtRevurdering.createURL({
+                    sakId: props.sak.id,
+                    steg: RevurderingSteg.EndringAvFradrag,
+                    revurderingId: response.payload.id,
+                })
+            );
+        }
+    };
+
+    const formik = useFormik<OpprettRevurderingFormData>({
         initialValues: {
-            fraOgMed: new Date(props.revurdering.periode.fraOgMed),
+            fraOgMed: null,
         },
         async onSubmit({ fraOgMed }) {
             if (fraOgMed) {
-                const response = await dispatch(
-                    oppdaterRevurderingsPeriode({
-                        sakId: props.sakId,
-                        revurderingId: props.revurdering.id,
-                        fraOgMed,
-                    })
-                );
-                if (oppdaterRevurderingsPeriode.fulfilled.match(response)) {
-                    history.push(
-                        Routes.revurderValgtRevurdering.createURL({
-                            sakId: props.sakId,
-                            steg: RevurderingSteg.EndringAvFradrag,
-                            revurderingId: props.revurdering.id,
-                        })
-                    );
-                }
+                handleOpprettRevurdering(fraOgMed);
             }
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
     });
-    const periode = formik.values.fraOgMed
-        ? {
-              fraOgMed: formik.values.fraOgMed,
-          }
-        : null;
+
+    const periode = formik.values.fraOgMed ? { fraOgMed: formik.values.fraOgMed } : null;
+
+    const sisteUtbetalingsDato = useMemo<Date>(() => finnSisteUtbetalingsdato(props.sak.utbetalinger), [
+        props.sak.utbetalinger,
+    ]);
 
     return (
         <form
@@ -103,24 +107,24 @@ const ValgAvPeriode = (props: {
                                 isClearable
                                 selectsEnd
                                 startDate={periode?.fraOgMed}
-                                minDate={props.førsteUtbetalingISak}
-                                maxDate={props.sisteUtbetalingISak}
+                                minDate={new Date(props.sak.utbetalinger[0].fraOgMed)}
+                                maxDate={sisteUtbetalingsDato}
                                 autoComplete="off"
                             />
                             {formik.errors.fraOgMed && <Feilmelding>{formik.errors.fraOgMed}</Feilmelding>}
                         </div>
                     </div>
                 </div>
-                {hasSubmitted && RemoteData.isFailure(oppdaterRevurderingsPeriodeStatus) && (
+                {hasSubmitted && RemoteData.isFailure(opprettRevurderingStatus) && (
                     <AlertStripe type="feil" className={sharedStyles.alertstripe}>
-                        {oppdaterRevurderingsPeriodeStatus.error.body?.message}
+                        {opprettRevurderingStatus.error.body?.message}
                     </AlertStripe>
                 )}
                 <div className={sharedStyles.knappContainer}>
-                    <Link className="knapp" to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}>
+                    <Link className="knapp" to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
                         {intl.formatMessage({ id: 'knapp.avslutt' })}
                     </Link>
-                    <Hovedknapp spinner={RemoteData.isPending(oppdaterRevurderingsPeriodeStatus)}>
+                    <Hovedknapp spinner={RemoteData.isPending(opprettRevurderingStatus)}>
                         {intl.formatMessage({ id: 'knapp.neste' })}
                     </Hovedknapp>
                 </div>
@@ -129,4 +133,4 @@ const ValgAvPeriode = (props: {
     );
 };
 
-export default ValgAvPeriode;
+export default OpprettRevurdering;

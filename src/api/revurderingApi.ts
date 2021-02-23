@@ -1,21 +1,37 @@
 import { formatISO } from 'date-fns';
 
 import { Fradrag, Periode } from '~types/Fradrag';
-import { OpprettetRevurdering, SimulertRevurdering, TilAttesteringRevurdering } from '~types/Revurdering';
+import {
+    OpprettetRevurdering,
+    SimulertRevurdering,
+    RevurderingTilAttestering,
+    IverksattRevurdering,
+} from '~types/Revurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
 export async function opprettRevurdering(
     sakId: string,
-    periode: Periode
+    fraOgMed: Date
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/opprett`,
         method: 'POST',
         body: {
-            fraOgMed: formatISO(periode.fraOgMed, { representation: 'date' }),
-            tilOgMed: formatISO(periode.tilOgMed, { representation: 'date' }),
+            fraOgMed: formatISO(fraOgMed, { representation: 'date' }),
         },
+    });
+}
+
+export async function oppdaterRevurderingsPeriode(
+    sakId: string,
+    revurderingId: string,
+    fraOgMed: Date
+): Promise<ApiClientResult<OpprettetRevurdering>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/oppdaterPeriode`,
+        method: 'POST',
+        body: { fraOgMed: formatISO(fraOgMed, { representation: 'date' }) },
     });
 }
 
@@ -43,9 +59,16 @@ export async function beregnOgSimuler(
 export async function sendTilAttestering(
     sakId: string,
     revurderingId: string
-): Promise<ApiClientResult<TilAttesteringRevurdering>> {
+): Promise<ApiClientResult<RevurderingTilAttestering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilAttestering`,
+        method: 'POST',
+    });
+}
+
+export async function iverksett(sakId: string, revurderingId: string): Promise<ApiClientResult<IverksattRevurdering>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/iverksett`,
         method: 'POST',
     });
 }

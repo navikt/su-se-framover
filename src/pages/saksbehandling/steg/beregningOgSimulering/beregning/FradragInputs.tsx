@@ -162,6 +162,7 @@ export const FradragInputs = (props: {
     onFjernClick: (index: number) => void;
     onFradragChange: (index: number, value: FradragFormData) => void;
     beregningsDato: Nullable<{ fom: Date; tom: Date }>;
+    showDelerAvPeriode?: boolean;
 }) => {
     return (
         <div className={styles.fradragContainer}>
@@ -253,23 +254,25 @@ export const FradragInputs = (props: {
                                         props.onChange(e);
                                     }}
                                 />
-                                <Checkbox
-                                    label={props.intl.formatMessage({ id: 'fradrag.delerAvPeriode' })}
-                                    name={periode}
-                                    checked={visDelerAvPeriode}
-                                    onChange={(e) =>
-                                        props.onFradragChange(index, {
-                                            ...fradrag,
-                                            periode: e.target.checked
-                                                ? {
-                                                      fraOgMed: null,
-                                                      tilOgMed: null,
-                                                  }
-                                                : null,
-                                        })
-                                    }
-                                    className={styles.checkbox}
-                                />
+                                {props.showDelerAvPeriode && (
+                                    <Checkbox
+                                        label={props.intl.formatMessage({ id: 'fradrag.delerAvPeriode' })}
+                                        name={periode}
+                                        checked={visDelerAvPeriode}
+                                        onChange={(e) =>
+                                            props.onFradragChange(index, {
+                                                ...fradrag,
+                                                periode: e.target.checked
+                                                    ? {
+                                                          fraOgMed: null,
+                                                          tilOgMed: null,
+                                                      }
+                                                    : null,
+                                            })
+                                        }
+                                        className={styles.checkbox}
+                                    />
+                                )}
                             </div>
                             {fradrag.fraUtland && (
                                 <InntektFraUtland
@@ -295,7 +298,7 @@ export const FradragInputs = (props: {
                                     intl={props.intl}
                                 />
                             )}
-                            {visDelerAvPeriode && (
+                            {props.showDelerAvPeriode && (
                                 <div className={styles.periode}>
                                     <div className={styles.fraOgMed}>
                                         <Label htmlFor={periode} className={styles.label}>

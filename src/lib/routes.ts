@@ -100,12 +100,28 @@ export const saksbehandlingOppsummering: Route<{
         `/saksoversikt/${sakId}/${behandlingId}/${SaksbehandlingMenyvalg.Oppsummering}`,
 };
 
-export const attestering: Route<{ sakId: string; behandlingId: string }> = {
-    path: '/attestering/:sakId/:behandlingId/',
-    createURL: (args) => `/attestering/${args.sakId}/${args.behandlingId}`,
+export const revurderValgtSak: Route<{ sakId: string }> = {
+    path: `/saksoversikt/:sakId/revurder/`,
+    createURL: ({ sakId }) => `/saksoversikt/${sakId}/revurder`,
 };
 
-export const revurderValgtSak: Route<{ sakId: string; steg: RevurderingSteg }> = {
-    path: `/saksoversikt/:sakId/revurder/:RevurderingSteg/`,
-    createURL: ({ sakId, steg }) => `/saksoversikt/${sakId}/revurder/${steg}`,
+export const revurderValgtRevurdering: Route<{ sakId: string; steg: RevurderingSteg; revurderingId: string }> = {
+    path: `/saksoversikt/:sakId/revurdering/:revurderingId/:revurderingSteg/`,
+    createURL: ({ sakId, steg, revurderingId }) => `/saksoversikt/${sakId}/revurdering/${revurderingId}/${steg}`,
+};
+
+//---------------Attestering-------------------------
+export const attestering: Route<{ sakId: string }> = {
+    path: '/attestering/:sakId/',
+    createURL: (args) => `/attestering/${args.sakId}`,
+};
+
+export const attesterBehandling: Route<{ sakId: string; behandlingId: string }> = {
+    path: '/attestering/:sakId/behandling/:behandlingId/',
+    createURL: (args) => `/attestering/${args.sakId}/behandling/${args.behandlingId}`,
+};
+
+export const attesterRevurdering: Route<{ sakId: string; revurderingId: string }> = {
+    path: '/attestering/:sakId/revurdering/:revurderingId/',
+    createURL: (args) => `/attestering/${args.sakId}/revurdering/${args.revurderingId}`,
 };

@@ -8,6 +8,13 @@ import * as sakApi from '~api/sakApi';
 import * as søknadApi from '~api/søknadApi';
 import { LukkSøknadBodyTypes } from '~api/søknadApi';
 import * as utbetalingApi from '~api/utbetalingApi';
+import {
+    beregnOgSimuler,
+    iverksettRevurdering,
+    oppdaterRevurderingsPeriode,
+    opprettRevurdering,
+    sendRevurderingTilAttestering,
+} from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
@@ -227,6 +234,9 @@ interface SakState {
     lastNedBrevStatus: RemoteData.RemoteData<ApiError, null>;
     søknadLukketStatus: RemoteData.RemoteData<ApiError, null>;
     lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
+    opprettRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
+    oppdaterRevurderingsPeriodeStatus: RemoteData.RemoteData<ApiError, null>;
+    beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: SakState = {
@@ -242,6 +252,9 @@ const initialState: SakState = {
     lastNedBrevStatus: RemoteData.initial,
     søknadLukketStatus: RemoteData.initial,
     lukketSøknadBrevutkastStatus: RemoteData.initial,
+    opprettRevurderingStatus: RemoteData.initial,
+    oppdaterRevurderingsPeriodeStatus: RemoteData.initial,
+    beregnOgSimulerStatus: RemoteData.initial,
 };
 
 export default createSlice({
@@ -487,6 +500,87 @@ export default createSlice({
             rejected: (state, action) => {
                 state.lukketSøknadBrevutkastStatus = simpleRejectedActionToRemoteData(action);
             },
+        });
+
+        handleAsyncThunk(builder, opprettRevurdering, {
+            pending: (state) => {
+                state.opprettRevurderingStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.opprettRevurderingStatus = RemoteData.success(null);
+
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        revurderinger: [...sak.revurderinger, action.payload],
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.opprettRevurderingStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, oppdaterRevurderingsPeriode, {
+            pending: (state) => {
+                state.oppdaterRevurderingsPeriodeStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.oppdaterRevurderingsPeriodeStatus = RemoteData.success(null);
+
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.oppdaterRevurderingsPeriodeStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, beregnOgSimuler, {
+            pending: (state) => {
+                state.beregnOgSimulerStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.beregnOgSimulerStatus = RemoteData.success(null);
+
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.beregnOgSimulerStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        // TODO ai: Se på om vi kan baka dessa 2 till 1.
+        builder.addCase(sendRevurderingTilAttestering.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                }))
+            );
+        });
+
+        builder.addCase(iverksettRevurdering.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                }))
+            );
         });
     },
 });

@@ -15,6 +15,8 @@ export default {
     'oppsummering.tekstTilVedtaksbrev.placeholder': 'Skriv inn innholdstekst i tekstfeltet her.',
     'oppsummering.tilSaksoversikt': 'Til saksoversikt',
     'oppsummering.sendtTilAttestering': 'Revurdering er sendt til attestering',
+    'oppsummering.størreEllerLik10Prosent': 'Revurderingen er ikke større eller lik 10 prosent endring',
+    'oppsummering.ukjentFeil': 'Ukjent feil',
 
     'revurdering.tittel': 'Revurdering',
     'revurdering.noeGikkGalt': 'Noe gikk galt. Gå tilbake og prøv igjen',
