@@ -14,6 +14,26 @@ import setupProxy from './proxy';
 import routes from './routes';
 import setupSession from './session';
 
+const hotjarCsp = {
+    imgSrc: ['http://*.hotjar.com', 'https://*.hotjar.com', 'http://*.hotjar.io', 'https://*.hotjar.io'],
+    scriptSrc: [
+        'http://*.hotjar.com',
+        'https://*.hotjar.com',
+        'http://*.hotjar.io',
+        'https://*.hotjar.io',
+        "'unsafe-inline'",
+    ],
+    connectSrc: [
+        'http://*.hotjar.com:*',
+        'https://*.hotjar.com:*',
+        'http://*.hotjar.io',
+        'https://*.hotjar.io',
+        'wss://*.hotjar.com',
+    ],
+    frameSrc: ['https://*.hotjar.com', 'http://*.hotjar.io', 'https://*.hotjar.io'],
+    fontSrc: ['http://*.hotjar.com', 'https://*.hotjar.com', 'http://*.hotjar.io', 'https://*.hotjar.io'],
+};
+
 export default async function startServer() {
     const app = express();
     logger.info(`Using log level: ${Config.server.logLevel}`);
@@ -44,10 +64,12 @@ export default async function startServer() {
                 ? {
                       directives: {
                           defaultSrc: ["'self'", 'data:'],
+                          imgSrc: ["'self'", ...hotjarCsp.imgSrc],
                           scriptSrc: [
                               "'self'",
                               (_req: IncomingMessage, res: ServerResponse) =>
                                   `'nonce-${((res as unknown) as { locals: { cspNonce: string } }).locals.cspNonce}'`,
+                              ...hotjarCsp.scriptSrc,
                           ],
                           styleSrc: ["'self'", 'fonts.googleapis.com', 'data: ', "'unsafe-inline'"],
                           connectSrc: [
@@ -55,8 +77,10 @@ export default async function startServer() {
                               'su-se-bakover.dev.adeo.no',
                               'su-se-bakover.nais.adeo.no',
                               'amplitude.nav.no',
+                              ...hotjarCsp.connectSrc,
                           ],
-                          fontSrc: ["'self'", 'fonts.gstatic.com', 'data:'],
+                          frameSrc: [...hotjarCsp.frameSrc],
+                          fontSrc: ["'self'", 'fonts.gstatic.com', 'data:', ...hotjarCsp.fontSrc],
                       },
                   }
                 : false,

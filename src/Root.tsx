@@ -10,6 +10,7 @@ import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-route
 import { ErrorCode } from '~/api/apiClient';
 import Config from '~/config';
 import { UserProvider } from '~context/userContext';
+import enableHotjar from '~lib/tracking/hotjar';
 import Attestering from '~pages/attestering/Attestering';
 import HomePage from '~pages/HomePage';
 import Saksoversikt from '~pages/saksbehandling/Saksoversikt';
@@ -39,6 +40,10 @@ const ScrollToTop = () => {
 };
 
 const Root = () => {
+    useEffect(() => {
+        enableHotjar();
+    }, []);
+
     return (
         <Provider store={Store}>
             <ErrorBoundary>
