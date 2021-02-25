@@ -3,6 +3,7 @@ import apiClient, { ApiClientResult } from './apiClient';
 export enum FeatureToggle {
     Hendelseslogg = 'supstonad.hendelseslogg',
     Revurdering = 'supstonad.ufore.revurdering',
+    Hotjar = 'supstonad.ufore.hotjar',
 }
 
 export type FeatureToggles = {
