@@ -119,7 +119,6 @@ export enum PersonligOppmøteStatus {
 }
 
 export interface Bosituasjon {
-    epsAlder: Nullable<number>;
     delerBolig: Nullable<boolean>;
     ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
     begrunnelse: Nullable<string>;
