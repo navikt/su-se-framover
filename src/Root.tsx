@@ -9,7 +9,9 @@ import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-route
 
 import { ErrorCode } from '~/api/apiClient';
 import Config from '~/config';
+import { FeatureToggle } from '~api/featureToggleApi';
 import { UserProvider } from '~context/userContext';
+import enableHotjar from '~lib/tracking/hotjar';
 import Attestering from '~pages/attestering/Attestering';
 import HomePage from '~pages/HomePage';
 import Saksoversikt from '~pages/saksbehandling/Saksoversikt';
@@ -18,7 +20,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Header from './components/header/Header';
 import WithDocTitle from './components/WithDocTitle';
 import * as meSlice from './features/me/me.slice';
-import { FeatureToggleProvider } from './lib/featureToggles';
+import { FeatureToggleProvider, useFeatureToggle } from './lib/featureToggles';
 import { pipe } from './lib/fp';
 import * as routes from './lib/routes';
 import Soknad from './pages/søknad';
@@ -83,6 +85,11 @@ const ContentWrapper: React.FC = (props) => {
             dispatch(meSlice.fetchMe());
         }
     }, [loggedInUser._tag]);
+
+    const hotjarToggle = useFeatureToggle(FeatureToggle.Hotjar);
+    useEffect(() => {
+        hotjarToggle && enableHotjar();
+    }, [hotjarToggle]);
 
     return (
         <div>
