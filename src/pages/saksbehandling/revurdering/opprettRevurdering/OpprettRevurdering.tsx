@@ -72,7 +72,7 @@ const OpprettRevurdering = (props: { sak: Sak }) => {
 
     const periode = formik.values.fraOgMed ? { fraOgMed: formik.values.fraOgMed } : null;
 
-    const sortertUtbetalingsperioder = props.sak.utbetalinger.sort(compareUtbetalingsperiode);
+    const sortertUtbetalingsperioder = [...props.sak.utbetalinger].sort(compareUtbetalingsperiode);
     const sisteUtbetalingsDato = new Date(sortertUtbetalingsperioder[sortertUtbetalingsperioder.length - 1].tilOgMed);
 
     return (

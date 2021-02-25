@@ -51,7 +51,7 @@ export const Utbetalinger = (props: {
 
     const kanGjenopptas = kanStansesEllerGjenopptas === KanStansesEllerGjenopptas.GJENOPPTA;
 
-    const sortertUtbetalingsperioder = props.utbetalingsperioder.sort(compareUtbetalingsperiode);
+    const sortertUtbetalingsperioder = [...props.utbetalingsperioder].sort(compareUtbetalingsperiode);
     const sisteUtbetalingsDato = new Date(sortertUtbetalingsperioder[sortertUtbetalingsperioder.length - 1].tilOgMed);
 
     return (
