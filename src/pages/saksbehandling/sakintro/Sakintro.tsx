@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import classNames from 'classnames';
+import { isEmpty } from 'fp-ts/lib/Array';
 import AlertStripe from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
@@ -80,8 +81,9 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
     });
 
     const revurderinger = props.sak.revurderinger;
+    const kanRevurderes = !isEmpty(props.sak.utbetalinger);
 
-    const revurderingToggle = useFeatureToggle(FeatureToggle.Revurdering) || true;
+    const revurderingToggle = useFeatureToggle(FeatureToggle.Revurdering) && kanRevurderes;
 
     return (
         <div className={styles.sakintroContainer}>
