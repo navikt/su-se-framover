@@ -81,7 +81,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
 
     const revurderinger = props.sak.revurderinger;
 
-    const revurderingToggle = useFeatureToggle(FeatureToggle.Revurdering);
+    const revurderingToggle = useFeatureToggle(FeatureToggle.Revurdering) || true;
 
     return (
         <div className={styles.sakintroContainer}>
