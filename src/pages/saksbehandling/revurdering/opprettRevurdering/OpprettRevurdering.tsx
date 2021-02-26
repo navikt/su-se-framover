@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { Ingress, Innholdstittel, Feilmelding } from 'nav-frontend-typografi';
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { useHistory, Link } from 'react-router-dom';
 
@@ -12,7 +12,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { finnSisteUtbetalingsdato } from '~pages/saksbehandling/sakintro/Utbetalinger';
+import { compareUtbetalingsperiode } from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Sak } from '~types/Sak';
 
@@ -72,9 +72,8 @@ const OpprettRevurdering = (props: { sak: Sak }) => {
 
     const periode = formik.values.fraOgMed ? { fraOgMed: formik.values.fraOgMed } : null;
 
-    const sisteUtbetalingsDato = useMemo<Date>(() => finnSisteUtbetalingsdato(props.sak.utbetalinger), [
-        props.sak.utbetalinger,
-    ]);
+    const sortertUtbetalingsperioder = [...props.sak.utbetalinger].sort(compareUtbetalingsperiode);
+    const sisteUtbetalingsDato = new Date(sortertUtbetalingsperioder[sortertUtbetalingsperioder.length - 1].tilOgMed);
 
     return (
         <form

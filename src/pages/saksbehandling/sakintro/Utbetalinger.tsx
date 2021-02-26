@@ -6,7 +6,7 @@ import { Fareknapp, Flatknapp, Knapp } from 'nav-frontend-knapper';
 import ModalWrapper from 'nav-frontend-modal';
 import Panel from 'nav-frontend-paneler';
 import { Element, Undertittel } from 'nav-frontend-typografi';
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 
 import { Person } from '~api/personApi';
@@ -21,19 +21,8 @@ import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
 import messages from './utbetalinger-nb';
 import styles from './utbetalinger.module.less';
 
-const sorterUtbetalingsperioder = (
-    utbetalingsperioder: Utbetalingsperiode[],
-    sortFn: (dateLeft: number | Date, dateRight: number | Date) => number
-): Date[] => {
-    return utbetalingsperioder.map((u) => new Date(u.tilOgMed)).sort(sortFn);
-};
-export const finnSisteUtbetalingsdato = (utbetalingsperioder: Utbetalingsperiode[]) => {
-    return sorterUtbetalingsperioder(utbetalingsperioder, DateFns.compareDesc)[0];
-};
-
-export const finnFørsteUtbetalingsdato = (utbetalingsperioder: Utbetalingsperiode[]) => {
-    return sorterUtbetalingsperioder(utbetalingsperioder, DateFns.compareAsc)[0];
-};
+export const compareUtbetalingsperiode = (u1: Utbetalingsperiode, u2: Utbetalingsperiode) =>
+    DateFns.compareAsc(new Date(u1.fraOgMed), new Date(u2.fraOgMed));
 
 export const Utbetalinger = (props: {
     søker: Person;
@@ -62,9 +51,8 @@ export const Utbetalinger = (props: {
 
     const kanGjenopptas = kanStansesEllerGjenopptas === KanStansesEllerGjenopptas.GJENOPPTA;
 
-    const sisteUtbetalingsDato = useMemo<Date>(() => finnSisteUtbetalingsdato(utbetalingsperioder), [
-        utbetalingsperioder,
-    ]);
+    const sortertUtbetalingsperioder = [...props.utbetalingsperioder].sort(compareUtbetalingsperiode);
+    const sisteUtbetalingsDato = new Date(sortertUtbetalingsperioder[sortertUtbetalingsperioder.length - 1].tilOgMed);
 
     return (
         <div className={styles.utbetalingContainer}>

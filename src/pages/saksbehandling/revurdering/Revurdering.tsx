@@ -1,12 +1,12 @@
 import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
 
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 
-import { finnFørsteUtbetalingsdato, finnSisteUtbetalingsdato } from '../sakintro/Utbetalinger';
+import { compareUtbetalingsperiode } from '../sakintro/Utbetalinger';
 import { RevurderingSteg } from '../types';
 
 import EndringAvFradrag from './endringAvFradrag/EndringAvFradrag';
@@ -59,12 +59,11 @@ const Revurdering = (props: { sak: Sak }) => {
         );
     }
 
-    const sisteUtbetalingsDato = useMemo<Date>(() => finnSisteUtbetalingsdato(props.sak.utbetalinger), [
-        props.sak.utbetalinger,
-    ]);
-    const førsteUtbetalingsDato = useMemo<Date>(() => finnFørsteUtbetalingsdato(props.sak.utbetalinger), [
-        props.sak.utbetalinger,
-    ]);
+    const sortertUtbetalinger = [...props.sak.utbetalinger].sort(compareUtbetalingsperiode);
+    const [førsteUtbetaling, sisteUtbetaling] = [
+        sortertUtbetalinger[0],
+        sortertUtbetalinger[sortertUtbetalinger.length - 1],
+    ];
 
     return (
         <div className={styles.pageContainer}>
@@ -79,8 +78,8 @@ const Revurdering = (props: { sak: Sak }) => {
                     <ValgAvPeriode
                         sakId={props.sak.id}
                         revurdering={påbegyntRevurdering}
-                        førsteUtbetalingISak={førsteUtbetalingsDato}
-                        sisteUtbetalingISak={sisteUtbetalingsDato}
+                        førsteUtbetalingISak={new Date(førsteUtbetaling.fraOgMed)}
+                        sisteUtbetalingISak={new Date(sisteUtbetaling.tilOgMed)}
                     />
                 </Route>
                 <Route path={createRevurderingsPath(RevurderingSteg.EndringAvFradrag)}>
