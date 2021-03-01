@@ -1,15 +1,58 @@
 @import '~/styles/variables.less';
 
-.successknapper {
+.pageContainer {
     display: flex;
-    justify-content: center;
-}
-.search {
-    padding-top: @spacing;
+    flex-direction: column;
+    align-self: center;
+    margin-bottom: @spacing-xxl;
+    width: 35%;
+
+    .tittel {
+        margin-top: @spacing-xl;
+    }
+
+    .section {
+        margin-top: @spacing;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .paragraphSpacing {
+        margin-top: @spacing-xs;
+    }
+
+    .list {
+        .listItem {
+            display: list-item;
+            list-style-type: disc;
+            margin-left: @spacing;
+        }
+    }
+
+    .checkboksPanelContainer {
+        margin-top: @spacing;
+    }
+
+    .searchContainer {
+        margin-top: @spacing;
+
+        .finnSøkerTekst {
+            margin-top: @spacing-xxs;
+        }
+
+        .searchboxContainer {
+            margin-top: @spacing-s;
+        }
+    }
 }
 
-.tittel {
+.knapperContainer {
+    margin-top: @spacing-xl;
     display: flex;
     justify-content: center;
-    margin-top: @spacing-xl;
+
+    > :not(:last-child) {
+        margin-right: @spacing;
+    }
 }
