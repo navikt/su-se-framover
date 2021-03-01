@@ -112,7 +112,7 @@
         "nav-frontend-typografi": "^2.0.37",
         "nav-frontend-typografi-style": "^1.0.34",
         "postcss-import": "^14.0.0",
-        "postcss-less": "^4.0.0",
+        "postcss-less": "^4.0.1",
         "postcss-modules": "^3.2.2",
         "prop-types": "^15.7.2",
         "query-string": "^6.13.7",
