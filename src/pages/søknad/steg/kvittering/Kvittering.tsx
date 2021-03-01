@@ -52,7 +52,7 @@ const Kvittering = () => {
                                         onClick={() => {
                                             dispatch(personSlice.default.actions.resetSøker());
                                             dispatch(søknadslice.default.actions.resetSøknad());
-                                            history.push(Routes.soknad.createURL({}));
+                                            history.push(Routes.soknad.createURL());
                                         }}
                                     >
                                         {intl.formatMessage({ id: 'kvittering.avslutt' })}
@@ -96,7 +96,7 @@ const Kvittering = () => {
                                         onClick={() => {
                                             dispatch(personSlice.default.actions.resetSøker());
                                             dispatch(søknadslice.default.actions.resetSøknad());
-                                            history.push(Routes.soknad.createURL({}));
+                                            history.push(Routes.soknadPersonSøk.createURL({}));
                                         }}
                                     >
                                         {intl.formatMessage({ id: 'kvittering.avslutt' })}

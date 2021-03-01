@@ -72,14 +72,14 @@ const Steg = (props: {
 const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person, erSaksbehandler: boolean) => {
     const avbrytUrl =
         søknad.forVeileder.type === Søknadstype.Papirsøknad && erSaksbehandler
-            ? routes.soknad.createURL({ papirsøknad: true })
-            : routes.soknad.createURL({});
+            ? routes.soknadPersonSøk.createURL({ papirsøknad: true })
+            : routes.soknadPersonSøk.createURL({});
 
     switch (step) {
         case Søknadsteg.Uførevedtak:
             return (
                 <Uførevedtak
-                    forrigeUrl={routes.soknad.createURL({})}
+                    forrigeUrl={avbrytUrl}
                     nesteUrl={routes.soknadsutfylling.createURL({
                         step: Søknadsteg.FlyktningstatusOppholdstillatelse,
                     })}
@@ -270,7 +270,7 @@ const StartUtfylling = () => {
             <Feilmelding className={styles.feilmeldingTekst}>
                 {intl.formatMessage({ id: 'feilmelding.tekst' })}
             </Feilmelding>
-            <Link to={routes.soknad.createURL({})} className="knapp">
+            <Link to={routes.soknadPersonSøk.createURL({})} className="knapp">
                 {intl.formatMessage({ id: 'feilmelding.knapp' })}
             </Link>
         </div>
@@ -346,16 +346,18 @@ const index = () => {
     return (
         <Switch>
             <Route exact={true} path={routes.soknad.path}>
+                <Infoside
+                    nesteUrl={routes.soknadPersonSøk.createURL({ papirsøknad: isPapirsøknad ? true : undefined })}
+                />
+            </Route>
+            <Route exact={true} path={routes.soknadPersonSøk.path}>
                 <Inngang
                     nesteUrl={
                         isPapirsøknad
                             ? routes.soknadsutfylling.createURL({ step: Søknadsteg.Uførevedtak, papirsøknad: true })
-                            : routes.soknadsInfo.createURL()
+                            : routes.soknadsutfylling.createURL({ step: Søknadsteg.Uførevedtak })
                     }
                 />
-            </Route>
-            <Route exact={true} path={routes.soknadsInfo.path}>
-                <Infoside nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Uførevedtak })} />
             </Route>
             <Route exact={true} path={routes.soknadsutfylling.path}>
                 <StartUtfylling />

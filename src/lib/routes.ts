@@ -21,14 +21,14 @@ export const home: Route<never> = {
     createURL: () => '/',
 };
 
-export const soknad: Route<{ papirsøknad?: boolean }> = {
-    path: '/soknad',
-    createURL: (args) => '/soknad' + (args.papirsøknad ? '?papirsoknad=true' : ''),
+export const soknad: Route<never> = {
+    path: '/soknad/',
+    createURL: () => '/soknad/',
 };
 
-export const soknadsInfo: Route<never> = {
-    path: '/soknad/informasjon-om-su/',
-    createURL: () => '/soknad/informasjon-om-su/',
+export const soknadPersonSøk: Route<{ papirsøknad?: boolean }> = {
+    path: '/soknad/personsok',
+    createURL: (args) => '/soknad/personsok' + (args.papirsøknad ? '?papirsoknad=true' : ''),
 };
 
 export const soknadsutfylling: Route<{ step: Søknadsteg; papirsøknad?: boolean }> = {
