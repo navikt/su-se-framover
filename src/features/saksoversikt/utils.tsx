@@ -171,33 +171,24 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
     ];
 };
 
-export const vilkårsinformasjonForBeregningssteg = (behandling: Behandling): Vilkårsinformasjon[] => {
-    const { utledetSats } = behandling.behandlingsinformasjon;
-
+export const vilkårsinformasjonForBeregningssteg = (b: Behandling): Vilkårsinformasjon[] => {
     return [
         {
-            status:
-                utledetSats === null
-                    ? VilkårVurderingStatus.IkkeVurdert
-                    : //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
-                    behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG
-                    ? VilkårVurderingStatus.IkkeVurdert
-                    : VilkårVurderingStatus.Ok,
+            status: getSatsStatus(b),
             vilkårtype: Vilkårtype.Sats,
             begrunnelse: null,
-            //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
-            erStartet: behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ? false : utledetSats !== null,
+            erStartet: erSatsStartet(b),
         },
         {
             status:
-                behandling.beregning === null
+                b.beregning === null
                     ? VilkårVurderingStatus.IkkeVurdert
-                    : behandling.status === Behandlingsstatus.BEREGNET_AVSLAG
+                    : b.status === Behandlingsstatus.BEREGNET_AVSLAG
                     ? VilkårVurderingStatus.IkkeOk
                     : VilkårVurderingStatus.Ok,
             vilkårtype: Vilkårtype.Beregning,
             begrunnelse: null,
-            erStartet: behandling.beregning !== null,
+            erStartet: b.beregning !== null,
         },
     ];
 };
@@ -220,3 +211,52 @@ function statusForPersonligOppmøte(personligOppmøte: Nullable<PersonligOppmøt
             return VilkårVurderingStatus.Uavklart;
     }
 }
+
+const getSatsStatus = (b: Behandling) => {
+    //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
+    if (b.status === Behandlingsstatus.OPPRETTET || b.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+        return VilkårVurderingStatus.IkkeVurdert;
+    }
+    if (
+        b.behandlingsinformasjon.ektefelle &&
+        b.behandlingsinformasjon.bosituasjon &&
+        b.behandlingsinformasjon.bosituasjon.ektemakeEllerSamboerUførFlyktning !== null
+    ) {
+        return VilkårVurderingStatus.Ok;
+    }
+
+    if (
+        b.behandlingsinformasjon.ektefelle == null &&
+        b.behandlingsinformasjon.bosituasjon &&
+        b.behandlingsinformasjon.bosituasjon.delerBolig !== null
+    ) {
+        return VilkårVurderingStatus.Ok;
+    }
+
+    return VilkårVurderingStatus.IkkeVurdert;
+};
+
+const erSatsStartet = (b: Behandling) => {
+    //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
+    if (b.status === Behandlingsstatus.OPPRETTET || b.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+        return false;
+    }
+
+    if (
+        b.behandlingsinformasjon.ektefelle &&
+        b.behandlingsinformasjon.bosituasjon &&
+        b.behandlingsinformasjon.bosituasjon.ektemakeEllerSamboerUførFlyktning !== null
+    ) {
+        return true;
+    }
+
+    if (
+        b.behandlingsinformasjon.ektefelle == null &&
+        b.behandlingsinformasjon.bosituasjon &&
+        b.behandlingsinformasjon.bosituasjon.delerBolig !== null
+    ) {
+        return true;
+    }
+
+    return false;
+};

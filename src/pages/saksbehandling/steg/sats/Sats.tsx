@@ -41,7 +41,6 @@ const toBosituasjon = (values: FormData, eps: Nullable<Person>): Nullable<Bositu
     }
 
     return {
-        epsAlder: eps?.alder ?? null, // TODO: Denne burde bruke ektefelle, og ikke lagre alder her, men krever en opprydding i Behandlingsinformasjon i backend
         delerBolig: values.delerSøkerBolig,
         ektemakeEllerSamboerUførFlyktning: values.mottarEktemakeEllerSamboerSU,
         begrunnelse: values.begrunnelse,

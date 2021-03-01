@@ -84,6 +84,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const eksisterendeBosituasjon = props.behandling.behandlingsinformasjon.bosituasjon;
 
     const handleSave = async (values: FormData, nesteUrl: string) => {
         if (RemoteData.isPending(eps) && values.epsFnr !== null) return;
@@ -107,10 +108,9 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             fnr: values.epsFnr,
         };
 
-        if (
-            eqFormue.equals(formueValues, props.behandling.behandlingsinformasjon.formue) &&
-            eqEktefelle.equals(ektefelle, props.behandling.behandlingsinformasjon.ektefelle)
-        ) {
+        const erEktefelleUendret = eqEktefelle.equals(ektefelle, props.behandling.behandlingsinformasjon.ektefelle);
+
+        if (eqFormue.equals(formueValues, props.behandling.behandlingsinformasjon.formue) && erEktefelleUendret) {
             history.push(nesteUrl);
             return;
         }
@@ -135,6 +135,16 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                               fnr: values.epsFnr!,
                           },
+                    //Det skal kreves ny registerering av sats når EPS endres. Enten ved ny Fnr, eller fjerner/legger til EPS.
+                    //Denne sørger for at vi nuller ut sats steget hvis det er gjort en endring, og vi har en eksisterende bosituasjon
+                    bosituasjon:
+                        !erEktefelleUendret && eksisterendeBosituasjon
+                            ? {
+                                  ...eksisterendeBosituasjon,
+                                  delerBolig: null,
+                                  ektemakeEllerSamboerUførFlyktning: null,
+                              }
+                            : eksisterendeBosituasjon,
                 },
             })
         );
