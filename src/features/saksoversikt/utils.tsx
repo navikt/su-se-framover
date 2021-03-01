@@ -214,13 +214,11 @@ function statusForPersonligOppmøte(personligOppmøte: Nullable<PersonligOppmøt
 
 const getSatsStatus = (b: Behandling) => {
     //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
-
     if (b.status === Behandlingsstatus.OPPRETTET || b.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
         return VilkårVurderingStatus.IkkeVurdert;
     }
     if (
-        b.behandlingsinformasjon.formue &&
-        b.behandlingsinformasjon.formue.borSøkerMedEPS &&
+        b.behandlingsinformasjon.ektefelle &&
         b.behandlingsinformasjon.bosituasjon &&
         b.behandlingsinformasjon.bosituasjon.ektemakeEllerSamboerUførFlyktning !== null
     ) {
@@ -228,8 +226,7 @@ const getSatsStatus = (b: Behandling) => {
     }
 
     if (
-        b.behandlingsinformasjon.formue &&
-        b.behandlingsinformasjon.formue.borSøkerMedEPS === false &&
+        b.behandlingsinformasjon.ektefelle == null &&
         b.behandlingsinformasjon.bosituasjon &&
         b.behandlingsinformasjon.bosituasjon.delerBolig !== null
     ) {
@@ -241,14 +238,12 @@ const getSatsStatus = (b: Behandling) => {
 
 const erSatsStartet = (b: Behandling) => {
     //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
-
     if (b.status === Behandlingsstatus.OPPRETTET || b.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
         return false;
     }
 
     if (
-        b.behandlingsinformasjon.formue &&
-        b.behandlingsinformasjon.formue.borSøkerMedEPS &&
+        b.behandlingsinformasjon.ektefelle &&
         b.behandlingsinformasjon.bosituasjon &&
         b.behandlingsinformasjon.bosituasjon.ektemakeEllerSamboerUførFlyktning !== null
     ) {
@@ -256,8 +251,7 @@ const erSatsStartet = (b: Behandling) => {
     }
 
     if (
-        b.behandlingsinformasjon.formue &&
-        b.behandlingsinformasjon.formue.borSøkerMedEPS === false &&
+        b.behandlingsinformasjon.ektefelle == null &&
         b.behandlingsinformasjon.bosituasjon &&
         b.behandlingsinformasjon.bosituasjon.delerBolig !== null
     ) {
