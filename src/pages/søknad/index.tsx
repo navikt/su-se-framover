@@ -72,7 +72,7 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person, erSa
     const avbrytUrl =
         søknad.forVeileder.type === Søknadstype.Papirsøknad && erSaksbehandler
             ? routes.soknadPersonSøk.createURL({ papirsøknad: true })
-            : routes.soknadPersonSøk.createURL({});
+            : routes.soknad.createURL();
 
     switch (step) {
         case Søknadsteg.Uførevedtak:
