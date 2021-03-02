@@ -11,6 +11,8 @@ export default {
     'steg.forVeileder': 'For veileder',
     'steg.informasjonOmPapirsøknad': 'Informasjon om søknaden',
     'steg.oppsummering': 'Oppsummering',
+    'steg.oppsummering.hjelpetekst':
+        'Les gjennom oppsummeringen før du sender inn søknaden. Hvis du trenger å gjøre endringer, kan du gjøre det ved å klikke på lenken under hver del.',
     'steg.neste': 'Neste',
     'steg.forrige': 'Forrige',
     'feilmelding.tekst': 'En feil oppstod',

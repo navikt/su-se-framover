@@ -46,6 +46,7 @@ const Steg = (props: {
     søker: Person;
     intl: IntlShape;
     erSaksbehandler: boolean;
+    hjelpetekst: string | undefined;
 }) => {
     const sectionRef = React.useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -60,9 +61,7 @@ const Steg = (props: {
                 <Undertittel tag="h3" id="steg-heading">
                     {props.title}
                 </Undertittel>
-                {(props.step === Søknadsteg.DinInntekt || props.step === Søknadsteg.EktefellesInntekt) && (
-                    <p>{props.intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' })}</p>
-                )}
+                {props.hjelpetekst}
             </div>
             {showSteg(props.step, props.søknad, props.søker, props.erSaksbehandler)}
         </section>
@@ -234,6 +233,7 @@ const StartUtfylling = () => {
         {
             label: intl.formatMessage({ id: 'steg.inntekt' }),
             step: Søknadsteg.DinInntekt,
+            hjelpetekst: intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' }),
         },
         {
             label: intl.formatMessage({ id: 'steg.ektefellesFormue' }),
@@ -244,6 +244,7 @@ const StartUtfylling = () => {
             label: intl.formatMessage({ id: 'steg.ektefellesInntekt' }),
             step: Søknadsteg.EktefellesInntekt,
             onlyIf: søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
+            hjelpetekst: intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' }),
         },
         {
             label: intl.formatMessage({ id: 'steg.utenlandsopphold' }),
@@ -261,6 +262,7 @@ const StartUtfylling = () => {
         {
             label: intl.formatMessage({ id: 'steg.oppsummering' }),
             step: Søknadsteg.Oppsummering,
+            hjelpetekst: intl.formatMessage({ id: 'steg.oppsummering.hjelpetekst' }),
         },
     ].filter((s) => (typeof s.onlyIf !== 'undefined' ? s.onlyIf : true));
     const aktivtSteg = steg.findIndex((s) => s.step === step);
@@ -330,6 +332,7 @@ const StartUtfylling = () => {
                                 søker={søker}
                                 intl={intl}
                                 erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
+                                hjelpetekst={steg.find((s) => s.step === step)?.hjelpetekst}
                             />
                         </>
                     )
