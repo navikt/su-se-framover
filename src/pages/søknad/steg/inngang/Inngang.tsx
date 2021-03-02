@@ -130,7 +130,6 @@ const index = (props: { nesteUrl: string }) => {
                         htmlType="button"
                         onClick={() => {
                             setHasSubmitted(() => true);
-
                             handleStartSøknadKlikk();
                         }}
                     >

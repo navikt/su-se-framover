@@ -24,6 +24,12 @@ const Kvittering = () => {
     const søknad = useAppSelector((state) => state.innsending.søknad);
     const søker = useAppSelector((state) => state.søker.søker);
 
+    const handleAvsluttSøknad = () => {
+        dispatch(personSlice.default.actions.resetSøker());
+        dispatch(søknadslice.default.actions.resetSøknad());
+        history.push(Routes.soknad.createURL());
+    };
+
     const VisFeil = () => (
         <IntlProvider locale="nb" messages={messages}>
             <div className={styles.feilContainer}>
@@ -32,13 +38,7 @@ const Kvittering = () => {
                 </AlertStripe>
 
                 <div className={styles.nySøknadKnapp}>
-                    <Knapp
-                        onClick={() => {
-                            dispatch(personSlice.default.actions.resetSøker());
-                            dispatch(søknadslice.default.actions.resetSøknad());
-                            history.push(Routes.soknad.createURL());
-                        }}
-                    >
+                    <Knapp onClick={handleAvsluttSøknad}>
                         <FormattedMessage id="kvittering.avslutt" />
                     </Knapp>
                 </div>
@@ -105,13 +105,7 @@ const Kvittering = () => {
                                         </div>
 
                                         <div className={styles.nySøknadKnapp}>
-                                            <Knapp
-                                                onClick={() => {
-                                                    dispatch(personSlice.default.actions.resetSøker());
-                                                    dispatch(søknadslice.default.actions.resetSøknad());
-                                                    history.push(Routes.soknad.createURL());
-                                                }}
-                                            >
+                                            <Knapp onClick={handleAvsluttSøknad}>
                                                 <FormattedMessage id="kvittering.avslutt" />
                                             </Knapp>
 
