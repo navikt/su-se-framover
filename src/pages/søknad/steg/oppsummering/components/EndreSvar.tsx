@@ -9,8 +9,8 @@ import { trackEvent } from '~lib/tracking/amplitude';
 import { søknadOppsummeringEndreSvarKlikk } from '~lib/tracking/trackingEvents';
 import { Søknadsteg } from '~pages/søknad/types';
 
-import messages from '../Søknadoppsummering/oppsummering-nb';
-import styles from '../Søknadoppsummering/oppsummering.module.less';
+import messages from '../Søknadoppsummering/søknadsoppsummering-nb';
+import styles from '../Søknadoppsummering/søknadsoppsummering.module.less';
 
 export const EndreSvar = (props: { path: Søknadsteg; søker: Person }) => {
     const intl = useI18n({ messages });

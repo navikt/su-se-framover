@@ -24,9 +24,9 @@ import { FormueOppsummering } from '../components/FormueOppsummering';
 import InntektsOppsummering from '../components/InntektsOppsummering';
 import { Oppsummeringsfelt } from '../components/Oppsummeringsfelt';
 
-import oppsummeringMessages from './oppsummering-nb';
-import styles from './oppsummering.module.less';
 import { ingenAdresseGrunnTekst } from './OppsummeringUtils';
+import oppsummeringMessages from './søknadsoppsummering-nb';
+import styles from './søknadsoppsummering.module.less';
 
 const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søker: Person }) => {
     const intl = useI18n({
