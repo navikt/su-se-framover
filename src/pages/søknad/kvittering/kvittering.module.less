@@ -1,0 +1,56 @@
+@import '~/styles/variables.less';
+
+.pageTittel {
+    margin-top: @spacing-xxl;
+}
+
+.feilContainer {
+    margin-top: @spacing-xl;
+}
+
+.suksessContainer {
+    margin-top: @spacing-l;
+    display: flex;
+    justify-content: center;
+
+    > :not(:last-child) {
+        margin-right: @spacing-xxl;
+    }
+}
+
+.senderSøknadSpinnerContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.tilVeileder {
+    margin-top: @spacing-l;
+    h3 {
+        margin-bottom: @spacing-xs;
+    }
+    ol {
+        list-style: decimal inside;
+        li {
+            margin-bottom: @spacing-xs;
+        }
+    }
+}
+
+.list {
+    .listItem {
+        display: list-item;
+        list-style-type: disc;
+        margin-left: @spacing;
+    }
+}
+
+.nySøknadKnapp {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    margin-top: @spacing-xl;
+
+    > :not(:last-child) {
+        margin-right: @spacing;
+    }
+}
