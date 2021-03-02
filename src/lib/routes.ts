@@ -36,6 +36,11 @@ export const soknadsutfylling: Route<{ step: Søknadsteg; papirsøknad?: boolean
     createURL: (args) => `/soknad/utfylling/${args.step}`,
 };
 
+export const søkandskvittering: Route<never> = {
+    path: '/soknad/kvittering',
+    createURL: () => `/soknad/kvittering`,
+};
+
 export const saksoversiktIndex: Route<never> = {
     path: '/saksoversikt/:sakId?/:behandlingId?/:meny?/:vilkar?/',
     createURL: () => '/saksoversikt',

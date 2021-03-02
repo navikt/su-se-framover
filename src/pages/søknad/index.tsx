@@ -22,6 +22,7 @@ import { Rolle } from '~types/LoggedInUser';
 import { Søknadstype } from '~types/Søknad';
 
 import styles from './index.module.less';
+import Kvittering from './kvittering/Kvittering';
 import messages from './nb';
 import BoOgOppholdINorge from './steg/bo-og-opphold-i-norge/Bo-og-opphold-i-norge';
 import EktefellesFormue from './steg/ektefelle/EktefellesFormue';
@@ -33,7 +34,6 @@ import InformasjonOmPapirsøknad from './steg/informasjon-om-papirsøknad/Inform
 import Infoside from './steg/infoside/Infoside';
 import Inngang from './steg/inngang/Inngang';
 import Inntekt from './steg/inntekt/Inntekt';
-import Kvittering from './steg/kvittering/Kvittering';
 import Oppsummering from './steg/oppsummering/Oppsummering';
 import Uførevedtak from './steg/uførevedtak/Uførevedtak';
 import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
@@ -182,13 +182,11 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person, erSa
                                 ? Søknadsteg.ForVeileder
                                 : Søknadsteg.InformasjonOmPapirsøknad,
                     })}
-                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Kvittering })}
+                    nesteUrl={routes.søkandskvittering.createURL()}
                     avbrytUrl={avbrytUrl}
                     søker={søker}
                 />
             );
-        case Søknadsteg.Kvittering:
-            return <Kvittering />;
     }
 };
 
@@ -296,34 +294,32 @@ const StartUtfylling = () => {
                                         <Personkort person={søker} />
                                     </div>
                                 </Systemtittel>
-                                {step !== Søknadsteg.Kvittering && (
-                                    <>
-                                        <div className={styles.stegindikatorContainer}>
-                                            <Stegindikator
-                                                steg={steg.map((s, index) => ({
-                                                    index,
-                                                    label: s.label,
-                                                }))}
-                                                aktivtSteg={aktivtSteg}
-                                                visLabel={false}
-                                                onChange={
-                                                    process.env.NODE_ENV === 'development'
-                                                        ? (index) => {
-                                                              const nyttSteg = steg[index];
-                                                              if (nyttSteg) {
-                                                                  history.push(
-                                                                      routes.soknadsutfylling.createURL({
-                                                                          step: nyttSteg.step,
-                                                                      })
-                                                                  );
-                                                              }
+                                <>
+                                    <div className={styles.stegindikatorContainer}>
+                                        <Stegindikator
+                                            steg={steg.map((s, index) => ({
+                                                index,
+                                                label: s.label,
+                                            }))}
+                                            aktivtSteg={aktivtSteg}
+                                            visLabel={false}
+                                            onChange={
+                                                process.env.NODE_ENV === 'development'
+                                                    ? (index) => {
+                                                          const nyttSteg = steg[index];
+                                                          if (nyttSteg) {
+                                                              history.push(
+                                                                  routes.soknadsutfylling.createURL({
+                                                                      step: nyttSteg.step,
+                                                                  })
+                                                              );
                                                           }
-                                                        : undefined
-                                                }
-                                            />
-                                        </div>
-                                    </>
-                                )}
+                                                      }
+                                                    : undefined
+                                            }
+                                        />
+                                    </div>
+                                </>
                             </div>
                             <Steg
                                 title={steg.find((s) => s.step === step)?.label || ''}
@@ -364,6 +360,9 @@ const index = () => {
             </Route>
             <Route exact={true} path={routes.soknadsutfylling.path}>
                 <StartUtfylling />
+            </Route>
+            <Route exact={true} path={routes.søkandskvittering.path}>
+                <Kvittering />
             </Route>
         </Switch>
     );
