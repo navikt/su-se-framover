@@ -1,14 +1,23 @@
 @import '~/styles/variables.less';
 
+.suksessContainer {
+    display: flex;
+    justify-content: center;
+
+    > :not(:last-child) {
+        margin-right: @spacing-xxl;
+    }
+}
+
 .nySøknadKnapp {
     display: flex;
     justify-content: center;
     flex-direction: row;
     margin-top: @spacing-xl;
-}
 
-.marginRight {
-    margin-right: @spacing;
+    > :not(:last-child) {
+        margin-right: @spacing;
+    }
 }
 
 .senderSøknadSpinnerContainer {
