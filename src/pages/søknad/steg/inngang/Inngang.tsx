@@ -32,16 +32,13 @@ const index = (props: { nesteUrl: string }) => {
     }, [søker]);
 
     const isFormValid = () => {
-        if (hasSubmitted && erBekreftet && RemoteData.isSuccess(søker)) {
+        if (erBekreftet && RemoteData.isSuccess(søker)) {
             return true;
         }
         return false;
     };
 
     const handleStartSøknadKlikk = () => {
-        setHasSubmitted(true);
-        console.log(søker);
-
         if (isFormValid()) {
             dispatch(
                 søknadSlice.actions.startSøknad(isPapirsøknad ? Søknadstype.Papirsøknad : Søknadstype.DigitalSøknad)
@@ -129,7 +126,14 @@ const index = (props: { nesteUrl: string }) => {
                     <Link className="knapp" to={Routes.soknad.createURL()}>
                         <FormattedMessage id="knapp.forrige" />
                     </Link>
-                    <Hovedknapp htmlType="button" onClick={handleStartSøknadKlikk}>
+                    <Hovedknapp
+                        htmlType="button"
+                        onClick={() => {
+                            setHasSubmitted(() => true);
+
+                            handleStartSøknadKlikk();
+                        }}
+                    >
                         <FormattedMessage id="knapp.startSøknad" />
                     </Hovedknapp>
                 </div>
