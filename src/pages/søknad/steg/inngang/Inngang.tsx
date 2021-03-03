@@ -32,6 +32,9 @@ const index = (props: { nesteUrl: string }) => {
     }, [søker]);
 
     const isFormValid = () => {
+        if (isPapirsøknad && RemoteData.isSuccess(søker)) {
+            return true;
+        }
         if (erBekreftet && RemoteData.isSuccess(søker)) {
             return true;
         }
@@ -46,15 +49,10 @@ const index = (props: { nesteUrl: string }) => {
             history.push(props.nesteUrl);
         }
     };
-    return (
-        <RawIntlProvider value={intl}>
-            <div className={styles.pageContainer}>
-                <Sidetittel className={styles.tittel}>
-                    {intl.formatMessage(
-                        isPapirsøknad ? { id: 'page.tittel.papirSøknad' } : { id: 'page.tittel.digitalSøknad' }
-                    )}
-                </Sidetittel>
 
+    const VisInformasjonstekst = () => {
+        return (
+            <div>
                 <section className={styles.section}>
                     <Ingress>
                         <FormattedMessage id="sendeInnDokumentasjon.måSendeInnDok" />
@@ -99,6 +97,20 @@ const index = (props: { nesteUrl: string }) => {
                         {intl.formatMessage({ id: 'bekreftelsesboks.tekst.p1' })}
                     </BekreftCheckboksPanel>
                 </div>
+            </div>
+        );
+    };
+
+    return (
+        <RawIntlProvider value={intl}>
+            <div className={styles.pageContainer}>
+                <Sidetittel className={styles.tittel}>
+                    {intl.formatMessage(
+                        isPapirsøknad ? { id: 'page.tittel.papirSøknad' } : { id: 'page.tittel.digitalSøknad' }
+                    )}
+                </Sidetittel>
+
+                {!isPapirsøknad && <VisInformasjonstekst />}
 
                 <div className={styles.searchContainer}>
                     <Ingress>
