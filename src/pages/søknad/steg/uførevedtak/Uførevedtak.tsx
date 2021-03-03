@@ -91,6 +91,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
                                 dispatch(søknadSlice.actions.harUførevedtakUpdated(formik.values.harUførevedtak));
                                 history.push(props.forrigeUrl);
                             },
+                            handleClickAsAvbryt: true,
                         }}
                         avbryt={{
                             toRoute: props.avbrytUrl,
