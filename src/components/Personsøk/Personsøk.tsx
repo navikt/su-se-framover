@@ -56,7 +56,7 @@ const Personsøk = (props: PersonsøkProps) => {
 
     const handleSubmit = () => {
         if (!Number(input)) {
-            return setInputErrorMsg('må vare ett tall');
+            return setInputErrorMsg(intl.formatMessage({ id: 'feilmelding.måVareTall' }));
         }
 
         if (input.length === 11) {
