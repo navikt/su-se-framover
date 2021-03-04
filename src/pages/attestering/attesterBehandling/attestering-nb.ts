@@ -7,6 +7,7 @@ export default {
     'feil.generisk': 'En feil skjedde',
     'feil.fantIkkeBehandling': 'Fant ikke behandlingen',
     'feil.ikkeKlarForAttestering': 'Behandlingen er ikke klar for attestering',
+    'feil.ukjentFeil': 'Ukjent feil',
 
     'input.grunn.label': 'Grunn',
     'input.grunn.value.default': 'Velg grunn',

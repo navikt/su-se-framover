@@ -17,6 +17,7 @@ export default {
     'feilmelding.fantIkkeBehandlingsId': 'Fant ikke behandlingsid',
     'feilmelding.ikkeGjortEnBeregning': 'Det er ikke gjort en beregning',
     'feilmelding.sendingFeilet': 'Sending feilet',
+    'feilmelding.ukjentFeil': 'Ukjent feil',
 
     'knapp.sendTilAttestering': 'Send til attestering',
     'knapp.tilbake': 'Tilbake',

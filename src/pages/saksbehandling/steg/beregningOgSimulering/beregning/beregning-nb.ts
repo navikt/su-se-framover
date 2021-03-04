@@ -27,6 +27,7 @@ export default {
     'display.visBeregning.sats.høy': 'Høy sats',
     'display.visBeregning.sats.ordinær': 'Ordinær sats',
 
+    'feilmelding.ukjentFeil': 'Ukjent feil',
     'feiloppsummering.title': 'For å gå videre må du rette opp følgende:',
 
     'fradrag.heading': 'Fradrag',

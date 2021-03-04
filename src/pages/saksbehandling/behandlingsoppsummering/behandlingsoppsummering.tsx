@@ -105,7 +105,10 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
                 </div>
                 <div className={styles.brevutkastFeil}>
                     {RemoteData.isFailure(lastNedBrevStatus) && (
-                        <AlertStripeFeil>{lastNedBrevStatus.error.body?.message}</AlertStripeFeil>
+                        <AlertStripeFeil>
+                            {lastNedBrevStatus.error.body?.message ??
+                                intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
+                        </AlertStripeFeil>
                     )}
                 </div>
             </div>
