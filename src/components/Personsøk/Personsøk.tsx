@@ -20,7 +20,8 @@ import styles from './personsøk.module.less';
 
 interface PersonsøkProps {
     person: RemoteData.RemoteData<ApiError, Person>;
-    onSubmit(fnr: string): void;
+    onFetchByFnr(fnr: string): void;
+    onFetchBySaksnummer?(saksnummer: string): void;
     onReset(): void;
 }
 
@@ -29,17 +30,21 @@ const Personsøk = (props: PersonsøkProps) => {
 
     const intl = useI18n({ messages });
 
-    const [fnr, setFnr] = React.useState('');
+    const [input, setInput] = React.useState('');
     const [fnrValidation, setFnrValidation] = React.useState<ValidationResult | null>(null);
+    const [inputErrorMessage, setInputErrorMsg] = React.useState<string | null>(null);
 
     React.useEffect(() => {
-        const validation = fnrValidator.fnr(fnr);
-        setFnrValidation(validation);
-        if (fnr.length !== 11) {
+        setHasSubmitted(true);
+        setFnrValidation(null);
+        setInputErrorMsg(null);
+
+        if (input.length !== 11) {
             props.onReset();
         }
-    }, [fnr]);
-    const lagFeilmelding = (error: ErrorReason) => {
+    }, [input]);
+
+    const lagFnrFeilmelding = (error: ErrorReason) => {
         switch (error) {
             case 'fnr or dnr must consist of 11 digits':
                 return intl.formatMessage({ id: 'feilmelding.lengde' });
@@ -50,12 +55,22 @@ const Personsøk = (props: PersonsøkProps) => {
     };
 
     const handleSubmit = () => {
-        setHasSubmitted(true);
-        const validation = fnrValidator.fnr(fnr);
-        setFnrValidation(validation);
+        if (!Number(input)) {
+            return setInputErrorMsg('må vare ett tall');
+        }
 
+        if (input.length === 11) {
+            return fetchSakByFnr();
+        }
+
+        props.onFetchBySaksnummer?.(input);
+    };
+
+    const fetchSakByFnr = () => {
+        const validation = fnrValidator.fnr(input);
+        setFnrValidation(validation);
         if (validation.status === 'valid') {
-            props.onSubmit(fnr);
+            props.onFetchByFnr(input);
         }
     };
 
@@ -75,14 +90,14 @@ const Personsøk = (props: PersonsøkProps) => {
                     </Label>
                     <div className={styles.inputfeltcontainer}>
                         <Input
-                            id="fnr"
-                            name="fnr"
+                            id="input"
+                            name="input"
                             className={styles.inputfelt}
                             autoComplete="on"
                             onChange={(e) => {
-                                setFnr(removeSpaces(e.target.value));
+                                setInput(removeSpaces(e.target.value));
                             }}
-                            value={fnr}
+                            value={input}
                             // Så lenge denne er det eneste på siden sin så ønsker vi at den skal autofokuseres
                             // eslint-disable-next-line jsx-a11y/no-autofocus
                             autoFocus
@@ -95,8 +110,9 @@ const Personsøk = (props: PersonsøkProps) => {
                     </div>
                     <SkjemaelementFeilmelding>
                         {hasSubmitted && fnrValidation?.status === 'invalid'
-                            ? lagFeilmelding(fnrValidation.reasons[0])
-                            : undefined}{' '}
+                            ? lagFnrFeilmelding(fnrValidation.reasons[0])
+                            : undefined}
+                        {hasSubmitted && inputErrorMessage}
                     </SkjemaelementFeilmelding>
                 </div>
                 <div className={styles.personkortWrapper}>

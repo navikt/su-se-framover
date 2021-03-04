@@ -192,9 +192,15 @@ const Saksoversikt = () => {
                                 dispatch(personSlice.default.actions.resetSøker());
                                 dispatch(sakSlice.default.actions.resetSak());
                             }}
-                            onSubmit={(fnr) => {
+                            onFetchByFnr={(fnr) => {
                                 dispatch(personSlice.fetchPerson({ fnr }));
                                 dispatch(sakSlice.fetchSak({ fnr }));
+                            }}
+                            onFetchBySaksnummer={async (saksnummer) => {
+                                const res = await dispatch(sakSlice.fetchSak({ saksnummer }));
+                                if (sakSlice.fetchSak.fulfilled.match(res)) {
+                                    dispatch(personSlice.fetchPerson({ fnr: res.payload.fnr }));
+                                }
                             }}
                             person={søker}
                         />

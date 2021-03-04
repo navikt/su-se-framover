@@ -116,7 +116,7 @@ const index = (props: { nesteUrl: string }) => {
                             onReset={() => {
                                 dispatch(personSlice.default.actions.resetSøker());
                             }}
-                            onSubmit={(fnr) => {
+                            onFetchByFnr={(fnr) => {
                                 dispatch(personSlice.fetchPerson({ fnr }));
                             }}
                             person={søker}
