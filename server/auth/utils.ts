@@ -43,7 +43,8 @@ export async function getOrRefreshOnBehalfOfToken(
     }
     if (onBehalfOfToken.expired()) {
         log.debug('getOrRefreshOnBehalfOfToken: on-behalf-of token has expired, requesting new using refresh_token.');
-        const refreshedOnBehalfOfToken = await requestOnBehalfOfToken(authClient, onBehalfOfToken);
+        const token = await getOrRefreshSelfTokenIfExpired(authClient, selfToken, tokenSets, log);
+        const refreshedOnBehalfOfToken = await requestOnBehalfOfToken(authClient, token);
         tokenSets[Config.auth.suSeBakoverUri] = refreshedOnBehalfOfToken;
         return refreshedOnBehalfOfToken;
     }
