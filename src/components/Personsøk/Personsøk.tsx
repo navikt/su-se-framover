@@ -86,7 +86,9 @@ const Personsøk = (props: PersonsøkProps) => {
             >
                 <div className={styles.inputContainer}>
                     <Label htmlFor="fnr">
-                        <FormattedMessage id={'input.fnr.label'} />
+                        {`${intl.formatMessage({ id: 'input.fnr.label' })} / ${intl.formatMessage({
+                            id: 'input.fnr.saksnummer',
+                        })}`}
                     </Label>
                     <div className={styles.inputfeltcontainer}>
                         <Input
