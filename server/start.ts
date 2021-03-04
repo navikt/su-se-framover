@@ -64,7 +64,7 @@ export default async function startServer() {
                 ? {
                       directives: {
                           defaultSrc: ["'self'", 'data:'],
-                          imgSrc: ["'self'", ...hotjarCsp.imgSrc],
+                          imgSrc: ["'self'", 'data:', ...hotjarCsp.imgSrc],
                           scriptSrc: [
                               "'self'",
                               (_req: IncomingMessage, res: ServerResponse) =>
