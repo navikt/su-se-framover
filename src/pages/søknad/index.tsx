@@ -46,7 +46,7 @@ const Steg = (props: {
     søker: Person;
     intl: IntlShape;
     erSaksbehandler: boolean;
-    hjelpetekst: string | undefined;
+    hjelpetekst?: string;
 }) => {
     const sectionRef = React.useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -294,32 +294,30 @@ const StartUtfylling = () => {
                                         <Personkort person={søker} />
                                     </div>
                                 </Systemtittel>
-                                <>
-                                    <div className={styles.stegindikatorContainer}>
-                                        <Stegindikator
-                                            steg={steg.map((s, index) => ({
-                                                index,
-                                                label: s.label,
-                                            }))}
-                                            aktivtSteg={aktivtSteg}
-                                            visLabel={false}
-                                            onChange={
-                                                process.env.NODE_ENV === 'development'
-                                                    ? (index) => {
-                                                          const nyttSteg = steg[index];
-                                                          if (nyttSteg) {
-                                                              history.push(
-                                                                  routes.soknadsutfylling.createURL({
-                                                                      step: nyttSteg.step,
-                                                                  })
-                                                              );
-                                                          }
+                                <div className={styles.stegindikatorContainer}>
+                                    <Stegindikator
+                                        steg={steg.map((s, index) => ({
+                                            index,
+                                            label: s.label,
+                                        }))}
+                                        aktivtSteg={aktivtSteg}
+                                        visLabel={false}
+                                        onChange={
+                                            process.env.NODE_ENV === 'development'
+                                                ? (index) => {
+                                                      const nyttSteg = steg[index];
+                                                      if (nyttSteg) {
+                                                          history.push(
+                                                              routes.soknadsutfylling.createURL({
+                                                                  step: nyttSteg.step,
+                                                              })
+                                                          );
                                                       }
-                                                    : undefined
-                                            }
-                                        />
-                                    </div>
-                                </>
+                                                  }
+                                                : undefined
+                                        }
+                                    />
+                                </div>
                             </div>
                             <Steg
                                 title={steg.find((s) => s.step === step)?.label || ''}
@@ -345,17 +343,14 @@ const index = () => {
     return (
         <Switch>
             <Route exact={true} path={routes.soknad.path}>
-                <Infoside
-                    nesteUrl={routes.soknadPersonSøk.createURL({ papirsøknad: isPapirsøknad ? true : undefined })}
-                />
+                <Infoside nesteUrl={routes.soknadPersonSøk.createURL({ papirsøknad: isPapirsøknad })} />
             </Route>
             <Route exact={true} path={routes.soknadPersonSøk.path}>
                 <Inngang
-                    nesteUrl={
-                        isPapirsøknad
-                            ? routes.soknadsutfylling.createURL({ step: Søknadsteg.Uførevedtak, papirsøknad: true })
-                            : routes.soknadsutfylling.createURL({ step: Søknadsteg.Uførevedtak })
-                    }
+                    nesteUrl={routes.soknadsutfylling.createURL({
+                        step: Søknadsteg.Uførevedtak,
+                        papirsøknad: isPapirsøknad,
+                    })}
                 />
             </Route>
             <Route exact={true} path={routes.soknadsutfylling.path}>

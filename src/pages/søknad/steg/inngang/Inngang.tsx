@@ -31,18 +31,10 @@ const index = (props: { nesteUrl: string }) => {
         dispatch(søknadSlice.actions.resetSøknad());
     }, [søker]);
 
-    const isFormValid = () => {
-        if (isPapirsøknad && RemoteData.isSuccess(søker)) {
-            return true;
-        }
-        if (erBekreftet && RemoteData.isSuccess(søker)) {
-            return true;
-        }
-        return false;
-    };
+    const isFormValid = RemoteData.isSuccess(søker) && (isPapirsøknad || erBekreftet);
 
     const handleStartSøknadKlikk = () => {
-        if (isFormValid()) {
+        if (isFormValid) {
             dispatch(
                 søknadSlice.actions.startSøknad(isPapirsøknad ? Søknadstype.Papirsøknad : Søknadstype.DigitalSøknad)
             );
@@ -50,7 +42,7 @@ const index = (props: { nesteUrl: string }) => {
         }
     };
 
-    const VisInformasjonstekst = () => {
+    const Informasjon = () => {
         return (
             <div>
                 <section className={styles.section}>
@@ -110,7 +102,7 @@ const index = (props: { nesteUrl: string }) => {
                     )}
                 </Sidetittel>
 
-                {!isPapirsøknad && <VisInformasjonstekst />}
+                {!isPapirsøknad && <Informasjon />}
 
                 <div className={styles.searchContainer}>
                     <Ingress>

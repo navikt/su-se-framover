@@ -124,86 +124,46 @@ const Kvittering = () => {
                                     <div className={styles.infoContainer}>
                                         <AlertStripeInfo>
                                             <p>
-                                                <FormattedMessage
-                                                    id="vedlegg.huskVedlegg"
-                                                    values={{
-                                                        //eslint-disable-next-line react/display-name
-                                                        b: (text: string) => <Element>{text}</Element>,
-                                                    }}
-                                                />
+                                                <FormattedMessage id="vedlegg.huskVedlegg" />
                                             </p>
                                             <br />
                                             <p>
-                                                <FormattedMessage
-                                                    id="vedlegg.måLeggesMed"
-                                                    values={{
-                                                        //eslint-disable-next-line react/display-name
-                                                        b: (text: string) => <Element>{text}</Element>,
-                                                    }}
-                                                />
+                                                <FormattedMessage id="vedlegg.måLeggesMed" />
                                             </p>
                                             <br />
                                             <ul className={styles.list}>
                                                 <li className={styles.listItem}>
-                                                    <FormattedMessage
-                                                        id="vedlegg.måLeggesMed.puntk1"
-                                                        values={{
-                                                            //eslint-disable-next-line react/display-name
-                                                            b: (text: string) => <Element>{text}</Element>,
-                                                        }}
-                                                    />
+                                                    <Element>
+                                                        <FormattedMessage id="vedlegg.måLeggesMed.puntk1" />
+                                                    </Element>
                                                 </li>
                                                 <li className={styles.listItem}>
-                                                    <FormattedMessage
-                                                        id="vedlegg.måLeggesMed.puntk2"
-                                                        values={{
-                                                            //eslint-disable-next-line react/display-name
-                                                            b: (text: string) => <Element>{text}</Element>,
-                                                        }}
-                                                    />
+                                                    <Element>
+                                                        <FormattedMessage id="vedlegg.måLeggesMed.puntk2" />
+                                                    </Element>
                                                 </li>
                                             </ul>
                                             <br />
                                             <p>
-                                                <FormattedMessage
-                                                    id="vedlegg.formueIUtlandet"
-                                                    values={{
-                                                        //eslint-disable-next-line react/display-name
-                                                        b: (text: string) => <Element>{text}</Element>,
-                                                    }}
-                                                />
+                                                <FormattedMessage id="vedlegg.formueIUtlandet" />
                                             </p>
                                             <br />
                                             <ul className={styles.list}>
                                                 <li className={styles.listItem}>
-                                                    <FormattedMessage
-                                                        id="vedlegg.formueIUtlandet.punkt1"
-                                                        values={{
-                                                            //eslint-disable-next-line react/display-name
-                                                            b: (text: string) => <Element>{text}</Element>,
-                                                        }}
-                                                    />
+                                                    <Element>
+                                                        <FormattedMessage id="vedlegg.formueIUtlandet.punkt1" />
+                                                    </Element>
                                                 </li>
                                                 <li className={styles.listItem}>
-                                                    <FormattedMessage
-                                                        id="vedlegg.formueIUtlandet.punkt2"
-                                                        values={{
-                                                            //eslint-disable-next-line react/display-name
-                                                            b: (text: string) => <Element>{text}</Element>,
-                                                        }}
-                                                    />
+                                                    <Element>
+                                                        <FormattedMessage id="vedlegg.formueIUtlandet.punkt2" />
+                                                    </Element>
                                                 </li>
                                             </ul>
                                             <br />
-                                            <p>
-                                                <FormattedMessage
-                                                    id="vedlegg.søkerManglerDok"
-                                                    values={{
-                                                        //eslint-disable-next-line react/display-name
-                                                        b: (text: string) => <Element>{text}</Element>,
-                                                    }}
-                                                />
-                                            </p>
+                                            <Element>
+                                                <FormattedMessage id="vedlegg.søkerManglerDok" />
+                                            </Element>
                                         </AlertStripeInfo>
                                     </div>
                                 </div>

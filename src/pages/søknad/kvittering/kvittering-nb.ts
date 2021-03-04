@@ -15,11 +15,11 @@ export default {
 
     'vedlegg.huskVedlegg': 'Husk vedlegg som skal sendes med søknaden',
     'vedlegg.måLeggesMed': 'Vedlegg som må legges med fra søker og eventuelt søkers ektefelle/samboer:',
-    'vedlegg.måLeggesMed.puntk1': '<b>Kopi av pass</b>',
-    'vedlegg.måLeggesMed.puntk2': '<b>Kopi av grunnlaget for skatt og siste skattemelding</b>',
+    'vedlegg.måLeggesMed.puntk1': 'Kopi av pass',
+    'vedlegg.måLeggesMed.puntk2': 'Kopi av grunnlaget for skatt og siste skattemelding',
     'vedlegg.formueIUtlandet':
         'Hvis søker og eventuelt søkers ektefelle/samboer har formue i utlandet eller mottar pensjon fra utlandet, må dette dokumenters:',
-    'vedlegg.formueIUtlandet.punkt1': '<b>Dokumentering av formue i utlandet</b>',
-    'vedlegg.formueIUtlandet.punkt2': '<b>Dokumentering av pensjon fra utlandet</b>',
-    'vedlegg.søkerManglerDok': '<b>Hvis søker mangler dokumentasjon kan søker ettersende dette.</b>',
+    'vedlegg.formueIUtlandet.punkt1': 'Dokumentering av formue i utlandet',
+    'vedlegg.formueIUtlandet.punkt2': 'Dokumentering av pensjon fra utlandet',
+    'vedlegg.søkerManglerDok': 'Hvis søker mangler dokumentasjon kan søker ettersende dette.',
 };
