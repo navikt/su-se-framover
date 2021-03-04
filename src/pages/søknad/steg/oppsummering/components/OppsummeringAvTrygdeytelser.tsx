@@ -1,7 +1,7 @@
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 import React from 'react';
 
-import styles from '../Søknadoppsummering/oppsummering.module.less';
+import styles from '../Søknadoppsummering/søknadsoppsummering.module.less';
 
 export const OppsummeringAvTrygdeytelser = (props: {
     labelFirstEl: React.ReactNode;

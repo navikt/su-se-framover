@@ -14,6 +14,7 @@ const Bunnknapper = (props: {
     previous?: {
         label?: React.ReactNode;
         onClick: () => void;
+        handleClickAsAvbryt?: boolean;
     };
     next?: {
         label?: React.ReactNode;
@@ -34,7 +35,11 @@ const Bunnknapper = (props: {
                         htmlType="button"
                         className={styles.navKnapp}
                         onClick={() => {
-                            props.previous?.onClick();
+                            if (props.previous?.handleClickAsAvbryt) {
+                                setModalOpen(true);
+                            } else {
+                                props.previous?.onClick();
+                            }
                         }}
                     >
                         {props.previous.label ?? <FormattedMessage id="steg.forrige" />}

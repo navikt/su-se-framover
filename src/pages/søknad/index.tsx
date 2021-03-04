@@ -22,6 +22,7 @@ import { Rolle } from '~types/LoggedInUser';
 import { Søknadstype } from '~types/Søknad';
 
 import styles from './index.module.less';
+import Kvittering from './kvittering/Kvittering';
 import messages from './nb';
 import BoOgOppholdINorge from './steg/bo-og-opphold-i-norge/Bo-og-opphold-i-norge';
 import EktefellesFormue from './steg/ektefelle/EktefellesFormue';
@@ -33,7 +34,6 @@ import InformasjonOmPapirsøknad from './steg/informasjon-om-papirsøknad/Inform
 import Infoside from './steg/infoside/Infoside';
 import Inngang from './steg/inngang/Inngang';
 import Inntekt from './steg/inntekt/Inntekt';
-import Kvittering from './steg/kvittering/Kvittering';
 import Oppsummering from './steg/oppsummering/Oppsummering';
 import Uførevedtak from './steg/uførevedtak/Uførevedtak';
 import Utenlandsopphold from './steg/utenlandsopphold/Utenlandsopphold';
@@ -46,6 +46,7 @@ const Steg = (props: {
     søker: Person;
     intl: IntlShape;
     erSaksbehandler: boolean;
+    hjelpetekst?: string;
 }) => {
     const sectionRef = React.useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -60,9 +61,7 @@ const Steg = (props: {
                 <Undertittel tag="h3" id="steg-heading">
                     {props.title}
                 </Undertittel>
-                {(props.step === Søknadsteg.DinInntekt || props.step === Søknadsteg.EktefellesInntekt) && (
-                    <p>{props.intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' })}</p>
-                )}
+                {props.hjelpetekst}
             </div>
             {showSteg(props.step, props.søknad, props.søker, props.erSaksbehandler)}
         </section>
@@ -72,14 +71,14 @@ const Steg = (props: {
 const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person, erSaksbehandler: boolean) => {
     const avbrytUrl =
         søknad.forVeileder.type === Søknadstype.Papirsøknad && erSaksbehandler
-            ? routes.soknad.createURL({ papirsøknad: true })
-            : routes.soknad.createURL({});
+            ? routes.soknadPersonSøk.createURL({ papirsøknad: true })
+            : routes.soknad.createURL();
 
     switch (step) {
         case Søknadsteg.Uførevedtak:
             return (
                 <Uførevedtak
-                    forrigeUrl={routes.soknad.createURL({})}
+                    forrigeUrl={avbrytUrl}
                     nesteUrl={routes.soknadsutfylling.createURL({
                         step: Søknadsteg.FlyktningstatusOppholdstillatelse,
                     })}
@@ -183,13 +182,11 @@ const showSteg = (step: Søknadsteg, søknad: SøknadState, søker: Person, erSa
                                 ? Søknadsteg.ForVeileder
                                 : Søknadsteg.InformasjonOmPapirsøknad,
                     })}
-                    nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Kvittering })}
+                    nesteUrl={routes.søkandskvittering.createURL()}
                     avbrytUrl={avbrytUrl}
                     søker={søker}
                 />
             );
-        case Søknadsteg.Kvittering:
-            return <Kvittering />;
     }
 };
 
@@ -234,6 +231,7 @@ const StartUtfylling = () => {
         {
             label: intl.formatMessage({ id: 'steg.inntekt' }),
             step: Søknadsteg.DinInntekt,
+            hjelpetekst: intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' }),
         },
         {
             label: intl.formatMessage({ id: 'steg.ektefellesFormue' }),
@@ -244,6 +242,7 @@ const StartUtfylling = () => {
             label: intl.formatMessage({ id: 'steg.ektefellesInntekt' }),
             step: Søknadsteg.EktefellesInntekt,
             onlyIf: søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
+            hjelpetekst: intl.formatMessage({ id: 'steg.inntekt.hjelpetekst' }),
         },
         {
             label: intl.formatMessage({ id: 'steg.utenlandsopphold' }),
@@ -261,6 +260,7 @@ const StartUtfylling = () => {
         {
             label: intl.formatMessage({ id: 'steg.oppsummering' }),
             step: Søknadsteg.Oppsummering,
+            hjelpetekst: intl.formatMessage({ id: 'steg.oppsummering.hjelpetekst' }),
         },
     ].filter((s) => (typeof s.onlyIf !== 'undefined' ? s.onlyIf : true));
     const aktivtSteg = steg.findIndex((s) => s.step === step);
@@ -270,7 +270,7 @@ const StartUtfylling = () => {
             <Feilmelding className={styles.feilmeldingTekst}>
                 {intl.formatMessage({ id: 'feilmelding.tekst' })}
             </Feilmelding>
-            <Link to={routes.soknad.createURL({})} className="knapp">
+            <Link to={routes.soknadPersonSøk.createURL({})} className="knapp">
                 {intl.formatMessage({ id: 'feilmelding.knapp' })}
             </Link>
         </div>
@@ -294,34 +294,30 @@ const StartUtfylling = () => {
                                         <Personkort person={søker} />
                                     </div>
                                 </Systemtittel>
-                                {step !== Søknadsteg.Kvittering && (
-                                    <>
-                                        <div className={styles.stegindikatorContainer}>
-                                            <Stegindikator
-                                                steg={steg.map((s, index) => ({
-                                                    index,
-                                                    label: s.label,
-                                                }))}
-                                                aktivtSteg={aktivtSteg}
-                                                visLabel={false}
-                                                onChange={
-                                                    process.env.NODE_ENV === 'development'
-                                                        ? (index) => {
-                                                              const nyttSteg = steg[index];
-                                                              if (nyttSteg) {
-                                                                  history.push(
-                                                                      routes.soknadsutfylling.createURL({
-                                                                          step: nyttSteg.step,
-                                                                      })
-                                                                  );
-                                                              }
-                                                          }
-                                                        : undefined
-                                                }
-                                            />
-                                        </div>
-                                    </>
-                                )}
+                                <div className={styles.stegindikatorContainer}>
+                                    <Stegindikator
+                                        steg={steg.map((s, index) => ({
+                                            index,
+                                            label: s.label,
+                                        }))}
+                                        aktivtSteg={aktivtSteg}
+                                        visLabel={false}
+                                        onChange={
+                                            process.env.NODE_ENV === 'development'
+                                                ? (index) => {
+                                                      const nyttSteg = steg[index];
+                                                      if (nyttSteg) {
+                                                          history.push(
+                                                              routes.soknadsutfylling.createURL({
+                                                                  step: nyttSteg.step,
+                                                              })
+                                                          );
+                                                      }
+                                                  }
+                                                : undefined
+                                        }
+                                    />
+                                </div>
                             </div>
                             <Steg
                                 title={steg.find((s) => s.step === step)?.label || ''}
@@ -330,6 +326,7 @@ const StartUtfylling = () => {
                                 søker={søker}
                                 intl={intl}
                                 erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
+                                hjelpetekst={steg.find((s) => s.step === step)?.hjelpetekst}
                             />
                         </>
                     )
@@ -346,19 +343,21 @@ const index = () => {
     return (
         <Switch>
             <Route exact={true} path={routes.soknad.path}>
-                <Inngang
-                    nesteUrl={
-                        isPapirsøknad
-                            ? routes.soknadsutfylling.createURL({ step: Søknadsteg.Uførevedtak, papirsøknad: true })
-                            : routes.soknadsInfo.createURL()
-                    }
-                />
+                <Infoside nesteUrl={routes.soknadPersonSøk.createURL({ papirsøknad: isPapirsøknad })} />
             </Route>
-            <Route exact={true} path={routes.soknadsInfo.path}>
-                <Infoside nesteUrl={routes.soknadsutfylling.createURL({ step: Søknadsteg.Uførevedtak })} />
+            <Route exact={true} path={routes.soknadPersonSøk.path}>
+                <Inngang
+                    nesteUrl={routes.soknadsutfylling.createURL({
+                        step: Søknadsteg.Uførevedtak,
+                        papirsøknad: isPapirsøknad,
+                    })}
+                />
             </Route>
             <Route exact={true} path={routes.soknadsutfylling.path}>
                 <StartUtfylling />
+            </Route>
+            <Route exact={true} path={routes.søkandskvittering.path}>
+                <Kvittering />
             </Route>
         </Switch>
     );

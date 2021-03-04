@@ -37,50 +37,6 @@ const Infoside = (props: { nesteUrl: string }) => {
 
                 <section className={styles.section}>
                     <Ingress>
-                        <FormattedMessage id="riktigeOpplysninger.girOssRiktigeOpplysninger" />
-                    </Ingress>
-                    <p className={styles.paragraphSpacing}>
-                        <FormattedMessage id="riktigeOpplysninger.behandleDinSøknad" />
-                    </p>
-                    <p className={styles.paragraphSpacing}>
-                        <FormattedMessage id="riktigeOpplysninger.hvisDuFårSU" />
-                    </p>
-                </section>
-
-                <section className={styles.section}>
-                    <Ingress>
-                        <FormattedMessage id="sendeInnDokumentasjon.måSendeInnDok" />
-                    </Ingress>
-                    <p className={styles.paragraphSpacing}>
-                        <FormattedMessage id="sendeInnDokumentasjon.dokGjelder" />
-                    </p>
-                    <p className={styles.paragraphSpacing}>
-                        <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed" />
-                    </p>
-                    <ul className={styles.list}>
-                        <li className={styles.listItem}>
-                            <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed.punkt1" />
-                        </li>
-                        <li className={styles.listItem}>
-                            <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed.punkt2" />
-                        </li>
-                    </ul>
-
-                    <p className={styles.paragraphSpacing}>
-                        <FormattedMessage id="sendeInnDokumentasjon.kanskjeLeggesVed" />
-                    </p>
-                    <ul className={styles.list}>
-                        <li className={styles.listItem}>
-                            <FormattedMessage id="sendeInnDokumentasjon.kanskjeLeggesVed.punkt1" />
-                        </li>
-                        <li className={styles.listItem}>
-                            <FormattedMessage id="sendeInnDokumentasjon.kanskjeLeggesVed.punkt2" />
-                        </li>
-                    </ul>
-                </section>
-
-                <section className={styles.section}>
-                    <Ingress>
                         <FormattedMessage id="henterInnInfo.viHenterInnInfo" />
                     </Ingress>
                     <p className={styles.paragraphSpacing}>
@@ -137,7 +93,7 @@ const Infoside = (props: { nesteUrl: string }) => {
 
                 <div className={styles.knappContainer}>
                     <Link className="knapp knapp--hoved" to={props.nesteUrl}>
-                        <FormattedMessage id="knapp.startUtfylling" />
+                        <FormattedMessage id="knapp.neste" />
                     </Link>
                 </div>
             </div>

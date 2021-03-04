@@ -23,7 +23,7 @@ const Header = (props: Props) => {
                 <div className={styles.content}>
                     {props.user.roller.includes(Rolle.Saksbehandler) && (
                         <Lenke
-                            href={Routes.soknad.createURL({
+                            href={Routes.soknadPersonSøk.createURL({
                                 papirsøknad: true,
                             })}
                             className={styles.papirsoknad}
