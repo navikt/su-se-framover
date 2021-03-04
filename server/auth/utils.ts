@@ -102,7 +102,7 @@ export async function getOpenIdClient(issuerUrl: string) {
         return new issuer.Client(
             {
                 client_id: Config.auth.clientId,
-                redirect_uris: [Config.auth.redirectUri],
+                redirect_uris: [Config.auth.loginRedirectUri],
                 token_endpoint_auth_method: 'private_key_jwt',
                 token_endpoint_auth_signing_alg: 'RS256',
             },

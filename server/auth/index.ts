@@ -87,7 +87,9 @@ export default async function setup(app: Express, authClient: OpenIdClient.Clien
         req.logout();
         req.session.destroy(() => {
             res.clearCookie(Config.server.sessionCookieName);
-            res.redirect('/');
+            const endSessionUrl = authClient.endSessionUrl({ post_logout_redirect_uri: Config.auth.logoutRedirectUri });
+            req.log.debug(`Redirecting user via Azure's end_session_endpoint: ${endSessionUrl}`);
+            res.redirect(endSessionUrl);
         });
     });
     app.get('/oauth2/callback', passport.authenticate(authName, { failureRedirect: '/login-failed' }), (req, res) => {

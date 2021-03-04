@@ -93,7 +93,8 @@ export const auth = {
               ],
           },
 
-    redirectUri: envVar({ name: 'AUTH_REDIRECT_URI' }),
+    loginRedirectUri: envVar({ name: 'AUTH_LOGIN_REDIRECT_URI' }),
+    logoutRedirectUri: envVar({ name: 'AUTH_LOGOUT_REDIRECT_URI' }),
 
     suSeBakoverUri: envVar({ name: 'SU_SE_BAKOVER_AAD_APP_NAME' }),
 
