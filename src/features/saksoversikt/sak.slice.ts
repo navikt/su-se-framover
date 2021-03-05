@@ -24,16 +24,22 @@ import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
-export const fetchSak = createAsyncThunk<Sak, { fnr: string } | { sakId: string }, { rejectValue: ApiError }>(
-    'sak/fetch',
-    async (arg, thunkApi) => {
-        const res = await ('fnr' in arg ? sakApi.fetchSakByFnr(arg.fnr) : sakApi.fetchSakBySakId(arg.sakId));
-        if (res.status === 'ok') {
-            return res.data;
-        }
-        return thunkApi.rejectWithValue(res.error);
+export const fetchSak = createAsyncThunk<
+    Sak,
+    { fnr: string } | { sakId: string } | { saksnummer: string },
+    { rejectValue: ApiError }
+>('sak/fetch', async (arg, thunkApi) => {
+    console.log(arg);
+    const res = await ('fnr' in arg
+        ? sakApi.fetchSakByFnr(arg.fnr)
+        : 'saksnummer' in arg
+        ? sakApi.fetchSakBySaksnummer(arg.saksnummer)
+        : sakApi.fetchSakBySakId(arg.sakId));
+    if (res.status === 'ok') {
+        return res.data;
     }
-);
+    return thunkApi.rejectWithValue(res.error);
+});
 
 export const stansUtbetalinger = createAsyncThunk<Sak, { sakId: string }, { rejectValue: ApiError }>(
     'utbetalinger/stans',
