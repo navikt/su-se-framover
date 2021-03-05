@@ -12,6 +12,7 @@ import {
     OppholdIUtlandetStatus,
     PersonligOppmøte,
     InstitusjonsoppholdStatus,
+    isPerson,
 } from '~types/Behandlingsinformasjon';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
@@ -213,12 +214,24 @@ function statusForPersonligOppmøte(personligOppmøte: Nullable<PersonligOppmøt
 }
 
 const getSatsStatus = (b: Behandling) => {
+    const ektefelle = b.behandlingsinformasjon.ektefelle;
+
     //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
     if (b.status === Behandlingsstatus.OPPRETTET || b.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
         return VilkårVurderingStatus.IkkeVurdert;
     }
     if (
-        b.behandlingsinformasjon.ektefelle &&
+        b.behandlingsinformasjon.bosituasjon &&
+        ektefelle &&
+        isPerson(ektefelle) &&
+        ektefelle.alder &&
+        ektefelle.alder >= 67
+    ) {
+        return VilkårVurderingStatus.Ok;
+    }
+
+    if (
+        ektefelle &&
         b.behandlingsinformasjon.bosituasjon &&
         b.behandlingsinformasjon.bosituasjon.ektemakeEllerSamboerUførFlyktning !== null
     ) {
@@ -226,7 +239,7 @@ const getSatsStatus = (b: Behandling) => {
     }
 
     if (
-        b.behandlingsinformasjon.ektefelle == null &&
+        ektefelle == null &&
         b.behandlingsinformasjon.bosituasjon &&
         b.behandlingsinformasjon.bosituasjon.delerBolig !== null
     ) {
@@ -237,9 +250,21 @@ const getSatsStatus = (b: Behandling) => {
 };
 
 const erSatsStartet = (b: Behandling) => {
+    const ektefelle = b.behandlingsinformasjon.ektefelle;
+
     //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
     if (b.status === Behandlingsstatus.OPPRETTET || b.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
         return false;
+    }
+
+    if (
+        b.behandlingsinformasjon.bosituasjon &&
+        ektefelle &&
+        isPerson(ektefelle) &&
+        ektefelle.alder &&
+        ektefelle.alder >= 67
+    ) {
+        return true;
     }
 
     if (

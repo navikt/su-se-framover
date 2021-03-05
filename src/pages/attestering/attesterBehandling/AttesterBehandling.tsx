@@ -259,7 +259,10 @@ const Attesteringsinnhold = ({
                                 <div className={styles.sendInnAttesteringFeilet}>
                                     <AlertStripe type="feil">
                                         <p>{intl.formatMessage({ id: 'status.feilet' })}</p>
-                                        <p>{attesteringStatus.error.body?.message || ''}</p>
+                                        <p>
+                                            {attesteringStatus.error.body?.message ||
+                                                intl.formatMessage({ id: 'feil.ukjentFeil' })}
+                                        </p>
                                     </AlertStripe>
                                 </div>
                             )}

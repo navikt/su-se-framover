@@ -342,7 +342,10 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                         {RemoteData.isFailure(beregningStatus) && (
                             <AlertStripeFeil>
                                 <p>{intl.formatMessage({ id: 'alert.feil.beregningFeilet' })}</p>
-                                <p>{beregningStatus.error.body?.message || ''}</p>
+                                <p>
+                                    {beregningStatus.error.body?.message ||
+                                        intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
+                                </p>
                             </AlertStripeFeil>
                         )}
                         {needsBeregning && (
