@@ -86,9 +86,11 @@ const Personsøk = (props: PersonsøkProps) => {
             >
                 <div className={styles.inputContainer}>
                     <Label htmlFor="fnr">
-                        {`${intl.formatMessage({ id: 'input.fnr.label' })} / ${intl.formatMessage({
-                            id: 'input.fnr.saksnummer',
-                        })}`}
+                        {props.onFetchBySaksnummer
+                            ? `${intl.formatMessage({ id: 'input.fnr.label' })} / ${intl.formatMessage({
+                                  id: 'input.fnr.saksnummer',
+                              })}`
+                            : intl.formatMessage({ id: 'input.fnr.label' })}
                     </Label>
                     <div className={styles.inputfeltcontainer}>
                         <Input
