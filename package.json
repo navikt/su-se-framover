@@ -64,7 +64,7 @@
         "date-fns": "^2.17.0",
         "deasync": "^0.1.20",
         "formik": "^2.2.6",
-        "fp-ts": "^2.9.3",
+        "fp-ts": "^2.9.5",
         "js-cookie": "^2.2.1",
         "jsonwebtoken": "^8.5.1",
         "less": "^3.12.2",
