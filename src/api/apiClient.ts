@@ -50,13 +50,13 @@ export default async function apiClient<T>(arg: {
 }): Promise<ApiClientResult<T>> {
     const correlationId = arg.extraData?.correlationId ?? uuid();
 
+    const headers = new Headers(arg.request?.headers);
+    headers.append('X-Correlation-ID', correlationId);
+
     const res = await fetch(`/api/${arg.url.startsWith('/') ? arg.url.slice(1) : arg.url}`, {
         ...arg.request,
         method: arg.method,
-        headers: {
-            ...(arg.request ? arg.request.headers : null),
-            'X-Correlation-ID': correlationId,
-        },
+        headers: headers,
         body: arg.body ? JSON.stringify(arg.body) : undefined,
     });
 
