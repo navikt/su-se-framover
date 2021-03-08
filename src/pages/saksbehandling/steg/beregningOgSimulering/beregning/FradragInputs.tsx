@@ -150,54 +150,42 @@ export const fradragSchema = yup.object<FradragFormData>({
 });
 
 const TilOgMedRadios = (props: {
-    radioValue?: Nullable<Date>;
-    beregningStartDato?: Nullable<Date>;
-    beregningSluttDato?: Nullable<Date>;
-    periodeFraOgMed?: Nullable<Date>;
+    periodeTilOgMed: Nullable<Date>;
+    beregningStartDato: Date;
+    beregningSluttDato: Date;
+    periodeFraOgMed: Date;
     periodeName: string;
     onFradragChange: (date: Date) => void;
     intl: IntlShape;
 }) => {
     const { periodeFraOgMed, beregningStartDato, beregningSluttDato } = props;
 
-    if (!periodeFraOgMed || !beregningStartDato || !beregningSluttDato) {
-        return null;
-    }
-
     const forrigeKalendermåned = DateFns.subMonths(DateFns.endOfMonth(new Date()), 1);
 
-    const getTilOgMedDatoer = (startDate?: Nullable<Date>, endDate?: Nullable<Date>) => {
-        if (!startDate || !endDate) {
-            return [];
-        }
-
-        const dateInterval = DateFns.eachMonthOfInterval({
-            start: startDate,
-            end: endDate,
-        });
-
-        return dateInterval.map((date) => DateFns.endOfMonth(date));
-    };
+    const datoer = DateFns.eachMonthOfInterval({
+        start: beregningStartDato,
+        end: forrigeKalendermåned,
+    }).map((date) => DateFns.endOfMonth(date));
 
     return (
         <ul>
-            {getTilOgMedDatoer(beregningStartDato, forrigeKalendermåned)
+            {datoer
                 .filter((date) => !DateFns.isBefore(date, periodeFraOgMed))
-                .map((date) => {
-                    return (
-                        <Radio
-                            key={date.toDateString()}
-                            name={props.periodeName}
-                            label={formatMonthYear(date.toDateString(), props.intl)}
-                            onChange={() => {
-                                props.onFradragChange(date);
-                            }}
-                            defaultChecked={
-                                props.radioValue ? DateFns.isEqual(DateFns.endOfMonth(props.radioValue), date) : false
-                            }
-                        />
-                    );
-                })}
+                .map((date) => (
+                    <Radio
+                        key={date.toDateString()}
+                        name={props.periodeName}
+                        label={formatMonthYear(date.toDateString(), props.intl)}
+                        onChange={() => {
+                            props.onFradragChange(date);
+                        }}
+                        defaultChecked={
+                            props.periodeTilOgMed
+                                ? DateFns.isEqual(DateFns.endOfMonth(props.periodeTilOgMed), date)
+                                : false
+                        }
+                    />
+                ))}
             <Radio
                 name={props.periodeName}
                 label={props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.utHeleStønadsperioden' })}
@@ -205,7 +193,9 @@ const TilOgMedRadios = (props: {
                     props.onFradragChange(beregningSluttDato);
                 }}
                 defaultChecked={
-                    props.radioValue ? DateFns.isEqual(DateFns.endOfMonth(props.radioValue), beregningSluttDato) : false
+                    props.periodeTilOgMed
+                        ? DateFns.isEqual(DateFns.endOfMonth(props.periodeTilOgMed), beregningSluttDato)
+                        : false
                 }
             />
         </ul>
@@ -389,29 +379,34 @@ export const FradragInputs = (props: {
                                             autoComplete="off"
                                         />
                                     </div>
-                                    <div>
-                                        <Label htmlFor={periode} className={styles.label}>
-                                            {props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.tom' })}
-                                        </Label>
 
-                                        <TilOgMedRadios
-                                            periodeName={`${periode}.tilOgMed`}
-                                            beregningStartDato={props.beregningsDato?.fom}
-                                            beregningSluttDato={props.beregningsDato?.tom}
-                                            periodeFraOgMed={fradrag.periode?.fraOgMed}
-                                            radioValue={fradrag.periode?.tilOgMed}
-                                            onFradragChange={(date: Date) => {
-                                                props.onFradragChange(index, {
-                                                    ...fradrag,
-                                                    periode: {
-                                                        fraOgMed: fradrag.periode?.fraOgMed ?? null,
-                                                        tilOgMed: date,
-                                                    },
-                                                });
-                                            }}
-                                            intl={props.intl}
-                                        />
-                                    </div>
+                                    {props.beregningsDato && fradrag.periode?.fraOgMed && (
+                                        <div>
+                                            <Label htmlFor={periode} className={styles.label}>
+                                                {props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.tom' })}
+                                            </Label>
+
+                                            <TilOgMedRadios
+                                                periodeName={`${periode}.tilOgMed`}
+                                                beregningStartDato={props.beregningsDato.fom}
+                                                beregningSluttDato={props.beregningsDato.tom}
+                                                periodeFraOgMed={fradrag.periode.fraOgMed}
+                                                periodeTilOgMed={fradrag.periode.tilOgMed}
+                                                onFradragChange={(date: Date) => {
+                                                    props.onFradragChange(index, {
+                                                        ...fradrag,
+                                                        periode: {
+                                                            //Blir sjekket på over div
+                                                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                                            fraOgMed: fradrag.periode!.fraOgMed,
+                                                            tilOgMed: date,
+                                                        },
+                                                    });
+                                                }}
+                                                intl={props.intl}
+                                            />
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </SkjemaGruppe>
