@@ -52,6 +52,7 @@ export default {
     'fradrag.delerAvPeriode': 'Deler av perioden',
     'fradrag.delerAvPeriode.fom': 'Fra og med',
     'fradrag.delerAvPeriode.tom': 'Til og med',
+    'fradrag.delerAvPeriode.utHeleStønadsperioden': 'Ut hele stønadsperioden',
 
     'fradrag.eps.fribeløp': 'Fribeløp',
 
