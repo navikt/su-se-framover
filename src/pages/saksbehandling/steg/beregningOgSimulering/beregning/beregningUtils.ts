@@ -1,3 +1,4 @@
+import { toDateOrNull } from '~lib/dateUtils';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
 
@@ -56,7 +57,10 @@ export const FradragTilFradragFormData = (fradrag: Fradrag[]): FradragFormData[]
                 kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
             },
             tilhørerEPS: f.tilhører === FradragTilhører.EPS,
-            periode: f.periode,
+            periode: {
+                fraOgMed: toDateOrNull(f.periode?.fraOgMed),
+                tilOgMed: toDateOrNull(f.periode?.tilOgMed),
+            },
         };
     });
     return fradragFormData;
