@@ -149,7 +149,7 @@ export const fradragSchema = yup.object<FradragFormData>({
         .defined(),
 });
 
-const TilOgMegRadios = (props: {
+const TilOgMedRadios = (props: {
     radioValue?: Nullable<Date>;
     beregningStartDato?: Nullable<Date>;
     beregningSluttDato?: Nullable<Date>;
@@ -164,25 +164,17 @@ const TilOgMegRadios = (props: {
         return null;
     }
 
-    const forrigeKalendermåned = DateFns.subMonths(DateFns.endOfMonth(new Date()), 0);
-
-    const getTilOgMedDatoer = (startDate?: Nullable<Date>, endDate?: Nullable<Date>) => {
-        if (!startDate || !endDate) {
-            return [];
-        }
-
-        const dateInterval = DateFns.eachMonthOfInterval({
-            start: startDate,
-            end: endDate,
-        });
-
-        return dateInterval.map((date) => DateFns.endOfMonth(date));
-    };
+    const currentAndPrevious2Months = [
+        DateFns.subMonths(DateFns.endOfMonth(new Date()), 0),
+        DateFns.subMonths(DateFns.endOfMonth(new Date()), 1),
+        DateFns.subMonths(DateFns.endOfMonth(new Date()), 2),
+    ];
 
     return (
         <ul>
-            {getTilOgMedDatoer(beregningStartDato, forrigeKalendermåned)
+            {currentAndPrevious2Months
                 .filter((date) => !DateFns.isBefore(date, periodeFraOgMed))
+                .reverse()
                 .map((date) => {
                     return (
                         <Radio
@@ -394,7 +386,7 @@ export const FradragInputs = (props: {
                                             {props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.tom' })}
                                         </Label>
 
-                                        <TilOgMegRadios
+                                        <TilOgMedRadios
                                             periodeName={`${periode}.tilOgMed`}
                                             beregningStartDato={props.beregningsDato?.fom}
                                             beregningSluttDato={props.beregningsDato?.tom}
