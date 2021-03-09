@@ -1,5 +1,6 @@
 export default {
     'feil.feilOppsto': 'En feil oppsto',
+    'feil.kunneIkkeHentePdf': 'En feil skjedde under henting av PDF',
 
     'kvittering.søknadMottatt': 'Søknaden om supplerende stønad er mottatt.',
     'kvittering.skrivUtSøknad': 'Skriv ut søknad',

@@ -8,7 +8,9 @@ import * as React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
+import { ApiError } from '~api/apiClient';
 import { fetchSøknad } from '~api/pdfApi';
+import { OpprettetSøknad } from '~api/søknadApi';
 import * as personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
 import * as søknadslice from '~features/søknad/søknad.slice';
@@ -23,11 +25,25 @@ const Kvittering = () => {
     const history = useHistory();
     const søknad = useAppSelector((state) => state.innsending.søknad);
     const søker = useAppSelector((state) => state.søker.søker);
+    const [fetchSøknadPdfState, setFetchSøknadPdfState] = React.useState<RemoteData.RemoteData<ApiError, null>>(
+        RemoteData.initial
+    );
 
     const handleAvsluttSøknad = () => {
         dispatch(personSlice.default.actions.resetSøker());
         dispatch(søknadslice.default.actions.resetSøknad());
         history.push(Routes.soknad.createURL());
+    };
+
+    const handleSkrivUtSøknadClick = async (opprettetSøknad: OpprettetSøknad) => {
+        setFetchSøknadPdfState(RemoteData.pending);
+        const res = await fetchSøknad(opprettetSøknad.søknad.id);
+        if (res.status === 'ok') {
+            setFetchSøknadPdfState(RemoteData.success(null));
+            window.open(URL.createObjectURL(res.data));
+        } else {
+            setFetchSøknadPdfState(RemoteData.failure(res.error));
+        }
     };
 
     const VisFeil = () => (
@@ -104,18 +120,22 @@ const Kvittering = () => {
                                             </ol>
                                         </div>
 
+                                        {RemoteData.isFailure(fetchSøknadPdfState) && (
+                                            <AlertStripe type="feil">
+                                                <FormattedMessage id="feil.kunneIkkeHentePdf" />
+                                            </AlertStripe>
+                                        )}
+
                                         <div className={styles.nySøknadKnapp}>
                                             <Knapp onClick={handleAvsluttSøknad}>
                                                 <FormattedMessage id="kvittering.avslutt" />
                                             </Knapp>
 
                                             <Hovedknapp
-                                                onClick={() =>
-                                                    fetchSøknad(saksnummerOgSøknad.søknad.id).then((res) => {
-                                                        if (res.status === 'ok')
-                                                            window.open(URL.createObjectURL(res.data));
-                                                    })
-                                                }
+                                                onClick={() => {
+                                                    handleSkrivUtSøknadClick(saksnummerOgSøknad);
+                                                }}
+                                                spinner={RemoteData.isPending(fetchSøknadPdfState)}
                                             >
                                                 <FormattedMessage id="kvittering.skrivUtSøknad" />
                                             </Hovedknapp>
