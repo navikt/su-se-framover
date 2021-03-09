@@ -29,7 +29,6 @@ export const fetchSak = createAsyncThunk<
     { fnr: string } | { sakId: string } | { saksnummer: string },
     { rejectValue: ApiError }
 >('sak/fetch', async (arg, thunkApi) => {
-    console.log(arg);
     const res = await ('fnr' in arg
         ? sakApi.fetchSakByFnr(arg.fnr)
         : 'saksnummer' in arg

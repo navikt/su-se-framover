@@ -158,19 +158,20 @@ const TilOgMedRadios = (props: {
     onFradragChange: (date: Date) => void;
     intl: IntlShape;
 }) => {
-    const { periodeFraOgMed, beregningStartDato, beregningSluttDato } = props;
-
     const forrigeKalendermåned = DateFns.subMonths(DateFns.endOfMonth(new Date()), 1);
+    const beregningSluttDato = DateFns.endOfMonth(props.beregningSluttDato);
 
-    const datoer = DateFns.eachMonthOfInterval({
-        start: beregningStartDato,
-        end: forrigeKalendermåned,
-    }).map((date) => DateFns.endOfMonth(date));
+    const datoer = DateFns.isBefore(props.beregningStartDato, forrigeKalendermåned)
+        ? DateFns.eachMonthOfInterval({
+              start: props.beregningStartDato,
+              end: forrigeKalendermåned,
+          }).map((date) => DateFns.endOfMonth(date))
+        : [];
 
     return (
         <ul>
             {datoer
-                .filter((date) => !DateFns.isBefore(date, periodeFraOgMed))
+                .filter((date) => !DateFns.isBefore(date, props.periodeFraOgMed))
                 .map((date) => (
                     <Radio
                         key={date.toDateString()}
