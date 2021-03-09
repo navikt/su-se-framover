@@ -3,14 +3,14 @@ import * as DateFns from 'date-fns';
 import { FormikErrors } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
-import { SkjemaGruppe, Select, Input, Checkbox, InputProps, Label } from 'nav-frontend-skjema';
+import { SkjemaGruppe, Select, Input, Checkbox, InputProps, Label, Radio } from 'nav-frontend-skjema';
 import { Normaltekst, Feilmelding } from 'nav-frontend-typografi';
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import { IntlShape } from 'react-intl';
 
 import { TrashBin } from '~assets/Icons';
-import { toStringDateOrNull } from '~lib/dateUtils';
+import { toStringDateOrNull, formatMonthYear } from '~lib/dateUtils';
 import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsPositiveNumber } from '~lib/validering';
 import InntektFraUtland from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/InntektFraUtland';
@@ -27,8 +27,8 @@ export interface FradragFormData {
     utenlandskInntekt: UtenlandskInntektFormData;
     tilhørerEPS: boolean;
     periode: Nullable<{
-        fraOgMed: Nullable<string>;
-        tilOgMed: Nullable<string>;
+        fraOgMed: Nullable<Date>;
+        tilOgMed: Nullable<Date>;
     }>;
 }
 
@@ -128,9 +128,9 @@ export const fradragSchema = yup.object<FradragFormData>({
     periode: yup
         .object()
         .shape({
-            fraOgMed: yup.string().required().typeError('Dato må fylles inn'),
+            fraOgMed: yup.date().required().typeError('Dato må fylles inn'),
             tilOgMed: yup
-                .string()
+                .date()
                 .required()
                 .typeError('Dato må fylles inn')
                 .test(
@@ -148,6 +148,59 @@ export const fradragSchema = yup.object<FradragFormData>({
         })
         .defined(),
 });
+
+const TilOgMedRadios = (props: {
+    periodeTilOgMed: Nullable<Date>;
+    beregningStartDato: Date;
+    beregningSluttDato: Date;
+    periodeFraOgMed: Date;
+    periodeName: string;
+    onFradragChange: (date: Date) => void;
+    intl: IntlShape;
+}) => {
+    const { periodeFraOgMed, beregningStartDato, beregningSluttDato } = props;
+
+    const forrigeKalendermåned = DateFns.subMonths(DateFns.endOfMonth(new Date()), 1);
+
+    const datoer = DateFns.eachMonthOfInterval({
+        start: beregningStartDato,
+        end: forrigeKalendermåned,
+    }).map((date) => DateFns.endOfMonth(date));
+
+    return (
+        <ul>
+            {datoer
+                .filter((date) => !DateFns.isBefore(date, periodeFraOgMed))
+                .map((date) => (
+                    <Radio
+                        key={date.toDateString()}
+                        name={props.periodeName}
+                        label={formatMonthYear(date.toDateString(), props.intl)}
+                        onChange={() => {
+                            props.onFradragChange(date);
+                        }}
+                        defaultChecked={
+                            props.periodeTilOgMed
+                                ? DateFns.isEqual(DateFns.endOfMonth(props.periodeTilOgMed), date)
+                                : false
+                        }
+                    />
+                ))}
+            <Radio
+                name={props.periodeName}
+                label={props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.utHeleStønadsperioden' })}
+                onChange={() => {
+                    props.onFradragChange(beregningSluttDato);
+                }}
+                defaultChecked={
+                    props.periodeTilOgMed
+                        ? DateFns.isEqual(DateFns.endOfMonth(props.periodeTilOgMed), beregningSluttDato)
+                        : false
+                }
+            />
+        </ul>
+    );
+};
 
 export const isValidFradrag = (f: unknown): f is Fradrag => fradragSchema.isValidSync(f);
 
@@ -310,54 +363,50 @@ export const FradragInputs = (props: {
                                             selected={
                                                 fradrag.periode?.fraOgMed ? new Date(fradrag.periode.fraOgMed) : null
                                             }
-                                            onChange={(e) =>
+                                            onChange={(e: Date) => {
                                                 props.onFradragChange(index, {
                                                     ...fradrag,
                                                     periode: {
+                                                        fraOgMed: e,
                                                         tilOgMed: fradrag.periode?.tilOgMed ?? null,
-                                                        fraOgMed: toStringDateOrNull(e as Nullable<Date>),
                                                     },
-                                                })
-                                            }
+                                                });
+                                            }}
                                             dateFormat="MM/yyyy"
                                             showMonthYearPicker
-                                            maxDate={props.beregningsDato?.tom}
                                             minDate={props.beregningsDato?.fom}
+                                            maxDate={DateFns.endOfMonth(DateFns.addMonths(new Date(), 1))}
                                             autoComplete="off"
                                         />
                                     </div>
-                                    <div>
-                                        <Label htmlFor={periode} className={styles.label}>
-                                            {props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.tom' })}
-                                        </Label>
 
-                                        <DatePicker
-                                            id={`${periode}.tilOgMed`}
-                                            selected={
-                                                fradrag.periode?.tilOgMed ? new Date(fradrag.periode.tilOgMed) : null
-                                            }
-                                            onChange={(e) =>
-                                                props.onFradragChange(index, {
-                                                    ...fradrag,
-                                                    periode: {
-                                                        fraOgMed: fradrag.periode?.fraOgMed ?? null,
-                                                        tilOgMed: toLastDayOfMonthString(e as Nullable<Date>),
-                                                    },
-                                                })
-                                            }
-                                            dateFormat="MM/yyyy"
-                                            showMonthYearPicker
-                                            selectsEnd={true}
-                                            endDate={props.beregningsDato?.tom}
-                                            minDate={
-                                                fradrag.periode?.fraOgMed
-                                                    ? new Date(fradrag.periode.fraOgMed)
-                                                    : props.beregningsDato?.fom
-                                            }
-                                            maxDate={props.beregningsDato?.tom}
-                                            autoComplete="off"
-                                        />
-                                    </div>
+                                    {props.beregningsDato && fradrag.periode?.fraOgMed && (
+                                        <div>
+                                            <Label htmlFor={periode} className={styles.label}>
+                                                {props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.tom' })}
+                                            </Label>
+
+                                            <TilOgMedRadios
+                                                periodeName={`${periode}.tilOgMed`}
+                                                beregningStartDato={props.beregningsDato.fom}
+                                                beregningSluttDato={props.beregningsDato.tom}
+                                                periodeFraOgMed={fradrag.periode.fraOgMed}
+                                                periodeTilOgMed={fradrag.periode.tilOgMed}
+                                                onFradragChange={(date: Date) => {
+                                                    props.onFradragChange(index, {
+                                                        ...fradrag,
+                                                        periode: {
+                                                            //Blir sjekket på over div
+                                                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                                            fraOgMed: fradrag.periode!.fraOgMed,
+                                                            tilOgMed: date,
+                                                        },
+                                                    });
+                                                }}
+                                                intl={props.intl}
+                                            />
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </SkjemaGruppe>
@@ -373,9 +422,3 @@ export const FradragInputs = (props: {
         </div>
     );
 };
-
-function toLastDayOfMonthString(date: Date | null) {
-    if (!date) return null;
-
-    return toStringDateOrNull(lastDayOfMonth(date));
-}

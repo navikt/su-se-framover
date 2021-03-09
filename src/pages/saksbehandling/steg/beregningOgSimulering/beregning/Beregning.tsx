@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { addMonths, lastDayOfMonth } from 'date-fns';
+import { addMonths, lastDayOfMonth, formatISO } from 'date-fns';
 import { useFormik } from 'formik';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
@@ -49,11 +49,15 @@ function getInitialValues(beregning: Nullable<Beregning>): FormData {
     const fradragUtenomForventetInntekt = (beregning?.fradrag ?? []).filter(
         (f) => f.type !== Fradragstype.ForventetInntekt
     );
+
     return {
         fom: toDateOrNull(beregning?.fraOgMed),
         tom: toDateOrNull(beregning?.tilOgMed),
         fradrag: fradragUtenomForventetInntekt.map((f) => ({
-            periode: f.periode,
+            periode: {
+                fraOgMed: toDateOrNull(f.periode?.fraOgMed),
+                tilOgMed: toDateOrNull(f.periode?.tilOgMed),
+            },
             fraUtland: f.utenlandskInntekt !== null,
             beløp: f.beløp.toString(),
             utenlandskInntekt: {
@@ -93,14 +97,17 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 sats: props.behandling.behandlingsinformasjon.utledetSats,
-                fom: values.fom,
-                tom: lastDayOfMonth(values.tom),
+                fom: formatISO(values.fom, { representation: 'date' }),
+                tom: formatISO(lastDayOfMonth(values.tom), { representation: 'date' }),
                 fradrag: values.fradrag.map((f) => ({
                     //valdiering sikrer at feltet ikke er null
                     /* eslint-disable @typescript-eslint/no-non-null-assertion */
                     periode:
                         f.periode?.fraOgMed && f.periode.tilOgMed
-                            ? { fraOgMed: f.periode.fraOgMed, tilOgMed: f.periode.tilOgMed }
+                            ? {
+                                  fraOgMed: formatISO(f.periode.fraOgMed, { representation: 'date' }),
+                                  tilOgMed: formatISO(f.periode.tilOgMed, { representation: 'date' }),
+                              }
                             : null,
                     beløp: parseInt(f.beløp!, 10),
                     type: f.type!,

@@ -136,7 +136,7 @@ export const lastNedBrev = createAsyncThunk<
 
 export const startBeregning = createAsyncThunk<
     Behandling,
-    { sakId: string; behandlingId: string; sats: Sats; fom: Date; tom: Date; fradrag: Fradrag[] },
+    { sakId: string; behandlingId: string; sats: Sats; fom: string; tom: string; fradrag: Fradrag[] },
     { rejectValue: ApiError }
 >('beregning/start', async ({ sakId, behandlingId, fom, tom, fradrag }, thunkApi) => {
     const res = await behandlingApi.startBeregning(sakId, behandlingId, { fom, tom, fradrag });
