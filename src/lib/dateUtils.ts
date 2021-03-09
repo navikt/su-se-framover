@@ -48,3 +48,5 @@ export const toStringDateOrNull = (date: Date | null) => {
 
     return DateFns.format(date, 'yyyy-MM-dd');
 };
+
+export const hentNesteKalenderMåned = () => DateFns.startOfMonth(DateFns.addMonths(new Date(), 1));

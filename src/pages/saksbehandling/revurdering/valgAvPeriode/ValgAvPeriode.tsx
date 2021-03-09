@@ -1,4 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
@@ -8,6 +9,7 @@ import DatePicker from 'react-datepicker';
 import { Link, useHistory } from 'react-router-dom';
 
 import { oppdaterRevurderingsPeriode } from '~features/revurdering/revurderingActions';
+import { hentNesteKalenderMåned } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -38,6 +40,8 @@ const ValgAvPeriode = (props: {
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const oppdaterRevurderingsPeriodeStatus = useAppSelector((state) => state.sak.oppdaterRevurderingsPeriodeStatus);
     const dispatch = useAppDispatch();
+
+    const nesteKalendermåned = hentNesteKalenderMåned();
 
     const formik = useFormik<ValgAvPeriodeFormData>({
         initialValues: {
@@ -103,7 +107,7 @@ const ValgAvPeriode = (props: {
                                 isClearable
                                 selectsEnd
                                 startDate={periode?.fraOgMed}
-                                minDate={props.førsteUtbetalingISak}
+                                minDate={DateFns.max([props.førsteUtbetalingISak, nesteKalendermåned])}
                                 maxDate={props.sisteUtbetalingISak}
                                 autoComplete="off"
                             />
