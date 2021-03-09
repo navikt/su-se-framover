@@ -87,47 +87,97 @@ const Kvittering = () => {
                                         }}
                                     />
                                 </Systemtittel>
-                                <div className={styles.suksessContainer}>
-                                    <div>
-                                        <AlertStripe type="suksess">
-                                            <Normaltekst>
-                                                <FormattedMessage id="kvittering.søknadMottatt" />
-                                            </Normaltekst>
-                                            <Normaltekst>
-                                                <FormattedMessage
-                                                    id="kvittering.saksnummer"
-                                                    values={{
-                                                        saksnummer: saksnummerOgSøknad.saksnummer,
-                                                    }}
-                                                />
-                                            </Normaltekst>
-                                        </AlertStripe>
+                                <div>
+                                    <div className={styles.suksessContainer}>
+                                        <div>
+                                            <AlertStripe type="suksess">
+                                                <Normaltekst>
+                                                    <FormattedMessage id="kvittering.søknadMottatt" />
+                                                </Normaltekst>
+                                                <Normaltekst>
+                                                    <FormattedMessage
+                                                        id="kvittering.saksnummer"
+                                                        values={{
+                                                            saksnummer: saksnummerOgSøknad.saksnummer,
+                                                        }}
+                                                    />
+                                                </Normaltekst>
+                                            </AlertStripe>
 
-                                        <div className={styles.tilVeileder}>
-                                            <Undertittel tag="h3">
-                                                <FormattedMessage id="kvittering.tilVeileder.heading" />
-                                            </Undertittel>
-                                            <ol>
-                                                <li>
-                                                    <FormattedMessage id="kvittering.tilVeileder.punkt1" />
-                                                </li>
-                                                <li>
-                                                    <FormattedMessage id="kvittering.tilVeileder.punkt2" />
-                                                </li>
-                                                <li>
-                                                    <FormattedMessage id="kvittering.tilVeileder.punkt3" />
-                                                </li>
-                                            </ol>
+                                            <div className={styles.tilVeileder}>
+                                                <Undertittel tag="h3">
+                                                    <FormattedMessage id="kvittering.tilVeileder.heading" />
+                                                </Undertittel>
+                                                <ol>
+                                                    <li>
+                                                        <FormattedMessage id="kvittering.tilVeileder.punkt1" />
+                                                    </li>
+                                                    <li>
+                                                        <FormattedMessage id="kvittering.tilVeileder.punkt2" />
+                                                    </li>
+                                                    <li>
+                                                        <FormattedMessage id="kvittering.tilVeileder.punkt3" />
+                                                    </li>
+                                                </ol>
+                                            </div>
                                         </div>
 
+                                        <div className={styles.infoContainer}>
+                                            <AlertStripeInfo>
+                                                <p>
+                                                    <FormattedMessage id="vedlegg.huskVedlegg" />
+                                                </p>
+                                                <br />
+                                                <p>
+                                                    <FormattedMessage id="vedlegg.måLeggesMed" />
+                                                </p>
+                                                <br />
+                                                <ul className={styles.list}>
+                                                    <li className={styles.listItem}>
+                                                        <Element>
+                                                            <FormattedMessage id="vedlegg.måLeggesMed.puntk1" />
+                                                        </Element>
+                                                    </li>
+                                                    <li className={styles.listItem}>
+                                                        <Element>
+                                                            <FormattedMessage id="vedlegg.måLeggesMed.puntk2" />
+                                                        </Element>
+                                                    </li>
+                                                </ul>
+                                                <br />
+                                                <p>
+                                                    <FormattedMessage id="vedlegg.formueIUtlandet" />
+                                                </p>
+                                                <br />
+                                                <ul className={styles.list}>
+                                                    <li className={styles.listItem}>
+                                                        <Element>
+                                                            <FormattedMessage id="vedlegg.formueIUtlandet.punkt1" />
+                                                        </Element>
+                                                    </li>
+                                                    <li className={styles.listItem}>
+                                                        <Element>
+                                                            <FormattedMessage id="vedlegg.formueIUtlandet.punkt2" />
+                                                        </Element>
+                                                    </li>
+                                                </ul>
+                                                <br />
+                                                <Element>
+                                                    <FormattedMessage id="vedlegg.søkerManglerDok" />
+                                                </Element>
+                                            </AlertStripeInfo>
+                                        </div>
+                                    </div>
+                                    <div className={styles.nySøknadKnapp}>
                                         {RemoteData.isFailure(fetchSøknadPdfState) && (
-                                            <AlertStripe type="feil">
-                                                <FormattedMessage id="feil.kunneIkkeHentePdf" />
-                                            </AlertStripe>
+                                            <div className={styles.errorMessageContainer}>
+                                                <AlertStripe type="feil">
+                                                    <FormattedMessage id="feil.kunneIkkeHentePdf" />
+                                                </AlertStripe>
+                                            </div>
                                         )}
-
-                                        <div className={styles.nySøknadKnapp}>
-                                            <Knapp onClick={handleAvsluttSøknad}>
+                                        <div>
+                                            <Knapp onClick={handleAvsluttSøknad} className={styles.avsluttKnapp}>
                                                 <FormattedMessage id="kvittering.avslutt" />
                                             </Knapp>
 
@@ -140,51 +190,6 @@ const Kvittering = () => {
                                                 <FormattedMessage id="kvittering.skrivUtSøknad" />
                                             </Hovedknapp>
                                         </div>
-                                    </div>
-                                    <div className={styles.infoContainer}>
-                                        <AlertStripeInfo>
-                                            <p>
-                                                <FormattedMessage id="vedlegg.huskVedlegg" />
-                                            </p>
-                                            <br />
-                                            <p>
-                                                <FormattedMessage id="vedlegg.måLeggesMed" />
-                                            </p>
-                                            <br />
-                                            <ul className={styles.list}>
-                                                <li className={styles.listItem}>
-                                                    <Element>
-                                                        <FormattedMessage id="vedlegg.måLeggesMed.puntk1" />
-                                                    </Element>
-                                                </li>
-                                                <li className={styles.listItem}>
-                                                    <Element>
-                                                        <FormattedMessage id="vedlegg.måLeggesMed.puntk2" />
-                                                    </Element>
-                                                </li>
-                                            </ul>
-                                            <br />
-                                            <p>
-                                                <FormattedMessage id="vedlegg.formueIUtlandet" />
-                                            </p>
-                                            <br />
-                                            <ul className={styles.list}>
-                                                <li className={styles.listItem}>
-                                                    <Element>
-                                                        <FormattedMessage id="vedlegg.formueIUtlandet.punkt1" />
-                                                    </Element>
-                                                </li>
-                                                <li className={styles.listItem}>
-                                                    <Element>
-                                                        <FormattedMessage id="vedlegg.formueIUtlandet.punkt2" />
-                                                    </Element>
-                                                </li>
-                                            </ul>
-                                            <br />
-                                            <Element>
-                                                <FormattedMessage id="vedlegg.søkerManglerDok" />
-                                            </Element>
-                                        </AlertStripeInfo>
                                     </div>
                                 </div>
                             </IntlProvider>

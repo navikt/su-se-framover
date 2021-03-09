@@ -41,7 +41,7 @@ const VilkårsOppsummering = (props: {
     const vilkårsinformasjon = mapToVilkårsinformasjon(props.behandlingsinformasjon);
 
     return (
-        <div className={styles.container}>
+        <div>
             <Systemtittel className={styles.tittel}>{intl.formatMessage({ id: 'page.tittel' })}</Systemtittel>
             <div className={styles.vilkårsblokkerContainer}>
                 {vilkårsinformasjon.map((v) => (

@@ -12,9 +12,14 @@
     margin-top: @spacing-l;
     display: flex;
     justify-content: center;
+    margin-bottom: @spacing-xl;
 
     > :not(:last-child) {
         margin-right: @spacing-xxl;
+    }
+
+    @media (max-width: @screen-md) {
+        flex-direction: column;
     }
 }
 
@@ -47,10 +52,13 @@
 .nySøknadKnapp {
     display: flex;
     justify-content: center;
-    flex-direction: row;
-    margin-top: @spacing-xl;
+    flex-direction: column;
 
-    > :not(:last-child) {
+    .avsluttKnapp {
         margin-right: @spacing;
+    }
+    .errorMessageContainer {
+        display: flex;
+        margin-bottom: @spacing;
     }
 }
