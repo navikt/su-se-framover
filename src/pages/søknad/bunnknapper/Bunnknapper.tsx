@@ -18,6 +18,7 @@ const Bunnknapper = (props: {
     };
     next?: {
         label?: React.ReactNode;
+        spinner?: boolean;
     };
     avbryt: {
         toRoute: string;
@@ -27,7 +28,7 @@ const Bunnknapper = (props: {
     return (
         <TextProvider messages={{ [Languages.nb]: messages }}>
             <div className={styles.container}>
-                <Hovedknapp htmlType="submit" className={styles.navKnapp}>
+                <Hovedknapp htmlType="submit" className={styles.navKnapp} spinner={props.next?.spinner}>
                     {props.next?.label ?? <FormattedMessage id="steg.neste" />}
                 </Hovedknapp>
                 {props.previous && (
