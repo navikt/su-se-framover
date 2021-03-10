@@ -1,4 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
@@ -8,6 +9,7 @@ import DatePicker from 'react-datepicker';
 import { useHistory, Link } from 'react-router-dom';
 
 import { opprettRevurdering } from '~features/revurdering/revurderingActions';
+import { hentNesteKalenderMåned } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -37,6 +39,7 @@ const OpprettRevurdering = (props: { sak: Sak }) => {
     const intl = useI18n({ messages });
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const opprettRevurderingStatus = useAppSelector((state) => state.sak.opprettRevurderingStatus);
+    const nesteKalendermåned = hentNesteKalenderMåned();
 
     const handleOpprettRevurdering = async (fraOgMed: Date) => {
         const response = await dispatch(
@@ -106,7 +109,10 @@ const OpprettRevurdering = (props: { sak: Sak }) => {
                                 isClearable
                                 selectsEnd
                                 startDate={periode?.fraOgMed}
-                                minDate={new Date(props.sak.utbetalinger[0].fraOgMed)}
+                                minDate={DateFns.max([
+                                    new Date(props.sak.utbetalinger[0].fraOgMed),
+                                    nesteKalendermåned,
+                                ])}
                                 maxDate={sisteUtbetalingsDato}
                                 autoComplete="off"
                             />
