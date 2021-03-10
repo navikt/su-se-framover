@@ -77,25 +77,30 @@ const utledSats = (values: FormData, harEPS: boolean, epsAlder?: Nullable<number
     return null;
 };
 
-const schema = yup.object<FormData>({
-    delerSøkerBolig: yup.boolean().defined().when('epsFnr', {
-        is: null,
-        then: yup.boolean().required(),
-    }),
-    mottarEktemakeEllerSamboerSU: yup
-        .boolean()
-        .defined()
-        .test('eps mottar SU', 'Feltet må fylles ut', function (mottarSu) {
-            const { epsFnr, epsAlder } = this.parent;
+const getValidationSchema = (eps: Nullable<Person>) => {
+    return yup.object<FormData>({
+        delerSøkerBolig: yup
+            .boolean()
+            .defined()
+            .test('deler søker bolig', 'Feltet må fylles ut', function (delerSøkerBolig) {
+                if (!eps) {
+                    return delerSøkerBolig !== null;
+                }
+                return true;
+            }),
+        mottarEktemakeEllerSamboerSU: yup
+            .boolean()
+            .defined()
+            .test('eps mottar SU', 'Feltet må fylles ut', function (mottarSu) {
+                if (eps && eps.alder && eps.alder < 67) {
+                    return mottarSu !== null;
+                }
 
-            if (epsFnr && epsAlder < 67) {
-                return mottarSu !== null;
-            }
-
-            return true;
-        }),
-    begrunnelse: yup.string().defined(),
-});
+                return true;
+            }),
+        begrunnelse: yup.string().defined(),
+    });
+};
 
 const Sats = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
@@ -115,7 +120,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                     : eksisterendeBosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null,
             begrunnelse: eksisterendeBosituasjon?.begrunnelse ?? null,
         },
-        validationSchema: schema,
+        validationSchema: getValidationSchema(eps),
         validateOnChange: hasSubmitted,
         async onSubmit(values) {
             handleSave(values, props.nesteUrl);
