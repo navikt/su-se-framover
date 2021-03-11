@@ -1,11 +1,13 @@
 import { formatISO } from 'date-fns';
 
+import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
 import { Fradrag, Periode } from '~types/Fradrag';
 import {
     OpprettetRevurdering,
     SimulertRevurdering,
     RevurderingTilAttestering,
     IverksattRevurdering,
+    UnderkjentRevurdering,
 } from '~types/Revurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -63,6 +65,22 @@ export async function sendTilAttestering(
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilAttestering`,
         method: 'POST',
+    });
+}
+
+export async function underkjenn(
+    sakId: string,
+    revurderingId: string,
+    grunn: UnderkjennRevurderingGrunn,
+    kommentar?: string
+): Promise<ApiClientResult<UnderkjentRevurdering>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/underkjenn`,
+        method: 'PATCH',
+        body: {
+            grunn: grunn,
+            kommentar: kommentar,
+        },
     });
 }
 

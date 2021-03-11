@@ -38,6 +38,11 @@ export interface IverksattRevurdering extends Revurdering<RevurderingsStatus.IVE
     attestant: string;
 }
 
+export interface UnderkjentRevurdering extends Revurdering<RevurderingsStatus.UNDERKJENT> {
+    beregninger: Beregninger;
+    attestant: string;
+}
+
 export enum RevurderingsStatus {
     OPPRETTET = 'OPPRETTET',
     BEREGNET_INNVILGET = 'BEREGNET_INNVILGET',
@@ -45,4 +50,5 @@ export enum RevurderingsStatus {
     SIMULERT = 'SIMULERT',
     TIL_ATTESTERING = 'TIL_ATTESTERING',
     IVERKSATT = 'IVERKSATT',
+    UNDERKJENT = 'UNDERKJENT',
 }

@@ -2,12 +2,14 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
 import { Nullable } from '~lib/types';
+import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
 import { Periode, Fradrag } from '~types/Fradrag';
 import {
     RevurderingTilAttestering,
     IverksattRevurdering,
     OpprettetRevurdering,
     SimulertRevurdering,
+    UnderkjentRevurdering,
 } from '~types/Revurdering';
 
 import * as pdfApi from '../../api/pdfApi';
@@ -71,6 +73,18 @@ export const iverksettRevurdering = createAsyncThunk<
     { rejectValue: ApiError }
 >('revurdering/iverksett', async ({ sakId, revurderingId }, thunkApi) => {
     const res = await revurderingApi.iverksett(sakId, revurderingId);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const underkjennRevurdering = createAsyncThunk<
+    UnderkjentRevurdering,
+    { sakId: string; revurderingId: string; grunn: UnderkjennRevurderingGrunn; kommentar?: string },
+    { rejectValue: ApiError }
+>('revurdering/underkjenn', async ({ sakId, revurderingId, grunn, kommentar }, thunkApi) => {
+    const res = await revurderingApi.underkjenn(sakId, revurderingId, grunn, kommentar);
     if (res.status === 'ok') {
         return res.data;
     }
