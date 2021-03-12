@@ -93,9 +93,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                 ? fradragUtenForventetInntekt(
                       FradragTilFradragFormData(props.revurdering.beregninger.revurdert.fradrag)
                   )
-                : fradragUtenForventetInntekt(
-                      FradragTilFradragFormData(props.revurdering.tilRevurdering.beregning?.fradrag ?? [])
-                  ),
+                : [],
         },
         onSubmit(values) {
             beregnOgSimulerRevurdering(values.fradrag);
