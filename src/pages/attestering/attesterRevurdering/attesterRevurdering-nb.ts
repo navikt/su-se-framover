@@ -18,6 +18,7 @@ export default {
     'input.kommentar.label': 'Kommentar',
 
     'attester.iverksatt': 'Revurdering er iverksatt',
+    'attester.sendtTilbake': 'Revurdering er sendt tilbake til vurdering',
     'attester.tilSaksoversikt': 'Til saksoversikt',
 
     'knapp.tekst': 'Send beslutning',

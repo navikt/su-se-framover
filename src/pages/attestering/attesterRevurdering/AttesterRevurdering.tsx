@@ -131,7 +131,11 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
         return (
             <div className={styles.sendtTilAttesteringContainer}>
                 <AlertStripeSuksess>
-                    <p>{intl.formatMessage({ id: 'attester.iverksatt' })}</p>
+                    <p>
+                        {formik.values.beslutning
+                            ? intl.formatMessage({ id: 'attester.iverksatt' })
+                            : intl.formatMessage({ id: 'attester.sendtTilbake' })}
+                    </p>
                     <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
                         {intl.formatMessage({ id: 'attester.tilSaksoversikt' })}
                     </Link>
