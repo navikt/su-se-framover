@@ -1,4 +1,4 @@
-import { Behandling } from './Behandling';
+import { Behandling, Attestering } from './Behandling';
 import { Beregning } from './Beregning';
 import { Periode } from './Fradrag';
 
@@ -35,12 +35,12 @@ export interface RevurderingTilAttestering extends Revurdering<RevurderingsStatu
 
 export interface IverksattRevurdering extends Revurdering<RevurderingsStatus.IVERKSATT> {
     beregninger: Beregninger;
-    attestant: string;
+    attestering: Attestering;
 }
 
 export interface UnderkjentRevurdering extends Revurdering<RevurderingsStatus.UNDERKJENT> {
     beregninger: Beregninger;
-    attestant: string;
+    attestering: Attestering;
 }
 
 export enum RevurderingsStatus {

@@ -71,7 +71,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const intl = useI18n({ messages });
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
     const dispatch = useAppDispatch();
-    const [hasSubmitted, setHasSubmitted] = useState<boolean>();
+    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const [sendtBeslutning, setSendtBeslutning] = useState<
         RemoteData.RemoteData<ApiError, IverksattRevurdering | UnderkjentRevurdering>
     >(RemoteData.initial);
@@ -81,7 +81,6 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const formik = useFormik<FormData>({
         initialValues: {},
         onSubmit: async (values) => {
-            console.log(values);
             if (values.beslutning) {
                 setSendtBeslutning(RemoteData.pending);
                 const res = await dispatch(

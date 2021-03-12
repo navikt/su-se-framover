@@ -47,4 +47,9 @@ export default {
 
     'knapp.revurder': 'Revurder',
     'knapp.stoppUtbetaling': 'Stopp utbetaling',
+
+    'revurdering.fortsett': 'Fortsett revurdering',
+    'revurdering.tittel': 'Revurderinger',
+    'revurdering.undertittel': 'Revurdering',
+    'revurdering.opprettet': 'Opprettet:',
 };
