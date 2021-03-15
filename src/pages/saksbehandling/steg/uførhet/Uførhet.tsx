@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Radio, RadioGruppe, Input, Label, Feiloppsummering, Textarea } from 'nav-frontend-skjema';
+import { Radio, RadioGruppe, Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Normaltekst, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -14,6 +13,8 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import UføregrunnlagInputFelter from '~pages/saksbehandling/steg/uførhet/UføregrunnlagInputFelter';
+import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Uførhet as UførhetType, UførhetStatus } from '~types/Behandlingsinformasjon';
 
@@ -25,34 +26,6 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 
 import messages from './uførhet-nb';
 import styles from './Uførhet.module.less';
-
-const UførhetInput = (props: {
-    tittel: string;
-    inputName: string;
-    inputTekst: string;
-    defaultValues: string;
-    bredde?: 'fullbredde' | 'XXL' | 'XL' | 'L' | 'M' | 'S' | 'XS' | 'XXS';
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    feil: string | undefined;
-}) => (
-    <div className={styles.uføreAndFeilmeldingInputContainer}>
-        <Label htmlFor={props.inputName}> {props.tittel} </Label>
-        <span>
-            <span className={styles.uføreInputContainer}>
-                <Input
-                    className={styles.uførehetInputFelt}
-                    name={props.inputName}
-                    defaultValue={props.defaultValues}
-                    bredde={props.bredde}
-                    onChange={props.onChange}
-                    id={props.inputName}
-                />
-                <Normaltekst>{props.inputTekst}</Normaltekst>
-            </span>
-            {props.feil && <Feilmelding>{props.feil}</Feilmelding>}
-        </span>
-    </div>
-);
 
 interface FormData {
     status: Nullable<UførhetStatus>;
@@ -133,7 +106,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
             begrunnelse: props.behandling.behandlingsinformasjon.uførhet?.begrunnelse ?? null,
         },
         async onSubmit(values) {
-            handleSave(values, props.nesteUrl);
+            await handleSave(values, props.nesteUrl);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -144,123 +117,127 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
-                    <form
-                        onSubmit={(e) => {
-                            setHasSubmitted(true);
-                            formik.handleSubmit(e);
-                        }}
-                    >
-                        <RadioGruppe
-                            className={styles.radioGruppe}
-                            legend={intl.formatMessage({ id: 'radio.uførhet.legend' })}
-                            feil={formik.errors.status}
+                    <>
+                        <UføregrunnlagInputFelter sakId={props.sakId} behandling={props.behandling} />
+                        ------------------------------------------------------------------------------------------------------------------------------
+                        <form
+                            onSubmit={(e) => {
+                                setHasSubmitted(true);
+                                formik.handleSubmit(e);
+                            }}
                         >
-                            <Radio
-                                label={intl.formatMessage({ id: 'radio.label.ja' })}
-                                name="status"
-                                onChange={() =>
-                                    formik.setValues({ ...formik.values, status: UførhetStatus.VilkårOppfylt })
-                                }
-                                defaultChecked={formik.values.status === UførhetStatus.VilkårOppfylt}
-                            />
-                            <Radio
-                                label={intl.formatMessage({ id: 'radio.label.nei' })}
-                                name="status"
-                                onChange={() =>
-                                    formik.setValues((v) => ({
-                                        status: UførhetStatus.VilkårIkkeOppfylt,
-                                        uføregrad: null,
-                                        forventetInntekt: null,
-                                        begrunnelse: v.begrunnelse,
-                                    }))
-                                }
-                                defaultChecked={formik.values.status === UførhetStatus.VilkårIkkeOppfylt}
-                            />
-                            <Radio
-                                label={intl.formatMessage({ id: 'radio.label.uføresakTilBehandling' })}
-                                name="status"
-                                onChange={() =>
-                                    formik.setValues((v) => ({
-                                        status: UførhetStatus.HarUføresakTilBehandling,
-                                        uføregrad: null,
-                                        forventetInntekt: null,
-                                        begrunnelse: v.begrunnelse,
-                                    }))
-                                }
-                                defaultChecked={formik.values.status === UførhetStatus.HarUføresakTilBehandling}
-                            />
-                        </RadioGruppe>
-                        {formik.values.status === UførhetStatus.VilkårOppfylt && (
-                            <div className={styles.formInputContainer}>
-                                <UførhetInput
-                                    tittel={intl.formatMessage({ id: 'input.label.uføregrad' })}
-                                    inputName="uføregrad"
-                                    inputTekst="%"
-                                    bredde="XS"
-                                    defaultValues={formik.values.uføregrad ?? ''}
-                                    onChange={formik.handleChange}
-                                    feil={formik.errors.uføregrad}
+                            <RadioGruppe
+                                className={styles.radioGruppe}
+                                legend={intl.formatMessage({ id: 'radio.uførhet.legend' })}
+                                feil={formik.errors.status}
+                            >
+                                <Radio
+                                    label={intl.formatMessage({ id: 'radio.label.ja' })}
+                                    name="status"
+                                    onChange={() =>
+                                        formik.setValues({ ...formik.values, status: UførhetStatus.VilkårOppfylt })
+                                    }
+                                    defaultChecked={formik.values.status === UførhetStatus.VilkårOppfylt}
                                 />
-                                <UførhetInput
-                                    tittel={intl.formatMessage({ id: 'input.label.forventetInntekt' })}
-                                    inputName="forventetInntekt"
-                                    inputTekst=" NOK"
-                                    bredde="L"
-                                    defaultValues={formik.values.forventetInntekt ?? ''}
+                                <Radio
+                                    label={intl.formatMessage({ id: 'radio.label.nei' })}
+                                    name="status"
+                                    onChange={() =>
+                                        formik.setValues((v) => ({
+                                            status: UførhetStatus.VilkårIkkeOppfylt,
+                                            uføregrad: null,
+                                            forventetInntekt: null,
+                                            begrunnelse: v.begrunnelse,
+                                        }))
+                                    }
+                                    defaultChecked={formik.values.status === UførhetStatus.VilkårIkkeOppfylt}
+                                />
+                                <Radio
+                                    label={intl.formatMessage({ id: 'radio.label.uføresakTilBehandling' })}
+                                    name="status"
+                                    onChange={() =>
+                                        formik.setValues((v) => ({
+                                            status: UførhetStatus.HarUføresakTilBehandling,
+                                            uføregrad: null,
+                                            forventetInntekt: null,
+                                            begrunnelse: v.begrunnelse,
+                                        }))
+                                    }
+                                    defaultChecked={formik.values.status === UførhetStatus.HarUføresakTilBehandling}
+                                />
+                            </RadioGruppe>
+                            {formik.values.status === UførhetStatus.VilkårOppfylt && (
+                                <div className={styles.formInputContainer}>
+                                    <UførhetInput
+                                        tittel={intl.formatMessage({ id: 'input.label.uføregrad' })}
+                                        inputName="uføregrad"
+                                        inputTekst="%"
+                                        bredde="XS"
+                                        value={formik.values.uføregrad ?? ''}
+                                        onChange={formik.handleChange}
+                                        feil={formik.errors.uføregrad}
+                                    />
+                                    <UførhetInput
+                                        tittel={intl.formatMessage({ id: 'input.label.forventetInntekt' })}
+                                        inputName="forventetInntekt"
+                                        inputTekst=" NOK"
+                                        bredde="L"
+                                        value={formik.values.forventetInntekt ?? ''}
+                                        onChange={formik.handleChange}
+                                        feil={formik.errors.forventetInntekt}
+                                    />
+                                </div>
+                            )}
+
+                            <div className={sharedStyles.textareaContainer}>
+                                <Textarea
+                                    label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                                    name="begrunnelse"
                                     onChange={formik.handleChange}
-                                    feil={formik.errors.forventetInntekt}
+                                    value={formik.values.begrunnelse ?? ''}
+                                    feil={formik.errors.begrunnelse}
                                 />
                             </div>
-                        )}
 
-                        <div className={sharedStyles.textareaContainer}>
-                            <Textarea
-                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
-                                name="begrunnelse"
-                                onChange={formik.handleChange}
-                                value={formik.values.begrunnelse ?? ''}
-                                feil={formik.errors.begrunnelse}
+                            {pipe(
+                                lagreBehandlingsinformasjonStatus,
+                                RemoteData.fold(
+                                    () => null,
+                                    () => (
+                                        <NavFrontendSpinner>
+                                            {intl.formatMessage({ id: 'display.lagre.lagrer' })}
+                                        </NavFrontendSpinner>
+                                    ),
+                                    () => (
+                                        <AlertStripe type="feil">
+                                            {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                        </AlertStripe>
+                                    ),
+                                    () => null
+                                )
+                            )}
+                            <Feiloppsummering
+                                tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                                feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                                hidden={!formikErrorsHarFeil(formik.errors)}
                             />
-                        </div>
-
-                        {pipe(
-                            lagreBehandlingsinformasjonStatus,
-                            RemoteData.fold(
-                                () => null,
-                                () => (
-                                    <NavFrontendSpinner>
-                                        {intl.formatMessage({ id: 'display.lagre.lagrer' })}
-                                    </NavFrontendSpinner>
-                                ),
-                                () => (
-                                    <AlertStripe type="feil">
-                                        {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
-                                    </AlertStripe>
-                                ),
-                                () => null
-                            )
-                        )}
-                        <Feiloppsummering
-                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
-                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                            hidden={!formikErrorsHarFeil(formik.errors)}
-                        />
-                        <Vurderingknapper
-                            onTilbakeClick={() => {
-                                history.push(props.forrigeUrl);
-                            }}
-                            onLagreOgFortsettSenereClick={() => {
-                                formik.validateForm().then((res) => {
-                                    if (Object.keys(res).length === 0) {
-                                        handleSave(
-                                            formik.values,
-                                            Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })
-                                        );
-                                    }
-                                });
-                            }}
-                        />
-                    </form>
+                            <Vurderingknapper
+                                onTilbakeClick={() => {
+                                    history.push(props.forrigeUrl);
+                                }}
+                                onLagreOgFortsettSenereClick={() => {
+                                    formik.validateForm().then((res) => {
+                                        if (Object.keys(res).length === 0) {
+                                            handleSave(
+                                                formik.values,
+                                                Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })
+                                            );
+                                        }
+                                    });
+                                }}
+                            />
+                        </form>
+                    </>
                 ),
                 right: <UførhetFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}

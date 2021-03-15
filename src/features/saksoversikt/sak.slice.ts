@@ -20,6 +20,7 @@ import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
+import { Uføregrunnlag } from '~types/grunnlagsdata';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
@@ -115,6 +116,22 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/informasjon', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreBehandlingsinformasjon(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreUføregrunnlag = createAsyncThunk<
+    Behandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        uføregrunnlag: Uføregrunnlag[];
+    },
+    { rejectValue: ApiError }
+>('behandling/grunngsdata/uføre', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreUføregrunnlag(arg);
     if (res.status === 'ok') {
         return res.data;
     }

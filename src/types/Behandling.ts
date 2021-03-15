@@ -1,4 +1,5 @@
 import { Nullable } from '~lib/types';
+import { Uføregrunnlag } from '~types/grunnlagsdata';
 import { Simulering } from '~types/Simulering';
 
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
@@ -19,6 +20,11 @@ export interface Behandling {
     saksbehandler: Nullable<string>;
     hendelser: Nullable<Hendelse[]>;
     satsBeløp: Nullable<number>;
+    grunnlag: Grunnlag;
+}
+
+export interface Grunnlag {
+    uføre: Uføregrunnlag[];
 }
 
 export enum Behandlingsstatus {

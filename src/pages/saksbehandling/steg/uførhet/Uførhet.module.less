@@ -6,6 +6,7 @@
     .uføreInputContainer {
         display: flex;
         align-items: center;
+        margin-right: @spacing-s;
 
         .uførehetInputFelt {
             margin-right: @spacing-xxs;
@@ -15,4 +16,40 @@
 
 .radioGruppe {
     margin-bottom: @spacing-xxs;
+}
+
+.uføregrunnlagInputContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    margin-bottom: @spacing-xxs;
+
+    .periode {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+    }
+
+    .uføre {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+    }
+
+    .datoContainer {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .fjernFeltButton {
+        display: flex;
+        align-self: flex-end;
+    }
+
+    .søppelbøtteContainer {
+        align-self: flex-end;
+        height: 40px;
+        width: 40px;
+        padding: 0;
+    }
 }
