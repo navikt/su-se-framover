@@ -6,6 +6,7 @@ import {
     RevurderingTilAttestering,
     IverksattRevurdering,
     BeregnetAvslag,
+    UnderkjentRevurdering,
 } from '~types/Revurdering';
 
 export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurdering => !('beregninger' in r);
@@ -21,3 +22,6 @@ export const erRevurderingTilAttestering = (r: Revurdering): r is RevurderingTil
 
 export const erRevurderingIverksatt = (r: Revurdering): r is IverksattRevurdering =>
     r.status === RevurderingsStatus.IVERKSATT;
+
+export const erRevurderingUnderkjent = (r: Revurdering): r is UnderkjentRevurdering =>
+    r.status === RevurderingsStatus.UNDERKJENT;

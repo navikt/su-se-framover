@@ -20,7 +20,7 @@ import { erRevurderingTilAttestering } from '~pages/saksbehandling/revurdering/r
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import Søkefelt from '~pages/saksbehandling/søkefelt/Søkefelt';
 import { useAppDispatch } from '~redux/Store';
-import { IverksattRevurdering } from '~types/Revurdering';
+import { IverksattRevurdering, UnderkjentRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 
 import SharedStyles from '../sharedStyles.module.less';
@@ -34,7 +34,7 @@ interface FormData {
     kommentar?: string;
 }
 
-enum UnderkjennRevurderingGrunn {
+export enum UnderkjennRevurderingGrunn {
     BEREGNINGEN_ER_FEIL = 'BEREGNINGEN_ER_FEIL',
     DOKUMENTASJON_MANGLER = 'DOKUMENTASJON_MANGLER',
     VEDTAKSBREVET_ER_FEIL = 'VEDTAKSBREVET_ER_FEIL',
@@ -71,10 +71,10 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const intl = useI18n({ messages });
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
     const dispatch = useAppDispatch();
-    const [hasSubmitted, setHasSubmitted] = useState<boolean>();
-    const [sendtBeslutning, setSendtBeslutning] = useState<RemoteData.RemoteData<ApiError, IverksattRevurdering>>(
-        RemoteData.initial
-    );
+    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+    const [sendtBeslutning, setSendtBeslutning] = useState<
+        RemoteData.RemoteData<ApiError, IverksattRevurdering | UnderkjentRevurdering>
+    >(RemoteData.initial);
 
     const gender = useMemo<Gender>(() => getGender(props.søker), [props.søker]);
 
@@ -101,7 +101,27 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 }
             }
 
-            //TODO: add underkjenning
+            if (!values.beslutning && values.grunn) {
+                setSendtBeslutning(RemoteData.pending);
+                const res = await dispatch(
+                    revurderingSlice.underkjennRevurdering({
+                        sakId: props.sak.id,
+                        revurderingId: urlParams.revurderingId,
+                        grunn: values.grunn,
+                        kommentar: values.kommentar,
+                    })
+                );
+
+                if (revurderingSlice.underkjennRevurdering.fulfilled.match(res)) {
+                    setSendtBeslutning(RemoteData.success(res.payload));
+                }
+
+                if (revurderingSlice.underkjennRevurdering.rejected.match(res)) {
+                    //TODO: fix at res.payload kan være undefined?
+                    if (!res.payload) return;
+                    setSendtBeslutning(RemoteData.failure(res.payload));
+                }
+            }
         },
         validateOnChange: hasSubmitted,
         validationSchema: schema,
@@ -111,7 +131,11 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
         return (
             <div className={styles.sendtTilAttesteringContainer}>
                 <AlertStripeSuksess>
-                    <p>{intl.formatMessage({ id: 'attester.iverksatt' })}</p>
+                    <p>
+                        {formik.values.beslutning
+                            ? intl.formatMessage({ id: 'attester.iverksatt' })
+                            : intl.formatMessage({ id: 'attester.sendtTilbake' })}
+                    </p>
                     <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
                         {intl.formatMessage({ id: 'attester.tilSaksoversikt' })}
                     </Link>
@@ -224,6 +248,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
             <Hovedknapp className={styles.sendBeslutningKnapp} spinner={RemoteData.isPending(sendtBeslutning)}>
                 {intl.formatMessage({ id: 'knapp.tekst' })}
             </Hovedknapp>
+            {/*TODO: bruk feilmeldingskode */}
             {RemoteData.isFailure(sendtBeslutning) && (
                 <AlertStripeFeil>{sendtBeslutning.error.body?.message}</AlertStripeFeil>
             )}

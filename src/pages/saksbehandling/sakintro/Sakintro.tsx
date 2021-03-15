@@ -26,7 +26,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
-import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
+import { Behandling, Behandlingsstatus, UnderkjennelseGrunn, Underkjennelse } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 
@@ -36,6 +36,7 @@ import {
     erRevurderingIverksatt,
     erRevurderingSimulert,
     erRevurderingOpprettet,
+    erRevurderingUnderkjent,
 } from '../revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
@@ -53,6 +54,36 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
         default:
             return 'display.søknad.lukket.ukjentLukking';
     }
+};
+
+const UnderkjennelsesInformasjon = (props: { underkjennelse: Underkjennelse; intl: IntlShape }) => {
+    return (
+        <div className={styles.underkjennelseContainer}>
+            <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
+                {props.intl.formatMessage({
+                    id: 'behandling.attestering.advarsel',
+                })}
+            </AlertStripe>
+            <div className={styles.underkjennelse}>
+                <div className={styles.underkjenningsinfo}>
+                    <Element>
+                        {props.intl.formatMessage({
+                            id: 'display.attestering.sendtTilbakeFordi',
+                        })}
+                    </Element>
+                    <Normaltekst>{grunnToText(props.underkjennelse.grunn, props.intl)}</Normaltekst>
+                </div>
+                <div className={styles.underkjenningsinfo}>
+                    <Element>
+                        {props.intl.formatMessage({
+                            id: 'display.attestering.kommentar',
+                        })}
+                    </Element>
+                    <Normaltekst>{props.underkjennelse.kommentar}</Normaltekst>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
@@ -175,38 +206,10 @@ const ÅpneSøknader = (props: {
                                             <Normaltekst>{props.intl.formatDate(s.opprettet)}</Normaltekst>
                                         </div>
                                         {behandling?.attestering?.underkjennelse && (
-                                            <div className={styles.underkjennelseContainer}>
-                                                <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
-                                                    {props.intl.formatMessage({
-                                                        id: 'behandling.attestering.advarsel',
-                                                    })}
-                                                </AlertStripe>
-                                                <div className={styles.underkjennelse}>
-                                                    <div className={styles.underkjenningsinfo}>
-                                                        <Element>
-                                                            {props.intl.formatMessage({
-                                                                id: 'display.attestering.sendtTilbakeFordi',
-                                                            })}
-                                                        </Element>
-                                                        <Normaltekst>
-                                                            {grunnToText(
-                                                                behandling.attestering.underkjennelse.grunn,
-                                                                props.intl
-                                                            )}
-                                                        </Normaltekst>
-                                                    </div>
-                                                    <div className={styles.underkjenningsinfo}>
-                                                        <Element>
-                                                            {props.intl.formatMessage({
-                                                                id: 'display.attestering.kommentar',
-                                                            })}
-                                                        </Element>
-                                                        <Normaltekst>
-                                                            {behandling.attestering.underkjennelse.kommentar}
-                                                        </Normaltekst>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <UnderkjennelsesInformasjon
+                                                underkjennelse={behandling.attestering.underkjennelse}
+                                                intl={props.intl}
+                                            />
                                         )}
                                     </div>
                                     <div className={styles.knapper}>
@@ -239,7 +242,9 @@ const Revurderinger = (props: { sakId: string; revurderinger: Revurdering[]; int
 
     return (
         <div className={styles.søknadsContainer}>
-            <Ingress className={styles.søknadsContainerTittel}>Revurderinger</Ingress>
+            <Ingress className={styles.søknadsContainerTittel}>
+                {props.intl.formatMessage({ id: 'revurdering.tittel' })}
+            </Ingress>
             <ol>
                 {props.revurderinger.map((r) => {
                     return (
@@ -247,14 +252,25 @@ const Revurderinger = (props: { sakId: string; revurderinger: Revurdering[]; int
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
                                     <div>
-                                        <Undertittel>Revurdering</Undertittel>
+                                        <Undertittel>
+                                            {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
+                                        </Undertittel>
                                         <div className={styles.dato}>
-                                            <Element>Opprettet: </Element>
+                                            <Element>
+                                                {props.intl.formatMessage({ id: 'revurdering.opprettet' })}{' '}
+                                            </Element>
                                             <Normaltekst>{props.intl.formatDate(r.opprettet)}</Normaltekst>
                                         </div>
+                                        {erRevurderingUnderkjent(r) && (
+                                            //underkjent revurdering har alltid en underkjennelse
+                                            /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                                            <UnderkjennelsesInformasjon
+                                                underkjennelse={r.attestering.underkjennelse!}
+                                                intl={props.intl}
+                                            />
+                                        )}
                                     </div>
                                     <div className={styles.knapper}>
-                                        <p>{r.status}</p>
                                         <RevurderingStartetKnapper sakId={props.sakId} r={r} intl={props.intl} />
                                     </div>
                                 </div>
@@ -312,7 +328,7 @@ const RevurderingStartetKnapper = (props: { r: Revurdering; sakId: string; intl:
                                 revurderingId: r.id,
                             })}
                         >
-                            Fortsett revurdering
+                            {props.intl.formatMessage({ id: 'revurdering.fortsett' })}
                         </Link>
                     )
                 )}
