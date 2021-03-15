@@ -60,7 +60,7 @@
         "babel-polyfill": "^6.26.0",
         "babel-runtime": "^6.26.0",
         "classnames": "^2.2.6",
-        "country-data-list": "^1.2.0",
+        "country-data-list": "^1.2.1",
         "date-fns": "^2.17.0",
         "dayjs": "^1.10.4",
         "deasync": "^0.1.20",
