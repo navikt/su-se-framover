@@ -3,6 +3,7 @@ import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Element, Innholdstittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
+import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
@@ -12,6 +13,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { Sak } from '~types/Sak';
+import { Vedtaksresultat } from '~types/Vedtak';
 
 import messages from './vedtaksoppsummering-nb';
 import styles from './vedtaksoppsummering.module.less';
@@ -20,6 +22,16 @@ interface Props {
     sak: Sak;
 }
 
+const vedtaksresultatToTekst = (vedtaksresultat: Vedtaksresultat, intl: IntlShape): string => {
+    switch (vedtaksresultat) {
+        case Vedtaksresultat.INNVILGET:
+            return intl.formatMessage({ id: 'resultat.innvilget' });
+        case Vedtaksresultat.AVSLÅTT:
+            return intl.formatMessage({ id: 'resultat.avslått' });
+    }
+};
+
+/* TODO ai 16.03.2021: Denna støtter pt innvilgede revurderingsvedtak. Må sørge for att søknadsbehandling og andre resultat støttes i framtiden. */
 const Vedtaksoppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
     const intl = useI18n({ messages });
@@ -46,7 +58,7 @@ const Vedtaksoppsummering = (props: Props) => {
                 <div className={styles.tilleggsinfoContainer}>
                     <div>
                         <Element>{intl.formatMessage({ id: 'resultat.tittel' })}</Element>
-                        <p>{vedtak.resultat}</p>
+                        <p>{vedtaksresultatToTekst(vedtak.resultat, intl)}</p>
                     </div>
                     <div>
                         <Element> {intl.formatMessage({ id: 'behandlet.av' })}</Element>
@@ -85,6 +97,7 @@ const Vedtaksoppsummering = (props: Props) => {
             </div>
         );
     };
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Innholdstittel className={styles.tittel}> Oppsummering av vedtak</Innholdstittel>

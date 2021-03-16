@@ -20,6 +20,6 @@ export interface Vedtak {
 }
 
 export enum Vedtaksresultat {
-    INNVILGELSE = 'INNVILGET',
-    AVSLAG = 'AVSLÅTT',
+    INNVILGET = 'INNVILGET',
+    AVSLÅTT = 'AVSLÅTT',
 }

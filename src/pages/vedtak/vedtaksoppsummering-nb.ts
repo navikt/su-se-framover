@@ -3,8 +3,8 @@ export default {
     'attestert.av': 'Attestant',
 
     'resultat.tittel': 'Resultat',
-    'resultat.innvilgelse': 'Innvilgelse',
-    'resultat.avslag': 'Avslag',
+    'resultat.innvilget': 'Innvilget',
+    'resultat.avslått': 'Avslått',
 
     'vedtak.dato': 'Vedtaksdato',
     'vedtak.brev': 'Vedtaksbrev',
