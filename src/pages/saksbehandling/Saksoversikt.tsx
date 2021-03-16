@@ -1,12 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { PersonCard, Gender } from '@navikt/nap-person-card';
-import classNames from 'classnames';
 import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect, useMemo } from 'react';
 import { IntlProvider } from 'react-intl';
-import { Link, Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
@@ -21,6 +20,7 @@ import { useFeatureToggle } from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import Vedtaksoppsummering from '~pages/vedtak/Vedtaksoppsummering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
 import Behandlingsoppsummering from './behandlingsoppsummering/behandlingsoppsummering';
@@ -143,6 +143,11 @@ const Saksoversikt = () => {
                                                     <Revurdering sak={sak} />
                                                 </div>
                                             </Route>
+                                            <Route path={Routes.vedtaksoppsummering.path}>
+                                                <div className={styles.mainContent}>
+                                                    <Vedtaksoppsummering sak={sak} />
+                                                </div>
+                                            </Route>
                                             <Route path={Routes.saksoversiktValgtBehandling.path}>
                                                 <div className={styles.mainContent}>
                                                     <Switch>
@@ -161,14 +166,6 @@ const Saksoversikt = () => {
                                                                 </Innholdstittel>
                                                             </div>
                                                             <Behandlingsoppsummering sak={sak} />
-                                                            <Link
-                                                                to={Routes.saksoversiktValgtSak.createURL({
-                                                                    sakId: sak.id,
-                                                                })}
-                                                                className={classNames('knapp', styles.backButton)}
-                                                            >
-                                                                {intl.formatMessage({ id: 'knapp.tilbake' })}
-                                                            </Link>
                                                         </Route>
                                                     </Switch>
                                                 </div>
