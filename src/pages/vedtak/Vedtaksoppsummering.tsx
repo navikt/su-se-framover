@@ -1,13 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
-import { Element } from 'nav-frontend-typografi';
+import { Element, Innholdstittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import { useUserContext } from '~context/userContext';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { Sak } from '~types/Sak';
 
 import messages from './vedtaksoppsummering-nb';
@@ -16,6 +18,7 @@ import styles from './vedtaksoppsummering.module.less';
 interface Props {
     sak: Sak;
 }
+
 const Vedtaksoppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
     const intl = useI18n({ messages });
@@ -24,15 +27,15 @@ const Vedtaksoppsummering = (props: Props) => {
         RemoteData.initial
     );
     const vedtak = props.sak.vedtak.find((v) => v.id === urlParams.vedtakId);
-    if (!vedtak) return <div>lol wtf</div>;
+    if (!vedtak) return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
 
     const Tilleggsinfo = () => {
         return (
             <div>
                 <div className={styles.tilleggsinfoContainer}>
                     <div>
-                        <Element>{intl.formatMessage({ id: 'vurdering.tittel' })}</Element>
-                        <p>{'status tekst here'}</p>
+                        <Element>{intl.formatMessage({ id: 'resultat.tittel' })}</Element>
+                        <p>{vedtak.resultat}</p>
                     </div>
                     <div>
                         <Element> {intl.formatMessage({ id: 'behandlet.av' })}</Element>
@@ -45,15 +48,11 @@ const Vedtaksoppsummering = (props: Props) => {
                     </div>
 
                     <div>
-                        <Element> {intl.formatMessage({ id: 'behandling.søknadsdato' })}</Element>
-                        <p>søknadsdato</p>
+                        <Element> {intl.formatMessage({ id: 'vedtak.dato' })}</Element>
+                        <p>{intl.formatDate(vedtak.opprettet)}</p>
                     </div>
                     <div>
-                        <Element> {intl.formatMessage({ id: 'behandling.saksbehandlingsdato' })}</Element>
-                        <p>saksbehandlingsdato</p>
-                    </div>
-                    <div>
-                        <Element>{intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}</Element>
+                        <Element>{intl.formatMessage({ id: 'vedtak.brev' })}</Element>
                         <Knapp
                             spinner={RemoteData.isPending(lastNedBrevStatus)}
                             mini
@@ -76,9 +75,13 @@ const Vedtaksoppsummering = (props: Props) => {
         );
     };
     return (
-        <div>
-            <Element> Oppsummering av vedtak</Element>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Innholdstittel className={styles.tittel}> Oppsummering av vedtak</Innholdstittel>
             <Tilleggsinfo />
+            <VisBeregning beregning={vedtak.beregning} />
+            <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })} className="knapp">
+                {intl.formatMessage({ id: 'knapp.tilbake' })}
+            </Link>
         </div>
     );
 };

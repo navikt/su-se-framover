@@ -1,3 +1,14 @@
-.lolz {
-    width: 25px;
+@import '~/styles/variables.less';
+
+.tittel {
+    margin: @spacing 0;
+}
+
+.tilleggsinfoContainer {
+    display: flex;
+    margin-bottom: @spacing-l;
+
+    > :not(:last-child) {
+        margin-right: @spacing;
+    }
 }

@@ -16,4 +16,10 @@ export interface Vedtak {
     sakId: string;
     fnr: string;
     periode: Periode;
+    resultat: Vedtaksresultat;
+}
+
+export enum Vedtaksresultat {
+    INNVILGELSE = 'INNVILGET',
+    AVSLAG = 'AVSLÅTT',
 }
