@@ -12,6 +12,7 @@ import {
     beregnOgSimuler,
     iverksettRevurdering,
     oppdaterRevurderingsPeriode,
+    lagreUføregrunnlag as lagreUføregrunnlagForRevurdering,
     opprettRevurdering,
     sendRevurderingTilAttestering,
 } from '~features/revurdering/revurderingActions';
@@ -249,6 +250,7 @@ interface SakState {
     gjenopptaUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<ApiError, null>;
     lagreBehandlingsinformasjonStatus: RemoteData.RemoteData<ApiError, null>;
+    lagreUføregrunnlagStatus: RemoteData.RemoteData<ApiError, null>;
     beregningStatus: RemoteData.RemoteData<ApiError, null>;
     simuleringStatus: RemoteData.RemoteData<ApiError, null>;
     sendtTilAttesteringStatus: RemoteData.RemoteData<ApiError, null>;
@@ -267,6 +269,7 @@ const initialState: SakState = {
     gjenopptaUtbetalingerStatus: RemoteData.initial,
     lagreVilkårsvurderingStatus: RemoteData.initial,
     lagreBehandlingsinformasjonStatus: RemoteData.initial,
+    lagreUføregrunnlagStatus: RemoteData.initial,
     beregningStatus: RemoteData.initial,
     simuleringStatus: RemoteData.initial,
     sendtTilAttesteringStatus: RemoteData.initial,
@@ -383,6 +386,26 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.lagreBehandlingsinformasjonStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, lagreUføregrunnlag, {
+            pending: (state) => {
+                state.lagreUføregrunnlagStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.lagreUføregrunnlagStatus = RemoteData.success(null);
+
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.lagreUføregrunnlagStatus = simpleRejectedActionToRemoteData(action);
             },
         });
 
@@ -561,6 +584,27 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.oppdaterRevurderingsPeriodeStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, lagreUføregrunnlagForRevurdering, {
+            pending: (state) => {
+                // TODO jah: Er det greit å gjenbruke denne fra søknadsbehandling?
+                state.lagreUføregrunnlagStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.lagreUføregrunnlagStatus = RemoteData.success(null);
+
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.lagreUføregrunnlagStatus = simpleRejectedActionToRemoteData(action);
             },
         });
 

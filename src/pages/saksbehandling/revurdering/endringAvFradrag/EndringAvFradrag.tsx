@@ -26,11 +26,8 @@ import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregnin
 import messages from '../revurdering-nb';
 import sharedStyles from '../revurdering.module.less';
 import { erRevurderingSimulert } from '../revurderingUtils';
-import * as behandlingApi from '~api/behandlingApi';
+
 import styles from './endringAvFradrag.module.less';
-import { ApiError } from '~api/apiClient';
-import { Uføregrunnlag } from '~types/grunnlagsdata';
-import { createAsyncThunk } from '@reduxjs/toolkit';
 
 interface EndringAvFradragFormData {
     fradrag: FradragFormData[];
@@ -108,7 +105,6 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
         validateOnChange: hasSubmitted,
     });
 
-
     return (
         <form
             className={sharedStyles.revurderingContainer}
@@ -128,36 +124,47 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                         ${props.revurdering.periode.tilOgMed} `}
                     </p>
                 </div>
-                <Innholdstittel className={sharedStyles.tittel}>
-                    Før behandling
-                </Innholdstittel>
-                {
-                props.revurdering.grunnlag.førBehandling.uføre.map((x)=> (
+                <Innholdstittel className={sharedStyles.tittel}>Før behandling</Innholdstittel>
+                {props.revurdering.grunnlag.førBehandling.uføre.map((x) => (
                     <>
-                    fraOgMed:{x.periode.fraOgMed}<br/>
-                    tilOgMed:{x.periode.tilOgMed}<br/>
-                    Uføregrad:{x.uføregrad}<br/>
-                    Forventet inntekt:{x.forventetInntekt}<br/>
-                    <br/>
+                        fraOgMed:{x.periode.fraOgMed}
+                        <br />
+                        tilOgMed:{x.periode.tilOgMed}
+                        <br />
+                        Uføregrad:{x.uføregrad}
+                        <br />
+                        Forventet inntekt:{x.forventetInntekt}
+                        <br />
+                        <br />
                     </>
-                ))
-                }
-                <Innholdstittel className={sharedStyles.tittel}>
-                    Resultat
-                </Innholdstittel>
-                {
-                props.revurdering.grunnlag.resultat.uføre.map((x)=> (
+                ))}
+                <Innholdstittel className={sharedStyles.tittel}>Resultat</Innholdstittel>
+                {props.revurdering.grunnlag.resultat.uføre.map((x) => (
                     <>
-                    fraOgMed:{x.periode.fraOgMed}<br/>
-                    tilOgMed:{x.periode.tilOgMed}<br/>
-                    Uføregrad:{x.uføregrad}<br/>
-                    Forventet inntekt:{x.forventetInntekt}<br/>
-                    <br/>
+                        fraOgMed:{x.periode.fraOgMed}
+                        <br />
+                        tilOgMed:{x.periode.tilOgMed}
+                        <br />
+                        Uføregrad:{x.uføregrad}
+                        <br />
+                        Forventet inntekt:{x.forventetInntekt}
+                        <br />
+                        <br />
                     </>
-                ))
-                }
-                <UføregrunnlagInputFelter grunnlag={props.revurdering.grunnlag.endring} lagre={(uføregrunnlag) => dispatch(lagreUføregrunnlag({ sakId: props.sakId, revurderingId: props.revurdering.id, uføregrunnlag }))} />
-                        ------------------------------------------------------------------------------------------------------------------------------
+                ))}
+                <UføregrunnlagInputFelter
+                    grunnlag={props.revurdering.grunnlag.endring}
+                    lagre={(uføregrunnlag) =>
+                        dispatch(
+                            lagreUføregrunnlag({
+                                sakId: props.sakId,
+                                revurderingId: props.revurdering.id,
+                                uføregrunnlag,
+                            })
+                        )
+                    }
+                />
+                ------------------------------------------------------------------------------------------------------------------------------
                 <div className={styles.fradragInputsContainer}>
                     <FradragInputs
                         harEps={props.revurdering.tilRevurdering.behandlingsinformasjon.ektefelle ? true : false}

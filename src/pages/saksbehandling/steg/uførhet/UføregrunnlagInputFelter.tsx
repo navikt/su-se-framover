@@ -7,20 +7,18 @@ import * as React from 'react';
 import DatePicker from 'react-datepicker';
 
 import { TrashBin } from '~assets/Icons';
-import { lagreUføregrunnlag } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import sharedI18n from '~pages/saksbehandling/steg/sharedI18n-nb';
 import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import messages from '~pages/saksbehandling/steg/uførhet/uførhet-nb';
 import sharedStyles from '~pages/søknad/steg-shared.module.less';
-import { useAppDispatch } from '~redux/Store';
 import { Grunnlag } from '~types/Behandling';
 import { Uføregrunnlag } from '~types/grunnlagsdata';
 
 import styles from './Uførhet.module.less';
 
-const UføregrunnlagInputFelter = (props: { grunnlag: Grunnlag, lagre: (uføregrunnlag: Uføregrunnlag[]) => void }) => {
+const UføregrunnlagInputFelter = (props: { grunnlag: Grunnlag; lagre: (uføregrunnlag: Uføregrunnlag[]) => void }) => {
     interface FormData {
         grunnlag: UføregrunnlagFormData[];
     }
@@ -32,7 +30,6 @@ const UføregrunnlagInputFelter = (props: { grunnlag: Grunnlag, lagre: (uføregr
         uføregrad: Nullable<string>;
     }
 
-
     const handleSave = async (values: FormData) => {
         const uføregrunnlag = values.grunnlag.map((uføregrunnlag) => ({
             periode: {
@@ -42,7 +39,7 @@ const UføregrunnlagInputFelter = (props: { grunnlag: Grunnlag, lagre: (uføregr
             uføregrad: +uføregrunnlag.uføregrad!,
             forventetInntekt: +uføregrunnlag.forventetInntekt!,
         })) as Uføregrunnlag[];
-        props.lagre(uføregrunnlag)
+        props.lagre(uføregrunnlag);
     };
 
     const handleRemove = async (index: number) => {

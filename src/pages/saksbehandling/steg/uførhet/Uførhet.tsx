@@ -1,12 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { createAsyncThunk } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Radio, RadioGruppe, Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ApiError } from '~api/apiClient';
 
 import { eqUførhet } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon, lagreUføregrunnlag } from '~features/saksoversikt/sak.slice';
@@ -18,16 +16,14 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import UføregrunnlagInputFelter from '~pages/saksbehandling/steg/uførhet/UføregrunnlagInputFelter';
 import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Behandling } from '~types/Behandling';
 import { Uførhet as UførhetType, UførhetStatus } from '~types/Behandlingsinformasjon';
-import { Uføregrunnlag } from '~types/grunnlagsdata';
 
 import { UførhetFaktablokk } from '../faktablokk/faktablokker/UførhetFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurdering, Vurderingknapper } from '../Vurdering';
-import * as behandlingApi from '~api/behandlingApi';
+
 import messages from './uførhet-nb';
 import styles from './Uførhet.module.less';
 
@@ -122,7 +118,18 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
             {{
                 left: (
                     <>
-                        <UføregrunnlagInputFelter grunnlag={props.behandling.grunnlag} lagre={(uføregrunnlag) => dispatch(lagreUføregrunnlag({ sakId: props.sakId, behandlingId: props.behandling.id, uføregrunnlag }))} />
+                        <UføregrunnlagInputFelter
+                            grunnlag={props.behandling.grunnlag}
+                            lagre={(uføregrunnlag) =>
+                                dispatch(
+                                    lagreUføregrunnlag({
+                                        sakId: props.sakId,
+                                        behandlingId: props.behandling.id,
+                                        uføregrunnlag,
+                                    })
+                                )
+                            }
+                        />
                         ------------------------------------------------------------------------------------------------------------------------------
                         <form
                             onSubmit={(e) => {
