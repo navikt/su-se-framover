@@ -72,13 +72,14 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
         initialValues: {
             tekstTilVedtaksbrev: null,
         },
-        async onSubmit() {
+        async onSubmit(values) {
             setSendtTilAttesteringStatus(RemoteData.pending);
 
             const res = await dispatch(
                 revurderingSlice.sendRevurderingTilAttestering({
                     sakId: props.sakId,
                     revurderingId: props.revurdering.id,
+                    fritekstTilBrev: values.tekstTilVedtaksbrev ?? '',
                 })
             );
 
