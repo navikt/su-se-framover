@@ -43,7 +43,7 @@ export default {
     'fradrag.type.kvalifiseringsstønad': 'Kvalifiseringsstønad',
     'fradrag.type.bidragetterekteskapsloven': 'Bidrag etter ekteskapsloven',
     'fradrag.type.kapitalinntekt': 'Kapitalinntekt',
-    'fradrag.type.forventetinntekt': 'Forventet inntekt',
+    'fradrag.type.forventetinntekt': 'Forventet inntekt etter uførhet',
     'fradrag.type.beregnetFradragEPS': 'Ektefelle/samboer totalt',
     'fradrag.type.underMinstenivå': 'Beløp under minstegrense for utbetaling',
 
