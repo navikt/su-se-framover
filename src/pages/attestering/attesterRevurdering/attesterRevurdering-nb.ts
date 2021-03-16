@@ -7,6 +7,7 @@ export default {
     'beslutning.underkjenn': 'Underkjenn',
 
     'feil.fantIkkeRevurdering': 'Fant ikke revurdering',
+    'feil.klarteIkkeHenteBrev': 'Klarte ikke hente brevet.',
 
     'input.grunn.label': 'Grunn',
     'input.grunn.value.default': 'Velg grunn',
@@ -21,6 +22,7 @@ export default {
     'attester.sendtTilbake': 'Revurdering er sendt tilbake til vurdering',
     'attester.tilSaksoversikt': 'Til saksoversikt',
 
+    'knapp.brev': 'Vis brev',
     'knapp.tekst': 'Send beslutning',
 
     'page.tittel': 'Attestering',

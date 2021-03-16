@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
 import * as behandlingApi from '~api/behandlingApi';
-import { fetchBrev } from '~api/pdfApi';
+import * as PdfApi from '~api/pdfApi';
 import * as sakApi from '~api/sakApi';
 import * as søknadApi from '~api/søknadApi';
 import { LukkSøknadBodyTypes } from '~api/søknadApi';
@@ -121,12 +121,12 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const lastNedBrev = createAsyncThunk<
+export const fetchBrevutkastForSøknadsbehandling = createAsyncThunk<
     { objectUrl: string },
     { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
 >('behandling/lastNedBrev', async ({ sakId, behandlingId }, thunkApi) => {
-    const res = await fetchBrev(sakId, behandlingId);
+    const res = await PdfApi.fetchBrevutkastForSøknadsbehandling(sakId, behandlingId);
     if (res.status === 'ok') {
         return { objectUrl: URL.createObjectURL(res.data) };
     }
@@ -469,7 +469,7 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, lastNedBrev, {
+        handleAsyncThunk(builder, fetchBrevutkastForSøknadsbehandling, {
             pending: (state) => {
                 state.lastNedBrevStatus = RemoteData.pending;
             },
