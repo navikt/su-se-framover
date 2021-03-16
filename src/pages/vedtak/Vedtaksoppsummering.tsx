@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
+import { fetchBrevutkastForRevurdering } from '~api/pdfApi';
 import { useUserContext } from '~context/userContext';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -23,11 +24,21 @@ const Vedtaksoppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
     const intl = useI18n({ messages });
     const user = useUserContext();
-    const [lastNedBrevStatus, setLastNedBrevStatus] = useState<RemoteData.RemoteData<ApiError, null>>(
-        RemoteData.initial
-    );
+    const [fetchVedtaksbrev, setFetchVedtaksbrev] = useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const vedtak = props.sak.vedtak.find((v) => v.id === urlParams.vedtakId);
     if (!vedtak) return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
+
+    const hentVedtaksbrev = async () => {
+        setFetchVedtaksbrev(RemoteData.pending);
+
+        const res = await fetchBrevutkastForRevurdering(props.sak.id, vedtak.behandlingId);
+        if (res.status === 'ok') {
+            setFetchVedtaksbrev(RemoteData.success(null));
+            window.open(URL.createObjectURL(res.data));
+        } else {
+            setFetchVedtaksbrev(RemoteData.failure(res.error));
+        }
+    };
 
     const Tilleggsinfo = () => {
         return (
@@ -54,19 +65,19 @@ const Vedtaksoppsummering = (props: Props) => {
                     <div>
                         <Element>{intl.formatMessage({ id: 'vedtak.brev' })}</Element>
                         <Knapp
-                            spinner={RemoteData.isPending(lastNedBrevStatus)}
+                            spinner={RemoteData.isPending(fetchVedtaksbrev)}
                             mini
                             htmlType="button"
-                            onClick={() => setLastNedBrevStatus(RemoteData.pending)}
+                            onClick={hentVedtaksbrev}
                         >
                             {intl.formatMessage({ id: 'knapp.vis' })}
                         </Knapp>
                     </div>
                 </div>
                 <div className={styles.brevutkastFeil}>
-                    {RemoteData.isFailure(lastNedBrevStatus) && (
+                    {RemoteData.isFailure(fetchVedtaksbrev) && (
                         <AlertStripeFeil>
-                            {lastNedBrevStatus.error.body?.message ??
+                            {fetchVedtaksbrev.error.body?.message ??
                                 intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
                         </AlertStripeFeil>
                     )}
