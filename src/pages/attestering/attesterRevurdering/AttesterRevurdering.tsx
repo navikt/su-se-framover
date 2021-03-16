@@ -152,7 +152,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
 
     const handleShowBrevClick = async () => {
         setHentPdfStatus(RemoteData.pending);
-        const res = await PdfApi.fetchBrevutkast(props.sak.id, revurdering.id);
+        const res = await PdfApi.fetchBrevutkastForRevurdering(props.sak.id, revurdering.id);
         if (res.status === 'ok') {
             setHentPdfStatus(RemoteData.success(null));
             window.open(URL.createObjectURL(res.data));

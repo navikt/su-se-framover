@@ -7,7 +7,7 @@ import React, { useCallback } from 'react';
 import { IntlShape } from 'react-intl';
 
 import { useUserContext } from '~context/userContext';
-import { lastNedBrev } from '~features/saksoversikt/sak.slice';
+import { fetchBrevutkastForSøknadsbehandling } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -57,11 +57,13 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
             return;
         }
 
-        dispatch(lastNedBrev({ sakId: props.sakId, behandlingId: props.behandling.id })).then((action) => {
-            if (lastNedBrev.fulfilled.match(action)) {
-                window.open(action.payload.objectUrl);
+        dispatch(fetchBrevutkastForSøknadsbehandling({ sakId: props.sakId, behandlingId: props.behandling.id })).then(
+            (action) => {
+                if (fetchBrevutkastForSøknadsbehandling.fulfilled.match(action)) {
+                    window.open(action.payload.objectUrl);
+                }
             }
-        });
+        );
     }, [props.sakId, props.behandling.id]);
 
     const Tilleggsinfo = () => {

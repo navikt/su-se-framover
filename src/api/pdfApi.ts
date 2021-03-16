@@ -1,6 +1,9 @@
 import apiClient, { ApiClientResult } from './apiClient';
 
-export async function fetchBrev(sakId: string, behandlingId: string): Promise<ApiClientResult<Blob>> {
+export async function fetchBrevutkastForSøknadsbehandling(
+    sakId: string,
+    behandlingId: string
+): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}/vedtaksutkast`,
         method: 'GET',
@@ -9,7 +12,7 @@ export async function fetchBrev(sakId: string, behandlingId: string): Promise<Ap
     });
 }
 
-export async function fetchSøknad(søknadId: string): Promise<ApiClientResult<Blob>> {
+export async function fetchSøknadutskrift(søknadId: string): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/soknad/${søknadId}/utskrift`,
         method: 'GET',
@@ -18,7 +21,10 @@ export async function fetchSøknad(søknadId: string): Promise<ApiClientResult<B
     });
 }
 
-export async function fetchBrevutkast(sakId: string, revurderingId: string): Promise<ApiClientResult<Blob>> {
+export async function fetchBrevutkastForRevurdering(
+    sakId: string,
+    revurderingId: string
+): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/brevutkast`,
         method: 'GET',
@@ -27,7 +33,7 @@ export async function fetchBrevutkast(sakId: string, revurderingId: string): Pro
     });
 }
 
-export async function fetchBrevutkastWithFritekst(
+export async function fetchBrevutkastForRevurderingWithFritekst(
     sakId: string,
     revurderingId: string,
     fritekst: string

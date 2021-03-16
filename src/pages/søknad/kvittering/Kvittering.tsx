@@ -9,7 +9,7 @@ import { IntlProvider, FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
-import { fetchSøknad } from '~api/pdfApi';
+import { fetchSøknadutskrift } from '~api/pdfApi';
 import { OpprettetSøknad } from '~api/søknadApi';
 import * as personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
@@ -37,7 +37,7 @@ const Kvittering = () => {
 
     const handleSkrivUtSøknadClick = async (opprettetSøknad: OpprettetSøknad) => {
         setFetchSøknadPdfState(RemoteData.pending);
-        const res = await fetchSøknad(opprettetSøknad.søknad.id);
+        const res = await fetchSøknadutskrift(opprettetSøknad.søknad.id);
         if (res.status === 'ok') {
             setFetchSøknadPdfState(RemoteData.success(null));
             window.open(URL.createObjectURL(res.data));

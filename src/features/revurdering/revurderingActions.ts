@@ -95,7 +95,7 @@ export const fetchBrevutkastWithFritekst = createAsyncThunk<
     { sakId: string; revurderingId: string; fritekst: string },
     { rejectValue: ApiError }
 >('revurdering/revurderingsVedtak', async ({ sakId, revurderingId, fritekst }, thunkApi) => {
-    const res = await pdfApi.fetchBrevutkastWithFritekst(sakId, revurderingId, fritekst);
+    const res = await pdfApi.fetchBrevutkastForRevurderingWithFritekst(sakId, revurderingId, fritekst);
     if (res.status === 'ok') {
         return { objectUrl: URL.createObjectURL(res.data) };
     }
