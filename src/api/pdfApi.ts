@@ -18,10 +18,19 @@ export async function fetchSøknad(søknadId: string): Promise<ApiClientResult<B
     });
 }
 
-export async function fetchRevurderingsVedtak(
+export async function fetchBrevutkast(sakId: string, revurderingId: string): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/brevutkast`,
+        method: 'GET',
+        request: { headers: new Headers({ Accept: 'application/pdf' }) },
+        bodyTransformer: (res) => res.blob(),
+    });
+}
+
+export async function fetchBrevutkastWithFritekst(
     sakId: string,
     revurderingId: string,
-    fritekst: string | null
+    fritekst: string
 ): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/brevutkast`,

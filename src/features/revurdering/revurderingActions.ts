@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
-import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
 import { Periode, Fradrag } from '~types/Fradrag';
 import {
@@ -91,12 +90,12 @@ export const underkjennRevurdering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const fetchRevurderingsVedtak = createAsyncThunk<
+export const fetchBrevutkastWithFritekst = createAsyncThunk<
     { objectUrl: string },
-    { sakId: string; revurderingId: string; fritekst: Nullable<string> },
+    { sakId: string; revurderingId: string; fritekst: string },
     { rejectValue: ApiError }
 >('revurdering/revurderingsVedtak', async ({ sakId, revurderingId, fritekst }, thunkApi) => {
-    const res = await pdfApi.fetchRevurderingsVedtak(sakId, revurderingId, fritekst);
+    const res = await pdfApi.fetchBrevutkastWithFritekst(sakId, revurderingId, fritekst);
     if (res.status === 'ok') {
         return { objectUrl: URL.createObjectURL(res.data) };
     }

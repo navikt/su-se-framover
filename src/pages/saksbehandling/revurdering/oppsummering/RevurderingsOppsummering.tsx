@@ -51,13 +51,13 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
             setHentBrevStatus(RemoteData.pending);
 
             dispatch(
-                revurderingSlice.fetchRevurderingsVedtak({
+                revurderingSlice.fetchBrevutkastWithFritekst({
                     sakId: props.sakId,
                     revurderingId: props.revurdering?.id ?? '',
-                    fritekst,
+                    fritekst: fritekst ?? '',
                 })
             ).then((action) => {
-                if (revurderingSlice.fetchRevurderingsVedtak.fulfilled.match(action)) {
+                if (revurderingSlice.fetchBrevutkastWithFritekst.fulfilled.match(action)) {
                     setHentBrevStatus(RemoteData.success(null));
                     window.open(action.payload.objectUrl);
                 } else {

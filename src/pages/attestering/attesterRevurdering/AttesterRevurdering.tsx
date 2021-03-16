@@ -2,13 +2,14 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { PersonCard, Gender } from '@navikt/nap-person-card';
 import { useFormik } from 'formik';
 import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
-import { Hovedknapp } from 'nav-frontend-knapper';
+import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { RadioPanelGruppe, Textarea, Select } from 'nav-frontend-skjema';
 import { Innholdstittel, Systemtittel } from 'nav-frontend-typografi';
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
+import * as PdfApi from '~api/pdfApi';
 import { Person } from '~api/personApi';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
 import { getGender, showName } from '~features/person/personUtils';
@@ -72,6 +73,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+    const [hentPdfStatus, setHentPdfStatus] = useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const [sendtBeslutning, setSendtBeslutning] = useState<
         RemoteData.RemoteData<ApiError, IverksattRevurdering | UnderkjentRevurdering>
     >(RemoteData.initial);
@@ -148,6 +150,17 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
         return <AlertStripeFeil>{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</AlertStripeFeil>;
     }
 
+    const handleShowBrevClick = async () => {
+        setHentPdfStatus(RemoteData.pending);
+        const res = await PdfApi.fetchBrevutkast(props.sak.id, revurdering.id);
+        if (res.status === 'ok') {
+            setHentPdfStatus(RemoteData.success(null));
+            window.open(URL.createObjectURL(res.data));
+        } else {
+            setHentPdfStatus(RemoteData.failure(res.error));
+        }
+    };
+
     return (
         <form
             className={SharedStyles.container}
@@ -182,6 +195,19 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                         beregning={revurdering.beregninger.revurdert}
                     />
                 </div>
+                <Knapp
+                    className={styles.brevButton}
+                    htmlType="button"
+                    spinner={RemoteData.isPending(hentPdfStatus)}
+                    onClick={handleShowBrevClick}
+                >
+                    {intl.formatMessage({ id: 'knapp.brev' })}
+                </Knapp>
+                {RemoteData.isFailure(hentPdfStatus) && (
+                    <AlertStripeFeil className={styles.brevFeil}>
+                        {intl.formatMessage({ id: 'feil.klarteIkkeHenteBrev' })}
+                    </AlertStripeFeil>
+                )}
 
                 <RadioPanelGruppe
                     className={SharedStyles.formElement}
