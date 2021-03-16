@@ -2,6 +2,7 @@ import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
 import { Uføregrunnlag } from '~types/grunnlagsdata';
+import { Revurdering } from '~types/Revurdering';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -132,3 +133,5 @@ export async function lagreUføregrunnlag(arg: { sakId: string; behandlingId: st
         })),
     });
 }
+
+

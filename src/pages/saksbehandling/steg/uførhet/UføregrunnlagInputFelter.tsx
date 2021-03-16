@@ -15,12 +15,12 @@ import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import messages from '~pages/saksbehandling/steg/uførhet/uførhet-nb';
 import sharedStyles from '~pages/søknad/steg-shared.module.less';
 import { useAppDispatch } from '~redux/Store';
-import { Behandling } from '~types/Behandling';
+import { Grunnlag } from '~types/Behandling';
 import { Uføregrunnlag } from '~types/grunnlagsdata';
 
 import styles from './Uførhet.module.less';
 
-const UføregrunnlagInputFelter = (props: { sakId: string; behandling: Behandling }) => {
+const UføregrunnlagInputFelter = (props: { grunnlag: Grunnlag, lagre: (uføregrunnlag: Uføregrunnlag[]) => void }) => {
     interface FormData {
         grunnlag: UføregrunnlagFormData[];
     }
@@ -32,7 +32,6 @@ const UføregrunnlagInputFelter = (props: { sakId: string; behandling: Behandlin
         uføregrad: Nullable<string>;
     }
 
-    const dispatch = useAppDispatch();
 
     const handleSave = async (values: FormData) => {
         const uføregrunnlag = values.grunnlag.map((uføregrunnlag) => ({
@@ -43,13 +42,7 @@ const UføregrunnlagInputFelter = (props: { sakId: string; behandling: Behandlin
             uføregrad: +uføregrunnlag.uføregrad!,
             forventetInntekt: +uføregrunnlag.forventetInntekt!,
         })) as Uføregrunnlag[];
-        await dispatch(
-            lagreUføregrunnlag({
-                sakId: props.sakId,
-                behandlingId: props.behandling.id,
-                uføregrunnlag,
-            })
-        );
+        props.lagre(uføregrunnlag)
     };
 
     const handleRemove = async (index: number) => {
@@ -61,7 +54,7 @@ const UføregrunnlagInputFelter = (props: { sakId: string; behandling: Behandlin
 
     const formik = useFormik<FormData>({
         initialValues: {
-            grunnlag: props.behandling.grunnlag.uføre.map((x) => ({
+            grunnlag: props.grunnlag.uføre.map((x) => ({
                 fraOgMed: DateFns.parseISO(x.periode.fraOgMed),
                 tilOgMed: DateFns.parseISO(x.periode.tilOgMed),
                 uføregrad: String(x.uføregrad),

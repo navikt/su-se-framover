@@ -130,7 +130,7 @@ export const lagreUføregrunnlag = createAsyncThunk<
         uføregrunnlag: Uføregrunnlag[];
     },
     { rejectValue: ApiError }
->('behandling/grunngsdata/uføre', async (arg, thunkApi) => {
+>('behandling/grunnlag/uføre', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreUføregrunnlag(arg);
     if (res.status === 'ok') {
         return res.data;

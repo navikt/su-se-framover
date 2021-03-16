@@ -1,11 +1,13 @@
 import { formatISO } from 'date-fns';
 
 import { Fradrag, Periode } from '~types/Fradrag';
+import { Uføregrunnlag } from '~types/grunnlagsdata';
 import {
     OpprettetRevurdering,
     SimulertRevurdering,
     RevurderingTilAttestering,
     IverksattRevurdering,
+    Revurdering,
 } from '~types/Revurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -70,5 +72,19 @@ export async function iverksett(sakId: string, revurderingId: string): Promise<A
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/iverksett`,
         method: 'POST',
+    });
+}
+
+export async function lagreUføregrunnlag( sakId: string, revurderingId: string, uføregrunnlag: Uføregrunnlag[] ) {
+    return apiClient<OpprettetRevurdering>({
+        url: `/saker/${sakId}/behandlinger/${revurderingId}/grunnlagsdata/uføre`,
+        method: 'POST',
+        body: uføregrunnlag.map((uføregrunnlag) => ({
+            ...uføregrunnlag,
+            periode: {
+                fraOgMed: uføregrunnlag.periode.fraOgMed,
+                tilOgMed: uføregrunnlag.periode.tilOgMed,
+            },
+        })),
     });
 }

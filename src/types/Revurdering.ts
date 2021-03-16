@@ -1,4 +1,4 @@
-import { Behandling } from './Behandling';
+import { Behandling, Grunnlag } from './Behandling';
 import { Beregning } from './Beregning';
 import { Periode } from './Fradrag';
 
@@ -9,6 +9,13 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     periode: Periode<string>;
     tilRevurdering: Behandling;
     saksbehandler: string;
+    grunnlag: Grunnlagsett;
+}
+
+export interface Grunnlagsett {
+    førBehandling: Grunnlag;
+    endring: Grunnlag;
+    resultat: Grunnlag;
 }
 interface Beregninger {
     beregning: Beregning;

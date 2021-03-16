@@ -3,6 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~api/apiClient';
 import { Nullable } from '~lib/types';
 import { Periode, Fradrag } from '~types/Fradrag';
+import { Uføregrunnlag } from '~types/grunnlagsdata';
 import {
     RevurderingTilAttestering,
     IverksattRevurdering,
@@ -85,6 +86,22 @@ export const fetchRevurderingsVedtak = createAsyncThunk<
     const res = await pdfApi.fetchRevurderingsVedtak(sakId, revurderingId, fritekst);
     if (res.status === 'ok') {
         return { objectUrl: URL.createObjectURL(res.data) };
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreUføregrunnlag = createAsyncThunk<
+    OpprettetRevurdering,
+    {
+        sakId: string;
+        revurderingId: string;
+        uføregrunnlag: Uføregrunnlag[];
+    },
+    { rejectValue: ApiError }
+>('revurdering/grunnlag/uføre', async ({ sakId, revurderingId,uføregrunnlag }, thunkApi) => {
+    const res = await revurderingApi.lagreUføregrunnlag(sakId, revurderingId,uføregrunnlag);
+    if (res.status === 'ok') {
+        return res.data;
     }
     return thunkApi.rejectWithValue(res.error);
 });
