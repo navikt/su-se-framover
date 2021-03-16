@@ -1,4 +1,5 @@
 export default {
+    tittel: 'Oppsummering av vedtak',
     'behandlet.av': 'Saksbehandler',
     'attestert.av': 'Attestant',
 

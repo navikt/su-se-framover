@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import { fetchBrevutkastForRevurdering } from '~api/pdfApi';
-import { useUserContext } from '~context/userContext';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
@@ -35,7 +34,6 @@ const vedtaksresultatToTekst = (vedtaksresultat: Vedtaksresultat, intl: IntlShap
 const Vedtaksoppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
     const intl = useI18n({ messages });
-    const user = useUserContext();
     const [fetchVedtaksbrev, setFetchVedtaksbrev] = useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const vedtak = props.sak.vedtak.find((v) => v.id === urlParams.vedtakId);
     if (!vedtak) return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
@@ -52,17 +50,17 @@ const Vedtaksoppsummering = (props: Props) => {
         }
     };
 
-    const Tilleggsinfo = () => {
+    const InfoHeader = () => {
         return (
             <div>
-                <div className={styles.tilleggsinfoContainer}>
+                <div className={styles.infoHeader}>
                     <div>
                         <Element>{intl.formatMessage({ id: 'resultat.tittel' })}</Element>
                         <p>{vedtaksresultatToTekst(vedtak.resultat, intl)}</p>
                     </div>
                     <div>
                         <Element> {intl.formatMessage({ id: 'behandlet.av' })}</Element>
-                        <p>{vedtak.saksbehandler || user.navn}</p>
+                        <p>{vedtak.saksbehandler}</p>
                     </div>
 
                     <div>
@@ -99,9 +97,9 @@ const Vedtaksoppsummering = (props: Props) => {
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Innholdstittel className={styles.tittel}> Oppsummering av vedtak</Innholdstittel>
-            <Tilleggsinfo />
+        <div className={styles.container}>
+            <Innholdstittel className={styles.tittel}> {intl.formatMessage({ id: 'tittel' })}</Innholdstittel>
+            <InfoHeader />
             <VisBeregning beregning={vedtak.beregning} />
             <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })} className="knapp">
                 {intl.formatMessage({ id: 'knapp.tilbake' })}

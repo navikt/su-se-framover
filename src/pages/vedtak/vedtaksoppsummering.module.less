@@ -1,14 +1,20 @@
 @import '~/styles/variables.less';
 
-.tittel {
-    margin: @spacing 0;
-}
-
-.tilleggsinfoContainer {
+.container {
     display: flex;
-    margin-bottom: @spacing-l;
+    flex-direction: column;
+    align-items: center;
 
-    > :not(:last-child) {
-        margin-right: @spacing;
+    .tittel {
+        margin: @spacing 0;
+    }
+
+    .infoHeader {
+        display: flex;
+        margin-bottom: @spacing-l;
+
+        > :not(:last-child) {
+            margin-right: @spacing;
+        }
     }
 }
