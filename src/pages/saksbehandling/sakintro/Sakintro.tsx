@@ -315,7 +315,8 @@ const RevurderingStartetKnapper = (props: { r: Revurdering; sakId: string; intl:
                     </Link>
                 ) : (
                     !erRevurderingTilAttestering(r) &&
-                    !erRevurderingIverksatt(r) && (
+                    !erRevurderingIverksatt(r) &&
+                    user.navIdent !== r.attestering?.attestant && (
                         <Link
                             className="knapp knapp--mini"
                             to={Routes.revurderValgtRevurdering.createURL({

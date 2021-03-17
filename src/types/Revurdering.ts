@@ -1,3 +1,5 @@
+import { Nullable } from '~lib/types';
+
 import { Behandling, Attestering } from './Behandling';
 import { Beregning } from './Beregning';
 import { Periode } from './Fradrag';
@@ -9,6 +11,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     periode: Periode<string>;
     tilRevurdering: Behandling;
     saksbehandler: string;
+    attestering: Nullable<Attestering>;
 }
 interface Beregninger {
     beregning: Beregning;
