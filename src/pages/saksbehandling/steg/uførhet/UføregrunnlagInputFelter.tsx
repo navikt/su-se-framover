@@ -36,8 +36,8 @@ const UføregrunnlagInputFelter = (props: { grunnlag: Grunnlag; lagre: (uføregr
                 fraOgMed: formatISO(uføregrunnlag.fraOgMed!, { representation: 'date' }),
                 tilOgMed: formatISO(lastDayOfMonth(uføregrunnlag.tilOgMed!), { representation: 'date' }),
             },
-            uføregrad: +uføregrunnlag.uføregrad!,
-            forventetInntekt: +uføregrunnlag.forventetInntekt!,
+            uføregrad: Number.parseInt(uføregrunnlag.uføregrad!),
+            forventetInntekt: Number.parseInt(uføregrunnlag.forventetInntekt!),
         })) as Uføregrunnlag[];
         props.lagre(uføregrunnlag);
     };

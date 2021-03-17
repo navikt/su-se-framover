@@ -7,7 +7,6 @@ import {
     SimulertRevurdering,
     RevurderingTilAttestering,
     IverksattRevurdering,
-    Revurdering,
 } from '~types/Revurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -75,7 +74,7 @@ export async function iverksett(sakId: string, revurderingId: string): Promise<A
     });
 }
 
-export async function lagreUføregrunnlag( sakId: string, revurderingId: string, uføregrunnlag: Uføregrunnlag[] ) {
+export async function lagreUføregrunnlag(sakId: string, revurderingId: string, uføregrunnlag: Uføregrunnlag[]) {
     return apiClient<OpprettetRevurdering>({
         url: `/saker/${sakId}/behandlinger/${revurderingId}/grunnlagsdata/uføre`,
         method: 'POST',

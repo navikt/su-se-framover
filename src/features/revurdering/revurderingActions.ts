@@ -98,8 +98,8 @@ export const lagreUføregrunnlag = createAsyncThunk<
         uføregrunnlag: Uføregrunnlag[];
     },
     { rejectValue: ApiError }
->('revurdering/grunnlag/uføre', async ({ sakId, revurderingId,uføregrunnlag }, thunkApi) => {
-    const res = await revurderingApi.lagreUføregrunnlag(sakId, revurderingId,uføregrunnlag);
+>('revurdering/grunnlag/uføre', async ({ sakId, revurderingId, uføregrunnlag }, thunkApi) => {
+    const res = await revurderingApi.lagreUføregrunnlag(sakId, revurderingId, uføregrunnlag);
     if (res.status === 'ok') {
         return res.data;
     }

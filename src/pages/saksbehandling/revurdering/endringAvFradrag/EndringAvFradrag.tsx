@@ -2,11 +2,13 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { Ingress, Innholdstittel } from 'nav-frontend-typografi';
+import { Ingress, Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
+import { useIntl } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
 import { beregnOgSimuler, lagreUføregrunnlag } from '~features/revurdering/revurderingActions';
+import { formatMonthYear } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
@@ -20,6 +22,7 @@ import UføregrunnlagInputFelter from '~pages/saksbehandling/steg/uførhet/Ufør
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Fradragstype, FradragTilhører } from '~types/Fradrag';
+import { Uføregrunnlag } from '~types/grunnlagsdata';
 import { Revurdering } from '~types/Revurdering';
 
 import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregning-nb';
@@ -36,6 +39,30 @@ interface EndringAvFradragFormData {
 const schema = yup.object<EndringAvFradragFormData>({
     fradrag: yup.array(fradragSchema.required()).defined(),
 });
+
+const Uføregrunnlag = (uførgrunnlag: Uføregrunnlag) => {
+    const intl = useIntl();
+    return (
+        <div className={styles.uføregrunnlagvisning}>
+            <div className={styles.uføregrunnlagrad}>
+                <span>fraOgMed</span>
+                <span>{formatMonthYear(uførgrunnlag.periode.fraOgMed, intl)}</span>
+            </div>
+            <div className={styles.uføregrunnlagrad}>
+                <span>tilOgMed</span>
+                <span>{formatMonthYear(uførgrunnlag.periode.tilOgMed, intl)}</span>
+            </div>
+            <div className={styles.uføregrunnlagrad}>
+                <span>Uføregrad</span>
+                <span>{uførgrunnlag.uføregrad}</span>
+            </div>
+            <div className={styles.uføregrunnlagrad}>
+                <span>Forventet inntekt</span>
+                <span>{uførgrunnlag.forventetInntekt}</span>
+            </div>
+        </div>
+    );
+};
 
 const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) => {
     const { beregnOgSimulerStatus } = useAppSelector((state) => state.sak);
@@ -124,34 +151,20 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                         ${props.revurdering.periode.tilOgMed} `}
                     </p>
                 </div>
-                <Innholdstittel className={sharedStyles.tittel}>Før behandling</Innholdstittel>
-                {props.revurdering.grunnlag.førBehandling.uføre.map((x) => (
-                    <>
-                        fraOgMed:{x.periode.fraOgMed}
-                        <br />
-                        tilOgMed:{x.periode.tilOgMed}
-                        <br />
-                        Uføregrad:{x.uføregrad}
-                        <br />
-                        Forventet inntekt:{x.forventetInntekt}
-                        <br />
-                        <br />
-                    </>
-                ))}
-                <Innholdstittel className={sharedStyles.tittel}>Resultat</Innholdstittel>
-                {props.revurdering.grunnlag.resultat.uføre.map((x) => (
-                    <>
-                        fraOgMed:{x.periode.fraOgMed}
-                        <br />
-                        tilOgMed:{x.periode.tilOgMed}
-                        <br />
-                        Uføregrad:{x.uføregrad}
-                        <br />
-                        Forventet inntekt:{x.forventetInntekt}
-                        <br />
-                        <br />
-                    </>
-                ))}
+                <div className={styles.grunnlagsdata}>
+                    <div className={styles.grunnlagsdataelement}>
+                        <Undertittel className={styles.grunnlagsdataoverskrift}>Før behandling</Undertittel>
+                        {props.revurdering.grunnlag.førBehandling.uføre.map((x, idx) => (
+                            <Uføregrunnlag {...x} key={idx} />
+                        ))}
+                    </div>
+                    <div className={styles.grunnlagsdataelement}>
+                        <Undertittel className={styles.grunnlagsdataoverskrift}>Resultat</Undertittel>
+                        {props.revurdering.grunnlag.resultat.uføre.map((x, idx) => (
+                            <Uføregrunnlag {...x} key={idx} />
+                        ))}
+                    </div>
+                </div>
                 <UføregrunnlagInputFelter
                     grunnlag={props.revurdering.grunnlag.endring}
                     lagre={(uføregrunnlag) =>
