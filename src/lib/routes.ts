@@ -41,6 +41,13 @@ export const søkandskvittering: Route<never> = {
     createURL: () => `/soknad/kvittering`,
 };
 
+//---------------Vedtak--------------------------------
+export const vedtaksoppsummering: Route<{ sakId: string; vedtakId: string }> = {
+    path: `/saksoversikt/:sakId/vedtak/:vedtakId/`,
+    createURL: ({ sakId, vedtakId }) => `/saksoversikt/${sakId}/vedtak/${vedtakId}/`,
+};
+
+//---------------Søknadsbehandling & revurdering------
 export const saksoversiktIndex: Route<never> = {
     path: '/saksoversikt/:sakId?/:behandlingId?/:meny?/:vilkar?/',
     createURL: () => '/saksoversikt',

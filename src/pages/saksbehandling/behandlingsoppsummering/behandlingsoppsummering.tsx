@@ -1,10 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import classNames from 'classnames';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Knapp } from 'nav-frontend-knapper';
 import { Element } from 'nav-frontend-typografi';
 import React, { useCallback } from 'react';
 import { IntlShape } from 'react-intl';
+import { Link } from 'react-router-dom';
 
 import { useUserContext } from '~context/userContext';
 import { fetchBrevutkastForSøknadsbehandling } from '~features/saksoversikt/sak.slice';
@@ -29,6 +31,8 @@ interface Props {
 const Behandlingsoppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
     const behandling = props.sak.behandlinger.find((behandling) => behandling.id === urlParams.behandlingId);
+    const intl = useI18n({ messages });
+
     if (!behandling) {
         return <></>;
     }
@@ -42,6 +46,14 @@ const Behandlingsoppsummering = (props: Props) => {
                 behandlingsinformasjon={behandling.behandlingsinformasjon}
             />
             {behandling.beregning && <VisBeregningOgSimulering sak={props.sak} behandling={behandling} />}
+            <Link
+                to={Routes.saksoversiktValgtSak.createURL({
+                    sakId: props.sak.id,
+                })}
+                className={classNames('knapp', styles.backButton)}
+            >
+                {intl.formatMessage({ id: 'knapp.tilbake' })}
+            </Link>
         </div>
     );
 };

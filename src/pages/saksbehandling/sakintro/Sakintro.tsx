@@ -150,9 +150,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         utbetalingsperioder={props.sak.utbetalinger}
                         kanStansesEllerGjenopptas={props.sak.utbetalingerKanStansesEllerGjenopptas}
                     />
-                    {revurderingToggle && (
-                        <Revurderinger sakId={props.sak.id} revurderinger={revurderinger} intl={intl} />
-                    )}
+                    {revurderingToggle && <Revurderinger sak={props.sak} revurderinger={revurderinger} intl={intl} />}
                     <GodkjenteSøknader
                         sakId={props.sak.id}
                         åpneSøknader={godkjenteBehandlinger}
@@ -237,7 +235,7 @@ const ÅpneSøknader = (props: {
     );
 };
 
-const Revurderinger = (props: { sakId: string; revurderinger: Revurdering[]; intl: IntlShape }) => {
+const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: IntlShape }) => {
     if (props.revurderinger.length === 0) return null;
 
     return (
@@ -271,7 +269,7 @@ const Revurderinger = (props: { sakId: string; revurderinger: Revurdering[]; int
                                         )}
                                     </div>
                                     <div className={styles.knapper}>
-                                        <RevurderingStartetKnapper sakId={props.sakId} r={r} intl={props.intl} />
+                                        <RevurderingStartetKnapper sak={props.sak} revurdering={r} intl={props.intl} />
                                     </div>
                                 </div>
                             </Panel>
@@ -283,30 +281,43 @@ const Revurderinger = (props: { sakId: string; revurderinger: Revurdering[]; int
     );
 };
 
-const RevurderingStartetKnapper = (props: { r: Revurdering; sakId: string; intl: IntlShape }) => {
+const RevurderingStartetKnapper = (props: { revurdering: Revurdering; sak: Sak; intl: IntlShape }) => {
     const user = useUserContext();
-    const { r } = props;
+    const { revurdering } = props;
+    const vedtak = props.sak.vedtak.find((v) => v.behandlingId === revurdering.id);
 
     return (
         <div className={styles.behandlingContainer}>
-            {erRevurderingTilAttestering(r) && (!user.isAttestant || user.navIdent === r.saksbehandler) && (
-                <div className={styles.ikonContainer}>
-                    <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
-                    <p>
-                        {props.intl.formatMessage({
-                            id: 'display.attestering.tilAttestering',
-                        })}
-                    </p>
-                </div>
+            {erRevurderingTilAttestering(revurdering) &&
+                (!user.isAttestant || user.navIdent === revurdering.saksbehandler) && (
+                    <div className={styles.ikonContainer}>
+                        <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
+                        <p>
+                            {props.intl.formatMessage({
+                                id: 'display.attestering.tilAttestering',
+                            })}
+                        </p>
+                    </div>
+                )}
+
+            {erRevurderingIverksatt(revurdering) && vedtak && (
+                <Link
+                    className="knapp"
+                    to={Routes.vedtaksoppsummering.createURL({ sakId: props.sak.id, vedtakId: vedtak.id })}
+                >
+                    Se oppsummering
+                </Link>
             )}
 
             <div className={styles.knapper}>
-                {erRevurderingTilAttestering(r) && user.isAttestant && user.navIdent !== r.saksbehandler ? (
+                {erRevurderingTilAttestering(revurdering) &&
+                user.isAttestant &&
+                user.navIdent !== revurdering.saksbehandler ? (
                     <Link
                         className="knapp knapp--mini"
                         to={Routes.attesterRevurdering.createURL({
-                            sakId: props.sakId,
-                            revurderingId: r.id,
+                            sakId: props.sak.id,
+                            revurderingId: revurdering.id,
                         })}
                     >
                         {props.intl.formatMessage({
@@ -314,19 +325,19 @@ const RevurderingStartetKnapper = (props: { r: Revurdering; sakId: string; intl:
                         })}
                     </Link>
                 ) : (
-                    !erRevurderingTilAttestering(r) &&
-                    !erRevurderingIverksatt(r) &&
-                    user.navIdent !== r.attestering?.attestant && (
+                    !erRevurderingTilAttestering(revurdering) &&
+                    !erRevurderingIverksatt(revurdering) &&
+                    user.navIdent !== revurdering.attestering?.attestant && (
                         <Link
                             className="knapp knapp--mini"
                             to={Routes.revurderValgtRevurdering.createURL({
-                                sakId: props.sakId,
-                                steg: erRevurderingSimulert(r)
+                                sakId: props.sak.id,
+                                steg: erRevurderingSimulert(revurdering)
                                     ? RevurderingSteg.Oppsummering
-                                    : erRevurderingOpprettet(r)
+                                    : erRevurderingOpprettet(revurdering)
                                     ? RevurderingSteg.EndringAvFradrag
                                     : RevurderingSteg.Periode,
-                                revurderingId: r.id,
+                                revurderingId: revurdering.id,
                             })}
                         >
                             {props.intl.formatMessage({ id: 'revurdering.fortsett' })}
@@ -626,7 +637,7 @@ const AvslåtteSøknader = (props: {
                                             behandlingId: behandling.id,
                                         })}
                                     >
-                                        Se oppsummering
+                                        {props.intl.formatMessage({ id: 'revurdering.oppsummering' })}
                                     </Link>
                                 </div>
                             </Panel>
