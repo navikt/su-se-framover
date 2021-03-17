@@ -637,7 +637,7 @@ const AvslåtteSøknader = (props: {
                                             behandlingId: behandling.id,
                                         })}
                                     >
-                                        Se oppsummering
+                                        {props.intl.formatMessage({ id: 'revurdering.oppsummering' })}
                                     </Link>
                                 </div>
                             </Panel>
