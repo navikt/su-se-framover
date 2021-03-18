@@ -22,7 +22,7 @@ import UføregrunnlagInputFelter from '~pages/saksbehandling/steg/uførhet/Ufør
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Fradragstype, FradragTilhører } from '~types/Fradrag';
-import { Uføregrunnlag } from '~types/grunnlagsdata';
+import { Uføregrunnlag } from '~types/Grunnlag';
 import { Revurdering } from '~types/Revurdering';
 
 import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregning-nb';
@@ -154,19 +154,21 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                 <div className={styles.grunnlagsdata}>
                     <div className={styles.grunnlagsdataelement}>
                         <Undertittel className={styles.grunnlagsdataoverskrift}>Før behandling</Undertittel>
-                        {props.revurdering.grunnlag.førBehandling.uføre.map((x, idx) => (
-                            <Uføregrunnlag {...x} key={idx} />
-                        ))}
+                        {props.revurdering.simulertEndringGrunnlag &&
+                            props.revurdering.simulertEndringGrunnlag.førBehandling.uføre.map((x, idx) => (
+                                <Uføregrunnlag {...x} key={idx} />
+                            ))}
                     </div>
                     <div className={styles.grunnlagsdataelement}>
                         <Undertittel className={styles.grunnlagsdataoverskrift}>Resultat</Undertittel>
-                        {props.revurdering.grunnlag.resultat.uføre.map((x, idx) => (
-                            <Uføregrunnlag {...x} key={idx} />
-                        ))}
+                        {props.revurdering.simulertEndringGrunnlag &&
+                            props.revurdering.simulertEndringGrunnlag.resultat.uføre.map((x, idx) => (
+                                <Uføregrunnlag {...x} key={idx} />
+                            ))}
                     </div>
                 </div>
                 <UføregrunnlagInputFelter
-                    grunnlag={props.revurdering.grunnlag.endring}
+                    grunnlag={props.revurdering.grunnlag}
                     lagre={(uføregrunnlag) =>
                         dispatch(
                             lagreUføregrunnlag({

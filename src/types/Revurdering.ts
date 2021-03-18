@@ -1,6 +1,7 @@
-import { Behandling, Grunnlag } from './Behandling';
+import { Behandling } from './Behandling';
 import { Beregning } from './Beregning';
 import { Periode } from './Fradrag';
+import { Grunnlag, SimulertEndringGrunnlag } from './Grunnlag';
 
 export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
     id: string;
@@ -9,14 +10,10 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     periode: Periode<string>;
     tilRevurdering: Behandling;
     saksbehandler: string;
-    grunnlag: Grunnlagsett;
+    grunnlag: Grunnlag;
+    simulertEndringGrunnlag?: SimulertEndringGrunnlag;
 }
 
-export interface Grunnlagsett {
-    førBehandling: Grunnlag;
-    endring: Grunnlag;
-    resultat: Grunnlag;
-}
 interface Beregninger {
     beregning: Beregning;
     revurdert: Beregning;
@@ -52,4 +49,9 @@ export enum RevurderingsStatus {
     SIMULERT = 'SIMULERT',
     TIL_ATTESTERING = 'TIL_ATTESTERING',
     IVERKSATT = 'IVERKSATT',
+}
+
+export interface LeggTilUføreResponse {
+    revurdering: Revurdering;
+    simulertEndringGrunnlag: SimulertEndringGrunnlag;
 }

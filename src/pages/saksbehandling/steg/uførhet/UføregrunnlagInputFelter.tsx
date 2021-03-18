@@ -13,8 +13,7 @@ import sharedI18n from '~pages/saksbehandling/steg/sharedI18n-nb';
 import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import messages from '~pages/saksbehandling/steg/uførhet/uførhet-nb';
 import sharedStyles from '~pages/søknad/steg-shared.module.less';
-import { Grunnlag } from '~types/Behandling';
-import { Uføregrunnlag } from '~types/grunnlagsdata';
+import { Grunnlag, Uføregrunnlag } from '~types/Grunnlag';
 
 import styles from './Uførhet.module.less';
 
@@ -33,10 +32,14 @@ const UføregrunnlagInputFelter = (props: { grunnlag: Grunnlag; lagre: (uføregr
     const handleSave = async (values: FormData) => {
         const uføregrunnlag = values.grunnlag.map((uføregrunnlag) => ({
             periode: {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 fraOgMed: formatISO(uføregrunnlag.fraOgMed!, { representation: 'date' }),
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 tilOgMed: formatISO(lastDayOfMonth(uføregrunnlag.tilOgMed!), { representation: 'date' }),
             },
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             uføregrad: Number.parseInt(uføregrunnlag.uføregrad!),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             forventetInntekt: Number.parseInt(uføregrunnlag.forventetInntekt!),
         })) as Uføregrunnlag[];
         props.lagre(uføregrunnlag);

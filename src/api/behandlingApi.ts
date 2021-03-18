@@ -1,7 +1,7 @@
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
-import { Uføregrunnlag } from '~types/grunnlagsdata';
+import { Uføregrunnlag } from '~types/Grunnlag';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -121,7 +121,7 @@ export async function underkjenn(arg: {
 
 export async function lagreUføregrunnlag(arg: { sakId: string; behandlingId: string; uføregrunnlag: Uføregrunnlag[] }) {
     return apiClient<Behandling>({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlagsdata/uføre`,
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/uføregrunnlag`,
         method: 'POST',
         body: arg.uføregrunnlag.map((uføregrunnlag) => ({
             ...uføregrunnlag,

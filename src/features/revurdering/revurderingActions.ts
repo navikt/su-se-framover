@@ -3,12 +3,13 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~api/apiClient';
 import { Nullable } from '~lib/types';
 import { Periode, Fradrag } from '~types/Fradrag';
-import { Uføregrunnlag } from '~types/grunnlagsdata';
+import { Uføregrunnlag } from '~types/Grunnlag';
 import {
     RevurderingTilAttestering,
     IverksattRevurdering,
     OpprettetRevurdering,
     SimulertRevurdering,
+    LeggTilUføreResponse,
 } from '~types/Revurdering';
 
 import * as pdfApi from '../../api/pdfApi';
@@ -91,7 +92,7 @@ export const fetchRevurderingsVedtak = createAsyncThunk<
 });
 
 export const lagreUføregrunnlag = createAsyncThunk<
-    OpprettetRevurdering,
+    LeggTilUføreResponse,
     {
         sakId: string;
         revurderingId: string;

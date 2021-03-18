@@ -21,7 +21,7 @@ import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
-import { Uføregrunnlag } from '~types/grunnlagsdata';
+import { Uføregrunnlag } from '~types/Grunnlag';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
@@ -599,7 +599,14 @@ export default createSlice({
                     state.sak,
                     RemoteData.map((sak) => ({
                         ...sak,
-                        revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                        revurderinger: sak.revurderinger.map((r) =>
+                            r.id === action.payload.revurdering.id
+                                ? {
+                                      ...action.payload.revurdering,
+                                      simulertEndringGrunnlag: action.payload.simulertEndringGrunnlag,
+                                  }
+                                : r
+                        ),
                     }))
                 );
             },
