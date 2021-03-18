@@ -1,7 +1,7 @@
 import { formatISO } from 'date-fns';
 
 import { Fradrag, Periode } from '~types/Fradrag';
-import { Uføregrunnlag } from '~types/Grunnlag';
+import { SimulertEndringGrunnlag, Uføregrunnlag } from '~types/Grunnlag';
 import {
     OpprettetRevurdering,
     SimulertRevurdering,
@@ -86,5 +86,15 @@ export async function lagreUføregrunnlag(sakId: string, revurderingId: string, 
                 tilOgMed: uføregrunnlag.periode.tilOgMed,
             },
         })),
+    });
+}
+
+export async function hentUføregrunnlag(
+    sakId: string,
+    revurderingId: string
+): Promise<ApiClientResult<SimulertEndringGrunnlag>> {
+    return apiClient<SimulertEndringGrunnlag>({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/uføregrunnlag`,
+        method: 'GET',
     });
 }

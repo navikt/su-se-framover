@@ -66,6 +66,9 @@ const Uføregrunnlag = (uførgrunnlag: Uføregrunnlag) => {
 
 const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) => {
     const { beregnOgSimulerStatus } = useAppSelector((state) => state.sak);
+    const revurderingGrunnlagSimulering = useAppSelector(
+        (state) => state.sak.revurderingGrunnlagSimulering[props.revurdering.id] ?? RemoteData.initial
+    );
     const intl = useI18n({ messages: { ...messages, ...fradragMessages } });
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const dispatch = useAppDispatch();
@@ -151,22 +154,22 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                         ${props.revurdering.periode.tilOgMed} `}
                     </p>
                 </div>
-                <div className={styles.grunnlagsdata}>
-                    <div className={styles.grunnlagsdataelement}>
-                        <Undertittel className={styles.grunnlagsdataoverskrift}>Før behandling</Undertittel>
-                        {props.revurdering.simulertEndringGrunnlag &&
-                            props.revurdering.simulertEndringGrunnlag.førBehandling.uføre.map((x, idx) => (
+                {RemoteData.isSuccess(revurderingGrunnlagSimulering) && (
+                    <div className={styles.grunnlagsdata}>
+                        <div className={styles.grunnlagsdataelement}>
+                            <Undertittel className={styles.grunnlagsdataoverskrift}>Før behandling</Undertittel>
+                            {revurderingGrunnlagSimulering.value.førBehandling.uføre.map((x, idx) => (
                                 <Uføregrunnlag {...x} key={idx} />
                             ))}
-                    </div>
-                    <div className={styles.grunnlagsdataelement}>
-                        <Undertittel className={styles.grunnlagsdataoverskrift}>Resultat</Undertittel>
-                        {props.revurdering.simulertEndringGrunnlag &&
-                            props.revurdering.simulertEndringGrunnlag.resultat.uføre.map((x, idx) => (
+                        </div>
+                        <div className={styles.grunnlagsdataelement}>
+                            <Undertittel className={styles.grunnlagsdataoverskrift}>Resultat</Undertittel>
+                            {revurderingGrunnlagSimulering.value.resultat.uføre.map((x, idx) => (
                                 <Uføregrunnlag {...x} key={idx} />
                             ))}
+                        </div>
                     </div>
-                </div>
+                )}
                 <UføregrunnlagInputFelter
                     grunnlag={props.revurdering.grunnlag}
                     lagre={(uføregrunnlag) =>
