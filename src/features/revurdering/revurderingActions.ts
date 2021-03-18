@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~api/apiClient';
 import { Nullable } from '~lib/types';
 import { Periode, Fradrag } from '~types/Fradrag';
-import { Uføregrunnlag } from '~types/Grunnlag';
+import { SimulertEndringGrunnlag, Uføregrunnlag } from '~types/Grunnlag';
 import {
     RevurderingTilAttestering,
     IverksattRevurdering,
@@ -99,8 +99,23 @@ export const lagreUføregrunnlag = createAsyncThunk<
         uføregrunnlag: Uføregrunnlag[];
     },
     { rejectValue: ApiError }
->('revurdering/grunnlag/uføre', async ({ sakId, revurderingId, uføregrunnlag }, thunkApi) => {
+>('revurdering/grunnlag/uføre/lagre', async ({ sakId, revurderingId, uføregrunnlag }, thunkApi) => {
     const res = await revurderingApi.lagreUføregrunnlag(sakId, revurderingId, uføregrunnlag);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const hentUføregrunnlag = createAsyncThunk<
+    SimulertEndringGrunnlag,
+    {
+        sakId: string;
+        revurderingId: string;
+    },
+    { rejectValue: ApiError }
+>('revurdering/grunnlag/uføre/hent', async ({ sakId, revurderingId }, thunkApi) => {
+    const res = await revurderingApi.hentUføregrunnlag(sakId, revurderingId);
     if (res.status === 'ok') {
         return res.data;
     }

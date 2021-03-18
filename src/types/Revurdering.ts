@@ -11,7 +11,6 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     tilRevurdering: Behandling;
     saksbehandler: string;
     grunnlag: Grunnlag;
-    simulertEndringGrunnlag?: SimulertEndringGrunnlag;
 }
 
 interface Beregninger {
