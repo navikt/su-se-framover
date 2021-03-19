@@ -12,6 +12,20 @@ export async function fetchBrevutkastForSøknadsbehandling(
     });
 }
 
+export async function fetchBrevutkastForSøknadsbehandlingWithFritekst(
+    sakId: string,
+    behandlingId: string,
+    fritekst: string
+): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/saker/${sakId}/behandlinger/${behandlingId}/vedtaksutkast`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/pdf' }) },
+        body: { fritekst: fritekst },
+        bodyTransformer: (res) => res.blob(),
+    });
+}
+
 export async function fetchSøknadutskrift(søknadId: string): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/soknad/${søknadId}/utskrift`,

@@ -25,6 +25,30 @@
 }
 
 .navigeringContainer {
+    width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
+}
+
+.fritekstareaOuterContainer {
+    width: 100%;
+}
+
+.fritekstareaContainer {
+    max-width: 30rem;
+    display: flex;
+    flex-direction: column;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+}
+
+.fritekstarea {
+    width: 100%;
+    display: flex;
+}
+
+.visBrevKnapp {
+    width: fit-content;
 }

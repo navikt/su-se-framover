@@ -169,6 +169,7 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
                             onClick={() => hentBrev(formik.values.tekstTilVedtaksbrev)}
                             htmlType="button"
                             spinner={RemoteData.isPending(hentBrevStatus)}
+                            mini
                         >
                             {intl.formatMessage({ id: 'knapp.seVedtaksbrev' })}
                         </Knapp>

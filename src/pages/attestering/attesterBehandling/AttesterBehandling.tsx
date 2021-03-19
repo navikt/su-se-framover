@@ -159,7 +159,7 @@ const Attesteringsinnhold = ({
                     </Innholdstittel>
                 </div>
 
-                <BehandlingStatus sakId={props.sak.id} behandling={props.behandling} />
+                <BehandlingStatus sakId={props.sak.id} behandling={props.behandling} withBrevutkastknapp />
                 <VilkårsOppsummering
                     søknadInnhold={props.behandling.søknad.søknadInnhold}
                     behandlingsinformasjon={props.behandling.behandlingsinformasjon}

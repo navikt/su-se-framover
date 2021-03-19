@@ -3,7 +3,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
 import * as behandlingApi from '~api/behandlingApi';
-import * as PdfApi from '~api/pdfApi';
 import * as sakApi from '~api/sakApi';
 import * as søknadApi from '~api/søknadApi';
 import { LukkSøknadBodyTypes } from '~api/søknadApi';
@@ -121,18 +120,6 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const fetchBrevutkastForSøknadsbehandling = createAsyncThunk<
-    { objectUrl: string },
-    { sakId: string; behandlingId: string },
-    { rejectValue: ApiError }
->('behandling/lastNedBrev', async ({ sakId, behandlingId }, thunkApi) => {
-    const res = await PdfApi.fetchBrevutkastForSøknadsbehandling(sakId, behandlingId);
-    if (res.status === 'ok') {
-        return { objectUrl: URL.createObjectURL(res.data) };
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
 export const startBeregning = createAsyncThunk<
     Behandling,
     { sakId: string; behandlingId: string; sats: Sats; fom: string; tom: string; fradrag: Fradrag[] },
@@ -159,10 +146,10 @@ export const startSimulering = createAsyncThunk<
 
 export const sendTilAttestering = createAsyncThunk<
     Behandling,
-    { sakId: string; behandlingId: string },
+    { sakId: string; behandlingId: string; fritekstTilBrev: string },
     { rejectValue: ApiError }
->('behandling/tilAttestering', async ({ sakId, behandlingId }, thunkApi) => {
-    const res = await behandlingApi.sendTilAttestering({ sakId, behandlingId });
+>('behandling/tilAttestering', async ({ sakId, behandlingId, fritekstTilBrev }, thunkApi) => {
+    const res = await behandlingApi.sendTilAttestering({ sakId, behandlingId, fritekstTilBrev });
     if (res.status === 'ok') {
         return res.data;
     }
@@ -236,7 +223,6 @@ interface SakState {
     simuleringStatus: RemoteData.RemoteData<ApiError, null>;
     sendtTilAttesteringStatus: RemoteData.RemoteData<ApiError, null>;
     attesteringStatus: RemoteData.RemoteData<ApiError, null>;
-    lastNedBrevStatus: RemoteData.RemoteData<ApiError, null>;
     søknadLukketStatus: RemoteData.RemoteData<ApiError, null>;
     lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
     opprettRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
@@ -254,7 +240,6 @@ const initialState: SakState = {
     simuleringStatus: RemoteData.initial,
     sendtTilAttesteringStatus: RemoteData.initial,
     attesteringStatus: RemoteData.initial,
-    lastNedBrevStatus: RemoteData.initial,
     søknadLukketStatus: RemoteData.initial,
     lukketSøknadBrevutkastStatus: RemoteData.initial,
     opprettRevurderingStatus: RemoteData.initial,
@@ -466,18 +451,6 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.sendtTilAttesteringStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-
-        handleAsyncThunk(builder, fetchBrevutkastForSøknadsbehandling, {
-            pending: (state) => {
-                state.lastNedBrevStatus = RemoteData.pending;
-            },
-            fulfilled: (state) => {
-                state.lastNedBrevStatus = RemoteData.success(null);
-            },
-            rejected: (state, action) => {
-                state.lastNedBrevStatus = simpleRejectedActionToRemoteData(action);
             },
         });
 

@@ -1,10 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
-import { Hovedknapp } from 'nav-frontend-knapper';
+import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import { Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel } from 'nav-frontend-typografi/';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { ApiError } from '~api/apiClient';
+import * as PdfApi from '~api/pdfApi';
 import {
     erAvslått,
     erTilAttestering,
@@ -42,6 +45,47 @@ const Vedtak = (props: Props) => {
     const { sakId, behandlingId } = routes.useRouteParams<typeof routes.saksoversiktValgtBehandling>();
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
 
+    const [fritekst, setFritekst] = useState('');
+    const [lastNedBrevStatus, setLastNedBrevStatus] = useState<RemoteData.RemoteData<ApiError, null>>(
+        RemoteData.initial
+    );
+
+    const handleVisBrevClick = async () => {
+        if (RemoteData.isPending(lastNedBrevStatus) || !behandling) {
+            return;
+        }
+        setLastNedBrevStatus(RemoteData.pending);
+
+        const res = await PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst(sakId, behandling.id, fritekst);
+        if (res.status === 'ok') {
+            window.open(URL.createObjectURL(res.data));
+            setLastNedBrevStatus(RemoteData.success(null));
+        } else {
+            setLastNedBrevStatus(RemoteData.failure(res.error));
+        }
+    };
+
+    const vilkårUrl = (vilkårType: Vilkårtype) => {
+        return createVilkårUrl({
+            sakId: sakId,
+            behandlingId: behandlingId,
+            vilkar: vilkårType,
+        });
+    };
+
+    const sisteVurderteVilkår = behandling
+        ? mapToVilkårsinformasjon(behandling.behandlingsinformasjon)
+              .reverse()
+              .find((vilkår) => vilkår.status !== VilkårVurderingStatus.IkkeVurdert)
+        : undefined;
+
+    const tilbakeUrl = useMemo(() => {
+        if (behandling && erVilkårsvurderingerVurdertAvslag(behandling) && !erBeregnetAvslag(behandling))
+            return vilkårUrl(sisteVurderteVilkår?.vilkårtype ?? Vilkårtype.PersonligOppmøte);
+
+        return vilkårUrl(Vilkårtype.Beregning);
+    }, [behandling, sisteVurderteVilkår]);
+
     if (!behandling) {
         return <AlertStripe type="feil">{intl.formatMessage({ id: 'feilmelding.fantIkkeBehandlingsId' })}</AlertStripe>;
     }
@@ -56,25 +100,6 @@ const Vedtak = (props: Props) => {
             </AlertStripeSuksess>
         );
     }
-
-    const vilkårUrl = (vilkårType: Vilkårtype) => {
-        return createVilkårUrl({
-            sakId: sakId,
-            behandlingId: behandlingId,
-            vilkar: vilkårType,
-        });
-    };
-
-    const sisteVurderteVilkår = mapToVilkårsinformasjon(behandling.behandlingsinformasjon)
-        .reverse()
-        .find((vilkår) => vilkår.status !== VilkårVurderingStatus.IkkeVurdert);
-
-    const handleTilbake = () => {
-        if (erVilkårsvurderingerVurdertAvslag(behandling) && !erBeregnetAvslag(behandling))
-            return vilkårUrl(sisteVurderteVilkår?.vilkårtype ?? Vilkårtype.PersonligOppmøte);
-
-        return vilkårUrl(Vilkårtype.Beregning);
-    };
 
     if (erSimulert(behandling) || erAvslått(behandling) || erUnderkjent(behandling)) {
         return (
@@ -97,17 +122,48 @@ const Vedtak = (props: Props) => {
                     {harBeregning(behandling) ? (
                         <VisBeregningOgSimulering sak={sak} behandling={behandling} />
                     ) : (
-                        <>{intl.formatMessage({ id: 'feilmelding.ikkeGjortEnBeregning' })}</>
+                        intl.formatMessage({ id: 'feilmelding.ikkeGjortEnBeregning' })
                     )}
                 </div>
+                <div className={styles.fritekstareaOuterContainer}>
+                    <div className={styles.fritekstareaContainer}>
+                        <Textarea
+                            label={intl.formatMessage({ id: 'input.fritekst.label' })}
+                            name="fritekst"
+                            onChange={(e) => setFritekst(e.target.value)}
+                            value={fritekst}
+                            className={styles.fritekstarea}
+                        />
+                        {RemoteData.isFailure(lastNedBrevStatus) && (
+                            <AlertStripe type="feil">
+                                {intl.formatMessage({ id: 'feilmelding.brevhentingFeilet' })}
+                            </AlertStripe>
+                        )}
+                        <Knapp
+                            className={styles.visBrevKnapp}
+                            htmlType="button"
+                            onClick={handleVisBrevClick}
+                            spinner={RemoteData.isPending(lastNedBrevStatus)}
+                            mini
+                        >
+                            {intl.formatMessage({ id: 'knapp.vis' })}
+                        </Knapp>
+                    </div>
+                </div>
                 <div className={styles.navigeringContainer}>
-                    <Link to={handleTilbake()} className="knapp">
+                    <Link to={tilbakeUrl} className="knapp">
                         {intl.formatMessage({ id: 'knapp.tilbake' })}
                     </Link>
                     <Hovedknapp
                         spinner={RemoteData.isPending(sendtTilAttesteringStatus)}
                         onClick={() =>
-                            dispatch(sakSlice.sendTilAttestering({ sakId: sak.id, behandlingId: behandlingId }))
+                            dispatch(
+                                sakSlice.sendTilAttestering({
+                                    sakId: sak.id,
+                                    behandlingId: behandlingId,
+                                    fritekstTilBrev: fritekst,
+                                })
+                            )
                         }
                         htmlType="button"
                     >
