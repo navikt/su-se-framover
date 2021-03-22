@@ -25,7 +25,6 @@ import { useAppSelector, useAppDispatch } from '~redux/Store';
 
 import Behandlingsoppsummering from './behandlingsoppsummering/behandlingsoppsummering';
 import LukkSøknad from './lukkSøknad/LukkSøknad';
-import OpprettRevurdering from './revurdering/opprettRevurdering/OpprettRevurdering';
 import Revurdering from './revurdering/Revurdering';
 import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
@@ -135,7 +134,7 @@ const Saksoversikt = () => {
                                             </Route>
                                             <Route path={Routes.revurderValgtSak.path}>
                                                 <div className={styles.mainContent}>
-                                                    <OpprettRevurdering sak={sak} />
+                                                    <Revurdering sak={sak} />
                                                 </div>
                                             </Route>
                                             <Route path={Routes.revurderValgtRevurdering.path}>
