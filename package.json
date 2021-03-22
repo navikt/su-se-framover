@@ -51,7 +51,7 @@
         "@navikt/nap-side-menu": "^1.0.7",
         "@reduxjs/toolkit": "^1.5.0",
         "@sentry/browser": "^6.2.1",
-        "@types/jest": "^26.0.19",
+        "@types/jest": "^26.0.21",
         "@types/jsonwebtoken": "^8.5.0",
         "@types/react-collapse": "^5.0.0",
         "@types/react-datepicker": "^3.1.7",
