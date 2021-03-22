@@ -76,9 +76,11 @@ export default async function apiClient<T>(arg: {
         window.location.href = `${Config.LOGIN_URL}?redirectTo=${window.location.pathname}`;
     }
 
+    const errorBody: ErrorMessage = await res.json().catch((_err) => ({}));
+
     return error({
         statusCode: res.status,
         correlationId,
-        body: await res.json(),
+        body: errorBody,
     });
 }
