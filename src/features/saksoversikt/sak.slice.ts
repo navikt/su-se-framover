@@ -13,6 +13,7 @@ import {
     oppdaterRevurderingsPeriode,
     opprettRevurdering,
     sendRevurderingTilAttestering,
+    underkjennRevurdering,
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
@@ -156,7 +157,7 @@ export const sendTilAttestering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const startAttestering = createAsyncThunk<
+export const attesteringIverksett = createAsyncThunk<
     Behandling,
     { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
@@ -395,7 +396,7 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, startAttestering, {
+        handleAsyncThunk(builder, attesteringIverksett, {
             pending: (state) => {
                 state.attesteringStatus = RemoteData.pending;
             },
@@ -552,6 +553,15 @@ export default createSlice({
         });
 
         builder.addCase(iverksettRevurdering.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                }))
+            );
+        });
+        builder.addCase(underkjennRevurdering.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({
