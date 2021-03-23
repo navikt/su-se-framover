@@ -11,12 +11,13 @@ import DatePicker from 'react-datepicker';
 import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
+import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
+import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
 
-import sharedMessages from '../revurdering-nb';
 import sharedStyles from '../revurdering.module.less';
 
 import messages from './revurderingIntro-nb';
@@ -28,26 +29,13 @@ interface OpprettRevurderingFormData {
     begrunnelse: Nullable<string>;
 }
 
+const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter((x) => x !== OpprettetRevurderingGrunn.MIGRERT);
+
 const schema = yup.object<OpprettRevurderingFormData>({
     fraOgMed: yup.date().nullable().required(),
-    årsak: yup.mixed<OpprettetRevurderingGrunn>().nullable().oneOf(Object.values(OpprettetRevurderingGrunn)).required(),
+    årsak: yup.mixed<OpprettetRevurderingGrunn>().nullable().oneOf(gyldigeÅrsaker).required(),
     begrunnelse: yup.string().nullable().required(),
 });
-
-function getTextId(grunn: OpprettetRevurderingGrunn) {
-    switch (grunn) {
-        case OpprettetRevurderingGrunn.MELDING_FRA_BRUKER:
-            return 'input.årsak.value.meldingFraBruker';
-        case OpprettetRevurderingGrunn.INFORMASJON_FRA_KONTROLLSAMTALE:
-            return 'input.årsak.value.informasjonFraKontrollsamtale';
-        case OpprettetRevurderingGrunn.DØDSFALL:
-            return 'input.årsak.value.dødsfall';
-        case OpprettetRevurderingGrunn.ANDRE_KILDER:
-            return 'input.årsak.value.andreKilder';
-        case OpprettetRevurderingGrunn.MIGRERT:
-            return 'input.årsak.value.migrert';
-    }
-}
 
 interface RevurderingIntroProps {
     onNesteClick: (fraOgMed: Date, årsak: OpprettetRevurderingGrunn, begrunnelse: string) => void;
@@ -139,15 +127,13 @@ const RevurderingIntro = (props: RevurderingIntroProps) => {
                         <option value="" disabled>
                             {intl.formatMessage({ id: 'input.årsak.value.default' })}
                         </option>
-                        {Object.values(OpprettetRevurderingGrunn)
-                            .filter((x) => x !== OpprettetRevurderingGrunn.MIGRERT)
-                            .map((grunn, index) => (
-                                <option value={grunn} key={index}>
-                                    {intl.formatMessage({
-                                        id: getTextId(grunn),
-                                    })}
-                                </option>
-                            ))}
+                        {gyldigeÅrsaker.map((grunn, index) => (
+                            <option value={grunn} key={index}>
+                                {intl.formatMessage({
+                                    id: getRevurderingsårsakMessageId(grunn),
+                                })}
+                            </option>
+                        ))}
                     </Select>
 
                     <div className={styles.formElement}>

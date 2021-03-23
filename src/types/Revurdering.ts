@@ -12,7 +12,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     tilRevurdering: Behandling;
     saksbehandler: string;
     attestering: Nullable<Attestering>;
-    årsak: Nullable<OpprettetRevurderingGrunn>;
+    årsak: OpprettetRevurderingGrunn;
     begrunnelse: Nullable<string>;
 }
 interface Beregninger {

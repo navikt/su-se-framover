@@ -1,10 +1,8 @@
 export default {
-    'input.årsak.value.default': 'Velg årsak',
-    'input.årsak.value.meldingFraBruker': 'Melding fra bruker',
-    'input.årsak.value.informasjonFraKontrollsamtale': 'Informasjon fra kontrollsamtale',
-    'input.årsak.value.dødsfall': 'Dødsfall',
-    'input.årsak.value.andreKilder': 'Nye opplysninger fra andre kilder',
-    'input.årsak.value.migrert': 'Migrert',
+    'datovelger.fom.legend': 'Fra',
+    'datovelger.tom.legend': 'Til',
+
     'input.årsak.label': 'Årsak for revurdering',
+    'input.årsak.value.default': 'Velg årsak',
     'input.begrunnelse.label': 'Begrunnelse',
 };

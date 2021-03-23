@@ -16,7 +16,30 @@ import styles from './revurdering.module.less';
 import { EndreRevurderingPage } from './revurderingIntro/EndreRevurderingPage';
 import { NyRevurderingPage } from './revurderingIntro/NyRevurderingPage';
 import { erRevurderingSimulert, erRevurderingBeregnetAvslag } from './revurderingUtils';
-import { VisFeilmelding } from './VisFeilMelding';
+
+export const VisFeilmelding = (props: { forrigeURL: string }) => {
+    const intl = useI18n({ messages });
+
+    return (
+        <div className={styles.revurderingContainer}>
+            <Innholdstittel className={styles.tittel}>
+                {intl.formatMessage({ id: 'oppsummering.tittel' })}
+            </Innholdstittel>
+            <div className={styles.mainContentContainer}>
+                <div>
+                    <Feilmelding className={styles.feilmelding}>
+                        {intl.formatMessage({ id: 'revurdering.noeGikkGalt' })}
+                    </Feilmelding>
+                </div>
+                <div className={styles.knappContainer}>
+                    <Link className="knapp" to={props.forrigeURL}>
+                        {intl.formatMessage({ id: 'knapp.forrige' })}
+                    </Link>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const Revurdering = (props: { sak: Sak }) => {
     const intl = useI18n({ messages });
