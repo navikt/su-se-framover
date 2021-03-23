@@ -13,6 +13,7 @@ import {
     oppdaterRevurderingsPeriode,
     opprettRevurdering,
     sendRevurderingTilAttestering,
+    underkjennRevurdering,
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
@@ -552,6 +553,15 @@ export default createSlice({
         });
 
         builder.addCase(iverksettRevurdering.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                }))
+            );
+        });
+        builder.addCase(underkjennRevurdering.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({
