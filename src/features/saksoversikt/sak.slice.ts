@@ -156,7 +156,7 @@ export const sendTilAttestering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const startAttestering = createAsyncThunk<
+export const attesteringIverksett = createAsyncThunk<
     Behandling,
     { sakId: string; behandlingId: string },
     { rejectValue: ApiError }
@@ -395,7 +395,7 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, startAttestering, {
+        handleAsyncThunk(builder, attesteringIverksett, {
             pending: (state) => {
                 state.attesteringStatus = RemoteData.pending;
             },

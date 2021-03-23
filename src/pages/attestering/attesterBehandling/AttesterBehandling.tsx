@@ -70,7 +70,7 @@ const Attesteringsinnhold = ({
         onSubmit: (values) => {
             if (values.beslutning) {
                 dispatch(
-                    sakSlice.startAttestering({
+                    sakSlice.attesteringIverksett({
                         sakId: props.sak.id,
                         behandlingId: props.behandling.id,
                     })
