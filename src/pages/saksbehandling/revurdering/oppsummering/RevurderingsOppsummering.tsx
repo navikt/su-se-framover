@@ -72,7 +72,7 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
 
     const formik = useFormik({
         initialValues: {
-            tekstTilVedtaksbrev: null,
+            tekstTilVedtaksbrev: props.revurdering.fritekstTilBrev,
         },
         async onSubmit(values) {
             setSendtTilAttesteringStatus(RemoteData.pending);

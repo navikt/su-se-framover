@@ -14,4 +14,5 @@ export default {
     'knapp.vis': 'Vis brev',
 
     'feilmelding.fantIkkeVedtak': 'Fant ikke vedtak',
+    'feilmelding.ukjentFeil': 'Ukjent feil',
 };
