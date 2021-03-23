@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { RadioPanelGruppe, Textarea, Select } from 'nav-frontend-skjema';
-import { Innholdstittel, Systemtittel } from 'nav-frontend-typografi';
+import { Innholdstittel, Systemtittel, Element, Normaltekst } from 'nav-frontend-typografi';
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -14,6 +14,8 @@ import { Person } from '~api/personApi';
 import { PersonAdvarsel } from '~components/PersonAdvarsel';
 import { getGender, showName } from '~features/person/personUtils';
 import * as revurderingSlice from '~features/revurdering/revurderingActions';
+import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
+import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
@@ -69,7 +71,7 @@ const schema = yup.object<FormData>({
 
 const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.attesterRevurdering>();
-    const intl = useI18n({ messages });
+    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
@@ -183,6 +185,18 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                     <Innholdstittel className={SharedStyles.pageTittel}>
                         {intl.formatMessage({ id: 'page.tittel' })}
                     </Innholdstittel>
+                </div>
+                <div className={styles.årsakBegrunnelseContainer}>
+                    <p>
+                        <Element tag="span">{intl.formatMessage({ id: 'revurdering.årsak' })}: </Element>
+                        <Normaltekst tag="span">
+                            {intl.formatMessage({ id: getRevurderingsårsakMessageId(revurdering.årsak) })}
+                        </Normaltekst>
+                    </p>
+                    <p>
+                        <Element tag="span">{intl.formatMessage({ id: 'revurdering.begrunnelse' })}: </Element>
+                        <Normaltekst tag="span">{revurdering.begrunnelse}</Normaltekst>
+                    </p>
                 </div>
                 <div className={styles.beregningContainer}>
                     <VisBeregning

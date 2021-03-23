@@ -8,32 +8,39 @@ import {
     RevurderingTilAttestering,
     IverksattRevurdering,
     UnderkjentRevurdering,
+    OpprettetRevurderingGrunn,
 } from '~types/Revurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
 export async function opprettRevurdering(
     sakId: string,
-    fraOgMed: Date
+    fraOgMed: Date,
+    årsak: OpprettetRevurderingGrunn,
+    begrunnelse: string
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/opprett`,
+        url: `/saker/${sakId}/revurderinger`,
         method: 'POST',
         body: {
             fraOgMed: formatISO(fraOgMed, { representation: 'date' }),
+            årsak: årsak,
+            begrunnelse: begrunnelse,
         },
     });
 }
 
-export async function oppdaterRevurderingsPeriode(
+export async function oppdaterRevurdering(
     sakId: string,
     revurderingId: string,
-    fraOgMed: Date
+    fraOgMed: Date,
+    årsak: OpprettetRevurderingGrunn,
+    begrunnelse: string
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/oppdaterPeriode`,
-        method: 'POST',
-        body: { fraOgMed: formatISO(fraOgMed, { representation: 'date' }) },
+        url: `/saker/${sakId}/revurderinger/${revurderingId}`,
+        method: 'PUT',
+        body: { fraOgMed: formatISO(fraOgMed, { representation: 'date' }), årsak: årsak, begrunnelse: begrunnelse },
     });
 }
 

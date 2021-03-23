@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import { beregnOgSimuler } from '~features/revurdering/revurderingActions';
+import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
@@ -38,7 +39,7 @@ const schema = yup.object<EndringAvFradragFormData>({
 
 const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) => {
     const { beregnOgSimulerStatus } = useAppSelector((state) => state.sak);
-    const intl = useI18n({ messages: { ...messages, ...fradragMessages } });
+    const intl = useI18n({ messages: { ...sharedMessages, ...messages, ...fradragMessages } });
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const dispatch = useAppDispatch();
     const history = useHistory();

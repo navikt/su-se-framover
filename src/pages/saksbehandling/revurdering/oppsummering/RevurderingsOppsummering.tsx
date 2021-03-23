@@ -3,12 +3,14 @@ import { useFormik } from 'formik';
 import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { Textarea } from 'nav-frontend-skjema';
-import { Innholdstittel } from 'nav-frontend-typografi';
+import { Innholdstittel, Normaltekst, Element } from 'nav-frontend-typografi';
 import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import * as revurderingSlice from '~features/revurdering/revurderingActions';
+import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
+import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -18,10 +20,10 @@ import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch } from '~redux/Store';
 import { SimulertRevurdering, RevurderingTilAttestering, BeregnetAvslag } from '~types/Revurdering';
 
-import messages from '../revurdering-nb';
 import sharedStyles from '../revurdering.module.less';
 import { erRevurderingBeregnetAvslag } from '../revurderingUtils';
 
+import messages from './revurderingOppsummering-nb';
 import styles from './revurderingsOppsummering.module.less';
 
 interface OppsummeringFormData {
@@ -34,7 +36,7 @@ const schema = yup.object<OppsummeringFormData>({
 
 const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertRevurdering | BeregnetAvslag }) => {
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
-    const intl = useI18n({ messages });
+    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     const dispatch = useAppDispatch();
     const [sendtTilAttesteringStatus, setSendtTilAttesteringStatus] = useState<
         RemoteData.RemoteData<ApiError, RevurderingTilAttestering>
@@ -140,6 +142,18 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
                 {intl.formatMessage({ id: 'oppsummering.tittel' })}
             </Innholdstittel>
             <div className={sharedStyles.mainContentContainer}>
+                <div className={styles.årsakBegrunnelseContainer}>
+                    <p>
+                        <Element tag="span">{intl.formatMessage({ id: 'revurdering.årsak' })}: </Element>
+                        <Normaltekst tag="span">
+                            {intl.formatMessage({ id: getRevurderingsårsakMessageId(props.revurdering.årsak) })}
+                        </Normaltekst>
+                    </p>
+                    <p>
+                        <Element tag="span">{intl.formatMessage({ id: 'revurdering.begrunnelse' })}: </Element>
+                        <Normaltekst tag="span">{props.revurdering.begrunnelse}</Normaltekst>
+                    </p>
+                </div>
                 <div className={styles.beregningContainer}>
                     <VisBeregning
                         beregningsTittel={intl.formatMessage({ id: 'oppsummering.gammelBeregning.tittel' })}

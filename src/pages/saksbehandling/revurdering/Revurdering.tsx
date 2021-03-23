@@ -1,3 +1,4 @@
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
@@ -6,16 +7,39 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 
-import { compareUtbetalingsperiode } from '../sakintro/Utbetalinger';
 import { RevurderingSteg } from '../types';
 
 import EndringAvFradrag from './endringAvFradrag/EndringAvFradrag';
 import RevurderingsOppsummering from './oppsummering/RevurderingsOppsummering';
 import messages from './revurdering-nb';
 import styles from './revurdering.module.less';
+import { EndreRevurderingPage } from './revurderingIntro/EndreRevurderingPage';
+import { NyRevurderingPage } from './revurderingIntro/NyRevurderingPage';
 import { erRevurderingSimulert, erRevurderingBeregnetAvslag } from './revurderingUtils';
-import ValgAvPeriode from './valgAvPeriode/ValgAvPeriode';
-import { VisFeilmelding } from './VisFeilMelding';
+
+export const VisFeilmelding = (props: { forrigeURL: string }) => {
+    const intl = useI18n({ messages });
+
+    return (
+        <div className={styles.revurderingContainer}>
+            <Innholdstittel className={styles.tittel}>
+                {intl.formatMessage({ id: 'oppsummering.tittel' })}
+            </Innholdstittel>
+            <div className={styles.mainContentContainer}>
+                <div>
+                    <Feilmelding className={styles.feilmelding}>
+                        {intl.formatMessage({ id: 'revurdering.noeGikkGalt' })}
+                    </Feilmelding>
+                </div>
+                <div className={styles.knappContainer}>
+                    <Link className="knapp" to={props.forrigeURL}>
+                        {intl.formatMessage({ id: 'knapp.forrige' })}
+                    </Link>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const Revurdering = (props: { sak: Sak }) => {
     const intl = useI18n({ messages });
@@ -23,11 +47,6 @@ const Revurdering = (props: { sak: Sak }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
 
     const påbegyntRevurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
-
-    if (!påbegyntRevurdering) {
-        //TODO
-        return null;
-    }
 
     const createRevurderingsPath = (steg: RevurderingSteg) => {
         return Routes.revurderValgtRevurdering.createURL({
@@ -59,45 +78,48 @@ const Revurdering = (props: { sak: Sak }) => {
         );
     }
 
-    const sortertUtbetalinger = [...props.sak.utbetalinger].sort(compareUtbetalingsperiode);
-    const [førsteUtbetaling, sisteUtbetaling] = [
-        sortertUtbetalinger[0],
-        sortertUtbetalinger[sortertUtbetalinger.length - 1],
-    ];
-
     return (
         <div className={styles.pageContainer}>
             <Switch>
                 <Route
-                    path={Routes.revurderValgtRevurdering.createURL({
+                    path={Routes.revurderValgtSak.createURL({
                         sakId: props.sak.id,
-                        steg: RevurderingSteg.Periode,
-                        revurderingId: påbegyntRevurdering.id,
                     })}
                 >
-                    <ValgAvPeriode
-                        sakId={props.sak.id}
-                        revurdering={påbegyntRevurdering}
-                        førsteUtbetalingISak={new Date(førsteUtbetaling.fraOgMed)}
-                        sisteUtbetalingISak={new Date(sisteUtbetaling.tilOgMed)}
-                    />
+                    <NyRevurderingPage sak={props.sak} />
                 </Route>
-                <Route path={createRevurderingsPath(RevurderingSteg.EndringAvFradrag)}>
-                    <EndringAvFradrag sakId={props.sak.id} revurdering={påbegyntRevurdering} />
-                </Route>
-                <Route path={createRevurderingsPath(RevurderingSteg.Oppsummering)}>
-                    {erRevurderingSimulert(påbegyntRevurdering) || erRevurderingBeregnetAvslag(påbegyntRevurdering) ? (
-                        <RevurderingsOppsummering sakId={props.sak.id} revurdering={påbegyntRevurdering} />
-                    ) : (
-                        <VisFeilmelding
-                            forrigeURL={Routes.revurderValgtRevurdering.createURL({
+                {!påbegyntRevurdering ? (
+                    <AlertStripe type="feil">Fant ikke revurdering</AlertStripe>
+                ) : (
+                    <>
+                        <Route
+                            path={Routes.revurderValgtRevurdering.createURL({
                                 sakId: props.sak.id,
-                                steg: RevurderingSteg.EndringAvFradrag,
+                                steg: RevurderingSteg.Periode,
                                 revurderingId: påbegyntRevurdering.id,
                             })}
-                        />
-                    )}
-                </Route>
+                        >
+                            <EndreRevurderingPage sak={props.sak} revurdering={påbegyntRevurdering} />
+                        </Route>
+                        <Route path={createRevurderingsPath(RevurderingSteg.EndringAvFradrag)}>
+                            <EndringAvFradrag sakId={props.sak.id} revurdering={påbegyntRevurdering} />
+                        </Route>
+                        <Route path={createRevurderingsPath(RevurderingSteg.Oppsummering)}>
+                            {erRevurderingSimulert(påbegyntRevurdering) ||
+                            erRevurderingBeregnetAvslag(påbegyntRevurdering) ? (
+                                <RevurderingsOppsummering sakId={props.sak.id} revurdering={påbegyntRevurdering} />
+                            ) : (
+                                <VisFeilmelding
+                                    forrigeURL={Routes.revurderValgtRevurdering.createURL({
+                                        sakId: props.sak.id,
+                                        steg: RevurderingSteg.EndringAvFradrag,
+                                        revurderingId: påbegyntRevurdering.id,
+                                    })}
+                                />
+                            )}
+                        </Route>
+                    </>
+                )}
             </Switch>
         </div>
     );

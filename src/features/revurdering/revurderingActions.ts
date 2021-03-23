@@ -9,6 +9,7 @@ import {
     OpprettetRevurdering,
     SimulertRevurdering,
     UnderkjentRevurdering,
+    OpprettetRevurderingGrunn,
 } from '~types/Revurdering';
 
 import * as pdfApi from '../../api/pdfApi';
@@ -16,10 +17,10 @@ import * as revurderingApi from '../../api/revurderingApi';
 
 export const opprettRevurdering = createAsyncThunk<
     OpprettetRevurdering,
-    { sakId: string; fraOgMed: Date },
+    { sakId: string; fraOgMed: Date; årsak: OpprettetRevurderingGrunn; begrunnelse: string },
     { rejectValue: ApiError }
->('revurdering/opprettRevurdering', async ({ sakId, fraOgMed }, thunkApi) => {
-    const res = await revurderingApi.opprettRevurdering(sakId, fraOgMed);
+>('revurdering/opprettRevurdering', async ({ sakId, fraOgMed, årsak, begrunnelse }, thunkApi) => {
+    const res = await revurderingApi.opprettRevurdering(sakId, fraOgMed, årsak, begrunnelse);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -28,15 +29,18 @@ export const opprettRevurdering = createAsyncThunk<
 
 export const oppdaterRevurderingsPeriode = createAsyncThunk<
     OpprettetRevurdering,
-    { sakId: string; revurderingId: string; fraOgMed: Date },
+    { sakId: string; revurderingId: string; fraOgMed: Date; årsak: OpprettetRevurderingGrunn; begrunnelse: string },
     { rejectValue: ApiError }
->('revurdering/oppdaterRevurderingsPeriode', async ({ sakId, revurderingId, fraOgMed }, thunkApi) => {
-    const res = await revurderingApi.oppdaterRevurderingsPeriode(sakId, revurderingId, fraOgMed);
-    if (res.status === 'ok') {
-        return res.data;
+>(
+    'revurdering/oppdaterRevurderingsPeriode',
+    async ({ sakId, revurderingId, fraOgMed, årsak, begrunnelse }, thunkApi) => {
+        const res = await revurderingApi.oppdaterRevurdering(sakId, revurderingId, fraOgMed, årsak, begrunnelse);
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
     }
-    return thunkApi.rejectWithValue(res.error);
-});
+);
 
 export const beregnOgSimuler = createAsyncThunk<
     SimulertRevurdering,

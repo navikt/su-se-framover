@@ -12,6 +12,8 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     tilRevurdering: Behandling;
     saksbehandler: string;
     attestering: Nullable<Attestering>;
+    årsak: OpprettetRevurderingGrunn;
+    begrunnelse: Nullable<string>;
 }
 interface Beregninger {
     beregning: Beregning;
@@ -54,4 +56,12 @@ export enum RevurderingsStatus {
     TIL_ATTESTERING = 'TIL_ATTESTERING',
     IVERKSATT = 'IVERKSATT',
     UNDERKJENT = 'UNDERKJENT',
+}
+
+export enum OpprettetRevurderingGrunn {
+    MELDING_FRA_BRUKER = 'MELDING_FRA_BRUKER',
+    INFORMASJON_FRA_KONTROLLSAMTALE = 'INFORMASJON_FRA_KONTROLLSAMTALE',
+    DØDSFALL = 'DØDSFALL',
+    ANDRE_KILDER = 'ANDRE_KILDER',
+    MIGRERT = 'MIGRERT',
 }

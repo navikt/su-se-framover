@@ -16,13 +16,10 @@ import { formatMonthYear } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { KanStansesEllerGjenopptas } from '~types/Sak';
-import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
+import { compareUtbetalingsperiode, Utbetalingsperiode } from '~types/Utbetalingsperiode';
 
 import messages from './utbetalinger-nb';
 import styles from './utbetalinger.module.less';
-
-export const compareUtbetalingsperiode = (u1: Utbetalingsperiode, u2: Utbetalingsperiode) =>
-    DateFns.compareAsc(new Date(u1.fraOgMed), new Date(u2.fraOgMed));
 
 export const Utbetalinger = (props: {
     søker: Person;
