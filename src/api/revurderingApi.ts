@@ -20,7 +20,7 @@ export async function opprettRevurdering(
     begrunnelse: string
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/opprett`,
+        url: `/saker/${sakId}/revurderinger`,
         method: 'POST',
         body: {
             fraOgMed: formatISO(fraOgMed, { representation: 'date' }),
@@ -38,8 +38,8 @@ export async function oppdaterRevurdering(
     begrunnelse: string
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/oppdaterPeriode`,
-        method: 'POST',
+        url: `/saker/${sakId}/revurderinger/${revurderingId}`,
+        method: 'PUT',
         body: { fraOgMed: formatISO(fraOgMed, { representation: 'date' }), årsak: årsak, begrunnelse: begrunnelse },
     });
 }
