@@ -227,7 +227,7 @@ interface SakState {
     søknadLukketStatus: RemoteData.RemoteData<ApiError, null>;
     lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
     opprettRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
-    oppdaterRevurderingsPeriodeStatus: RemoteData.RemoteData<ApiError, null>;
+    oppdaterRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
     beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
@@ -244,7 +244,7 @@ const initialState: SakState = {
     søknadLukketStatus: RemoteData.initial,
     lukketSøknadBrevutkastStatus: RemoteData.initial,
     opprettRevurderingStatus: RemoteData.initial,
-    oppdaterRevurderingsPeriodeStatus: RemoteData.initial,
+    oppdaterRevurderingStatus: RemoteData.initial,
     beregnOgSimulerStatus: RemoteData.initial,
 };
 
@@ -503,10 +503,10 @@ export default createSlice({
 
         handleAsyncThunk(builder, oppdaterRevurderingsPeriode, {
             pending: (state) => {
-                state.oppdaterRevurderingsPeriodeStatus = RemoteData.pending;
+                state.oppdaterRevurderingStatus = RemoteData.pending;
             },
             fulfilled: (state, action) => {
-                state.oppdaterRevurderingsPeriodeStatus = RemoteData.success(null);
+                state.oppdaterRevurderingStatus = RemoteData.success(null);
 
                 state.sak = pipe(
                     state.sak,
@@ -517,7 +517,7 @@ export default createSlice({
                 );
             },
             rejected: (state, action) => {
-                state.oppdaterRevurderingsPeriodeStatus = simpleRejectedActionToRemoteData(action);
+                state.oppdaterRevurderingStatus = simpleRejectedActionToRemoteData(action);
             },
         });
 

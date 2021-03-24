@@ -17,6 +17,7 @@ export interface ApiError {
 
 export interface ErrorMessage {
     message: string;
+    code?: string;
 }
 
 export type ApiClientResult<T> = { status: 'ok'; data: T; statusCode: number } | { status: 'error'; error: ApiError };
