@@ -1,18 +1,16 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { PersonCard, Gender } from '@navikt/nap-person-card';
 import { useFormik } from 'formik';
 import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { RadioPanelGruppe, Textarea, Select } from 'nav-frontend-skjema';
 import { Innholdstittel, Systemtittel, Element, Normaltekst } from 'nav-frontend-typografi';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import * as PdfApi from '~api/pdfApi';
 import { Person } from '~api/personApi';
-import { PersonAdvarsel } from '~components/PersonAdvarsel';
-import { getGender, showName } from '~features/person/personUtils';
+import Personlinje from '~components/personlinje/Personlinje';
 import * as revurderingSlice from '~features/revurdering/revurderingActions';
 import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
@@ -21,7 +19,6 @@ import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
 import { erRevurderingTilAttestering } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
-import Søkefelt from '~pages/saksbehandling/søkefelt/Søkefelt';
 import { useAppDispatch } from '~redux/Store';
 import { IverksattRevurdering, UnderkjentRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
@@ -79,8 +76,6 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const [sendtBeslutning, setSendtBeslutning] = useState<
         RemoteData.RemoteData<ApiError, IverksattRevurdering | UnderkjentRevurdering>
     >(RemoteData.initial);
-
-    const gender = useMemo<Gender>(() => getGender(props.søker), [props.søker]);
 
     const formik = useFormik<FormData>({
         initialValues: {},
@@ -171,15 +166,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 formik.handleSubmit(e);
             }}
         >
-            <div className={SharedStyles.headerContainer}>
-                <PersonCard
-                    fodselsnummer={props.søker.fnr}
-                    gender={gender}
-                    name={showName(props.søker.navn)}
-                    renderLabelContent={(): JSX.Element => <PersonAdvarsel person={props.søker} />}
-                />
-                <Søkefelt />
-            </div>
+            <Personlinje søker={props.søker} sak={props.sak} />
             <div className={SharedStyles.content}>
                 <div className={SharedStyles.tittelContainer}>
                     <Innholdstittel className={SharedStyles.pageTittel}>

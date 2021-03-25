@@ -40,7 +40,7 @@ export const PersonAdvarsel = (props: { person: Person }) => {
     }
 
     return (
-        <div>
+        <div className={styles.container}>
             {etiketter.map((etikett) => (
                 <Etikett className={styles.etikett} type={etikett.type} key={etikett.text} mini>
                     {etikett.text}

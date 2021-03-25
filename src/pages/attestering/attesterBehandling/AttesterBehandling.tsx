@@ -1,26 +1,23 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Gender, PersonCard } from '@navikt/nap-person-card';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, RadioPanelGruppe, Select, Textarea } from 'nav-frontend-skjema';
 import { Systemtittel } from 'nav-frontend-typografi';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
-import { PersonAdvarsel } from '~components/PersonAdvarsel';
+import Personlinje from '~components/personlinje/Personlinje';
 import { erAvslått, erIverksatt, erTilAttestering } from '~features/behandling/behandlingUtils';
-import { getGender, showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { BehandlingStatus } from '~pages/saksbehandling/behandlingsoppsummering/behandlingsoppsummering';
 import VisBeregningOgSimulering from '~pages/saksbehandling/steg/beregningOgSimulering/BeregningOgSimulering';
-import Søkefelt from '~pages/saksbehandling/søkefelt/Søkefelt';
 import VilkårsOppsummering from '~pages/saksbehandling/vilkårsOppsummering/VilkårsOppsummering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
@@ -103,8 +100,6 @@ const Attesteringsinnhold = ({
         validateOnChange: hasSubmitted,
     });
 
-    const gender = useMemo<Gender>(() => getGender(props.søker), [props.søker]);
-
     const { errors } = formik;
 
     if (RemoteData.isSuccess(attesteringStatus)) {
@@ -143,15 +138,7 @@ const Attesteringsinnhold = ({
 
     return (
         <div className={SharedStyles.container}>
-            <div className={SharedStyles.headerContainer}>
-                <PersonCard
-                    fodselsnummer={props.søker.fnr}
-                    gender={gender}
-                    name={showName(props.søker.navn)}
-                    renderLabelContent={(): JSX.Element => <PersonAdvarsel person={props.søker} />}
-                />
-                <Søkefelt />
-            </div>
+            <Personlinje søker={props.søker} sak={props.sak} />
             <div className={SharedStyles.content}>
                 <div className={SharedStyles.tittelContainer}>
                     <Innholdstittel className={SharedStyles.pageTittel}>
