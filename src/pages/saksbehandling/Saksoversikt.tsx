@@ -1,20 +1,18 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { PersonCard, Gender } from '@navikt/nap-person-card';
 import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
 import Hendelseslogg from '~components/Hendelseslogg';
-import { PersonAdvarsel } from '~components/PersonAdvarsel';
+import Personlinje from '~components/personlinje/Personlinje';
 import Personsøk from '~components/Personsøk/Personsøk';
 import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
-import { getGender, showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
@@ -30,7 +28,6 @@ import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
 import Vilkår from './steg/vilkår/Vilkår';
-import Søkefelt from './søkefelt/Søkefelt';
 import Vedtak from './vedtak/Vedtak';
 
 const Saksoversikt = () => {
@@ -57,16 +54,6 @@ const Saksoversikt = () => {
             }
         }
     }, [sak._tag, søker._tag]);
-
-    const gender = useMemo<Gender>(
-        () =>
-            pipe(
-                søker,
-                RemoteData.map(getGender),
-                RemoteData.getOrElse((): Gender => Gender.unknown)
-            ),
-        [søker._tag]
-    );
 
     const featureHendelseslogg = useFeatureToggle(FeatureToggle.Hendelseslogg);
 
@@ -116,15 +103,7 @@ const Saksoversikt = () => {
                                 ),
                             ([søker, sak]) => (
                                 <>
-                                    <div className={styles.headerContainer}>
-                                        <PersonCard
-                                            fodselsnummer={søker.fnr}
-                                            gender={gender}
-                                            name={showName(søker.navn)}
-                                            renderLabelContent={(): JSX.Element => <PersonAdvarsel person={søker} />}
-                                        />
-                                        <Søkefelt />
-                                    </div>
+                                    <Personlinje søker={søker} sak={sak} />
                                     <div className={styles.container}>
                                         <Switch>
                                             <Route path={Routes.avsluttSøknadsbehandling.path}>
