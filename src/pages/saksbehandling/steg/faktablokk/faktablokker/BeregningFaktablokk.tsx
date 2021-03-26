@@ -24,9 +24,7 @@ const BeregningFaktablokk = (props: FaktablokkProps) => {
                     {
                         tittel: intl.formatMessage({ id: 'beregning.andreYtelserINav' }),
                         verdi: props.søknadInnhold.inntektOgPensjon.andreYtelserINav
-                            ? `${intl.formatMessage({ id: 'fraSøknad.nei' })}, ${
-                                  props.søknadInnhold.inntektOgPensjon.andreYtelserINav
-                              }: ${props.søknadInnhold.inntektOgPensjon.andreYtelserINavBeløp}`
+                            ? `${props.søknadInnhold.inntektOgPensjon.andreYtelserINav}: ${props.søknadInnhold.inntektOgPensjon.andreYtelserINavBeløp}`
                             : intl.formatMessage({ id: 'fraSøknad.nei' }),
                     },
                     {
