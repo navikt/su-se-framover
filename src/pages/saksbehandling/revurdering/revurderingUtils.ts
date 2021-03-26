@@ -18,10 +18,11 @@ export const erRevurderingBeregnetAvslag = (r: Revurdering): r is BeregnetAvslag
     r.status === RevurderingsStatus.BEREGNET_AVSLAG;
 
 export const erRevurderingTilAttestering = (r: Revurdering): r is RevurderingTilAttestering =>
-    r.status === RevurderingsStatus.TIL_ATTESTERING;
+    r.status === RevurderingsStatus.TIL_ATTESTERING_INNVILGET ||
+    r.status === RevurderingsStatus.TIL_ATTESTERING_OPPHØRT;
 
 export const erRevurderingIverksatt = (r: Revurdering): r is IverksattRevurdering =>
-    r.status === RevurderingsStatus.IVERKSATT;
+    r.status === RevurderingsStatus.IVERKSATT_INNVILGET || r.status === RevurderingsStatus.IVERKSATT_OPPHØRT;
 
 export const erRevurderingUnderkjent = (r: Revurdering): r is UnderkjentRevurdering =>
-    r.status === RevurderingsStatus.UNDERKJENT;
+    r.status === RevurderingsStatus.UNDERKJENT_INNVILGET || r.status === RevurderingsStatus.UNDERKJENT_OPPHØRT;
