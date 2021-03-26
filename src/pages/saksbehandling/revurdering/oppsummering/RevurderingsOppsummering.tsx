@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import { Knapp } from 'nav-frontend-knapper';
 import { Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel, Normaltekst, Element } from 'nav-frontend-typografi';
 import React, { useCallback, useState } from 'react';
@@ -20,6 +20,7 @@ import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch } from '~redux/Store';
 import { SimulertRevurdering, RevurderingTilAttestering, BeregnetAvslag } from '~types/Revurdering';
 
+import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
 import { erRevurderingBeregnetAvslag } from '../revurderingUtils';
 
@@ -35,7 +36,6 @@ const schema = yup.object<OppsummeringFormData>({
 });
 
 const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertRevurdering | BeregnetAvslag }) => {
-    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     const dispatch = useAppDispatch();
     const [sendtTilAttesteringStatus, setSendtTilAttesteringStatus] = useState<
@@ -44,6 +44,7 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
     const [hentBrevStatus, setHentBrevStatus] = useState<RemoteData.RemoteData<ApiError | undefined, null>>(
         RemoteData.initial
     );
+    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
 
     const hentBrev = useCallback(
         (fritekst: Nullable<string>) => {
@@ -117,6 +118,21 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
         revurderingId: props.revurdering.id,
     });
 
+    const feilkodeTilFeilmelding = (feilkode: string | undefined) => {
+        switch (feilkode) {
+            case 'fant_ikke_revurdering':
+                return intl.formatMessage({ id: 'feil.fant.ikke.revurdering' });
+            case 'ugyldig_tilstand':
+                return intl.formatMessage({ id: 'feil.ugyldig.tilstand' });
+            case 'fant_ikke_aktør_id':
+                return intl.formatMessage({ id: 'feil.fant.ikke.aktør.id' });
+            case 'kunne_ikke_opprette_oppgave':
+                return intl.formatMessage({ id: 'feil.kunne.ikke.opprette.oppgave' });
+            default:
+                return intl.formatMessage({ id: 'feil.ukjentFeil' });
+        }
+    };
+
     if (erRevurderingBeregnetAvslag(props.revurdering)) {
         return (
             <div>
@@ -189,25 +205,22 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
                         </Knapp>
                         {RemoteData.isFailure(hentBrevStatus) && (
                             <AlertStripeFeil>
-                                {hentBrevStatus?.error?.body?.message ||
-                                    intl.formatMessage({ id: 'oppsummering.ukjentFeil' })}
+                                {hentBrevStatus?.error?.body?.message || intl.formatMessage({ id: 'feil.ukjentFeil' })}
                             </AlertStripeFeil>
                         )}
                     </div>
                 </div>
                 {RemoteData.isFailure(sendtTilAttesteringStatus) && (
                     <AlertStripeFeil className={sharedStyles.alertstripe}>
-                        {sendtTilAttesteringStatus.error.body?.message}
+                        {feilkodeTilFeilmelding(sendtTilAttesteringStatus.error.body?.code)}
                     </AlertStripeFeil>
                 )}
-                <div className={sharedStyles.knappContainer}>
-                    <Link className="knapp" to={forrigeURL}>
-                        {intl.formatMessage({ id: 'knapp.forrige' })}
-                    </Link>
-                    <Hovedknapp spinner={RemoteData.isPending(sendtTilAttesteringStatus)}>
-                        {intl.formatMessage({ id: 'knapp.sendTilAttestering' })}
-                    </Hovedknapp>
-                </div>
+                <RevurderingBunnknapper
+                    onNesteClick={'submit'}
+                    nesteKnappTekst={intl.formatMessage({ id: 'knapp.sendTilAttestering' })}
+                    tilbakeUrl={forrigeURL}
+                    onNesteClickSpinner={RemoteData.isPending(sendtTilAttesteringStatus)}
+                />
             </div>
         </form>
     );

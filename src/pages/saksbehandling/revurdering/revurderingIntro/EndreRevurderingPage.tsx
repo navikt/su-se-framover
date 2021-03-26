@@ -11,10 +11,10 @@ import { OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { compareUtbetalingsperiode } from '~types/Utbetalingsperiode';
 
-import RevurderingIntro from './RevurderingIntroForm';
+import RevurderingIntroForm from './RevurderingIntroForm';
 
 export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering }) => {
-    const opprettRevurderingStatus = useAppSelector((state) => state.sak.opprettRevurderingStatus);
+    const oppdaterRevurderingStatus = useAppSelector((state) => state.sak.oppdaterRevurderingStatus);
     const history = useHistory();
 
     const dispatch = useAppDispatch();
@@ -38,6 +38,25 @@ export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering
             );
         }
     };
+    const handleLagreOgFortsettSenereClick = async (
+        fraOgMed: Date,
+        årsak: OpprettetRevurderingGrunn,
+        begrunnelse: string
+    ) => {
+        const response = await dispatch(
+            oppdaterRevurdering({
+                sakId: props.sak.id,
+                revurderingId: props.revurdering.id,
+                fraOgMed: fraOgMed,
+                årsak: årsak,
+                begrunnelse: begrunnelse,
+            })
+        );
+
+        if (oppdaterRevurdering.fulfilled.match(response)) {
+            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }));
+        }
+    };
 
     const sortertUtbetalinger = [...props.sak.utbetalinger].sort(compareUtbetalingsperiode);
     const [førsteUtbetaling, sisteUtbetaling] = [
@@ -49,13 +68,15 @@ export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering
     const maxFraOgMed = new Date(sisteUtbetaling.tilOgMed);
 
     return (
-        <RevurderingIntro
+        <RevurderingIntroForm
             onNesteClick={handleNesteClick}
-            avbrytUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}
+            onLagreOgFortsettSenereClick={handleLagreOgFortsettSenereClick}
+            tilbakeUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}
             revurdering={props.revurdering}
             maxFraOgMed={maxFraOgMed}
             minFraOgMed={minFraOgMed}
-            nesteClickStatus={opprettRevurderingStatus}
+            nesteClickStatus={oppdaterRevurderingStatus}
+            lagreOgFortsettSenereClickStatus={oppdaterRevurderingStatus}
         />
     );
 };

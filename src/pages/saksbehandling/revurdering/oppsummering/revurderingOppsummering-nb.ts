@@ -7,7 +7,6 @@ export default {
     'oppsummering.tilSaksoversikt': 'Til saksoversikt',
     'oppsummering.sendtTilAttestering': 'Revurdering er sendt til attestering',
     'oppsummering.størreEllerLik10Prosent': 'Revurderingen er ikke større eller lik 10 prosent endring',
-    'oppsummering.ukjentFeil': 'Ukjent feil',
 
     'revurdering.årsak': 'Årsak for revurdering',
     'revurdering.begrunnelse': 'Begrunnelse',

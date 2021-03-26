@@ -250,6 +250,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
+                                setHasSubmitted(true);
                                 formik.validateForm().then((res) => {
                                     if (Object.keys(res).length === 0) {
                                         handleSave(

@@ -1,13 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
-import { Hovedknapp } from 'nav-frontend-knapper';
 import { Ingress, Innholdstittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { beregnOgSimuler } from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
+import { customFormikSubmit } from '~lib/formikUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
@@ -23,7 +23,7 @@ import { Fradragstype, FradragTilhører } from '~types/Fradrag';
 import { Revurdering } from '~types/Revurdering';
 
 import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregning-nb';
-import messages from '../revurdering-nb';
+import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
 import { erRevurderingSimulert } from '../revurderingUtils';
 
@@ -37,12 +37,21 @@ const schema = yup.object<EndringAvFradragFormData>({
     fradrag: yup.array(fradragSchema.required()).defined(),
 });
 
+enum SubmittedStatus {
+    NOT_SUBMITTED,
+    NESTE,
+    LAGRE,
+}
+
 const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) => {
     const { beregnOgSimulerStatus } = useAppSelector((state) => state.sak);
-    const intl = useI18n({ messages: { ...sharedMessages, ...messages, ...fradragMessages } });
-    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+    const intl = useI18n({ messages: { ...sharedMessages, ...fradragMessages } });
     const dispatch = useAppDispatch();
     const history = useHistory();
+
+    const [submittedStatus, setSubmittedStatus] = useState<SubmittedStatus>(SubmittedStatus.NOT_SUBMITTED);
+
+    const hasSubmitted = () => submittedStatus === SubmittedStatus.NESTE || submittedStatus === SubmittedStatus.LAGRE;
 
     const fradragUtenForventetInntekt = (fradrag: FradragFormData[]) => {
         return fradrag.filter((f) => {
@@ -50,8 +59,15 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
         });
     };
 
-    const beregnOgSimulerRevurdering = async (fradrag: FradragFormData[]) => {
-        const response = await dispatch(
+    const handleLagreOgFortsettSenereClick = async () => {
+        const response = await beregnOgSimulerRevurdering(formik.values.fradrag);
+        if (beregnOgSimuler.fulfilled.match(response)) {
+            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+        }
+    };
+
+    const beregnOgSimulerRevurdering = (fradrag: FradragFormData[]) =>
+        dispatch(
             beregnOgSimuler({
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
@@ -73,20 +89,9 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                           }
                         : null,
                     tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
-                    /* eslint-enable @typescript-eslint/no-non-null-assertion */
                 })),
             })
         );
-        if (beregnOgSimuler.fulfilled.match(response)) {
-            history.push(
-                Routes.revurderValgtRevurdering.createURL({
-                    sakId: props.sakId,
-                    steg: RevurderingSteg.Oppsummering,
-                    revurderingId: props.revurdering.id,
-                })
-            );
-        }
-    };
 
     const formik = useFormik<EndringAvFradragFormData>({
         initialValues: {
@@ -96,18 +101,44 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                   )
                 : [],
         },
-        onSubmit(values) {
-            beregnOgSimulerRevurdering(values.fradrag);
+        async onSubmit(values) {
+            const response = await beregnOgSimulerRevurdering(values.fradrag);
+            if (beregnOgSimuler.fulfilled.match(response)) {
+                history.push(
+                    Routes.revurderValgtRevurdering.createURL({
+                        sakId: props.sakId,
+                        steg: RevurderingSteg.Oppsummering,
+                        revurderingId: props.revurdering.id,
+                    })
+                );
+            }
         },
         validationSchema: schema,
-        validateOnChange: hasSubmitted,
+        validateOnChange: hasSubmitted(),
     });
+
+    const feilkodeTilFeilmelding = (feilkode: string | undefined) => {
+        switch (feilkode) {
+            case 'fant_ikke_revurdering':
+                return intl.formatMessage({ id: 'feil.fant.ikke.revurdering' });
+            case 'ugyldig_tilstand':
+                return intl.formatMessage({ id: 'feil.ugyldig.tilstand' });
+            case 'siste_måned_ved_nedgang_i_stønaden':
+                return intl.formatMessage({ id: 'feil.siste.måned.ved.nedgang.i.stønaden' });
+            case 'simulering_feilet':
+                return intl.formatMessage({ id: 'feil.simulering.feilet' });
+            case 'ufullstendig_behandlingsinformasjon':
+                return intl.formatMessage({ id: 'feil.ufullstendig.behandlingsinformasjon' });
+            default:
+                return intl.formatMessage({ id: 'feil.ukjentFeil' });
+        }
+    };
 
     return (
         <form
             className={sharedStyles.revurderingContainer}
             onSubmit={(e) => {
-                setHasSubmitted(true);
+                setSubmittedStatus(SubmittedStatus.NESTE);
                 formik.handleSubmit(e);
             }}
         >
@@ -167,24 +198,27 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                 </div>
                 {RemoteData.isFailure(beregnOgSimulerStatus) && (
                     <AlertStripeFeil className={sharedStyles.alertstripe}>
-                        {beregnOgSimulerStatus.error.body?.message}
+                        {feilkodeTilFeilmelding(beregnOgSimulerStatus.error.body?.code)}
                     </AlertStripeFeil>
                 )}
-                <div className={sharedStyles.knappContainer}>
-                    <Link
-                        className="knapp"
-                        to={Routes.revurderValgtRevurdering.createURL({
-                            sakId: props.sakId,
-                            steg: RevurderingSteg.Periode,
-                            revurderingId: props.revurdering.id,
-                        })}
-                    >
-                        {intl.formatMessage({ id: 'knapp.forrige' })}
-                    </Link>
-                    <Hovedknapp spinner={RemoteData.isPending(beregnOgSimulerStatus)}>
-                        {intl.formatMessage({ id: 'knapp.neste' })}
-                    </Hovedknapp>
-                </div>
+                <RevurderingBunnknapper
+                    onNesteClick="submit"
+                    tilbakeUrl={Routes.revurderValgtRevurdering.createURL({
+                        sakId: props.sakId,
+                        steg: RevurderingSteg.Periode,
+                        revurderingId: props.revurdering.id,
+                    })}
+                    onLagreOgFortsettSenereClick={() => {
+                        setSubmittedStatus(SubmittedStatus.LAGRE);
+                        customFormikSubmit(formik, handleLagreOgFortsettSenereClick);
+                    }}
+                    onNesteClickSpinner={
+                        submittedStatus === SubmittedStatus.NESTE && RemoteData.isPending(beregnOgSimulerStatus)
+                    }
+                    onLagreOgFortsettSenereClickSpinner={
+                        submittedStatus === SubmittedStatus.LAGRE && RemoteData.isPending(beregnOgSimulerStatus)
+                    }
+                />
             </div>
         </form>
     );
