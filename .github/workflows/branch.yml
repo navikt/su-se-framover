@@ -3,7 +3,7 @@ name: Bygg og deploy branch til dev
 on:
     push:
         branches:
-            - hotjar
+            - revurdering-opphørt
 
 env:
     IMAGE: docker.pkg.github.com/${{ github.repository }}/su-se-framover:${{ github.sha }}
