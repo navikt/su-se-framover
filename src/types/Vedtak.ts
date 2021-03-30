@@ -16,10 +16,12 @@ export interface Vedtak {
     sakId: string;
     fnr: string;
     periode: Periode;
-    resultat: Vedtaksresultat;
+    type: VedtakType;
 }
 
-export enum Vedtaksresultat {
-    INNVILGET = 'INNVILGET',
-    AVSLÅTT = 'AVSLÅTT',
+export enum VedtakType {
+    SØKNAD = 'SØKNAD',
+    ENDRING = 'ENDRING',
+    OPPHØR = 'OPPHØR',
+    AVSLAG = 'AVSLAG',
 }

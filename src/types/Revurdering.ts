@@ -31,20 +31,24 @@ export interface BeregnetAvslag extends Revurdering<RevurderingsStatus.BEREGNET_
     beregninger: Beregninger;
 }
 
-export interface SimulertRevurdering extends Revurdering<RevurderingsStatus.SIMULERT> {
+export interface SimulertRevurdering
+    extends Revurdering<RevurderingsStatus.SIMULERT_INNVILGET | RevurderingsStatus.SIMULERT_OPPHØRT> {
     beregninger: Beregninger;
 }
 
-export interface RevurderingTilAttestering extends Revurdering<RevurderingsStatus.TIL_ATTESTERING> {
+export interface RevurderingTilAttestering
+    extends Revurdering<RevurderingsStatus.TIL_ATTESTERING_INNVILGET | RevurderingsStatus.TIL_ATTESTERING_OPPHØRT> {
     beregninger: Beregninger;
 }
 
-export interface IverksattRevurdering extends Revurdering<RevurderingsStatus.IVERKSATT> {
+export interface IverksattRevurdering
+    extends Revurdering<RevurderingsStatus.IVERKSATT_INNVILGET | RevurderingsStatus.IVERKSATT_OPPHØRT> {
     beregninger: Beregninger;
     attestering: Attestering;
 }
 
-export interface UnderkjentRevurdering extends Revurdering<RevurderingsStatus.UNDERKJENT> {
+export interface UnderkjentRevurdering
+    extends Revurdering<RevurderingsStatus.UNDERKJENT_INNVILGET | RevurderingsStatus.UNDERKJENT_OPPHØRT> {
     beregninger: Beregninger;
     attestering: Attestering;
 }
@@ -53,10 +57,14 @@ export enum RevurderingsStatus {
     OPPRETTET = 'OPPRETTET',
     BEREGNET_INNVILGET = 'BEREGNET_INNVILGET',
     BEREGNET_AVSLAG = 'BEREGNET_AVSLAG',
-    SIMULERT = 'SIMULERT',
-    TIL_ATTESTERING = 'TIL_ATTESTERING',
-    IVERKSATT = 'IVERKSATT',
-    UNDERKJENT = 'UNDERKJENT',
+    SIMULERT_OPPHØRT = 'SIMULERT_OPPHØRT',
+    SIMULERT_INNVILGET = 'SIMULERT_INNVILGET',
+    TIL_ATTESTERING_INNVILGET = 'TIL_ATTESTERING_INNVILGET',
+    TIL_ATTESTERING_OPPHØRT = 'TIL_ATTESTERING_OPPHØRT',
+    IVERKSATT_INNVILGET = 'IVERKSATT_INNVILGET',
+    IVERKSATT_OPPHØRT = 'IVERKSATT_OPPHØRT',
+    UNDERKJENT_INNVILGET = 'UNDERKJENT_INNVILGET',
+    UNDERKJENT_OPPHØRT = 'UNDERKJENT_OPPHØRT',
 }
 
 export enum OpprettetRevurderingGrunn {
