@@ -4,8 +4,10 @@ export default {
     'attestert.av': 'Attestant',
 
     'resultat.tittel': 'Resultat',
-    'resultat.innvilget': 'Innvilget',
-    'resultat.avslått': 'Avslått',
+    'vedtaktype.søknad': 'Innvilget',
+    'vedtaktype.avslått': 'Avslått',
+    'vedtaktype.endring': 'Endret',
+    'vedtaktype.opphør': 'Opphørt',
 
     'vedtak.dato': 'Vedtaksdato',
     'vedtak.brev': 'Vedtaksbrev',

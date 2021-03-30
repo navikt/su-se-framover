@@ -12,7 +12,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { Sak } from '~types/Sak';
-import { Vedtaksresultat } from '~types/Vedtak';
+import { VedtakType } from '~types/Vedtak';
 
 import messages from './vedtaksoppsummering-nb';
 import styles from './vedtaksoppsummering.module.less';
@@ -21,12 +21,16 @@ interface Props {
     sak: Sak;
 }
 
-const vedtaksresultatToTekst = (vedtaksresultat: Vedtaksresultat, intl: IntlShape): string => {
-    switch (vedtaksresultat) {
-        case Vedtaksresultat.INNVILGET:
-            return intl.formatMessage({ id: 'resultat.innvilget' });
-        case Vedtaksresultat.AVSLÅTT:
-            return intl.formatMessage({ id: 'resultat.avslått' });
+const vedtaksresultatToTekst = (type: VedtakType, intl: IntlShape): string => {
+    switch (type) {
+        case VedtakType.SØKNAD:
+            return intl.formatMessage({ id: 'vedtaktype.søknad' });
+        case VedtakType.AVSLAG:
+            return intl.formatMessage({ id: 'vedtaktype.avslått' });
+        case VedtakType.ENDRING:
+            return intl.formatMessage({ id: 'vedtaktype.endring' });
+        case VedtakType.OPPHØR:
+            return intl.formatMessage({ id: 'vedtaktype.opphør' });
     }
 };
 
@@ -56,7 +60,7 @@ const Vedtaksoppsummering = (props: Props) => {
                 <div className={styles.infoHeader}>
                     <div>
                         <Element>{intl.formatMessage({ id: 'resultat.tittel' })}</Element>
-                        <p>{vedtaksresultatToTekst(vedtak.resultat, intl)}</p>
+                        <p>{vedtaksresultatToTekst(vedtak.type, intl)}</p>
                     </div>
                     <div>
                         <Element> {intl.formatMessage({ id: 'behandlet.av' })}</Element>
