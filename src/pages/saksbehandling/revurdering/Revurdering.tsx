@@ -15,7 +15,7 @@ import RevurderingsOppsummering from './oppsummering/RevurderingsOppsummering';
 import styles from './revurdering.module.less';
 import { EndreRevurderingPage } from './revurderingIntro/EndreRevurderingPage';
 import { NyRevurderingPage } from './revurderingIntro/NyRevurderingPage';
-import { erRevurderingSimulert, erRevurderingBeregnetAvslag } from './revurderingUtils';
+import { erRevurderingSimulert, erRevurderingBeregnetIngenEndring } from './revurderingUtils';
 
 export const VisFeilmelding = (props: { forrigeURL: string }) => {
     const intl = useI18n({ messages: sharedMessages });
@@ -106,7 +106,7 @@ const Revurdering = (props: { sak: Sak }) => {
                         </Route>
                         <Route path={createRevurderingsPath(RevurderingSteg.Oppsummering)}>
                             {erRevurderingSimulert(påbegyntRevurdering) ||
-                            erRevurderingBeregnetAvslag(påbegyntRevurdering) ? (
+                            erRevurderingBeregnetIngenEndring(påbegyntRevurdering) ? (
                                 <RevurderingsOppsummering sakId={props.sak.id} revurdering={påbegyntRevurdering} />
                             ) : (
                                 <VisFeilmelding

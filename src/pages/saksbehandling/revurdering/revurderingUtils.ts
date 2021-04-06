@@ -5,7 +5,7 @@ import {
     OpprettetRevurdering,
     RevurderingTilAttestering,
     IverksattRevurdering,
-    BeregnetAvslag,
+    BeregnetIngenEndring,
     UnderkjentRevurdering,
 } from '~types/Revurdering';
 
@@ -14,8 +14,8 @@ export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurderin
 export const erRevurderingSimulert = (revurdering: Revurdering): revurdering is SimulertRevurdering =>
     'beregninger' in revurdering;
 
-export const erRevurderingBeregnetAvslag = (r: Revurdering): r is BeregnetAvslag =>
-    r.status === RevurderingsStatus.BEREGNET_AVSLAG;
+export const erRevurderingBeregnetIngenEndring = (r: Revurdering): r is BeregnetIngenEndring =>
+    r.status === RevurderingsStatus.BEREGNET_INGEN_ENDRING;
 
 export const erRevurderingTilAttestering = (r: Revurdering): r is RevurderingTilAttestering =>
     r.status === RevurderingsStatus.TIL_ATTESTERING_INNVILGET ||

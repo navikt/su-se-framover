@@ -18,11 +18,16 @@ import yup from '~lib/validering';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch } from '~redux/Store';
-import { SimulertRevurdering, RevurderingTilAttestering, BeregnetAvslag, RevurderingsStatus } from '~types/Revurdering';
+import {
+    SimulertRevurdering,
+    RevurderingTilAttestering,
+    BeregnetIngenEndring,
+    RevurderingsStatus,
+} from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
-import { erRevurderingBeregnetAvslag } from '../revurderingUtils';
+import { erRevurderingBeregnetIngenEndring } from '../revurderingUtils';
 
 import messages from './revurderingOppsummering-nb';
 import styles from './revurderingsOppsummering.module.less';
@@ -35,7 +40,10 @@ const schema = yup.object<OppsummeringFormData>({
     tekstTilVedtaksbrev: yup.string().nullable(),
 });
 
-const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertRevurdering | BeregnetAvslag }) => {
+const RevurderingsOppsummering = (props: {
+    sakId: string;
+    revurdering: SimulertRevurdering | BeregnetIngenEndring;
+}) => {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     const dispatch = useAppDispatch();
     const [sendtTilAttesteringStatus, setSendtTilAttesteringStatus] = useState<
@@ -133,19 +141,6 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
         }
     };
 
-    if (erRevurderingBeregnetAvslag(props.revurdering)) {
-        return (
-            <div>
-                <AlertStripeAdvarsel>
-                    {intl.formatMessage({ id: 'oppsummering.størreEllerLik10Prosent' })}
-                </AlertStripeAdvarsel>
-                <Link className="knapp" to={forrigeURL}>
-                    {intl.formatMessage({ id: 'knapp.forrige' })}
-                </Link>
-            </div>
-        );
-    }
-
     return (
         <form
             className={sharedStyles.revurderingContainer}
@@ -173,6 +168,12 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
                         beregning={props.revurdering.beregninger.revurdert}
                     />
                 </div>
+                {erRevurderingBeregnetIngenEndring(props.revurdering) && (
+                    <div className={styles.ingenEndringContainer}>
+                        <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p1' })}</p>
+                        <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p2' })}</p>
+                    </div>
+                )}
                 {props.revurdering.status === RevurderingsStatus.SIMULERT_OPPHØRT && (
                     <div className={styles.opphørsadvarsel}>
                         <AlertStripeAdvarsel>
