@@ -14,6 +14,8 @@ import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/bereg
 import { Sak } from '~types/Sak';
 import { VedtakType } from '~types/Vedtak';
 
+import RevurderingÅrsakOgBegrunnelse from '../../components/RevurderingÅrsakOgBegrunnelse/RevurderingÅrsakOgBegrunnelse';
+
 import messages from './vedtaksoppsummering-nb';
 import styles from './vedtaksoppsummering.module.less';
 
@@ -41,6 +43,8 @@ const Vedtaksoppsummering = (props: Props) => {
     const [fetchVedtaksbrev, setFetchVedtaksbrev] = useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const vedtak = props.sak.vedtak.find((v) => v.id === urlParams.vedtakId);
     if (!vedtak) return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
+
+    const revurderingSomFørteTilVedtak = props.sak.revurderinger.find((b) => b.id === vedtak.behandlingId);
 
     const hentVedtaksbrev = async () => {
         setFetchVedtaksbrev(RemoteData.pending);
@@ -103,6 +107,12 @@ const Vedtaksoppsummering = (props: Props) => {
     return (
         <div className={styles.container}>
             <Innholdstittel className={styles.tittel}> {intl.formatMessage({ id: 'tittel' })}</Innholdstittel>
+            {revurderingSomFørteTilVedtak && (
+                <RevurderingÅrsakOgBegrunnelse
+                    className={styles.revurderingInfo}
+                    revurdering={revurderingSomFørteTilVedtak}
+                />
+            )}
             <InfoHeader />
             <VisBeregning beregning={vedtak.beregning} />
             <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })} className="knapp">
