@@ -3,13 +3,13 @@ import { useFormik } from 'formik';
 import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Textarea } from 'nav-frontend-skjema';
-import { Innholdstittel, Normaltekst, Element } from 'nav-frontend-typografi';
+import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
+import RevurderingÅrsakOgBegrunnelse from '~components/RevurderingÅrsakOgBegrunnelse/RevurderingÅrsakOgBegrunnelse';
 import * as revurderingSlice from '~features/revurdering/revurderingActions';
-import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -158,18 +158,10 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
                 {intl.formatMessage({ id: 'oppsummering.tittel' })}
             </Innholdstittel>
             <div className={sharedStyles.mainContentContainer}>
-                <div className={styles.årsakBegrunnelseContainer}>
-                    <p>
-                        <Element tag="span">{intl.formatMessage({ id: 'revurdering.årsak' })}: </Element>
-                        <Normaltekst tag="span">
-                            {intl.formatMessage({ id: getRevurderingsårsakMessageId(props.revurdering.årsak) })}
-                        </Normaltekst>
-                    </p>
-                    <p>
-                        <Element tag="span">{intl.formatMessage({ id: 'revurdering.begrunnelse' })}: </Element>
-                        <Normaltekst tag="span">{props.revurdering.begrunnelse}</Normaltekst>
-                    </p>
-                </div>
+                <RevurderingÅrsakOgBegrunnelse
+                    className={styles.årsakBegrunnelseContainer}
+                    revurdering={props.revurdering}
+                />
                 <div className={styles.beregningContainer}>
                     <VisBeregning
                         beregningsTittel={intl.formatMessage({ id: 'oppsummering.gammelBeregning.tittel' })}

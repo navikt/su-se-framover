@@ -9,9 +9,6 @@ export default {
     'feil.fantIkkeRevurdering': 'Fant ikke revurdering',
     'feil.klarteIkkeHenteBrev': 'Klarte ikke hente brevet.',
 
-    'revurdering.årsak': 'Årsak for revurdering',
-    'revurdering.begrunnelse': 'Begrunnelse',
-
     'input.grunn.label': 'Grunn',
     'input.grunn.value.default': 'Velg grunn',
     'input.grunn.value.beregningErFeil': 'Beregning er feil',

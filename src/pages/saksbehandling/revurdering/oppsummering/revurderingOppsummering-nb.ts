@@ -8,7 +8,5 @@ export default {
     'oppsummering.sendtTilAttestering': 'Revurdering er sendt til attestering',
     'oppsummering.størreEllerLik10Prosent': 'Revurderingen er ikke større eller lik 10 prosent endring',
 
-    'revurdering.årsak': 'Årsak for revurdering',
-    'revurdering.begrunnelse': 'Begrunnelse',
     'revurdering.opphør.advarsel': 'Denne revurderingen fører til opphør for bruker',
 };

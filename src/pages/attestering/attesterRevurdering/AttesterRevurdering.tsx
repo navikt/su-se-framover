@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import { AlertStripeAdvarsel, AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { RadioPanelGruppe, Textarea, Select } from 'nav-frontend-skjema';
-import { Innholdstittel, Systemtittel, Element, Normaltekst } from 'nav-frontend-typografi';
+import { Innholdstittel, Systemtittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -11,8 +11,8 @@ import { ApiError } from '~api/apiClient';
 import * as PdfApi from '~api/pdfApi';
 import { Person } from '~api/personApi';
 import Personlinje from '~components/personlinje/Personlinje';
+import RevurderingÅrsakOgBegrunnelse from '~components/RevurderingÅrsakOgBegrunnelse/RevurderingÅrsakOgBegrunnelse';
 import * as revurderingSlice from '~features/revurdering/revurderingActions';
-import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -173,18 +173,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                         {intl.formatMessage({ id: 'page.tittel' })}
                     </Innholdstittel>
                 </div>
-                <div className={styles.årsakBegrunnelseContainer}>
-                    <p>
-                        <Element tag="span">{intl.formatMessage({ id: 'revurdering.årsak' })}: </Element>
-                        <Normaltekst tag="span">
-                            {intl.formatMessage({ id: getRevurderingsårsakMessageId(revurdering.årsak) })}
-                        </Normaltekst>
-                    </p>
-                    <p>
-                        <Element tag="span">{intl.formatMessage({ id: 'revurdering.begrunnelse' })}: </Element>
-                        <Normaltekst tag="span">{revurdering.begrunnelse}</Normaltekst>
-                    </p>
-                </div>
+                <RevurderingÅrsakOgBegrunnelse className={styles.årsakBegrunnelseContainer} revurdering={revurdering} />
                 <div className={styles.beregningContainer}>
                     <VisBeregning
                         beregningsTittel={intl.formatMessage({ id: 'beregning.gammelBeregning' })}
