@@ -17,8 +17,7 @@
         "tdd": "jest --watch",
         "clean:dist": "rimraf dist",
         "prettier": "prettier --write src server",
-        "tsc:watch": "tsc --watch --noEmit --project './tsconfig.json'",
-        "preinstall": "npx npm-force-resolutions"
+        "tsc:watch": "tsc --watch --noEmit --project './tsconfig.json'"
     },
     "husky": {
         "hooks": {
@@ -176,8 +175,5 @@
         "ts-jest": "^26.4.4",
         "ts-node": "^9.1.1",
         "typescript": "^4.2.3"
-    },
-    "resolutions": {
-        "node-forge": "^0.10.0"
     }
 }
