@@ -10,4 +10,5 @@ export default {
 
     'revurdering.årsak': 'Årsak for revurdering',
     'revurdering.begrunnelse': 'Begrunnelse',
+    'revurdering.opphør.advarsel': 'Denne revurderingen fører til opphør for bruker',
 };

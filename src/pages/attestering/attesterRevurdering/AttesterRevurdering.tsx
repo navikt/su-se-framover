@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
-import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import { AlertStripeAdvarsel, AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { RadioPanelGruppe, Textarea, Select } from 'nav-frontend-skjema';
 import { Innholdstittel, Systemtittel, Element, Normaltekst } from 'nav-frontend-typografi';
@@ -20,7 +20,7 @@ import yup from '~lib/validering';
 import { erRevurderingTilAttestering } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { useAppDispatch } from '~redux/Store';
-import { IverksattRevurdering, UnderkjentRevurdering } from '~types/Revurdering';
+import { IverksattRevurdering, RevurderingsStatus, UnderkjentRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 
 import SharedStyles from '../sharedStyles.module.less';
@@ -208,6 +208,12 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                     <AlertStripeFeil className={styles.brevFeil}>
                         {intl.formatMessage({ id: 'feil.klarteIkkeHenteBrev' })}
                     </AlertStripeFeil>
+                )}
+
+                {revurdering.status === RevurderingsStatus.TIL_ATTESTERING_OPPHØRT && (
+                    <div className={styles.opphørsadvarsel}>
+                        <AlertStripeAdvarsel>Denne revurderingen fører till opphør for bruker</AlertStripeAdvarsel>
+                    </div>
                 )}
 
                 <RadioPanelGruppe

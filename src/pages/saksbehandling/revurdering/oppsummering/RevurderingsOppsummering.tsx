@@ -18,7 +18,7 @@ import yup from '~lib/validering';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch } from '~redux/Store';
-import { SimulertRevurdering, RevurderingTilAttestering, BeregnetAvslag } from '~types/Revurdering';
+import { SimulertRevurdering, RevurderingTilAttestering, BeregnetAvslag, RevurderingsStatus } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
@@ -181,6 +181,13 @@ const RevurderingsOppsummering = (props: { sakId: string; revurdering: SimulertR
                         beregning={props.revurdering.beregninger.revurdert}
                     />
                 </div>
+                {props.revurdering.status === RevurderingsStatus.SIMULERT_OPPHØRT && (
+                    <div className={styles.opphørsadvarsel}>
+                        <AlertStripeAdvarsel>
+                            {intl.formatMessage({ id: 'revurdering.opphør.advarsel' })}
+                        </AlertStripeAdvarsel>
+                    </div>
+                )}
                 <div className={styles.brevContainer}>
                     <div className={styles.textAreaContainer}>
                         <Textarea
