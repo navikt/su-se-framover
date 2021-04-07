@@ -170,8 +170,10 @@ const RevurderingsOppsummering = (props: {
                 </div>
                 {erRevurderingBeregnetIngenEndring(props.revurdering) && (
                     <div className={styles.ingenEndringContainer}>
-                        <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p1' })}</p>
-                        <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p2' })}</p>
+                        <div className={styles.mindreEnn10ProsentTekstContainer}>
+                            <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p1' })}</p>
+                            <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p2' })}</p>
+                        </div>
                     </div>
                 )}
                 {props.revurdering.status === RevurderingsStatus.SIMULERT_OPPHØRT && (
