@@ -27,7 +27,7 @@ export interface BeregnetInnvilget extends Revurdering<RevurderingsStatus.BEREGN
     beregninger: Beregninger;
 }
 
-export interface BeregnetAvslag extends Revurdering<RevurderingsStatus.BEREGNET_AVSLAG> {
+export interface BeregnetIngenEndring extends Revurdering<RevurderingsStatus.BEREGNET_INGEN_ENDRING> {
     beregninger: Beregninger;
 }
 
@@ -56,15 +56,18 @@ export interface UnderkjentRevurdering
 export enum RevurderingsStatus {
     OPPRETTET = 'OPPRETTET',
     BEREGNET_INNVILGET = 'BEREGNET_INNVILGET',
-    BEREGNET_AVSLAG = 'BEREGNET_AVSLAG',
+    BEREGNET_INGEN_ENDRING = 'BEREGNET_INGEN_ENDRING',
     SIMULERT_OPPHØRT = 'SIMULERT_OPPHØRT',
     SIMULERT_INNVILGET = 'SIMULERT_INNVILGET',
     TIL_ATTESTERING_INNVILGET = 'TIL_ATTESTERING_INNVILGET',
     TIL_ATTESTERING_OPPHØRT = 'TIL_ATTESTERING_OPPHØRT',
+    TIL_ATTESTERING_INGEN_ENDRING = 'TIL_ATTESTERING_INGEN_ENDRING',
     IVERKSATT_INNVILGET = 'IVERKSATT_INNVILGET',
     IVERKSATT_OPPHØRT = 'IVERKSATT_OPPHØRT',
+    IVERKSATT_INGEN_ENDRING = 'IVERKSATT_INGEN_ENDRING',
     UNDERKJENT_INNVILGET = 'UNDERKJENT_INNVILGET',
     UNDERKJENT_OPPHØRT = 'UNDERKJENT_OPPHØRT',
+    UNDERKJENT_INGEN_ENDRING = 'UNDERKJENT_INGEN_ENDRING',
 }
 
 export enum OpprettetRevurderingGrunn {
