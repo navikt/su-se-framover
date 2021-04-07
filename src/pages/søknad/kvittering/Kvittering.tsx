@@ -16,6 +16,7 @@ import { showName } from '~features/person/personUtils';
 import * as søknadslice from '~features/søknad/søknad.slice';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Søknadstype } from '~types/Søknad';
 
 import messages from './kvittering-nb';
 import styles from './kvittering.module.less';
@@ -25,6 +26,7 @@ const Kvittering = () => {
     const history = useHistory();
     const søknad = useAppSelector((state) => state.innsending.søknad);
     const søker = useAppSelector((state) => state.søker.søker);
+    const søknadstype = useAppSelector((state) => state.soknad.forVeileder.type);
     const [fetchSøknadPdfState, setFetchSøknadPdfState] = React.useState<RemoteData.RemoteData<ApiError, null>>(
         RemoteData.initial
     );
@@ -32,7 +34,12 @@ const Kvittering = () => {
     const handleAvsluttSøknad = () => {
         dispatch(personSlice.default.actions.resetSøker());
         dispatch(søknadslice.default.actions.resetSøknad());
-        history.push(Routes.soknad.createURL());
+
+        if (søknadstype === Søknadstype.Papirsøknad) {
+            history.push(Routes.saksoversiktIndex.createURL());
+        } else {
+            history.push(Routes.soknad.createURL());
+        }
     };
 
     const handleSkrivUtSøknadClick = async (opprettetSøknad: OpprettetSøknad) => {
