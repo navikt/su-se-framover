@@ -6,7 +6,8 @@ export default {
     'beslutning.godkjenn': 'Godkjenn',
     'beslutning.underkjenn': 'Underkjenn',
 
-    'feil.fantIkkeRevurdering': 'Fant ikke revurdering',
+    'feil.fantIkkeRevurdering': 'Fant ikke revurdering.',
+    'feil.ikkeTilAttestering': 'Revurderingen er ikke til attestering.',
     'feil.klarteIkkeHenteBrev': 'Klarte ikke hente brevet.',
 
     'input.grunn.label': 'Grunn',
