@@ -1,4 +1,7 @@
 export default {
+    'revurdering.årsak': 'Årsak for revurdering',
+    'revurdering.begrunnelse': 'Begrunnelse',
+
     'årsak.meldingFraBruker': 'Melding fra bruker',
     'årsak.informasjonFraKontrollsamtale': 'Informasjon fra kontrollsamtale',
     'årsak.dødsfall': 'Dødsfall',
