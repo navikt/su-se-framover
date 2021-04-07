@@ -21,5 +21,7 @@ export default {
     'display.utbetalingsperiode.stansUtbetaling': 'Stans utbetalinger',
     'display.utbetalingsperiode.stoppUtbetaling': 'Stopp utbetaling',
 
+    'display.utbetalingsperiode.linje.opphørt': 'Opphørt',
+
     'display.utbetalingsperiode.tittel': 'Utbetalingsperioder',
 };
