@@ -172,12 +172,12 @@ export const Utbetalinger = (props: {
     );
 };
 
-const utbetalingstypeTilTekst = (utbetalingstype: Utbetalingstype) => {
+const utbetalingstypeTilTekst = (utbetalingstype: Utbetalingstype, intl: IntlShape) => {
     switch (utbetalingstype) {
         case Utbetalingstype.NY:
             return '';
         case Utbetalingstype.OPPHØR:
-            return 'Opphørt';
+            return intl.formatMessage({ id: 'display.utbetalingsperiode.linje.opphørt' });
     }
 };
 
@@ -189,7 +189,7 @@ const UtbetalingsperiodeListItem = (props: { utbetalingsperiode: Utbetalingsperi
                 {props.intl.formatDate(props.utbetalingsperiode.tilOgMed, { month: '2-digit', year: 'numeric' })}
             </p>
             <p>{props.utbetalingsperiode.beløp} kr</p>
-            <p>{utbetalingstypeTilTekst(props.utbetalingsperiode.type)}</p>
+            <p>{utbetalingstypeTilTekst(props.utbetalingsperiode.type, props.intl)}</p>
         </div>
     );
 };
