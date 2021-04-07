@@ -1,26 +1,26 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { PersonCard, Gender } from '@navikt/nap-person-card';
 import { useFormik } from 'formik';
-import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
-import { Hovedknapp } from 'nav-frontend-knapper';
+import { AlertStripeAdvarsel, AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { RadioPanelGruppe, Textarea, Select } from 'nav-frontend-skjema';
 import { Innholdstittel, Systemtittel } from 'nav-frontend-typografi';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
+import * as PdfApi from '~api/pdfApi';
 import { Person } from '~api/personApi';
-import { PersonAdvarsel } from '~components/PersonAdvarsel';
-import { getGender, showName } from '~features/person/personUtils';
+import Personlinje from '~components/personlinje/Personlinje';
+import RevurderingÅrsakOgBegrunnelse from '~components/RevurderingÅrsakOgBegrunnelse/RevurderingÅrsakOgBegrunnelse';
 import * as revurderingSlice from '~features/revurdering/revurderingActions';
+import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
 import { erRevurderingTilAttestering } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
-import Søkefelt from '~pages/saksbehandling/søkefelt/Søkefelt';
 import { useAppDispatch } from '~redux/Store';
-import { IverksattRevurdering } from '~types/Revurdering';
+import { IverksattRevurdering, RevurderingsStatus, UnderkjentRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 
 import SharedStyles from '../sharedStyles.module.less';
@@ -34,7 +34,7 @@ interface FormData {
     kommentar?: string;
 }
 
-enum UnderkjennRevurderingGrunn {
+export enum UnderkjennRevurderingGrunn {
     BEREGNINGEN_ER_FEIL = 'BEREGNINGEN_ER_FEIL',
     DOKUMENTASJON_MANGLER = 'DOKUMENTASJON_MANGLER',
     VEDTAKSBREVET_ER_FEIL = 'VEDTAKSBREVET_ER_FEIL',
@@ -68,15 +68,14 @@ const schema = yup.object<FormData>({
 
 const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.attesterRevurdering>();
-    const intl = useI18n({ messages });
+    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
     const dispatch = useAppDispatch();
-    const [hasSubmitted, setHasSubmitted] = useState<boolean>();
-    const [sendtBeslutning, setSendtBeslutning] = useState<RemoteData.RemoteData<ApiError, IverksattRevurdering>>(
-        RemoteData.initial
-    );
-
-    const gender = useMemo<Gender>(() => getGender(props.søker), [props.søker]);
+    const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+    const [hentPdfStatus, setHentPdfStatus] = useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
+    const [sendtBeslutning, setSendtBeslutning] = useState<
+        RemoteData.RemoteData<ApiError, IverksattRevurdering | UnderkjentRevurdering>
+    >(RemoteData.initial);
 
     const formik = useFormik<FormData>({
         initialValues: {},
@@ -101,7 +100,27 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 }
             }
 
-            //TODO: add underkjenning
+            if (!values.beslutning && values.grunn) {
+                setSendtBeslutning(RemoteData.pending);
+                const res = await dispatch(
+                    revurderingSlice.underkjennRevurdering({
+                        sakId: props.sak.id,
+                        revurderingId: urlParams.revurderingId,
+                        grunn: values.grunn,
+                        kommentar: values.kommentar,
+                    })
+                );
+
+                if (revurderingSlice.underkjennRevurdering.fulfilled.match(res)) {
+                    setSendtBeslutning(RemoteData.success(res.payload));
+                }
+
+                if (revurderingSlice.underkjennRevurdering.rejected.match(res)) {
+                    //TODO: fix at res.payload kan være undefined?
+                    if (!res.payload) return;
+                    setSendtBeslutning(RemoteData.failure(res.payload));
+                }
+            }
         },
         validateOnChange: hasSubmitted,
         validationSchema: schema,
@@ -111,7 +130,11 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
         return (
             <div className={styles.sendtTilAttesteringContainer}>
                 <AlertStripeSuksess>
-                    <p>{intl.formatMessage({ id: 'attester.iverksatt' })}</p>
+                    <p>
+                        {formik.values.beslutning
+                            ? intl.formatMessage({ id: 'attester.iverksatt' })
+                            : intl.formatMessage({ id: 'attester.sendtTilbake' })}
+                    </p>
                     <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
                         {intl.formatMessage({ id: 'attester.tilSaksoversikt' })}
                     </Link>
@@ -124,6 +147,17 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
         return <AlertStripeFeil>{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</AlertStripeFeil>;
     }
 
+    const handleShowBrevClick = async () => {
+        setHentPdfStatus(RemoteData.pending);
+        const res = await PdfApi.fetchBrevutkastForRevurdering(props.sak.id, revurdering.id);
+        if (res.status === 'ok') {
+            setHentPdfStatus(RemoteData.success(null));
+            window.open(URL.createObjectURL(res.data));
+        } else {
+            setHentPdfStatus(RemoteData.failure(res.error));
+        }
+    };
+
     return (
         <form
             className={SharedStyles.container}
@@ -132,21 +166,14 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 formik.handleSubmit(e);
             }}
         >
-            <div className={SharedStyles.headerContainer}>
-                <PersonCard
-                    fodselsnummer={props.søker.fnr}
-                    gender={gender}
-                    name={showName(props.søker.navn)}
-                    renderLabelContent={(): JSX.Element => <PersonAdvarsel person={props.søker} />}
-                />
-                <Søkefelt />
-            </div>
+            <Personlinje søker={props.søker} sak={props.sak} />
             <div className={SharedStyles.content}>
                 <div className={SharedStyles.tittelContainer}>
                     <Innholdstittel className={SharedStyles.pageTittel}>
                         {intl.formatMessage({ id: 'page.tittel' })}
                     </Innholdstittel>
                 </div>
+                <RevurderingÅrsakOgBegrunnelse className={styles.årsakBegrunnelseContainer} revurdering={revurdering} />
                 <div className={styles.beregningContainer}>
                     <VisBeregning
                         beregningsTittel={intl.formatMessage({ id: 'beregning.gammelBeregning' })}
@@ -158,6 +185,25 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                         beregning={revurdering.beregninger.revurdert}
                     />
                 </div>
+                <Knapp
+                    className={styles.brevButton}
+                    htmlType="button"
+                    spinner={RemoteData.isPending(hentPdfStatus)}
+                    onClick={handleShowBrevClick}
+                >
+                    {intl.formatMessage({ id: 'knapp.brev' })}
+                </Knapp>
+                {RemoteData.isFailure(hentPdfStatus) && (
+                    <AlertStripeFeil className={styles.brevFeil}>
+                        {intl.formatMessage({ id: 'feil.klarteIkkeHenteBrev' })}
+                    </AlertStripeFeil>
+                )}
+
+                {revurdering.status === RevurderingsStatus.TIL_ATTESTERING_OPPHØRT && (
+                    <div className={styles.opphørsadvarsel}>
+                        <AlertStripeAdvarsel>Denne revurderingen fører till opphør for bruker</AlertStripeAdvarsel>
+                    </div>
+                )}
 
                 <RadioPanelGruppe
                     className={SharedStyles.formElement}
@@ -224,6 +270,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
             <Hovedknapp className={styles.sendBeslutningKnapp} spinner={RemoteData.isPending(sendtBeslutning)}>
                 {intl.formatMessage({ id: 'knapp.tekst' })}
             </Hovedknapp>
+            {/*TODO: bruk feilmeldingskode */}
             {RemoteData.isFailure(sendtBeslutning) && (
                 <AlertStripeFeil>{sendtBeslutning.error.body?.message}</AlertStripeFeil>
             )}

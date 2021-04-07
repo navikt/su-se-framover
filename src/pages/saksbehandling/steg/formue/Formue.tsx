@@ -24,7 +24,7 @@ import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering, validatePositiveNumber } from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering, validateNonNegativeNumber } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { FormueStatus, Formue, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
@@ -45,14 +45,14 @@ type FormData = Formue & {
 };
 
 const VerdierSchema: yup.ObjectSchema<FormueVerdier | undefined> = yup.object<FormueVerdier>({
-    verdiIkkePrimærbolig: validatePositiveNumber,
-    verdiEiendommer: validatePositiveNumber,
-    verdiKjøretøy: validatePositiveNumber,
-    innskudd: validatePositiveNumber,
-    verdipapir: validatePositiveNumber,
-    pengerSkyldt: validatePositiveNumber,
-    kontanter: validatePositiveNumber,
-    depositumskonto: validatePositiveNumber,
+    verdiIkkePrimærbolig: validateNonNegativeNumber,
+    verdiEiendommer: validateNonNegativeNumber,
+    verdiKjøretøy: validateNonNegativeNumber,
+    innskudd: validateNonNegativeNumber,
+    verdipapir: validateNonNegativeNumber,
+    pengerSkyldt: validateNonNegativeNumber,
+    kontanter: validateNonNegativeNumber,
+    depositumskonto: validateNonNegativeNumber,
 });
 
 const schema = yup.object<FormData>({

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
-import { Nullable } from '~lib/types';
+import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
 import { Periode, Fradrag } from '~types/Fradrag';
 import { SimulertEndringGrunnlag, Uføregrunnlag } from '~types/Grunnlag';
 import {
@@ -9,6 +9,8 @@ import {
     IverksattRevurdering,
     OpprettetRevurdering,
     SimulertRevurdering,
+    UnderkjentRevurdering,
+    OpprettetRevurderingGrunn,
     LeggTilUføreResponse,
 } from '~types/Revurdering';
 
@@ -17,10 +19,10 @@ import * as revurderingApi from '../../api/revurderingApi';
 
 export const opprettRevurdering = createAsyncThunk<
     OpprettetRevurdering,
-    { sakId: string; fraOgMed: Date },
+    { sakId: string; fraOgMed: Date; årsak: OpprettetRevurderingGrunn; begrunnelse: string },
     { rejectValue: ApiError }
->('revurdering/opprettRevurdering', async ({ sakId, fraOgMed }, thunkApi) => {
-    const res = await revurderingApi.opprettRevurdering(sakId, fraOgMed);
+>('revurdering/opprettRevurdering', async ({ sakId, fraOgMed, årsak, begrunnelse }, thunkApi) => {
+    const res = await revurderingApi.opprettRevurdering(sakId, fraOgMed, årsak, begrunnelse);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -29,15 +31,18 @@ export const opprettRevurdering = createAsyncThunk<
 
 export const oppdaterRevurderingsPeriode = createAsyncThunk<
     OpprettetRevurdering,
-    { sakId: string; revurderingId: string; fraOgMed: Date },
+    { sakId: string; revurderingId: string; fraOgMed: Date; årsak: OpprettetRevurderingGrunn; begrunnelse: string },
     { rejectValue: ApiError }
->('revurdering/oppdaterRevurderingsPeriode', async ({ sakId, revurderingId, fraOgMed }, thunkApi) => {
-    const res = await revurderingApi.oppdaterRevurderingsPeriode(sakId, revurderingId, fraOgMed);
-    if (res.status === 'ok') {
-        return res.data;
+>(
+    'revurdering/oppdaterRevurderingsPeriode',
+    async ({ sakId, revurderingId, fraOgMed, årsak, begrunnelse }, thunkApi) => {
+        const res = await revurderingApi.oppdaterRevurdering(sakId, revurderingId, fraOgMed, årsak, begrunnelse);
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
     }
-    return thunkApi.rejectWithValue(res.error);
-});
+);
 
 export const beregnOgSimuler = createAsyncThunk<
     SimulertRevurdering,
@@ -57,10 +62,10 @@ export const beregnOgSimuler = createAsyncThunk<
 
 export const sendRevurderingTilAttestering = createAsyncThunk<
     RevurderingTilAttestering,
-    { sakId: string; revurderingId: string },
+    { sakId: string; revurderingId: string; fritekstTilBrev: string },
     { rejectValue: ApiError }
->('revurdering/sendTilAttestering', async ({ sakId, revurderingId }, thunkApi) => {
-    const res = await revurderingApi.sendTilAttestering(sakId, revurderingId);
+>('revurdering/sendTilAttestering', async ({ sakId, revurderingId, fritekstTilBrev }, thunkApi) => {
+    const res = await revurderingApi.sendTilAttestering(sakId, revurderingId, fritekstTilBrev);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -79,12 +84,24 @@ export const iverksettRevurdering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const fetchRevurderingsVedtak = createAsyncThunk<
+export const underkjennRevurdering = createAsyncThunk<
+    UnderkjentRevurdering,
+    { sakId: string; revurderingId: string; grunn: UnderkjennRevurderingGrunn; kommentar?: string },
+    { rejectValue: ApiError }
+>('revurdering/underkjenn', async ({ sakId, revurderingId, grunn, kommentar }, thunkApi) => {
+    const res = await revurderingApi.underkjenn(sakId, revurderingId, grunn, kommentar);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const fetchBrevutkastWithFritekst = createAsyncThunk<
     { objectUrl: string },
-    { sakId: string; revurderingId: string; fritekst: Nullable<string> },
+    { sakId: string; revurderingId: string; fritekst: string },
     { rejectValue: ApiError }
 >('revurdering/revurderingsVedtak', async ({ sakId, revurderingId, fritekst }, thunkApi) => {
-    const res = await pdfApi.fetchRevurderingsVedtak(sakId, revurderingId, fritekst);
+    const res = await pdfApi.fetchBrevutkastForRevurderingWithFritekst(sakId, revurderingId, fritekst);
     if (res.status === 'ok') {
         return { objectUrl: URL.createObjectURL(res.data) };
     }

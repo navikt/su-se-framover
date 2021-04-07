@@ -12,6 +12,7 @@ export default {
     'feilmelding.fantIkkeBehandlingsId': 'Fant ikke behandlingsid',
     'feilmelding.ikkeGjortEnBeregning': 'Det er ikke gjort en beregning',
     'feilmelding.sendingFeilet': 'Sending feilet',
+    'feilmelding.brevhentingFeilet': 'En feil skjedde under generering av brev',
 
     'knapp.sendTilAttestering': 'Send til attestering',
     'knapp.tilbake': 'Tilbake',
@@ -27,4 +28,6 @@ export default {
 
     'vedtak.sendtTilAttestering': 'Vedtak er sendt til Attestering',
     'vedtak.sendtTilAttestering.lenkeSaksoversikt': 'Til saksoversikt',
+
+    'input.fritekst.label': 'Tekst til vedtaksbrev',
 };

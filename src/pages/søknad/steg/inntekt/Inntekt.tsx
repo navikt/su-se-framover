@@ -42,8 +42,8 @@ const schema = yup.object<FormData>({
             is: true,
             then: yup
                 .number()
-                .typeError('Forventet inntekt må være et tall')
-                .label('Forventet inntekt')
+                .typeError('Forventet inntekt etter uførhet må være et tall')
+                .label('Forventet inntekt etter uførhet')
                 .nullable(false)
                 .positive(),
             otherwise: yup.number(),

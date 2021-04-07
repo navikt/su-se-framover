@@ -1,16 +1,18 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import classNames from 'classnames';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Knapp } from 'nav-frontend-knapper';
 import { Element } from 'nav-frontend-typografi';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { IntlShape } from 'react-intl';
+import { Link } from 'react-router-dom';
 
+import { ApiError } from '~api/apiClient';
+import * as PdfApi from '~api/pdfApi';
 import { useUserContext } from '~context/userContext';
-import { lastNedBrev } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 
@@ -29,40 +31,55 @@ interface Props {
 const Behandlingsoppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
     const behandling = props.sak.behandlinger.find((behandling) => behandling.id === urlParams.behandlingId);
+    const intl = useI18n({ messages });
+
     if (!behandling) {
         return <></>;
     }
 
     return (
         <div className={styles.oppsummeringContainer}>
-            <BehandlingStatus sakId={props.sak.id} behandling={behandling} />
+            <BehandlingStatus sakId={props.sak.id} behandling={behandling} withBrevutkastknapp />
             <VilkårsOppsummering
                 behandlingstatus={behandling.status}
                 søknadInnhold={behandling.søknad.søknadInnhold}
                 behandlingsinformasjon={behandling.behandlingsinformasjon}
             />
             {behandling.beregning && <VisBeregningOgSimulering sak={props.sak} behandling={behandling} />}
+            <Link
+                to={Routes.saksoversiktValgtSak.createURL({
+                    sakId: props.sak.id,
+                })}
+                className={classNames('knapp', styles.backButton)}
+            >
+                {intl.formatMessage({ id: 'knapp.tilbake' })}
+            </Link>
         </div>
     );
 };
 
-export const BehandlingStatus = (props: { sakId: string; behandling: Behandling }) => {
-    const { lastNedBrevStatus } = useAppSelector((s) => s.sak);
+export const BehandlingStatus = (props: { sakId: string; behandling: Behandling; withBrevutkastknapp?: boolean }) => {
     const user = useUserContext();
-    const dispatch = useAppDispatch();
     const intl = useI18n({ messages });
 
-    const hentBrev = useCallback(() => {
+    const [lastNedBrevStatus, setLastNedBrevStatus] = useState<RemoteData.RemoteData<ApiError, null>>(
+        RemoteData.initial
+    );
+
+    const hentBrev = useCallback(async () => {
         if (RemoteData.isPending(lastNedBrevStatus)) {
             return;
         }
+        setLastNedBrevStatus(RemoteData.pending);
 
-        dispatch(lastNedBrev({ sakId: props.sakId, behandlingId: props.behandling.id })).then((action) => {
-            if (lastNedBrev.fulfilled.match(action)) {
-                window.open(action.payload.objectUrl);
-            }
-        });
-    }, [props.sakId, props.behandling.id]);
+        const res = await PdfApi.fetchBrevutkastForSøknadsbehandling(props.sakId, props.behandling.id);
+        if (res.status === 'ok') {
+            window.open(URL.createObjectURL(res.data));
+            setLastNedBrevStatus(RemoteData.success(null));
+        } else {
+            setLastNedBrevStatus(RemoteData.failure(res.error));
+        }
+    }, [props.sakId, props.behandling.id, lastNedBrevStatus._tag]);
 
     const Tilleggsinfo = () => {
         return (
@@ -91,17 +108,19 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling 
                         <Element> {intl.formatMessage({ id: 'behandling.saksbehandlingsdato' })}</Element>
                         <p>{intl.formatDate(props.behandling.opprettet)}</p>
                     </div>
-                    <div>
-                        <Element>{intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}</Element>
-                        <Knapp
-                            spinner={RemoteData.isPending(lastNedBrevStatus)}
-                            mini
-                            htmlType="button"
-                            onClick={hentBrev}
-                        >
-                            {intl.formatMessage({ id: 'knapp.vis' })}
-                        </Knapp>
-                    </div>
+                    {props.withBrevutkastknapp && (
+                        <div>
+                            <Element>{intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}</Element>
+                            <Knapp
+                                spinner={RemoteData.isPending(lastNedBrevStatus)}
+                                mini
+                                htmlType="button"
+                                onClick={hentBrev}
+                            >
+                                {intl.formatMessage({ id: 'knapp.vis' })}
+                            </Knapp>
+                        </div>
+                    )}
                 </div>
                 <div className={styles.brevutkastFeil}>
                     {RemoteData.isFailure(lastNedBrevStatus) && (

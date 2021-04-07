@@ -16,13 +16,10 @@ import { formatMonthYear } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { KanStansesEllerGjenopptas } from '~types/Sak';
-import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
+import { compareUtbetalingsperiode, Utbetalingsperiode, Utbetalingstype } from '~types/Utbetalingsperiode';
 
 import messages from './utbetalinger-nb';
 import styles from './utbetalinger.module.less';
-
-export const compareUtbetalingsperiode = (u1: Utbetalingsperiode, u2: Utbetalingsperiode) =>
-    DateFns.compareAsc(new Date(u1.fraOgMed), new Date(u2.fraOgMed));
 
 export const Utbetalinger = (props: {
     søker: Person;
@@ -175,6 +172,15 @@ export const Utbetalinger = (props: {
     );
 };
 
+const utbetalingstypeTilTekst = (utbetalingstype: Utbetalingstype, intl: IntlShape) => {
+    switch (utbetalingstype) {
+        case Utbetalingstype.NY:
+            return '';
+        case Utbetalingstype.OPPHØR:
+            return intl.formatMessage({ id: 'display.utbetalingsperiode.linje.opphørt' });
+    }
+};
+
 const UtbetalingsperiodeListItem = (props: { utbetalingsperiode: Utbetalingsperiode; intl: IntlShape }) => {
     return (
         <div className={styles.utbetalingsperiode}>
@@ -183,7 +189,7 @@ const UtbetalingsperiodeListItem = (props: { utbetalingsperiode: Utbetalingsperi
                 {props.intl.formatDate(props.utbetalingsperiode.tilOgMed, { month: '2-digit', year: 'numeric' })}
             </p>
             <p>{props.utbetalingsperiode.beløp} kr</p>
-            <p>{props.intl.formatMessage({ id: 'display.utbetalingsperiode.ordinærSats' })}</p>
+            <p>{utbetalingstypeTilTekst(props.utbetalingsperiode.type, props.intl)}</p>
         </div>
     );
 };

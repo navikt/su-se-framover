@@ -17,6 +17,7 @@ export interface ApiError {
 
 export interface ErrorMessage {
     message: string;
+    code?: string;
 }
 
 export type ApiClientResult<T> = { status: 'ok'; data: T; statusCode: number } | { status: 'error'; error: ApiError };
@@ -76,9 +77,11 @@ export default async function apiClient<T>(arg: {
         window.location.href = `${Config.LOGIN_URL}?redirectTo=${window.location.pathname}`;
     }
 
+    const errorBody: ErrorMessage = await res.json().catch((_err) => ({}));
+
     return error({
         statusCode: res.status,
         correlationId,
-        body: await res.json(),
+        body: errorBody,
     });
 }

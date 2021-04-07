@@ -26,7 +26,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
-import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
+import { Behandling, Behandlingsstatus, UnderkjennelseGrunn, Underkjennelse } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 
@@ -36,6 +36,7 @@ import {
     erRevurderingIverksatt,
     erRevurderingSimulert,
     erRevurderingOpprettet,
+    erRevurderingUnderkjent,
 } from '../revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
@@ -53,6 +54,36 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
         default:
             return 'display.søknad.lukket.ukjentLukking';
     }
+};
+
+const UnderkjennelsesInformasjon = (props: { underkjennelse: Underkjennelse; intl: IntlShape }) => {
+    return (
+        <div className={styles.underkjennelseContainer}>
+            <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
+                {props.intl.formatMessage({
+                    id: 'behandling.attestering.advarsel',
+                })}
+            </AlertStripe>
+            <div className={styles.underkjennelse}>
+                <div className={styles.underkjenningsinfo}>
+                    <Element>
+                        {props.intl.formatMessage({
+                            id: 'display.attestering.sendtTilbakeFordi',
+                        })}
+                    </Element>
+                    <Normaltekst>{grunnToText(props.underkjennelse.grunn, props.intl)}</Normaltekst>
+                </div>
+                <div className={styles.underkjenningsinfo}>
+                    <Element>
+                        {props.intl.formatMessage({
+                            id: 'display.attestering.kommentar',
+                        })}
+                    </Element>
+                    <Normaltekst>{props.underkjennelse.kommentar}</Normaltekst>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
@@ -119,9 +150,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         utbetalingsperioder={props.sak.utbetalinger}
                         kanStansesEllerGjenopptas={props.sak.utbetalingerKanStansesEllerGjenopptas}
                     />
-                    {revurderingToggle && (
-                        <Revurderinger sakId={props.sak.id} revurderinger={revurderinger} intl={intl} />
-                    )}
+                    {revurderingToggle && <Revurderinger sak={props.sak} revurderinger={revurderinger} intl={intl} />}
                     <GodkjenteSøknader
                         sakId={props.sak.id}
                         åpneSøknader={godkjenteBehandlinger}
@@ -175,38 +204,10 @@ const ÅpneSøknader = (props: {
                                             <Normaltekst>{props.intl.formatDate(s.opprettet)}</Normaltekst>
                                         </div>
                                         {behandling?.attestering?.underkjennelse && (
-                                            <div className={styles.underkjennelseContainer}>
-                                                <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
-                                                    {props.intl.formatMessage({
-                                                        id: 'behandling.attestering.advarsel',
-                                                    })}
-                                                </AlertStripe>
-                                                <div className={styles.underkjennelse}>
-                                                    <div className={styles.underkjenningsinfo}>
-                                                        <Element>
-                                                            {props.intl.formatMessage({
-                                                                id: 'display.attestering.sendtTilbakeFordi',
-                                                            })}
-                                                        </Element>
-                                                        <Normaltekst>
-                                                            {grunnToText(
-                                                                behandling.attestering.underkjennelse.grunn,
-                                                                props.intl
-                                                            )}
-                                                        </Normaltekst>
-                                                    </div>
-                                                    <div className={styles.underkjenningsinfo}>
-                                                        <Element>
-                                                            {props.intl.formatMessage({
-                                                                id: 'display.attestering.kommentar',
-                                                            })}
-                                                        </Element>
-                                                        <Normaltekst>
-                                                            {behandling.attestering.underkjennelse.kommentar}
-                                                        </Normaltekst>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <UnderkjennelsesInformasjon
+                                                underkjennelse={behandling.attestering.underkjennelse}
+                                                intl={props.intl}
+                                            />
                                         )}
                                     </div>
                                     <div className={styles.knapper}>
@@ -234,12 +235,14 @@ const ÅpneSøknader = (props: {
     );
 };
 
-const Revurderinger = (props: { sakId: string; revurderinger: Revurdering[]; intl: IntlShape }) => {
+const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: IntlShape }) => {
     if (props.revurderinger.length === 0) return null;
 
     return (
         <div className={styles.søknadsContainer}>
-            <Ingress className={styles.søknadsContainerTittel}>Revurderinger</Ingress>
+            <Ingress className={styles.søknadsContainerTittel}>
+                {props.intl.formatMessage({ id: 'revurdering.tittel' })}
+            </Ingress>
             <ol>
                 {props.revurderinger.map((r) => {
                     return (
@@ -247,15 +250,26 @@ const Revurderinger = (props: { sakId: string; revurderinger: Revurdering[]; int
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
                                     <div>
-                                        <Undertittel>Revurdering</Undertittel>
+                                        <Undertittel>
+                                            {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
+                                        </Undertittel>
                                         <div className={styles.dato}>
-                                            <Element>Opprettet: </Element>
+                                            <Element>
+                                                {props.intl.formatMessage({ id: 'revurdering.opprettet' })}{' '}
+                                            </Element>
                                             <Normaltekst>{props.intl.formatDate(r.opprettet)}</Normaltekst>
                                         </div>
+                                        {erRevurderingUnderkjent(r) && (
+                                            //underkjent revurdering har alltid en underkjennelse
+                                            /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                                            <UnderkjennelsesInformasjon
+                                                underkjennelse={r.attestering.underkjennelse!}
+                                                intl={props.intl}
+                                            />
+                                        )}
                                     </div>
                                     <div className={styles.knapper}>
-                                        <p>{r.status}</p>
-                                        <RevurderingStartetKnapper sakId={props.sakId} r={r} intl={props.intl} />
+                                        <RevurderingStartetKnapper sak={props.sak} revurdering={r} intl={props.intl} />
                                     </div>
                                 </div>
                             </Panel>
@@ -267,30 +281,43 @@ const Revurderinger = (props: { sakId: string; revurderinger: Revurdering[]; int
     );
 };
 
-const RevurderingStartetKnapper = (props: { r: Revurdering; sakId: string; intl: IntlShape }) => {
+const RevurderingStartetKnapper = (props: { revurdering: Revurdering; sak: Sak; intl: IntlShape }) => {
     const user = useUserContext();
-    const { r } = props;
+    const { revurdering } = props;
+    const vedtak = props.sak.vedtak.find((v) => v.behandlingId === revurdering.id);
 
     return (
         <div className={styles.behandlingContainer}>
-            {erRevurderingTilAttestering(r) && (!user.isAttestant || user.navIdent === r.saksbehandler) && (
-                <div className={styles.ikonContainer}>
-                    <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
-                    <p>
-                        {props.intl.formatMessage({
-                            id: 'display.attestering.tilAttestering',
-                        })}
-                    </p>
-                </div>
+            {erRevurderingTilAttestering(revurdering) &&
+                (!user.isAttestant || user.navIdent === revurdering.saksbehandler) && (
+                    <div className={styles.ikonContainer}>
+                        <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
+                        <p>
+                            {props.intl.formatMessage({
+                                id: 'display.attestering.tilAttestering',
+                            })}
+                        </p>
+                    </div>
+                )}
+
+            {erRevurderingIverksatt(revurdering) && vedtak && (
+                <Link
+                    className="knapp"
+                    to={Routes.vedtaksoppsummering.createURL({ sakId: props.sak.id, vedtakId: vedtak.id })}
+                >
+                    Se oppsummering
+                </Link>
             )}
 
             <div className={styles.knapper}>
-                {erRevurderingTilAttestering(r) && user.isAttestant && user.navIdent !== r.saksbehandler ? (
+                {erRevurderingTilAttestering(revurdering) &&
+                user.isAttestant &&
+                user.navIdent !== revurdering.saksbehandler ? (
                     <Link
                         className="knapp knapp--mini"
                         to={Routes.attesterRevurdering.createURL({
-                            sakId: props.sakId,
-                            revurderingId: r.id,
+                            sakId: props.sak.id,
+                            revurderingId: revurdering.id,
                         })}
                     >
                         {props.intl.formatMessage({
@@ -298,21 +325,22 @@ const RevurderingStartetKnapper = (props: { r: Revurdering; sakId: string; intl:
                         })}
                     </Link>
                 ) : (
-                    !erRevurderingTilAttestering(r) &&
-                    !erRevurderingIverksatt(r) && (
+                    !erRevurderingTilAttestering(revurdering) &&
+                    !erRevurderingIverksatt(revurdering) &&
+                    user.navIdent !== revurdering.attestering?.attestant && (
                         <Link
                             className="knapp knapp--mini"
                             to={Routes.revurderValgtRevurdering.createURL({
-                                sakId: props.sakId,
-                                steg: erRevurderingSimulert(r)
+                                sakId: props.sak.id,
+                                steg: erRevurderingSimulert(revurdering)
                                     ? RevurderingSteg.Oppsummering
-                                    : erRevurderingOpprettet(r)
+                                    : erRevurderingOpprettet(revurdering)
                                     ? RevurderingSteg.EndringAvFradrag
                                     : RevurderingSteg.Periode,
-                                revurderingId: r.id,
+                                revurderingId: revurdering.id,
                             })}
                         >
-                            Fortsett revurdering
+                            {props.intl.formatMessage({ id: 'revurdering.fortsett' })}
                         </Link>
                     )
                 )}
@@ -609,7 +637,7 @@ const AvslåtteSøknader = (props: {
                                             behandlingId: behandling.id,
                                         })}
                                     >
-                                        Se oppsummering
+                                        {props.intl.formatMessage({ id: 'revurdering.oppsummering' })}
                                     </Link>
                                 </div>
                             </Panel>

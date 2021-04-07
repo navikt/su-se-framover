@@ -106,7 +106,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
             begrunnelse: props.behandling.behandlingsinformasjon.uførhet?.begrunnelse ?? null,
         },
         async onSubmit(values) {
-            await handleSave(values, props.nesteUrl);
+            handleSave(values, props.nesteUrl);
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -237,6 +237,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                     history.push(props.forrigeUrl);
                                 }}
                                 onLagreOgFortsettSenereClick={() => {
+                                    setHasSubmitted(true);
                                     formik.validateForm().then((res) => {
                                         if (Object.keys(res).length === 0) {
                                             handleSave(

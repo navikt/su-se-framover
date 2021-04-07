@@ -1,6 +1,6 @@
 export default {
     'input.label.uføregrad': 'Uføregrad',
-    'input.label.forventetInntekt': 'Forventet inntekt per år',
+    'input.label.forventetInntekt': 'Forventet inntekt etter uførhet per år',
 
     'page.tittel': 'Uførhet',
     'radio.uførhet.legend':

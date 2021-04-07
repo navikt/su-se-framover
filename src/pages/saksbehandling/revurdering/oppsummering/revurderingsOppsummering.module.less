@@ -1,15 +1,15 @@
 @import '~/styles/variables.less';
 
+.årsakBegrunnelseContainer {
+    margin-bottom: @spacing;
+}
+
 .beregningContainer {
     display: flex;
 
     > :not(:last-child) {
         margin-right: @spacing-xl;
     }
-}
-
-.sendtTilAttesteringContainer {
-    margin-top: @spacing;
 }
 
 .brevContainer {
@@ -30,4 +30,24 @@
             margin-bottom: @spacing-s;
         }
     }
+}
+
+.ingenEndringContainer {
+    margin-bottom: @spacing;
+
+    .mindreEnn10ProsentTekstContainer {
+        margin-bottom: @spacing;
+
+        > :first-child {
+            margin-bottom: @spacing-s;
+        }
+    }
+}
+
+.opphørsadvarsel {
+    margin-bottom: @spacing;
+}
+
+.sendtTilAttesteringContainer {
+    margin-top: @spacing;
 }

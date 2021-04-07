@@ -89,10 +89,14 @@ export async function simulerBehandling(sakId: string, behandlingId: string): Pr
 export async function sendTilAttestering(arg: {
     sakId: string;
     behandlingId: string;
+    fritekstTilBrev: string;
 }): Promise<ApiClientResult<Behandling>> {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/tilAttestering`,
         method: 'POST',
+        body: {
+            fritekst: arg.fritekstTilBrev,
+        },
     });
 }
 
