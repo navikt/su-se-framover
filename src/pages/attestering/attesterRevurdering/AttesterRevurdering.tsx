@@ -14,10 +14,15 @@ import Personlinje from '~components/personlinje/Personlinje';
 import RevurderingÅrsakOgBegrunnelse from '~components/RevurderingÅrsakOgBegrunnelse/RevurderingÅrsakOgBegrunnelse';
 import * as revurderingSlice from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
-import { erRevurderingTilAttestering } from '~pages/saksbehandling/revurdering/revurderingUtils';
+import {
+    erRevurderingIverksatt,
+    erRevurderingTilAttestering,
+    erRevurderingUnderkjent,
+} from '~pages/saksbehandling/revurdering/revurderingUtils';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { useAppDispatch } from '~redux/Store';
 import { IverksattRevurdering, RevurderingsStatus, UnderkjentRevurdering } from '~types/Revurdering';
@@ -90,6 +95,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 );
 
                 if (revurderingSlice.iverksettRevurdering.fulfilled.match(res)) {
+                    dispatch(sakSlice.fetchSak({ saksnummer: props.sak.saksnummer.toString() }));
                     setSendtBeslutning(RemoteData.success(res.payload));
                 }
 
@@ -126,9 +132,16 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
         validationSchema: schema,
     });
 
-    if (RemoteData.isSuccess(sendtBeslutning)) {
+    if (!revurdering) {
         return (
-            <div className={styles.sendtTilAttesteringContainer}>
+            <div className={styles.advarselContainer}>
+                <AlertStripeFeil>{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</AlertStripeFeil>
+            </div>
+        );
+    }
+    if (erRevurderingIverksatt(revurdering) || erRevurderingUnderkjent(revurdering)) {
+        return (
+            <div className={styles.advarselContainer}>
                 <AlertStripeSuksess>
                     <p>
                         {formik.values.beslutning
@@ -143,8 +156,12 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
         );
     }
 
-    if (!revurdering || !erRevurderingTilAttestering(revurdering)) {
-        return <AlertStripeFeil>{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</AlertStripeFeil>;
+    if (!erRevurderingTilAttestering(revurdering)) {
+        return (
+            <div className={styles.advarselContainer}>
+                <AlertStripeFeil>{intl.formatMessage({ id: 'feil.ikkeTilAttestering' })}</AlertStripeFeil>
+            </div>
+        );
     }
 
     const handleShowBrevClick = async () => {
