@@ -185,14 +185,16 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                         beregning={revurdering.beregninger.revurdert}
                     />
                 </div>
-                <Knapp
-                    className={styles.brevButton}
-                    htmlType="button"
-                    spinner={RemoteData.isPending(hentPdfStatus)}
-                    onClick={handleShowBrevClick}
-                >
-                    {intl.formatMessage({ id: 'knapp.brev' })}
-                </Knapp>
+                {revurdering.sendBrev && (
+                    <Knapp
+                        className={styles.brevButton}
+                        htmlType="button"
+                        spinner={RemoteData.isPending(hentPdfStatus)}
+                        onClick={handleShowBrevClick}
+                    >
+                        {intl.formatMessage({ id: 'knapp.brev' })}
+                    </Knapp>
+                )}
                 {RemoteData.isFailure(hentPdfStatus) && (
                     <AlertStripeFeil className={styles.brevFeil}>
                         {intl.formatMessage({ id: 'feil.klarteIkkeHenteBrev' })}

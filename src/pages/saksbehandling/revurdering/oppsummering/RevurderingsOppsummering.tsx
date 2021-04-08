@@ -3,7 +3,7 @@ import { useFormik, FormikErrors } from 'formik';
 import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Textarea, Checkbox } from 'nav-frontend-skjema';
-import { Innholdstittel } from 'nav-frontend-typografi';
+import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import React, { useCallback, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -24,11 +24,12 @@ import {
     RevurderingTilAttestering,
     BeregnetIngenEndring,
     RevurderingsStatus,
+    UnderkjentRevurdering,
 } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
-import { erRevurderingBeregnetIngenEndring } from '../revurderingUtils';
+import { erRevurderingIngenEndring } from '../revurderingUtils';
 
 import messages from './revurderingOppsummering-nb';
 import styles from './revurderingsOppsummering.module.less';
@@ -84,7 +85,7 @@ const BrevInput = (props: {
 
 const RevurderingsOppsummering = (props: {
     sakId: string;
-    revurdering: SimulertRevurdering | BeregnetIngenEndring;
+    revurdering: SimulertRevurdering | BeregnetIngenEndring | UnderkjentRevurdering;
 }) => {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     const dispatch = useAppDispatch();
@@ -121,10 +122,18 @@ const RevurderingsOppsummering = (props: {
         [props.sakId, hentBrevStatus]
     );
 
+    const sendBrevInitialValue = () => {
+        const sendBrev = (props.revurdering as UnderkjentRevurdering).sendBrev;
+        if (sendBrev) {
+            return sendBrev;
+        }
+        return erRevurderingIngenEndring(props.revurdering) ? false : true;
+    };
+
     const formik = useFormik<OppsummeringFormData>({
         initialValues: {
             tekstTilVedtaksbrev: props.revurdering.fritekstTilBrev,
-            sendBrev: false,
+            sendBrev: sendBrevInitialValue(),
         },
         async onSubmit(values) {
             setSendtTilAttesteringStatus(RemoteData.pending);
@@ -134,7 +143,7 @@ const RevurderingsOppsummering = (props: {
                     sakId: props.sakId,
                     revurderingId: props.revurdering.id,
                     fritekstTilBrev: values.tekstTilVedtaksbrev ?? '',
-                    sendBrev: values.sendBrev,
+                    sendBrev: erRevurderingIngenEndring(props.revurdering) ? values.sendBrev : undefined,
                 })
             );
 
@@ -197,6 +206,11 @@ const RevurderingsOppsummering = (props: {
                 {intl.formatMessage({ id: 'oppsummering.tittel' })}
             </Innholdstittel>
             <div className={sharedStyles.mainContentContainer}>
+                {erRevurderingIngenEndring(props.revurdering) && (
+                    <Undertittel className={styles.undertittelContainer}>
+                        Mindre enn 10% endring i utbetaling
+                    </Undertittel>
+                )}
                 <RevurderingÅrsakOgBegrunnelse
                     className={styles.årsakBegrunnelseContainer}
                     revurdering={props.revurdering}
@@ -219,7 +233,7 @@ const RevurderingsOppsummering = (props: {
                         </AlertStripeAdvarsel>
                     </div>
                 )}
-                {erRevurderingBeregnetIngenEndring(props.revurdering) ? (
+                {erRevurderingIngenEndring(props.revurdering) ? (
                     <div className={styles.ingenEndringContainer}>
                         <div className={styles.mindreEnn10ProsentTekstContainer}>
                             <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p1' })}</p>

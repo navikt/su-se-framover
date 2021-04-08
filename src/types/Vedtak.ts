@@ -22,6 +22,7 @@ export interface Vedtak {
 export enum VedtakType {
     SØKNAD = 'SØKNAD',
     ENDRING = 'ENDRING',
+    INGEN_ENDRING = 'INGEN_ENDRING',
     OPPHØR = 'OPPHØR',
     AVSLAG = 'AVSLAG',
 }

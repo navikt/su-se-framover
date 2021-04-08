@@ -5,7 +5,7 @@ export default {
     'oppsummering.tekstTilVedtaksbrev.tittel': 'Tekst til vedtaksbrev',
     'oppsummering.tekstTilVedtaksbrev.placeholder': 'Skriv inn innholdstekst i tekstfeltet her.',
     'oppsummering.tilSaksoversikt': 'Til saksoversikt',
-    'oppsummering.sendBrev': 'Send vedtaks brev til bruker',
+    'oppsummering.sendBrev': 'Send vedtaksbrev til bruker',
     'oppsummering.sendtTilAttestering': 'Revurdering er sendt til attestering',
     'oppsummering.størreEllerLik10Prosent': 'Revurderingen er ikke større eller lik 10 prosent endring',
 

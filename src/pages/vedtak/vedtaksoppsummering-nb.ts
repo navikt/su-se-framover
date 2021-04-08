@@ -7,6 +7,7 @@ export default {
     'vedtaktype.søknad': 'Innvilget',
     'vedtaktype.avslått': 'Avslått',
     'vedtaktype.endring': 'Endret',
+    'vedtaktype.ingenendring': 'Ingen endring',
     'vedtaktype.opphør': 'Opphørt',
 
     'vedtak.dato': 'Vedtaksdato',

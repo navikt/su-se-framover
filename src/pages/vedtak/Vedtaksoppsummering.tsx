@@ -11,6 +11,7 @@ import { fetchBrevutkastForRevurdering } from '~api/pdfApi';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
+import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { VedtakType } from '~types/Vedtak';
 
@@ -33,6 +34,8 @@ const vedtaksresultatToTekst = (type: VedtakType, intl: IntlShape): string => {
             return intl.formatMessage({ id: 'vedtaktype.endring' });
         case VedtakType.OPPHØR:
             return intl.formatMessage({ id: 'vedtaktype.opphør' });
+        case VedtakType.INGEN_ENDRING:
+            return intl.formatMessage({ id: 'vedtaktype.ingenendring' });
     }
 };
 
@@ -44,7 +47,9 @@ const Vedtaksoppsummering = (props: Props) => {
     const vedtak = props.sak.vedtak.find((v) => v.id === urlParams.vedtakId);
     if (!vedtak) return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
 
-    const revurderingSomFørteTilVedtak = props.sak.revurderinger.find((b) => b.id === vedtak.behandlingId);
+    const revurderingSomFørteTilVedtak = props.sak.revurderinger.find(
+        (b) => b.id === vedtak.behandlingId
+    ) as IverksattRevurdering;
 
     const hentVedtaksbrev = async () => {
         setFetchVedtaksbrev(RemoteData.pending);
@@ -80,17 +85,19 @@ const Vedtaksoppsummering = (props: Props) => {
                         <Element> {intl.formatMessage({ id: 'vedtak.dato' })}</Element>
                         <p>{intl.formatDate(vedtak.opprettet)}</p>
                     </div>
-                    <div>
-                        <Element>{intl.formatMessage({ id: 'vedtak.brev' })}</Element>
-                        <Knapp
-                            spinner={RemoteData.isPending(fetchVedtaksbrev)}
-                            mini
-                            htmlType="button"
-                            onClick={hentVedtaksbrev}
-                        >
-                            {intl.formatMessage({ id: 'knapp.vis' })}
-                        </Knapp>
-                    </div>
+                    {revurderingSomFørteTilVedtak.sendBrev && (
+                        <div>
+                            <Element>{intl.formatMessage({ id: 'vedtak.brev' })}</Element>
+                            <Knapp
+                                spinner={RemoteData.isPending(fetchVedtaksbrev)}
+                                mini
+                                htmlType="button"
+                                onClick={hentVedtaksbrev}
+                            >
+                                {intl.formatMessage({ id: 'knapp.vis' })}
+                            </Knapp>
+                        </div>
+                    )}
                 </div>
                 <div className={styles.brevutkastFeil}>
                     {RemoteData.isFailure(fetchVedtaksbrev) && (

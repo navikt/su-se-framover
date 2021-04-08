@@ -69,7 +69,7 @@ export async function sendTilAttestering(
     sakId: string,
     revurderingId: string,
     fritekstTilBrev: string,
-    sendBrev: boolean
+    sendBrev?: boolean
 ): Promise<ApiClientResult<RevurderingTilAttestering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilAttestering`,
