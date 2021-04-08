@@ -68,13 +68,15 @@ export async function beregnOgSimuler(
 export async function sendTilAttestering(
     sakId: string,
     revurderingId: string,
-    fritekstTilBrev: string
+    fritekstTilBrev: string,
+    sendBrev: boolean
 ): Promise<ApiClientResult<RevurderingTilAttestering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilAttestering`,
         method: 'POST',
         body: {
             fritekstTilBrev,
+            sendBrev,
         },
     });
 }

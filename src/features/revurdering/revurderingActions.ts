@@ -60,10 +60,10 @@ export const beregnOgSimuler = createAsyncThunk<
 
 export const sendRevurderingTilAttestering = createAsyncThunk<
     RevurderingTilAttestering,
-    { sakId: string; revurderingId: string; fritekstTilBrev: string },
+    { sakId: string; revurderingId: string; fritekstTilBrev: string; sendBrev: boolean },
     { rejectValue: ApiError }
->('revurdering/sendTilAttestering', async ({ sakId, revurderingId, fritekstTilBrev }, thunkApi) => {
-    const res = await revurderingApi.sendTilAttestering(sakId, revurderingId, fritekstTilBrev);
+>('revurdering/sendTilAttestering', async ({ sakId, revurderingId, fritekstTilBrev, sendBrev }, thunkApi) => {
+    const res = await revurderingApi.sendTilAttestering(sakId, revurderingId, fritekstTilBrev, sendBrev);
     if (res.status === 'ok') {
         return res.data;
     }

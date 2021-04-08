@@ -1,10 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { useFormik } from 'formik';
+import { useFormik, FormikErrors } from 'formik';
 import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
-import { Textarea } from 'nav-frontend-skjema';
+import { Textarea, Checkbox } from 'nav-frontend-skjema';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useCallback, useState } from 'react';
+import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
@@ -33,12 +34,53 @@ import messages from './revurderingOppsummering-nb';
 import styles from './revurderingsOppsummering.module.less';
 
 interface OppsummeringFormData {
+    sendBrev: boolean;
     tekstTilVedtaksbrev?: Nullable<string>;
 }
 
 const schema = yup.object<OppsummeringFormData>({
     tekstTilVedtaksbrev: yup.string().nullable(),
+    sendBrev: yup.boolean(),
 });
+
+const BrevInput = (props: {
+    values: OppsummeringFormData;
+    hentBrevStatus: RemoteData.RemoteData<ApiError | undefined, null>;
+    errors: FormikErrors<OppsummeringFormData>;
+    hentBrev: (fritekst?: Nullable<string>) => void;
+    handleChange: (e: React.ChangeEvent<unknown>) => void;
+    intl: IntlShape;
+}) => (
+    <div className={styles.brevContainer}>
+        <div className={styles.textAreaContainer}>
+            <Textarea
+                label={props.intl.formatMessage({ id: 'oppsummering.tekstTilVedtaksbrev.tittel' })}
+                name="tekstTilVedtaksbrev"
+                placeholder={props.intl.formatMessage({
+                    id: 'oppsummering.tekstTilVedtaksbrev.placeholder',
+                })}
+                value={props.values.tekstTilVedtaksbrev ?? ''}
+                feil={props.errors.tekstTilVedtaksbrev}
+                onChange={props.handleChange}
+            />
+        </div>
+        <div className={styles.seBrevContainer}>
+            <Knapp
+                onClick={() => props.hentBrev(props.values.tekstTilVedtaksbrev)}
+                htmlType="button"
+                spinner={RemoteData.isPending(props.hentBrevStatus)}
+                mini
+            >
+                {props.intl.formatMessage({ id: 'knapp.seVedtaksbrev' })}
+            </Knapp>
+            {RemoteData.isFailure(props.hentBrevStatus) && (
+                <AlertStripeFeil>
+                    {props.hentBrevStatus?.error?.body?.message || props.intl.formatMessage({ id: 'feil.ukjentFeil' })}
+                </AlertStripeFeil>
+            )}
+        </div>
+    </div>
+);
 
 const RevurderingsOppsummering = (props: {
     sakId: string;
@@ -55,7 +97,7 @@ const RevurderingsOppsummering = (props: {
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
 
     const hentBrev = useCallback(
-        (fritekst: Nullable<string>) => {
+        (fritekst?: Nullable<string>) => {
             if (RemoteData.isPending(hentBrevStatus)) {
                 return;
             }
@@ -79,9 +121,10 @@ const RevurderingsOppsummering = (props: {
         [props.sakId, hentBrevStatus]
     );
 
-    const formik = useFormik({
+    const formik = useFormik<OppsummeringFormData>({
         initialValues: {
             tekstTilVedtaksbrev: props.revurdering.fritekstTilBrev,
+            sendBrev: false,
         },
         async onSubmit(values) {
             setSendtTilAttesteringStatus(RemoteData.pending);
@@ -91,6 +134,7 @@ const RevurderingsOppsummering = (props: {
                     sakId: props.sakId,
                     revurderingId: props.revurdering.id,
                     fritekstTilBrev: values.tekstTilVedtaksbrev ?? '',
+                    sendBrev: values.sendBrev,
                 })
             );
 
@@ -168,14 +212,6 @@ const RevurderingsOppsummering = (props: {
                         beregning={props.revurdering.beregninger.revurdert}
                     />
                 </div>
-                {erRevurderingBeregnetIngenEndring(props.revurdering) && (
-                    <div className={styles.ingenEndringContainer}>
-                        <div className={styles.mindreEnn10ProsentTekstContainer}>
-                            <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p1' })}</p>
-                            <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p2' })}</p>
-                        </div>
-                    </div>
-                )}
                 {props.revurdering.status === RevurderingsStatus.SIMULERT_OPPHØRT && (
                     <div className={styles.opphørsadvarsel}>
                         <AlertStripeAdvarsel>
@@ -183,35 +219,41 @@ const RevurderingsOppsummering = (props: {
                         </AlertStripeAdvarsel>
                     </div>
                 )}
-                <div className={styles.brevContainer}>
-                    <div className={styles.textAreaContainer}>
-                        <Textarea
-                            label={intl.formatMessage({ id: 'oppsummering.tekstTilVedtaksbrev.tittel' })}
-                            name="tekstTilVedtaksbrev"
-                            placeholder={intl.formatMessage({
-                                id: 'oppsummering.tekstTilVedtaksbrev.placeholder',
-                            })}
-                            value={formik.values.tekstTilVedtaksbrev ?? ''}
-                            feil={formik.errors.tekstTilVedtaksbrev}
+                {erRevurderingBeregnetIngenEndring(props.revurdering) ? (
+                    <div className={styles.ingenEndringContainer}>
+                        <div className={styles.mindreEnn10ProsentTekstContainer}>
+                            <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p1' })}</p>
+                            <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p2' })}</p>
+                        </div>
+                        <Checkbox
+                            label={intl.formatMessage({ id: 'oppsummering.sendBrev' })}
+                            name="sendBrev"
+                            className={styles.sendBrevCheckbox}
+                            checked={formik.values.sendBrev ?? false}
                             onChange={formik.handleChange}
                         />
-                    </div>
-                    <div className={styles.seBrevContainer}>
-                        <Knapp
-                            onClick={() => hentBrev(formik.values.tekstTilVedtaksbrev)}
-                            htmlType="button"
-                            spinner={RemoteData.isPending(hentBrevStatus)}
-                            mini
-                        >
-                            {intl.formatMessage({ id: 'knapp.seVedtaksbrev' })}
-                        </Knapp>
-                        {RemoteData.isFailure(hentBrevStatus) && (
-                            <AlertStripeFeil>
-                                {hentBrevStatus?.error?.body?.message || intl.formatMessage({ id: 'feil.ukjentFeil' })}
-                            </AlertStripeFeil>
+                        {formik.values.sendBrev && (
+                            <BrevInput
+                                values={formik.values}
+                                hentBrevStatus={hentBrevStatus}
+                                errors={formik.errors}
+                                hentBrev={hentBrev}
+                                handleChange={formik.handleChange}
+                                intl={intl}
+                            />
                         )}
                     </div>
-                </div>
+                ) : (
+                    <BrevInput
+                        values={formik.values}
+                        hentBrevStatus={hentBrevStatus}
+                        errors={formik.errors}
+                        hentBrev={hentBrev}
+                        handleChange={formik.handleChange}
+                        intl={intl}
+                    />
+                )}
+
                 {RemoteData.isFailure(sendtTilAttesteringStatus) && (
                     <AlertStripeFeil className={sharedStyles.alertstripe}>
                         {feilkodeTilFeilmelding(sendtTilAttesteringStatus.error.body?.code)}
