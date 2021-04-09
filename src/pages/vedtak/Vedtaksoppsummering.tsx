@@ -75,19 +75,17 @@ const Vedtaksoppsummering = (props: Props) => {
                         <Element> {intl.formatMessage({ id: 'behandlet.av' })}</Element>
                         <p>{vedtak.saksbehandler}</p>
                     </div>
-
                     <div>
                         <Element> {intl.formatMessage({ id: 'attestert.av' })}</Element>
                         <p>{vedtak.attestant}</p>
                     </div>
-
                     <div>
                         <Element> {intl.formatMessage({ id: 'vedtak.dato' })}</Element>
                         <p>{intl.formatDate(vedtak.opprettet)}</p>
                     </div>
-                    {revurderingSomFørteTilVedtak.sendBrev && (
-                        <div>
-                            <Element>{intl.formatMessage({ id: 'vedtak.brev' })}</Element>
+                    <div>
+                        <Element>{intl.formatMessage({ id: 'vedtak.brev' })}</Element>
+                        {revurderingSomFørteTilVedtak.sendBrev ? (
                             <Knapp
                                 spinner={RemoteData.isPending(fetchVedtaksbrev)}
                                 mini
@@ -96,8 +94,10 @@ const Vedtaksoppsummering = (props: Props) => {
                             >
                                 {intl.formatMessage({ id: 'knapp.vis' })}
                             </Knapp>
-                        </div>
-                    )}
+                        ) : (
+                            intl.formatMessage({ id: 'vedtak.ingenBrev' })
+                        )}
+                    </div>
                 </div>
                 <div className={styles.brevutkastFeil}>
                     {RemoteData.isFailure(fetchVedtaksbrev) && (

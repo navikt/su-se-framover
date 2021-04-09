@@ -12,6 +12,7 @@ export default {
 
     'vedtak.dato': 'Vedtaksdato',
     'vedtak.brev': 'Vedtaksbrev',
+    'vedtak.ingenBrev': 'Ingen brev',
 
     'knapp.tilbake': 'Tilbake',
     'knapp.vis': 'Vis brev',

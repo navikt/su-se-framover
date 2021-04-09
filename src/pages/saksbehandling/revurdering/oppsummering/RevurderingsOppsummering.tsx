@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik, FormikErrors } from 'formik';
-import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
+import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel, AlertStripeInfo } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Textarea, Checkbox } from 'nav-frontend-skjema';
 import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
@@ -207,9 +207,12 @@ const RevurderingsOppsummering = (props: {
             </Innholdstittel>
             <div className={sharedStyles.mainContentContainer}>
                 {erRevurderingIngenEndring(props.revurdering) && (
-                    <Undertittel className={styles.undertittelContainer}>
-                        Mindre enn 10% endring i utbetaling
-                    </Undertittel>
+                    <AlertStripeInfo className={styles.ingenEndringInfoboks}>
+                        <Undertittel className={styles.undertittelContainer}>
+                            Mindre enn 10% endring i utbetaling
+                        </Undertittel>
+                        <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring' })}</p>
+                    </AlertStripeInfo>
                 )}
                 <RevurderingÅrsakOgBegrunnelse
                     className={styles.årsakBegrunnelseContainer}
@@ -235,10 +238,6 @@ const RevurderingsOppsummering = (props: {
                 )}
                 {erRevurderingIngenEndring(props.revurdering) ? (
                     <div className={styles.ingenEndringContainer}>
-                        <div className={styles.mindreEnn10ProsentTekstContainer}>
-                            <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p1' })}</p>
-                            <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p2' })}</p>
-                        </div>
                         <Checkbox
                             label={intl.formatMessage({ id: 'oppsummering.sendBrev' })}
                             name="sendBrev"
