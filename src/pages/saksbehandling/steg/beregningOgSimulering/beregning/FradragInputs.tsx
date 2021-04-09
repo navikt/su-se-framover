@@ -158,13 +158,13 @@ const TilOgMedRadios = (props: {
     onFradragChange: (date: Date) => void;
     intl: IntlShape;
 }) => {
-    const forrigeKalendermåned = DateFns.subMonths(DateFns.endOfMonth(new Date()), 1);
+    const denneKalendermåneden = DateFns.endOfMonth(new Date());
     const beregningSluttDato = DateFns.endOfMonth(props.beregningSluttDato);
 
-    const datoer = DateFns.isBefore(props.beregningStartDato, forrigeKalendermåned)
+    const datoer = DateFns.isBefore(props.beregningStartDato, denneKalendermåneden)
         ? DateFns.eachMonthOfInterval({
               start: props.beregningStartDato,
-              end: forrigeKalendermåned,
+              end: denneKalendermåneden,
           }).map((date) => DateFns.endOfMonth(date))
         : [];
 
