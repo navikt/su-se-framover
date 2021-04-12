@@ -39,21 +39,21 @@ export interface SimulertRevurdering
 export interface RevurderingTilAttestering
     extends Revurdering<RevurderingsStatus.TIL_ATTESTERING_INNVILGET | RevurderingsStatus.TIL_ATTESTERING_OPPHØRT> {
     beregninger: Beregninger;
-    sendBrev: boolean;
+    skalFøreTilBrevutsending: boolean;
 }
 
 export interface IverksattRevurdering
     extends Revurdering<RevurderingsStatus.IVERKSATT_INNVILGET | RevurderingsStatus.IVERKSATT_OPPHØRT> {
     beregninger: Beregninger;
     attestering: Attestering;
-    sendBrev: boolean;
+    skalFøreTilBrevutsending: boolean;
 }
 
 export interface UnderkjentRevurdering
     extends Revurdering<RevurderingsStatus.UNDERKJENT_INNVILGET | RevurderingsStatus.UNDERKJENT_OPPHØRT> {
     beregninger: Beregninger;
     attestering: Attestering;
-    sendBrev: boolean;
+    skalFøreTilBrevutsending: boolean;
 }
 
 export enum RevurderingsStatus {

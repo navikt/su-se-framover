@@ -85,7 +85,7 @@ const Vedtaksoppsummering = (props: Props) => {
                     </div>
                     <div>
                         <Element>{intl.formatMessage({ id: 'vedtak.brev' })}</Element>
-                        {revurderingSomFørteTilVedtak.sendBrev ? (
+                        {revurderingSomFørteTilVedtak.skalFøreTilBrevutsending ? (
                             <Knapp
                                 spinner={RemoteData.isPending(fetchVedtaksbrev)}
                                 mini

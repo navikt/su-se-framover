@@ -185,7 +185,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                         beregning={revurdering.beregninger.revurdert}
                     />
                 </div>
-                {revurdering.sendBrev && (
+                {revurdering.skalFøreTilBrevutsending && (
                     <Knapp
                         className={styles.brevButton}
                         htmlType="button"

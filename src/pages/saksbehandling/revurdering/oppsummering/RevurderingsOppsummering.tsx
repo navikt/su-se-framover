@@ -35,13 +35,13 @@ import messages from './revurderingOppsummering-nb';
 import styles from './revurderingsOppsummering.module.less';
 
 interface OppsummeringFormData {
-    sendBrev: boolean;
+    skalFøreTilBrevutsending: boolean;
     tekstTilVedtaksbrev?: Nullable<string>;
 }
 
 const schema = yup.object<OppsummeringFormData>({
     tekstTilVedtaksbrev: yup.string().nullable(),
-    sendBrev: yup.boolean(),
+    skalFøreTilBrevutsending: yup.boolean(),
 });
 
 const BrevInput = (props: {
@@ -122,10 +122,10 @@ const RevurderingsOppsummering = (props: {
         [props.sakId, hentBrevStatus]
     );
 
-    const sendBrevInitialValue = () => {
-        const sendBrev = (props.revurdering as UnderkjentRevurdering).sendBrev;
-        if (sendBrev) {
-            return sendBrev;
+    const skalFøreTilBrevutsendingInitialValue = () => {
+        const skalFøreTilBrevutsending = (props.revurdering as UnderkjentRevurdering).skalFøreTilBrevutsending;
+        if (skalFøreTilBrevutsending) {
+            return skalFøreTilBrevutsending;
         }
         return erRevurderingIngenEndring(props.revurdering) ? false : true;
     };
@@ -133,7 +133,7 @@ const RevurderingsOppsummering = (props: {
     const formik = useFormik<OppsummeringFormData>({
         initialValues: {
             tekstTilVedtaksbrev: props.revurdering.fritekstTilBrev,
-            sendBrev: sendBrevInitialValue(),
+            skalFøreTilBrevutsending: skalFøreTilBrevutsendingInitialValue(),
         },
         async onSubmit(values) {
             setSendtTilAttesteringStatus(RemoteData.pending);
@@ -143,7 +143,7 @@ const RevurderingsOppsummering = (props: {
                     sakId: props.sakId,
                     revurderingId: props.revurdering.id,
                     fritekstTilBrev: values.tekstTilVedtaksbrev ?? '',
-                    sendBrev: erRevurderingIngenEndring(props.revurdering) ? values.sendBrev : undefined,
+                    skalFøreTilBrevutsending: erRevurderingIngenEndring(props.revurdering) ? values.skalFøreTilBrevutsending : undefined,
                 })
             );
 
@@ -239,13 +239,13 @@ const RevurderingsOppsummering = (props: {
                 {erRevurderingIngenEndring(props.revurdering) ? (
                     <div className={styles.ingenEndringContainer}>
                         <Checkbox
-                            label={intl.formatMessage({ id: 'oppsummering.sendBrev' })}
-                            name="sendBrev"
-                            className={styles.sendBrevCheckbox}
-                            checked={formik.values.sendBrev ?? false}
+                            label={intl.formatMessage({ id: 'oppsummering.skalFøreTilBrevutsending' })}
+                            name="skalFøreTilBrevutsending"
+                            className={styles.skalFøreTilBrevutsendingCheckbox}
+                            checked={formik.values.skalFøreTilBrevutsending ?? false}
                             onChange={formik.handleChange}
                         />
-                        {formik.values.sendBrev && (
+                        {formik.values.skalFøreTilBrevutsending && (
                             <BrevInput
                                 values={formik.values}
                                 hentBrevStatus={hentBrevStatus}
