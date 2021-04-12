@@ -17,7 +17,7 @@ import {
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
-import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
+import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
@@ -74,6 +74,11 @@ export const startBehandling = createAsyncThunk<
     }
     return thunkApi.rejectWithValue(res.error);
 });
+
+export const lagreVirkningstidspunkt = createApiCallAsyncThunk<
+    Behandling,
+    { sakId: string; behandlingId: string; fraOgMed: string; tilOgMed: string; begrunnelse: string }
+>('behandling/lagreVirkningstidspunk', behandlingApi.lagreVirkningstidspunkt);
 
 export const fetchBehandling = createAsyncThunk<
     Behandling,
@@ -286,6 +291,22 @@ export default createSlice({
             rejected: (state) => {
                 state.sak = { ...state.sak };
             },
+        });
+
+        handleAsyncThunk(builder, lagreVirkningstidspunkt, {
+            pending: (state) => state,
+            fulfilled: (state, action) => {
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) =>
+                            b.id === action.meta.arg.behandlingId ? action.payload : b
+                        ),
+                    }))
+                );
+            },
+            rejected: (state) => state,
         });
 
         handleAsyncThunk(builder, stansUtbetalinger, {

@@ -41,6 +41,23 @@ export async function startBeregning(
     });
 }
 
+export async function lagreVirkningstidspunkt(arg: {
+    sakId: string;
+    behandlingId: string;
+    fraOgMed: string;
+    tilOgMed: string;
+    begrunnelse: string;
+}) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/behandlingsperiode`,
+        method: 'POST',
+        body: {
+            periode: { fraOgMed: arg.fraOgMed, tilOgMed: arg.tilOgMed },
+            begrunnelse: arg.begrunnelse,
+        },
+    });
+}
+
 export async function lagreVilkårsvurdering(arg: {
     sakId: string;
     behandlingId: string;
