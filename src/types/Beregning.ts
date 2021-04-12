@@ -1,6 +1,8 @@
 import * as Array from 'fp-ts/lib/Array';
 import { Eq, eqNumber, eqString, getStructEq } from 'fp-ts/lib/Eq';
 
+import { Nullable } from '~lib/types';
+
 import { Fradrag, eqFradragBortsettFraPeriode } from './Fradrag';
 import { Sats } from './Sats';
 
@@ -12,6 +14,7 @@ export interface Beregning {
     tilOgMed: string;
     månedsberegninger: Månedsberegning[];
     fradrag: Fradrag[];
+    begrunnelse: Nullable<string>;
 }
 
 export interface Månedsberegning {
