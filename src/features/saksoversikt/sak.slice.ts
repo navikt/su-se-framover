@@ -261,6 +261,9 @@ export default createSlice({
         resetSak(state) {
             state.sak = RemoteData.initial;
         },
+        resetBeregningstatus(state) {
+            state.beregningStatus = RemoteData.initial;
+        },
     },
     extraReducers: (builder) => {
         handleAsyncThunk(builder, fetchSak, {

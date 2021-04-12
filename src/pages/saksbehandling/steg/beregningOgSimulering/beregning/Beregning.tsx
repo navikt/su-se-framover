@@ -7,7 +7,7 @@ import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Undertittel } from 'nav-frontend-typografi';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { kanSimuleres } from '~features/behandling/behandlingUtils';
@@ -87,6 +87,10 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             tom: DateUtils.parseIsoDateOnly(tom),
         };
     }, [props.behandling.behandlingsperiode]);
+
+    useEffect(() => {
+        dispatch(sakSlice.default.actions.resetBeregningstatus());
+    }, []);
 
     if (!erIGyldigStatusForÅKunneBeregne(props.behandling) || stønadsperiode === null) {
         return <div>{intl.formatMessage({ id: 'beregning.behandlingErIkkeFerdig' })}</div>;
