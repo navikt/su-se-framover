@@ -143,7 +143,9 @@ const RevurderingsOppsummering = (props: {
                     sakId: props.sakId,
                     revurderingId: props.revurdering.id,
                     fritekstTilBrev: values.tekstTilVedtaksbrev ?? '',
-                    skalFøreTilBrevutsending: erRevurderingIngenEndring(props.revurdering) ? values.skalFøreTilBrevutsending : undefined,
+                    skalFøreTilBrevutsending: erRevurderingIngenEndring(props.revurdering)
+                        ? values.skalFøreTilBrevutsending
+                        : undefined,
                 })
             );
 
