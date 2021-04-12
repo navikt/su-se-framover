@@ -27,8 +27,6 @@ export async function startBeregning(
     sakId: string,
     behandlingId: string,
     arg: {
-        fom: string;
-        tom: string;
         fradrag: Fradrag[];
         begrunnelse: Nullable<string>;
     }
@@ -37,10 +35,6 @@ export async function startBeregning(
         url: `/saker/${sakId}/behandlinger/${behandlingId}/beregn`,
         method: 'POST',
         body: {
-            stønadsperiode: {
-                fraOgMed: arg.fom,
-                tilOgMed: arg.tom,
-            },
             fradrag: arg.fradrag,
             begrunnelse: arg.begrunnelse,
         },

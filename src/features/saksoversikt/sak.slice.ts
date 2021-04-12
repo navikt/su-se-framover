@@ -124,18 +124,10 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
 
 export const startBeregning = createAsyncThunk<
     Behandling,
-    {
-        sakId: string;
-        behandlingId: string;
-        sats: Sats;
-        fom: string;
-        tom: string;
-        fradrag: Fradrag[];
-        begrunnelse: Nullable<string>;
-    },
+    { sakId: string; behandlingId: string; sats: Sats; fradrag: Fradrag[]; begrunnelse: Nullable<string> },
     { rejectValue: ApiError }
->('beregning/start', async ({ sakId, behandlingId, fom, tom, fradrag, begrunnelse }, thunkApi) => {
-    const res = await behandlingApi.startBeregning(sakId, behandlingId, { fom, tom, fradrag, begrunnelse });
+>('beregning/start', async ({ sakId, behandlingId, fradrag, begrunnelse }, thunkApi) => {
+    const res = await behandlingApi.startBeregning(sakId, behandlingId, { fradrag, begrunnelse });
     if (res.status === 'ok') {
         return res.data;
     }
