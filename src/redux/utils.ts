@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { ActionReducerMapBuilder, AsyncThunk, CaseReducer, PayloadAction } from '@reduxjs/toolkit';
+import { ActionReducerMapBuilder, AsyncThunk, CaseReducer, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
-import { ApiError } from '~api/apiClient';
+import { ApiClientResult, ApiError } from '~api/apiClient';
 
 export const handleAsyncThunk = <State, A, B, C>(
     builder: ActionReducerMapBuilder<State>,
@@ -25,3 +25,16 @@ export const simpleRejectedActionToRemoteData = <ActionType extends string, M, E
             statusCode: -1,
         }
     );
+
+export function createApiCallAsyncThunk<TReturn, TArgs>(
+    type: string,
+    f: (args: TArgs) => Promise<ApiClientResult<TReturn>>
+) {
+    return createAsyncThunk<TReturn, TArgs, { rejectValue: ApiError }>(type, async (args, thunkApi) => {
+        const res = await f(args);
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
+    });
+}
