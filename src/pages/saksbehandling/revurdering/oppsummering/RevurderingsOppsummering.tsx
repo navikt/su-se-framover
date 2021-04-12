@@ -1,10 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { useFormik } from 'formik';
-import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
+import { useFormik, FormikErrors } from 'formik';
+import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel, AlertStripeInfo } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
-import { Textarea } from 'nav-frontend-skjema';
-import { Innholdstittel } from 'nav-frontend-typografi';
+import { Textarea, Checkbox } from 'nav-frontend-skjema';
+import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
 import React, { useCallback, useState } from 'react';
+import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
@@ -23,26 +24,68 @@ import {
     RevurderingTilAttestering,
     BeregnetIngenEndring,
     RevurderingsStatus,
+    UnderkjentRevurdering,
 } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
-import { erRevurderingBeregnetIngenEndring } from '../revurderingUtils';
+import { erRevurderingIngenEndring } from '../revurderingUtils';
 
 import messages from './revurderingOppsummering-nb';
 import styles from './revurderingsOppsummering.module.less';
 
 interface OppsummeringFormData {
+    skalFøreTilBrevutsending: boolean;
     tekstTilVedtaksbrev?: Nullable<string>;
 }
 
 const schema = yup.object<OppsummeringFormData>({
     tekstTilVedtaksbrev: yup.string().nullable(),
+    skalFøreTilBrevutsending: yup.boolean(),
 });
+
+const BrevInput = (props: {
+    values: OppsummeringFormData;
+    hentBrevStatus: RemoteData.RemoteData<ApiError | undefined, null>;
+    errors: FormikErrors<OppsummeringFormData>;
+    hentBrev: (fritekst?: Nullable<string>) => void;
+    handleChange: (e: React.ChangeEvent<unknown>) => void;
+    intl: IntlShape;
+}) => (
+    <div className={styles.brevContainer}>
+        <div className={styles.textAreaContainer}>
+            <Textarea
+                label={props.intl.formatMessage({ id: 'oppsummering.tekstTilVedtaksbrev.tittel' })}
+                name="tekstTilVedtaksbrev"
+                placeholder={props.intl.formatMessage({
+                    id: 'oppsummering.tekstTilVedtaksbrev.placeholder',
+                })}
+                value={props.values.tekstTilVedtaksbrev ?? ''}
+                feil={props.errors.tekstTilVedtaksbrev}
+                onChange={props.handleChange}
+            />
+        </div>
+        <div className={styles.seBrevContainer}>
+            <Knapp
+                onClick={() => props.hentBrev(props.values.tekstTilVedtaksbrev)}
+                htmlType="button"
+                spinner={RemoteData.isPending(props.hentBrevStatus)}
+                mini
+            >
+                {props.intl.formatMessage({ id: 'knapp.seVedtaksbrev' })}
+            </Knapp>
+            {RemoteData.isFailure(props.hentBrevStatus) && (
+                <AlertStripeFeil>
+                    {props.hentBrevStatus?.error?.body?.message || props.intl.formatMessage({ id: 'feil.ukjentFeil' })}
+                </AlertStripeFeil>
+            )}
+        </div>
+    </div>
+);
 
 const RevurderingsOppsummering = (props: {
     sakId: string;
-    revurdering: SimulertRevurdering | BeregnetIngenEndring;
+    revurdering: SimulertRevurdering | BeregnetIngenEndring | UnderkjentRevurdering;
 }) => {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     const dispatch = useAppDispatch();
@@ -55,7 +98,7 @@ const RevurderingsOppsummering = (props: {
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
 
     const hentBrev = useCallback(
-        (fritekst: Nullable<string>) => {
+        (fritekst?: Nullable<string>) => {
             if (RemoteData.isPending(hentBrevStatus)) {
                 return;
             }
@@ -79,9 +122,18 @@ const RevurderingsOppsummering = (props: {
         [props.sakId, hentBrevStatus]
     );
 
-    const formik = useFormik({
+    const skalFøreTilBrevutsendingInitialValue = () => {
+        const skalFøreTilBrevutsending = (props.revurdering as UnderkjentRevurdering).skalFøreTilBrevutsending;
+        if (skalFøreTilBrevutsending) {
+            return skalFøreTilBrevutsending;
+        }
+        return erRevurderingIngenEndring(props.revurdering) ? false : true;
+    };
+
+    const formik = useFormik<OppsummeringFormData>({
         initialValues: {
             tekstTilVedtaksbrev: props.revurdering.fritekstTilBrev,
+            skalFøreTilBrevutsending: skalFøreTilBrevutsendingInitialValue(),
         },
         async onSubmit(values) {
             setSendtTilAttesteringStatus(RemoteData.pending);
@@ -91,6 +143,9 @@ const RevurderingsOppsummering = (props: {
                     sakId: props.sakId,
                     revurderingId: props.revurdering.id,
                     fritekstTilBrev: values.tekstTilVedtaksbrev ?? '',
+                    skalFøreTilBrevutsending: erRevurderingIngenEndring(props.revurdering)
+                        ? values.skalFøreTilBrevutsending
+                        : undefined,
                 })
             );
 
@@ -153,6 +208,14 @@ const RevurderingsOppsummering = (props: {
                 {intl.formatMessage({ id: 'oppsummering.tittel' })}
             </Innholdstittel>
             <div className={sharedStyles.mainContentContainer}>
+                {erRevurderingIngenEndring(props.revurdering) && (
+                    <AlertStripeInfo className={styles.ingenEndringInfoboks}>
+                        <Undertittel className={styles.undertittelContainer}>
+                            Mindre enn 10% endring i utbetaling
+                        </Undertittel>
+                        <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring' })}</p>
+                    </AlertStripeInfo>
+                )}
                 <RevurderingÅrsakOgBegrunnelse
                     className={styles.årsakBegrunnelseContainer}
                     revurdering={props.revurdering}
@@ -168,14 +231,6 @@ const RevurderingsOppsummering = (props: {
                         beregning={props.revurdering.beregninger.revurdert}
                     />
                 </div>
-                {erRevurderingBeregnetIngenEndring(props.revurdering) && (
-                    <div className={styles.ingenEndringContainer}>
-                        <div className={styles.mindreEnn10ProsentTekstContainer}>
-                            <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p1' })}</p>
-                            <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring.p2' })}</p>
-                        </div>
-                    </div>
-                )}
                 {props.revurdering.status === RevurderingsStatus.SIMULERT_OPPHØRT && (
                     <div className={styles.opphørsadvarsel}>
                         <AlertStripeAdvarsel>
@@ -183,35 +238,37 @@ const RevurderingsOppsummering = (props: {
                         </AlertStripeAdvarsel>
                     </div>
                 )}
-                <div className={styles.brevContainer}>
-                    <div className={styles.textAreaContainer}>
-                        <Textarea
-                            label={intl.formatMessage({ id: 'oppsummering.tekstTilVedtaksbrev.tittel' })}
-                            name="tekstTilVedtaksbrev"
-                            placeholder={intl.formatMessage({
-                                id: 'oppsummering.tekstTilVedtaksbrev.placeholder',
-                            })}
-                            value={formik.values.tekstTilVedtaksbrev ?? ''}
-                            feil={formik.errors.tekstTilVedtaksbrev}
+                {erRevurderingIngenEndring(props.revurdering) ? (
+                    <div className={styles.ingenEndringContainer}>
+                        <Checkbox
+                            label={intl.formatMessage({ id: 'oppsummering.skalFøreTilBrevutsending' })}
+                            name="skalFøreTilBrevutsending"
+                            className={styles.skalFøreTilBrevutsendingCheckbox}
+                            checked={formik.values.skalFøreTilBrevutsending ?? false}
                             onChange={formik.handleChange}
                         />
-                    </div>
-                    <div className={styles.seBrevContainer}>
-                        <Knapp
-                            onClick={() => hentBrev(formik.values.tekstTilVedtaksbrev)}
-                            htmlType="button"
-                            spinner={RemoteData.isPending(hentBrevStatus)}
-                            mini
-                        >
-                            {intl.formatMessage({ id: 'knapp.seVedtaksbrev' })}
-                        </Knapp>
-                        {RemoteData.isFailure(hentBrevStatus) && (
-                            <AlertStripeFeil>
-                                {hentBrevStatus?.error?.body?.message || intl.formatMessage({ id: 'feil.ukjentFeil' })}
-                            </AlertStripeFeil>
+                        {formik.values.skalFøreTilBrevutsending && (
+                            <BrevInput
+                                values={formik.values}
+                                hentBrevStatus={hentBrevStatus}
+                                errors={formik.errors}
+                                hentBrev={hentBrev}
+                                handleChange={formik.handleChange}
+                                intl={intl}
+                            />
                         )}
                     </div>
-                </div>
+                ) : (
+                    <BrevInput
+                        values={formik.values}
+                        hentBrevStatus={hentBrevStatus}
+                        errors={formik.errors}
+                        hentBrev={hentBrev}
+                        handleChange={formik.handleChange}
+                        intl={intl}
+                    />
+                )}
+
                 {RemoteData.isFailure(sendtTilAttesteringStatus) && (
                     <AlertStripeFeil className={sharedStyles.alertstripe}>
                         {feilkodeTilFeilmelding(sendtTilAttesteringStatus.error.body?.code)}
