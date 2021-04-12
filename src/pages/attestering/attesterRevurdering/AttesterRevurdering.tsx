@@ -11,7 +11,8 @@ import { ApiError } from '~api/apiClient';
 import * as PdfApi from '~api/pdfApi';
 import { Person } from '~api/personApi';
 import Personlinje from '~components/personlinje/Personlinje';
-import RevurderingÅrsakOgBegrunnelse from '~components/RevurderingÅrsakOgBegrunnelse/RevurderingÅrsakOgBegrunnelse';
+import RevurderingIngenEndringAlert from '~components/revurdering/RevurderingIngenEndringAlert';
+import RevurderingÅrsakOgBegrunnelse from '~components/revurdering/RevurderingÅrsakOgBegrunnelse';
 import * as revurderingSlice from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -22,6 +23,7 @@ import {
     erRevurderingIverksatt,
     erRevurderingTilAttestering,
     erRevurderingUnderkjent,
+    erRevurderingIngenEndring,
 } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { useAppDispatch } from '~redux/Store';
@@ -190,6 +192,9 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                         {intl.formatMessage({ id: 'page.tittel' })}
                     </Innholdstittel>
                 </div>
+                {erRevurderingIngenEndring(revurdering) && (
+                    <RevurderingIngenEndringAlert className={styles.ingenEndringInfoboks} />
+                )}
                 <RevurderingÅrsakOgBegrunnelse className={styles.årsakBegrunnelseContainer} revurdering={revurdering} />
                 <div className={styles.beregningContainer}>
                     <VisBeregning

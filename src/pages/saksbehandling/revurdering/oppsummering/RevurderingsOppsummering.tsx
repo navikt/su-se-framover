@@ -1,15 +1,16 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik, FormikErrors } from 'formik';
-import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel, AlertStripeInfo } from 'nav-frontend-alertstriper';
+import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Textarea, Checkbox } from 'nav-frontend-skjema';
-import { Innholdstittel, Undertittel } from 'nav-frontend-typografi';
+import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useCallback, useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
-import RevurderingÅrsakOgBegrunnelse from '~components/RevurderingÅrsakOgBegrunnelse/RevurderingÅrsakOgBegrunnelse';
+import RevurderingIngenEndringAlert from '~components/revurdering/RevurderingIngenEndringAlert';
+import RevurderingÅrsakOgBegrunnelse from '~components/revurdering/RevurderingÅrsakOgBegrunnelse';
 import * as revurderingSlice from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
@@ -209,12 +210,7 @@ const RevurderingsOppsummering = (props: {
             </Innholdstittel>
             <div className={sharedStyles.mainContentContainer}>
                 {erRevurderingIngenEndring(props.revurdering) && (
-                    <AlertStripeInfo className={styles.ingenEndringInfoboks}>
-                        <Undertittel className={styles.undertittelContainer}>
-                            Mindre enn 10% endring i utbetaling
-                        </Undertittel>
-                        <p>{intl.formatMessage({ id: 'oppsummering.ingenEndring' })}</p>
-                    </AlertStripeInfo>
+                    <RevurderingIngenEndringAlert className={styles.ingenEndringInfoboks} />
                 )}
                 <RevurderingÅrsakOgBegrunnelse
                     className={styles.årsakBegrunnelseContainer}

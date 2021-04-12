@@ -15,7 +15,7 @@ import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { VedtakType } from '~types/Vedtak';
 
-import RevurderingÅrsakOgBegrunnelse from '../../components/RevurderingÅrsakOgBegrunnelse/RevurderingÅrsakOgBegrunnelse';
+import RevurderingÅrsakOgBegrunnelse from '../../components/revurdering/RevurderingÅrsakOgBegrunnelse';
 
 import messages from './vedtaksoppsummering-nb';
 import styles from './vedtaksoppsummering.module.less';
