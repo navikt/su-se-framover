@@ -220,7 +220,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         }
     };
 
-    console.log(formik.values);
     return (
         <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
