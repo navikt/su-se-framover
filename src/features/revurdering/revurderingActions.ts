@@ -58,6 +58,18 @@ export const beregnOgSimuler = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const forhåndsvarsleRevurdering = createAsyncThunk<
+    { objectUrl: string },
+    { sakId: string; revurderingId: string; fritekstTilBrev: string },
+    { rejectValue: ApiError }
+>('revurdering/forhandsvarsle', async ({ sakId, revurderingId, fritekstTilBrev }, thunkApi) => {
+    const res = await revurderingApi.forhåndsvarsle(sakId, revurderingId, fritekstTilBrev);
+    if (res.status === 'ok') {
+        return { objectUrl: URL.createObjectURL(res.data) };
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const sendRevurderingTilAttestering = createAsyncThunk<
     RevurderingTilAttestering,
     { sakId: string; revurderingId: string; fritekstTilBrev: string; skalFøreTilBrevutsending?: boolean },

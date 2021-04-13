@@ -65,6 +65,20 @@ export async function beregnOgSimuler(
     });
 }
 
+export async function forhåndsvarsle(
+    sakId: string,
+    revurderingId: string,
+    fritekstTilBrev: string
+): Promise<ApiClientResult<RevurderingTilAttestering>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/forhandsvarsle`,
+        method: 'POST',
+        body: {
+            fritekstTilBrev,
+        },
+    });
+}
+
 export async function sendTilAttestering(
     sakId: string,
     revurderingId: string,
