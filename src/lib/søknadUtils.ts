@@ -23,7 +23,7 @@ export function getIverksatteInnvilgedeSøknader(sak: Sak) {
 
             return {
                 iverksattDato: vedtakForBehandling?.opprettet,
-                søknadensBehandling: behandling?.id,
+                søknadensBehandlingsId: behandling?.id,
                 søknad: s,
             };
         });

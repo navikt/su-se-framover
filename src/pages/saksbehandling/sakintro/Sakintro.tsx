@@ -373,7 +373,7 @@ const RevurderingStartetKnapper = (props: {
 const IverksattInnvilgedeSøknader = (props: {
     iverksatteInnvilgedeSøknader: Array<{
         iverksattDato: string | undefined;
-        søknadensBehandling: string | undefined;
+        søknadensBehandlingsId: string | undefined;
         søknad: Søknad;
     }>;
     sakId: string;
@@ -388,7 +388,7 @@ const IverksattInnvilgedeSøknader = (props: {
             </Ingress>
             <ol>
                 {props.iverksatteInnvilgedeSøknader.map((s) => {
-                    if (!s.søknadensBehandling) return <></>;
+                    if (!s.søknadensBehandlingsId) return <></>;
 
                     return (
                         <div key={s.søknad.id}>
@@ -418,7 +418,7 @@ const IverksattInnvilgedeSøknader = (props: {
                                             className="knapp"
                                             to={Routes.saksbehandlingOppsummering.createURL({
                                                 sakId: props.sakId,
-                                                behandlingId: s.søknadensBehandling,
+                                                behandlingId: s.søknadensBehandlingsId,
                                             })}
                                         >
                                             {props.intl.formatMessage({ id: 'display.behandling.seOppsummering' })}
