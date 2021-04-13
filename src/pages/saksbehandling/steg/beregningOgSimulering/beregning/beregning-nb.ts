@@ -3,6 +3,8 @@ export default {
     'alert.feil.beregningFeilet': 'Beregning feilet',
     'alert.feil.simuleringFeilet': 'Simulering feilet',
 
+    'beregning.behandlingErIkkeFerdig': 'Behandlingen er ikke ferdig.',
+
     'datovelger.fom.legend': 'Fra og med',
     'datovelger.tom.legend': 'Til og med',
 
@@ -26,6 +28,7 @@ export default {
     'display.visBeregning.kurs': 'Kurs',
     'display.visBeregning.sats.høy': 'Høy sats',
     'display.visBeregning.sats.ordinær': 'Ordinær sats',
+    'display.visBeregning.begrunnelse': 'Begrunnelse',
 
     'feilmelding.ukjentFeil': 'Ukjent feil',
     'feiloppsummering.title': 'For å gå videre må du rette opp følgende:',

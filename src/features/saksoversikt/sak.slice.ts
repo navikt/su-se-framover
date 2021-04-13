@@ -16,6 +16,7 @@ import {
     underkjennRevurdering,
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
+import { Nullable } from '~lib/types';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
@@ -123,10 +124,18 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
 
 export const startBeregning = createAsyncThunk<
     Behandling,
-    { sakId: string; behandlingId: string; sats: Sats; fom: string; tom: string; fradrag: Fradrag[] },
+    {
+        sakId: string;
+        behandlingId: string;
+        sats: Sats;
+        fom: string;
+        tom: string;
+        fradrag: Fradrag[];
+        begrunnelse: Nullable<string>;
+    },
     { rejectValue: ApiError }
->('beregning/start', async ({ sakId, behandlingId, fom, tom, fradrag }, thunkApi) => {
-    const res = await behandlingApi.startBeregning(sakId, behandlingId, { fom, tom, fradrag });
+>('beregning/start', async ({ sakId, behandlingId, fom, tom, fradrag, begrunnelse }, thunkApi) => {
+    const res = await behandlingApi.startBeregning(sakId, behandlingId, { fom, tom, fradrag, begrunnelse });
     if (res.status === 'ok') {
         return res.data;
     }

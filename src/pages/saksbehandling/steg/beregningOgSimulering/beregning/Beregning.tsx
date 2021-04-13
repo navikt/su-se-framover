@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
-import { Feiloppsummering } from 'nav-frontend-skjema';
+import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Undertittel, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
@@ -31,6 +31,7 @@ import { Fradragstype, FradragTilhører } from '~types/Fradrag';
 
 import BeregningFaktablokk from '../../faktablokk/faktablokker/BeregningFaktablokk';
 import sharedI18n from '../../sharedI18n-nb';
+import SharedStyles from '../../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../../types';
 import { Vurdering, Vurderingknapper } from '../../Vurdering';
 
@@ -43,6 +44,7 @@ interface FormData {
     fom: Nullable<Date>;
     tom: Nullable<Date>;
     fradrag: FradragFormData[];
+    begrunnelse: Nullable<string>;
 }
 
 function getInitialValues(beregning: Nullable<Beregning>): FormData {
@@ -68,6 +70,7 @@ function getInitialValues(beregning: Nullable<Beregning>): FormData {
             type: f.type,
             tilhørerEPS: f.tilhører === FradragTilhører.EPS,
         })),
+        begrunnelse: beregning?.begrunnelse ?? '',
     };
 }
 
@@ -79,7 +82,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     const { beregningStatus, simuleringStatus } = useAppSelector((state) => state.sak);
 
     if (!erIGyldigStatusForÅKunneBeregne(props.behandling)) {
-        return <div>Behandlingen er ikke ferdig.</div>;
+        return <div>{intl.formatMessage({ id: 'beregning.behandlingErIkkeFerdig' })}</div>;
     }
 
     const startBeregning = async (values: FormData) => {
@@ -121,6 +124,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                     tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
                     /* eslint-enable @typescript-eslint/no-non-null-assertion */
                 })),
+                begrunnelse: values.begrunnelse,
             })
         );
 
@@ -177,6 +181,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                     return fom <= tom;
                 }),
             fradrag: yup.array(fradragSchema.required()).defined(),
+            begrunnelse: yup.string(),
         }),
         validateOnChange: false,
     });
@@ -261,7 +266,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 {formik.errors.tom && <Feilmelding>{formik.errors.tom}</Feilmelding>}
                             </div>
                         </div>
-
                         <Undertittel>Fradrag</Undertittel>
                         <div className={styles.container}>
                             <FradragInputs
@@ -344,6 +348,15 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     })}
                                 </AlertStripe>
                             )}
+                        </div>
+                        <div className={SharedStyles.textareaContainer}>
+                            <Textarea
+                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                                name="begrunnelse"
+                                onChange={formik.handleChange}
+                                value={formik.values.begrunnelse ?? ''}
+                                feil={formik.errors.begrunnelse}
+                            />
                         </div>
 
                         {RemoteData.isFailure(beregningStatus) && (

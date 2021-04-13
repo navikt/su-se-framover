@@ -1,3 +1,4 @@
+import { Nullable } from '~lib/types';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
@@ -29,6 +30,7 @@ export async function startBeregning(
         fom: string;
         tom: string;
         fradrag: Fradrag[];
+        begrunnelse: Nullable<string>;
     }
 ): Promise<ApiClientResult<Behandling>> {
     return apiClient({
@@ -40,6 +42,7 @@ export async function startBeregning(
                 tilOgMed: arg.tom,
             },
             fradrag: arg.fradrag,
+            begrunnelse: arg.begrunnelse,
         },
     });
 }

@@ -46,14 +46,16 @@ const Behandlingsoppsummering = (props: Props) => {
                 behandlingsinformasjon={behandling.behandlingsinformasjon}
             />
             {behandling.beregning && <VisBeregningOgSimulering sak={props.sak} behandling={behandling} />}
-            <Link
-                to={Routes.saksoversiktValgtSak.createURL({
-                    sakId: props.sak.id,
-                })}
-                className={classNames('knapp', styles.backButton)}
-            >
-                {intl.formatMessage({ id: 'knapp.tilbake' })}
-            </Link>
+            <div className={styles.tilbakeLinkContainer}>
+                <Link
+                    to={Routes.saksoversiktValgtSak.createURL({
+                        sakId: props.sak.id,
+                    })}
+                    className={classNames('knapp', styles.backButton)}
+                >
+                    {intl.formatMessage({ id: 'knapp.tilbake' })}
+                </Link>
+            </div>
         </div>
     );
 };
