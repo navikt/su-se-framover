@@ -24,6 +24,7 @@ import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
 import { Behandling, UnderkjennelseGrunn, Underkjennelse } from '~types/Behandling';
@@ -38,7 +39,6 @@ import {
     erRevurderingIverksatt,
     erRevurderingSimulert,
     erRevurderingOpprettet,
-    erRevurderingUnderkjent,
 } from '../revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
@@ -170,6 +170,32 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
     );
 };
 
+const DatoerOgUnderkjennelse = (props: {
+    tittelId: string;
+    tekstOgDato: Array<Nullable<{ tekstId: string; dato: string }>>;
+    underkjennelse?: Nullable<Underkjennelse>;
+}) => {
+    const intl = useI18n({ messages });
+
+    return (
+        <div>
+            <Undertittel>{intl.formatMessage({ id: props.tittelId })}</Undertittel>
+            {props.tekstOgDato
+                .filter((o) => o !== null)
+                .map((o, i) => (
+                    <li key={i} className={styles.dato}>
+                        {/* blir filtrert vekk */
+                        /*eslint-disable @typescript-eslint/no-non-null-assertion */}
+                        <Element>{`${intl.formatMessage({ id: o!.tekstId })}: `}</Element>
+                        <Normaltekst>{o!.dato}</Normaltekst>
+                        {/*eslint-enable @typescript-eslint/no-non-null-assertion */}
+                    </li>
+                ))}
+            {props.underkjennelse && <UnderkjennelsesInformasjon underkjennelse={props.underkjennelse} intl={intl} />}
+        </div>
+    );
+};
+
 const ÅpneSøknader = (props: {
     åpneSøknader: Søknad[];
     behandlinger: Behandling[];
@@ -191,23 +217,13 @@ const ÅpneSøknader = (props: {
                         <div key={s.id}>
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
-                                    <div>
-                                        <Undertittel>
-                                            {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
-                                        </Undertittel>
-                                        <div className={styles.dato}>
-                                            <Element>
-                                                {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
-                                            </Element>
-                                            <Normaltekst>{søknadMottat(s, props.intl)}</Normaltekst>
-                                        </div>
-                                        {behandling?.attestering?.underkjennelse && (
-                                            <UnderkjennelsesInformasjon
-                                                underkjennelse={behandling.attestering.underkjennelse}
-                                                intl={props.intl}
-                                            />
-                                        )}
-                                    </div>
+                                    <DatoerOgUnderkjennelse
+                                        tittelId="display.søknad.typeSøknad"
+                                        tekstOgDato={[
+                                            { tekstId: 'display.søknad.mottatt', dato: søknadMottat(s, props.intl) },
+                                        ]}
+                                        underkjennelse={behandling?.attestering?.underkjennelse}
+                                    />
                                     <div className={styles.knapper}>
                                         {!behandling ? (
                                             <StartSøknadsbehandlingKnapper
@@ -250,35 +266,22 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                         <div key={r.id}>
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
-                                    <div>
-                                        <Undertittel>
-                                            {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
-                                        </Undertittel>
-                                        <div className={styles.dato}>
-                                            <Element>
-                                                {props.intl.formatMessage({ id: 'revurdering.opprettet' })}{' '}
-                                            </Element>
-                                            <Normaltekst>{props.intl.formatDate(r.opprettet)}</Normaltekst>
-                                        </div>
-                                        {vedtakForBehandling?.opprettet && (
-                                            <div className={styles.dato}>
-                                                <Element>
-                                                    {props.intl.formatMessage({ id: 'revurdering.iverksattDato' })}{' '}
-                                                </Element>
-                                                <Normaltekst>
-                                                    {props.intl.formatDate(vedtakForBehandling.opprettet)}
-                                                </Normaltekst>
-                                            </div>
-                                        )}
-                                        {erRevurderingUnderkjent(r) && (
-                                            //underkjent revurdering har alltid en underkjennelse
-                                            /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                                            <UnderkjennelsesInformasjon
-                                                underkjennelse={r.attestering.underkjennelse!}
-                                                intl={props.intl}
-                                            />
-                                        )}
-                                    </div>
+                                    <DatoerOgUnderkjennelse
+                                        tittelId="revurdering.undertittel"
+                                        tekstOgDato={[
+                                            {
+                                                tekstId: 'revurdering.opprettet',
+                                                dato: props.intl.formatDate(r.opprettet),
+                                            },
+                                            vedtakForBehandling?.opprettet
+                                                ? {
+                                                      tekstId: 'revurdering.iverksattDato',
+                                                      dato: props.intl.formatDate(vedtakForBehandling.opprettet),
+                                                  }
+                                                : null,
+                                        ]}
+                                        underkjennelse={r.attestering?.underkjennelse}
+                                    />
                                     <div className={styles.knapper}>
                                         <RevurderingStartetKnapper
                                             sakId={props.sak.id}
@@ -394,25 +397,19 @@ const IverksattInnvilgedeSøknader = (props: {
                         <div key={s.søknad.id}>
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
-                                    <div>
-                                        <Undertittel>
-                                            {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
-                                        </Undertittel>
-                                        <div className={styles.dato}>
-                                            <Element>
-                                                {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
-                                            </Element>
-                                            <Normaltekst>{søknadMottat(s.søknad, props.intl)}</Normaltekst>
-                                        </div>
-                                        <div className={styles.dato}>
-                                            <Element>
-                                                {`${props.intl.formatMessage({
-                                                    id: 'display.søknad.iverksattDato',
-                                                })}: `}
-                                            </Element>
-                                            <Normaltekst>{props.intl.formatDate(s.iverksattDato)}</Normaltekst>
-                                        </div>
-                                    </div>
+                                    <DatoerOgUnderkjennelse
+                                        tittelId="display.søknad.typeSøknad"
+                                        tekstOgDato={[
+                                            {
+                                                tekstId: 'display.søknad.mottatt',
+                                                dato: søknadMottat(s.søknad, props.intl),
+                                            },
+                                            {
+                                                tekstId: 'display.søknad.iverksattDato',
+                                                dato: props.intl.formatDate(s.iverksattDato),
+                                            },
+                                        ]}
+                                    />
                                     <div className={(styles.knapper, styles.flexColumn)}>
                                         <Link
                                             className="knapp"
@@ -596,17 +593,15 @@ const LukkedeSøknader = (props: { lukkedeSøknader: Søknad[]; intl: IntlShape 
                     <li key={søknad.id}>
                         <Panel border className={styles.søknad}>
                             <div className={styles.info}>
-                                <div>
-                                    <Undertittel>
-                                        {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
-                                    </Undertittel>
-                                    <div className={styles.dato}>
-                                        <Element>
-                                            {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
-                                        </Element>
-                                        <Normaltekst>{søknadMottat(søknad, props.intl)}</Normaltekst>
-                                    </div>
-                                </div>
+                                <DatoerOgUnderkjennelse
+                                    tittelId="display.søknad.typeSøknad"
+                                    tekstOgDato={[
+                                        {
+                                            tekstId: 'display.søknad.mottatt',
+                                            dato: søknadMottat(søknad, props.intl),
+                                        },
+                                    ]}
+                                />
                             </div>
                             <div className={styles.ikonContainer}>
                                 <Ikon className={styles.ikon} kind="feil-sirkel-fyll" width={'24px'} />
@@ -648,17 +643,15 @@ const AvslåtteSøknader = (props: {
                         <li key={søknad.id}>
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
-                                    <div>
-                                        <Undertittel>
-                                            {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
-                                        </Undertittel>
-                                        <div className={styles.dato}>
-                                            <Element>
-                                                {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
-                                            </Element>
-                                            <Normaltekst>{søknadMottat(søknad, props.intl)}</Normaltekst>
-                                        </div>
-                                    </div>
+                                    <DatoerOgUnderkjennelse
+                                        tittelId="display.søknad.typeSøknad"
+                                        tekstOgDato={[
+                                            {
+                                                tekstId: 'display.søknad.mottatt',
+                                                dato: søknadMottat(søknad, props.intl),
+                                            },
+                                        ]}
+                                    />
                                 </div>
                                 <div className={(styles.knapper, styles.flexColumn)}>
                                     <Link
