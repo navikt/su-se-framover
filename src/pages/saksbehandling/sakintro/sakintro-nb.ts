@@ -10,6 +10,7 @@ export default {
     'display.lukkedeSøknader.tittel': 'Lukket søknad',
 
     'display.behandling.fortsettBehandling': 'Fortsett behandling',
+    'display.behandling.seOppsummering': 'Se oppsummering',
 
     'display.behandling.klarteIkkeStarteBehandling': 'Klarte ikke å starte behandling',
     'display.behandling.klarteIkkeStarteBehandling.fantIkkeSøknad': 'Fant ikke søknad',
@@ -33,6 +34,7 @@ export default {
     'display.saksoversikt.tittel': 'Saksnummer',
 
     'display.søknad.avslått': 'Avslått',
+    'display.søknad.iverksattDato': 'Iverksatt dato',
     'display.søknad.lukket.avvist': 'Avvist',
     'display.søknad.lukket.bortfalt': 'Bortfalt',
     'display.søknad.lukket.trukket': 'Trukket',
@@ -52,5 +54,6 @@ export default {
     'revurdering.oppsummering': 'Se oppsummering',
     'revurdering.tittel': 'Revurderinger',
     'revurdering.undertittel': 'Revurdering',
-    'revurdering.opprettet': 'Opprettet:',
+    'revurdering.opprettet': 'Opprettet',
+    'revurdering.iverksattDato': 'Iverksatt dato',
 };
