@@ -30,12 +30,12 @@ const Framdriftsindikator = (props: { sakId: string; behandling: Behandling; vil
                     sakId={props.sakId}
                     behandlingId={props.behandling.id}
                     vilkår={{
-                        status: !props.behandling.behandlingsperiode
+                        status: !props.behandling.stønadsperiode
                             ? VilkårVurderingStatus.IkkeVurdert
                             : VilkårVurderingStatus.Ok,
                         vilkårtype: Vilkårtype.Virkningstidspunkt,
-                        begrunnelse: props.behandling.behandlingsperiode?.begrunnelse ?? null,
-                        erStartet: !!props.behandling.behandlingsperiode,
+                        begrunnelse: props.behandling.stønadsperiode?.begrunnelse ?? null,
+                        erStartet: !!props.behandling.stønadsperiode,
                     }}
                     key={Vilkårtype.Virkningstidspunkt}
                     aktivtVilkår={props.vilkår}

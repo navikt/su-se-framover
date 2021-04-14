@@ -19,7 +19,7 @@ export interface Behandling {
     saksbehandler: Nullable<string>;
     hendelser: Nullable<Hendelse[]>;
     satsBeløp: Nullable<number>;
-    behandlingsperiode: Nullable<Behandlingsperiode>;
+    stønadsperiode: Nullable<Behandlingsperiode>;
 }
 
 export interface Behandlingsperiode {

@@ -77,8 +77,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     const { beregningStatus, simuleringStatus } = useAppSelector((state) => state.sak);
 
     const stønadsperiode = useMemo(() => {
-        const fom = props.behandling.behandlingsperiode?.periode.fraOgMed;
-        const tom = props.behandling.behandlingsperiode?.periode.tilOgMed;
+        const fom = props.behandling.stønadsperiode?.periode.fraOgMed;
+        const tom = props.behandling.stønadsperiode?.periode.tilOgMed;
         if (!fom || !tom) {
             return null;
         }
@@ -86,7 +86,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             fom: DateUtils.parseIsoDateOnly(fom),
             tom: DateUtils.parseIsoDateOnly(tom),
         };
-    }, [props.behandling.behandlingsperiode]);
+    }, [props.behandling.stønadsperiode]);
 
     useEffect(() => {
         dispatch(sakSlice.default.actions.resetBeregningstatus());

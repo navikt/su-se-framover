@@ -58,14 +58,14 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const form = useForm<FormData>({
         defaultValues: {
             fraOgMed: nullableMap(
-                props.behandling.behandlingsperiode?.periode.fraOgMed ?? null,
+                props.behandling.stønadsperiode?.periode.fraOgMed ?? null,
                 DateUtils.parseIsoDateOnly
             ),
             tilOgMed: nullableMap(
-                props.behandling.behandlingsperiode?.periode.tilOgMed ?? null,
+                props.behandling.stønadsperiode?.periode.tilOgMed ?? null,
                 DateUtils.parseIsoDateOnly
             ),
-            begrunnelse: props.behandling.behandlingsperiode?.begrunnelse ?? '',
+            begrunnelse: props.behandling.stønadsperiode?.begrunnelse ?? '',
         },
         resolver: yupResolver(schema),
     });
