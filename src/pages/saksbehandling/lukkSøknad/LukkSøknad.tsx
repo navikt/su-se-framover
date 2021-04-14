@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { lukkSøknad } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { søknadMottat } from '~lib/søknadUtils';
+import { søknadMottatt } from '~lib/søknadUtils';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse } from '~types/Søknad';
@@ -151,7 +151,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
                 <Trukket
                     datoSøkerTrakkSøknad={formik.values.datoSøkerTrakkSøknad}
                     søknadId={søknad.id}
-                    søknadOpprettet={søknadMottat(søknad, intl)}
+                    søknadOpprettet={søknadMottatt(søknad, intl)}
                     feilmelding={formik.errors.datoSøkerTrakkSøknad}
                     lukkSøknadBegrunnelse={formik.values.lukkSøknadBegrunnelse}
                     lukketSøknadBrevutkastStatus={lukketSøknadBrevutkastStatus}

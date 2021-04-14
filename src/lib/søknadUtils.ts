@@ -4,7 +4,7 @@ import { Behandlingsstatus } from '../types/Behandling';
 import { Sak } from '../types/Sak';
 import { Søknad, Søknadstype } from '../types/Søknad';
 
-export function søknadMottat(søknad: Søknad, intl: IntlShape): string {
+export function søknadMottatt(søknad: Søknad, intl: IntlShape): string {
     if (søknad.søknadInnhold.forNav.type === Søknadstype.Papirsøknad) {
         return intl.formatDate(søknad.søknadInnhold.forNav.mottaksdatoForSøknad);
     }

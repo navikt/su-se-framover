@@ -14,7 +14,7 @@ import { useUserContext } from '~context/userContext';
 import { erIverksatt } from '~features/behandling/behandlingUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { søknadMottat } from '~lib/søknadUtils';
+import { søknadMottatt } from '~lib/søknadUtils';
 import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
@@ -116,7 +116,7 @@ export const BehandlingStatus = (props: {
 
                     <div>
                         <Element> {intl.formatMessage({ id: 'behandling.søknadsdato' })}</Element>
-                        <p>{søknadMottat(props.behandling.søknad, intl)}</p>
+                        <p>{søknadMottatt(props.behandling.søknad, intl)}</p>
                     </div>
                     <div>
                         <Element> {intl.formatMessage({ id: 'behandling.saksbehandlingStartet' })}</Element>

@@ -31,7 +31,7 @@ import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 import { Vedtak } from '~types/Vedtak';
 
-import { getIverksatteInnvilgedeSøknader, søknadMottat } from '../../../lib/søknadUtils';
+import { getIverksatteInnvilgedeSøknader, søknadMottatt } from '../../../lib/søknadUtils';
 import { Revurdering } from '../../../types/Revurdering';
 import {
     erRevurderingTilAttestering,
@@ -199,7 +199,7 @@ const ÅpneSøknader = (props: {
                                             <Element>
                                                 {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
                                             </Element>
-                                            <Normaltekst>{søknadMottat(s, props.intl)}</Normaltekst>
+                                            <Normaltekst>{søknadMottatt(s, props.intl)}</Normaltekst>
                                         </div>
                                         {behandling?.attestering?.underkjennelse && (
                                             <UnderkjennelsesInformasjon
@@ -402,7 +402,7 @@ const IverksattInnvilgedeSøknader = (props: {
                                             <Element>
                                                 {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
                                             </Element>
-                                            <Normaltekst>{søknadMottat(s.søknad, props.intl)}</Normaltekst>
+                                            <Normaltekst>{søknadMottatt(s.søknad, props.intl)}</Normaltekst>
                                         </div>
                                         <div className={styles.dato}>
                                             <Element>
@@ -604,7 +604,7 @@ const LukkedeSøknader = (props: { lukkedeSøknader: Søknad[]; intl: IntlShape 
                                         <Element>
                                             {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
                                         </Element>
-                                        <Normaltekst>{søknadMottat(søknad, props.intl)}</Normaltekst>
+                                        <Normaltekst>{søknadMottatt(søknad, props.intl)}</Normaltekst>
                                     </div>
                                 </div>
                             </div>
@@ -656,7 +656,7 @@ const AvslåtteSøknader = (props: {
                                             <Element>
                                                 {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
                                             </Element>
-                                            <Normaltekst>{søknadMottat(søknad, props.intl)}</Normaltekst>
+                                            <Normaltekst>{søknadMottatt(søknad, props.intl)}</Normaltekst>
                                         </div>
                                     </div>
                                 </div>
