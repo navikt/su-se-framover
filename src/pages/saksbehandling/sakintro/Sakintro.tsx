@@ -26,10 +26,12 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
-import { Behandling, Behandlingsstatus, UnderkjennelseGrunn, Underkjennelse } from '~types/Behandling';
+import { Behandling, UnderkjennelseGrunn, Underkjennelse } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
+import { Vedtak } from '~types/Vedtak';
 
+import { getIverksatteInnvilgedeSøknader, søknadMottatt } from '../../../lib/søknadUtils';
 import { Revurdering } from '../../../types/Revurdering';
 import {
     erRevurderingTilAttestering,
@@ -97,10 +99,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
             return Date.parse(a.opprettet) - Date.parse(b.opprettet);
         });
 
-    const godkjenteBehandlinger = props.sak.søknader.filter((søknad) => {
-        const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
-        return søknad.lukket === null && behandling?.status === Behandlingsstatus.IVERKSATT_INNVILGET;
-    });
+    const iverksatteInnvilgedeSøknader = getIverksatteInnvilgedeSøknader(props.sak);
 
     const lukkedeSøknader = props.sak.søknader.filter((søknad) => {
         return søknad.lukket !== null;
@@ -151,10 +150,9 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         kanStansesEllerGjenopptas={props.sak.utbetalingerKanStansesEllerGjenopptas}
                     />
                     {revurderingToggle && <Revurderinger sak={props.sak} revurderinger={revurderinger} intl={intl} />}
-                    <GodkjenteSøknader
+                    <IverksattInnvilgedeSøknader
                         sakId={props.sak.id}
-                        åpneSøknader={godkjenteBehandlinger}
-                        behandlinger={props.sak.behandlinger}
+                        iverksatteInnvilgedeSøknader={iverksatteInnvilgedeSøknader}
                         intl={intl}
                     />
                     <AvslåtteSøknader
@@ -201,7 +199,7 @@ const ÅpneSøknader = (props: {
                                             <Element>
                                                 {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
                                             </Element>
-                                            <Normaltekst>{props.intl.formatDate(s.opprettet)}</Normaltekst>
+                                            <Normaltekst>{søknadMottatt(s, props.intl)}</Normaltekst>
                                         </div>
                                         {behandling?.attestering?.underkjennelse && (
                                             <UnderkjennelsesInformasjon
@@ -245,6 +243,9 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
             </Ingress>
             <ol>
                 {props.revurderinger.map((r) => {
+                    const behandling = props.sak.behandlinger.find((b) => b.id === r.tilRevurdering.id);
+                    const vedtakForBehandling = props.sak.vedtak.find((v) => v.behandlingId === behandling?.id);
+
                     return (
                         <div key={r.id}>
                             <Panel border className={styles.søknad}>
@@ -259,6 +260,16 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                                             </Element>
                                             <Normaltekst>{props.intl.formatDate(r.opprettet)}</Normaltekst>
                                         </div>
+                                        {vedtakForBehandling?.opprettet && (
+                                            <div className={styles.dato}>
+                                                <Element>
+                                                    {props.intl.formatMessage({ id: 'revurdering.iverksattDato' })}{' '}
+                                                </Element>
+                                                <Normaltekst>
+                                                    {props.intl.formatDate(vedtakForBehandling.opprettet)}
+                                                </Normaltekst>
+                                            </div>
+                                        )}
                                         {erRevurderingUnderkjent(r) && (
                                             //underkjent revurdering har alltid en underkjennelse
                                             /* eslint-disable @typescript-eslint/no-non-null-assertion */
@@ -269,7 +280,12 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                                         )}
                                     </div>
                                     <div className={styles.knapper}>
-                                        <RevurderingStartetKnapper sak={props.sak} revurdering={r} intl={props.intl} />
+                                        <RevurderingStartetKnapper
+                                            sakId={props.sak.id}
+                                            vedtak={props.sak.vedtak}
+                                            revurdering={r}
+                                            intl={props.intl}
+                                        />
                                     </div>
                                 </div>
                             </Panel>
@@ -281,10 +297,15 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
     );
 };
 
-const RevurderingStartetKnapper = (props: { revurdering: Revurdering; sak: Sak; intl: IntlShape }) => {
+const RevurderingStartetKnapper = (props: {
+    sakId: string;
+    revurdering: Revurdering;
+    vedtak: Vedtak[];
+    intl: IntlShape;
+}) => {
     const user = useUserContext();
     const { revurdering } = props;
-    const vedtak = props.sak.vedtak.find((v) => v.behandlingId === revurdering.id);
+    const vedtak = props.vedtak.find((v) => v.behandlingId === revurdering.id);
 
     return (
         <div className={styles.behandlingContainer}>
@@ -303,7 +324,7 @@ const RevurderingStartetKnapper = (props: { revurdering: Revurdering; sak: Sak; 
             {erRevurderingIverksatt(revurdering) && vedtak && (
                 <Link
                     className="knapp"
-                    to={Routes.vedtaksoppsummering.createURL({ sakId: props.sak.id, vedtakId: vedtak.id })}
+                    to={Routes.vedtaksoppsummering.createURL({ sakId: props.sakId, vedtakId: vedtak.id })}
                 >
                     Se oppsummering
                 </Link>
@@ -316,7 +337,7 @@ const RevurderingStartetKnapper = (props: { revurdering: Revurdering; sak: Sak; 
                     <Link
                         className="knapp knapp--mini"
                         to={Routes.attesterRevurdering.createURL({
-                            sakId: props.sak.id,
+                            sakId: props.sakId,
                             revurderingId: revurdering.id,
                         })}
                     >
@@ -331,7 +352,7 @@ const RevurderingStartetKnapper = (props: { revurdering: Revurdering; sak: Sak; 
                         <Link
                             className="knapp knapp--mini"
                             to={Routes.revurderValgtRevurdering.createURL({
-                                sakId: props.sak.id,
+                                sakId: props.sakId,
                                 steg: erRevurderingSimulert(revurdering)
                                     ? RevurderingSteg.Oppsummering
                                     : erRevurderingOpprettet(revurdering)
@@ -349,13 +370,16 @@ const RevurderingStartetKnapper = (props: { revurdering: Revurdering; sak: Sak; 
     );
 };
 
-const GodkjenteSøknader = (props: {
-    åpneSøknader: Søknad[];
-    behandlinger: Behandling[];
+const IverksattInnvilgedeSøknader = (props: {
+    iverksatteInnvilgedeSøknader: Array<{
+        iverksattDato: string | undefined;
+        søknadensBehandlingsId: string | undefined;
+        søknad: Søknad;
+    }>;
     sakId: string;
     intl: IntlShape;
 }) => {
-    if (props.åpneSøknader.length === 0) return null;
+    if (props.iverksatteInnvilgedeSøknader.length === 0) return null;
 
     return (
         <div className={styles.søknadsContainer}>
@@ -363,12 +387,11 @@ const GodkjenteSøknader = (props: {
                 {props.intl.formatMessage({ id: 'display.godkjenteSøknader.tittel' })}
             </Ingress>
             <ol>
-                {props.åpneSøknader.map((s) => {
-                    const behandling = props.behandlinger.find((b) => b.søknad.id === s.id);
-                    if (!behandling) return <></>;
+                {props.iverksatteInnvilgedeSøknader.map((s) => {
+                    if (!s.søknadensBehandlingsId) return <></>;
 
                     return (
-                        <div key={s.id}>
+                        <div key={s.søknad.id}>
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
                                     <div>
@@ -379,7 +402,15 @@ const GodkjenteSøknader = (props: {
                                             <Element>
                                                 {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
                                             </Element>
-                                            <Normaltekst>{props.intl.formatDate(s.opprettet)}</Normaltekst>
+                                            <Normaltekst>{søknadMottatt(s.søknad, props.intl)}</Normaltekst>
+                                        </div>
+                                        <div className={styles.dato}>
+                                            <Element>
+                                                {`${props.intl.formatMessage({
+                                                    id: 'display.søknad.iverksattDato',
+                                                })}: `}
+                                            </Element>
+                                            <Normaltekst>{props.intl.formatDate(s.iverksattDato)}</Normaltekst>
                                         </div>
                                     </div>
                                     <div className={(styles.knapper, styles.flexColumn)}>
@@ -387,10 +418,10 @@ const GodkjenteSøknader = (props: {
                                             className="knapp"
                                             to={Routes.saksbehandlingOppsummering.createURL({
                                                 sakId: props.sakId,
-                                                behandlingId: behandling.id,
+                                                behandlingId: s.søknadensBehandlingsId,
                                             })}
                                         >
-                                            Se oppsummering
+                                            {props.intl.formatMessage({ id: 'display.behandling.seOppsummering' })}
                                         </Link>
                                     </div>
                                 </div>
@@ -573,7 +604,7 @@ const LukkedeSøknader = (props: { lukkedeSøknader: Søknad[]; intl: IntlShape 
                                         <Element>
                                             {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
                                         </Element>
-                                        <Normaltekst>{props.intl.formatDate(søknad.opprettet)}</Normaltekst>
+                                        <Normaltekst>{søknadMottatt(søknad, props.intl)}</Normaltekst>
                                     </div>
                                 </div>
                             </div>
@@ -625,7 +656,7 @@ const AvslåtteSøknader = (props: {
                                             <Element>
                                                 {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
                                             </Element>
-                                            <Normaltekst>{props.intl.formatDate(søknad.opprettet)}</Normaltekst>
+                                            <Normaltekst>{søknadMottatt(søknad, props.intl)}</Normaltekst>
                                         </div>
                                     </div>
                                 </div>

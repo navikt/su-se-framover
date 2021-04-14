@@ -11,10 +11,13 @@ import { Link } from 'react-router-dom';
 import { ApiError } from '~api/apiClient';
 import * as PdfApi from '~api/pdfApi';
 import { useUserContext } from '~context/userContext';
+import { erIverksatt } from '~features/behandling/behandlingUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { søknadMottatt } from '~lib/søknadUtils';
 import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
+import { Vedtak } from '~types/Vedtak';
 
 import VisBeregningOgSimulering from '../steg/beregningOgSimulering/BeregningOgSimulering';
 import VilkårsOppsummering from '../vilkårsOppsummering/VilkårsOppsummering';
@@ -31,6 +34,7 @@ interface Props {
 const Behandlingsoppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
     const behandling = props.sak.behandlinger.find((behandling) => behandling.id === urlParams.behandlingId);
+    const vedtakForBehandling = props.sak.vedtak.find((v) => v.behandlingId === behandling?.id);
     const intl = useI18n({ messages });
 
     if (!behandling) {
@@ -39,7 +43,12 @@ const Behandlingsoppsummering = (props: Props) => {
 
     return (
         <div className={styles.oppsummeringContainer}>
-            <BehandlingStatus sakId={props.sak.id} behandling={behandling} withBrevutkastknapp />
+            <BehandlingStatus
+                sakId={props.sak.id}
+                behandling={behandling}
+                vedtakForBehandling={vedtakForBehandling}
+                withBrevutkastknapp
+            />
             <VilkårsOppsummering
                 behandlingstatus={behandling.status}
                 søknadInnhold={behandling.søknad.søknadInnhold}
@@ -60,7 +69,12 @@ const Behandlingsoppsummering = (props: Props) => {
     );
 };
 
-export const BehandlingStatus = (props: { sakId: string; behandling: Behandling; withBrevutkastknapp?: boolean }) => {
+export const BehandlingStatus = (props: {
+    sakId: string;
+    behandling: Behandling;
+    vedtakForBehandling?: Vedtak;
+    withBrevutkastknapp?: boolean;
+}) => {
     const user = useUserContext();
     const intl = useI18n({ messages });
 
@@ -104,12 +118,18 @@ export const BehandlingStatus = (props: { sakId: string; behandling: Behandling;
 
                     <div>
                         <Element> {intl.formatMessage({ id: 'behandling.søknadsdato' })}</Element>
-                        <p>{intl.formatDate(props.behandling.søknad.opprettet)}</p>
+                        <p>{søknadMottatt(props.behandling.søknad, intl)}</p>
                     </div>
                     <div>
-                        <Element> {intl.formatMessage({ id: 'behandling.saksbehandlingsdato' })}</Element>
+                        <Element> {intl.formatMessage({ id: 'behandling.saksbehandlingStartet' })}</Element>
                         <p>{intl.formatDate(props.behandling.opprettet)}</p>
                     </div>
+                    {erIverksatt(props.behandling) && (
+                        <div>
+                            <Element> {intl.formatMessage({ id: 'behandling.iverksattDato' })}</Element>
+                            <p>{intl.formatDate(props.vedtakForBehandling?.opprettet)}</p>
+                        </div>
+                    )}
                     {props.withBrevutkastknapp && (
                         <div>
                             <Element>{intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}</Element>

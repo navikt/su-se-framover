@@ -3,7 +3,6 @@ export default {
 
     'behandling.ikkeFerdig': 'Behandlingen er ikke ferdig',
     'behandling.søknadsdato': 'Søknadsdato',
-    'behandling.saksbehandlingsdato': 'Saksbehandlingsdato',
 
     'brev.utkastVedtaksbrev': 'Utkast til vedtaksbrev',
 
