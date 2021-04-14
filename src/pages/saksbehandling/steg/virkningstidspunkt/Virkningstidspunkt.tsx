@@ -33,11 +33,21 @@ interface FormData {
 }
 
 const schema = yup.object<FormData>({
-    fraOgMed: yup.date().nullable().required(),
+    fraOgMed: yup.date().nullable().required().min(DateUtils.getStartenPåMånedenTreTilbakeITid(new Date())),
     tilOgMed: yup
         .date()
         .nullable()
         .required()
+        .test('maks12MndStønadsperiode', 'Stønadsperioden kan ikke være lenger enn 12 måneder', function (tilOgMed) {
+            const { fraOgMed } = this.parent;
+            if (!tilOgMed || !fraOgMed) {
+                return false;
+            }
+            if (DateFns.differenceInYears(tilOgMed, fraOgMed) >= 1) {
+                return false;
+            }
+            return true;
+        })
         .test('isAfterFom', 'Sluttdato må være etter startdato', function (tilOgMed) {
             const { fraOgMed } = this.parent;
             if (!tilOgMed || !fraOgMed) {
@@ -55,7 +65,10 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const [savingState, setSavingState] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const dispatch = useAppDispatch();
 
-    const form = useForm<FormData>({
+    const {
+        formState: { isValid, isSubmitted, errors },
+        ...form
+    } = useForm<FormData>({
         defaultValues: {
             fraOgMed: nullableMap(
                 props.behandling.stønadsperiode?.periode.fraOgMed ?? null,
@@ -68,6 +81,12 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
             begrunnelse: props.behandling.stønadsperiode?.begrunnelse ?? '',
         },
         resolver: yupResolver(schema),
+    });
+
+    form.watch((values) => {
+        if (values.fraOgMed !== null && values.tilOgMed === null) {
+            form.setValue('tilOgMed', DateFns.endOfMonth(DateFns.addMonths(values.fraOgMed, 11)));
+        }
     });
 
     const save = async (data: FormData) => {
@@ -137,6 +156,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                     isClearable
                                     selectsEnd
                                     autoComplete="off"
+                                    minDate={DateUtils.getStartenPåMånedenTreTilbakeITid(new Date())}
                                     feil={fieldState.error?.message}
                                 />
                             )}
@@ -188,8 +208,8 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                         )}
                         <Feiloppsummering
                             tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
-                            hidden={!form.formState.isSubmitted || form.formState.isValid}
-                            feil={hookFormErrorsTilFeiloppsummering(form.formState.errors)}
+                            hidden={!isSubmitted || isValid}
+                            feil={hookFormErrorsTilFeiloppsummering(errors)}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {

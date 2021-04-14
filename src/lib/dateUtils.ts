@@ -55,6 +55,8 @@ export const toStringDateOrNull = (date: Date | null) => {
 
 export const startenPåNesteMåned = (date: Date) => DateFns.startOfMonth(DateFns.addMonths(date, 1));
 
+export const getStartenPåMånedenTreTilbakeITid = (d: Date) => DateFns.startOfMonth(DateFns.subMonths(d, 3));
+
 /**
  * Parser datostreng på formatet @see {@link DateFormats.IsoDateOnly}
  * Gir null dersom @param str er null
