@@ -1,11 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { AsyncThunk } from '@reduxjs/toolkit';
-import { useFormik, FormikErrors } from 'formik';
+import { useFormik } from 'formik';
 import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
-import { Textarea, Checkbox, Radio } from 'nav-frontend-skjema';
+import { Textarea, Checkbox, Radio, Label } from 'nav-frontend-skjema';
 import { Innholdstittel } from 'nav-frontend-typografi';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
 
@@ -46,46 +46,7 @@ const schema = yup.object<OppsummeringFormData>({
     skalFøreTilBrevutsending: yup.boolean(),
 });
 
-const BrevInput = (props: {
-    values: OppsummeringFormData;
-    hentBrevStatus: RemoteData.RemoteData<ApiError | undefined, null>;
-    errors: FormikErrors<OppsummeringFormData>;
-    hentBrev: (fritekst?: Nullable<string>) => void;
-    handleChange: (e: React.ChangeEvent<unknown>) => void;
-    intl: IntlShape;
-}) => (
-    <div className={styles.brevContainer}>
-        <div className={styles.textAreaContainer}>
-            <Textarea
-                label={props.intl.formatMessage({ id: 'oppsummering.tekstTilVedtaksbrev.tittel' })}
-                name="tekstTilVedtaksbrev"
-                placeholder={props.intl.formatMessage({
-                    id: 'oppsummering.tekstTilVedtaksbrev.placeholder',
-                })}
-                value={props.values.tekstTilVedtaksbrev ?? ''}
-                feil={props.errors.tekstTilVedtaksbrev}
-                onChange={props.handleChange}
-            />
-        </div>
-        <div className={styles.seBrevContainer}>
-            <Knapp
-                onClick={() => props.hentBrev(props.values.tekstTilVedtaksbrev)}
-                htmlType="button"
-                spinner={RemoteData.isPending(props.hentBrevStatus)}
-                mini
-            >
-                {props.intl.formatMessage({ id: 'knapp.seVedtaksbrev' })}
-            </Knapp>
-            {RemoteData.isFailure(props.hentBrevStatus) && (
-                <AlertStripeFeil>
-                    {props.hentBrevStatus?.error?.body?.message || props.intl.formatMessage({ id: 'feil.ukjentFeil' })}
-                </AlertStripeFeil>
-            )}
-        </div>
-    </div>
-);
-
-function BrevInputPro<T>(props: {
+function BrevInput<T>(props: {
     tekst: string;
     fn: AsyncThunk<{ objectUrl: string }, T, { rejectValue: ApiError }>;
     fnArgs: T;
@@ -124,7 +85,7 @@ function BrevInputPro<T>(props: {
             </div>
             <div className={styles.seBrevContainer}>
                 <Knapp onClick={onHentBrev} htmlType="button" spinner={RemoteData.isPending(hentBrevStatus)} mini>
-                    {props.intl.formatMessage({ id: 'knapp.seVedtaksbrev' })}
+                    {props.intl.formatMessage({ id: 'knapp.seBrev' })}
                 </Knapp>
                 {RemoteData.isFailure(hentBrevStatus) && (
                     <AlertStripeFeil>
@@ -145,36 +106,11 @@ const RevurderingsOppsummering = (props: {
     const [sendtTilAttesteringStatus, setSendtTilAttesteringStatus] = useState<
         RemoteData.RemoteData<ApiError, RevurderingTilAttestering>
     >(RemoteData.initial);
-    const [hentBrevStatus, setHentBrevStatus] = useState<RemoteData.RemoteData<ApiError | undefined, null>>(
+    const [sendtTilForhåndsvarsling, setSendtTilForhåndsvarsling] = useState<RemoteData.RemoteData<ApiError, null>>(
         RemoteData.initial
     );
     const [skalForhåndsvarsle, setSkalForhåndsvarsle] = useState(true);
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
-
-    const hentBrev = useCallback(
-        (fritekst?: Nullable<string>) => {
-            if (RemoteData.isPending(hentBrevStatus)) {
-                return;
-            }
-            setHentBrevStatus(RemoteData.pending);
-
-            dispatch(
-                revurderingSlice.fetchBrevutkastWithFritekst({
-                    sakId: props.sakId,
-                    revurderingId: props.revurdering?.id ?? '',
-                    fritekst: fritekst ?? '',
-                })
-            ).then((action) => {
-                if (revurderingSlice.fetchBrevutkastWithFritekst.fulfilled.match(action)) {
-                    setHentBrevStatus(RemoteData.success(null));
-                    window.open(action.payload.objectUrl);
-                } else {
-                    setHentBrevStatus(RemoteData.failure(action.payload));
-                }
-            });
-        },
-        [props.sakId, hentBrevStatus]
-    );
 
     const skalFøreTilBrevutsendingInitialValue = () => {
         const skalFøreTilBrevutsending = (props.revurdering as UnderkjentRevurdering).skalFøreTilBrevutsending;
@@ -190,6 +126,27 @@ const RevurderingsOppsummering = (props: {
             skalFøreTilBrevutsending: skalFøreTilBrevutsendingInitialValue(),
         },
         async onSubmit(values) {
+            if (skalForhåndsvarsle) {
+                setSendtTilForhåndsvarsling(RemoteData.pending);
+
+                const res = await dispatch(
+                    revurderingSlice.forhåndsvarsleRevurdering({
+                        sakId: props.sakId,
+                        revurderingId: props.revurdering.id,
+                        fritekstTilBrev: values.tekstTilVedtaksbrev ?? '',
+                    })
+                );
+
+                if (revurderingSlice.forhåndsvarsleRevurdering.rejected.match(res)) {
+                    //TODO: fix at res.payload kan være undefined?
+                    if (!res.payload) return;
+                    setSendtTilForhåndsvarsling(RemoteData.failure(res.payload));
+                }
+
+                if (revurderingSlice.forhåndsvarsleRevurdering.fulfilled.match(res)) {
+                    setSendtTilForhåndsvarsling(RemoteData.success(null));
+                }
+            }
             setSendtTilAttesteringStatus(RemoteData.pending);
 
             const res = await dispatch(
@@ -298,52 +255,56 @@ const RevurderingsOppsummering = (props: {
                         />
                         {formik.values.skalFøreTilBrevutsending && (
                             <BrevInput
-                                values={formik.values}
-                                hentBrevStatus={hentBrevStatus}
-                                errors={formik.errors}
-                                hentBrev={hentBrev}
+                                tittel={intl.formatMessage({ id: 'oppsummering.tekstTilVedtaksbrev.tittel' })}
+                                placeholder={intl.formatMessage({
+                                    id: 'oppsummering.tekstTilVedtaksbrev.placeholder',
+                                })}
+                                tekst={formik.values.tekstTilVedtaksbrev ?? ''}
                                 handleChange={formik.handleChange}
+                                fn={revurderingSlice.fetchBrevutkastWithFritekst}
+                                fnArgs={{
+                                    sakId: props.sakId,
+                                    revurderingId: props.revurdering?.id ?? '',
+                                    fritekst: formik.values.tekstTilVedtaksbrev ?? '',
+                                }}
                                 intl={intl}
                             />
                         )}
                     </div>
                 ) : (
                     <>
+                        <Label htmlFor="forhåndsvarsel">Skal bruker forhåndsvarsles?</Label>
                         <Radio
                             label="Ja"
-                            name="forshåndsvarsel"
+                            name="forhåndsvarsel"
                             onChange={() => setSkalForhåndsvarsle(true)}
                             defaultChecked={skalForhåndsvarsle}
                         />
                         <Radio
                             label="Nei"
-                            name="forshåndsvarsel"
+                            name="forhåndsvarsel"
                             onChange={() => setSkalForhåndsvarsle(false)}
                             defaultChecked={!skalForhåndsvarsle}
                         />
-                        {skalForhåndsvarsle ? (
-                            <BrevInputPro
-                                tittel={'Skal bruker forhåndsvarsles?'}
-                                tekst={formik.values.tekstTilVedtaksbrev ?? ''}
-                                fn={revurderingSlice.forhåndsvarsleRevurdering}
-                                fnArgs={{
-                                    sakId: props.sakId,
-                                    revurderingId: props.revurdering?.id ?? '',
-                                    fritekstTilBrev: formik.values.tekstTilVedtaksbrev ?? '',
-                                }}
-                                handleChange={formik.handleChange}
-                                intl={intl}
-                            />
-                        ) : (
-                            <BrevInput
-                                values={formik.values}
-                                hentBrevStatus={hentBrevStatus}
-                                errors={formik.errors}
-                                hentBrev={hentBrev}
-                                handleChange={formik.handleChange}
-                                intl={intl}
-                            />
-                        )}
+                        <BrevInput
+                            tittel={
+                                skalForhåndsvarsle
+                                    ? 'Tekst til forhåndsvarsel'
+                                    : intl.formatMessage({ id: 'oppsummering.tekstTilVedtaksbrev.tittel' })
+                            }
+                            placeholder={intl.formatMessage({
+                                id: 'oppsummering.tekstTilVedtaksbrev.placeholder',
+                            })}
+                            tekst={formik.values.tekstTilVedtaksbrev ?? ''}
+                            handleChange={formik.handleChange}
+                            fn={revurderingSlice.fetchBrevutkastWithFritekst}
+                            fnArgs={{
+                                sakId: props.sakId,
+                                revurderingId: props.revurdering?.id ?? '',
+                                fritekst: formik.values.tekstTilVedtaksbrev ?? '',
+                            }}
+                            intl={intl}
+                        />
                     </>
                 )}
 
@@ -354,9 +315,16 @@ const RevurderingsOppsummering = (props: {
                 )}
                 <RevurderingBunnknapper
                     onNesteClick={'submit'}
-                    nesteKnappTekst={intl.formatMessage({ id: 'knapp.sendTilAttestering' })}
+                    nesteKnappTekst={
+                        skalForhåndsvarsle
+                            ? 'Send forhåndsvarsel'
+                            : intl.formatMessage({ id: 'knapp.sendTilAttestering' })
+                    }
                     tilbakeUrl={forrigeURL}
-                    onNesteClickSpinner={RemoteData.isPending(sendtTilAttesteringStatus)}
+                    onNesteClickSpinner={
+                        RemoteData.isPending(sendtTilAttesteringStatus) ||
+                        RemoteData.isPending(sendtTilForhåndsvarsling)
+                    }
                 />
             </div>
         </form>

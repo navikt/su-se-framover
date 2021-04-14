@@ -12,7 +12,7 @@ export default {
     'knapp.forrige': 'Forrige',
     'knapp.neste': 'Neste',
     'knapp.sendTilAttestering': 'Send til attestering',
-    'knapp.seVedtaksbrev': 'Se vedtaksbrev',
+    'knapp.seBrev': 'Se brev',
 
     'periode.overskrift': 'Periode',
     'revurdering.tittel': 'Revurdering',
