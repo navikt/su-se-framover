@@ -1,6 +1,7 @@
 import { Nullable } from '~lib/types';
 
 import { Behandling, Attestering } from './Behandling';
+import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
 import { Periode } from './Fradrag';
 
@@ -15,6 +16,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     fritekstTilBrev: string;
     årsak: OpprettetRevurderingGrunn;
     begrunnelse: Nullable<string>;
+    behandlingsinformasjon: Behandlingsinformasjon;
 }
 interface Beregninger {
     beregning: Beregning;
@@ -79,4 +81,5 @@ export enum OpprettetRevurderingGrunn {
     DØDSFALL = 'DØDSFALL',
     ANDRE_KILDER = 'ANDRE_KILDER',
     MIGRERT = 'MIGRERT',
+    REGULER_GRUNNBELØP = 'REGULER_GRUNNBELØP',
 }

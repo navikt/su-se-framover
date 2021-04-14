@@ -24,6 +24,7 @@ import {
     erRevurderingTilAttestering,
     erRevurderingUnderkjent,
     erRevurderingIngenEndring,
+    erGregulering,
 } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { useAppDispatch } from '~redux/Store';
@@ -207,7 +208,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                         beregning={revurdering.beregninger.revurdert}
                     />
                 </div>
-                {revurdering.skalFøreTilBrevutsending && (
+                {revurdering.skalFøreTilBrevutsending && !erGregulering(revurdering.årsak) && (
                     <Knapp
                         className={styles.brevButton}
                         htmlType="button"

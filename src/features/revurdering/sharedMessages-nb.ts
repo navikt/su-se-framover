@@ -7,6 +7,7 @@ export default {
     'årsak.dødsfall': 'Dødsfall',
     'årsak.andreKilder': 'Nye opplysninger fra andre kilder',
     'årsak.migrert': 'Migrert',
+    'årsak.gRegulering': 'G-regulering',
 
     'knapp.avslutt': 'Avslutt',
     'knapp.forrige': 'Forrige',

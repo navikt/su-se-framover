@@ -30,7 +30,7 @@ import {
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
-import { erRevurderingIngenEndring } from '../revurderingUtils';
+import { erGregulering, erRevurderingIngenEndring } from '../revurderingUtils';
 
 import messages from './revurderingOppsummering-nb';
 import styles from './revurderingsOppsummering.module.less';
@@ -234,36 +234,37 @@ const RevurderingsOppsummering = (props: {
                         </AlertStripeAdvarsel>
                     </div>
                 )}
-                {erRevurderingIngenEndring(props.revurdering) ? (
-                    <div className={styles.ingenEndringContainer}>
-                        <Checkbox
-                            label={intl.formatMessage({ id: 'oppsummering.skalFøreTilBrevutsending' })}
-                            name="skalFøreTilBrevutsending"
-                            className={styles.skalFøreTilBrevutsendingCheckbox}
-                            checked={formik.values.skalFøreTilBrevutsending ?? false}
-                            onChange={formik.handleChange}
-                        />
-                        {formik.values.skalFøreTilBrevutsending && (
-                            <BrevInput
-                                values={formik.values}
-                                hentBrevStatus={hentBrevStatus}
-                                errors={formik.errors}
-                                hentBrev={hentBrev}
-                                handleChange={formik.handleChange}
-                                intl={intl}
+                {!erGregulering(props.revurdering.årsak) &&
+                    (erRevurderingIngenEndring(props.revurdering) ? (
+                        <div className={styles.ingenEndringContainer}>
+                            <Checkbox
+                                label={intl.formatMessage({ id: 'oppsummering.skalFøreTilBrevutsending' })}
+                                name="skalFøreTilBrevutsending"
+                                className={styles.skalFøreTilBrevutsendingCheckbox}
+                                checked={formik.values.skalFøreTilBrevutsending ?? false}
+                                onChange={formik.handleChange}
                             />
-                        )}
-                    </div>
-                ) : (
-                    <BrevInput
-                        values={formik.values}
-                        hentBrevStatus={hentBrevStatus}
-                        errors={formik.errors}
-                        hentBrev={hentBrev}
-                        handleChange={formik.handleChange}
-                        intl={intl}
-                    />
-                )}
+                            {formik.values.skalFøreTilBrevutsending && (
+                                <BrevInput
+                                    values={formik.values}
+                                    hentBrevStatus={hentBrevStatus}
+                                    errors={formik.errors}
+                                    hentBrev={hentBrev}
+                                    handleChange={formik.handleChange}
+                                    intl={intl}
+                                />
+                            )}
+                        </div>
+                    ) : (
+                        <BrevInput
+                            values={formik.values}
+                            hentBrevStatus={hentBrevStatus}
+                            errors={formik.errors}
+                            hentBrev={hentBrev}
+                            handleChange={formik.handleChange}
+                            intl={intl}
+                        />
+                    ))}
 
                 {RemoteData.isFailure(sendtTilAttesteringStatus) && (
                     <AlertStripeFeil className={sharedStyles.alertstripe}>
