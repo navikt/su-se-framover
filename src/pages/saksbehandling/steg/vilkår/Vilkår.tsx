@@ -19,11 +19,12 @@ import OppholdIUtlandet from '../opphold-i-utlandet/OppholdIUtlandet';
 import PersonligOppmøte from '../personlig-oppmøte/PersonligOppmøte';
 import Sats from '../sats/Sats';
 import Uførhet from '../uførhet/Uførhet';
+import Virkningstidspunkt from '../virkningstidspunkt/Virkningstidspunkt';
 
 import styles from './vilkår.module.less';
 
 const Vilkår = (props: { sak: Sak; søker: Person }) => {
-    const { vilkar = Vilkårtype.Uførhet, ...urlParams } = Routes.useRouteParams<
+    const { vilkar = Vilkårtype.Virkningstidspunkt, ...urlParams } = Routes.useRouteParams<
         typeof Routes.saksbehandlingVilkårsvurdering
     >();
     const behandling = props.sak.behandlinger.find((b) => b.id === urlParams.behandlingId);
@@ -53,11 +54,20 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
             <Framdriftsindikator sakId={props.sak.id} behandling={behandling} vilkår={vilkar} />
             <div className={styles.content}>
                 <Switch>
+                    <Route path={vilkårUrl(Vilkårtype.Virkningstidspunkt)}>
+                        <Virkningstidspunkt
+                            behandling={behandling}
+                            søker={props.søker}
+                            forrigeUrl={saksoversiktUrl}
+                            nesteUrl={vilkårUrl(Vilkårtype.Uførhet)}
+                            sakId={urlParams.sakId}
+                        />
+                    </Route>
                     <Route path={vilkårUrl(Vilkårtype.Uførhet)}>
                         <Uførhet
                             behandling={behandling}
                             søker={props.søker}
-                            forrigeUrl={saksoversiktUrl}
+                            forrigeUrl={vilkårUrl(Vilkårtype.Virkningstidspunkt)}
                             nesteUrl={vilkårUrl(Vilkårtype.Flyktning)}
                             sakId={urlParams.sakId}
                         />

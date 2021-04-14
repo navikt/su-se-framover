@@ -12,7 +12,7 @@ import {
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Behandling } from '~types/Behandling';
-import { Vilkårtype } from '~types/Vilkårsvurdering';
+import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import messages from './Framdrifsindikator-nb';
 import styles from './framdriftsindikator.module.less';
@@ -26,6 +26,21 @@ const Framdriftsindikator = (props: { sakId: string; behandling: Behandling; vil
     return (
         <div>
             <ol className={styles.framdriftsindikator}>
+                <Vilkår
+                    sakId={props.sakId}
+                    behandlingId={props.behandling.id}
+                    vilkår={{
+                        status: !props.behandling.stønadsperiode
+                            ? VilkårVurderingStatus.IkkeVurdert
+                            : VilkårVurderingStatus.Ok,
+                        vilkårtype: Vilkårtype.Virkningstidspunkt,
+                        begrunnelse: props.behandling.stønadsperiode?.begrunnelse ?? null,
+                        erStartet: !!props.behandling.stønadsperiode,
+                    }}
+                    key={Vilkårtype.Virkningstidspunkt}
+                    aktivtVilkår={props.vilkår}
+                />
+
                 <Element className={styles.olTittel}>{intl.formatMessage({ id: 'vilkår' })}</Element>
                 {vilkårrekkefølge.map((v) => (
                     <Vilkår

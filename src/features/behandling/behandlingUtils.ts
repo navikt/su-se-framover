@@ -124,7 +124,7 @@ export const hentSisteVurdertSaksbehandlingssteg = (behandling: Behandling) => {
         hentSaksbehandlingssteger,
         Arr.findLast((v: Vilkårsinformasjon) => v.erStartet),
         Option.fold(
-            () => Vilkårtype.Uførhet,
+            () => Vilkårtype.Virkningstidspunkt,
             (x) => x.vilkårtype
         )
     );

@@ -1,19 +1,18 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { addMonths, lastDayOfMonth, formatISO } from 'date-fns';
+import { formatISO } from 'date-fns';
 import { useFormik } from 'formik';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Undertittel, Feilmelding } from 'nav-frontend-typografi';
-import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
+import { Undertittel } from 'nav-frontend-typografi';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { kanSimuleres } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { toDateOrNull } from '~lib/dateUtils';
+import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -41,8 +40,6 @@ import { erIGyldigStatusForÅKunneBeregne } from './beregningUtils';
 import VisBeregning from './VisBeregning';
 
 interface FormData {
-    fom: Nullable<Date>;
-    tom: Nullable<Date>;
     fradrag: FradragFormData[];
     begrunnelse: Nullable<string>;
 }
@@ -53,12 +50,10 @@ function getInitialValues(beregning: Nullable<Beregning>): FormData {
     );
 
     return {
-        fom: toDateOrNull(beregning?.fraOgMed),
-        tom: toDateOrNull(beregning?.tilOgMed),
         fradrag: fradragUtenomForventetInntekt.map((f) => ({
             periode: {
-                fraOgMed: toDateOrNull(f.periode?.fraOgMed),
-                tilOgMed: toDateOrNull(f.periode?.tilOgMed),
+                fraOgMed: DateUtils.toDateOrNull(f.periode?.fraOgMed),
+                tilOgMed: DateUtils.toDateOrNull(f.periode?.tilOgMed),
             },
             fraUtland: f.utenlandskInntekt !== null,
             beløp: f.beløp.toString(),
@@ -81,12 +76,28 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 
     const { beregningStatus, simuleringStatus } = useAppSelector((state) => state.sak);
 
-    if (!erIGyldigStatusForÅKunneBeregne(props.behandling)) {
+    const stønadsperiode = useMemo(() => {
+        const fom = props.behandling.stønadsperiode?.periode.fraOgMed;
+        const tom = props.behandling.stønadsperiode?.periode.tilOgMed;
+        if (!fom || !tom) {
+            return null;
+        }
+        return {
+            fom: DateUtils.parseIsoDateOnly(fom),
+            tom: DateUtils.parseIsoDateOnly(tom),
+        };
+    }, [props.behandling.stønadsperiode]);
+
+    useEffect(() => {
+        dispatch(sakSlice.default.actions.resetBeregningstatus());
+    }, []);
+
+    if (!erIGyldigStatusForÅKunneBeregne(props.behandling) || stønadsperiode === null) {
         return <div>{intl.formatMessage({ id: 'beregning.behandlingErIkkeFerdig' })}</div>;
     }
 
     const startBeregning = async (values: FormData) => {
-        if (!values.fom || !values.tom || !props.behandling.behandlingsinformasjon.utledetSats) {
+        if (!props.behandling.behandlingsinformasjon.utledetSats) {
             return null;
         }
 
@@ -100,8 +111,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 sats: props.behandling.behandlingsinformasjon.utledetSats,
-                fom: formatISO(values.fom, { representation: 'date' }),
-                tom: formatISO(lastDayOfMonth(values.tom), { representation: 'date' }),
                 fradrag: values.fradrag.map((f) => ({
                     //valdiering sikrer at feltet ikke er null
                     /* eslint-disable @typescript-eslint/no-non-null-assertion */
@@ -141,22 +150,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         }
     };
 
-    const byttDato = (keyNavn: keyof Pick<FormData, 'fom' | 'tom'>, dato: Date | [Date, Date] | null) => {
-        const maybeDate = Array.isArray(dato) ? dato[0] : dato;
-        if (keyNavn === 'fom' && formik.values.tom == null && maybeDate != null) {
-            formik.setValues({
-                ...formik.values,
-                ['fom']: maybeDate,
-                ['tom']: addMonths(maybeDate, 11),
-            });
-        } else {
-            formik.setValues({
-                ...formik.values,
-                [keyNavn]: maybeDate,
-            });
-        }
-    };
-
     const formik = useFormik<FormData>({
         initialValues: getInitialValues(props.behandling.beregning),
         async onSubmit(values, helpers) {
@@ -167,19 +160,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             }
         },
         validationSchema: yup.object<FormData>({
-            fom: yup.date().nullable().required(),
-            tom: yup
-                .date()
-                .nullable()
-                .required()
-                .test('isAfterFom', 'Sluttdato må være etter startdato', function (tom) {
-                    const { fom } = this.parent;
-                    if (!tom || !fom) {
-                        return false;
-                    }
-
-                    return fom <= tom;
-                }),
             fradrag: yup.array(fradragSchema.required()).defined(),
             begrunnelse: yup.string(),
         }),
@@ -229,43 +209,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        <Undertittel>Periode</Undertittel>
-                        <div className={styles.container}>
-                            <div className={styles.datoContainer}>
-                                <label htmlFor="fom">{intl.formatMessage({ id: 'datovelger.fom.legend' })}</label>
-                                <DatePicker
-                                    id="fom"
-                                    selected={formik.values.fom}
-                                    onChange={(dato) => byttDato('fom', dato)}
-                                    dateFormat="MM/yyyy"
-                                    showMonthYearPicker
-                                    isClearable
-                                    selectsEnd
-                                    startDate={formik.values.fom}
-                                    endDate={formik.values.tom}
-                                    minDate={new Date(2021, 0)}
-                                    autoComplete="off"
-                                />
-                                {formik.errors.fom && <Feilmelding>{formik.errors.fom}</Feilmelding>}
-                            </div>
-                            <div className={styles.datoContainer}>
-                                <label htmlFor="tom">{intl.formatMessage({ id: 'datovelger.tom.legend' })}</label>
-                                <DatePicker
-                                    id="tom"
-                                    selected={formik.values.tom}
-                                    onChange={(dato) => byttDato('tom', dato)}
-                                    dateFormat="MM/yyyy"
-                                    showMonthYearPicker
-                                    isClearable
-                                    selectsEnd
-                                    startDate={formik.values.fom}
-                                    endDate={formik.values.tom}
-                                    minDate={new Date(2021, 0)}
-                                    autoComplete="off"
-                                />
-                                {formik.errors.tom && <Feilmelding>{formik.errors.tom}</Feilmelding>}
-                            </div>
-                        </div>
                         <Undertittel>Fradrag</Undertittel>
                         <div className={styles.container}>
                             <FradragInputs
@@ -284,13 +227,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                         fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
                                     }));
                                 }}
-                                beregningsDato={
-                                    formik.values.fom &&
-                                    formik.values.tom && {
-                                        fom: formik.values.fom,
-                                        tom: formik.values.tom,
-                                    }
-                                }
+                                beregningsDato={stønadsperiode}
                                 onLeggTilClick={() => {
                                     formik.setValues({
                                         ...formik.values,

@@ -5,9 +5,6 @@ export default {
 
     'beregning.behandlingErIkkeFerdig': 'Behandlingen er ikke ferdig.',
 
-    'datovelger.fom.legend': 'Fra og med',
-    'datovelger.tom.legend': 'Til og med',
-
     'display.checkbox.fraUtland': 'Fra utland',
     'display.checkbox.tilhørerEPS': 'Ektefelle/samboer',
 
