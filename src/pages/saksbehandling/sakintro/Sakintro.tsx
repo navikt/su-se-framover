@@ -16,7 +16,6 @@ import { Person } from '~api/personApi';
 import { useUserContext } from '~context/userContext';
 import {
     erIverksatt,
-    erIverksattAvslag,
     erTilAttestering,
     hentSisteVurdertSaksbehandlingssteg,
 } from '~features/behandling/behandlingUtils';
@@ -31,7 +30,11 @@ import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 import { Vedtak } from '~types/Vedtak';
 
-import { getIverksatteInnvilgedeSøknader, søknadMottatt } from '../../../lib/søknadUtils';
+import {
+    getIverksatteInnvilgedeSøknader,
+    søknadMottatt,
+    getIverksatteAvslåtteSøknader,
+} from '../../../lib/søknadUtils';
 import { Revurdering } from '../../../types/Revurdering';
 import {
     erRevurderingTilAttestering,
@@ -105,10 +108,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
         return søknad.lukket !== null;
     });
 
-    const avslåtteSøknader = props.sak.søknader.filter((søknad) => {
-        const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
-        return behandling && erIverksattAvslag(behandling);
-    });
+    const avslåtteSøknader = getIverksatteAvslåtteSøknader(props.sak);
 
     const revurderinger = props.sak.revurderinger;
     const kanRevurderes = !isEmpty(props.sak.utbetalinger);
@@ -155,12 +155,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                         iverksatteInnvilgedeSøknader={iverksatteInnvilgedeSøknader}
                         intl={intl}
                     />
-                    <AvslåtteSøknader
-                        sakId={props.sak.id}
-                        avslåtteSøknader={avslåtteSøknader}
-                        behandlinger={props.sak.behandlinger}
-                        intl={intl}
-                    />
+                    <AvslåtteSøknader sakId={props.sak.id} avslåtteSøknader={avslåtteSøknader} intl={intl} />
                     <LukkedeSøknader lukkedeSøknader={lukkedeSøknader} intl={intl} />
                 </div>
             ) : (
@@ -626,8 +621,11 @@ const LukkedeSøknader = (props: { lukkedeSøknader: Søknad[]; intl: IntlShape 
 
 const AvslåtteSøknader = (props: {
     sakId: string;
-    behandlinger: Behandling[];
-    avslåtteSøknader: Søknad[];
+    avslåtteSøknader: Array<{
+        iverksattDato: string | undefined;
+        søknadensBehandlingsId: string | undefined;
+        søknad: Søknad;
+    }>;
     intl: IntlShape;
 }) => {
     if (props.avslåtteSøknader.length === 0) return null;
@@ -640,12 +638,11 @@ const AvslåtteSøknader = (props: {
                 })}
             </Ingress>
             <ol>
-                {props.avslåtteSøknader.map((søknad) => {
-                    const behandling = props.behandlinger.find((b) => b.søknad.id === søknad.id);
-                    if (!behandling) return <></>;
+                {props.avslåtteSøknader.map((s) => {
+                    if (!s.søknadensBehandlingsId) return <></>;
 
                     return (
-                        <li key={søknad.id}>
+                        <li key={s.søknad.id}>
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
                                     <div>
@@ -656,7 +653,15 @@ const AvslåtteSøknader = (props: {
                                             <Element>
                                                 {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
                                             </Element>
-                                            <Normaltekst>{søknadMottatt(søknad, props.intl)}</Normaltekst>
+                                            <Normaltekst>{søknadMottatt(s.søknad, props.intl)}</Normaltekst>
+                                        </div>
+                                        <div className={styles.dato}>
+                                            <Element>
+                                                {`${props.intl.formatMessage({
+                                                    id: 'display.søknad.iverksattDato',
+                                                })}: `}
+                                            </Element>
+                                            <Normaltekst>{props.intl.formatDate(s.iverksattDato)}</Normaltekst>
                                         </div>
                                     </div>
                                 </div>
@@ -665,7 +670,7 @@ const AvslåtteSøknader = (props: {
                                         className="knapp"
                                         to={Routes.saksbehandlingOppsummering.createURL({
                                             sakId: props.sakId,
-                                            behandlingId: behandling.id,
+                                            behandlingId: s.søknadensBehandlingsId,
                                         })}
                                     >
                                         {props.intl.formatMessage({ id: 'revurdering.oppsummering' })}

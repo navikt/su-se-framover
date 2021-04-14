@@ -28,3 +28,22 @@ export function getIverksatteInnvilgedeSøknader(sak: Sak) {
             };
         });
 }
+
+export function getIverksatteAvslåtteSøknader(sak: Sak) {
+    return sak.søknader
+        .filter((søknad) => {
+            const behandling = sak.behandlinger.find((b) => b.søknad.id === søknad.id);
+
+            return søknad.lukket === null && behandling?.status === Behandlingsstatus.IVERKSATT_AVSLAG;
+        })
+        .map((s) => {
+            const behandling = sak.behandlinger.find((b) => b.søknad.id === s.id);
+            const vedtakForBehandling = sak.vedtak.find((v) => v.behandlingId === behandling?.id);
+
+            return {
+                iverksattDato: vedtakForBehandling?.opprettet,
+                søknadensBehandlingsId: behandling?.id,
+                søknad: s,
+            };
+        });
+}
