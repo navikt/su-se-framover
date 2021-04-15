@@ -16,7 +16,8 @@ import {
     underkjennRevurdering,
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
-import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
+import { Nullable } from '~lib/types';
+import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
@@ -74,6 +75,11 @@ export const startBehandling = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const lagreVirkningstidspunkt = createApiCallAsyncThunk<
+    Behandling,
+    { sakId: string; behandlingId: string; fraOgMed: string; tilOgMed: string; begrunnelse: string }
+>('behandling/lagreVirkningstidspunk', behandlingApi.lagreVirkningstidspunkt);
+
 export const fetchBehandling = createAsyncThunk<
     Behandling,
     { sakId: string; behandlingId: string },
@@ -123,10 +129,10 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
 
 export const startBeregning = createAsyncThunk<
     Behandling,
-    { sakId: string; behandlingId: string; sats: Sats; fom: string; tom: string; fradrag: Fradrag[] },
+    { sakId: string; behandlingId: string; sats: Sats; fradrag: Fradrag[]; begrunnelse: Nullable<string> },
     { rejectValue: ApiError }
->('beregning/start', async ({ sakId, behandlingId, fom, tom, fradrag }, thunkApi) => {
-    const res = await behandlingApi.startBeregning(sakId, behandlingId, { fom, tom, fradrag });
+>('beregning/start', async ({ sakId, behandlingId, fradrag, begrunnelse }, thunkApi) => {
+    const res = await behandlingApi.startBeregning(sakId, behandlingId, { fradrag, begrunnelse });
     if (res.status === 'ok') {
         return res.data;
     }
@@ -255,6 +261,9 @@ export default createSlice({
         resetSak(state) {
             state.sak = RemoteData.initial;
         },
+        resetBeregningstatus(state) {
+            state.beregningStatus = RemoteData.initial;
+        },
     },
     extraReducers: (builder) => {
         handleAsyncThunk(builder, fetchSak, {
@@ -285,6 +294,22 @@ export default createSlice({
             rejected: (state) => {
                 state.sak = { ...state.sak };
             },
+        });
+
+        handleAsyncThunk(builder, lagreVirkningstidspunkt, {
+            pending: (state) => state,
+            fulfilled: (state, action) => {
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) =>
+                            b.id === action.meta.arg.behandlingId ? action.payload : b
+                        ),
+                    }))
+                );
+            },
+            rejected: (state) => state,
         });
 
         handleAsyncThunk(builder, stansUtbetalinger, {

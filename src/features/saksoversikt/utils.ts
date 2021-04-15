@@ -25,6 +25,8 @@ export const createVilkårUrl = (props: { sakId: string; behandlingId: string; v
 
 export const vilkårTittelFormatted = (type: Vilkårtype) => {
     switch (type) {
+        case Vilkårtype.Virkningstidspunkt:
+            return 'Virkningstidspunkt';
         case Vilkårtype.BorOgOppholderSegINorge:
             return 'Bo og opphold i Norge';
         case Vilkårtype.Flyktning:

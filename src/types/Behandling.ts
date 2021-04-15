@@ -19,6 +19,15 @@ export interface Behandling {
     saksbehandler: Nullable<string>;
     hendelser: Nullable<Hendelse[]>;
     satsBeløp: Nullable<number>;
+    stønadsperiode: Nullable<Behandlingsperiode>;
+}
+
+export interface Behandlingsperiode {
+    periode: {
+        fraOgMed: Nullable<string>;
+        tilOgMed: Nullable<string>;
+    };
+    begrunnelse: Nullable<string>;
 }
 
 export enum Behandlingsstatus {

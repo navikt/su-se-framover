@@ -16,6 +16,7 @@ export enum VilkårVurderingStatus {
 }
 
 export enum Vilkårtype {
+    Virkningstidspunkt = 'VIRKNINGSTIDSPUNKT',
     Uførhet = 'UFØRHET',
     Flyktning = 'FLYKTNING',
     Oppholdstillatelse = 'OPPHOLDSTILLATELSE',
