@@ -146,6 +146,7 @@ const RevurderingsOppsummering = (props: {
                 if (revurderingSlice.forhåndsvarsleRevurdering.fulfilled.match(res)) {
                     setSendtTilForhåndsvarsling(RemoteData.success(null));
                 }
+                return;
             }
             setSendtTilAttesteringStatus(RemoteData.pending);
 

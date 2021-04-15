@@ -69,12 +69,12 @@ export async function forhåndsvarsle(
     sakId: string,
     revurderingId: string,
     fritekstTilBrev: string
-): Promise<ApiClientResult<RevurderingTilAttestering>> {
+): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/forhandsvarsle`,
         method: 'POST',
         body: {
-            fritekstTilBrev,
+            fritekst: fritekstTilBrev,
         },
     });
 }
