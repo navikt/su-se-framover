@@ -2,6 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import classNames from 'classnames';
 import { isEmpty } from 'fp-ts/lib/Array';
 import AlertStripe, { AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import { EtikettInfo } from 'nav-frontend-etiketter';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
@@ -274,9 +275,18 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
                                     <div>
-                                        <Undertittel>
-                                            {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
-                                        </Undertittel>
+                                        <div className={styles.tittel}>
+                                            <Undertittel>
+                                                {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
+                                            </Undertittel>
+                                            {r.harForhåndsvarslet && (
+                                                <EtikettInfo className={styles.etikett}>
+                                                    {props.intl.formatMessage({
+                                                        id: 'revurdering.label.forhåndsvarselSendt',
+                                                    })}
+                                                </EtikettInfo>
+                                            )}
+                                        </div>
                                         <div className={styles.dato}>
                                             <Element>
                                                 {props.intl.formatMessage({ id: 'revurdering.opprettet' })}{' '}
