@@ -66,7 +66,7 @@ const RevurderingsOppsummering = (props: {
 
                 {erRevurderingSimulert(props.revurdering) &&
                     (erRevurderingForhåndsvarslet(props.revurdering) ? (
-                        <EtterForhåndsvarsel revurdering={props.revurdering} intl={intl} />
+                        <EtterForhåndsvarsel sakId={props.sakId} revurdering={props.revurdering} intl={intl} />
                     ) : (
                         <Forhåndsvarsel sakId={props.sakId} revurdering={props.revurdering} intl={intl} />
                     ))}

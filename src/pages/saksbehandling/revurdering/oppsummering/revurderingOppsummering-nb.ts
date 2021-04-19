@@ -1,5 +1,15 @@
 export default {
+    'etterForhåndsvarsel.begrunnelse.label': 'Begrunnelse',
+    'etterForhåndsvarsel.resultatEtterForhåndsvarsel': 'Resultat etter forhåndsvarsel',
+    'etterForhåndsvarsel.resultatEtterForhåndsvarsel.sammeOpplysninger':
+        'Revurderingen skal fortsette med samme opplysninger',
+    'etterForhåndsvarsel.resultatEtterForhåndsvarsel.andreOpplysninger':
+        'Revurdering skal fortsette med andre opplysninger',
+    'etterForhåndsvarsel.resultatEtterForhåndsvarsel.avsluttesUtenEndring': 'Revurdering skal avsluttes uten endringer',
+
     'feil.generellFeil': 'En feil skjedde',
+
+    'knapp.sendtBrevOgAvslutt': 'Send brev og avslutt',
 
     'link.tilbake': 'Tilbake',
 
