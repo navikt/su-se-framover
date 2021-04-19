@@ -25,4 +25,5 @@ export enum VedtakType {
     INGEN_ENDRING = 'INGEN_ENDRING',
     OPPHØR = 'OPPHØR',
     AVSLAG = 'AVSLAG',
+    REGULER_GRUNNBELØP = 'REGULER_GRUNNBELØP',
 }

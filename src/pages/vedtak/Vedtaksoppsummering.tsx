@@ -10,6 +10,7 @@ import { ApiError } from '~api/apiClient';
 import { fetchBrevutkastForRevurdering } from '~api/pdfApi';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { erGregulering } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
@@ -36,6 +37,8 @@ const vedtaksresultatToTekst = (type: VedtakType, intl: IntlShape): string => {
             return intl.formatMessage({ id: 'vedtaktype.opphør' });
         case VedtakType.INGEN_ENDRING:
             return intl.formatMessage({ id: 'vedtaktype.ingenendring' });
+        case VedtakType.REGULER_GRUNNBELØP:
+            return intl.formatMessage({ id: 'vedtaktype.regulergrunnbeløp' });
     }
 };
 
@@ -85,7 +88,8 @@ const Vedtaksoppsummering = (props: Props) => {
                     </div>
                     <div>
                         <Element>{intl.formatMessage({ id: 'vedtak.brev' })}</Element>
-                        {revurderingSomFørteTilVedtak.skalFøreTilBrevutsending ? (
+                        {revurderingSomFørteTilVedtak.skalFøreTilBrevutsending &&
+                        !erGregulering(revurderingSomFørteTilVedtak.årsak) ? (
                             <Knapp
                                 spinner={RemoteData.isPending(fetchVedtaksbrev)}
                                 mini
