@@ -1,14 +1,14 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import classNames from 'classnames';
 import { isEmpty } from 'fp-ts/lib/Array';
-import AlertStripe from 'nav-frontend-alertstriper';
+import AlertStripe, { AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
 import { Element, Ingress, Innholdstittel, Normaltekst, Undertittel } from 'nav-frontend-typografi';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IntlShape } from 'react-intl';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
@@ -23,6 +23,7 @@ import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
 import { Behandling, UnderkjennelseGrunn, Underkjennelse } from '~types/Behandling';
@@ -61,38 +62,35 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
     }
 };
 
-const UnderkjennelsesInformasjon = (props: { underkjennelse: Underkjennelse; intl: IntlShape }) => {
+interface successNotificationState {
+    harForhåndsvarslet?: boolean;
+    sendtTilAttestering?: boolean;
+}
+
+const SuksessStatuser = (props: { locationState: Nullable<successNotificationState>; intl: IntlShape }) => {
     return (
-        <div className={styles.underkjennelseContainer}>
-            <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
-                {props.intl.formatMessage({
-                    id: 'behandling.attestering.advarsel',
-                })}
-            </AlertStripe>
-            <div className={styles.underkjennelse}>
-                <div className={styles.underkjenningsinfo}>
-                    <Element>
-                        {props.intl.formatMessage({
-                            id: 'display.attestering.sendtTilbakeFordi',
-                        })}
-                    </Element>
-                    <Normaltekst>{grunnToText(props.underkjennelse.grunn, props.intl)}</Normaltekst>
-                </div>
-                <div className={styles.underkjenningsinfo}>
-                    <Element>
-                        {props.intl.formatMessage({
-                            id: 'display.attestering.kommentar',
-                        })}
-                    </Element>
-                    <Normaltekst>{props.underkjennelse.kommentar}</Normaltekst>
-                </div>
-            </div>
+        <div className={styles.suksessStatuserContainer}>
+            {props.locationState?.harForhåndsvarslet && (
+                <AlertStripeSuksess>{props.intl.formatMessage({ id: 'suksess.forhåndsvarsel' })}</AlertStripeSuksess>
+            )}
+            {props.locationState?.sendtTilAttestering && (
+                <AlertStripeSuksess>{props.intl.formatMessage({ id: 'suksess.forhåndsvarsel' })}</AlertStripeSuksess>
+            )}
         </div>
     );
 };
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
+    const history = useHistory();
+    const location = useLocation<successNotificationState>();
+    const [locationState, setLocationState] = useState<successNotificationState | null>(null);
     const intl = useI18n({ messages });
+
+    useEffect(() => {
+        setLocationState(location.state);
+        history.replace(location.pathname, null);
+    }, []);
+
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {
             const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
@@ -117,6 +115,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
 
     return (
         <div className={styles.sakintroContainer}>
+            <SuksessStatuser locationState={locationState} intl={intl} />
             <div className={styles.pageHeader}>
                 <Innholdstittel className={styles.tittel}>
                     {intl.formatMessage({ id: 'display.saksoversikt.tittel' })}: {props.sak.saksnummer}
@@ -134,7 +133,6 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                     )}
                 </div>
             </div>
-
             {props.sak.søknader.length > 0 ? (
                 <div className={styles.søknadOgUtbetalingContainer}>
                     <ÅpneSøknader
@@ -161,6 +159,36 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
             ) : (
                 'Ingen søknader'
             )}
+        </div>
+    );
+};
+
+const UnderkjennelsesInformasjon = (props: { underkjennelse: Underkjennelse; intl: IntlShape }) => {
+    return (
+        <div className={styles.underkjennelseContainer}>
+            <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
+                {props.intl.formatMessage({
+                    id: 'behandling.attestering.advarsel',
+                })}
+            </AlertStripe>
+            <div className={styles.underkjennelse}>
+                <div className={styles.underkjenningsinfo}>
+                    <Element>
+                        {props.intl.formatMessage({
+                            id: 'display.attestering.sendtTilbakeFordi',
+                        })}
+                    </Element>
+                    <Normaltekst>{grunnToText(props.underkjennelse.grunn, props.intl)}</Normaltekst>
+                </div>
+                <div className={styles.underkjenningsinfo}>
+                    <Element>
+                        {props.intl.formatMessage({
+                            id: 'display.attestering.kommentar',
+                        })}
+                    </Element>
+                    <Normaltekst>{props.underkjennelse.kommentar}</Normaltekst>
+                </div>
+            </div>
         </div>
     );
 };

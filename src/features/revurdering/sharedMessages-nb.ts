@@ -22,13 +22,6 @@ export default {
 
     'feil.noeGikkGalt': 'Noe gikk galt. Gå tilbake og prøv igjen',
     'feil.kanIkkeRevurdere': 'Det finnes ingen perioder for revurdering',
-    'feil.ukjentFeil': 'Ukjent feil',
-    'feil.fant.ikke.sak': 'Fant ikke sak',
-    'feil.fant.ikke.aktør.id': 'Fant ikke aktør id',
-    'feil.kunne.ikke.opprette.oppgave': 'Kunne ikke opprette oppgave',
-    'feil.fant.ikke.revurdering': 'Fant ikke revurdering',
-    'feil.ugyldig.periode': 'Ugyldig periode',
-    'feil.ugyldig.tilstand': 'Ugyldig tilstand',
     'feil.tidligst.neste.måned': 'Revurdering kan kun gjøres fra og med neste kalendermåned',
     'feil.begrunnelse.kan.ikke.være.tom': 'Begrunnelse kan ikke være tom',
     'feil.ugyldig.årsak': 'Ugyldig årsak',
