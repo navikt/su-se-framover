@@ -9,10 +9,13 @@ import {
     UnderkjentRevurdering,
 } from '~types/Revurdering';
 
-export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurdering => !('beregninger' in r);
+export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurdering =>
+    r.status === RevurderingsStatus.OPPRETTET;
 
-export const erRevurderingSimulert = (revurdering: Revurdering): revurdering is SimulertRevurdering =>
-    'beregninger' in revurdering;
+export const erRevurderingSimulert = (r: Revurdering): r is SimulertRevurdering =>
+    r.status === RevurderingsStatus.SIMULERT_INNVILGET || r.status === RevurderingsStatus.SIMULERT_OPPHØRT;
+
+export const erRevurderingForhåndsvarslet = (r: Revurdering) => r.harForhåndsvarslet === true;
 
 export const erRevurderingIngenEndring = (r: Revurdering): r is BeregnetIngenEndring =>
     r.status === RevurderingsStatus.BEREGNET_INGEN_ENDRING ||
