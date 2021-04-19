@@ -15,6 +15,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     fritekstTilBrev: string;
     årsak: OpprettetRevurderingGrunn;
     begrunnelse: Nullable<string>;
+    harForhåndsvarslet: boolean;
 }
 interface Beregninger {
     beregning: Beregning;
@@ -79,4 +80,17 @@ export enum OpprettetRevurderingGrunn {
     DØDSFALL = 'DØDSFALL',
     ANDRE_KILDER = 'ANDRE_KILDER',
     MIGRERT = 'MIGRERT',
+}
+
+export enum RevurderingErrorCodes {
+    ALLEREDE_FORHÅNDSVARSLET = 'allerede_forhåndsvarslet',
+    FANT_IKKE_SAK = 'fant_ikke_Sak',
+    FANT_IKKE_PERSON = 'fant_ikke_person',
+    FANT_IKKE_AKTØR_ID = 'fant_ikke_aktør_id',
+    FANT_IKKE_REVURDERING = 'fant_ikke_revurdering',
+    UGYLDIG_PERIODE = 'ugyldig_periode',
+    UGYLDIG_TILSTAND = 'ugyldig_tilstand',
+    KUNNE_IKKE_OPPRETTE_OPPGAVE = 'kunne_ikke_opprette_oppgave',
+    KUNNE_IKKE_DISTRIBUERE_BREV = 'kunne_ikke_distribuere_brev',
+    KUNNE_IKKE_JOURNALFØRE_BREV = 'kunne_ikke_journalføre_brev',
 }
