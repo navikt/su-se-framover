@@ -10,9 +10,9 @@ import {
     SimulertRevurdering,
     UnderkjentRevurdering,
     OpprettetRevurderingGrunn,
+    RevurderingErrorCodes,
 } from '~types/Revurdering';
 
-import * as pdfApi from '../../api/pdfApi';
 import * as revurderingApi from '../../api/revurderingApi';
 
 export const opprettRevurdering = createAsyncThunk<
@@ -61,7 +61,7 @@ export const beregnOgSimuler = createAsyncThunk<
 export const forhåndsvarsleRevurdering = createAsyncThunk<
     SimulertRevurdering,
     { sakId: string; revurderingId: string; fritekstTilBrev: string },
-    { rejectValue: ApiError }
+    { rejectValue: ApiError<RevurderingErrorCodes> }
 >('revurdering/forhandsvarsle', async ({ sakId, revurderingId, fritekstTilBrev }, thunkApi) => {
     const res = await revurderingApi.forhåndsvarsle(sakId, revurderingId, fritekstTilBrev);
     if (res.status === 'ok') {
@@ -73,7 +73,7 @@ export const forhåndsvarsleRevurdering = createAsyncThunk<
 export const sendRevurderingTilAttestering = createAsyncThunk<
     RevurderingTilAttestering,
     { sakId: string; revurderingId: string; fritekstTilBrev: string; skalFøreTilBrevutsending?: boolean },
-    { rejectValue: ApiError }
+    { rejectValue: ApiError<RevurderingErrorCodes> }
 >(
     'revurdering/sendTilAttestering',
     async ({ sakId, revurderingId, fritekstTilBrev, skalFøreTilBrevutsending: skalFøreTilBrevutsending }, thunkApi) => {
@@ -110,18 +110,6 @@ export const underkjennRevurdering = createAsyncThunk<
     const res = await revurderingApi.underkjenn(sakId, revurderingId, grunn, kommentar);
     if (res.status === 'ok') {
         return res.data;
-    }
-    return thunkApi.rejectWithValue(res.error);
-});
-
-export const fetchBrevutkastWithFritekst = createAsyncThunk<
-    { objectUrl: string },
-    { sakId: string; revurderingId: string; fritekst: string },
-    { rejectValue: ApiError }
->('revurdering/revurderingsVedtak', async ({ sakId, revurderingId, fritekst }, thunkApi) => {
-    const res = await pdfApi.fetchBrevutkastForRevurderingWithFritekst(sakId, revurderingId, fritekst);
-    if (res.status === 'ok') {
-        return { objectUrl: URL.createObjectURL(res.data) };
     }
     return thunkApi.rejectWithValue(res.error);
 });

@@ -9,6 +9,7 @@ import {
     IverksattRevurdering,
     UnderkjentRevurdering,
     OpprettetRevurderingGrunn,
+    RevurderingErrorCodes,
 } from '~types/Revurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -69,7 +70,7 @@ export async function forhåndsvarsle(
     sakId: string,
     revurderingId: string,
     fritekstTilBrev: string
-): Promise<ApiClientResult<SimulertRevurdering>> {
+): Promise<ApiClientResult<SimulertRevurdering, RevurderingErrorCodes>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/forhandsvarsle`,
         method: 'POST',
@@ -84,7 +85,7 @@ export async function sendTilAttestering(
     revurderingId: string,
     fritekstTilBrev: string,
     skalFøreTilBrevutsending?: boolean
-): Promise<ApiClientResult<RevurderingTilAttestering>> {
+): Promise<ApiClientResult<RevurderingTilAttestering, RevurderingErrorCodes>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilAttestering`,
         method: 'POST',
