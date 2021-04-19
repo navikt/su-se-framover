@@ -99,6 +99,10 @@ const Forhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevurderin
 
         if (revurderingActions.sendRevurderingTilAttestering.fulfilled.match(res)) {
             setStatus(RemoteData.success(res.payload));
+            history.push({
+                pathname: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
+                state: { sendtTilAttestering: true },
+            });
         }
     };
 
