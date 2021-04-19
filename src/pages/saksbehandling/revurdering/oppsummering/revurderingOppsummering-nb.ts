@@ -1,4 +1,8 @@
 export default {
+    'feil.generellFeil': 'En feil skjedde',
+
+    'link.tilbake': 'Tilbake',
+
     'oppsummering.tittel': 'Oppsummering',
     'oppsummering.gammelBeregning.tittel': 'Gammel beregning',
     'oppsummering.nyBeregning.tittel': 'Ny beregning',
