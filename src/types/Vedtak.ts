@@ -8,7 +8,7 @@ export interface Vedtak {
     opprettet: string;
     behandlingsinformasjon: Behandlingsinformasjon;
     beregning: Beregning;
-    simulering: Simulering;
+    simulering?: Simulering;
     attestant: string;
     saksbehandler: string;
     utbetalingId: string;
