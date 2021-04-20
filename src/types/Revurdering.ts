@@ -4,6 +4,7 @@ import { Behandling, Attestering } from './Behandling';
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
 import { Periode } from './Fradrag';
+import { Simulering } from './Simulering';
 
 export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
     id: string;
@@ -36,12 +37,14 @@ export interface BeregnetIngenEndring extends Revurdering<RevurderingsStatus.BER
 export interface SimulertRevurdering
     extends Revurdering<RevurderingsStatus.SIMULERT_INNVILGET | RevurderingsStatus.SIMULERT_OPPHØRT> {
     beregninger: Beregninger;
+    simulering: Simulering;
 }
 
 export interface RevurderingTilAttestering
     extends Revurdering<RevurderingsStatus.TIL_ATTESTERING_INNVILGET | RevurderingsStatus.TIL_ATTESTERING_OPPHØRT> {
     beregninger: Beregninger;
     skalFøreTilBrevutsending: boolean;
+    simulering: Nullable<Simulering>;
 }
 
 export interface IverksattRevurdering
@@ -49,6 +52,7 @@ export interface IverksattRevurdering
     beregninger: Beregninger;
     attestering: Attestering;
     skalFøreTilBrevutsending: boolean;
+    simulering: Nullable<Simulering>;
 }
 
 export interface UnderkjentRevurdering
@@ -56,6 +60,11 @@ export interface UnderkjentRevurdering
     beregninger: Beregninger;
     attestering: Attestering;
     skalFøreTilBrevutsending: boolean;
+    simulering: Nullable<Simulering>;
+}
+
+export function harSimulering(r: Revurdering): r is Revurdering & { simulering: Simulering } {
+    return 'simulering' in r && r['simulering'] !== null;
 }
 
 export enum RevurderingsStatus {
