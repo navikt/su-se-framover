@@ -99,7 +99,7 @@ export const saksbehandlingVilkårsvurdering: Route<{
     vilkar?: Vilkårtype;
 }> = {
     path: `/saksoversikt/:sakId/:behandlingId/${SaksbehandlingMenyvalg.Vilkår}/:vilkar?/`,
-    createURL: ({ vilkar = Vilkårtype.Uførhet, ...args }) =>
+    createURL: ({ vilkar = Vilkårtype.Virkningstidspunkt, ...args }) =>
         `/saksoversikt/${args.sakId}/${args.behandlingId}/${SaksbehandlingMenyvalg.Vilkår}/${vilkar}`,
 };
 

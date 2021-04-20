@@ -11,13 +11,21 @@ import { ApiError } from '~api/apiClient';
 import * as PdfApi from '~api/pdfApi';
 import { Person } from '~api/personApi';
 import Personlinje from '~components/personlinje/Personlinje';
-import RevurderingÅrsakOgBegrunnelse from '~components/RevurderingÅrsakOgBegrunnelse/RevurderingÅrsakOgBegrunnelse';
+import RevurderingIngenEndringAlert from '~components/revurdering/RevurderingIngenEndringAlert';
+import RevurderingÅrsakOgBegrunnelse from '~components/revurdering/RevurderingÅrsakOgBegrunnelse';
 import * as revurderingSlice from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
-import { erRevurderingTilAttestering } from '~pages/saksbehandling/revurdering/revurderingUtils';
+import {
+    erRevurderingIverksatt,
+    erRevurderingTilAttestering,
+    erRevurderingUnderkjent,
+    erRevurderingIngenEndring,
+    erGregulering,
+} from '~pages/saksbehandling/revurdering/revurderingUtils';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { useAppDispatch } from '~redux/Store';
 import { IverksattRevurdering, RevurderingsStatus, UnderkjentRevurdering } from '~types/Revurdering';
@@ -90,6 +98,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 );
 
                 if (revurderingSlice.iverksettRevurdering.fulfilled.match(res)) {
+                    dispatch(sakSlice.fetchSak({ saksnummer: props.sak.saksnummer.toString() }));
                     setSendtBeslutning(RemoteData.success(res.payload));
                 }
 
@@ -126,9 +135,16 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
         validationSchema: schema,
     });
 
-    if (RemoteData.isSuccess(sendtBeslutning)) {
+    if (!revurdering) {
         return (
-            <div className={styles.sendtTilAttesteringContainer}>
+            <div className={styles.advarselContainer}>
+                <AlertStripeFeil>{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</AlertStripeFeil>
+            </div>
+        );
+    }
+    if (erRevurderingIverksatt(revurdering) || erRevurderingUnderkjent(revurdering)) {
+        return (
+            <div className={styles.advarselContainer}>
                 <AlertStripeSuksess>
                     <p>
                         {formik.values.beslutning
@@ -143,8 +159,12 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
         );
     }
 
-    if (!revurdering || !erRevurderingTilAttestering(revurdering)) {
-        return <AlertStripeFeil>{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</AlertStripeFeil>;
+    if (!erRevurderingTilAttestering(revurdering)) {
+        return (
+            <div className={styles.advarselContainer}>
+                <AlertStripeFeil>{intl.formatMessage({ id: 'feil.ikkeTilAttestering' })}</AlertStripeFeil>
+            </div>
+        );
     }
 
     const handleShowBrevClick = async () => {
@@ -173,6 +193,9 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                         {intl.formatMessage({ id: 'page.tittel' })}
                     </Innholdstittel>
                 </div>
+                {erRevurderingIngenEndring(revurdering) && (
+                    <RevurderingIngenEndringAlert className={styles.ingenEndringInfoboks} />
+                )}
                 <RevurderingÅrsakOgBegrunnelse className={styles.årsakBegrunnelseContainer} revurdering={revurdering} />
                 <div className={styles.beregningContainer}>
                     <VisBeregning
@@ -185,14 +208,16 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                         beregning={revurdering.beregninger.revurdert}
                     />
                 </div>
-                <Knapp
-                    className={styles.brevButton}
-                    htmlType="button"
-                    spinner={RemoteData.isPending(hentPdfStatus)}
-                    onClick={handleShowBrevClick}
-                >
-                    {intl.formatMessage({ id: 'knapp.brev' })}
-                </Knapp>
+                {revurdering.skalFøreTilBrevutsending && !erGregulering(revurdering.årsak) && (
+                    <Knapp
+                        className={styles.brevButton}
+                        htmlType="button"
+                        spinner={RemoteData.isPending(hentPdfStatus)}
+                        onClick={handleShowBrevClick}
+                    >
+                        {intl.formatMessage({ id: 'knapp.brev' })}
+                    </Knapp>
+                )}
                 {RemoteData.isFailure(hentPdfStatus) && (
                     <AlertStripeFeil className={styles.brevFeil}>
                         {intl.formatMessage({ id: 'feil.klarteIkkeHenteBrev' })}

@@ -15,7 +15,9 @@ import * as personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
 import * as søknadslice from '~features/søknad/søknad.slice';
 import * as Routes from '~lib/routes';
+import { Nullable } from '~lib/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Søknadstype } from '~types/Søknad';
 
 import messages from './kvittering-nb';
 import styles from './kvittering.module.less';
@@ -25,14 +27,20 @@ const Kvittering = () => {
     const history = useHistory();
     const søknad = useAppSelector((state) => state.innsending.søknad);
     const søker = useAppSelector((state) => state.søker.søker);
+    const søknadstype = useAppSelector((state) => state.soknad.forVeileder.type);
     const [fetchSøknadPdfState, setFetchSøknadPdfState] = React.useState<RemoteData.RemoteData<ApiError, null>>(
         RemoteData.initial
     );
 
-    const handleAvsluttSøknad = () => {
+    const handleAvsluttSøknad = (sakId: Nullable<string>) => {
         dispatch(personSlice.default.actions.resetSøker());
         dispatch(søknadslice.default.actions.resetSøknad());
-        history.push(Routes.soknad.createURL());
+
+        if (søknadstype === Søknadstype.Papirsøknad && sakId) {
+            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: sakId }));
+        } else {
+            history.push(Routes.soknad.createURL());
+        }
     };
 
     const handleSkrivUtSøknadClick = async (opprettetSøknad: OpprettetSøknad) => {
@@ -54,7 +62,7 @@ const Kvittering = () => {
                 </AlertStripe>
 
                 <div className={styles.nySøknadKnapp}>
-                    <Knapp onClick={handleAvsluttSøknad}>
+                    <Knapp onClick={() => handleAvsluttSøknad(null)}>
                         <FormattedMessage id="kvittering.avslutt" />
                     </Knapp>
                 </div>
@@ -177,7 +185,10 @@ const Kvittering = () => {
                                             </div>
                                         )}
                                         <div>
-                                            <Knapp onClick={handleAvsluttSøknad} className={styles.avsluttKnapp}>
+                                            <Knapp
+                                                onClick={() => handleAvsluttSøknad(saksnummerOgSøknad.søknad.sakId)}
+                                                className={styles.avsluttKnapp}
+                                            >
                                                 <FormattedMessage id="kvittering.avslutt" />
                                             </Knapp>
 

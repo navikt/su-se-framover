@@ -46,13 +46,14 @@ export const oppdaterRevurderingsPeriode = createAsyncThunk<
 
 export const beregnOgSimuler = createAsyncThunk<
     SimulertRevurdering,
-    { sakId: string; revurderingId: string; periode: Periode<string>; fradrag: Fradrag[] },
+    { sakId: string; revurderingId: string; periode: Periode<string>; fradrag: Fradrag[]; forventetInntekt?: number },
     { rejectValue: ApiError }
->('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode, fradrag }, thunkApi) => {
+>('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode, fradrag, forventetInntekt }, thunkApi) => {
     const res = await revurderingApi.beregnOgSimuler(sakId, {
         revurderingId,
         periode,
         fradrag,
+        forventetInntekt,
     });
     if (res.status === 'ok') {
         return res.data;
@@ -62,15 +63,23 @@ export const beregnOgSimuler = createAsyncThunk<
 
 export const sendRevurderingTilAttestering = createAsyncThunk<
     RevurderingTilAttestering,
-    { sakId: string; revurderingId: string; fritekstTilBrev: string },
+    { sakId: string; revurderingId: string; fritekstTilBrev: string; skalFøreTilBrevutsending?: boolean },
     { rejectValue: ApiError }
->('revurdering/sendTilAttestering', async ({ sakId, revurderingId, fritekstTilBrev }, thunkApi) => {
-    const res = await revurderingApi.sendTilAttestering(sakId, revurderingId, fritekstTilBrev);
-    if (res.status === 'ok') {
-        return res.data;
+>(
+    'revurdering/sendTilAttestering',
+    async ({ sakId, revurderingId, fritekstTilBrev, skalFøreTilBrevutsending: skalFøreTilBrevutsending }, thunkApi) => {
+        const res = await revurderingApi.sendTilAttestering(
+            sakId,
+            revurderingId,
+            fritekstTilBrev,
+            skalFøreTilBrevutsending
+        );
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
     }
-    return thunkApi.rejectWithValue(res.error);
-});
+);
 
 export const iverksettRevurdering = createAsyncThunk<
     IverksattRevurdering,

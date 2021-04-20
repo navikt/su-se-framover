@@ -8,7 +8,7 @@ export interface Vedtak {
     opprettet: string;
     behandlingsinformasjon: Behandlingsinformasjon;
     beregning: Beregning;
-    simulering: Simulering;
+    simulering?: Simulering;
     attestant: string;
     saksbehandler: string;
     utbetalingId: string;
@@ -22,6 +22,8 @@ export interface Vedtak {
 export enum VedtakType {
     SØKNAD = 'SØKNAD',
     ENDRING = 'ENDRING',
+    INGEN_ENDRING = 'INGEN_ENDRING',
     OPPHØR = 'OPPHØR',
     AVSLAG = 'AVSLAG',
+    REGULER_GRUNNBELØP = 'REGULER_GRUNNBELØP',
 }

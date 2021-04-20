@@ -8,7 +8,8 @@ export default {
 
     'behandling.ikkeFerdig': 'Behandlingen er ikke ferdig',
     'behandling.søknadsdato': 'Søknadsdato',
-    'behandling.saksbehandlingsdato': 'Saksbehandlingsdato',
+    'behandling.saksbehandlingStartet': 'Saksbehandling startet',
+    'behandling.iverksattDato': 'Iverksatt dato',
 
     'brev.utkastVedtaksbrev': 'Utkast til vedtaksbrev',
 

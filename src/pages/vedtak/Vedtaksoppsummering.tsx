@@ -10,11 +10,14 @@ import { ApiError } from '~api/apiClient';
 import { fetchBrevutkastForRevurdering } from '~api/pdfApi';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { erGregulering } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
+import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { VedtakType } from '~types/Vedtak';
 
-import RevurderingÅrsakOgBegrunnelse from '../../components/RevurderingÅrsakOgBegrunnelse/RevurderingÅrsakOgBegrunnelse';
+import RevurderingÅrsakOgBegrunnelse from '../../components/revurdering/RevurderingÅrsakOgBegrunnelse';
+import { Utbetalingssimulering } from '../saksbehandling/steg/beregningOgSimulering/simulering/simulering';
 
 import messages from './vedtaksoppsummering-nb';
 import styles from './vedtaksoppsummering.module.less';
@@ -33,6 +36,10 @@ const vedtaksresultatToTekst = (type: VedtakType, intl: IntlShape): string => {
             return intl.formatMessage({ id: 'vedtaktype.endring' });
         case VedtakType.OPPHØR:
             return intl.formatMessage({ id: 'vedtaktype.opphør' });
+        case VedtakType.INGEN_ENDRING:
+            return intl.formatMessage({ id: 'vedtaktype.ingenendring' });
+        case VedtakType.REGULER_GRUNNBELØP:
+            return intl.formatMessage({ id: 'vedtaktype.regulergrunnbeløp' });
     }
 };
 
@@ -44,7 +51,9 @@ const Vedtaksoppsummering = (props: Props) => {
     const vedtak = props.sak.vedtak.find((v) => v.id === urlParams.vedtakId);
     if (!vedtak) return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
 
-    const revurderingSomFørteTilVedtak = props.sak.revurderinger.find((b) => b.id === vedtak.behandlingId);
+    const revurderingSomFørteTilVedtak = props.sak.revurderinger.find(
+        (b) => b.id === vedtak.behandlingId
+    ) as IverksattRevurdering;
 
     const hentVedtaksbrev = async () => {
         setFetchVedtaksbrev(RemoteData.pending);
@@ -70,26 +79,29 @@ const Vedtaksoppsummering = (props: Props) => {
                         <Element> {intl.formatMessage({ id: 'behandlet.av' })}</Element>
                         <p>{vedtak.saksbehandler}</p>
                     </div>
-
                     <div>
                         <Element> {intl.formatMessage({ id: 'attestert.av' })}</Element>
                         <p>{vedtak.attestant}</p>
                     </div>
-
                     <div>
                         <Element> {intl.formatMessage({ id: 'vedtak.dato' })}</Element>
                         <p>{intl.formatDate(vedtak.opprettet)}</p>
                     </div>
                     <div>
                         <Element>{intl.formatMessage({ id: 'vedtak.brev' })}</Element>
-                        <Knapp
-                            spinner={RemoteData.isPending(fetchVedtaksbrev)}
-                            mini
-                            htmlType="button"
-                            onClick={hentVedtaksbrev}
-                        >
-                            {intl.formatMessage({ id: 'knapp.vis' })}
-                        </Knapp>
+                        {revurderingSomFørteTilVedtak.skalFøreTilBrevutsending &&
+                        !erGregulering(revurderingSomFørteTilVedtak.årsak) ? (
+                            <Knapp
+                                spinner={RemoteData.isPending(fetchVedtaksbrev)}
+                                mini
+                                htmlType="button"
+                                onClick={hentVedtaksbrev}
+                            >
+                                {intl.formatMessage({ id: 'knapp.vis' })}
+                            </Knapp>
+                        ) : (
+                            intl.formatMessage({ id: 'vedtak.ingenBrev' })
+                        )}
                     </div>
                 </div>
                 <div className={styles.brevutkastFeil}>
@@ -114,7 +126,10 @@ const Vedtaksoppsummering = (props: Props) => {
                 />
             )}
             <InfoHeader />
-            <VisBeregning beregning={vedtak.beregning} />
+            <div className={styles.beregningOgSimulering}>
+                <VisBeregning beregning={vedtak.beregning} />
+                {vedtak.simulering && <Utbetalingssimulering simulering={vedtak.simulering} />}
+            </div>
             <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })} className="knapp">
                 {intl.formatMessage({ id: 'knapp.tilbake' })}
             </Link>

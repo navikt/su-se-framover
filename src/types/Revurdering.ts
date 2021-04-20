@@ -1,8 +1,10 @@
 import { Nullable } from '~lib/types';
 
 import { Behandling, Attestering } from './Behandling';
+import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
 import { Periode } from './Fradrag';
+import { Simulering } from './Simulering';
 import { Grunnlag, SimulertEndringGrunnlag } from './Grunnlag';
 
 export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
@@ -16,6 +18,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     fritekstTilBrev: string;
     årsak: OpprettetRevurderingGrunn;
     begrunnelse: Nullable<string>;
+    behandlingsinformasjon: Behandlingsinformasjon;
     grunnlag: Grunnlag;
 }
 
@@ -37,23 +40,34 @@ export interface BeregnetIngenEndring extends Revurdering<RevurderingsStatus.BER
 export interface SimulertRevurdering
     extends Revurdering<RevurderingsStatus.SIMULERT_INNVILGET | RevurderingsStatus.SIMULERT_OPPHØRT> {
     beregninger: Beregninger;
+    simulering: Simulering;
 }
 
 export interface RevurderingTilAttestering
     extends Revurdering<RevurderingsStatus.TIL_ATTESTERING_INNVILGET | RevurderingsStatus.TIL_ATTESTERING_OPPHØRT> {
     beregninger: Beregninger;
+    skalFøreTilBrevutsending: boolean;
+    simulering: Nullable<Simulering>;
 }
 
 export interface IverksattRevurdering
     extends Revurdering<RevurderingsStatus.IVERKSATT_INNVILGET | RevurderingsStatus.IVERKSATT_OPPHØRT> {
     beregninger: Beregninger;
     attestering: Attestering;
+    skalFøreTilBrevutsending: boolean;
+    simulering: Nullable<Simulering>;
 }
 
 export interface UnderkjentRevurdering
     extends Revurdering<RevurderingsStatus.UNDERKJENT_INNVILGET | RevurderingsStatus.UNDERKJENT_OPPHØRT> {
     beregninger: Beregninger;
     attestering: Attestering;
+    skalFøreTilBrevutsending: boolean;
+    simulering: Nullable<Simulering>;
+}
+
+export function harSimulering(r: Revurdering): r is Revurdering & { simulering: Simulering } {
+    return 'simulering' in r && r['simulering'] !== null;
 }
 
 export enum RevurderingsStatus {
@@ -79,6 +93,7 @@ export enum OpprettetRevurderingGrunn {
     DØDSFALL = 'DØDSFALL',
     ANDRE_KILDER = 'ANDRE_KILDER',
     MIGRERT = 'MIGRERT',
+    REGULER_GRUNNBELØP = 'REGULER_GRUNNBELØP',
 }
 
 export interface LeggTilUføreResponse {

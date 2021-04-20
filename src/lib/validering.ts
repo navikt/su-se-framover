@@ -1,5 +1,6 @@
 import { FormikErrors } from 'formik';
 import { FeiloppsummeringFeil } from 'nav-frontend-skjema';
+import { FieldError, FieldErrors } from 'react-hook-form';
 import * as yup from 'yup';
 
 function label(data: Partial<yup.TestMessageParams>) {
@@ -96,6 +97,16 @@ export function formikErrorsTilFeiloppsummering<T extends Record<string, any>>(
         return {
             skjemaelementId: key,
             feilmelding: val ?? '',
+        };
+    });
+}
+
+export function hookFormErrorsTilFeiloppsummering<T>(errors: FieldErrors<T>): FeiloppsummeringFeil[] {
+    return Object.entries(errors).map(([key, value]) => {
+        const v = value as FieldError;
+        return {
+            skjemaelementId: key,
+            feilmelding: v.message ?? '',
         };
     });
 }

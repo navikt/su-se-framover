@@ -184,7 +184,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                         inputName="uføregrad"
                                         inputTekst="%"
                                         bredde="XS"
-                                        value={formik.values.uføregrad ?? ''}
+                                        defaultValues={formik.values.uføregrad ?? ''}
                                         onChange={formik.handleChange}
                                         feil={formik.errors.uføregrad}
                                     />
@@ -193,7 +193,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                         inputName="forventetInntekt"
                                         inputTekst=" NOK"
                                         bredde="L"
-                                        value={formik.values.forventetInntekt ?? ''}
+                                        defaultValues={formik.values.forventetInntekt ?? ''}
                                         onChange={formik.handleChange}
                                         feil={formik.errors.forventetInntekt}
                                     />

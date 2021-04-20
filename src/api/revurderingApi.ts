@@ -52,6 +52,7 @@ export async function beregnOgSimuler(
         revurderingId: string;
         periode: Periode<string>;
         fradrag: Fradrag[];
+        forventetInntekt?: number;
     }
 ): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
@@ -63,6 +64,7 @@ export async function beregnOgSimuler(
                 tilOgMed: formatISO(new Date(arg.periode.tilOgMed), { representation: 'date' }),
             },
             fradrag: arg.fradrag,
+            forventetInntekt: arg.forventetInntekt,
         },
     });
 }
@@ -70,13 +72,15 @@ export async function beregnOgSimuler(
 export async function sendTilAttestering(
     sakId: string,
     revurderingId: string,
-    fritekstTilBrev: string
+    fritekstTilBrev: string,
+    skalFøreTilBrevutsending?: boolean
 ): Promise<ApiClientResult<RevurderingTilAttestering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilAttestering`,
         method: 'POST',
         body: {
             fritekstTilBrev,
+            skalFøreTilBrevutsending: skalFøreTilBrevutsending,
         },
     });
 }

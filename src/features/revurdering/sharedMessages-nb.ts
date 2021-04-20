@@ -7,6 +7,7 @@ export default {
     'årsak.dødsfall': 'Dødsfall',
     'årsak.andreKilder': 'Nye opplysninger fra andre kilder',
     'årsak.migrert': 'Migrert',
+    'årsak.gRegulering': 'G-regulering',
 
     'knapp.avslutt': 'Avslutt',
     'knapp.forrige': 'Forrige',
@@ -16,6 +17,9 @@ export default {
 
     'periode.overskrift': 'Periode',
     'revurdering.tittel': 'Revurdering',
+    'revurdering.ingenEndring.tittel': 'Mindre enn 10% endring i utbetaling',
+    'revurdering.ingenEndring':
+        'Ny beregning fører til mindre enn 10 % endring av utbetalingen. Vi lagrer beregningen, men utbetalingen til bruker blir ikke endret.',
 
     'feil.noeGikkGalt': 'Noe gikk galt. Gå tilbake og prøv igjen',
     'feil.kanIkkeRevurdere': 'Det finnes ingen perioder for revurdering',

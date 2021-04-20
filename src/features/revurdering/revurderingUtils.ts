@@ -14,5 +14,7 @@ export function getRevurderingsårsakMessageId(årsak: OpprettetRevurderingGrunn
             return 'årsak.andreKilder';
         case OpprettetRevurderingGrunn.MIGRERT:
             return 'årsak.migrert';
+        case OpprettetRevurderingGrunn.REGULER_GRUNNBELØP:
+            return 'årsak.gRegulering';
     }
 }

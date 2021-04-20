@@ -1,3 +1,4 @@
+import { Nullable } from '~lib/types';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
@@ -27,20 +28,33 @@ export async function startBeregning(
     sakId: string,
     behandlingId: string,
     arg: {
-        fom: string;
-        tom: string;
         fradrag: Fradrag[];
+        begrunnelse: Nullable<string>;
     }
 ): Promise<ApiClientResult<Behandling>> {
     return apiClient({
         url: `/saker/${sakId}/behandlinger/${behandlingId}/beregn`,
         method: 'POST',
         body: {
-            stønadsperiode: {
-                fraOgMed: arg.fom,
-                tilOgMed: arg.tom,
-            },
             fradrag: arg.fradrag,
+            begrunnelse: arg.begrunnelse,
+        },
+    });
+}
+
+export async function lagreVirkningstidspunkt(arg: {
+    sakId: string;
+    behandlingId: string;
+    fraOgMed: string;
+    tilOgMed: string;
+    begrunnelse: string;
+}) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/stønadsperiode`,
+        method: 'POST',
+        body: {
+            periode: { fraOgMed: arg.fraOgMed, tilOgMed: arg.tilOgMed },
+            begrunnelse: arg.begrunnelse,
         },
     });
 }

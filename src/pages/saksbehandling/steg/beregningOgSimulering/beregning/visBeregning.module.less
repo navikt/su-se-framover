@@ -34,10 +34,12 @@
 
 .beregningdetaljer {
     .linje {
-        display: flex;
-        justify-content: space-between;
-        > :first-child {
-            margin-right: @spacing-xxs;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        column-gap: @spacing-xxs;
+
+        :last-child {
+            text-align: end;
         }
     }
 
@@ -70,5 +72,25 @@
 
     .detaljertFradragliste {
         padding-left: @spacing-xs;
+    }
+}
+
+.simuleringsdetaljer {
+    .totalt {
+        margin-bottom: @spacing;
+    }
+    .linje {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: @spacing;
+
+        &:not(:last-child) {
+            margin-bottom: @spacing-s;
+        }
+
+        .beløp,
+        .type {
+            text-align: end;
+        }
     }
 }
