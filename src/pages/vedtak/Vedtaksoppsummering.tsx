@@ -16,6 +16,7 @@ import { Sak } from '~types/Sak';
 import { VedtakType } from '~types/Vedtak';
 
 import RevurderingÅrsakOgBegrunnelse from '../../components/revurdering/RevurderingÅrsakOgBegrunnelse';
+import { Utbetalingssimulering } from '../saksbehandling/steg/beregningOgSimulering/simulering/simulering';
 
 import messages from './vedtaksoppsummering-nb';
 import styles from './vedtaksoppsummering.module.less';
@@ -121,7 +122,10 @@ const Vedtaksoppsummering = (props: Props) => {
                 />
             )}
             <InfoHeader />
-            <VisBeregning beregning={vedtak.beregning} />
+            <div className={styles.beregningOgSimulering}>
+                <VisBeregning beregning={vedtak.beregning} />
+                {vedtak.simulering && <Utbetalingssimulering simulering={vedtak.simulering} />}
+            </div>
             <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })} className="knapp">
                 {intl.formatMessage({ id: 'knapp.tilbake' })}
             </Link>

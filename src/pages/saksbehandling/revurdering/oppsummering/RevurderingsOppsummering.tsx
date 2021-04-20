@@ -26,8 +26,10 @@ import {
     BeregnetIngenEndring,
     RevurderingsStatus,
     UnderkjentRevurdering,
+    harSimulering,
 } from '~types/Revurdering';
 
+import { Utbetalingssimulering } from '../../steg/beregningOgSimulering/simulering/simulering';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
 import { erRevurderingIngenEndring } from '../revurderingUtils';
@@ -226,6 +228,10 @@ const RevurderingsOppsummering = (props: {
                         beregningsTittel={intl.formatMessage({ id: 'oppsummering.nyBeregning.tittel' })}
                         beregning={props.revurdering.beregninger.revurdert}
                     />
+
+                    {harSimulering(props.revurdering) && (
+                        <Utbetalingssimulering simulering={props.revurdering.simulering} />
+                    )}
                 </div>
                 {props.revurdering.status === RevurderingsStatus.SIMULERT_OPPHØRT && (
                     <div className={styles.opphørsadvarsel}>
