@@ -56,13 +56,24 @@ const EtterForhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevur
         resolver: yupResolver(schema),
     });
 
-    const forrigeURL = Routes.revurderValgtRevurdering.createURL({
-        sakId: props.sakId,
-        steg: RevurderingSteg.EndringAvFradrag,
-        revurderingId: props.revurdering.id,
-    });
-
     const handleSubmit = async (data: FormData) => {
+        // TODO: lagre begrunnelse for valget (som del av de andre API-kallene)
+
+        if (data.resultatEtterForhåndsvarsel === ResultatVerdier.ANDRE_OPPLYSNINGER) {
+            // TODO: lagre begrunnelse først
+            history.push(
+                Routes.revurderValgtRevurdering.createURL({
+                    sakId: props.sakId,
+                    revurderingId: props.revurdering.id,
+                    steg: RevurderingSteg.EndringAvFradrag,
+                })
+            );
+            return;
+        }
+        if (data.resultatEtterForhåndsvarsel === ResultatVerdier.AVSLUTTES_UTEN_ENDRING) {
+            // send brev og avslutt
+            return;
+        }
         setSendtTilAttesteringStatus(RemoteData.pending);
 
         const res = await dispatch(
@@ -179,7 +190,9 @@ const EtterForhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevur
                         ? props.intl.formatMessage({ id: 'knapp.sendtBrevOgAvslutt' })
                         : undefined
                 }
-                tilbakeUrl={forrigeURL}
+                tilbakeUrl={Routes.saksoversiktValgtSak.createURL({
+                    sakId: props.sakId,
+                })}
                 onNesteClickSpinner={RemoteData.isPending(sendtTilAttesteringStatus)}
             />
         </form>
