@@ -4,7 +4,7 @@ import { AlertStripeFeil, AlertStripeAdvarsel } from 'nav-frontend-alertstriper'
 import { Knapp } from 'nav-frontend-knapper';
 import { Textarea, Checkbox } from 'nav-frontend-skjema';
 import { Innholdstittel } from 'nav-frontend-typografi';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
@@ -13,7 +13,7 @@ import RevurderingIngenEndringAlert from '~components/revurdering/RevurderingIng
 import RevurderingÅrsakOgBegrunnelse from '~components/revurdering/RevurderingÅrsakOgBegrunnelse';
 import * as revurderingSlice from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
-import { useI18n } from '~lib/hooks';
+import { useApiCall, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
@@ -49,7 +49,7 @@ const schema = yup.object<OppsummeringFormData>({
 
 const BrevInput = (props: {
     values: OppsummeringFormData;
-    hentBrevStatus: RemoteData.RemoteData<ApiError | undefined, null>;
+    hentBrevStatus: RemoteData.RemoteData<ApiError | undefined, { objectUrl: string }>;
     errors: FormikErrors<OppsummeringFormData>;
     hentBrev: (fritekst?: Nullable<string>) => void;
     handleChange: (e: React.ChangeEvent<unknown>) => void;
@@ -96,35 +96,19 @@ const RevurderingsOppsummering = (props: {
     const [sendtTilAttesteringStatus, setSendtTilAttesteringStatus] = useState<
         RemoteData.RemoteData<ApiError, RevurderingTilAttestering>
     >(RemoteData.initial);
-    const [hentBrevStatus, setHentBrevStatus] = useState<RemoteData.RemoteData<ApiError | undefined, null>>(
-        RemoteData.initial
-    );
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+    const [brevResult, fetchBrev] = useApiCall(revurderingSlice.fetchBrevutkastWithFritekst);
 
-    const hentBrev = useCallback(
-        (fritekst?: Nullable<string>) => {
-            if (RemoteData.isPending(hentBrevStatus)) {
-                return;
-            }
-            setHentBrevStatus(RemoteData.pending);
-
-            dispatch(
-                revurderingSlice.fetchBrevutkastWithFritekst({
-                    sakId: props.sakId,
-                    revurderingId: props.revurdering?.id ?? '',
-                    fritekst: fritekst ?? '',
-                })
-            ).then((action) => {
-                if (revurderingSlice.fetchBrevutkastWithFritekst.fulfilled.match(action)) {
-                    setHentBrevStatus(RemoteData.success(null));
-                    window.open(action.payload.objectUrl);
-                } else {
-                    setHentBrevStatus(RemoteData.failure(action.payload));
-                }
-            });
-        },
-        [props.sakId, hentBrevStatus]
-    );
+    const hentBrev = (fritekst: Nullable<string> | undefined) => {
+        fetchBrev(
+            {
+                sakId: props.sakId,
+                revurderingId: props.revurdering?.id ?? '',
+                fritekst: fritekst ?? '',
+            },
+            ({ objectUrl }) => window.open(objectUrl)
+        );
+    };
 
     const skalFøreTilBrevutsendingInitialValue = () => {
         const skalFøreTilBrevutsending = (props.revurdering as UnderkjentRevurdering).skalFøreTilBrevutsending;
@@ -245,7 +229,7 @@ const RevurderingsOppsummering = (props: {
                             {formik.values.skalFøreTilBrevutsending && (
                                 <BrevInput
                                     values={formik.values}
-                                    hentBrevStatus={hentBrevStatus}
+                                    hentBrevStatus={brevResult}
                                     errors={formik.errors}
                                     hentBrev={hentBrev}
                                     handleChange={formik.handleChange}
@@ -256,7 +240,7 @@ const RevurderingsOppsummering = (props: {
                     ) : (
                         <BrevInput
                             values={formik.values}
-                            hentBrevStatus={hentBrevStatus}
+                            hentBrevStatus={brevResult}
                             errors={formik.errors}
                             hentBrev={hentBrev}
                             handleChange={formik.handleChange}
