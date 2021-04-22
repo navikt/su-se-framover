@@ -20,8 +20,8 @@ import {
     FradragInputs,
     fradragSchema,
 } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/FradragInputs';
-import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/Uførhet';
 import UføregrunnlagInputFelter from '~pages/saksbehandling/steg/uførhet/UføregrunnlagInputFelter';
+import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Fradragstype, FradragTilhører } from '~types/Fradrag';
