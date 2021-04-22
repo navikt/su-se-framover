@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 
+import * as Routes from '~lib/routes';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import { RevurderingSteg, SaksbehandlingMenyvalg } from '../pages/saksbehandling/types';
@@ -136,4 +137,18 @@ export const attesterBehandling: Route<{ sakId: string; behandlingId: string }> 
 export const attesterRevurdering: Route<{ sakId: string; revurderingId: string }> = {
     path: '/attestering/:sakId/revurdering/:revurderingId/',
     createURL: (args) => `/attestering/${args.sakId}/revurdering/${args.revurderingId}`,
+};
+
+export interface SuccessNotificationState {
+    notification?: string;
+}
+
+export const createSakIntroLocation = (
+    message: string,
+    sakid: string
+): { pathname: string; state: SuccessNotificationState } => {
+    return {
+        pathname: Routes.saksoversiktValgtSak.createURL({ sakId: sakid }),
+        state: { notification: message },
+    };
 };
