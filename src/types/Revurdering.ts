@@ -57,6 +57,31 @@ export interface UnderkjentRevurdering
     skalFøreTilBrevutsending: boolean;
 }
 
+export enum Forhåndsvarseltype {
+    IngenForhåndsvarsel = 'INGEN_FORHÅNDSVARSEL',
+    SkalVarslesSendt = 'SKAL_FORHÅNDSVARSLES_SENDT',
+    SkalVarslesBesluttet = 'SKAL_FORHÅNDSVARSLES_BESLUTTET',
+}
+
+export enum BeslutningEtterForhåndsvarsling {
+    FortsettSammeOpplysninger = 'FORTSETT_MED_SAMME_OPPLYSNINGER',
+    FortsettMedAndreOpplysninger = 'FORTSETT_MED_ANDRE_OPPLYSNINGER',
+    AvsluttUtenEndringer = 'AVSLUTT_UTEN_ENDRINGER',
+}
+
+interface ForhåndsvarselBase<T extends Forhåndsvarseltype = Forhåndsvarseltype> {
+    type: T;
+}
+export type IngenForhåndsvarsel = ForhåndsvarselBase<Forhåndsvarseltype.IngenForhåndsvarsel>;
+export type ForhåndsvarselSkalVarslesSendt = ForhåndsvarselBase<Forhåndsvarseltype.SkalVarslesSendt>;
+export interface ForhåndsvarselSkalVarslesBesluttet
+    extends ForhåndsvarselBase<Forhåndsvarseltype.SkalVarslesBesluttet> {
+    begrunnelse: string;
+    beslutningEtterForhåndsvarsling: BeslutningEtterForhåndsvarsling;
+}
+
+export type Forhåndsvarsel = IngenForhåndsvarsel | ForhåndsvarselSkalVarslesSendt | ForhåndsvarselSkalVarslesBesluttet;
+
 export enum RevurderingsStatus {
     OPPRETTET = 'OPPRETTET',
     BEREGNET_INNVILGET = 'BEREGNET_INNVILGET',
