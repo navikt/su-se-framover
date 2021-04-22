@@ -23,7 +23,6 @@ import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { useI18n, useNotificationFromLocation } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { SuccessNotificationState } from '~lib/routes';
 import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
@@ -50,7 +49,7 @@ import { RevurderingSteg } from '../types';
 import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
 
-const SuksessStatuser = (props: { locationState: Nullable<SuccessNotificationState>; intl: IntlShape }) => {
+const SuksessStatuser = (props: { locationState: Nullable<Routes.SuccessNotificationState>; intl: IntlShape }) => {
     return (
         <div className={styles.suksessStatuserContainer}>
             {props.locationState?.notification && (

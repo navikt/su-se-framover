@@ -15,7 +15,6 @@ import * as revurderingSlice from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { createSakIntroLocation } from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
@@ -162,7 +161,7 @@ const RevurderingsOppsummering = (props: {
 
             if (revurderingSlice.sendRevurderingTilAttestering.fulfilled.match(res)) {
                 const message = intl.formatMessage({ id: 'oppsummering.sendtTilAttestering' });
-                history.push(createSakIntroLocation(message, props.sakId));
+                history.push(Routes.createSakIntroLocation(message, props.sakId));
             }
         },
         validationSchema: schema,

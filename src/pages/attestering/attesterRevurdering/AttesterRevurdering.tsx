@@ -18,7 +18,6 @@ import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { createSakIntroLocation } from '~lib/routes';
 import yup from '~lib/validering';
 import {
     erRevurderingTilAttestering,
@@ -100,7 +99,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 if (revurderingSlice.iverksettRevurdering.fulfilled.match(res)) {
                     dispatch(sakSlice.fetchSak({ saksnummer: props.sak.saksnummer.toString() }));
                     const message = intl.formatMessage({ id: 'attester.iverksatt' });
-                    history.push(createSakIntroLocation(message, props.sak.id));
+                    history.push(Routes.createSakIntroLocation(message, props.sak.id));
                 }
 
                 if (revurderingSlice.iverksettRevurdering.rejected.match(res)) {
@@ -123,7 +122,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
 
                 if (revurderingSlice.underkjennRevurdering.fulfilled.match(res)) {
                     const message = intl.formatMessage({ id: 'attester.sendtTilbake' });
-                    history.push(createSakIntroLocation(message, props.sak.id));
+                    history.push(Routes.createSakIntroLocation(message, props.sak.id));
                 }
 
                 if (revurderingSlice.underkjennRevurdering.rejected.match(res)) {

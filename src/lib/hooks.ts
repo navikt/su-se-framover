@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { createIntlCache, createIntl } from 'react-intl';
 import { useHistory, useLocation } from 'react-router-dom';
 

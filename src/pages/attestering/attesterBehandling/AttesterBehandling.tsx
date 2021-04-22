@@ -15,7 +15,6 @@ import { erAvslått, erIverksatt, erTilAttestering } from '~features/behandling/
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { createSakIntroLocation } from '~lib/routes';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { BehandlingStatus } from '~pages/saksbehandling/behandlingsoppsummering/behandlingsoppsummering';
 import VisBeregningOgSimulering from '~pages/saksbehandling/steg/beregningOgSimulering/BeregningOgSimulering';
@@ -76,7 +75,7 @@ const Attesteringsinnhold = ({
                 );
                 if (sakSlice.attesteringIverksett.fulfilled.match(response)) {
                     const message = intl.formatMessage({ id: 'status.iverksatt' });
-                    history.push(createSakIntroLocation(message, props.sak.id));
+                    history.push(Routes.createSakIntroLocation(message, props.sak.id));
                 }
                 return;
             }
@@ -92,7 +91,7 @@ const Attesteringsinnhold = ({
                 );
                 if (sakSlice.attesteringUnderkjenn.fulfilled.match(response)) {
                     const message = intl.formatMessage({ id: 'status.sendtTilbake' });
-                    history.push(createSakIntroLocation(message, props.sak.id));
+                    history.push(Routes.createSakIntroLocation(message, props.sak.id));
                 }
             }
         },
