@@ -184,6 +184,8 @@ const RevurderingsOppsummering = (props: {
                 return intl.formatMessage({ id: 'feil.fant.ikke.aktør.id' });
             case 'kunne_ikke_opprette_oppgave':
                 return intl.formatMessage({ id: 'feil.kunne.ikke.opprette.oppgave' });
+            case 'g_regulering_kan_ikke_føre_til_opphør':
+                return intl.formatMessage({ id: 'feil.g_regulering_kan_ikke_føre_til_opphør' });
             default:
                 return intl.formatMessage({ id: 'feil.ukjentFeil' });
         }
