@@ -1,12 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik, FormikErrors } from 'formik';
-import { AlertStripeFeil, AlertStripeSuksess, AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
+import { AlertStripeFeil, AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Textarea, Checkbox } from 'nav-frontend-skjema';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useCallback, useState } from 'react';
 import { IntlShape } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import RevurderingIngenEndringAlert from '~components/revurdering/RevurderingIngenEndringAlert';
@@ -92,6 +92,7 @@ const RevurderingsOppsummering = (props: {
 }) => {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     const dispatch = useAppDispatch();
+    const history = useHistory();
     const [sendtTilAttesteringStatus, setSendtTilAttesteringStatus] = useState<
         RemoteData.RemoteData<ApiError, RevurderingTilAttestering>
     >(RemoteData.initial);
@@ -159,25 +160,14 @@ const RevurderingsOppsummering = (props: {
             }
 
             if (revurderingSlice.sendRevurderingTilAttestering.fulfilled.match(res)) {
-                setSendtTilAttesteringStatus(RemoteData.success(res.payload));
+                const message = intl.formatMessage({ id: 'oppsummering.sendtTilAttestering' });
+                history.push(Routes.createSakIntroLocation(message, props.sakId));
             }
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
     });
 
-    if (RemoteData.isSuccess(sendtTilAttesteringStatus)) {
-        return (
-            <div className={styles.sendtTilAttesteringContainer}>
-                <AlertStripeSuksess>
-                    <p>{intl.formatMessage({ id: 'oppsummering.sendtTilAttestering' })}</p>
-                    <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}>
-                        {intl.formatMessage({ id: 'oppsummering.tilSaksoversikt' })}
-                    </Link>
-                </AlertStripeSuksess>
-            </div>
-        );
-    }
     const forrigeURL = Routes.revurderValgtRevurdering.createURL({
         sakId: props.sakId,
         steg: RevurderingSteg.EndringAvFradrag,

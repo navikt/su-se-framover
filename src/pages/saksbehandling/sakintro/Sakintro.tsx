@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import classNames from 'classnames';
 import { isEmpty } from 'fp-ts/lib/Array';
-import AlertStripe from 'nav-frontend-alertstriper';
+import AlertStripe, { AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
@@ -21,8 +21,9 @@ import {
 } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
-import { useI18n } from '~lib/hooks';
+import { useI18n, useNotificationFromLocation } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
 import { Behandling, UnderkjennelseGrunn, Underkjennelse } from '~types/Behandling';
@@ -47,6 +48,16 @@ import { RevurderingSteg } from '../types';
 
 import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
+
+const SuksessStatuser = (props: { locationState: Nullable<Routes.SuccessNotificationState>; intl: IntlShape }) => {
+    return (
+        <div className={styles.suksessStatuserContainer}>
+            {props.locationState?.notification && (
+                <AlertStripeSuksess>{props.locationState.notification}</AlertStripeSuksess>
+            )}
+        </div>
+    );
+};
 
 const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
     switch (type) {
@@ -92,7 +103,9 @@ const UnderkjennelsesInformasjon = (props: { underkjennelse: Underkjennelse; int
 };
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
+    const locationState = useNotificationFromLocation();
     const intl = useI18n({ messages });
+
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {
             const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
@@ -117,6 +130,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
 
     return (
         <div className={styles.sakintroContainer}>
+            <SuksessStatuser locationState={locationState} intl={intl} />
             <div className={styles.pageHeader}>
                 <Innholdstittel className={styles.tittel}>
                     {intl.formatMessage({ id: 'display.saksoversikt.tittel' })}: {props.sak.saksnummer}
