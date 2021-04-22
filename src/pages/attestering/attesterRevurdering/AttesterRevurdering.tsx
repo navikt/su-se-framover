@@ -1,11 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
-import { AlertStripeAdvarsel, AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import { AlertStripeAdvarsel, AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { RadioPanelGruppe, Textarea, Select } from 'nav-frontend-skjema';
 import { Innholdstittel, Systemtittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import * as PdfApi from '~api/pdfApi';
@@ -18,11 +18,10 @@ import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { createSakIntroLocation } from '~lib/routes';
 import yup from '~lib/validering';
 import {
-    erRevurderingIverksatt,
     erRevurderingTilAttestering,
-    erRevurderingUnderkjent,
     erRevurderingIngenEndring,
     erGregulering,
 } from '~pages/saksbehandling/revurdering/revurderingUtils';
@@ -79,6 +78,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
     const dispatch = useAppDispatch();
+    const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const [hentPdfStatus, setHentPdfStatus] = useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const [sendtBeslutning, setSendtBeslutning] = useState<
@@ -99,7 +99,8 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
 
                 if (revurderingSlice.iverksettRevurdering.fulfilled.match(res)) {
                     dispatch(sakSlice.fetchSak({ saksnummer: props.sak.saksnummer.toString() }));
-                    setSendtBeslutning(RemoteData.success(res.payload));
+                    const message = intl.formatMessage({ id: 'attester.iverksatt' });
+                    history.push(createSakIntroLocation(message, props.sak.id));
                 }
 
                 if (revurderingSlice.iverksettRevurdering.rejected.match(res)) {
@@ -121,7 +122,8 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 );
 
                 if (revurderingSlice.underkjennRevurdering.fulfilled.match(res)) {
-                    setSendtBeslutning(RemoteData.success(res.payload));
+                    const message = intl.formatMessage({ id: 'attester.sendtTilbake' });
+                    history.push(createSakIntroLocation(message, props.sak.id));
                 }
 
                 if (revurderingSlice.underkjennRevurdering.rejected.match(res)) {
@@ -139,22 +141,6 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
         return (
             <div className={styles.advarselContainer}>
                 <AlertStripeFeil>{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</AlertStripeFeil>
-            </div>
-        );
-    }
-    if (erRevurderingIverksatt(revurdering) || erRevurderingUnderkjent(revurdering)) {
-        return (
-            <div className={styles.advarselContainer}>
-                <AlertStripeSuksess>
-                    <p>
-                        {formik.values.beslutning
-                            ? intl.formatMessage({ id: 'attester.iverksatt' })
-                            : intl.formatMessage({ id: 'attester.sendtTilbake' })}
-                    </p>
-                    <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
-                        {intl.formatMessage({ id: 'attester.tilSaksoversikt' })}
-                    </Link>
-                </AlertStripeSuksess>
             </div>
         );
     }
