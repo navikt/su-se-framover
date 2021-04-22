@@ -19,8 +19,8 @@ import {
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
-import * as Routes from '~lib/routes';
 import * as routes from '~lib/routes';
+import { createSakIntroLocation } from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Sak } from '~types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
@@ -51,7 +51,6 @@ const Vedtak = (props: Props) => {
     );
 
     const history = useHistory();
-
     const handleVisBrevClick = async () => {
         if (RemoteData.isPending(lastNedBrevStatus) || !behandling) {
             return;
@@ -156,11 +155,8 @@ const Vedtak = (props: Props) => {
                                 })
                             );
                             if (sakSlice.sendTilAttestering.fulfilled.match(response)) {
-                                const location = {
-                                    pathname: Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }),
-                                    state: { søknadsbehandlingSendtTilAttestering: true },
-                                };
-                                history.push(location);
+                                const message = intl.formatMessage({ id: 'vedtak.sendtTilAttestering' });
+                                history.push(createSakIntroLocation(message, sak.id));
                             }
                         }}
                         htmlType="button"

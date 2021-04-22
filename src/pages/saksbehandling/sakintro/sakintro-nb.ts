@@ -56,9 +56,4 @@ export default {
     'revurdering.undertittel': 'Revurdering',
     'revurdering.opprettet': 'Opprettet',
     'revurdering.iverksattDato': 'Iverksatt dato',
-
-    'suksess.forhåndsvarsel': 'Forhåndsvarsel er sendt til bruker og oppgave i Gosys er opprettet',
-    'suksess.søknadsbehandlingSendtTilAttestering':
-        'Søknadsbehandling er sendt til attestering og oppgave i Gosys er opprettet',
-    'suksess.sendtTilAttestering': 'Revurderingen er sendt til attestering',
 };

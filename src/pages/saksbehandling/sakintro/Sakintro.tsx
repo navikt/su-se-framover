@@ -6,9 +6,9 @@ import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
 import { Element, Ingress, Innholdstittel, Normaltekst, Undertittel } from 'nav-frontend-typografi';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
@@ -21,8 +21,9 @@ import {
 } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
-import { useI18n } from '~lib/hooks';
+import { useI18n, useNotificationFromLocation } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { SuccessNotificationState } from '~lib/routes';
 import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
@@ -49,27 +50,11 @@ import { RevurderingSteg } from '../types';
 import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
 
-interface successNotificationState {
-    harForhåndsvarslet?: boolean;
-    sendtTilAttestering?: boolean;
-    søknadsbehandlingSendtTilAttestering?: boolean;
-}
-
-const SuksessStatuser = (props: { locationState: Nullable<successNotificationState>; intl: IntlShape }) => {
+const SuksessStatuser = (props: { locationState: Nullable<SuccessNotificationState>; intl: IntlShape }) => {
     return (
         <div className={styles.suksessStatuserContainer}>
-            {props.locationState?.harForhåndsvarslet && (
-                <AlertStripeSuksess>{props.intl.formatMessage({ id: 'suksess.forhåndsvarsel' })}</AlertStripeSuksess>
-            )}
-            {props.locationState?.sendtTilAttestering && (
-                <AlertStripeSuksess>
-                    {props.intl.formatMessage({ id: 'suksess.sendtTilAttestering' })}
-                </AlertStripeSuksess>
-            )}
-            {props.locationState?.søknadsbehandlingSendtTilAttestering && (
-                <AlertStripeSuksess>
-                    {props.intl.formatMessage({ id: 'suksess.søknadsbehandlingSendtTilAttestering' })}
-                </AlertStripeSuksess>
+            {props.locationState?.notification && (
+                <AlertStripeSuksess>{props.locationState.notification}</AlertStripeSuksess>
             )}
         </div>
     );
@@ -119,15 +104,8 @@ const UnderkjennelsesInformasjon = (props: { underkjennelse: Underkjennelse; int
 };
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
-    const history = useHistory();
-    const location = useLocation<successNotificationState>();
-    const [locationState, setLocationState] = useState<successNotificationState | null>(null);
+    const locationState = useNotificationFromLocation();
     const intl = useI18n({ messages });
-
-    useEffect(() => {
-        setLocationState(location.state);
-        history.replace(location.pathname, null);
-    }, []);
 
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {

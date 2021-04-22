@@ -25,8 +25,7 @@ export default {
     'underkjent.kommentar': 'Kommentar',
     'underkjent.sendtTilbakeFraAttestering': 'Sendt tilbake fra attestering',
 
-    'vedtak.sendtTilAttestering': 'Vedtak er sendt til Attestering',
-    'vedtak.sendtTilAttestering.lenkeSaksoversikt': 'Til saksoversikt',
+    'vedtak.sendtTilAttestering': 'Vedtak er sendt til attestering og oppgave i Gosys er opprettet',
 
     'input.fritekst.label': 'Tekst til vedtaksbrev',
 };
