@@ -15,7 +15,7 @@ import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch } from '~redux/Store';
-import { RevurderingTilAttestering, SimulertRevurdering } from '~types/Revurdering';
+import { BeslutningEtterForhåndsvarsling, RevurderingTilAttestering, SimulertRevurdering } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
@@ -23,19 +23,16 @@ import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFe
 import styles from './revurderingsOppsummering.module.less';
 
 interface FormData {
-    resultatEtterForhåndsvarsel: Nullable<ResultatVerdier>;
+    resultatEtterForhåndsvarsel: Nullable<BeslutningEtterForhåndsvarsling>;
     tekstTilVedtaksbrev: string;
     begrunnelse: string;
 }
 
-enum ResultatVerdier {
-    MED_SAMME_OPPLYSNINGER = 'med_samme_opplysninger',
-    ANDRE_OPPLYSNINGER = 'andre_opplysninger',
-    AVSLUTTES_UTEN_ENDRING = 'avsluttes_uten_endring',
-}
-
 const schema = yup.object<FormData>({
-    resultatEtterForhåndsvarsel: yup.mixed().oneOf(Object.values(ResultatVerdier), 'Feltet må fylles ut').required(),
+    resultatEtterForhåndsvarsel: yup
+        .mixed()
+        .oneOf(Object.values(BeslutningEtterForhåndsvarsling), 'Feltet må fylles ut')
+        .required(),
     tekstTilVedtaksbrev: yup.string(),
     begrunnelse: yup.string(),
 });
@@ -44,7 +41,7 @@ const EtterForhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevur
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [sendtTilAttesteringStatus, setSendtTilAttesteringStatus] = useState<
-        RemoteData.RemoteData<ApiError, RevurderingTilAttestering>
+        RemoteData.RemoteData<ApiError, RevurderingTilAttestering | SimulertRevurdering>
     >(RemoteData.initial);
 
     const form = useForm<FormData>({
@@ -57,43 +54,43 @@ const EtterForhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevur
     });
 
     const handleSubmit = async (data: FormData) => {
-        // TODO: lagre begrunnelse for valget (som del av de andre API-kallene)
-
-        if (data.resultatEtterForhåndsvarsel === ResultatVerdier.ANDRE_OPPLYSNINGER) {
-            // TODO: lagre begrunnelse først
-            history.push(
-                Routes.revurderValgtRevurdering.createURL({
-                    sakId: props.sakId,
-                    revurderingId: props.revurdering.id,
-                    steg: RevurderingSteg.EndringAvFradrag,
-                })
-            );
-            return;
-        }
-        if (data.resultatEtterForhåndsvarsel === ResultatVerdier.AVSLUTTES_UTEN_ENDRING) {
-            // send brev og avslutt
+        if (!data.resultatEtterForhåndsvarsel) {
             return;
         }
         setSendtTilAttesteringStatus(RemoteData.pending);
 
         const res = await dispatch(
-            revurderingActions.sendRevurderingTilAttestering({
+            revurderingActions.fortsettEtterForhåndsvarsel({
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
+                begrunnelse: data.begrunnelse,
+                valg: data.resultatEtterForhåndsvarsel,
                 fritekstTilBrev: data.tekstTilVedtaksbrev,
             })
         );
 
-        if (revurderingActions.sendRevurderingTilAttestering.rejected.match(res)) {
+        if (revurderingActions.fortsettEtterForhåndsvarsel.rejected.match(res)) {
             //TODO: fix at res.payload kan være undefined?
             if (!res.payload) return;
             setSendtTilAttesteringStatus(RemoteData.failure(res.payload));
         }
 
-        if (revurderingActions.sendRevurderingTilAttestering.fulfilled.match(res)) {
+        if (revurderingActions.fortsettEtterForhåndsvarsel.fulfilled.match(res)) {
             setSendtTilAttesteringStatus(RemoteData.success(res.payload));
+            if (data.resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger) {
+                history.push(
+                    Routes.revurderValgtRevurdering.createURL({
+                        sakId: props.sakId,
+                        steg: RevurderingSteg.EndringAvFradrag,
+                        revurderingId: props.revurdering.id,
+                    })
+                );
+                return;
+            }
+
             history.push({
                 pathname: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
+                //TODO: fix når den avsluttes
                 state: { sendtTilAttestering: true },
             });
         }
@@ -124,21 +121,24 @@ const EtterForhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevur
                                 id: 'etterForhåndsvarsel.resultatEtterForhåndsvarsel.sammeOpplysninger',
                             })}
                             name="resultatEtterForhåndsvarsel"
-                            onChange={() => field.onChange(ResultatVerdier.MED_SAMME_OPPLYSNINGER)}
+                            onChange={() => field.onChange(BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger)}
                         />
                         <Radio
                             label={props.intl.formatMessage({
                                 id: 'etterForhåndsvarsel.resultatEtterForhåndsvarsel.andreOpplysninger',
                             })}
                             name="resultatEtterForhåndsvarsel"
-                            onChange={() => field.onChange(ResultatVerdier.ANDRE_OPPLYSNINGER)}
+                            onChange={() =>
+                                field.onChange(BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger)
+                            }
                         />
                         <Radio
                             label={props.intl.formatMessage({
                                 id: 'etterForhåndsvarsel.resultatEtterForhåndsvarsel.avsluttesUtenEndring',
                             })}
                             name="resultatEtterForhåndsvarsel"
-                            onChange={() => field.onChange(ResultatVerdier.AVSLUTTES_UTEN_ENDRING)}
+                            onChange={() => field.onChange(BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer)}
+                            disabled={true}
                         />
                     </RadioGruppe>
                 )}
@@ -157,8 +157,8 @@ const EtterForhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevur
                 )}
             />
 
-            {(watch.resultatEtterForhåndsvarsel === ResultatVerdier.MED_SAMME_OPPLYSNINGER ||
-                watch.resultatEtterForhåndsvarsel === ResultatVerdier.AVSLUTTES_UTEN_ENDRING) && (
+            {(watch.resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger ||
+                watch.resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer) && (
                 <Controller
                     control={form.control}
                     name="tekstTilVedtaksbrev"
@@ -184,9 +184,9 @@ const EtterForhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevur
             <RevurderingBunnknapper
                 onNesteClick={'submit'}
                 nesteKnappTekst={
-                    watch.resultatEtterForhåndsvarsel === ResultatVerdier.MED_SAMME_OPPLYSNINGER
+                    watch.resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger
                         ? props.intl.formatMessage({ id: 'knapp.sendTilAttestering' })
-                        : watch.resultatEtterForhåndsvarsel === ResultatVerdier.AVSLUTTES_UTEN_ENDRING
+                        : watch.resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer
                         ? props.intl.formatMessage({ id: 'knapp.sendtBrevOgAvslutt' })
                         : undefined
                 }
