@@ -44,6 +44,7 @@ import {
     erRevurderingSimulert,
     erRevurderingOpprettet,
     erRevurderingUnderkjent,
+    erForhåndsvarslingBesluttet,
 } from '../revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
@@ -75,7 +76,9 @@ const SuksessStatuser = (props: { locationState: Nullable<successNotificationSta
                 <AlertStripeSuksess>{props.intl.formatMessage({ id: 'suksess.forhåndsvarsel' })}</AlertStripeSuksess>
             )}
             {props.locationState?.sendtTilAttestering && (
-                <AlertStripeSuksess>{props.intl.formatMessage({ id: 'suksess.forhåndsvarsel' })}</AlertStripeSuksess>
+                <AlertStripeSuksess>
+                    {props.intl.formatMessage({ id: 'suksess.sendtTilAttestering' })}
+                </AlertStripeSuksess>
             )}
         </div>
     );
@@ -279,7 +282,7 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                                             <Undertittel>
                                                 {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
                                             </Undertittel>
-                                            {r.harForhåndsvarslet && (
+                                            {r.forhåndsvarsel && !erForhåndsvarslingBesluttet(r) && (
                                                 <EtikettInfo className={styles.etikett}>
                                                     {props.intl.formatMessage({
                                                         id: 'revurdering.label.forhåndsvarselSendt',

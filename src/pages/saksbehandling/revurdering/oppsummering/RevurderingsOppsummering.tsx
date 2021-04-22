@@ -15,10 +15,16 @@ import {
 } from '~types/Revurdering';
 
 import sharedStyles from '../revurdering.module.less';
-import { erRevurderingForhåndsvarslet, erRevurderingIngenEndring, erRevurderingSimulert } from '../revurderingUtils';
+import {
+    erForhåndsvarslingBesluttet,
+    erRevurderingForhåndsvarslet,
+    erRevurderingIngenEndring,
+    erRevurderingSimulert,
+} from '../revurderingUtils';
 
 import EtterForhåndsvarsel from './EtterForhåndsvarsel';
 import Forhåndsvarsel from './Forhåndsvarsel';
+import ForhåndsvarslingBesluttet from './ForhåndsvarslingBesluttet';
 import IngenEndring from './IngenEndring';
 import messages from './revurderingOppsummering-nb';
 import styles from './revurderingsOppsummering.module.less';
@@ -66,7 +72,15 @@ const RevurderingsOppsummering = (props: {
 
                 {erRevurderingSimulert(props.revurdering) &&
                     (erRevurderingForhåndsvarslet(props.revurdering) ? (
-                        <EtterForhåndsvarsel sakId={props.sakId} revurdering={props.revurdering} intl={intl} />
+                        erForhåndsvarslingBesluttet(props.revurdering) ? (
+                            <ForhåndsvarslingBesluttet
+                                sakId={props.sakId}
+                                revurdering={props.revurdering}
+                                intl={intl}
+                            />
+                        ) : (
+                            <EtterForhåndsvarsel sakId={props.sakId} revurdering={props.revurdering} intl={intl} />
+                        )
                     ) : (
                         <Forhåndsvarsel sakId={props.sakId} revurdering={props.revurdering} intl={intl} />
                     ))}
