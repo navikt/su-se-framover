@@ -11,6 +11,7 @@ import {
     UnderkjentRevurdering,
     OpprettetRevurderingGrunn,
     RevurderingErrorCodes,
+    BeslutningEtterForhåndsvarsling,
 } from '~types/Revurdering';
 
 import * as revurderingApi from '../../api/revurderingApi';
@@ -113,3 +114,30 @@ export const underkjennRevurdering = createAsyncThunk<
     }
     return thunkApi.rejectWithValue(res.error);
 });
+
+export const fortsettEtterForhåndsvarsel = createAsyncThunk<
+    SimulertRevurdering | RevurderingTilAttestering,
+    {
+        sakId: string;
+        revurderingId: string;
+        begrunnelse: string;
+        valg: BeslutningEtterForhåndsvarsling;
+        fritekstTilBrev: string;
+    },
+    { rejectValue: ApiError }
+>(
+    'revurdering/fortsettEtterForhåndsvarsel',
+    async ({ sakId, revurderingId, begrunnelse, valg, fritekstTilBrev }, thunkApi) => {
+        const res = await revurderingApi.fortsettEtterForhåndsvarsel(
+            sakId,
+            revurderingId,
+            begrunnelse,
+            valg,
+            fritekstTilBrev
+        );
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
+    }
+);
