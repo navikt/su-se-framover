@@ -7,7 +7,7 @@ import { Systemtittel } from 'nav-frontend-typografi';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
 import Personlinje from '~components/personlinje/Personlinje';
@@ -15,12 +15,13 @@ import { erAvslått, erIverksatt, erTilAttestering } from '~features/behandling/
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { createSakIntroLocation } from '~lib/routes';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { BehandlingStatus } from '~pages/saksbehandling/behandlingsoppsummering/behandlingsoppsummering';
 import VisBeregningOgSimulering from '~pages/saksbehandling/steg/beregningOgSimulering/BeregningOgSimulering';
 import VilkårsOppsummering from '~pages/saksbehandling/vilkårsOppsummering/VilkårsOppsummering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
+import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 
 import SharedStyles from '../sharedStyles.module.less';
@@ -61,22 +62,27 @@ const Attesteringsinnhold = ({
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const attesteringStatus = useAppSelector((s) => s.sak.attesteringStatus);
     const dispatch = useAppDispatch();
+    const history = useHistory();
 
     const formik = useFormik<FormData>({
         initialValues: {},
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             if (values.beslutning) {
-                dispatch(
+                const response = await dispatch(
                     sakSlice.attesteringIverksett({
                         sakId: props.sak.id,
                         behandlingId: props.behandling.id,
                     })
                 );
+                if (sakSlice.attesteringIverksett.fulfilled.match(response)) {
+                    const message = intl.formatMessage({ id: 'status.iverksatt' });
+                    history.push(createSakIntroLocation(message, props.sak.id));
+                }
                 return;
             }
 
             if (values.kommentar && values.grunn) {
-                dispatch(
+                const response = await dispatch(
                     sakSlice.attesteringUnderkjenn({
                         sakId: props.sak.id,
                         behandlingId: props.behandling.id,
@@ -84,6 +90,10 @@ const Attesteringsinnhold = ({
                         kommentar: values.kommentar,
                     })
                 );
+                if (sakSlice.attesteringUnderkjenn.fulfilled.match(response)) {
+                    const message = intl.formatMessage({ id: 'status.sendtTilbake' });
+                    history.push(createSakIntroLocation(message, props.sak.id));
+                }
             }
         },
         validationSchema: yup.object<FormData>({
@@ -101,27 +111,6 @@ const Attesteringsinnhold = ({
     });
 
     const { errors } = formik;
-
-    if (RemoteData.isSuccess(attesteringStatus)) {
-        return (
-            <div className={styles.content}>
-                <AlertStripe type="suksess">
-                    <p>
-                        {intl.formatMessage({
-                            id: [Behandlingsstatus.IVERKSATT_INNVILGET, Behandlingsstatus.IVERKSATT_AVSLAG].includes(
-                                props.behandling.status
-                            )
-                                ? 'status.iverksatt'
-                                : 'status.sendtTilbake',
-                        })}
-                    </p>
-                    <Link to={Routes.saksoversiktIndex.createURL()}>
-                        {intl.formatMessage({ id: 'lenke.saksoversikt' })}
-                    </Link>
-                </AlertStripe>
-            </div>
-        );
-    }
 
     if (!erTilAttestering(props.behandling) && !erIverksatt(props.behandling)) {
         return (
