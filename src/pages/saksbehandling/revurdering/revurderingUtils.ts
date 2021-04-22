@@ -7,6 +7,7 @@ import {
     IverksattRevurdering,
     BeregnetIngenEndring,
     UnderkjentRevurdering,
+    Forhåndsvarseltype,
 } from '~types/Revurdering';
 
 export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurdering =>
@@ -15,7 +16,9 @@ export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurderin
 export const erRevurderingSimulert = (r: Revurdering): r is SimulertRevurdering =>
     r.status === RevurderingsStatus.SIMULERT_INNVILGET || r.status === RevurderingsStatus.SIMULERT_OPPHØRT;
 
-export const erRevurderingForhåndsvarslet = (r: Revurdering) => r.harForhåndsvarslet === true;
+export const erRevurderingForhåndsvarslet = (r: Revurdering) => r.forhåndsvarsel !== null;
+export const erForhåndsvarslingBesluttet = (r: Revurdering) =>
+    r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesBesluttet;
 
 export const erRevurderingIngenEndring = (r: Revurdering): r is BeregnetIngenEndring =>
     r.status === RevurderingsStatus.BEREGNET_INGEN_ENDRING ||

@@ -15,7 +15,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     fritekstTilBrev: string;
     årsak: OpprettetRevurderingGrunn;
     begrunnelse: Nullable<string>;
-    harForhåndsvarslet: boolean;
+    forhåndsvarsel: Nullable<Forhåndsvarsel>;
 }
 interface Beregninger {
     beregning: Beregning;
