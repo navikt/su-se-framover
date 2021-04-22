@@ -1,14 +1,14 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import classNames from 'classnames';
 import { isEmpty } from 'fp-ts/lib/Array';
-import AlertStripe from 'nav-frontend-alertstriper';
+import AlertStripe, { AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
 import { Element, Ingress, Innholdstittel, Normaltekst, Undertittel } from 'nav-frontend-typografi';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IntlShape } from 'react-intl';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
@@ -23,6 +23,7 @@ import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
 import { Behandling, UnderkjennelseGrunn, Underkjennelse } from '~types/Behandling';
@@ -47,6 +48,32 @@ import { RevurderingSteg } from '../types';
 
 import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
+
+interface successNotificationState {
+    harForhåndsvarslet?: boolean;
+    sendtTilAttestering?: boolean;
+    søknadsbehandlingSendtTilAttestering?: boolean;
+}
+
+const SuksessStatuser = (props: { locationState: Nullable<successNotificationState>; intl: IntlShape }) => {
+    return (
+        <div className={styles.suksessStatuserContainer}>
+            {props.locationState?.harForhåndsvarslet && (
+                <AlertStripeSuksess>{props.intl.formatMessage({ id: 'suksess.forhåndsvarsel' })}</AlertStripeSuksess>
+            )}
+            {props.locationState?.sendtTilAttestering && (
+                <AlertStripeSuksess>
+                    {props.intl.formatMessage({ id: 'suksess.sendtTilAttestering' })}
+                </AlertStripeSuksess>
+            )}
+            {props.locationState?.søknadsbehandlingSendtTilAttestering && (
+                <AlertStripeSuksess>
+                    {props.intl.formatMessage({ id: 'suksess.søknadsbehandlingSendtTilAttestering' })}
+                </AlertStripeSuksess>
+            )}
+        </div>
+    );
+};
 
 const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
     switch (type) {
@@ -92,7 +119,16 @@ const UnderkjennelsesInformasjon = (props: { underkjennelse: Underkjennelse; int
 };
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
+    const history = useHistory();
+    const location = useLocation<successNotificationState>();
+    const [locationState, setLocationState] = useState<successNotificationState | null>(null);
     const intl = useI18n({ messages });
+
+    useEffect(() => {
+        setLocationState(location.state);
+        history.replace(location.pathname, null);
+    }, []);
+
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {
             const behandling = props.sak.behandlinger.find((b) => b.søknad.id === søknad.id);
@@ -117,6 +153,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
 
     return (
         <div className={styles.sakintroContainer}>
+            <SuksessStatuser locationState={locationState} intl={intl} />
             <div className={styles.pageHeader}>
                 <Innholdstittel className={styles.tittel}>
                     {intl.formatMessage({ id: 'display.saksoversikt.tittel' })}: {props.sak.saksnummer}

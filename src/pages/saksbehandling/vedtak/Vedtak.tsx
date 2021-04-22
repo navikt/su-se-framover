@@ -1,16 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import AlertStripe, { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel } from 'nav-frontend-typografi/';
 import React, { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import * as PdfApi from '~api/pdfApi';
 import {
     erAvslått,
-    erTilAttestering,
     erUnderkjent,
     erSimulert,
     erBeregnetAvslag,
@@ -20,6 +19,7 @@ import {
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
+import * as Routes from '~lib/routes';
 import * as routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Sak } from '~types/Sak';
@@ -49,6 +49,8 @@ const Vedtak = (props: Props) => {
     const [lastNedBrevStatus, setLastNedBrevStatus] = useState<RemoteData.RemoteData<ApiError, null>>(
         RemoteData.initial
     );
+
+    const history = useHistory();
 
     const handleVisBrevClick = async () => {
         if (RemoteData.isPending(lastNedBrevStatus) || !behandling) {
@@ -88,17 +90,6 @@ const Vedtak = (props: Props) => {
 
     if (!behandling) {
         return <AlertStripe type="feil">{intl.formatMessage({ id: 'feilmelding.fantIkkeBehandlingsId' })}</AlertStripe>;
-    }
-
-    if (erTilAttestering(behandling)) {
-        return (
-            <AlertStripeSuksess className={styles.vedtakSendtTilAttesteringAlertStripe}>
-                <p>{intl.formatMessage({ id: 'vedtak.sendtTilAttestering' })}</p>
-                <Link to={routes.saksoversiktIndex.createURL()}>
-                    {intl.formatMessage({ id: 'vedtak.sendtTilAttestering.lenkeSaksoversikt' })}
-                </Link>
-            </AlertStripeSuksess>
-        );
     }
 
     if (erSimulert(behandling) || erAvslått(behandling) || erUnderkjent(behandling)) {
@@ -156,15 +147,22 @@ const Vedtak = (props: Props) => {
                     </Link>
                     <Hovedknapp
                         spinner={RemoteData.isPending(sendtTilAttesteringStatus)}
-                        onClick={() =>
-                            dispatch(
+                        onClick={async () => {
+                            const response = await dispatch(
                                 sakSlice.sendTilAttestering({
                                     sakId: sak.id,
                                     behandlingId: behandlingId,
                                     fritekstTilBrev: fritekst,
                                 })
-                            )
-                        }
+                            );
+                            if (sakSlice.sendTilAttestering.fulfilled.match(response)) {
+                                const location = {
+                                    pathname: Routes.saksoversiktValgtSak.createURL({ sakId: sak.id }),
+                                    state: { søknadsbehandlingSendtTilAttestering: true },
+                                };
+                                history.push(location);
+                            }
+                        }}
                         htmlType="button"
                     >
                         {intl.formatMessage({ id: 'knapp.sendTilAttestering' })}
