@@ -11,10 +11,9 @@ import { Link } from 'react-router-dom';
 import { lukkSøknad } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { søknadMottatt } from '~lib/søknadUtils';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Sak } from '~types/Sak';
-import { LukkSøknadBegrunnelse } from '~types/Søknad';
+import { LukkSøknadBegrunnelse, Søknad, Søknadstype } from '~types/Søknad';
 
 import Avvist from './Avvist';
 import nb from './lukkSøknad-nb';
@@ -151,7 +150,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
                 <Trukket
                     datoSøkerTrakkSøknad={formik.values.datoSøkerTrakkSøknad}
                     søknadId={søknad.id}
-                    søknadOpprettet={søknadMottatt(søknad, intl)}
+                    søknadOpprettet={hentOpprettetDatoFraSøknad(søknad)}
                     feilmelding={formik.errors.datoSøkerTrakkSøknad}
                     lukkSøknadBegrunnelse={formik.values.lukkSøknadBegrunnelse}
                     lukketSøknadBrevutkastStatus={lukketSøknadBrevutkastStatus}
@@ -217,5 +216,12 @@ const LukkSøknad = (props: { sak: Sak }) => {
         </form>
     );
 };
+
+function hentOpprettetDatoFraSøknad(søknad: Søknad) {
+    if (søknad.søknadInnhold.forNav.type === Søknadstype.Papirsøknad) {
+        return søknad.søknadInnhold.forNav.mottaksdatoForSøknad;
+    }
+    return søknad.opprettet;
+}
 
 export default LukkSøknad;
