@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import * as pdfApi from '~api/pdfApi';
+import { Revurderingshandling } from '~api/revurderingApi';
 import { BrevInput } from '~components/brevInput/BrevInput';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import * as Routes from '~lib/routes';
@@ -21,12 +22,12 @@ import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
 
 interface FormData {
-    skalForhåndsvarsle: Nullable<boolean>;
+    revurderingshandling: Nullable<Revurderingshandling>;
     fritekstTilBrev: Nullable<string>;
 }
 
 const schema = yup.object<FormData>({
-    skalForhåndsvarsle: yup.boolean().required().defined(),
+    revurderingshandling: yup.mixed().required().defined().oneOf(Object.values(Revurderingshandling)),
     fritekstTilBrev: yup.string(),
 });
 
@@ -40,69 +41,46 @@ const Forhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevurderin
 
     const form = useForm<FormData>({
         defaultValues: {
-            skalForhåndsvarsle: null,
+            revurderingshandling: null,
         },
         resolver: yupResolver(schema),
     });
 
-    const handleSubmit = (data: FormData) => {
-        if (data.skalForhåndsvarsle) {
-            submitForhåndsvarsel(data);
-        } else {
-            submitTilAttestering(data);
+    const handleSubmit = async (data: FormData) => {
+        if (data.revurderingshandling === null) {
+            return;
         }
-    };
-
-    const submitForhåndsvarsel = async (data: FormData) => {
         setStatus(RemoteData.pending);
 
-        const res = await dispatch(
-            revurderingActions.forhåndsvarsleRevurdering({
+        const forhåndsvarselRes = await dispatch(
+            revurderingActions.forhåndsvarsleEllerSendTilAttestering({
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
+                revurderingshandling: data.revurderingshandling,
                 fritekstTilBrev: data.fritekstTilBrev ?? '',
             })
         );
 
-        if (revurderingActions.forhåndsvarsleRevurdering.rejected.match(res)) {
+        if (revurderingActions.forhåndsvarsleEllerSendTilAttestering.rejected.match(forhåndsvarselRes)) {
             //TODO: fix at res.payload kan være undefined?
-            if (!res.payload) return;
-            setStatus(RemoteData.failure(res.payload));
+            if (!forhåndsvarselRes.payload) return;
+            setStatus(RemoteData.failure(forhåndsvarselRes.payload));
         }
 
-        if (revurderingActions.forhåndsvarsleRevurdering.fulfilled.match(res)) {
+        if (revurderingActions.forhåndsvarsleEllerSendTilAttestering.fulfilled.match(forhåndsvarselRes)) {
             setStatus(RemoteData.success(null));
-            history.push({
-                pathname: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
-                state: { harForhåndsvarslet: true },
-            });
-        }
-    };
 
-    const submitTilAttestering = async (data: FormData) => {
-        setStatus(RemoteData.pending);
-
-        const res = await dispatch(
-            revurderingActions.sendRevurderingTilAttestering({
-                sakId: props.sakId,
-                revurderingId: props.revurdering.id,
-                fritekstTilBrev: data.fritekstTilBrev ?? '',
-                skalFøreTilBrevutsending: undefined,
-            })
-        );
-
-        if (revurderingActions.sendRevurderingTilAttestering.rejected.match(res)) {
-            //TODO: fix at res.payload kan være undefined?
-            if (!res.payload) return;
-            setStatus(RemoteData.failure(res.payload));
-        }
-
-        if (revurderingActions.sendRevurderingTilAttestering.fulfilled.match(res)) {
-            setStatus(RemoteData.success(res.payload));
-            history.push({
-                pathname: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
-                state: { sendtTilAttestering: true },
-            });
+            if (data.revurderingshandling) {
+                history.push({
+                    pathname: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
+                    state: { harForhåndsvarslet: true },
+                });
+            } else {
+                history.push({
+                    pathname: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
+                    state: { sendtTilAttestering: true },
+                });
+            }
         }
     };
 
@@ -123,22 +101,30 @@ const Forhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevurderin
         <form onSubmit={form.handleSubmit(handleSubmit)}>
             <Controller
                 control={form.control}
-                name="skalForhåndsvarsle"
+                name="revurderingshandling"
                 render={({ field, fieldState }) => (
                     <RadioGruppe legend="Skal bruker forhåndsvarsles?" feil={fieldState.error?.message}>
-                        <Radio label="Ja" name="skalForhåndsvarsle" onChange={() => field.onChange(true)} />
-                        <Radio label="Nei" name="skalForhåndsvarsle" onChange={() => field.onChange(false)} />
+                        <Radio
+                            label="Ja"
+                            name="revurderingshandling"
+                            onChange={() => field.onChange(Revurderingshandling.Forhåndsvarsle)}
+                        />
+                        <Radio
+                            label="Nei"
+                            name="revurderingshandling"
+                            onChange={() => field.onChange(Revurderingshandling.SendTilAttestering)}
+                        />
                     </RadioGruppe>
                 )}
             />
-            {form.watch('skalForhåndsvarsle') !== null && (
+            {form.watch('revurderingshandling') !== null && (
                 <Controller
                     control={form.control}
                     name="fritekstTilBrev"
                     render={({ field, fieldState }) => (
                         <BrevInput
                             tittel={
-                                form.getValues('skalForhåndsvarsle')
+                                form.getValues('revurderingshandling')
                                     ? 'Tekst til forhåndsvarsel'
                                     : props.intl.formatMessage({ id: 'oppsummering.tekstTilVedtaksbrev.tittel' })
                             }
@@ -160,7 +146,7 @@ const Forhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevurderin
             <RevurderingBunnknapper
                 onNesteClick={'submit'}
                 nesteKnappTekst={
-                    form.getValues('skalForhåndsvarsle')
+                    form.getValues('revurderingshandling') === Revurderingshandling.Forhåndsvarsle
                         ? 'Send forhåndsvarsel'
                         : props.intl.formatMessage({ id: 'knapp.sendTilAttestering' })
                 }

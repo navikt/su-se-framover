@@ -14,7 +14,7 @@ import {
     opprettRevurdering,
     sendRevurderingTilAttestering,
     underkjennRevurdering,
-    forhåndsvarsleRevurdering,
+    forhåndsvarsleEllerSendTilAttestering,
     fortsettEtterForhåndsvarsel,
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
@@ -598,7 +598,7 @@ export default createSlice({
             );
         });
 
-        builder.addCase(forhåndsvarsleRevurdering.fulfilled, (state, action) => {
+        builder.addCase(forhåndsvarsleEllerSendTilAttestering.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({

@@ -15,6 +15,7 @@ import {
 } from '~types/Revurdering';
 
 import * as revurderingApi from '../../api/revurderingApi';
+import { Revurderingshandling } from '../../api/revurderingApi';
 
 export const opprettRevurdering = createAsyncThunk<
     OpprettetRevurdering,
@@ -59,12 +60,17 @@ export const beregnOgSimuler = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const forhåndsvarsleRevurdering = createAsyncThunk<
+export const forhåndsvarsleEllerSendTilAttestering = createAsyncThunk<
     SimulertRevurdering,
-    { sakId: string; revurderingId: string; fritekstTilBrev: string },
+    { sakId: string; revurderingId: string; revurderingshandling: Revurderingshandling; fritekstTilBrev: string },
     { rejectValue: ApiError<RevurderingErrorCodes> }
->('revurdering/forhandsvarsle', async ({ sakId, revurderingId, fritekstTilBrev }, thunkApi) => {
-    const res = await revurderingApi.forhåndsvarsle(sakId, revurderingId, fritekstTilBrev);
+>('revurdering/forhandsvarsle', async ({ sakId, revurderingId, revurderingshandling, fritekstTilBrev }, thunkApi) => {
+    const res = await revurderingApi.forhåndsvarsleEllerSendTilAttestering(
+        sakId,
+        revurderingId,
+        revurderingshandling,
+        fritekstTilBrev
+    );
     if (res.status === 'ok') {
         return res.data;
     }
