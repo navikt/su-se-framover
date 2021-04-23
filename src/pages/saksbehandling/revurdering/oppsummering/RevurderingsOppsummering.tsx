@@ -12,14 +12,17 @@ import {
     BeregnetIngenEndring,
     RevurderingsStatus,
     UnderkjentRevurdering,
+    harSimulering,
 } from '~types/Revurdering';
 
+import { Utbetalingssimulering } from '../../steg/beregningOgSimulering/simulering/simulering';
 import sharedStyles from '../revurdering.module.less';
 import {
     erForhåndsvarslingBesluttet,
     erRevurderingForhåndsvarslet,
     erRevurderingIngenEndring,
     erRevurderingSimulert,
+    erGregulering,
 } from '../revurderingUtils';
 
 import EtterForhåndsvarsel from './EtterForhåndsvarsel';
@@ -58,6 +61,10 @@ const RevurderingsOppsummering = (props: {
                         beregningsTittel={intl.formatMessage({ id: 'oppsummering.nyBeregning.tittel' })}
                         beregning={props.revurdering.beregninger.revurdert}
                     />
+
+                    {harSimulering(props.revurdering) && (
+                        <Utbetalingssimulering simulering={props.revurdering.simulering} />
+                    )}
                 </div>
                 {props.revurdering.status === RevurderingsStatus.SIMULERT_OPPHØRT && (
                     <div className={styles.opphørsadvarsel}>
@@ -67,6 +74,9 @@ const RevurderingsOppsummering = (props: {
                     </div>
                 )}
                 {erRevurderingIngenEndring(props.revurdering) && (
+                    <IngenEndring sakId={props.sakId} revurdering={props.revurdering} intl={intl} />
+                )}
+                {!erGregulering(props.revurdering.årsak) && erRevurderingIngenEndring(props.revurdering) && (
                     <IngenEndring sakId={props.sakId} revurdering={props.revurdering} intl={intl} />
                 )}
 

@@ -26,7 +26,7 @@ import { Vurdering, Vurderingknapper } from '../Vurdering';
 import messages from './uførhet-nb';
 import styles from './Uførhet.module.less';
 
-const UførhetInput = (props: {
+export const UførhetInput = (props: {
     tittel: string;
     inputName: string;
     inputTekst: string;

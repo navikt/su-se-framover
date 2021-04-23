@@ -8,6 +8,7 @@ import {
     BeregnetIngenEndring,
     UnderkjentRevurdering,
     Forhåndsvarseltype,
+    OpprettetRevurderingGrunn,
 } from '~types/Revurdering';
 
 export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurdering =>
@@ -40,3 +41,6 @@ export const erRevurderingUnderkjent = (r: Revurdering): r is UnderkjentRevurder
     r.status === RevurderingsStatus.UNDERKJENT_INNVILGET ||
     r.status === RevurderingsStatus.UNDERKJENT_OPPHØRT ||
     r.status === RevurderingsStatus.UNDERKJENT_INGEN_ENDRING;
+
+export const erGregulering = (årsak: OpprettetRevurderingGrunn): boolean =>
+    årsak === OpprettetRevurderingGrunn.REGULER_GRUNNBELØP;

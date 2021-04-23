@@ -21,7 +21,6 @@ export default {
 
     'attester.iverksatt': 'Revurdering er iverksatt',
     'attester.sendtTilbake': 'Revurdering er sendt tilbake til vurdering',
-    'attester.tilSaksoversikt': 'Til saksoversikt',
     'attester.opphør.advarsel': 'Denne revurderingen fører til opphør for bruker',
 
     'knapp.brev': 'Vis brev',

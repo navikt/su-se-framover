@@ -10,6 +10,7 @@ import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { customFormikSubmit } from '~lib/formikUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { FradragTilFradragFormData } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/beregningUtils';
 import {
@@ -17,6 +18,7 @@ import {
     FradragInputs,
     fradragSchema,
 } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/FradragInputs';
+import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/Uførhet';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Fradragstype, FradragTilhører } from '~types/Fradrag';
@@ -25,17 +27,14 @@ import { Revurdering } from '~types/Revurdering';
 import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregning-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
-import { erRevurderingSimulert } from '../revurderingUtils';
+import { erGregulering, erRevurderingSimulert } from '../revurderingUtils';
 
 import styles from './endringAvFradrag.module.less';
 
 interface EndringAvFradragFormData {
     fradrag: FradragFormData[];
+    forventetInntekt: Nullable<string>;
 }
-
-const schema = yup.object<EndringAvFradragFormData>({
-    fradrag: yup.array(fradragSchema.required()).defined(),
-});
 
 enum SubmittedStatus {
     NOT_SUBMITTED,
@@ -60,24 +59,24 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
     };
 
     const handleLagreOgFortsettSenereClick = async () => {
-        const response = await beregnOgSimulerRevurdering(formik.values.fradrag);
+        const response = await beregnOgSimulerRevurdering(formik.values);
         if (beregnOgSimuler.fulfilled.match(response)) {
             history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
         }
     };
 
-    const beregnOgSimulerRevurdering = (fradrag: FradragFormData[]) =>
+    const beregnOgSimulerRevurdering = (values: EndringAvFradragFormData) =>
         dispatch(
             beregnOgSimuler({
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
-                //valdiering sikrer at feltet ikke er null
+                //validering sikrer at feltet ikke er null
                 /* eslint-disable @typescript-eslint/no-non-null-assertion */
                 periode: {
                     fraOgMed: props.revurdering.periode.fraOgMed,
                     tilOgMed: props.revurdering.periode.tilOgMed,
                 },
-                fradrag: fradrag.map((f: FradragFormData) => ({
+                fradrag: values.fradrag.map((f: FradragFormData) => ({
                     periode: null,
                     beløp: Number.parseInt(f.beløp!, 10),
                     type: f.type!,
@@ -90,9 +89,29 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                         : null,
                     tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
                 })),
+                forventetInntekt:
+                    erGregulering(props.revurdering.årsak) && values.forventetInntekt
+                        ? parseInt(values.forventetInntekt, 10)
+                        : undefined,
             })
         );
 
+    const schema = erGregulering(props.revurdering.årsak)
+        ? yup.object<EndringAvFradragFormData>({
+              fradrag: yup.array(fradragSchema.required()).defined(),
+              forventetInntekt: (yup
+                  .number()
+                  .typeError('Forventet inntekt etter uførhet må være et tall')
+                  .label('Forventet inntekt etter uførhet')
+                  .nullable(false)
+                  .integer()
+                  .min(0) as yup.Schema<unknown>) as yup.Schema<Nullable<string>>,
+          })
+        : yup.object<EndringAvFradragFormData>({
+              fradrag: yup.array(fradragSchema.required()).defined(),
+              forventetInntekt: yup.string().nullable().defined(),
+          });
+    const forventetInntekt = props.revurdering.behandlingsinformasjon.uførhet?.forventetInntekt;
     const formik = useFormik<EndringAvFradragFormData>({
         initialValues: {
             fradrag: erRevurderingSimulert(props.revurdering)
@@ -100,9 +119,11 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                       FradragTilFradragFormData(props.revurdering.beregninger.revurdert.fradrag)
                   )
                 : [],
+            forventetInntekt: forventetInntekt ? String(forventetInntekt) : null,
         },
         async onSubmit(values) {
-            const response = await beregnOgSimulerRevurdering(values.fradrag);
+            const response = await beregnOgSimulerRevurdering(values);
+
             if (beregnOgSimuler.fulfilled.match(response)) {
                 history.push(
                     Routes.revurderValgtRevurdering.createURL({
@@ -153,6 +174,19 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                         ${props.revurdering.periode.tilOgMed} `}
                     </p>
                 </div>
+                {erGregulering(props.revurdering.årsak) && (
+                    <div className={styles.forventetInntektContainer}>
+                        <UførhetInput
+                            tittel={intl.formatMessage({ id: 'fradrag.type.forventetinntekt' })}
+                            inputName="forventetInntekt"
+                            inputTekst=" NOK"
+                            bredde="L"
+                            defaultValues={formik.values.forventetInntekt ?? ''}
+                            onChange={formik.handleChange}
+                            feil={formik.errors.forventetInntekt}
+                        />
+                    </div>
+                )}
                 <div className={styles.fradragInputsContainer}>
                     <FradragInputs
                         harEps={props.revurdering.tilRevurdering.behandlingsinformasjon.ektefelle ? true : false}

@@ -7,6 +7,7 @@ export default {
     'årsak.dødsfall': 'Dødsfall',
     'årsak.andreKilder': 'Nye opplysninger fra andre kilder',
     'årsak.migrert': 'Migrert',
+    'årsak.gRegulering': 'G-regulering',
 
     'knapp.avslutt': 'Avslutt',
     'knapp.forrige': 'Forrige',
@@ -29,4 +30,5 @@ export default {
     'feil.siste.måned.ved.nedgang.i.stønaden': 'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
     'feil.simulering.feilet': 'Simulering feilet',
     'feil.ufullstendig.behandlingsinformasjon': 'Ufullstendig behandlingsinformasjon',
+    'feil.g_regulering_kan_ikke_føre_til_opphør': 'G-regulering kan ikke føre til opphør',
 };

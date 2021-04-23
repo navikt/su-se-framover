@@ -22,7 +22,7 @@ import {
 } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
-import { useI18n } from '~lib/hooks';
+import { useI18n, useNotificationFromLocation } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
@@ -51,6 +51,16 @@ import { RevurderingSteg } from '../types';
 import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
 
+const SuksessStatuser = (props: { locationState: Nullable<Routes.SuccessNotificationState>; intl: IntlShape }) => {
+    return (
+        <div className={styles.suksessStatuserContainer}>
+            {props.locationState?.notification && (
+                <AlertStripeSuksess>{props.locationState.notification}</AlertStripeSuksess>
+            )}
+        </div>
+    );
+};
+
 const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
     switch (type) {
         case LukkSøknadBegrunnelse.Avvist:
@@ -64,36 +74,9 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
     }
 };
 
-interface successNotificationState {
-    harForhåndsvarslet?: boolean;
-    sendtTilAttestering?: boolean;
-}
-
-const SuksessStatuser = (props: { locationState: Nullable<successNotificationState>; intl: IntlShape }) => {
-    return (
-        <div className={styles.suksessStatuserContainer}>
-            {props.locationState?.harForhåndsvarslet && (
-                <AlertStripeSuksess>{props.intl.formatMessage({ id: 'suksess.forhåndsvarsel' })}</AlertStripeSuksess>
-            )}
-            {props.locationState?.sendtTilAttestering && (
-                <AlertStripeSuksess>
-                    {props.intl.formatMessage({ id: 'suksess.sendtTilAttestering' })}
-                </AlertStripeSuksess>
-            )}
-        </div>
-    );
-};
-
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
-    const history = useHistory();
-    const location = useLocation<successNotificationState>();
-    const [locationState, setLocationState] = useState<successNotificationState | null>(null);
+    const locationState = useNotificationFromLocation();
     const intl = useI18n({ messages });
-
-    useEffect(() => {
-        setLocationState(location.state);
-        history.replace(location.pathname, null);
-    }, []);
 
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {

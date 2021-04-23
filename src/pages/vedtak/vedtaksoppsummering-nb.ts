@@ -9,6 +9,7 @@ export default {
     'vedtaktype.endring': 'Endret',
     'vedtaktype.ingenendring': 'Ingen endring',
     'vedtaktype.opphør': 'Opphørt',
+    'vedtaktype.regulergrunnbeløp': 'Regulert grunnbeløp',
 
     'vedtak.dato': 'Vedtaksdato',
     'vedtak.brev': 'Vedtaksbrev',
