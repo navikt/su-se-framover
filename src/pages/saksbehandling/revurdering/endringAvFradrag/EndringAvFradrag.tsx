@@ -143,6 +143,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
               fradrag: yup.array(fradragSchema.required()).defined(),
               forventetInntekt: yup.string().nullable().defined(),
           });
+    // TODO jah: Spør Agnethe om design-tips her, kan vi bytte ut denne med den andre komponenten?
     const forventetInntekt = props.revurdering.behandlingsinformasjon.uførhet?.forventetInntekt;
     const formik = useFormik<EndringAvFradragFormData>({
         initialValues: {
@@ -206,19 +207,6 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                         ${props.revurdering.periode.tilOgMed} `}
                     </p>
                 </div>
-                {erGregulering(props.revurdering.årsak) && (
-                    <div className={styles.forventetInntektContainer}>
-                        <UførhetInput
-                            tittel={intl.formatMessage({ id: 'fradrag.type.forventetinntekt' })}
-                            inputName="forventetInntekt"
-                            inputTekst=" NOK"
-                            bredde="L"
-                            defaultValues={formik.values.forventetInntekt ?? ''}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.forventetInntekt}
-                        />
-                    </div>
-                )}
                 {RemoteData.isSuccess(revurderingGrunnlagSimulering) && (
                     <div className={styles.grunnlagsdata}>
                         <div className={styles.grunnlagsdataelement}>
@@ -248,6 +236,19 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                     }
                 />
                 ------------------------------------------------------------------------------------------------------------------------------
+                {erGregulering(props.revurdering.årsak) && (
+                    <div className={styles.forventetInntektContainer}>
+                        <UførhetInput
+                            tittel={intl.formatMessage({ id: 'fradrag.type.forventetinntekt' })}
+                            inputName="forventetInntekt"
+                            inputTekst=" NOK"
+                            bredde="L"
+                            value={formik.values.forventetInntekt ?? ''}
+                            onChange={formik.handleChange}
+                            feil={formik.errors.forventetInntekt}
+                        />
+                    </div>
+                )}
                 <div className={styles.fradragInputsContainer}>
                     <FradragInputs
                         harEps={props.revurdering.tilRevurdering.behandlingsinformasjon.ektefelle ? true : false}
