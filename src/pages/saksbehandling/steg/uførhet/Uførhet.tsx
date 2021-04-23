@@ -13,10 +13,9 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import UføregrunnlagInputFelter from '~pages/saksbehandling/steg/uførhet/UføregrunnlagInputFelter';
 import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Uførhet as UførhetType, UførhetStatus } from '~types/Behandlingsinformasjon';
+import { Uførhet as UførhetType } from '~types/Behandlingsinformasjon';
 import { Oppfylt } from '~types/Grunnlag';
 
 import { UførhetFaktablokk } from '../faktablokk/faktablokker/UførhetFaktablokk';
@@ -80,22 +79,23 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         }
 
         const res = await dispatch(
-            dispatch(
-                lagreUføregrunnlag({
-                    sakId: props.sakId,
-                    behandlingId: props.behandling.id,
-                    uføregrunnlag: {
-                        uføregrad: uføreValues.uføregrad!,
-                        forventetInntekt: uføreValues.forventetInntekt!,
-                        begrunnelse: uføreValues.begrunnelse?? '',
-                        oppfylt: uføreValues.status,
-                        periode: {
-                            fraOgMed: props.behandling.stønadsperiode!.periode.fraOgMed;
-                            tilOgMed: props.behandling.stønadsperiode!.periode.tilOgMed;
-                        };
+            lagreUføregrunnlag({
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+                uføregrunnlag: {
+                    uføregrad: uføreValues.uføregrad,
+                    forventetInntekt: uføreValues.forventetInntekt,
+                    begrunnelse: uføreValues.begrunnelse ?? '',
+                    oppfylt: uføreValues.status,
+                    periode: {
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        fraOgMed: props.behandling.stønadsperiode!.periode.fraOgMed!,
+
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        tilOgMed: props.behandling.stønadsperiode!.periode.tilOgMed!,
                     },
-                })
-            )
+                },
+            })
         );
 
         if (!res) return;
@@ -105,9 +105,11 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         }
     };
 
+    const uføre = props.behandling.grunnlag.uføre.length == 0 ? null : props.behandling.grunnlag.uføre[0];
+
     const formik = useFormik<FormData>({
         initialValues: {
-            status: props.behandling.grunnlag.uføre?.status ?? null,
+            status: uføre?.oppfylt ?? null,
             uføregrad: props.behandling.behandlingsinformasjon.uførhet?.uføregrad?.toString() ?? null,
             forventetInntekt: props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt?.toString() ?? null,
             begrunnelse: props.behandling.behandlingsinformasjon.uførhet?.begrunnelse ?? null,
@@ -125,19 +127,6 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
             {{
                 left: (
                     <>
-                        <UføregrunnlagInputFelter
-                            grunnlag={props.behandling.grunnlag}
-                            lagre={(uføregrunnlag) =>
-                                dispatch(
-                                    lagreUføregrunnlag({
-                                        sakId: props.sakId,
-                                        behandlingId: props.behandling.id,
-                                        uføregrunnlag,
-                                    })
-                                )
-                            }
-                        />
-                        ------------------------------------------------------------------------------------------------------------------------------
                         <form
                             onSubmit={(e) => {
                                 setHasSubmitted(true);
@@ -152,39 +141,37 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                 <Radio
                                     label={intl.formatMessage({ id: 'radio.label.ja' })}
                                     name="status"
-                                    onChange={() =>
-                                        formik.setValues({ ...formik.values, status: UførhetStatus.VilkårOppfylt })
-                                    }
-                                    defaultChecked={formik.values.status === UførhetStatus.VilkårOppfylt}
+                                    onChange={() => formik.setValues({ ...formik.values, status: Oppfylt.JA })}
+                                    defaultChecked={formik.values.status === Oppfylt.JA}
                                 />
                                 <Radio
                                     label={intl.formatMessage({ id: 'radio.label.nei' })}
                                     name="status"
                                     onChange={() =>
                                         formik.setValues((v) => ({
-                                            status: UførhetStatus.VilkårIkkeOppfylt,
+                                            status: Oppfylt.NEI,
                                             uføregrad: null,
                                             forventetInntekt: null,
                                             begrunnelse: v.begrunnelse,
                                         }))
                                     }
-                                    defaultChecked={formik.values.status === UførhetStatus.VilkårIkkeOppfylt}
+                                    defaultChecked={formik.values.status === Oppfylt.NEI}
                                 />
                                 <Radio
                                     label={intl.formatMessage({ id: 'radio.label.uføresakTilBehandling' })}
                                     name="status"
                                     onChange={() =>
                                         formik.setValues((v) => ({
-                                            status: UførhetStatus.HarUføresakTilBehandling,
+                                            status: Oppfylt.UAVKLART,
                                             uføregrad: null,
                                             forventetInntekt: null,
                                             begrunnelse: v.begrunnelse,
                                         }))
                                     }
-                                    defaultChecked={formik.values.status === UførhetStatus.HarUføresakTilBehandling}
+                                    defaultChecked={formik.values.status === Oppfylt.UAVKLART}
                                 />
                             </RadioGruppe>
-                            {formik.values.status === UførhetStatus.VilkårOppfylt && (
+                            {formik.values.status === Oppfylt.JA && (
                                 <div className={styles.formInputContainer}>
                                     <UførhetInput
                                         tittel={intl.formatMessage({ id: 'input.label.uføregrad' })}

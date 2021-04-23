@@ -1,5 +1,4 @@
 import { Nullable } from '~lib/types';
-import UføregrunnlagInputFelter from '~pages/saksbehandling/steg/uførhet/UføregrunnlagInputFelter';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';

@@ -4,8 +4,8 @@ import { Behandling, Attestering } from './Behandling';
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
 import { Periode } from './Fradrag';
-import { Simulering } from './Simulering';
 import { Grunnlag, SimulertEndringGrunnlag } from './Grunnlag';
+import { Simulering } from './Simulering';
 
 export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
     id: string;
