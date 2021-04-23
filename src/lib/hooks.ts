@@ -34,11 +34,12 @@ export const useNotificationFromLocation = () => {
     }, []);
     return locationState;
 };
-type ApiCall<U> = RemoteData.RemoteData<ApiError | undefined, U>;
-export function useApiCall<T, U>(
+
+type ApiResult<U> = RemoteData.RemoteData<ApiError | undefined, U>;
+function useApiCall<T, U>(
     fn: AsyncThunk<U, T, { rejectValue: ApiError }>
-): [ApiCall<U>, (args: T, onSuccess?: (result: U) => void) => void] {
-    const [apiResult, setApiResult] = useState<ApiCall<U>>(RemoteData.initial);
+): [ApiResult<U>, (args: T, onSuccess?: (result: U) => void) => void] {
+    const [apiResult, setApiResult] = useState<ApiResult<U>>(RemoteData.initial);
     const dispatch = useAppDispatch();
 
     const callFn = React.useCallback(
@@ -60,4 +61,17 @@ export function useApiCall<T, U>(
     );
 
     return [apiResult, callFn];
+}
+
+export function useFetchBrev<T>(
+    sliceFn: AsyncThunk<{ objectUrl: string }, T, { rejectValue: ApiError }>
+): [ApiResult<{ objectUrl: string }>, (args: T) => void] {
+    const [status, fetchBrev] = useApiCall(sliceFn);
+
+    return [
+        status,
+        (args: T) => {
+            fetchBrev(args, ({ objectUrl }) => window.open(objectUrl));
+        },
+    ];
 }

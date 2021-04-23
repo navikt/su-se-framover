@@ -13,7 +13,7 @@ import RevurderingIngenEndringAlert from '~components/revurdering/RevurderingIng
 import RevurderingÅrsakOgBegrunnelse from '~components/revurdering/RevurderingÅrsakOgBegrunnelse';
 import * as revurderingSlice from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
-import { useApiCall, useI18n } from '~lib/hooks';
+import { useFetchBrev, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
@@ -97,18 +97,7 @@ const RevurderingsOppsummering = (props: {
         RemoteData.RemoteData<ApiError, RevurderingTilAttestering>
     >(RemoteData.initial);
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
-    const [brevResult, fetchBrev] = useApiCall(revurderingSlice.fetchBrevutkastWithFritekst);
-
-    const hentBrev = (fritekst: Nullable<string> | undefined) => {
-        fetchBrev(
-            {
-                sakId: props.sakId,
-                revurderingId: props.revurdering?.id ?? '',
-                fritekst: fritekst ?? '',
-            },
-            ({ objectUrl }) => window.open(objectUrl)
-        );
-    };
+    const [brevResult, fetchBrev] = useFetchBrev(revurderingSlice.fetchBrevutkastWithFritekst);
 
     const skalFøreTilBrevutsendingInitialValue = () => {
         const skalFøreTilBrevutsending = (props.revurdering as UnderkjentRevurdering).skalFøreTilBrevutsending;
@@ -116,6 +105,14 @@ const RevurderingsOppsummering = (props: {
             return skalFøreTilBrevutsending;
         }
         return erRevurderingIngenEndring(props.revurdering) ? false : true;
+    };
+
+    const hentBrev = (fritekst?: Nullable<string>) => {
+        fetchBrev({
+            sakId: props.sakId,
+            revurderingId: props.revurdering.id,
+            fritekst: fritekst ?? '',
+        });
     };
 
     const formik = useFormik<OppsummeringFormData>({
