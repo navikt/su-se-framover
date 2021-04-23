@@ -9,6 +9,8 @@ export default {
 
     'feil.generellFeil': 'En feil skjedde',
 
+    'forhåndsvarsling.sendtForhåndsvarsling': 'Forhåndsvarsel er sendt til bruker og oppgave i Gosys er opprettet',
+
     'knapp.sendtBrevOgAvslutt': 'Send brev og avslutt',
 
     'link.tilbake': 'Tilbake',

@@ -51,10 +51,12 @@ const ForhåndsvarslingBesluttet = (props: { sakId: string; revurdering: Simuler
         if (revurderingActions.sendRevurderingTilAttestering.fulfilled.match(res)) {
             setSendtTilAttesteringStatus(RemoteData.success(res.payload));
 
-            history.push({
-                pathname: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
-                state: { sendtTilAttestering: true },
-            });
+            history.push(
+                Routes.createSakIntroLocation(
+                    props.intl.formatMessage({ id: 'oppsummering.sendtTilAttestering' }),
+                    props.sakId
+                )
+            );
         }
     };
 

@@ -70,16 +70,20 @@ const Forhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevurderin
         if (revurderingActions.forhåndsvarsleEllerSendTilAttestering.fulfilled.match(forhåndsvarselRes)) {
             setStatus(RemoteData.success(null));
 
-            if (data.revurderingshandling) {
-                history.push({
-                    pathname: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
-                    state: { harForhåndsvarslet: true },
-                });
+            if (data.revurderingshandling === Revurderingshandling.Forhåndsvarsle) {
+                history.push(
+                    Routes.createSakIntroLocation(
+                        props.intl.formatMessage({ id: 'forhåndsvarsling.sendtForhåndsvarsling' }),
+                        props.sakId
+                    )
+                );
             } else {
-                history.push({
-                    pathname: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
-                    state: { sendtTilAttestering: true },
-                });
+                history.push(
+                    Routes.createSakIntroLocation(
+                        props.intl.formatMessage({ id: 'oppsummering.sendtTilAttestering' }),
+                        props.sakId
+                    )
+                );
             }
         }
     };

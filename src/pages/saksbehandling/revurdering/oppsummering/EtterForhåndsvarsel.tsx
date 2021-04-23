@@ -88,11 +88,12 @@ const EtterForhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevur
                 return;
             }
 
-            history.push({
-                pathname: Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }),
-                //TODO: fix når den avsluttes
-                state: { sendtTilAttestering: true },
-            });
+            history.push(
+                Routes.createSakIntroLocation(
+                    props.intl.formatMessage({ id: 'oppsummering.sendtTilAttestering' }),
+                    props.sakId
+                )
+            );
         }
     };
 
