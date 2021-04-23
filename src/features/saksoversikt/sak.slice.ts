@@ -135,7 +135,7 @@ export const lagreUføregrunnlag = createAsyncThunk<
     {
         sakId: string;
         behandlingId: string;
-        uføregrunnlag: Uføregrunnlag[];
+        uføregrunnlag: Uføregrunnlag;
     },
     { rejectValue: ApiError }
 >('behandling/grunnlag/uføre', async (arg, thunkApi) => {

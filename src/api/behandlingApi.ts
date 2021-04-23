@@ -1,4 +1,5 @@
 import { Nullable } from '~lib/types';
+import UføregrunnlagInputFelter from '~pages/saksbehandling/steg/uførhet/UføregrunnlagInputFelter';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
@@ -137,16 +138,19 @@ export async function underkjenn(arg: {
     });
 }
 
-export async function lagreUføregrunnlag(arg: { sakId: string; behandlingId: string; uføregrunnlag: Uføregrunnlag[] }) {
+export async function lagreUføregrunnlag(arg: { sakId: string; behandlingId: string; uføregrunnlag: Uføregrunnlag }) {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/uføregrunnlag`,
         method: 'POST',
-        body: arg.uføregrunnlag.map((uføregrunnlag) => ({
-            ...uføregrunnlag,
+        body: {
+            uføregrad: arg.uføregrunnlag.uføregrad,
+            forventetInntekt: arg.uføregrunnlag.forventetInntekt,
             periode: {
-                fraOgMed: uføregrunnlag.periode.fraOgMed,
-                tilOgMed: uføregrunnlag.periode.tilOgMed,
+                fraOgMed: arg.uføregrunnlag.periode.fraOgMed,
+                tilOgMed: arg.uføregrunnlag.periode.tilOgMed,
             },
-        })),
+            begrunnelse: arg.uføregrunnlag.begrunnelse,
+            oppfylt: arg.uføregrunnlag.oppfylt,
+        },
     });
 }

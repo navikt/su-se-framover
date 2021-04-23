@@ -17,6 +17,7 @@ import UføregrunnlagInputFelter from '~pages/saksbehandling/steg/uførhet/Ufør
 import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Uførhet as UførhetType, UførhetStatus } from '~types/Behandlingsinformasjon';
+import { Oppfylt } from '~types/Grunnlag';
 
 import { UførhetFaktablokk } from '../faktablokk/faktablokker/UførhetFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -28,23 +29,20 @@ import messages from './uførhet-nb';
 import styles from './Uførhet.module.less';
 
 interface FormData {
-    status: Nullable<UførhetStatus>;
+    status: Nullable<Oppfylt>;
     uføregrad: Nullable<string>;
     forventetInntekt: Nullable<string>;
     begrunnelse: Nullable<string>;
 }
 
 const schema = yup.object<FormData>({
-    status: yup
-        .mixed()
-        .defined()
-        .oneOf([UførhetStatus.VilkårOppfylt, UførhetStatus.VilkårIkkeOppfylt, UførhetStatus.HarUføresakTilBehandling]),
+    status: yup.mixed().defined().oneOf([Oppfylt.JA, Oppfylt.NEI, Oppfylt.UAVKLART]),
     uføregrad: (yup
         .number()
         .nullable()
         .defined()
         .when('status', {
-            is: UførhetStatus.VilkårOppfylt,
+            is: Oppfylt.JA,
             then: yup.number().positive().min(1).max(100).required().typeError('Feltet må være et tall'),
             otherwise: yup.number().nullable().defined(),
         }) as unknown) as yup.Schema<string>,
@@ -53,7 +51,7 @@ const schema = yup.object<FormData>({
         .nullable()
         .defined()
         .when('status', {
-            is: UførhetStatus.VilkårOppfylt,
+            is: Oppfylt.JA,
             then: yup.number().positive().integer().min(0).required().typeError('Feltet må være et tall'),
             otherwise: yup.number().nullable().defined(),
         }) as unknown) as yup.Schema<string>,
@@ -82,13 +80,22 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         }
 
         const res = await dispatch(
-            lagreBehandlingsinformasjon({
-                sakId: props.sakId,
-                behandlingId: props.behandling.id,
-                behandlingsinformasjon: {
-                    uførhet: uføreValues,
-                },
-            })
+            dispatch(
+                lagreUføregrunnlag({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                    uføregrunnlag: {
+                        uføregrad: uføreValues.uføregrad!,
+                        forventetInntekt: uføreValues.forventetInntekt!,
+                        begrunnelse: uføreValues.begrunnelse?? '',
+                        oppfylt: uføreValues.status,
+                        periode: {
+                            fraOgMed: props.behandling.stønadsperiode!.periode.fraOgMed;
+                            tilOgMed: props.behandling.stønadsperiode!.periode.tilOgMed;
+                        };
+                    },
+                })
+            )
         );
 
         if (!res) return;
@@ -100,7 +107,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
 
     const formik = useFormik<FormData>({
         initialValues: {
-            status: props.behandling.behandlingsinformasjon.uførhet?.status ?? null,
+            status: props.behandling.grunnlag.uføre?.status ?? null,
             uføregrad: props.behandling.behandlingsinformasjon.uførhet?.uføregrad?.toString() ?? null,
             forventetInntekt: props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt?.toString() ?? null,
             begrunnelse: props.behandling.behandlingsinformasjon.uførhet?.begrunnelse ?? null,

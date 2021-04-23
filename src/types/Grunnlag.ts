@@ -2,6 +2,14 @@ export interface Uføregrunnlag {
     periode: GrunnlagsPeriode;
     uføregrad: number;
     forventetInntekt: number;
+    begrunnelse: string;
+    oppfylt: Oppfylt;
+}
+
+export enum Oppfylt {
+    JA = 'JA',
+    NEI = 'NEI',
+    UAVKLART = 'UAVKLART',
 }
 
 export interface GrunnlagsPeriode {
@@ -18,4 +26,8 @@ export interface SimulertEndringGrunnlag {
     førBehandling: Grunnlag;
     endring: Grunnlag;
     resultat: Grunnlag;
+}
+
+export interface SøknadsbehandlingGrunnlag {
+    uføre: Uføregrunnlag;
 }
