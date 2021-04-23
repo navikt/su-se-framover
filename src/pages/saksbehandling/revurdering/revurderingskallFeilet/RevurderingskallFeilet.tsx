@@ -1,4 +1,3 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import React from 'react';
 import { IntlShape } from 'react-intl';
