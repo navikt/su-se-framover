@@ -60,8 +60,8 @@ const ForhåndsvarslingBesluttet = (props: { sakId: string; revurdering: Simuler
         }
     };
 
-    const handleVisBrevClick = async () =>
-        await pdfApi.fetchBrevutkastForRevurderingWithFritekst(
+    const handleVisBrevClick = () =>
+        pdfApi.fetchBrevutkastForRevurderingWithFritekst(
             props.sakId,
             props.revurdering.id,
             form.getValues('tekstTilVedtaksbrev')

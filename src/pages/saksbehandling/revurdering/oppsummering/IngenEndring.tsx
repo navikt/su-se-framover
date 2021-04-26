@@ -85,8 +85,8 @@ const IngenEndring = (props: { sakId: string; revurdering: BeregnetIngenEndring;
         revurderingId: props.revurdering.id,
     });
 
-    const handleVisBrevClick = async () =>
-        await pdfApi.fetchBrevutkastForRevurderingWithFritekst(
+    const handleVisBrevClick = () =>
+        pdfApi.fetchBrevutkastForRevurderingWithFritekst(
             props.sakId,
             props.revurdering.id,
             form.getValues('tekstTilVedtaksbrev') ?? ''

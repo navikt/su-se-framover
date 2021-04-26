@@ -94,8 +94,8 @@ const Forhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevurderin
         revurderingId: props.revurdering.id,
     });
 
-    const handleVisBrevClick = async () =>
-        await pdfApi.fetchBrevutkastForRevurderingWithFritekst(
+    const handleVisBrevClick = () =>
+        pdfApi.fetchBrevutkastForRevurderingWithFritekst(
             props.sakId,
             props.revurdering.id,
             form.getValues('fritekstTilBrev') ?? ''

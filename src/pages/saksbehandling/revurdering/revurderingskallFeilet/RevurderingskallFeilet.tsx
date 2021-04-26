@@ -23,7 +23,7 @@ const feilkodeTilFeilmelding = (feil: Nullable<ErrorMessage>, intl: IntlShape) =
         case RevurderingErrorCodes.FANT_IKKE_SAK:
             return intl.formatMessage({ id: 'feil.fant.ikke.sak' });
         case RevurderingErrorCodes.FANT_IKKE_PERSON:
-            return intl.formatMessage({ id: 'feil.kunne.ikke.person' });
+            return intl.formatMessage({ id: 'feil.fant.ikke.person' });
         case RevurderingErrorCodes.KUNNE_IKKE_OPPRETTE_OPPGAVE:
             return intl.formatMessage({ id: 'feil.kunne.ikke.opprette.oppgave' });
         case RevurderingErrorCodes.KUNNE_IKKE_JOURNALFØRE_BREV:
