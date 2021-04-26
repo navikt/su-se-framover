@@ -40,6 +40,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
     const forVeileder = useAppSelector((s) => s.soknad.forVeileder);
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
+    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
     const søker: Person = props.søker;
     const telefonnummerPdl = søker.telefonnummer
         ? `${søker.telefonnummer.landskode} ${søker.telefonnummer.nummer}`
@@ -76,6 +77,11 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                     onSubmit={(e) => {
                         setHasSubmitted(true);
                         formik.handleSubmit(e);
+                        setTimeout(() => {
+                            if (feiloppsummeringref.current) {
+                                feiloppsummeringref.current.focus();
+                            }
+                        }, 0);
                     }}
                 >
                     <Panel border className={styles.panelMargin}>
@@ -164,6 +170,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
                         hidden={!formikErrorsHarFeil(formik.errors)}
+                        innerRef={feiloppsummeringref}
                     />
                     <Bunnknapper
                         previous={{
