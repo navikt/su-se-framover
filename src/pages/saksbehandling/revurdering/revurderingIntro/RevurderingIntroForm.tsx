@@ -11,6 +11,7 @@ import DatePicker from 'react-datepicker';
 import { ApiError } from '~api/apiClient';
 import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
+import { erDatoFørStartenPåNesteMåned } from '~lib/dateUtils';
 import { customFormikSubmit } from '~lib/formikUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
@@ -33,7 +34,22 @@ const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter((x) => x
 
 const schema = yup.object<OpprettRevurderingFormData>({
     fraOgMed: yup.date().nullable().required(),
-    årsak: yup.mixed<OpprettetRevurderingGrunn>().nullable().oneOf(gyldigeÅrsaker).required(),
+    årsak: yup
+        .mixed<OpprettetRevurderingGrunn>()
+        .nullable()
+        .required()
+        .when('fraOgMed', {
+            is: (val) => {
+                return erDatoFørStartenPåNesteMåned(val);
+            },
+            then: yup
+                .mixed()
+                .oneOf(
+                    [OpprettetRevurderingGrunn.REGULER_GRUNNBELØP],
+                    'Feltet må være én av disse verdiene: G-regulering'
+                ),
+            otherwise: yup.mixed().oneOf(gyldigeÅrsaker, 'Vennligst velg et alternativ'),
+        }),
     begrunnelse: yup.string().nullable().required(),
 });
 
@@ -74,6 +90,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
             begrunnelse: props.revurdering?.begrunnelse ?? null,
         },
         async onSubmit(values) {
+            console.log(values);
             if (values.fraOgMed && values.årsak && values.begrunnelse) {
                 props.onNesteClick(values.fraOgMed, values.årsak, values.begrunnelse);
             }
@@ -112,7 +129,33 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
         }
     };
 
+    const gyldigeÅrsaksValg = () => {
+        return gyldigeÅrsaker.map((grunn, index) => {
+            if (
+                formik.values.fraOgMed &&
+                erDatoFørStartenPåNesteMåned(formik.values.fraOgMed) &&
+                grunn !== OpprettetRevurderingGrunn.REGULER_GRUNNBELØP
+            ) {
+                return (
+                    <option value={grunn} key={index} disabled>
+                        {intl.formatMessage({
+                            id: getRevurderingsårsakMessageId(grunn),
+                        })}
+                    </option>
+                );
+            }
+            return (
+                <option value={grunn} key={index}>
+                    {intl.formatMessage({
+                        id: getRevurderingsårsakMessageId(grunn),
+                    })}
+                </option>
+            );
+        });
+    };
+
     const periode = formik.values.fraOgMed ? { fraOgMed: formik.values.fraOgMed } : null;
+
     return (
         <form className={sharedStyles.revurderingContainer} onSubmit={formik.handleSubmit}>
             <Innholdstittel className={sharedStyles.tittel}>
@@ -160,13 +203,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                         <option value="" disabled>
                             {intl.formatMessage({ id: 'input.årsak.value.default' })}
                         </option>
-                        {gyldigeÅrsaker.map((grunn, index) => (
-                            <option value={grunn} key={index}>
-                                {intl.formatMessage({
-                                    id: getRevurderingsårsakMessageId(grunn),
-                                })}
-                            </option>
-                        ))}
+                        {gyldigeÅrsaksValg()}
                     </Select>
 
                     <div className={styles.formElement}>
