@@ -8,6 +8,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreUføregrunnlag } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
@@ -22,7 +23,7 @@ import { UførhetFaktablokk } from '../faktablokk/faktablokker/UførhetFaktablok
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurdering, Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../Vurdering';
 
 import messages from './uførhet-nb';
 import styles from './Uførhet.module.less';
@@ -128,7 +129,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
 
     return (
-        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <>
@@ -254,7 +255,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                 ),
                 right: <UførhetFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
-        </Vurdering>
+        </ToKolonner>
     );
 };
 

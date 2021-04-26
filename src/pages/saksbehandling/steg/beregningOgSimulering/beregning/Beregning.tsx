@@ -15,6 +15,7 @@ import { Undertittel } from 'nav-frontend-typografi';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import ToKolonner from '~components/toKolonner/ToKolonner';
 import { kanSimuleres } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import * as DateUtils from '~lib/dateUtils';
@@ -37,7 +38,7 @@ import BeregningFaktablokk from '../../faktablokk/faktablokker/BeregningFaktablo
 import sharedI18n from '../../sharedI18n-nb';
 import SharedStyles from '../../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../../types';
-import { Vurdering, Vurderingknapper } from '../../Vurdering';
+import { Vurderingknapper } from '../../Vurdering';
 
 import messages from './beregning-nb';
 import styles from './beregning.module.less';
@@ -211,7 +212,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     };
 
     return (
-        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <form
@@ -356,7 +357,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                 ),
                 right: <BeregningFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
-        </Vurdering>
+        </ToKolonner>
     );
 };
 

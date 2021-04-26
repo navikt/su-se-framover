@@ -11,6 +11,7 @@ import { Sats as FaktiskSats } from '~/types/Sats';
 import { Person } from '~api/personApi';
 import { SuperRadioGruppe } from '~components/FormElements';
 import { Personkort } from '~components/Personkort';
+import ToKolonner from '~components/toKolonner/ToKolonner';
 import { eqBosituasjon } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
@@ -24,7 +25,7 @@ import { Bosituasjon, isPerson } from '~types/Behandlingsinformasjon';
 import { SatsFaktablokk } from '../faktablokk/faktablokker/SatsFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurdering, Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../Vurdering';
 
 import messages from './sats-nb';
 import styles from './sats.module.less';
@@ -154,7 +155,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     };
 
     return (
-        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <form
@@ -297,7 +298,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 ),
                 right: <SatsFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
-        </Vurdering>
+        </ToKolonner>
     );
 };
 

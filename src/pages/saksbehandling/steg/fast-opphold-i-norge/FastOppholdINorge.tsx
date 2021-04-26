@@ -6,6 +6,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import ToKolonner from '~components/toKolonner/ToKolonner';
 import { eqFastOppholdINorge } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
@@ -20,7 +21,7 @@ import { FastOppholdFaktablokk } from '../faktablokk/faktablokker/FastOppholdFak
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurdering, Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../Vurdering';
 
 import messages from './fastOppholdINorge-nb';
 
@@ -90,7 +91,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     };
 
     return (
-        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <form
@@ -189,7 +190,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 ),
                 right: <FastOppholdFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
-        </Vurdering>
+        </ToKolonner>
     );
 };
 
