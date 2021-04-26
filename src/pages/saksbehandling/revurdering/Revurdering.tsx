@@ -3,11 +3,9 @@ import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
 
-import { hentUføregrunnlag } from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { useAppDispatch } from '~redux/Store';
 import { Sak } from '~types/Sak';
 
 import { RevurderingSteg } from '../types';
@@ -45,11 +43,6 @@ export const VisFeilmelding = (props: { forrigeURL: string }) => {
 
 const Revurdering = (props: { sak: Sak }) => {
     const intl = useI18n({ messages: sharedMessages });
-    const dispatch = useAppDispatch();
-    React.useEffect(() => {
-        dispatch(hentUføregrunnlag({ sakId: props.sak.id, revurderingId: urlParams.revurderingId }));
-        //TODO jah: maybe show some error?
-    }, []);
 
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
 

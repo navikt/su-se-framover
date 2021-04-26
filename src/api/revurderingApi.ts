@@ -1,8 +1,9 @@
 import { formatISO } from 'date-fns';
 
+import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
 import { Fradrag } from '~types/Fradrag';
-import { SimulertEndringGrunnlag, Uføregrunnlag } from '~types/Grunnlag';
+import { SimulertEndringGrunnlag } from '~types/Grunnlag';
 import { Periode } from '~types/Periode';
 import {
     OpprettetRevurdering,
@@ -109,17 +110,24 @@ export async function iverksett(sakId: string, revurderingId: string): Promise<A
     });
 }
 
-export async function lagreUføregrunnlag(sakId: string, revurderingId: string, uføregrunnlag: Uføregrunnlag[]) {
+export async function lagreUføregrunnlag(arg: {
+    sakId: string;
+    revurderingId: string;
+    periode: Periode<string>;
+    uføregrad: Nullable<number>;
+    forventetInntekt: Nullable<number>;
+}) {
     return apiClient<LeggTilUføreResponse>({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/uføregrunnlag`,
+        url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/uføregrunnlag`,
         method: 'POST',
-        body: uføregrunnlag.map((uføregrunnlag) => ({
-            ...uføregrunnlag,
+        body: {
+            uføregrad: arg.uføregrad,
+            forventetInntekt: arg.forventetInntekt,
             periode: {
-                fraOgMed: uføregrunnlag.periode.fraOgMed,
-                tilOgMed: uføregrunnlag.periode.tilOgMed,
+                fraOgMed: arg.periode.fraOgMed,
+                tilOgMed: arg.periode.tilOgMed,
             },
-        })),
+        },
     });
 }
 

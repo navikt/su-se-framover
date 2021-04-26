@@ -1,14 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
-import { Ingress, Innholdstittel, Undertittel } from 'nav-frontend-typografi';
+import { Ingress, Innholdstittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
-import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { beregnOgSimuler, lagreUføregrunnlag } from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
-import { formatMonthYear } from '~lib/dateUtils';
 import { customFormikSubmit } from '~lib/formikUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -20,15 +18,15 @@ import {
     FradragInputs,
     fradragSchema,
 } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/FradragInputs';
-import UføregrunnlagInputFelter from '~pages/saksbehandling/steg/uførhet/UføregrunnlagInputFelter';
 import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Fradragstype, FradragTilhører } from '~types/Fradrag';
-import { Uføregrunnlag } from '~types/Grunnlag';
 import { Revurdering } from '~types/Revurdering';
+import { UføreResultat } from '~types/Vilkår';
 
 import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregning-nb';
+import uføreMessage from '../../steg/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
 import { erGregulering, erRevurderingSimulert } from '../revurderingUtils';
@@ -38,6 +36,7 @@ import styles from './endringAvFradrag.module.less';
 interface EndringAvFradragFormData {
     fradrag: FradragFormData[];
     forventetInntekt: Nullable<string>;
+    uføregrad: Nullable<string>;
 }
 
 enum SubmittedStatus {
@@ -46,39 +45,11 @@ enum SubmittedStatus {
     LAGRE,
 }
 
-const Uføregrunnlag = (uførgrunnlag: Uføregrunnlag) => {
-    const intl = useIntl();
-    return (
-        <div className={styles.uføregrunnlagvisning}>
-            <div className={styles.uføregrunnlagrad}>
-                <span>fraOgMed</span>
-                <span>{formatMonthYear(uførgrunnlag.periode.fraOgMed, intl)}</span>
-            </div>
-            <div className={styles.uføregrunnlagrad}>
-                <span>tilOgMed</span>
-                <span>{formatMonthYear(uførgrunnlag.periode.tilOgMed, intl)}</span>
-            </div>
-            <div className={styles.uføregrunnlagrad}>
-                <span>Uføregrad</span>
-                <span>{uførgrunnlag.uføregrad}</span>
-            </div>
-            <div className={styles.uføregrunnlagrad}>
-                <span>Forventet inntekt</span>
-                <span>{uførgrunnlag.forventetInntekt}</span>
-            </div>
-        </div>
-    );
-};
-
 const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) => {
     const { beregnOgSimulerStatus } = useAppSelector((state) => state.sak);
-    const intl = useI18n({ messages: { ...sharedMessages, ...fradragMessages } });
+    const intl = useI18n({ messages: { ...sharedMessages, ...fradragMessages, ...uføreMessage } });
     const dispatch = useAppDispatch();
     const history = useHistory();
-
-    const revurderingGrunnlagSimulering = useAppSelector(
-        (state) => state.sak.revurderingGrunnlagSimulering[props.revurdering.id] ?? RemoteData.initial
-    );
 
     const [submittedStatus, setSubmittedStatus] = useState<SubmittedStatus>(SubmittedStatus.NOT_SUBMITTED);
 
@@ -91,60 +62,90 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
     };
 
     const handleLagreOgFortsettSenereClick = async () => {
-        const response = await beregnOgSimulerRevurdering(formik.values);
-        if (beregnOgSimuler.fulfilled.match(response)) {
+        if (await beregnOgSimulerRevurdering(formik.values)) {
             history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
         }
     };
 
-    const beregnOgSimulerRevurdering = (values: EndringAvFradragFormData) =>
-        dispatch(
-            beregnOgSimuler({
+    const beregnOgSimulerRevurdering = async (values: EndringAvFradragFormData): Promise<boolean> => {
+        const res = await dispatch(
+            lagreUføregrunnlag({
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
-                //validering sikrer at feltet ikke er null
-                /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                uføregrad: values.uføregrad ? parseInt(values.uføregrad, 10) : null,
+                forventetInntekt: values.forventetInntekt ? parseInt(values.forventetInntekt, 10) : null,
                 periode: {
                     fraOgMed: props.revurdering.periode.fraOgMed,
                     tilOgMed: props.revurdering.periode.tilOgMed,
                 },
-                fradrag: values.fradrag.map((f: FradragFormData) => ({
-                    periode: null,
-                    beløp: Number.parseInt(f.beløp!, 10),
-                    type: f.type!,
-                    utenlandskInntekt: f.fraUtland
-                        ? {
-                              beløpIUtenlandskValuta: Number.parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
-                              valuta: f.utenlandskInntekt.valuta,
-                              kurs: Number.parseFloat(f.utenlandskInntekt.kurs),
-                          }
-                        : null,
-                    tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
-                })),
-                forventetInntekt:
-                    erGregulering(props.revurdering.årsak) && values.forventetInntekt
-                        ? parseInt(values.forventetInntekt, 10)
-                        : undefined,
             })
         );
+
+        if (!res) return false;
+        if (!lagreUføregrunnlag.fulfilled.match(res)) {
+            return false;
+        }
+        return beregnOgSimuler.fulfilled.match(
+            await dispatch(
+                beregnOgSimuler({
+                    sakId: props.sakId,
+                    revurderingId: props.revurdering.id,
+                    //validering sikrer at feltet ikke er null
+                    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                    periode: {
+                        fraOgMed: props.revurdering.periode.fraOgMed,
+                        tilOgMed: props.revurdering.periode.tilOgMed,
+                    },
+                    fradrag: values.fradrag.map((f: FradragFormData) => ({
+                        periode: null,
+                        beløp: Number.parseInt(f.beløp!, 10),
+                        type: f.type!,
+                        utenlandskInntekt: f.fraUtland
+                            ? {
+                                  beløpIUtenlandskValuta: Number.parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
+                                  valuta: f.utenlandskInntekt.valuta,
+                                  kurs: Number.parseFloat(f.utenlandskInntekt.kurs),
+                              }
+                            : null,
+                        tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
+                    })),
+                    forventetInntekt:
+                        erGregulering(props.revurdering.årsak) && values.forventetInntekt
+                            ? parseInt(values.forventetInntekt, 10)
+                            : undefined,
+                })
+            )
+        );
+    };
 
     const schema = erGregulering(props.revurdering.årsak)
         ? yup.object<EndringAvFradragFormData>({
               fradrag: yup.array(fradragSchema.required()).defined(),
+              uføregrad: (yup
+                  .number()
+                  .nullable()
+                  .defined()
+                  .when('status', {
+                      is: UføreResultat.VilkårOppfylt,
+                      then: yup.number().positive().min(1).max(100).required().typeError('Feltet må være et tall'),
+                      otherwise: yup.number().nullable().defined(),
+                  }) as unknown) as yup.Schema<string>,
               forventetInntekt: (yup
                   .number()
-                  .typeError('Forventet inntekt etter uførhet må være et tall')
-                  .label('Forventet inntekt etter uførhet')
-                  .nullable(false)
-                  .integer()
-                  .min(0) as yup.Schema<unknown>) as yup.Schema<Nullable<string>>,
+                  .nullable()
+                  .defined()
+                  .when('status', {
+                      is: UføreResultat.VilkårOppfylt,
+                      then: yup.number().positive().integer().min(0).required().typeError('Feltet må være et tall'),
+                      otherwise: yup.number().nullable().defined(),
+                  }) as unknown) as yup.Schema<string>,
           })
         : yup.object<EndringAvFradragFormData>({
               fradrag: yup.array(fradragSchema.required()).defined(),
               forventetInntekt: yup.string().nullable().defined(),
+              uføregrad: yup.string().nullable().defined(),
           });
-    // TODO jah: Spør Agnethe om design-tips her, kan vi bytte ut denne med den andre komponenten?
-    const forventetInntekt = props.revurdering.behandlingsinformasjon.uførhet?.forventetInntekt;
+    const uføregrunnlag = props.revurdering.grunnlag.uføre[0];
     const formik = useFormik<EndringAvFradragFormData>({
         initialValues: {
             fradrag: erRevurderingSimulert(props.revurdering)
@@ -152,12 +153,11 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                       FradragTilFradragFormData(props.revurdering.beregninger.revurdert.fradrag)
                   )
                 : [],
-            forventetInntekt: forventetInntekt ? String(forventetInntekt) : null,
+            forventetInntekt: uføregrunnlag.forventetInntekt ? String(uføregrunnlag.forventetInntekt) : null,
+            uføregrad: uføregrunnlag.uføregrad ? String(uføregrunnlag.uføregrad) : null,
         },
         async onSubmit(values) {
-            const response = await beregnOgSimulerRevurdering(values);
-
-            if (beregnOgSimuler.fulfilled.match(response)) {
+            if (await beregnOgSimulerRevurdering(values)) {
                 history.push(
                     Routes.revurderValgtRevurdering.createURL({
                         sakId: props.sakId,
@@ -207,37 +207,17 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                         ${props.revurdering.periode.tilOgMed} `}
                     </p>
                 </div>
-                {RemoteData.isSuccess(revurderingGrunnlagSimulering) && (
-                    <div className={styles.grunnlagsdata}>
-                        <div className={styles.grunnlagsdataelement}>
-                            <Undertittel className={styles.grunnlagsdataoverskrift}>Før behandling</Undertittel>
-                            {revurderingGrunnlagSimulering.value.førBehandling.uføre.map((x, idx) => (
-                                <Uføregrunnlag {...x} key={idx} />
-                            ))}
-                        </div>
-                        <div className={styles.grunnlagsdataelement}>
-                            <Undertittel className={styles.grunnlagsdataoverskrift}>Resultat</Undertittel>
-                            {revurderingGrunnlagSimulering.value.resultat.uføre.map((x, idx) => (
-                                <Uføregrunnlag {...x} key={idx} />
-                            ))}
-                        </div>
-                    </div>
-                )}
-                <UføregrunnlagInputFelter
-                    grunnlag={props.revurdering.grunnlag}
-                    lagre={(uføregrunnlag) =>
-                        dispatch(
-                            lagreUføregrunnlag({
-                                sakId: props.sakId,
-                                revurderingId: props.revurdering.id,
-                                uføregrunnlag,
-                            })
-                        )
-                    }
-                />
-                ------------------------------------------------------------------------------------------------------------------------------
                 {erGregulering(props.revurdering.årsak) && (
                     <div className={styles.forventetInntektContainer}>
+                        <UførhetInput
+                            tittel={intl.formatMessage({ id: 'input.label.uføregrad' })}
+                            inputName="uføregrad"
+                            inputTekst="%"
+                            bredde="XS"
+                            value={formik.values.uføregrad ?? ''}
+                            onChange={formik.handleChange}
+                            feil={formik.errors.uføregrad}
+                        />
                         <UførhetInput
                             tittel={intl.formatMessage({ id: 'fradrag.type.forventetinntekt' })}
                             inputName="forventetInntekt"
