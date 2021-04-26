@@ -62,7 +62,3 @@ export function spanLeftWithIndex<T>(
     };
     return (arr: T[]) => helper(0, [], arr);
 }
-
-export function zip<T>(a: T[], b: T[]): Array<[T, T]> {
-    return a.map((value, index) => [value, b[index]]);
-}

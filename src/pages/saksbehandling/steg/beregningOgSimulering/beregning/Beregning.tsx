@@ -1,6 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { formatISO } from 'date-fns';
 import { useFormik } from 'formik';
+import { getEq } from 'fp-ts/Array';
+import { eqBoolean, eqDate, eqString, getStructEq } from 'fp-ts/lib/Eq';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
@@ -12,11 +14,10 @@ import { useHistory } from 'react-router-dom';
 
 import { kanSimuleres } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { zip } from '~lib/arrayUtils';
 import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import {
     FradragFormData,
@@ -37,6 +38,7 @@ import { Vurdering, Vurderingknapper } from '../../Vurdering';
 
 import messages from './beregning-nb';
 import styles from './beregning.module.less';
+import { UtenlandskInntektFormData } from './beregningstegTypes';
 import { erIGyldigStatusForÅKunneBeregne, FradragTilFradragFormData } from './beregningUtils';
 import VisBeregning from './VisBeregning';
 
@@ -358,25 +360,28 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 function erFradragLike(fradrag: Fradrag[] | undefined, formFradrag: FradragFormData[]): boolean {
     if (!fradrag) return false;
 
-    const fradragSomFormData = zip(
-        FradragTilFradragFormData(fradrag.filter((f) => f.type !== Fradragstype.ForventetInntekt)),
-        formFradrag
-    );
-
-    if (fradragSomFormData.length != formFradrag.length) return false;
-
-    return fradragSomFormData.every(
-        (p) =>
-            p[0].beløp === p[1].beløp &&
-            p[0].fraUtland === p[1].fraUtland &&
-            p[0].periode?.fraOgMed?.toString() === p[1].periode?.fraOgMed?.toString() &&
-            p[0].periode?.tilOgMed?.toString() === p[1].periode?.tilOgMed?.toString() &&
-            p[0].tilhørerEPS === p[1].tilhørerEPS &&
-            p[0].type === p[1].type &&
-            p[0].utenlandskInntekt.beløpIUtenlandskValuta === p[1].utenlandskInntekt.beløpIUtenlandskValuta &&
-            p[0].utenlandskInntekt.kurs === p[1].utenlandskInntekt.kurs &&
-            p[0].utenlandskInntekt.valuta === p[1].utenlandskInntekt.valuta
-    );
+    const fradragFraBasen = FradragTilFradragFormData(fradrag.filter((f) => f.type !== Fradragstype.ForventetInntekt));
+    return getEq(eqFradragFormData).equals(formFradrag, fradragFraBasen);
 }
+
+const eqUtenlandskInntekt = getStructEq<UtenlandskInntektFormData>({
+    beløpIUtenlandskValuta: eqString,
+    valuta: eqString,
+    kurs: eqString,
+});
+
+const eqPeriode = getStructEq<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>({
+    fraOgMed: eqNullable(eqDate),
+    tilOgMed: eqNullable(eqDate),
+});
+
+const eqFradragFormData = getStructEq<FradragFormData>({
+    type: eqNullable(eqString),
+    beløp: eqNullable(eqString),
+    fraUtland: eqBoolean,
+    utenlandskInntekt: eqUtenlandskInntekt,
+    tilhørerEPS: eqBoolean,
+    periode: eqNullable(eqPeriode),
+});
 
 export default Beregning;
