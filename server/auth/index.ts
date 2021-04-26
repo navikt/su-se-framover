@@ -33,6 +33,7 @@ async function getStrategy(authClient: OpenIdClient.Client) {
                 response_mode: Config.auth.responseMode,
                 scope: `openid offline_access ${Config.auth.clientId}/.default`,
             },
+            extras: { clientAssertionPayload: { aud: authClient.issuer.metadata['token_endpoint'] } },
             usePKCE: 'S256',
             passReqToCallback: true,
         },
