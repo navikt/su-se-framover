@@ -39,7 +39,7 @@ import { Vurdering, Vurderingknapper } from '../../Vurdering';
 import messages from './beregning-nb';
 import styles from './beregning.module.less';
 import { UtenlandskInntektFormData } from './beregningstegTypes';
-import { erIGyldigStatusForÅKunneBeregne, FradragTilFradragFormData } from './beregningUtils';
+import { erIGyldigStatusForÅKunneBeregne, fradragTilFradragFormData } from './beregningUtils';
 import VisBeregning from './VisBeregning';
 
 interface FormData {
@@ -360,7 +360,10 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 function erFradragLike(fradrag: Fradrag[] | undefined, formFradrag: FradragFormData[]): boolean {
     if (!fradrag) return false;
 
-    const fradragFraBasen = FradragTilFradragFormData(fradrag.filter((f) => f.type !== Fradragstype.ForventetInntekt));
+    const fradragFraBasen = fradrag
+        .filter((f) => f.type !== Fradragstype.ForventetInntekt)
+        .map(fradragTilFradragFormData);
+
     return getEq(eqFradragFormData).equals(formFradrag, fradragFraBasen);
 }
 
