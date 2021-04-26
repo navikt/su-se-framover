@@ -1,20 +1,20 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import classNames from 'classnames';
 import { useFormik } from 'formik';
-import { AlertStripeSuksess, AlertStripeFeil } from 'nav-frontend-alertstriper';
+import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Fareknapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
 import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
+import { LukkSøknadBodyTypes } from '~api/søknadApi';
 import { lukkSøknad } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { søknadMottatt } from '~lib/søknadUtils';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Sak } from '~types/Sak';
-import { LukkSøknadBegrunnelse } from '~types/Søknad';
+import { LukkSøknadBegrunnelse, Søknad, Søknadstype } from '~types/Søknad';
 
 import Avvist from './Avvist';
 import nb from './lukkSøknad-nb';
@@ -34,6 +34,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const søknad = props.sak.søknader.find((s) => s.id === urlParams.soknadId);
     const intl = useI18n({ messages: nb });
+    const history = useHistory();
 
     const formik = useFormik<LukkSøknadFormData>({
         initialValues: lukkSøknadInitialValues,
@@ -41,40 +42,16 @@ const LukkSøknad = (props: { sak: Sak }) => {
             if (!values.lukkSøknadBegrunnelse) {
                 return;
             }
-            if (values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Trukket && values.datoSøkerTrakkSøknad) {
-                dispatch(
-                    lukkSøknad({
-                        søknadId: urlParams.soknadId,
-                        body: {
-                            type: values.lukkSøknadBegrunnelse,
-                            datoSøkerTrakkSøknad: values.datoSøkerTrakkSøknad,
-                        },
-                    })
-                );
-            } else if (values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Bortfalt) {
-                dispatch(
-                    lukkSøknad({
-                        søknadId: urlParams.soknadId,
-                        body: {
-                            type: values.lukkSøknadBegrunnelse,
-                        },
-                    })
-                );
-            } else if (values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Avvist) {
-                dispatch(
-                    lukkSøknad({
-                        søknadId: urlParams.soknadId,
-                        body: {
-                            type: values.lukkSøknadBegrunnelse,
-                            brevConfig: values.typeBrev
-                                ? {
-                                      brevtype: values.typeBrev,
-                                      fritekst: values.fritekst,
-                                  }
-                                : null,
-                        },
-                    })
-                );
+            const response = await dispatch(
+                lukkSøknad({
+                    søknadId: urlParams.soknadId,
+                    body: lagBody(values),
+                })
+            );
+
+            if (lukkSøknad.fulfilled.match(response)) {
+                const message = intl.formatMessage({ id: 'display.søknad.harBlittLukket' });
+                history.push(Routes.createSakIntroLocation(message, props.sak.id));
             }
         },
         validationSchema: LukkSøknadValidationSchema,
@@ -87,19 +64,6 @@ const LukkSøknad = (props: { sak: Sak }) => {
                 <AlertStripeFeil>
                     {intl.formatMessage({ id: 'display.søknad.fantIkkeSøknad' })} {urlParams.soknadId}
                 </AlertStripeFeil>
-            </div>
-        );
-    }
-
-    if (RemoteData.isSuccess(søknadLukketStatus) || søknad.lukket !== null) {
-        return (
-            <div>
-                <AlertStripeSuksess className={styles.søknadHarBlittLukket}>
-                    <p>{intl.formatMessage({ id: 'display.søknad.harBlittLukket' })}</p>
-                    <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
-                        {intl.formatMessage({ id: 'display.tilSaksoversikt' })}
-                    </Link>
-                </AlertStripeSuksess>
             </div>
         );
     }
@@ -151,7 +115,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
                 <Trukket
                     datoSøkerTrakkSøknad={formik.values.datoSøkerTrakkSøknad}
                     søknadId={søknad.id}
-                    søknadOpprettet={søknadMottatt(søknad, intl)}
+                    søknadOpprettet={hentOpprettetDatoFraSøknad(søknad)}
                     feilmelding={formik.errors.datoSøkerTrakkSøknad}
                     lukkSøknadBegrunnelse={formik.values.lukkSøknadBegrunnelse}
                     lukketSøknadBrevutkastStatus={lukketSøknadBrevutkastStatus}
@@ -217,5 +181,39 @@ const LukkSøknad = (props: { sak: Sak }) => {
         </form>
     );
 };
+
+function lagBody(values: LukkSøknadFormData): LukkSøknadBodyTypes {
+    switch (values.lukkSøknadBegrunnelse) {
+        case LukkSøknadBegrunnelse.Trukket:
+            return {
+                type: values.lukkSøknadBegrunnelse,
+                datoSøkerTrakkSøknad: values.datoSøkerTrakkSøknad!,
+            };
+
+        case LukkSøknadBegrunnelse.Bortfalt:
+            return {
+                type: values.lukkSøknadBegrunnelse,
+            };
+        case LukkSøknadBegrunnelse.Avvist:
+            return {
+                type: values.lukkSøknadBegrunnelse,
+                brevConfig: values.typeBrev
+                    ? {
+                          brevtype: values.typeBrev,
+                          fritekst: values.fritekst,
+                      }
+                    : null,
+            };
+        default:
+            throw new Error('LukkSøknadBegrunnelse har ugyldig verdi');
+    }
+}
+
+function hentOpprettetDatoFraSøknad(søknad: Søknad) {
+    if (søknad.søknadInnhold.forNav.type === Søknadstype.Papirsøknad) {
+        return søknad.søknadInnhold.forNav.mottaksdatoForSøknad;
+    }
+    return søknad.opprettet;
+}
 
 export default LukkSøknad;

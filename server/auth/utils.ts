@@ -83,7 +83,8 @@ async function requestOnBehalfOfToken(authClient: OpenIdClient.Client, tokenSet:
         scope: `api://${Config.auth.suSeBakoverUri}/.default`,
         assertion: tokenSet.access_token,
     };
-    return await authClient.grant(grantBody);
+    const clientAssertionPayload = { aud: authClient.issuer.metadata['token_endpoint'] };
+    return await authClient.grant(grantBody, { clientAssertionPayload });
 }
 
 export async function getOpenIdClient(issuerUrl: string) {

@@ -206,6 +206,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
         validateOnChange: hasSubmitted,
     });
 
+    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     let adresser: Array<{ label: string; radioValue: Adresse }> = [];
 
@@ -223,6 +224,11 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     onSubmit={(e) => {
                         setHasSubmitted(true);
                         formik.handleSubmit(e);
+                        setTimeout(() => {
+                            if (feiloppsummeringref.current) {
+                                feiloppsummeringref.current.focus();
+                            }
+                        }, 0);
                     }}
                 >
                     <div className={sharedStyles.formContainer}>
@@ -478,6 +484,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
                         hidden={!formikErrorsHarFeil(formik.errors)}
+                        innerRef={feiloppsummeringref}
                     />
                     <Bunnknapper
                         previous={{

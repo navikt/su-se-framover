@@ -12,7 +12,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { FradragTilFradragFormData } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/beregningUtils';
+import { fradragTilFradragFormData } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/beregningUtils';
 import {
     FradragFormData,
     FradragInputs,
@@ -150,7 +150,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
         initialValues: {
             fradrag: erRevurderingSimulert(props.revurdering)
                 ? fradragUtenForventetInntekt(
-                      FradragTilFradragFormData(props.revurdering.beregninger.revurdert.fradrag)
+                      props.revurdering.beregninger.revurdert.fradrag.map(fradragTilFradragFormData)
                   )
                 : [],
             forventetInntekt: uføregrunnlag.forventetInntekt ? String(uføregrunnlag.forventetInntekt) : null,
