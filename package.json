@@ -106,7 +106,7 @@
         "nav-frontend-toggle": "^1.0.3",
         "nav-frontend-toggle-style": "^1.0.3",
         "nav-frontend-typografi": "^3.0.4",
-        "nav-frontend-typografi-style": "^1.0.35",
+        "nav-frontend-typografi-style": "^1.1.1",
         "postcss-import": "^14.0.1",
         "postcss-less": "^4.0.1",
         "postcss-modules": "^3.2.2",
