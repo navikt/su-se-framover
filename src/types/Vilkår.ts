@@ -1,4 +1,4 @@
-import { Grunnlag } from './Grunnlag';
+import { Uføregrunnlag } from './Grunnlag';
 import { Periode } from './Periode';
 
 export interface Vilkårsvurderinger {
@@ -7,20 +7,21 @@ export interface Vilkårsvurderinger {
 
 export interface UføreVilkår {
     vilkår: string;
-    vurdering?: Vurderingsperiode;
-    resultat: string;
+    vurdering: Vurderingsperiode;
+    oppfylt: Oppfylt;
 }
 
 export interface Vurderingsperiode {
     id: string;
     opprettet: string;
-    resultat: Vurderingsresultat;
-    grunnlag?: Grunnlag;
+    oppfylt: Oppfylt;
+    grunnlag?: Uføregrunnlag;
     periode: Periode<string>;
     begrunnelse?: string;
 }
 
-enum Vurderingsresultat {
-    AVSLAG,
-    INNVILGET,
+export enum Oppfylt {
+    JA = 'JA',
+    NEI = 'NEI',
+    UAVKLART = 'UAVKLART',
 }

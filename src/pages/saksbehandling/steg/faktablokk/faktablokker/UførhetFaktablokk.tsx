@@ -3,7 +3,7 @@ import React from 'react';
 
 import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
-import { Oppfylt } from '~types/Grunnlag';
+import { UførhetStatus } from '~types/Behandlingsinformasjon';
 
 import Vilkårsblokk from '../../../vilkårsOppsummering/VilkårsBlokk';
 import saksbehandlingMessages from '../../uførhet/uførhet-nb';
@@ -58,13 +58,13 @@ export const UførhetVilkårsblokk = (props: VilkårsblokkProps<'uførhet'>) => 
                             {
                                 tittel: saksbehandlingMessage('radio.uførhet.legend'),
                                 verdi:
-                                    props.behandlingsinformasjon.status === Oppfylt.JA
+                                    props.behandlingsinformasjon.status === UførhetStatus.VilkårOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                                        : props.behandlingsinformasjon.status === Oppfylt.NEI
+                                        : props.behandlingsinformasjon.status === UførhetStatus.VilkårIkkeOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.nei' })
                                         : intl.formatMessage({ id: 'radio.label.uføresakTilBehandling' }),
                             },
-                            ...(props.behandlingsinformasjon.status === Oppfylt.JA
+                            ...(props.behandlingsinformasjon.status === UførhetStatus.VilkårOppfylt
                                 ? [
                                       FaktaSpacing,
                                       {

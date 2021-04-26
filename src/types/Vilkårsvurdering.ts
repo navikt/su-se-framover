@@ -1,13 +1,3 @@
-export type Vilkårsvurderinger = {
-    [key in Vilkårtype]: Vilkårsvurdering;
-};
-
-export interface Vilkårsvurdering {
-    id: string;
-    begrunnelse: string;
-    status: VilkårVurderingStatus;
-}
-
 export enum VilkårVurderingStatus {
     IkkeVurdert = 'IKKE_VURDERT',
     Ok = 'OK',

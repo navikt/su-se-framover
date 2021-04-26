@@ -1,7 +1,6 @@
 import { Person } from '~api/personApi';
 import { Nullable } from '~lib/types';
 
-import { Oppfylt } from './Grunnlag';
 import { Sats } from './Sats';
 
 export interface Behandlingsinformasjon {
@@ -19,7 +18,7 @@ export interface Behandlingsinformasjon {
 }
 
 export interface Uførhet {
-    status: Oppfylt;
+    status: UførhetStatus;
     uføregrad: Nullable<number>;
     forventetInntekt: Nullable<number>;
     begrunnelse: Nullable<string>;

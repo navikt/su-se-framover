@@ -27,9 +27,8 @@ import {
     OppholdIUtlandetStatus,
     PersonligOppmøte,
     PersonligOppmøteStatus,
-    Uførhet,
+    UførhetStatus,
 } from '~types/Behandlingsinformasjon';
-import { Oppfylt } from '~types/Grunnlag';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
@@ -100,7 +99,7 @@ export const erUnderkjent = (behandling: Behandling) => {
 export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) => {
     return (
         behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ||
-        behandling.behandlingsinformasjon.uførhet?.status === Oppfylt.NEI ||
+        behandling.behandlingsinformasjon.uførhet?.status === UførhetStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.flyktning?.status === FlyktningStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.lovligOpphold?.status === LovligOppholdStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.fastOppholdINorge?.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt ||
@@ -128,15 +127,6 @@ export const hentSisteVurdertSaksbehandlingssteg = (behandling: Behandling) => {
             (x) => x.vilkårtype
         )
     );
-};
-
-// TODO ai: See if we can simplify with getStructEq({...})
-export const eqUførhet: Eq<Nullable<Uførhet>> = {
-    equals: (ufør1, ufør2) =>
-        ufør1?.status === ufør2?.status &&
-        ufør1?.uføregrad === ufør2?.uføregrad &&
-        ufør1?.forventetInntekt === ufør2?.forventetInntekt &&
-        ufør1?.begrunnelse === ufør2?.begrunnelse,
 };
 
 export const eqFlyktning: Eq<Nullable<Flyktning>> = {

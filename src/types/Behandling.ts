@@ -5,7 +5,7 @@ import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
 import { Grunnlag } from './Grunnlag';
 import { Søknad } from './Søknad';
-import { Vilkårsvurderinger } from './Vilkårsvurdering';
+import { Vilkårsvurderinger } from './Vilkår';
 
 export interface Behandling {
     id: string;

@@ -23,9 +23,11 @@ import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemote
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
-import { SimulertEndringGrunnlag, Uføregrunnlag } from '~types/Grunnlag';
+import { SimulertEndringGrunnlag } from '~types/Grunnlag';
+import { Periode } from '~types/Periode';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
+import { Oppfylt } from '~types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<
@@ -135,7 +137,11 @@ export const lagreUføregrunnlag = createAsyncThunk<
     {
         sakId: string;
         behandlingId: string;
-        uføregrunnlag: Uføregrunnlag;
+        periode: Periode<string>;
+        uføregrad: Nullable<number>;
+        forventetInntekt: Nullable<number>;
+        begrunnelse: string;
+        oppfylt: Oppfylt;
     },
     { rejectValue: ApiError }
 >('behandling/grunnlag/uføre', async (arg, thunkApi) => {

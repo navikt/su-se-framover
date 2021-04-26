@@ -6,7 +6,6 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { eqUførhet } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon, lagreUføregrunnlag } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
@@ -15,8 +14,7 @@ import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Uførhet as UførhetType } from '~types/Behandlingsinformasjon';
-import { Oppfylt } from '~types/Grunnlag';
+import { Oppfylt } from '~types/Vilkår';
 
 import { UførhetFaktablokk } from '../faktablokk/faktablokker/UførhetFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -66,14 +64,16 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const handleSave = async (values: FormData, nesteUrl: string) => {
         if (!values.status) return;
 
-        const uføreValues: UførhetType = {
-            status: values.status,
-            uføregrad: values.uføregrad ? parseInt(values.uføregrad, 10) : null,
-            forventetInntekt: values.forventetInntekt ? parseInt(values.forventetInntekt, 10) : null,
-            begrunnelse: values.begrunnelse,
-        };
+        const isEqual = (): boolean =>
+            values.status === props.behandling.vilkårsvurderinger.uføre?.vurdering?.oppfylt &&
+            values.uføregrad === props.behandling.vilkårsvurderinger.uføre?.vurdering?.grunnlag?.uføregrad &&
+            values.forventetInntekt ===
+                props.behandling.vilkårsvurderinger.uføre?.vurdering?.grunnlag.forventetInntekt &&
+            values.begrunnelse === props.behandling.vilkårsvurderinger.uføre?.vurdering.begrunnelse;
 
-        if (eqUførhet.equals(uføreValues, props.behandling.behandlingsinformasjon.uførhet)) {
+        console.log('Sjekker om de er like');
+        if (isEqual()) {
+            console.log('Likt som før, går til neste url');
             history.push(nesteUrl);
             return;
         }
@@ -82,34 +82,35 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
             lagreUføregrunnlag({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                uføregrunnlag: {
-                    uføregrad: uføreValues.uføregrad,
-                    forventetInntekt: uføreValues.forventetInntekt,
-                    begrunnelse: uføreValues.begrunnelse ?? '',
-                    oppfylt: uføreValues.status,
-                    periode: {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        fraOgMed: props.behandling.stønadsperiode!.periode.fraOgMed!,
+                uføregrad: values.uføregrad ? parseInt(values.uføregrad, 10) : null,
+                forventetInntekt: values.forventetInntekt ? parseInt(values.forventetInntekt, 10) : null,
+                begrunnelse: values.begrunnelse ?? '',
+                oppfylt: values.status,
+                periode: {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    fraOgMed: props.behandling.stønadsperiode!.periode.fraOgMed!,
 
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        tilOgMed: props.behandling.stønadsperiode!.periode.tilOgMed!,
-                    },
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    tilOgMed: props.behandling.stønadsperiode!.periode.tilOgMed!,
                 },
             })
         );
+        console.log('Utført kall, venter på response');
 
         if (!res) return;
-
+        console.log('Sjekker om repsonse er fulfilles');
         if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+            console.log('går til neste url');
             history.push(nesteUrl);
         }
     };
 
-    const uføre = props.behandling.grunnlag.uføre.length == 0 ? null : props.behandling.grunnlag.uføre[0];
+    //const uføre = props.behandling.grunnlag.uføre.length == 0 ? null : props.behandling.grunnlag.uføre[0];
+    const uføre = props.behandling.vilkårsvurderinger?.uføre;
 
     const formik = useFormik<FormData>({
         initialValues: {
-            status: uføre?.oppfylt ?? null,
+            status: uføre?.vurdering?.oppfylt ?? null,
             uføregrad: props.behandling.behandlingsinformasjon.uførhet?.uføregrad?.toString() ?? null,
             forventetInntekt: props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt?.toString() ?? null,
             begrunnelse: props.behandling.behandlingsinformasjon.uførhet?.begrunnelse ?? null,

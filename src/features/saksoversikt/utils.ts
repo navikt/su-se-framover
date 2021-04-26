@@ -12,8 +12,8 @@ import {
     PersonligOppmøte,
     InstitusjonsoppholdStatus,
     isPerson,
+    UførhetStatus,
 } from '~types/Behandlingsinformasjon';
-import { Oppfylt } from '~types/Grunnlag';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const createVilkårUrl = (props: { sakId: string; behandlingId: string; vilkar: Vilkårtype }) =>
@@ -78,9 +78,9 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
             status:
                 uførhet === null
                     ? VilkårVurderingStatus.IkkeVurdert
-                    : uførhet.status === Oppfylt.UAVKLART
+                    : uførhet.status === UførhetStatus.HarUføresakTilBehandling
                     ? VilkårVurderingStatus.Uavklart
-                    : uførhet.status === Oppfylt.JA
+                    : uførhet.status === UførhetStatus.VilkårOppfylt
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Uførhet,

@@ -6,16 +6,7 @@ export interface Uføregrunnlag {
     periode: Periode<string>;
     uføregrad: Nullable<number>;
     forventetInntekt: Nullable<number>;
-    begrunnelse: string;
-    oppfylt: Oppfylt;
 }
-
-export enum Oppfylt {
-    JA = 'JA',
-    NEI = 'NEI',
-    UAVKLART = 'UAVKLART',
-}
-
 export interface Grunnlag {
     uføre: Uføregrunnlag[];
 }

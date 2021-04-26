@@ -15,8 +15,7 @@ import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
-import { Flyktning as FlyktningType, FlyktningStatus } from '~types/Behandlingsinformasjon';
-import { Oppfylt } from '~types/Grunnlag';
+import { Flyktning as FlyktningType, FlyktningStatus, UførhetStatus } from '~types/Behandlingsinformasjon';
 
 import { FlyktningFaktablokk } from '../faktablokk/faktablokker/FlyktningFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -50,7 +49,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
 
     const vilGiTidligAvslag = (): boolean => {
         return (
-            props.behandling.behandlingsinformasjon.uførhet?.status === Oppfylt.NEI ||
+            props.behandling.behandlingsinformasjon.uførhet?.status === UførhetStatus.VilkårOppfylt ||
             formik.values?.status === FlyktningStatus.VilkårIkkeOppfylt
         );
     };
