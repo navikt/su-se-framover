@@ -27,7 +27,7 @@ import { SimulertEndringGrunnlag } from '~types/Grunnlag';
 import { Periode } from '~types/Periode';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
-import { Oppfylt } from '~types/Vilkår';
+import { Vurderingsresultat } from '~types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<
@@ -141,7 +141,7 @@ export const lagreUføregrunnlag = createAsyncThunk<
         uføregrad: Nullable<number>;
         forventetInntekt: Nullable<number>;
         begrunnelse: string;
-        oppfylt: Oppfylt;
+        resultat: Vurderingsresultat;
     },
     { rejectValue: ApiError }
 >('behandling/grunnlag/uføre', async (arg, thunkApi) => {

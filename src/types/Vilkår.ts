@@ -8,20 +8,20 @@ export interface Vilkårsvurderinger {
 export interface UføreVilkår {
     vilkår: string;
     vurdering: Vurderingsperiode;
-    oppfylt: Oppfylt;
+    resultat: Vurderingsresultat;
 }
 
 export interface Vurderingsperiode {
     id: string;
     opprettet: string;
-    oppfylt: Oppfylt;
+    resultat: Vurderingsresultat;
     grunnlag?: Uføregrunnlag;
     periode: Periode<string>;
     begrunnelse?: string;
 }
 
-export enum Oppfylt {
-    JA = 'JA',
-    NEI = 'NEI',
-    UAVKLART = 'UAVKLART',
+export enum Vurderingsresultat {
+    VilkårOppfylt = 'VilkårOppfylt',
+    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
+    HarUføresakTilBehandling = 'HarUføresakTilBehandling',
 }

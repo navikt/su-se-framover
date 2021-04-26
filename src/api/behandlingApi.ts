@@ -3,7 +3,7 @@ import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
 import { Periode } from '~types/Periode';
-import { Oppfylt } from '~types/Vilkår';
+import { Vurderingsresultat } from '~types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -145,7 +145,7 @@ export async function lagreUføregrunnlag(arg: {
     uføregrad: Nullable<number>;
     forventetInntekt: Nullable<number>;
     begrunnelse: string;
-    oppfylt: Oppfylt;
+    resultat: Vurderingsresultat;
 }) {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/uføregrunnlag`,
@@ -158,7 +158,7 @@ export async function lagreUføregrunnlag(arg: {
                 tilOgMed: arg.periode.tilOgMed,
             },
             begrunnelse: arg.begrunnelse,
-            oppfylt: arg.oppfylt,
+            resultat: arg.resultat,
         },
     });
 }

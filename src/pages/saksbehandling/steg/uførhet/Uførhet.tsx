@@ -6,7 +6,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { lagreBehandlingsinformasjon, lagreUføregrunnlag } from '~features/saksoversikt/sak.slice';
+import { lagreUføregrunnlag } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -14,7 +14,7 @@ import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Oppfylt } from '~types/Vilkår';
+import { Vurderingsresultat } from '~types/Vilkår';
 
 import { UførhetFaktablokk } from '../faktablokk/faktablokker/UførhetFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -26,20 +26,27 @@ import messages from './uførhet-nb';
 import styles from './Uførhet.module.less';
 
 interface FormData {
-    status: Nullable<Oppfylt>;
+    status: Nullable<Vurderingsresultat>;
     uføregrad: Nullable<string>;
     forventetInntekt: Nullable<string>;
     begrunnelse: Nullable<string>;
 }
 
 const schema = yup.object<FormData>({
-    status: yup.mixed().defined().oneOf([Oppfylt.JA, Oppfylt.NEI, Oppfylt.UAVKLART]),
+    status: yup
+        .mixed()
+        .defined()
+        .oneOf([
+            Vurderingsresultat.VilkårOppfylt,
+            Vurderingsresultat.VilkårIkkeOppfylt,
+            Vurderingsresultat.HarUføresakTilBehandling,
+        ]),
     uføregrad: (yup
         .number()
         .nullable()
         .defined()
         .when('status', {
-            is: Oppfylt.JA,
+            is: Vurderingsresultat.VilkårOppfylt,
             then: yup.number().positive().min(1).max(100).required().typeError('Feltet må være et tall'),
             otherwise: yup.number().nullable().defined(),
         }) as unknown) as yup.Schema<string>,
@@ -48,7 +55,7 @@ const schema = yup.object<FormData>({
         .nullable()
         .defined()
         .when('status', {
-            is: Oppfylt.JA,
+            is: Vurderingsresultat.VilkårOppfylt,
             then: yup.number().positive().integer().min(0).required().typeError('Feltet må være et tall'),
             otherwise: yup.number().nullable().defined(),
         }) as unknown) as yup.Schema<string>,
@@ -65,11 +72,11 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         if (!values.status) return;
 
         const isEqual = (): boolean =>
-            values.status === props.behandling.vilkårsvurderinger.uføre?.vurdering?.oppfylt &&
-            values.uføregrad === props.behandling.vilkårsvurderinger.uføre?.vurdering?.grunnlag?.uføregrad &&
-            values.forventetInntekt ===
-                props.behandling.vilkårsvurderinger.uføre?.vurdering?.grunnlag.forventetInntekt &&
-            values.begrunnelse === props.behandling.vilkårsvurderinger.uføre?.vurdering.begrunnelse;
+            values.status == props.behandling.vilkårsvurderinger.uføre?.vurdering?.resultat &&
+            values.uføregrad == props.behandling.vilkårsvurderinger.uføre?.vurdering?.grunnlag?.uføregrad &&
+            values.forventetInntekt ==
+                props.behandling.vilkårsvurderinger.uføre?.vurdering?.grunnlag?.forventetInntekt &&
+            values.begrunnelse == props.behandling.vilkårsvurderinger.uføre?.vurdering.begrunnelse;
 
         console.log('Sjekker om de er like');
         if (isEqual()) {
@@ -85,7 +92,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                 uføregrad: values.uføregrad ? parseInt(values.uføregrad, 10) : null,
                 forventetInntekt: values.forventetInntekt ? parseInt(values.forventetInntekt, 10) : null,
                 begrunnelse: values.begrunnelse ?? '',
-                oppfylt: values.status,
+                resultat: values.status,
                 periode: {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     fraOgMed: props.behandling.stønadsperiode!.periode.fraOgMed!,
@@ -98,19 +105,18 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         console.log('Utført kall, venter på response');
 
         if (!res) return;
-        console.log('Sjekker om repsonse er fulfilles');
-        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+        console.log(`Sjekker om repsonse er fulfilled. Res: ${JSON.stringify(res)}`);
+        if (lagreUføregrunnlag.fulfilled.match(res)) {
             console.log('går til neste url');
             history.push(nesteUrl);
         }
     };
 
-    //const uføre = props.behandling.grunnlag.uføre.length == 0 ? null : props.behandling.grunnlag.uføre[0];
     const uføre = props.behandling.vilkårsvurderinger?.uføre;
 
     const formik = useFormik<FormData>({
         initialValues: {
-            status: uføre?.vurdering?.oppfylt ?? null,
+            status: uføre?.vurdering?.resultat ?? null,
             uføregrad: props.behandling.behandlingsinformasjon.uførhet?.uføregrad?.toString() ?? null,
             forventetInntekt: props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt?.toString() ?? null,
             begrunnelse: props.behandling.behandlingsinformasjon.uførhet?.begrunnelse ?? null,
@@ -142,37 +148,41 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                 <Radio
                                     label={intl.formatMessage({ id: 'radio.label.ja' })}
                                     name="status"
-                                    onChange={() => formik.setValues({ ...formik.values, status: Oppfylt.JA })}
-                                    defaultChecked={formik.values.status === Oppfylt.JA}
+                                    onChange={() =>
+                                        formik.setValues({ ...formik.values, status: Vurderingsresultat.VilkårOppfylt })
+                                    }
+                                    defaultChecked={formik.values.status === Vurderingsresultat.VilkårOppfylt}
                                 />
                                 <Radio
                                     label={intl.formatMessage({ id: 'radio.label.nei' })}
                                     name="status"
                                     onChange={() =>
                                         formik.setValues((v) => ({
-                                            status: Oppfylt.NEI,
+                                            status: Vurderingsresultat.VilkårIkkeOppfylt,
                                             uføregrad: null,
                                             forventetInntekt: null,
                                             begrunnelse: v.begrunnelse,
                                         }))
                                     }
-                                    defaultChecked={formik.values.status === Oppfylt.NEI}
+                                    defaultChecked={formik.values.status === Vurderingsresultat.VilkårIkkeOppfylt}
                                 />
                                 <Radio
                                     label={intl.formatMessage({ id: 'radio.label.uføresakTilBehandling' })}
                                     name="status"
                                     onChange={() =>
                                         formik.setValues((v) => ({
-                                            status: Oppfylt.UAVKLART,
+                                            status: Vurderingsresultat.HarUføresakTilBehandling,
                                             uføregrad: null,
                                             forventetInntekt: null,
                                             begrunnelse: v.begrunnelse,
                                         }))
                                     }
-                                    defaultChecked={formik.values.status === Oppfylt.UAVKLART}
+                                    defaultChecked={
+                                        formik.values.status === Vurderingsresultat.HarUføresakTilBehandling
+                                    }
                                 />
                             </RadioGruppe>
-                            {formik.values.status === Oppfylt.JA && (
+                            {formik.values.status === Vurderingsresultat.VilkårOppfylt && (
                                 <div className={styles.formInputContainer}>
                                     <UførhetInput
                                         tittel={intl.formatMessage({ id: 'input.label.uføregrad' })}
