@@ -1,5 +1,7 @@
 import * as Array from 'fp-ts/lib/Array';
-import { Eq, eqNumber, eqString, getStructEq } from 'fp-ts/lib/Eq';
+import { Eq, struct } from 'fp-ts/lib/Eq';
+import { Eq as eqNumber } from 'fp-ts/lib/number';
+import { Eq as eqString } from 'fp-ts/lib/string';
 
 import { Nullable } from '~lib/types';
 
@@ -29,7 +31,7 @@ export interface Månedsberegning {
     epsInputFradrag: Fradrag[];
 }
 
-export const eqMånedsberegningBortsettFraPeriode: Eq<Månedsberegning> = getStructEq<
+export const eqMånedsberegningBortsettFraPeriode: Eq<Månedsberegning> = struct<
     Omit<Månedsberegning, 'fraOgMed' | 'tilOgMed'>
 >({
     beløp: eqNumber,

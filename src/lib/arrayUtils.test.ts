@@ -1,4 +1,4 @@
-import { eqNumber } from 'fp-ts/lib/Eq';
+import { Eq as eqNumber } from 'fp-ts/lib/number';
 
 import { groupWhile, groupByEq, spanLeftWithIndex } from './arrayUtils';
 import { pipe } from './fp';
