@@ -2,8 +2,6 @@ import { toDateOrNull } from '~lib/dateUtils';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
 
-import { FradragFormData } from './FradragInputs';
-
 export const fradragstypeResourceId = (f: Fradragstype): string => {
     switch (f) {
         case Fradragstype.NAVytelserTilLivsopphold:
@@ -45,23 +43,18 @@ export const erIGyldigStatusForÅKunneBeregne = (behandling: Behandling) =>
         Behandlingsstatus.UNDERKJENT_INNVILGET,
     ].some((status) => status === behandling.status);
 
-export const FradragTilFradragFormData = (fradrag: Fradrag[]): FradragFormData[] => {
-    const fradragFormData: FradragFormData[] = fradrag.map((f) => {
-        return {
-            type: f.type || null,
-            beløp: f.beløp.toString() || null,
-            fraUtland: f.utenlandskInntekt !== null,
-            utenlandskInntekt: {
-                beløpIUtenlandskValuta: f.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',
-                valuta: f.utenlandskInntekt?.valuta ?? '',
-                kurs: f.utenlandskInntekt?.kurs.toString() ?? '',
-            },
-            tilhørerEPS: f.tilhører === FradragTilhører.EPS,
-            periode: {
-                fraOgMed: toDateOrNull(f.periode?.fraOgMed),
-                tilOgMed: toDateOrNull(f.periode?.tilOgMed),
-            },
-        };
-    });
-    return fradragFormData;
-};
+export const fradragTilFradragFormData = (fradrag: Fradrag) => ({
+    type: fradrag.type || null,
+    beløp: fradrag.beløp.toString() || null,
+    fraUtland: fradrag.utenlandskInntekt !== null,
+    utenlandskInntekt: {
+        beløpIUtenlandskValuta: fradrag.utenlandskInntekt?.beløpIUtenlandskValuta.toString() ?? '',
+        valuta: fradrag.utenlandskInntekt?.valuta ?? '',
+        kurs: fradrag.utenlandskInntekt?.kurs.toString() ?? '',
+    },
+    tilhørerEPS: fradrag.tilhører === FradragTilhører.EPS,
+    periode: {
+        fraOgMed: toDateOrNull(fradrag.periode?.fraOgMed),
+        tilOgMed: toDateOrNull(fradrag.periode?.tilOgMed),
+    },
+});

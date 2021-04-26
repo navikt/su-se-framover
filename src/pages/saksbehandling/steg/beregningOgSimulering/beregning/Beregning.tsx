@@ -1,9 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { formatISO } from 'date-fns';
 import { useFormik } from 'formik';
+import { getEq } from 'fp-ts/Array';
+import { eqBoolean, eqDate, eqString, getStructEq } from 'fp-ts/lib/Eq';
 import { pipe } from 'fp-ts/lib/function';
 import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
-import { Knapp } from 'nav-frontend-knapper';
+import { Hovedknapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Undertittel } from 'nav-frontend-typografi';
@@ -15,7 +17,7 @@ import * as sakSlice from '~features/saksoversikt/sak.slice';
 import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import {
     FradragFormData,
@@ -26,7 +28,7 @@ import {
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Beregning } from '~types/Beregning';
-import { Fradragstype, FradragTilhører } from '~types/Fradrag';
+import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
 
 import BeregningFaktablokk from '../../faktablokk/faktablokker/BeregningFaktablokk';
 import sharedI18n from '../../sharedI18n-nb';
@@ -36,7 +38,8 @@ import { Vurdering, Vurderingknapper } from '../../Vurdering';
 
 import messages from './beregning-nb';
 import styles from './beregning.module.less';
-import { erIGyldigStatusForÅKunneBeregne } from './beregningUtils';
+import { UtenlandskInntektFormData } from './beregningstegTypes';
+import { erIGyldigStatusForÅKunneBeregne, fradragTilFradragFormData } from './beregningUtils';
 import VisBeregning from './VisBeregning';
 
 interface FormData {
@@ -173,8 +176,12 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             return;
         }
         if (formik.dirty) {
-            setNeedsBeregning(true);
-            return;
+            if (erFradragLike(props.behandling.beregning?.fradrag, formik.values.fradrag)) {
+                startBeregning(formik.values);
+            } else {
+                setNeedsBeregning(true);
+                return;
+            }
         }
         if (
             RemoteData.isSuccess(beregningStatus) ||
@@ -268,11 +275,11 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     className={styles.feiloppsummering}
                                 />
                             )}
-                            <Knapp htmlType="submit" spinner={RemoteData.isPending(beregningStatus)} mini>
+                            <Hovedknapp htmlType="submit" spinner={RemoteData.isPending(beregningStatus)} mini>
                                 {props.behandling.beregning
                                     ? intl.formatMessage({ id: 'knapp.startNyBeregning' })
                                     : intl.formatMessage({ id: 'knapp.startBeregning' })}
-                            </Knapp>
+                            </Hovedknapp>
 
                             {props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG && (
                                 <AlertStripe type="advarsel" className={styles.avslagadvarsel}>
@@ -349,5 +356,35 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         </Vurdering>
     );
 };
+
+function erFradragLike(fradrag: Fradrag[] | undefined, formFradrag: FradragFormData[]): boolean {
+    if (!fradrag) return false;
+
+    const fradragFraBasen = fradrag
+        .filter((f) => f.type !== Fradragstype.ForventetInntekt)
+        .map(fradragTilFradragFormData);
+
+    return getEq(eqFradragFormData).equals(formFradrag, fradragFraBasen);
+}
+
+const eqUtenlandskInntekt = getStructEq<UtenlandskInntektFormData>({
+    beløpIUtenlandskValuta: eqString,
+    valuta: eqString,
+    kurs: eqString,
+});
+
+const eqPeriode = getStructEq<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>({
+    fraOgMed: eqNullable(eqDate),
+    tilOgMed: eqNullable(eqDate),
+});
+
+const eqFradragFormData = getStructEq<FradragFormData>({
+    type: eqNullable(eqString),
+    beløp: eqNullable(eqString),
+    fraUtland: eqBoolean,
+    utenlandskInntekt: eqUtenlandskInntekt,
+    tilhørerEPS: eqBoolean,
+    periode: eqNullable(eqPeriode),
+});
 
 export default Beregning;
