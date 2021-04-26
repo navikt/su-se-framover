@@ -1,6 +1,6 @@
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
-import { Periode } from './Fradrag';
+import { Periode } from './Periode';
 import { Simulering } from './Simulering';
 
 export interface Vedtak {
@@ -15,7 +15,7 @@ export interface Vedtak {
     behandlingId: string;
     sakId: string;
     fnr: string;
-    periode: Periode;
+    periode: Periode<string>;
     type: VedtakType;
 }
 

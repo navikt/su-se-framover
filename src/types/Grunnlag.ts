@@ -1,7 +1,9 @@
 import { Nullable } from '~lib/types';
 
+import { Periode } from './Periode';
+
 export interface Uføregrunnlag {
-    periode: GrunnlagsPeriode;
+    periode: Periode<string>;
     uføregrad: Nullable<number>;
     forventetInntekt: Nullable<number>;
     begrunnelse: string;
@@ -12,11 +14,6 @@ export enum Oppfylt {
     JA = 'JA',
     NEI = 'NEI',
     UAVKLART = 'UAVKLART',
-}
-
-export interface GrunnlagsPeriode {
-    fraOgMed: string;
-    tilOgMed: string;
 }
 
 export interface Grunnlag {

@@ -3,7 +3,6 @@ import { Nullable } from '~lib/types';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import {
     Behandlingsinformasjon,
-    UførhetStatus,
     FlyktningStatus,
     LovligOppholdStatus,
     FastOppholdINorgeStatus,
@@ -14,6 +13,7 @@ import {
     InstitusjonsoppholdStatus,
     isPerson,
 } from '~types/Behandlingsinformasjon';
+import { Oppfylt } from '~types/Grunnlag';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const createVilkårUrl = (props: { sakId: string; behandlingId: string; vilkar: Vilkårtype }) =>
@@ -78,9 +78,9 @@ export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinfo
             status:
                 uførhet === null
                     ? VilkårVurderingStatus.IkkeVurdert
-                    : uførhet.status === UførhetStatus.HarUføresakTilBehandling
+                    : uførhet.status === Oppfylt.UAVKLART
                     ? VilkårVurderingStatus.Uavklart
-                    : uførhet.status === UførhetStatus.VilkårOppfylt
+                    : uførhet.status === Oppfylt.JA
                     ? VilkårVurderingStatus.Ok
                     : VilkårVurderingStatus.IkkeOk,
             vilkårtype: Vilkårtype.Uførhet,

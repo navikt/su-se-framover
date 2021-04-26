@@ -1,8 +1,9 @@
 import { formatISO } from 'date-fns';
 
 import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
-import { Fradrag, Periode } from '~types/Fradrag';
+import { Fradrag } from '~types/Fradrag';
 import { SimulertEndringGrunnlag, Uføregrunnlag } from '~types/Grunnlag';
+import { Periode } from '~types/Periode';
 import {
     OpprettetRevurdering,
     SimulertRevurdering,

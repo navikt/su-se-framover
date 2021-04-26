@@ -3,8 +3,8 @@ import { Nullable } from '~lib/types';
 import { Behandling, Attestering } from './Behandling';
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
-import { Periode } from './Fradrag';
 import { Grunnlag, SimulertEndringGrunnlag } from './Grunnlag';
+import { Periode } from './Periode';
 import { Simulering } from './Simulering';
 
 export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {

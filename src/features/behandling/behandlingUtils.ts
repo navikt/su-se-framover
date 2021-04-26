@@ -28,8 +28,8 @@ import {
     PersonligOppmøte,
     PersonligOppmøteStatus,
     Uførhet,
-    UførhetStatus,
 } from '~types/Behandlingsinformasjon';
+import { Oppfylt } from '~types/Grunnlag';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
@@ -100,7 +100,7 @@ export const erUnderkjent = (behandling: Behandling) => {
 export const erVilkårsvurderingerVurdertAvslag = (behandling: Behandling) => {
     return (
         behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG ||
-        behandling.behandlingsinformasjon.uførhet?.status === UførhetStatus.VilkårIkkeOppfylt ||
+        behandling.behandlingsinformasjon.uførhet?.status === Oppfylt.NEI ||
         behandling.behandlingsinformasjon.flyktning?.status === FlyktningStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.lovligOpphold?.status === LovligOppholdStatus.VilkårIkkeOppfylt ||
         behandling.behandlingsinformasjon.fastOppholdINorge?.status === FastOppholdINorgeStatus.VilkårIkkeOppfylt ||

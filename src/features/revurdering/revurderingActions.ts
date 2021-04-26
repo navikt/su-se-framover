@@ -2,8 +2,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
 import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
-import { Periode, Fradrag } from '~types/Fradrag';
+import { Fradrag } from '~types/Fradrag';
 import { SimulertEndringGrunnlag, Uføregrunnlag } from '~types/Grunnlag';
+import { Periode } from '~types/Periode';
 import {
     RevurderingTilAttestering,
     IverksattRevurdering,
