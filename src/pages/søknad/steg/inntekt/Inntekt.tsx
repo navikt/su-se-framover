@@ -233,6 +233,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
+    const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
     const formik = useFormik<FormData>({
         initialValues: {
@@ -372,6 +373,11 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
                     onSubmit={(e) => {
                         setHasSubmitted(true);
                         formik.handleSubmit(e);
+                        setTimeout(() => {
+                            if (feiloppsummeringref.current) {
+                                feiloppsummeringref.current.focus();
+                            }
+                        }, 0);
                     }}
                 >
                     <div className={sharedStyles.formContainer}>
@@ -595,6 +601,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
                         hidden={!formikErrorsHarFeil(formik.errors)}
+                        innerRef={feiloppsummeringref}
                     />
 
                     <Bunnknapper

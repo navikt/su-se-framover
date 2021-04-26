@@ -1,6 +1,5 @@
-import { MessageFormatElement } from 'intl-messageformat-parser';
 import * as React from 'react';
-import { IntlProvider } from 'react-intl';
+import { IntlProvider, MessageFormatElement } from 'react-intl';
 
 export enum Languages {
     nb = 'nb-NO',
