@@ -29,14 +29,17 @@ interface FormData {
     status: Nullable<UføreResultat>;
     uføregrad: Nullable<string>;
     forventetInntekt: Nullable<string>;
-    begrunnelse: Nullable<string>;
+    begrunnelse?: Nullable<string>;
 }
 
 const schema = yup.object<FormData>({
     status: yup
         .mixed()
         .defined()
-        .oneOf([UføreResultat.VilkårOppfylt, UføreResultat.VilkårIkkeOppfylt, UføreResultat.HarUføresakTilBehandling]),
+        .oneOf(
+            [UføreResultat.VilkårOppfylt, UføreResultat.VilkårIkkeOppfylt, UføreResultat.HarUføresakTilBehandling],
+            'Vennligst velg et alternativ'
+        ),
     uføregrad: (yup
         .number()
         .nullable()
@@ -55,7 +58,7 @@ const schema = yup.object<FormData>({
             then: yup.number().positive().integer().min(0).required().typeError('Feltet må være et tall'),
             otherwise: yup.number().nullable().defined(),
         }) as unknown) as yup.Schema<string>,
-    begrunnelse: yup.string().nullable().defined(),
+    begrunnelse: yup.string().min(0).nullable().notRequired(),
 });
 
 const Uførhet = (props: VilkårsvurderingBaseProps) => {
