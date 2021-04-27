@@ -28,6 +28,7 @@ import {
 import EtterForhåndsvarsel from './EtterForhåndsvarsel';
 import Forhåndsvarsel from './Forhåndsvarsel';
 import ForhåndsvarslingBesluttet from './ForhåndsvarslingBesluttet';
+import GReguleringForOppsummering from './GReguleringForOppsummering';
 import IngenEndring from './IngenEndring';
 import messages from './revurderingOppsummering-nb';
 import styles from './revurderingsOppsummering.module.less';
@@ -38,13 +39,36 @@ const RevurderingsOppsummering = (props: {
 }) => {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
 
+    const OppsummeringsFormer = (r: SimulertRevurdering | BeregnetIngenEndring | UnderkjentRevurdering) => {
+        if (erGregulering(r.årsak)) {
+            return <GReguleringForOppsummering sakId={props.sakId} revurdering={r} intl={intl} />;
+        }
+
+        if (erRevurderingIngenEndring(r)) {
+            return <IngenEndring sakId={props.sakId} revurdering={r} intl={intl} />;
+        }
+
+        if (erRevurderingSimulert(r)) {
+            if (erRevurderingForhåndsvarslet(r)) {
+                if (erForhåndsvarslingBesluttet(r)) {
+                    return <ForhåndsvarslingBesluttet sakId={props.sakId} revurdering={r} intl={intl} />;
+                } else {
+                    return <EtterForhåndsvarsel sakId={props.sakId} revurdering={r} intl={intl} />;
+                }
+            }
+            return <Forhåndsvarsel sakId={props.sakId} revurdering={r} intl={intl} />;
+        }
+
+        return null;
+    };
+
     return (
         <div className={sharedStyles.revurderingContainer}>
             <Innholdstittel className={sharedStyles.tittel}>
                 {intl.formatMessage({ id: 'oppsummering.tittel' })}
             </Innholdstittel>
             <div className={sharedStyles.mainContentContainer}>
-                {erRevurderingIngenEndring(props.revurdering) && (
+                {erRevurderingIngenEndring(props.revurdering) && !erGregulering(props.revurdering.årsak) && (
                     <RevurderingIngenEndringAlert className={styles.ingenEndringInfoboks} />
                 )}
                 <RevurderingÅrsakOgBegrunnelse
@@ -73,27 +97,8 @@ const RevurderingsOppsummering = (props: {
                         </AlertStripeAdvarsel>
                     </div>
                 )}
-                {erRevurderingIngenEndring(props.revurdering) && (
-                    <IngenEndring sakId={props.sakId} revurdering={props.revurdering} intl={intl} />
-                )}
-                {!erGregulering(props.revurdering.årsak) && erRevurderingIngenEndring(props.revurdering) && (
-                    <IngenEndring sakId={props.sakId} revurdering={props.revurdering} intl={intl} />
-                )}
 
-                {erRevurderingSimulert(props.revurdering) &&
-                    (erRevurderingForhåndsvarslet(props.revurdering) ? (
-                        erForhåndsvarslingBesluttet(props.revurdering) ? (
-                            <ForhåndsvarslingBesluttet
-                                sakId={props.sakId}
-                                revurdering={props.revurdering}
-                                intl={intl}
-                            />
-                        ) : (
-                            <EtterForhåndsvarsel sakId={props.sakId} revurdering={props.revurdering} intl={intl} />
-                        )
-                    ) : (
-                        <Forhåndsvarsel sakId={props.sakId} revurdering={props.revurdering} intl={intl} />
-                    ))}
+                {OppsummeringsFormer(props.revurdering)}
             </div>
         </div>
     );

@@ -10,7 +10,7 @@ import { RevurderingErrorCodes } from '~types/Revurdering';
 import messages from './revurderingskallFeilet-nb';
 import styles from './revurderingskallFeilet.module.less';
 
-const feilkodeTilFeilmelding = (feil: Nullable<ErrorMessage>, intl: IntlShape) => {
+const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) => {
     switch (feil?.code) {
         case RevurderingErrorCodes.UGYLDIG_TILSTAND:
             return intl.formatMessage({ id: 'feil.ugyldig.tilstand' });
@@ -36,12 +36,12 @@ const feilkodeTilFeilmelding = (feil: Nullable<ErrorMessage>, intl: IntlShape) =
             return intl.formatMessage({ id: 'feil.ukjentFeil' });
     }
 };
-const RevurderingskallFeilet = (props: { error: ApiError }) => {
+const RevurderingskallFeilet = (props: { error?: ApiError }) => {
     const intl = useI18n({ messages });
 
     return (
         <AlertStripeFeil className={styles.alertstripe}>
-            {feilkodeTilFeilmelding(props.error.body, intl)}
+            {feilkodeTilFeilmelding(intl, props.error?.body)}
         </AlertStripeFeil>
     );
 };

@@ -83,15 +83,14 @@ export enum BeslutningEtterForhåndsvarsling {
 interface ForhåndsvarselBase<T extends Forhåndsvarseltype = Forhåndsvarseltype> {
     type: T;
 }
-export type IngenForhåndsvarsel = ForhåndsvarselBase<Forhåndsvarseltype.IngenForhåndsvarsel>;
-export type ForhåndsvarselSkalVarslesSendt = ForhåndsvarselBase<Forhåndsvarseltype.SkalVarslesSendt>;
-export interface ForhåndsvarselSkalVarslesBesluttet
-    extends ForhåndsvarselBase<Forhåndsvarseltype.SkalVarslesBesluttet> {
+export type Ingen = ForhåndsvarselBase<Forhåndsvarseltype.IngenForhåndsvarsel>;
+export type Sendt = ForhåndsvarselBase<Forhåndsvarseltype.SkalVarslesSendt>;
+export interface Besluttet extends ForhåndsvarselBase<Forhåndsvarseltype.SkalVarslesBesluttet> {
     begrunnelse: string;
     beslutningEtterForhåndsvarsling: BeslutningEtterForhåndsvarsling;
 }
 
-export type Forhåndsvarsel = IngenForhåndsvarsel | ForhåndsvarselSkalVarslesSendt | ForhåndsvarselSkalVarslesBesluttet;
+export type Forhåndsvarsel = Ingen | Sendt | Besluttet;
 
 export enum RevurderingsStatus {
     OPPRETTET = 'OPPRETTET',
