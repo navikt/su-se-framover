@@ -1,5 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
+import { struct } from 'fp-ts/lib/Eq';
+import * as S from 'fp-ts/lib/string';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Radio, RadioGruppe, Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -10,7 +12,7 @@ import { lagreUføregrunnlag } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -29,7 +31,7 @@ interface FormData {
     status: Nullable<UføreResultat>;
     uføregrad: Nullable<string>;
     forventetInntekt: Nullable<string>;
-    begrunnelse?: Nullable<string>;
+    begrunnelse: Nullable<string>;
 }
 
 const schema = yup.object<FormData>({
@@ -58,7 +60,7 @@ const schema = yup.object<FormData>({
             then: yup.number().positive().integer().min(0).required().typeError('Feltet må være et tall'),
             otherwise: yup.number().nullable().defined(),
         }) as unknown) as yup.Schema<string>,
-    begrunnelse: yup.string().min(0).nullable().notRequired(),
+    begrunnelse: yup.string().defined().default(null),
 });
 
 const Uførhet = (props: VilkårsvurderingBaseProps) => {
@@ -70,15 +72,14 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const handleSave = async (values: FormData, nesteUrl: string) => {
         if (!values.status) return;
 
-        const isEqual = (): boolean =>
-            /* Bruker == istedenfor === siden `undefined == null => true` */
-            values.status == props.behandling.vilkårsvurderinger.uføre?.vurdering?.resultat &&
-            values.uføregrad == props.behandling.vilkårsvurderinger.uføre?.vurdering?.grunnlag?.uføregrad &&
-            values.forventetInntekt ==
-                props.behandling.vilkårsvurderinger.uføre?.vurdering?.grunnlag?.forventetInntekt &&
-            values.begrunnelse == props.behandling.vilkårsvurderinger.uføre?.vurdering.begrunnelse;
+        const eqFormData = struct<FormData>({
+            status: eqNullable(S.Eq),
+            uføregrad: eqNullable(S.Eq),
+            forventetInntekt: eqNullable(S.Eq),
+            begrunnelse: eqNullable(S.Eq),
+        });
 
-        if (isEqual()) {
+        if (eqFormData.equals(values, initialFormData())) {
             history.push(nesteUrl);
             return;
         }
@@ -107,15 +108,17 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         }
     };
 
+    const initialFormData = (): FormData => ({
+        status: uføre?.vurdering?.resultat ?? null,
+        uføregrad: props.behandling.behandlingsinformasjon.uførhet?.uføregrad?.toString() ?? null,
+        forventetInntekt: props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt?.toString() ?? null,
+        begrunnelse: props.behandling.behandlingsinformasjon.uførhet?.begrunnelse || null,
+    });
+
     const uføre = props.behandling.vilkårsvurderinger?.uføre;
 
     const formik = useFormik<FormData>({
-        initialValues: {
-            status: uføre?.vurdering?.resultat ?? null,
-            uføregrad: props.behandling.behandlingsinformasjon.uførhet?.uføregrad?.toString() ?? null,
-            forventetInntekt: props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt?.toString() ?? null,
-            begrunnelse: props.behandling.behandlingsinformasjon.uførhet?.begrunnelse ?? null,
-        },
+        initialValues: initialFormData(),
         async onSubmit(values) {
             handleSave(values, props.nesteUrl);
         },
