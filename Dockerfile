@@ -21,4 +21,6 @@ RUN npm run build
 
 EXPOSE ${PORT}
 
+USER apprunner
+
 CMD ["npm", "start"]
