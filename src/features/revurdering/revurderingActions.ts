@@ -10,9 +10,10 @@ import {
     SimulertRevurdering,
     UnderkjentRevurdering,
     OpprettetRevurderingGrunn,
+    RevurderingErrorCodes,
+    BeslutningEtterForhåndsvarsling,
 } from '~types/Revurdering';
 
-import * as pdfApi from '../../api/pdfApi';
 import * as revurderingApi from '../../api/revurderingApi';
 
 export const opprettRevurdering = createAsyncThunk<
@@ -59,10 +60,32 @@ export const beregnOgSimuler = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const forhåndsvarsleEllerSendTilAttestering = createAsyncThunk<
+    SimulertRevurdering,
+    {
+        sakId: string;
+        revurderingId: string;
+        revurderingshandling: revurderingApi.Revurderingshandling;
+        fritekstTilBrev: string;
+    },
+    { rejectValue: ApiError<RevurderingErrorCodes> }
+>('revurdering/forhandsvarsle', async ({ sakId, revurderingId, revurderingshandling, fritekstTilBrev }, thunkApi) => {
+    const res = await revurderingApi.forhåndsvarsleEllerSendTilAttestering(
+        sakId,
+        revurderingId,
+        revurderingshandling,
+        fritekstTilBrev
+    );
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const sendRevurderingTilAttestering = createAsyncThunk<
     RevurderingTilAttestering,
     { sakId: string; revurderingId: string; fritekstTilBrev: string; skalFøreTilBrevutsending?: boolean },
-    { rejectValue: ApiError }
+    { rejectValue: ApiError<RevurderingErrorCodes> }
 >(
     'revurdering/sendTilAttestering',
     async ({ sakId, revurderingId, fritekstTilBrev, skalFøreTilBrevutsending: skalFøreTilBrevutsending }, thunkApi) => {
@@ -103,14 +126,29 @@ export const underkjennRevurdering = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const fetchBrevutkastWithFritekst = createAsyncThunk<
-    { objectUrl: string },
-    { sakId: string; revurderingId: string; fritekst: string },
+export const fortsettEtterForhåndsvarsel = createAsyncThunk<
+    SimulertRevurdering | RevurderingTilAttestering,
+    {
+        sakId: string;
+        revurderingId: string;
+        begrunnelse: string;
+        valg: BeslutningEtterForhåndsvarsling;
+        fritekstTilBrev: string;
+    },
     { rejectValue: ApiError }
->('revurdering/revurderingsVedtak', async ({ sakId, revurderingId, fritekst }, thunkApi) => {
-    const res = await pdfApi.fetchBrevutkastForRevurderingWithFritekst(sakId, revurderingId, fritekst);
-    if (res.status === 'ok') {
-        return { objectUrl: URL.createObjectURL(res.data) };
+>(
+    'revurdering/fortsettEtterForhåndsvarsel',
+    async ({ sakId, revurderingId, begrunnelse, valg, fritekstTilBrev }, thunkApi) => {
+        const res = await revurderingApi.fortsettEtterForhåndsvarsel(
+            sakId,
+            revurderingId,
+            begrunnelse,
+            valg,
+            fritekstTilBrev
+        );
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
     }
-    return thunkApi.rejectWithValue(res.error);
-});
+);

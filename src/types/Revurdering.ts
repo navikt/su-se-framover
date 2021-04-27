@@ -17,6 +17,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     fritekstTilBrev: string;
     årsak: OpprettetRevurderingGrunn;
     begrunnelse: Nullable<string>;
+    forhåndsvarsel: Nullable<Forhåndsvarsel>;
     behandlingsinformasjon: Behandlingsinformasjon;
 }
 interface Beregninger {
@@ -67,6 +68,30 @@ export function harSimulering(r: Revurdering): r is Revurdering & { simulering: 
     return 'simulering' in r && r['simulering'] !== null;
 }
 
+export enum Forhåndsvarseltype {
+    IngenForhåndsvarsel = 'INGEN_FORHÅNDSVARSEL',
+    SkalVarslesSendt = 'SKAL_FORHÅNDSVARSLES_SENDT',
+    SkalVarslesBesluttet = 'SKAL_FORHÅNDSVARSLES_BESLUTTET',
+}
+
+export enum BeslutningEtterForhåndsvarsling {
+    FortsettSammeOpplysninger = 'FORTSETT_MED_SAMME_OPPLYSNINGER',
+    FortsettMedAndreOpplysninger = 'FORTSETT_MED_ANDRE_OPPLYSNINGER',
+    AvsluttUtenEndringer = 'AVSLUTT_UTEN_ENDRINGER',
+}
+
+interface ForhåndsvarselBase<T extends Forhåndsvarseltype = Forhåndsvarseltype> {
+    type: T;
+}
+export type Ingen = ForhåndsvarselBase<Forhåndsvarseltype.IngenForhåndsvarsel>;
+export type Sendt = ForhåndsvarselBase<Forhåndsvarseltype.SkalVarslesSendt>;
+export interface Besluttet extends ForhåndsvarselBase<Forhåndsvarseltype.SkalVarslesBesluttet> {
+    begrunnelse: string;
+    beslutningEtterForhåndsvarsling: BeslutningEtterForhåndsvarsling;
+}
+
+export type Forhåndsvarsel = Ingen | Sendt | Besluttet;
+
 export enum RevurderingsStatus {
     OPPRETTET = 'OPPRETTET',
     BEREGNET_INNVILGET = 'BEREGNET_INNVILGET',
@@ -91,4 +116,17 @@ export enum OpprettetRevurderingGrunn {
     ANDRE_KILDER = 'ANDRE_KILDER',
     MIGRERT = 'MIGRERT',
     REGULER_GRUNNBELØP = 'REGULER_GRUNNBELØP',
+}
+
+export enum RevurderingErrorCodes {
+    ALLEREDE_FORHÅNDSVARSLET = 'allerede_forhåndsvarslet',
+    FANT_IKKE_SAK = 'fant_ikke_Sak',
+    FANT_IKKE_PERSON = 'fant_ikke_person',
+    FANT_IKKE_AKTØR_ID = 'fant_ikke_aktør_id',
+    FANT_IKKE_REVURDERING = 'fant_ikke_revurdering',
+    UGYLDIG_PERIODE = 'ugyldig_periode',
+    UGYLDIG_TILSTAND = 'ugyldig_tilstand',
+    KUNNE_IKKE_OPPRETTE_OPPGAVE = 'kunne_ikke_opprette_oppgave',
+    KUNNE_IKKE_DISTRIBUERE_BREV = 'kunne_ikke_distribuere_brev',
+    KUNNE_IKKE_JOURNALFØRE_BREV = 'kunne_ikke_journalføre_brev',
 }

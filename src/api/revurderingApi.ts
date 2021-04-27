@@ -9,6 +9,8 @@ import {
     IverksattRevurdering,
     UnderkjentRevurdering,
     OpprettetRevurderingGrunn,
+    RevurderingErrorCodes,
+    BeslutningEtterForhåndsvarsling,
 } from '~types/Revurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -67,12 +69,33 @@ export async function beregnOgSimuler(
     });
 }
 
+export enum Revurderingshandling {
+    SendTilAttestering = 'SEND_TIL_ATTESTERING',
+    Forhåndsvarsle = 'FORHÅNDSVARSLE',
+}
+
+export async function forhåndsvarsleEllerSendTilAttestering(
+    sakId: string,
+    revurderingId: string,
+    revurderingshandling: Revurderingshandling,
+    fritekstTilBrev: string
+): Promise<ApiClientResult<SimulertRevurdering, RevurderingErrorCodes>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/forhandsvarsleEllerSendTilAttestering`,
+        method: 'POST',
+        body: {
+            revurderingshandling,
+            fritekst: fritekstTilBrev,
+        },
+    });
+}
+
 export async function sendTilAttestering(
     sakId: string,
     revurderingId: string,
     fritekstTilBrev: string,
     skalFøreTilBrevutsending?: boolean
-): Promise<ApiClientResult<RevurderingTilAttestering>> {
+): Promise<ApiClientResult<RevurderingTilAttestering, RevurderingErrorCodes>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/tilAttestering`,
         method: 'POST',
@@ -103,5 +126,23 @@ export async function iverksett(sakId: string, revurderingId: string): Promise<A
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/iverksett`,
         method: 'POST',
+    });
+}
+
+export async function fortsettEtterForhåndsvarsel(
+    sakId: string,
+    revurderingId: string,
+    begrunnelse: string,
+    valg: BeslutningEtterForhåndsvarsling,
+    fritekstTilBrev: string
+): Promise<ApiClientResult<SimulertRevurdering | RevurderingTilAttestering>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/fortsettEtterForhåndsvarsel`,
+        method: 'POST',
+        body: {
+            begrunnelse,
+            valg,
+            fritekstTilBrev,
+        },
     });
 }

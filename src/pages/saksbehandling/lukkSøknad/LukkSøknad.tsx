@@ -187,6 +187,8 @@ function lagBody(values: LukkSøknadFormData): LukkSøknadBodyTypes {
         case LukkSøknadBegrunnelse.Trukket:
             return {
                 type: values.lukkSøknadBegrunnelse,
+                //Denne har validering
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 datoSøkerTrakkSøknad: values.datoSøkerTrakkSøknad!,
             };
 

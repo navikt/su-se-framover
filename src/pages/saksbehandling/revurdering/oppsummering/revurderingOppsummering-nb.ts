@@ -1,4 +1,20 @@
 export default {
+    'etterForhåndsvarsel.begrunnelse.label': 'Begrunnelse',
+    'etterForhåndsvarsel.resultatEtterForhåndsvarsel': 'Resultat etter forhåndsvarsel',
+    'etterForhåndsvarsel.resultatEtterForhåndsvarsel.sammeOpplysninger':
+        'Revurderingen skal fortsette med samme opplysninger',
+    'etterForhåndsvarsel.resultatEtterForhåndsvarsel.andreOpplysninger':
+        'Revurdering skal fortsette med andre opplysninger',
+    'etterForhåndsvarsel.resultatEtterForhåndsvarsel.avsluttesUtenEndring': 'Revurdering skal avsluttes uten endringer',
+
+    'feil.generellFeil': 'En feil skjedde',
+
+    'forhåndsvarsling.sendtForhåndsvarsling': 'Forhåndsvarsel er sendt til bruker og oppgave i Gosys er opprettet',
+
+    'knapp.sendtBrevOgAvslutt': 'Send brev og avslutt',
+
+    'link.tilbake': 'Tilbake',
+
     'oppsummering.tittel': 'Oppsummering',
     'oppsummering.gammelBeregning.tittel': 'Gammel beregning',
     'oppsummering.nyBeregning.tittel': 'Ny beregning',
