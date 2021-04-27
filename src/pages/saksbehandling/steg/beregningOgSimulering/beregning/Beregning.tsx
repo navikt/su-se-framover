@@ -2,11 +2,11 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { formatISO } from 'date-fns';
 import { useFormik } from 'formik';
 import { getEq } from 'fp-ts/Array';
-import { Eq as eqBoolean } from 'fp-ts/lib/boolean';
-import { Eq as eqDate } from 'fp-ts/lib/Date';
+import * as B from 'fp-ts/lib/boolean';
+import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 import { pipe } from 'fp-ts/lib/function';
-import { Eq as eqString } from 'fp-ts/lib/string';
+import * as S from 'fp-ts/lib/string';
 import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
@@ -371,22 +371,22 @@ function erFradragLike(fradrag: Fradrag[] | undefined, formFradrag: FradragFormD
 }
 
 const eqUtenlandskInntekt = struct<UtenlandskInntektFormData>({
-    beløpIUtenlandskValuta: eqString,
-    valuta: eqString,
-    kurs: eqString,
+    beløpIUtenlandskValuta: S.Eq,
+    valuta: S.Eq,
+    kurs: S.Eq,
 });
 
 const eqPeriode = struct<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>({
-    fraOgMed: eqNullable(eqDate),
-    tilOgMed: eqNullable(eqDate),
+    fraOgMed: eqNullable(D.Eq),
+    tilOgMed: eqNullable(D.Eq),
 });
 
 const eqFradragFormData = struct<FradragFormData>({
-    type: eqNullable(eqString),
-    beløp: eqNullable(eqString),
-    fraUtland: eqBoolean,
+    type: eqNullable(S.Eq),
+    beløp: eqNullable(S.Eq),
+    fraUtland: B.Eq,
     utenlandskInntekt: eqUtenlandskInntekt,
-    tilhørerEPS: eqBoolean,
+    tilhørerEPS: B.Eq,
     periode: eqNullable(eqPeriode),
 });
 

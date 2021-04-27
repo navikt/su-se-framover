@@ -1,6 +1,6 @@
 import { struct } from 'fp-ts/lib/Eq';
-import { Eq as eqNumber } from 'fp-ts/lib/number';
-import { Eq as eqString } from 'fp-ts/lib/string';
+import * as N from 'fp-ts/lib/number';
+import * as S from 'fp-ts/lib/string';
 
 import { eqNullable, Nullable } from '~lib/types';
 
@@ -13,16 +13,16 @@ export interface Fradrag {
 }
 
 const eqUtenlandskInntekt = struct<UtenlandskInntekt>({
-    beløpIUtenlandskValuta: eqNumber,
-    kurs: eqNumber,
-    valuta: eqString,
+    beløpIUtenlandskValuta: N.Eq,
+    kurs: N.Eq,
+    valuta: S.Eq,
 });
 
 export const eqFradragBortsettFraPeriode = struct<Omit<Fradrag, 'periode'>>({
-    type: eqString,
-    beløp: eqNumber,
+    type: S.Eq,
+    beløp: N.Eq,
     utenlandskInntekt: eqNullable(eqUtenlandskInntekt),
-    tilhører: eqString,
+    tilhører: S.Eq,
 });
 
 export interface Periode<T = Date> {
