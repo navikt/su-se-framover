@@ -68,6 +68,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         if (!values.status) return;
 
         const isEqual = (): boolean =>
+            /* Bruker == istedenfor === siden `undefined == null => true` */
             values.status == props.behandling.vilkårsvurderinger.uføre?.vurdering?.resultat &&
             values.uføregrad == props.behandling.vilkårsvurderinger.uføre?.vurdering?.grunnlag?.uføregrad &&
             values.forventetInntekt ==

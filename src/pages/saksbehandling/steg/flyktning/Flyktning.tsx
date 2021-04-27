@@ -49,7 +49,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
 
     const vilGiTidligAvslag = (): boolean => {
         return (
-            props.behandling.behandlingsinformasjon.uførhet?.status === UførhetStatus.VilkårOppfylt ||
+            props.behandling.behandlingsinformasjon.uførhet?.status === UførhetStatus.VilkårIkkeOppfylt ||
             formik.values?.status === FlyktningStatus.VilkårIkkeOppfylt
         );
     };

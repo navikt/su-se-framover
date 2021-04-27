@@ -48,14 +48,13 @@ export const oppdaterRevurderingsPeriode = createAsyncThunk<
 
 export const beregnOgSimuler = createAsyncThunk<
     SimulertRevurdering,
-    { sakId: string; revurderingId: string; periode: Periode<string>; fradrag: Fradrag[]; forventetInntekt?: number },
+    { sakId: string; revurderingId: string; periode: Periode<string>; fradrag: Fradrag[] },
     { rejectValue: ApiError }
->('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode, fradrag, forventetInntekt }, thunkApi) => {
+>('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode, fradrag }, thunkApi) => {
     const res = await revurderingApi.beregnOgSimuler(sakId, {
         revurderingId,
         periode,
         fradrag,
-        forventetInntekt,
     });
     if (res.status === 'ok') {
         return res.data;

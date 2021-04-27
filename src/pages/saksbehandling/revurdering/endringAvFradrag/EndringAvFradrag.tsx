@@ -81,23 +81,21 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
             })
         );
 
-        if (!res) return false;
-        if (!lagreUføregrunnlag.fulfilled.match(res)) {
-            return false;
-        }
+        if (!res || !lagreUføregrunnlag.fulfilled.match(res)) return false;
+
         return beregnOgSimuler.fulfilled.match(
             await dispatch(
                 beregnOgSimuler({
                     sakId: props.sakId,
                     revurderingId: props.revurdering.id,
-                    //validering sikrer at feltet ikke er null
-                    /* eslint-disable @typescript-eslint/no-non-null-assertion */
                     periode: {
                         fraOgMed: props.revurdering.periode.fraOgMed,
                         tilOgMed: props.revurdering.periode.tilOgMed,
                     },
                     fradrag: values.fradrag.map((f: FradragFormData) => ({
                         periode: null,
+                        /* valideringa sjekker at f.beløp og f.type ikke er null */
+                        /* eslint-disable @typescript-eslint/no-non-null-assertion */
                         beløp: Number.parseInt(f.beløp!, 10),
                         type: f.type!,
                         utenlandskInntekt: f.fraUtland
@@ -109,10 +107,6 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                             : null,
                         tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
                     })),
-                    forventetInntekt:
-                        erGregulering(props.revurdering.årsak) && values.forventetInntekt
-                            ? parseInt(values.forventetInntekt, 10)
-                            : undefined,
                 })
             )
         );

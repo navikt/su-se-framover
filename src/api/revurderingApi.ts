@@ -54,7 +54,6 @@ export async function beregnOgSimuler(
         revurderingId: string;
         periode: Periode<string>;
         fradrag: Fradrag[];
-        forventetInntekt?: number;
     }
 ): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
@@ -66,7 +65,6 @@ export async function beregnOgSimuler(
                 tilOgMed: formatISO(new Date(arg.periode.tilOgMed), { representation: 'date' }),
             },
             fradrag: arg.fradrag,
-            forventetInntekt: arg.forventetInntekt,
         },
     });
 }
