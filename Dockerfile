@@ -6,6 +6,8 @@ ENV FRONTEND_DIR ${BASE_DIR}/frontend
 ENV BACKEND_DIR ${BASE_DIR}/server
 ENV PORT 80
 
+USER root
+
 RUN mkdir -p ${BASE_DIR}
 
 COPY dist ${FRONTEND_DIR}
