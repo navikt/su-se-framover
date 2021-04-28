@@ -16,6 +16,8 @@ const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) 
             return intl.formatMessage({ id: 'feil.ugyldig.tilstand' });
         case RevurderingErrorCodes.UGYLDIG_PERIODE:
             return intl.formatMessage({ id: 'feil.ugyldig.periode' });
+        case RevurderingErrorCodes.UGYLDIG_ÅRSAK:
+            return intl.formatMessage({ id: 'feil.ugyldig.årsak' });
         case RevurderingErrorCodes.FANT_IKKE_REVURDERING:
             return intl.formatMessage({ id: 'feil.fant.ikke.revurdering' });
         case RevurderingErrorCodes.FANT_IKKE_AKTØR_ID:
@@ -32,6 +34,16 @@ const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) 
             return intl.formatMessage({ id: 'feil.kunne.ikke.distribuere.brev' });
         case RevurderingErrorCodes.ALLEREDE_FORHÅNDSVARSLET:
             return intl.formatMessage({ id: 'feil.allerede.forhåndsvarslet' });
+        case RevurderingErrorCodes.INGENTING_Å_REVURDERE_I_PERIODEN:
+            return intl.formatMessage({ id: 'feil.kanIkkeRevurdere' });
+        case RevurderingErrorCodes.TIDLIGST_NESTE_MÅNED:
+            return intl.formatMessage({ id: 'feil.tidligst.neste.måned' });
+        case RevurderingErrorCodes.BEGRUNNELSE_KAN_IKKE_VÆRE_TOM:
+            return intl.formatMessage({ id: 'feil.begrunnelse.kan.ikke.være.tom' });
+        case RevurderingErrorCodes.PERIODEN_MÅ_VÆRE_INNENFOR_STØNADSPERIODEN:
+            return intl.formatMessage({ id: 'feil.perioden.må.være.innenfor.stønadsperioden' });
+        case RevurderingErrorCodes.KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET:
+            return intl.formatMessage({ id: 'feil.kan.ikke.oppdatere.revurdering.som.er.forhådnsvarslet' });
         default:
             return intl.formatMessage({ id: 'feil.ukjentFeil' });
     }
