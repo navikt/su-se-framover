@@ -51,12 +51,14 @@ const DetaljertFradrag = (props: {
 }) => (
     <>
         <span>{props.tittel.label}</span>
-        <span style={{ textAlign: 'right' }}>{props.tittel.verdi}</span>
+        <span className={styles.alignTextRight}>{props.tittel.verdi}</span>
         <>
             {props.detaljer.map((d) => (
                 <React.Fragment key={d.label}>
-                    <Undertekst style={{ paddingLeft: d.epsUtland ? '24px' : '12px' }}>{d.label}</Undertekst>
-                    <Undertekst style={{ textAlign: 'right' }}>{d.verdi}</Undertekst>
+                    <Undertekst className={d.epsUtland ? styles.additionalDetails : styles.detailedLinje}>
+                        {d.label}
+                    </Undertekst>
+                    <Undertekst className={styles.alignTextRight}>{d.verdi}</Undertekst>
                 </React.Fragment>
             ))}
         </>
