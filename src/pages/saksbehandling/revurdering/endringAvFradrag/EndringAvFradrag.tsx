@@ -24,6 +24,7 @@ import { Fradragstype, FradragTilhører } from '~types/Fradrag';
 import { Revurdering } from '~types/Revurdering';
 import { UføreResultat } from '~types/Vilkår';
 
+import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregning-nb';
 import uføreMessages from '../../steg/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
@@ -49,7 +50,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
     const lagreUføregrunnlagStatus = useAppSelector(
         (state) => state.sak.revurderingGrunnlagSimulering[props.revurdering.id] ?? RemoteData.initial
     );
-    const intl = useI18n({ messages: { ...sharedMessages, ...uføreMessages } });
+    const intl = useI18n({ messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages } });
     const dispatch = useAppDispatch();
     const history = useHistory();
 
@@ -199,7 +200,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                             feil={formik.errors.uføregrad}
                         />
                         <UførhetInput
-                            tittel={intl.formatMessage({ id: 'fradrag.type.forventetinntekt' })}
+                            tittel={intl.formatMessage({ id: 'input.label.forventetInntekt' })}
                             inputName="forventetInntekt"
                             inputTekst=" NOK"
                             bredde="L"
