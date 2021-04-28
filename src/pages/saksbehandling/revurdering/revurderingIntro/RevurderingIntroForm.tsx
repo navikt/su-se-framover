@@ -124,6 +124,8 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                 return intl.formatMessage({ id: 'feil.ugyldig.årsak' });
             case 'perioden_må_være_innenfor_stønadsperioden':
                 return intl.formatMessage({ id: 'feil.perioden.må.være.innenfor.stønadsperioden' });
+            case 'periode_og_årsak_kombinasjon_er_ugyldig':
+                return intl.formatMessage({ id: 'feil.periode.og.årsak.kombinasjon.er.ugyldig' });
             default:
                 return intl.formatMessage({ id: 'feil.ukjentFeil' });
         }

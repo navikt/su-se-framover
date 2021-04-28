@@ -64,7 +64,7 @@ export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering
         sortertUtbetalinger[sortertUtbetalinger.length - 1],
     ];
 
-    const minFraOgMed = DateFns.min([new Date(førsteUtbetaling.fraOgMed), inneværendeOgEnMånedTilbakeITid(new Date())]);
+    const minFraOgMed = DateFns.max([new Date(førsteUtbetaling.fraOgMed), inneværendeOgEnMånedTilbakeITid(new Date())]);
     const maxFraOgMed = new Date(sisteUtbetaling.tilOgMed);
 
     return (

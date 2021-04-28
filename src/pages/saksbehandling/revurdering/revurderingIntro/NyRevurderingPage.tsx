@@ -61,7 +61,7 @@ export const NyRevurderingPage = (props: { sak: Sak }) => {
     const sortertUtbetalingsperioder = [...props.sak.utbetalinger].sort(compareUtbetalingsperiode);
     const sisteUtbetalingsDato = new Date(sortertUtbetalingsperioder[sortertUtbetalingsperioder.length - 1].tilOgMed);
 
-    const minFraOgMed = DateFns.min([
+    const minFraOgMed = DateFns.max([
         new Date(props.sak.utbetalinger[0].fraOgMed),
         inneværendeOgEnMånedTilbakeITid(new Date()),
     ]);
