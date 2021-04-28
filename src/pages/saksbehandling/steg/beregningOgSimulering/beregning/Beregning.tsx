@@ -2,8 +2,11 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { formatISO } from 'date-fns';
 import { useFormik } from 'formik';
 import { getEq } from 'fp-ts/Array';
-import { eqBoolean, eqDate, eqString, getStructEq } from 'fp-ts/lib/Eq';
+import * as B from 'fp-ts/lib/boolean';
+import * as D from 'fp-ts/lib/Date';
+import { struct } from 'fp-ts/lib/Eq';
 import { pipe } from 'fp-ts/lib/function';
+import * as S from 'fp-ts/lib/string';
 import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
@@ -367,23 +370,23 @@ function erFradragLike(fradrag: Fradrag[] | undefined, formFradrag: FradragFormD
     return getEq(eqFradragFormData).equals(formFradrag, fradragFraBasen);
 }
 
-const eqUtenlandskInntekt = getStructEq<UtenlandskInntektFormData>({
-    beløpIUtenlandskValuta: eqString,
-    valuta: eqString,
-    kurs: eqString,
+const eqUtenlandskInntekt = struct<UtenlandskInntektFormData>({
+    beløpIUtenlandskValuta: S.Eq,
+    valuta: S.Eq,
+    kurs: S.Eq,
 });
 
-const eqPeriode = getStructEq<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>({
-    fraOgMed: eqNullable(eqDate),
-    tilOgMed: eqNullable(eqDate),
+const eqPeriode = struct<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>({
+    fraOgMed: eqNullable(D.Eq),
+    tilOgMed: eqNullable(D.Eq),
 });
 
-const eqFradragFormData = getStructEq<FradragFormData>({
-    type: eqNullable(eqString),
-    beløp: eqNullable(eqString),
-    fraUtland: eqBoolean,
+const eqFradragFormData = struct<FradragFormData>({
+    type: eqNullable(S.Eq),
+    beløp: eqNullable(S.Eq),
+    fraUtland: B.Eq,
     utenlandskInntekt: eqUtenlandskInntekt,
-    tilhørerEPS: eqBoolean,
+    tilhørerEPS: B.Eq,
     periode: eqNullable(eqPeriode),
 });
 

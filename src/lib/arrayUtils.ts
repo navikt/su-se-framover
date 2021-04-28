@@ -1,6 +1,6 @@
 import { chop, spanLeft } from 'fp-ts/lib/Array';
 import { Eq } from 'fp-ts/lib/Eq';
-import { pipe } from 'fp-ts/lib/pipeable';
+import { pipe } from 'fp-ts/lib/function';
 
 /**
  * Grupperer elementer som er like (med @param eqT)

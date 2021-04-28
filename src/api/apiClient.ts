@@ -9,27 +9,34 @@ export enum ErrorCode {
     NotFound = 404,
 }
 
-export interface ApiError {
+export interface ApiError<TErrorCode extends string = string> {
     statusCode: ErrorCode | number;
     correlationId: string;
-    body: ErrorMessage | null;
+    body: ErrorMessage<TErrorCode> | null;
 }
 
-export interface ErrorMessage {
+export interface ErrorMessage<TErrorCode extends string = string> {
     message: string;
-    code?: string;
+    code?: TErrorCode;
 }
 
-export type ApiClientResult<T> = { status: 'ok'; data: T; statusCode: number } | { status: 'error'; error: ApiError };
+export type ApiClientResult<TSuccess, TErrorCode extends string = string> =
+    | { status: 'ok'; data: TSuccess; statusCode: number }
+    | { status: 'error'; error: ApiError<TErrorCode> };
 
-function error<T = unknown>(e: ApiError): ApiClientResult<T> {
+function error<TErrorCode extends string = string, TSuccess = unknown>(
+    e: ApiError
+): ApiClientResult<TSuccess, TErrorCode> {
     return {
         status: 'error',
-        error: e,
+        error: e as ApiError<TErrorCode>,
     };
 }
 
-function success<T>(data: T, statusCode: number): ApiClientResult<T> {
+function success<TSuccess, TErrorCode extends string = string>(
+    data: TSuccess,
+    statusCode: number
+): ApiClientResult<TSuccess, TErrorCode> {
     return {
         status: 'ok',
         data,
@@ -39,7 +46,7 @@ function success<T>(data: T, statusCode: number): ApiClientResult<T> {
 
 type Method = 'GET' | 'PUT' | 'POST' | 'PATCH';
 
-export default async function apiClient<T>(arg: {
+export default async function apiClient<TSuccess, TErrorCode extends string = string>(arg: {
     url: string;
     method: Method;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,8 +54,8 @@ export default async function apiClient<T>(arg: {
     request?: Partial<Request>;
     successStatusCodes?: number[];
     extraData?: { correlationId: string };
-    bodyTransformer?: (res: Response) => Promise<T>;
-}): Promise<ApiClientResult<T>> {
+    bodyTransformer?: (res: Response) => Promise<TSuccess>;
+}): Promise<ApiClientResult<TSuccess, TErrorCode>> {
     const correlationId = arg.extraData?.correlationId ?? uuid();
 
     const headers = new Headers(arg.request?.headers);
@@ -63,9 +70,9 @@ export default async function apiClient<T>(arg: {
 
     if (res.ok || arg.successStatusCodes?.includes(res.status)) {
         if (arg.bodyTransformer) {
-            return success<T>(await arg.bodyTransformer(res), res.status);
+            return success<TSuccess, TErrorCode>(await arg.bodyTransformer(res), res.status);
         }
-        return success<T>(await res.json(), res.status);
+        return success<TSuccess, TErrorCode>(await res.json(), res.status);
     }
 
     const authenticateChallengeHeader = res.headers.get('WWW-Authenticate');

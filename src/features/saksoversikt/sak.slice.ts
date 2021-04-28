@@ -16,6 +16,8 @@ import {
     opprettRevurdering,
     sendRevurderingTilAttestering,
     underkjennRevurdering,
+    forhåndsvarsleEllerSendTilAttestering,
+    fortsettEtterForhåndsvarsel,
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
@@ -675,6 +677,26 @@ export default createSlice({
             );
         });
         builder.addCase(underkjennRevurdering.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                }))
+            );
+        });
+
+        builder.addCase(forhåndsvarsleEllerSendTilAttestering.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                }))
+            );
+        });
+
+        builder.addCase(fortsettEtterForhåndsvarsel.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({

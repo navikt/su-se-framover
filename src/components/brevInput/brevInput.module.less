@@ -1,0 +1,21 @@
+@import '~/styles/variables.less';
+
+.brevContainer {
+    margin-bottom: @spacing;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+
+    .textAreaContainer {
+        width: 30rem;
+    }
+
+    .seBrevContainer {
+        width: 30em;
+
+        > :first-child {
+            margin-bottom: @spacing-s;
+        }
+    }
+}

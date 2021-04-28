@@ -1,11 +1,11 @@
-import { eqNumber } from 'fp-ts/lib/Eq';
+import * as N from 'fp-ts/lib/number';
 
 import { groupWhile, groupByEq, spanLeftWithIndex } from './arrayUtils';
 import { pipe } from './fp';
 
 describe('groupByEq', () => {
     it('returns an array with each group as array', () =>
-        expect(groupByEq(eqNumber)([1, 1, 2, 2, 3, 3, 4, 4])).toEqual([
+        expect(groupByEq(N.Eq)([1, 1, 2, 2, 3, 3, 4, 4])).toEqual([
             [1, 1],
             [2, 2],
             [3, 3],
@@ -13,7 +13,7 @@ describe('groupByEq', () => {
         ]));
 
     it('returns an array with each group as array 2', () =>
-        expect(groupByEq(eqNumber)([1, 1, 3, 3, 1, 1])).toEqual([
+        expect(groupByEq(N.Eq)([1, 1, 3, 3, 1, 1])).toEqual([
             [1, 1],
             [3, 3],
             [1, 1],

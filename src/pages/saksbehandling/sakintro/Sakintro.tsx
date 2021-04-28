@@ -2,6 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import classNames from 'classnames';
 import { isEmpty } from 'fp-ts/lib/Array';
 import AlertStripe, { AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import { EtikettInfo } from 'nav-frontend-etiketter';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
@@ -43,6 +44,7 @@ import {
     erRevurderingSimulert,
     erRevurderingOpprettet,
     erRevurderingUnderkjent,
+    erForhåndsvarslingBesluttet,
 } from '../revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
@@ -70,36 +72,6 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
         default:
             return 'display.søknad.lukket.ukjentLukking';
     }
-};
-
-const UnderkjennelsesInformasjon = (props: { underkjennelse: Underkjennelse; intl: IntlShape }) => {
-    return (
-        <div className={styles.underkjennelseContainer}>
-            <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
-                {props.intl.formatMessage({
-                    id: 'behandling.attestering.advarsel',
-                })}
-            </AlertStripe>
-            <div className={styles.underkjennelse}>
-                <div className={styles.underkjenningsinfo}>
-                    <Element>
-                        {props.intl.formatMessage({
-                            id: 'display.attestering.sendtTilbakeFordi',
-                        })}
-                    </Element>
-                    <Normaltekst>{grunnToText(props.underkjennelse.grunn, props.intl)}</Normaltekst>
-                </div>
-                <div className={styles.underkjenningsinfo}>
-                    <Element>
-                        {props.intl.formatMessage({
-                            id: 'display.attestering.kommentar',
-                        })}
-                    </Element>
-                    <Normaltekst>{props.underkjennelse.kommentar}</Normaltekst>
-                </div>
-            </div>
-        </div>
-    );
 };
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
@@ -148,7 +120,6 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                     )}
                 </div>
             </div>
-
             {props.sak.søknader.length > 0 ? (
                 <div className={styles.søknadOgUtbetalingContainer}>
                     <ÅpneSøknader
@@ -175,6 +146,36 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
             ) : (
                 'Ingen søknader'
             )}
+        </div>
+    );
+};
+
+const UnderkjennelsesInformasjon = (props: { underkjennelse: Underkjennelse; intl: IntlShape }) => {
+    return (
+        <div className={styles.underkjennelseContainer}>
+            <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
+                {props.intl.formatMessage({
+                    id: 'behandling.attestering.advarsel',
+                })}
+            </AlertStripe>
+            <div className={styles.underkjennelse}>
+                <div className={styles.underkjenningsinfo}>
+                    <Element>
+                        {props.intl.formatMessage({
+                            id: 'display.attestering.sendtTilbakeFordi',
+                        })}
+                    </Element>
+                    <Normaltekst>{grunnToText(props.underkjennelse.grunn, props.intl)}</Normaltekst>
+                </div>
+                <div className={styles.underkjenningsinfo}>
+                    <Element>
+                        {props.intl.formatMessage({
+                            id: 'display.attestering.kommentar',
+                        })}
+                    </Element>
+                    <Normaltekst>{props.underkjennelse.kommentar}</Normaltekst>
+                </div>
+            </div>
         </div>
     );
 };
@@ -260,9 +261,18 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
                                     <div>
-                                        <Undertittel>
-                                            {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
-                                        </Undertittel>
+                                        <div className={styles.tittel}>
+                                            <Undertittel>
+                                                {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
+                                            </Undertittel>
+                                            {r.forhåndsvarsel && !erForhåndsvarslingBesluttet(r) && (
+                                                <EtikettInfo className={styles.etikett}>
+                                                    {props.intl.formatMessage({
+                                                        id: 'revurdering.label.forhåndsvarselSendt',
+                                                    })}
+                                                </EtikettInfo>
+                                            )}
+                                        </div>
                                         <div className={styles.dato}>
                                             <Element>
                                                 {props.intl.formatMessage({ id: 'revurdering.opprettet' })}{' '}
