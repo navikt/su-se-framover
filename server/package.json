@@ -13,7 +13,7 @@
     "license": "ISC",
     "engines": {
         "node": ">=14 <15",
-        "npm": ">=7 <8"
+        "npm": ">=6 <7"
     },
     "dependencies": {
         "@tsconfig/node12": "^1.0.7",

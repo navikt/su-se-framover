@@ -8,8 +8,6 @@ ENV PORT 80
 
 USER root
 
-RUN npm install -g npm@7
-
 RUN mkdir -p ${BASE_DIR}
 
 COPY dist ${FRONTEND_DIR}

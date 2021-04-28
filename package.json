@@ -33,7 +33,7 @@
     "license": "MIT",
     "engines": {
         "node": ">=14 <15",
-        "npm": ">=7 <8"
+        "npm": ">=6 <7"
     },
     "bugs": {
         "url": "https://github.com/navikt/su-se-framover/issues"
@@ -152,7 +152,6 @@
         "@types/yup": "^0.29.11",
         "@typescript-eslint/eslint-plugin": "^4.22.0",
         "@typescript-eslint/parser": "^4.22.0",
-        "enzyme-adapter-react-16": "^1.15.6",
         "eslint": "^7.25.0",
         "eslint-config-prettier": "^8.2.0",
         "eslint-import-resolver-typescript": "^2.4.0",

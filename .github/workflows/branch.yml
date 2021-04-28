@@ -3,7 +3,7 @@ name: Bygg og deploy branch til dev
 on:
     push:
         branches:
-            - bump_node_v14
+            - changethis
 
 env:
     IMAGE: docker.pkg.github.com/${{ github.repository }}/su-se-framover:${{ github.sha }}
