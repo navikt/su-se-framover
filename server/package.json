@@ -11,6 +11,10 @@
     "keywords": [],
     "author": "",
     "license": "ISC",
+    "engines": {
+        "node": ">=14 <15",
+        "npm": ">=6 <7"
+    },
     "dependencies": {
         "@tsconfig/node12": "^1.0.7",
         "@types/connect-redis": "0.0.16",
