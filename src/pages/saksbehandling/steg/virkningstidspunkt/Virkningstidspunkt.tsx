@@ -85,7 +85,9 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
 
     form.watch((values) => {
         if (values.fraOgMed !== null && values.tilOgMed === null) {
-            form.setValue('tilOgMed', DateFns.endOfMonth(DateFns.addMonths(values.fraOgMed, 11)));
+            form.setValue('tilOgMed', DateFns.endOfMonth(DateFns.addMonths(values.fraOgMed, 11)), {
+                shouldValidate: true,
+            });
         }
     });
 
