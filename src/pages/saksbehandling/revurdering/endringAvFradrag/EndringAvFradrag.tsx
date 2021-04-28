@@ -68,20 +68,21 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
     };
 
     const beregnOgSimulerRevurdering = async (values: EndringAvFradragFormData): Promise<boolean> => {
-        const res = await dispatch(
-            lagreUføregrunnlag({
-                sakId: props.sakId,
-                revurderingId: props.revurdering.id,
-                uføregrad: values.uføregrad ? parseInt(values.uføregrad, 10) : null,
-                forventetInntekt: values.forventetInntekt ? parseInt(values.forventetInntekt, 10) : null,
-                periode: {
-                    fraOgMed: props.revurdering.periode.fraOgMed,
-                    tilOgMed: props.revurdering.periode.tilOgMed,
-                },
-            })
-        );
-
-        if (!res || !lagreUføregrunnlag.fulfilled.match(res)) return false;
+        if (erGregulering(props.revurdering.årsak)) {
+            const res = await dispatch(
+                lagreUføregrunnlag({
+                    sakId: props.sakId,
+                    revurderingId: props.revurdering.id,
+                    uføregrad: values.uføregrad ? parseInt(values.uføregrad, 10) : null,
+                    forventetInntekt: values.forventetInntekt ? parseInt(values.forventetInntekt, 10) : null,
+                    periode: {
+                        fraOgMed: props.revurdering.periode.fraOgMed,
+                        tilOgMed: props.revurdering.periode.tilOgMed,
+                    },
+                })
+            );
+            if (!res || !lagreUføregrunnlag.fulfilled.match(res)) return false;
+        }
 
         return beregnOgSimuler.fulfilled.match(
             await dispatch(
