@@ -37,7 +37,7 @@ import {
     søknadMottatt,
     getIverksatteAvslåtteSøknader,
 } from '../../../lib/søknadUtils';
-import { Revurdering } from '../../../types/Revurdering';
+import { OpprettetRevurderingGrunn, Revurdering } from '../../../types/Revurdering';
 import {
     erRevurderingTilAttestering,
     erRevurderingIverksatt,
@@ -265,13 +265,15 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                                             <Undertittel>
                                                 {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
                                             </Undertittel>
-                                            {r.forhåndsvarsel && !erForhåndsvarslingBesluttet(r) && (
-                                                <EtikettInfo className={styles.etikett}>
-                                                    {props.intl.formatMessage({
-                                                        id: 'revurdering.label.forhåndsvarselSendt',
-                                                    })}
-                                                </EtikettInfo>
-                                            )}
+                                            {r.forhåndsvarsel &&
+                                                r.årsak !== OpprettetRevurderingGrunn.REGULER_GRUNNBELØP &&
+                                                !erForhåndsvarslingBesluttet(r) && (
+                                                    <EtikettInfo className={styles.etikett}>
+                                                        {props.intl.formatMessage({
+                                                            id: 'revurdering.label.forhåndsvarselSendt',
+                                                        })}
+                                                    </EtikettInfo>
+                                                )}
                                         </div>
                                         <div className={styles.dato}>
                                             <Element>
