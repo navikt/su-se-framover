@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Ingress, Innholdstittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -25,10 +24,10 @@ import { Fradragstype, FradragTilhører } from '~types/Fradrag';
 import { Revurdering } from '~types/Revurdering';
 import { UføreResultat } from '~types/Vilkår';
 
-import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregning-nb';
-import uføreMessage from '../../steg/uførhet/uførhet-nb';
+import uføreMessages from '../../steg/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
+import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
 import { erGregulering, erRevurderingSimulert } from '../revurderingUtils';
 
 import styles from './endringAvFradrag.module.less';
@@ -47,7 +46,10 @@ enum SubmittedStatus {
 
 const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) => {
     const { beregnOgSimulerStatus } = useAppSelector((state) => state.sak);
-    const intl = useI18n({ messages: { ...sharedMessages, ...fradragMessages, ...uføreMessage } });
+    const lagreUføregrunnlagStatus = useAppSelector(
+        (state) => state.sak.revurderingGrunnlagSimulering[props.revurdering.id] ?? RemoteData.initial
+    );
+    const intl = useI18n({ messages: { ...sharedMessages, ...uføreMessages } });
     const dispatch = useAppDispatch();
     const history = useHistory();
 
@@ -166,23 +168,6 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
         validateOnChange: hasSubmitted(),
     });
 
-    const feilkodeTilFeilmelding = (feilkode: string | undefined) => {
-        switch (feilkode) {
-            case 'fant_ikke_revurdering':
-                return intl.formatMessage({ id: 'feil.fant.ikke.revurdering' });
-            case 'ugyldig_tilstand':
-                return intl.formatMessage({ id: 'feil.ugyldig.tilstand' });
-            case 'siste_måned_ved_nedgang_i_stønaden':
-                return intl.formatMessage({ id: 'feil.siste.måned.ved.nedgang.i.stønaden' });
-            case 'simulering_feilet':
-                return intl.formatMessage({ id: 'feil.simulering.feilet' });
-            case 'ufullstendig_behandlingsinformasjon':
-                return intl.formatMessage({ id: 'feil.ufullstendig.behandlingsinformasjon' });
-            default:
-                return intl.formatMessage({ id: 'feil.ukjentFeil' });
-        }
-    };
-
     return (
         <form
             className={sharedStyles.revurderingContainer}
@@ -268,9 +253,10 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                     />
                 </div>
                 {RemoteData.isFailure(beregnOgSimulerStatus) && (
-                    <AlertStripeFeil className={sharedStyles.alertstripe}>
-                        {feilkodeTilFeilmelding(beregnOgSimulerStatus.error.body?.code)}
-                    </AlertStripeFeil>
+                    <RevurderingskallFeilet error={beregnOgSimulerStatus.error} />
+                )}
+                {RemoteData.isFailure(lagreUføregrunnlagStatus) && (
+                    <RevurderingskallFeilet error={lagreUføregrunnlagStatus.error} />
                 )}
                 <RevurderingBunnknapper
                     onNesteClick="submit"
@@ -284,10 +270,12 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering }) =>
                         customFormikSubmit(formik, handleLagreOgFortsettSenereClick);
                     }}
                     onNesteClickSpinner={
-                        submittedStatus === SubmittedStatus.NESTE && RemoteData.isPending(beregnOgSimulerStatus)
+                        submittedStatus === SubmittedStatus.NESTE &&
+                        (RemoteData.isPending(beregnOgSimulerStatus) || RemoteData.isPending(lagreUføregrunnlagStatus))
                     }
                     onLagreOgFortsettSenereClickSpinner={
-                        submittedStatus === SubmittedStatus.LAGRE && RemoteData.isPending(beregnOgSimulerStatus)
+                        submittedStatus === SubmittedStatus.LAGRE &&
+                        (RemoteData.isPending(beregnOgSimulerStatus) || RemoteData.isPending(lagreUføregrunnlagStatus))
                     }
                 />
             </div>

@@ -132,8 +132,12 @@ export enum RevurderingErrorCodes {
     KUNNE_IKKE_OPPRETTE_OPPGAVE = 'kunne_ikke_opprette_oppgave',
     KUNNE_IKKE_DISTRIBUERE_BREV = 'kunne_ikke_distribuere_brev',
     KUNNE_IKKE_JOURNALFØRE_BREV = 'kunne_ikke_journalføre_brev',
+    UFULLSTENDIG_BEHANDLINGSINFORMASJON = 'ufullstendig_behandlingsinformasjon',
+    SIMULERING_FEILET = 'simulering_feilet',
+    SISTE_MÅNED_VED_NEDGANG_I_STØNADEN = 'siste_måned_ved_nedgang_i_stønaden',
+    G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
+    MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL = 'mangler_beslutning_på_forhåndsvarsel',
 }
-
 export interface LeggTilUføreResponse {
     revurdering: Revurdering;
     simulertEndringGrunnlag: SimulertEndringGrunnlag;

@@ -13,5 +13,11 @@ export default {
     'feil.ugyldig.periode': 'Ugyldig periode',
     'feil.ugyldig.tilstand': 'Ugyldig tilstand',
 
+    'feil.siste.måned.ved.nedgang.i.stønaden': 'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
+    'feil.simulering.feilet': 'Simulering feilet',
+    'feil.ufullstendig.behandlingsinformasjon': 'Ufullstendig behandlingsinformasjon',
+    'feil.gregulering.kan.ikke.føre.til.opphør': 'G-regulering kan ikke føre til opphør',
+    'feil.mangler.beslutning.på.forhåndsvarsel': 'Mangler beslutning på forhåndsvarsel',
+
     'feil.ukjentFeil': 'Ukjent feil',
 };
