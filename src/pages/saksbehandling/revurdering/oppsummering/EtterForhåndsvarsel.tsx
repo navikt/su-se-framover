@@ -191,8 +191,10 @@ const EtterForhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevur
                         ? props.intl.formatMessage({ id: 'knapp.sendtBrevOgAvslutt' })
                         : undefined
                 }
-                tilbakeUrl={Routes.saksoversiktValgtSak.createURL({
+                tilbakeUrl={Routes.revurderValgtRevurdering.createURL({
                     sakId: props.sakId,
+                    steg: RevurderingSteg.EndringAvFradrag,
+                    revurderingId: props.revurdering.id,
                 })}
                 onNesteClickSpinner={RemoteData.isPending(sendtTilAttesteringStatus)}
             />

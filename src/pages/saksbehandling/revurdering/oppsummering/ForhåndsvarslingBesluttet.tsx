@@ -9,6 +9,7 @@ import * as pdfApi from '~api/pdfApi';
 import { BrevInput } from '~components/brevInput/BrevInput';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import * as Routes from '~lib/routes';
+import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch } from '~redux/Store';
 import { RevurderingTilAttestering, SimulertRevurdering } from '~types/Revurdering';
 
@@ -90,8 +91,10 @@ const ForhåndsvarslingBesluttet = (props: { sakId: string; revurdering: Simuler
             <RevurderingBunnknapper
                 onNesteClick={'submit'}
                 nesteKnappTekst={props.intl.formatMessage({ id: 'knapp.sendTilAttestering' })}
-                tilbakeUrl={Routes.saksoversiktValgtSak.createURL({
+                tilbakeUrl={Routes.revurderValgtRevurdering.createURL({
                     sakId: props.sakId,
+                    steg: RevurderingSteg.EndringAvFradrag,
+                    revurderingId: props.revurdering.id,
                 })}
                 onNesteClickSpinner={RemoteData.isPending(sendtTilAttesteringStatus)}
             />
