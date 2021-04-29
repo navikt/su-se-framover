@@ -3,7 +3,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { oppdaterRevurderingsPeriode as oppdaterRevurdering } from '~features/revurdering/revurderingActions';
-import { startenPåNesteMåned as førsteINesteMåned } from '~lib/dateUtils';
+import { startenPåForrigeMåned } from '~lib/dateUtils';
 import * as Routes from '~lib/routes';
 import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -64,7 +64,7 @@ export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering
         sortertUtbetalinger[sortertUtbetalinger.length - 1],
     ];
 
-    const minFraOgMed = DateFns.max([new Date(førsteUtbetaling.fraOgMed), førsteINesteMåned(new Date())]);
+    const minFraOgMed = DateFns.max([new Date(førsteUtbetaling.fraOgMed), startenPåForrigeMåned(new Date())]);
     const maxFraOgMed = new Date(sisteUtbetaling.tilOgMed);
 
     return (

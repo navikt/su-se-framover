@@ -1,12 +1,12 @@
-FROM navikt/node-express:12.2.0-alpine
+FROM navikt/node-express:14-alpine
 
 ENV NODE_ENV production
 ENV BASE_DIR /app
 ENV FRONTEND_DIR ${BASE_DIR}/frontend
 ENV BACKEND_DIR ${BASE_DIR}/server
-ENV PORT 80
+ENV PORT 8080
 
-RUN mkdir -p ${BASE_DIR}
+USER root
 
 COPY dist ${FRONTEND_DIR}
 COPY server ${BACKEND_DIR}
@@ -18,5 +18,7 @@ RUN npm ci
 RUN npm run build
 
 EXPOSE ${PORT}
+
+USER apprunner
 
 CMD ["npm", "start"]

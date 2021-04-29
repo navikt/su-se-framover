@@ -11,6 +11,7 @@ import DatePicker from 'react-datepicker';
 import { ApiError } from '~api/apiClient';
 import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
+import { erDatoFørStartenPåNesteMåned, startenPåForrigeMåned } from '~lib/dateUtils';
 import { customFormikSubmit } from '~lib/formikUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
@@ -32,8 +33,27 @@ interface OpprettRevurderingFormData {
 const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter((x) => x !== OpprettetRevurderingGrunn.MIGRERT);
 
 const schema = yup.object<OpprettRevurderingFormData>({
-    fraOgMed: yup.date().nullable().required(),
-    årsak: yup.mixed<OpprettetRevurderingGrunn>().nullable().oneOf(gyldigeÅrsaker).required(),
+    fraOgMed: yup
+        .date()
+        .nullable()
+        .required()
+        .test({
+            name: 'fraOgMed kan kun starte fra neste måned for årsaker som ikke er g-regulering',
+            message: 'Du kan ikke velge en dato bakover i tid for årsaker som ikke er G-regulering',
+            test: function (val) {
+                const årsak = this.parent.årsak;
+
+                if (
+                    !DateFns.isBefore(val, startenPåForrigeMåned(new Date())) &&
+                    årsak === OpprettetRevurderingGrunn.REGULER_GRUNNBELØP
+                ) {
+                    return true;
+                }
+
+                return !erDatoFørStartenPåNesteMåned(val);
+            },
+        }),
+    årsak: yup.mixed<OpprettetRevurderingGrunn>().nullable().required(),
     begrunnelse: yup.string().nullable().required(),
 });
 
@@ -107,12 +127,15 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                 return intl.formatMessage({ id: 'feil.ugyldig.årsak' });
             case 'perioden_må_være_innenfor_stønadsperioden':
                 return intl.formatMessage({ id: 'feil.perioden.må.være.innenfor.stønadsperioden' });
+            case 'periode_og_årsak_kombinasjon_er_ugyldig':
+                return intl.formatMessage({ id: 'feil.periode.og.årsak.kombinasjon.er.ugyldig' });
             default:
                 return intl.formatMessage({ id: 'feil.ukjentFeil' });
         }
     };
 
     const periode = formik.values.fraOgMed ? { fraOgMed: formik.values.fraOgMed } : null;
+
     return (
         <form className={sharedStyles.revurderingContainer} onSubmit={formik.handleSubmit}>
             <Innholdstittel className={sharedStyles.tittel}>
@@ -124,24 +147,26 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                     <div className={classNames(styles.datoContainerWrapper, styles.formElement)}>
                         <div className={styles.datoContainer}>
                             <label htmlFor="fom">{intl.formatMessage({ id: 'datovelger.fom.legend' })}</label>
-                            <DatePicker
-                                id="fom"
-                                selected={formik.values.fraOgMed}
-                                onChange={(date) => {
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        fraOgMed: Array.isArray(date) ? date[0] : date,
-                                    }));
-                                }}
-                                dateFormat="MM/yyyy"
-                                showMonthYearPicker
-                                isClearable
-                                selectsEnd
-                                startDate={periode?.fraOgMed}
-                                minDate={props.minFraOgMed}
-                                maxDate={props.maxFraOgMed}
-                                autoComplete="off"
-                            />
+                            <span>
+                                <DatePicker
+                                    id="fom"
+                                    selected={formik.values.fraOgMed}
+                                    onChange={(date) => {
+                                        formik.setValues((v) => ({
+                                            ...v,
+                                            fraOgMed: Array.isArray(date) ? date[0] : date,
+                                        }));
+                                    }}
+                                    dateFormat="MM/yyyy"
+                                    showMonthYearPicker
+                                    isClearable
+                                    selectsEnd
+                                    startDate={periode?.fraOgMed}
+                                    minDate={props.minFraOgMed}
+                                    maxDate={props.maxFraOgMed}
+                                    autoComplete="off"
+                                />
+                            </span>
                             {formik.errors.fraOgMed && <Feilmelding>{formik.errors.fraOgMed}</Feilmelding>}
                         </div>
                     </div>
@@ -160,13 +185,28 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                         <option value="" disabled>
                             {intl.formatMessage({ id: 'input.årsak.value.default' })}
                         </option>
-                        {gyldigeÅrsaker.map((grunn, index) => (
-                            <option value={grunn} key={index}>
-                                {intl.formatMessage({
-                                    id: getRevurderingsårsakMessageId(grunn),
-                                })}
-                            </option>
-                        ))}
+                        {gyldigeÅrsaker.map((grunn) => {
+                            if (
+                                formik.values.fraOgMed &&
+                                erDatoFørStartenPåNesteMåned(formik.values.fraOgMed) &&
+                                grunn !== OpprettetRevurderingGrunn.REGULER_GRUNNBELØP
+                            ) {
+                                return (
+                                    <option value={grunn} key={grunn} disabled>
+                                        {intl.formatMessage({
+                                            id: getRevurderingsårsakMessageId(grunn),
+                                        })}
+                                    </option>
+                                );
+                            }
+                            return (
+                                <option value={grunn} key={grunn}>
+                                    {intl.formatMessage({
+                                        id: getRevurderingsårsakMessageId(grunn),
+                                    })}
+                                </option>
+                            );
+                        })}
                     </Select>
 
                     <div className={styles.formElement}>

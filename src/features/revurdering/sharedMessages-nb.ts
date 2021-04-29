@@ -31,4 +31,5 @@ export default {
     'feil.simulering.feilet': 'Simulering feilet',
     'feil.ufullstendig.behandlingsinformasjon': 'Ufullstendig behandlingsinformasjon',
     'feil.g_regulering_kan_ikke_føre_til_opphør': 'G-regulering kan ikke føre til opphør',
+    'feil.periode.og.årsak.kombinasjon.er.ugyldig': 'Angitt periode og årsak er ugyldig',
 };

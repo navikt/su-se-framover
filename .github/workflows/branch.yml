@@ -3,7 +3,7 @@ name: Bygg og deploy branch til dev
 on:
     push:
         branches:
-            - legg-til-perioder-på-grunnlagsdata-wait-a-bit
+            - changethis
 
 env:
     IMAGE: docker.pkg.github.com/${{ github.repository }}/su-se-framover:${{ github.sha }}
@@ -16,7 +16,7 @@ jobs:
             - uses: actions/checkout@v1
             - uses: actions/setup-node@v1
               with:
-                  node-version: '12.x'
+                  node-version: '14.x'
             - name: install deps
               run: npm ci
             - name: lint and typecheck

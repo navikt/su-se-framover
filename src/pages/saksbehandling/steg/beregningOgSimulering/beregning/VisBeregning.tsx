@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
 import * as Ord from 'fp-ts/Ord';
-import { Element, Normaltekst, Systemtittel, Undertekst } from 'nav-frontend-typografi';
+import { Element, Systemtittel, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
@@ -48,20 +48,20 @@ const DetaljertFradrag = (props: {
     };
     detaljer: Array<{ label: string; verdi: string; epsUtland?: boolean }>;
 }) => (
-    <div className={styles.detaljertfradrag}>
-        <Normaltekst className={styles.linje}>
-            <span>{props.tittel.label}</span>
-            <span>{props.tittel.verdi}</span>
-        </Normaltekst>
-        <ul className={styles.detaljertFradragliste}>
+    <>
+        <span>{props.tittel.label}</span>
+        <span className={styles.alignTextRight}>{props.tittel.verdi}</span>
+        <>
             {props.detaljer.map((d) => (
-                <li key={d.label} className={d.epsUtland ? styles.linjeEpsUtland : styles.linje}>
-                    <Undertekst>{d.label}</Undertekst>
-                    <Undertekst>{d.verdi}</Undertekst>
-                </li>
+                <React.Fragment key={d.label}>
+                    <Undertekst className={d.epsUtland ? styles.additionalDetails : styles.detailedLinje}>
+                        {d.label}
+                    </Undertekst>
+                    <Undertekst className={styles.alignTextRight}>{d.verdi}</Undertekst>
+                </React.Fragment>
             ))}
-        </ul>
-    </div>
+        </>
+    </>
 );
 
 const VisBenyttetEpsFradrag = ({

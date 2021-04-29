@@ -6,7 +6,7 @@ metadata:
   labels:
     team: supstonad
 spec:
-  port: 80
+  port: 8080
   image: {{ image }}
   azure:
     application:
@@ -28,10 +28,10 @@ spec:
     min: 1
   liveness:
     path: isAlive
-    port: 80
+    port: 8080
   readiness:
     path: isReady
-    port: 80
+    port: 8080
   ingresses:
     - {{ingress}}
   vault:
