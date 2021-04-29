@@ -23,10 +23,7 @@ export default {
 
     'feil.noeGikkGalt': 'Noe gikk galt. Gå tilbake og prøv igjen',
     'feil.kanIkkeRevurdere': 'Det finnes ingen perioder for revurdering',
-    'feil.tidligst.neste.måned': 'Revurdering kan kun gjøres fra og med neste kalendermåned',
-    'feil.begrunnelse.kan.ikke.være.tom': 'Begrunnelse kan ikke være tom',
-    'feil.ugyldig.årsak': 'Ugyldig årsak',
-    'feil.perioden.må.være.innenfor.stønadsperioden': 'Perioden må være innenfor allerede valgt stønadsperiode',
+
     'feil.siste.måned.ved.nedgang.i.stønaden': 'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
     'feil.simulering.feilet': 'Simulering feilet',
     'feil.ufullstendig.behandlingsinformasjon': 'Ufullstendig behandlingsinformasjon',

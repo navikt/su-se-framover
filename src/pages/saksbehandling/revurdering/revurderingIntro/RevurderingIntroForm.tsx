@@ -2,14 +2,12 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Select, Textarea } from 'nav-frontend-skjema';
 import { Ingress, Innholdstittel, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~api/apiClient';
-import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { erDatoFørStartenPåNesteMåned, startenPåForrigeMåned } from '~lib/dateUtils';
 import { customFormikSubmit } from '~lib/formikUtils';
@@ -20,6 +18,8 @@ import { OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
+import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
+import { getRevurderingsårsakMessageId } from '../revurderingUtils';
 
 import messages from './revurderingIntro-nb';
 import styles from './revurderingIntro.module.less';
@@ -101,38 +101,6 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
         validationSchema: schema,
         validateOnChange: hasSubmitted(),
     });
-
-    const feilkodeTilFeilmelding = (feilkode: string | undefined) => {
-        // Dette er unionen av feilkodene til opprett/oppdater
-        switch (feilkode) {
-            case 'fant_ikke_sak':
-                return intl.formatMessage({ id: 'feil.fant.ikke.sak' });
-            case 'fant_ikke_aktør_id':
-                return intl.formatMessage({ id: 'feil.fant.ikke.aktør.id' });
-            case 'kunne_ikke_opprette_oppgave':
-                return intl.formatMessage({ id: 'feil.kunne.ikke.opprette.oppgave' });
-            case 'fant_ikke_revurdering':
-                return intl.formatMessage({ id: 'feil.fant.ikke.revurdering' });
-            case 'ugyldig_periode':
-                return intl.formatMessage({ id: 'feil.ugyldig.periode' });
-            case 'ugyldig_tilstand':
-                return intl.formatMessage({ id: 'feil.ugyldig.tilstand' });
-            case 'ingenting_å_revurdere_i_perioden':
-                return intl.formatMessage({ id: 'feil.kanIkkeRevurdere' });
-            case 'tidligest_neste_måned':
-                return intl.formatMessage({ id: 'feil.tidligst.neste.måned' });
-            case 'begrunnelse_kan_ikke_være_tom':
-                return intl.formatMessage({ id: 'feil.begrunnelse.kan.ikke.være.tom' });
-            case 'ugyldig_årsak':
-                return intl.formatMessage({ id: 'feil.ugyldig.årsak' });
-            case 'perioden_må_være_innenfor_stønadsperioden':
-                return intl.formatMessage({ id: 'feil.perioden.må.være.innenfor.stønadsperioden' });
-            case 'periode_og_årsak_kombinasjon_er_ugyldig':
-                return intl.formatMessage({ id: 'feil.periode.og.årsak.kombinasjon.er.ugyldig' });
-            default:
-                return intl.formatMessage({ id: 'feil.ukjentFeil' });
-        }
-    };
 
     const periode = formik.values.fraOgMed ? { fraOgMed: formik.values.fraOgMed } : null;
 
@@ -219,10 +187,8 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                         />
                     </div>
                 </div>
-                {hasSubmitted() && RemoteData.isFailure(props.nesteClickStatus) && (
-                    <AlertStripe type="feil" className={sharedStyles.alertstripe}>
-                        {feilkodeTilFeilmelding(props.nesteClickStatus.error.body?.code)}
-                    </AlertStripe>
+                {RemoteData.isFailure(props.nesteClickStatus) && (
+                    <RevurderingskallFeilet error={props.nesteClickStatus.error} />
                 )}
                 <RevurderingBunnknapper
                     onNesteClick={() => {
