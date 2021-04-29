@@ -1,11 +1,9 @@
-import { Nullable } from '~lib/types';
-
 import { Periode } from './Periode';
 
 export interface Uføregrunnlag {
     periode: Periode<string>;
-    uføregrad: Nullable<number>;
-    forventetInntekt: Nullable<number>;
+    uføregrad: number;
+    forventetInntekt: number;
 }
 export interface Grunnlag {
     uføre: Uføregrunnlag[];
