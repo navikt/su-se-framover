@@ -27,7 +27,6 @@ import {
     OppholdIUtlandetStatus,
     PersonligOppmøte,
     PersonligOppmøteStatus,
-    Uførhet,
     UførhetStatus,
 } from '~types/Behandlingsinformasjon';
 import { Sak } from '~types/Sak';
@@ -128,15 +127,6 @@ export const hentSisteVurdertSaksbehandlingssteg = (behandling: Behandling) => {
             (x) => x.vilkårtype
         )
     );
-};
-
-// TODO ai: See if we can simplify with getStructEq({...})
-export const eqUførhet: Eq<Nullable<Uførhet>> = {
-    equals: (ufør1, ufør2) =>
-        ufør1?.status === ufør2?.status &&
-        ufør1?.uføregrad === ufør2?.uføregrad &&
-        ufør1?.forventetInntekt === ufør2?.forventetInntekt &&
-        ufør1?.begrunnelse === ufør2?.begrunnelse,
 };
 
 export const eqFlyktning: Eq<Nullable<Flyktning>> = {

@@ -3,7 +3,6 @@ import { Nullable } from '~lib/types';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import {
     Behandlingsinformasjon,
-    UførhetStatus,
     FlyktningStatus,
     LovligOppholdStatus,
     FastOppholdINorgeStatus,
@@ -13,6 +12,7 @@ import {
     PersonligOppmøte,
     InstitusjonsoppholdStatus,
     isPerson,
+    UførhetStatus,
 } from '~types/Behandlingsinformasjon';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 

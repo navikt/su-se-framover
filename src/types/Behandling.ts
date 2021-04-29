@@ -3,8 +3,9 @@ import { Simulering } from '~types/Simulering';
 
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
+import { Grunnlag } from './Grunnlag';
 import { Søknad } from './Søknad';
-import { Vilkårsvurderinger } from './Vilkårsvurdering';
+import { Vilkårsvurderinger } from './Vilkår';
 
 export interface Behandling {
     id: string;
@@ -20,6 +21,7 @@ export interface Behandling {
     hendelser: Nullable<Hendelse[]>;
     satsBeløp: Nullable<number>;
     stønadsperiode: Nullable<Behandlingsperiode>;
+    grunnlag: Grunnlag;
 }
 
 export interface Behandlingsperiode {

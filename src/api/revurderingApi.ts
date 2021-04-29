@@ -1,7 +1,10 @@
 import { formatISO } from 'date-fns';
 
+import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
-import { Fradrag, Periode } from '~types/Fradrag';
+import { Fradrag } from '~types/Fradrag';
+import { SimulertEndringGrunnlag } from '~types/Grunnlag';
+import { Periode } from '~types/Periode';
 import {
     OpprettetRevurdering,
     SimulertRevurdering,
@@ -11,6 +14,7 @@ import {
     OpprettetRevurderingGrunn,
     RevurderingErrorCodes,
     BeslutningEtterForhåndsvarsling,
+    LeggTilUføreResponse,
 } from '~types/Revurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -52,7 +56,6 @@ export async function beregnOgSimuler(
         revurderingId: string;
         periode: Periode<string>;
         fradrag: Fradrag[];
-        forventetInntekt?: number;
     }
 ): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
@@ -64,7 +67,6 @@ export async function beregnOgSimuler(
                 tilOgMed: formatISO(new Date(arg.periode.tilOgMed), { representation: 'date' }),
             },
             fradrag: arg.fradrag,
-            forventetInntekt: arg.forventetInntekt,
         },
     });
 }
@@ -144,5 +146,36 @@ export async function fortsettEtterForhåndsvarsel(
             valg,
             fritekstTilBrev,
         },
+    });
+}
+
+export async function lagreUføregrunnlag(arg: {
+    sakId: string;
+    revurderingId: string;
+    periode: Periode<string>;
+    uføregrad: Nullable<number>;
+    forventetInntekt: Nullable<number>;
+}) {
+    return apiClient<LeggTilUføreResponse>({
+        url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/uføregrunnlag`,
+        method: 'POST',
+        body: {
+            uføregrad: arg.uføregrad,
+            forventetInntekt: arg.forventetInntekt,
+            periode: {
+                fraOgMed: arg.periode.fraOgMed,
+                tilOgMed: arg.periode.tilOgMed,
+            },
+        },
+    });
+}
+
+export async function hentUføregrunnlag(
+    sakId: string,
+    revurderingId: string
+): Promise<ApiClientResult<SimulertEndringGrunnlag>> {
+    return apiClient<SimulertEndringGrunnlag>({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/uføregrunnlag`,
+        method: 'GET',
     });
 }

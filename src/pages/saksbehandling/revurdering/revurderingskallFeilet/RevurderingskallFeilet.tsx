@@ -34,10 +34,18 @@ const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) 
             return intl.formatMessage({ id: 'feil.kunne.ikke.distribuere.brev' });
         case RevurderingErrorCodes.ALLEREDE_FORHÅNDSVARSLET:
             return intl.formatMessage({ id: 'feil.allerede.forhåndsvarslet' });
+        case RevurderingErrorCodes.UFULLSTENDIG_BEHANDLINGSINFORMASJON:
+            return intl.formatMessage({ id: 'feil.ufullstendig.behandlingsinformasjon' });
+        case RevurderingErrorCodes.SIMULERING_FEILET:
+            return intl.formatMessage({ id: 'feil.simulering.feilet' });
+        case RevurderingErrorCodes.SISTE_MÅNED_VED_NEDGANG_I_STØNADEN:
+            return intl.formatMessage({ id: 'feil.siste.måned.ved.nedgang.i.stønaden' });
+        case RevurderingErrorCodes.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR:
+            return intl.formatMessage({ id: 'feil.gregulering.kan.ikke.føre.til.opphør' });
+        case RevurderingErrorCodes.MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL:
+            return intl.formatMessage({ id: 'feil.mangler.beslutning.på.forhåndsvarsel' });
         case RevurderingErrorCodes.INGENTING_Å_REVURDERE_I_PERIODEN:
             return intl.formatMessage({ id: 'feil.kan.ikke.revurdere' });
-        case RevurderingErrorCodes.TIDLIGST_NESTE_MÅNED:
-            return intl.formatMessage({ id: 'feil.tidligst.neste.måned' });
         case RevurderingErrorCodes.BEGRUNNELSE_KAN_IKKE_VÆRE_TOM:
             return intl.formatMessage({ id: 'feil.begrunnelse.kan.ikke.være.tom' });
         case RevurderingErrorCodes.PERIODEN_MÅ_VÆRE_INNENFOR_STØNADSPERIODEN:

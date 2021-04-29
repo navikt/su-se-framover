@@ -4,6 +4,8 @@ import * as S from 'fp-ts/lib/string';
 
 import { eqNullable, Nullable } from '~lib/types';
 
+import { Periode } from './Periode';
+
 export interface Fradrag {
     periode: Nullable<Periode<string>>;
     type: Fradragstype;
@@ -24,11 +26,6 @@ export const eqFradragBortsettFraPeriode = struct<Omit<Fradrag, 'periode'>>({
     utenlandskInntekt: eqNullable(eqUtenlandskInntekt),
     tilhører: S.Eq,
 });
-
-export interface Periode<T = Date> {
-    fraOgMed: T;
-    tilOgMed: T;
-}
 
 export interface UtenlandskInntekt {
     beløpIUtenlandskValuta: number;

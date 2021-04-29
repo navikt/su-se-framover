@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, Dictionary } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
 import * as behandlingApi from '~api/behandlingApi';
@@ -11,6 +11,8 @@ import {
     beregnOgSimuler,
     iverksettRevurdering,
     oppdaterRevurderingsPeriode,
+    lagreUføregrunnlag as lagreUføregrunnlagForRevurdering,
+    hentUføregrunnlag as hentUføregrunnlagForRevurdering,
     opprettRevurdering,
     sendRevurderingTilAttestering,
     underkjennRevurdering,
@@ -23,8 +25,11 @@ import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemote
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
+import { SimulertEndringGrunnlag } from '~types/Grunnlag';
+import { Periode } from '~types/Periode';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
+import { UføreResultat } from '~types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<
@@ -129,6 +134,26 @@ export const lagreBehandlingsinformasjon = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const lagreUføregrunnlag = createAsyncThunk<
+    Behandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        periode: Periode<string>;
+        uføregrad: Nullable<number>;
+        forventetInntekt: Nullable<number>;
+        begrunnelse: string;
+        resultat: UføreResultat;
+    },
+    { rejectValue: ApiError }
+>('behandling/grunnlag/uføre', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreUføregrunnlag(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const startBeregning = createAsyncThunk<
     Behandling,
     { sakId: string; behandlingId: string; sats: Sats; fradrag: Fradrag[]; begrunnelse: Nullable<string> },
@@ -224,10 +249,12 @@ export const hentLukketSøknadBrevutkast = createAsyncThunk<
 
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
+    revurderingGrunnlagSimulering: Dictionary<RemoteData.RemoteData<ApiError, SimulertEndringGrunnlag>>;
     stansUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
     gjenopptaUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<ApiError, null>;
     lagreBehandlingsinformasjonStatus: RemoteData.RemoteData<ApiError, null>;
+    lagreUføregrunnlagStatus: RemoteData.RemoteData<ApiError, null>;
     beregningStatus: RemoteData.RemoteData<ApiError, null>;
     simuleringStatus: RemoteData.RemoteData<ApiError, null>;
     sendtTilAttesteringStatus: RemoteData.RemoteData<ApiError, null>;
@@ -241,10 +268,12 @@ interface SakState {
 
 const initialState: SakState = {
     sak: RemoteData.initial,
+    revurderingGrunnlagSimulering: {},
     stansUtbetalingerStatus: RemoteData.initial,
     gjenopptaUtbetalingerStatus: RemoteData.initial,
     lagreVilkårsvurderingStatus: RemoteData.initial,
     lagreBehandlingsinformasjonStatus: RemoteData.initial,
+    lagreUføregrunnlagStatus: RemoteData.initial,
     beregningStatus: RemoteData.initial,
     simuleringStatus: RemoteData.initial,
     sendtTilAttesteringStatus: RemoteData.initial,
@@ -379,6 +408,26 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.lagreBehandlingsinformasjonStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, lagreUføregrunnlag, {
+            pending: (state) => {
+                state.lagreUføregrunnlagStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.lagreUføregrunnlagStatus = RemoteData.success(null);
+
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.lagreUføregrunnlagStatus = simpleRejectedActionToRemoteData(action);
             },
         });
 
@@ -545,6 +594,45 @@ export default createSlice({
             },
             rejected: (state, action) => {
                 state.oppdaterRevurderingStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, hentUføregrunnlagForRevurdering, {
+            pending: (state, action) => {
+                state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.success(action.payload);
+            },
+            rejected: (state, action) => {
+                state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = simpleRejectedActionToRemoteData(
+                    action
+                );
+            },
+        });
+
+        handleAsyncThunk(builder, lagreUføregrunnlagForRevurdering, {
+            pending: (state, action) => {
+                state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.success(
+                    action.payload.simulertEndringGrunnlag
+                );
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        revurderinger: sak.revurderinger.map((r) =>
+                            r.id === action.payload.revurdering.id ? action.payload.revurdering : r
+                        ),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = simpleRejectedActionToRemoteData(
+                    action
+                );
             },
         });
 

@@ -3,7 +3,8 @@ import { Nullable } from '~lib/types';
 import { Behandling, Attestering } from './Behandling';
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
-import { Periode } from './Fradrag';
+import { Grunnlag, SimulertEndringGrunnlag } from './Grunnlag';
+import { Periode } from './Periode';
 import { Simulering } from './Simulering';
 
 export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
@@ -19,7 +20,9 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     begrunnelse: Nullable<string>;
     forhåndsvarsel: Nullable<Forhåndsvarsel>;
     behandlingsinformasjon: Behandlingsinformasjon;
+    grunnlag: Grunnlag;
 }
+
 interface Beregninger {
     beregning: Beregning;
     revurdert: Beregning;
@@ -121,12 +124,11 @@ export enum OpprettetRevurderingGrunn {
 export enum RevurderingErrorCodes {
     ALLEREDE_FORHÅNDSVARSLET = 'allerede_forhåndsvarslet',
     INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
-    TIDLIGST_NESTE_MÅNED = 'tidligest_neste_måned',
     BEGRUNNELSE_KAN_IKKE_VÆRE_TOM = 'begrunnelse_kan_ikke_være_tom',
     PERIODEN_MÅ_VÆRE_INNENFOR_STØNADSPERIODEN = 'perioden_må_være_innenfor_stønadsperioden',
     KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET = 'kan_ikke_oppdatere_revurdering_som_er_forhåndsvarslet',
     PERIODE_OG_ÅRSAK_KOMBINASJON_ER_UGYLDIG = 'periode_og_årsak_kombinasjon_er_ugyldig',
-    FANT_IKKE_SAK = 'fant_ikke_Sak',
+    FANT_IKKE_SAK = 'fant_ikke_sak',
     FANT_IKKE_PERSON = 'fant_ikke_person',
     FANT_IKKE_AKTØR_ID = 'fant_ikke_aktør_id',
     FANT_IKKE_REVURDERING = 'fant_ikke_revurdering',
@@ -136,4 +138,13 @@ export enum RevurderingErrorCodes {
     KUNNE_IKKE_OPPRETTE_OPPGAVE = 'kunne_ikke_opprette_oppgave',
     KUNNE_IKKE_DISTRIBUERE_BREV = 'kunne_ikke_distribuere_brev',
     KUNNE_IKKE_JOURNALFØRE_BREV = 'kunne_ikke_journalføre_brev',
+    UFULLSTENDIG_BEHANDLINGSINFORMASJON = 'ufullstendig_behandlingsinformasjon',
+    SIMULERING_FEILET = 'simulering_feilet',
+    SISTE_MÅNED_VED_NEDGANG_I_STØNADEN = 'siste_måned_ved_nedgang_i_stønaden',
+    G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
+    MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL = 'mangler_beslutning_på_forhåndsvarsel',
+}
+export interface LeggTilUføreResponse {
+    revurdering: Revurdering;
+    simulertEndringGrunnlag: SimulertEndringGrunnlag;
 }

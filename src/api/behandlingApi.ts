@@ -2,6 +2,8 @@ import { Nullable } from '~lib/types';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
+import { Periode } from '~types/Periode';
+import { UføreResultat } from '~types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import apiClient, { ApiClientResult } from './apiClient';
@@ -132,6 +134,31 @@ export async function underkjenn(arg: {
         body: {
             grunn: arg.grunn,
             kommentar: arg.kommentar,
+        },
+    });
+}
+
+export async function lagreUføregrunnlag(arg: {
+    sakId: string;
+    behandlingId: string;
+    periode: Periode<string>;
+    uføregrad: Nullable<number>;
+    forventetInntekt: Nullable<number>;
+    begrunnelse: string;
+    resultat: UføreResultat;
+}) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/uføregrunnlag`,
+        method: 'POST',
+        body: {
+            uføregrad: arg.uføregrad,
+            forventetInntekt: arg.forventetInntekt,
+            periode: {
+                fraOgMed: arg.periode.fraOgMed,
+                tilOgMed: arg.periode.tilOgMed,
+            },
+            begrunnelse: arg.begrunnelse,
+            resultat: arg.resultat,
         },
     });
 }

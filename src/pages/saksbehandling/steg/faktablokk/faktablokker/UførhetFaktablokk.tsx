@@ -58,9 +58,9 @@ export const UførhetVilkårsblokk = (props: VilkårsblokkProps<'uførhet'>) => 
                             {
                                 tittel: saksbehandlingMessage('radio.uførhet.legend'),
                                 verdi:
-                                    props.behandlingsinformasjon.status === 'VilkårOppfylt'
+                                    props.behandlingsinformasjon.status === UførhetStatus.VilkårOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.ja' })
-                                        : props.behandlingsinformasjon.status === 'VilkårIkkeOppfylt'
+                                        : props.behandlingsinformasjon.status === UførhetStatus.VilkårIkkeOppfylt
                                         ? intl.formatMessage({ id: 'fraSøknad.nei' })
                                         : intl.formatMessage({ id: 'radio.label.uføresakTilBehandling' }),
                             },

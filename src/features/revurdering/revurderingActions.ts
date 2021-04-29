@@ -1,8 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
+import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
-import { Periode, Fradrag } from '~types/Fradrag';
+import { Fradrag } from '~types/Fradrag';
+import { SimulertEndringGrunnlag } from '~types/Grunnlag';
+import { Periode } from '~types/Periode';
 import {
     RevurderingTilAttestering,
     IverksattRevurdering,
@@ -12,6 +15,7 @@ import {
     OpprettetRevurderingGrunn,
     RevurderingErrorCodes,
     BeslutningEtterForhåndsvarsling,
+    LeggTilUføreResponse,
 } from '~types/Revurdering';
 
 import * as revurderingApi from '../../api/revurderingApi';
@@ -45,14 +49,13 @@ export const oppdaterRevurderingsPeriode = createAsyncThunk<
 
 export const beregnOgSimuler = createAsyncThunk<
     SimulertRevurdering,
-    { sakId: string; revurderingId: string; periode: Periode<string>; fradrag: Fradrag[]; forventetInntekt?: number },
+    { sakId: string; revurderingId: string; periode: Periode<string>; fradrag: Fradrag[] },
     { rejectValue: ApiError }
->('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode, fradrag, forventetInntekt }, thunkApi) => {
+>('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode, fradrag }, thunkApi) => {
     const res = await revurderingApi.beregnOgSimuler(sakId, {
         revurderingId,
         periode,
         fradrag,
-        forventetInntekt,
     });
     if (res.status === 'ok') {
         return res.data;
@@ -152,3 +155,36 @@ export const fortsettEtterForhåndsvarsel = createAsyncThunk<
         return thunkApi.rejectWithValue(res.error);
     }
 );
+
+export const lagreUføregrunnlag = createAsyncThunk<
+    LeggTilUføreResponse,
+    {
+        sakId: string;
+        revurderingId: string;
+        periode: Periode<string>;
+        uføregrad: Nullable<number>;
+        forventetInntekt: Nullable<number>;
+    },
+    { rejectValue: ApiError }
+>('revurdering/grunnlag/uføre/lagre', async (arg, thunkApi) => {
+    const res = await revurderingApi.lagreUføregrunnlag(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const hentUføregrunnlag = createAsyncThunk<
+    SimulertEndringGrunnlag,
+    {
+        sakId: string;
+        revurderingId: string;
+    },
+    { rejectValue: ApiError }
+>('revurdering/grunnlag/uføre/hent', async ({ sakId, revurderingId }, thunkApi) => {
+    const res = await revurderingApi.hentUføregrunnlag(sakId, revurderingId);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
