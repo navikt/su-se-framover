@@ -8,7 +8,6 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~api/apiClient';
-import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { erDatoFørStartenPåNesteMåned, startenPåForrigeMåned } from '~lib/dateUtils';
 import { customFormikSubmit } from '~lib/formikUtils';
@@ -20,6 +19,7 @@ import { OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
 import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
+import { getRevurderingsårsakMessageId } from '../revurderingUtils';
 
 import messages from './revurderingIntro-nb';
 import styles from './revurderingIntro.module.less';
