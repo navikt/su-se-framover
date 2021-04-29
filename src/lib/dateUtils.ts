@@ -55,7 +55,7 @@ export const toStringDateOrNull = (date: Date | null) => {
 
 export const startenPåNesteMåned = (date: Date) => DateFns.startOfMonth(DateFns.addMonths(date, 1));
 
-export const inneværendeOgEnMånedTilbakeITid = (date: Date) => DateFns.startOfMonth(DateFns.subMonths(date, 1));
+export const startenPåForrigeMåned = (date: Date) => DateFns.startOfMonth(DateFns.subMonths(date, 1));
 
 export const erDatoFørStartenPåNesteMåned = (date: Date) => DateFns.isBefore(date, startenPåNesteMåned(new Date()));
 
