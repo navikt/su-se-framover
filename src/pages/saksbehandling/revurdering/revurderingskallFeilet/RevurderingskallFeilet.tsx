@@ -44,6 +44,9 @@ const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) 
             return intl.formatMessage({ id: 'feil.perioden.må.være.innenfor.stønadsperioden' });
         case RevurderingErrorCodes.KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET:
             return intl.formatMessage({ id: 'feil.kan.ikke.oppdatere.revurdering.som.er.forhåndsvarslet' });
+        case RevurderingErrorCodes.PERIODE_OG_ÅRSAK_KOMBINASJON_ER_UGYLDIG:
+            return intl.formatMessage({ id: 'feil.periode.og.årsak.kombinasjon.er.ugyldig' });
+
         default:
             return intl.formatMessage({ id: 'feil.ukjentFeil' });
     }

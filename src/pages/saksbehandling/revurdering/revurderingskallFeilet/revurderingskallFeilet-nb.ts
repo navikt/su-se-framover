@@ -6,6 +6,7 @@ export default {
     'feil.kan.ikke.oppdatere.revurdering.som.er.forhåndsvarslet':
         'Kan ikke oppdatere revurdering som er forhåndsvarslet',
     'feil.perioden.må.være.innenfor.stønadsperioden': 'Perioden må være innenfor allerede valgt stønadsperiode',
+    'feil.periode.og.årsak.kombinasjon.er.ugyldig': 'Angitt periode og årsak er ugyldig',
 
     'feil.fant.ikke.sak': 'Fant ikke sak',
     'feil.fant.ikke.aktør.id': 'Fant ikke aktør id',
