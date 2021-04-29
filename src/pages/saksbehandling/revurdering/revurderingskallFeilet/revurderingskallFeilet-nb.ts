@@ -2,8 +2,8 @@ export default {
     'feil.allerede.forhåndsvarslet': 'Revurderingen er allerede blitt forhåndsvarslet',
     'feil.tidligst.neste.måned': 'Revurdering kan kun gjøres fra og med neste kalendermåned',
     'feil.begrunnelse.kan.ikke.være.tom': 'Begrunnelse kan ikke være tom',
-    'feil.kanIkkeRevurdere': 'Det finnes ingen perioder for revurdering',
-    'feil.kan.ikke.oppdatere.revurdering.som.er.forhådnsvarslet':
+    'feil.kan.ikke.revurdere': 'Det finnes ingen perioder for revurdering',
+    'feil.kan.ikke.oppdatere.revurdering.som.er.forhåndsvarslet':
         'Kan ikke oppdatere revurdering som er forhåndsvarslet',
     'feil.perioden.må.være.innenfor.stønadsperioden': 'Perioden må være innenfor allerede valgt stønadsperiode',
 
