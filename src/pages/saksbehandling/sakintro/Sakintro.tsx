@@ -44,7 +44,7 @@ import {
     erRevurderingSimulert,
     erRevurderingOpprettet,
     erRevurderingUnderkjent,
-    erForhåndsvarslingBesluttet,
+    erForhåndsvarselSendt,
 } from '../revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
@@ -265,7 +265,7 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                                             <Undertittel>
                                                 {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
                                             </Undertittel>
-                                            {r.forhåndsvarsel && !erForhåndsvarslingBesluttet(r) && (
+                                            {erForhåndsvarselSendt(r) && (
                                                 <EtikettInfo className={styles.etikett}>
                                                     {props.intl.formatMessage({
                                                         id: 'revurdering.label.forhåndsvarselSendt',

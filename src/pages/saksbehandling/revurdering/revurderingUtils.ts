@@ -1,3 +1,4 @@
+import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import {
     Revurdering,
     SimulertRevurdering,
@@ -18,6 +19,7 @@ export const erRevurderingSimulert = (r: Revurdering): r is SimulertRevurdering 
     r.status === RevurderingsStatus.SIMULERT_INNVILGET || r.status === RevurderingsStatus.SIMULERT_OPPHØRT;
 
 export const erRevurderingForhåndsvarslet = (r: Revurdering) => r.forhåndsvarsel !== null;
+export const erForhåndsvarselSendt = (r: Revurdering) => r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesSendt;
 export const erForhåndsvarslingBesluttet = (r: Revurdering) =>
     r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesBesluttet;
 
@@ -44,3 +46,20 @@ export const erRevurderingUnderkjent = (r: Revurdering): r is UnderkjentRevurder
 
 export const erGregulering = (årsak: OpprettetRevurderingGrunn): boolean =>
     årsak === OpprettetRevurderingGrunn.REGULER_GRUNNBELØP;
+
+export function getRevurderingsårsakMessageId(årsak: OpprettetRevurderingGrunn): keyof typeof sharedMessages {
+    switch (årsak) {
+        case OpprettetRevurderingGrunn.MELDING_FRA_BRUKER:
+            return 'årsak.meldingFraBruker';
+        case OpprettetRevurderingGrunn.INFORMASJON_FRA_KONTROLLSAMTALE:
+            return 'årsak.informasjonFraKontrollsamtale';
+        case OpprettetRevurderingGrunn.DØDSFALL:
+            return 'årsak.dødsfall';
+        case OpprettetRevurderingGrunn.ANDRE_KILDER:
+            return 'årsak.andreKilder';
+        case OpprettetRevurderingGrunn.MIGRERT:
+            return 'årsak.migrert';
+        case OpprettetRevurderingGrunn.REGULER_GRUNNBELØP:
+            return 'årsak.gRegulering';
+    }
+}
