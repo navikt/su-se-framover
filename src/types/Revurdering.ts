@@ -125,7 +125,6 @@ export enum RevurderingErrorCodes {
     ALLEREDE_FORHÅNDSVARSLET = 'allerede_forhåndsvarslet',
     INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
     BEGRUNNELSE_KAN_IKKE_VÆRE_TOM = 'begrunnelse_kan_ikke_være_tom',
-    PERIODEN_MÅ_VÆRE_INNENFOR_STØNADSPERIODEN = 'perioden_må_være_innenfor_stønadsperioden',
     KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET = 'kan_ikke_oppdatere_revurdering_som_er_forhåndsvarslet',
     PERIODE_OG_ÅRSAK_KOMBINASJON_ER_UGYLDIG = 'periode_og_årsak_kombinasjon_er_ugyldig',
     FANT_IKKE_SAK = 'fant_ikke_sak',
