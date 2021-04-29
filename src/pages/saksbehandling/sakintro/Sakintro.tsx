@@ -37,14 +37,14 @@ import {
     søknadMottatt,
     getIverksatteAvslåtteSøknader,
 } from '../../../lib/søknadUtils';
-import { OpprettetRevurderingGrunn, Revurdering } from '../../../types/Revurdering';
+import { Revurdering } from '../../../types/Revurdering';
 import {
     erRevurderingTilAttestering,
     erRevurderingIverksatt,
     erRevurderingSimulert,
     erRevurderingOpprettet,
     erRevurderingUnderkjent,
-    erForhåndsvarslingBesluttet,
+    erForhåndsvarselSendt,
 } from '../revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
@@ -265,15 +265,13 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                                             <Undertittel>
                                                 {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
                                             </Undertittel>
-                                            {r.forhåndsvarsel &&
-                                                r.årsak !== OpprettetRevurderingGrunn.REGULER_GRUNNBELØP &&
-                                                !erForhåndsvarslingBesluttet(r) && (
-                                                    <EtikettInfo className={styles.etikett}>
-                                                        {props.intl.formatMessage({
-                                                            id: 'revurdering.label.forhåndsvarselSendt',
-                                                        })}
-                                                    </EtikettInfo>
-                                                )}
+                                            {erForhåndsvarselSendt(r) && (
+                                                <EtikettInfo className={styles.etikett}>
+                                                    {props.intl.formatMessage({
+                                                        id: 'revurdering.label.forhåndsvarselSendt',
+                                                    })}
+                                                </EtikettInfo>
+                                            )}
                                         </div>
                                         <div className={styles.dato}>
                                             <Element>
