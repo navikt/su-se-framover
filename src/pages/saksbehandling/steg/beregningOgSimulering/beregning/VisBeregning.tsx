@@ -40,7 +40,6 @@ const getBenyttedeFradrag = (månedsberegning: Månedsberegning): Fradrag[] =>
                 periode: fradrag[0].periode,
             }))
     );
-// function(element1, element2)
 
 const DetaljertFradrag = (props: {
     tittel: {
