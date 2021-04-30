@@ -50,6 +50,7 @@ export const Utbetalingssimulering = (props: { simulering: Simulering }) => {
                 groupWhile(
                     (curr, prev) =>
                         curr.bruttoYtelse === prev.bruttoYtelse &&
+                        curr.type === prev.type &&
                         DateFns.differenceInCalendarMonths(
                             DateFns.parseISO(curr.fraOgMed),
                             DateFns.parseISO(prev.tilOgMed)
