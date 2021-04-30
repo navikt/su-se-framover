@@ -12,7 +12,7 @@ import Beregning from '../beregningOgSimulering/beregning/Beregning';
 import FastOppholdINorge from '../fast-opphold-i-norge/FastOppholdINorge';
 import Flyktning from '../flyktning/Flyktning';
 import Formue from '../formue/Formue';
-import Framdriftsindikator from '../framdriftsindikator/Framdriftsindikator';
+import SaksbehandlingFramdriftsindikator from '../framdriftsindikator/SaksbehandlingFramdriftsindikator';
 import Institusjonsopphold from '../institusjonsopphold/Institusjonsopphold';
 import LovligOppholdINorge from '../lovlig-opphold-i-norge/LovligOppholdINorge';
 import OppholdIUtlandet from '../opphold-i-utlandet/OppholdIUtlandet';
@@ -51,7 +51,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
 
     return (
         <div className={styles.container}>
-            <Framdriftsindikator sakId={props.sak.id} behandling={behandling} vilkår={vilkar} />
+            <SaksbehandlingFramdriftsindikator sakId={props.sak.id} behandling={behandling} vilkår={vilkar} />
             <div className={styles.content}>
                 <Switch>
                     <Route path={vilkårUrl(Vilkårtype.Virkningstidspunkt)}>
