@@ -254,6 +254,7 @@ const VisBeregning = (props: Props) => {
                                 getBenyttedeFradrag,
                                 arr.some((fradrag) => fradrag.type === Fradragstype.BeregnetFradragEPS)
                             ) ? null : (
+                                // TODO ai 30.04.2021: determine key for list of fradrag for eps
                                 <li key={Math.random()} className={styles.linje}>
                                     <DetaljertFradrag
                                         tittel={{
