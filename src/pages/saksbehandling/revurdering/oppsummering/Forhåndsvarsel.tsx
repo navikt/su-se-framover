@@ -94,7 +94,14 @@ const Forhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevurderin
         revurderingId: props.revurdering.id,
     });
 
-    const handleVisBrevClick = () =>
+    const handleVisForhåndsvarselClick = () =>
+        pdfApi.fetchBrevutkastForForhåndsvarsel(
+            props.sakId,
+            props.revurdering.id,
+            form.getValues('fritekstTilBrev') ?? ''
+        );
+
+    const handleVisVedtaksbrevClick = () =>
         pdfApi.fetchBrevutkastForRevurderingWithFritekst(
             props.sakId,
             props.revurdering.id,
@@ -128,8 +135,8 @@ const Forhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevurderin
                     render={({ field, fieldState }) => (
                         <BrevInput
                             tittel={
-                                form.getValues('revurderingshandling')
-                                    ? 'Tekst til forhåndsvarsel'
+                                form.getValues('revurderingshandling') == Revurderingshandling.Forhåndsvarsle
+                                    ? props.intl.formatMessage({ id: 'oppsummering.tekstTilForhåndsvarsel.tittel' })
                                     : props.intl.formatMessage({ id: 'oppsummering.tekstTilVedtaksbrev.tittel' })
                             }
                             placeholder={props.intl.formatMessage({
@@ -137,7 +144,11 @@ const Forhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevurderin
                             })}
                             tekst={form.getValues('fritekstTilBrev') ?? ''}
                             onChange={field.onChange}
-                            onVisBrevClick={handleVisBrevClick}
+                            onVisBrevClick={
+                                form.getValues('revurderingshandling') == Revurderingshandling.Forhåndsvarsle
+                                    ? handleVisForhåndsvarselClick
+                                    : handleVisVedtaksbrevClick
+                            }
                             intl={props.intl}
                             feil={fieldState.error}
                         />

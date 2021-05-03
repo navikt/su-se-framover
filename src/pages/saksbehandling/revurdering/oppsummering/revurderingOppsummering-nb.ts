@@ -19,6 +19,7 @@ export default {
     'oppsummering.gammelBeregning.tittel': 'Gammel beregning',
     'oppsummering.nyBeregning.tittel': 'Ny beregning',
     'oppsummering.tekstTilVedtaksbrev.tittel': 'Tekst til vedtaksbrev',
+    'oppsummering.tekstTilForhåndsvarsel.tittel': 'Tekst til forhåndsvarsel',
     'oppsummering.tekstTilVedtaksbrev.placeholder': 'Skriv inn innholdstekst i tekstfeltet her.',
     'oppsummering.skalFøreTilBrevutsending': 'Send vedtaksbrev til bruker',
     'oppsummering.sendtTilAttestering': 'Revurdering er sendt til attestering',

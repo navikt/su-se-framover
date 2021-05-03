@@ -53,6 +53,22 @@ export async function fetchBrevutkastForRevurderingWithFritekst(
     fritekst: string
 ): Promise<ApiClientResult<Blob>> {
     return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/brevutkast`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/pdf' }) },
+        body: {
+            fritekst,
+        },
+        bodyTransformer: (res) => res.blob(),
+    });
+}
+
+export async function fetchBrevutkastForForhåndsvarsel(
+    sakId: string,
+    revurderingId: string,
+    fritekst: string
+): Promise<ApiClientResult<Blob>> {
+    return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/brevutkastForForhandsvarsel`,
         method: 'POST',
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
