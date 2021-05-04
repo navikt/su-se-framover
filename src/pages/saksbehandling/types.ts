@@ -11,5 +11,6 @@ export enum SaksbehandlingMenyvalg {
 export enum RevurderingSteg {
     Periode = 'periode',
     EndringAvFradrag = 'endringAvFradrag',
+    Uførhet = 'ufore',
     Oppsummering = 'oppsummering',
 }

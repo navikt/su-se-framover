@@ -3,7 +3,6 @@ import { formatISO } from 'date-fns';
 import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
 import { Fradrag } from '~types/Fradrag';
-import { SimulertEndringGrunnlag } from '~types/Grunnlag';
 import { Periode } from '~types/Periode';
 import {
     OpprettetRevurdering,
@@ -16,6 +15,8 @@ import {
     BeslutningEtterForhåndsvarsling,
     LeggTilUføreResponse,
 } from '~types/Revurdering';
+
+import { UføreResultat, Vilkårsvurderinger } from '../types/Vilkår';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -152,29 +153,26 @@ export async function fortsettEtterForhåndsvarsel(
 export async function lagreUføregrunnlag(arg: {
     sakId: string;
     revurderingId: string;
-    periode: Periode<string>;
-    uføregrad: Nullable<number>;
-    forventetInntekt: Nullable<number>;
+    vurderinger: Array<{
+        periode: Periode<string>;
+        uføregrad: Nullable<number>;
+        forventetInntekt: Nullable<number>;
+        resultat: UføreResultat;
+        begrunnelse: Nullable<string>;
+    }>;
 }) {
     return apiClient<LeggTilUføreResponse>({
         url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/uføregrunnlag`,
         method: 'POST',
-        body: {
-            uføregrad: arg.uføregrad,
-            forventetInntekt: arg.forventetInntekt,
-            periode: {
-                fraOgMed: arg.periode.fraOgMed,
-                tilOgMed: arg.periode.tilOgMed,
-            },
-        },
+        body: { vurderinger: arg.vurderinger },
     });
 }
 
 export async function hentUføregrunnlag(
     sakId: string,
     revurderingId: string
-): Promise<ApiClientResult<SimulertEndringGrunnlag>> {
-    return apiClient<SimulertEndringGrunnlag>({
+): Promise<ApiClientResult<Vilkårsvurderinger>> {
+    return apiClient<Vilkårsvurderinger>({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/uføregrunnlag`,
         method: 'GET',
     });

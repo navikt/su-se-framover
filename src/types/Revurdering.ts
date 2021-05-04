@@ -3,9 +3,9 @@ import { Nullable } from '~lib/types';
 import { Behandling, Attestering } from './Behandling';
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
-import { Grunnlag, SimulertEndringGrunnlag } from './Grunnlag';
 import { Periode } from './Periode';
 import { Simulering } from './Simulering';
+import { Vilkårsvurderinger } from './Vilkår';
 
 export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
     id: string;
@@ -20,7 +20,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     begrunnelse: Nullable<string>;
     forhåndsvarsel: Nullable<Forhåndsvarsel>;
     behandlingsinformasjon: Behandlingsinformasjon;
-    grunnlag: Grunnlag;
+    vilkårsvurderinger: Vilkårsvurderinger;
 }
 
 interface Beregninger {
@@ -145,5 +145,5 @@ export enum RevurderingErrorCodes {
 }
 export interface LeggTilUføreResponse {
     revurdering: Revurdering;
-    simulertEndringGrunnlag: SimulertEndringGrunnlag;
+    gjeldendeVilkårsvurderinger: Vilkårsvurderinger;
 }

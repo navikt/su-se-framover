@@ -1,0 +1,44 @@
+@import '~/styles/variables.less';
+
+.periodeoverskrift {
+    margin-bottom: @spacing;
+}
+
+.periodeliste {
+    margin-bottom: @spacing;
+}
+
+.periodeContainer {
+    background-color: @navLysGra;
+    padding: @spacing-s;
+    margin-bottom: @spacing;
+    position: relative;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing;
+    }
+
+    .slettknapp {
+        position: absolute;
+        top: @spacing-s;
+        right: @spacing-s;
+    }
+
+    .horizontal {
+        display: flex;
+        > :not(:last-child) {
+            margin-right: @spacing;
+        }
+    }
+}
+
+.nyperiodeContainer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: @spacing;
+}
+
+.feiloppsummering {
+    margin-bottom: @spacing;
+}
