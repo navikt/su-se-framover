@@ -53,6 +53,8 @@ export const toStringDateOrNull = (date: Date | null) => {
     return DateFns.format(date, DateFormats.IsoDateOnly);
 };
 
+export const toIsoDateOnlyString = (date: Date) => DateFns.format(date, DateFormats.IsoDateOnly);
+
 export const startenPåNesteMåned = (date: Date) => DateFns.startOfMonth(DateFns.addMonths(date, 1));
 
 export const startenPåForrigeMåned = (date: Date) => DateFns.startOfMonth(DateFns.subMonths(date, 1));
@@ -60,6 +62,8 @@ export const startenPåForrigeMåned = (date: Date) => DateFns.startOfMonth(Date
 export const erDatoFørStartenPåNesteMåned = (date: Date) => DateFns.isBefore(date, startenPåNesteMåned(new Date()));
 
 export const getStartenPåMånedenTreTilbakeITid = (d: Date) => DateFns.startOfMonth(DateFns.subMonths(d, 3));
+
+export const sluttenAvMåneden = (d: Date) => DateFns.endOfMonth(d);
 
 /**
  * Parser datostreng på formatet @see {@link DateFormats.IsoDateOnly}
