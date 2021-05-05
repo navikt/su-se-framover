@@ -8,24 +8,26 @@
     background-color: @navLysGra;
     padding: @spacing-s;
     margin-bottom: @spacing;
-    position: relative;
 
     > :not(:last-child) {
         margin-bottom: @spacing;
     }
 
-    .slettknapp {
-        position: absolute;
-        top: @spacing-s;
-        right: @spacing-s;
-    }
-
     .horizontal {
         display: flex;
+
         > :not(:last-child) {
             margin-right: @spacing;
         }
     }
+}
+
+.periodeInputContainer {
+    width: 100%;
+    display: flex;
+}
+.slettknapp {
+    height: min-content;
 }
 
 .nyperiodeContainer {

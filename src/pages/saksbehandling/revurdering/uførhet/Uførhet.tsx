@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Input } from 'nav-frontend-skjema';
@@ -116,56 +117,58 @@ const Uføreperiodevurdering = (props: {
 
     return (
         <li className={styles.periodeContainer}>
-            <Knapp
-                className={styles.slettknapp}
-                onClick={() => {
-                    props.onRemoveClick();
-                }}
-                kompakt
-                aria-label={intl.formatMessage({ id: 'input.fjernPeriode.label' })}
-            >
-                <TrashBin width="24px" height="24px" />
-            </Knapp>
             <div className={styles.horizontal}>
-                <Controller
-                    name={`grunnlag.${props.index}.fraOgMed` as const}
-                    control={props.control}
-                    defaultValue={props.item.fraOgMed}
-                    render={({ field, fieldState }) => (
-                        <DatePicker
-                            id={field.name}
-                            label={intl.formatMessage({ id: 'input.fom.label' })}
-                            feil={fieldState.error?.message}
-                            {...field}
-                            onChange={field.onChange}
-                            dateFormat="MM/yyyy"
-                            showMonthYearPicker
-                            isClearable
-                            autoComplete="off"
-                            minDate={props.minDate}
-                            maxDate={props.maxDate}
-                        />
-                    )}
-                />
-                <Controller
-                    name={`grunnlag.${props.index}.tilOgMed` as const}
-                    control={props.control}
-                    defaultValue={props.item.tilOgMed}
-                    render={({ field, fieldState }) => (
-                        <DatePicker
-                            label={intl.formatMessage({ id: 'input.tom.label' })}
-                            id={field.name}
-                            feil={fieldState.error?.message}
-                            {...field}
-                            dateFormat="MM/yyyy"
-                            showMonthYearPicker
-                            isClearable
-                            autoComplete="off"
-                            minDate={props.minDate}
-                            maxDate={props.maxDate}
-                        />
-                    )}
-                />
+                <div className={classNames(styles.horizontal, styles.periodeInputContainer)}>
+                    <Controller
+                        name={`grunnlag.${props.index}.fraOgMed` as const}
+                        control={props.control}
+                        defaultValue={props.item.fraOgMed}
+                        render={({ field, fieldState }) => (
+                            <DatePicker
+                                id={field.name}
+                                label={intl.formatMessage({ id: 'input.fom.label' })}
+                                feil={fieldState.error?.message}
+                                {...field}
+                                onChange={field.onChange}
+                                dateFormat="MM/yyyy"
+                                showMonthYearPicker
+                                isClearable
+                                autoComplete="off"
+                                minDate={props.minDate}
+                                maxDate={props.maxDate}
+                            />
+                        )}
+                    />
+                    <Controller
+                        name={`grunnlag.${props.index}.tilOgMed` as const}
+                        control={props.control}
+                        defaultValue={props.item.tilOgMed}
+                        render={({ field, fieldState }) => (
+                            <DatePicker
+                                label={intl.formatMessage({ id: 'input.tom.label' })}
+                                id={field.name}
+                                feil={fieldState.error?.message}
+                                {...field}
+                                dateFormat="MM/yyyy"
+                                showMonthYearPicker
+                                isClearable
+                                autoComplete="off"
+                                minDate={props.minDate}
+                                maxDate={props.maxDate}
+                            />
+                        )}
+                    />
+                </div>
+                <Knapp
+                    className={styles.slettknapp}
+                    onClick={() => {
+                        props.onRemoveClick();
+                    }}
+                    kompakt
+                    aria-label={intl.formatMessage({ id: 'input.fjernPeriode.label' })}
+                >
+                    <TrashBin width="24px" height="24px" />
+                </Knapp>
             </div>
             <Controller
                 control={props.control}
