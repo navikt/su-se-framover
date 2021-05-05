@@ -1,10 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
-import { Ingress, Innholdstittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
+import ToKolonner from '~components/toKolonner/ToKolonner';
 import { beregnOgSimuler } from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { customFormikSubmit } from '~lib/formikUtils';
@@ -26,6 +26,7 @@ import uføreMessages from '../../steg/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
 import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
+import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { erRevurderingSimulert } from '../revurderingUtils';
 
 import styles from './endringAvFradrag.module.less';
@@ -121,86 +122,88 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering; forr
     });
 
     return (
-        <form
-            className={sharedStyles.revurderingContainer}
-            onSubmit={(e) => {
-                setSubmittedStatus(SubmittedStatus.NESTE);
-                formik.handleSubmit(e);
+        <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
+            {{
+                left: (
+                    <form
+                        className={sharedStyles.revurderingContainer}
+                        onSubmit={(e) => {
+                            setSubmittedStatus(SubmittedStatus.NESTE);
+                            formik.handleSubmit(e);
+                        }}
+                    >
+                        <div>
+                            {/* <div className={sharedStyles.mainContentContainer}> */}
+                            <div className={styles.fradragInputsContainer}>
+                                <FradragInputs
+                                    harEps={
+                                        props.revurdering.tilRevurdering.behandlingsinformasjon.ektefelle ? true : false
+                                    }
+                                    feltnavn="fradrag"
+                                    fradrag={formik.values.fradrag}
+                                    errors={formik.errors.fradrag}
+                                    intl={intl}
+                                    onChange={formik.handleChange}
+                                    onFradragChange={(index, value) => {
+                                        formik.setFieldValue(`fradrag[${index}]`, value);
+                                    }}
+                                    onFjernClick={(index) => {
+                                        formik.setValues((v) => ({
+                                            ...v,
+                                            fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
+                                        }));
+                                    }}
+                                    beregningsDato={{
+                                        fom: new Date(props.revurdering.periode.fraOgMed),
+                                        tom: new Date(props.revurdering.periode.tilOgMed),
+                                    }}
+                                    onLeggTilClick={() => {
+                                        formik.setValues({
+                                            ...formik.values,
+                                            fradrag: [
+                                                ...formik.values.fradrag,
+                                                {
+                                                    beløp: null,
+                                                    type: null,
+                                                    fraUtland: false,
+                                                    utenlandskInntekt: {
+                                                        beløpIUtenlandskValuta: '',
+                                                        valuta: '',
+                                                        kurs: '',
+                                                    },
+                                                    periode: null,
+                                                    tilhørerEPS: false,
+                                                },
+                                            ],
+                                        });
+                                    }}
+                                />
+                            </div>
+                            {RemoteData.isFailure(beregnOgSimulerStatus) && (
+                                <RevurderingskallFeilet error={beregnOgSimulerStatus.error} />
+                            )}
+                            <RevurderingBunnknapper
+                                onNesteClick="submit"
+                                tilbakeUrl={props.forrigeUrl}
+                                onLagreOgFortsettSenereClick={() => {
+                                    setSubmittedStatus(SubmittedStatus.LAGRE);
+                                    customFormikSubmit(formik, handleLagreOgFortsettSenereClick);
+                                }}
+                                onNesteClickSpinner={
+                                    submittedStatus === SubmittedStatus.NESTE &&
+                                    RemoteData.isPending(beregnOgSimulerStatus)
+                                }
+                                onLagreOgFortsettSenereClickSpinner={
+                                    submittedStatus === SubmittedStatus.LAGRE &&
+                                    RemoteData.isPending(beregnOgSimulerStatus)
+                                }
+                            />
+                        </div>
+                    </form>
+                ),
+                right: <span />,
             }}
-        >
-            <Innholdstittel className={sharedStyles.tittel}>
-                {intl.formatMessage({ id: 'revurdering.tittel' })}
-            </Innholdstittel>
-            <div className={sharedStyles.mainContentContainer}>
-                <Ingress>{intl.formatMessage({ id: 'periode.overskrift' })}</Ingress>
-                <div className={styles.periodeContainer}>
-                    <p>
-                        {`${props.revurdering.periode.fraOgMed} -
-                        ${props.revurdering.periode.tilOgMed} `}
-                    </p>
-                </div>
-                <div className={styles.fradragInputsContainer}>
-                    <FradragInputs
-                        harEps={props.revurdering.tilRevurdering.behandlingsinformasjon.ektefelle ? true : false}
-                        feltnavn="fradrag"
-                        fradrag={formik.values.fradrag}
-                        errors={formik.errors.fradrag}
-                        intl={intl}
-                        onChange={formik.handleChange}
-                        onFradragChange={(index, value) => {
-                            formik.setFieldValue(`fradrag[${index}]`, value);
-                        }}
-                        onFjernClick={(index) => {
-                            formik.setValues((v) => ({
-                                ...v,
-                                fradrag: formik.values.fradrag.filter((_, idx) => idx !== index),
-                            }));
-                        }}
-                        beregningsDato={{
-                            fom: new Date(props.revurdering.periode.fraOgMed),
-                            tom: new Date(props.revurdering.periode.tilOgMed),
-                        }}
-                        onLeggTilClick={() => {
-                            formik.setValues({
-                                ...formik.values,
-                                fradrag: [
-                                    ...formik.values.fradrag,
-                                    {
-                                        beløp: null,
-                                        type: null,
-                                        fraUtland: false,
-                                        utenlandskInntekt: {
-                                            beløpIUtenlandskValuta: '',
-                                            valuta: '',
-                                            kurs: '',
-                                        },
-                                        periode: null,
-                                        tilhørerEPS: false,
-                                    },
-                                ],
-                            });
-                        }}
-                    />
-                </div>
-                {RemoteData.isFailure(beregnOgSimulerStatus) && (
-                    <RevurderingskallFeilet error={beregnOgSimulerStatus.error} />
-                )}
-                <RevurderingBunnknapper
-                    onNesteClick="submit"
-                    tilbakeUrl={props.forrigeUrl}
-                    onLagreOgFortsettSenereClick={() => {
-                        setSubmittedStatus(SubmittedStatus.LAGRE);
-                        customFormikSubmit(formik, handleLagreOgFortsettSenereClick);
-                    }}
-                    onNesteClickSpinner={
-                        submittedStatus === SubmittedStatus.NESTE && RemoteData.isPending(beregnOgSimulerStatus)
-                    }
-                    onLagreOgFortsettSenereClickSpinner={
-                        submittedStatus === SubmittedStatus.LAGRE && RemoteData.isPending(beregnOgSimulerStatus)
-                    }
-                />
-            </div>
-        </form>
+        </ToKolonner>
     );
 };
 

@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as DateFns from 'date-fns';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Input } from 'nav-frontend-skjema';
-import { Element, Innholdstittel, Normaltekst, Undertittel } from 'nav-frontend-typografi';
+import { Element, Innholdstittel, Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { Control, Controller, FieldArrayWithId, FieldPath, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router';
@@ -29,6 +29,7 @@ import { UføreResultat, Vilkårsvurderinger, VurderingsperiodeUføre } from '~t
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
+import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
 import messages from './uførhet-nb';
 import styles from './uførhet.module.less';
@@ -421,7 +422,6 @@ const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: Vilkårsvurderinge
 };
 
 const Uførhet = (props: { sakId: string; revurdering: Revurdering; forrigeUrl: string; nesteUrl: string }) => {
-    const intl = useI18n({ messages });
     const dispatch = useAppDispatch();
     const grunnlag = useAppSelector(
         (s) => s.sak.revurderingGrunnlagSimulering[props.revurdering.id] ?? RemoteData.initial
@@ -434,22 +434,15 @@ const Uførhet = (props: { sakId: string; revurdering: Revurdering; forrigeUrl: 
     }, [grunnlag._tag]);
 
     return (
-        <ToKolonner tittel={intl.formatMessage({ id: 'heading.valgtPeriode' })}>
+        <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <div>
-                        <Undertittel className={styles.periodeoverskrift}>
-                            {DateUtils.formatMonthYear(props.revurdering.periode.fraOgMed, intl)}
-                            {' – '}
-                            {DateUtils.formatMonthYear(props.revurdering.periode.tilOgMed, intl)}
-                        </Undertittel>
-                        <UførhetForm
-                            sakId={props.sakId}
-                            revurdering={props.revurdering}
-                            forrigeUrl={props.forrigeUrl}
-                            nesteUrl={props.nesteUrl}
-                        />
-                    </div>
+                    <UførhetForm
+                        sakId={props.sakId}
+                        revurdering={props.revurdering}
+                        forrigeUrl={props.forrigeUrl}
+                        nesteUrl={props.nesteUrl}
+                    />
                 ),
                 right: pipe(
                     grunnlag,

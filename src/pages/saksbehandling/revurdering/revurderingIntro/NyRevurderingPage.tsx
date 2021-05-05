@@ -32,7 +32,7 @@ export const NyRevurderingPage = (props: { sak: Sak }) => {
             history.push(
                 Routes.revurderValgtRevurdering.createURL({
                     sakId: props.sak.id,
-                    steg: RevurderingSteg.EndringAvFradrag,
+                    steg: RevurderingSteg.Uførhet,
                     revurderingId: response.payload.id,
                 })
             );

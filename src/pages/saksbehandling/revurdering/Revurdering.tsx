@@ -94,6 +94,24 @@ const Revurdering = (props: { sak: Sak }) => {
         );
     }
 
+    const alleSteg = [
+        {
+            id: RevurderingSteg.Uførhet,
+            label: intl.formatMessage({ id: stegTilTekstId(RevurderingSteg.Uførhet) }),
+            erKlikkbar: false,
+            status: Linjestatus.Ingenting,
+            url: createRevurderingsPath(RevurderingSteg.Uførhet),
+        },
+        {
+            id: RevurderingSteg.EndringAvFradrag,
+            label: intl.formatMessage({
+                id: stegTilTekstId(RevurderingSteg.EndringAvFradrag),
+            }),
+            erKlikkbar: false,
+            status: Linjestatus.Ingenting,
+            url: createRevurderingsPath(RevurderingSteg.EndringAvFradrag),
+        },
+    ];
     return (
         <div className={styles.pageContainer}>
             <Switch>
@@ -108,6 +126,9 @@ const Revurdering = (props: { sak: Sak }) => {
                     <AlertStripe type="feil">Fant ikke revurdering</AlertStripe>
                 ) : (
                     <>
+                        <Innholdstittel className={styles.tittel}>
+                            {intl.formatMessage({ id: 'revurdering.tittel' })}
+                        </Innholdstittel>
                         <Route
                             path={Routes.revurderValgtRevurdering.createURL({
                                 sakId: props.sak.id,
@@ -115,31 +136,16 @@ const Revurdering = (props: { sak: Sak }) => {
                                 revurderingId: påbegyntRevurdering.id,
                             })}
                         >
-                            <EndreRevurderingPage sak={props.sak} revurdering={påbegyntRevurdering} />
+                            <EndreRevurderingPage
+                                sak={props.sak}
+                                revurdering={påbegyntRevurdering}
+                                nesteUrl={createRevurderingsPath(RevurderingSteg.Uførhet)}
+                            />
                         </Route>
                         <div className={styles.asdf}>
-                            <Framdriftsindikator
-                                aktivId={urlParams.steg}
-                                elementer={[
-                                    // TODO: Finn ut status på stegene
-                                    {
-                                        id: RevurderingSteg.Uførhet,
-                                        label: intl.formatMessage({ id: stegTilTekstId(RevurderingSteg.Uførhet) }),
-                                        erKlikkbar: false,
-                                        status: Linjestatus.Ingenting,
-                                        url: createRevurderingsPath(RevurderingSteg.Uførhet),
-                                    },
-                                    {
-                                        id: RevurderingSteg.EndringAvFradrag,
-                                        label: intl.formatMessage({
-                                            id: stegTilTekstId(RevurderingSteg.EndringAvFradrag),
-                                        }),
-                                        erKlikkbar: false,
-                                        status: Linjestatus.Ingenting,
-                                        url: createRevurderingsPath(RevurderingSteg.EndringAvFradrag),
-                                    },
-                                ]}
-                            />
+                            <Route path={alleSteg.map((s) => s.url)}>
+                                <Framdriftsindikator aktivId={urlParams.steg} elementer={alleSteg} />
+                            </Route>
                             <Route path={createRevurderingsPath(RevurderingSteg.Uførhet)}>
                                 <Uførhet
                                     sakId={props.sak.id}
