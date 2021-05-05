@@ -580,6 +580,7 @@ export default createSlice({
             },
             fulfilled: (state, action) => {
                 state.oppdaterRevurderingStatus = RemoteData.success(null);
+                state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.initial;
 
                 state.sak = pipe(
                     state.sak,
