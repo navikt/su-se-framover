@@ -58,7 +58,7 @@ const uføregrunnlagFormDataSchema = yup.object<UføregrunnlagFormData>({
         .test('etterFom', 'Til-og-med kan ikke være før fra-og-med', function (value) {
             const fom = this.parent.fraOgMed as Nullable<Date>;
             if (value && fom) {
-                return DateFns.isAfter(value, fom);
+                return !DateFns.isBefore(fom, value);
             }
             return true;
         }),
