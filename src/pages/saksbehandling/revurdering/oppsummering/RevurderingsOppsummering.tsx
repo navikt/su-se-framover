@@ -1,5 +1,5 @@
 import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
-import { Innholdstittel } from 'nav-frontend-typografi';
+import { Systemtittel } from 'nav-frontend-typografi';
 import React from 'react';
 
 import RevurderingIngenEndringAlert from '~components/revurdering/RevurderingIngenEndringAlert';
@@ -64,10 +64,10 @@ const RevurderingsOppsummering = (props: {
 
     return (
         <div className={sharedStyles.revurderingContainer}>
-            <Innholdstittel className={sharedStyles.tittel}>
-                {intl.formatMessage({ id: 'oppsummering.tittel' })}
-            </Innholdstittel>
             <div className={sharedStyles.mainContentContainer}>
+                <Systemtittel className={styles.heading}>
+                    {intl.formatMessage({ id: 'oppsummering.tittel' })}
+                </Systemtittel>
                 {erRevurderingIngenEndring(props.revurdering) && !erGregulering(props.revurdering.årsak) && (
                     <RevurderingIngenEndringAlert className={styles.ingenEndringInfoboks} />
                 )}

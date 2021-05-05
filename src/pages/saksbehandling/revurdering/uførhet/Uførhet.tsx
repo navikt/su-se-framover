@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as DateFns from 'date-fns';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Input } from 'nav-frontend-skjema';
-import { Element, Innholdstittel, Normaltekst } from 'nav-frontend-typografi';
+import { Element, Normaltekst, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { Control, Controller, FieldArrayWithId, FieldPath, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router';
@@ -374,7 +374,9 @@ const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: Vilkårsvurderinge
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     return (
         <div>
-            <Innholdstittel>{intl.formatMessage({ id: 'heading.gjeldendeGrunnlag' })}</Innholdstittel>
+            <Systemtittel className={styles.grunnlagsdataHeading}>
+                {intl.formatMessage({ id: 'heading.gjeldendeGrunnlag' })}
+            </Systemtittel>
             <ul className={styles.grunnlagsliste}>
                 {props.vilkårsvurderinger.uføre?.vurderinger.map((item) => (
                     <li key={item.periode.fraOgMed + item.periode.tilOgMed}>
