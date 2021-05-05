@@ -52,6 +52,8 @@ const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) 
             return intl.formatMessage({ id: 'feil.kan.ikke.oppdatere.revurdering.som.er.forhåndsvarslet' });
         case RevurderingErrorCodes.PERIODE_OG_ÅRSAK_KOMBINASJON_ER_UGYLDIG:
             return intl.formatMessage({ id: 'feil.periode.og.årsak.kombinasjon.er.ugyldig' });
+        case RevurderingErrorCodes.OVERLAPPENDE_VURDERINGSPERIODER:
+            return intl.formatMessage({ id: 'feil.overlappende.vurderingsperioder' });
 
         default:
             return intl.formatMessage({ id: 'feil.ukjentFeil' });

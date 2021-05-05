@@ -142,6 +142,7 @@ export enum RevurderingErrorCodes {
     SISTE_MÅNED_VED_NEDGANG_I_STØNADEN = 'siste_måned_ved_nedgang_i_stønaden',
     G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
     MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL = 'mangler_beslutning_på_forhåndsvarsel',
+    OVERLAPPENDE_VURDERINGSPERIODER = 'overlappende_vurderingsperioder',
 }
 export interface LeggTilUføreResponse {
     revurdering: Revurdering;

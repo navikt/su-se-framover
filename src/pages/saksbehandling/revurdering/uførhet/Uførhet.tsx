@@ -64,7 +64,7 @@ const uføregrunnlagFormDataSchema = yup.object<UføregrunnlagFormData>({
     oppfylt: yup.bool().required().defined(),
     uføregrad: yup.mixed<string>().when('oppfylt', {
         is: true,
-        then: validateNonNegativeNumber,
+        then: validateNonNegativeNumber.max(100, 'Uføregrad må være mellom 0 og 100'),
         otherwise: yup.string().notRequired(),
     }),
     forventetInntekt: yup.mixed<string>().when('oppfylt', {

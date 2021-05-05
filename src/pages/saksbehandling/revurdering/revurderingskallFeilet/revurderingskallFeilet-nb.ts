@@ -26,5 +26,7 @@ export default {
     'feil.gregulering.kan.ikke.føre.til.opphør': 'G-regulering kan ikke føre til opphør',
     'feil.mangler.beslutning.på.forhåndsvarsel': 'Mangler beslutning på forhåndsvarsel',
 
+    'feil.overlappende.vurderingsperioder': 'Perioder kan ikke overlappe',
+
     'feil.ukjentFeil': 'Ukjent feil',
 };
