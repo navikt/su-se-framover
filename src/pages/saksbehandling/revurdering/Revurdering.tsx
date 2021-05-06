@@ -142,7 +142,7 @@ const Revurdering = (props: { sak: Sak }) => {
                                 nesteUrl={createRevurderingsPath(RevurderingSteg.Uførhet)}
                             />
                         </Route>
-                        <div className={styles.asdf}>
+                        <div className={styles.sideMedFramdriftsindikatorContainer}>
                             <Route path={alleSteg.map((s) => s.url)}>
                                 <Framdriftsindikator aktivId={urlParams.steg} elementer={alleSteg} />
                             </Route>

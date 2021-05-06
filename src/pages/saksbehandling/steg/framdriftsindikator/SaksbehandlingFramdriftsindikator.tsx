@@ -45,7 +45,7 @@ const SaksbehandlingFramdriftsindikator = (props: { sakId: string; behandling: B
             elementer={[
                 {
                     id: Vilkårtype.Virkningstidspunkt,
-                    erKlikkbar: !!props.behandling.stønadsperiode,
+                    erKlikkbar: props.behandling.stønadsperiode !== null,
                     label: vilkårTittelFormatted(Vilkårtype.Virkningstidspunkt),
                     status: props.behandling.stønadsperiode ? Linjestatus.Ok : Linjestatus.Ingenting,
                     url: vilkårUrl(Vilkårtype.Virkningstidspunkt),

@@ -133,7 +133,6 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering; forr
                         }}
                     >
                         <div>
-                            {/* <div className={sharedStyles.mainContentContainer}> */}
                             <div className={styles.fradragInputsContainer}>
                                 <FradragInputs
                                     harEps={
