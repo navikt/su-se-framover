@@ -102,12 +102,23 @@ export function formikErrorsTilFeiloppsummering<T extends Record<string, any>>(
 }
 
 export function hookFormErrorsTilFeiloppsummering<T>(errors: FieldErrors<T>): FeiloppsummeringFeil[] {
-    return Object.entries(errors).map(([key, value]) => {
-        const v = value as FieldError;
-        return {
-            skjemaelementId: key,
-            feilmelding: v.message ?? '',
-        };
+    return Object.entries(errors).flatMap(([key, value]) => {
+        const k = key as keyof T;
+        const v = value as FieldError | Array<FieldErrors<T[typeof k]>>;
+        if (Array.isArray(v)) {
+            return v.flatMap((x, index) => {
+                if (typeof x === 'undefined' || x === null) {
+                    return [];
+                }
+                return hookFormErrorsTilFeiloppsummering(withFullPathKey(`${key}.${index}`, x));
+            });
+        }
+        return [
+            {
+                skjemaelementId: key,
+                feilmelding: v.message ?? '',
+            },
+        ];
     });
 }
 

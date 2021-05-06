@@ -1,10 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
+import * as revurderingApi from '~api/revurderingApi';
 import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
 import { Fradrag } from '~types/Fradrag';
-import { SimulertEndringGrunnlag } from '~types/Grunnlag';
 import { Periode } from '~types/Periode';
 import {
     RevurderingTilAttestering,
@@ -17,8 +17,7 @@ import {
     BeslutningEtterForhåndsvarsling,
     LeggTilUføreResponse,
 } from '~types/Revurdering';
-
-import * as revurderingApi from '../../api/revurderingApi';
+import { UføreResultat, Vilkårsvurderinger } from '~types/Vilkår';
 
 export const opprettRevurdering = createAsyncThunk<
     OpprettetRevurdering,
@@ -161,9 +160,13 @@ export const lagreUføregrunnlag = createAsyncThunk<
     {
         sakId: string;
         revurderingId: string;
-        periode: Periode<string>;
-        uføregrad: Nullable<number>;
-        forventetInntekt: Nullable<number>;
+        vurderinger: Array<{
+            periode: Periode<string>;
+            uføregrad: Nullable<number>;
+            forventetInntekt: Nullable<number>;
+            resultat: UføreResultat;
+            begrunnelse: Nullable<string>;
+        }>;
     },
     { rejectValue: ApiError }
 >('revurdering/grunnlag/uføre/lagre', async (arg, thunkApi) => {
@@ -175,7 +178,7 @@ export const lagreUføregrunnlag = createAsyncThunk<
 });
 
 export const hentUføregrunnlag = createAsyncThunk<
-    SimulertEndringGrunnlag,
+    Vilkårsvurderinger,
     {
         sakId: string;
         revurderingId: string;

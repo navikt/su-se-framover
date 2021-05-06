@@ -12,6 +12,7 @@ import {
     erVilkårsvurderingerVurdertAvslag,
 } from '~/features/behandling/behandlingUtils';
 import { SuperRadioGruppe } from '~components/FormElements';
+import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksoversikt/utils';
 import { pipe } from '~lib/fp';
@@ -31,7 +32,7 @@ import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 import { PersonligOppmøteFaktablokk } from '../faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurdering, Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../Vurdering';
 
 import messages from './personligOppmøte-nb';
 import styles from './personligOppmøte.module.less';
@@ -320,7 +321,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     );
 
     return (
-        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <form
@@ -468,7 +469,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                 ),
                 right: <PersonligOppmøteFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
-        </Vurdering>
+        </ToKolonner>
     );
 };
 

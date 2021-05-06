@@ -10,6 +10,7 @@ import { useHistory } from 'react-router';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
 import DatePicker from '~components/datePicker/DatePicker';
+import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as SakSlice from '~features/saksoversikt/sak.slice';
 import * as DateUtils from '~lib/dateUtils';
 import { nullableMap, pipe } from '~lib/fp';
@@ -21,7 +22,7 @@ import { useAppDispatch } from '~redux/Store';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurdering, Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../Vurdering';
 
 import messages from './virkningstidspunkt-nb';
 import styles from './virkningstidspunkt.module.less';
@@ -141,7 +142,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     };
 
     return (
-        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <form onSubmit={form.handleSubmit(handleSubmit)} className={styles.container}>
@@ -223,7 +224,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                 ),
                 right: <div />,
             }}
-        </Vurdering>
+        </ToKolonner>
     );
 };
 

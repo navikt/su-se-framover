@@ -7,17 +7,18 @@
     width: 100%;
 }
 
+.tittel {
+    width: 100%;
+    padding: @spacing-xs 10rem;
+    border-bottom: 1px solid @navLysGra;
+}
+
 .revurderingContainer {
     width: 100%;
     display: flex;
     flex-direction: column;
+    padding-top: @spacing;
     margin-bottom: @spacing-xxl;
-
-    .tittel {
-        padding: @spacing-xs 10rem;
-        border-bottom: 1px solid @navLysGra;
-        margin-bottom: @spacing;
-    }
 
     .mainContentContainer {
         padding-left: 10rem;
@@ -40,4 +41,9 @@
             margin-bottom: @spacing;
         }
     }
+}
+
+.sideMedFramdriftsindikatorContainer {
+    display: flex;
+    width: 100%;
 }

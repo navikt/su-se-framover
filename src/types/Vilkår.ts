@@ -7,11 +7,11 @@ export interface Vilkårsvurderinger {
 
 export interface UføreVilkår {
     vilkår: string;
-    vurdering: Vurderingsperiode;
+    vurderinger: VurderingsperiodeUføre[];
     resultat: UføreResultat;
 }
 
-export interface Vurderingsperiode {
+export interface VurderingsperiodeUføre {
     id: string;
     opprettet: string;
     resultat: UføreResultat;

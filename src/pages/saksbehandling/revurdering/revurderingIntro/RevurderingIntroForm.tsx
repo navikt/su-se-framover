@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
 import { Select, Textarea } from 'nav-frontend-skjema';
-import { Ingress, Innholdstittel, Feilmelding } from 'nav-frontend-typografi';
+import { Ingress, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
@@ -106,9 +106,6 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
 
     return (
         <form className={sharedStyles.revurderingContainer} onSubmit={formik.handleSubmit}>
-            <Innholdstittel className={sharedStyles.tittel}>
-                {intl.formatMessage({ id: 'revurdering.tittel' })}
-            </Innholdstittel>
             <div className={sharedStyles.mainContentContainer}>
                 <Ingress>{intl.formatMessage({ id: 'periode.overskrift' })}</Ingress>
                 <div className={styles.periodeContainer}>

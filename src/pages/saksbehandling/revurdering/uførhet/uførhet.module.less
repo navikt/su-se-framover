@@ -1,0 +1,50 @@
+@import '~/styles/variables.less';
+
+.periodeliste {
+    margin-bottom: @spacing;
+}
+
+.periodeContainer {
+    background-color: @navLysGra;
+    padding: @spacing-s;
+    margin-bottom: @spacing;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing;
+    }
+
+    .horizontal {
+        display: flex;
+
+        > :not(:last-child) {
+            margin-right: @spacing;
+        }
+    }
+}
+
+.periodeInputContainer {
+    width: 100%;
+    display: flex;
+}
+.slettknapp {
+    height: min-content;
+}
+
+.nyperiodeContainer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: @spacing;
+}
+
+.feiloppsummering {
+    margin-bottom: @spacing;
+}
+
+.grunnlagsdataHeading {
+    margin-bottom: @spacing;
+}
+
+.grunnlagsliste li {
+    margin-bottom: @spacing-s;
+}

@@ -25,11 +25,10 @@ import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemote
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
-import { SimulertEndringGrunnlag } from '~types/Grunnlag';
 import { Periode } from '~types/Periode';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
-import { UføreResultat } from '~types/Vilkår';
+import { UføreResultat, Vilkårsvurderinger } from '~types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<
@@ -249,7 +248,7 @@ export const hentLukketSøknadBrevutkast = createAsyncThunk<
 
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
-    revurderingGrunnlagSimulering: Dictionary<RemoteData.RemoteData<ApiError, SimulertEndringGrunnlag>>;
+    revurderingGrunnlagSimulering: Dictionary<RemoteData.RemoteData<ApiError, Vilkårsvurderinger>>;
     stansUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
     gjenopptaUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<ApiError, null>;
@@ -263,7 +262,6 @@ interface SakState {
     lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
     opprettRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
     oppdaterRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
-    beregnOgSimulerStatus: RemoteData.RemoteData<ApiError, null>;
 }
 
 const initialState: SakState = {
@@ -282,7 +280,6 @@ const initialState: SakState = {
     lukketSøknadBrevutkastStatus: RemoteData.initial,
     opprettRevurderingStatus: RemoteData.initial,
     oppdaterRevurderingStatus: RemoteData.initial,
-    beregnOgSimulerStatus: RemoteData.initial,
 };
 
 export default createSlice({
@@ -583,6 +580,7 @@ export default createSlice({
             },
             fulfilled: (state, action) => {
                 state.oppdaterRevurderingStatus = RemoteData.success(null);
+                state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.initial;
 
                 state.sak = pipe(
                     state.sak,
@@ -611,49 +609,29 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, lagreUføregrunnlagForRevurdering, {
-            pending: (state, action) => {
-                state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.success(
-                    action.payload.simulertEndringGrunnlag
-                );
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        revurderinger: sak.revurderinger.map((r) =>
-                            r.id === action.payload.revurdering.id ? action.payload.revurdering : r
-                        ),
-                    }))
-                );
-            },
-            rejected: (state, action) => {
-                state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = simpleRejectedActionToRemoteData(
-                    action
-                );
-            },
+        builder.addCase(lagreUføregrunnlagForRevurdering.fulfilled, (state, action) => {
+            state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.success(
+                action.payload.gjeldendeVilkårsvurderinger
+            );
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: sak.revurderinger.map((r) =>
+                        r.id === action.payload.revurdering.id ? action.payload.revurdering : r
+                    ),
+                }))
+            );
         });
 
-        handleAsyncThunk(builder, beregnOgSimuler, {
-            pending: (state) => {
-                state.beregnOgSimulerStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.beregnOgSimulerStatus = RemoteData.success(null);
-
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
-                    }))
-                );
-            },
-            rejected: (state, action) => {
-                state.beregnOgSimulerStatus = simpleRejectedActionToRemoteData(action);
-            },
+        builder.addCase(beregnOgSimuler.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                }))
+            );
         });
 
         // TODO ai: Se på om vi kan baka dessa 2 till 1.

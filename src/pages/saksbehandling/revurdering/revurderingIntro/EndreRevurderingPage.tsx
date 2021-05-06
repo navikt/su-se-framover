@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 import { oppdaterRevurderingsPeriode as oppdaterRevurdering } from '~features/revurdering/revurderingActions';
 import { startenPåForrigeMåned } from '~lib/dateUtils';
 import * as Routes from '~lib/routes';
-import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
@@ -13,7 +12,7 @@ import { compareUtbetalingsperiode } from '~types/Utbetalingsperiode';
 
 import RevurderingIntroForm from './RevurderingIntroForm';
 
-export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering }) => {
+export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering; nesteUrl: string }) => {
     const oppdaterRevurderingStatus = useAppSelector((state) => state.sak.oppdaterRevurderingStatus);
     const history = useHistory();
 
@@ -29,13 +28,7 @@ export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering
             })
         );
         if (oppdaterRevurdering.fulfilled.match(response)) {
-            history.push(
-                Routes.revurderValgtRevurdering.createURL({
-                    sakId: props.sak.id,
-                    steg: RevurderingSteg.EndringAvFradrag,
-                    revurderingId: response.payload.id,
-                })
-            );
+            history.push(props.nesteUrl);
         }
     };
     const handleLagreOgFortsettSenereClick = async (

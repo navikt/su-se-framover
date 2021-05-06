@@ -14,6 +14,7 @@ import { useHistory } from 'react-router-dom';
 import { ApiError, ErrorCode } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import { Personkort } from '~components/Personkort';
+import ToKolonner from '~components/toKolonner/ToKolonner';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';
 import personSlice from '~features/person/person.slice';
@@ -32,7 +33,7 @@ import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 import { FormueFaktablokk } from '../faktablokk/faktablokker/FormueFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
-import { Vurdering, Vurderingknapper } from '../Vurdering';
+import { Vurderingknapper } from '../Vurdering';
 
 import messages from './formue-nb';
 import styles from './formue.module.less';
@@ -215,7 +216,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const vilkårErOppfylt = totalFormue < 0.5 * G;
 
     return (
-        <Vurdering tittel={intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <form
@@ -567,7 +568,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                 ),
                 right: <FormueFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
             }}
-        </Vurdering>
+        </ToKolonner>
     );
 };
 

@@ -1,30 +1,24 @@
 @import '~/styles/variables.less';
 
-.framdriftsindikator {
+.container {
     border-right: 1px solid @navLysGra;
     display: flex;
     flex-direction: column;
     padding: @spacing-s @spacing-s 0 @spacing-s;
     width: 13rem;
-
-    .olTittel {
-        margin-bottom: @spacing-xxs;
-    }
 }
 
-.vilkårInfoContainer {
+.seksjonstittel {
+    margin-bottom: @spacing-xxs;
+}
+
+.linje {
     display: flex;
     margin-bottom: @spacing-s;
-
-    & p {
-        align-self: center;
-    }
+    align-items: center;
 }
 
-.iconAndLineContainer {
-    display: flex;
-    flex-direction: column;
-    align-self: center;
+.icon {
     margin-right: @spacing-xxs;
 }
 
