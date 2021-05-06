@@ -143,6 +143,8 @@ export enum RevurderingErrorCodes {
     G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
     MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL = 'mangler_beslutning_på_forhåndsvarsel',
     OVERLAPPENDE_VURDERINGSPERIODER = 'overlappende_vurderingsperioder',
+    VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
+    VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
 }
 export interface LeggTilUføreResponse {
     revurdering: Revurdering;
