@@ -263,11 +263,10 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             />
                         </div>
                         <Undertittel>
-                            Beregning{' '}
-                            {props.behandling.beregning
-                                ? `${intl.formatDate(props.behandling.beregning.fraOgMed)}-
-                            ${intl.formatDate(props.behandling.beregning.tilOgMed)}`
-                                : ''}
+                            Beregning
+                            {props.behandling.beregning &&
+                                ` ${DateUtils.formatMonthYear(props.behandling.beregning.fraOgMed, intl)}-
+                                ${DateUtils.formatMonthYear(props.behandling.beregning.tilOgMed, intl)}`}
                         </Undertittel>
                         <div className={styles.beregningsContainer}>
                             {props.behandling.beregning && <VisBeregning beregning={props.behandling.beregning} />}
