@@ -28,5 +28,9 @@ export default {
 
     'feil.overlappende.vurderingsperioder': 'Perioder kan ikke overlappe',
 
+    'feil.vurderinger.samme.resultat': 'Vurdering av vilkår må ha samme resultat for hele revurderingsperioden',
+
+    'feil.vurderinger.utenfor.revurderingsperiode': 'Vurdering av vilkår gjøres innenfor revurderingsperioden',
+
     'feil.ukjentFeil': 'Ukjent feil',
 };

@@ -31,6 +31,7 @@ import { UføreResultat, Vilkårsvurderinger, VurderingsperiodeUføre } from '~t
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
+import { erGregulering } from '../revurderingUtils';
 
 import messages from './uførhet-nb';
 import styles from './uførhet.module.less';
@@ -48,36 +49,42 @@ interface FormData {
     grunnlag: UføregrunnlagFormData[];
 }
 
-const uføregrunnlagFormDataSchema = yup.object<UføregrunnlagFormData>({
-    id: yup.string(),
-    fraOgMed: yup.date().required().defined(),
-    tilOgMed: yup
-        .date()
-        .required()
-        .defined()
-        .test('etterFom', 'Til-og-med kan ikke være før fra-og-med', function (value) {
-            const fom = this.parent.fraOgMed as Nullable<Date>;
-            if (value && fom) {
-                return !DateFns.isBefore(value, fom);
-            }
-            return true;
+const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
+    yup.object<UføregrunnlagFormData>({
+        id: yup.string(),
+        fraOgMed: yup.date().required().defined(),
+        tilOgMed: yup
+            .date()
+            .required()
+            .defined()
+            .test('etterFom', 'Til-og-med kan ikke være før fra-og-med', function (value) {
+                const fom = this.parent.fraOgMed as Nullable<Date>;
+                if (value && fom) {
+                    return !DateFns.isBefore(value, fom);
+                }
+                return true;
+            }),
+        oppfylt: erGRegulering
+            ? yup.mixed<boolean>().equals([true], 'Vilkår må være oppfylt ved g-regulering')
+            : yup.bool().required().defined(),
+        uføregrad: yup.mixed<string>().when('oppfylt', {
+            is: true,
+            then: validateNonNegativeNumber.max(100, 'Uføregrad må være mellom 0 og 100'),
+            otherwise: yup.string().notRequired(),
         }),
-    oppfylt: yup.bool().required().defined(),
-    uføregrad: yup.mixed<string>().when('oppfylt', {
-        is: true,
-        then: validateNonNegativeNumber.max(100, 'Uføregrad må være mellom 0 og 100'),
-        otherwise: yup.string().notRequired(),
-    }),
-    forventetInntekt: yup.mixed<string>().when('oppfylt', {
-        is: true,
-        then: validateNonNegativeNumber,
-        otherwise: yup.string().notRequired(),
-    }),
-});
+        forventetInntekt: yup.mixed<string>().when('oppfylt', {
+            is: true,
+            then: validateNonNegativeNumber,
+            otherwise: yup.string().notRequired(),
+        }),
+    });
 
-const schema = yup.object<FormData>({
-    grunnlag: yup.array(uføregrunnlagFormDataSchema.required()).required('Du må legge inn minst én periode'),
-});
+const schema = (erGRegulering: boolean) =>
+    yup.object<FormData>({
+        grunnlag: yup
+            .array(uføregrunnlagFormDataSchema(erGRegulering).required())
+            .required('Du må legge inn minst én periode'),
+    });
 
 const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): UføregrunnlagFormData => ({
     id: uuid(),
@@ -236,7 +243,7 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                 props.revurdering.vilkårsvurderinger.uføre?.vurderinger.map((u) => vurderingsperiodeTilFormData(u)) ??
                 [],
         },
-        resolver: yupResolver(schema),
+        resolver: yupResolver(schema(erGregulering(props.revurdering.årsak))),
     });
 
     const grunnlagValues = useFieldArray({
