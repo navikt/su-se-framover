@@ -33,8 +33,10 @@ interface FormData {
     begrunnelse: string;
 }
 
+const TIDLIGST_MULIG_START_DATO = new Date(2021, 0, 1);
+
 const schema = yup.object<FormData>({
-    fraOgMed: yup.date().nullable().required().min(DateUtils.getStartenPåMånedenTreTilbakeITid(new Date())),
+    fraOgMed: yup.date().nullable().required().min(TIDLIGST_MULIG_START_DATO),
     tilOgMed: yup
         .date()
         .nullable()
@@ -159,7 +161,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                     isClearable
                                     selectsEnd
                                     autoComplete="off"
-                                    minDate={DateUtils.getStartenPåMånedenTreTilbakeITid(new Date())}
+                                    minDate={TIDLIGST_MULIG_START_DATO}
                                     feil={fieldState.error?.message}
                                 />
                             )}
