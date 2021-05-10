@@ -70,7 +70,7 @@
         "less": "^4.1.1",
         "lodash.throttle": "^4.1.1",
         "moment": "^2.29.1",
-        "nav-datovelger": "^11.0.0",
+        "nav-datovelger": "^11.1.2",
         "nav-frontend-alertstriper": "^3.1.1",
         "nav-frontend-alertstriper-style": "^2.1.1",
         "nav-frontend-chevron": "^1.0.28",
