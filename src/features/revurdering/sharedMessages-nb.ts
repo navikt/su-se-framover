@@ -2,6 +2,8 @@ export default {
     'revurdering.årsak': 'Årsak for revurdering',
     'revurdering.begrunnelse': 'Begrunnelse',
 
+    'feiloppsummering.title': 'For å gå videre må du rette opp følgende:',
+
     'årsak.meldingFraBruker': 'Melding fra bruker',
     'årsak.informasjonFraKontrollsamtale': 'Informasjon fra kontrollsamtale',
     'årsak.dødsfall': 'Dødsfall',

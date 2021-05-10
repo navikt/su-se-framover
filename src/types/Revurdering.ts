@@ -21,6 +21,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     forhåndsvarsel: Nullable<Forhåndsvarsel>;
     behandlingsinformasjon: Behandlingsinformasjon;
     vilkårsvurderinger: Vilkårsvurderinger;
+    informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;
 }
 
 interface Beregninger {
@@ -147,4 +148,14 @@ export enum RevurderingErrorCodes {
 export interface LeggTilUføreResponse {
     revurdering: Revurdering;
     gjeldendeVilkårsvurderinger: Vilkårsvurderinger;
+}
+
+export enum InformasjonSomRevurderes {
+    Uførhet = 'Uførhet',
+    Inntekt = 'Inntekt',
+}
+
+export enum Vurderingstatus {
+    IkkeVurdert = 'IkkeVurdert',
+    Vurdert = 'Vurdert',
 }

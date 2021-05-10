@@ -16,20 +16,36 @@ import {
     RevurderingErrorCodes,
     BeslutningEtterForhåndsvarsling,
     LeggTilUføreResponse,
+    InformasjonSomRevurderes,
 } from '~types/Revurdering';
 import { UføreResultat, Vilkårsvurderinger } from '~types/Vilkår';
 
 export const opprettRevurdering = createAsyncThunk<
     OpprettetRevurdering,
-    { sakId: string; fraOgMed: Date; årsak: OpprettetRevurderingGrunn; begrunnelse: string },
+    {
+        sakId: string;
+        fraOgMed: Date;
+        årsak: OpprettetRevurderingGrunn;
+        informasjonSomRevurderes: InformasjonSomRevurderes[];
+        begrunnelse: string;
+    },
     { rejectValue: ApiError }
->('revurdering/opprettRevurdering', async ({ sakId, fraOgMed, årsak, begrunnelse }, thunkApi) => {
-    const res = await revurderingApi.opprettRevurdering(sakId, fraOgMed, årsak, begrunnelse);
-    if (res.status === 'ok') {
-        return res.data;
+>(
+    'revurdering/opprettRevurdering',
+    async ({ sakId, fraOgMed, årsak, informasjonSomRevurderes, begrunnelse }, thunkApi) => {
+        const res = await revurderingApi.opprettRevurdering(
+            sakId,
+            fraOgMed,
+            årsak,
+            informasjonSomRevurderes,
+            begrunnelse
+        );
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
     }
-    return thunkApi.rejectWithValue(res.error);
-});
+);
 
 export const oppdaterRevurderingsPeriode = createAsyncThunk<
     OpprettetRevurdering,

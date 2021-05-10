@@ -9,6 +9,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 
+import { InformasjonSomRevurderes, Vurderingstatus } from '../../../types/Revurdering';
 import { RevurderingSteg } from '../types';
 
 import EndringAvFradrag from './endringAvFradrag/EndringAvFradrag';
@@ -94,24 +95,26 @@ const Revurdering = (props: { sak: Sak }) => {
         );
     }
 
-    const alleSteg = [
-        {
-            id: RevurderingSteg.Uførhet,
-            label: intl.formatMessage({ id: stegTilTekstId(RevurderingSteg.Uførhet) }),
+    const informasjonSomRevurderesTilRevurderingSteg = (i: InformasjonSomRevurderes) => {
+        switch (i) {
+            case InformasjonSomRevurderes.Uførhet:
+                return RevurderingSteg.Uførhet;
+            case InformasjonSomRevurderes.Inntekt:
+                return RevurderingSteg.EndringAvFradrag;
+        }
+    };
+
+    const alleSteg = Object.entries(påbegyntRevurdering?.informasjonSomRevurderes ?? {}).map(([k, v]) => {
+        const revurderingsteg = informasjonSomRevurderesTilRevurderingSteg(k as InformasjonSomRevurderes);
+        return {
+            id: revurderingsteg,
+            label: intl.formatMessage({ id: stegTilTekstId(revurderingsteg) }),
             erKlikkbar: false,
-            status: Linjestatus.Ingenting,
-            url: createRevurderingsPath(RevurderingSteg.Uførhet),
-        },
-        {
-            id: RevurderingSteg.EndringAvFradrag,
-            label: intl.formatMessage({
-                id: stegTilTekstId(RevurderingSteg.EndringAvFradrag),
-            }),
-            erKlikkbar: false,
-            status: Linjestatus.Ingenting,
-            url: createRevurderingsPath(RevurderingSteg.EndringAvFradrag),
-        },
-    ];
+            status: v === Vurderingstatus.IkkeVurdert ? Linjestatus.Ingenting : Linjestatus.Ok,
+            url: createRevurderingsPath(revurderingsteg),
+        };
+    });
+
     return (
         <div className={styles.pageContainer}>
             <Switch>

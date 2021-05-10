@@ -14,6 +14,7 @@ import {
     RevurderingErrorCodes,
     BeslutningEtterForhåndsvarsling,
     LeggTilUføreResponse,
+    InformasjonSomRevurderes,
 } from '~types/Revurdering';
 
 import { UføreResultat, Vilkårsvurderinger } from '../types/Vilkår';
@@ -24,6 +25,7 @@ export async function opprettRevurdering(
     sakId: string,
     fraOgMed: Date,
     årsak: OpprettetRevurderingGrunn,
+    informasjonSomRevurderes: InformasjonSomRevurderes[],
     begrunnelse: string
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
@@ -32,6 +34,7 @@ export async function opprettRevurdering(
         body: {
             fraOgMed: formatISO(fraOgMed, { representation: 'date' }),
             årsak: årsak,
+            informasjonSomRevurderes: informasjonSomRevurderes,
             begrunnelse: begrunnelse,
         },
     });

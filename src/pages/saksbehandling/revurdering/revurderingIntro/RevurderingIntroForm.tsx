@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
-import { Select, Textarea } from 'nav-frontend-skjema';
+import { Checkbox, CheckboxGruppe, Feiloppsummering, Select, Textarea } from 'nav-frontend-skjema';
 import { Ingress, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -13,8 +13,8 @@ import { erDatoFørStartenPåNesteMåned, startenPåForrigeMåned } from '~lib/d
 import { customFormikSubmit } from '~lib/formikUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
-import { OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import { InformasjonSomRevurderes, OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
@@ -28,6 +28,7 @@ interface OpprettRevurderingFormData {
     fraOgMed: Nullable<Date>;
     årsak: Nullable<OpprettetRevurderingGrunn>;
     begrunnelse: Nullable<string>;
+    informasjonSomRevurderes: InformasjonSomRevurderes[];
 }
 
 const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter((x) => x !== OpprettetRevurderingGrunn.MIGRERT);
@@ -55,11 +56,24 @@ const schema = yup.object<OpprettRevurderingFormData>({
         }),
     årsak: yup.mixed<OpprettetRevurderingGrunn>().nullable().required(),
     begrunnelse: yup.string().nullable().required(),
+    informasjonSomRevurderes: yup
+        .array<InformasjonSomRevurderes>(
+            yup.mixed<InformasjonSomRevurderes>().oneOf(Object.values(InformasjonSomRevurderes))
+        )
+        .min(1, 'Du må velge minst en ting å revurdere')
+        .required(),
 });
 
+interface FormValues {
+    fraOgMed: Date;
+    årsak: OpprettetRevurderingGrunn;
+    informasjonSomRevurderes: InformasjonSomRevurderes[];
+    begrunnelse: string;
+}
+
 interface RevurderingIntroFormProps {
-    onNesteClick: (fraOgMed: Date, årsak: OpprettetRevurderingGrunn, begrunnelse: string) => void;
-    onLagreOgFortsettSenereClick: (fraOgMed: Date, årsak: OpprettetRevurderingGrunn, begrunnelse: string) => void;
+    onNesteClick: (arg: FormValues) => void;
+    onLagreOgFortsettSenereClick: (arg: FormValues) => void;
     tilbakeUrl: string;
     revurdering?: Revurdering;
     minFraOgMed: Date;
@@ -79,6 +93,15 @@ enum SubmittedStatus {
     LAGRE,
 }
 
+const informasjonSomRevurderesMessageId = (i: InformasjonSomRevurderes) => {
+    switch (i) {
+        case InformasjonSomRevurderes.Uførhet:
+            return 'informasjonSomRevurderes.uførhet';
+        case InformasjonSomRevurderes.Inntekt:
+            return 'informasjonSomRevurderes.inntekt';
+    }
+};
+
 const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     const [submittedStatus, setSubmittedStatus] = useState<SubmittedStatus>(SubmittedStatus.NOT_SUBMITTED);
@@ -92,10 +115,18 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                 : null,
             årsak: getInitialÅrsak(props.revurdering?.årsak),
             begrunnelse: props.revurdering?.begrunnelse ?? null,
+            informasjonSomRevurderes: props.revurdering
+                ? (Object.keys(props.revurdering.informasjonSomRevurderes) as InformasjonSomRevurderes[])
+                : [],
         },
         async onSubmit(values) {
             if (values.fraOgMed && values.årsak && values.begrunnelse) {
-                props.onNesteClick(values.fraOgMed, values.årsak, values.begrunnelse);
+                props.onNesteClick({
+                    fraOgMed: values.fraOgMed,
+                    årsak: values.årsak,
+                    informasjonSomRevurderes: values.informasjonSomRevurderes,
+                    begrunnelse: values.begrunnelse,
+                });
             }
         },
         validationSchema: schema,
@@ -175,6 +206,29 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                     </Select>
 
                     <div className={styles.formElement}>
+                        <CheckboxGruppe
+                            legend={intl.formatMessage({ id: 'input.informasjonSomRevurderes.label' })}
+                            feil={formik.errors.informasjonSomRevurderes}
+                        >
+                            {Object.values(InformasjonSomRevurderes).map((i) => (
+                                <Checkbox
+                                    key={i}
+                                    label={intl.formatMessage({ id: informasjonSomRevurderesMessageId(i) })}
+                                    checked={formik.values.informasjonSomRevurderes.includes(i)}
+                                    onChange={(e) => {
+                                        return formik.setValues({
+                                            ...formik.values,
+                                            informasjonSomRevurderes: e.target.checked
+                                                ? [...formik.values.informasjonSomRevurderes, i]
+                                                : formik.values.informasjonSomRevurderes.filter((i2) => i2 !== i),
+                                        });
+                                    }}
+                                />
+                            ))}
+                        </CheckboxGruppe>
+                    </div>
+
+                    <div className={styles.formElement}>
                         <Textarea
                             label={intl.formatMessage({ id: 'input.begrunnelse.label' })}
                             name="begrunnelse"
@@ -183,6 +237,11 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                             onChange={formik.handleChange}
                         />
                     </div>
+                    <Feiloppsummering
+                        tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                        hidden={!formikErrorsHarFeil(formik.errors)}
+                        feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                    />
                 </div>
                 {RemoteData.isFailure(props.nesteClickStatus) && (
                     <RevurderingskallFeilet error={props.nesteClickStatus.error} />
@@ -196,8 +255,14 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                     onLagreOgFortsettSenereClick={() => {
                         setSubmittedStatus(SubmittedStatus.LAGRE);
                         customFormikSubmit(formik, async (values) =>
-                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                            props.onLagreOgFortsettSenereClick(values.fraOgMed!, values.årsak!, values.begrunnelse!)
+                            props.onLagreOgFortsettSenereClick({
+                                /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                                fraOgMed: values.fraOgMed!,
+                                årsak: values.årsak!,
+                                informasjonSomRevurderes: values.informasjonSomRevurderes,
+                                begrunnelse: values.begrunnelse!,
+                                /* eslint-enable @typescript-eslint/no-non-null-assertion */
+                            })
                         );
                     }}
                     onNesteClickSpinner={
