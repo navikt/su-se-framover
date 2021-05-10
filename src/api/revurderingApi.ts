@@ -45,12 +45,18 @@ export async function oppdaterRevurdering(
     revurderingId: string,
     fraOgMed: Date,
     årsak: OpprettetRevurderingGrunn,
+    informasjonSomRevurderes: InformasjonSomRevurderes[],
     begrunnelse: string
 ): Promise<ApiClientResult<OpprettetRevurdering>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}`,
         method: 'PUT',
-        body: { fraOgMed: formatISO(fraOgMed, { representation: 'date' }), årsak: årsak, begrunnelse: begrunnelse },
+        body: {
+            fraOgMed: formatISO(fraOgMed, { representation: 'date' }),
+            årsak: årsak,
+            informasjonSomRevurderes: informasjonSomRevurderes,
+            begrunnelse: begrunnelse,
+        },
     });
 }
 

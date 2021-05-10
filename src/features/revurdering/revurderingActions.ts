@@ -49,12 +49,26 @@ export const opprettRevurdering = createAsyncThunk<
 
 export const oppdaterRevurderingsPeriode = createAsyncThunk<
     OpprettetRevurdering,
-    { sakId: string; revurderingId: string; fraOgMed: Date; årsak: OpprettetRevurderingGrunn; begrunnelse: string },
+    {
+        sakId: string;
+        revurderingId: string;
+        fraOgMed: Date;
+        årsak: OpprettetRevurderingGrunn;
+        informasjonSomRevurderes: InformasjonSomRevurderes[];
+        begrunnelse: string;
+    },
     { rejectValue: ApiError }
 >(
     'revurdering/oppdaterRevurderingsPeriode',
-    async ({ sakId, revurderingId, fraOgMed, årsak, begrunnelse }, thunkApi) => {
-        const res = await revurderingApi.oppdaterRevurdering(sakId, revurderingId, fraOgMed, årsak, begrunnelse);
+    async ({ sakId, revurderingId, fraOgMed, årsak, informasjonSomRevurderes, begrunnelse }, thunkApi) => {
+        const res = await revurderingApi.oppdaterRevurdering(
+            sakId,
+            revurderingId,
+            fraOgMed,
+            årsak,
+            informasjonSomRevurderes,
+            begrunnelse
+        );
         if (res.status === 'ok') {
             return res.data;
         }
