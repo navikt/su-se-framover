@@ -10,9 +10,11 @@ import { InformasjonSomRevurderes, OpprettetRevurderingGrunn, Revurdering } from
 import { Sak } from '~types/Sak';
 import { compareUtbetalingsperiode } from '~types/Utbetalingsperiode';
 
+import { finnNesteRevurderingsteg } from '../revurderingUtils';
+
 import RevurderingIntroForm from './RevurderingIntroForm';
 
-export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering; nesteUrl: string }) => {
+export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering }) => {
     const oppdaterRevurderingStatus = useAppSelector((state) => state.sak.oppdaterRevurderingStatus);
     const history = useHistory();
 
@@ -31,7 +33,13 @@ export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering
             })
         );
         if (oppdaterRevurdering.fulfilled.match(response)) {
-            history.push(props.nesteUrl);
+            history.push(
+                Routes.revurderValgtRevurdering.createURL({
+                    sakId: props.sak.id,
+                    revurderingId: props.revurdering.id,
+                    steg: finnNesteRevurderingsteg(response.payload.informasjonSomRevurderes),
+                })
+            );
         }
     };
     const handleLagreOgFortsettSenereClick = async (arg: {

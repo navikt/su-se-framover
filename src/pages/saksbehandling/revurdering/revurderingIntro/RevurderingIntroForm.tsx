@@ -12,7 +12,7 @@ import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { erDatoFørStartenPåNesteMåned, startenPåForrigeMåned } from '~lib/dateUtils';
 import { customFormikSubmit } from '~lib/formikUtils';
 import { useI18n } from '~lib/hooks';
-import { Nullable } from '~lib/types';
+import { keyOf, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { InformasjonSomRevurderes, OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
 
@@ -210,9 +210,10 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                             legend={intl.formatMessage({ id: 'input.informasjonSomRevurderes.label' })}
                             feil={formik.errors.informasjonSomRevurderes}
                         >
-                            {Object.values(InformasjonSomRevurderes).map((i) => (
+                            {Object.values(InformasjonSomRevurderes).map((i, idx) => (
                                 <Checkbox
                                     key={i}
+                                    id={idx === 0 ? keyOf<FormValues>('informasjonSomRevurderes') : undefined}
                                     label={intl.formatMessage({ id: informasjonSomRevurderesMessageId(i) })}
                                     checked={formik.values.informasjonSomRevurderes.includes(i)}
                                     onChange={(e) => {
