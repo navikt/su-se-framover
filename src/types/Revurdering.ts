@@ -145,6 +145,7 @@ export enum RevurderingErrorCodes {
     OVERLAPPENDE_VURDERINGSPERIODER = 'overlappende_vurderingsperioder',
     VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
     VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
+    HELE_REVURDERINGSPERIODEN_MÅ_HA_VURDERINGER = 'hele_behandlingsperioden_må_ha_vurderinger',
 }
 export interface LeggTilUføreResponse {
     revurdering: Revurdering;

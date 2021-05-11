@@ -31,6 +31,7 @@ export default {
     'feil.vurderinger.samme.resultat': 'Vurdering av vilkår må ha samme resultat for hele revurderingsperioden',
 
     'feil.vurderinger.utenfor.revurderingsperiode': 'Vurdering av vilkår gjøres innenfor revurderingsperioden',
+    'feil.mangler.revurderingsperioder': 'Hele eller deler av revurderingsperioden mangler vurdering(er)',
 
     'feil.ukjentFeil': 'Ukjent feil',
 };
