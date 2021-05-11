@@ -10,7 +10,11 @@ import {
     UnderkjentRevurdering,
     Forhåndsvarseltype,
     OpprettetRevurderingGrunn,
+    InformasjonSomRevurderes,
+    Vurderingstatus,
 } from '~types/Revurdering';
+
+import { RevurderingSteg } from '../types';
 
 export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurdering =>
     r.status === RevurderingsStatus.OPPRETTET;
@@ -63,3 +67,34 @@ export function getRevurderingsårsakMessageId(årsak: OpprettetRevurderingGrunn
             return 'årsak.gRegulering';
     }
 }
+
+/**
+ * Dette er det som styrer rekkefølgen på når ting skal revurderes.
+ * Det bør alltid tas utgangspunkt i denne, og heller filtrere bort de stegene man ikke ønsker.
+ */
+export const revurderingstegrekkefølge = [RevurderingSteg.Uførhet, RevurderingSteg.EndringAvFradrag];
+
+export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) => {
+    switch (i) {
+        case RevurderingSteg.Uførhet:
+            return InformasjonSomRevurderes.Uførhet;
+        case RevurderingSteg.EndringAvFradrag:
+            return InformasjonSomRevurderes.Inntekt;
+    }
+    return null;
+};
+
+export const finnNesteRevurderingsteg = (
+    informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>
+) => {
+    const keys = Object.keys(informasjonSomRevurderes);
+    if (keys.length === 0) {
+        return RevurderingSteg.Periode;
+    }
+    const førsteIkkeVurderteSteg = revurderingstegrekkefølge.find((r) => {
+        const i = revurderingstegTilInformasjonSomRevurderes(r);
+        return i && informasjonSomRevurderes[i] === Vurderingstatus.IkkeVurdert;
+    });
+
+    return førsteIkkeVurderteSteg ?? RevurderingSteg.Oppsummering;
+};
