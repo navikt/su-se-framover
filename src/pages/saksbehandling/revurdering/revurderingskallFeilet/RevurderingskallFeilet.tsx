@@ -58,6 +58,8 @@ const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) 
             return intl.formatMessage({ id: 'feil.vurderinger.samme.resultat' });
         case RevurderingErrorCodes.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE:
             return intl.formatMessage({ id: 'feil.vurderinger.utenfor.revurderingsperiode' });
+        case RevurderingErrorCodes.HELE_REVURDERINGSPERIODEN_MÅ_HA_VURDERINGER:
+            return intl.formatMessage({ id: 'feil.mangler.revurderingsperioder' });
 
         default:
             return intl.formatMessage({ id: 'feil.ukjentFeil' });
