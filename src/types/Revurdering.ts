@@ -68,8 +68,11 @@ export interface UnderkjentRevurdering
     simulering: Nullable<Simulering>;
 }
 
+export function harBeregninger(r: Revurdering): r is Revurdering & { beregninger: Beregninger } {
+    return 'beregninger' in r;
+}
 export function harSimulering(r: Revurdering): r is Revurdering & { simulering: Simulering } {
-    return 'simulering' in r && r['simulering'] !== null;
+    return 'simulering' in r;
 }
 
 export enum Forhåndsvarseltype {

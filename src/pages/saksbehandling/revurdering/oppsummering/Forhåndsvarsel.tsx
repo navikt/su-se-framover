@@ -14,7 +14,6 @@ import * as revurderingActions from '~features/revurdering/revurderingActions';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch } from '~redux/Store';
 import { RevurderingTilAttestering, SimulertRevurdering } from '~types/Revurdering';
 
@@ -31,7 +30,12 @@ const schema = yup.object<FormData>({
     fritekstTilBrev: yup.string(),
 });
 
-const Forhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevurdering; intl: IntlShape }) => {
+const Forhåndsvarsel = (props: {
+    sakId: string;
+    revurdering: SimulertRevurdering;
+    intl: IntlShape;
+    forrigeUrl: string;
+}) => {
     const [status, setStatus] = useState<RemoteData.RemoteData<ApiError, null | RevurderingTilAttestering>>(
         RemoteData.initial
     );
@@ -87,12 +91,6 @@ const Forhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevurderin
             }
         }
     };
-
-    const forrigeURL = Routes.revurderValgtRevurdering.createURL({
-        sakId: props.sakId,
-        steg: RevurderingSteg.EndringAvFradrag,
-        revurderingId: props.revurdering.id,
-    });
 
     const handleVisForhåndsvarselClick = () =>
         pdfApi.fetchBrevutkastForForhåndsvarsel(
@@ -165,7 +163,7 @@ const Forhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevurderin
                         ? 'Send forhåndsvarsel'
                         : props.intl.formatMessage({ id: 'knapp.sendTilAttestering' })
                 }
-                tilbakeUrl={forrigeURL}
+                tilbakeUrl={props.forrigeUrl}
                 onNesteClickSpinner={RemoteData.isPending(status)}
             />
         </form>

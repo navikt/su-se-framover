@@ -21,37 +21,8 @@ import messages from './revurdering-nb';
 import styles from './revurdering.module.less';
 import { EndreRevurderingPage } from './revurderingIntro/EndreRevurderingPage';
 import { NyRevurderingPage } from './revurderingIntro/NyRevurderingPage';
-import {
-    erRevurderingSimulert,
-    erRevurderingIngenEndring,
-    revurderingstegrekkefølge,
-    revurderingstegTilInformasjonSomRevurderes,
-} from './revurderingUtils';
+import { revurderingstegrekkefølge, revurderingstegTilInformasjonSomRevurderes } from './revurderingUtils';
 import Uførhet from './uførhet/Uførhet';
-
-export const VisFeilmelding = (props: { forrigeURL: string }) => {
-    const intl = useI18n({ messages: sharedMessages });
-
-    return (
-        <div className={styles.revurderingContainer}>
-            <Innholdstittel className={styles.tittel}>
-                {intl.formatMessage({ id: 'revurdering.tittel' })}
-            </Innholdstittel>
-            <div className={styles.mainContentContainer}>
-                <div>
-                    <Feilmelding className={styles.feilmelding}>
-                        {intl.formatMessage({ id: 'feil.noeGikkGalt' })}
-                    </Feilmelding>
-                </div>
-                <div className={styles.knappContainer}>
-                    <Link className="knapp" to={props.forrigeURL}>
-                        {intl.formatMessage({ id: 'knapp.forrige' })}
-                    </Link>
-                </div>
-            </div>
-        </div>
-    );
-};
 
 const stegTilTekstId = (steg: RevurderingSteg) => {
     switch (steg) {
@@ -174,18 +145,17 @@ const RevurderingPage = (props: { sak: Sak }) => {
                             })}
                         </div>
                         <Route path={createRevurderingsPath(RevurderingSteg.Oppsummering)}>
-                            {erRevurderingSimulert(påbegyntRevurdering) ||
-                            erRevurderingIngenEndring(påbegyntRevurdering) ? (
-                                <RevurderingsOppsummering sakId={props.sak.id} revurdering={påbegyntRevurdering} />
-                            ) : (
-                                <VisFeilmelding
-                                    forrigeURL={Routes.revurderValgtRevurdering.createURL({
-                                        sakId: props.sak.id,
-                                        steg: RevurderingSteg.EndringAvFradrag,
-                                        revurderingId: påbegyntRevurdering.id,
-                                    })}
-                                />
-                            )}
+                            <RevurderingsOppsummering
+                                sakId={props.sak.id}
+                                revurdering={påbegyntRevurdering}
+                                forrigeUrl={
+                                    aktiveSteg[aktiveSteg.length - 1]?.url ??
+                                    createRevurderingsPath(RevurderingSteg.Periode)
+                                }
+                                førsteRevurderingstegUrl={
+                                    aktiveSteg[0]?.url ?? createRevurderingsPath(RevurderingSteg.Periode)
+                                }
+                            />
                         </Route>
                     </>
                 )}

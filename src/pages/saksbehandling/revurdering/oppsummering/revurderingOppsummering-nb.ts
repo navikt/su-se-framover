@@ -25,6 +25,8 @@ export default {
     'oppsummering.sendtTilAttestering': 'Revurdering er sendt til attestering',
     'oppsummering.størreEllerLik10Prosent': 'Revurderingen er ikke større eller lik 10 prosent endring',
 
+    'oppsummering.beregner': 'Beregner…',
+
     'oppsummering.ingenEndring':
         'Ny beregning fører til mindre enn 10 % endring av utbetalingen. Vi lagrer beregningen, men utbetalingen til bruker blir ikke endret.',
 

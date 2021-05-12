@@ -6,7 +6,6 @@ import { useHistory } from 'react-router';
 import { ApiError } from '~api/apiClient';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import * as Routes from '~lib/routes';
-import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch } from '~redux/Store';
 import {
     BeregnetIngenEndring,
@@ -21,6 +20,7 @@ import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFe
 const GReguleringForOppsummering = (props: {
     sakId: string;
     revurdering: SimulertRevurdering | BeregnetIngenEndring | UnderkjentRevurdering;
+    forrigeUrl: string;
     intl: IntlShape;
 }) => {
     const dispatch = useAppDispatch();
@@ -57,12 +57,6 @@ const GReguleringForOppsummering = (props: {
         }
     };
 
-    const forrigeURL = Routes.revurderValgtRevurdering.createURL({
-        sakId: props.sakId,
-        steg: RevurderingSteg.EndringAvFradrag,
-        revurderingId: props.revurdering.id,
-    });
-
     return (
         <form
             onSubmit={(e) => {
@@ -75,7 +69,7 @@ const GReguleringForOppsummering = (props: {
             <RevurderingBunnknapper
                 onNesteClick={'submit'}
                 nesteKnappTekst={props.intl.formatMessage({ id: 'knapp.sendTilAttestering' })}
-                tilbakeUrl={forrigeURL}
+                tilbakeUrl={props.forrigeUrl}
                 onNesteClickSpinner={RemoteData.isPending(status)}
             />
         </form>
