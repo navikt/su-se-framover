@@ -114,6 +114,6 @@ interface InntektOgPensjon {
 }
 
 export interface EktefellePartnerSamboer {
-    erUførFlyktning: boolean;
+    erUførFlyktning: Nullable<boolean>;
     fnr: string;
 }

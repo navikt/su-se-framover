@@ -1,6 +1,7 @@
 export default {
-    'ektefelleEllerSamboer.feil.ikkeTilgang': 'Du har ikke tilgang til å se informasjon om denne brukeren',
     'ektefelleEllerSamboer.feil.felteneMåFyllesUt': 'Feltene må fylles ut',
+    'ektefelleEllerSamboer.feil.ikkeTilgang': 'Du har ikke tilgang til å se informasjon om denne brukeren',
+    'ektefelleEllerSamboer.feil.kunneIkkeSøkePerson': 'Feil skjedde under søk av person',
 
     'input.opphold-i-norge.label': 'Bor og oppholder du deg i Norge?',
     'input.folkereg-adresse.label': 'Bor på folkereg adresse?',
