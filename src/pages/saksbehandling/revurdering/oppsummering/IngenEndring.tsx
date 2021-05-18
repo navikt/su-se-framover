@@ -13,7 +13,6 @@ import * as revurderingActions from '~features/revurdering/revurderingActions';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch } from '~redux/Store';
 import { BeregnetIngenEndring, RevurderingTilAttestering } from '~types/Revurdering';
 
@@ -36,7 +35,12 @@ const schema = yup.object<IngenEndringFormData>({
     }),
 });
 
-const IngenEndring = (props: { sakId: string; revurdering: BeregnetIngenEndring; intl: IntlShape }) => {
+const IngenEndring = (props: {
+    sakId: string;
+    revurdering: BeregnetIngenEndring;
+    intl: IntlShape;
+    forrigeUrl: string;
+}) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
 
@@ -80,12 +84,6 @@ const IngenEndring = (props: { sakId: string; revurdering: BeregnetIngenEndring;
             );
         }
     };
-
-    const forrigeURL = Routes.revurderValgtRevurdering.createURL({
-        sakId: props.sakId,
-        steg: RevurderingSteg.EndringAvFradrag,
-        revurderingId: props.revurdering.id,
-    });
 
     const handleVisBrevClick = () =>
         pdfApi.fetchBrevutkastForRevurderingWithFritekst(
@@ -137,7 +135,7 @@ const IngenEndring = (props: { sakId: string; revurdering: BeregnetIngenEndring;
             <RevurderingBunnknapper
                 onNesteClick={'submit'}
                 nesteKnappTekst={props.intl.formatMessage({ id: 'knapp.sendTilAttestering' })}
-                tilbakeUrl={forrigeURL}
+                tilbakeUrl={props.forrigeUrl}
                 onNesteClickSpinner={RemoteData.isPending(sendtTilAttesteringStatus)}
             />
         </form>

@@ -21,6 +21,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     forhåndsvarsel: Nullable<Forhåndsvarsel>;
     behandlingsinformasjon: Behandlingsinformasjon;
     vilkårsvurderinger: Vilkårsvurderinger;
+    informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;
 }
 
 interface Beregninger {
@@ -67,8 +68,11 @@ export interface UnderkjentRevurdering
     simulering: Nullable<Simulering>;
 }
 
+export function harBeregninger(r: Revurdering): r is Revurdering & { beregninger: Beregninger } {
+    return 'beregninger' in r;
+}
 export function harSimulering(r: Revurdering): r is Revurdering & { simulering: Simulering } {
-    return 'simulering' in r && r['simulering'] !== null;
+    return 'simulering' in r;
 }
 
 export enum Forhåndsvarseltype {
@@ -150,4 +154,14 @@ export enum RevurderingErrorCodes {
 export interface LeggTilUføreResponse {
     revurdering: Revurdering;
     gjeldendeVilkårsvurderinger: Vilkårsvurderinger;
+}
+
+export enum InformasjonSomRevurderes {
+    Uførhet = 'Uførhet',
+    Inntekt = 'Inntekt',
+}
+
+export enum Vurderingstatus {
+    IkkeVurdert = 'IkkeVurdert',
+    Vurdert = 'Vurdert',
 }

@@ -1,3 +1,6 @@
+import * as A from 'fp-ts/Array';
+import { pipe } from 'fp-ts/lib/function';
+import * as O from 'fp-ts/Option';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
@@ -7,6 +10,7 @@ import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikato
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { Revurdering, Vurderingstatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 
 import { RevurderingSteg } from '../types';
@@ -17,32 +21,8 @@ import messages from './revurdering-nb';
 import styles from './revurdering.module.less';
 import { EndreRevurderingPage } from './revurderingIntro/EndreRevurderingPage';
 import { NyRevurderingPage } from './revurderingIntro/NyRevurderingPage';
-import { erRevurderingSimulert, erRevurderingIngenEndring } from './revurderingUtils';
+import { revurderingstegrekkefølge, revurderingstegTilInformasjonSomRevurderes } from './revurderingUtils';
 import Uførhet from './uførhet/Uførhet';
-
-export const VisFeilmelding = (props: { forrigeURL: string }) => {
-    const intl = useI18n({ messages: sharedMessages });
-
-    return (
-        <div className={styles.revurderingContainer}>
-            <Innholdstittel className={styles.tittel}>
-                {intl.formatMessage({ id: 'revurdering.tittel' })}
-            </Innholdstittel>
-            <div className={styles.mainContentContainer}>
-                <div>
-                    <Feilmelding className={styles.feilmelding}>
-                        {intl.formatMessage({ id: 'feil.noeGikkGalt' })}
-                    </Feilmelding>
-                </div>
-                <div className={styles.knappContainer}>
-                    <Link className="knapp" to={props.forrigeURL}>
-                        {intl.formatMessage({ id: 'knapp.forrige' })}
-                    </Link>
-                </div>
-            </div>
-        </div>
-    );
-};
 
 const stegTilTekstId = (steg: RevurderingSteg) => {
     switch (steg) {
@@ -57,7 +37,7 @@ const stegTilTekstId = (steg: RevurderingSteg) => {
     }
 };
 
-const Revurdering = (props: { sak: Sak }) => {
+const RevurderingPage = (props: { sak: Sak }) => {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
@@ -94,24 +74,28 @@ const Revurdering = (props: { sak: Sak }) => {
         );
     }
 
-    const alleSteg = [
-        {
-            id: RevurderingSteg.Uførhet,
-            label: intl.formatMessage({ id: stegTilTekstId(RevurderingSteg.Uførhet) }),
-            erKlikkbar: false,
-            status: Linjestatus.Ingenting,
-            url: createRevurderingsPath(RevurderingSteg.Uførhet),
-        },
-        {
-            id: RevurderingSteg.EndringAvFradrag,
-            label: intl.formatMessage({
-                id: stegTilTekstId(RevurderingSteg.EndringAvFradrag),
-            }),
-            erKlikkbar: false,
-            status: Linjestatus.Ingenting,
-            url: createRevurderingsPath(RevurderingSteg.EndringAvFradrag),
-        },
-    ];
+    const alleSteg = revurderingstegrekkefølge.map((steg) => ({
+        id: steg,
+        label: intl.formatMessage({ id: stegTilTekstId(steg) }),
+        erKlikkbar: false,
+        status: Linjestatus.Ingenting,
+        url: createRevurderingsPath(steg),
+    }));
+
+    const aktiveSteg = pipe(
+        alleSteg,
+        A.filterMap((steg) =>
+            pipe(
+                O.fromNullable(revurderingstegTilInformasjonSomRevurderes(steg.id)),
+                O.chainNullableK((i) => påbegyntRevurdering?.informasjonSomRevurderes[i]),
+                O.map((vurderingstatus) => ({
+                    ...steg,
+                    status: vurderingstatus === Vurderingstatus.IkkeVurdert ? Linjestatus.Ingenting : Linjestatus.Ok,
+                }))
+            )
+        )
+    );
+
     return (
         <div className={styles.pageContainer}>
             <Switch>
@@ -136,46 +120,42 @@ const Revurdering = (props: { sak: Sak }) => {
                                 revurderingId: påbegyntRevurdering.id,
                             })}
                         >
-                            <EndreRevurderingPage
-                                sak={props.sak}
-                                revurdering={påbegyntRevurdering}
-                                nesteUrl={createRevurderingsPath(RevurderingSteg.Uførhet)}
-                            />
+                            <EndreRevurderingPage sak={props.sak} revurdering={påbegyntRevurdering} />
                         </Route>
                         <div className={styles.sideMedFramdriftsindikatorContainer}>
                             <Route path={alleSteg.map((s) => s.url)}>
-                                <Framdriftsindikator aktivId={urlParams.steg} elementer={alleSteg} />
+                                <Framdriftsindikator aktivId={urlParams.steg} elementer={aktiveSteg} />
                             </Route>
-                            <Route path={createRevurderingsPath(RevurderingSteg.Uførhet)}>
-                                <Uførhet
-                                    sakId={props.sak.id}
-                                    revurdering={påbegyntRevurdering}
-                                    forrigeUrl={createRevurderingsPath(RevurderingSteg.Periode)}
-                                    nesteUrl={createRevurderingsPath(RevurderingSteg.EndringAvFradrag)}
-                                />
-                            </Route>
-                            <Route path={createRevurderingsPath(RevurderingSteg.EndringAvFradrag)}>
-                                <EndringAvFradrag
-                                    sakId={props.sak.id}
-                                    revurdering={påbegyntRevurdering}
-                                    forrigeUrl={createRevurderingsPath(RevurderingSteg.Uførhet)}
-                                    nesteUrl={createRevurderingsPath(RevurderingSteg.Oppsummering)}
-                                />
-                            </Route>
+                            {aktiveSteg.map((el, idx) => {
+                                const forrigeUrl =
+                                    aktiveSteg[idx - 1]?.url ?? createRevurderingsPath(RevurderingSteg.Periode);
+                                const nesteUrl =
+                                    aktiveSteg[idx + 1]?.url ?? createRevurderingsPath(RevurderingSteg.Oppsummering);
+                                return (
+                                    <Route path={el.url} key={el.id}>
+                                        <RevurderingstegPage
+                                            steg={el.id}
+                                            sakId={props.sak.id}
+                                            revurdering={påbegyntRevurdering}
+                                            forrigeUrl={forrigeUrl}
+                                            nesteUrl={nesteUrl}
+                                        />
+                                    </Route>
+                                );
+                            })}
                         </div>
                         <Route path={createRevurderingsPath(RevurderingSteg.Oppsummering)}>
-                            {erRevurderingSimulert(påbegyntRevurdering) ||
-                            erRevurderingIngenEndring(påbegyntRevurdering) ? (
-                                <RevurderingsOppsummering sakId={props.sak.id} revurdering={påbegyntRevurdering} />
-                            ) : (
-                                <VisFeilmelding
-                                    forrigeURL={Routes.revurderValgtRevurdering.createURL({
-                                        sakId: props.sak.id,
-                                        steg: RevurderingSteg.EndringAvFradrag,
-                                        revurderingId: påbegyntRevurdering.id,
-                                    })}
-                                />
-                            )}
+                            <RevurderingsOppsummering
+                                sakId={props.sak.id}
+                                revurdering={påbegyntRevurdering}
+                                forrigeUrl={
+                                    aktiveSteg[aktiveSteg.length - 1]?.url ??
+                                    createRevurderingsPath(RevurderingSteg.Periode)
+                                }
+                                førsteRevurderingstegUrl={
+                                    aktiveSteg[0]?.url ?? createRevurderingsPath(RevurderingSteg.Periode)
+                                }
+                            />
                         </Route>
                     </>
                 )}
@@ -184,4 +164,35 @@ const Revurdering = (props: { sak: Sak }) => {
     );
 };
 
-export default Revurdering;
+const RevurderingstegPage = (props: {
+    steg: RevurderingSteg;
+    forrigeUrl: string;
+    nesteUrl: string;
+    sakId: string;
+    revurdering: Revurdering;
+}) => {
+    switch (props.steg) {
+        case RevurderingSteg.Uførhet:
+            return (
+                <Uførhet
+                    sakId={props.sakId}
+                    revurdering={props.revurdering}
+                    forrigeUrl={props.forrigeUrl}
+                    nesteUrl={props.nesteUrl}
+                />
+            );
+        case RevurderingSteg.EndringAvFradrag:
+            return (
+                <EndringAvFradrag
+                    sakId={props.sakId}
+                    revurdering={props.revurdering}
+                    forrigeUrl={props.forrigeUrl}
+                    nesteUrl={props.nesteUrl}
+                />
+            );
+        default:
+            return null;
+    }
+};
+
+export default RevurderingPage;

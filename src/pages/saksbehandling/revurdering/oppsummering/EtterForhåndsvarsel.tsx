@@ -13,7 +13,6 @@ import * as revurderingActions from '~features/revurdering/revurderingActions';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch } from '~redux/Store';
 import { BeslutningEtterForhåndsvarsling, RevurderingTilAttestering, SimulertRevurdering } from '~types/Revurdering';
 
@@ -37,7 +36,13 @@ const schema = yup.object<FormData>({
     begrunnelse: yup.string(),
 });
 
-const EtterForhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevurdering; intl: IntlShape }) => {
+const EtterForhåndsvarsel = (props: {
+    sakId: string;
+    revurdering: SimulertRevurdering;
+    intl: IntlShape;
+    forrigeUrl: string;
+    førsteRevurderingstegUrl: string;
+}) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [sendtTilAttesteringStatus, setSendtTilAttesteringStatus] = useState<
@@ -78,13 +83,7 @@ const EtterForhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevur
         if (revurderingActions.fortsettEtterForhåndsvarsel.fulfilled.match(res)) {
             setSendtTilAttesteringStatus(RemoteData.success(res.payload));
             if (data.resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger) {
-                history.push(
-                    Routes.revurderValgtRevurdering.createURL({
-                        sakId: props.sakId,
-                        steg: RevurderingSteg.EndringAvFradrag,
-                        revurderingId: props.revurdering.id,
-                    })
-                );
+                history.push(props.førsteRevurderingstegUrl);
                 return;
             }
 
@@ -191,11 +190,7 @@ const EtterForhåndsvarsel = (props: { sakId: string; revurdering: SimulertRevur
                         ? props.intl.formatMessage({ id: 'knapp.sendtBrevOgAvslutt' })
                         : undefined
                 }
-                tilbakeUrl={Routes.revurderValgtRevurdering.createURL({
-                    sakId: props.sakId,
-                    steg: RevurderingSteg.EndringAvFradrag,
-                    revurderingId: props.revurdering.id,
-                })}
+                tilbakeUrl={props.forrigeUrl}
                 onNesteClickSpinner={RemoteData.isPending(sendtTilAttesteringStatus)}
             />
         </form>

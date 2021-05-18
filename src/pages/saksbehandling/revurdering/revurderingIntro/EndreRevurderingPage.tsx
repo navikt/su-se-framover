@@ -6,43 +6,53 @@ import { oppdaterRevurderingsPeriode as oppdaterRevurdering } from '~features/re
 import { startenPåForrigeMåned } from '~lib/dateUtils';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
+import { InformasjonSomRevurderes, OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { compareUtbetalingsperiode } from '~types/Utbetalingsperiode';
 
+import { finnNesteRevurderingsteg } from '../revurderingUtils';
+
 import RevurderingIntroForm from './RevurderingIntroForm';
 
-export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering; nesteUrl: string }) => {
+export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering }) => {
     const oppdaterRevurderingStatus = useAppSelector((state) => state.sak.oppdaterRevurderingStatus);
     const history = useHistory();
 
     const dispatch = useAppDispatch();
-    const handleNesteClick = async (fraOgMed: Date, årsak: OpprettetRevurderingGrunn, begrunnelse: string) => {
+    const handleNesteClick = async (arg: {
+        fraOgMed: Date;
+        årsak: OpprettetRevurderingGrunn;
+        informasjonSomRevurderes: InformasjonSomRevurderes[];
+        begrunnelse: string;
+    }) => {
         const response = await dispatch(
             oppdaterRevurdering({
                 sakId: props.sak.id,
                 revurderingId: props.revurdering.id,
-                fraOgMed: fraOgMed,
-                årsak: årsak,
-                begrunnelse: begrunnelse,
+                ...arg,
             })
         );
         if (oppdaterRevurdering.fulfilled.match(response)) {
-            history.push(props.nesteUrl);
+            history.push(
+                Routes.revurderValgtRevurdering.createURL({
+                    sakId: props.sak.id,
+                    revurderingId: props.revurdering.id,
+                    steg: finnNesteRevurderingsteg(response.payload.informasjonSomRevurderes),
+                })
+            );
         }
     };
-    const handleLagreOgFortsettSenereClick = async (
-        fraOgMed: Date,
-        årsak: OpprettetRevurderingGrunn,
-        begrunnelse: string
-    ) => {
+    const handleLagreOgFortsettSenereClick = async (arg: {
+        fraOgMed: Date;
+        årsak: OpprettetRevurderingGrunn;
+        informasjonSomRevurderes: InformasjonSomRevurderes[];
+        begrunnelse: string;
+    }) => {
         const response = await dispatch(
             oppdaterRevurdering({
                 sakId: props.sak.id,
                 revurderingId: props.revurdering.id,
-                fraOgMed: fraOgMed,
-                årsak: årsak,
-                begrunnelse: begrunnelse,
+                ...arg,
             })
         );
 

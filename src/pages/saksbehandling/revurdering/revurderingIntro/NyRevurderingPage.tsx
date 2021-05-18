@@ -5,11 +5,12 @@ import { useHistory } from 'react-router-dom';
 import { opprettRevurdering } from '~features/revurdering/revurderingActions';
 import { startenPåForrigeMåned } from '~lib/dateUtils';
 import * as Routes from '~lib/routes';
-import { RevurderingSteg } from '~pages/saksbehandling/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { OpprettetRevurderingGrunn } from '~types/Revurdering';
+import { InformasjonSomRevurderes, OpprettetRevurderingGrunn } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { compareUtbetalingsperiode } from '~types/Utbetalingsperiode';
+
+import { finnNesteRevurderingsteg } from '../revurderingUtils';
 
 import RevurderingIntroForm from './RevurderingIntroForm';
 
@@ -18,13 +19,16 @@ export const NyRevurderingPage = (props: { sak: Sak }) => {
     const history = useHistory();
 
     const dispatch = useAppDispatch();
-    const handleNesteClick = async (fraOgMed: Date, årsak: OpprettetRevurderingGrunn, begrunnelse: string) => {
+    const handleNesteClick = async (arg: {
+        fraOgMed: Date;
+        årsak: OpprettetRevurderingGrunn;
+        informasjonSomRevurderes: InformasjonSomRevurderes[];
+        begrunnelse: string;
+    }) => {
         const response = await dispatch(
             opprettRevurdering({
                 sakId: props.sak.id,
-                fraOgMed,
-                årsak: årsak,
-                begrunnelse: begrunnelse,
+                ...arg,
             })
         );
 
@@ -32,24 +36,23 @@ export const NyRevurderingPage = (props: { sak: Sak }) => {
             history.push(
                 Routes.revurderValgtRevurdering.createURL({
                     sakId: props.sak.id,
-                    steg: RevurderingSteg.Uførhet,
                     revurderingId: response.payload.id,
+                    steg: finnNesteRevurderingsteg(response.payload.informasjonSomRevurderes),
                 })
             );
         }
     };
 
-    const handleLagreOgFortsettSenereClick = async (
-        fraOgMed: Date,
-        årsak: OpprettetRevurderingGrunn,
-        begrunnelse: string
-    ) => {
+    const handleLagreOgFortsettSenereClick = async (arg: {
+        fraOgMed: Date;
+        årsak: OpprettetRevurderingGrunn;
+        informasjonSomRevurderes: InformasjonSomRevurderes[];
+        begrunnelse: string;
+    }) => {
         const response = await dispatch(
             opprettRevurdering({
                 sakId: props.sak.id,
-                fraOgMed,
-                årsak: årsak,
-                begrunnelse: begrunnelse,
+                ...arg,
             })
         );
 

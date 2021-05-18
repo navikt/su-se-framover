@@ -24,27 +24,23 @@ import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { useI18n, useNotificationFromLocation } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { getIverksatteInnvilgedeSøknader, søknadMottatt, getIverksatteAvslåtteSøknader } from '~lib/søknadUtils';
 import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
 import { Behandling, UnderkjennelseGrunn, Underkjennelse } from '~types/Behandling';
+import { Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 import { Vedtak } from '~types/Vedtak';
 
 import {
-    getIverksatteInnvilgedeSøknader,
-    søknadMottatt,
-    getIverksatteAvslåtteSøknader,
-} from '../../../lib/søknadUtils';
-import { Revurdering } from '../../../types/Revurdering';
-import {
     erRevurderingTilAttestering,
     erRevurderingIverksatt,
     erRevurderingSimulert,
-    erRevurderingOpprettet,
     erRevurderingUnderkjent,
     erForhåndsvarselSendt,
+    finnNesteRevurderingsteg,
 } from '../revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
@@ -374,9 +370,7 @@ const RevurderingStartetKnapper = (props: {
                                 sakId: props.sakId,
                                 steg: erRevurderingSimulert(revurdering)
                                     ? RevurderingSteg.Oppsummering
-                                    : erRevurderingOpprettet(revurdering)
-                                    ? RevurderingSteg.EndringAvFradrag
-                                    : RevurderingSteg.Periode,
+                                    : finnNesteRevurderingsteg(revurdering.informasjonSomRevurderes),
                                 revurderingId: revurdering.id,
                             })}
                         >
