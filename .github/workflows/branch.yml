@@ -1,16 +1,20 @@
-name: Bygg og deploy branch til dev
-
+name: Build non-master/main branches on push.
+# If you want to deploy your branch see branch-deploy.yml
 on:
     push:
         branches:
-            - changethis
+            - '*' # matches every branch that doesn't contain a '/'
+            - '*/*' # matches every branch containing a single '/'
+            - '**' # matches every branch
+            - '!master' # excludes master
+            - '!main' # excludes main (will probably replace master)
 
 env:
     IMAGE: docker.pkg.github.com/${{ github.repository }}/su-se-framover:${{ github.sha }}
 
 jobs:
     build:
-        name: Build and push Docker container
+        name: Build, test and type-check
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v1
@@ -23,23 +27,3 @@ jobs:
               run: npm run lint-and-typecheck
             - name: build client
               run: npm run build
-            - name: Build and publish Docker image
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: |
-                  docker build --tag ${IMAGE} .
-                  docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
-                  docker push ${IMAGE}
-
-    deploy-to-both:
-        name: Deploy to dev
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v1
-            - uses: nais/deploy/actions/deploy@v1
-              env:
-                  APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-                  CLUSTER: dev-fss
-                  RESOURCE: nais.yml
-                  VARS: nais-dev.json
