@@ -1,9 +1,12 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import fnrValidator from '@navikt/fnrvalidator';
 import { FormikErrors } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Input, Radio, RadioGruppe, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useState, useMemo } from 'react';
 
+import { ApiError } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import { Person } from '~api/personApi';
 import { Personkort } from '~components/Personkort';
@@ -100,24 +103,31 @@ interface FnrInputProps {
     onAlderChange: (alder: Nullable<number>) => void;
 }
 const FnrInput = ({ inputId, fnr, onFnrChange, feil, autoComplete, onAlderChange }: FnrInputProps) => {
-    const [person, setPerson] = useState<Person | null>(null);
+    const [person, setPerson] = useState<RemoteData.RemoteData<ApiError, Person>>(RemoteData.initial);
     const [harIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
     const intl = useI18n({ messages });
 
     async function fetchPerson(fødselsnummer: string) {
         setHarIkkeTilgang(false);
+        setPerson(RemoteData.pending);
         const res = await personApi.fetchPerson(fødselsnummer);
-        if (res.status === 'error' && res.error.statusCode === 403) {
-            setHarIkkeTilgang(true);
+
+        if (res.status === 'error') {
+            if (res.error.statusCode === 403) {
+                setHarIkkeTilgang(true);
+            } else {
+                setPerson(RemoteData.failure(res.error));
+            }
         }
+
         if (res.status === 'ok') {
-            setPerson(res.data);
+            setPerson(RemoteData.success(res.data));
             onAlderChange(res.data.alder);
         }
     }
 
     useEffect(() => {
-        setPerson(null);
+        setPerson(RemoteData.initial);
         if (fnr?.length === 11) {
             const validateFnr = fnrValidator.fnr(fnr);
             if (validateFnr.status === 'valid') {
@@ -139,9 +149,17 @@ const FnrInput = ({ inputId, fnr, onFnrChange, feil, autoComplete, onAlderChange
                 autoComplete={autoComplete}
             />
 
-            {person && (
+            {RemoteData.isPending(person) && <NavFrontendSpinner />}
+            {RemoteData.isSuccess(person) && (
                 <div className={styles.personkort}>
-                    <Personkort person={person} />
+                    <Personkort person={person.value} />
+                </div>
+            )}
+            {RemoteData.isFailure(person) && (
+                <div>
+                    <AlertStripe type="feil">
+                        {intl.formatMessage({ id: 'ektefelleEllerSamboer.feil.kunneIkkeSøkePerson' })}
+                    </AlertStripe>
                 </div>
             )}
             {harIkkeTilgang && (
