@@ -29,6 +29,8 @@ export const erRevurderingForhåndsvarslet = (r: Revurdering) => r.forhåndsvars
 export const erForhåndsvarselSendt = (r: Revurdering) => r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesSendt;
 export const erForhåndsvarslingBesluttet = (r: Revurdering) =>
     r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesBesluttet;
+export const erIngenForhåndsvarsel = (r: Revurdering) =>
+    r.forhåndsvarsel?.type === Forhåndsvarseltype.IngenForhåndsvarsel;
 
 export const erRevurderingIngenEndring = (
     r: Revurdering

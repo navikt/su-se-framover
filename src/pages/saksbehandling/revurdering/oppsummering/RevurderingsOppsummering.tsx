@@ -37,6 +37,7 @@ import {
     erRevurderingOpprettet,
     erBeregnetIngenEndring,
     erRevurderingUnderkjent,
+    erIngenForhåndsvarsel,
 } from '../revurderingUtils';
 
 import EtterForhåndsvarsel from './EtterForhåndsvarsel';
@@ -99,7 +100,7 @@ const RevurderingsOppsummering = (props: {
 
         if (erRevurderingSimulert(r)) {
             if (erRevurderingForhåndsvarslet(r)) {
-                if (erForhåndsvarslingBesluttet(r)) {
+                if (erForhåndsvarslingBesluttet(r) || erIngenForhåndsvarsel(r)) {
                     return (
                         <SendRevurderingTilAttesteringForm
                             sakId={props.sakId}
