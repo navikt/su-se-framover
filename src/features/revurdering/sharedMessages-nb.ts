@@ -23,6 +23,10 @@ export default {
     'revurdering.ingenEndring':
         'Ny beregning fører til mindre enn 10 % endring av utbetalingen. Vi lagrer beregningen, men utbetalingen til bruker blir ikke endret.',
 
+    'revurdering.ingenEndring.gregulering.tittel': 'G-regulering',
+    'revurdering.ingenEndring.gregulering.beskrivelse':
+        'Denne revurderingen har samme utbetalingsbeløp per måned. Det er derfor ingen simulering. Vi lagrer den nye informasjonen som er satt in.',
+
     'feil.noeGikkGalt': 'Noe gikk galt. Gå tilbake og prøv igjen',
     'feil.kanIkkeRevurdere': 'Det finnes ingen perioder for revurdering',
 

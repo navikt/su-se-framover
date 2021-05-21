@@ -10,7 +10,7 @@ import { BrevInput } from '~components/brevInput/BrevInput';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import * as Routes from '~lib/routes';
 import { useAppDispatch } from '~redux/Store';
-import { RevurderingTilAttestering, SimulertRevurdering } from '~types/Revurdering';
+import { RevurderingTilAttestering, SimulertRevurdering, UnderkjentRevurdering } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 
@@ -20,7 +20,7 @@ interface FormData {
 
 const SendRevurderingTilAttesteringForm = (props: {
     sakId: string;
-    revurdering: SimulertRevurdering;
+    revurdering: SimulertRevurdering | UnderkjentRevurdering;
     forrigeUrl: string;
     intl: IntlShape;
 }) => {

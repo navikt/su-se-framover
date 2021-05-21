@@ -35,6 +35,8 @@ import {
     erRevurderingSimulert,
     erGregulering,
     erRevurderingOpprettet,
+    erBeregnetIngenEndring,
+    erRevurderingUnderkjent,
 } from '../revurderingUtils';
 
 import EtterForhåndsvarsel from './EtterForhåndsvarsel';
@@ -91,7 +93,7 @@ const RevurderingsOppsummering = (props: {
             );
         }
 
-        if (erRevurderingIngenEndring(r)) {
+        if (erBeregnetIngenEndring(r)) {
             return <IngenEndring sakId={props.sakId} revurdering={r} intl={intl} forrigeUrl={props.forrigeUrl} />;
         }
 
@@ -123,6 +125,17 @@ const RevurderingsOppsummering = (props: {
             return <Forhåndsvarsel sakId={props.sakId} revurdering={r} intl={intl} forrigeUrl={props.forrigeUrl} />;
         }
 
+        if (erRevurderingUnderkjent(r)) {
+            return (
+                <SendRevurderingTilAttesteringForm
+                    sakId={props.sakId}
+                    revurdering={r}
+                    intl={intl}
+                    forrigeUrl={props.forrigeUrl}
+                />
+            );
+        }
+
         return null;
     };
 
@@ -147,12 +160,17 @@ const RevurderingsOppsummering = (props: {
                         ),
                         (err) => <RevurderingskallFeilet error={err} />,
                         () =>
-                            erRevurderingSimulert(props.revurdering) || erRevurderingIngenEndring(props.revurdering) ? (
+                            erRevurderingSimulert(props.revurdering) ||
+                            erBeregnetIngenEndring(props.revurdering) ||
+                            erRevurderingUnderkjent(props.revurdering) ? (
                                 <>
-                                    {erRevurderingIngenEndring(props.revurdering) &&
-                                        !erGregulering(props.revurdering.årsak) && (
-                                            <RevurderingIngenEndringAlert className={styles.ingenEndringInfoboks} />
-                                        )}
+                                    {erRevurderingIngenEndring(props.revurdering) && (
+                                        <RevurderingIngenEndringAlert
+                                            årsak={props.revurdering.årsak}
+                                            className={styles.ingenEndringInfoboks}
+                                        />
+                                    )}
+
                                     <RevurderingÅrsakOgBegrunnelse
                                         className={styles.årsakBegrunnelseContainer}
                                         revurdering={props.revurdering}

@@ -179,7 +179,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                     </Innholdstittel>
                 </div>
                 {erRevurderingIngenEndring(revurdering) && (
-                    <RevurderingIngenEndringAlert className={styles.ingenEndringInfoboks} />
+                    <RevurderingIngenEndringAlert årsak={revurdering.årsak} className={styles.ingenEndringInfoboks} />
                 )}
                 <RevurderingÅrsakOgBegrunnelse className={styles.årsakBegrunnelseContainer} revurdering={revurdering} />
                 <div className={styles.beregningContainer}>

@@ -4,11 +4,25 @@ import * as React from 'react';
 
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
+import { erGregulering } from '~pages/saksbehandling/revurdering/revurderingUtils';
+import { OpprettetRevurderingGrunn } from '~types/Revurdering';
 
 import styles from './revurdering.module.less';
 
-const RevurderingIngenEndringAlert = (props: { className?: string }) => {
+const RevurderingIngenEndringAlert = (props: { årsak: OpprettetRevurderingGrunn; className?: string }) => {
     const intl = useI18n({ messages: sharedMessages });
+
+    if (erGregulering(props.årsak)) {
+        return (
+            <AlertStripeInfo className={props.className}>
+                <Undertittel className={styles.undertittelContainer}>
+                    {intl.formatMessage({ id: 'revurdering.ingenEndring.gregulering.tittel' })}
+                </Undertittel>
+                <p>{intl.formatMessage({ id: 'revurdering.ingenEndring.gregulering.beskrivelse' })}</p>
+            </AlertStripeInfo>
+        );
+    }
+
     return (
         <AlertStripeInfo className={props.className}>
             <Undertittel className={styles.undertittelContainer}>
