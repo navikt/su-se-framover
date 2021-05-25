@@ -13,14 +13,24 @@
 }
 
 .opphørsadvarsel {
+    display: flex;
     margin-bottom: @spacing;
 }
 
-.selectContainer {
-    margin-bottom: @spacing;
+.beslutningContainer {
+    display: flex;
+    flex-direction: column;
 
-    .select {
-        margin-bottom: @spacing-xs;
+    > * {
+        width: 500px;
+    }
+
+    .selectContainer {
+        margin-bottom: @spacing;
+
+        .select {
+            margin-bottom: @spacing-xs;
+        }
     }
 }
 

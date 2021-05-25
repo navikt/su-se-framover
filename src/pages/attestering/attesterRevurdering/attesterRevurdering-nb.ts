@@ -10,6 +10,8 @@ export default {
     'feil.ikkeTilAttestering': 'Revurderingen er ikke til attestering.',
     'feil.klarteIkkeHenteBrev': 'Klarte ikke hente brevet.',
 
+    'info.opphør': 'Denne revurderingen fører til opphør for bruker',
+
     'input.grunn.label': 'Grunn',
     'input.grunn.value.default': 'Velg grunn',
     'input.grunn.value.beregningErFeil': 'Beregning er feil',
