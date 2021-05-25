@@ -17,6 +17,7 @@ import { useHistory } from 'react-router-dom';
 
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { kanSimuleres } from '~features/behandling/behandlingUtils';
+import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
@@ -78,7 +79,7 @@ function getInitialValues(beregning: Nullable<Beregning>): FormData {
 
 const Beregning = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
-    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages, ...fradragstypeMessages } });
     const [needsBeregning, setNeedsBeregning] = useState(false);
 
     const { beregningStatus, simuleringStatus } = useAppSelector((state) => state.sak);
