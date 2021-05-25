@@ -18,7 +18,7 @@ import {
     LeggTilUføreResponse,
     InformasjonSomRevurderes,
 } from '~types/Revurdering';
-import { UføreResultat, Vilkårsvurderinger } from '~types/Vilkår';
+import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 export const opprettRevurdering = createAsyncThunk<
     OpprettetRevurdering,
@@ -207,15 +207,15 @@ export const lagreUføregrunnlag = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const hentUføregrunnlag = createAsyncThunk<
-    Vilkårsvurderinger,
+export const hentGrunnlagsdataOgVilkårsvurderinger = createAsyncThunk<
+    GrunnlagsdataOgVilkårsvurderinger,
     {
         sakId: string;
         revurderingId: string;
     },
     { rejectValue: ApiError }
->('revurdering/grunnlag/uføre/hent', async ({ sakId, revurderingId }, thunkApi) => {
-    const res = await revurderingApi.hentUføregrunnlag(sakId, revurderingId);
+>('revurdering/grunnlagsdataOgVilkårsvurderinger/hent', async ({ sakId, revurderingId }, thunkApi) => {
+    const res = await revurderingApi.hentGrunnlagsdataOgVilkårsvurderinger(sakId, revurderingId);
     if (res.status === 'ok') {
         return res.data;
     }

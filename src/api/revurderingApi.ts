@@ -17,7 +17,7 @@ import {
     InformasjonSomRevurderes,
 } from '~types/Revurdering';
 
-import { UføreResultat, Vilkårsvurderinger } from '../types/Vilkår';
+import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '../types/Vilkår';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -177,12 +177,12 @@ export async function lagreUføregrunnlag(arg: {
     });
 }
 
-export async function hentUføregrunnlag(
+export async function hentGrunnlagsdataOgVilkårsvurderinger(
     sakId: string,
     revurderingId: string
-): Promise<ApiClientResult<Vilkårsvurderinger>> {
-    return apiClient<Vilkårsvurderinger>({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/uføregrunnlag`,
+): Promise<ApiClientResult<GrunnlagsdataOgVilkårsvurderinger>> {
+    return apiClient<GrunnlagsdataOgVilkårsvurderinger>({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/grunnlagsdataOgVilkårsvurderinger`,
         method: 'GET',
     });
 }

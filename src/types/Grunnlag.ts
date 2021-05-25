@@ -8,6 +8,3 @@ export interface Uføregrunnlag {
     forventetInntekt: number;
     begrunnelse: Nullable<string>;
 }
-export interface Grunnlag {
-    uføre: Uføregrunnlag[];
-}

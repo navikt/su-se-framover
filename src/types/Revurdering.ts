@@ -5,7 +5,7 @@ import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
 import { Periode } from './Periode';
 import { Simulering } from './Simulering';
-import { Vilkårsvurderinger } from './Vilkår';
+import { GrunnlagsdataOgVilkårsvurderinger } from './Vilkår';
 
 export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
     id: string;
@@ -20,7 +20,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     begrunnelse: Nullable<string>;
     forhåndsvarsel: Nullable<Forhåndsvarsel>;
     behandlingsinformasjon: Behandlingsinformasjon;
-    vilkårsvurderinger: Vilkårsvurderinger;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;
 }
 
@@ -167,7 +167,7 @@ export enum RevurderingErrorCodes {
 }
 export interface LeggTilUføreResponse {
     revurdering: Revurdering;
-    gjeldendeVilkårsvurderinger: Vilkårsvurderinger;
+    gjeldendeVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }
 
 export enum InformasjonSomRevurderes {
