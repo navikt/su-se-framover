@@ -76,6 +76,7 @@ const RevurderingsOppsummering = (props: {
                 if (RevurderingActions.beregnOgSimuler.fulfilled.match(res)) {
                     setBeregnOgSimulerStatus(RemoteData.success(null));
                 } else if (RevurderingActions.beregnOgSimuler.rejected.match(res)) {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     setBeregnOgSimulerStatus(RemoteData.failure(res.payload!));
                 }
             });

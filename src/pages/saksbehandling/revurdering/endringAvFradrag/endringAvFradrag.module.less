@@ -6,3 +6,29 @@
 .forventetInntektContainer {
     margin-bottom: @spacing-l;
 }
+
+.grunnlagsdataHeading {
+    margin-bottom: @spacing;
+}
+
+.grunnlagsdataPeriodeHeader {
+    margin-bottom: @spacing-xs;
+}
+
+.grunnlagsliste li {
+    margin-bottom: @spacing-xxs;
+}
+
+.linje {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    column-gap: @spacing-xxs;
+
+    .detailedLinje {
+        margin-left: @spacing;
+    }
+
+    :nth-child(even) {
+        text-align: end;
+    }
+}

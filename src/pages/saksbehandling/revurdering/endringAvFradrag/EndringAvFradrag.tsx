@@ -1,15 +1,26 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
+import * as A from 'fp-ts/Array';
+import * as Eq from 'fp-ts/Eq';
+import * as O from 'fp-ts/Option';
+import { Systemtittel, Element, Undertekst } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import ToKolonner from '~components/toKolonner/ToKolonner';
+import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
+import { getFradragstypeStringMedEpsSpesifisering } from '~features/fradrag/fradragUtils';
 import { beregnOgSimuler } from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
+import { groupByEq } from '~lib/arrayUtils';
+import * as DateUtils from '~lib/dateUtils';
+import { formatCurrency } from '~lib/formatUtils';
 import { customFormikSubmit } from '~lib/formikUtils';
+import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { eqNullable } from '~lib/types';
 import yup from '~lib/validering';
 import { fradragTilFradragFormData } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/beregningUtils';
 import {
@@ -18,8 +29,10 @@ import {
     fradragSchema,
 } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/FradragInputs';
 import { useAppDispatch } from '~redux/Store';
-import { Fradragstype, FradragTilhører } from '~types/Fradrag';
+import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
+import { eqStringPeriode } from '~types/Periode';
 import { Revurdering } from '~types/Revurdering';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregning-nb';
 import uføreMessages from '../../steg/uførhet/uførhet-nb';
@@ -29,6 +42,7 @@ import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFe
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 import { erRevurderingSimulert } from '../revurderingUtils';
 
+import messages from './endringAvFradrag-nb';
 import styles from './endringAvFradrag.module.less';
 
 interface EndringAvFradragFormData {
@@ -41,8 +55,97 @@ enum SubmittedStatus {
     LAGRE,
 }
 
-const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering; forrigeUrl: string; nesteUrl: string }) => {
-    const intl = useI18n({ messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages } });
+const GjeldendeFradrag = (props: { fradrag: Fradrag[] }) => {
+    const intl = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
+    return (
+        <div>
+            <Systemtittel className={styles.grunnlagsdataHeading}>
+                {intl.formatMessage({ id: 'heading.gjeldendeFradrag' })}
+            </Systemtittel>
+            <ul className={styles.grunnlagsliste}>
+                {pipe(
+                    props.fradrag,
+                    groupByEq(
+                        pipe(
+                            eqNullable(eqStringPeriode),
+                            Eq.contramap((f) => f.periode)
+                        )
+                    ),
+                    A.mapWithIndex((idx, fradragsgruppe) => (
+                        <li key={idx}>
+                            <Element className={styles.grunnlagsdataPeriodeHeader}>
+                                {pipe(
+                                    A.head(fradragsgruppe),
+                                    O.chainNullableK((head) => head.periode),
+                                    O.map(
+                                        (periode) =>
+                                            `${DateUtils.formatMonthYear(
+                                                periode.fraOgMed,
+                                                intl
+                                            )} – ${DateUtils.formatMonthYear(periode.tilOgMed, intl)}`
+                                    ),
+                                    O.getOrElse(() => intl.formatMessage({ id: 'feil.ukjent.periode' }))
+                                )}
+                            </Element>
+
+                            <ul>
+                                {fradragsgruppe.map((fradrag, idx) => (
+                                    <li key={idx} className={styles.linje}>
+                                        <span>
+                                            {getFradragstypeStringMedEpsSpesifisering(
+                                                fradrag.type,
+                                                fradrag.tilhører,
+                                                intl
+                                            )}
+                                        </span>
+                                        <span>{formatCurrency(intl, fradrag.beløp)}</span>
+                                        {fradrag.utenlandskInntekt !== null && (
+                                            <>
+                                                <Undertekst className={styles.detailedLinje}>
+                                                    {intl.formatMessage({
+                                                        id: 'fradrag.utenlandsk.beløp',
+                                                    })}
+                                                </Undertekst>
+                                                <Undertekst className={styles.alignTextRight}>
+                                                    {formatCurrency(
+                                                        intl,
+                                                        fradrag.utenlandskInntekt.beløpIUtenlandskValuta,
+                                                        {
+                                                            currency: fradrag.utenlandskInntekt.valuta,
+                                                        }
+                                                    )}
+                                                </Undertekst>
+                                                <Undertekst className={styles.detailedLinje}>
+                                                    {intl.formatMessage({
+                                                        id: 'fradrag.utenlandsk.kurs',
+                                                    })}
+                                                </Undertekst>
+                                                <Undertekst className={styles.alignTextRight}>
+                                                    {intl.formatNumber(fradrag.utenlandskInntekt.kurs)}
+                                                </Undertekst>
+                                            </>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        </li>
+                    ))
+                )}
+            </ul>
+        </div>
+    );
+};
+
+const EndringAvFradrag = (props: {
+    sakId: string;
+    revurdering: Revurdering;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    forrigeUrl: string;
+    nesteUrl: string;
+}) => {
+    const intl = useI18n({
+        messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages, ...fradragstypeMessages },
+    });
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [beregnOgSimulerStatus, setBeregnOgSimulerStatus] = useState<RemoteData.RemoteData<ApiError, null>>(
@@ -110,7 +213,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering; forr
                 ? fradragUtenForventetInntekt(
                       props.revurdering.beregninger.revurdert.fradrag.map(fradragTilFradragFormData)
                   )
-                : [],
+                : props.grunnlagsdataOgVilkårsvurderinger.fradrag.map(fradragTilFradragFormData),
         },
         async onSubmit(values) {
             if (await beregnOgSimulerRevurdering(values)) {
@@ -200,7 +303,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering; forr
                         </div>
                     </form>
                 ),
-                right: <span />,
+                right: <GjeldendeFradrag fradrag={props.grunnlagsdataOgVilkårsvurderinger.fradrag} />,
             }}
         </ToKolonner>
     );
