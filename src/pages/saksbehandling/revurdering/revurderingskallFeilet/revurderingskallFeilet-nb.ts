@@ -16,7 +16,7 @@ export default {
     'feil.kunne.ikke.opprette.oppgave': 'Kunne ikke opprette oppgave',
     'feil.kunne.ikke.journalføre.brev': 'Kunne ikke journalføre brev',
     'feil.kunne.ikke.distribuere.brev': 'Distribuering av brev feilet',
-    'feil.kunne.ikke.kontroll.simulere': 'Kunne ikke kontroll simulere',
+    'feil.kunne.ikke.kontroll.simulere': 'Kunne ikke kontrollsimulere',
     'feil.kunne.ikke.utbetale': 'Kunne ikke utbetale',
 
     'feil.ugyldig.periode': 'Ugyldig periode',
