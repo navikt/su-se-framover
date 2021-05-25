@@ -22,12 +22,19 @@ export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurderin
 export const erRevurderingSimulert = (r: Revurdering): r is SimulertRevurdering =>
     r.status === RevurderingsStatus.SIMULERT_INNVILGET || r.status === RevurderingsStatus.SIMULERT_OPPHØRT;
 
+export const erBeregnetIngenEndring = (r: Revurdering): r is BeregnetIngenEndring =>
+    r.status === RevurderingsStatus.BEREGNET_INGEN_ENDRING;
+
 export const erRevurderingForhåndsvarslet = (r: Revurdering) => r.forhåndsvarsel !== null;
 export const erForhåndsvarselSendt = (r: Revurdering) => r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesSendt;
 export const erForhåndsvarslingBesluttet = (r: Revurdering) =>
     r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesBesluttet;
+export const erIngenForhåndsvarsel = (r: Revurdering) =>
+    r.forhåndsvarsel?.type === Forhåndsvarseltype.IngenForhåndsvarsel;
 
-export const erRevurderingIngenEndring = (r: Revurdering): r is BeregnetIngenEndring =>
+export const erRevurderingIngenEndring = (
+    r: Revurdering
+): r is BeregnetIngenEndring | UnderkjentRevurdering | IverksattRevurdering | RevurderingTilAttestering =>
     r.status === RevurderingsStatus.BEREGNET_INGEN_ENDRING ||
     r.status === RevurderingsStatus.UNDERKJENT_INGEN_ENDRING ||
     r.status === RevurderingsStatus.IVERKSATT_INGEN_ENDRING ||
