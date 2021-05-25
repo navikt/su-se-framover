@@ -126,30 +126,44 @@ export enum OpprettetRevurderingGrunn {
 }
 
 export enum RevurderingErrorCodes {
+    //forhåndsvarsling
     ALLEREDE_FORHÅNDSVARSLET = 'allerede_forhåndsvarslet',
-    INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
-    BEGRUNNELSE_KAN_IKKE_VÆRE_TOM = 'begrunnelse_kan_ikke_være_tom',
     KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET = 'kan_ikke_oppdatere_revurdering_som_er_forhåndsvarslet',
+    MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL = 'mangler_beslutning_på_forhåndsvarsel',
+
+    //perioder
     PERIODE_OG_ÅRSAK_KOMBINASJON_ER_UGYLDIG = 'periode_og_årsak_kombinasjon_er_ugyldig',
+    INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
+    OVERLAPPENDE_VURDERINGSPERIODER = 'overlappende_vurderingsperioder',
+    HELE_REVURDERINGSPERIODEN_MÅ_HA_VURDERINGER = 'hele_behandlingsperioden_må_ha_vurderinger',
+    VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
+
+    //Fant_ikke....
     FANT_IKKE_SAK = 'fant_ikke_sak',
     FANT_IKKE_PERSON = 'fant_ikke_person',
     FANT_IKKE_AKTØR_ID = 'fant_ikke_aktør_id',
     FANT_IKKE_REVURDERING = 'fant_ikke_revurdering',
+
+    //ugyldig...
     UGYLDIG_PERIODE = 'ugyldig_periode',
     UGYLDIG_TILSTAND = 'ugyldig_tilstand',
     UGYLDIG_ÅRSAK = 'ugyldig_årsak',
+
+    //kunne_ikke...
     KUNNE_IKKE_OPPRETTE_OPPGAVE = 'kunne_ikke_opprette_oppgave',
     KUNNE_IKKE_DISTRIBUERE_BREV = 'kunne_ikke_distribuere_brev',
     KUNNE_IKKE_JOURNALFØRE_BREV = 'kunne_ikke_journalføre_brev',
+    KUNNE_IKKE_KONTROLL_SIMULERE = 'kunne_ikke_kontrollsimulere',
+    KUNNE_IKKE_UTBETALE = 'kunne_ikke_utbetale',
+
+    //generell
+    BEGRUNNELSE_KAN_IKKE_VÆRE_TOM = 'begrunnelse_kan_ikke_være_tom',
     UFULLSTENDIG_BEHANDLINGSINFORMASJON = 'ufullstendig_behandlingsinformasjon',
     SIMULERING_FEILET = 'simulering_feilet',
     SISTE_MÅNED_VED_NEDGANG_I_STØNADEN = 'siste_måned_ved_nedgang_i_stønaden',
     G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
-    MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL = 'mangler_beslutning_på_forhåndsvarsel',
-    OVERLAPPENDE_VURDERINGSPERIODER = 'overlappende_vurderingsperioder',
     VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
-    VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
-    HELE_REVURDERINGSPERIODEN_MÅ_HA_VURDERINGER = 'hele_behandlingsperioden_må_ha_vurderinger',
+    ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON = 'attestant_og_saksbehandler_kan_ikke_være_samme_person',
 }
 export interface LeggTilUføreResponse {
     revurdering: Revurdering;

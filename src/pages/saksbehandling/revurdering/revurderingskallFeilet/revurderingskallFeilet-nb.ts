@@ -1,5 +1,6 @@
 export default {
     'feil.allerede.forhåndsvarslet': 'Revurderingen er allerede blitt forhåndsvarslet',
+    'feil.attestant.og.saksbehandler.kan.ikke.være.samme.person': 'Kan ikke attestere egen saksbehandling',
     'feil.tidligst.neste.måned': 'Revurdering kan kun gjøres fra og med neste kalendermåned',
     'feil.begrunnelse.kan.ikke.være.tom': 'Begrunnelse kan ikke være tom',
     'feil.kan.ikke.revurdere': 'Det finnes ingen perioder for revurdering',
@@ -15,6 +16,8 @@ export default {
     'feil.kunne.ikke.opprette.oppgave': 'Kunne ikke opprette oppgave',
     'feil.kunne.ikke.journalføre.brev': 'Kunne ikke journalføre brev',
     'feil.kunne.ikke.distribuere.brev': 'Distribuering av brev feilet',
+    'feil.kunne.ikke.kontroll.simulere': 'Kunne ikke kontrollsimulere',
+    'feil.kunne.ikke.utbetale': 'Kunne ikke utbetale',
 
     'feil.ugyldig.periode': 'Ugyldig periode',
     'feil.ugyldig.tilstand': 'Ugyldig tilstand',

@@ -19,6 +19,7 @@ import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
+import RevurderingskallFeilet from '~pages/saksbehandling/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import {
     erRevurderingTilAttestering,
     erRevurderingIngenEndring,
@@ -211,79 +212,78 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
 
                 {revurdering.status === RevurderingsStatus.TIL_ATTESTERING_OPPHØRT && (
                     <div className={styles.opphørsadvarsel}>
-                        <AlertStripeAdvarsel>Denne revurderingen fører till opphør for bruker</AlertStripeAdvarsel>
+                        <AlertStripeAdvarsel>{intl.formatMessage({ id: 'info.opphør' })}</AlertStripeAdvarsel>
                     </div>
                 )}
 
-                <RadioPanelGruppe
-                    className={SharedStyles.formElement}
-                    name={intl.formatMessage({ id: 'beslutning.tittel' })}
-                    legend={<Systemtittel>{intl.formatMessage({ id: 'beslutning.tittel' })}</Systemtittel>}
-                    radios={[
-                        {
-                            label: intl.formatMessage({ id: 'beslutning.godkjenn' }),
-                            value: 'godkjenn',
-                        },
-                        {
-                            label: intl.formatMessage({ id: 'beslutning.underkjenn' }),
-                            value: 'revurder',
-                        },
-                    ]}
-                    checked={
-                        formik.values.beslutning
-                            ? 'godkjenn'
-                            : formik.values.beslutning === false
-                            ? 'revurder'
-                            : undefined
-                    }
-                    onChange={(_, value) => formik.setValues((v) => ({ ...v, beslutning: value === 'godkjenn' }))}
-                    feil={formik.errors.beslutning}
-                />
-                {formik.values.beslutning === false && (
-                    <div className={styles.selectContainer}>
-                        <Select
-                            label={intl.formatMessage({ id: 'input.grunn.label' })}
-                            onChange={(event) =>
-                                formik.setValues((v) => ({
-                                    ...v,
-                                    grunn: event.target.value as UnderkjennRevurderingGrunn,
-                                }))
-                            }
-                            value={formik.values.grunn ?? ''}
-                            feil={formik.errors.grunn}
-                            className={styles.select}
-                        >
-                            <option value="" disabled>
-                                {intl.formatMessage({ id: 'input.grunn.value.default' })}
-                            </option>
-                            {Object.values(UnderkjennRevurderingGrunn).map((grunn, index) => (
-                                <option value={grunn} key={index}>
-                                    {intl.formatMessage({
-                                        id: getTextId(grunn),
-                                    })}
+                <div className={styles.beslutningContainer}>
+                    <RadioPanelGruppe
+                        className={SharedStyles.formElement}
+                        name={intl.formatMessage({ id: 'beslutning.tittel' })}
+                        legend={<Systemtittel>{intl.formatMessage({ id: 'beslutning.tittel' })}</Systemtittel>}
+                        radios={[
+                            {
+                                label: intl.formatMessage({ id: 'beslutning.godkjenn' }),
+                                value: 'godkjenn',
+                            },
+                            {
+                                label: intl.formatMessage({ id: 'beslutning.underkjenn' }),
+                                value: 'revurder',
+                            },
+                        ]}
+                        checked={
+                            formik.values.beslutning
+                                ? 'godkjenn'
+                                : formik.values.beslutning === false
+                                ? 'revurder'
+                                : undefined
+                        }
+                        onChange={(_, value) => formik.setValues((v) => ({ ...v, beslutning: value === 'godkjenn' }))}
+                        feil={formik.errors.beslutning}
+                    />
+                    {formik.values.beslutning === false && (
+                        <div className={styles.selectContainer}>
+                            <Select
+                                label={intl.formatMessage({ id: 'input.grunn.label' })}
+                                onChange={(event) =>
+                                    formik.setValues((v) => ({
+                                        ...v,
+                                        grunn: event.target.value as UnderkjennRevurderingGrunn,
+                                    }))
+                                }
+                                value={formik.values.grunn ?? ''}
+                                feil={formik.errors.grunn}
+                                className={styles.select}
+                            >
+                                <option value="" disabled>
+                                    {intl.formatMessage({ id: 'input.grunn.value.default' })}
                                 </option>
-                            ))}
-                        </Select>
+                                {Object.values(UnderkjennRevurderingGrunn).map((grunn, index) => (
+                                    <option value={grunn} key={index}>
+                                        {intl.formatMessage({
+                                            id: getTextId(grunn),
+                                        })}
+                                    </option>
+                                ))}
+                            </Select>
 
-                        <div className={styles.textAreaContainer}>
-                            <Textarea
-                                label={intl.formatMessage({ id: 'input.kommentar.label' })}
-                                name="kommentar"
-                                value={formik.values.kommentar ?? ''}
-                                feil={formik.errors.kommentar}
-                                onChange={formik.handleChange}
-                            />
+                            <div className={styles.textAreaContainer}>
+                                <Textarea
+                                    label={intl.formatMessage({ id: 'input.kommentar.label' })}
+                                    name="kommentar"
+                                    value={formik.values.kommentar ?? ''}
+                                    feil={formik.errors.kommentar}
+                                    onChange={formik.handleChange}
+                                />
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
             <Hovedknapp className={styles.sendBeslutningKnapp} spinner={RemoteData.isPending(sendtBeslutning)}>
                 {intl.formatMessage({ id: 'knapp.tekst' })}
             </Hovedknapp>
-            {/*TODO: bruk feilmeldingskode */}
-            {RemoteData.isFailure(sendtBeslutning) && (
-                <AlertStripeFeil>{sendtBeslutning.error.body?.message}</AlertStripeFeil>
-            )}
+            {RemoteData.isFailure(sendtBeslutning) && <RevurderingskallFeilet error={sendtBeslutning.error} />}
         </form>
     );
 };
