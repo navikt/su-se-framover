@@ -21,7 +21,6 @@ import {
     RevurderingsStatus,
     UnderkjentRevurdering,
     harSimulering,
-    harBeregninger,
     Revurdering,
 } from '~types/Revurdering';
 
@@ -34,8 +33,6 @@ import {
     erRevurderingIngenEndring,
     erRevurderingSimulert,
     erGregulering,
-    erRevurderingOpprettet,
-    erBeregnetIngenEndring,
     erRevurderingUnderkjent,
     erIngenForhåndsvarsel,
 } from '../revurderingUtils';
@@ -57,9 +54,7 @@ const RevurderingsOppsummering = (props: {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     const dispatch = useAppDispatch();
     const [beregnOgSimulerStatus, setBeregnOgSimulerStatus] = useState<RemoteData.RemoteData<ApiError, null>>(
-        erRevurderingOpprettet(props.revurdering) && !harBeregninger(props.revurdering)
-            ? RemoteData.initial
-            : RemoteData.success(null)
+        RemoteData.initial
     );
 
     useEffect(() => {
@@ -68,9 +63,9 @@ const RevurderingsOppsummering = (props: {
             dispatch(
                 RevurderingActions.beregnOgSimuler({
                     sakId: props.sakId,
-                    fradrag: [],
                     periode: props.revurdering.periode,
                     revurderingId: props.revurdering.id,
+                    fradrag: [],
                 })
             ).then((res) => {
                 if (RevurderingActions.beregnOgSimuler.fulfilled.match(res)) {
