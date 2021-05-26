@@ -260,7 +260,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                         ],
                                     });
                                 }}
-                                showDelerAvPeriode
                             />
                         </div>
                         <Undertittel>

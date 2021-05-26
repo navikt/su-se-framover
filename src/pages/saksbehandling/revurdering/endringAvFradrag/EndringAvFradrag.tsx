@@ -160,8 +160,14 @@ const EndringAvFradrag = (props: {
                 fradrag: values.fradrag.map((f: FradragFormData) => ({
                     periode: {
                         /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                        fraOgMed: DateUtils.toIsoDateOnlyString(f.periode!.fraOgMed!),
-                        tilOgMed: DateUtils.toIsoDateOnlyString(DateUtils.sluttenAvMåneden(f.periode!.tilOgMed!)),
+                        fraOgMed: DateUtils.toIsoDateOnlyString(
+                            f.periode?.fraOgMed ?? new Date(props.revurdering.periode.fraOgMed)
+                        ),
+                        tilOgMed: DateUtils.toIsoDateOnlyString(
+                            DateUtils.sluttenAvMåneden(
+                                f.periode?.tilOgMed ?? new Date(props.revurdering.periode.tilOgMed)
+                            )
+                        ),
                         /* eslint-enable @typescript-eslint/no-non-null-assertion */
                     },
                     /* valideringa sjekker at f.beløp og f.type ikke er null */
