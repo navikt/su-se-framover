@@ -142,7 +142,7 @@
         "@hot-loader/react-dom": "^17.0.1",
         "@testing-library/react": "^11.2.7",
         "@testing-library/react-hooks": "^5.1.2",
-        "@types/amplitude-js": "^7.0.1",
+        "@types/amplitude-js": "^8.0.0",
         "@types/classnames": "^2.3.1",
         "@types/js-cookie": "^2.2.6",
         "@types/parcel-env": "0.0.0",
