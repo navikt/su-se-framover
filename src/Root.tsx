@@ -13,6 +13,7 @@ import { FeatureToggle } from '~api/featureToggleApi';
 import { UserProvider } from '~context/userContext';
 import enableHotjar from '~lib/tracking/hotjar';
 import Attestering from '~pages/attestering/Attestering';
+import Drift from '~pages/drift';
 import HomePage from '~pages/HomePage';
 import Saksoversikt from '~pages/saksbehandling/Saksoversikt';
 
@@ -62,6 +63,9 @@ const Root = () => {
                                         </Route>
                                         <Route path={routes.attestering.path}>
                                             <WithDocTitle title="Attestering" Page={Attestering} />
+                                        </Route>
+                                        <Route path={routes.drift.path}>
+                                            <WithDocTitle title="Drift" Page={Drift} />
                                         </Route>
                                         <Route>404</Route>
                                     </Switch>

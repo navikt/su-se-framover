@@ -27,6 +27,11 @@ export const soknad: Route<never> = {
     createURL: () => '/soknad/',
 };
 
+export const drift: Route<never> = {
+    path: '/drift/',
+    createURL: () => '/drift/',
+};
+
 export const soknadPersonSøk: Route<{ papirsøknad?: boolean }> = {
     path: '/soknad/personsok',
     createURL: (args) => '/soknad/personsok' + (args.papirsøknad ? '?papirsoknad=true' : ''),
