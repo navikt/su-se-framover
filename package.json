@@ -140,7 +140,7 @@
         "@babel/plugin-transform-runtime": "^7.13.15",
         "@babel/preset-react": "^7.13.13",
         "@hot-loader/react-dom": "^17.0.1",
-        "@testing-library/react": "^11.2.6",
+        "@testing-library/react": "^11.2.7",
         "@testing-library/react-hooks": "^5.1.2",
         "@types/amplitude-js": "^7.0.1",
         "@types/classnames": "^2.3.1",
