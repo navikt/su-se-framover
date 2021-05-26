@@ -15,7 +15,7 @@ export default {
         '<b>opplysninger om arbeidsforholdet</b> ditt fra arbeidsgiver- og arbeidstakerregisteret',
     'henterInnInfo.viHenter.flyktningsstatus': '<b>flyktningsstatus og oppholdstillatelse</b> fra UDI',
     'henterInnInfo.brukerTidligereOpplysninger':
-        'Vi kan også bruke tidligere opplysninger du har gitt oss, eller opplysninger du gitt oss i andre sammenhenger, hvis det er relevant og nødvendig.',
+        'Vi kan også bruke tidligere opplysninger du har gitt oss, eller opplysninger du har gitt oss i andre sammenhenger, hvis det er relevant og nødvendig.',
 
     'knapp.neste': 'Neste',
 
