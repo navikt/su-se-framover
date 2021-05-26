@@ -18,6 +18,7 @@ import {
     underkjennRevurdering,
     forhåndsvarsleEllerSendTilAttestering,
     fortsettEtterForhåndsvarsel,
+    lagreFradragsgrunnlag,
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
@@ -617,6 +618,15 @@ export default createSlice({
                     revurderinger: sak.revurderinger.map((r) =>
                         r.id === action.payload.revurdering.id ? action.payload.revurdering : r
                     ),
+                }))
+            );
+        });
+        builder.addCase(lagreFradragsgrunnlag.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
                 }))
             );
         });

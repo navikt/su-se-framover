@@ -3,15 +3,16 @@ import { useFormik } from 'formik';
 import * as A from 'fp-ts/Array';
 import * as Eq from 'fp-ts/Eq';
 import * as O from 'fp-ts/Option';
+import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Systemtittel, Element, Undertekst } from 'nav-frontend-typografi';
-import React, { useState } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
 import { getFradragstypeStringMedEpsSpesifisering } from '~features/fradrag/fradragUtils';
-import { beregnOgSimuler } from '~features/revurdering/revurderingActions';
+import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { groupByEq } from '~lib/arrayUtils';
 import * as DateUtils from '~lib/dateUtils';
@@ -21,7 +22,7 @@ import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { eqNullable } from '~lib/types';
-import yup from '~lib/validering';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { fradragTilFradragFormData } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/beregningUtils';
 import {
     FradragFormData,
@@ -29,7 +30,7 @@ import {
     fradragSchema,
 } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/FradragInputs';
 import { useAppDispatch } from '~redux/Store';
-import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
+import { Fradrag, FradragTilhører } from '~types/Fradrag';
 import { eqStringPeriode } from '~types/Periode';
 import { Revurdering } from '~types/Revurdering';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
@@ -40,19 +41,12 @@ import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
 import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { erRevurderingSimulert } from '../revurderingUtils';
 
 import messages from './endringAvFradrag-nb';
 import styles from './endringAvFradrag.module.less';
 
 interface EndringAvFradragFormData {
     fradrag: FradragFormData[];
-}
-
-enum SubmittedStatus {
-    NOT_SUBMITTED,
-    NESTE,
-    LAGRE,
 }
 
 const GjeldendeFradrag = (props: { fradrag: Fradrag[] }) => {
@@ -148,38 +142,28 @@ const EndringAvFradrag = (props: {
     });
     const dispatch = useAppDispatch();
     const history = useHistory();
-    const [beregnOgSimulerStatus, setBeregnOgSimulerStatus] = useState<RemoteData.RemoteData<ApiError, null>>(
-        RemoteData.initial
-    );
+    const [hasSubmitted, setHasSubmitted] = React.useState(false);
+    const [savingState, setSavingState] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
 
-    const [submittedStatus, setSubmittedStatus] = useState<SubmittedStatus>(SubmittedStatus.NOT_SUBMITTED);
+    const [pressedButton, setPressedButton] = React.useState<'ingen' | 'neste' | 'lagre'>('ingen');
 
-    const hasSubmitted = () => submittedStatus === SubmittedStatus.NESTE || submittedStatus === SubmittedStatus.LAGRE;
-
-    const fradragUtenForventetInntekt = (fradrag: FradragFormData[]) => {
-        return fradrag.filter((f) => {
-            return f.type !== Fradragstype.ForventetInntekt;
-        });
-    };
-
-    const handleLagreOgFortsettSenereClick = async () => {
-        if (await beregnOgSimulerRevurdering(formik.values)) {
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+    const save = async (values: EndringAvFradragFormData) => {
+        if (RemoteData.isPending(savingState)) {
+            return false;
         }
-    };
+        setSavingState(RemoteData.pending);
 
-    const beregnOgSimulerRevurdering = async (values: EndringAvFradragFormData): Promise<boolean> => {
-        setBeregnOgSimulerStatus(RemoteData.pending);
         const res = await dispatch(
-            beregnOgSimuler({
+            lagreFradragsgrunnlag({
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
-                periode: {
-                    fraOgMed: props.revurdering.periode.fraOgMed,
-                    tilOgMed: props.revurdering.periode.tilOgMed,
-                },
                 fradrag: values.fradrag.map((f: FradragFormData) => ({
-                    periode: null,
+                    periode: {
+                        /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                        fraOgMed: DateUtils.toIsoDateOnlyString(f.periode!.fraOgMed!),
+                        tilOgMed: DateUtils.toIsoDateOnlyString(DateUtils.sluttenAvMåneden(f.periode!.tilOgMed!)),
+                        /* eslint-enable @typescript-eslint/no-non-null-assertion */
+                    },
                     /* valideringa sjekker at f.beløp og f.type ikke er null */
                     /* eslint-disable @typescript-eslint/no-non-null-assertion */
                     beløp: Number.parseInt(f.beløp!, 10),
@@ -195,13 +179,24 @@ const EndringAvFradrag = (props: {
                 })),
             })
         );
-        if (beregnOgSimuler.fulfilled.match(res)) {
-            setBeregnOgSimulerStatus(RemoteData.success(null));
+
+        if (lagreFradragsgrunnlag.fulfilled.match(res)) {
+            setSavingState(RemoteData.success(null));
             return true;
-        } else if (beregnOgSimuler.rejected.match(res)) {
-            setBeregnOgSimulerStatus(RemoteData.failure(res.payload!));
+        } else if (lagreFradragsgrunnlag.rejected.match(res)) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            setSavingState(RemoteData.failure(res.payload!));
         }
         return false;
+    };
+
+    const handleLagreOgFortsettSenereClick = async () => {
+        setPressedButton('lagre');
+        const res = await save(formik.values);
+        setPressedButton('ingen');
+        if (res) {
+            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+        }
     };
 
     const schema = yup.object<EndringAvFradragFormData>({
@@ -209,19 +204,18 @@ const EndringAvFradrag = (props: {
     });
     const formik = useFormik<EndringAvFradragFormData>({
         initialValues: {
-            fradrag: erRevurderingSimulert(props.revurdering)
-                ? fradragUtenForventetInntekt(
-                      props.revurdering.beregninger.revurdert.fradrag.map(fradragTilFradragFormData)
-                  )
-                : props.grunnlagsdataOgVilkårsvurderinger.fradrag.map(fradragTilFradragFormData),
+            fradrag: props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.map(fradragTilFradragFormData),
         },
         async onSubmit(values) {
-            if (await beregnOgSimulerRevurdering(values)) {
+            setPressedButton('neste');
+            const res = await save(values);
+            setPressedButton('ingen');
+            if (res) {
                 history.push(props.nesteUrl);
             }
         },
         validationSchema: schema,
-        validateOnChange: hasSubmitted(),
+        validateOnChange: hasSubmitted,
     });
 
     return (
@@ -231,7 +225,7 @@ const EndringAvFradrag = (props: {
                     <form
                         className={sharedStyles.revurderingContainer}
                         onSubmit={(e) => {
-                            setSubmittedStatus(SubmittedStatus.NESTE);
+                            setHasSubmitted(true);
                             formik.handleSubmit(e);
                         }}
                     >
@@ -281,23 +275,23 @@ const EndringAvFradrag = (props: {
                                     }}
                                 />
                             </div>
-                            {RemoteData.isFailure(beregnOgSimulerStatus) && (
-                                <RevurderingskallFeilet error={beregnOgSimulerStatus.error} />
-                            )}
+                            <Feiloppsummering
+                                tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                                className={styles.feiloppsummering}
+                                feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                                hidden={!formikErrorsHarFeil(formik.errors)}
+                            />
+                            {RemoteData.isFailure(savingState) && <RevurderingskallFeilet error={savingState.error} />}
                             <RevurderingBunnknapper
                                 onNesteClick="submit"
                                 tilbakeUrl={props.forrigeUrl}
                                 onLagreOgFortsettSenereClick={() => {
-                                    setSubmittedStatus(SubmittedStatus.LAGRE);
+                                    setHasSubmitted(true);
                                     customFormikSubmit(formik, handleLagreOgFortsettSenereClick);
                                 }}
-                                onNesteClickSpinner={
-                                    submittedStatus === SubmittedStatus.NESTE &&
-                                    RemoteData.isPending(beregnOgSimulerStatus)
-                                }
+                                onNesteClickSpinner={pressedButton === 'neste' && RemoteData.isPending(savingState)}
                                 onLagreOgFortsettSenereClickSpinner={
-                                    submittedStatus === SubmittedStatus.LAGRE &&
-                                    RemoteData.isPending(beregnOgSimulerStatus)
+                                    pressedButton === 'lagre' && RemoteData.isPending(savingState)
                                 }
                             />
                         </div>

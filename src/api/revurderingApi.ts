@@ -15,6 +15,7 @@ import {
     BeslutningEtterForhåndsvarsling,
     LeggTilUføreResponse,
     InformasjonSomRevurderes,
+    Revurdering,
 } from '~types/Revurdering';
 
 import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '../types/Vilkår';
@@ -65,7 +66,6 @@ export async function beregnOgSimuler(
     arg: {
         revurderingId: string;
         periode: Periode<string>;
-        fradrag: Fradrag[];
     }
 ): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
@@ -76,7 +76,6 @@ export async function beregnOgSimuler(
                 fraOgMed: formatISO(new Date(arg.periode.fraOgMed), { representation: 'date' }),
                 tilOgMed: formatISO(new Date(arg.periode.tilOgMed), { representation: 'date' }),
             },
-            fradrag: arg.fradrag,
         },
     });
 }
@@ -174,6 +173,20 @@ export async function lagreUføregrunnlag(arg: {
         url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/uføregrunnlag`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
+    });
+}
+
+export async function lagreFradragsgrunnlag(
+    sakId: string,
+    revurderingId: string,
+    fradrag: Fradrag[]
+): Promise<ApiClientResult<Revurdering>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/fradrag`,
+        method: 'POST',
+        body: {
+            fradrag: fradrag,
+        },
     });
 }
 

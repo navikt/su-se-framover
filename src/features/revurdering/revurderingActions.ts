@@ -17,6 +17,7 @@ import {
     BeslutningEtterForhåndsvarsling,
     LeggTilUføreResponse,
     InformasjonSomRevurderes,
+    Revurdering,
 } from '~types/Revurdering';
 import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
@@ -78,13 +79,12 @@ export const oppdaterRevurderingsPeriode = createAsyncThunk<
 
 export const beregnOgSimuler = createAsyncThunk<
     SimulertRevurdering,
-    { sakId: string; revurderingId: string; periode: Periode<string>; fradrag: Fradrag[] },
+    { sakId: string; revurderingId: string; periode: Periode<string> },
     { rejectValue: ApiError }
->('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode, fradrag }, thunkApi) => {
+>('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode }, thunkApi) => {
     const res = await revurderingApi.beregnOgSimuler(sakId, {
         revurderingId,
         periode,
-        fradrag,
     });
     if (res.status === 'ok') {
         return res.data;
@@ -201,6 +201,22 @@ export const lagreUføregrunnlag = createAsyncThunk<
     { rejectValue: ApiError }
 >('revurdering/grunnlag/uføre/lagre', async (arg, thunkApi) => {
     const res = await revurderingApi.lagreUføregrunnlag(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreFradragsgrunnlag = createAsyncThunk<
+    Revurdering,
+    {
+        sakId: string;
+        revurderingId: string;
+        fradrag: Fradrag[];
+    },
+    { rejectValue: ApiError }
+>('revurdering/grunnlag/fradrag/lagre', async (arg, thunkApi) => {
+    const res = await revurderingApi.lagreFradragsgrunnlag(arg.sakId, arg.revurderingId, arg.fradrag);
     if (res.status === 'ok') {
         return res.data;
     }

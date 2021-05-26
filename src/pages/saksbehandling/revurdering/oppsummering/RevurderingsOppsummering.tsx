@@ -35,6 +35,7 @@ import {
     erGregulering,
     erRevurderingUnderkjent,
     erIngenForhåndsvarsel,
+    erBeregnetIngenEndring,
 } from '../revurderingUtils';
 
 import EtterForhåndsvarsel from './EtterForhåndsvarsel';
@@ -65,7 +66,6 @@ const RevurderingsOppsummering = (props: {
                     sakId: props.sakId,
                     periode: props.revurdering.periode,
                     revurderingId: props.revurdering.id,
-                    fradrag: [],
                 })
             ).then((res) => {
                 if (RevurderingActions.beregnOgSimuler.fulfilled.match(res)) {
