@@ -18,15 +18,14 @@ import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import * as DateUtils from '~lib/dateUtils';
 import * as FormatUtils from '~lib/formatUtils';
-import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering, validateNonNegativeNumber } from '~lib/validering';
 import sharedMessages from '~pages/saksbehandling/steg/sharedI18n-nb';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { useAppDispatch } from '~redux/Store';
 import { Revurdering } from '~types/Revurdering';
-import { UføreResultat, Vilkårsvurderinger, VurderingsperiodeUføre } from '~types/Vilkår';
+import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger, VurderingsperiodeUføre } from '~types/Vilkår';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
@@ -240,8 +239,9 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
     } = useForm<FormData>({
         defaultValues: {
             grunnlag:
-                props.revurdering.vilkårsvurderinger.uføre?.vurderinger.map((u) => vurderingsperiodeTilFormData(u)) ??
-                [],
+                props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre?.vurderinger.map((u) =>
+                    vurderingsperiodeTilFormData(u)
+                ) ?? [],
         },
         resolver: yupResolver(schema(erGregulering(props.revurdering.årsak))),
     });
@@ -380,7 +380,7 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
     );
 };
 
-const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: Vilkårsvurderinger }) => {
+const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger }) => {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     return (
         <div>
@@ -433,18 +433,13 @@ const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: Vilkårsvurderinge
     );
 };
 
-const Uførhet = (props: { sakId: string; revurdering: Revurdering; forrigeUrl: string; nesteUrl: string }) => {
-    const dispatch = useAppDispatch();
-    const grunnlag = useAppSelector(
-        (s) => s.sak.revurderingGrunnlagSimulering[props.revurdering.id] ?? RemoteData.initial
-    );
-
-    React.useEffect(() => {
-        if (RemoteData.isInitial(grunnlag)) {
-            dispatch(revurderingActions.hentUføregrunnlag({ sakId: props.sakId, revurderingId: props.revurdering.id }));
-        }
-    }, [grunnlag._tag]);
-
+const Uførhet = (props: {
+    sakId: string;
+    revurdering: Revurdering;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    forrigeUrl: string;
+    nesteUrl: string;
+}) => {
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
@@ -456,15 +451,7 @@ const Uførhet = (props: { sakId: string; revurdering: Revurdering; forrigeUrl: 
                         nesteUrl={props.nesteUrl}
                     />
                 ),
-                right: pipe(
-                    grunnlag,
-                    RemoteData.fold(
-                        () => <div />,
-                        () => <div />,
-                        () => <div />,
-                        (v) => <GjeldendeGrunnlagsdata vilkårsvurderinger={v} />
-                    )
-                ),
+                right: <GjeldendeGrunnlagsdata vilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger} />,
             }}
         </ToKolonner>
     );

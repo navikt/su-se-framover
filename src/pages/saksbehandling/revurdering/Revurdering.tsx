@@ -1,17 +1,23 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import * as A from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
 import AlertStripe from 'nav-frontend-alertstriper';
+import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
 
+import { ApiError } from '~api/apiClient';
 import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
+import * as revurderingActions from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Revurdering, Vurderingstatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import { RevurderingSteg } from '../types';
 
@@ -21,6 +27,7 @@ import messages from './revurdering-nb';
 import styles from './revurdering.module.less';
 import { EndreRevurderingPage } from './revurderingIntro/EndreRevurderingPage';
 import { NyRevurderingPage } from './revurderingIntro/NyRevurderingPage';
+import RevurderingskallFeilet from './revurderingskallFeilet/RevurderingskallFeilet';
 import { revurderingstegrekkefølge, revurderingstegTilInformasjonSomRevurderes } from './revurderingUtils';
 import Uførhet from './uførhet/Uførhet';
 
@@ -43,6 +50,22 @@ const RevurderingPage = (props: { sak: Sak }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
 
     const påbegyntRevurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
+
+    const dispatch = useAppDispatch();
+    const grunnlag = useAppSelector(
+        (s) => s.sak.revurderingGrunnlagSimulering[påbegyntRevurdering?.id ?? ''] ?? RemoteData.initial
+    );
+
+    React.useEffect(() => {
+        if (RemoteData.isInitial(grunnlag) && påbegyntRevurdering) {
+            dispatch(
+                revurderingActions.hentGrunnlagsdataOgVilkårsvurderinger({
+                    sakId: props.sak.id,
+                    revurderingId: påbegyntRevurdering.id,
+                })
+            );
+        }
+    }, [grunnlag._tag, påbegyntRevurdering?.id]);
 
     const createRevurderingsPath = (steg: RevurderingSteg) => {
         return Routes.revurderValgtRevurdering.createURL({
@@ -137,6 +160,7 @@ const RevurderingPage = (props: { sak: Sak }) => {
                                             steg={el.id}
                                             sakId={props.sak.id}
                                             revurdering={påbegyntRevurdering}
+                                            grunnlagsdataOgVilkårsvurderinger={grunnlag}
                                             forrigeUrl={forrigeUrl}
                                             nesteUrl={nesteUrl}
                                         />
@@ -170,13 +194,36 @@ const RevurderingstegPage = (props: {
     nesteUrl: string;
     sakId: string;
     revurdering: Revurdering;
+    grunnlagsdataOgVilkårsvurderinger: RemoteData.RemoteData<ApiError, GrunnlagsdataOgVilkårsvurderinger>;
 }) => {
+    if (RemoteData.isInitial(props.grunnlagsdataOgVilkårsvurderinger)) {
+        return (
+            <div className={styles.fullsideSpinnerFeilmeldingContainer}>
+                <NavFrontendSpinner />
+            </div>
+        );
+    }
+    if (RemoteData.isPending(props.grunnlagsdataOgVilkårsvurderinger)) {
+        return (
+            <div className={styles.fullsideSpinnerFeilmeldingContainer}>
+                <NavFrontendSpinner />
+            </div>
+        );
+    }
+    if (RemoteData.isFailure(props.grunnlagsdataOgVilkårsvurderinger)) {
+        return (
+            <div className={styles.fullsideSpinnerFeilmeldingContainer}>
+                <RevurderingskallFeilet error={props.grunnlagsdataOgVilkårsvurderinger.error} />
+            </div>
+        );
+    }
     switch (props.steg) {
         case RevurderingSteg.Uførhet:
             return (
                 <Uførhet
                     sakId={props.sakId}
                     revurdering={props.revurdering}
+                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger.value}
                     forrigeUrl={props.forrigeUrl}
                     nesteUrl={props.nesteUrl}
                 />
@@ -186,6 +233,7 @@ const RevurderingstegPage = (props: {
                 <EndringAvFradrag
                     sakId={props.sakId}
                     revurdering={props.revurdering}
+                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger.value}
                     forrigeUrl={props.forrigeUrl}
                     nesteUrl={props.nesteUrl}
                 />

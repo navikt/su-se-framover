@@ -12,12 +12,13 @@ import {
     iverksettRevurdering,
     oppdaterRevurderingsPeriode,
     lagreUføregrunnlag as lagreUføregrunnlagForRevurdering,
-    hentUføregrunnlag as hentUføregrunnlagForRevurdering,
+    hentGrunnlagsdataOgVilkårsvurderinger,
     opprettRevurdering,
     sendRevurderingTilAttestering,
     underkjennRevurdering,
     forhåndsvarsleEllerSendTilAttestering,
     fortsettEtterForhåndsvarsel,
+    lagreFradragsgrunnlag,
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
@@ -28,7 +29,7 @@ import { Fradrag } from '~types/Fradrag';
 import { Periode } from '~types/Periode';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
-import { UføreResultat, Vilkårsvurderinger } from '~types/Vilkår';
+import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<
@@ -248,7 +249,7 @@ export const hentLukketSøknadBrevutkast = createAsyncThunk<
 
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
-    revurderingGrunnlagSimulering: Dictionary<RemoteData.RemoteData<ApiError, Vilkårsvurderinger>>;
+    revurderingGrunnlagSimulering: Dictionary<RemoteData.RemoteData<ApiError, GrunnlagsdataOgVilkårsvurderinger>>;
     stansUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
     gjenopptaUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<ApiError, null>;
@@ -595,7 +596,7 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, hentUføregrunnlagForRevurdering, {
+        handleAsyncThunk(builder, hentGrunnlagsdataOgVilkårsvurderinger, {
             pending: (state, action) => {
                 state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.pending;
             },
@@ -610,9 +611,6 @@ export default createSlice({
         });
 
         builder.addCase(lagreUføregrunnlagForRevurdering.fulfilled, (state, action) => {
-            state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.success(
-                action.payload.gjeldendeVilkårsvurderinger
-            );
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({
@@ -620,6 +618,15 @@ export default createSlice({
                     revurderinger: sak.revurderinger.map((r) =>
                         r.id === action.payload.revurdering.id ? action.payload.revurdering : r
                     ),
+                }))
+            );
+        });
+        builder.addCase(lagreFradragsgrunnlag.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
                 }))
             );
         });

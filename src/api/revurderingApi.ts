@@ -15,9 +15,10 @@ import {
     BeslutningEtterForhåndsvarsling,
     LeggTilUføreResponse,
     InformasjonSomRevurderes,
+    Revurdering,
 } from '~types/Revurdering';
 
-import { UføreResultat, Vilkårsvurderinger } from '../types/Vilkår';
+import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '../types/Vilkår';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -65,7 +66,6 @@ export async function beregnOgSimuler(
     arg: {
         revurderingId: string;
         periode: Periode<string>;
-        fradrag: Fradrag[];
     }
 ): Promise<ApiClientResult<SimulertRevurdering>> {
     return apiClient({
@@ -76,7 +76,6 @@ export async function beregnOgSimuler(
                 fraOgMed: formatISO(new Date(arg.periode.fraOgMed), { representation: 'date' }),
                 tilOgMed: formatISO(new Date(arg.periode.tilOgMed), { representation: 'date' }),
             },
-            fradrag: arg.fradrag,
         },
     });
 }
@@ -177,12 +176,26 @@ export async function lagreUføregrunnlag(arg: {
     });
 }
 
-export async function hentUføregrunnlag(
+export async function lagreFradragsgrunnlag(
+    sakId: string,
+    revurderingId: string,
+    fradrag: Fradrag[]
+): Promise<ApiClientResult<Revurdering>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/fradrag`,
+        method: 'POST',
+        body: {
+            fradrag: fradrag,
+        },
+    });
+}
+
+export async function hentGrunnlagsdataOgVilkårsvurderinger(
     sakId: string,
     revurderingId: string
-): Promise<ApiClientResult<Vilkårsvurderinger>> {
-    return apiClient<Vilkårsvurderinger>({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/uføregrunnlag`,
+): Promise<ApiClientResult<GrunnlagsdataOgVilkårsvurderinger>> {
+    return apiClient<GrunnlagsdataOgVilkårsvurderinger>({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/grunnlagsdataOgVilkårsvurderinger`,
         method: 'GET',
     });
 }

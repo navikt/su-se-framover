@@ -21,7 +21,6 @@ import {
     RevurderingsStatus,
     UnderkjentRevurdering,
     harSimulering,
-    harBeregninger,
     Revurdering,
 } from '~types/Revurdering';
 
@@ -34,10 +33,9 @@ import {
     erRevurderingIngenEndring,
     erRevurderingSimulert,
     erGregulering,
-    erRevurderingOpprettet,
-    erBeregnetIngenEndring,
     erRevurderingUnderkjent,
     erIngenForhåndsvarsel,
+    erBeregnetIngenEndring,
 } from '../revurderingUtils';
 
 import EtterForhåndsvarsel from './EtterForhåndsvarsel';
@@ -57,9 +55,7 @@ const RevurderingsOppsummering = (props: {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
     const dispatch = useAppDispatch();
     const [beregnOgSimulerStatus, setBeregnOgSimulerStatus] = useState<RemoteData.RemoteData<ApiError, null>>(
-        erRevurderingOpprettet(props.revurdering) && !harBeregninger(props.revurdering)
-            ? RemoteData.initial
-            : RemoteData.success(null)
+        RemoteData.initial
     );
 
     useEffect(() => {
@@ -68,7 +64,6 @@ const RevurderingsOppsummering = (props: {
             dispatch(
                 RevurderingActions.beregnOgSimuler({
                     sakId: props.sakId,
-                    fradrag: [],
                     periode: props.revurdering.periode,
                     revurderingId: props.revurdering.id,
                 })
@@ -76,6 +71,7 @@ const RevurderingsOppsummering = (props: {
                 if (RevurderingActions.beregnOgSimuler.fulfilled.match(res)) {
                     setBeregnOgSimulerStatus(RemoteData.success(null));
                 } else if (RevurderingActions.beregnOgSimuler.rejected.match(res)) {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     setBeregnOgSimulerStatus(RemoteData.failure(res.payload!));
                 }
             });

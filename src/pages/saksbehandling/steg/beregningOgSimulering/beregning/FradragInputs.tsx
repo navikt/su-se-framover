@@ -10,6 +10,7 @@ import DatePicker from 'react-datepicker';
 import { IntlShape } from 'react-intl';
 
 import { TrashBin } from '~assets/Icons';
+import { getFradragstypeString } from '~features/fradrag/fradragUtils';
 import { toStringDateOrNull, formatMonthYear } from '~lib/dateUtils';
 import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsPositiveNumber } from '~lib/validering';
@@ -17,7 +18,6 @@ import InntektFraUtland from '~pages/saksbehandling/steg/beregningOgSimulering/b
 import { Fradrag, Fradragstype } from '~types/Fradrag';
 
 import { UtenlandskInntektFormData } from './beregningstegTypes';
-import * as BeregningUtils from './beregningUtils';
 import styles from './fradragInputs.module.less';
 
 export interface FradragFormData {
@@ -94,7 +94,7 @@ const FradragsSelection = (props: {
                 .filter((type) => type !== Fradragstype.ForventetInntekt)
                 .map((f) => (
                     <option value={f} key={f}>
-                        {props.intl.formatMessage({ id: BeregningUtils.fradragstypeResourceId(f) })}
+                        {getFradragstypeString(f, props.intl)}
                     </option>
                 ))}
         </Select>

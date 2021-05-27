@@ -1,8 +1,10 @@
+import { Fradrag } from './Fradrag';
 import { Uføregrunnlag } from './Grunnlag';
 import { Periode } from './Periode';
 
-export interface Vilkårsvurderinger {
+export interface GrunnlagsdataOgVilkårsvurderinger {
     uføre?: UføreVilkår;
+    fradrag: Fradrag[];
 }
 
 export interface UføreVilkår {

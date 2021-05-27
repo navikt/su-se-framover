@@ -1,16 +1,28 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
-import React, { useState } from 'react';
+import * as A from 'fp-ts/Array';
+import * as Eq from 'fp-ts/Eq';
+import * as O from 'fp-ts/Option';
+import { Feiloppsummering } from 'nav-frontend-skjema';
+import { Systemtittel, Element, Undertekst } from 'nav-frontend-typografi';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import { beregnOgSimuler } from '~features/revurdering/revurderingActions';
+import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
+import { getFradragstypeStringMedEpsSpesifisering } from '~features/fradrag/fradragUtils';
+import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
+import { groupByEq } from '~lib/arrayUtils';
+import * as DateUtils from '~lib/dateUtils';
+import { formatCurrency } from '~lib/formatUtils';
 import { customFormikSubmit } from '~lib/formikUtils';
+import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import yup from '~lib/validering';
+import { eqNullable } from '~lib/types';
+import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { fradragTilFradragFormData } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/beregningUtils';
 import {
     FradragFormData,
@@ -18,8 +30,10 @@ import {
     fradragSchema,
 } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/FradragInputs';
 import { useAppDispatch } from '~redux/Store';
-import { Fradragstype, FradragTilhører } from '~types/Fradrag';
+import { Fradrag, FradragTilhører } from '~types/Fradrag';
+import { eqStringPeriode } from '~types/Periode';
 import { Revurdering } from '~types/Revurdering';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregning-nb';
 import uføreMessages from '../../steg/uførhet/uførhet-nb';
@@ -27,56 +41,129 @@ import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
 import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { erRevurderingSimulert } from '../revurderingUtils';
 
+import messages from './endringAvFradrag-nb';
 import styles from './endringAvFradrag.module.less';
 
 interface EndringAvFradragFormData {
     fradrag: FradragFormData[];
 }
 
-enum SubmittedStatus {
-    NOT_SUBMITTED,
-    NESTE,
-    LAGRE,
-}
+const GjeldendeFradrag = (props: { fradrag: Fradrag[] }) => {
+    const intl = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
+    return (
+        <div>
+            <Systemtittel className={styles.grunnlagsdataHeading}>
+                {intl.formatMessage({ id: 'heading.gjeldendeFradrag' })}
+            </Systemtittel>
+            <ul className={styles.grunnlagsliste}>
+                {pipe(
+                    props.fradrag,
+                    groupByEq(
+                        pipe(
+                            eqNullable(eqStringPeriode),
+                            Eq.contramap((f) => f.periode)
+                        )
+                    ),
+                    A.mapWithIndex((idx, fradragsgruppe) => (
+                        <li key={idx}>
+                            <Element className={styles.grunnlagsdataPeriodeHeader}>
+                                {pipe(
+                                    A.head(fradragsgruppe),
+                                    O.chainNullableK((head) => head.periode),
+                                    O.map(
+                                        (periode) =>
+                                            `${DateUtils.formatMonthYear(
+                                                periode.fraOgMed,
+                                                intl
+                                            )} – ${DateUtils.formatMonthYear(periode.tilOgMed, intl)}`
+                                    ),
+                                    O.getOrElse(() => intl.formatMessage({ id: 'feil.ukjent.periode' }))
+                                )}
+                            </Element>
 
-const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering; forrigeUrl: string; nesteUrl: string }) => {
-    const intl = useI18n({ messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages } });
+                            <ul>
+                                {fradragsgruppe.map((fradrag, idx) => (
+                                    <li key={idx} className={styles.linje}>
+                                        <span>
+                                            {getFradragstypeStringMedEpsSpesifisering(
+                                                fradrag.type,
+                                                fradrag.tilhører,
+                                                intl
+                                            )}
+                                        </span>
+                                        <span>{formatCurrency(intl, fradrag.beløp)}</span>
+                                        {fradrag.utenlandskInntekt !== null && (
+                                            <>
+                                                <Undertekst className={styles.detailedLinje}>
+                                                    {intl.formatMessage({
+                                                        id: 'fradrag.utenlandsk.beløp',
+                                                    })}
+                                                </Undertekst>
+                                                <Undertekst className={styles.alignTextRight}>
+                                                    {formatCurrency(
+                                                        intl,
+                                                        fradrag.utenlandskInntekt.beløpIUtenlandskValuta,
+                                                        {
+                                                            currency: fradrag.utenlandskInntekt.valuta,
+                                                        }
+                                                    )}
+                                                </Undertekst>
+                                                <Undertekst className={styles.detailedLinje}>
+                                                    {intl.formatMessage({
+                                                        id: 'fradrag.utenlandsk.kurs',
+                                                    })}
+                                                </Undertekst>
+                                                <Undertekst className={styles.alignTextRight}>
+                                                    {intl.formatNumber(fradrag.utenlandskInntekt.kurs)}
+                                                </Undertekst>
+                                            </>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        </li>
+                    ))
+                )}
+            </ul>
+        </div>
+    );
+};
+
+const EndringAvFradrag = (props: {
+    sakId: string;
+    revurdering: Revurdering;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    forrigeUrl: string;
+    nesteUrl: string;
+}) => {
+    const intl = useI18n({
+        messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages, ...fradragstypeMessages },
+    });
     const dispatch = useAppDispatch();
     const history = useHistory();
-    const [beregnOgSimulerStatus, setBeregnOgSimulerStatus] = useState<RemoteData.RemoteData<ApiError, null>>(
-        RemoteData.initial
-    );
+    const [hasSubmitted, setHasSubmitted] = React.useState(false);
+    const [savingState, setSavingState] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
 
-    const [submittedStatus, setSubmittedStatus] = useState<SubmittedStatus>(SubmittedStatus.NOT_SUBMITTED);
+    const [pressedButton, setPressedButton] = React.useState<'ingen' | 'neste' | 'lagre'>('ingen');
 
-    const hasSubmitted = () => submittedStatus === SubmittedStatus.NESTE || submittedStatus === SubmittedStatus.LAGRE;
-
-    const fradragUtenForventetInntekt = (fradrag: FradragFormData[]) => {
-        return fradrag.filter((f) => {
-            return f.type !== Fradragstype.ForventetInntekt;
-        });
-    };
-
-    const handleLagreOgFortsettSenereClick = async () => {
-        if (await beregnOgSimulerRevurdering(formik.values)) {
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+    const save = async (values: EndringAvFradragFormData) => {
+        if (RemoteData.isPending(savingState)) {
+            return false;
         }
-    };
+        setSavingState(RemoteData.pending);
 
-    const beregnOgSimulerRevurdering = async (values: EndringAvFradragFormData): Promise<boolean> => {
-        setBeregnOgSimulerStatus(RemoteData.pending);
         const res = await dispatch(
-            beregnOgSimuler({
+            lagreFradragsgrunnlag({
                 sakId: props.sakId,
                 revurderingId: props.revurdering.id,
-                periode: {
-                    fraOgMed: props.revurdering.periode.fraOgMed,
-                    tilOgMed: props.revurdering.periode.tilOgMed,
-                },
                 fradrag: values.fradrag.map((f: FradragFormData) => ({
-                    periode: null,
+                    periode: {
+                        /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                        fraOgMed: DateUtils.toIsoDateOnlyString(f.periode!.fraOgMed!),
+                        tilOgMed: DateUtils.toIsoDateOnlyString(DateUtils.sluttenAvMåneden(f.periode!.tilOgMed!)),
+                        /* eslint-enable @typescript-eslint/no-non-null-assertion */
+                    },
                     /* valideringa sjekker at f.beløp og f.type ikke er null */
                     /* eslint-disable @typescript-eslint/no-non-null-assertion */
                     beløp: Number.parseInt(f.beløp!, 10),
@@ -92,13 +179,24 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering; forr
                 })),
             })
         );
-        if (beregnOgSimuler.fulfilled.match(res)) {
-            setBeregnOgSimulerStatus(RemoteData.success(null));
+
+        if (lagreFradragsgrunnlag.fulfilled.match(res)) {
+            setSavingState(RemoteData.success(null));
             return true;
-        } else if (beregnOgSimuler.rejected.match(res)) {
-            setBeregnOgSimulerStatus(RemoteData.failure(res.payload!));
+        } else if (lagreFradragsgrunnlag.rejected.match(res)) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            setSavingState(RemoteData.failure(res.payload!));
         }
         return false;
+    };
+
+    const handleLagreOgFortsettSenereClick = async () => {
+        setPressedButton('lagre');
+        const res = await save(formik.values);
+        setPressedButton('ingen');
+        if (res) {
+            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+        }
     };
 
     const schema = yup.object<EndringAvFradragFormData>({
@@ -106,19 +204,18 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering; forr
     });
     const formik = useFormik<EndringAvFradragFormData>({
         initialValues: {
-            fradrag: erRevurderingSimulert(props.revurdering)
-                ? fradragUtenForventetInntekt(
-                      props.revurdering.beregninger.revurdert.fradrag.map(fradragTilFradragFormData)
-                  )
-                : [],
+            fradrag: props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.map(fradragTilFradragFormData),
         },
         async onSubmit(values) {
-            if (await beregnOgSimulerRevurdering(values)) {
+            setPressedButton('neste');
+            const res = await save(values);
+            setPressedButton('ingen');
+            if (res) {
                 history.push(props.nesteUrl);
             }
         },
         validationSchema: schema,
-        validateOnChange: hasSubmitted(),
+        validateOnChange: hasSubmitted,
     });
 
     return (
@@ -128,7 +225,7 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering; forr
                     <form
                         className={sharedStyles.revurderingContainer}
                         onSubmit={(e) => {
-                            setSubmittedStatus(SubmittedStatus.NESTE);
+                            setHasSubmitted(true);
                             formik.handleSubmit(e);
                         }}
                     >
@@ -178,29 +275,29 @@ const EndringAvFradrag = (props: { sakId: string; revurdering: Revurdering; forr
                                     }}
                                 />
                             </div>
-                            {RemoteData.isFailure(beregnOgSimulerStatus) && (
-                                <RevurderingskallFeilet error={beregnOgSimulerStatus.error} />
-                            )}
+                            <Feiloppsummering
+                                tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                                className={styles.feiloppsummering}
+                                feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                                hidden={!formikErrorsHarFeil(formik.errors)}
+                            />
+                            {RemoteData.isFailure(savingState) && <RevurderingskallFeilet error={savingState.error} />}
                             <RevurderingBunnknapper
                                 onNesteClick="submit"
                                 tilbakeUrl={props.forrigeUrl}
                                 onLagreOgFortsettSenereClick={() => {
-                                    setSubmittedStatus(SubmittedStatus.LAGRE);
+                                    setHasSubmitted(true);
                                     customFormikSubmit(formik, handleLagreOgFortsettSenereClick);
                                 }}
-                                onNesteClickSpinner={
-                                    submittedStatus === SubmittedStatus.NESTE &&
-                                    RemoteData.isPending(beregnOgSimulerStatus)
-                                }
+                                onNesteClickSpinner={pressedButton === 'neste' && RemoteData.isPending(savingState)}
                                 onLagreOgFortsettSenereClickSpinner={
-                                    submittedStatus === SubmittedStatus.LAGRE &&
-                                    RemoteData.isPending(beregnOgSimulerStatus)
+                                    pressedButton === 'lagre' && RemoteData.isPending(savingState)
                                 }
                             />
                         </div>
                     </form>
                 ),
-                right: <span />,
+                right: <GjeldendeFradrag fradrag={props.grunnlagsdataOgVilkårsvurderinger.fradrag} />,
             }}
         </ToKolonner>
     );
