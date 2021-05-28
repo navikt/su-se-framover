@@ -1,0 +1,54 @@
+@import '~/styles/variables.less';
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: @container-sm;
+    padding: @spacing-s @spacing-l;
+    margin-bottom: @spacing-xxl;
+}
+
+.headerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.statusContainer {
+    display: flex;
+    justify-content: flex-start;
+    > :not(:last-child) {
+        margin-right: @spacing-s;
+    }
+}
+
+.actionsContainer {
+    display: flex;
+    justify-content: flex-start;
+    > :not(:last-child) {
+        margin-right: @spacing-s;
+    }
+}
+
+.tabellContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+}
+
+.tabelldata {
+    white-space: nowrap;
+}
+
+.knapp {
+    margin-bottom: @spacing;
+}
+
+.alert {
+    margin-bottom: @spacing;
+}
