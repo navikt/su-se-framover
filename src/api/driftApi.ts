@@ -1,23 +1,23 @@
 import apiClient, { ApiClientResult } from './apiClient';
 
-interface journalpostOk {
+interface JournalpostOk {
     sakId: string;
     journalpostId: string;
 }
-export interface JournalpostSøknadOk extends journalpostOk {
+export interface JournalpostSøknadOk extends JournalpostOk {
     søknadId: string;
 }
-export interface JournalpostIverksettOk extends journalpostOk {
+export interface JournalpostIverksettOk extends JournalpostOk {
     behandlingId: string;
 }
-interface journalpostFeil {
+interface JournalpostFeil {
     sakId: string;
     grunn: string;
 }
-export interface JournalpostSøknadFeil extends journalpostFeil {
+export interface JournalpostSøknadFeil extends JournalpostFeil {
     søknadId: string;
 }
-export interface JournalpostIverksettFeil extends journalpostFeil {
+export interface JournalpostIverksettFeil extends JournalpostFeil {
     behandlingId: string;
 }
 export interface BrevbestillingOk {

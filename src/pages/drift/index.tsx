@@ -15,6 +15,141 @@ import {
 
 import styles from './index.module.less';
 
+const Rad = (props: {
+    type: 'Journalpost' | 'Oppgave' | 'Brevbestilling';
+    status: 'OK' | 'FEIL';
+    sakId: string;
+    id: string;
+    søknadId?: string;
+    behandlingId?: string;
+}) => {
+    return (
+        <tr>
+            <td>{props.type}</td>
+            <td>{props.status}</td>
+            <td className={styles.tabelldata}>{props.sakId}</td>
+            <td className={styles.tabelldata}>{props.id}</td>
+            <td className={styles.tabelldata}>{props.søknadId ?? props.behandlingId}</td>
+        </tr>
+    );
+};
+
+const SøknadTabell = (props: { søknadResponse: SøknadResponse }) => {
+    return (
+        <table className="tabell">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Sakid</th>
+                    <th>Id</th>
+                    <th>Søknadid</th>
+                </tr>
+            </thead>
+            <tbody>
+                {props.søknadResponse.journalposteringer.ok.map((journalpost) => (
+                    <Rad
+                        key={journalpost.journalpostId}
+                        type="Journalpost"
+                        status="OK"
+                        sakId={journalpost.sakId}
+                        søknadId={journalpost.søknadId}
+                        id={journalpost.journalpostId}
+                    />
+                ))}
+                {props.søknadResponse.journalposteringer.feilet.map((journalpost, index) => (
+                    <Rad
+                        key={index}
+                        type="Journalpost"
+                        status="FEIL"
+                        sakId={journalpost.sakId}
+                        søknadId={journalpost.søknadId}
+                        id={journalpost.grunn}
+                    />
+                ))}
+                {props.søknadResponse.oppgaver.ok.map((oppgave) => (
+                    <Rad
+                        key={oppgave.oppgaveId}
+                        type="Oppgave"
+                        status="OK"
+                        sakId={oppgave.sakId}
+                        søknadId={oppgave.søknadId}
+                        id={oppgave.oppgaveId}
+                    />
+                ))}
+                {props.søknadResponse.oppgaver.feilet.map((oppgave, index) => (
+                    <Rad
+                        key={index}
+                        type="Oppgave"
+                        status="FEIL"
+                        sakId={oppgave.sakId}
+                        søknadId={oppgave.søknadId}
+                        id={oppgave.grunn}
+                    />
+                ))}
+            </tbody>
+        </table>
+    );
+};
+
+const IverksettTabell = (props: { iverksettResponse: IverksettResponse }) => {
+    return (
+        <table className="tabell">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Sakid</th>
+                    <th>Id</th>
+                    <th>BehandlingId</th>
+                </tr>
+            </thead>
+            <tbody>
+                {props.iverksettResponse.journalposteringer.ok.map((journalpost) => (
+                    <Rad
+                        key={journalpost.journalpostId}
+                        type="Journalpost"
+                        status="OK"
+                        sakId={journalpost.sakId}
+                        behandlingId={journalpost.behandlingId}
+                        id={journalpost.journalpostId}
+                    />
+                ))}
+                {props.iverksettResponse.journalposteringer.feilet.map((journalpost, index) => (
+                    <Rad
+                        key={index}
+                        type="Journalpost"
+                        status="FEIL"
+                        sakId={journalpost.sakId}
+                        behandlingId={journalpost.behandlingId}
+                        id={journalpost.grunn}
+                    />
+                ))}
+                {props.iverksettResponse.brevbestillinger.ok.map((brevbestilling) => (
+                    <Rad
+                        key={brevbestilling.brevbestillingId}
+                        type="Brevbestilling"
+                        status="OK"
+                        sakId={brevbestilling.sakId}
+                        behandlingId={brevbestilling.behandlingId}
+                        id={brevbestilling.brevbestillingId}
+                    />
+                ))}
+                {props.iverksettResponse.brevbestillinger.feilet.map((brevbestilling, index) => (
+                    <Rad
+                        key={index}
+                        type="Brevbestilling"
+                        status="FEIL"
+                        sakId={brevbestilling.sakId}
+                        behandlingId={brevbestilling.behandlingId}
+                        id={brevbestilling.grunn}
+                    />
+                ))}
+            </tbody>
+        </table>
+    );
+};
+
 const Drift = () => {
     const [statusBakover, setStatusBakover] = React.useState<RemoteData.RemoteData<ApiError, string>>(
         RemoteData.initial
@@ -55,141 +190,6 @@ const Drift = () => {
         } else {
             setfixIverksettingResponse(RemoteData.failure(resultat.error));
         }
-    };
-
-    const Rad = (props: {
-        type: 'Journalpost' | 'Oppgave' | 'Brevbestilling';
-        status: 'OK' | 'FEIL';
-        sakId: string;
-        id: string;
-        søknadId?: string;
-        behandlingId?: string;
-    }) => {
-        return (
-            <tr>
-                <td>{props.type}</td>
-                <td>{props.status}</td>
-                <td className={styles.tabellrad}>{props.sakId}</td>
-                <td className={styles.tabellrad}>{props.id}</td>
-                <td className={styles.tabellrad}>{props.søknadId ?? props.behandlingId}</td>
-            </tr>
-        );
-    };
-
-    const SøknadTabell = (props: { søknadResponse: SøknadResponse }) => {
-        return (
-            <table className="tabell">
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Sakid</th>
-                        <th>Id</th>
-                        <th>Søknadid</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {props.søknadResponse.journalposteringer.ok.map((journalpost) => (
-                        <Rad
-                            key={journalpost.journalpostId}
-                            type="Journalpost"
-                            status="OK"
-                            sakId={journalpost.sakId}
-                            søknadId={journalpost.søknadId}
-                            id={journalpost.journalpostId}
-                        />
-                    ))}
-                    {props.søknadResponse.journalposteringer.feilet.map((journalpost, index) => (
-                        <Rad
-                            key={index}
-                            type="Journalpost"
-                            status="FEIL"
-                            sakId={journalpost.sakId}
-                            søknadId={journalpost.søknadId}
-                            id={journalpost.grunn}
-                        />
-                    ))}
-                    {props.søknadResponse.oppgaver.ok.map((oppgave) => (
-                        <Rad
-                            key={oppgave.oppgaveId}
-                            type="Oppgave"
-                            status="OK"
-                            sakId={oppgave.sakId}
-                            søknadId={oppgave.søknadId}
-                            id={oppgave.oppgaveId}
-                        />
-                    ))}
-                    {props.søknadResponse.oppgaver.feilet.map((oppgave, index) => (
-                        <Rad
-                            key={index}
-                            type="Oppgave"
-                            status="FEIL"
-                            sakId={oppgave.sakId}
-                            søknadId={oppgave.søknadId}
-                            id={oppgave.grunn}
-                        />
-                    ))}
-                </tbody>
-            </table>
-        );
-    };
-
-    const IverksettTabell = (props: { iverksettResponse: IverksettResponse }) => {
-        return (
-            <table className="tabell">
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Sakid</th>
-                        <th>Id</th>
-                        <th>BehandlingId</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {props.iverksettResponse.journalposteringer.ok.map((journalpost) => (
-                        <Rad
-                            key={journalpost.journalpostId}
-                            type="Journalpost"
-                            status="OK"
-                            sakId={journalpost.sakId}
-                            behandlingId={journalpost.behandlingId}
-                            id={journalpost.journalpostId}
-                        />
-                    ))}
-                    {props.iverksettResponse.journalposteringer.feilet.map((journalpost, index) => (
-                        <Rad
-                            key={index}
-                            type="Journalpost"
-                            status="FEIL"
-                            sakId={journalpost.sakId}
-                            behandlingId={journalpost.behandlingId}
-                            id={journalpost.grunn}
-                        />
-                    ))}
-                    {props.iverksettResponse.brevbestillinger.ok.map((brevbestilling) => (
-                        <Rad
-                            key={brevbestilling.brevbestillingId}
-                            type="Brevbestilling"
-                            status="OK"
-                            sakId={brevbestilling.sakId}
-                            behandlingId={brevbestilling.behandlingId}
-                            id={brevbestilling.brevbestillingId}
-                        />
-                    ))}
-                    {props.iverksettResponse.brevbestillinger.feilet.map((brevbestilling, index) => (
-                        <Rad
-                            key={index}
-                            type="Brevbestilling"
-                            status="FEIL"
-                            sakId={brevbestilling.sakId}
-                            behandlingId={brevbestilling.behandlingId}
-                            id={brevbestilling.grunn}
-                        />
-                    ))}
-                </tbody>
-            </table>
-        );
     };
 
     return (
