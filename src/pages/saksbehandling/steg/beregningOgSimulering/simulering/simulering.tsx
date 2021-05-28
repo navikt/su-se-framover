@@ -66,10 +66,10 @@ export const Utbetalingssimulering = (props: { simulering: Simulering }) => {
                                     className={classNames(styles.periodeoverskrift, styles.linje)}
                                     key={head.fraOgMed + head.tilOgMed}
                                 >
-                                    <span>{`${formatMonthYear(head.fraOgMed, intl)} - ${formatMonthYear(
-                                        last.tilOgMed,
+                                    <span className={styles.periode}>{`${formatMonthYear(
+                                        head.fraOgMed,
                                         intl
-                                    )}`}</span>
+                                    )} - ${formatMonthYear(last.tilOgMed, intl)}`}</span>
                                     <span className={styles.type}>
                                         {head.type !== SimulertUtbetalingstype.ORDINÆR
                                             ? intl.formatMessage({ id: simulertUtbetalingstypeToResourceId(head.type) })
