@@ -178,6 +178,7 @@ export interface LeggTilUføreResponse {
 export enum InformasjonSomRevurderes {
     Uførhet = 'Uførhet',
     Inntekt = 'Inntekt',
+    Bosituasjon = 'Bosituasjon',
 }
 
 export enum Vurderingstatus {

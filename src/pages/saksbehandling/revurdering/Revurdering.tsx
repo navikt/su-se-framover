@@ -21,6 +21,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import { RevurderingSteg } from '../types';
 
+import Bosituasjon from './bosituasjon/Bosituasjon';
 import EndringAvFradrag from './endringAvFradrag/EndringAvFradrag';
 import RevurderingsOppsummering from './oppsummering/RevurderingsOppsummering';
 import messages from './revurdering-nb';
@@ -37,6 +38,8 @@ const stegTilTekstId = (steg: RevurderingSteg) => {
             return 'steg.periode';
         case RevurderingSteg.Uførhet:
             return 'steg.uførhet';
+        case RevurderingSteg.Bosituasjon:
+            return 'steg.bosituasjon';
         case RevurderingSteg.EndringAvFradrag:
             return 'steg.fradrag';
         case RevurderingSteg.Oppsummering:
@@ -221,6 +224,16 @@ const RevurderingstegPage = (props: {
         case RevurderingSteg.Uførhet:
             return (
                 <Uførhet
+                    sakId={props.sakId}
+                    revurdering={props.revurdering}
+                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger.value}
+                    forrigeUrl={props.forrigeUrl}
+                    nesteUrl={props.nesteUrl}
+                />
+            );
+        case RevurderingSteg.Bosituasjon:
+            return (
+                <Bosituasjon
                     sakId={props.sakId}
                     revurdering={props.revurdering}
                     grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger.value}

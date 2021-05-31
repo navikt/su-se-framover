@@ -223,6 +223,22 @@ export const lagreFradragsgrunnlag = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const lagreBosituasjonsgrunnlag = createAsyncThunk<
+    Revurdering,
+    {
+        sakId: string;
+        revurderingId: string;
+        fradrag: Fradrag[];
+    },
+    { rejectValue: ApiError }
+>('revurdering/grunnlag/fradrag/lagre', async (arg, thunkApi) => {
+    const res = await revurderingApi.lagreBosituasjonsgrunnlag(arg.sakId, arg.revurderingId);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const hentGrunnlagsdataOgVilkårsvurderinger = createAsyncThunk<
     GrunnlagsdataOgVilkårsvurderinger,
     {

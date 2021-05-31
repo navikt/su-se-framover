@@ -9,4 +9,5 @@ export default {
 
     'informasjonSomRevurderes.uførhet': 'Uførhet',
     'informasjonSomRevurderes.inntekt': 'Inntekt',
+    'informasjonSomRevurderes.bosituasjon': 'Bosituasjon',
 };

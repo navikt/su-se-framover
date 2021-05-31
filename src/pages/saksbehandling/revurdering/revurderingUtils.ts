@@ -79,7 +79,11 @@ export function getRevurderingsårsakMessageId(årsak: OpprettetRevurderingGrunn
  * Dette er det som styrer rekkefølgen på når ting skal revurderes.
  * Det bør alltid tas utgangspunkt i denne, og heller filtrere bort de stegene man ikke ønsker.
  */
-export const revurderingstegrekkefølge = [RevurderingSteg.Uførhet, RevurderingSteg.EndringAvFradrag];
+export const revurderingstegrekkefølge = [
+    RevurderingSteg.Uførhet,
+    RevurderingSteg.Bosituasjon,
+    RevurderingSteg.EndringAvFradrag,
+];
 
 export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) => {
     switch (i) {
@@ -87,6 +91,8 @@ export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) =
             return InformasjonSomRevurderes.Uførhet;
         case RevurderingSteg.EndringAvFradrag:
             return InformasjonSomRevurderes.Inntekt;
+        case RevurderingSteg.Bosituasjon:
+            return InformasjonSomRevurderes.Bosituasjon;
     }
     return null;
 };
