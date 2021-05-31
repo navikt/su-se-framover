@@ -156,7 +156,6 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
             if (res.status === 'error') {
                 setEps(RemoteData.failure(res.error));
             } else {
-                // setEps(RemoteData.success(res.data));
                 setEps(RemoteData.success(res.data));
             }
         }
@@ -170,7 +169,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
         eps,
         RemoteData.fold(
             () => {
-                //Denne er for når søker ikke har EPS
+                //Denne er for når søker ikke har EPS - den blir bare satt til pending når vi fetcher
                 return (
                     <SatsForm
                         behandlingId={props.behandling.id}
