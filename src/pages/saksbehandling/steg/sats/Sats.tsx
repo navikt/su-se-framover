@@ -30,6 +30,14 @@ import { Vurderingknapper } from '../Vurdering';
 import messages from './sats-nb';
 import styles from './sats.module.less';
 
+// enum Bosituasjonsgrunnlag {
+//     DELER_BOLIG_MED_VOKSNE = 'DELER_BOLIG_MED_VOKSNE',
+//     BOR_ALENE = 'BOR_ALENE',
+//     EPS_UFØR_FLYKTNING = 'EPS_UFØR_FLYKTNING',
+//     EPS_IKKE_UFØR_FLYKTNING = 'EPS_IKKE_UFØR_FLYKTNING',
+//     EPS_67_ELLER_OVER = 'EPS_67_ELLER_OVER',
+// }
+
 interface FormData {
     delerSøkerBolig: Nullable<boolean>;
     mottarEktemakeEllerSamboerSU: Nullable<boolean>;
@@ -47,6 +55,15 @@ const toBosituasjon = (values: FormData, eps: Nullable<Person>): Nullable<Bositu
         begrunnelse: values.begrunnelse,
     };
 };
+
+// const tilBosituasjonsgrunnlag = (values: FormData, eps: Nullable<Person>): Nullable<string> => {
+//     if (eps) {
+//         if (eps.alder && eps?.alder >= 67) {
+
+//         }
+//         return values.mottarEktemakeEllerSamboerSU ? Bosituasjonsgrunnlag.
+//     }
+// };
 
 const utledSats = (values: FormData, harEPS: boolean, epsAlder?: Nullable<number>) => {
     if (!values.delerSøkerBolig && values.delerSøkerBolig !== null) {
@@ -148,6 +165,14 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 },
             })
         );
+
+        // dispatch(
+        //     lagreBosituasjonGrunnlag({
+        //         sakId: props.sakId,
+        //         behandlingId: props.behandling.id,
+        //         delerBoligMed: values.delerSøkerBolig,
+        //     })
+        // );
 
         if (res && lagreBehandlingsinformasjon.fulfilled.match(res)) {
             history.push(nesteUrl);

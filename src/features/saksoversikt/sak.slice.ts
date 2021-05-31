@@ -20,6 +20,7 @@ import {
     fortsettEtterForhåndsvarsel,
     lagreFradragsgrunnlag,
 } from '~features/revurdering/revurderingActions';
+import { DelerBoligMed } from '~features/søknad/types';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
@@ -148,6 +149,38 @@ export const lagreUføregrunnlag = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/grunnlag/uføre', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreUføregrunnlag(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreEpsGrunnlag = createAsyncThunk<
+    Behandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        epsFnr: Nullable<string>;
+    },
+    { rejectValue: ApiError }
+>('behandling/grunnlag/bosituasjon/eps', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreGrunnlagEps(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreBosituasjonGrunnlag = createAsyncThunk<
+    Behandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        delerBoligMed: DelerBoligMed;
+    },
+    { rejectValue: ApiError }
+>('behandling/grunnlag/bosituasjon/fullfør', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreGrunnlagBosituasjon(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -410,6 +443,26 @@ export default createSlice({
         });
 
         handleAsyncThunk(builder, lagreUføregrunnlag, {
+            pending: (state) => {
+                state.lagreUføregrunnlagStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.lagreUføregrunnlagStatus = RemoteData.success(null);
+
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.lagreUføregrunnlagStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
+        handleAsyncThunk(builder, lagreEpsGrunnlag, {
             pending: (state) => {
                 state.lagreUføregrunnlagStatus = RemoteData.pending;
             },

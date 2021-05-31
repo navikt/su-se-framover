@@ -1,3 +1,4 @@
+import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
@@ -90,6 +91,30 @@ export async function lagreBehandlingsinformasjon(arg: {
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/informasjon`,
         method: 'PATCH',
         body: arg.behandlingsinformasjon,
+    });
+}
+
+export async function lagreGrunnlagEps(arg: { sakId: string; behandlingId: string; epsFnr: Nullable<string> }) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/eps`,
+        method: 'POST',
+        body: {
+            epsFnr: arg.epsFnr,
+        },
+    });
+}
+
+export async function lagreGrunnlagBosituasjon(arg: {
+    sakId: string;
+    behandlingId: string;
+    delerBoligMed: DelerBoligMed;
+}) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/fullfør`,
+        method: 'POST',
+        body: {
+            delerBoligMed: arg.delerBoligMed,
+        },
     });
 }
 

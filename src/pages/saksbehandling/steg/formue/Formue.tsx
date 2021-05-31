@@ -19,7 +19,7 @@ import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';
 import personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
-import sakSlice, { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import sakSlice, { lagreBehandlingsinformasjon, lagreEpsGrunnlag } from '~features/saksoversikt/sak.slice';
 import { removeSpaces } from '~lib/formatUtils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
@@ -147,6 +147,15 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                               }
                             : eksisterendeBosituasjon,
                 },
+            })
+        );
+
+        // todo ai: wuuut to dooo here
+        await dispatch(
+            lagreEpsGrunnlag({
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+                epsFnr: values.epsFnr,
             })
         );
 
