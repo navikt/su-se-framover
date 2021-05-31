@@ -20,7 +20,6 @@ import {
     fortsettEtterForhåndsvarsel,
     lagreFradragsgrunnlag,
 } from '~features/revurdering/revurderingActions';
-import { DelerBoligMed } from '~features/søknad/types';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
@@ -176,7 +175,8 @@ export const lagreBosituasjonGrunnlag = createAsyncThunk<
     {
         sakId: string;
         behandlingId: string;
-        delerBoligMed: DelerBoligMed;
+        bosituasjon: string;
+        begrunnelse: Nullable<string>;
     },
     { rejectValue: ApiError }
 >('behandling/grunnlag/bosituasjon/fullfør', async (arg, thunkApi) => {

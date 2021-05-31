@@ -13,7 +13,7 @@ import { SuperRadioGruppe } from '~components/FormElements';
 import { Personkort } from '~components/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { eqBosituasjon } from '~features/behandling/behandlingUtils';
-import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import { lagreBehandlingsinformasjon, lagreBosituasjonGrunnlag } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -30,13 +30,13 @@ import { Vurderingknapper } from '../Vurdering';
 import messages from './sats-nb';
 import styles from './sats.module.less';
 
-// enum Bosituasjonsgrunnlag {
-//     DELER_BOLIG_MED_VOKSNE = 'DELER_BOLIG_MED_VOKSNE',
-//     BOR_ALENE = 'BOR_ALENE',
-//     EPS_UFØR_FLYKTNING = 'EPS_UFØR_FLYKTNING',
-//     EPS_IKKE_UFØR_FLYKTNING = 'EPS_IKKE_UFØR_FLYKTNING',
-//     EPS_67_ELLER_OVER = 'EPS_67_ELLER_OVER',
-// }
+enum Bosituasjonsgrunnlag {
+    DELER_BOLIG_MED_VOKSNE = 'DELER_BOLIG_MED_VOKSNE',
+    BOR_ALENE = 'BOR_ALENE',
+    EPS_UFØR_FLYKTNING = 'EPS_UFØR_FLYKTNING',
+    EPS_IKKE_UFØR_FLYKTNING = 'EPS_IKKE_UFØR_FLYKTNING',
+    EPS_67_ELLER_OVER = 'EPS_67_ELLER_OVER',
+}
 
 interface FormData {
     delerSøkerBolig: Nullable<boolean>;
@@ -56,14 +56,21 @@ const toBosituasjon = (values: FormData, eps: Nullable<Person>): Nullable<Bositu
     };
 };
 
-// const tilBosituasjonsgrunnlag = (values: FormData, eps: Nullable<Person>): Nullable<string> => {
-//     if (eps) {
-//         if (eps.alder && eps?.alder >= 67) {
+const tilBosituasjonsgrunnlag = (values: FormData, eps: Nullable<Person>): Nullable<string> => {
+    if (eps && eps.alder) {
+        if (eps.alder >= 67) {
+            return Bosituasjonsgrunnlag.EPS_67_ELLER_OVER;
+        }
 
-//         }
-//         return values.mottarEktemakeEllerSamboerSU ? Bosituasjonsgrunnlag.
-//     }
-// };
+        if (values.mottarEktemakeEllerSamboerSU === null) return null;
+        return values.mottarEktemakeEllerSamboerSU
+            ? Bosituasjonsgrunnlag.EPS_UFØR_FLYKTNING
+            : Bosituasjonsgrunnlag.EPS_IKKE_UFØR_FLYKTNING;
+    }
+
+    if (values.delerSøkerBolig === null) return null;
+    return values.delerSøkerBolig ? Bosituasjonsgrunnlag.DELER_BOLIG_MED_VOKSNE : Bosituasjonsgrunnlag.BOR_ALENE;
+};
 
 const utledSats = (values: FormData, harEPS: boolean, epsAlder?: Nullable<number>) => {
     if (!values.delerSøkerBolig && values.delerSøkerBolig !== null) {
@@ -166,13 +173,17 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
             })
         );
 
-        // dispatch(
-        //     lagreBosituasjonGrunnlag({
-        //         sakId: props.sakId,
-        //         behandlingId: props.behandling.id,
-        //         delerBoligMed: values.delerSøkerBolig,
-        //     })
-        // );
+        const bosituasjonsgrunnlag = tilBosituasjonsgrunnlag(values, eps);
+        if (bosituasjonsgrunnlag) {
+            dispatch(
+                lagreBosituasjonGrunnlag({
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                    bosituasjon: bosituasjonsgrunnlag,
+                    begrunnelse: values.begrunnelse,
+                })
+            );
+        }
 
         if (res && lagreBehandlingsinformasjon.fulfilled.match(res)) {
             history.push(nesteUrl);
