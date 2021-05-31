@@ -147,6 +147,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const [eps, setEps] = useState<RemoteData.RemoteData<ApiError | undefined, Person>>(RemoteData.initial);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const history = useHistory();
+    const epsFnr = props.behandling.behandlingsinformasjon.ektefelle?.fnr;
 
     useEffect(() => {
         async function fetchEPS(fnr: string) {
@@ -160,30 +161,30 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
             }
         }
 
-        if (props.behandling.behandlingsinformasjon.ektefelle?.fnr) {
-            fetchEPS(props.behandling.behandlingsinformasjon.ektefelle?.fnr);
+        if (epsFnr) {
+            fetchEPS(epsFnr);
         }
     }, []);
 
+    if (!epsFnr) {
+        return (
+            <SatsForm
+                behandlingId={props.behandling.id}
+                søker={props.søker}
+                eps={null}
+                bosituasjon={props.behandling.behandlingsinformasjon.bosituasjon}
+                søknadInnhold={props.behandling.søknad.søknadInnhold}
+                forrigeUrl={props.forrigeUrl}
+                nesteUrl={props.nesteUrl}
+                sakId={props.sakId}
+                intl={intl}
+            />
+        );
+    }
     return pipe(
         eps,
         RemoteData.fold(
-            () => {
-                //Denne er for når søker ikke har EPS - den blir bare satt til pending når vi fetcher
-                return (
-                    <SatsForm
-                        behandlingId={props.behandling.id}
-                        søker={props.søker}
-                        eps={null}
-                        bosituasjon={props.behandling.behandlingsinformasjon.bosituasjon}
-                        søknadInnhold={props.behandling.søknad.søknadInnhold}
-                        forrigeUrl={props.forrigeUrl}
-                        nesteUrl={props.nesteUrl}
-                        sakId={props.sakId}
-                        intl={intl}
-                    />
-                );
-            },
+            () => <NavFrontendSpinner />,
             () => <NavFrontendSpinner />,
             () => (
                 <div className={styles.epsFeilContainer}>
