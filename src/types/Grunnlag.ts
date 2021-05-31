@@ -8,3 +8,12 @@ export interface Uføregrunnlag {
     forventetInntekt: number;
     begrunnelse: Nullable<string>;
 }
+
+export interface Bosituasjon {
+    /* Kun brukt i debuggingsøyemed foreløpig */
+    type: string;
+    fnr: Nullable<string>;
+    delerBolig: Nullable<boolean>;
+    ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
+    begrunnelse: Nullable<string>;
+}
