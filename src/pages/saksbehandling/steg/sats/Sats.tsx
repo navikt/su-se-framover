@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
+import { Hovedknapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element, Feilmelding } from 'nav-frontend-typografi';
@@ -121,6 +122,7 @@ const getValidationSchema = (eps: Nullable<Person>) => {
 const Sats = (props: VilkårsvurderingBaseProps) => {
     const [eps, setEps] = useState<RemoteData.RemoteData<ApiError | undefined, Person>>(RemoteData.initial);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const history = useHistory();
 
     useEffect(() => {
         async function fetchEPS(fnr: string) {
@@ -130,12 +132,12 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
             if (res.status === 'error') {
                 setEps(RemoteData.failure(res.error));
             } else {
+                // setEps(RemoteData.success(res.data));
                 setEps(RemoteData.success(res.data));
             }
         }
 
         if (props.behandling.behandlingsinformasjon.ektefelle?.fnr) {
-            setEps(RemoteData.pending);
             fetchEPS(props.behandling.behandlingsinformasjon.ektefelle?.fnr);
         }
     }, []);
@@ -146,7 +148,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
             () => {
                 //Denne er for når søker ikke har EPS
                 return (
-                    <SatsInternal
+                    <SatsForm
                         behandlingId={props.behandling.id}
                         søker={props.søker}
                         eps={null}
@@ -160,9 +162,20 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 );
             },
             () => <NavFrontendSpinner />,
-            () => <Feilmelding>{intl.formatMessage({ id: 'feil.pdlFeil' })}</Feilmelding>,
+            () => (
+                <div className={styles.epsFeilContainer}>
+                    <Feilmelding>{intl.formatMessage({ id: 'feilmelding.pdlFeil' })}</Feilmelding>
+                    <Hovedknapp
+                        onClick={() => {
+                            history.push(props.forrigeUrl);
+                        }}
+                    >
+                        {intl.formatMessage({ id: 'knapp.tilbake' })}
+                    </Hovedknapp>
+                </div>
+            ),
             (eps) => (
-                <SatsInternal
+                <SatsForm
                     behandlingId={props.behandling.id}
                     søker={props.søker}
                     eps={eps}
@@ -178,7 +191,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     );
 };
 
-const SatsInternal = (props: SatsProps) => {
+const SatsForm = (props: SatsProps) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = useState(false);
