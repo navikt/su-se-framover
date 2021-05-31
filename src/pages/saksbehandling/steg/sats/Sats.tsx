@@ -265,7 +265,7 @@ const SatsForm = (props: SatsProps) => {
             dispatch(
                 lagreBosituasjonGrunnlag({
                     sakId: props.sakId,
-                    behandlingId: props.behandling.id,
+                    behandlingId: props.behandlingId,
                     bosituasjon: bosituasjonsgrunnlag,
                     begrunnelse: values.begrunnelse,
                 })

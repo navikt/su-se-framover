@@ -174,7 +174,7 @@ export async function lagreUføregrunnlag(arg: {
     resultat: UføreResultat;
 }) {
     return apiClient<Behandling>({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/uføregrunnlag`,
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/uføre`,
         method: 'POST',
         body: {
             uføregrad: arg.uføregrad,
