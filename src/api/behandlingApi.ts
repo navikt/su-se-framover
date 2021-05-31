@@ -1,4 +1,3 @@
-import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
@@ -107,13 +106,15 @@ export async function lagreGrunnlagEps(arg: { sakId: string; behandlingId: strin
 export async function lagreGrunnlagBosituasjon(arg: {
     sakId: string;
     behandlingId: string;
-    delerBoligMed: DelerBoligMed;
+    bosituasjon: string;
+    begrunnelse: Nullable<string>;
 }) {
     return apiClient<Behandling>({
         url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/fullfør`,
         method: 'POST',
         body: {
-            delerBoligMed: arg.delerBoligMed,
+            bosituasjon: arg.bosituasjon,
+            begrunnelse: arg.begrunnelse,
         },
     });
 }
