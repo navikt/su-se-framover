@@ -110,7 +110,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
     };
 
     const initialFormData = (): FormData => ({
-        status: props.behandling.vilkårsvurderinger.uføre?.resultat ?? null,
+        status: props.behandling.grunnlagsdataOgVilkårsvurderinger.uføre?.resultat ?? null,
         uføregrad: props.behandling.behandlingsinformasjon.uførhet?.uføregrad?.toString() ?? null,
         forventetInntekt: props.behandling.behandlingsinformasjon.uførhet?.forventetInntekt?.toString() ?? null,
         begrunnelse: props.behandling.behandlingsinformasjon.uførhet?.begrunnelse || null,
