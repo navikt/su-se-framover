@@ -190,6 +190,19 @@ export async function lagreFradragsgrunnlag(
     });
 }
 
+export async function lagreBosituasjonsgrunnlag(
+    sakId: string,
+    revurderingId: string
+): Promise<ApiClientResult<Revurdering>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/fradrag`,
+        method: 'POST',
+        body: {
+            asd: 5,
+        },
+    });
+}
+
 export async function hentGrunnlagsdataOgVilkårsvurderinger(
     sakId: string,
     revurderingId: string

@@ -79,6 +79,8 @@ const informasjonSomRevurderesMessageId = (i: InformasjonSomRevurderes) => {
             return 'informasjonSomRevurderes.uførhet';
         case InformasjonSomRevurderes.Inntekt:
             return 'informasjonSomRevurderes.inntekt';
+        case InformasjonSomRevurderes.Bosituasjon:
+            return 'informasjonSomRevurderes.bosituasjon';
     }
 };
 
