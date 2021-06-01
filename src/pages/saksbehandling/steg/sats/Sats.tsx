@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
+import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element, Feilmelding } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
@@ -16,14 +16,14 @@ import { SuperRadioGruppe } from '~components/FormElements';
 import { Personkort } from '~components/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { eqBosituasjon } from '~features/behandling/behandlingUtils';
-import { lagreBehandlingsinformasjon, lagreBosituasjonGrunnlag } from '~features/saksoversikt/sak.slice';
+import { lagreBosituasjonGrunnlag } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Bosituasjon } from '~types/Behandlingsinformasjon';
+import { Bosituasjon } from '~types/Grunnlag';
 import { SøknadInnhold } from '~types/Søknad';
 
 import { SatsFaktablokk } from '../faktablokk/faktablokker/SatsFaktablokk';
@@ -34,7 +34,7 @@ import { Vurderingknapper } from '../Vurdering';
 import messages from './sats-nb';
 import styles from './sats.module.less';
 
-enum Bosituasjonsgrunnlag {
+enum BosituasjonsValg {
     DELER_BOLIG_MED_VOKSNE = 'DELER_BOLIG_MED_VOKSNE',
     BOR_ALENE = 'BOR_ALENE',
     EPS_UFØR_FLYKTNING = 'EPS_UFØR_FLYKTNING',
@@ -60,32 +60,34 @@ interface SatsProps {
     intl: IntlShape;
 }
 
-const toBosituasjon = (values: FormData, eps: Nullable<Person>): Nullable<Bosituasjon> => {
-    if (values.delerSøkerBolig === null && eps === null) {
-        return null;
-    }
-
+const tilBosituasjonsgrunnlag = (
+    values: FormData,
+    bosituasjonsValg: BosituasjonsValg,
+    eps: Nullable<Person>
+): Bosituasjon => {
     return {
+        type: bosituasjonsValg,
+        fnr: eps?.fnr ?? null,
         delerBolig: values.delerSøkerBolig,
         ektemakeEllerSamboerUførFlyktning: values.mottarEktemakeEllerSamboerSU,
         begrunnelse: values.begrunnelse,
     };
 };
 
-const tilBosituasjonsgrunnlag = (values: FormData, eps: Nullable<Person>): Nullable<string> => {
+const tilBosituasjonsValg = (values: FormData, eps: Nullable<Person>): Nullable<BosituasjonsValg> => {
     if (eps && eps.alder) {
         if (eps.alder >= 67) {
-            return Bosituasjonsgrunnlag.EPS_67_ELLER_OVER;
+            return BosituasjonsValg.EPS_67_ELLER_OVER;
         }
 
         if (values.mottarEktemakeEllerSamboerSU === null) return null;
         return values.mottarEktemakeEllerSamboerSU
-            ? Bosituasjonsgrunnlag.EPS_UFØR_FLYKTNING
-            : Bosituasjonsgrunnlag.EPS_IKKE_UFØR_FLYKTNING;
+            ? BosituasjonsValg.EPS_UFØR_FLYKTNING
+            : BosituasjonsValg.EPS_IKKE_UFØR_FLYKTNING;
     }
 
     if (values.delerSøkerBolig === null) return null;
-    return values.delerSøkerBolig ? Bosituasjonsgrunnlag.DELER_BOLIG_MED_VOKSNE : Bosituasjonsgrunnlag.BOR_ALENE;
+    return values.delerSøkerBolig ? BosituasjonsValg.DELER_BOLIG_MED_VOKSNE : BosituasjonsValg.BOR_ALENE;
 };
 
 const utledSats = (values: FormData, harEPS: boolean, epsAlder?: Nullable<number>) => {
@@ -147,7 +149,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const [eps, setEps] = useState<RemoteData.RemoteData<ApiError | undefined, Person>>(RemoteData.initial);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const history = useHistory();
-    const epsFnr = props.behandling.behandlingsinformasjon.ektefelle?.fnr;
+    const epsFnr = props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0].fnr;
 
     useEffect(() => {
         async function fetchEPS(fnr: string) {
@@ -172,7 +174,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 behandlingId={props.behandling.id}
                 søker={props.søker}
                 eps={null}
-                bosituasjon={props.behandling.behandlingsinformasjon.bosituasjon}
+                bosituasjon={props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0] ?? null}
                 søknadInnhold={props.behandling.søknad.søknadInnhold}
                 forrigeUrl={props.forrigeUrl}
                 nesteUrl={props.nesteUrl}
@@ -203,7 +205,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                     behandlingId={props.behandling.id}
                     søker={props.søker}
                     eps={eps}
-                    bosituasjon={props.behandling.behandlingsinformasjon.bosituasjon}
+                    bosituasjon={props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0] ?? null}
                     søknadInnhold={props.behandling.søknad.søknadInnhold}
                     forrigeUrl={props.forrigeUrl}
                     nesteUrl={props.nesteUrl}
@@ -240,39 +242,28 @@ const SatsForm = (props: SatsProps) => {
     });
 
     const handleSave = async (values: FormData, nesteUrl: string) => {
-        const boSituasjonValues = toBosituasjon(values, eps);
-        if (!boSituasjonValues) {
+        const bosituasjonsvalg = tilBosituasjonsValg(values, eps);
+        if (!bosituasjonsvalg) {
             return;
         }
 
-        if (eqBosituasjon.equals(boSituasjonValues, props.bosituasjon)) {
+        const bosituasjonsgrunnlag = tilBosituasjonsgrunnlag(values, bosituasjonsvalg, props.eps);
+
+        if (eqBosituasjon.equals(bosituasjonsgrunnlag, props.bosituasjon)) {
             history.push(nesteUrl);
             return;
         }
 
         const res = await dispatch(
-            lagreBehandlingsinformasjon({
+            lagreBosituasjonGrunnlag({
                 sakId: props.sakId,
                 behandlingId: props.behandlingId,
-                behandlingsinformasjon: {
-                    bosituasjon: boSituasjonValues,
-                },
+                bosituasjon: bosituasjonsvalg,
+                begrunnelse: values.begrunnelse,
             })
         );
 
-        const bosituasjonsgrunnlag = tilBosituasjonsgrunnlag(values, eps);
-        if (bosituasjonsgrunnlag) {
-            dispatch(
-                lagreBosituasjonGrunnlag({
-                    sakId: props.sakId,
-                    behandlingId: props.behandlingId,
-                    bosituasjon: bosituasjonsgrunnlag,
-                    begrunnelse: values.begrunnelse,
-                })
-            );
-        }
-
-        if (res && lagreBehandlingsinformasjon.fulfilled.match(res)) {
+        if (lagreBosituasjonGrunnlag.fulfilled.match(res)) {
             history.push(nesteUrl);
         }
     };
@@ -298,29 +289,33 @@ const SatsForm = (props: SatsProps) => {
                             )}
                         </div>
                         {!eps && (
-                            <SuperRadioGruppe
-                                id="delerSøkerBolig"
+                            <RadioGruppe
                                 legend={props.intl.formatMessage({ id: 'radio.delerSøkerBoligOver18.legend' })}
-                                values={formik.values}
-                                errors={formik.errors}
-                                property="delerSøkerBolig"
-                                onChange={(val) => {
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        delerSøkerBolig: val.delerSøkerBolig,
-                                    }));
-                                }}
-                                options={[
-                                    {
-                                        label: props.intl.formatMessage({ id: 'radio.label.ja' }),
-                                        radioValue: true,
-                                    },
-                                    {
-                                        label: props.intl.formatMessage({ id: 'radio.label.nei' }),
-                                        radioValue: false,
-                                    },
-                                ]}
-                            />
+                                feil={formik.errors.delerSøkerBolig}
+                            >
+                                <Radio
+                                    label={props.intl.formatMessage({ id: 'radio.label.ja' })}
+                                    name="delerSøkerBolig"
+                                    checked={formik.values.delerSøkerBolig === true}
+                                    onChange={() => {
+                                        formik.setValues((v) => ({
+                                            ...v,
+                                            delerSøkerBolig: true,
+                                        }));
+                                    }}
+                                />
+                                <Radio
+                                    label={props.intl.formatMessage({ id: 'radio.label.nei' })}
+                                    name="delerSøkerBolig"
+                                    checked={formik.values.delerSøkerBolig === false}
+                                    onChange={() => {
+                                        formik.setValues((v) => ({
+                                            ...v,
+                                            delerSøkerBolig: false,
+                                        }));
+                                    }}
+                                />
+                            </RadioGruppe>
                         )}
                         {eps?.alder && eps.alder < 67 ? (
                             <SuperRadioGruppe

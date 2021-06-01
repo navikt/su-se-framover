@@ -1,11 +1,13 @@
+import { Nullable } from '~lib/types';
+
 import { Fradrag } from './Fradrag';
 import { Bosituasjon, Uføregrunnlag } from './Grunnlag';
 import { Periode } from './Periode';
 
 export interface GrunnlagsdataOgVilkårsvurderinger {
-    uføre?: UføreVilkår;
+    uføre: Nullable<UføreVilkår>;
     fradrag: Fradrag[];
-    bosituasjon?: Bosituasjon[];
+    bosituasjon: Bosituasjon[];
 }
 
 export interface UføreVilkår {
