@@ -288,6 +288,7 @@ interface SakState {
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<ApiError, null>;
     lagreBehandlingsinformasjonStatus: RemoteData.RemoteData<ApiError, null>;
     lagreUføregrunnlagStatus: RemoteData.RemoteData<ApiError, null>;
+    lagreBosituasjonGrunnlag: RemoteData.RemoteData<ApiError, null>;
     beregningStatus: RemoteData.RemoteData<ApiError, null>;
     simuleringStatus: RemoteData.RemoteData<ApiError, null>;
     sendtTilAttesteringStatus: RemoteData.RemoteData<ApiError, null>;
@@ -306,6 +307,7 @@ const initialState: SakState = {
     lagreVilkårsvurderingStatus: RemoteData.initial,
     lagreBehandlingsinformasjonStatus: RemoteData.initial,
     lagreUføregrunnlagStatus: RemoteData.initial,
+    lagreBosituasjonGrunnlag: RemoteData.initial,
     beregningStatus: RemoteData.initial,
     simuleringStatus: RemoteData.initial,
     sendtTilAttesteringStatus: RemoteData.initial,
@@ -674,6 +676,17 @@ export default createSlice({
                 }))
             );
         });
+
+        builder.addCase(lagreBosituasjonGrunnlag.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
         builder.addCase(lagreFradragsgrunnlag.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,

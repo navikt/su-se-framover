@@ -82,9 +82,12 @@ const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[]; revurderings
                             </div>
                         )}
 
-                        <div>
+                        <div className={styles.informasjonsbitContainer}>
                             <Normaltekst>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.sats' })}</Normaltekst>
-                            <Element>HER TRENGER VI SATS</Element>
+                            <span>
+                                <Element>HER TRENGER VI SATS</Element>
+                                🏋️🏋️🏋️
+                            </span>
                         </div>
                     </li>
                 ))}
