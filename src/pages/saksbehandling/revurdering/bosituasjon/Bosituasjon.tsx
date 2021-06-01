@@ -1,3 +1,4 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import fnrValidator from '@navikt/fnrvalidator';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
@@ -5,13 +6,16 @@ import { Ingress, Element, Normaltekst } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import { ApiError } from '~api/apiClient';
 import ToKolonner from '~components/toKolonner/ToKolonner';
+import * as revurderingActions from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { FnrInput } from '~pages/søknad/steg/bo-og-opphold-i-norge/EktefellePartnerSamboer';
+import { useAppDispatch } from '~redux/Store';
 import { Bosituasjon } from '~types/Grunnlag';
 import { Periode } from '~types/Periode';
 import { Revurdering } from '~types/Revurdering';
@@ -19,6 +23,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
+import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
 import messages from './bosituasjon-nb';
@@ -105,6 +110,8 @@ const Bosituasjon = (props: {
 }) => {
     const intl = useI18n({ messages: { ...messages, ...sharedMessages } });
     const [epsAlder, setEPSAlder] = useState<Nullable<number>>(null);
+    const [status, setStatus] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
+    const dispatch = useAppDispatch();
 
     const schema = yup.object<BosituasjonFormData>({
         harEPS: yup.boolean().required('Feltet må fylles ut').nullable(),
@@ -166,7 +173,26 @@ const Bosituasjon = (props: {
     });
 
     const handleSubmit = async (data: BosituasjonFormData) => {
-        console.log('Submitting: ', data);
+        setStatus(RemoteData.pending);
+
+        const res = await dispatch(
+            revurderingActions.lagreBosituasjonsgrunnlag({
+                sakId: props.sakId,
+                revurderingId: props.revurdering.id,
+                epsFnr: data.epsFnr,
+                epsUførFlyktning: data.erEPSUførFlyktning,
+                delerBolig: data.delerSøkerBolig,
+                begrunnelse: data.begrunnelse,
+            })
+        );
+
+        if (revurderingActions.lagreBosituasjonsgrunnlag.fulfilled.match(res)) {
+            setStatus(RemoteData.success(null));
+        }
+        if (revurderingActions.lagreBosituasjonsgrunnlag.rejected.match(res)) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            setStatus(RemoteData.failure(res.payload!));
+        }
     };
 
     const DelerSøkerBoligForm = () => {
@@ -279,7 +305,6 @@ const Bosituasjon = (props: {
                                 {form.watch('harEPS') && <EPSForm />}
                                 {form.watch('harEPS') === false && <DelerSøkerBoligForm />}
                             </div>
-
                             <div className={styles.textAreaContainer}>
                                 <Controller
                                     control={form.control}
@@ -295,14 +320,18 @@ const Bosituasjon = (props: {
                                     )}
                                 />
                             </div>
-
                             <Feiloppsummering
                                 tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                                 className={styles.feiloppsummering}
                                 feil={hookFormErrorsTilFeiloppsummering(errors)}
                                 hidden={isValid || !isSubmitted}
                             />
-                            <RevurderingBunnknapper onNesteClick="submit" tilbakeUrl={props.forrigeUrl} />
+                            {RemoteData.isFailure(status) && <RevurderingskallFeilet error={status.error} />}
+                            <RevurderingBunnknapper
+                                onNesteClick="submit"
+                                tilbakeUrl={props.forrigeUrl}
+                                onNesteClickSpinner={RemoteData.isPending(status)}
+                            />
                         </div>
                     </form>
                 ),

@@ -192,14 +192,18 @@ export async function lagreFradragsgrunnlag(
 
 export async function lagreBosituasjonsgrunnlag(
     sakId: string,
-    revurderingId: string
+    revurderingId: string,
+    arg: {
+        epsFnr: Nullable<string>;
+        delerBolig: Nullable<boolean>;
+        epsUførFlyktning: Nullable<boolean>;
+        begrunnelse: Nullable<string>;
+    }
 ): Promise<ApiClientResult<Revurdering>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/fradrag`,
+        url: `/saker/${sakId}/revurderinger/${revurderingId}/bosituasjongrunnlag`,
         method: 'POST',
-        body: {
-            asd: 5,
-        },
+        body: arg,
     });
 }
 
