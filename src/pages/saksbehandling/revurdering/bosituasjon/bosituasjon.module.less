@@ -1,7 +1,7 @@
 @import '~/styles/variables.less';
 
-.todo {
-    background-color: red;
+.feiloppsummering {
+    margin-bottom: @spacing-xs;
 }
 
 .bosituasjonInputsContainer {
@@ -13,11 +13,24 @@
     width: 50%;
 }
 
-.epsFnrInput {
+.epsFormContainer {
     display: flex;
     flex-direction: column;
+}
 
-    .epsFnrInputContainer {
-        color: red;
+.eksisterendeVedtakTittel {
+    margin-bottom: @spacing;
+}
+
+.grunnlagsliste {
+    > * {
+        margin-bottom: @spacing-xxs;
+    }
+}
+
+.informasjonsbitContainer {
+    display: flex;
+    > :not(:last-child) {
+        margin-right: @spacing-xl;
     }
 }

@@ -5,7 +5,7 @@ import { Periode } from './Periode';
 export interface GrunnlagsdataOgVilkårsvurderinger {
     uføre?: UføreVilkår;
     fradrag: Fradrag[];
-    bosituasjon?: Bosituasjon;
+    bosituasjon?: Bosituasjon[];
 }
 
 export interface UføreVilkår {
