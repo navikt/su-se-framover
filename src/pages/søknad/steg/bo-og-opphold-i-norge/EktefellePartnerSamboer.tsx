@@ -95,14 +95,25 @@ const EktefellePartnerSamboer = (props: Props) => {
 };
 
 interface FnrInputProps {
+    label?: string;
     inputId: string;
+    name?: string;
     fnr: Nullable<string>;
     onFnrChange: (fnr: string) => void;
     feil?: React.ReactNode;
     autoComplete?: string;
     onAlderChange: (alder: Nullable<number>) => void;
 }
-const FnrInput = ({ inputId, fnr, onFnrChange, feil, autoComplete, onAlderChange }: FnrInputProps) => {
+export const FnrInput = ({
+    label,
+    inputId,
+    name,
+    fnr,
+    onFnrChange,
+    feil,
+    autoComplete,
+    onAlderChange,
+}: FnrInputProps) => {
     const [person, setPerson] = useState<RemoteData.RemoteData<ApiError, Person>>(RemoteData.initial);
     const [harIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
     const intl = useI18n({ messages });
@@ -140,7 +151,8 @@ const FnrInput = ({ inputId, fnr, onFnrChange, feil, autoComplete, onAlderChange
         <div className={styles.fnrInput}>
             <Input
                 id={inputId}
-                label={intl.formatMessage({ id: 'input.ektefelleEllerSamboerFnr.label' })}
+                label={label ?? intl.formatMessage({ id: 'input.ektefelleEllerSamboerFnr.label' })}
+                name={name}
                 description={intl.formatMessage({ id: 'input.ektefelleEllerSamboerFnrDescription.label' })}
                 onChange={(e) => onFnrChange(e.target.value)}
                 value={fnr ?? ''}

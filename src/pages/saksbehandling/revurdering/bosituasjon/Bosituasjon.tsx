@@ -1,12 +1,19 @@
-import { Feiloppsummering, Input, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
-import React from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import fnrValidator from '@navikt/fnrvalidator';
+import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
+import { Ingress, Element, Normaltekst } from 'nav-frontend-typografi';
+import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
+import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
-import { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
+import { FnrInput } from '~pages/søknad/steg/bo-og-opphold-i-norge/EktefellePartnerSamboer';
+import { Bosituasjon } from '~types/Grunnlag';
+import { Periode } from '~types/Periode';
 import { Revurdering } from '~types/Revurdering';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
@@ -16,6 +23,7 @@ import RevurderingsperiodeHeader from '../revurderingsperiodeheader/Revurderings
 
 import messages from './bosituasjon-nb';
 import styles from './bosituasjon.module.less';
+
 interface BosituasjonFormData {
     harEPS: Nullable<boolean>;
     epsFnr: Nullable<string>;
@@ -23,6 +31,67 @@ interface BosituasjonFormData {
     erEPSUførFlyktning: Nullable<boolean>;
     begrunnelse: Nullable<string>;
 }
+
+const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[]; revurderingsperiode: Periode<string> }) => {
+    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
+
+    return (
+        <div>
+            <Ingress className={styles.eksisterendeVedtakTittel}>
+                {intl.formatMessage({ id: 'eksisterende.vedtakinfo.tittel' })}
+            </Ingress>
+            <ul className={styles.grunnlagsliste}>
+                {props.bosituasjon?.map((item, index) => (
+                    <li key={index}>
+                        <Element>
+                            {DateUtils.formatMonthYear(props.revurderingsperiode.fraOgMed, intl)}
+                            {' – '}
+                            {DateUtils.formatMonthYear(props.revurderingsperiode.tilOgMed, intl)}
+                        </Element>
+                        <div className={styles.informasjonsbitContainer}>
+                            <Normaltekst>
+                                {intl.formatMessage({ id: 'eksisterende.vedtakinfo.søkerBorMed' })}
+                            </Normaltekst>
+                            <Element>
+                                {item.fnr
+                                    ? intl.formatMessage({ id: 'eksisterende.vedtakinfo.eps' })
+                                    : item.delerBolig
+                                    ? intl.formatMessage({ id: 'eksisterende.vedtakinfo.over18år' })
+                                    : intl.formatMessage({ id: 'eksisterende.vedtakinfo.enslig' })}
+                            </Element>
+                        </div>
+
+                        {item.fnr && (
+                            <div>
+                                <div className={styles.informasjonsbitContainer}>
+                                    <Normaltekst>
+                                        {intl.formatMessage({ id: 'eksisterende.vedtakinfo.eps' })}
+                                    </Normaltekst>
+                                    <Element>{item.fnr}</Element>
+                                </div>
+                                <div className={styles.informasjonsbitContainer}>
+                                    <Normaltekst>
+                                        {intl.formatMessage({ id: 'eksisterende.vedtakinfo.mottarSU' })}
+                                    </Normaltekst>
+                                    <Element>
+                                        {item.ektemakeEllerSamboerUførFlyktning
+                                            ? intl.formatMessage({ id: 'eksisterende.vedtakinfo.ja' })
+                                            : intl.formatMessage({ id: 'eksisterende.vedtakinfo.nei' })}
+                                    </Element>
+                                </div>
+                            </div>
+                        )}
+
+                        <div>
+                            <Normaltekst>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.sats' })}</Normaltekst>
+                            <Element>HER TRENGER VI SATS</Element>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
 
 const Bosituasjon = (props: {
     sakId: string;
@@ -32,9 +101,56 @@ const Bosituasjon = (props: {
     nesteUrl: string;
 }) => {
     const intl = useI18n({ messages: { ...messages, ...sharedMessages } });
+    const [epsAlder, setEPSAlder] = useState<Nullable<number>>(null);
+
+    const schema = yup.object<BosituasjonFormData>({
+        harEPS: yup.boolean().required('Feltet må fylles ut').nullable(),
+        epsFnr: yup
+            .string()
+            .defined()
+            .when('harEPS', {
+                is: true,
+                then: yup
+                    .string()
+                    .required()
+                    .test({
+                        name: 'Gyldig fødselsnummer',
+                        message: 'Ugyldig fødselsnummer',
+                        test: function (value) {
+                            return (
+                                typeof value === 'string' &&
+                                value.length === 11 &&
+                                fnrValidator.fnr(value).status === 'valid'
+                            );
+                        },
+                    }),
+            }),
+        delerSøkerBolig: yup.boolean().defined().when('harEPS', {
+            is: false,
+            then: yup.boolean().required(),
+            otherwise: yup.boolean().defined(),
+        }),
+        erEPSUførFlyktning: yup
+            .boolean()
+            .defined()
+            .when('harEPS', {
+                is: true,
+                then: yup.boolean().test({
+                    name: 'er eps ufør flyktning',
+                    message: 'Feltet må fylles ut',
+                    test: function () {
+                        if (epsAlder && epsAlder < 67) {
+                            return this.parent.erEPSUførFlyktning !== null;
+                        }
+                        return true;
+                    },
+                }),
+            }),
+        begrunnelse: yup.string(),
+    });
 
     const {
-        formState: { errors, isSubmitted },
+        formState: { errors, isSubmitted, isValid },
         ...form
     } = useForm<BosituasjonFormData>({
         defaultValues: {
@@ -43,6 +159,7 @@ const Bosituasjon = (props: {
             delerSøkerBolig: null,
             erEPSUførFlyktning: null,
         },
+        resolver: yupResolver(schema),
     });
 
     const handleSubmit = async (data: BosituasjonFormData) => {
@@ -59,13 +176,34 @@ const Bosituasjon = (props: {
                         legend={intl.formatMessage({ id: 'form.delerSøkerBolig' })}
                         feil={fieldState.error?.message}
                     >
-                        <Radio label="Ja" name="delerSøkerBolig" onChange={() => field.onChange(true)} />
-                        <Radio label="Nei" name="delerSøkerBolig" onChange={() => field.onChange(false)} />
+                        <Radio
+                            label="Ja"
+                            name="delerSøkerBolig"
+                            checked={field.value === true}
+                            onChange={() => field.onChange(true)}
+                        />
+                        <Radio
+                            label="Nei"
+                            name="delerSøkerBolig"
+                            checked={field.value === false}
+                            onChange={() => field.onChange(false)}
+                        />
                     </RadioGruppe>
                 )}
             />
         );
     };
+
+    React.useEffect(() => {
+        if (isSubmitted) {
+            form.trigger();
+        }
+    }, [form.watch('harEPS')]);
+    React.useEffect(() => {
+        if (isSubmitted) {
+            form.trigger('erEPSUførFlyktning');
+        }
+    }, [epsAlder]);
 
     const EPSForm = () => {
         return (
@@ -74,22 +212,43 @@ const Bosituasjon = (props: {
                     control={form.control}
                     name="epsFnr"
                     render={({ field, fieldState }) => (
-                        <div className={styles.epsFnrInputContainer}>
-                            <Input
-                                label={intl.formatMessage({ id: 'form.epsFnr' })}
-                                id="epsFnr"
-                                name="epsFnr"
-                                autoComplete="on"
-                                onChange={field.onChange}
-                                value={field.value ?? ''}
-                                // Så lenge denne er det eneste på siden sin så ønsker vi at den skal autofokuseres
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
-                                autoFocus
-                                feil={fieldState.error}
-                            />
-                        </div>
+                        <FnrInput
+                            label={intl.formatMessage({ id: 'form.epsFnr' })}
+                            inputId="epsFnr"
+                            name="epsFnr"
+                            autoComplete="on"
+                            onFnrChange={field.onChange}
+                            fnr={field.value ?? ''}
+                            feil={fieldState.error?.message}
+                            onAlderChange={(alder) => setEPSAlder(alder)}
+                        />
                     )}
                 />
+                {epsAlder && epsAlder < 67 && (
+                    <Controller
+                        control={form.control}
+                        name="erEPSUførFlyktning"
+                        render={({ field, fieldState }) => (
+                            <RadioGruppe
+                                legend={intl.formatMessage({ id: 'form.erEPSUførFlyktning' })}
+                                feil={fieldState.error?.message}
+                            >
+                                <Radio
+                                    label="Ja"
+                                    name="erEPSUførFlyktning"
+                                    checked={field.value === true}
+                                    onChange={() => field.onChange(true)}
+                                />
+                                <Radio
+                                    label="Nei"
+                                    name="erEPSUførFlyktning"
+                                    checked={field.value === false}
+                                    onChange={() => field.onChange(false)}
+                                />
+                            </RadioGruppe>
+                        )}
+                    />
+                )}
             </div>
         );
     };
@@ -138,13 +297,18 @@ const Bosituasjon = (props: {
                                 tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                                 className={styles.feiloppsummering}
                                 feil={hookFormErrorsTilFeiloppsummering(errors)}
-                                hidden={errors && !isSubmitted}
+                                hidden={isValid || !isSubmitted}
                             />
                             <RevurderingBunnknapper onNesteClick="submit" tilbakeUrl={props.forrigeUrl} />
                         </div>
                     </form>
                 ),
-                right: <p>Gjeldene bosituasjon kommer inn her</p>,
+                right: (
+                    <GjeldendeBosituasjon
+                        bosituasjon={props.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
+                        revurderingsperiode={props.revurdering.periode}
+                    />
+                ),
             }}
         </ToKolonner>
     );
