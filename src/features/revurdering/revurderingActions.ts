@@ -228,11 +228,19 @@ export const lagreBosituasjonsgrunnlag = createAsyncThunk<
     {
         sakId: string;
         revurderingId: string;
-        fradrag: Fradrag[];
+        epsFnr: Nullable<string>;
+        delerBolig: Nullable<boolean>;
+        epsUførFlyktning: Nullable<boolean>;
+        begrunnelse: Nullable<string>;
     },
     { rejectValue: ApiError }
->('revurdering/grunnlag/fradrag/lagre', async (arg, thunkApi) => {
-    const res = await revurderingApi.lagreBosituasjonsgrunnlag(arg.sakId, arg.revurderingId);
+>('revurdering/grunnlag/bosituasjon/lagre', async (arg, thunkApi) => {
+    const res = await revurderingApi.lagreBosituasjonsgrunnlag(arg.sakId, arg.revurderingId, {
+        epsFnr: arg.epsFnr,
+        delerBolig: arg.delerBolig,
+        epsUførFlyktning: arg.epsUførFlyktning,
+        begrunnelse: arg.begrunnelse,
+    });
     if (res.status === 'ok') {
         return res.data;
     }
