@@ -69,7 +69,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
 
     const {
-        formState: { isValid, isSubmitted, errors },
+        formState: { isValid, isSubmitted, errors, isDirty },
         ...form
     } = useForm<FormData>({
         defaultValues: {
@@ -123,6 +123,10 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     };
 
     const handleSubmit: SubmitHandler<FormData> = async (x) => {
+        if (!isDirty) {
+            return history.push(props.nesteUrl);
+        }
+
         setSavingState(RemoteData.pending);
 
         const res = await save(x);
