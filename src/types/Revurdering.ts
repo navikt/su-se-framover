@@ -164,6 +164,12 @@ export enum RevurderingErrorCodes {
     G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
     VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
     ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON = 'attestant_og_saksbehandler_kan_ikke_være_samme_person',
+
+    //revurderingsutfall som ikke støttes
+    OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON = 'opphør_og_andre_endringer_i_kombinasjon',
+    OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE = 'opphør_ikke_tidligste_dato',
+    DELVIS_OPPHØR = 'delvis_opphør',
+    OPPHØR_AV_FLERE_VILKÅR = 'opphør_av_flere_vilkår',
 }
 export interface LeggTilUføreResponse {
     revurdering: Revurdering;

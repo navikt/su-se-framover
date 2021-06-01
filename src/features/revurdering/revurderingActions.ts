@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { ApiError } from '~api/apiClient';
+import { ApiError, ErrorMessage } from '~api/apiClient';
 import * as revurderingApi from '~api/revurderingApi';
 import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
@@ -78,7 +78,7 @@ export const oppdaterRevurderingsPeriode = createAsyncThunk<
 );
 
 export const beregnOgSimuler = createAsyncThunk<
-    SimulertRevurdering,
+    { revurdering: SimulertRevurdering; feilmeldinger: ErrorMessage[] },
     { sakId: string; revurderingId: string; periode: Periode<string> },
     { rejectValue: ApiError }
 >('revurdering/beregnOgSimuler', async ({ sakId, revurderingId, periode }, thunkApi) => {

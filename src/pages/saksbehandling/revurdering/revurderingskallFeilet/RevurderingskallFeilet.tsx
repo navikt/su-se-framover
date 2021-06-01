@@ -10,7 +10,7 @@ import { RevurderingErrorCodes } from '~types/Revurdering';
 import messages from './revurderingskallFeilet-nb';
 import styles from './revurderingskallFeilet.module.less';
 
-const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) => {
+export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) => {
     switch (feil?.code) {
         //Ugyldig...
         case RevurderingErrorCodes.UGYLDIG_TILSTAND:
@@ -76,6 +76,16 @@ const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) 
             return intl.formatMessage({ id: 'feil.vurderinger.samme.resultat' });
         case RevurderingErrorCodes.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON:
             return intl.formatMessage({ id: 'feil.attestant.og.saksbehandler.kan.ikke.være.samme.person' });
+
+        //revurderingsutfall som ikke støttes
+        case RevurderingErrorCodes.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON:
+            return intl.formatMessage({ id: 'feil.opphør.og.andre.endringer.i.kombinasjon' });
+        case RevurderingErrorCodes.OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE:
+            return intl.formatMessage({ id: 'feil.opphør.ikke.fra.første.dato.i.revurderingsperiode' });
+        case RevurderingErrorCodes.DELVIS_OPPHØR:
+            return intl.formatMessage({ id: 'feil.opphør.deler.av.revurderingsperiode' });
+        case RevurderingErrorCodes.OPPHØR_AV_FLERE_VILKÅR:
+            return intl.formatMessage({ id: 'feil.opphør.flere.vilkår' });
 
         default:
             return intl.formatMessage({ id: 'feil.ukjentFeil' });

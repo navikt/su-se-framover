@@ -636,7 +636,9 @@ export default createSlice({
                 state.sak,
                 RemoteData.map((sak) => ({
                     ...sak,
-                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
+                    revurderinger: sak.revurderinger.map((r) =>
+                        r.id === action.payload.revurdering.id ? action.payload.revurdering : r
+                    ),
                 }))
             );
         });
