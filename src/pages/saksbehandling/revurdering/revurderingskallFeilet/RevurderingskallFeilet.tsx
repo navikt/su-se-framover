@@ -53,8 +53,6 @@ const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) 
         //perioder
         case RevurderingErrorCodes.INGENTING_Å_REVURDERE_I_PERIODEN:
             return intl.formatMessage({ id: 'feil.kan.ikke.revurdere' });
-        case RevurderingErrorCodes.PERIODE_OG_ÅRSAK_KOMBINASJON_ER_UGYLDIG:
-            return intl.formatMessage({ id: 'feil.periode.og.årsak.kombinasjon.er.ugyldig' });
         case RevurderingErrorCodes.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE:
             return intl.formatMessage({ id: 'feil.vurderinger.utenfor.revurderingsperiode' });
         case RevurderingErrorCodes.HELE_REVURDERINGSPERIODEN_MÅ_HA_VURDERINGER:

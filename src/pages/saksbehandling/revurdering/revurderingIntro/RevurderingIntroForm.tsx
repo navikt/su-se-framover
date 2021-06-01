@@ -9,7 +9,6 @@ import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~api/apiClient';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
-import { erDatoFørStartenPåNesteMåned, startenPåForrigeMåned } from '~lib/dateUtils';
 import { customFormikSubmit } from '~lib/formikUtils';
 import { useI18n } from '~lib/hooks';
 import { keyOf, Nullable } from '~lib/types';
@@ -34,26 +33,7 @@ interface OpprettRevurderingFormData {
 const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter((x) => x !== OpprettetRevurderingGrunn.MIGRERT);
 
 const schema = yup.object<OpprettRevurderingFormData>({
-    fraOgMed: yup
-        .date()
-        .nullable()
-        .required()
-        .test({
-            name: 'fraOgMed kan kun starte fra neste måned for årsaker som ikke er g-regulering',
-            message: 'Du kan ikke velge en dato bakover i tid for årsaker som ikke er G-regulering',
-            test: function (val) {
-                const årsak = this.parent.årsak;
-
-                if (
-                    !DateFns.isBefore(val, startenPåForrigeMåned(new Date())) &&
-                    årsak === OpprettetRevurderingGrunn.REGULER_GRUNNBELØP
-                ) {
-                    return true;
-                }
-
-                return !erDatoFørStartenPåNesteMåned(val);
-            },
-        }),
+    fraOgMed: yup.date().nullable().required(),
     årsak: yup.mixed<OpprettetRevurderingGrunn>().nullable().required(),
     begrunnelse: yup.string().nullable().required(),
     informasjonSomRevurderes: yup
@@ -182,19 +162,6 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                             {intl.formatMessage({ id: 'input.årsak.value.default' })}
                         </option>
                         {gyldigeÅrsaker.map((grunn) => {
-                            if (
-                                formik.values.fraOgMed &&
-                                erDatoFørStartenPåNesteMåned(formik.values.fraOgMed) &&
-                                grunn !== OpprettetRevurderingGrunn.REGULER_GRUNNBELØP
-                            ) {
-                                return (
-                                    <option value={grunn} key={grunn} disabled>
-                                        {intl.formatMessage({
-                                            id: getRevurderingsårsakMessageId(grunn),
-                                        })}
-                                    </option>
-                                );
-                            }
                             return (
                                 <option value={grunn} key={grunn}>
                                     {intl.formatMessage({

@@ -132,7 +132,6 @@ export enum RevurderingErrorCodes {
     MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL = 'mangler_beslutning_på_forhåndsvarsel',
 
     //perioder
-    PERIODE_OG_ÅRSAK_KOMBINASJON_ER_UGYLDIG = 'periode_og_årsak_kombinasjon_er_ugyldig',
     INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
     OVERLAPPENDE_VURDERINGSPERIODER = 'overlappende_vurderingsperioder',
     HELE_REVURDERINGSPERIODEN_MÅ_HA_VURDERINGER = 'hele_behandlingsperioden_må_ha_vurderinger',
