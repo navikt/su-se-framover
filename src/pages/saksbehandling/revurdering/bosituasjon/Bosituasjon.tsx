@@ -102,13 +102,26 @@ const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[]; revurderings
     );
 };
 
-const setDefaultValues = (bosituasjon: Bosituasjon[]) => {
+const setDefaultValues = (revurdering: Revurdering, bosituasjon: Bosituasjon[]): BosituasjonFormData => {
+    const bosituasjonLocal = revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon;
+
+    if (bosituasjonLocal.length === 1) {
+        return {
+            harEPS: bosituasjonLocal[0].fnr !== null,
+            epsFnr: bosituasjonLocal[0].fnr,
+            delerSøkerBolig: bosituasjonLocal[0].delerBolig,
+            erEPSUførFlyktning: bosituasjonLocal[0].ektemakeEllerSamboerUførFlyktning,
+            begrunnelse: bosituasjonLocal[0].begrunnelse,
+        };
+    }
+
     if (bosituasjon.length !== 1) {
         return {
             harEPS: null,
             epsFnr: null,
             delerSøkerBolig: null,
             erEPSUførFlyktning: null,
+            begrunnelse: null,
         };
     }
 
@@ -117,6 +130,7 @@ const setDefaultValues = (bosituasjon: Bosituasjon[]) => {
         epsFnr: bosituasjon[0].fnr,
         delerSøkerBolig: bosituasjon[0].delerBolig,
         erEPSUførFlyktning: bosituasjon[0].ektemakeEllerSamboerUførFlyktning,
+        begrunnelse: bosituasjon[0].begrunnelse,
     };
 };
 
@@ -183,7 +197,10 @@ const Bosituasjon = (props: {
         formState: { errors, isSubmitted },
         ...form
     } = useForm<BosituasjonFormData>({
-        defaultValues: setDefaultValues(props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.bosituasjon),
+        defaultValues: setDefaultValues(
+            props.revurdering,
+            props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.bosituasjon
+        ),
         resolver: yupResolver(schema),
     });
 
