@@ -20,7 +20,7 @@ import {
 
 import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '../types/Vilkår';
 
-import apiClient, { ApiClientResult } from './apiClient';
+import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
 
 export async function opprettRevurdering(
     sakId: string,
@@ -67,7 +67,7 @@ export async function beregnOgSimuler(
         revurderingId: string;
         periode: Periode<string>;
     }
-): Promise<ApiClientResult<SimulertRevurdering>> {
+): Promise<ApiClientResult<{ revurdering: SimulertRevurdering; feilmeldinger: ErrorMessage[] }>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${arg.revurderingId}/beregnOgSimuler`,
         method: 'POST',

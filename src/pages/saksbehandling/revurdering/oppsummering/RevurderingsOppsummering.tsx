@@ -1,11 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
+import { AlertStripeAdvarsel, AlertStripeFeil } from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Feilmelding, Systemtittel } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { ApiError } from '~api/apiClient';
+import { ApiError, ErrorMessage } from '~api/apiClient';
 import RevurderingIngenEndringAlert from '~components/revurdering/RevurderingIngenEndringAlert';
 import RevurderingÅrsakOgBegrunnelse from '~components/revurdering/RevurderingÅrsakOgBegrunnelse';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
@@ -26,7 +26,8 @@ import {
 
 import { Utbetalingssimulering } from '../../steg/beregningOgSimulering/simulering/simulering';
 import sharedStyles from '../revurdering.module.less';
-import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
+import RevurderingskallFeilet, { feilkodeTilFeilmelding } from '../revurderingskallFeilet/RevurderingskallFeilet';
+import revurderingskallFeiletMessages from '../revurderingskallFeilet/revurderingskallFeilet-nb';
 import {
     erForhåndsvarslingBesluttet,
     erRevurderingForhåndsvarslet,
@@ -52,9 +53,9 @@ const RevurderingsOppsummering = (props: {
     forrigeUrl: string;
     førsteRevurderingstegUrl: string;
 }) => {
-    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const intl = useI18n({ messages: { ...sharedMessages, ...messages, ...revurderingskallFeiletMessages } });
     const dispatch = useAppDispatch();
-    const [beregnOgSimulerStatus, setBeregnOgSimulerStatus] = useState<RemoteData.RemoteData<ApiError, null>>(
+    const [beregnOgSimulerStatus, setBeregnOgSimulerStatus] = useState<RemoteData.RemoteData<ApiError, ErrorMessage[]>>(
         RemoteData.initial
     );
 
@@ -69,7 +70,7 @@ const RevurderingsOppsummering = (props: {
                 })
             ).then((res) => {
                 if (RevurderingActions.beregnOgSimuler.fulfilled.match(res)) {
-                    setBeregnOgSimulerStatus(RemoteData.success(null));
+                    setBeregnOgSimulerStatus(RemoteData.success(res.payload.feilmeldinger));
                 } else if (RevurderingActions.beregnOgSimuler.rejected.match(res)) {
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     setBeregnOgSimulerStatus(RemoteData.failure(res.payload!));
@@ -198,7 +199,14 @@ const RevurderingsOppsummering = (props: {
                                             </AlertStripeAdvarsel>
                                         </div>
                                     )}
-
+                                    {RemoteData.isSuccess(beregnOgSimulerStatus) &&
+                                        beregnOgSimulerStatus.value.map((errorMessage) => (
+                                            <div className={styles.opphørsadvarsel} key={errorMessage.code}>
+                                                <AlertStripeFeil>
+                                                    {feilkodeTilFeilmelding(intl, errorMessage)}
+                                                </AlertStripeFeil>
+                                            </div>
+                                        ))}
                                     {OppsummeringsFormer(props.revurdering)}
                                 </>
                             ) : (
