@@ -1,6 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as DateFns from 'date-fns';
+import * as D from 'fp-ts/lib/Date';
+import { struct } from 'fp-ts/lib/Eq';
+import * as S from 'fp-ts/lib/string';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -16,7 +19,7 @@ import * as DateUtils from '~lib/dateUtils';
 import { nullableMap, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 
@@ -34,6 +37,11 @@ interface FormData {
 }
 
 const TIDLIGST_MULIG_START_DATO = new Date(2021, 0, 1);
+const eqBehandlingsperiode = struct<FormData>({
+    fraOgMed: eqNullable(D.Eq),
+    tilOgMed: eqNullable(D.Eq),
+    begrunnelse: S.Eq,
+});
 
 const schema = yup.object<FormData>({
     fraOgMed: yup.date().nullable().required().min(TIDLIGST_MULIG_START_DATO),
@@ -67,22 +75,17 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
     const [savingState, setSavingState] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const dispatch = useAppDispatch();
+    const initialValues = {
+        fraOgMed: nullableMap(props.behandling.stønadsperiode?.periode.fraOgMed ?? null, DateUtils.parseIsoDateOnly),
+        tilOgMed: nullableMap(props.behandling.stønadsperiode?.periode.tilOgMed ?? null, DateUtils.parseIsoDateOnly),
+        begrunnelse: props.behandling.stønadsperiode?.begrunnelse ?? '',
+    };
 
     const {
         formState: { isValid, isSubmitted, errors },
         ...form
     } = useForm<FormData>({
-        defaultValues: {
-            fraOgMed: nullableMap(
-                props.behandling.stønadsperiode?.periode.fraOgMed ?? null,
-                DateUtils.parseIsoDateOnly
-            ),
-            tilOgMed: nullableMap(
-                props.behandling.stønadsperiode?.periode.tilOgMed ?? null,
-                DateUtils.parseIsoDateOnly
-            ),
-            begrunnelse: props.behandling.stønadsperiode?.begrunnelse ?? '',
-        },
+        defaultValues: initialValues,
         resolver: yupResolver(schema),
     });
 
@@ -123,6 +126,10 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     };
 
     const handleSubmit: SubmitHandler<FormData> = async (x) => {
+        if (eqBehandlingsperiode.equals(form.getValues(), initialValues)) {
+            return history.push(props.nesteUrl);
+        }
+
         setSavingState(RemoteData.pending);
 
         const res = await save(x);
