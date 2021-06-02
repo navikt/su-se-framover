@@ -60,10 +60,10 @@ export const NyRevurderingPage = (props: { sak: Sak }) => {
         }
     };
 
-    const sortertUtbetalinger = [...props.sak.utbetalinger].sort(compareUtbetalingsperiode);
+    const sorterteUtbetalinger = [...props.sak.utbetalinger].sort(compareUtbetalingsperiode);
     const [førsteUtbetaling, sisteUtbetaling] = [
-        sortertUtbetalinger[0],
-        sortertUtbetalinger[sortertUtbetalinger.length - 1],
+        sorterteUtbetalinger[0],
+        sorterteUtbetalinger[sorterteUtbetalinger.length - 1],
     ];
 
     return (
