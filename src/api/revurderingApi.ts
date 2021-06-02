@@ -16,6 +16,7 @@ import {
     LeggTilUføreResponse,
     InformasjonSomRevurderes,
     Revurdering,
+    BosituasjonRequest,
 } from '~types/Revurdering';
 
 import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '../types/Vilkår';
@@ -190,20 +191,16 @@ export async function lagreFradragsgrunnlag(
     });
 }
 
-export async function lagreBosituasjonsgrunnlag(
-    sakId: string,
-    revurderingId: string,
-    arg: {
-        epsFnr: Nullable<string>;
-        delerBolig: Nullable<boolean>;
-        epsUførFlyktning: Nullable<boolean>;
-        begrunnelse: Nullable<string>;
-    }
-): Promise<ApiClientResult<Revurdering>> {
+export async function lagreBosituasjonsgrunnlag(data: BosituasjonRequest): Promise<ApiClientResult<Revurdering>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/${revurderingId}/bosituasjongrunnlag`,
+        url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/bosituasjongrunnlag`,
         method: 'POST',
-        body: arg,
+        body: {
+            epsFnr: data.epsFnr,
+            erEPSUførFlyktning: data.erEPSUførFlyktning,
+            delerBolig: data.delerBolig,
+            begrunnelse: data.begrunnelse,
+        },
     });
 }
 
