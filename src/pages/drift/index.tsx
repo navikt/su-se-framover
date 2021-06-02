@@ -237,14 +237,19 @@ const Drift = () => {
                     <AlertStripe className={styles.alert} type="feil">
                         <p>Fix Søknader feilet</p>
                         {fixSøknaderResponse.error.statusCode}
-                        <p>Body: {fixSøknaderResponse.error.body?.message}</p>
+                        <p>
+                            {fixSøknaderResponse.error.body?.message ?? JSON.stringify(fixSøknaderResponse.error.body)}
+                        </p>
                     </AlertStripe>
                 )}
                 {RemoteData.isFailure(fixIverksettingResponse) && (
                     <AlertStripe className={styles.alert} type="feil">
                         <p>Fix Iverksettinger feilet</p>
                         {fixIverksettingResponse.error.statusCode}
-                        <p>{fixIverksettingResponse.error.body?.message}</p>
+                        <p>
+                            {fixIverksettingResponse.error.body?.message ??
+                                JSON.stringify(fixIverksettingResponse.error.body)}
+                        </p>
                     </AlertStripe>
                 )}
                 <div className={styles.tabellContainer}>
