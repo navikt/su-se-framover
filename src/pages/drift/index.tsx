@@ -242,9 +242,9 @@ const Drift = () => {
                 )}
                 {RemoteData.isFailure(fixIverksettingResponse) && (
                     <AlertStripe className={styles.alert} type="feil">
-                        Fix Iverksettinger feilet
+                        <p>Fix Iverksettinger feilet</p>
                         {fixIverksettingResponse.error.statusCode}
-                        {fixIverksettingResponse.error.body?.message}
+                        <p>{fixIverksettingResponse.error.body?.message}</p>
                     </AlertStripe>
                 )}
                 <div className={styles.tabellContainer}>
