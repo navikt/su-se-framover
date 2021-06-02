@@ -188,3 +188,12 @@ export enum Vurderingstatus {
     IkkeVurdert = 'IkkeVurdert',
     Vurdert = 'Vurdert',
 }
+
+export interface BosituasjonRequest {
+    sakId: string;
+    revurderingId: string;
+    epsFnr: Nullable<string>;
+    erEPSUførFlyktning: Nullable<boolean>;
+    delerBolig: Nullable<boolean>;
+    begrunnelse: Nullable<string>;
+}

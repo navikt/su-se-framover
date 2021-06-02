@@ -19,7 +19,7 @@ import { FnrInput } from '~pages/søknad/steg/bo-og-opphold-i-norge/EktefellePar
 import { useAppDispatch } from '~redux/Store';
 import { Bosituasjon } from '~types/Grunnlag';
 import { Periode } from '~types/Periode';
-import { Revurdering } from '~types/Revurdering';
+import { BosituasjonRequest, Revurdering } from '~types/Revurdering';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -187,18 +187,49 @@ const Bosituasjon = (props: {
         resolver: yupResolver(schema),
     });
 
+    function tilBosituasjonBody(body: {
+        sakId: string;
+        revurderingsId: string;
+        data: BosituasjonFormData;
+    }): BosituasjonRequest {
+        if (body.data.harEPS) {
+            return {
+                sakId: body.sakId,
+                revurderingId: body.revurderingsId,
+                epsFnr: body.data.epsFnr,
+                erEPSUførFlyktning: body.data.erEPSUførFlyktning,
+                delerBolig: null,
+                begrunnelse: body.data.begrunnelse,
+            };
+        }
+
+        return {
+            sakId: body.sakId,
+            revurderingId: body.revurderingsId,
+            epsFnr: null,
+            erEPSUførFlyktning: null,
+            delerBolig: body.data.delerSøkerBolig,
+            begrunnelse: body.data.begrunnelse,
+        };
+    }
+
     const handleSubmit = async (data: BosituasjonFormData) => {
         setStatus(RemoteData.pending);
 
         const res = await dispatch(
-            revurderingActions.lagreBosituasjonsgrunnlag({
-                sakId: props.sakId,
-                revurderingId: props.revurdering.id,
-                epsFnr: data.epsFnr,
-                epsUførFlyktning: data.erEPSUførFlyktning,
-                delerBolig: data.delerSøkerBolig,
-                begrunnelse: data.begrunnelse,
-            })
+            revurderingActions.lagreBosituasjonsgrunnlag(
+                tilBosituasjonBody({
+                    sakId: props.sakId,
+                    revurderingsId: props.revurdering.id,
+                    data: {
+                        harEPS: data.harEPS,
+                        epsFnr: data.epsFnr,
+                        erEPSUførFlyktning: data.erEPSUførFlyktning,
+                        delerSøkerBolig: data.delerSøkerBolig,
+                        begrunnelse: data.begrunnelse,
+                    },
+                })
+            )
         );
 
         if (revurderingActions.lagreBosituasjonsgrunnlag.fulfilled.match(res)) {
