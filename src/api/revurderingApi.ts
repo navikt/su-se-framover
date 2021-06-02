@@ -207,7 +207,7 @@ export async function lagreBosituasjonsgrunnlag(
     });
 }
 
-export async function hentGrunnlagsdataOgVilkårsvurderinger(
+export async function hentGjeldendeGrunnlagsdataOgVilkårsvurderinger(
     sakId: string,
     revurderingId: string
 ): Promise<ApiClientResult<GrunnlagsdataOgVilkårsvurderinger>> {

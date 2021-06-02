@@ -247,15 +247,15 @@ export const lagreBosituasjonsgrunnlag = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const hentGrunnlagsdataOgVilkårsvurderinger = createAsyncThunk<
+export const hentGjeldendeGrunnlagsdataOgVilkårsvurderinger = createAsyncThunk<
     GrunnlagsdataOgVilkårsvurderinger,
     {
         sakId: string;
         revurderingId: string;
     },
     { rejectValue: ApiError }
->('revurdering/grunnlagsdataOgVilkårsvurderinger/hent', async ({ sakId, revurderingId }, thunkApi) => {
-    const res = await revurderingApi.hentGrunnlagsdataOgVilkårsvurderinger(sakId, revurderingId);
+>('revurdering/hentGrunnlagsdataOgVilkårsvurderinger/hent', async ({ sakId, revurderingId }, thunkApi) => {
+    const res = await revurderingApi.hentGjeldendeGrunnlagsdataOgVilkårsvurderinger(sakId, revurderingId);
     if (res.status === 'ok') {
         return res.data;
     }
