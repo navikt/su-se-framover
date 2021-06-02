@@ -12,7 +12,7 @@ import {
     iverksettRevurdering,
     oppdaterRevurderingsPeriode,
     lagreUføregrunnlag as lagreUføregrunnlagForRevurdering,
-    hentGrunnlagsdataOgVilkårsvurderinger,
+    hentGjeldendeGrunnlagsdataOgVilkårsvurderinger,
     opprettRevurdering,
     sendRevurderingTilAttestering,
     underkjennRevurdering,
@@ -652,7 +652,7 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, hentGrunnlagsdataOgVilkårsvurderinger, {
+        handleAsyncThunk(builder, hentGjeldendeGrunnlagsdataOgVilkårsvurderinger, {
             pending: (state, action) => {
                 state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.pending;
             },

@@ -62,7 +62,7 @@ const RevurderingPage = (props: { sak: Sak }) => {
     React.useEffect(() => {
         if (RemoteData.isInitial(grunnlag) && påbegyntRevurdering) {
             dispatch(
-                revurderingActions.hentGrunnlagsdataOgVilkårsvurderinger({
+                revurderingActions.hentGjeldendeGrunnlagsdataOgVilkårsvurderinger({
                     sakId: props.sak.id,
                     revurderingId: påbegyntRevurdering.id,
                 })
@@ -236,7 +236,7 @@ const RevurderingstegPage = (props: {
                 <Bosituasjon
                     sakId={props.sakId}
                     revurdering={props.revurdering}
-                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger.value}
+                    gjeldendeGrunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger.value}
                     forrigeUrl={props.forrigeUrl}
                     nesteUrl={props.nesteUrl}
                 />

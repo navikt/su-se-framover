@@ -17,15 +17,19 @@ export default {
     'feil.kunne.ikke.distribuere.brev': 'Distribuering av brev feilet',
     'feil.kunne.ikke.kontroll.simulere': 'Kunne ikke kontrollsimulere',
     'feil.kunne.ikke.utbetale': 'Kunne ikke utbetale',
+    'feil.kunne.ikke.slå.opp.eps': 'Kunne ikke slå opp ektefelle eller samboer i PDL',
 
     'feil.ugyldig.periode': 'Ugyldig periode',
     'feil.ugyldig.tilstand': 'Ugyldig tilstand',
     'feil.ugyldig.årsak': 'Ugyldig årsak',
+    'feil.ugyldig.data': 'Ugyldig data',
 
     'feil.siste.måned.ved.nedgang.i.stønaden': 'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
     'feil.simulering.feilet': 'Simulering feilet',
     'feil.ufullstendig.behandlingsinformasjon': 'Ufullstendig behandlingsinformasjon',
     'feil.gregulering.kan.ikke.føre.til.opphør': 'G-regulering kan ikke føre til opphør',
+    'feil.eps.alder.er.null': 'Alderen til ektefelle eller samboer er null',
+
     'feil.mangler.beslutning.på.forhåndsvarsel': 'Mangler beslutning på forhåndsvarsel',
 
     'feil.opphør.og.andre.endringer.i.kombinasjon':

@@ -5,6 +5,7 @@ import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skj
 import { Ingress, Element, Normaltekst } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import ToKolonner from '~components/toKolonner/ToKolonner';
@@ -101,10 +102,28 @@ const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[]; revurderings
     );
 };
 
+const setDefaultValues = (bosituasjon: Bosituasjon[]) => {
+    if (bosituasjon.length !== 1) {
+        return {
+            harEPS: null,
+            epsFnr: null,
+            delerSøkerBolig: null,
+            erEPSUførFlyktning: null,
+        };
+    }
+
+    return {
+        harEPS: bosituasjon[0].fnr === null,
+        epsFnr: bosituasjon[0].fnr,
+        delerSøkerBolig: bosituasjon[0].delerBolig,
+        erEPSUførFlyktning: bosituasjon[0].ektemakeEllerSamboerUførFlyktning,
+    };
+};
+
 const Bosituasjon = (props: {
     sakId: string;
     revurdering: Revurdering;
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     forrigeUrl: string;
     nesteUrl: string;
 }) => {
@@ -112,6 +131,7 @@ const Bosituasjon = (props: {
     const [epsAlder, setEPSAlder] = useState<Nullable<number>>(null);
     const [status, setStatus] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const dispatch = useAppDispatch();
+    const history = useHistory();
 
     const schema = yup.object<BosituasjonFormData>({
         harEPS: yup.boolean().required('Feltet må fylles ut').nullable(),
@@ -160,15 +180,10 @@ const Bosituasjon = (props: {
     });
 
     const {
-        formState: { errors, isSubmitted, isValid },
+        formState: { errors, isSubmitted },
         ...form
     } = useForm<BosituasjonFormData>({
-        defaultValues: {
-            harEPS: null,
-            epsFnr: null,
-            delerSøkerBolig: null,
-            erEPSUførFlyktning: null,
-        },
+        defaultValues: setDefaultValues(props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.bosituasjon),
         resolver: yupResolver(schema),
     });
 
@@ -188,6 +203,7 @@ const Bosituasjon = (props: {
 
         if (revurderingActions.lagreBosituasjonsgrunnlag.fulfilled.match(res)) {
             setStatus(RemoteData.success(null));
+            history.push(props.nesteUrl);
         }
         if (revurderingActions.lagreBosituasjonsgrunnlag.rejected.match(res)) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -297,8 +313,18 @@ const Bosituasjon = (props: {
                                             legend={intl.formatMessage({ id: 'form.harSøkerEPS' })}
                                             feil={fieldState.error?.message}
                                         >
-                                            <Radio label="Ja" name="harEPS" onChange={() => field.onChange(true)} />
-                                            <Radio label="Nei" name="harEPS" onChange={() => field.onChange(false)} />
+                                            <Radio
+                                                label="Ja"
+                                                name="harEPS"
+                                                checked={field.value === true}
+                                                onChange={() => field.onChange(true)}
+                                            />
+                                            <Radio
+                                                label="Nei"
+                                                name="harEPS"
+                                                checked={field.value === false}
+                                                onChange={() => field.onChange(false)}
+                                            />
                                         </RadioGruppe>
                                     )}
                                 />
@@ -324,7 +350,7 @@ const Bosituasjon = (props: {
                                 tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                                 className={styles.feiloppsummering}
                                 feil={hookFormErrorsTilFeiloppsummering(errors)}
-                                hidden={isValid || !isSubmitted}
+                                hidden={!(Object.values(errors).length > 0)}
                             />
                             {RemoteData.isFailure(status) && <RevurderingskallFeilet error={status.error} />}
                             <RevurderingBunnknapper
@@ -337,7 +363,7 @@ const Bosituasjon = (props: {
                 ),
                 right: (
                     <GjeldendeBosituasjon
-                        bosituasjon={props.grunnlagsdataOgVilkårsvurderinger.bosituasjon}
+                        bosituasjon={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.bosituasjon}
                         revurderingsperiode={props.revurdering.periode}
                     />
                 ),
