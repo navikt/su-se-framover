@@ -3,7 +3,6 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { oppdaterRevurderingsPeriode as oppdaterRevurdering } from '~features/revurdering/revurderingActions';
-import { startenPåForrigeMåned } from '~lib/dateUtils';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { InformasjonSomRevurderes, OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
@@ -61,14 +60,11 @@ export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering
         }
     };
 
-    const sortertUtbetalinger = [...props.sak.utbetalinger].sort(compareUtbetalingsperiode);
+    const sorterteUtbetalinger = [...props.sak.utbetalinger].sort(compareUtbetalingsperiode);
     const [førsteUtbetaling, sisteUtbetaling] = [
-        sortertUtbetalinger[0],
-        sortertUtbetalinger[sortertUtbetalinger.length - 1],
+        sorterteUtbetalinger[0],
+        sorterteUtbetalinger[sorterteUtbetalinger.length - 1],
     ];
-
-    const minFraOgMed = DateFns.max([new Date(førsteUtbetaling.fraOgMed), startenPåForrigeMåned(new Date())]);
-    const maxFraOgMed = new Date(sisteUtbetaling.tilOgMed);
 
     return (
         <RevurderingIntroForm
@@ -76,8 +72,8 @@ export const EndreRevurderingPage = (props: { sak: Sak; revurdering: Revurdering
             onLagreOgFortsettSenereClick={handleLagreOgFortsettSenereClick}
             tilbakeUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}
             revurdering={props.revurdering}
-            maxFraOgMed={maxFraOgMed}
-            minFraOgMed={minFraOgMed}
+            maxFraOgMed={DateFns.parseISO(sisteUtbetaling.tilOgMed)}
+            minFraOgMed={DateFns.parseISO(førsteUtbetaling.fraOgMed)}
             nesteClickStatus={oppdaterRevurderingStatus}
             lagreOgFortsettSenereClickStatus={oppdaterRevurderingStatus}
         />
