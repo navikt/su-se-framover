@@ -113,7 +113,7 @@ const setDefaultValues = (bosituasjon: Bosituasjon[]) => {
     }
 
     return {
-        harEPS: bosituasjon[0].fnr === null,
+        harEPS: bosituasjon[0].fnr !== null,
         epsFnr: bosituasjon[0].fnr,
         delerSøkerBolig: bosituasjon[0].delerBolig,
         erEPSUførFlyktning: bosituasjon[0].ektemakeEllerSamboerUførFlyktning,
