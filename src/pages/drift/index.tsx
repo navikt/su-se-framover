@@ -233,6 +233,20 @@ const Drift = () => {
                         Fix Iverksettinger
                     </Knapp>
                 </div>
+                {RemoteData.isFailure(fixSøknaderResponse) && (
+                    <AlertStripe className={styles.alert} type="feil">
+                        <p>Fix Søknader feilet</p>
+                        {fixSøknaderResponse.error.statusCode}
+                        <p>Body: {fixSøknaderResponse.error.body?.message}</p>
+                    </AlertStripe>
+                )}
+                {RemoteData.isFailure(fixIverksettingResponse) && (
+                    <AlertStripe className={styles.alert} type="feil">
+                        <p>Fix Iverksettinger feilet</p>
+                        {fixIverksettingResponse.error.statusCode}
+                        <p>{fixIverksettingResponse.error.body?.message}</p>
+                    </AlertStripe>
+                )}
                 <div className={styles.tabellContainer}>
                     {RemoteData.isSuccess(fixSøknaderResponse) && (
                         <div>
