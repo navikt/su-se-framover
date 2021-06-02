@@ -259,6 +259,17 @@ const Bosituasjon = (props: {
         }
     };
 
+    React.useEffect(() => {
+        if (isSubmitted) {
+            form.trigger();
+        }
+    }, [form.watch('harEPS')]);
+    React.useEffect(() => {
+        if (isSubmitted) {
+            form.trigger('erEPSUførFlyktning');
+        }
+    }, [epsAlder]);
+
     const DelerSøkerBoligForm = () => {
         return (
             <Controller
@@ -286,17 +297,6 @@ const Bosituasjon = (props: {
             />
         );
     };
-
-    React.useEffect(() => {
-        if (isSubmitted) {
-            form.trigger();
-        }
-    }, [form.watch('harEPS')]);
-    React.useEffect(() => {
-        if (isSubmitted) {
-            form.trigger('erEPSUførFlyktning');
-        }
-    }, [epsAlder]);
 
     const EPSForm = () => {
         return (
@@ -346,6 +346,15 @@ const Bosituasjon = (props: {
         );
     };
 
+    function resetEPSForm() {
+        form.setValue('epsFnr', null);
+        form.setValue('erEPSUførFlyktning', null);
+    }
+
+    function resetDelerSøkerBoligForm() {
+        form.setValue('delerSøkerBolig', null);
+    }
+
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
@@ -365,13 +374,19 @@ const Bosituasjon = (props: {
                                                 label="Ja"
                                                 name="harEPS"
                                                 checked={field.value === true}
-                                                onChange={() => field.onChange(true)}
+                                                onChange={() => {
+                                                    resetDelerSøkerBoligForm();
+                                                    field.onChange(true);
+                                                }}
                                             />
                                             <Radio
                                                 label="Nei"
                                                 name="harEPS"
                                                 checked={field.value === false}
-                                                onChange={() => field.onChange(false)}
+                                                onChange={() => {
+                                                    resetEPSForm();
+                                                    field.onChange(false);
+                                                }}
                                             />
                                         </RadioGruppe>
                                     )}
