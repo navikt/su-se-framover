@@ -97,11 +97,11 @@ const EtterForhåndsvarsel = (props: {
     };
 
     const handleVisBrevClick = () =>
-        pdfApi.fetchBrevutkastForRevurderingWithFritekst(
-            props.sakId,
-            props.revurdering.id,
-            form.getValues('tekstTilVedtaksbrev')
-        );
+        pdfApi.fetchBrevutkastForRevurderingWithFritekst({
+            sakId: props.sakId,
+            revurderingId: props.revurdering.id,
+            fritekst: form.getValues('tekstTilVedtaksbrev'),
+        });
 
     const watch = form.watch();
 

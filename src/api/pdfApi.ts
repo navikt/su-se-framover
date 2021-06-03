@@ -1,11 +1,11 @@
 import apiClient, { ApiClientResult } from './apiClient';
 
-export async function fetchBrevutkastForSøknadsbehandling(
-    sakId: string,
-    behandlingId: string
-): Promise<ApiClientResult<Blob>> {
+export async function fetchBrevutkastForSøknadsbehandling(args: {
+    sakId: string;
+    behandlingId: string;
+}): Promise<ApiClientResult<Blob>> {
     return apiClient({
-        url: `/saker/${sakId}/behandlinger/${behandlingId}/vedtaksutkast`,
+        url: `/saker/${args.sakId}/behandlinger/${args.behandlingId}/vedtaksutkast`,
         method: 'GET',
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
         bodyTransformer: (res) => res.blob(),
