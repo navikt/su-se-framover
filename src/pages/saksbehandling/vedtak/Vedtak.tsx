@@ -44,7 +44,7 @@ const Vedtak = (props: Props) => {
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
 
     const [fritekst, setFritekst] = useState('');
-    const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForRevurderingWithFritekst);
+    const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst);
 
     const history = useHistory();
 
@@ -117,7 +117,7 @@ const Vedtak = (props: Props) => {
                             onClick={() => {
                                 lastNedBrev({
                                     sakId,
-                                    revurderingId: behandling.id,
+                                    behandlingId: behandling.id,
                                     fritekst,
                                 });
                             }}

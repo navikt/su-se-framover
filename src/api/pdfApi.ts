@@ -12,16 +12,16 @@ export async function fetchBrevutkastForSøknadsbehandling(args: {
     });
 }
 
-export async function fetchBrevutkastForSøknadsbehandlingWithFritekst(
-    sakId: string,
-    behandlingId: string,
-    fritekst: string
-): Promise<ApiClientResult<Blob>> {
+export async function fetchBrevutkastForSøknadsbehandlingWithFritekst(args: {
+    sakId: string;
+    behandlingId: string;
+    fritekst: string;
+}): Promise<ApiClientResult<Blob>> {
     return apiClient({
-        url: `/saker/${sakId}/behandlinger/${behandlingId}/vedtaksutkast`,
+        url: `/saker/${args.sakId}/behandlinger/${args.behandlingId}/vedtaksutkast`,
         method: 'POST',
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
-        body: { fritekst: fritekst },
+        body: { fritekst: args.fritekst },
         bodyTransformer: (res) => res.blob(),
     });
 }
