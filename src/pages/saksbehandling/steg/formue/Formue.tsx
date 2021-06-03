@@ -85,7 +85,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const eksisterendeBosituasjon = props.behandling.behandlingsinformasjon.bosituasjon;
 
     const handleSave = async (values: FormData, nesteUrl: string) => {
         if (RemoteData.isPending(eps) && values.epsFnr !== null) return;
@@ -139,13 +138,13 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                     //Det skal kreves ny registerering av sats når EPS endres. Enten ved ny Fnr, eller fjerner/legger til EPS.
                     //Denne sørger for at vi nuller ut sats steget hvis det er gjort en endring, og vi har en eksisterende bosituasjon
                     bosituasjon:
-                        !erEktefelleUendret && eksisterendeBosituasjon
+                        !erEktefelleUendret && props.behandling.behandlingsinformasjon.bosituasjon
                             ? {
-                                  ...eksisterendeBosituasjon,
+                                  ...props.behandling.behandlingsinformasjon.bosituasjon,
                                   delerBolig: null,
                                   ektemakeEllerSamboerUførFlyktning: null,
                               }
-                            : eksisterendeBosituasjon,
+                            : props.behandling.behandlingsinformasjon.bosituasjon,
                 },
             })
         );
@@ -170,7 +169,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const G = 101351;
 
     const formik = useFormik<FormData>({
-        initialValues: getFormue(behandlingsInfo, søknadInnhold),
+        initialValues: getFormue(behandlingsInfo, søknadInnhold, props.behandling.grunnlagsdataOgVilkårsvurderinger),
         async onSubmit() {
             handleSave(formik.values, props.nesteUrl);
         },
