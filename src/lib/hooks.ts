@@ -1,9 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { AsyncThunk } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
 import { createIntlCache, createIntl } from 'react-intl';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { ApiClientResult, ApiError } from '~api/apiClient';
+import { useAppDispatch } from '~redux/Store';
 
 import { SuccessNotificationState } from './routes';
 
@@ -55,7 +57,7 @@ export function useAsyncApiActionCreator<T, U>(
                 });
             }
         },
-        [apiResult, actionCreator, onSuccess]
+        [apiResult, actionCreator]
     );
 
     return [apiResult, callFn];

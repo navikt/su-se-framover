@@ -17,7 +17,7 @@ import {
 } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
-import { useFetchBrev, useI18n } from '~lib/hooks';
+import { useBrevForhåndsvisning, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Sak } from '~types/Sak';
@@ -44,7 +44,7 @@ const Vedtak = (props: Props) => {
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
 
     const [fritekst, setFritekst] = useState('');
-    const [brevStatus, lastNedBrev] = useFetchBrev(PdfApi.fetchBrevutkastForRevurderingWithFritekst);
+    const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForRevurderingWithFritekst);
 
     const history = useHistory();
 

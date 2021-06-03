@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import * as PdfApi from '~api/pdfApi';
 import { useUserContext } from '~context/userContext';
 import { erIverksatt } from '~features/behandling/behandlingUtils';
-import { useFetchBrev, useI18n } from '~lib/hooks';
+import { useBrevForhåndsvisning, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { søknadMottatt } from '~lib/søknadUtils';
 import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
@@ -76,7 +76,7 @@ export const BehandlingStatus = (props: {
 }) => {
     const user = useUserContext();
     const intl = useI18n({ messages });
-    const [lastNedBrevStatus, lastNedBrev] = useFetchBrev(PdfApi.fetchBrevutkastForSøknadsbehandling);
+    const [lastNedBrevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandling);
 
     const hentBrev = useCallback(async () => {
         lastNedBrev({
