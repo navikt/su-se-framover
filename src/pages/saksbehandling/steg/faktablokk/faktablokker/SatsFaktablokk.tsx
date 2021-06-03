@@ -4,7 +4,7 @@ import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { DelerBoligMed } from '~features/søknad/types';
 import { useI18n } from '~lib/hooks';
 import { keyOf } from '~lib/types';
-import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
+import { Bosituasjon } from '~types/Grunnlag';
 import { Sats } from '~types/Sats';
 import { SøknadInnhold } from '~types/Søknad';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
@@ -70,12 +70,7 @@ export const SatsFaktablokk = (props: FaktablokkProps) => {
     );
 };
 
-export const SatsVilkårsblokk = (props: {
-    sats: Behandlingsinformasjon['utledetSats'];
-    ektefelle: Behandlingsinformasjon['ektefelle'];
-    bosituasjon: Behandlingsinformasjon['bosituasjon'];
-    søknadInnhold: SøknadInnhold;
-}) => {
+export const SatsVilkårsblokk = (props: { bosituasjon: Bosituasjon; søknadInnhold: SøknadInnhold }) => {
     const intl = useI18n({
         messages: {
             ...messages,
@@ -91,7 +86,7 @@ export const SatsVilkårsblokk = (props: {
                 <Faktablokk
                     tittel={intl.formatMessage({ id: 'display.fraSaksbehandling' })}
                     fakta={[
-                        ...(props.ektefelle
+                        ...(props.bosituasjon.fnr
                             ? [
                                   {
                                       tittel: intl.formatMessage({
@@ -108,7 +103,7 @@ export const SatsVilkårsblokk = (props: {
                         {
                             tittel: intl.formatMessage({ id: 'bosituasjon.vurderingAvSats' }),
                             verdi:
-                                props.sats === Sats.Høy
+                                props.bosituasjon.sats === Sats.Høy
                                     ? intl.formatMessage({ id: 'bosituasjon.sats.høy' })
                                     : intl.formatMessage({ id: 'bosituasjon.sats.ordinær' }),
                         },

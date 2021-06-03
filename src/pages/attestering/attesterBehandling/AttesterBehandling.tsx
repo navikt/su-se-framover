@@ -136,6 +136,7 @@ const Attesteringsinnhold = ({
 
                 <BehandlingStatus sakId={props.sak.id} behandling={props.behandling} withBrevutkastknapp />
                 <VilkårsOppsummering
+                    grunnlagsdataOgVilkårsvurderinger={props.behandling.grunnlagsdataOgVilkårsvurderinger}
                     søknadInnhold={props.behandling.søknad.søknadInnhold}
                     behandlingsinformasjon={props.behandling.behandlingsinformasjon}
                     behandlingstatus={props.behandling.status}

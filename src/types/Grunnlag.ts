@@ -16,4 +16,5 @@ export interface Bosituasjon {
     delerBolig: Nullable<boolean>;
     ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
     begrunnelse: Nullable<string>;
+    sats: Nullable<string>;
 }

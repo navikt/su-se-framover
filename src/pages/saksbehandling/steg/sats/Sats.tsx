@@ -63,7 +63,8 @@ interface SatsProps {
 const tilBosituasjonsgrunnlag = (
     values: FormData,
     bosituasjonsValg: BosituasjonsValg,
-    eps: Nullable<Person>
+    eps: Nullable<Person>,
+    sats?: Nullable<string>
 ): Bosituasjon => {
     return {
         type: bosituasjonsValg,
@@ -71,6 +72,7 @@ const tilBosituasjonsgrunnlag = (
         delerBolig: values.delerSøkerBolig,
         ektemakeEllerSamboerUførFlyktning: values.mottarEktemakeEllerSamboerSU,
         begrunnelse: values.begrunnelse,
+        sats: sats ?? null,
     };
 };
 
@@ -247,7 +249,12 @@ const SatsForm = (props: SatsProps) => {
             return;
         }
 
-        const bosituasjonsgrunnlag = tilBosituasjonsgrunnlag(values, bosituasjonsvalg, props.eps);
+        const bosituasjonsgrunnlag = tilBosituasjonsgrunnlag(
+            values,
+            bosituasjonsvalg,
+            props.eps,
+            props.bosituasjon?.sats
+        );
 
         if (eqBosituasjon.equals(bosituasjonsgrunnlag, props.bosituasjon)) {
             history.push(nesteUrl);

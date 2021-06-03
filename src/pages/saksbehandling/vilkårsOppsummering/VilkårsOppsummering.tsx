@@ -5,6 +5,7 @@ import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksove
 import { useI18n } from '~lib/hooks';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import { Behandlingsstatus } from '../../../types/Behandling';
@@ -36,6 +37,7 @@ const VilkårsOppsummering = (props: {
     søknadInnhold: SøknadInnhold;
     behandlingsinformasjon: Behandlingsinformasjon;
     behandlingstatus: Behandlingsstatus;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const intl = useI18n({ messages });
     const vilkårsinformasjon = mapToVilkårsinformasjon(props.behandlingsinformasjon);
@@ -54,9 +56,7 @@ const VilkårsOppsummering = (props: {
                 ))}
                 {shouldShowSats(props.behandlingstatus) && (
                     <SatsVilkårsblokk
-                        bosituasjon={props.behandlingsinformasjon.bosituasjon}
-                        ektefelle={props.behandlingsinformasjon.ektefelle}
-                        sats={props.behandlingsinformasjon.utledetSats}
+                        bosituasjon={props.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0]}
                         søknadInnhold={props.søknadInnhold}
                     />
                 )}

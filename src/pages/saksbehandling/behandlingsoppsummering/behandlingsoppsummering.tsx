@@ -50,6 +50,7 @@ const Behandlingsoppsummering = (props: Props) => {
                 withBrevutkastknapp
             />
             <VilkårsOppsummering
+                grunnlagsdataOgVilkårsvurderinger={behandling.grunnlagsdataOgVilkårsvurderinger}
                 behandlingstatus={behandling.status}
                 søknadInnhold={behandling.søknad.søknadInnhold}
                 behandlingsinformasjon={behandling.behandlingsinformasjon}
