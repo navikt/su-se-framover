@@ -34,32 +34,32 @@ export const useNotificationFromLocation = () => {
 };
 
 type ApiResult<U> = RemoteData.RemoteData<ApiError | undefined, U>;
-// function useDispatchCall<T, U>(
-//     fn: AsyncThunk<U, T, { rejectValue: ApiError }>
-// ): [ApiResult<U>, (args: T, onSuccess?: (result: U) => void) => void] {
-//     const [apiResult, setApiResult] = useState<ApiResult<U>>(RemoteData.initial);
-//     const dispatch = useAppDispatch();
+export function useAsyncApiActionCreator<T, U>(
+    actionCreator: AsyncThunk<U, T, { rejectValue: ApiError }>
+): [ApiResult<U>, (args: T, onSuccess?: (result: U) => void) => void] {
+    const [apiResult, setApiResult] = useState<ApiResult<U>>(RemoteData.initial);
+    const dispatch = useAppDispatch();
 
-//     const callFn = React.useCallback(
-//         (args: T, onSuccess?: (result: U) => void) => {
-//             if (!RemoteData.isPending(apiResult)) {
-//                 setApiResult(RemoteData.pending);
+    const callFn = React.useCallback(
+        (args: T, onSuccess?: (result: U) => void) => {
+            if (!RemoteData.isPending(apiResult)) {
+                setApiResult(RemoteData.pending);
 
-//                 dispatch(fn(args)).then((action) => {
-//                     if (fn.fulfilled.match(action)) {
-//                         setApiResult(RemoteData.success(action.payload));
-//                         onSuccess?.(action.payload);
-//                     } else {
-//                         setApiResult(RemoteData.failure(action.payload));
-//                     }
-//                 });
-//             }
-//         },
-//         [apiResult]
-//     );
+                dispatch(actionCreator(args)).then((action) => {
+                    if (actionCreator.fulfilled.match(action)) {
+                        setApiResult(RemoteData.success(action.payload));
+                        onSuccess?.(action.payload);
+                    } else {
+                        setApiResult(RemoteData.failure(action.payload));
+                    }
+                });
+            }
+        },
+        [apiResult, actionCreator, onSuccess]
+    );
 
-//     return [apiResult, callFn];
-// }
+    return [apiResult, callFn];
+}
 
 export function useApiCall<T, U>(
     fn: (req: T) => Promise<ApiClientResult<U>>
@@ -80,7 +80,7 @@ export function useApiCall<T, U>(
                 }
             }
         },
-        [apiResult]
+        [apiResult, fn]
     );
 
     return [apiResult, callFn];
