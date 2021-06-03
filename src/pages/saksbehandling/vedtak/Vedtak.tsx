@@ -86,6 +86,7 @@ const Vedtak = (props: Props) => {
                     <BehandlingStatus sakId={sak.id} behandling={behandling} />
 
                     <VilkårsOppsummering
+                        grunnlagsdataOgVilkårsvurderinger={behandling.grunnlagsdataOgVilkårsvurderinger}
                         behandlingstatus={behandling.status}
                         søknadInnhold={behandling.søknad.søknadInnhold}
                         behandlingsinformasjon={behandling.behandlingsinformasjon}
