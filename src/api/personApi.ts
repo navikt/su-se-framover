@@ -64,5 +64,11 @@ export interface Person {
 }
 
 export async function fetchPerson(fnr: string): Promise<ApiClientResult<Person>> {
-    return apiClient({ url: `/person/${fnr}`, method: 'GET' });
+    return apiClient({
+        url: `/person/søk`,
+        method: 'POST',
+        body: {
+            fnr: fnr,
+        },
+    });
 }
