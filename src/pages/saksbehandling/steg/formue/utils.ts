@@ -2,6 +2,7 @@ import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import { Behandlingsinformasjon, FormueStatus, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 export const keyNavnForFormue: Array<keyof FormueVerdier> = [
     'verdiIkkePrimærbolig',
@@ -47,7 +48,11 @@ export function kalkulerFormueFraSøknad(f: SøknadInnhold['formue']) {
     ].reduce((acc, formue) => acc + formue, 0);
 }
 
-export function getFormue(behandlingsInfo: Behandlingsinformasjon, søknadsInnhold: SøknadInnhold) {
+export function getFormue(
+    behandlingsInfo: Behandlingsinformasjon,
+    søknadsInnhold: SøknadInnhold,
+    grunnlagsdata: GrunnlagsdataOgVilkårsvurderinger
+) {
     const behandlingsFormue = behandlingsInfo.formue;
 
     return {
@@ -58,7 +63,8 @@ export function getFormue(behandlingsInfo: Behandlingsinformasjon, søknadsInnho
         borSøkerMedEPS:
             behandlingsFormue?.borSøkerMedEPS ??
             søknadsInnhold.boforhold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
-        epsFnr: behandlingsInfo.ektefelle?.fnr ?? søknadsInnhold.boforhold.ektefellePartnerSamboer?.fnr ?? null,
+        // TODO ai: støtte flere bosituasjonsgrunnlag senare når det blir aktuellt
+        epsFnr: grunnlagsdata?.bosituasjon[0]?.fnr,
     };
 }
 
