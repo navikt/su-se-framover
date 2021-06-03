@@ -6,7 +6,6 @@ import { Innholdstittel } from 'nav-frontend-typografi/';
 import React, { useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { ApiError } from '~api/apiClient';
 import * as PdfApi from '~api/pdfApi';
 import {
     erAvslått,
@@ -18,7 +17,7 @@ import {
 } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
-import { useI18n } from '~lib/hooks';
+import { useFetchBrev, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Sak } from '~types/Sak';
@@ -45,25 +44,9 @@ const Vedtak = (props: Props) => {
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
 
     const [fritekst, setFritekst] = useState('');
-    const [lastNedBrevStatus, setLastNedBrevStatus] = useState<RemoteData.RemoteData<ApiError, null>>(
-        RemoteData.initial
-    );
+    const [brevStatus, lastNedBrev] = useFetchBrev(PdfApi.fetchBrevutkastForRevurderingWithFritekst);
 
     const history = useHistory();
-    const handleVisBrevClick = async () => {
-        if (RemoteData.isPending(lastNedBrevStatus) || !behandling) {
-            return;
-        }
-        setLastNedBrevStatus(RemoteData.pending);
-
-        const res = await PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst(sakId, behandling.id, fritekst);
-        if (res.status === 'ok') {
-            window.open(URL.createObjectURL(res.data));
-            setLastNedBrevStatus(RemoteData.success(null));
-        } else {
-            setLastNedBrevStatus(RemoteData.failure(res.error));
-        }
-    };
 
     const vilkårUrl = (vilkårType: Vilkårtype) => {
         return createVilkårUrl({
@@ -123,7 +106,7 @@ const Vedtak = (props: Props) => {
                             value={fritekst}
                             className={styles.fritekstarea}
                         />
-                        {RemoteData.isFailure(lastNedBrevStatus) && (
+                        {RemoteData.isFailure(brevStatus) && (
                             <AlertStripe type="feil">
                                 {intl.formatMessage({ id: 'feilmelding.brevhentingFeilet' })}
                             </AlertStripe>
@@ -131,8 +114,14 @@ const Vedtak = (props: Props) => {
                         <Knapp
                             className={styles.visBrevKnapp}
                             htmlType="button"
-                            onClick={handleVisBrevClick}
-                            spinner={RemoteData.isPending(lastNedBrevStatus)}
+                            onClick={() => {
+                                lastNedBrev({
+                                    sakId,
+                                    revurderingId: behandling.id,
+                                    fritekst,
+                                });
+                            }}
+                            spinner={RemoteData.isPending(brevStatus)}
                             mini
                         >
                             {intl.formatMessage({ id: 'knapp.vis' })}
