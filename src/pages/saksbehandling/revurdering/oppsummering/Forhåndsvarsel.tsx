@@ -100,11 +100,11 @@ const Forhåndsvarsel = (props: {
         );
 
     const handleVisVedtaksbrevClick = () =>
-        pdfApi.fetchBrevutkastForRevurderingWithFritekst(
-            props.sakId,
-            props.revurdering.id,
-            form.getValues('fritekstTilBrev') ?? ''
-        );
+        pdfApi.fetchBrevutkastForRevurderingWithFritekst({
+            sakId: props.sakId,
+            revurderingId: props.revurdering.id,
+            fritekst: form.getValues('fritekstTilBrev') ?? '',
+        });
 
     return (
         <form onSubmit={form.handleSubmit(handleSubmit)}>

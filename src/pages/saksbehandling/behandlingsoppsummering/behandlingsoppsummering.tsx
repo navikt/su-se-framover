@@ -4,15 +4,14 @@ import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Knapp } from 'nav-frontend-knapper';
 import { Element } from 'nav-frontend-typografi';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
 
-import { ApiError } from '~api/apiClient';
 import * as PdfApi from '~api/pdfApi';
 import { useUserContext } from '~context/userContext';
 import { erIverksatt } from '~features/behandling/behandlingUtils';
-import { useI18n } from '~lib/hooks';
+import { useBrevForhåndsvisning, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { søknadMottatt } from '~lib/søknadUtils';
 import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
@@ -77,24 +76,13 @@ export const BehandlingStatus = (props: {
 }) => {
     const user = useUserContext();
     const intl = useI18n({ messages });
-
-    const [lastNedBrevStatus, setLastNedBrevStatus] = useState<RemoteData.RemoteData<ApiError, null>>(
-        RemoteData.initial
-    );
+    const [lastNedBrevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandling);
 
     const hentBrev = useCallback(async () => {
-        if (RemoteData.isPending(lastNedBrevStatus)) {
-            return;
-        }
-        setLastNedBrevStatus(RemoteData.pending);
-
-        const res = await PdfApi.fetchBrevutkastForSøknadsbehandling(props.sakId, props.behandling.id);
-        if (res.status === 'ok') {
-            window.open(URL.createObjectURL(res.data));
-            setLastNedBrevStatus(RemoteData.success(null));
-        } else {
-            setLastNedBrevStatus(RemoteData.failure(res.error));
-        }
+        lastNedBrev({
+            sakId: props.sakId,
+            behandlingId: props.behandling.id,
+        });
     }, [props.sakId, props.behandling.id, lastNedBrevStatus._tag]);
 
     const Tilleggsinfo = () => {
@@ -147,7 +135,7 @@ export const BehandlingStatus = (props: {
                 <div className={styles.brevutkastFeil}>
                     {RemoteData.isFailure(lastNedBrevStatus) && (
                         <AlertStripeFeil>
-                            {lastNedBrevStatus.error.body?.message ??
+                            {lastNedBrevStatus.error?.body?.message ??
                                 intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
                         </AlertStripeFeil>
                     )}

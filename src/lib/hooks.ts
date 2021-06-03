@@ -1,6 +1,11 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { AsyncThunk } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
 import { createIntlCache, createIntl } from 'react-intl';
 import { useHistory, useLocation } from 'react-router-dom';
+
+import { ApiClientResult, ApiError } from '~api/apiClient';
+import { useAppDispatch } from '~redux/Store';
 
 import { SuccessNotificationState } from './routes';
 
@@ -29,3 +34,71 @@ export const useNotificationFromLocation = () => {
     }, []);
     return locationState;
 };
+
+type ApiResult<U> = RemoteData.RemoteData<ApiError | undefined, U>;
+export function useAsyncApiActionCreator<T, U>(
+    actionCreator: AsyncThunk<U, T, { rejectValue: ApiError }>
+): [ApiResult<U>, (args: T, onSuccess?: (result: U) => void) => void] {
+    const [apiResult, setApiResult] = useState<ApiResult<U>>(RemoteData.initial);
+    const dispatch = useAppDispatch();
+
+    const callFn = React.useCallback(
+        (args: T, onSuccess?: (result: U) => void) => {
+            if (!RemoteData.isPending(apiResult)) {
+                setApiResult(RemoteData.pending);
+
+                dispatch(actionCreator(args)).then((action) => {
+                    if (actionCreator.fulfilled.match(action)) {
+                        setApiResult(RemoteData.success(action.payload));
+                        onSuccess?.(action.payload);
+                    } else {
+                        setApiResult(RemoteData.failure(action.payload));
+                    }
+                });
+            }
+        },
+        [apiResult, actionCreator]
+    );
+
+    return [apiResult, callFn];
+}
+
+export function useApiCall<T, U>(
+    fn: (req: T) => Promise<ApiClientResult<U>>
+): [ApiResult<U>, (args: T, onSuccess?: (result: U) => void) => void] {
+    const [apiResult, setApiResult] = useState<ApiResult<U>>(RemoteData.initial);
+
+    const callFn = React.useCallback(
+        async (args: T, onSuccess?: (result: U) => void) => {
+            if (!RemoteData.isPending(apiResult)) {
+                setApiResult(RemoteData.pending);
+
+                const res = await fn(args);
+                if (res.status === 'ok') {
+                    setApiResult(RemoteData.success(res.data));
+                    onSuccess?.(res.data);
+                } else {
+                    setApiResult(RemoteData.failure(res.error));
+                }
+            }
+        },
+        [apiResult, fn]
+    );
+
+    return [apiResult, callFn];
+}
+
+export function useBrevForhåndsvisning<T>(
+    fetchBrev: (args: T) => Promise<ApiClientResult<Blob, string>>
+): [ApiResult<Blob>, (args: T) => void] {
+    const [status, forhåndsvisBrev] = useApiCall(fetchBrev);
+
+    return [
+        status,
+        (args: T) => {
+            forhåndsvisBrev(args, (blob) => {
+                window.open(URL.createObjectURL(blob));
+            });
+        },
+    ];
+}
