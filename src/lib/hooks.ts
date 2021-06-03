@@ -86,15 +86,15 @@ export function useApiCall<T, U>(
     return [apiResult, callFn];
 }
 
-export function useFetchBrev<T>(
-    sliceFn: (args: T) => Promise<ApiClientResult<Blob, string>>
+export function useBrevForhåndsvisning<T>(
+    fetchBrev: (args: T) => Promise<ApiClientResult<Blob, string>>
 ): [ApiResult<Blob>, (args: T) => void] {
-    const [status, fetchBrev] = useApiCall(sliceFn);
+    const [status, forhåndsvisBrev] = useApiCall(fetchBrev);
 
     return [
         status,
         (args: T) => {
-            fetchBrev(args, (blob) => {
+            forhåndsvisBrev(args, (blob) => {
                 window.open(URL.createObjectURL(blob));
             });
         },
