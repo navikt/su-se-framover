@@ -103,12 +103,12 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             epsVerdier: values.borSøkerMedEPS ? values.epsVerdier : null,
             begrunnelse: values.begrunnelse,
         };
-        const ektefelle = {
-            harEktefellePartnerSamboer: values.borSøkerMedEPS,
-            fnr: values.epsFnr,
-        };
 
-        const erEktefelleUendret = eqEktefelle.equals(ektefelle, props.behandling.behandlingsinformasjon.ektefelle);
+        const ektefelle = { fnr: values.epsFnr };
+        // TODO ai: Husk å legg in støtte for flera bosituasjonsgrunnlag når det kommer
+        const erEktefelleUendret = eqEktefelle.equals(ektefelle, {
+            fnr: props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0]?.fnr,
+        });
 
         if (eqFormue.equals(formueValues, props.behandling.behandlingsinformasjon.formue) && erEktefelleUendret) {
             history.push(nesteUrl);
@@ -119,33 +119,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             lagreBehandlingsinformasjon({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                behandlingsinformasjon: {
-                    formue: formueValues,
-                    ektefelle: RemoteData.isSuccess(eps)
-                        ? {
-                              fnr: eps.value.fnr,
-                              navn: eps.value.navn,
-                              kjønn: eps.value.kjønn,
-                              fødselsdato: eps.value.fødselsdato,
-                              alder: eps.value.alder,
-                              adressebeskyttelse: eps.value.adressebeskyttelse,
-                              skjermet: eps.value.skjermet,
-                          }
-                        : {
-                              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                              fnr: values.epsFnr!,
-                          },
-                    //Det skal kreves ny registerering av sats når EPS endres. Enten ved ny Fnr, eller fjerner/legger til EPS.
-                    //Denne sørger for at vi nuller ut sats steget hvis det er gjort en endring, og vi har en eksisterende bosituasjon
-                    bosituasjon:
-                        !erEktefelleUendret && props.behandling.behandlingsinformasjon.bosituasjon
-                            ? {
-                                  ...props.behandling.behandlingsinformasjon.bosituasjon,
-                                  delerBolig: null,
-                                  ektemakeEllerSamboerUførFlyktning: null,
-                              }
-                            : props.behandling.behandlingsinformasjon.bosituasjon,
-                },
+                behandlingsinformasjon: { formue: formueValues },
             })
         );
 
