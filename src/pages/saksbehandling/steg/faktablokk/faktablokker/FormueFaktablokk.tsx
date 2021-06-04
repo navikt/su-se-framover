@@ -7,6 +7,7 @@ import { IntlShape } from 'react-intl';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { formatCurrency } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
+import { Nullable } from '~lib/types';
 import { Behandlingsinformasjon, FormueStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
@@ -210,7 +211,7 @@ export const FormueVilkårsblokk = (props: {
     info: Vilkårsinformasjon;
     søknadInnhold: SøknadInnhold;
     formue: Behandlingsinformasjon['formue'];
-    ektefelle: Behandlingsinformasjon['ektefelle'];
+    ektefelle: { fnr: Nullable<string> };
 }) => {
     const intl = useI18n({
         messages: {
@@ -276,11 +277,11 @@ export const FormueVilkårsblokk = (props: {
                                     tittel: saksbehandlingMessage('input.label.borSøkerMedEktefelle'),
                                     verdi: props.formue.borSøkerMedEPS ? 'Ja' : 'Nei',
                                 },
-                                ...(props.ektefelle
+                                ...(props.ektefelle.fnr
                                     ? [
                                           {
                                               tittel: saksbehandlingMessage('input.label.ektefellesFødselsnummer'),
-                                              verdi: props.ektefelle?.fnr,
+                                              verdi: props.ektefelle.fnr,
                                           },
                                       ]
                                     : []),

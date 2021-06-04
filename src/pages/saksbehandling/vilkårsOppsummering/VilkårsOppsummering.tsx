@@ -52,6 +52,7 @@ const VilkårsOppsummering = (props: {
                         info={v}
                         søknadInnhold={props.søknadInnhold}
                         behandlingsinformasjon={props.behandlingsinformasjon}
+                        grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
                     />
                 ))}
                 {shouldShowSats(props.behandlingstatus) && (
@@ -69,6 +70,7 @@ const Vilkårsting = (props: {
     info: Vilkårsinformasjon;
     søknadInnhold: SøknadInnhold;
     behandlingsinformasjon: Behandlingsinformasjon;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     switch (props.info.vilkårtype) {
         case Vilkårtype.Uførhet:
@@ -125,7 +127,7 @@ const Vilkårsting = (props: {
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
                     formue={props.behandlingsinformasjon.formue}
-                    ektefelle={props.behandlingsinformasjon.ektefelle}
+                    ektefelle={{ fnr: props.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0].fnr }}
                 />
             );
         case Vilkårtype.PersonligOppmøte:

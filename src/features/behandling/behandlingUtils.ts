@@ -28,7 +28,6 @@ import {
     PersonligOppmøteStatus,
     UførhetStatus,
 } from '~types/Behandlingsinformasjon';
-import { Bosituasjon } from '~types/Grunnlag';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
@@ -187,9 +186,15 @@ export const eqPersonligOppmøte: Eq<Nullable<PersonligOppmøte>> = {
         personligOppmøte1?.begrunnelse === personligOppmøte2?.begrunnelse,
 };
 
-export const eqBosituasjon: Eq<Nullable<Bosituasjon>> = {
+export const eqBosituasjon: Eq<
+    Nullable<{
+        fnr: Nullable<string>;
+        delerBolig: Nullable<boolean>;
+        ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
+        begrunnelse: Nullable<string>;
+    }>
+> = {
     equals: (sats1, sats2) =>
-        sats1?.type === sats2?.type &&
         sats1?.fnr === sats2?.fnr &&
         sats1?.delerBolig === sats2?.delerBolig &&
         sats1?.ektemakeEllerSamboerUførFlyktning === sats2?.ektemakeEllerSamboerUførFlyktning &&
