@@ -2,6 +2,7 @@ import { Nullable } from '~lib/types';
 
 import { Attestering } from './Behandling';
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
+import { Behandling, Attestering } from './Behandling';
 import { Beregning } from './Beregning';
 import { Periode } from './Periode';
 import { Simulering } from './Simulering';
@@ -20,7 +21,6 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     årsak: OpprettetRevurderingGrunn;
     begrunnelse: Nullable<string>;
     forhåndsvarsel: Nullable<Forhåndsvarsel>;
-    behandlingsinformasjon: Behandlingsinformasjon;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;
 }
