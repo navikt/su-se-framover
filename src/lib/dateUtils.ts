@@ -1,6 +1,8 @@
 import * as DateFns from 'date-fns';
 import { IntlShape } from 'react-intl';
 
+import { Periode } from '../types/Periode';
+
 import { Nullable } from './types';
 
 enum DateFormats {
@@ -52,6 +54,10 @@ export const toStringDateOrNull = (date: Date | null) => {
 
     return DateFns.format(date, DateFormats.IsoDateOnly);
 };
+
+// Tipper det ikke blir nødvendig med "overload" for Periode<Date>
+export const formatPeriode = (periode: Periode<string>, intl: IntlShape) =>
+    `${formatMonthYear(periode.fraOgMed, intl)} – ${formatMonthYear(periode.tilOgMed, intl)}`;
 
 export const toIsoDateOnlyString = (date: Date) => DateFns.format(date, DateFormats.IsoDateOnly);
 
