@@ -27,8 +27,8 @@ import sharedStyles from '../revurdering.module.less';
 import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
-import messages from './bosituasjon-nb';
-import styles from './bosituasjon.module.less';
+import messages from './bosituasjonForm-nb';
+import styles from './bosituasjonForm.module.less';
 
 interface BosituasjonFormData {
     harEPS: Nullable<boolean>;

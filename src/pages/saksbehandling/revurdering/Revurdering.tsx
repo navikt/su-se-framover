@@ -21,7 +21,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import { RevurderingSteg } from '../types';
 
-import Bosituasjon from './bosituasjon/Bosituasjon';
+import Bosituasjon from './bosituasjon/BosituasjonForm';
 import EndringAvFradrag from './endringAvFradrag/EndringAvFradrag';
 import RevurderingOppsummeringPage from './OppsummeringPage/RevurderingOppsummeringPage';
 import messages from './revurdering-nb';
