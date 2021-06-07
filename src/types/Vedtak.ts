@@ -1,3 +1,5 @@
+import { Nullable } from '~lib/types';
+
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
 import { Periode } from './Periode';
@@ -7,16 +9,17 @@ export interface Vedtak {
     id: string;
     opprettet: string;
     behandlingsinformasjon: Behandlingsinformasjon;
-    beregning: Beregning;
+    beregning: Nullable<Beregning>;
     simulering?: Simulering;
     attestant: string;
     saksbehandler: string;
-    utbetalingId: string;
+    utbetalingId: Nullable<string>;
     behandlingId: string;
     sakId: string;
     fnr: string;
     periode: Periode<string>;
     type: VedtakType;
+    saksnummer: string;
 }
 
 export enum VedtakType {

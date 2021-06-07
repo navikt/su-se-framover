@@ -1,10 +1,11 @@
 import { Nullable } from '~lib/types';
 
-import { Behandling, Attestering } from './Behandling';
+import { Attestering } from './Behandling';
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
 import { Periode } from './Periode';
 import { Simulering } from './Simulering';
+import { Vedtak } from './Vedtak';
 import { GrunnlagsdataOgVilkårsvurderinger } from './Vilkår';
 
 export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
@@ -12,7 +13,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     status: T;
     opprettet: string;
     periode: Periode<string>;
-    tilRevurdering: Behandling;
+    tilRevurdering: Vedtak;
     saksbehandler: string;
     attestering: Nullable<Attestering>;
     fritekstTilBrev: string;
