@@ -187,7 +187,7 @@ const Bosituasjon = (props: {
                     },
                 }),
             }),
-        begrunnelse: yup.string(),
+        begrunnelse: yup.string().nullable().defined(),
     });
 
     const {
