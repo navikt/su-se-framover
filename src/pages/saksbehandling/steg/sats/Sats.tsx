@@ -141,20 +141,20 @@ const getValidationSchema = (eps: Nullable<Person>) => {
 };
 
 const Sats = (props: VilkårsvurderingBaseProps) => {
-    const [eps, setEps] = useState<RemoteData.RemoteData<ApiError | undefined, Person>>(RemoteData.initial);
+    const [epsStatus, setEpsStatus] = useState<RemoteData.RemoteData<ApiError | undefined, Person>>(RemoteData.initial);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const history = useHistory();
     const epsFnr = props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0].fnr;
 
     useEffect(() => {
         async function fetchEPS(fnr: string) {
-            setEps(RemoteData.pending);
+            setEpsStatus(RemoteData.pending);
 
             const res = await fetchPerson(fnr);
             if (res.status === 'error') {
-                setEps(RemoteData.failure(res.error));
+                setEpsStatus(RemoteData.failure(res.error));
             } else {
-                setEps(RemoteData.success(res.data));
+                setEpsStatus(RemoteData.success(res.data));
             }
         }
 
@@ -179,7 +179,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
         );
     }
     return pipe(
-        eps,
+        epsStatus,
         RemoteData.fold(
             () => <NavFrontendSpinner />,
             () => <NavFrontendSpinner />,
@@ -212,23 +212,27 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     );
 };
 
+function mottarEktemakeEllerSamboerSUInitialValue(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasjon>) {
+    return eps && eps.alder && eps.alder >= 67 ? null : bosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null;
+}
+
+function setInitialValues(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasjon>) {
+    return {
+        delerSøkerBolig: eps ? null : bosituasjon?.delerBolig ?? null,
+        mottarEktemakeEllerSamboerSU: mottarEktemakeEllerSamboerSUInitialValue(eps, bosituasjon),
+        begrunnelse: bosituasjon?.begrunnelse ?? null,
+    };
+}
+
 const SatsForm = (props: SatsProps) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
-    const eksisterendeBosituasjon = props.bosituasjon;
     const eps = props.eps;
 
     const formik = useFormik<FormData>({
-        initialValues: {
-            delerSøkerBolig: eps ? null : eksisterendeBosituasjon?.delerBolig ?? null,
-            mottarEktemakeEllerSamboerSU:
-                eps && eps.alder && eps.alder >= 67
-                    ? null
-                    : eksisterendeBosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null,
-            begrunnelse: eksisterendeBosituasjon?.begrunnelse ?? null,
-        },
+        initialValues: setInitialValues(eps, props.bosituasjon),
         validationSchema: getValidationSchema(eps),
         validateOnChange: hasSubmitted,
         async onSubmit(values) {
