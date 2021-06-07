@@ -22,7 +22,7 @@ import { showName } from '~features/person/personUtils';
 import sakSlice, { lagreBehandlingsinformasjon, lagreEpsGrunnlag } from '~features/saksoversikt/sak.slice';
 import { removeSpaces } from '~lib/formatUtils';
 import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/hooks';
+import { useAsyncApiActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering, validateNonNegativeNumber } from '~lib/validering';
@@ -84,6 +84,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const søknadInnhold = props.behandling.søknad.søknadInnhold;
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
+    const [lagreEpsGrunnlagLocal, lagreEpsGrunnlagKall] = useAsyncApiActionCreator(lagreEpsGrunnlag);
+
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const handleSave = async (values: FormData, nesteUrl: string) => {
@@ -123,16 +125,11 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             })
         );
 
-        // todo ai: wuuut to dooo here
-        await dispatch(
-            lagreEpsGrunnlag({
-                sakId: props.sakId,
-                behandlingId: props.behandling.id,
-                epsFnr: values.epsFnr,
-            })
-        );
-
-        if (!res) return;
+        lagreEpsGrunnlagKall({
+            sakId: props.sakId,
+            behandlingId: props.behandling.id,
+            epsFnr: values.epsFnr,
+        });
 
         if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
             history.push(nesteUrl);
@@ -510,7 +507,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         />
 
                         {pipe(
-                            lagreBehandlingsinformasjonStatus,
+                            RemoteData.combine(lagreBehandlingsinformasjonStatus, lagreEpsGrunnlagLocal),
                             RemoteData.fold(
                                 () => null,
                                 () => (
@@ -526,6 +523,12 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 () => null
                             )
                         )}
+                        {RemoteData.isFailure(lagreEpsGrunnlagLocal) && (
+                            <AlertStripe type="feil">
+                                {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                            </AlertStripe>
+                        )}
+
                         <Feiloppsummering
                             tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                             feil={formikErrorsTilFeiloppsummering(formik.errors)}

@@ -31,11 +31,11 @@ export enum BosituasjonTyper {
 }
 
 export const erBosituasjonFullstendig = (b: Bosituasjon) => {
-    return (
-        b.type === BosituasjonTyper.DELER_BOLIG_MED_VOKSNE ||
-        b.type === BosituasjonTyper.EPS_IKKE_UFØR_FLYKTNING ||
-        b.type === BosituasjonTyper.EPS_OVER_67 ||
-        b.type === BosituasjonTyper.EPS_UFØR_FLYKTNING ||
-        b.type === BosituasjonTyper.ENSLIG
-    );
+    return [
+        BosituasjonTyper.DELER_BOLIG_MED_VOKSNE,
+        BosituasjonTyper.EPS_IKKE_UFØR_FLYKTNING,
+        BosituasjonTyper.EPS_OVER_67,
+        BosituasjonTyper.EPS_UFØR_FLYKTNING,
+        BosituasjonTyper.ENSLIG,
+    ].includes(b.type);
 };

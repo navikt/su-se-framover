@@ -188,14 +188,12 @@ export const eqPersonligOppmøte: Eq<Nullable<PersonligOppmøte>> = {
 
 export const eqBosituasjon: Eq<
     Nullable<{
-        fnr: Nullable<string>;
         delerBolig: Nullable<boolean>;
         ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
         begrunnelse: Nullable<string>;
     }>
 > = {
     equals: (sats1, sats2) =>
-        sats1?.fnr === sats2?.fnr &&
         sats1?.delerBolig === sats2?.delerBolig &&
         sats1?.ektemakeEllerSamboerUførFlyktning === sats2?.ektemakeEllerSamboerUførFlyktning &&
         sats1?.begrunnelse === sats2?.begrunnelse,

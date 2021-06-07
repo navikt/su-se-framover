@@ -10,7 +10,6 @@ import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { Sats as FaktiskSats } from '~/types/Sats';
-import { ApiError } from '~api/apiClient';
 import { Person, fetchPerson } from '~api/personApi';
 import { SuperRadioGruppe } from '~components/FormElements';
 import { Personkort } from '~components/Personkort';
@@ -18,7 +17,7 @@ import ToKolonner from '~components/toKolonner/ToKolonner';
 import { eqBosituasjon } from '~features/behandling/behandlingUtils';
 import { lagreBosituasjonGrunnlag } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/hooks';
+import { useApiCall, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
@@ -141,25 +140,14 @@ const getValidationSchema = (eps: Nullable<Person>) => {
 };
 
 const Sats = (props: VilkårsvurderingBaseProps) => {
-    const [epsStatus, setEpsStatus] = useState<RemoteData.RemoteData<ApiError | undefined, Person>>(RemoteData.initial);
+    const [eps, fetchEps] = useApiCall(fetchPerson);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const history = useHistory();
     const epsFnr = props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0].fnr;
 
     useEffect(() => {
-        async function fetchEPS(fnr: string) {
-            setEpsStatus(RemoteData.pending);
-
-            const res = await fetchPerson(fnr);
-            if (res.status === 'error') {
-                setEpsStatus(RemoteData.failure(res.error));
-            } else {
-                setEpsStatus(RemoteData.success(res.data));
-            }
-        }
-
         if (epsFnr) {
-            fetchEPS(epsFnr);
+            fetchEps(epsFnr);
         }
     }, []);
 
@@ -179,7 +167,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
         );
     }
     return pipe(
-        epsStatus,
+        eps,
         RemoteData.fold(
             () => <NavFrontendSpinner />,
             () => <NavFrontendSpinner />,
@@ -216,7 +204,7 @@ function mottarEktemakeEllerSamboerSUInitialValue(eps: Nullable<Person>, bositua
     return eps && eps.alder && eps.alder >= 67 ? null : bosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null;
 }
 
-function setInitialValues(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasjon>) {
+function getInitialValues(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasjon>) {
     return {
         delerSøkerBolig: eps ? null : bosituasjon?.delerBolig ?? null,
         mottarEktemakeEllerSamboerSU: mottarEktemakeEllerSamboerSUInitialValue(eps, bosituasjon),
@@ -232,7 +220,7 @@ const SatsForm = (props: SatsProps) => {
     const eps = props.eps;
 
     const formik = useFormik<FormData>({
-        initialValues: setInitialValues(eps, props.bosituasjon),
+        initialValues: getInitialValues(eps, props.bosituasjon),
         validationSchema: getValidationSchema(eps),
         validateOnChange: hasSubmitted,
         async onSubmit(values) {

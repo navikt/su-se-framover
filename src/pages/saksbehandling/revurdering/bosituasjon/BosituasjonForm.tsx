@@ -8,6 +8,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
+import { FnrInput } from '~components/FnrInput/FnrInput';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
@@ -15,7 +16,6 @@ import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { FnrInput } from '~pages/søknad/steg/bo-og-opphold-i-norge/EktefellePartnerSamboer';
 import { useAppDispatch } from '~redux/Store';
 import { Bosituasjon } from '~types/Grunnlag';
 import { Periode } from '~types/Periode';
@@ -99,7 +99,7 @@ const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[]; revurderings
     );
 };
 
-const setDefaultValues = (revurdering: Revurdering, bosituasjon: Bosituasjon[]): BosituasjonFormData => {
+const getDefaultValues = (revurdering: Revurdering, bosituasjon: Bosituasjon[]): BosituasjonFormData => {
     const bosituasjonLocal = revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon;
 
     if (bosituasjonLocal.length === 1) {
@@ -194,7 +194,7 @@ const BosituasjonForm = (props: {
         formState: { errors, isSubmitted },
         ...form
     } = useForm<BosituasjonFormData>({
-        defaultValues: setDefaultValues(
+        defaultValues: getDefaultValues(
             props.revurdering,
             props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.bosituasjon
         ),
@@ -346,6 +346,7 @@ const BosituasjonForm = (props: {
     function resetEPSForm() {
         form.setValue('epsFnr', null);
         form.setValue('erEPSUførFlyktning', null);
+        setEPSAlder(null);
     }
 
     function resetDelerSøkerBoligForm() {
