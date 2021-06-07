@@ -1,5 +1,5 @@
 import * as DateFns from 'date-fns';
-import { IntlShape } from 'react-intl';
+import { FormatDateOptions, IntlShape } from 'react-intl';
 
 import { Periode } from '../types/Periode';
 
@@ -9,14 +9,20 @@ enum DateFormats {
     IsoDateOnly = 'yyyy-MM-dd',
 }
 
+const formatDateOptions: FormatDateOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+};
+
 export const formatDateTime = (time: string, intl: IntlShape) => {
-    return `${intl.formatDate(time)} ${intl.formatTime(time)}`;
+    return `${intl.formatDate(time, formatDateOptions)} ${intl.formatTime(time)}`;
 };
 
 export const formatMonthYear = (date: string, intl: IntlShape) =>
     intl.formatDate(date, {
-        year: 'numeric',
-        month: '2-digit',
+        ...formatDateOptions,
+        day: undefined,
     });
 
 export type Utlandsdatoer = Array<{ utreisedato: string; innreisedato: string }>;
