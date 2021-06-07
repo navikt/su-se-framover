@@ -35,8 +35,8 @@ export const useNotificationFromLocation = () => {
     return locationState;
 };
 
-type ApiResult<U> = RemoteData.RemoteData<ApiError | undefined, U>;
-export function useAsyncApiActionCreator<T, U>(
+export type ApiResult<U> = RemoteData.RemoteData<ApiError | undefined, U>;
+export function useAsyncActionCreator<T, U>(
     actionCreator: AsyncThunk<U, T, { rejectValue: ApiError }>
 ): [ApiResult<U>, (args: T, onSuccess?: (result: U) => void) => void] {
     const [apiResult, setApiResult] = useState<ApiResult<U>>(RemoteData.initial);
@@ -58,6 +58,31 @@ export function useAsyncApiActionCreator<T, U>(
             }
         },
         [apiResult, actionCreator]
+    );
+
+    return [apiResult, callFn];
+}
+
+/**
+ * @param actionCreator action creator
+ * @param argsTransformer funksjon som gjør at man kan "partially apply"-e action creatoren. Dersom argsTransformer returnerer `undefined` vil ikke actionen bli dispatchet.
+ * @param onSuccess callback som kalles når action creator-en returnerer suksess
+ */
+export function useAsyncActionCreatorWithArgsTransformer<TSuccess, TThunkArgs, TArgs>(
+    actionCreator: AsyncThunk<TSuccess, TThunkArgs, { rejectValue: ApiError }>,
+    argsTransformer: (args: TArgs) => TThunkArgs | undefined,
+    onSuccess?: (args: TArgs, data: TSuccess) => void
+): [ApiResult<TSuccess>, (args: TArgs) => void] {
+    const [apiResult, call] = useAsyncActionCreator(actionCreator);
+
+    const callFn = React.useCallback(
+        (x: TArgs) => {
+            const args = argsTransformer(x);
+            if (typeof args !== 'undefined') {
+                call(args, onSuccess ? (data) => onSuccess(x, data) : undefined);
+            }
+        },
+        [argsTransformer, call]
     );
 
     return [apiResult, callFn];
