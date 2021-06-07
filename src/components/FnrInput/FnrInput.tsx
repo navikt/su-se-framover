@@ -7,7 +7,6 @@ import React, { useEffect, useState } from 'react';
 
 import { ApiError } from '~api/apiClient';
 import * as personApi from '~api/personApi';
-import { Person } from '~api/personApi';
 import { Personkort } from '~components/Personkort';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
@@ -35,7 +34,7 @@ export const FnrInput = ({
     autoComplete,
     onAlderChange,
 }: FnrInputProps) => {
-    const [person, setPerson] = useState<RemoteData.RemoteData<ApiError, Person>>(RemoteData.initial);
+    const [person, setPerson] = useState<RemoteData.RemoteData<ApiError, personApi.Person>>(RemoteData.initial);
     const [harIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
     const intl = useI18n({ messages });
 

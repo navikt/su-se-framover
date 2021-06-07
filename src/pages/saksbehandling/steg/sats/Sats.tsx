@@ -140,7 +140,7 @@ const getValidationSchema = (eps: Nullable<Person>) => {
 };
 
 const Sats = (props: VilkårsvurderingBaseProps) => {
-    const [eps, fetchEps] = useApiCall(fetchPerson);
+    const [epsStatus, fetchEps] = useApiCall(fetchPerson);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const history = useHistory();
     const epsFnr = props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0].fnr;
@@ -167,7 +167,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
         );
     }
     return pipe(
-        eps,
+        epsStatus,
         RemoteData.fold(
             () => <NavFrontendSpinner />,
             () => <NavFrontendSpinner />,
