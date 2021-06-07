@@ -131,7 +131,7 @@ const setDefaultValues = (revurdering: Revurdering, bosituasjon: Bosituasjon[]):
     };
 };
 
-const Bosituasjon = (props: {
+const BosituasjonForm = (props: {
     sakId: string;
     revurdering: Revurdering;
     gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
@@ -410,7 +410,7 @@ const Bosituasjon = (props: {
                                 tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                                 className={styles.feiloppsummering}
                                 feil={hookFormErrorsTilFeiloppsummering(errors)}
-                                hidden={!(Object.values(errors).length > 0)}
+                                hidden={Object.values(errors).length <= 0}
                             />
                             {RemoteData.isFailure(status) && <RevurderingskallFeilet error={status.error} />}
                             <RevurderingBunnknapper
@@ -432,4 +432,4 @@ const Bosituasjon = (props: {
     );
 };
 
-export default Bosituasjon;
+export default BosituasjonForm;
