@@ -167,6 +167,7 @@ export enum RevurderingErrorCodes {
     VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
     ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON = 'attestant_og_saksbehandler_kan_ikke_være_samme_person',
     EPS_ALDER_ER_NULL = 'eps_alder_er_null',
+    HAR_IKKE_EKTEFELLE = 'har_ikke_ektefelle',
 
     //revurderingsutfall som ikke støttes
     OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON = 'opphør_og_andre_endringer_i_kombinasjon',

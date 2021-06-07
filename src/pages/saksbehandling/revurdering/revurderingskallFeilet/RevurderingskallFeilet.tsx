@@ -80,6 +80,8 @@ export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMes
             return intl.formatMessage({ id: 'feil.attestant.og.saksbehandler.kan.ikke.være.samme.person' });
         case RevurderingErrorCodes.EPS_ALDER_ER_NULL:
             return intl.formatMessage({ id: 'feil.eps.alder.er.null' });
+        case RevurderingErrorCodes.HAR_IKKE_EKTEFELLE:
+            return intl.formatMessage({ id: 'feil.har.ikke.ektefelle' });
 
         //revurderingsutfall som ikke støttes
         case RevurderingErrorCodes.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON:
