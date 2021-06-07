@@ -127,7 +127,7 @@ const Vedtaksoppsummering = (props: Props) => {
             )}
             <InfoHeader />
             <div className={styles.beregningOgSimulering}>
-                <VisBeregning beregning={vedtak.beregning} />
+                {vedtak.beregning && <VisBeregning beregning={vedtak.beregning} />}
                 {vedtak.simulering && <Utbetalingssimulering simulering={vedtak.simulering} />}
             </div>
             <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })} className="knapp">
