@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import fnrValidator from '@navikt/fnrvalidator';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import { Ingress, Element, Normaltekst } from 'nav-frontend-typografi';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -343,6 +343,19 @@ const BosituasjonForm = (props: {
         );
     };
 
+    const harEPS = form.watch('harEPS');
+
+    useEffect(() => {
+        if (harEPS === null) {
+            return;
+        }
+        if (harEPS) {
+            resetDelerSøkerBoligForm();
+        } else {
+            resetEPSForm();
+        }
+    }, [harEPS]);
+
     function resetEPSForm() {
         form.setValue('epsFnr', null);
         form.setValue('erEPSUførFlyktning', null);
@@ -373,7 +386,6 @@ const BosituasjonForm = (props: {
                                                 name="harEPS"
                                                 checked={field.value === true}
                                                 onChange={() => {
-                                                    resetDelerSøkerBoligForm();
                                                     field.onChange(true);
                                                 }}
                                             />
@@ -382,7 +394,6 @@ const BosituasjonForm = (props: {
                                                 name="harEPS"
                                                 checked={field.value === false}
                                                 onChange={() => {
-                                                    resetEPSForm();
                                                     field.onChange(false);
                                                 }}
                                             />
