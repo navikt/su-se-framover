@@ -12,9 +12,7 @@ export interface Behandlingsinformasjon {
     oppholdIUtlandet: Nullable<OppholdIUtlandet>;
     formue: Nullable<Formue>;
     personligOppmøte: Nullable<PersonligOppmøte>;
-    bosituasjon: Nullable<Bosituasjon>;
     utledetSats: Nullable<Sats>;
-    ektefelle: Nullable<Ektefelle>;
 }
 
 export interface Uførhet {

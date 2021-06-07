@@ -17,6 +17,7 @@ export interface Bosituasjon {
     ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
     begrunnelse: Nullable<string>;
     sats: Nullable<string>;
+    periode: Periode<string>;
 }
 
 export enum BosituasjonTyper {

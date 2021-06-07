@@ -50,9 +50,9 @@ const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[]; revurderings
                 {props.bosituasjon?.map((item, index) => (
                     <li key={index}>
                         <Element>
-                            {DateUtils.formatMonthYear(props.revurderingsperiode.fraOgMed, intl)}
+                            {DateUtils.formatMonthYear(item.periode.fraOgMed, intl)}
                             {' – '}
-                            {DateUtils.formatMonthYear(props.revurderingsperiode.tilOgMed, intl)}
+                            {DateUtils.formatMonthYear(item.periode.tilOgMed, intl)}
                         </Element>
                         <div className={styles.informasjonsbitContainer}>
                             <Normaltekst>
