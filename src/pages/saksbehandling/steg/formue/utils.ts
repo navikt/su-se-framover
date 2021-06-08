@@ -64,7 +64,7 @@ export function getFormue(
             behandlingsFormue?.borSøkerMedEPS ??
             søknadsInnhold.boforhold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
         // TODO ai: støtte flere bosituasjonsgrunnlag senare når det blir aktuellt
-        epsFnr: grunnlagsdata?.bosituasjon[0]?.fnr,
+        epsFnr: grunnlagsdata?.bosituasjon[0]?.fnr ?? søknadsInnhold.boforhold.ektefellePartnerSamboer?.fnr ?? null,
     };
 }
 
