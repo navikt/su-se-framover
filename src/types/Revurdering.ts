@@ -156,6 +156,11 @@ export enum RevurderingErrorCodes {
     KUNNE_IKKE_UTBETALE = 'kunne_ikke_utbetale',
     KUNNE_IKKE_SLÅ_OPP_EPS = 'kunne_ikke_slå_opp_eps',
 
+    //EPS
+    EPS_ALDER_ER_NULL = 'eps_alder_er_null',
+    KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS = 'kan_ikke_ha_eps_fradrag_uten_eps',
+    GJELDENDE_EPS_HAR_FORMUE = 'gjeldende_eps_har_formue',
+
     //generell
     BEGRUNNELSE_KAN_IKKE_VÆRE_TOM = 'begrunnelse_kan_ikke_være_tom',
     UFULLSTENDIG_BEHANDLINGSINFORMASJON = 'ufullstendig_behandlingsinformasjon',
@@ -164,9 +169,6 @@ export enum RevurderingErrorCodes {
     G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
     VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
     ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON = 'attestant_og_saksbehandler_kan_ikke_være_samme_person',
-    EPS_ALDER_ER_NULL = 'eps_alder_er_null',
-    HAR_IKKE_EKTEFELLE = 'har_ikke_ektefelle',
-    GJELDENDE_EPS_HAR_FORMUE = 'gjeldende_eps_har_formue',
 
     //revurderingsutfall som ikke støttes
     OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON = 'opphør_og_andre_endringer_i_kombinasjon',

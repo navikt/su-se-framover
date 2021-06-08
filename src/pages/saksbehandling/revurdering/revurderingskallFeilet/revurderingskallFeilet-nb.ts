@@ -29,7 +29,8 @@ export default {
     'feil.ufullstendig.behandlingsinformasjon': 'Ufullstendig behandlingsinformasjon',
     'feil.gregulering.kan.ikke.føre.til.opphør': 'G-regulering kan ikke føre til opphør',
     'feil.eps.alder.er.null': 'Alderen til ektefelle eller samboer er null',
-    'feil.har.ikke.ektefelle': 'Kan ikke legge til fradrag på ektefelle når bruker ikke har ektefelle.',
+    'feil.kan.ikke.ha.eps.fradrag.uten.eps':
+        'Kan ikke legge til fradrag/beregne på ektefelle når bruker ikke har ektefelle.',
     'feil.gjeldende.eps.har.formue': 'Gjeldende EPS har formue. Du kan revurdere når revurdering av formue åpnes',
 
     'feil.mangler.beslutning.på.forhåndsvarsel': 'Mangler beslutning på forhåndsvarsel',
