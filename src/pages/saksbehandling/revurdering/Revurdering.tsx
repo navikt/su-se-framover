@@ -158,11 +158,9 @@ const RevurderingPage = (props: { sak: Sak }) => {
                                 />
                             </Route>
                             {aktiveSteg(påbegyntRevurdering).map((el, idx) => {
-                                console.log(aktiveSteg(påbegyntRevurdering), idx);
                                 const forrigeUrl =
                                     aktiveSteg(påbegyntRevurdering)[idx - 1]?.url ??
                                     createRevurderingsPath(RevurderingSteg.Periode);
-                                console.log(`forrige url: ${forrigeUrl}`);
                                 const nesteUrl = (revurdering: Revurdering) =>
                                     aktiveSteg(revurdering)[idx + 1]?.url ??
                                     createRevurderingsPath(RevurderingSteg.Oppsummering);
