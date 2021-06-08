@@ -1,0 +1,74 @@
+@import '~/styles/variables.less';
+
+@border: 1px solid @navGra20;
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.rad {
+    display: flex;
+
+    .cellecontainer {
+        width: 50%;
+
+        &:first-child {
+            padding-right: @spacing;
+            border-right: @border;
+        }
+        &:last-child {
+            padding-left: @spacing;
+        }
+    }
+
+    .celle {
+        height: 100%;
+        padding: @spacing 0;
+        border-bottom: @border;
+    }
+
+    &:last-of-type .celle {
+        border-bottom: none;
+    }
+
+    &.overskriftsrad .celle {
+        padding: 0;
+        border-bottom: none;
+    }
+}
+
+.vilkårvisningContainer {
+    display: flex;
+    flex-direction: column;
+
+    .grunnlagsblokk {
+        display: flex;
+        flex-direction: column;
+
+        &:not(:last-child) {
+            margin-bottom: @spacing-s;
+        }
+
+        .info {
+            display: flex;
+
+            &:not(:last-child) {
+                margin-bottom: @spacing-xxs;
+            }
+
+            .infolabel,
+            .infoverdi {
+                width: 50%;
+            }
+            .infoverdi {
+                display: flex;
+                align-items: flex-end;
+            }
+
+            .infolabel {
+                margin-right: @spacing-s;
+            }
+        }
+    }
+}

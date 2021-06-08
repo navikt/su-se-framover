@@ -1,0 +1,20 @@
+@import '~/styles/variables.less';
+
+.container {
+    display: flex;
+    flex-direction: column;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing-l;
+    }
+}
+
+.intro {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: @spacing-xs;
+}
+
+.introItem {
+    margin-right: @spacing;
+}

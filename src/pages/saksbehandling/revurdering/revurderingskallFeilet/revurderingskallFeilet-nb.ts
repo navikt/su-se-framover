@@ -29,11 +29,11 @@ export default {
     'feil.mangler.beslutning.på.forhåndsvarsel': 'Mangler beslutning på forhåndsvarsel',
 
     'feil.opphør.og.andre.endringer.i.kombinasjon':
-        'Opphør i kombinasjon med andre endringer støttes ikke. Revurdering må gjennomføres i flere steg',
+        'Opphør i kombinasjon med andre endringer støttes ikke. Revurdering må gjennomføres i flere steg.',
     'feil.opphør.ikke.fra.første.dato.i.revurderingsperiode':
-        'Opphørsdato er ikke lik fra-dato for revurderingsperioden. Revurdering må gjennomføres i flere steg',
+        'Opphørsdato er ikke lik fra-dato for revurderingsperioden. Revurdering må gjennomføres i flere steg.',
     'feil.opphør.deler.av.revurderingsperiode':
-        'Delvis opphør støttes ikke. Revurderingen må gjennomføres i flere steg',
+        'Delvis opphør støttes ikke. Revurderingen må gjennomføres i flere steg.',
     'feil.opphør.flere.vilkår': 'Opphør av flere vilkår i kombinasjon støttes ikke',
 
     'feil.overlappende.vurderingsperioder': 'Perioder kan ikke overlappe',

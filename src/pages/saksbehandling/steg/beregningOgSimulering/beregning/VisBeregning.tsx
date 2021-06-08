@@ -22,6 +22,7 @@ import styles from './visBeregning.module.less';
 
 interface Props {
     beregningsTittel?: string;
+    utenTittel?: boolean;
     beregning: Beregning;
 }
 
@@ -128,9 +129,11 @@ const VisBeregning = (props: Props) => {
 
     return (
         <div className={styles.beregningdetaljer}>
-            <Systemtittel className={styles.visBeregningTittel}>
-                {props.beregningsTittel ? props.beregningsTittel : intl.formatMessage({ id: 'page.tittel' })}
-            </Systemtittel>
+            {!props.utenTittel && (
+                <Systemtittel className={styles.visBeregningTittel}>
+                    {props.beregningsTittel ? props.beregningsTittel : intl.formatMessage({ id: 'page.tittel' })}
+                </Systemtittel>
+            )}
             <Element className={classNames(styles.totalt, styles.linje)}>
                 <span>{intl.formatMessage({ id: 'display.totaltBeløp' })}</span>
                 <span>

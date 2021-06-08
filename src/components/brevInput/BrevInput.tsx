@@ -10,7 +10,7 @@ import { ApiClientResult, ApiError } from '~api/apiClient';
 
 import styles from './brevInput.module.less';
 
-export function BrevInput(props: {
+export interface BrevInputProps {
     tekst: string;
     onVisBrevClick: () => Promise<ApiClientResult<Blob>>;
     onChange: (e: React.ChangeEvent<unknown>) => void;
@@ -18,7 +18,9 @@ export function BrevInput(props: {
     tittel: string;
     placeholder?: string;
     feil?: FieldError;
-}) {
+}
+
+export function BrevInput(props: BrevInputProps) {
     const [hentBrevStatus, setHentBrevStatus] = useState<RemoteData.RemoteData<ApiError | undefined, null>>(
         RemoteData.initial
     );

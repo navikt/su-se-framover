@@ -22,7 +22,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 import { RevurderingSteg } from '../types';
 
 import EndringAvFradrag from './endringAvFradrag/EndringAvFradrag';
-import RevurderingsOppsummering from './oppsummering/RevurderingsOppsummering';
+import RevurderingOppsummeringPage from './OppsummeringPage/RevurderingOppsummeringPage';
 import messages from './revurdering-nb';
 import styles from './revurdering.module.less';
 import { EndreRevurderingPage } from './revurderingIntro/EndreRevurderingPage';
@@ -169,7 +169,7 @@ const RevurderingPage = (props: { sak: Sak }) => {
                             })}
                         </div>
                         <Route path={createRevurderingsPath(RevurderingSteg.Oppsummering)}>
-                            <RevurderingsOppsummering
+                            <RevurderingOppsummeringPage
                                 sakId={props.sak.id}
                                 revurdering={påbegyntRevurdering}
                                 forrigeUrl={
@@ -179,6 +179,7 @@ const RevurderingPage = (props: { sak: Sak }) => {
                                 førsteRevurderingstegUrl={
                                     aktiveSteg[0]?.url ?? createRevurderingsPath(RevurderingSteg.Periode)
                                 }
+                                grunnlagsdataOgVilkårsvurderinger={grunnlag}
                             />
                         </Route>
                     </>

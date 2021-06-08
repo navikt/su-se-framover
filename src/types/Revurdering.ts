@@ -73,7 +73,7 @@ export function harBeregninger(r: Revurdering): r is Revurdering & { beregninger
     return 'beregninger' in r;
 }
 export function harSimulering(r: Revurdering): r is Revurdering & { simulering: Simulering } {
-    return 'simulering' in r;
+    return 'simulering' in r && (r as SimulertRevurdering).simulering !== null;
 }
 
 export enum Forhåndsvarseltype {

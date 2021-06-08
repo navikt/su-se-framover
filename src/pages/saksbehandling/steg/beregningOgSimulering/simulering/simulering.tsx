@@ -28,14 +28,16 @@ interface Props {
     behandling: Behandling;
 }
 
-export const Utbetalingssimulering = (props: { simulering: Simulering }) => {
+export const Utbetalingssimulering = (props: { simulering: Simulering; utenTittel?: boolean }) => {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     return (
         <div className={styles.simuleringsdetaljer}>
-            <Systemtittel className={styles.visBeregningTittel}>
-                {intl.formatMessage({ id: 'simulering.tittel' })}
-            </Systemtittel>
+            {!props.utenTittel && (
+                <Systemtittel className={styles.visBeregningTittel}>
+                    {intl.formatMessage({ id: 'simulering.tittel' })}
+                </Systemtittel>
+            )}
             <Element className={classNames(styles.totalt, styles.linje)}>
                 <span>{intl.formatMessage({ id: 'totaltBeløp' })}</span>
                 <span />
@@ -66,10 +68,10 @@ export const Utbetalingssimulering = (props: { simulering: Simulering }) => {
                                     className={classNames(styles.periodeoverskrift, styles.linje)}
                                     key={head.fraOgMed + head.tilOgMed}
                                 >
-                                    <span>{`${formatMonthYear(head.fraOgMed, intl)} - ${formatMonthYear(
-                                        last.tilOgMed,
+                                    <span className={styles.periode}>{`${formatMonthYear(
+                                        head.fraOgMed,
                                         intl
-                                    )}`}</span>
+                                    )} - ${formatMonthYear(last.tilOgMed, intl)}`}</span>
                                     <span className={styles.type}>
                                         {head.type !== SimulertUtbetalingstype.ORDINÆR
                                             ? intl.formatMessage({ id: simulertUtbetalingstypeToResourceId(head.type) })
