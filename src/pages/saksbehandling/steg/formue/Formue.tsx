@@ -22,11 +22,12 @@ import { showName } from '~features/person/personUtils';
 import sakSlice, { lagreBehandlingsinformasjon, lagreEpsGrunnlag } from '~features/saksoversikt/sak.slice';
 import { removeSpaces } from '~lib/formatUtils';
 import { pipe } from '~lib/fp';
-import { useAsyncApiActionCreator, useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering, validateNonNegativeNumber } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Behandling } from '~types/Behandling';
 import { FormueStatus, Formue, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
@@ -84,7 +85,9 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const søknadInnhold = props.behandling.søknad.søknadInnhold;
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
-    const [lagreEpsGrunnlagLocal, lagreEpsGrunnlagKall] = useAsyncApiActionCreator(lagreEpsGrunnlag);
+    const [lagreEpsGrunnlagStatus, setLagreEpsGrunnlagStatus] = useState<RemoteData.RemoteData<ApiError, Behandling>>(
+        RemoteData.initial
+    );
 
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
 
@@ -117,23 +120,32 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        const res = await dispatch(
-            lagreBehandlingsinformasjon({
+        setLagreEpsGrunnlagStatus(RemoteData.pending);
+        await dispatch(
+            lagreEpsGrunnlag({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                behandlingsinformasjon: { formue: formueValues },
+                epsFnr: values.epsFnr,
             })
-        );
+        ).then(async (epsGrunnlagRes) => {
+            if (lagreEpsGrunnlag.fulfilled.match(epsGrunnlagRes)) {
+                const res = await dispatch(
+                    lagreBehandlingsinformasjon({
+                        sakId: props.sakId,
+                        behandlingId: props.behandling.id,
+                        behandlingsinformasjon: { formue: formueValues },
+                    })
+                );
 
-        lagreEpsGrunnlagKall({
-            sakId: props.sakId,
-            behandlingId: props.behandling.id,
-            epsFnr: values.epsFnr,
+                if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+                    history.push(nesteUrl);
+                }
+            }
+            if (lagreEpsGrunnlag.rejected.match(epsGrunnlagRes)) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                setLagreEpsGrunnlagStatus(RemoteData.failure(epsGrunnlagRes.payload!));
+            }
         });
-
-        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
-            history.push(nesteUrl);
-        }
     };
 
     // TODO ai: implementera detta i backend
@@ -507,7 +519,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         />
 
                         {pipe(
-                            RemoteData.combine(lagreBehandlingsinformasjonStatus, lagreEpsGrunnlagLocal),
+                            RemoteData.combine(lagreBehandlingsinformasjonStatus, lagreEpsGrunnlagStatus),
                             RemoteData.fold(
                                 () => null,
                                 () => (
@@ -522,11 +534,6 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 ),
                                 () => null
                             )
-                        )}
-                        {RemoteData.isFailure(lagreEpsGrunnlagLocal) && (
-                            <AlertStripe type="feil">
-                                {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
-                            </AlertStripe>
                         )}
 
                         <Feiloppsummering
