@@ -1,8 +1,6 @@
 import { Nullable } from '~lib/types';
 
 import { Attestering } from './Behandling';
-import { Behandlingsinformasjon } from './Behandlingsinformasjon';
-import { Behandling, Attestering } from './Behandling';
 import { Beregning } from './Beregning';
 import { Periode } from './Periode';
 import { Simulering } from './Simulering';

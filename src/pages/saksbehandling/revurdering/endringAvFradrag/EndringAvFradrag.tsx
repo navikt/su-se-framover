@@ -239,8 +239,7 @@ const EndringAvFradrag = (props: {
                             <div className={styles.fradragInputsContainer}>
                                 <FradragInputs
                                     harEps={
-                                        props.revurdering.tilRevurdering.grunnlagsdataOgVilkårsvurderinger
-                                            .bosituasjon[0].fnr !== null
+                                        props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0].fnr !== null
                                     }
                                     feltnavn="fradrag"
                                     fradrag={formik.values.fradrag}

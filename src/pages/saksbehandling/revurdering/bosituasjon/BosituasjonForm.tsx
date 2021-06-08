@@ -136,7 +136,7 @@ const BosituasjonForm = (props: {
     revurdering: Revurdering;
     gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     forrigeUrl: string;
-    nesteUrl: string;
+    nesteUrl: (revurdering: Revurdering) => string;
 }) => {
     const intl = useI18n({ messages: { ...messages, ...sharedMessages } });
     const [epsAlder, setEPSAlder] = useState<Nullable<number>>(null);
@@ -248,7 +248,7 @@ const BosituasjonForm = (props: {
 
         if (revurderingActions.lagreBosituasjonsgrunnlag.fulfilled.match(res)) {
             setStatus(RemoteData.success(null));
-            history.push(props.nesteUrl);
+            history.push(props.nesteUrl(res.payload));
         }
         if (revurderingActions.lagreBosituasjonsgrunnlag.rejected.match(res)) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

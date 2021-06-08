@@ -256,7 +256,7 @@ const RevurderingOppsummeringPage = (props: {
     React.useEffect(() => {
         if (RemoteData.isInitial(props.grunnlagsdataOgVilkårsvurderinger)) {
             dispatch(
-                RevurderingActions.hentGrunnlagsdataOgVilkårsvurderinger({
+                RevurderingActions.hentGjeldendeGrunnlagsdataOgVilkårsvurderinger({
                     sakId: props.sakId,
                     revurderingId: props.revurdering.id,
                 })

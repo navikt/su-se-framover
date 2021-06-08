@@ -249,7 +249,7 @@ export const hentGjeldendeGrunnlagsdataOgVilkårsvurderinger = createAsyncThunk<
         revurderingId: string;
     },
     { rejectValue: ApiError }
->('revurdering/hentGrunnlagsdataOgVilkårsvurderinger/hent', async ({ sakId, revurderingId }, thunkApi) => {
+>('revurdering/hentGjeldendeGrunnlagsdataOgVilkårsvurderinger/hent', async ({ sakId, revurderingId }, thunkApi) => {
     const res = await revurderingApi.hentGjeldendeGrunnlagsdataOgVilkårsvurderinger(sakId, revurderingId);
     if (res.status === 'ok') {
         return res.data;
