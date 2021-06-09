@@ -84,6 +84,7 @@ export function getRevurderingsårsakMessageId(årsak: OpprettetRevurderingGrunn
 export const revurderingstegrekkefølge = [
     RevurderingSteg.Uførhet,
     RevurderingSteg.Bosituasjon,
+    RevurderingSteg.Formue,
     RevurderingSteg.EndringAvFradrag,
 ];
 
@@ -95,6 +96,8 @@ export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) =
             return InformasjonSomRevurderes.Inntekt;
         case RevurderingSteg.Bosituasjon:
             return InformasjonSomRevurderes.Bosituasjon;
+        case RevurderingSteg.Formue:
+            return InformasjonSomRevurderes.Formue;
     }
     return null;
 };

@@ -185,6 +185,7 @@ export enum InformasjonSomRevurderes {
     Uførhet = 'Uførhet',
     Inntekt = 'Inntekt',
     Bosituasjon = 'Bosituasjon',
+    Formue = 'Formue',
 }
 
 export enum Vurderingstatus {
