@@ -1,4 +1,5 @@
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
+import { Bosituasjon } from '~types/Grunnlag';
 import {
     Revurdering,
     SimulertRevurdering,
@@ -13,6 +14,7 @@ import {
     InformasjonSomRevurderes,
     Vurderingstatus,
 } from '~types/Revurdering';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import { RevurderingSteg } from '../types';
 
@@ -110,4 +112,14 @@ export const finnNesteRevurderingsteg = (
     });
 
     return førsteIkkeVurderteSteg ?? RevurderingSteg.Oppsummering;
+};
+
+export const hentBosituasjongrunnlag = (g: GrunnlagsdataOgVilkårsvurderinger): Bosituasjon => {
+    if (g.bosituasjon.length > 1) {
+        //Dette er en guard for at bosituasjon kan kun ha 1 element helt til vi støtter å ta inn fler
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return null!;
+    }
+
+    return g.bosituasjon[0];
 };

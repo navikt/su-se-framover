@@ -9,6 +9,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import { Behandlingsstatus } from '../../../types/Behandling';
+import { hentBosituasjongrunnlag } from '../revurdering/revurderingUtils';
 import { FastOppholdVilkårsblokk } from '../steg/faktablokk/faktablokker/FastOppholdFaktablokk';
 import { FlyktningVilkårsblokk } from '../steg/faktablokk/faktablokker/FlyktningFaktablokk';
 import { FormueVilkårsblokk } from '../steg/faktablokk/faktablokker/FormueFaktablokk';
@@ -57,7 +58,7 @@ const VilkårsOppsummering = (props: {
                 ))}
                 {shouldShowSats(props.behandlingstatus) && (
                     <SatsVilkårsblokk
-                        bosituasjon={props.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0]}
+                        bosituasjon={hentBosituasjongrunnlag(props.grunnlagsdataOgVilkårsvurderinger)}
                         søknadInnhold={props.søknadInnhold}
                     />
                 )}
@@ -127,7 +128,7 @@ const Vilkårsting = (props: {
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
                     formue={props.behandlingsinformasjon.formue}
-                    ektefelle={{ fnr: props.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0].fnr }}
+                    ektefelle={{ fnr: hentBosituasjongrunnlag(props.grunnlagsdataOgVilkårsvurderinger).fnr }}
                 />
             );
         case Vilkårtype.PersonligOppmøte:

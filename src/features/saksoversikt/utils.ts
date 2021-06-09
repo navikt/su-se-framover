@@ -1,5 +1,6 @@
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
+import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import {
     Behandlingsinformasjon,
@@ -221,7 +222,7 @@ const getSatsStatus = (b: Behandling) => {
         return VilkårVurderingStatus.IkkeVurdert;
     }
 
-    if (erBosituasjonFullstendig(b.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0])) {
+    if (erBosituasjonFullstendig(hentBosituasjongrunnlag(b.grunnlagsdataOgVilkårsvurderinger))) {
         return VilkårVurderingStatus.Ok;
     }
     return VilkårVurderingStatus.IkkeVurdert;
@@ -233,7 +234,7 @@ const erSatsStartet = (b: Behandling) => {
         return false;
     }
 
-    if (erBosituasjonFullstendig(b.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0])) {
+    if (erBosituasjonFullstendig(hentBosituasjongrunnlag(b.grunnlagsdataOgVilkårsvurderinger))) {
         return true;
     }
 

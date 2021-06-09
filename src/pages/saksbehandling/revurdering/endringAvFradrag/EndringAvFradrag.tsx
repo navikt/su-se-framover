@@ -41,6 +41,7 @@ import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
 import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
+import { hentBosituasjongrunnlag } from '../revurderingUtils';
 
 import messages from './endringAvFradrag-nb';
 import styles from './endringAvFradrag.module.less';
@@ -239,7 +240,8 @@ const EndringAvFradrag = (props: {
                             <div className={styles.fradragInputsContainer}>
                                 <FradragInputs
                                     harEps={
-                                        props.revurdering.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0].fnr !== null
+                                        hentBosituasjongrunnlag(props.revurdering.grunnlagsdataOgVilkårsvurderinger)
+                                            .fnr !== null
                                     }
                                     feltnavn="fradrag"
                                     fradrag={formik.values.fradrag}

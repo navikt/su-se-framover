@@ -1,5 +1,6 @@
 import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
+import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { Behandlingsinformasjon, FormueStatus, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
@@ -64,7 +65,10 @@ export function getFormue(
             behandlingsFormue?.borSøkerMedEPS ??
             søknadsInnhold.boforhold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
         // TODO ai: støtte flere bosituasjonsgrunnlag senare når det blir aktuellt
-        epsFnr: grunnlagsdata?.bosituasjon[0]?.fnr ?? søknadsInnhold.boforhold.ektefellePartnerSamboer?.fnr ?? null,
+        epsFnr:
+            hentBosituasjongrunnlag(grunnlagsdata)?.fnr ??
+            søknadsInnhold.boforhold.ektefellePartnerSamboer?.fnr ??
+            null,
     };
 }
 

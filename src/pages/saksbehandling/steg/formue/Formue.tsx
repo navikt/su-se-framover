@@ -26,6 +26,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering, validateNonNegativeNumber } from '~lib/validering';
+import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { FormueStatus, Formue, FormueVerdier } from '~types/Behandlingsinformasjon';
@@ -110,9 +111,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         };
 
         const ektefelle = { fnr: values.epsFnr };
-        // TODO ai: Husk å legg in støtte for flera bosituasjonsgrunnlag når det kommer
         const erEktefelleUendret = eqEktefelle.equals(ektefelle, {
-            fnr: props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0]?.fnr,
+            fnr: hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger)?.fnr,
         });
 
         if (eqFormue.equals(formueValues, props.behandling.behandlingsinformasjon.formue) && erEktefelleUendret) {

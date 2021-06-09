@@ -21,6 +21,7 @@ import { useApiCall, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Bosituasjon } from '~types/Grunnlag';
 import { SøknadInnhold } from '~types/Søknad';
@@ -143,7 +144,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     const [epsStatus, fetchEps] = useApiCall(fetchPerson);
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const history = useHistory();
-    const epsFnr = props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0].fnr;
+    const epsFnr = hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr;
 
     useEffect(() => {
         if (epsFnr) {
@@ -157,7 +158,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 behandlingId={props.behandling.id}
                 søker={props.søker}
                 eps={null}
-                bosituasjon={props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0] ?? null}
+                bosituasjon={hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger) ?? null}
                 søknadInnhold={props.behandling.søknad.søknadInnhold}
                 forrigeUrl={props.forrigeUrl}
                 nesteUrl={props.nesteUrl}
@@ -188,7 +189,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                     behandlingId={props.behandling.id}
                     søker={props.søker}
                     eps={eps}
-                    bosituasjon={props.behandling.grunnlagsdataOgVilkårsvurderinger.bosituasjon[0] ?? null}
+                    bosituasjon={hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger) ?? null}
                     søknadInnhold={props.behandling.søknad.søknadInnhold}
                     forrigeUrl={props.forrigeUrl}
                     nesteUrl={props.nesteUrl}
