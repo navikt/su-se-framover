@@ -604,9 +604,8 @@ export default createSlice({
                 state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.success(action.payload);
             },
             rejected: (state, action) => {
-                state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = simpleRejectedActionToRemoteData(
-                    action
-                );
+                state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] =
+                    simpleRejectedActionToRemoteData(action);
             },
         });
 

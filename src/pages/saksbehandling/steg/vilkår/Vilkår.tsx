@@ -24,9 +24,8 @@ import Virkningstidspunkt from '../virkningstidspunkt/Virkningstidspunkt';
 import styles from './vilkår.module.less';
 
 const Vilkår = (props: { sak: Sak; søker: Person }) => {
-    const { vilkar = Vilkårtype.Virkningstidspunkt, ...urlParams } = Routes.useRouteParams<
-        typeof Routes.saksbehandlingVilkårsvurdering
-    >();
+    const { vilkar = Vilkårtype.Virkningstidspunkt, ...urlParams } =
+        Routes.useRouteParams<typeof Routes.saksbehandlingVilkårsvurdering>();
     const behandling = props.sak.behandlinger.find((b) => b.id === urlParams.behandlingId);
 
     if (!(behandling && urlParams.sakId && urlParams.behandlingId)) {

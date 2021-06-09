@@ -21,12 +21,12 @@ import messages from './ektefellesformue-nb';
 type FormData = SøknadState['formue'];
 
 const kjøretøySchema = yup.object({
-    verdiPåKjøretøy: (yup
+    verdiPåKjøretøy: yup
         .number()
         .typeError('Verdi på kjøretøy må være et tall')
         .positive()
         .label('Verdi på kjøretøy')
-        .required() as yup.Schema<unknown>) as yup.Schema<string>,
+        .required() as yup.Schema<unknown> as yup.Schema<string>,
     kjøretøyDeEier: yup.string().required(),
 });
 

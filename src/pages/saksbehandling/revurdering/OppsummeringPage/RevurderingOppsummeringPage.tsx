@@ -79,41 +79,39 @@ const OppsummeringshandlingForm = (props: {
         }
     );
 
-    const [
-        forhåndsvarsleEllerSendTilAttesteringState,
-        forhåndsvarsleEllerSendTilAttestering,
-    ] = useAsyncActionCreatorWithArgsTransformer(
-        RevurderingActions.forhåndsvarsleEllerSendTilAttestering,
-        (args: { revurderingshandling: Revurderingshandling; brevtekst: string }) => {
-            if (props.feilmeldinger.length > 0) {
-                feilRef.current?.focus();
-                return;
+    const [forhåndsvarsleEllerSendTilAttesteringState, forhåndsvarsleEllerSendTilAttestering] =
+        useAsyncActionCreatorWithArgsTransformer(
+            RevurderingActions.forhåndsvarsleEllerSendTilAttestering,
+            (args: { revurderingshandling: Revurderingshandling; brevtekst: string }) => {
+                if (props.feilmeldinger.length > 0) {
+                    feilRef.current?.focus();
+                    return;
+                }
+                return {
+                    sakId: props.sakId,
+                    revurderingId: props.revurdering.id,
+                    revurderingshandling: args.revurderingshandling,
+                    fritekstTilBrev: args.brevtekst,
+                };
+            },
+            (args) => {
+                if (args.revurderingshandling === Revurderingshandling.Forhåndsvarsle) {
+                    history.push(
+                        Routes.createSakIntroLocation(
+                            intl.formatMessage({ id: 'notification.sendtForhåndsvarsel' }),
+                            props.sakId
+                        )
+                    );
+                } else {
+                    history.push(
+                        Routes.createSakIntroLocation(
+                            intl.formatMessage({ id: 'notification.sendtTilAttestering' }),
+                            props.sakId
+                        )
+                    );
+                }
             }
-            return {
-                sakId: props.sakId,
-                revurderingId: props.revurdering.id,
-                revurderingshandling: args.revurderingshandling,
-                fritekstTilBrev: args.brevtekst,
-            };
-        },
-        (args) => {
-            if (args.revurderingshandling === Revurderingshandling.Forhåndsvarsle) {
-                history.push(
-                    Routes.createSakIntroLocation(
-                        intl.formatMessage({ id: 'notification.sendtForhåndsvarsel' }),
-                        props.sakId
-                    )
-                );
-            } else {
-                history.push(
-                    Routes.createSakIntroLocation(
-                        intl.formatMessage({ id: 'notification.sendtTilAttestering' }),
-                        props.sakId
-                    )
-                );
-            }
-        }
-    );
+        );
 
     const [fortsettEtterForhåndsvarselState, fortsettEtterForhåndsvarsel] = useAsyncActionCreatorWithArgsTransformer(
         RevurderingActions.fortsettEtterForhåndsvarsel,
