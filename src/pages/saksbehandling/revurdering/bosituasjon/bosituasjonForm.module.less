@@ -1,0 +1,37 @@
+@import '~/styles/variables.less';
+
+.feiloppsummering {
+    margin-bottom: @spacing-xs;
+}
+
+.bosituasjonInputsContainer {
+    margin-bottom: @spacing-xs;
+}
+
+.textAreaContainer {
+    margin-bottom: @spacing;
+    width: 50%;
+}
+
+.epsFormContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.eksisterendeVedtakTittel {
+    margin-bottom: @spacing;
+}
+
+.grunnlagsliste {
+    > * {
+        margin-bottom: @spacing-xxs;
+    }
+}
+
+.informasjonsbitContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    > :not(:last-child) {
+        margin-right: @spacing-xl;
+    }
+}

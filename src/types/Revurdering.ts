@@ -1,7 +1,6 @@
 import { Nullable } from '~lib/types';
 
 import { Attestering } from './Behandling';
-import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
 import { Periode } from './Periode';
 import { Simulering } from './Simulering';
@@ -20,7 +19,6 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     årsak: OpprettetRevurderingGrunn;
     begrunnelse: Nullable<string>;
     forhåndsvarsel: Nullable<Forhåndsvarsel>;
-    behandlingsinformasjon: Behandlingsinformasjon;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;
 }
@@ -148,6 +146,7 @@ export enum RevurderingErrorCodes {
     UGYLDIG_PERIODE = 'ugyldig_periode',
     UGYLDIG_TILSTAND = 'ugyldig_tilstand',
     UGYLDIG_ÅRSAK = 'ugyldig_årsak',
+    UGYLDIG_DATA = 'ugyldig_data',
 
     //kunne_ikke...
     KUNNE_IKKE_OPPRETTE_OPPGAVE = 'kunne_ikke_opprette_oppgave',
@@ -155,6 +154,12 @@ export enum RevurderingErrorCodes {
     KUNNE_IKKE_JOURNALFØRE_BREV = 'kunne_ikke_journalføre_brev',
     KUNNE_IKKE_KONTROLL_SIMULERE = 'kunne_ikke_kontrollsimulere',
     KUNNE_IKKE_UTBETALE = 'kunne_ikke_utbetale',
+    KUNNE_IKKE_SLÅ_OPP_EPS = 'kunne_ikke_slå_opp_eps',
+
+    //EPS
+    EPS_ALDER_ER_NULL = 'eps_alder_er_null',
+    KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS = 'kan_ikke_ha_eps_fradrag_uten_eps',
+    GJELDENDE_EPS_HAR_FORMUE = 'gjeldende_eps_har_formue',
 
     //generell
     BEGRUNNELSE_KAN_IKKE_VÆRE_TOM = 'begrunnelse_kan_ikke_være_tom',
@@ -179,9 +184,19 @@ export interface LeggTilUføreResponse {
 export enum InformasjonSomRevurderes {
     Uførhet = 'Uførhet',
     Inntekt = 'Inntekt',
+    Bosituasjon = 'Bosituasjon',
 }
 
 export enum Vurderingstatus {
     IkkeVurdert = 'IkkeVurdert',
     Vurdert = 'Vurdert',
+}
+
+export interface BosituasjonRequest {
+    sakId: string;
+    revurderingId: string;
+    epsFnr: Nullable<string>;
+    erEPSUførFlyktning: Nullable<boolean>;
+    delerBolig: Nullable<boolean>;
+    begrunnelse: Nullable<string>;
 }

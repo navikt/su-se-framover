@@ -9,7 +9,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from './Vilkår';
 export interface Behandling {
     id: string;
     søknad: Søknad;
-    vilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     behandlingsinformasjon: Behandlingsinformasjon;
     beregning: Nullable<Beregning>;
     status: Behandlingsstatus;

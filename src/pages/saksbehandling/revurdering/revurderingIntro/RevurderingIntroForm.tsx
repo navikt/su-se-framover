@@ -2,6 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
+import { AlertStripeInfo } from 'nav-frontend-alertstriper';
 import { Checkbox, CheckboxGruppe, Feiloppsummering, Select, Textarea } from 'nav-frontend-skjema';
 import { Ingress, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
@@ -79,6 +80,8 @@ const informasjonSomRevurderesMessageId = (i: InformasjonSomRevurderes) => {
             return 'informasjonSomRevurderes.uførhet';
         case InformasjonSomRevurderes.Inntekt:
             return 'informasjonSomRevurderes.inntekt';
+        case InformasjonSomRevurderes.Bosituasjon:
+            return 'informasjonSomRevurderes.bosituasjon';
     }
 };
 
@@ -120,7 +123,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
             <div className={sharedStyles.mainContentContainer}>
                 <Ingress>{intl.formatMessage({ id: 'periode.overskrift' })}</Ingress>
                 <div className={styles.periodeContainer}>
-                    <div className={classNames(styles.datoContainerWrapper, styles.formElement)}>
+                    <div className={classNames(styles.datoContainerWrapper)}>
                         <div className={styles.datoContainer}>
                             <label htmlFor="fom">{intl.formatMessage({ id: 'datovelger.fom.legend' })}</label>
                             <span>
@@ -146,33 +149,34 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                             {formik.errors.fraOgMed && <Feilmelding>{formik.errors.fraOgMed}</Feilmelding>}
                         </div>
                     </div>
-                    <Select
-                        label={intl.formatMessage({ id: 'input.årsak.label' })}
-                        onChange={(event) =>
-                            formik.setValues((v) => ({
-                                ...v,
-                                årsak: event.target.value as OpprettetRevurderingGrunn,
-                            }))
-                        }
-                        value={formik.values.årsak ?? ''}
-                        feil={formik.errors.årsak}
-                        className={styles.formElement}
-                    >
-                        <option value="" disabled>
-                            {intl.formatMessage({ id: 'input.årsak.value.default' })}
-                        </option>
-                        {gyldigeÅrsaker.map((grunn) => {
-                            return (
-                                <option value={grunn} key={grunn}>
-                                    {intl.formatMessage({
-                                        id: getRevurderingsårsakMessageId(grunn),
-                                    })}
-                                </option>
-                            );
-                        })}
-                    </Select>
+                    <div className={styles.selectContainer}>
+                        <Select
+                            label={intl.formatMessage({ id: 'input.årsak.label' })}
+                            onChange={(event) =>
+                                formik.setValues((v) => ({
+                                    ...v,
+                                    årsak: event.target.value as OpprettetRevurderingGrunn,
+                                }))
+                            }
+                            value={formik.values.årsak ?? ''}
+                            feil={formik.errors.årsak}
+                        >
+                            <option value="" disabled>
+                                {intl.formatMessage({ id: 'input.årsak.value.default' })}
+                            </option>
+                            {gyldigeÅrsaker.map((grunn) => {
+                                return (
+                                    <option value={grunn} key={grunn}>
+                                        {intl.formatMessage({
+                                            id: getRevurderingsårsakMessageId(grunn),
+                                        })}
+                                    </option>
+                                );
+                            })}
+                        </Select>
+                    </div>
 
-                    <div className={styles.formElement}>
+                    <div className={styles.årsakForRevurderingContainer}>
                         <CheckboxGruppe
                             legend={intl.formatMessage({ id: 'input.informasjonSomRevurderes.label' })}
                             feil={formik.errors.informasjonSomRevurderes}
@@ -196,7 +200,13 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                         </CheckboxGruppe>
                     </div>
 
-                    <div className={styles.formElement}>
+                    <div className={styles.informasjonsContainer}>
+                        {formik.values.informasjonSomRevurderes.includes(InformasjonSomRevurderes.Bosituasjon) && (
+                            <AlertStripeInfo>{intl.formatMessage({ id: 'info.bosituasjon' })}</AlertStripeInfo>
+                        )}
+                    </div>
+
+                    <div className={styles.begrunnelsesContainer}>
                         <Textarea
                             label={intl.formatMessage({ id: 'input.begrunnelse.label' })}
                             name="begrunnelse"

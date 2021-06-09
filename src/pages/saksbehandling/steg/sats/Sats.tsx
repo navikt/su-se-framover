@@ -1,26 +1,30 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
+import { Hovedknapp } from 'nav-frontend-knapper';
+import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Element } from 'nav-frontend-typografi';
-import React, { useState } from 'react';
+import { Element, Feilmelding } from 'nav-frontend-typografi';
+import React, { useEffect, useState } from 'react';
+import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { Sats as FaktiskSats } from '~/types/Sats';
-import { Person } from '~api/personApi';
+import { Person, fetchPerson } from '~api/personApi';
 import { SuperRadioGruppe } from '~components/FormElements';
 import { Personkort } from '~components/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { eqBosituasjon } from '~features/behandling/behandlingUtils';
-import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import { lagreBosituasjonGrunnlag } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/hooks';
+import { useApiCall, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Bosituasjon, isPerson } from '~types/Behandlingsinformasjon';
+import { Bosituasjon } from '~types/Grunnlag';
+import { SøknadInnhold } from '~types/Søknad';
 
 import { SatsFaktablokk } from '../faktablokk/faktablokker/SatsFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -30,22 +34,55 @@ import { Vurderingknapper } from '../Vurdering';
 import messages from './sats-nb';
 import styles from './sats.module.less';
 
+enum BosituasjonsValg {
+    DELER_BOLIG_MED_VOKSNE = 'DELER_BOLIG_MED_VOKSNE',
+    BOR_ALENE = 'BOR_ALENE',
+    EPS_UFØR_FLYKTNING = 'EPS_UFØR_FLYKTNING',
+    EPS_IKKE_UFØR_FLYKTNING = 'EPS_IKKE_UFØR_FLYKTNING',
+    EPS_67_ELLER_OVER = 'EPS_67_ELLER_OVER',
+}
+
 interface FormData {
     delerSøkerBolig: Nullable<boolean>;
     mottarEktemakeEllerSamboerSU: Nullable<boolean>;
     begrunnelse: Nullable<string>;
 }
 
-const toBosituasjon = (values: FormData, eps: Nullable<Person>): Nullable<Bosituasjon> => {
-    if (values.delerSøkerBolig === null && eps === null) {
-        return null;
-    }
+interface SatsProps {
+    behandlingId: string;
+    eps: Nullable<Person>;
+    søker: Person;
+    bosituasjon: Nullable<Bosituasjon>;
+    søknadInnhold: SøknadInnhold;
+    forrigeUrl: string;
+    nesteUrl: string;
+    sakId: string;
+    intl: IntlShape;
+}
 
+const tilBosituasjonsgrunnlag = (values: FormData, eps: Nullable<Person>) => {
     return {
+        fnr: eps?.fnr ?? null,
         delerBolig: values.delerSøkerBolig,
         ektemakeEllerSamboerUførFlyktning: values.mottarEktemakeEllerSamboerSU,
         begrunnelse: values.begrunnelse,
     };
+};
+
+const tilBosituasjonsValg = (values: FormData, eps: Nullable<Person>): Nullable<BosituasjonsValg> => {
+    if (eps && eps.alder) {
+        if (eps.alder >= 67) {
+            return BosituasjonsValg.EPS_67_ELLER_OVER;
+        }
+
+        if (values.mottarEktemakeEllerSamboerSU === null) return null;
+        return values.mottarEktemakeEllerSamboerSU
+            ? BosituasjonsValg.EPS_UFØR_FLYKTNING
+            : BosituasjonsValg.EPS_IKKE_UFØR_FLYKTNING;
+    }
+
+    if (values.delerSøkerBolig === null) return null;
+    return values.delerSøkerBolig ? BosituasjonsValg.DELER_BOLIG_MED_VOKSNE : BosituasjonsValg.BOR_ALENE;
 };
 
 const utledSats = (values: FormData, harEPS: boolean, epsAlder?: Nullable<number>) => {
@@ -104,23 +141,87 @@ const getValidationSchema = (eps: Nullable<Person>) => {
 };
 
 const Sats = (props: VilkårsvurderingBaseProps) => {
+    const [epsStatus, fetchEps] = useApiCall(fetchPerson);
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const history = useHistory();
+    const epsFnr = hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr;
+
+    useEffect(() => {
+        if (epsFnr) {
+            fetchEps(epsFnr);
+        }
+    }, []);
+
+    if (!epsFnr) {
+        return (
+            <SatsForm
+                behandlingId={props.behandling.id}
+                søker={props.søker}
+                eps={null}
+                bosituasjon={hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger) ?? null}
+                søknadInnhold={props.behandling.søknad.søknadInnhold}
+                forrigeUrl={props.forrigeUrl}
+                nesteUrl={props.nesteUrl}
+                sakId={props.sakId}
+                intl={intl}
+            />
+        );
+    }
+    return pipe(
+        epsStatus,
+        RemoteData.fold(
+            () => <NavFrontendSpinner />,
+            () => <NavFrontendSpinner />,
+            () => (
+                <div className={styles.epsFeilContainer}>
+                    <Feilmelding>{intl.formatMessage({ id: 'feilmelding.pdlFeil' })}</Feilmelding>
+                    <Hovedknapp
+                        onClick={() => {
+                            history.push(props.forrigeUrl);
+                        }}
+                    >
+                        {intl.formatMessage({ id: 'knapp.tilbake' })}
+                    </Hovedknapp>
+                </div>
+            ),
+            (eps) => (
+                <SatsForm
+                    behandlingId={props.behandling.id}
+                    søker={props.søker}
+                    eps={eps}
+                    bosituasjon={hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger) ?? null}
+                    søknadInnhold={props.behandling.søknad.søknadInnhold}
+                    forrigeUrl={props.forrigeUrl}
+                    nesteUrl={props.nesteUrl}
+                    sakId={props.sakId}
+                    intl={intl}
+                />
+            )
+        )
+    );
+};
+
+function mottarEktemakeEllerSamboerSUInitialValue(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasjon>) {
+    return eps && eps.alder && eps.alder >= 67 ? null : bosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null;
+}
+
+function getInitialValues(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasjon>) {
+    return {
+        delerSøkerBolig: eps ? null : bosituasjon?.delerBolig ?? null,
+        mottarEktemakeEllerSamboerSU: mottarEktemakeEllerSamboerSUInitialValue(eps, bosituasjon),
+        begrunnelse: bosituasjon?.begrunnelse ?? null,
+    };
+}
+
+const SatsForm = (props: SatsProps) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
-    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const eksisterendeBosituasjon = props.behandling.behandlingsinformasjon.bosituasjon;
-    const eps = props.behandling.behandlingsinformasjon.ektefelle as Nullable<Person>;
+    const eps = props.eps;
 
     const formik = useFormik<FormData>({
-        initialValues: {
-            delerSøkerBolig: eps ? null : eksisterendeBosituasjon?.delerBolig ?? null,
-            mottarEktemakeEllerSamboerSU:
-                eps && isPerson(eps) && eps.alder && eps.alder >= 67
-                    ? null
-                    : eksisterendeBosituasjon?.ektemakeEllerSamboerUførFlyktning ?? null,
-            begrunnelse: eksisterendeBosituasjon?.begrunnelse ?? null,
-        },
+        initialValues: getInitialValues(eps, props.bosituasjon),
         validationSchema: getValidationSchema(eps),
         validateOnChange: hasSubmitted,
         async onSubmit(values) {
@@ -129,33 +230,34 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     });
 
     const handleSave = async (values: FormData, nesteUrl: string) => {
-        const boSituasjonValues = toBosituasjon(values, eps);
-        if (!boSituasjonValues) {
+        const bosituasjonsvalg = tilBosituasjonsValg(values, eps);
+        if (!bosituasjonsvalg) {
             return;
         }
 
-        if (eqBosituasjon.equals(boSituasjonValues, props.behandling.behandlingsinformasjon.bosituasjon)) {
+        const bosituasjonsgrunnlag = tilBosituasjonsgrunnlag(values, eps);
+
+        if (eqBosituasjon.equals(bosituasjonsgrunnlag, props.bosituasjon)) {
             history.push(nesteUrl);
             return;
         }
 
         const res = await dispatch(
-            lagreBehandlingsinformasjon({
+            lagreBosituasjonGrunnlag({
                 sakId: props.sakId,
-                behandlingId: props.behandling.id,
-                behandlingsinformasjon: {
-                    bosituasjon: boSituasjonValues,
-                },
+                behandlingId: props.behandlingId,
+                bosituasjon: bosituasjonsvalg,
+                begrunnelse: values.begrunnelse,
             })
         );
 
-        if (res && lagreBehandlingsinformasjon.fulfilled.match(res)) {
+        if (lagreBosituasjonGrunnlag.fulfilled.match(res)) {
             history.push(nesteUrl);
         }
     };
 
     return (
-        <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={props.intl.formatMessage({ id: 'page.tittel' })}>
             {{
                 left: (
                     <form
@@ -168,41 +270,45 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                             {eps && (
                                 <div className={styles.personkortContainer}>
                                     <Element className={styles.personkortTittel}>
-                                        {intl.formatMessage({ id: 'display.eps.label' })}
+                                        {props.intl.formatMessage({ id: 'display.eps.label' })}
                                     </Element>
                                     <Personkort person={eps} />
                                 </div>
                             )}
                         </div>
                         {!eps && (
-                            <SuperRadioGruppe
-                                id="delerSøkerBolig"
-                                legend={intl.formatMessage({ id: 'radio.delerSøkerBoligOver18.legend' })}
-                                values={formik.values}
-                                errors={formik.errors}
-                                property="delerSøkerBolig"
-                                onChange={(val) => {
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        delerSøkerBolig: val.delerSøkerBolig,
-                                    }));
-                                }}
-                                options={[
-                                    {
-                                        label: intl.formatMessage({ id: 'radio.label.ja' }),
-                                        radioValue: true,
-                                    },
-                                    {
-                                        label: intl.formatMessage({ id: 'radio.label.nei' }),
-                                        radioValue: false,
-                                    },
-                                ]}
-                            />
+                            <RadioGruppe
+                                legend={props.intl.formatMessage({ id: 'radio.delerSøkerBoligOver18.legend' })}
+                                feil={formik.errors.delerSøkerBolig}
+                            >
+                                <Radio
+                                    label={props.intl.formatMessage({ id: 'radio.label.ja' })}
+                                    name="delerSøkerBolig"
+                                    checked={formik.values.delerSøkerBolig === true}
+                                    onChange={() => {
+                                        formik.setValues((v) => ({
+                                            ...v,
+                                            delerSøkerBolig: true,
+                                        }));
+                                    }}
+                                />
+                                <Radio
+                                    label={props.intl.formatMessage({ id: 'radio.label.nei' })}
+                                    name="delerSøkerBolig"
+                                    checked={formik.values.delerSøkerBolig === false}
+                                    onChange={() => {
+                                        formik.setValues((v) => ({
+                                            ...v,
+                                            delerSøkerBolig: false,
+                                        }));
+                                    }}
+                                />
+                            </RadioGruppe>
                         )}
                         {eps?.alder && eps.alder < 67 ? (
                             <SuperRadioGruppe
                                 id="mottarEktemakeEllerSamboerSU"
-                                legend={intl.formatMessage({
+                                legend={props.intl.formatMessage({
                                     id: 'radio.ektemakeEllerSamboerUførFlyktning.legend',
                                 })}
                                 values={formik.values}
@@ -216,13 +322,13 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 property="mottarEktemakeEllerSamboerSU"
                                 options={[
                                     {
-                                        label: intl.formatMessage({
+                                        label: props.intl.formatMessage({
                                             id: 'radio.label.ja',
                                         }),
                                         radioValue: true,
                                     },
                                     {
-                                        label: intl.formatMessage({
+                                        label: props.intl.formatMessage({
                                             id: 'radio.label.nei',
                                         }),
                                         radioValue: false,
@@ -236,7 +342,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                             <>
                                 <hr />
                                 <span>
-                                    {`${intl.formatMessage({ id: 'display.sats' })} ${utledSats(
+                                    {`${props.intl.formatMessage({ id: 'display.sats' })} ${utledSats(
                                         formik.values,
                                         Boolean(eps),
                                         eps?.alder
@@ -248,7 +354,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                         )}
                         <div className={styles.textareaContainer}>
                             <Textarea
-                                label={intl.formatMessage({
+                                label={props.intl.formatMessage({
                                     id: 'input.label.begrunnelse',
                                 })}
                                 name="begrunnelse"
@@ -263,19 +369,19 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                                 () => null,
                                 () => (
                                     <NavFrontendSpinner>
-                                        {intl.formatMessage({ id: 'display.lagre.lagrer' })}
+                                        {props.intl.formatMessage({ id: 'display.lagre.lagrer' })}
                                     </NavFrontendSpinner>
                                 ),
                                 () => (
                                     <AlertStripe type="feil">
-                                        {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                        {props.intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
                                     </AlertStripe>
                                 ),
                                 () => null
                             )
                         )}
                         <Feiloppsummering
-                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                            tittel={props.intl.formatMessage({ id: 'feiloppsummering.title' })}
                             feil={formikErrorsTilFeiloppsummering(formik.errors)}
                             hidden={!formikErrorsHarFeil(formik.errors)}
                         />
@@ -296,7 +402,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                         />
                     </form>
                 ),
-                right: <SatsFaktablokk søknadInnhold={props.behandling.søknad.søknadInnhold} />,
+                right: <SatsFaktablokk søknadInnhold={props.søknadInnhold} />,
             }}
         </ToKolonner>
     );

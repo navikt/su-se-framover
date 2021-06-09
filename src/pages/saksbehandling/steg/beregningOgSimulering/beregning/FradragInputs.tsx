@@ -227,13 +227,14 @@ export const FradragInputs = (props: {
                                 </Knapp>
                             </div>
                             <div className={styles.checkboxContainer}>
-                                {props.harEps && (
+                                {(props.harEps || fradrag.tilhørerEPS) && (
                                     <Checkbox
                                         label={props.intl.formatMessage({ id: 'display.checkbox.tilhørerEPS' })}
                                         name={tilhørerEPSId}
                                         className={styles.checkbox}
                                         checked={fradrag.tilhørerEPS}
                                         onChange={props.onChange}
+                                        disabled={!props.harEps}
                                     />
                                 )}
                                 <Checkbox

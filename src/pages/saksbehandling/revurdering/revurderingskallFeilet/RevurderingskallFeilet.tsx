@@ -19,6 +19,8 @@ export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMes
             return intl.formatMessage({ id: 'feil.ugyldig.periode' });
         case RevurderingErrorCodes.UGYLDIG_ÅRSAK:
             return intl.formatMessage({ id: 'feil.ugyldig.årsak' });
+        case RevurderingErrorCodes.UGYLDIG_DATA:
+            return intl.formatMessage({ id: 'feil.ugyldig.data' });
 
         //fant ikke...
         case RevurderingErrorCodes.FANT_IKKE_REVURDERING:
@@ -41,6 +43,8 @@ export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMes
             return intl.formatMessage({ id: 'feil.kunne.ikke.kontroll.simulere' });
         case RevurderingErrorCodes.KUNNE_IKKE_UTBETALE:
             return intl.formatMessage({ id: 'feil.kunne.ikke.utbetale' });
+        case RevurderingErrorCodes.KUNNE_IKKE_SLÅ_OPP_EPS:
+            return intl.formatMessage({ id: 'feil.kunne.ikke.slå.opp.eps' });
 
         //forhåndsvarsling
         case RevurderingErrorCodes.MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL:
@@ -74,6 +78,12 @@ export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMes
             return intl.formatMessage({ id: 'feil.vurderinger.samme.resultat' });
         case RevurderingErrorCodes.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON:
             return intl.formatMessage({ id: 'feil.attestant.og.saksbehandler.kan.ikke.være.samme.person' });
+        case RevurderingErrorCodes.EPS_ALDER_ER_NULL:
+            return intl.formatMessage({ id: 'feil.eps.alder.er.null' });
+        case RevurderingErrorCodes.KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS:
+            return intl.formatMessage({ id: 'feil.kan.ikke.ha.eps.fradrag.uten.eps' });
+        case RevurderingErrorCodes.GJELDENDE_EPS_HAR_FORMUE:
+            return intl.formatMessage({ id: 'feil.gjeldende.eps.har.formue' });
 
         //revurderingsutfall som ikke støttes
         case RevurderingErrorCodes.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON:

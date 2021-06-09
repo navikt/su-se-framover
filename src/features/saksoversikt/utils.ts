@@ -1,5 +1,6 @@
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
+import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import {
     Behandlingsinformasjon,
@@ -11,9 +12,9 @@ import {
     OppholdIUtlandetStatus,
     PersonligOppmøte,
     InstitusjonsoppholdStatus,
-    isPerson,
     UførhetStatus,
 } from '~types/Behandlingsinformasjon';
+import { erBosituasjonFullstendig } from '~types/Grunnlag';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const createVilkårUrl = (props: { sakId: string; behandlingId: string; vilkar: Vilkårtype }) =>
@@ -216,72 +217,24 @@ function statusForPersonligOppmøte(personligOppmøte: Nullable<PersonligOppmøt
 }
 
 const getSatsStatus = (b: Behandling) => {
-    const ektefelle = b.behandlingsinformasjon.ektefelle;
-
     //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
     if (b.status === Behandlingsstatus.OPPRETTET || b.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
         return VilkårVurderingStatus.IkkeVurdert;
     }
-    if (
-        b.behandlingsinformasjon.bosituasjon &&
-        ektefelle &&
-        isPerson(ektefelle) &&
-        ektefelle.alder &&
-        ektefelle.alder >= 67
-    ) {
+
+    if (erBosituasjonFullstendig(hentBosituasjongrunnlag(b.grunnlagsdataOgVilkårsvurderinger))) {
         return VilkårVurderingStatus.Ok;
     }
-
-    if (
-        ektefelle &&
-        b.behandlingsinformasjon.bosituasjon &&
-        b.behandlingsinformasjon.bosituasjon.ektemakeEllerSamboerUførFlyktning !== null
-    ) {
-        return VilkårVurderingStatus.Ok;
-    }
-
-    if (
-        ektefelle == null &&
-        b.behandlingsinformasjon.bosituasjon &&
-        b.behandlingsinformasjon.bosituasjon.delerBolig !== null
-    ) {
-        return VilkårVurderingStatus.Ok;
-    }
-
     return VilkårVurderingStatus.IkkeVurdert;
 };
 
 const erSatsStartet = (b: Behandling) => {
-    const ektefelle = b.behandlingsinformasjon.ektefelle;
-
     //vi sjekker på behandlingsstatus fordi at man kan endre på vilkår etter sats-steget, som ikke resetter sats.
     if (b.status === Behandlingsstatus.OPPRETTET || b.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
         return false;
     }
 
-    if (
-        b.behandlingsinformasjon.bosituasjon &&
-        ektefelle &&
-        isPerson(ektefelle) &&
-        ektefelle.alder &&
-        ektefelle.alder >= 67
-    ) {
-        return true;
-    }
-
-    if (
-        b.behandlingsinformasjon.ektefelle &&
-        b.behandlingsinformasjon.bosituasjon &&
-        b.behandlingsinformasjon.bosituasjon.ektemakeEllerSamboerUførFlyktning !== null
-    ) {
-        return true;
-    }
-
-    if (
-        b.behandlingsinformasjon.ektefelle == null &&
-        b.behandlingsinformasjon.bosituasjon &&
-        b.behandlingsinformasjon.bosituasjon.delerBolig !== null
-    ) {
+    if (erBosituasjonFullstendig(hentBosituasjongrunnlag(b.grunnlagsdataOgVilkårsvurderinger))) {
         return true;
     }
 

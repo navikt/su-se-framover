@@ -11,7 +11,6 @@ import {
 import { Nullable } from '~lib/types';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import {
-    Bosituasjon,
     FastOppholdINorge,
     FastOppholdINorgeStatus,
     Flyktning,
@@ -187,7 +186,13 @@ export const eqPersonligOppmøte: Eq<Nullable<PersonligOppmøte>> = {
         personligOppmøte1?.begrunnelse === personligOppmøte2?.begrunnelse,
 };
 
-export const eqBosituasjon: Eq<Nullable<Bosituasjon>> = {
+export const eqBosituasjon: Eq<
+    Nullable<{
+        delerBolig: Nullable<boolean>;
+        ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
+        begrunnelse: Nullable<string>;
+    }>
+> = {
     equals: (sats1, sats2) =>
         sats1?.delerBolig === sats2?.delerBolig &&
         sats1?.ektemakeEllerSamboerUførFlyktning === sats2?.ektemakeEllerSamboerUførFlyktning &&

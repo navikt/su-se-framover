@@ -19,14 +19,16 @@ import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';
 import personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
-import sakSlice, { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import sakSlice, { lagreBehandlingsinformasjon, lagreEpsGrunnlag } from '~features/saksoversikt/sak.slice';
 import { removeSpaces } from '~lib/formatUtils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering, validateNonNegativeNumber } from '~lib/validering';
+import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { Behandling } from '~types/Behandling';
 import { FormueStatus, Formue, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
@@ -84,8 +86,11 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const søknadInnhold = props.behandling.søknad.søknadInnhold;
     const behandlingsInfo = props.behandling.behandlingsinformasjon;
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
+    const [lagreEpsGrunnlagStatus, setLagreEpsGrunnlagStatus] = useState<RemoteData.RemoteData<ApiError, Behandling>>(
+        RemoteData.initial
+    );
+
     const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const eksisterendeBosituasjon = props.behandling.behandlingsinformasjon.bosituasjon;
 
     const handleSave = async (values: FormData, nesteUrl: string) => {
         if (RemoteData.isPending(eps) && values.epsFnr !== null) return;
@@ -104,64 +109,50 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
             epsVerdier: values.borSøkerMedEPS ? values.epsVerdier : null,
             begrunnelse: values.begrunnelse,
         };
-        const ektefelle = {
-            harEktefellePartnerSamboer: values.borSøkerMedEPS,
-            fnr: values.epsFnr,
-        };
 
-        const erEktefelleUendret = eqEktefelle.equals(ektefelle, props.behandling.behandlingsinformasjon.ektefelle);
+        const ektefelle = { fnr: values.epsFnr };
+        const erEktefelleUendret = eqEktefelle.equals(ektefelle, {
+            fnr: hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger)?.fnr,
+        });
 
         if (eqFormue.equals(formueValues, props.behandling.behandlingsinformasjon.formue) && erEktefelleUendret) {
             history.push(nesteUrl);
             return;
         }
 
-        const res = await dispatch(
-            lagreBehandlingsinformasjon({
+        setLagreEpsGrunnlagStatus(RemoteData.pending);
+        await dispatch(
+            lagreEpsGrunnlag({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                behandlingsinformasjon: {
-                    formue: formueValues,
-                    ektefelle: RemoteData.isSuccess(eps)
-                        ? {
-                              fnr: eps.value.fnr,
-                              navn: eps.value.navn,
-                              kjønn: eps.value.kjønn,
-                              fødselsdato: eps.value.fødselsdato,
-                              alder: eps.value.alder,
-                              adressebeskyttelse: eps.value.adressebeskyttelse,
-                              skjermet: eps.value.skjermet,
-                          }
-                        : {
-                              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                              fnr: values.epsFnr!,
-                          },
-                    //Det skal kreves ny registerering av sats når EPS endres. Enten ved ny Fnr, eller fjerner/legger til EPS.
-                    //Denne sørger for at vi nuller ut sats steget hvis det er gjort en endring, og vi har en eksisterende bosituasjon
-                    bosituasjon:
-                        !erEktefelleUendret && eksisterendeBosituasjon
-                            ? {
-                                  ...eksisterendeBosituasjon,
-                                  delerBolig: null,
-                                  ektemakeEllerSamboerUførFlyktning: null,
-                              }
-                            : eksisterendeBosituasjon,
-                },
+                epsFnr: values.epsFnr,
             })
-        );
+        ).then(async (epsGrunnlagRes) => {
+            if (lagreEpsGrunnlag.fulfilled.match(epsGrunnlagRes)) {
+                const res = await dispatch(
+                    lagreBehandlingsinformasjon({
+                        sakId: props.sakId,
+                        behandlingId: props.behandling.id,
+                        behandlingsinformasjon: { formue: formueValues },
+                    })
+                );
 
-        if (!res) return;
-
-        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
-            history.push(nesteUrl);
-        }
+                if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
+                    history.push(nesteUrl);
+                }
+            }
+            if (lagreEpsGrunnlag.rejected.match(epsGrunnlagRes)) {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                setLagreEpsGrunnlagStatus(RemoteData.failure(epsGrunnlagRes.payload!));
+            }
+        });
     };
 
     // TODO ai: implementera detta i backend
     const G = 101351;
 
     const formik = useFormik<FormData>({
-        initialValues: getFormue(behandlingsInfo, søknadInnhold),
+        initialValues: getFormue(behandlingsInfo, søknadInnhold, props.behandling.grunnlagsdataOgVilkårsvurderinger),
         async onSubmit() {
             handleSave(formik.values, props.nesteUrl);
         },
@@ -528,7 +519,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         />
 
                         {pipe(
-                            lagreBehandlingsinformasjonStatus,
+                            RemoteData.combine(lagreBehandlingsinformasjonStatus, lagreEpsGrunnlagStatus),
                             RemoteData.fold(
                                 () => null,
                                 () => (
@@ -544,6 +535,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 () => null
                             )
                         )}
+
                         <Feiloppsummering
                             tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                             feil={formikErrorsTilFeiloppsummering(formik.errors)}

@@ -93,6 +93,32 @@ export async function lagreBehandlingsinformasjon(arg: {
     });
 }
 
+export async function lagreGrunnlagEps(arg: { sakId: string; behandlingId: string; epsFnr: Nullable<string> }) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/eps`,
+        method: 'POST',
+        body: {
+            epsFnr: arg.epsFnr,
+        },
+    });
+}
+
+export async function lagreGrunnlagBosituasjon(arg: {
+    sakId: string;
+    behandlingId: string;
+    bosituasjon: string;
+    begrunnelse: Nullable<string>;
+}) {
+    return apiClient<Behandling>({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/fullfør`,
+        method: 'POST',
+        body: {
+            bosituasjon: arg.bosituasjon,
+            begrunnelse: arg.begrunnelse,
+        },
+    });
+}
+
 // Denne vil kanskje på sikt låse behandlingen også.
 export async function simulerBehandling(sakId: string, behandlingId: string): Promise<ApiClientResult<Behandling>> {
     return apiClient({
@@ -148,7 +174,7 @@ export async function lagreUføregrunnlag(arg: {
     resultat: UføreResultat;
 }) {
     return apiClient<Behandling>({
-        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/uføregrunnlag`,
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/uføre`,
         method: 'POST',
         body: {
             uføregrad: arg.uføregrad,

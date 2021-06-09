@@ -24,6 +24,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import {
     FradragFormData,
     isValidFradrag,
@@ -224,7 +225,10 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                         <Undertittel>Fradrag</Undertittel>
                         <div className={styles.container}>
                             <FradragInputs
-                                harEps={props.behandling.behandlingsinformasjon.ektefelle !== null}
+                                harEps={
+                                    hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr !==
+                                    null
+                                }
                                 feltnavn="fradrag"
                                 fradrag={formik.values.fradrag}
                                 errors={formik.errors.fradrag}

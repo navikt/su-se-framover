@@ -6,6 +6,9 @@ export default {
     'feilmelding.ikkeTilgang': 'Du har ikke tilgang til å se informasjon om denne brukeren',
     'feilmelding.ikkeFunnet': 'Fant ikke noen bruker med det fødselsnummeret',
     'feilmelding.ukjent': 'En feil skjedde',
+    'feilmelding.pdlFeil': 'Klarte ikke å slå opp person i PDL',
+
+    'knapp.tilbake': 'Tilbake',
 
     'page.tittel': 'Sats',
 

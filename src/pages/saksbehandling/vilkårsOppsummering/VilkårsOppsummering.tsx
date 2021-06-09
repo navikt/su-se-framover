@@ -5,9 +5,11 @@ import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksove
 import { useI18n } from '~lib/hooks';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import { Behandlingsstatus } from '../../../types/Behandling';
+import { hentBosituasjongrunnlag } from '../revurdering/revurderingUtils';
 import { FastOppholdVilkårsblokk } from '../steg/faktablokk/faktablokker/FastOppholdFaktablokk';
 import { FlyktningVilkårsblokk } from '../steg/faktablokk/faktablokker/FlyktningFaktablokk';
 import { FormueVilkårsblokk } from '../steg/faktablokk/faktablokker/FormueFaktablokk';
@@ -36,6 +38,7 @@ const VilkårsOppsummering = (props: {
     søknadInnhold: SøknadInnhold;
     behandlingsinformasjon: Behandlingsinformasjon;
     behandlingstatus: Behandlingsstatus;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const intl = useI18n({ messages });
     const vilkårsinformasjon = mapToVilkårsinformasjon(props.behandlingsinformasjon);
@@ -50,13 +53,12 @@ const VilkårsOppsummering = (props: {
                         info={v}
                         søknadInnhold={props.søknadInnhold}
                         behandlingsinformasjon={props.behandlingsinformasjon}
+                        grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
                     />
                 ))}
                 {shouldShowSats(props.behandlingstatus) && (
                     <SatsVilkårsblokk
-                        bosituasjon={props.behandlingsinformasjon.bosituasjon}
-                        ektefelle={props.behandlingsinformasjon.ektefelle}
-                        sats={props.behandlingsinformasjon.utledetSats}
+                        bosituasjon={hentBosituasjongrunnlag(props.grunnlagsdataOgVilkårsvurderinger)}
                         søknadInnhold={props.søknadInnhold}
                     />
                 )}
@@ -69,6 +71,7 @@ const Vilkårsting = (props: {
     info: Vilkårsinformasjon;
     søknadInnhold: SøknadInnhold;
     behandlingsinformasjon: Behandlingsinformasjon;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     switch (props.info.vilkårtype) {
         case Vilkårtype.Uførhet:
@@ -125,7 +128,7 @@ const Vilkårsting = (props: {
                     info={props.info}
                     søknadInnhold={props.søknadInnhold}
                     formue={props.behandlingsinformasjon.formue}
-                    ektefelle={props.behandlingsinformasjon.ektefelle}
+                    ektefelle={{ fnr: hentBosituasjongrunnlag(props.grunnlagsdataOgVilkårsvurderinger).fnr }}
                 />
             );
         case Vilkårtype.PersonligOppmøte:

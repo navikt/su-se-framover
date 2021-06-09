@@ -12,13 +12,14 @@ import {
     iverksettRevurdering,
     oppdaterRevurderingsPeriode,
     lagreUføregrunnlag as lagreUføregrunnlagForRevurdering,
-    hentGrunnlagsdataOgVilkårsvurderinger,
+    hentGjeldendeGrunnlagsdataOgVilkårsvurderinger,
     opprettRevurdering,
     sendRevurderingTilAttestering,
     underkjennRevurdering,
     forhåndsvarsleEllerSendTilAttestering,
     fortsettEtterForhåndsvarsel,
     lagreFradragsgrunnlag,
+    lagreBosituasjonsgrunnlag,
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
@@ -27,6 +28,7 @@ import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
 import { Periode } from '~types/Periode';
+import { Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
 import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
@@ -148,6 +150,39 @@ export const lagreUføregrunnlag = createAsyncThunk<
     { rejectValue: ApiError }
 >('behandling/grunnlag/uføre', async (arg, thunkApi) => {
     const res = await behandlingApi.lagreUføregrunnlag(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreEpsGrunnlag = createAsyncThunk<
+    Behandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        epsFnr: Nullable<string>;
+    },
+    { rejectValue: ApiError }
+>('behandling/grunnlag/bosituasjon/eps', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreGrunnlagEps(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreBosituasjonGrunnlag = createAsyncThunk<
+    Behandling,
+    {
+        sakId: string;
+        behandlingId: string;
+        bosituasjon: string;
+        begrunnelse: Nullable<string>;
+    },
+    { rejectValue: ApiError }
+>('behandling/grunnlag/bosituasjon/fullfør', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreGrunnlagBosituasjon(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -429,6 +464,26 @@ export default createSlice({
             },
         });
 
+        handleAsyncThunk(builder, lagreEpsGrunnlag, {
+            pending: (state) => {
+                state.lagreUføregrunnlagStatus = RemoteData.pending;
+            },
+            fulfilled: (state, action) => {
+                state.lagreUføregrunnlagStatus = RemoteData.success(null);
+
+                state.sak = pipe(
+                    state.sak,
+                    RemoteData.map((sak) => ({
+                        ...sak,
+                        behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                    }))
+                );
+            },
+            rejected: (state, action) => {
+                state.lagreUføregrunnlagStatus = simpleRejectedActionToRemoteData(action);
+            },
+        });
+
         handleAsyncThunk(builder, startBeregning, {
             pending: (state) => {
                 state.beregningStatus = RemoteData.pending;
@@ -583,20 +638,14 @@ export default createSlice({
                 state.oppdaterRevurderingStatus = RemoteData.success(null);
                 state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.initial;
 
-                state.sak = pipe(
-                    state.sak,
-                    RemoteData.map((sak) => ({
-                        ...sak,
-                        revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
-                    }))
-                );
+                state.sak = oppdaterRevurderingISak(state.sak, action.payload);
             },
             rejected: (state, action) => {
                 state.oppdaterRevurderingStatus = simpleRejectedActionToRemoteData(action);
             },
         });
 
-        handleAsyncThunk(builder, hentGrunnlagsdataOgVilkårsvurderinger, {
+        handleAsyncThunk(builder, hentGjeldendeGrunnlagsdataOgVilkårsvurderinger, {
             pending: (state, action) => {
                 state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] = RemoteData.pending;
             },
@@ -610,87 +659,59 @@ export default createSlice({
             },
         });
 
-        builder.addCase(lagreUføregrunnlagForRevurdering.fulfilled, (state, action) => {
+        builder.addCase(lagreBosituasjonGrunnlag.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({
                     ...sak,
-                    revurderinger: sak.revurderinger.map((r) =>
-                        r.id === action.payload.revurdering.id ? action.payload.revurdering : r
-                    ),
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
                 }))
             );
         });
+
+        builder.addCase(lagreUføregrunnlagForRevurdering.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
+        });
+
         builder.addCase(lagreFradragsgrunnlag.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
-                }))
-            );
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+        });
+
+        builder.addCase(lagreBosituasjonsgrunnlag.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
         builder.addCase(beregnOgSimuler.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    revurderinger: sak.revurderinger.map((r) =>
-                        r.id === action.payload.revurdering.id ? action.payload.revurdering : r
-                    ),
-                }))
-            );
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
-        // TODO ai: Se på om vi kan baka dessa 2 till 1.
         builder.addCase(sendRevurderingTilAttestering.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
-                }))
-            );
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
         builder.addCase(iverksettRevurdering.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
-                }))
-            );
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
         builder.addCase(underkjennRevurdering.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
-                }))
-            );
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
         builder.addCase(forhåndsvarsleEllerSendTilAttestering.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
-                }))
-            );
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
         builder.addCase(fortsettEtterForhåndsvarsel.fulfilled, (state, action) => {
-            state.sak = pipe(
-                state.sak,
-                RemoteData.map((sak) => ({
-                    ...sak,
-                    revurderinger: sak.revurderinger.map((r) => (r.id === action.payload.id ? action.payload : r)),
-                }))
-            );
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
     },
 });
+
+function oppdaterRevurderingISak(sak: RemoteData.RemoteData<ApiError, Sak>, revurdering: Revurdering) {
+    return pipe(
+        sak,
+        RemoteData.map((s) => ({
+            ...s,
+            revurderinger: s.revurderinger.map((r) => (r.id === revurdering.id ? revurdering : r)),
+        }))
+    );
+}

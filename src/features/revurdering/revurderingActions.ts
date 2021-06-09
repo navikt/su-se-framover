@@ -18,6 +18,7 @@ import {
     LeggTilUføreResponse,
     InformasjonSomRevurderes,
     Revurdering,
+    BosituasjonRequest,
 } from '~types/Revurdering';
 import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
@@ -223,15 +224,33 @@ export const lagreFradragsgrunnlag = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const hentGrunnlagsdataOgVilkårsvurderinger = createAsyncThunk<
+export const lagreBosituasjonsgrunnlag = createAsyncThunk<Revurdering, BosituasjonRequest, { rejectValue: ApiError }>(
+    'revurdering/grunnlag/bosituasjon/lagre',
+    async (arg, thunkApi) => {
+        const res = await revurderingApi.lagreBosituasjonsgrunnlag({
+            sakId: arg.sakId,
+            revurderingId: arg.revurderingId,
+            epsFnr: arg.epsFnr,
+            delerBolig: arg.delerBolig,
+            erEPSUførFlyktning: arg.erEPSUførFlyktning,
+            begrunnelse: arg.begrunnelse,
+        });
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
+    }
+);
+
+export const hentGjeldendeGrunnlagsdataOgVilkårsvurderinger = createAsyncThunk<
     GrunnlagsdataOgVilkårsvurderinger,
     {
         sakId: string;
         revurderingId: string;
     },
     { rejectValue: ApiError }
->('revurdering/grunnlagsdataOgVilkårsvurderinger/hent', async ({ sakId, revurderingId }, thunkApi) => {
-    const res = await revurderingApi.hentGrunnlagsdataOgVilkårsvurderinger(sakId, revurderingId);
+>('revurdering/hentGjeldendeGrunnlagsdataOgVilkårsvurderinger/hent', async ({ sakId, revurderingId }, thunkApi) => {
+    const res = await revurderingApi.hentGjeldendeGrunnlagsdataOgVilkårsvurderinger(sakId, revurderingId);
     if (res.status === 'ok') {
         return res.data;
     }
