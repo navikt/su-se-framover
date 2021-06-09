@@ -35,11 +35,14 @@ export const useNotificationFromLocation = () => {
     return locationState;
 };
 
-export type ApiResult<U> = RemoteData.RemoteData<ApiError | undefined, U>;
-export function useAsyncActionCreator<T, U>(
-    actionCreator: AsyncThunk<U, T, { rejectValue: ApiError }>
-): [ApiResult<U>, (args: T, onSuccess?: (result: U) => void) => void] {
-    const [apiResult, setApiResult] = useState<ApiResult<U>>(RemoteData.initial);
+export type ApiResult<U, TErrorCode extends string = string> = RemoteData.RemoteData<
+    ApiError<TErrorCode> | undefined,
+    U
+>;
+export function useAsyncActionCreator<T, U, TErrorCode extends string = string>(
+    actionCreator: AsyncThunk<U, T, { rejectValue: ApiError<TErrorCode> }>
+): [ApiResult<U, TErrorCode>, (args: T, onSuccess?: (result: U) => void) => void] {
+    const [apiResult, setApiResult] = useState<ApiResult<U, TErrorCode>>(RemoteData.initial);
     const dispatch = useAppDispatch();
 
     const callFn = React.useCallback(
@@ -68,11 +71,16 @@ export function useAsyncActionCreator<T, U>(
  * @param argsTransformer funksjon som gjør at man kan "partially apply"-e action creatoren. Dersom argsTransformer returnerer `undefined` vil ikke actionen bli dispatchet.
  * @param onSuccess callback som kalles når action creator-en returnerer suksess
  */
-export function useAsyncActionCreatorWithArgsTransformer<TSuccess, TThunkArgs, TArgs>(
-    actionCreator: AsyncThunk<TSuccess, TThunkArgs, { rejectValue: ApiError }>,
+export function useAsyncActionCreatorWithArgsTransformer<
+    TSuccess,
+    TThunkArgs,
+    TArgs,
+    TErrorCode extends string = string
+>(
+    actionCreator: AsyncThunk<TSuccess, TThunkArgs, { rejectValue: ApiError<TErrorCode> }>,
     argsTransformer: (args: TArgs) => TThunkArgs | undefined,
     onSuccess?: (args: TArgs, data: TSuccess) => void
-): [ApiResult<TSuccess>, (args: TArgs) => void] {
+): [ApiResult<TSuccess, TErrorCode>, (args: TArgs) => void] {
     const [apiResult, call] = useAsyncActionCreator(actionCreator);
 
     const callFn = React.useCallback(

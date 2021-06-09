@@ -43,7 +43,7 @@ const schema = yup.object<FormData>({
             [UføreResultat.VilkårOppfylt, UføreResultat.VilkårIkkeOppfylt, UføreResultat.HarUføresakTilBehandling],
             'Vennligst velg et alternativ'
         ),
-    uføregrad: (yup
+    uføregrad: yup
         .number()
         .nullable()
         .defined()
@@ -51,8 +51,8 @@ const schema = yup.object<FormData>({
             is: UføreResultat.VilkårOppfylt,
             then: yup.number().positive().min(1).max(100).required().typeError('Feltet må være et tall'),
             otherwise: yup.number().nullable().defined(),
-        }) as unknown) as yup.Schema<string>,
-    forventetInntekt: (yup
+        }) as unknown as yup.Schema<string>,
+    forventetInntekt: yup
         .number()
         .nullable()
         .defined()
@@ -60,7 +60,7 @@ const schema = yup.object<FormData>({
             is: UføreResultat.VilkårOppfylt,
             then: yup.number().positive().integer().min(0).required().typeError('Feltet må være et tall'),
             otherwise: yup.number().nullable().defined(),
-        }) as unknown) as yup.Schema<string>,
+        }) as unknown as yup.Schema<string>,
     begrunnelse: yup.string().defined().default(null),
 });
 

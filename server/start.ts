@@ -68,7 +68,7 @@ export default async function startServer() {
                           scriptSrc: [
                               "'self'",
                               (_req: IncomingMessage, res: ServerResponse) =>
-                                  `'nonce-${((res as unknown) as { locals: { cspNonce: string } }).locals.cspNonce}'`,
+                                  `'nonce-${(res as unknown as { locals: { cspNonce: string } }).locals.cspNonce}'`,
                               ...hotjarCsp.scriptSrc,
                           ],
                           styleSrc: ["'self'", 'fonts.googleapis.com', 'data: ', "'unsafe-inline'"],

@@ -22,12 +22,12 @@ import styles from './inntekt.module.less';
 type FormData = SøknadState['inntekt'];
 
 const trygdeytelserIUtlandetSchema = yup.object({
-    beløp: (yup
+    beløp: yup
         .number()
         .typeError('Beløp må være et tall')
         .positive()
         .label('Beløp')
-        .required() as yup.Schema<unknown>) as yup.Schema<string>,
+        .required() as yup.Schema<unknown> as yup.Schema<string>,
     type: yup.string().required(),
     valuta: yup.string().required(),
 });
@@ -69,13 +69,13 @@ const schema = yup.object<FormData>({
             yup
                 .object({
                     ordning: yup.string().required(),
-                    beløp: (yup
+                    beløp: yup
                         .number()
                         .defined()
                         .label('Pensjonsinntekt')
                         .typeError('Pensjonsinntekt må et være tall')
                         .positive()
-                        .required() as unknown) as yup.Schema<string>,
+                        .required() as unknown as yup.Schema<string>,
                 })
                 .required()
         )
