@@ -134,7 +134,7 @@
         "styles": "^0.2.1",
         "ts-transformer-keys": "^0.4.3",
         "uuid": "^8.3.2",
-        "yup": "^0.29.3"
+        "yup": "^0.31.1"
     },
     "devDependencies": {
         "@babel/core": "^7.14.3",
