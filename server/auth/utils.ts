@@ -60,9 +60,10 @@ async function getOrRefreshSelfTokenIfExpired(
     log: Logger
 ): Promise<TokenSet> {
     if (selfToken.expired()) {
-        // Dette vil i praksis ikke forekomme. Da middlewaren akkurat har hentet et nytt self token med 1 times varighet.
+        // Denne vil ikke bli kalt initielt, men først når OBO/self-token har expired
         log.debug('getOrRefreshOnBehalfOfToken: self token has expired, requesting new using refresh_token.');
-        const refreshedSelfToken = await authClient.refresh(selfToken);
+        const clientAssertionPayload = { aud: authClient.issuer.metadata['token_endpoint'] };
+        const refreshedSelfToken = await authClient.refresh(selfToken, { clientAssertionPayload });
         tokenSets[tokenSetSelfId] = refreshedSelfToken;
         return refreshedSelfToken;
     }
