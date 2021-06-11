@@ -50,5 +50,11 @@ export default {
     'feil.vurderinger.utenfor.revurderingsperiode': 'Vurdering av vilkår gjøres innenfor revurderingsperioden',
     'feil.mangler.revurderingsperioder': 'Hele eller deler av revurderingsperioden mangler vurdering(er)',
 
+    'feil.bosituasjon.med.flere.perioder.må.vurderes':
+        'Revurderingsperioden inneholder tvetydig grunnlag for bosituasjon. Bosituasjon må revurderes.',
+
+    'feil.eps.inntekt.med.flere.perioder.må.revurderes':
+        'Revurderingsperioden inneholder tvetydig grunnlag for bosituasjon og inntekt. Både bosituasjon og inntekt må revurderes.',
+
     'feil.ukjentFeil': 'Ukjent feil',
 };

@@ -95,6 +95,12 @@ export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMes
         case RevurderingErrorCodes.OPPHØR_AV_FLERE_VILKÅR:
             return intl.formatMessage({ id: 'feil.opphør.flere.vilkår' });
 
+        //bosituasjon
+        case RevurderingErrorCodes.BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES:
+            return intl.formatMessage({ id: 'feil.bosituasjon.med.flere.perioder.må.vurderes' });
+        case RevurderingErrorCodes.BOSITUASJON_FLERE_PERIODER_OG_EPS_INNTEKT:
+            return intl.formatMessage({ id: 'feil.eps.inntekt.med.flere.perioder.må.revurderes' });
+
         default:
             return intl.formatMessage({ id: 'feil.ukjentFeil' });
     }

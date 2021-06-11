@@ -175,6 +175,10 @@ export enum RevurderingErrorCodes {
     OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE = 'opphør_ikke_tidligste_dato',
     DELVIS_OPPHØR = 'delvis_opphør',
     OPPHØR_AV_FLERE_VILKÅR = 'opphør_av_flere_vilkår',
+
+    //bosituasjon
+    BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES = 'bosituasjon_med_flere_perioder_må_revurderes',
+    BOSITUASJON_FLERE_PERIODER_OG_EPS_INNTEKT = 'eps_inntekt_med_flere_perioder_må_revurderes',
 }
 export interface LeggTilUføreResponse {
     revurdering: Revurdering;
