@@ -113,7 +113,7 @@ export function getBosituasjongrunnlagsblokker(b: Bosituasjon, intl: IntlShape):
                     },
                     {
                         label: intl.formatMessage({ id: 'bosituasjon.label.epsUførFlyktning' }),
-                        verdi: intl.formatMessage({ id: 'generell.nei' }),
+                        verdi: intl.formatMessage({ id: 'generell.ja' }),
                     },
                 ],
             ];
