@@ -1,7 +1,8 @@
 import { Nullable } from '~lib/types';
 
 import { Fradrag } from './Fradrag';
-import { Bosituasjon, Uføregrunnlag } from './Grunnlag';
+import { Uføregrunnlag } from './Grunnlag';
+import { Bosituasjon } from './grunnlag/Bosituasjon';
 import { Periode } from './Periode';
 
 export interface GrunnlagsdataOgVilkårsvurderinger {
