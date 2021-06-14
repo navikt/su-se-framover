@@ -201,3 +201,11 @@ export interface BosituasjonRequest {
     delerBolig: Nullable<boolean>;
     begrunnelse: Nullable<string>;
 }
+
+export interface RevurderingProps {
+    sakId: string;
+    revurdering: Revurdering;
+    gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    forrigeUrl: string;
+    nesteUrl: (revurdering: Revurdering) => string;
+}

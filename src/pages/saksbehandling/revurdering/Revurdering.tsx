@@ -244,7 +244,15 @@ const RevurderingstegPage = (props: {
                             />
                         );
                     case RevurderingSteg.Formue:
-                        return <Formue />;
+                        return (
+                            <Formue
+                                sakId={props.sakId}
+                                revurdering={props.revurdering}
+                                gjeldendeGrunnlagsdataOgVilkårsvurderinger={value}
+                                forrigeUrl={props.forrigeUrl}
+                                nesteUrl={props.nesteUrl}
+                            />
+                        );
                     case RevurderingSteg.EndringAvFradrag:
                         return (
                             <EndringAvFradrag
