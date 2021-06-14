@@ -17,7 +17,7 @@ import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
-import { Bosituasjon } from '~types/Grunnlag';
+import { Bosituasjon } from '~types/grunnlag/Bosituasjon';
 import { Periode } from '~types/Periode';
 import { BosituasjonRequest, Revurdering } from '~types/Revurdering';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';

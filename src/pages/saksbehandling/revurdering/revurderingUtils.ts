@@ -1,5 +1,5 @@
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
-import { Bosituasjon } from '~types/Grunnlag';
+import { Bosituasjon } from '~types/grunnlag/Bosituasjon';
 import {
     Revurdering,
     SimulertRevurdering,
