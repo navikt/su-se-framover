@@ -26,12 +26,14 @@ import DatePicker from '~components/datePicker/DatePicker';
 import { Personkort } from '~components/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
+import { lagreFormuegrunnlag } from '~features/revurdering/revurderingActions';
+import { toIsoDateOnlyString } from '~lib/dateUtils';
 import { pipe } from '~lib/fp';
-import { useApiCall, useI18n } from '~lib/hooks';
+import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~lib/validering';
 import { Periode } from '~types/Periode';
-import { RevurderingProps } from '~types/Revurdering';
+import { FormuegrunnlagFormue, FormuegrunnlagVerdier, RevurderingProps } from '~types/Revurdering';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -49,6 +51,7 @@ interface Verdier {
     innskuddsbeløp: string;
     verdipapir: string;
     kontanterOver1000: string;
+    pengerSkyldt: string;
     depositumskonto: string;
 }
 
@@ -82,6 +85,7 @@ const regnUtFormue = (verdier: Nullable<Verdier>) => {
         verdier.verdiPåEiendom,
         verdier.verdiPåKjøretøy,
         verdier.verdipapir,
+        verdier.pengerSkyldt,
         verdier.kontanterOver1000,
     ];
 
@@ -127,6 +131,7 @@ const schema = yup.object<FormueFormData>({
                             innskuddsbeløp: validateStringAsNonNegativeNumber,
                             verdipapir: validateStringAsNonNegativeNumber,
                             kontanterOver1000: validateStringAsNonNegativeNumber,
+                            pengerSkyldt: validateStringAsNonNegativeNumber,
                             depositumskonto: validateStringAsNonNegativeNumber,
                         })
                         .required(),
@@ -143,6 +148,7 @@ const schema = yup.object<FormueFormData>({
                                     innskuddsbeløp: validateStringAsNonNegativeNumber,
                                     verdipapir: validateStringAsNonNegativeNumber,
                                     kontanterOver1000: validateStringAsNonNegativeNumber,
+                                    pengerSkyldt: validateStringAsNonNegativeNumber,
                                     depositumskonto: validateStringAsNonNegativeNumber,
                                 })
                                 .required(),
@@ -167,6 +173,7 @@ const getDefaultValues = (epsFnr: Nullable<string>) => {
                     verdiPåKjøretøy: '0',
                     innskuddsbeløp: '0',
                     verdipapir: '0',
+                    pengerSkyldt: '0',
                     kontanterOver1000: '0',
                     depositumskonto: '0',
                 },
@@ -177,6 +184,7 @@ const getDefaultValues = (epsFnr: Nullable<string>) => {
                           verdiPåKjøretøy: '0',
                           innskuddsbeløp: '0',
                           verdipapir: '0',
+                          pengerSkyldt: '0',
                           kontanterOver1000: '0',
                           depositumskonto: '0',
                       }
@@ -198,6 +206,7 @@ const leggTilNyPeriode = (epsFnr: Nullable<string>) => {
             innskuddsbeløp: '0',
             verdipapir: '0',
             kontanterOver1000: '0',
+            pengerSkyldt: '0',
             depositumskonto: '0',
         },
         epsFormue: epsFnr
@@ -207,6 +216,7 @@ const leggTilNyPeriode = (epsFnr: Nullable<string>) => {
                   verdiPåKjøretøy: '0',
                   innskuddsbeløp: '0',
                   verdipapir: '0',
+                  pengerSkyldt: '0',
                   kontanterOver1000: '0',
                   depositumskonto: '0',
               }
@@ -215,18 +225,58 @@ const leggTilNyPeriode = (epsFnr: Nullable<string>) => {
     };
 };
 
+const formueFormDataTilFormuegrunnlagRequest = (data: FormueData[]): FormuegrunnlagFormue => {
+    return data.map((formue) => {
+        return {
+            periode: {
+                /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                fraOgMed: toIsoDateOnlyString(formue.periode.fraOgMed!),
+                tilOgMed: toIsoDateOnlyString(formue.periode.tilOgMed!),
+                /* eslint-enable @typescript-eslint/no-non-null-assertion */
+            },
+            //parseVerdier skal ikke kunne returnere null når input-parameteren ikke er null
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            søkersFormue: verdierToNumber(formue.søkersFormue)!,
+            epsFormue: verdierToNumber(formue.epsFormue),
+            begrunnelse: formue.begrunnelse,
+        };
+    });
+};
+
+const verdierToNumber = (stringVerdier: Nullable<Verdier>): FormuegrunnlagVerdier | null => {
+    if (!stringVerdier) {
+        return null;
+    }
+
+    return {
+        verdiIkkePrimærbolig: Number(stringVerdier.verdiPåBolig),
+        verdiEiendommer: Number(stringVerdier.verdiPåEiendom),
+        verdiKjøretøy: Number(stringVerdier.verdiPåKjøretøy),
+        innskudd: Number(stringVerdier.innskuddsbeløp),
+        verdipapir: Number(stringVerdier.verdipapir),
+        kontanter: Number(stringVerdier.kontanterOver1000),
+        pengerSkyldt: Number(stringVerdier.pengerSkyldt),
+        depositumskonto: Number(stringVerdier.depositumskonto),
+    };
+};
+
 const Formue = (props: RevurderingProps) => {
     const epsFnr = hentBosituasjongrunnlag(props.gjeldendeGrunnlagsdataOgVilkårsvurderinger).fnr;
     const intl = useI18n({ messages });
     const [epsStatus, hentEPS] = useApiCall(personApi.fetchPerson);
+    const [lagreFormuegrunnlagStatus, lagreFormuegrunnlagAction] = useAsyncActionCreator(lagreFormuegrunnlag);
 
     const { control, trigger, handleSubmit } = useForm<FormueFormData>({
         defaultValues: getDefaultValues(epsFnr),
         resolver: yupResolver(schema),
     });
 
-    const handleSubmitLOL = (data: FormueFormData) => {
-        console.log(data);
+    const lagreFormuegrunnlaget = (data: FormueFormData) => {
+        lagreFormuegrunnlagAction({
+            sakId: props.sakId,
+            revurderingId: props.revurdering.id,
+            formue: formueFormDataTilFormuegrunnlagRequest(data.formue),
+        });
     };
 
     const formueArray = useFieldArray({
@@ -263,7 +313,7 @@ const Formue = (props: RevurderingProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <form onSubmit={handleSubmit(handleSubmitLOL)}>
+                    <form onSubmit={handleSubmit(lagreFormuegrunnlaget)}>
                         {formueArray.fields.map((field, index) => (
                             <FormueBlokk
                                 key={field.id}
@@ -286,7 +336,15 @@ const Formue = (props: RevurderingProps) => {
                                 {intl.formatMessage({ id: 'knapp.nyPeriode' })}
                             </Knapp>
                         </div>
-                        <RevurderingBunnknapper onNesteClick="submit" tilbakeUrl={props.forrigeUrl} />
+
+                        {RemoteData.isFailure(lagreFormuegrunnlagStatus) && (
+                            <RevurderingskallFeilet error={lagreFormuegrunnlagStatus.error} />
+                        )}
+                        <RevurderingBunnknapper
+                            onNesteClick="submit"
+                            tilbakeUrl={props.forrigeUrl}
+                            onNesteClickSpinner={RemoteData.isPending(lagreFormuegrunnlagStatus)}
+                        />
                     </form>
                 ),
                 right: <GjeldendeFormue />,
@@ -335,7 +393,16 @@ const FormueBlokk = (props: {
                                 showMonthYearPicker
                                 isClearable
                                 autoComplete="off"
-                                {...field}
+                                value={field.value}
+                                onChange={(date) => {
+                                    field.onChange(
+                                        date
+                                            ? Array.isArray(date)
+                                                ? DateFns.startOfMonth(date[0])
+                                                : DateFns.startOfMonth(date)
+                                            : null
+                                    );
+                                }}
                                 feil={fieldState.error?.message}
                                 minDate={periode.fraOgMed}
                                 maxDate={periode.tilOgMed}
@@ -355,7 +422,16 @@ const FormueBlokk = (props: {
                                 showMonthYearPicker
                                 isClearable
                                 autoComplete="off"
-                                {...field}
+                                value={field.value}
+                                onChange={(date) => {
+                                    field.onChange(
+                                        date
+                                            ? Array.isArray(date)
+                                                ? DateFns.endOfMonth(date[0])
+                                                : DateFns.endOfMonth(date)
+                                            : null
+                                    );
+                                }}
                                 feil={fieldState.error?.message}
                                 minDate={watch.periode.fraOgMed}
                                 maxDate={periode.tilOgMed}
@@ -508,6 +584,7 @@ const FormuePanel = (props: {
         'verdiPåKjøretøy',
         'innskuddsbeløp',
         'verdipapir',
+        'pengerSkyldt',
         'kontanterOver1000',
         'depositumskonto',
     ];
@@ -593,6 +670,7 @@ const GjeldendeFormue = () => {
                     <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.verdiKjøretøy' })}</Normaltekst>
                     <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.innskuddsbeløp' })}</Normaltekst>
                     <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.verdiPapir' })}</Normaltekst>
+                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.pengerSkyldt' })}</Normaltekst>
                     <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.kontanterOver1000' })}</Normaltekst>
                     <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.depositumskonto' })}</Normaltekst>
                 </div>
@@ -609,6 +687,7 @@ const GjeldendeFormue = () => {
                             <Element>0</Element>
                             <Element>0</Element>
                             <Element>0</Element>
+                            <Element>0</Element>
                         </div>
                     </div>
                     {harEPS && (
@@ -617,6 +696,7 @@ const GjeldendeFormue = () => {
                                 {intl.formatMessage({ id: 'gjeldendeformue.eps' })}
                             </Normaltekst>
                             <div className={classNames(styles.formueVerdier, styles.formueInfo)}>
+                                <Element>0</Element>
                                 <Element>0</Element>
                                 <Element>0</Element>
                                 <Element>0</Element>

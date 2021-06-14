@@ -202,6 +202,30 @@ export interface BosituasjonRequest {
     begrunnelse: Nullable<string>;
 }
 
+export interface FormuegrunnlagVerdier {
+    verdiIkkePrimærbolig: number;
+    verdiEiendommer: number;
+    verdiKjøretøy: number;
+    innskudd: number;
+    verdipapir: number;
+    kontanter: number;
+    pengerSkyldt: number;
+    depositumskonto: number;
+}
+
+export type FormuegrunnlagFormue = Array<{
+    periode: Periode<string>;
+    søkersFormue: FormuegrunnlagVerdier;
+    epsFormue: Nullable<FormuegrunnlagVerdier>;
+    begrunnelse: Nullable<string>;
+}>;
+
+export interface FormuegrunnlagRequest {
+    sakId: string;
+    revurderingId: string;
+    formue: FormuegrunnlagFormue;
+}
+
 export interface RevurderingProps {
     sakId: string;
     revurdering: Revurdering;

@@ -17,6 +17,7 @@ import {
     InformasjonSomRevurderes,
     Revurdering,
     BosituasjonRequest,
+    FormuegrunnlagRequest,
 } from '~types/Revurdering';
 
 import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '../types/Vilkår';
@@ -201,6 +202,15 @@ export async function lagreBosituasjonsgrunnlag(data: BosituasjonRequest): Promi
             delerBolig: data.delerBolig,
             begrunnelse: data.begrunnelse,
         },
+    });
+}
+
+export async function lagreFormuegrunnlag(data: FormuegrunnlagRequest): Promise<ApiClientResult<Revurdering>> {
+    console.log(data);
+    return apiClient({
+        url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/formuegrunnlag`,
+        method: 'POST',
+        body: data.formue,
     });
 }
 

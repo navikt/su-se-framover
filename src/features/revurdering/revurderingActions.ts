@@ -19,6 +19,7 @@ import {
     InformasjonSomRevurderes,
     Revurdering,
     BosituasjonRequest,
+    FormuegrunnlagRequest,
 } from '~types/Revurdering';
 import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
@@ -234,6 +235,21 @@ export const lagreBosituasjonsgrunnlag = createAsyncThunk<Revurdering, Bosituasj
             delerBolig: arg.delerBolig,
             erEPSUførFlyktning: arg.erEPSUførFlyktning,
             begrunnelse: arg.begrunnelse,
+        });
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
+    }
+);
+
+export const lagreFormuegrunnlag = createAsyncThunk<Revurdering, FormuegrunnlagRequest, { rejectValue: ApiError }>(
+    'revurdering/grunnlag/formue/lagre',
+    async (arg, thunkApi) => {
+        const res = await revurderingApi.lagreFormuegrunnlag({
+            sakId: arg.sakId,
+            revurderingId: arg.revurderingId,
+            formue: arg.formue,
         });
         if (res.status === 'ok') {
             return res.data;

@@ -20,6 +20,7 @@ import {
     fortsettEtterForhåndsvarsel,
     lagreFradragsgrunnlag,
     lagreBosituasjonsgrunnlag,
+    lagreFormuegrunnlag,
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
@@ -678,6 +679,10 @@ export default createSlice({
         });
 
         builder.addCase(lagreBosituasjonsgrunnlag.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+        });
+
+        builder.addCase(lagreFormuegrunnlag.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 

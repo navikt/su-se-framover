@@ -14,6 +14,7 @@ export default {
     'formuepanel.innskuddsbeløp': 'Innskuddsbeløp',
     'formuepanel.verdipapir': 'Verdipapir',
     'formuepanel.kontanterOver1000': 'Kontanter over 1000',
+    'formuepanel.pengerSkyldt': 'Penger skyldt',
     'formuepanel.depositumskonto': 'Depositumskonto',
     'formuepanel.nyBeregning': 'Ny beregning',
 
@@ -25,6 +26,7 @@ export default {
     'gjeldendeformue.innskuddsbeløp': 'Innskuddsbeløp',
     'gjeldendeformue.verdiPapir': 'Verdipapir',
     'gjeldendeformue.kontanterOver1000': 'Kontanter over 1000',
+    'gjeldendeformue.pengerSkyldt': 'Penger skyldt',
     'gjeldendeformue.depositumskonto': 'Depositumskonto',
 
     'knapp.bekreft': 'Bekreft',
