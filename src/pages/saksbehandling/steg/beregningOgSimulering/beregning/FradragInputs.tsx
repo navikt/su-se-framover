@@ -344,7 +344,7 @@ export const FradragInputs = (props: {
                                                     props.onFradragChange(index, {
                                                         ...fradrag,
                                                         periode: {
-                                                            fraOgMed: fradrag.periode!.fraOgMed,
+                                                            fraOgMed: fradrag.periode?.fraOgMed ?? null,
                                                             tilOgMed: DateFns.endOfMonth(e) ?? null,
                                                         },
                                                     });
