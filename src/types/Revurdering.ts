@@ -147,6 +147,7 @@ export enum RevurderingErrorCodes {
     UGYLDIG_TILSTAND = 'ugyldig_tilstand',
     UGYLDIG_ÅRSAK = 'ugyldig_årsak',
     UGYLDIG_DATA = 'ugyldig_data',
+    HULL_I_TIDSLINJE = 'tidslinje_for_vedtak_ikke_kontinuerlig',
 
     //kunne_ikke...
     KUNNE_IKKE_OPPRETTE_OPPGAVE = 'kunne_ikke_opprette_oppgave',

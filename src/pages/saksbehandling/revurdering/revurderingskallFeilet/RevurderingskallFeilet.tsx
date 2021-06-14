@@ -21,6 +21,8 @@ export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMes
             return intl.formatMessage({ id: 'feil.ugyldig.årsak' });
         case RevurderingErrorCodes.UGYLDIG_DATA:
             return intl.formatMessage({ id: 'feil.ugyldig.data' });
+        case RevurderingErrorCodes.HULL_I_TIDSLINJE:
+            return intl.formatMessage({ id: 'feil.ugyldig.hull.tidslinje' });
 
         //fant ikke...
         case RevurderingErrorCodes.FANT_IKKE_REVURDERING:

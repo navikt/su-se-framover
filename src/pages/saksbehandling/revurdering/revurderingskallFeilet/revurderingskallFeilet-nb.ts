@@ -23,6 +23,7 @@ export default {
     'feil.ugyldig.tilstand': 'Ugyldig tilstand',
     'feil.ugyldig.årsak': 'Ugyldig årsak',
     'feil.ugyldig.data': 'Ugyldig data',
+    'feil.ugyldig.hull.tidslinje': 'Støtter ikke revurdering av periode hvor ikke alle måneder har vedtak.',
 
     'feil.siste.måned.ved.nedgang.i.stønaden': 'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
     'feil.simulering.feilet': 'Simulering feilet',
