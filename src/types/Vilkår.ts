@@ -1,19 +1,27 @@
 import { Nullable } from '~lib/types';
 
 import { Fradrag } from './Fradrag';
-import { Bosituasjon, Uføregrunnlag } from './Grunnlag';
+import { Bosituasjon, Formuegrunnlag, Uføregrunnlag } from './Grunnlag';
 import { Periode } from './Periode';
 
 export interface GrunnlagsdataOgVilkårsvurderinger {
     uføre: Nullable<UføreVilkår>;
     fradrag: Fradrag[];
     bosituasjon: Bosituasjon[];
+    formue: Nullable<FormueVilkår>;
 }
 
 export interface UføreVilkår {
-    vilkår: string;
+    vilkår: 'Uførhet';
     vurderinger: VurderingsperiodeUføre[];
     resultat: UføreResultat;
+}
+
+export interface FormueVilkår {
+    //TODO: fiks backend  - og bruk riktig resultat type
+    resultat: UføreResultat;
+    vurderinger: VurderingsperiodeFormue[];
+    vilkår: 'Formue';
 }
 
 export interface VurderingsperiodeUføre {
@@ -21,6 +29,16 @@ export interface VurderingsperiodeUføre {
     opprettet: string;
     resultat: UføreResultat;
     grunnlag?: Uføregrunnlag;
+    periode: Periode<string>;
+    begrunnelse?: string;
+}
+
+export interface VurderingsperiodeFormue {
+    id: string;
+    opprettet: string;
+    //TODO: riktig resultat type
+    resultat: UføreResultat;
+    grunnlag?: Formuegrunnlag;
     periode: Periode<string>;
     begrunnelse?: string;
 }

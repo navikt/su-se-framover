@@ -1,6 +1,7 @@
 import { Nullable } from '~lib/types';
 
 import { Periode } from './Periode';
+import { FormuegrunnlagVerdier } from './Revurdering';
 
 export interface Uføregrunnlag {
     periode: Periode<string>;
@@ -9,8 +10,12 @@ export interface Uføregrunnlag {
     begrunnelse: Nullable<string>;
 }
 
+export interface Formuegrunnlag {
+    søkersFormue: FormuegrunnlagVerdier;
+    epsFormue: Nullable<FormuegrunnlagVerdier>;
+}
+
 export interface Bosituasjon {
-    /* Kun brukt i debuggingsøyemed foreløpig */
     type: BosituasjonTyper;
     fnr: Nullable<string>;
     delerBolig: Nullable<boolean>;

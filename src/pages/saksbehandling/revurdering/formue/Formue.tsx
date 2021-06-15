@@ -1,13 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import { Knapp } from 'nav-frontend-knapper';
 import { Input, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Element, Ingress, Normaltekst, Undertittel } from 'nav-frontend-typografi';
+import { Element, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
     Control,
@@ -19,6 +18,7 @@ import {
     UseFormTrigger,
     useWatch,
 } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
 
 import * as personApi from '~api/personApi';
 import { TrashBin } from '~assets/Icons';
@@ -27,13 +27,11 @@ import { Personkort } from '~components/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { lagreFormuegrunnlag } from '~features/revurdering/revurderingActions';
-import { toIsoDateOnlyString } from '~lib/dateUtils';
 import { pipe } from '~lib/fp';
 import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
-import yup, { validateStringAsNonNegativeNumber } from '~lib/validering';
 import { Periode } from '~types/Periode';
-import { FormuegrunnlagFormue, FormuegrunnlagVerdier, RevurderingProps } from '~types/Revurdering';
+import { RevurderingProps } from '~types/Revurdering';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -43,240 +41,40 @@ import { hentBosituasjongrunnlag } from '../revurderingUtils';
 
 import messages from './formue-nb';
 import styles from './formue.module.less';
-
-interface Verdier {
-    verdiPåBolig: string;
-    verdiPåEiendom: string;
-    verdiPåKjøretøy: string;
-    innskuddsbeløp: string;
-    verdipapir: string;
-    kontanterOver1000: string;
-    pengerSkyldt: string;
-    depositumskonto: string;
-}
-
-interface FormueData {
-    epsFnr: Nullable<string>;
-    periode: { fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> };
-    søkersFormue: Verdier;
-    epsFormue: Nullable<Verdier>;
-    begrunnelse: Nullable<string>;
-}
-
-interface FormueFormData {
-    formue: FormueData[];
-}
-
-const regnUtFormue = (verdier: Nullable<Verdier>) => {
-    if (!verdier) {
-        return 0;
-    }
-
-    //https://trello.com/c/cKPqPVXP/513-saksbehandling-formue-depositumskonto-trekkes-ikke-ifra-innskudd-p%C3%A5-konto
-    //"depositum trekkes fra innskudd på konto(men det kan ikke bli minusbeløp), så summeres innskudd på konto med resten."
-    const innskudd = Math.max(
-        (verdier.innskuddsbeløp ? Number(verdier.innskuddsbeløp) : 0) -
-            (verdier.depositumskonto ? Number(verdier.depositumskonto) : 0),
-        0
-    );
-
-    const skalAdderes = [
-        verdier.verdiPåBolig,
-        verdier.verdiPåEiendom,
-        verdier.verdiPåKjøretøy,
-        verdier.verdipapir,
-        verdier.pengerSkyldt,
-        verdier.kontanterOver1000,
-    ];
-
-    const skalAdderesParsed = skalAdderes.map((verdi) => Number(verdi));
-
-    const formue = [...skalAdderesParsed, innskudd];
-
-    return formue.reduce((prev, current) => {
-        if (isNaN(current)) {
-            return prev + 0;
-        }
-        return prev + current;
-    }, 0);
-};
-
-const schema = yup.object<FormueFormData>({
-    formue: yup
-        .array<FormueData>(
-            yup
-                .object({
-                    epsFnr: yup.string().nullable().defined(),
-                    periode: yup
-                        .object<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>({
-                            fraOgMed: yup.date().required().typeError('Feltet må fylles ut'),
-                            tilOgMed: yup
-                                .date()
-                                .required()
-                                .typeError('Feltet må fylles ut')
-                                .test('etterFom', 'Til-og-med kan ikke være før fra-og-med', function (value) {
-                                    const fom = this.parent.fraOgMed as Nullable<Date>;
-                                    if (value && fom) {
-                                        return !DateFns.isBefore(value, fom);
-                                    }
-                                    return true;
-                                }),
-                        })
-                        .required(),
-                    søkersFormue: yup
-                        .object<Verdier>({
-                            verdiPåBolig: validateStringAsNonNegativeNumber,
-                            verdiPåEiendom: validateStringAsNonNegativeNumber,
-                            verdiPåKjøretøy: validateStringAsNonNegativeNumber,
-                            innskuddsbeløp: validateStringAsNonNegativeNumber,
-                            verdipapir: validateStringAsNonNegativeNumber,
-                            kontanterOver1000: validateStringAsNonNegativeNumber,
-                            pengerSkyldt: validateStringAsNonNegativeNumber,
-                            depositumskonto: validateStringAsNonNegativeNumber,
-                        })
-                        .required(),
-                    epsFormue: yup
-                        .object<Verdier>()
-                        .defined()
-                        .when('epsFnr', {
-                            is: (val) => val !== null,
-                            then: yup
-                                .object<Verdier>({
-                                    verdiPåBolig: validateStringAsNonNegativeNumber,
-                                    verdiPåEiendom: validateStringAsNonNegativeNumber,
-                                    verdiPåKjøretøy: validateStringAsNonNegativeNumber,
-                                    innskuddsbeløp: validateStringAsNonNegativeNumber,
-                                    verdipapir: validateStringAsNonNegativeNumber,
-                                    kontanterOver1000: validateStringAsNonNegativeNumber,
-                                    pengerSkyldt: validateStringAsNonNegativeNumber,
-                                    depositumskonto: validateStringAsNonNegativeNumber,
-                                })
-                                .required(),
-                            otherwise: yup.object().notRequired(),
-                        }),
-                    begrunnelse: yup.string().nullable().defined(),
-                })
-                .required()
-        )
-        .required(),
-});
-
-const getDefaultValues = (epsFnr: Nullable<string>) => {
-    return {
-        formue: [
-            {
-                epsFnr: epsFnr,
-                periode: { fraOgMed: null, tilOgMed: null },
-                søkersFormue: {
-                    verdiPåBolig: '0',
-                    verdiPåEiendom: '0',
-                    verdiPåKjøretøy: '0',
-                    innskuddsbeløp: '0',
-                    verdipapir: '0',
-                    pengerSkyldt: '0',
-                    kontanterOver1000: '0',
-                    depositumskonto: '0',
-                },
-                epsFormue: epsFnr
-                    ? {
-                          verdiPåBolig: '0',
-                          verdiPåEiendom: '0',
-                          verdiPåKjøretøy: '0',
-                          innskuddsbeløp: '0',
-                          verdipapir: '0',
-                          pengerSkyldt: '0',
-                          kontanterOver1000: '0',
-                          depositumskonto: '0',
-                      }
-                    : null,
-                begrunnelse: null,
-            },
-        ],
-    };
-};
-
-const leggTilNyPeriode = (epsFnr: Nullable<string>) => {
-    return {
-        epsFnr: epsFnr,
-        periode: { fraOgMed: null, tilOgMed: null },
-        søkersFormue: {
-            verdiPåBolig: '0',
-            verdiPåEiendom: '0',
-            verdiPåKjøretøy: '0',
-            innskuddsbeløp: '0',
-            verdipapir: '0',
-            kontanterOver1000: '0',
-            pengerSkyldt: '0',
-            depositumskonto: '0',
-        },
-        epsFormue: epsFnr
-            ? {
-                  verdiPåBolig: '0',
-                  verdiPåEiendom: '0',
-                  verdiPåKjøretøy: '0',
-                  innskuddsbeløp: '0',
-                  verdipapir: '0',
-                  pengerSkyldt: '0',
-                  kontanterOver1000: '0',
-                  depositumskonto: '0',
-              }
-            : null,
-        begrunnelse: null,
-    };
-};
-
-const formueFormDataTilFormuegrunnlagRequest = (data: FormueData[]): FormuegrunnlagFormue => {
-    return data.map((formue) => {
-        return {
-            periode: {
-                /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                fraOgMed: toIsoDateOnlyString(formue.periode.fraOgMed!),
-                tilOgMed: toIsoDateOnlyString(formue.periode.tilOgMed!),
-                /* eslint-enable @typescript-eslint/no-non-null-assertion */
-            },
-            //parseVerdier skal ikke kunne returnere null når input-parameteren ikke er null
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            søkersFormue: verdierToNumber(formue.søkersFormue)!,
-            epsFormue: verdierToNumber(formue.epsFormue),
-            begrunnelse: formue.begrunnelse,
-        };
-    });
-};
-
-const verdierToNumber = (stringVerdier: Nullable<Verdier>): FormuegrunnlagVerdier | null => {
-    if (!stringVerdier) {
-        return null;
-    }
-
-    return {
-        verdiIkkePrimærbolig: Number(stringVerdier.verdiPåBolig),
-        verdiEiendommer: Number(stringVerdier.verdiPåEiendom),
-        verdiKjøretøy: Number(stringVerdier.verdiPåKjøretøy),
-        innskudd: Number(stringVerdier.innskuddsbeløp),
-        verdipapir: Number(stringVerdier.verdipapir),
-        kontanter: Number(stringVerdier.kontanterOver1000),
-        pengerSkyldt: Number(stringVerdier.pengerSkyldt),
-        depositumskonto: Number(stringVerdier.depositumskonto),
-    };
-};
+import GjeldendeFormue from './GjeldendeFormue';
+import {
+    FormueFormData,
+    revurderFormueSchema,
+    VerdierFormData,
+    getDefaultValues,
+    regnUtFormue,
+    leggTilNyPeriode,
+    formueFormDataTilFormuegrunnlagRequest,
+} from './RevurderFormueUtils';
 
 const Formue = (props: RevurderingProps) => {
-    const epsFnr = hentBosituasjongrunnlag(props.gjeldendeGrunnlagsdataOgVilkårsvurderinger).fnr;
     const intl = useI18n({ messages });
+    const history = useHistory();
     const [epsStatus, hentEPS] = useApiCall(personApi.fetchPerson);
+    const epsFnr = hentBosituasjongrunnlag(props.revurdering.grunnlagsdataOgVilkårsvurderinger).fnr;
     const [lagreFormuegrunnlagStatus, lagreFormuegrunnlagAction] = useAsyncActionCreator(lagreFormuegrunnlag);
 
     const { control, trigger, handleSubmit } = useForm<FormueFormData>({
-        defaultValues: getDefaultValues(epsFnr),
-        resolver: yupResolver(schema),
+        defaultValues: getDefaultValues(props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue, epsFnr),
+        resolver: yupResolver(revurderFormueSchema),
     });
 
     const lagreFormuegrunnlaget = (data: FormueFormData) => {
-        lagreFormuegrunnlagAction({
-            sakId: props.sakId,
-            revurderingId: props.revurdering.id,
-            formue: formueFormDataTilFormuegrunnlagRequest(data.formue),
-        });
+        lagreFormuegrunnlagAction(
+            {
+                sakId: props.sakId,
+                revurderingId: props.revurdering.id,
+                formue: formueFormDataTilFormuegrunnlagRequest(data.formue),
+            },
+            (res) => {
+                history.push(props.nesteUrl(res));
+            }
+        );
     };
 
     const formueArray = useFieldArray({
@@ -347,7 +145,7 @@ const Formue = (props: RevurderingProps) => {
                         />
                     </form>
                 ),
-                right: <GjeldendeFormue />,
+                right: <GjeldendeFormue gjeldendeFormue={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue} />,
             }}
         </ToKolonner>
     );
@@ -363,9 +161,11 @@ const FormueBlokk = (props: {
     onSlettClick: (index: number) => void;
 }) => {
     const intl = useI18n({ messages });
-    const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(0);
-    const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(0);
     const blokkName = `formue.${props.blokkIndex}` as const;
+    const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(
+        regnUtFormue(props.blokkField.søkersFormue)
+    );
+    const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(regnUtFormue(props.blokkField.epsFormue));
     const periode = {
         fraOgMed: new Date(props.revurderingsperiode.fraOgMed),
         tilOgMed: new Date(props.revurderingsperiode.tilOgMed),
@@ -376,6 +176,7 @@ const FormueBlokk = (props: {
         control: props.formController,
     });
 
+    //TODO - regn ut g-verdi
     const erVilkårOppfylt = true;
 
     return (
@@ -552,13 +353,7 @@ const FormuePanel = (props: {
         return regnUtFormue(formueVerdier);
     }, [{ ...formueVerdier }]);
 
-    const handlePanelKlikk = () => {
-        if (åpen) {
-            validerInputs();
-        } else {
-            setÅpen(true);
-        }
-    };
+    const handlePanelKlikk = () => (åpen ? validerInputs() : setÅpen(true));
 
     function objectValues(obj?: Record<string, unknown>) {
         if (!obj) {
@@ -578,7 +373,7 @@ const FormuePanel = (props: {
         });
     };
 
-    const verdierId: Array<keyof Verdier> = [
+    const verdierId: Array<keyof VerdierFormData> = [
         'verdiPåBolig',
         'verdiPåEiendom',
         'verdiPåKjøretøy',
@@ -640,76 +435,6 @@ const FormuePanel = (props: {
                 {intl.formatMessage({ id: 'knapp.bekreft' })}
             </Knapp>
         </EkspanderbartpanelBase>
-    );
-};
-
-const GjeldendeFormue = () => {
-    const intl = useI18n({ messages });
-    const harEPS = true;
-
-    return (
-        <div>
-            <div className={styles.eksisterendeVedtakTittelContainer}>
-                <Ingress>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.tittel' })}</Ingress>
-                <Element>02.2021 - 06.2021</Element>
-            </div>
-            <ul>
-                {/*props.formue.map((item, index) => (
-                    <li key={index}>
-                        <p>{item}</p>
-                    </li>
-                ))*/}
-            </ul>
-
-            <div className={styles.oppsummeringsContainer}>
-                <div className={styles.formueInfo}>
-                    {/*Finnes en bedre måte? Denne er for å få teksten alignet med verdiene */}
-                    <Normaltekst>&nbsp;</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.verdiBolig' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.verdiEiendom' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.verdiKjøretøy' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.innskuddsbeløp' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.verdiPapir' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.pengerSkyldt' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.kontanterOver1000' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.depositumskonto' })}</Normaltekst>
-                </div>
-                <div className={styles.søkerOgEPSContainer}>
-                    <div>
-                        <Normaltekst className={styles.formueVerdiTittel}>
-                            {intl.formatMessage({ id: 'gjeldendeformue.søker' })}
-                        </Normaltekst>
-                        <div className={classNames(styles.formueVerdier, styles.formueInfo)}>
-                            <Element>0</Element>
-                            <Element>0</Element>
-                            <Element>0</Element>
-                            <Element>0</Element>
-                            <Element>0</Element>
-                            <Element>0</Element>
-                            <Element>0</Element>
-                            <Element>0</Element>
-                        </div>
-                    </div>
-                    {harEPS && (
-                        <div>
-                            <Normaltekst className={styles.formueVerdiTittel}>
-                                {intl.formatMessage({ id: 'gjeldendeformue.eps' })}
-                            </Normaltekst>
-                            <div className={classNames(styles.formueVerdier, styles.formueInfo)}>
-                                <Element>0</Element>
-                                <Element>0</Element>
-                                <Element>0</Element>
-                                <Element>0</Element>
-                                <Element>0</Element>
-                                <Element>0</Element>
-                                <Element>0</Element>
-                                <Element>0</Element>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
     );
 };
 
