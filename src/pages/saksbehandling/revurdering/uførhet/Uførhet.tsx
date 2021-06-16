@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { Knapp } from 'nav-frontend-knapper';
+import Panel from 'nav-frontend-paneler';
 import { Feiloppsummering, Input } from 'nav-frontend-skjema';
 import { Element, Normaltekst, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
@@ -122,104 +123,106 @@ const Uføreperiodevurdering = (props: {
     }, [value.fraOgMed]);
 
     return (
-        <li className={styles.periodeContainer}>
-            <div className={styles.horizontal}>
-                <div className={classNames(styles.horizontal, styles.periodeInputContainer)}>
-                    <Controller
-                        name={`grunnlag.${props.index}.fraOgMed` as const}
-                        control={props.control}
-                        defaultValue={props.item.fraOgMed}
-                        render={({ field, fieldState }) => (
-                            <DatePicker
-                                id={field.name}
-                                label={intl.formatMessage({ id: 'input.fom.label' })}
-                                feil={fieldState.error?.message}
-                                {...field}
-                                onChange={field.onChange}
-                                dateFormat="MM/yyyy"
-                                showMonthYearPicker
-                                isClearable
-                                autoComplete="off"
-                                minDate={props.minDate}
-                                maxDate={props.maxDate}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name={`grunnlag.${props.index}.tilOgMed` as const}
-                        control={props.control}
-                        defaultValue={props.item.tilOgMed}
-                        render={({ field, fieldState }) => (
-                            <DatePicker
-                                label={intl.formatMessage({ id: 'input.tom.label' })}
-                                id={field.name}
-                                feil={fieldState.error?.message}
-                                {...field}
-                                dateFormat="MM/yyyy"
-                                showMonthYearPicker
-                                isClearable
-                                autoComplete="off"
-                                minDate={props.minDate}
-                                maxDate={props.maxDate}
-                            />
-                        )}
-                    />
-                </div>
-                <Knapp
-                    className={styles.slettknapp}
-                    onClick={() => {
-                        props.onRemoveClick();
-                    }}
-                    kompakt
-                    aria-label={intl.formatMessage({ id: 'input.fjernPeriode.label' })}
-                >
-                    <TrashBin width="24px" height="24px" />
-                </Knapp>
-            </div>
-            <Controller
-                control={props.control}
-                name={`grunnlag.${props.index}.oppfylt` as const}
-                defaultValue={props.item.oppfylt}
-                render={({ field, fieldState }) => (
-                    <JaNeiSpørsmål
-                        id={field.name}
-                        legend={intl.formatMessage({ id: 'input.erVilkårOppfylt.label' })}
-                        state={field.value}
-                        onChange={field.onChange}
-                        feil={fieldState.error?.message}
-                    />
-                )}
-            />
-            {value.oppfylt && (
+        <li>
+            <Panel className={styles.periodeContainer} border>
                 <div className={styles.horizontal}>
-                    <Controller
-                        control={props.control}
-                        name={`grunnlag.${props.index}.uføregrad` as const}
-                        defaultValue={props.item.uføregrad ?? ''}
-                        render={({ field, fieldState }) => (
-                            <Input
-                                id={field.name}
-                                label={intl.formatMessage({ id: 'input.uføregrad.label' })}
-                                feil={fieldState.error?.message}
-                                {...field}
-                            />
-                        )}
-                    />
-                    <Controller
-                        control={props.control}
-                        name={`grunnlag.${props.index}.forventetInntekt` as const}
-                        defaultValue={props.item.forventetInntekt ?? ''}
-                        render={({ field, fieldState }) => (
-                            <Input
-                                id={field.name}
-                                label={intl.formatMessage({ id: 'input.forventetInntekt.label' })}
-                                feil={fieldState.error?.message}
-                                {...field}
-                            />
-                        )}
-                    />
+                    <div className={classNames(styles.horizontal, styles.periodeInputContainer)}>
+                        <Controller
+                            name={`grunnlag.${props.index}.fraOgMed` as const}
+                            control={props.control}
+                            defaultValue={props.item.fraOgMed}
+                            render={({ field, fieldState }) => (
+                                <DatePicker
+                                    id={field.name}
+                                    label={intl.formatMessage({ id: 'input.fom.label' })}
+                                    feil={fieldState.error?.message}
+                                    {...field}
+                                    onChange={field.onChange}
+                                    dateFormat="MM/yyyy"
+                                    showMonthYearPicker
+                                    isClearable
+                                    autoComplete="off"
+                                    minDate={props.minDate}
+                                    maxDate={props.maxDate}
+                                />
+                            )}
+                        />
+                        <Controller
+                            name={`grunnlag.${props.index}.tilOgMed` as const}
+                            control={props.control}
+                            defaultValue={props.item.tilOgMed}
+                            render={({ field, fieldState }) => (
+                                <DatePicker
+                                    label={intl.formatMessage({ id: 'input.tom.label' })}
+                                    id={field.name}
+                                    feil={fieldState.error?.message}
+                                    {...field}
+                                    dateFormat="MM/yyyy"
+                                    showMonthYearPicker
+                                    isClearable
+                                    autoComplete="off"
+                                    minDate={props.minDate}
+                                    maxDate={props.maxDate}
+                                />
+                            )}
+                        />
+                    </div>
+                    <Knapp
+                        className={styles.slettknapp}
+                        onClick={() => {
+                            props.onRemoveClick();
+                        }}
+                        kompakt
+                        aria-label={intl.formatMessage({ id: 'input.fjernPeriode.label' })}
+                    >
+                        <TrashBin width="24px" height="24px" />
+                    </Knapp>
                 </div>
-            )}
+                <Controller
+                    control={props.control}
+                    name={`grunnlag.${props.index}.oppfylt` as const}
+                    defaultValue={props.item.oppfylt}
+                    render={({ field, fieldState }) => (
+                        <JaNeiSpørsmål
+                            id={field.name}
+                            legend={intl.formatMessage({ id: 'input.erVilkårOppfylt.label' })}
+                            state={field.value}
+                            onChange={field.onChange}
+                            feil={fieldState.error?.message}
+                        />
+                    )}
+                />
+                {value.oppfylt && (
+                    <div className={styles.horizontal}>
+                        <Controller
+                            control={props.control}
+                            name={`grunnlag.${props.index}.uføregrad` as const}
+                            defaultValue={props.item.uføregrad ?? ''}
+                            render={({ field, fieldState }) => (
+                                <Input
+                                    id={field.name}
+                                    label={intl.formatMessage({ id: 'input.uføregrad.label' })}
+                                    feil={fieldState.error?.message}
+                                    {...field}
+                                />
+                            )}
+                        />
+                        <Controller
+                            control={props.control}
+                            name={`grunnlag.${props.index}.forventetInntekt` as const}
+                            defaultValue={props.item.forventetInntekt ?? ''}
+                            render={({ field, fieldState }) => (
+                                <Input
+                                    id={field.name}
+                                    label={intl.formatMessage({ id: 'input.forventetInntekt.label' })}
+                                    feil={fieldState.error?.message}
+                                    {...field}
+                                />
+                            )}
+                        />
+                    </div>
+                )}
+            </Panel>
         </li>
     );
 };
