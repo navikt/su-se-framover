@@ -4,13 +4,12 @@ import React from 'react';
 
 import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
-import { Nullable } from '~lib/types';
 import { FormueVilkår } from '~types/Vilkår';
 
 import messages from './formue-nb';
 import styles from './formue.module.less';
 
-const GjeldendeFormue = (props: { gjeldendeFormue: Nullable<FormueVilkår> }) => {
+const GjeldendeFormue = (props: { gjeldendeFormue: FormueVilkår }) => {
     const intl = useI18n({ messages });
 
     return (
@@ -19,7 +18,7 @@ const GjeldendeFormue = (props: { gjeldendeFormue: Nullable<FormueVilkår> }) =>
                 <Ingress>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.tittel' })}</Ingress>
             </div>
             <ul>
-                {props.gjeldendeFormue?.vurderinger.map((vurdering) => (
+                {props.gjeldendeFormue.vurderinger.map((vurdering) => (
                     <li key={vurdering.id}>
                         <Element>{DateUtils.formatPeriode(vurdering.periode, intl)}</Element>
                         <div className={styles.oppsummeringsContainer}>

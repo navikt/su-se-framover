@@ -4,7 +4,7 @@ import * as DateUtils from '~lib/dateUtils';
 import { Nullable } from '~lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~lib/validering';
 import { FormuegrunnlagFormue, FormuegrunnlagVerdier } from '~types/Revurdering';
-import { FormueVilkår } from '~types/Vilkår';
+import { Formuegrenser, FormueVilkår } from '~types/Vilkår';
 
 export interface VerdierFormData {
     verdiPåBolig: string;
@@ -212,6 +212,24 @@ export const formueFormDataTilFormuegrunnlagRequest = (data: FormueData[]): Form
             begrunnelse: formue.begrunnelse,
         };
     });
+};
+
+//hvis fraOgMed ikke er utfyllt, eller vi ikke finner en match for fraOgMed,
+//bruker vi den høyeste g-verdien som default
+export const getGVerdiForFormuegrense = (fraOgMed: Nullable<Date>, formuegrenser: Formuegrenser[]) => {
+    const sortert = formuegrenser.slice().sort((a: Formuegrenser, b: Formuegrenser) => {
+        return Date.parse(b.gyldigFra) - Date.parse(a.gyldigFra);
+    });
+
+    if (!fraOgMed) {
+        return sortert[0].beløp;
+    }
+
+    const senesteGrense = sortert.find((grense) => {
+        return fraOgMed >= new Date(grense.gyldigFra);
+    });
+
+    return senesteGrense?.beløp ?? sortert[0].beløp;
 };
 
 export const regnUtFormue = (verdier: Nullable<VerdierFormData>) => {

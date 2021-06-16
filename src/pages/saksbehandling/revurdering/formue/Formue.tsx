@@ -32,6 +32,7 @@ import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import { Periode } from '~types/Periode';
 import { RevurderingProps } from '~types/Revurdering';
+import { Formuegrenser } from '~types/Vilkår';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -50,11 +51,13 @@ import {
     regnUtFormue,
     leggTilNyPeriode,
     formueFormDataTilFormuegrunnlagRequest,
+    getGVerdiForFormuegrense,
 } from './RevurderFormueUtils';
 
 const Formue = (props: RevurderingProps) => {
-    const intl = useI18n({ messages });
+    const formuegrenser = props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue.formuegrenser;
     const history = useHistory();
+    const intl = useI18n({ messages });
     const [epsStatus, hentEPS] = useApiCall(personApi.fetchPerson);
     const epsFnr = hentBosituasjongrunnlag(props.revurdering.grunnlagsdataOgVilkårsvurderinger).fnr;
     const [lagreFormuegrunnlagStatus, lagreFormuegrunnlagAction] = useAsyncActionCreator(lagreFormuegrunnlag);
@@ -62,6 +65,11 @@ const Formue = (props: RevurderingProps) => {
     const { control, trigger, handleSubmit } = useForm<FormueFormData>({
         defaultValues: getDefaultValues(props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue, epsFnr),
         resolver: yupResolver(revurderFormueSchema),
+    });
+
+    const formueArray = useFieldArray({
+        name: 'formue',
+        control: control,
     });
 
     const lagreFormuegrunnlaget = (data: FormueFormData) => {
@@ -76,11 +84,6 @@ const Formue = (props: RevurderingProps) => {
             }
         );
     };
-
-    const formueArray = useFieldArray({
-        name: 'formue',
-        control: control,
-    });
 
     useEffect(() => {
         if (epsFnr) {
@@ -122,6 +125,7 @@ const Formue = (props: RevurderingProps) => {
                                 formController={control}
                                 triggerValidation={trigger}
                                 onSlettClick={() => formueArray.remove(index)}
+                                formuegrenser={formuegrenser}
                             />
                         ))}
                         <div className={styles.nyPeriodeKnappContainer}>
@@ -155,6 +159,7 @@ const FormueBlokk = (props: {
     revurderingsperiode: Periode<string>;
     blokkIndex: number;
     blokkField: FieldArrayWithId<FormueFormData>;
+    formuegrenser: Formuegrenser[];
     EPSPersonkort: Nullable<JSX.Element>;
     formController: Control<FormueFormData>;
     triggerValidation: UseFormTrigger<FormueFormData>;
@@ -166,6 +171,7 @@ const FormueBlokk = (props: {
         regnUtFormue(props.blokkField.søkersFormue)
     );
     const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(regnUtFormue(props.blokkField.epsFormue));
+
     const periode = {
         fraOgMed: new Date(props.revurderingsperiode.fraOgMed),
         tilOgMed: new Date(props.revurderingsperiode.tilOgMed),
@@ -176,8 +182,9 @@ const FormueBlokk = (props: {
         control: props.formController,
     });
 
-    //TODO - regn ut g-verdi
-    const erVilkårOppfylt = true;
+    const erVilkårOppfylt =
+        søkersBekreftetFormue + epsBekreftetFormue <=
+        getGVerdiForFormuegrense(watch.periode.fraOgMed, props.formuegrenser);
 
     return (
         <div className={styles.formueBlokk}>

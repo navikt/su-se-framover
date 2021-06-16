@@ -8,7 +8,7 @@ export interface GrunnlagsdataOgVilkårsvurderinger {
     uføre: Nullable<UføreVilkår>;
     fradrag: Fradrag[];
     bosituasjon: Bosituasjon[];
-    formue: Nullable<FormueVilkår>;
+    formue: FormueVilkår;
 }
 
 export interface UføreVilkår {
@@ -17,7 +17,13 @@ export interface UføreVilkår {
     resultat: UføreResultat;
 }
 
+export interface Formuegrenser {
+    gyldigFra: string;
+    beløp: number;
+}
+
 export interface FormueVilkår {
+    formuegrenser: Formuegrenser[];
     //TODO: fiks backend  - og bruk riktig resultat type
     resultat: UføreResultat;
     vurderinger: VurderingsperiodeFormue[];
