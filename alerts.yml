@@ -1,0 +1,31 @@
+apiVersion: nais.io/v1
+kind: Alert
+metadata:
+  name: su-se-framover
+  namespace: supstonad
+  labels:
+    team: supstonad
+spec:
+  receivers:
+    slack:
+      channel: '{{SLACK_ALERTS_CHANNEL}}'
+      prependText: 'alerts.yml: '
+  alerts:
+    - alert: su-se-framover-metrics-scrape-feilet
+      expr: sum(up{app="su-se-framover", job="kubernetes-pods"}) < 1
+      for: 1m
+      description: "su-se-framover sitt /metrics endepunktet har vært utilgjengelig i minst 1 minutt"
+      action: "`kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"
+    - alert: su-se-framover-error-logg
+      expr: 'sum(max_over_time(logd_messages_total{log_app="su-se-framover",log_level="Error"}[15m])
+              or vector(0)) -
+             sum(max_over_time(logd_messages_total{log_app="su-se-framover",log_level="Error"}[15m]
+             offset 15m) or vector(0)) > 0'
+      for: 1s
+      description: "su-se-framover har fått en ny error i loggen siste 15 min"
+      action: "Det er logget en melding i Kibana. Sjekk logger her: `{{LOGS_URL}}`"
+    - alert: su-se-framover-pods-available
+      expr: sum(kube_deployment_status_replicas_available{deployment="su-se-framover"}) < 1
+      for: 1m
+      description: "Tilgjengelige kubernetes pods for su-se-framover er mindre enn 1"
+      action: "`kubectl describe pod {{ $labels.kubernetes_pod_name }}` for events, og `kubectl logs {{ $labels.kubernetes_pod_name }}` for logger"

@@ -1,0 +1,29 @@
+name: Deploy alerts to NAIS
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'alerts.yml'
+      - '.github/workflows/alerts-deploy.yml'
+jobs:
+  apply-alerts:
+    name: Apply alerts to cluster
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: deploy to dev
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-fss
+          RESOURCE: alerts.yml
+          VAR: SLACK_ALERTS_CHANNEL=#supplerende_stonad_alerts_dev,LOGS_URL=https://logs.adeo.no/goto/6420064d823edb7dc1e34a05076d72dc
+      - name: deploy to prod
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-fss
+          RESOURCE: alerts.yml
+          VAR: SLACK_ALERTS_CHANNEL=#supplerende_stonad_alerts,LOGS_URL=https://logs.adeo.no/goto/8ffcbd951660390ba59eeacfd2425d80

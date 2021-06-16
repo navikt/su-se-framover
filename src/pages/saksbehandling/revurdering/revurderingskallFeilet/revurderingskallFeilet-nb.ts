@@ -23,6 +23,7 @@ export default {
     'feil.ugyldig.tilstand': 'Ugyldig tilstand',
     'feil.ugyldig.årsak': 'Ugyldig årsak',
     'feil.ugyldig.data': 'Ugyldig data',
+    'feil.ugyldig.hull.tidslinje': 'Støtter ikke revurdering av periode hvor ikke alle måneder har vedtak.',
 
     'feil.siste.måned.ved.nedgang.i.stønaden': 'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
     'feil.simulering.feilet': 'Simulering feilet',
@@ -49,6 +50,12 @@ export default {
 
     'feil.vurderinger.utenfor.revurderingsperiode': 'Vurdering av vilkår gjøres innenfor revurderingsperioden',
     'feil.mangler.revurderingsperioder': 'Hele eller deler av revurderingsperioden mangler vurdering(er)',
+
+    'feil.bosituasjon.med.flere.perioder.må.vurderes':
+        'Revurderingsperioden inneholder tvetydig grunnlag for bosituasjon. Bosituasjon må revurderes.',
+
+    'feil.eps.inntekt.med.flere.perioder.må.revurderes':
+        'Revurderingsperioden inneholder tvetydig grunnlag for bosituasjon og inntekt. Både bosituasjon og inntekt må revurderes.',
 
     'feil.ukjentFeil': 'Ukjent feil',
 };

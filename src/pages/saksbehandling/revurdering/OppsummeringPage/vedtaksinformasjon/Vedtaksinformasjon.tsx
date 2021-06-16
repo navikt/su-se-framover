@@ -1,17 +1,20 @@
 import classNames from 'classnames';
+import { pipe } from 'fp-ts/lib/function';
+import * as O from 'fp-ts/Option';
 import { Normaltekst, Element, Ingress } from 'nav-frontend-typografi';
 import * as React from 'react';
 
-import { formatPeriode } from '~lib/dateUtils';
-import { formatCurrency } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import { Revurdering } from '~types/Revurdering';
-import { GrunnlagsdataOgVilkårsvurderinger, UføreResultat, UføreVilkår } from '~types/Vilkår';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
+import { hentBosituasjongrunnlag } from '../../revurderingUtils';
+
+import { getBosituasjongrunnlagsblokker, getUførevilkårgrunnlagsblokker, Grunnlagsblokk } from './grunnlagsblokker';
 import messages from './vedtaksinformasjon-nb';
 import styles from './vedtaksinformasjon.module.less';
 
-const Rad = (props: { overskrift?: boolean; children: { venstre: JSX.Element; høyre: JSX.Element } }) => (
+const Rad = (props: { overskrift?: boolean; children: { venstre: React.ReactNode; høyre: React.ReactNode } }) => (
     <div className={classNames(styles.rad, { [styles.overskriftsrad]: props.overskrift })}>
         <div className={styles.cellecontainer}>
             <div className={styles.celle}>{props.children.venstre}</div>
@@ -22,14 +25,7 @@ const Rad = (props: { overskrift?: boolean; children: { venstre: JSX.Element; h�
     </div>
 );
 
-const Vilkårvisning = (props: {
-    grunnlagsblokker: Array<
-        Array<{
-            label: string;
-            verdi: string;
-        }>
-    >;
-}) => (
+const Vilkårvisning = (props: { grunnlagsblokker: Grunnlagsblokk[] }) => (
     <div className={styles.vilkårvisningContainer}>
         {props.grunnlagsblokker.map((grunnlagsblokk, idx) => (
             <div key={idx} className={styles.grunnlagsblokk}>
@@ -44,38 +40,66 @@ const Vilkårvisning = (props: {
     </div>
 );
 
-const Uførevilkår = (props: { vilkår: UføreVilkår }) => {
+const Uførevilkårblokk = (props: {
+    revurdering: Revurdering;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+}) => {
     const intl = useI18n({ messages });
-    return (
-        <Vilkårvisning
-            grunnlagsblokker={props.vilkår.vurderinger.map((v) =>
-                v.grunnlag && v.resultat === UføreResultat.VilkårOppfylt
-                    ? [
-                          {
-                              label: intl.formatMessage({ id: 'uførhet.label.uføregrad' }),
-                              verdi: `${v.grunnlag.uføregrad.toString()}%`,
-                          },
-                          {
-                              label: intl.formatMessage({ id: 'generell.label.periode' }),
-                              verdi: formatPeriode(v.grunnlag.periode, intl),
-                          },
-                          {
-                              label: intl.formatMessage({ id: 'uførhet.label.ieu' }),
-                              verdi: formatCurrency(intl, v.grunnlag.forventetInntekt),
-                          },
-                      ]
-                    : [
-                          {
-                              label: intl.formatMessage({ id: 'uførhet.label.harUførevedtak' }),
-                              verdi: intl.formatMessage({ id: 'generell.nei' }),
-                          },
-                          {
-                              label: intl.formatMessage({ id: 'generell.label.periode' }),
-                              verdi: formatPeriode(v.periode, intl),
-                          },
-                      ]
-            )}
-        />
+    return pipe(
+        O.fromNullable(props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre),
+        O.fold(
+            () => null,
+            (uførevilkår) => (
+                <Rad>
+                    {{
+                        venstre: <Vilkårvisning grunnlagsblokker={getUførevilkårgrunnlagsblokker(uførevilkår, intl)} />,
+                        høyre: pipe(
+                            O.fromNullable(props.grunnlagsdataOgVilkårsvurderinger.uføre),
+                            O.fold(
+                                () => null,
+                                (grunnlag) => (
+                                    <Vilkårvisning grunnlagsblokker={getUførevilkårgrunnlagsblokker(grunnlag, intl)} />
+                                )
+                            )
+                        ),
+                    }}
+                </Rad>
+            )
+        )
+    );
+};
+
+const Bosituasjonblokk = (props: {
+    revurdering: Revurdering;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+}) => {
+    const intl = useI18n({ messages });
+
+    return pipe(
+        O.fromNullable(hentBosituasjongrunnlag(props.revurdering.grunnlagsdataOgVilkårsvurderinger)),
+        O.fold(
+            () => null,
+            (bosituasjongrunnlag) => (
+                <Rad>
+                    {{
+                        venstre: (
+                            <Vilkårvisning
+                                grunnlagsblokker={getBosituasjongrunnlagsblokker(bosituasjongrunnlag, intl)}
+                            />
+                        ),
+                        høyre: pipe(
+                            O.fromNullable(hentBosituasjongrunnlag(props.grunnlagsdataOgVilkårsvurderinger)),
+                            O.fold(
+                                () => null,
+                                (grunnlag) => (
+                                    <Vilkårvisning grunnlagsblokker={getBosituasjongrunnlagsblokker(grunnlag, intl)} />
+                                )
+                            )
+                        ),
+                    }}
+                </Rad>
+            )
+        )
     );
 };
 
@@ -84,6 +108,7 @@ const Vedtaksinformasjon = (props: {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const intl = useI18n({ messages });
+
     return (
         <div className={styles.container}>
             <Rad overskrift>
@@ -92,18 +117,14 @@ const Vedtaksinformasjon = (props: {
                     høyre: <Ingress>{intl.formatMessage({ id: 'heading.eksisterende' })}</Ingress>,
                 }}
             </Rad>
-            {props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre && (
-                <Rad>
-                    {{
-                        venstre: <Uførevilkår vilkår={props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre} />,
-                        høyre: props.grunnlagsdataOgVilkårsvurderinger.uføre ? (
-                            <Uførevilkår vilkår={props.grunnlagsdataOgVilkårsvurderinger.uføre} />
-                        ) : (
-                            <span />
-                        ),
-                    }}
-                </Rad>
-            )}
+            <Uførevilkårblokk
+                revurdering={props.revurdering}
+                grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
+            />
+            <Bosituasjonblokk
+                revurdering={props.revurdering}
+                grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
+            />
         </div>
     );
 };

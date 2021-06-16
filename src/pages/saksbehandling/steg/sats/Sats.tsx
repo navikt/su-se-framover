@@ -17,13 +17,12 @@ import ToKolonner from '~components/toKolonner/ToKolonner';
 import { eqBosituasjon } from '~features/behandling/behandlingUtils';
 import { lagreBosituasjonGrunnlag } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
-import { useApiCall, useI18n } from '~lib/hooks';
+import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { Bosituasjon } from '~types/Grunnlag';
+import { Bosituasjon } from '~types/grunnlag/Bosituasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
 import { SatsFaktablokk } from '../faktablokk/faktablokker/SatsFaktablokk';
@@ -214,11 +213,10 @@ function getInitialValues(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasj
 }
 
 const SatsForm = (props: SatsProps) => {
-    const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = useState(false);
-    const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
     const eps = props.eps;
+    const [lagreBosituasjonStatus, lagreBosituasjon] = useAsyncActionCreator(lagreBosituasjonGrunnlag);
 
     const formik = useFormik<FormData>({
         initialValues: getInitialValues(eps, props.bosituasjon),
@@ -242,18 +240,17 @@ const SatsForm = (props: SatsProps) => {
             return;
         }
 
-        const res = await dispatch(
-            lagreBosituasjonGrunnlag({
+        lagreBosituasjon(
+            {
                 sakId: props.sakId,
                 behandlingId: props.behandlingId,
                 bosituasjon: bosituasjonsvalg,
                 begrunnelse: values.begrunnelse,
-            })
+            },
+            () => {
+                history.push(nesteUrl);
+            }
         );
-
-        if (lagreBosituasjonGrunnlag.fulfilled.match(res)) {
-            history.push(nesteUrl);
-        }
     };
 
     return (
@@ -364,7 +361,7 @@ const SatsForm = (props: SatsProps) => {
                             />
                         </div>
                         {pipe(
-                            lagreBehandlingsinformasjonStatus,
+                            lagreBosituasjonStatus,
                             RemoteData.fold(
                                 () => null,
                                 () => (

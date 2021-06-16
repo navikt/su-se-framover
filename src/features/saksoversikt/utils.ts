@@ -14,7 +14,7 @@ import {
     InstitusjonsoppholdStatus,
     UførhetStatus,
 } from '~types/Behandlingsinformasjon';
-import { erBosituasjonFullstendig } from '~types/Grunnlag';
+import { erBosituasjonFullstendig } from '~types/grunnlag/Bosituasjon';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const createVilkårUrl = (props: { sakId: string; behandlingId: string; vilkar: Vilkårtype }) =>

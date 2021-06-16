@@ -2,6 +2,6 @@
     "extends": "@tsconfig/node12/tsconfig.json",
     "compilerOptions": {
         "outDir": "./dist",
-        "typeRoots": ["./node_modules/@types", "./typings"],
-    },
+        "typeRoots": ["./node_modules/@types", "./typings"]
+    }
 }

@@ -27,6 +27,7 @@ export default function setupSession(app: Express) {
     app.set('trust proxy', 1);
 
     app.use(
+        /^(?!\/api\/toggles)/,
         session({
             cookie: {
                 maxAge: SESSION_MAX_AGE_MILLIS,
