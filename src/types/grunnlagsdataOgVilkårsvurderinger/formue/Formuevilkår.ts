@@ -24,5 +24,4 @@ export interface VurderingsperiodeFormue {
     resultat: UføreResultat;
     grunnlag?: Formuegrunnlag;
     periode: Periode<string>;
-    begrunnelse?: string;
 }
