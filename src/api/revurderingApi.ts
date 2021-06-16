@@ -3,6 +3,8 @@ import { formatISO } from 'date-fns';
 import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
 import { Fradrag } from '~types/Fradrag';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~types/Periode';
 import {
     OpprettetRevurdering,
@@ -19,8 +21,6 @@ import {
     BosituasjonRequest,
     FormuegrunnlagRequest,
 } from '~types/Revurdering';
-
-import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '../types/Vilkår';
 
 import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
 

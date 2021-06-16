@@ -30,9 +30,9 @@ import { lagreFormuegrunnlag } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
+import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { Periode } from '~types/Periode';
 import { RevurderingProps } from '~types/Revurdering';
-import { Formuegrenser } from '~types/Vilkår';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';

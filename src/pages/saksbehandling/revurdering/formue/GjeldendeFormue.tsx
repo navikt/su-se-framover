@@ -4,7 +4,7 @@ import React from 'react';
 
 import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
-import { FormueVilkår } from '~types/Vilkår';
+import { FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 
 import messages from './formue-nb';
 import styles from './formue.module.less';

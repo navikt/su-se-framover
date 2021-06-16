@@ -11,6 +11,7 @@ import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n, useAsyncActionCreatorWithArgsTransformer } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppDispatch } from '~redux/Store';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
     BeregnetIngenEndring,
     BeslutningEtterForhåndsvarsling,
@@ -18,7 +19,6 @@ import {
     SimulertRevurdering,
     UnderkjentRevurdering,
 } from '~types/Revurdering';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import sharedStyles from '../revurdering.module.less';
 import RevurderingskallFeilet, { feilkodeTilFeilmelding } from '../revurderingskallFeilet/RevurderingskallFeilet';

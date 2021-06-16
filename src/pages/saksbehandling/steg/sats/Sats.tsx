@@ -22,7 +22,7 @@ import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
-import { Bosituasjon } from '~types/grunnlag/Bosituasjon';
+import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { SøknadInnhold } from '~types/Søknad';
 
 import { SatsFaktablokk } from '../faktablokk/faktablokker/SatsFaktablokk';

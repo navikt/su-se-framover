@@ -2,8 +2,12 @@ import { IntlShape } from 'react-intl';
 
 import { formatPeriode } from '~lib/dateUtils';
 import { formatCurrency } from '~lib/formatUtils';
-import { erBosituasjonFullstendig, BosituasjonTyper, Bosituasjon } from '~types/grunnlag/Bosituasjon';
-import { UføreResultat, UføreVilkår } from '~types/Vilkår';
+import {
+    erBosituasjonFullstendig,
+    BosituasjonTyper,
+    Bosituasjon,
+} from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { UføreResultat, UføreVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 
 export type Grunnlagsblokk = Array<{
     label: string;

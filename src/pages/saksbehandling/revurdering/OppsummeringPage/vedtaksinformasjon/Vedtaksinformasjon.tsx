@@ -5,8 +5,8 @@ import { Normaltekst, Element, Ingress } from 'nav-frontend-typografi';
 import * as React from 'react';
 
 import { useI18n } from '~lib/hooks';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering } from '~types/Revurdering';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import { hentBosituasjongrunnlag } from '../../revurderingUtils';
 

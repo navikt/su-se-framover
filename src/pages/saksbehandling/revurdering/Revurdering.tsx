@@ -15,9 +15,9 @@ import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering, Vurderingstatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import { RevurderingSteg } from '../types';
 

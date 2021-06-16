@@ -2,8 +2,8 @@ import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
 import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { Behandlingsinformasjon, FormueStatus, FormueVerdier } from '~types/Behandlingsinformasjon';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~types/Søknad';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 export const keyNavnForFormue: Array<keyof FormueVerdier> = [
     'verdiIkkePrimærbolig',

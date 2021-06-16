@@ -1,5 +1,6 @@
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
-import { Bosituasjon } from '~types/grunnlag/Bosituasjon';
+import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
     Revurdering,
     SimulertRevurdering,
@@ -14,7 +15,6 @@ import {
     InformasjonSomRevurderes,
     Vurderingstatus,
 } from '~types/Revurdering';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import { RevurderingSteg } from '../types';
 

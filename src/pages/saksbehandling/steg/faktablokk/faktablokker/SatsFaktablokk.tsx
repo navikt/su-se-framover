@@ -4,7 +4,7 @@ import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { DelerBoligMed } from '~features/søknad/types';
 import { useI18n } from '~lib/hooks';
 import { keyOf } from '~lib/types';
-import { Bosituasjon } from '~types/grunnlag/Bosituasjon';
+import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Sats } from '~types/Sats';
 import { SøknadInnhold } from '~types/Søknad';
 import { Vilkårtype } from '~types/Vilkårsvurdering';

@@ -2,10 +2,10 @@ import { Nullable } from '~lib/types';
 
 import { Attestering } from './Behandling';
 import { Beregning } from './Beregning';
+import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Periode } from './Periode';
 import { Simulering } from './Simulering';
 import { Vedtak } from './Vedtak';
-import { GrunnlagsdataOgVilkårsvurderinger } from './Vilkår';
 
 export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
     id: string;

@@ -31,9 +31,9 @@ import {
 } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/FradragInputs';
 import { useAppDispatch } from '~redux/Store';
 import { Fradrag, FradragTilhører } from '~types/Fradrag';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { eqStringPeriode } from '~types/Periode';
 import { Revurdering } from '~types/Revurdering';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregning-nb';
 import uføreMessages from '../../steg/uførhet/uførhet-nb';

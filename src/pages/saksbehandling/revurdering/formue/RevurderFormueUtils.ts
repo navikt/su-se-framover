@@ -3,8 +3,8 @@ import * as DateFns from 'date-fns';
 import * as DateUtils from '~lib/dateUtils';
 import { Nullable } from '~lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~lib/validering';
+import { Formuegrenser, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { FormuegrunnlagFormue, FormuegrunnlagVerdier } from '~types/Revurdering';
-import { Formuegrenser, FormueVilkår } from '~types/Vilkår';
 
 export interface VerdierFormData {
     verdiPåBolig: string;
