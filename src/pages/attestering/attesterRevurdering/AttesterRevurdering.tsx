@@ -10,6 +10,7 @@ import { useHistory } from 'react-router-dom';
 import { ApiError } from '~api/apiClient';
 import * as PdfApi from '~api/pdfApi';
 import { Person } from '~api/personApi';
+import VisBeregning from '~components/beregningOgSimulering/beregning/VisBeregning';
 import Personlinje from '~components/personlinje/Personlinje';
 import RevurderingIngenEndringAlert from '~components/revurdering/RevurderingIngenEndringAlert';
 import RevurderingÅrsakOgBegrunnelse from '~components/revurdering/RevurderingÅrsakOgBegrunnelse';
@@ -25,7 +26,6 @@ import {
     erRevurderingIngenEndring,
     erGregulering,
 } from '~pages/saksbehandling/revurdering/revurderingUtils';
-import VisBeregning from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/VisBeregning';
 import { useAppDispatch } from '~redux/Store';
 import { IverksattRevurdering, RevurderingsStatus, UnderkjentRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';

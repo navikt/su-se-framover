@@ -8,7 +8,7 @@ import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
-import Beregning from '../beregningOgSimulering/beregning/Beregning';
+import Beregning from '../../../../components/beregningOgSimulering/beregning/Beregning';
 import FastOppholdINorge from '../fast-opphold-i-norge/FastOppholdINorge';
 import Flyktning from '../flyktning/Flyktning';
 import Formue from '../formue/Formue';

@@ -21,14 +21,14 @@ import * as Routes from '~lib/routes';
 import Vedtaksoppsummering from '~pages/vedtak/Vedtaksoppsummering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
-import Behandlingsoppsummering from './behandlingsoppsummering/behandlingsoppsummering';
+import BehandlingsoppsummeringPage from './behandlingsoppsummeringPage/BehandlingsoppsummeringPage';
 import LukkSøknad from './lukkSøknad/LukkSøknad';
 import Revurdering from './revurdering/Revurdering';
 import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
+import SendTilAttesteringPage from './sendTilAttesteringPage/SendTilAttesteringPage';
 import Vilkår from './steg/vilkår/Vilkår';
-import Vedtak from './vedtak/Vedtak';
 
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
@@ -130,7 +130,7 @@ const Saksoversikt = () => {
                                                 <div className={styles.mainContent}>
                                                     <Switch>
                                                         <Route path={Routes.saksbehandlingVedtak.path}>
-                                                            <Vedtak sak={sak} />
+                                                            <SendTilAttesteringPage sak={sak} />
                                                         </Route>
                                                         <Route path={Routes.saksbehandlingVilkårsvurdering.path}>
                                                             <Vilkår sak={sak} søker={søker} />
@@ -143,7 +143,7 @@ const Saksoversikt = () => {
                                                                     })}
                                                                 </Innholdstittel>
                                                             </div>
-                                                            <Behandlingsoppsummering sak={sak} />
+                                                            <BehandlingsoppsummeringPage sak={sak} />
                                                         </Route>
                                                     </Switch>
                                                 </div>

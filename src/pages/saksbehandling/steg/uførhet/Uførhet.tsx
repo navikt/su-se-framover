@@ -19,7 +19,7 @@ import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { UføreResultat } from '~types/Vilkår';
 
-import { UførhetFaktablokk } from '../faktablokk/faktablokker/UførhetFaktablokk';
+import { UførhetFaktablokk } from '../../../../components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UførhetFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
