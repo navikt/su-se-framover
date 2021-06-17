@@ -143,7 +143,7 @@ export const getDefaultValues = (formueVilkår: Nullable<FormueVilkår>, epsFnr:
                           depositumskonto: '0',
                       }
                     : null,
-                begrunnelse: formue.begrunnelse ?? '',
+                begrunnelse: formue.grunnlag?.begrunnelse ?? '',
             };
         }),
     };
