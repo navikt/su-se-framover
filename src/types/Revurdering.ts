@@ -170,6 +170,7 @@ export enum RevurderingErrorCodes {
     G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
     VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
     ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON = 'attestant_og_saksbehandler_kan_ikke_være_samme_person',
+    DEPOSITUM_KAN_IKKE_VÆRE_HØYERE_ENN_INNSKUDD = 'depositum_kan_ikke_være_høyere_enn_innskudd',
 
     //revurderingsutfall som ikke støttes
     OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON = 'opphør_og_andre_endringer_i_kombinasjon',

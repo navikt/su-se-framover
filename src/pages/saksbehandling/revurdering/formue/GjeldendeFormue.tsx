@@ -24,7 +24,7 @@ export const Formuevurdering = (props: {
 
     return (
         <div className={containerStyle}>
-            {oppsummeringsTing?.side === 'høyre' && (
+            {oppsummeringsTing?.side !== 'venstre' && (
                 <Element>{DateUtils.formatPeriode(vurdering.periode, intl)}</Element>
             )}
             {/*finn på noe bedre her også */}

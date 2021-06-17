@@ -66,6 +66,7 @@ export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMes
         case RevurderingErrorCodes.OVERLAPPENDE_VURDERINGSPERIODER:
             return intl.formatMessage({ id: 'feil.overlappende.vurderingsperioder' });
 
+        //generell
         case RevurderingErrorCodes.UFULLSTENDIG_BEHANDLINGSINFORMASJON:
             return intl.formatMessage({ id: 'feil.ufullstendig.behandlingsinformasjon' });
         case RevurderingErrorCodes.SIMULERING_FEILET:
@@ -86,6 +87,8 @@ export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMes
             return intl.formatMessage({ id: 'feil.kan.ikke.ha.eps.fradrag.uten.eps' });
         case RevurderingErrorCodes.GJELDENDE_EPS_HAR_FORMUE:
             return intl.formatMessage({ id: 'feil.gjeldende.eps.har.formue' });
+        case RevurderingErrorCodes.DEPOSITUM_KAN_IKKE_VÆRE_HØYERE_ENN_INNSKUDD:
+            return intl.formatMessage({ id: 'feil.depositum.kan.ikke.være.høyere.enn.innskudd' });
 
         //revurderingsutfall som ikke støttes
         case RevurderingErrorCodes.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON:
