@@ -180,6 +180,9 @@ export enum RevurderingErrorCodes {
     //bosituasjon
     BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES = 'bosituasjon_med_flere_perioder_må_revurderes',
     BOSITUASJON_FLERE_PERIODER_OG_EPS_INNTEKT = 'eps_inntekt_med_flere_perioder_må_revurderes',
+
+    //feilutbetaling
+    FEILUTBETALING_STØTTES_IKKE = 'feilutbetalinger_støttes_ikke',
 }
 export interface LeggTilUføreResponse {
     revurdering: Revurdering;
