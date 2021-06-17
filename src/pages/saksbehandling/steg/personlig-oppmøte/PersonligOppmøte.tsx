@@ -29,7 +29,7 @@ import {
 } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
-import { PersonligOppmøteFaktablokk } from '../faktablokk/faktablokker/PersonligOppmøteFaktablokk';
+import { PersonligOppmøteFaktablokk } from '../../../../components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurderingknapper } from '../Vurdering';
@@ -256,7 +256,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
 
         if (erUnderkjent(props.behandling) && erVilkårsvurderingerVurdertAvslag(props.behandling)) {
             return history.push(
-                Routes.saksbehandlingVedtak.createURL({
+                Routes.saksbehandlingSendTilAttestering.createURL({
                     sakId: props.sakId,
                     behandlingId: props.behandling.id,
                 })
@@ -292,7 +292,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
             if (res.payload.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
                 return history.push(
-                    Routes.saksbehandlingVedtak.createURL({
+                    Routes.saksbehandlingSendTilAttestering.createURL({
                         sakId: props.sakId,
                         behandlingId: props.behandling.id,
                     })

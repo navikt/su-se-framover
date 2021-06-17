@@ -9,6 +9,12 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
+import { fradragTilFradragFormData } from '~components/beregningOgSimulering/beregning/beregningUtils';
+import {
+    FradragFormData,
+    FradragInputs,
+    fradragSchema,
+} from '~components/beregningOgSimulering/beregning/FradragInputs';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
 import { getFradragstypeStringMedEpsSpesifisering } from '~features/fradrag/fradragUtils';
@@ -23,19 +29,13 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { eqNullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { fradragTilFradragFormData } from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/beregningUtils';
-import {
-    FradragFormData,
-    FradragInputs,
-    fradragSchema,
-} from '~pages/saksbehandling/steg/beregningOgSimulering/beregning/FradragInputs';
 import { useAppDispatch } from '~redux/Store';
 import { Fradrag, FradragTilhører } from '~types/Fradrag';
 import { eqStringPeriode } from '~types/Periode';
 import { Revurdering } from '~types/Revurdering';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
-import fradragMessages from '../../steg/beregningOgSimulering/beregning/beregning-nb';
+import fradragMessages from '../../../../components/beregningOgSimulering/beregning/beregning-nb';
 import uføreMessages from '../../steg/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';

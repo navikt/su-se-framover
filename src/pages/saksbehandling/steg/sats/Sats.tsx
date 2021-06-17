@@ -25,7 +25,7 @@ import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revur
 import { Bosituasjon } from '~types/grunnlag/Bosituasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
-import { SatsFaktablokk } from '../faktablokk/faktablokker/SatsFaktablokk';
+import { SatsFaktablokk } from '../../../../components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurderingknapper } from '../Vurdering';

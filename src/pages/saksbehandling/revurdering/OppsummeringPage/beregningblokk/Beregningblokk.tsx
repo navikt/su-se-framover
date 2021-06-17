@@ -6,8 +6,8 @@ import * as React from 'react';
 import { useI18n } from '~lib/hooks';
 import { harBeregninger, harSimulering, Revurdering, RevurderingsStatus } from '~types/Revurdering';
 
-import VisBeregning from '../../../steg/beregningOgSimulering/beregning/VisBeregning';
-import { Utbetalingssimulering } from '../../../steg/beregningOgSimulering/simulering/simulering';
+import VisBeregning from '../../../../../components/beregningOgSimulering/beregning/VisBeregning';
+import { Utbetalingssimulering } from '../../../../../components/beregningOgSimulering/simulering/simulering';
 import { erGregulering, erRevurderingIngenEndring } from '../../revurderingUtils';
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 
