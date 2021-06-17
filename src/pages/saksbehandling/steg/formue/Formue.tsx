@@ -304,9 +304,8 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                                             },
                                                                             {
                                                                                 navn: showName(props.søker.navn),
-                                                                                fnr:
-                                                                                    søknadInnhold.personopplysninger
-                                                                                        .fnr,
+                                                                                fnr: søknadInnhold.personopplysninger
+                                                                                    .fnr,
                                                                             }
                                                                         )}
                                                                     </Tekstomrade>
@@ -416,9 +415,11 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                 onChange={formik.handleChange}
                                                 defaultValue={formik.values.epsVerdier?.[keyNavn] ?? 0}
                                                 feil={
-                                                    (formik.errors.epsVerdier as
-                                                        | FormikErrors<FormueVerdier>
-                                                        | undefined)?.[keyNavn]
+                                                    (
+                                                        formik.errors.epsVerdier as
+                                                            | FormikErrors<FormueVerdier>
+                                                            | undefined
+                                                    )?.[keyNavn]
                                                 }
                                             />
                                         ))}

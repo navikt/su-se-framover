@@ -24,7 +24,7 @@ type FormData = ForVeilederPapirsøknad;
 
 const schema = yup.object<FormData>({
     type: yup.string().required() as yup.Schema<Søknadstype.Papirsøknad>,
-    mottaksdatoForSøknad: (yup.date().nullable().required() as unknown) as yup.Schema<string>,
+    mottaksdatoForSøknad: yup.date().nullable().required() as unknown as yup.Schema<string>,
     grunnForPapirinnsending: yup.mixed<GrunnForPapirinnsending>().oneOf(Object.values(GrunnForPapirinnsending)),
     annenGrunn: yup.string().nullable().defined().when('grunnForPapirinnsending', {
         is: GrunnForPapirinnsending.Annet,
