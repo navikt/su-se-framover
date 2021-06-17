@@ -42,16 +42,16 @@ import { hentBosituasjongrunnlag } from '../revurderingUtils';
 
 import messages from './formue-nb';
 import styles from './formue.module.less';
-import GjeldendeFormue from './GjeldendeFormue';
+import FormuevilkårOppsummering from './GjeldendeFormue';
 import {
     FormueFormData,
     revurderFormueSchema,
     VerdierFormData,
     getDefaultValues,
-    regnUtFormDataFormue,
+    regnUtFormDataVerdier,
     leggTilNyPeriode,
     formueFormDataTilFormuegrunnlagRequest,
-    getGVerdiForFormuegrense,
+    getSenesteGVerdi,
 } from './RevurderFormueUtils';
 
 const Formue = (props: RevurderingProps) => {
@@ -150,7 +150,11 @@ const Formue = (props: RevurderingProps) => {
                         />
                     </form>
                 ),
-                right: <GjeldendeFormue gjeldendeFormue={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue} />,
+                right: (
+                    <FormuevilkårOppsummering
+                        gjeldendeFormue={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue}
+                    />
+                ),
             }}
         </ToKolonner>
     );
@@ -203,10 +207,10 @@ const FormueBlokk = (props: {
     const intl = useI18n({ messages });
     const blokkName = `formue.${props.blokkIndex}` as const;
     const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(
-        regnUtFormDataFormue(props.blokkField.søkersFormue)
+        regnUtFormDataVerdier(props.blokkField.søkersFormue)
     );
     const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(
-        regnUtFormDataFormue(props.blokkField.epsFormue)
+        regnUtFormDataVerdier(props.blokkField.epsFormue)
     );
 
     const periode = {
@@ -220,8 +224,7 @@ const FormueBlokk = (props: {
     });
 
     const erVilkårOppfylt =
-        søkersBekreftetFormue + epsBekreftetFormue <=
-        getGVerdiForFormuegrense(watch.periode.fraOgMed, props.formuegrenser);
+        søkersBekreftetFormue + epsBekreftetFormue <= getSenesteGVerdi(watch.periode.fraOgMed, props.formuegrenser);
 
     return (
         <div className={styles.formueBlokk}>
@@ -366,29 +369,20 @@ const FormuePanel = (props: {
         control: props.formController,
     });
 
-    const { errors } = useFormState<FormueFormData>({
+    const { errors } = useFormState({
         name: panelName,
         control: props.formController,
     });
 
-    const utregnetFormue = useMemo(() => {
-        return regnUtFormDataFormue(formueVerdier);
-    }, [{ ...formueVerdier }]);
-
     const handlePanelKlikk = () => (åpen ? validerInputs() : setÅpen(true));
 
-    function objectValues(obj?: Nullable<Record<string, unknown>>) {
-        if (!obj) {
-            return [];
-        }
-        return Object.values(obj);
-    }
+    const utregnetFormue = useMemo(() => {
+        return regnUtFormDataVerdier(formueVerdier);
+    }, [{ ...formueVerdier }]);
 
     const validerInputs = () => {
-        props.triggerValidation(panelName).then(() => {
-            const triggeredErrors = errors?.formue?.[props.blokkIndex]?.[formueTilhører];
-
-            if (objectValues(triggeredErrors).length <= 0) {
+        props.triggerValidation(panelName).then((isPanelValid) => {
+            if (isPanelValid) {
                 setÅpen(false);
                 props.setBekreftetFormue(utregnetFormue);
             }
@@ -430,12 +424,12 @@ const FormuePanel = (props: {
                             name={`${panelName}.${id}`}
                             control={props.formController}
                             defaultValue={formueVerdier?.[id] ?? '0'}
-                            render={({ field, fieldState }) => (
+                            render={({ field }) => (
                                 <Input
                                     id={field.name}
                                     label={intl.formatMessage({ id: `formuepanel.${id}` })}
                                     {...field}
-                                    feil={fieldState.error?.message}
+                                    feil={errors.formue?.[props.blokkIndex]?.[formueTilhører]?.[id]?.message}
                                     bredde="M"
                                     inputMode="numeric"
                                     pattern="[0-9]*"

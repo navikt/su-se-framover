@@ -12,7 +12,7 @@ import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre
 import { Revurdering } from '~types/Revurdering';
 
 import { Formuestatus } from '../../formue/Formue';
-import GjeldendeFormue, { Formuevurdering } from '../../formue/GjeldendeFormue';
+import FormuevilkårOppsummering, { Formuevurdering } from '../../formue/GjeldendeFormue';
 import { regnUtFormuegrunnlag } from '../../formue/RevurderFormueUtils';
 import { hentBosituasjongrunnlag } from '../../revurderingUtils';
 
@@ -157,7 +157,7 @@ const Formueblokk = (props: {
                             O.fold(
                                 () => null,
                                 (formuevilkår) => (
-                                    <GjeldendeFormue
+                                    <FormuevilkårOppsummering
                                         gjeldendeFormue={formuevilkår}
                                         oppsummeringsTing={{ side: 'høyre', containerStyle: styles.formueContainer }}
                                     />

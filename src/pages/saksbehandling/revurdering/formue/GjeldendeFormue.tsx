@@ -14,6 +14,27 @@ interface OppsummeringsTing {
     containerStyle: string;
 }
 
+const FormuevilkårOppsummering = (props: { gjeldendeFormue: FormueVilkår; oppsummeringsTing?: OppsummeringsTing }) => {
+    const intl = useI18n({ messages });
+
+    return (
+        <div>
+            {!props.oppsummeringsTing && (
+                <div className={styles.eksisterendeVedtakTittelContainer}>
+                    <Ingress>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.tittel' })}</Ingress>
+                </div>
+            )}
+            <ul>
+                {props.gjeldendeFormue.vurderinger.map((vurdering) => (
+                    <li key={vurdering.id}>
+                        <Formuevurdering vurdering={vurdering} oppsummeringsTing={props.oppsummeringsTing} />
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
+
 export const Formuevurdering = (props: {
     vurdering: VurderingsperiodeFormue;
     containerStyle?: string;
@@ -81,25 +102,4 @@ export const Formuevurdering = (props: {
     );
 };
 
-const GjeldendeFormue = (props: { gjeldendeFormue: FormueVilkår; oppsummeringsTing?: OppsummeringsTing }) => {
-    const intl = useI18n({ messages });
-
-    return (
-        <div>
-            {!props.oppsummeringsTing && (
-                <div className={styles.eksisterendeVedtakTittelContainer}>
-                    <Ingress>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.tittel' })}</Ingress>
-                </div>
-            )}
-            <ul>
-                {props.gjeldendeFormue.vurderinger.map((vurdering) => (
-                    <li key={vurdering.id}>
-                        <Formuevurdering vurdering={vurdering} oppsummeringsTing={props.oppsummeringsTing} />
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-};
-
-export default GjeldendeFormue;
+export default FormuevilkårOppsummering;
