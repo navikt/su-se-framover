@@ -91,7 +91,7 @@ export const saksbehandlingBeregning: Route<{
     createURL: (args) => `/saksoversikt/${args.sakId}/${args.behandlingId}/${SaksbehandlingMenyvalg.Beregning}/`,
 };
 
-export const saksbehandlingVedtak: Route<{
+export const saksbehandlingSendTilAttestering: Route<{
     sakId: string;
     behandlingId: string;
 }> = {

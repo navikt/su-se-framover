@@ -129,7 +129,7 @@ const Saksoversikt = () => {
                                             <Route path={Routes.saksoversiktValgtBehandling.path}>
                                                 <div className={styles.mainContent}>
                                                     <Switch>
-                                                        <Route path={Routes.saksbehandlingVedtak.path}>
+                                                        <Route path={Routes.saksbehandlingSendTilAttestering.path}>
                                                             <SendTilAttesteringPage sak={sak} />
                                                         </Route>
                                                         <Route path={Routes.saksbehandlingVilkårsvurdering.path}>

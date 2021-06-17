@@ -3,7 +3,7 @@ import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Knapp } from 'nav-frontend-knapper';
 import { Element } from 'nav-frontend-typografi';
-import * as React from 'react';
+import React from 'react';
 import { IntlShape } from 'react-intl';
 
 import * as PdfApi from '~api/pdfApi';

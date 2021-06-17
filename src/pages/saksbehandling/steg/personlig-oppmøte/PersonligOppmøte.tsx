@@ -256,7 +256,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
 
         if (erUnderkjent(props.behandling) && erVilkårsvurderingerVurdertAvslag(props.behandling)) {
             return history.push(
-                Routes.saksbehandlingVedtak.createURL({
+                Routes.saksbehandlingSendTilAttestering.createURL({
                     sakId: props.sakId,
                     behandlingId: props.behandling.id,
                 })
@@ -292,7 +292,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
             if (res.payload.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
                 return history.push(
-                    Routes.saksbehandlingVedtak.createURL({
+                    Routes.saksbehandlingSendTilAttestering.createURL({
                         sakId: props.sakId,
                         behandlingId: props.behandling.id,
                     })

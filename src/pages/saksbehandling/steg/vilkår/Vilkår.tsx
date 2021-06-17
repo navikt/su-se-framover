@@ -39,7 +39,7 @@ const Vilkår = (props: { sak: Sak; søker: Person }) => {
             vilkar: vilkårType,
         });
 
-    const vedtakUrl = Routes.saksbehandlingVedtak.createURL({
+    const vedtakUrl = Routes.saksbehandlingSendTilAttestering.createURL({
         sakId: urlParams.sakId,
         behandlingId: behandling.id,
     });

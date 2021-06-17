@@ -56,7 +56,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     };
     const goToVedtak = () => {
         history.push(
-            Routes.saksbehandlingVedtak.createURL({
+            Routes.saksbehandlingSendTilAttestering.createURL({
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
             })
