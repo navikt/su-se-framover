@@ -48,7 +48,7 @@ import {
     revurderFormueSchema,
     VerdierFormData,
     getDefaultValues,
-    regnUtFormue,
+    regnUtFormDataFormue,
     leggTilNyPeriode,
     formueFormDataTilFormuegrunnlagRequest,
     getGVerdiForFormuegrense,
@@ -155,6 +155,39 @@ const Formue = (props: RevurderingProps) => {
     );
 };
 
+export const Formuestatus = (props: { bekreftetFormue: number; erVilkårOppfylt: boolean }) => {
+    const intl = useI18n({ messages });
+
+    return (
+        <div className={styles.statusContainer}>
+            <div>
+                <Normaltekst>{intl.formatMessage({ id: 'formueblokk.totalFormue' })}</Normaltekst>
+                <Undertittel>
+                    {props.bekreftetFormue} {intl.formatMessage({ id: 'panel.kroner' })}
+                </Undertittel>
+            </div>
+
+            <div className={styles.status}>
+                <VilkårvurderingStatusIcon
+                    status={props.erVilkårOppfylt ? VilkårVurderingStatus.Ok : VilkårVurderingStatus.IkkeOk}
+                />
+                <div className={styles.statusInformasjon}>
+                    <p>
+                        {props.erVilkårOppfylt
+                            ? intl.formatMessage({ id: 'formueblokk.vilkårOppfylt' })
+                            : intl.formatMessage({ id: 'formueblokk.vilkårIkkeOppfylt' })}
+                    </p>
+                    <p>
+                        {props.erVilkårOppfylt
+                            ? intl.formatMessage({ id: 'formueblokk.vilkårOppfyltGrunn' })
+                            : intl.formatMessage({ id: 'formueblokk.vilkårIkkeOppfyltGrunn' })}
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const FormueBlokk = (props: {
     revurderingsperiode: Periode<string>;
     blokkIndex: number;
@@ -168,9 +201,11 @@ const FormueBlokk = (props: {
     const intl = useI18n({ messages });
     const blokkName = `formue.${props.blokkIndex}` as const;
     const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(
-        regnUtFormue(props.blokkField.søkersFormue)
+        regnUtFormDataFormue(props.blokkField.søkersFormue)
     );
-    const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(regnUtFormue(props.blokkField.epsFormue));
+    const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(
+        regnUtFormDataFormue(props.blokkField.epsFormue)
+    );
 
     const periode = {
         fraOgMed: new Date(props.revurderingsperiode.fraOgMed),
@@ -287,32 +322,10 @@ const FormueBlokk = (props: {
                 )}
             </div>
 
-            <div className={styles.statusContainer}>
-                <div>
-                    <Normaltekst>{intl.formatMessage({ id: 'formueblokk.totalFormue' })}</Normaltekst>
-                    <Undertittel>
-                        {søkersBekreftetFormue + epsBekreftetFormue} {intl.formatMessage({ id: 'panel.kroner' })}
-                    </Undertittel>
-                </div>
-
-                <div className={styles.status}>
-                    <VilkårvurderingStatusIcon
-                        status={erVilkårOppfylt ? VilkårVurderingStatus.Ok : VilkårVurderingStatus.IkkeOk}
-                    />
-                    <div className={styles.statusInformasjon}>
-                        <p>
-                            {erVilkårOppfylt
-                                ? intl.formatMessage({ id: 'formueblokk.vilkårOppfylt' })
-                                : intl.formatMessage({ id: 'formueblokk.vilkårIkkeOppfylt' })}
-                        </p>
-                        <p>
-                            {erVilkårOppfylt
-                                ? intl.formatMessage({ id: 'formueblokk.vilkårOppfyltGrunn' })
-                                : intl.formatMessage({ id: 'formueblokk.vilkårIkkeOppfyltGrunn' })}
-                        </p>
-                    </div>
-                </div>
-            </div>
+            <Formuestatus
+                bekreftetFormue={søkersBekreftetFormue + epsBekreftetFormue}
+                erVilkårOppfylt={erVilkårOppfylt}
+            />
 
             <div className={styles.begrunnelseContainer}>
                 <Controller
@@ -357,12 +370,12 @@ const FormuePanel = (props: {
     });
 
     const utregnetFormue = useMemo(() => {
-        return regnUtFormue(formueVerdier);
+        return regnUtFormDataFormue(formueVerdier);
     }, [{ ...formueVerdier }]);
 
     const handlePanelKlikk = () => (åpen ? validerInputs() : setÅpen(true));
 
-    function objectValues(obj?: Record<string, unknown>) {
+    function objectValues(obj?: Nullable<Record<string, unknown>>) {
         if (!obj) {
             return [];
         }
@@ -386,7 +399,7 @@ const FormuePanel = (props: {
         'verdiPåKjøretøy',
         'innskuddsbeløp',
         'verdipapir',
-        'pengerSkyldt',
+        'stårNoenIGjeldTilDeg',
         'kontanterOver1000',
         'depositumskonto',
     ];

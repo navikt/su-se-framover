@@ -13,7 +13,7 @@ export interface VerdierFormData {
     innskuddsbeløp: string;
     verdipapir: string;
     kontanterOver1000: string;
-    pengerSkyldt: string;
+    stårNoenIGjeldTilDeg: string;
     depositumskonto: string;
 }
 
@@ -59,7 +59,7 @@ export const revurderFormueSchema = yup.object<FormueFormData>({
                             innskuddsbeløp: validateStringAsNonNegativeNumber,
                             verdipapir: validateStringAsNonNegativeNumber,
                             kontanterOver1000: validateStringAsNonNegativeNumber,
-                            pengerSkyldt: validateStringAsNonNegativeNumber,
+                            stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber,
                             depositumskonto: validateStringAsNonNegativeNumber,
                         })
                         .required(),
@@ -76,7 +76,7 @@ export const revurderFormueSchema = yup.object<FormueFormData>({
                                     innskuddsbeløp: validateStringAsNonNegativeNumber,
                                     verdipapir: validateStringAsNonNegativeNumber,
                                     kontanterOver1000: validateStringAsNonNegativeNumber,
-                                    pengerSkyldt: validateStringAsNonNegativeNumber,
+                                    stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber,
                                     depositumskonto: validateStringAsNonNegativeNumber,
                                 })
                                 .required(),
@@ -101,7 +101,7 @@ const formueGrunnlagVerdierTilVerdierFormData = (verdier?: Nullable<Formuegrunnl
         innskuddsbeløp: verdier.innskudd.toString(),
         verdipapir: verdier.verdipapir.toString(),
         kontanterOver1000: verdier.kontanter.toString(),
-        pengerSkyldt: verdier.pengerSkyldt.toString(),
+        stårNoenIGjeldTilDeg: verdier.pengerSkyldt.toString(),
         depositumskonto: verdier.depositumskonto.toString(),
     };
 };
@@ -128,7 +128,7 @@ export const getDefaultValues = (formueVilkår: Nullable<FormueVilkår>, epsFnr:
                     innskuddsbeløp: '0',
                     verdipapir: '0',
                     kontanterOver1000: '0',
-                    pengerSkyldt: '0',
+                    stårNoenIGjeldTilDeg: '0',
                     depositumskonto: '0',
                 },
                 epsFormue: epsFnr
@@ -139,7 +139,7 @@ export const getDefaultValues = (formueVilkår: Nullable<FormueVilkår>, epsFnr:
                           innskuddsbeløp: '0',
                           verdipapir: '0',
                           kontanterOver1000: '0',
-                          pengerSkyldt: '0',
+                          stårNoenIGjeldTilDeg: '0',
                           depositumskonto: '0',
                       }
                     : null,
@@ -160,7 +160,7 @@ export const leggTilNyPeriode = (epsFnr: Nullable<string>): FormueData => {
             innskuddsbeløp: '0',
             verdipapir: '0',
             kontanterOver1000: '0',
-            pengerSkyldt: '0',
+            stårNoenIGjeldTilDeg: '0',
             depositumskonto: '0',
         },
         epsFormue: epsFnr
@@ -170,7 +170,7 @@ export const leggTilNyPeriode = (epsFnr: Nullable<string>): FormueData => {
                   verdiPåKjøretøy: '0',
                   innskuddsbeløp: '0',
                   verdipapir: '0',
-                  pengerSkyldt: '0',
+                  stårNoenIGjeldTilDeg: '0',
                   kontanterOver1000: '0',
                   depositumskonto: '0',
               }
@@ -191,7 +191,7 @@ const verdierToNumber = (stringVerdier: Nullable<VerdierFormData>): Formuegrunnl
         innskudd: Number(stringVerdier.innskuddsbeløp),
         verdipapir: Number(stringVerdier.verdipapir),
         kontanter: Number(stringVerdier.kontanterOver1000),
-        pengerSkyldt: Number(stringVerdier.pengerSkyldt),
+        pengerSkyldt: Number(stringVerdier.stårNoenIGjeldTilDeg),
         depositumskonto: Number(stringVerdier.depositumskonto),
     };
 };
@@ -226,13 +226,14 @@ export const getGVerdiForFormuegrense = (fraOgMed: Nullable<Date>, formuegrenser
     }
 
     const senesteGrense = sortert.find((grense) => {
-        return fraOgMed >= new Date(grense.gyldigFra);
+        const parsed = DateFns.startOfDay(new Date(grense.gyldigFra));
+        return DateFns.isAfter(fraOgMed, parsed) || DateFns.isEqual(fraOgMed, parsed);
     });
 
     return senesteGrense?.beløp ?? sortert[0].beløp;
 };
 
-export const regnUtFormue = (verdier: Nullable<VerdierFormData>) => {
+export const regnUtFormDataFormue = (verdier: Nullable<VerdierFormData>) => {
     if (!verdier) {
         return 0;
     }
@@ -250,13 +251,39 @@ export const regnUtFormue = (verdier: Nullable<VerdierFormData>) => {
         verdier.verdiPåEiendom,
         verdier.verdiPåKjøretøy,
         verdier.verdipapir,
-        verdier.pengerSkyldt,
+        verdier.stårNoenIGjeldTilDeg,
         verdier.kontanterOver1000,
     ];
 
     const skalAdderesParsed = skalAdderes.map((verdi) => Number(verdi));
 
     const formue = [...skalAdderesParsed, innskudd];
+
+    return formue.reduce((prev, current) => {
+        if (isNaN(current)) {
+            return prev + 0;
+        }
+        return prev + current;
+    }, 0);
+};
+
+export const regnUtFormuegrunnlag = (verdier?: Nullable<FormuegrunnlagVerdier>) => {
+    if (!verdier) {
+        return 0;
+    }
+
+    const innskudd = Math.max(verdier.innskudd - verdier.depositumskonto, 0);
+
+    const skalAdderes = [
+        verdier.verdiIkkePrimærbolig,
+        verdier.verdiEiendommer,
+        verdier.verdiKjøretøy,
+        verdier.verdipapir,
+        verdier.pengerSkyldt,
+        verdier.kontanter,
+    ];
+
+    const formue = [...skalAdderes, innskudd];
 
     return formue.reduce((prev, current) => {
         if (isNaN(current)) {

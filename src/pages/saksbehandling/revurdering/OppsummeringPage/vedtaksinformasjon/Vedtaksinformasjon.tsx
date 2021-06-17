@@ -3,11 +3,17 @@ import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
 import { Normaltekst, Element, Ingress } from 'nav-frontend-typografi';
 import * as React from 'react';
+import { IntlShape } from 'react-intl';
 
 import { useI18n } from '~lib/hooks';
+import { FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Revurdering } from '~types/Revurdering';
 
+import { Formuestatus } from '../../formue/Formue';
+import GjeldendeFormue, { Formuevurdering } from '../../formue/GjeldendeFormue';
+import { regnUtFormuegrunnlag } from '../../formue/RevurderFormueUtils';
 import { hentBosituasjongrunnlag } from '../../revurderingUtils';
 
 import { getBosituasjongrunnlagsblokker, getUførevilkårgrunnlagsblokker, Grunnlagsblokk } from './grunnlagsblokker';
@@ -103,6 +109,68 @@ const Bosituasjonblokk = (props: {
     );
 };
 
+const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; intl: IntlShape }) => {
+    return (
+        <ul>
+            {props.formuevilkår.vurderinger.map((vurdering) => {
+                const søkersFormue = regnUtFormuegrunnlag(vurdering.grunnlag?.søkersFormue);
+                const epsFormue = regnUtFormuegrunnlag(vurdering.grunnlag?.epsFormue);
+                const bekreftetFormue = søkersFormue + epsFormue;
+
+                return (
+                    <li key={vurdering.id}>
+                        <Formuevurdering
+                            vurdering={vurdering}
+                            oppsummeringsTing={{ side: 'venstre', containerStyle: styles.formueContainer }}
+                        />
+                        <Formuestatus
+                            bekreftetFormue={bekreftetFormue}
+                            erVilkårOppfylt={vurdering.resultat === UføreResultat.VilkårOppfylt}
+                        />
+                        <div className={styles.begrunnelseContainer}>
+                            <Normaltekst>{props.intl.formatMessage({ id: 'formue.begrunnelse' })}</Normaltekst>
+                            <Element>{vurdering.grunnlag?.begrunnelse}</Element>
+                        </div>
+                    </li>
+                );
+            })}
+        </ul>
+    );
+};
+
+const Formueblokk = (props: {
+    revurdering: Revurdering;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+}) => {
+    const intl = useI18n({ messages });
+
+    return pipe(
+        O.fromNullable(props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue),
+        O.fold(
+            () => null,
+            (formuevilkår) => (
+                <Rad>
+                    {{
+                        venstre: <FormuevilkårVisning formuevilkår={formuevilkår} intl={intl} />,
+                        høyre: pipe(
+                            O.fromNullable(props.grunnlagsdataOgVilkårsvurderinger.formue),
+                            O.fold(
+                                () => null,
+                                (formuevilkår) => (
+                                    <GjeldendeFormue
+                                        gjeldendeFormue={formuevilkår}
+                                        oppsummeringsTing={{ side: 'høyre', containerStyle: styles.formueContainer }}
+                                    />
+                                )
+                            )
+                        ),
+                    }}
+                </Rad>
+            )
+        )
+    );
+};
+
 const Vedtaksinformasjon = (props: {
     revurdering: Revurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
@@ -122,6 +190,10 @@ const Vedtaksinformasjon = (props: {
                 grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
             />
             <Bosituasjonblokk
+                revurdering={props.revurdering}
+                grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
+            />
+            <Formueblokk
                 revurdering={props.revurdering}
                 grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
             />

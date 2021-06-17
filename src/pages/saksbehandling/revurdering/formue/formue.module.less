@@ -21,6 +21,16 @@
     }
 }
 
+.søkerOgEPSContainer {
+    display: flex;
+
+    > :not(:last-child) {
+        margin-right: @spacing-xs;
+        padding-right: @spacing;
+        border-right: @navLysGra 2px solid;
+    }
+}
+
 .formuePanel {
     background-color: @navLysGra;
 
@@ -40,15 +50,6 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 
-    .søkerOgEPSContainer {
-        display: flex;
-
-        > :not(:last-child) {
-            margin-right: @spacing-xs;
-            padding-right: @spacing;
-            border-right: @navLysGra 2px solid;
-        }
-    }
     .formueVerdiTittel {
         margin-bottom: @spacing-xxs;
     }
@@ -95,23 +96,23 @@
         }
     }
 
-    .statusContainer {
-        display: flex;
-        justify-content: space-around;
-        margin-bottom: @spacing;
-
-        .status {
-            display: flex;
-            align-items: center;
-            margin-left: @spacing;
-
-            .statusInformasjon {
-                margin-left: @spacing-xxs;
-            }
-        }
-    }
-
     .begrunnelseContainer {
         margin-bottom: @spacing-xl;
+    }
+}
+
+.statusContainer {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: @spacing;
+
+    .status {
+        display: flex;
+        align-items: center;
+        margin-left: @spacing;
+
+        .statusInformasjon {
+            margin-left: @spacing-xxs;
+        }
     }
 }
