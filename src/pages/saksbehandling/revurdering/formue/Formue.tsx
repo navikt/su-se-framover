@@ -121,6 +121,7 @@ const Formue = (props: RevurderingProps) => {
                                 revurderingsperiode={props.revurdering.periode}
                                 blokkIndex={index}
                                 blokkField={field}
+                                formueArrayLengde={formueArray.fields.length}
                                 EPSPersonkort={EPSPersonkort}
                                 formController={control}
                                 triggerValidation={trigger}
@@ -193,6 +194,7 @@ const FormueBlokk = (props: {
     blokkIndex: number;
     blokkField: FieldArrayWithId<FormueFormData>;
     formuegrenser: Formuegrenser[];
+    formueArrayLengde: number;
     EPSPersonkort: Nullable<JSX.Element>;
     formController: Control<FormueFormData>;
     triggerValidation: UseFormTrigger<FormueFormData>;
@@ -284,7 +286,7 @@ const FormueBlokk = (props: {
                         )}
                     />
                 </div>
-                {props.blokkIndex > 0 && (
+                {props.formueArrayLengde > 1 && (
                     <Knapp
                         className={styles.søppelbøtte}
                         htmlType="button"
