@@ -241,11 +241,12 @@ const VisBeregning = (props: Props) => {
                                     </li>
                                 ))
                             )}
-                            {pipe(
-                                månedsberegninger[0],
-                                getBenyttedeFradrag,
-                                arr.some((fradrag) => fradrag.type === Fradragstype.BeregnetFradragEPS)
-                            ) ? null : (
+                            {pipe(månedsberegninger[0], getBenyttedeFradrag, (benyttedeFradrag) => {
+                                return (
+                                    månedsberegninger[0].epsInputFradrag.length === 0 ||
+                                    benyttedeFradrag.some((fradrag) => fradrag.type === Fradragstype.BeregnetFradragEPS) // Beregnet fradrag er når det er over fribeløp
+                                );
+                            }) ? null : (
                                 // TODO ai 30.04.2021: determine key for list of fradrag for eps
                                 <li key={Math.random()} className={styles.linje}>
                                     <DetaljertFradrag
