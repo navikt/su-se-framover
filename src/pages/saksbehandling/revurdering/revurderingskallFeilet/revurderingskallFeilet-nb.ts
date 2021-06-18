@@ -12,6 +12,13 @@ export default {
     'feil.fant.ikke.revurdering': 'Fant ikke revurdering',
     'feil.fant.ikke.person': 'Fant ikke person',
 
+    'feil.ikke_lov_med_overlappende_perioder': 'Ikke lov med overlappende perioder',
+    'feil.ikke_lov_med_formueperiode_utenfor_bosituasjonperiode':
+        'Ikke lov med formue-periode utenfor bosituasjonperioden',
+    'feil.ikke_lov_med_formueperiode_utenfor_behandlingsperioden':
+        'Ikke lov med formue-periode utenfor behandlingsperioden',
+    'feil.ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps': 'Ikke lov med formue for eps hvis man ikke har eps',
+
     'feil.kunne.ikke.opprette.oppgave': 'Kunne ikke opprette oppgave',
     'feil.kunne.ikke.journalføre.brev': 'Kunne ikke journalføre brev',
     'feil.kunne.ikke.distribuere.brev': 'Distribuering av brev feilet',

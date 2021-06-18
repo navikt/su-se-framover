@@ -34,6 +34,16 @@ export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMes
         case RevurderingErrorCodes.FANT_IKKE_PERSON:
             return intl.formatMessage({ id: 'feil.fant.ikke.person' });
 
+        //ikke lov...
+        case RevurderingErrorCodes.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN:
+            return intl.formatMessage({ id: 'feil.ikke_lov_med_formueperiode_utenfor_behandlingsperioden' });
+        case RevurderingErrorCodes.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BOSITUASJONPERIODE:
+            return intl.formatMessage({ id: 'feil.ikke_lov_med_formueperiode_utenfor_bosituasjonperiode' });
+        case RevurderingErrorCodes.IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS:
+            return intl.formatMessage({ id: 'feil.ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps' });
+        case RevurderingErrorCodes.IKKE_LOV_MED_OVERLAPPENDE_PERIODER:
+            return intl.formatMessage({ id: 'feil.ikke_lov_med_overlappende_perioder' });
+
         //kunne ikke...
         case RevurderingErrorCodes.KUNNE_IKKE_OPPRETTE_OPPGAVE:
             return intl.formatMessage({ id: 'feil.kunne.ikke.opprette.oppgave' });

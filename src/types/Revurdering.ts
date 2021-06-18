@@ -142,6 +142,13 @@ export enum RevurderingErrorCodes {
     FANT_IKKE_AKTØR_ID = 'fant_ikke_aktør_id',
     FANT_IKKE_REVURDERING = 'fant_ikke_revurdering',
 
+    //Ikke_lov...
+    IKKE_LOV_MED_OVERLAPPENDE_PERIODER = 'ikke_lov_med_overlappende_perioder',
+    IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BOSITUASJONPERIODE = 'ikke_lov_med_formueperiode_utenfor_bosituasjonperiode',
+    IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN = 'ikke_lov_med_formueperiode_utenfor_behandlingsperioden',
+    IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS = 'ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps',
+    FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES = 'formue_som_fører_til_opphør_må_revurderes',
+
     //ugyldig...
     UGYLDIG_PERIODE = 'ugyldig_periode',
     UGYLDIG_TILSTAND = 'ugyldig_tilstand',
