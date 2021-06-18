@@ -9,17 +9,12 @@ import { FormueVilkår, VurderingsperiodeFormue } from '~types/grunnlagsdataOgVi
 import messages from './formue-nb';
 import styles from './formue.module.less';
 
-interface OppsummeringsTing {
-    side: 'venstre' | 'høyre';
-    containerStyle: string;
-}
-
-const FormuevilkårOppsummering = (props: { gjeldendeFormue: FormueVilkår; oppsummeringsTing?: OppsummeringsTing }) => {
+const FormuevilkårOppsummering = (props: { gjeldendeFormue: FormueVilkår; brukesForOppsummering?: boolean }) => {
     const intl = useI18n({ messages });
 
     return (
         <div>
-            {!props.oppsummeringsTing && (
+            {!props.brukesForOppsummering && (
                 <div className={styles.eksisterendeVedtakTittelContainer}>
                     <Ingress>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.tittel' })}</Ingress>
                 </div>
@@ -27,7 +22,7 @@ const FormuevilkårOppsummering = (props: { gjeldendeFormue: FormueVilkår; opps
             <ul>
                 {props.gjeldendeFormue.vurderinger.map((vurdering) => (
                     <li key={vurdering.id}>
-                        <Formuevurdering vurdering={vurdering} oppsummeringsTing={props.oppsummeringsTing} />
+                        <Formuevurdering vurdering={vurdering} />
                     </li>
                 ))}
             </ul>
@@ -35,22 +30,17 @@ const FormuevilkårOppsummering = (props: { gjeldendeFormue: FormueVilkår; opps
     );
 };
 
-export const Formuevurdering = (props: {
-    vurdering: VurderingsperiodeFormue;
-    containerStyle?: string;
-    oppsummeringsTing?: OppsummeringsTing;
-}) => {
-    const { vurdering, containerStyle, oppsummeringsTing } = props;
+export const Formuevurdering = (props: { vurdering: VurderingsperiodeFormue }) => {
+    const { vurdering } = props;
     const intl = useI18n({ messages });
 
     return (
-        <div className={containerStyle}>
-            {oppsummeringsTing?.side !== 'venstre' && (
+        <div>
+            <div className={styles.gjeldendePeriode}>
+                <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.gjeldendePeriode' })}</Normaltekst>
                 <Element>{DateUtils.formatPeriode(vurdering.periode, intl)}</Element>
-            )}
-            {/*finn på noe bedre her også */}
-            {oppsummeringsTing?.side === 'venstre' && <Element>&nbsp;</Element>}
-            <div className={oppsummeringsTing ? oppsummeringsTing.containerStyle : styles.oppsummeringsContainer}>
+            </div>
+            <div className={styles.oppsummeringsContainer}>
                 <div className={styles.formueInfo}>
                     {/*Finnes en bedre måte? Denne er for å få teksten alignet med verdiene */}
                     <Normaltekst>&nbsp;</Normaltekst>

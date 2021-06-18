@@ -42,7 +42,7 @@ import { hentBosituasjongrunnlag } from '../revurderingUtils';
 
 import messages from './formue-nb';
 import styles from './formue.module.less';
-import FormuevilkårOppsummering from './GjeldendeFormue';
+import FormuevilkårOppsummering from './FormuevilkårOppsummering';
 import {
     FormueFormData,
     revurderFormueSchema,
