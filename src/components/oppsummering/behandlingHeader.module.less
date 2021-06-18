@@ -1,0 +1,38 @@
+@import '~/styles/variables.less';
+
+.behandlingUnderkjentContainer {
+    display: flex;
+    flex-direction: column;
+
+    .grunnOgKommentarContainer {
+        display: grid;
+        grid-template-columns: auto auto 1fr;
+        gap: @spacing;
+        margin-bottom: @spacing-s;
+    }
+}
+
+.tilleggsinfoContainer {
+    display: flex;
+    margin-bottom: @spacing-l;
+
+    > :not(:last-child) {
+        margin-right: @spacing;
+    }
+}
+
+.brevutkastFeil {
+    display: flex;
+    justify-content: center;
+}
+
+.ikonContainer {
+    display: flex;
+    align-self: flex-start;
+    align-items: center;
+    margin-bottom: @spacing-xs;
+
+    .ikon {
+        margin-right: @spacing-xs;
+    }
+}

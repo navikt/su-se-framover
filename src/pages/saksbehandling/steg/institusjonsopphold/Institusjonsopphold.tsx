@@ -20,7 +20,7 @@ import {
     Institusjonsopphold as InstitusjonsoppholdType,
 } from '~types/Behandlingsinformasjon';
 
-import { InstitusjonsoppholdBlokk } from '../faktablokk/faktablokker/InstitusjonsoppholdBlokk';
+import { InstitusjonsoppholdBlokk } from '../../../../components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/InstitusjonsoppholdBlokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
