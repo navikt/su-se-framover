@@ -27,6 +27,7 @@ export default {
 
     'feilmelding.ikkeTilgang': 'Du har ikke tilgang til å se informasjon om denne brukeren',
     'feilmelding.ikkeFunnet': 'Fant ikke noen bruker med det fødselsnummeret',
+    'feilmelding.ugyldigeVerdier.depositum': 'Depositum må være mindre enn eller lik innskudd',
     'feilmelding.ukjent': 'En feil skjedde',
 
     'page.tittel': 'Formue',

@@ -528,9 +528,11 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                         {intl.formatMessage({ id: 'display.lagre.lagrer' })}
                                     </NavFrontendSpinner>
                                 ),
-                                () => (
+                                (error) => (
                                     <AlertStripe type="feil">
-                                        {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                        {error.body?.code === 'ugyldige_verdier_på_formue'
+                                            ? intl.formatMessage({ id: 'feilmelding.ugyldigeVerdier.depositum' })
+                                            : intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
                                     </AlertStripe>
                                 ),
                                 () => null
