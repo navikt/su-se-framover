@@ -18,6 +18,7 @@ export default {
     'formuepanel.depositumskonto': 'Depositumskonto',
     'formuepanel.nyBeregning': 'Ny beregning',
 
+    'gjeldendeformue.tittel': 'Formue',
     'gjeldendeformue.søker': 'Søker',
     'gjeldendeformue.eps': 'Ektefelle/Samboer',
     'gjeldendeformue.verdiBolig': 'Verdi på bolig',
@@ -28,6 +29,7 @@ export default {
     'gjeldendeformue.kontanter': 'Kontanter over 1000',
     'gjeldendeformue.stårNoenIGjeldTilDeg': 'Står noen i gjeld til deg',
     'gjeldendeformue.depositum': 'Depositumskonto',
+    'gjeldendeformue.gjeldendePeriode': 'Gjeldende periode',
 
     'knapp.bekreft': 'Bekreft',
     'knapp.fjernPeriode': 'Fjern periode',

@@ -1,5 +1,11 @@
 @import '~/styles/variables.less';
 
+.gjeldendePeriode {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: @spacing-xs;
+}
+
 .nyPeriodeKnappContainer {
     display: flex;
     justify-content: flex-end;
@@ -48,7 +54,7 @@
 
 .oppsummeringsContainer {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     margin-bottom: @spacing;
 
     .formueVerdiTittel {

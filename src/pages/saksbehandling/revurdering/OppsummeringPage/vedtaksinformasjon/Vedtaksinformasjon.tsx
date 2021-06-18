@@ -12,7 +12,7 @@ import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre
 import { Revurdering } from '~types/Revurdering';
 
 import { Formuestatus } from '../../formue/Formue';
-import FormuevilkårOppsummering, { Formuevurdering } from '../../formue/GjeldendeFormue';
+import FormuevilkårOppsummering, { Formuevurdering } from '../../formue/FormuevilkårOppsummering';
 import { regnUtFormuegrunnlag } from '../../formue/RevurderFormueUtils';
 import { hentBosituasjongrunnlag } from '../../revurderingUtils';
 
@@ -20,13 +20,20 @@ import { getBosituasjongrunnlagsblokker, getUførevilkårgrunnlagsblokker, Grunn
 import messages from './vedtaksinformasjon-nb';
 import styles from './vedtaksinformasjon.module.less';
 
-const Rad = (props: { overskrift?: boolean; children: { venstre: React.ReactNode; høyre: React.ReactNode } }) => (
+const Rad = (props: {
+    overskrift?: boolean;
+    radTittel?: string;
+    children: { venstre: React.ReactNode; høyre: React.ReactNode };
+}) => (
     <div className={classNames(styles.rad, { [styles.overskriftsrad]: props.overskrift })}>
-        <div className={styles.cellecontainer}>
-            <div className={styles.celle}>{props.children.venstre}</div>
-        </div>
-        <div className={styles.cellecontainer}>
-            <div className={styles.celle}>{props.children.høyre}</div>
+        <div className={styles.radTittelContainer}>{props.radTittel && <Element>{props.radTittel}</Element>}</div>
+        <div className={styles.childrenContainer}>
+            <div className={styles.cellecontainer}>
+                <div className={styles.celle}>{props.children.venstre}</div>
+            </div>
+            <div className={styles.cellecontainer}>
+                <div className={styles.celle}>{props.children.høyre}</div>
+            </div>
         </div>
     </div>
 );
@@ -56,7 +63,7 @@ const Uførevilkårblokk = (props: {
         O.fold(
             () => null,
             (uførevilkår) => (
-                <Rad>
+                <Rad radTittel={intl.formatMessage({ id: 'radTittel.uførhet' })}>
                     {{
                         venstre: <Vilkårvisning grunnlagsblokker={getUførevilkårgrunnlagsblokker(uførevilkår, intl)} />,
                         høyre: pipe(
@@ -86,7 +93,7 @@ const Bosituasjonblokk = (props: {
         O.fold(
             () => null,
             (bosituasjongrunnlag) => (
-                <Rad>
+                <Rad radTittel={intl.formatMessage({ id: 'radTittel.bosituasjon' })}>
                     {{
                         venstre: (
                             <Vilkårvisning
@@ -119,10 +126,7 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; intl: IntlS
 
                 return (
                     <li key={vurdering.id}>
-                        <Formuevurdering
-                            vurdering={vurdering}
-                            oppsummeringsTing={{ side: 'venstre', containerStyle: styles.formueContainer }}
-                        />
+                        <Formuevurdering vurdering={vurdering} />
                         <Formuestatus
                             bekreftetFormue={bekreftetFormue}
                             erVilkårOppfylt={vurdering.resultat === UføreResultat.VilkårOppfylt}
@@ -149,7 +153,7 @@ const Formueblokk = (props: {
         O.fold(
             () => null,
             (formuevilkår) => (
-                <Rad>
+                <Rad radTittel={intl.formatMessage({ id: 'radTittel.formue' })}>
                     {{
                         venstre: <FormuevilkårVisning formuevilkår={formuevilkår} intl={intl} />,
                         høyre: pipe(
@@ -157,10 +161,7 @@ const Formueblokk = (props: {
                             O.fold(
                                 () => null,
                                 (formuevilkår) => (
-                                    <FormuevilkårOppsummering
-                                        gjeldendeFormue={formuevilkår}
-                                        oppsummeringsTing={{ side: 'høyre', containerStyle: styles.formueContainer }}
-                                    />
+                                    <FormuevilkårOppsummering gjeldendeFormue={formuevilkår} brukesForOppsummering />
                                 )
                             )
                         ),

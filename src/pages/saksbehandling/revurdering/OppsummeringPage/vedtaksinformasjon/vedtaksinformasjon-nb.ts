@@ -19,6 +19,7 @@ export default {
     'bosituasjon.sats.ordinær': 'Ordinær',
     'bosituasjon.sats.høy': 'Høy',
 
+    'formue.tittel': 'Formue',
     'formue.søker': 'Søker',
     'formue.eps': 'Ektefelle/Samboer',
     'formue.verdiBolig': 'Verdi på bolig',
@@ -30,4 +31,8 @@ export default {
     'formue.pengerSkyldt': 'Penger skyldt',
     'formue.depositum': 'Depositumskonto',
     'formue.begrunnelse': 'Begrunnelse',
+
+    'radTittel.uførhet': 'Uførhet',
+    'radTittel.bosituasjon': 'Bosituasjon',
+    'radTittel.formue': 'Formue',
 };
