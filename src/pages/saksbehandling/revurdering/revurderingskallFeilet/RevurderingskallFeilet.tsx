@@ -10,119 +10,88 @@ import { RevurderingErrorCodes } from '~types/Revurdering';
 import messages from './revurderingskallFeilet-nb';
 import styles from './revurderingskallFeilet.module.less';
 
-export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) => {
-    switch (feil?.code) {
-        //Ugyldig...
-        case RevurderingErrorCodes.UGYLDIG_TILSTAND:
-            return intl.formatMessage({ id: 'feil.ugyldig.tilstand' });
-        case RevurderingErrorCodes.UGYLDIG_PERIODE:
-            return intl.formatMessage({ id: 'feil.ugyldig.periode' });
-        case RevurderingErrorCodes.UGYLDIG_ÅRSAK:
-            return intl.formatMessage({ id: 'feil.ugyldig.årsak' });
-        case RevurderingErrorCodes.UGYLDIG_DATA:
-            return intl.formatMessage({ id: 'feil.ugyldig.data' });
-        case RevurderingErrorCodes.HULL_I_TIDSLINJE:
-            return intl.formatMessage({ id: 'feil.ugyldig.hull.tidslinje' });
+const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string } = {
+    //Ugyldig...
+    [RevurderingErrorCodes.UGYLDIG_TILSTAND]: 'feil.ugyldig.tilstand',
+    [RevurderingErrorCodes.UGYLDIG_PERIODE]: 'feil.ugyldig.periode',
+    [RevurderingErrorCodes.UGYLDIG_ÅRSAK]: 'feil.ugyldig.årsak',
+    [RevurderingErrorCodes.UGYLDIG_DATA]: 'feil.ugyldig.data',
+    [RevurderingErrorCodes.HULL_I_TIDSLINJE]: 'feil.ugyldig.hull.tidslinje',
 
-        //fant ikke...
-        case RevurderingErrorCodes.FANT_IKKE_REVURDERING:
-            return intl.formatMessage({ id: 'feil.fant.ikke.revurdering' });
-        case RevurderingErrorCodes.FANT_IKKE_AKTØR_ID:
-            return intl.formatMessage({ id: 'feil.fant.ikke.aktør.id' });
-        case RevurderingErrorCodes.FANT_IKKE_SAK:
-            return intl.formatMessage({ id: 'feil.fant.ikke.sak' });
-        case RevurderingErrorCodes.FANT_IKKE_PERSON:
-            return intl.formatMessage({ id: 'feil.fant.ikke.person' });
+    //ikke_lov...
+    [RevurderingErrorCodes.IKKE_LOV_MED_OVERLAPPENDE_PERIODER]: 'feil.ikke_lov_med_overlappende_perioder',
+    [RevurderingErrorCodes.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BOSITUASJONPERIODE]:
+        'feil.ikke_lov_med_formueperiode_utenfor_bosituasjonperiode',
+    [RevurderingErrorCodes.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN]:
+        'feil.ikke_lov_med_formueperiode_utenfor_behandlingsperioden',
+    [RevurderingErrorCodes.IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS]:
+        'feil.ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps',
 
-        //ikke lov...
-        case RevurderingErrorCodes.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN:
-            return intl.formatMessage({ id: 'feil.ikke_lov_med_formueperiode_utenfor_behandlingsperioden' });
-        case RevurderingErrorCodes.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BOSITUASJONPERIODE:
-            return intl.formatMessage({ id: 'feil.ikke_lov_med_formueperiode_utenfor_bosituasjonperiode' });
-        case RevurderingErrorCodes.IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS:
-            return intl.formatMessage({ id: 'feil.ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps' });
-        case RevurderingErrorCodes.IKKE_LOV_MED_OVERLAPPENDE_PERIODER:
-            return intl.formatMessage({ id: 'feil.ikke_lov_med_overlappende_perioder' });
+    //fant ikke...
+    [RevurderingErrorCodes.FANT_IKKE_REVURDERING]: 'feil.fant.ikke.revurdering',
+    [RevurderingErrorCodes.FANT_IKKE_AKTØR_ID]: 'feil.fant.ikke.aktør.id',
+    [RevurderingErrorCodes.FANT_IKKE_SAK]: 'feil.fant.ikke.sak',
+    [RevurderingErrorCodes.FANT_IKKE_PERSON]: 'feil.fant.ikke.person',
 
-        //kunne ikke...
-        case RevurderingErrorCodes.KUNNE_IKKE_OPPRETTE_OPPGAVE:
-            return intl.formatMessage({ id: 'feil.kunne.ikke.opprette.oppgave' });
-        case RevurderingErrorCodes.KUNNE_IKKE_JOURNALFØRE_BREV:
-            return intl.formatMessage({ id: 'feil.kunne.ikke.journalføre.brev' });
-        case RevurderingErrorCodes.KUNNE_IKKE_DISTRIBUERE_BREV:
-            return intl.formatMessage({ id: 'feil.kunne.ikke.distribuere.brev' });
-        case RevurderingErrorCodes.KUNNE_IKKE_KONTROLL_SIMULERE:
-            return intl.formatMessage({ id: 'feil.kunne.ikke.kontroll.simulere' });
-        case RevurderingErrorCodes.KUNNE_IKKE_UTBETALE:
-            return intl.formatMessage({ id: 'feil.kunne.ikke.utbetale' });
-        case RevurderingErrorCodes.KUNNE_IKKE_SLÅ_OPP_EPS:
-            return intl.formatMessage({ id: 'feil.kunne.ikke.slå.opp.eps' });
+    //kunne ikke...
+    [RevurderingErrorCodes.KUNNE_IKKE_OPPRETTE_OPPGAVE]: 'feil.kunne.ikke.opprette.oppgave',
+    [RevurderingErrorCodes.KUNNE_IKKE_JOURNALFØRE_BREV]: 'feil.kunne.ikke.journalføre.brev',
+    [RevurderingErrorCodes.KUNNE_IKKE_DISTRIBUERE_BREV]: 'feil.kunne.ikke.distribuere.brev',
+    [RevurderingErrorCodes.KUNNE_IKKE_KONTROLL_SIMULERE]: 'feil.kunne.ikke.kontroll.simulere',
+    [RevurderingErrorCodes.KUNNE_IKKE_UTBETALE]: 'feil.kunne.ikke.utbetale',
+    [RevurderingErrorCodes.KUNNE_IKKE_SLÅ_OPP_EPS]: 'feil.kunne.ikke.slå.opp.eps',
 
-        //forhåndsvarsling
-        case RevurderingErrorCodes.MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL:
-            return intl.formatMessage({ id: 'feil.mangler.beslutning.på.forhåndsvarsel' });
-        case RevurderingErrorCodes.KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET:
-            return intl.formatMessage({ id: 'feil.kan.ikke.oppdatere.revurdering.som.er.forhåndsvarslet' });
-        case RevurderingErrorCodes.ALLEREDE_FORHÅNDSVARSLET:
-            return intl.formatMessage({ id: 'feil.allerede.forhåndsvarslet' });
+    //forhåndsvarsling
+    [RevurderingErrorCodes.MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL]: 'feil.mangler.beslutning.på.forhåndsvarsel',
+    [RevurderingErrorCodes.KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET]:
+        'feil.kan.ikke.oppdatere.revurdering.som.er.forhåndsvarslet',
+    [RevurderingErrorCodes.ALLEREDE_FORHÅNDSVARSLET]: 'feil.allerede.forhåndsvarslet',
 
-        //perioder
-        case RevurderingErrorCodes.INGENTING_Å_REVURDERE_I_PERIODEN:
-            return intl.formatMessage({ id: 'feil.kan.ikke.revurdere' });
-        case RevurderingErrorCodes.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE:
-            return intl.formatMessage({ id: 'feil.vurderinger.utenfor.revurderingsperiode' });
-        case RevurderingErrorCodes.HELE_REVURDERINGSPERIODEN_MÅ_HA_VURDERINGER:
-            return intl.formatMessage({ id: 'feil.mangler.revurderingsperioder' });
-        case RevurderingErrorCodes.OVERLAPPENDE_VURDERINGSPERIODER:
-            return intl.formatMessage({ id: 'feil.overlappende.vurderingsperioder' });
+    //perioder
+    [RevurderingErrorCodes.INGENTING_Å_REVURDERE_I_PERIODEN]: 'feil.kan.ikke.revurdere',
+    [RevurderingErrorCodes.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:
+        'feil.vurderinger.utenfor.revurderingsperiode',
+    [RevurderingErrorCodes.HELE_REVURDERINGSPERIODEN_MÅ_HA_VURDERINGER]: 'feil.mangler.revurderingsperioder',
+    [RevurderingErrorCodes.OVERLAPPENDE_VURDERINGSPERIODER]: 'feil.overlappende.vurderingsperioder',
 
-        //generell
-        case RevurderingErrorCodes.UFULLSTENDIG_BEHANDLINGSINFORMASJON:
-            return intl.formatMessage({ id: 'feil.ufullstendig.behandlingsinformasjon' });
-        case RevurderingErrorCodes.SIMULERING_FEILET:
-            return intl.formatMessage({ id: 'feil.simulering.feilet' });
-        case RevurderingErrorCodes.SISTE_MÅNED_VED_NEDGANG_I_STØNADEN:
-            return intl.formatMessage({ id: 'feil.siste.måned.ved.nedgang.i.stønaden' });
-        case RevurderingErrorCodes.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR:
-            return intl.formatMessage({ id: 'feil.gregulering.kan.ikke.føre.til.opphør' });
-        case RevurderingErrorCodes.BEGRUNNELSE_KAN_IKKE_VÆRE_TOM:
-            return intl.formatMessage({ id: 'feil.begrunnelse.kan.ikke.være.tom' });
-        case RevurderingErrorCodes.VURDERINGENE_MÅ_HA_SAMME_RESULTAT:
-            return intl.formatMessage({ id: 'feil.vurderinger.samme.resultat' });
-        case RevurderingErrorCodes.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON:
-            return intl.formatMessage({ id: 'feil.attestant.og.saksbehandler.kan.ikke.være.samme.person' });
-        case RevurderingErrorCodes.EPS_ALDER_ER_NULL:
-            return intl.formatMessage({ id: 'feil.eps.alder.er.null' });
-        case RevurderingErrorCodes.KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS:
-            return intl.formatMessage({ id: 'feil.kan.ikke.ha.eps.fradrag.uten.eps' });
-        case RevurderingErrorCodes.GJELDENDE_EPS_HAR_FORMUE:
-            return intl.formatMessage({ id: 'feil.gjeldende.eps.har.formue' });
-        case RevurderingErrorCodes.DEPOSITUM_KAN_IKKE_VÆRE_HØYERE_ENN_INNSKUDD:
-            return intl.formatMessage({ id: 'feil.depositum.kan.ikke.være.høyere.enn.innskudd' });
+    //generell
+    [RevurderingErrorCodes.UFULLSTENDIG_BEHANDLINGSINFORMASJON]: 'feil.ufullstendig.behandlingsinformasjon',
+    [RevurderingErrorCodes.SIMULERING_FEILET]: 'feil.simulering.feilet',
+    [RevurderingErrorCodes.SISTE_MÅNED_VED_NEDGANG_I_STØNADEN]: 'feil.siste.måned.ved.nedgang.i.stønaden',
+    [RevurderingErrorCodes.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'feil.gregulering.kan.ikke.føre.til.opphør',
+    [RevurderingErrorCodes.BEGRUNNELSE_KAN_IKKE_VÆRE_TOM]: 'feil.begrunnelse.kan.ikke.være.tom',
+    [RevurderingErrorCodes.VURDERINGENE_MÅ_HA_SAMME_RESULTAT]: 'feil.vurderinger.samme.resultat',
+    [RevurderingErrorCodes.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]:
+        'feil.attestant.og.saksbehandler.kan.ikke.være.samme.person',
+    [RevurderingErrorCodes.EPS_ALDER_ER_NULL]: 'feil.eps.alder.er.null',
+    [RevurderingErrorCodes.KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS]: 'feil.kan.ikke.ha.eps.fradrag.uten.eps',
 
-        //revurderingsutfall som ikke støttes
-        case RevurderingErrorCodes.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON:
-            return intl.formatMessage({ id: 'feil.opphør.og.andre.endringer.i.kombinasjon' });
-        case RevurderingErrorCodes.OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE:
-            return intl.formatMessage({ id: 'feil.opphør.ikke.fra.første.dato.i.revurderingsperiode' });
-        case RevurderingErrorCodes.DELVIS_OPPHØR:
-            return intl.formatMessage({ id: 'feil.opphør.deler.av.revurderingsperiode' });
-        case RevurderingErrorCodes.OPPHØR_AV_FLERE_VILKÅR:
-            return intl.formatMessage({ id: 'feil.opphør.flere.vilkår' });
+    //revurderingsutfall som ikke støttes
+    [RevurderingErrorCodes.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON]: 'feil.opphør.og.andre.endringer.i.kombinasjon',
+    [RevurderingErrorCodes.OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE]:
+        'feil.opphør.ikke.fra.første.dato.i.revurderingsperiode',
+    [RevurderingErrorCodes.DELVIS_OPPHØR]: 'feil.opphør.deler.av.revurderingsperiode',
+    [RevurderingErrorCodes.OPPHØR_AV_FLERE_VILKÅR]: 'feil.opphør.flere.vilkår',
+    [RevurderingErrorCodes.FEILUTBETALING_STØTTES_IKKE]: 'feil.feilutbetaling.støttes.ikke',
 
-        //bosituasjon
-        case RevurderingErrorCodes.BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES:
-            return intl.formatMessage({ id: 'feil.bosituasjon.med.flere.perioder.må.vurderes' });
-        case RevurderingErrorCodes.BOSITUASJON_FLERE_PERIODER_OG_EPS_INNTEKT:
-            return intl.formatMessage({ id: 'feil.eps.inntekt.med.flere.perioder.må.revurderes' });
+    //bosituasjon
+    [RevurderingErrorCodes.BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES]:
+        'feil.bosituasjon.med.flere.perioder.må.vurderes',
+    [RevurderingErrorCodes.BOSITUASJON_FLERE_PERIODER_OG_EPS_INNTEKT]:
+        'feil.eps.inntekt.med.flere.perioder.må.revurderes',
 
-        case RevurderingErrorCodes.FEILUTBETALING_STØTTES_IKKE:
-            return intl.formatMessage({ id: 'feil.feilutbetaling.støttes.ikke' });
-
-        default:
-            return intl.formatMessage({ id: 'feil.ukjentFeil' });
-    }
+    //Formue
+    [RevurderingErrorCodes.GJELDENDE_EPS_HAR_FORMUE]: 'feil.gjeldende.eps.har.formue',
+    [RevurderingErrorCodes.FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]: 'feil.formue.som.fører.til.opphør.må.revurderes',
+    [RevurderingErrorCodes.DEPOSITUM_KAN_IKKE_VÆRE_HØYERE_ENN_INNSKUDD]:
+        'feil.depositum.kan.ikke.være.høyere.enn.innskudd',
 };
+
+export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) => {
+    const messageId = revurderingErrorCodeMessageIdMap[(feil?.code ?? '') as RevurderingErrorCodes];
+    return intl.formatMessage({ id: messageId ?? 'feil.ukjentFeil' });
+};
+
 const RevurderingskallFeilet = (props: { error?: ApiError }) => {
     const intl = useI18n({ messages });
 

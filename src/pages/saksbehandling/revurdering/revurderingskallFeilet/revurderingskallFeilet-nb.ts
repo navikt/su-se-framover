@@ -56,6 +56,8 @@ export default {
 
     'feil.vurderinger.samme.resultat': 'Vurdering av vilkår må ha samme resultat for hele revurderingsperioden',
 
+    'feil.formue.som.fører.til.opphør.må.revurderes': 'Formue som fører til opphør må revurderes',
+
     'feil.vurderinger.utenfor.revurderingsperiode': 'Vurdering av vilkår gjøres innenfor revurderingsperioden',
     'feil.mangler.revurderingsperioder': 'Hele eller deler av revurderingsperioden mangler vurdering(er)',
 
