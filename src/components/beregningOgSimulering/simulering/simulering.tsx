@@ -60,7 +60,7 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                 ),
                 arr.map((gruppe) => {
                     return pipe(
-                        combineOptions(arr.head(gruppe), arr.last(gruppe)),
+                        combineOptions([arr.head(gruppe), arr.last(gruppe)]),
                         Option.map(([head, last]) => {
                             return (
                                 <Element

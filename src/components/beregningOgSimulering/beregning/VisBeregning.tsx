@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
 import * as Ord from 'fp-ts/Ord';
+import * as S from 'fp-ts/string';
 import { Element, Systemtittel, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
@@ -152,7 +153,7 @@ const VisBeregning = (props: Props) => {
                 arr.mapWithIndex((index, månedsberegninger) => (
                     <div key={månedsberegninger[0].fraOgMed}>
                         {pipe(
-                            combineOptions(arr.head(månedsberegninger), arr.last(månedsberegninger)),
+                            combineOptions([arr.head(månedsberegninger), arr.last(månedsberegninger)]),
                             Option.fold(
                                 () => ({
                                     tittel: '?',
@@ -195,8 +196,14 @@ const VisBeregning = (props: Props) => {
                                 månedsberegninger[0],
                                 getBenyttedeFradrag,
                                 arr.sortBy([
-                                    Ord.ord.contramap(Ord.ordString, (f: Fradrag) => f.tilhører),
-                                    Ord.ord.contramap(Ord.ordString, (f: Fradrag) => f.type),
+                                    pipe(
+                                        S.Ord,
+                                        Ord.contramap((f: Fradrag) => f.tilhører)
+                                    ),
+                                    pipe(
+                                        S.Ord,
+                                        Ord.contramap((f: Fradrag) => f.type)
+                                    ),
                                 ]),
                                 arr.map((fradrag) => (
                                     <li key={getFradragsnøkkel(fradrag) + index} className={styles.linje}>
