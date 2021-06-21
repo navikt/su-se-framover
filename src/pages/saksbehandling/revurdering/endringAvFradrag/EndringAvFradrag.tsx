@@ -9,6 +9,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
+import fradragMessages from '~components/beregningOgSimulering/beregning/beregning-nb';
 import { fradragTilFradragFormData } from '~components/beregningOgSimulering/beregning/beregningUtils';
 import {
     FradragFormData,
@@ -35,7 +36,6 @@ import { eqStringPeriode } from '~types/Periode';
 import { Revurdering } from '~types/Revurdering';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
-import fradragMessages from '../../../../components/beregningOgSimulering/beregning/beregning-nb';
 import uføreMessages from '../../steg/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
