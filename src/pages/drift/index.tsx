@@ -232,6 +232,16 @@ const Drift = () => {
                     >
                         Fix Iverksettinger
                     </Knapp>
+
+                    <Knapp
+                        className={styles.knapp}
+                        htmlType="button"
+                        onClick={() => {
+                            throw Error('Feil som ble trigget manuelt fra driftssiden');
+                        }}
+                    >
+                        Kast en feil
+                    </Knapp>
                 </div>
                 {RemoteData.isFailure(fixSøknaderResponse) && (
                     <AlertStripe className={styles.alert} type="feil">
