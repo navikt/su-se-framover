@@ -225,7 +225,7 @@ export const FormueVilkårsblokk = (props: {
         }
         const søkersFormueFraSøknad = kalkulerFormue(props.formue.verdier);
 
-        if (props.søknadInnhold.ektefelle) {
+        if (props.formue.borSøkerMedEPS && props.formue.epsVerdier) {
             return søkersFormueFraSøknad + kalkulerFormue(props.formue.epsVerdier);
         }
 
