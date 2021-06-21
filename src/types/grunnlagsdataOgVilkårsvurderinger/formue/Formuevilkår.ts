@@ -1,7 +1,5 @@
 import { Periode } from '~types/Periode';
 
-import { UføreResultat } from '../uføre/Uførevilkår';
-
 import { Formuegrunnlag } from './Formuegrunnlag';
 
 export interface Formuegrenser {
@@ -11,8 +9,7 @@ export interface Formuegrenser {
 
 export interface FormueVilkår {
     formuegrenser: Formuegrenser[];
-    //TODO: fiks backend  - og bruk riktig resultat type
-    resultat: UføreResultat;
+    resultat: FormueResultat;
     vurderinger: VurderingsperiodeFormue[];
     vilkår: 'Formue';
 }
@@ -20,8 +17,13 @@ export interface FormueVilkår {
 export interface VurderingsperiodeFormue {
     id: string;
     opprettet: string;
-    //TODO: riktig resultat type
-    resultat: UføreResultat;
+    resultat: FormueResultat;
     grunnlag?: Formuegrunnlag;
     periode: Periode<string>;
+}
+
+export enum FormueResultat {
+    VilkårOppfylt = 'VilkårOppfylt',
+    VilkårIkkeOppfylt = 'VilkårIkkeOppfylt',
+    HarUføresakTilBehandling = 'MåInnhenteMerInformasjon',
 }

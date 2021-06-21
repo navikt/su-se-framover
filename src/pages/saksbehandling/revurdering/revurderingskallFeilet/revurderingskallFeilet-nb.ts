@@ -40,7 +40,7 @@ export default {
     'feil.kan.ikke.ha.eps.fradrag.uten.eps':
         'Kan ikke legge til fradrag/beregne på ektefelle når bruker ikke har ektefelle.',
     'feil.gjeldende.eps.har.formue': 'Gjeldende EPS har formue. Du kan revurdere når revurdering av formue åpnes',
-    'feil.depositum.kan.ikke.være.høyere.enn.innskudd': 'Depositum kan ikke være høyere enn innskud',
+    'feil.depositum.kan.ikke.være.høyere.enn.innskudd': 'Depositum kan ikke være høyere enn innskudd',
 
     'feil.mangler.beslutning.på.forhåndsvarsel': 'Mangler beslutning på forhåndsvarsel',
 

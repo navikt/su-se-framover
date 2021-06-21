@@ -110,6 +110,15 @@ export const getSenesteGVerdi = (fraOgMed: Nullable<Date>, formuegrenser: Formue
     return senesteGrense?.beløp ?? sortert[0].beløp;
 };
 
+const summerFormue = (formue: number[]) => {
+    return formue.reduce((prev, current) => {
+        if (isNaN(current)) {
+            return prev + 0;
+        }
+        return prev + current;
+    }, 0);
+};
+
 export const regnUtFormDataVerdier = (verdier: Nullable<VerdierFormData>) => {
     if (!verdier) {
         return 0;
@@ -136,12 +145,7 @@ export const regnUtFormDataVerdier = (verdier: Nullable<VerdierFormData>) => {
 
     const formue = [...skalAdderesParsed, innskudd];
 
-    return formue.reduce((prev, current) => {
-        if (isNaN(current)) {
-            return prev + 0;
-        }
-        return prev + current;
-    }, 0);
+    return summerFormue(formue);
 };
 
 export const regnUtFormuegrunnlag = (verdier?: Nullable<FormuegrunnlagVerdier>) => {
@@ -162,12 +166,7 @@ export const regnUtFormuegrunnlag = (verdier?: Nullable<FormuegrunnlagVerdier>) 
 
     const formue = [...skalAdderes, innskudd];
 
-    return formue.reduce((prev, current) => {
-        if (isNaN(current)) {
-            return prev + 0;
-        }
-        return prev + current;
-    }, 0);
+    return summerFormue(formue);
 };
 
 const formDataVerdierToNumber = (stringVerdier: Nullable<VerdierFormData>): FormuegrunnlagVerdier | null => {

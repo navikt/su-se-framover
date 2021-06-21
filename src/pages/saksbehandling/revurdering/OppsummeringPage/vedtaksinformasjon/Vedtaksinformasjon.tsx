@@ -6,9 +6,8 @@ import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
 import { useI18n } from '~lib/hooks';
-import { FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Revurdering } from '~types/Revurdering';
 
 import { Formuestatus } from '../../formue/Formue';
@@ -129,7 +128,7 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; intl: IntlS
                         <Formuevurdering vurdering={vurdering} />
                         <Formuestatus
                             bekreftetFormue={bekreftetFormue}
-                            erVilkårOppfylt={vurdering.resultat === UføreResultat.VilkårOppfylt}
+                            erVilkårOppfylt={vurdering.resultat === FormueResultat.VilkårOppfylt}
                         />
                         <div className={styles.begrunnelseContainer}>
                             <Normaltekst>{props.intl.formatMessage({ id: 'formue.begrunnelse' })}</Normaltekst>
@@ -160,8 +159,11 @@ const Formueblokk = (props: {
                             O.fromNullable(props.grunnlagsdataOgVilkårsvurderinger.formue),
                             O.fold(
                                 () => null,
-                                (formuevilkår) => (
-                                    <FormuevilkårOppsummering gjeldendeFormue={formuevilkår} brukesForOppsummering />
+                                (gjeldendeFormuevilkår) => (
+                                    <FormuevilkårOppsummering
+                                        gjeldendeFormue={gjeldendeFormuevilkår}
+                                        brukesForOppsummering
+                                    />
                                 )
                             )
                         ),
