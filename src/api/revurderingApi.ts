@@ -206,7 +206,6 @@ export async function lagreBosituasjonsgrunnlag(data: BosituasjonRequest): Promi
 }
 
 export async function lagreFormuegrunnlag(data: FormuegrunnlagRequest): Promise<ApiClientResult<Revurdering>> {
-    console.log(data);
     return apiClient({
         url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/formuegrunnlag`,
         method: 'POST',

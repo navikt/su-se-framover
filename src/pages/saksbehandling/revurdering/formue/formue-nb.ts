@@ -35,7 +35,8 @@ export default {
     'knapp.fjernPeriode': 'Fjern periode',
     'knapp.nyPeriode': 'Ny periode for opplysning',
 
-    'panel.formue': 'formue',
+    'panel.formue.søkers': 'Søkers formue',
+    'panel.formue.eps': 'Ektefelle/Samboers formue',
     'panel.kroner': 'kr',
 
     'periode.fraOgMed': 'Fra og med',

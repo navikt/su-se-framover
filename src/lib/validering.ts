@@ -18,11 +18,7 @@ export const validateStringAsPositiveNumber = yup
     .moreThan(0, 'Feltet må være et positivt tall høyere enn 0')
     .typeError('Feltet må være et tall') as unknown as yup.Schema<string>;
 
-export const validateStringAsNonNegativeNumber = yup
-    .number()
-    .required('Feltet må fylles ut')
-    .min(0, 'Feltet må være større eller lik 0')
-    .typeError('Feltet må være et tall') as unknown as yup.Schema<string>;
+export const validateStringAsNonNegativeNumber = validateNonNegativeNumber as unknown as yup.Schema<string>;
 
 const norskLocale: yup.LocaleObject = {
     mixed: {

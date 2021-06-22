@@ -38,7 +38,7 @@ const tomFormue: VerdierFormData = {
     depositumskonto: '0',
 };
 
-export const leggTilNyPeriode = (epsFnr: Nullable<string>): FormueData => {
+export const getTomFormueData = (epsFnr: Nullable<string>): FormueData => {
     return {
         epsFnr: epsFnr,
         periode: { fraOgMed: null, tilOgMed: null },
@@ -51,7 +51,7 @@ export const leggTilNyPeriode = (epsFnr: Nullable<string>): FormueData => {
 export const getDefaultValues = (formueVilkår: Nullable<FormueVilkår>, epsFnr: Nullable<string>): FormueFormData => {
     if (!formueVilkår) {
         return {
-            formue: [leggTilNyPeriode(epsFnr)],
+            formue: [getTomFormueData(epsFnr)],
         };
     }
 
@@ -90,6 +90,13 @@ export const formueFormDataTilFormuegrunnlagRequest = (data: FormueData[]): Form
         };
     });
 };
+
+export const erFormueVilkårOppfylt = (
+    søkersBekreftetFormue: number,
+    epsBekreftetFormue: number,
+    fraOgMed: Nullable<Date>,
+    formuegrenser: Formuegrenser[]
+) => søkersBekreftetFormue + epsBekreftetFormue <= getSenesteGVerdi(fraOgMed, formuegrenser);
 
 //hvis fraOgMed ikke er utfyllt, eller vi ikke finner en match for fraOgMed,
 //bruker vi den høyeste g-verdien som default
@@ -141,7 +148,7 @@ export const regnUtFormDataVerdier = (verdier: Nullable<VerdierFormData>) => {
         verdier.kontanterOver1000,
     ];
 
-    const skalAdderesParsed = skalAdderes.map((verdi) => Number(verdi));
+    const skalAdderesParsed = skalAdderes.map((verdi) => Number.parseInt(verdi, 0));
 
     const formue = [...skalAdderesParsed, innskudd];
 
@@ -175,14 +182,14 @@ const formDataVerdierToNumber = (stringVerdier: Nullable<VerdierFormData>): Form
     }
 
     return {
-        verdiIkkePrimærbolig: Number(stringVerdier.verdiPåBolig),
-        verdiEiendommer: Number(stringVerdier.verdiPåEiendom),
-        verdiKjøretøy: Number(stringVerdier.verdiPåKjøretøy),
-        innskudd: Number(stringVerdier.innskuddsbeløp),
-        verdipapir: Number(stringVerdier.verdipapir),
-        kontanter: Number(stringVerdier.kontanterOver1000),
-        pengerSkyldt: Number(stringVerdier.stårNoenIGjeldTilDeg),
-        depositumskonto: Number(stringVerdier.depositumskonto),
+        verdiIkkePrimærbolig: Number.parseInt(stringVerdier.verdiPåBolig, 0),
+        verdiEiendommer: Number.parseInt(stringVerdier.verdiPåEiendom, 0),
+        verdiKjøretøy: Number.parseInt(stringVerdier.verdiPåKjøretøy, 0),
+        innskudd: Number.parseInt(stringVerdier.innskuddsbeløp, 0),
+        verdipapir: Number.parseInt(stringVerdier.verdipapir, 0),
+        kontanter: Number.parseInt(stringVerdier.kontanterOver1000, 0),
+        pengerSkyldt: Number.parseInt(stringVerdier.stårNoenIGjeldTilDeg, 0),
+        depositumskonto: Number.parseInt(stringVerdier.depositumskonto, 0),
     };
 };
 

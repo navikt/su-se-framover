@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Element, Ingress, Normaltekst } from 'nav-frontend-typografi';
+import { Element, Normaltekst } from 'nav-frontend-typografi';
 import React from 'react';
 
 import * as DateUtils from '~lib/dateUtils';
@@ -9,29 +9,19 @@ import { FormueVilkår, VurderingsperiodeFormue } from '~types/grunnlagsdataOgVi
 import messages from './formue-nb';
 import styles from './formue.module.less';
 
-const FormuevilkårOppsummering = (props: { gjeldendeFormue: FormueVilkår; brukesForOppsummering?: boolean }) => {
-    const intl = useI18n({ messages });
-
+const FormuevilkårOppsummering = (props: { gjeldendeFormue: FormueVilkår }) => {
     return (
-        <div>
-            {!props.brukesForOppsummering && (
-                <div className={styles.eksisterendeVedtakTittelContainer}>
-                    <Ingress>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.tittel' })}</Ingress>
-                </div>
-            )}
-            <ul>
-                {props.gjeldendeFormue.vurderinger.map((vurdering) => (
-                    <li key={vurdering.id}>
-                        <Formuevurdering vurdering={vurdering} />
-                    </li>
-                ))}
-            </ul>
-        </div>
+        <ul>
+            {props.gjeldendeFormue.vurderinger.map((vurdering) => (
+                <li key={vurdering.id}>
+                    <Formuevurdering vurdering={vurdering} />
+                </li>
+            ))}
+        </ul>
     );
 };
 
-export const Formuevurdering = (props: { vurdering: VurderingsperiodeFormue }) => {
-    const { vurdering } = props;
+export const Formuevurdering = ({ vurdering }: { vurdering: VurderingsperiodeFormue }) => {
     const intl = useI18n({ messages });
 
     return (

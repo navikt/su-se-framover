@@ -25,7 +25,11 @@ const Rad = (props: {
     children: { venstre: React.ReactNode; høyre: React.ReactNode };
 }) => (
     <div className={classNames(styles.rad, { [styles.overskriftsrad]: props.overskrift })}>
-        <div className={styles.radTittelContainer}>{props.radTittel && <Element>{props.radTittel}</Element>}</div>
+        {props.radTittel && (
+            <div className={styles.radTittelContainer}>
+                <Element>{props.radTittel}</Element>
+            </div>
+        )}
         <div className={styles.childrenContainer}>
             <div className={styles.cellecontainer}>
                 <div className={styles.celle}>{props.children.venstre}</div>
@@ -160,10 +164,7 @@ const Formueblokk = (props: {
                             O.fold(
                                 () => null,
                                 (gjeldendeFormuevilkår) => (
-                                    <FormuevilkårOppsummering
-                                        gjeldendeFormue={gjeldendeFormuevilkår}
-                                        brukesForOppsummering
-                                    />
+                                    <FormuevilkårOppsummering gjeldendeFormue={gjeldendeFormuevilkår} />
                                 )
                             )
                         ),

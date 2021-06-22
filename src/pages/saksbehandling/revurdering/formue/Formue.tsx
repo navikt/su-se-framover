@@ -1,13 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Delete } from '@navikt/ds-icons';
 import * as DateFns from 'date-fns';
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import { Knapp } from 'nav-frontend-knapper';
 import { Input, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Element, Normaltekst, Undertittel } from 'nav-frontend-typografi';
-import React, { useEffect, useMemo, useState } from 'react';
+import { Element, Ingress, Normaltekst, Undertittel } from 'nav-frontend-typografi';
+import React, { useEffect, useState } from 'react';
 import {
     Control,
     Controller,
@@ -21,13 +21,11 @@ import {
 import { useHistory } from 'react-router-dom';
 
 import * as personApi from '~api/personApi';
-import { TrashBin } from '~assets/Icons';
 import DatePicker from '~components/datePicker/DatePicker';
 import { Personkort } from '~components/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { lagreFormuegrunnlag } from '~features/revurdering/revurderingActions';
-import { pipe } from '~lib/fp';
 import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
@@ -49,9 +47,9 @@ import {
     VerdierFormData,
     getDefaultValues,
     regnUtFormDataVerdier,
-    leggTilNyPeriode,
+    getTomFormueData,
     formueFormDataTilFormuegrunnlagRequest,
-    getSenesteGVerdi,
+    erFormueVilkårOppfylt,
 } from './RevurderFormueUtils';
 
 const Formue = (props: RevurderingProps) => {
@@ -91,30 +89,13 @@ const Formue = (props: RevurderingProps) => {
         }
     }, [epsFnr]);
 
-    const EPSPersonkort = pipe(
-        epsStatus,
-        RemoteData.fold(
-            () => null,
-            () => <NavFrontendSpinner />,
-            (err) => (
-                <AlertStripeFeil>
-                    <RevurderingskallFeilet error={err} />
-                </AlertStripeFeil>
-            ),
-            (eps) => (
-                <div className={styles.personkortContainer}>
-                    <Element>{intl.formatMessage({ id: 'personkort.eps' })}</Element>
-                    <Personkort person={eps} />
-                </div>
-            )
-        )
-    );
-
     return (
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
                     <form onSubmit={handleSubmit(lagreFormuegrunnlaget)}>
+                        {RemoteData.isPending(epsStatus) && <NavFrontendSpinner />}
+                        {RemoteData.isFailure(epsStatus) && <RevurderingskallFeilet error={epsStatus.error} />}
                         {formueArray.fields.map((field, index) => (
                             <FormueBlokk
                                 key={field.id}
@@ -122,7 +103,7 @@ const Formue = (props: RevurderingProps) => {
                                 blokkIndex={index}
                                 blokkField={field}
                                 formueArrayLengde={formueArray.fields.length}
-                                EPSPersonkort={EPSPersonkort}
+                                eps={RemoteData.isSuccess(epsStatus) ? epsStatus.value : null}
                                 formController={control}
                                 triggerValidation={trigger}
                                 onSlettClick={() => formueArray.remove(index)}
@@ -133,13 +114,12 @@ const Formue = (props: RevurderingProps) => {
                             <Knapp
                                 htmlType="button"
                                 onClick={() => {
-                                    formueArray.append(leggTilNyPeriode(epsFnr));
+                                    formueArray.append(getTomFormueData(epsFnr));
                                 }}
                             >
                                 {intl.formatMessage({ id: 'knapp.nyPeriode' })}
                             </Knapp>
                         </div>
-
                         {RemoteData.isFailure(lagreFormuegrunnlagStatus) && (
                             <RevurderingskallFeilet error={lagreFormuegrunnlagStatus.error} />
                         )}
@@ -151,9 +131,14 @@ const Formue = (props: RevurderingProps) => {
                     </form>
                 ),
                 right: (
-                    <FormuevilkårOppsummering
-                        gjeldendeFormue={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue}
-                    />
+                    <div>
+                        <div className={styles.eksisterendeVedtakTittelContainer}>
+                            <Ingress>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.tittel' })}</Ingress>
+                        </div>
+                        <FormuevilkårOppsummering
+                            gjeldendeFormue={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue}
+                        />
+                    </div>
                 ),
             }}
         </ToKolonner>
@@ -199,7 +184,7 @@ const FormueBlokk = (props: {
     blokkField: FieldArrayWithId<FormueFormData>;
     formuegrenser: Formuegrenser[];
     formueArrayLengde: number;
-    EPSPersonkort: Nullable<JSX.Element>;
+    eps: Nullable<personApi.Person>;
     formController: Control<FormueFormData>;
     triggerValidation: UseFormTrigger<FormueFormData>;
     onSlettClick: (index: number) => void;
@@ -213,18 +198,22 @@ const FormueBlokk = (props: {
         regnUtFormDataVerdier(props.blokkField.epsFormue)
     );
 
-    const periode = {
-        fraOgMed: new Date(props.revurderingsperiode.fraOgMed),
-        tilOgMed: new Date(props.revurderingsperiode.tilOgMed),
-    };
-
     const watch = useWatch({
         name: blokkName,
         control: props.formController,
     });
 
-    const erVilkårOppfylt =
-        søkersBekreftetFormue + epsBekreftetFormue <= getSenesteGVerdi(watch.periode.fraOgMed, props.formuegrenser);
+    const erVilkårOppfylt = erFormueVilkårOppfylt(
+        søkersBekreftetFormue,
+        epsBekreftetFormue,
+        watch.periode.fraOgMed,
+        props.formuegrenser
+    );
+
+    const revurderingsperiode = {
+        fraOgMed: new Date(props.revurderingsperiode.fraOgMed),
+        tilOgMed: new Date(props.revurderingsperiode.tilOgMed),
+    };
 
     return (
         <div className={styles.formueBlokk}>
@@ -252,8 +241,8 @@ const FormueBlokk = (props: {
                                     );
                                 }}
                                 feil={fieldState.error?.message}
-                                minDate={periode.fraOgMed}
-                                maxDate={periode.tilOgMed}
+                                minDate={revurderingsperiode.fraOgMed}
+                                maxDate={revurderingsperiode.tilOgMed}
                                 startDate={field.value}
                                 endDate={watch.periode.tilOgMed}
                             />
@@ -282,7 +271,7 @@ const FormueBlokk = (props: {
                                 }}
                                 feil={fieldState.error?.message}
                                 minDate={watch.periode.fraOgMed}
-                                maxDate={periode.tilOgMed}
+                                maxDate={revurderingsperiode.tilOgMed}
                                 startDate={watch.periode.fraOgMed}
                                 endDate={field.value}
                             />
@@ -299,12 +288,17 @@ const FormueBlokk = (props: {
                         kompakt
                         aria-label={intl.formatMessage({ id: 'knapp.fjernPeriode' })}
                     >
-                        <TrashBin width="24px" height="24px" />
+                        <Delete />
                     </Knapp>
                 )}
             </div>
 
-            {props.EPSPersonkort}
+            {props.eps && (
+                <div className={styles.personkortContainer}>
+                    <Element>{intl.formatMessage({ id: 'personkort.eps' })}</Element>
+                    <Personkort person={props.eps} />
+                </div>
+            )}
 
             <div className={styles.formuePanelerContainer}>
                 <FormuePanel
@@ -315,7 +309,7 @@ const FormueBlokk = (props: {
                     formController={props.formController}
                     triggerValidation={props.triggerValidation}
                 />
-                {watch.epsFnr && (
+                {props.eps && (
                     <FormuePanel
                         tilhører={'Ektefelle/Samboers'}
                         blokkIndex={props.blokkIndex}
@@ -374,13 +368,14 @@ const FormuePanel = (props: {
         control: props.formController,
     });
 
-    const handlePanelKlikk = () => (åpen ? validerInputs() : setÅpen(true));
+    const handlePanelKlikk = () => (åpen ? handleBekreftClick() : setÅpen(true));
 
-    const utregnetFormue = useMemo(() => {
-        return regnUtFormDataVerdier(formueVerdier);
-    }, [{ ...formueVerdier }]);
+    let utregnetFormue = regnUtFormDataVerdier(formueVerdier);
+    useEffect(() => {
+        utregnetFormue = regnUtFormDataVerdier(formueVerdier);
+    }, [formueVerdier]);
 
-    const validerInputs = () => {
+    const handleBekreftClick = () => {
         props.triggerValidation(panelName).then((isPanelValid) => {
             if (isPanelValid) {
                 setÅpen(false);
@@ -406,7 +401,9 @@ const FormuePanel = (props: {
             tittel={
                 <div>
                     <Normaltekst>
-                        {props.tilhører} {intl.formatMessage({ id: 'panel.formue' })}
+                        {intl.formatMessage({
+                            id: props.tilhører === 'Søkers' ? 'panel.formue.søkers' : 'panel.formue.eps',
+                        })}
                     </Normaltekst>
                     <p>
                         {props.sumFormue} {intl.formatMessage({ id: 'panel.kroner' })}
@@ -447,7 +444,7 @@ const FormuePanel = (props: {
                 </Undertittel>
             </div>
 
-            <Knapp htmlType="button" onClick={() => validerInputs()}>
+            <Knapp htmlType="button" onClick={() => handleBekreftClick()}>
                 {intl.formatMessage({ id: 'knapp.bekreft' })}
             </Knapp>
         </EkspanderbartpanelBase>
