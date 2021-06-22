@@ -76,6 +76,7 @@ export type UfullstendigBosituasjon = HarEps | HarIkkeEps;
 export type Bosituasjon = FullstendigBosituasjon | UfullstendigBosituasjon;
 
 export const erBosituasjonFullstendig = (b: Bosituasjon): b is FullstendigBosituasjon => {
+    if (!b) return false;
     return [
         BosituasjonTyper.DELER_BOLIG_MED_VOKSNE,
         BosituasjonTyper.EPS_IKKE_UFØR_FLYKTNING,
