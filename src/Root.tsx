@@ -2,7 +2,7 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import Lenke from 'nav-frontend-lenker';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom';
@@ -12,10 +12,6 @@ import Config from '~/config';
 import { FeatureToggle } from '~api/featureToggleApi';
 import { UserProvider } from '~context/userContext';
 import enableHotjar from '~lib/tracking/hotjar';
-import Attestering from '~pages/attestering/Attestering';
-import Drift from '~pages/drift';
-import HomePage from '~pages/HomePage';
-import Saksoversikt from '~pages/saksbehandling/Saksoversikt';
 
 import ErrorBoundary from './components/ErrorBoundary';
 import Header from './components/header/Header';
@@ -24,12 +20,17 @@ import * as meSlice from './features/me/me.slice';
 import { FeatureToggleProvider, useFeatureToggle } from './lib/featureToggles';
 import { pipe } from './lib/fp';
 import * as routes from './lib/routes';
-import Soknad from './pages/søknad';
 import Store, { useAppDispatch, useAppSelector } from './redux/Store';
 import styles from './root.module.less';
 import { LoggedInUser } from './types/LoggedInUser';
 
 import './externalStyles';
+
+const Attestering = React.lazy(() => import('~pages/attestering/Attestering'));
+const Drift = React.lazy(() => import('~pages/drift'));
+const HomePage = React.lazy(() => import('~pages/HomePage'));
+const Saksoversikt = React.lazy(() => import('~pages/saksbehandling/Saksoversikt'));
+const Soknad = React.lazy(() => import('~pages/søknad'));
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -49,7 +50,7 @@ const Root = () => {
                     <Router>
                         <Route>
                             <ContentWrapper>
-                                <Fragment>
+                                <Suspense fallback={<NavFrontendSpinner />}>
                                     <ScrollToTop />
                                     <Switch>
                                         <Route exact path={routes.home.path}>
@@ -69,7 +70,7 @@ const Root = () => {
                                         </Route>
                                         <Route>404</Route>
                                     </Switch>
-                                </Fragment>
+                                </Suspense>
                             </ContentWrapper>
                         </Route>
                     </Router>

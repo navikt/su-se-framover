@@ -13,7 +13,7 @@ import { finnNesteRevurderingsteg } from '../revurderingUtils';
 
 import RevurderingIntroForm from './RevurderingIntroForm';
 
-export const NyRevurderingPage = (props: { sak: Sak }) => {
+const NyRevurderingPage = (props: { sak: Sak }) => {
     const opprettRevurderingStatus = useAppSelector((state) => state.sak.opprettRevurderingStatus);
     const history = useHistory();
 
@@ -79,3 +79,5 @@ export const NyRevurderingPage = (props: { sak: Sak }) => {
         />
     );
 };
+
+export default NyRevurderingPage;
