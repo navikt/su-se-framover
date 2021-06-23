@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@tsconfig/node12": "^1.0.7",
+        "@types/compression": "^1.7.0",
         "@types/connect-redis": "0.0.16",
         "@types/cors": "^2.8.10",
         "@types/express": "^4.17.12",
@@ -28,6 +29,7 @@
         "@types/passport-jwt": "^3.0.5",
         "@types/pino-http": "^5.4.1",
         "@types/redis": "^2.8.29",
+        "compression": "^1.7.4",
         "connect-redis": "^6.0.0",
         "cors": "^2.8.5",
         "dotenv": "^10.0.0",
