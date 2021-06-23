@@ -18,17 +18,20 @@ import { useFeatureToggle } from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import Vedtaksoppsummering from '~pages/vedtak/Vedtaksoppsummering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
-import BehandlingsoppsummeringPage from './behandlingsoppsummeringPage/BehandlingsoppsummeringPage';
-import LukkSøknad from './lukkSøknad/LukkSøknad';
-import Revurdering from './revurdering/Revurdering';
-import Sakintro from './sakintro/Sakintro';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
-import SendTilAttesteringPage from './sendTilAttesteringPage/SendTilAttesteringPage';
-import Vilkår from './steg/vilkår/Vilkår';
+
+const Vilkår = React.lazy(() => import('./steg/vilkår/Vilkår'));
+const SendTilAttesteringPage = React.lazy(() => import('./sendTilAttesteringPage/SendTilAttesteringPage'));
+const Vedtaksoppsummering = React.lazy(() => import('~pages/vedtak/Vedtaksoppsummering'));
+const BehandlingsoppsummeringPage = React.lazy(
+    () => import('./behandlingsoppsummeringPage/BehandlingsoppsummeringPage')
+);
+const LukkSøknad = React.lazy(() => import('./lukkSøknad/LukkSøknad'));
+const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));
+const Sakintro = React.lazy(() => import('./sakintro/Sakintro'));
 
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();

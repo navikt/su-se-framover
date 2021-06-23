@@ -21,16 +21,17 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import { RevurderingSteg } from '../types';
 
-import Bosituasjon from './bosituasjon/BosituasjonForm';
-import EndringAvFradrag from './endringAvFradrag/EndringAvFradrag';
-import RevurderingOppsummeringPage from './OppsummeringPage/RevurderingOppsummeringPage';
 import messages from './revurdering-nb';
 import styles from './revurdering.module.less';
-import { EndreRevurderingPage } from './revurderingIntro/EndreRevurderingPage';
-import { NyRevurderingPage } from './revurderingIntro/NyRevurderingPage';
 import RevurderingskallFeilet from './revurderingskallFeilet/RevurderingskallFeilet';
 import { revurderingstegrekkefølge, revurderingstegTilInformasjonSomRevurderes } from './revurderingUtils';
-import Uførhet from './uførhet/Uførhet';
+
+const NyRevurderingPage = React.lazy(() => import('./revurderingIntro/NyRevurderingPage'));
+const EndreRevurderingPage = React.lazy(() => import('./revurderingIntro/EndreRevurderingPage'));
+const Bosituasjon = React.lazy(() => import('./bosituasjon/BosituasjonForm'));
+const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFradrag'));
+const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
+const Uførhet = React.lazy(() => import('./uførhet/Uførhet'));
 
 const stegTilTekstId = (steg: RevurderingSteg) => {
     switch (steg) {
