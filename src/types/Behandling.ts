@@ -3,8 +3,8 @@ import { Simulering } from '~types/Simulering';
 
 import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
+import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Søknad } from './Søknad';
-import { GrunnlagsdataOgVilkårsvurderinger } from './Vilkår';
 
 export interface Behandling {
     id: string;

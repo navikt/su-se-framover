@@ -3,5 +3,6 @@ export default {
     'steg.uførhet': 'Uførhet',
     'steg.bosituasjon': 'Bosituasjon',
     'steg.fradrag': 'Inntekt',
+    'steg.formue': 'Formue',
     'steg.oppsummering': 'Oppsummering',
 };

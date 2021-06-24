@@ -13,5 +13,6 @@ export enum RevurderingSteg {
     EndringAvFradrag = 'endringAvFradrag',
     Uførhet = 'ufore',
     Bosituasjon = 'bosituasjon',
+    Formue = 'formue',
     Oppsummering = 'oppsummering',
 }

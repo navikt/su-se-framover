@@ -17,7 +17,7 @@ import { eqNullable, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { UføreResultat } from '~types/Vilkår';
+import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 
 import { UførhetFaktablokk } from '../../../../components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UførhetFaktablokk';
 import sharedI18n from '../sharedI18n-nb';

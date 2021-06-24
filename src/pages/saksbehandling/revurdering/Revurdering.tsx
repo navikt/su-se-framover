@@ -15,12 +15,13 @@ import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering, Vurderingstatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import { RevurderingSteg } from '../types';
 
+import Formue from './formue/Formue';
 import messages from './revurdering-nb';
 import styles from './revurdering.module.less';
 import RevurderingskallFeilet from './revurderingskallFeilet/RevurderingskallFeilet';
@@ -43,6 +44,8 @@ const stegTilTekstId = (steg: RevurderingSteg) => {
             return 'steg.bosituasjon';
         case RevurderingSteg.EndringAvFradrag:
             return 'steg.fradrag';
+        case RevurderingSteg.Formue:
+            return 'steg.formue';
         case RevurderingSteg.Oppsummering:
             return 'steg.oppsummering';
     }
@@ -209,61 +212,64 @@ const RevurderingstegPage = (props: {
     revurdering: Revurdering;
     grunnlagsdataOgVilkårsvurderinger: RemoteData.RemoteData<ApiError, GrunnlagsdataOgVilkårsvurderinger>;
 }) => {
-    if (RemoteData.isInitial(props.grunnlagsdataOgVilkårsvurderinger)) {
-        return (
-            <div className={styles.fullsideSpinnerFeilmeldingContainer}>
-                <NavFrontendSpinner />
-            </div>
-        );
-    }
-    if (RemoteData.isPending(props.grunnlagsdataOgVilkårsvurderinger)) {
-        return (
-            <div className={styles.fullsideSpinnerFeilmeldingContainer}>
-                <NavFrontendSpinner />
-            </div>
-        );
-    }
-    if (RemoteData.isFailure(props.grunnlagsdataOgVilkårsvurderinger)) {
-        return (
-            <div className={styles.fullsideSpinnerFeilmeldingContainer}>
-                <RevurderingskallFeilet error={props.grunnlagsdataOgVilkårsvurderinger.error} />
-            </div>
-        );
-    }
-    switch (props.steg) {
-        case RevurderingSteg.Uførhet:
-            return (
-                <Uførhet
-                    sakId={props.sakId}
-                    revurdering={props.revurdering}
-                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger.value}
-                    forrigeUrl={props.forrigeUrl}
-                    nesteUrl={props.nesteUrl(props.revurdering)}
-                />
-            );
-        case RevurderingSteg.Bosituasjon:
-            return (
-                <Bosituasjon
-                    sakId={props.sakId}
-                    revurdering={props.revurdering}
-                    gjeldendeGrunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger.value}
-                    forrigeUrl={props.forrigeUrl}
-                    nesteUrl={props.nesteUrl}
-                />
-            );
-        case RevurderingSteg.EndringAvFradrag:
-            return (
-                <EndringAvFradrag
-                    sakId={props.sakId}
-                    revurdering={props.revurdering}
-                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger.value}
-                    forrigeUrl={props.forrigeUrl}
-                    nesteUrl={props.nesteUrl(props.revurdering)}
-                />
-            );
-        default:
-            return null;
-    }
+    return pipe(
+        props.grunnlagsdataOgVilkårsvurderinger,
+        RemoteData.fold(
+            () => <NavFrontendSpinner />,
+            () => <NavFrontendSpinner />,
+            (error) => (
+                <div className={styles.fullsideSpinnerFeilmeldingContainer}>
+                    <RevurderingskallFeilet error={error} />
+                </div>
+            ),
+            (value) => {
+                switch (props.steg) {
+                    case RevurderingSteg.Uførhet:
+                        return (
+                            <Uførhet
+                                sakId={props.sakId}
+                                revurdering={props.revurdering}
+                                grunnlagsdataOgVilkårsvurderinger={value}
+                                forrigeUrl={props.forrigeUrl}
+                                nesteUrl={props.nesteUrl(props.revurdering)}
+                            />
+                        );
+                    case RevurderingSteg.Bosituasjon:
+                        return (
+                            <Bosituasjon
+                                sakId={props.sakId}
+                                revurdering={props.revurdering}
+                                gjeldendeGrunnlagsdataOgVilkårsvurderinger={value}
+                                forrigeUrl={props.forrigeUrl}
+                                nesteUrl={props.nesteUrl}
+                            />
+                        );
+                    case RevurderingSteg.Formue:
+                        return (
+                            <Formue
+                                sakId={props.sakId}
+                                revurdering={props.revurdering}
+                                gjeldendeGrunnlagsdataOgVilkårsvurderinger={value}
+                                forrigeUrl={props.forrigeUrl}
+                                nesteUrl={props.nesteUrl}
+                            />
+                        );
+                    case RevurderingSteg.EndringAvFradrag:
+                        return (
+                            <EndringAvFradrag
+                                sakId={props.sakId}
+                                revurdering={props.revurdering}
+                                grunnlagsdataOgVilkårsvurderinger={value}
+                                forrigeUrl={props.forrigeUrl}
+                                nesteUrl={props.nesteUrl(props.revurdering)}
+                            />
+                        );
+                    default:
+                        return null;
+                }
+            }
+        )
+    );
 };
 
 export default RevurderingPage;

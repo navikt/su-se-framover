@@ -17,10 +17,8 @@ import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
-import { Bosituasjon } from '~types/grunnlag/Bosituasjon';
-import { Periode } from '~types/Periode';
-import { BosituasjonRequest, Revurdering } from '~types/Revurdering';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
+import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { BosituasjonRequest, Revurdering, RevurderingProps } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
@@ -38,7 +36,7 @@ interface BosituasjonFormData {
     begrunnelse: Nullable<string>;
 }
 
-const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[]; revurderingsperiode: Periode<string> }) => {
+const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[] }) => {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     return (
@@ -131,13 +129,7 @@ const getDefaultValues = (revurdering: Revurdering, bosituasjon: Bosituasjon[]):
     };
 };
 
-const BosituasjonForm = (props: {
-    sakId: string;
-    revurdering: Revurdering;
-    gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
-    forrigeUrl: string;
-    nesteUrl: (revurdering: Revurdering) => string;
-}) => {
+const BosituasjonForm = (props: RevurderingProps) => {
     const intl = useI18n({ messages: { ...messages, ...sharedMessages } });
     const [epsAlder, setEPSAlder] = useState<Nullable<number>>(null);
     const [status, setStatus] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
@@ -434,10 +426,7 @@ const BosituasjonForm = (props: {
                     </form>
                 ),
                 right: (
-                    <GjeldendeBosituasjon
-                        bosituasjon={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.bosituasjon}
-                        revurderingsperiode={props.revurdering.periode}
-                    />
+                    <GjeldendeBosituasjon bosituasjon={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.bosituasjon} />
                 ),
             }}
         </ToKolonner>

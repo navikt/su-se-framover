@@ -3,24 +3,40 @@ import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
 import { Normaltekst, Element, Ingress } from 'nav-frontend-typografi';
 import * as React from 'react';
+import { IntlShape } from 'react-intl';
 
 import { useI18n } from '~lib/hooks';
+import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering } from '~types/Revurdering';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
+import { Formuestatus } from '../../formue/Formue';
+import FormuevilkårOppsummering, { Formuevurdering } from '../../formue/FormuevilkårOppsummering';
+import { regnUtFormuegrunnlag } from '../../formue/RevurderFormueUtils';
 import { hentBosituasjongrunnlag } from '../../revurderingUtils';
 
 import { getBosituasjongrunnlagsblokker, getUførevilkårgrunnlagsblokker, Grunnlagsblokk } from './grunnlagsblokker';
 import messages from './vedtaksinformasjon-nb';
 import styles from './vedtaksinformasjon.module.less';
 
-const Rad = (props: { overskrift?: boolean; children: { venstre: React.ReactNode; høyre: React.ReactNode } }) => (
+const Rad = (props: {
+    overskrift?: boolean;
+    radTittel?: string;
+    children: { venstre: React.ReactNode; høyre: React.ReactNode };
+}) => (
     <div className={classNames(styles.rad, { [styles.overskriftsrad]: props.overskrift })}>
-        <div className={styles.cellecontainer}>
-            <div className={styles.celle}>{props.children.venstre}</div>
-        </div>
-        <div className={styles.cellecontainer}>
-            <div className={styles.celle}>{props.children.høyre}</div>
+        {props.radTittel && (
+            <div className={styles.radTittelContainer}>
+                <Element>{props.radTittel}</Element>
+            </div>
+        )}
+        <div className={styles.childrenContainer}>
+            <div className={styles.cellecontainer}>
+                <div className={styles.celle}>{props.children.venstre}</div>
+            </div>
+            <div className={styles.cellecontainer}>
+                <div className={styles.celle}>{props.children.høyre}</div>
+            </div>
         </div>
     </div>
 );
@@ -50,7 +66,7 @@ const Uførevilkårblokk = (props: {
         O.fold(
             () => null,
             (uførevilkår) => (
-                <Rad>
+                <Rad radTittel={intl.formatMessage({ id: 'radTittel.uførhet' })}>
                     {{
                         venstre: <Vilkårvisning grunnlagsblokker={getUførevilkårgrunnlagsblokker(uførevilkår, intl)} />,
                         høyre: pipe(
@@ -80,7 +96,7 @@ const Bosituasjonblokk = (props: {
         O.fold(
             () => null,
             (bosituasjongrunnlag) => (
-                <Rad>
+                <Rad radTittel={intl.formatMessage({ id: 'radTittel.bosituasjon' })}>
                     {{
                         venstre: (
                             <Vilkårvisning
@@ -93,6 +109,62 @@ const Bosituasjonblokk = (props: {
                                 () => null,
                                 (grunnlag) => (
                                     <Vilkårvisning grunnlagsblokker={getBosituasjongrunnlagsblokker(grunnlag, intl)} />
+                                )
+                            )
+                        ),
+                    }}
+                </Rad>
+            )
+        )
+    );
+};
+
+const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; intl: IntlShape }) => {
+    return (
+        <ul>
+            {props.formuevilkår.vurderinger.map((vurdering) => {
+                const søkersFormue = regnUtFormuegrunnlag(vurdering.grunnlag?.søkersFormue);
+                const epsFormue = regnUtFormuegrunnlag(vurdering.grunnlag?.epsFormue);
+                const bekreftetFormue = søkersFormue + epsFormue;
+
+                return (
+                    <li key={vurdering.id}>
+                        <Formuevurdering vurdering={vurdering} />
+                        <Formuestatus
+                            bekreftetFormue={bekreftetFormue}
+                            erVilkårOppfylt={vurdering.resultat === FormueResultat.VilkårOppfylt}
+                        />
+                        <div className={styles.begrunnelseContainer}>
+                            <Normaltekst>{props.intl.formatMessage({ id: 'formue.begrunnelse' })}</Normaltekst>
+                            <Element>{vurdering.grunnlag?.begrunnelse}</Element>
+                        </div>
+                    </li>
+                );
+            })}
+        </ul>
+    );
+};
+
+const Formueblokk = (props: {
+    revurdering: Revurdering;
+    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+}) => {
+    const intl = useI18n({ messages });
+
+    return pipe(
+        O.fromNullable(props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue),
+        O.fold(
+            () => null,
+            (formuevilkår) => (
+                <Rad radTittel={intl.formatMessage({ id: 'radTittel.formue' })}>
+                    {{
+                        venstre: <FormuevilkårVisning formuevilkår={formuevilkår} intl={intl} />,
+                        høyre: pipe(
+                            O.fromNullable(props.grunnlagsdataOgVilkårsvurderinger.formue),
+                            O.fold(
+                                () => null,
+                                (gjeldendeFormuevilkår) => (
+                                    <FormuevilkårOppsummering gjeldendeFormue={gjeldendeFormuevilkår} />
                                 )
                             )
                         ),
@@ -122,6 +194,10 @@ const Vedtaksinformasjon = (props: {
                 grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
             />
             <Bosituasjonblokk
+                revurdering={props.revurdering}
+                grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
+            />
+            <Formueblokk
                 revurdering={props.revurdering}
                 grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
             />

@@ -25,8 +25,9 @@ import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering, validateNonNegativeNumber } from '~lib/validering';
 import sharedMessages from '~pages/saksbehandling/steg/sharedI18n-nb';
 import { useAppDispatch } from '~redux/Store';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { UføreResultat, VurderingsperiodeUføre } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Revurdering } from '~types/Revurdering';
-import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger, VurderingsperiodeUføre } from '~types/Vilkår';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';

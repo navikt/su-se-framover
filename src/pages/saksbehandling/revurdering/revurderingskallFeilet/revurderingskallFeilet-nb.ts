@@ -12,6 +12,13 @@ export default {
     'feil.fant.ikke.revurdering': 'Fant ikke revurdering',
     'feil.fant.ikke.person': 'Fant ikke person',
 
+    'feil.ikke_lov_med_overlappende_perioder': 'Ikke lov med overlappende perioder',
+    'feil.ikke_lov_med_formueperiode_utenfor_bosituasjonperiode':
+        'Ikke lov med formue-periode utenfor bosituasjonperioden',
+    'feil.ikke_lov_med_formueperiode_utenfor_behandlingsperioden':
+        'Ikke lov med formue-periode utenfor behandlingsperioden',
+    'feil.ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps': 'Ikke lov med formue for eps hvis man ikke har eps',
+
     'feil.kunne.ikke.opprette.oppgave': 'Kunne ikke opprette oppgave',
     'feil.kunne.ikke.journalføre.brev': 'Kunne ikke journalføre brev',
     'feil.kunne.ikke.distribuere.brev': 'Distribuering av brev feilet',
@@ -33,6 +40,7 @@ export default {
     'feil.kan.ikke.ha.eps.fradrag.uten.eps':
         'Kan ikke legge til fradrag/beregne på ektefelle når bruker ikke har ektefelle.',
     'feil.gjeldende.eps.har.formue': 'Gjeldende EPS har formue. Du kan revurdere når revurdering av formue åpnes',
+    'feil.depositum.kan.ikke.være.høyere.enn.innskudd': 'Depositum kan ikke være høyere enn innskudd',
 
     'feil.mangler.beslutning.på.forhåndsvarsel': 'Mangler beslutning på forhåndsvarsel',
 
@@ -47,6 +55,8 @@ export default {
     'feil.overlappende.vurderingsperioder': 'Perioder kan ikke overlappe',
 
     'feil.vurderinger.samme.resultat': 'Vurdering av vilkår må ha samme resultat for hele revurderingsperioden',
+
+    'feil.formue.som.fører.til.opphør.må.revurderes': 'Formue som fører til opphør må revurderes',
 
     'feil.vurderinger.utenfor.revurderingsperiode': 'Vurdering av vilkår gjøres innenfor revurderingsperioden',
     'feil.mangler.revurderingsperioder': 'Hele eller deler av revurderingsperioden mangler vurdering(er)',

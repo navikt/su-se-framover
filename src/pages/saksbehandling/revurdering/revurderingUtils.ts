@@ -1,5 +1,6 @@
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
-import { Bosituasjon } from '~types/grunnlag/Bosituasjon';
+import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import {
     Revurdering,
     SimulertRevurdering,
@@ -14,7 +15,6 @@ import {
     InformasjonSomRevurderes,
     Vurderingstatus,
 } from '~types/Revurdering';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 
 import { RevurderingSteg } from '../types';
 
@@ -85,6 +85,7 @@ export function getRevurderingsårsakMessageId(årsak: OpprettetRevurderingGrunn
 export const revurderingstegrekkefølge = [
     RevurderingSteg.Uførhet,
     RevurderingSteg.Bosituasjon,
+    RevurderingSteg.Formue,
     RevurderingSteg.EndringAvFradrag,
 ];
 
@@ -96,6 +97,8 @@ export const revurderingstegTilInformasjonSomRevurderes = (i: RevurderingSteg) =
             return InformasjonSomRevurderes.Inntekt;
         case RevurderingSteg.Bosituasjon:
             return InformasjonSomRevurderes.Bosituasjon;
+        case RevurderingSteg.Formue:
+            return InformasjonSomRevurderes.Formue;
     }
     return null;
 };

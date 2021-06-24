@@ -18,6 +18,15 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string
     [RevurderingErrorCodes.UGYLDIG_DATA]: 'feil.ugyldig.data',
     [RevurderingErrorCodes.HULL_I_TIDSLINJE]: 'feil.ugyldig.hull.tidslinje',
 
+    //ikke_lov...
+    [RevurderingErrorCodes.IKKE_LOV_MED_OVERLAPPENDE_PERIODER]: 'feil.ikke_lov_med_overlappende_perioder',
+    [RevurderingErrorCodes.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BOSITUASJONPERIODE]:
+        'feil.ikke_lov_med_formueperiode_utenfor_bosituasjonperiode',
+    [RevurderingErrorCodes.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN]:
+        'feil.ikke_lov_med_formueperiode_utenfor_behandlingsperioden',
+    [RevurderingErrorCodes.IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS]:
+        'feil.ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps',
+
     //fant ikke...
     [RevurderingErrorCodes.FANT_IKKE_REVURDERING]: 'feil.fant.ikke.revurdering',
     [RevurderingErrorCodes.FANT_IKKE_AKTØR_ID]: 'feil.fant.ikke.aktør.id',
@@ -45,6 +54,7 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string
     [RevurderingErrorCodes.HELE_REVURDERINGSPERIODEN_MÅ_HA_VURDERINGER]: 'feil.mangler.revurderingsperioder',
     [RevurderingErrorCodes.OVERLAPPENDE_VURDERINGSPERIODER]: 'feil.overlappende.vurderingsperioder',
 
+    //generell
     [RevurderingErrorCodes.UFULLSTENDIG_BEHANDLINGSINFORMASJON]: 'feil.ufullstendig.behandlingsinformasjon',
     [RevurderingErrorCodes.SIMULERING_FEILET]: 'feil.simulering.feilet',
     [RevurderingErrorCodes.SISTE_MÅNED_VED_NEDGANG_I_STØNADEN]: 'feil.siste.måned.ved.nedgang.i.stønaden',
@@ -55,7 +65,6 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string
         'feil.attestant.og.saksbehandler.kan.ikke.være.samme.person',
     [RevurderingErrorCodes.EPS_ALDER_ER_NULL]: 'feil.eps.alder.er.null',
     [RevurderingErrorCodes.KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS]: 'feil.kan.ikke.ha.eps.fradrag.uten.eps',
-    [RevurderingErrorCodes.GJELDENDE_EPS_HAR_FORMUE]: 'feil.gjeldende.eps.har.formue',
 
     //revurderingsutfall som ikke støttes
     [RevurderingErrorCodes.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON]: 'feil.opphør.og.andre.endringer.i.kombinasjon',
@@ -70,6 +79,12 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string
         'feil.bosituasjon.med.flere.perioder.må.vurderes',
     [RevurderingErrorCodes.BOSITUASJON_FLERE_PERIODER_OG_EPS_INNTEKT]:
         'feil.eps.inntekt.med.flere.perioder.må.revurderes',
+
+    //Formue
+    [RevurderingErrorCodes.GJELDENDE_EPS_HAR_FORMUE]: 'feil.gjeldende.eps.har.formue',
+    [RevurderingErrorCodes.FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]: 'feil.formue.som.fører.til.opphør.må.revurderes',
+    [RevurderingErrorCodes.DEPOSITUM_KAN_IKKE_VÆRE_HØYERE_ENN_INNSKUDD]:
+        'feil.depositum.kan.ikke.være.høyere.enn.innskudd',
 };
 
 export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) => {

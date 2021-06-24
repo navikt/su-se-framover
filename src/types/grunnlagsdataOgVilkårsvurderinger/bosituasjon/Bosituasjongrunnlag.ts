@@ -1,5 +1,5 @@
-import { Nullable } from '../../lib/types';
-import { Periode } from '../Periode';
+import { Nullable } from '../../../lib/types';
+import { Periode } from '../../Periode';
 
 export enum BosituasjonTyper {
     DELER_BOLIG_MED_VOKSNE = 'DELER_BOLIG_MED_VOKSNE',

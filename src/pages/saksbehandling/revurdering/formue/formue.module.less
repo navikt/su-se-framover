@@ -1,0 +1,125 @@
+@import '~/styles/variables.less';
+
+.gjeldendePeriode {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: @spacing-xs;
+}
+
+.nyPeriodeKnappContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: @spacing;
+}
+
+.personkortContainer {
+    margin-bottom: @spacing;
+    > :not(:last-child) {
+        margin-bottom: @spacing-xxs;
+    }
+}
+
+.eksisterendeVedtakTittelContainer {
+    margin-bottom: @spacing-xs;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing-xs;
+    }
+}
+
+.søkerOgEPSContainer {
+    display: flex;
+
+    > :not(:last-child) {
+        margin-right: @spacing-xs;
+        padding-right: @spacing;
+        border-right: @navBorder 2px solid;
+    }
+}
+
+.formuePanel {
+    background-color: @navLysGra;
+
+    .formueInputs {
+        margin-bottom: @spacing;
+
+        > :not(:last-child) {
+            margin-bottom: @spacing-xs;
+        }
+    }
+    .nyBeregningContainer {
+        margin-bottom: @spacing;
+    }
+}
+
+.oppsummeringsContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: @spacing;
+
+    .formueVerdiTittel {
+        margin-bottom: @spacing-xxs;
+    }
+
+    .formueInfo {
+        > :not(:last-child) {
+            margin-bottom: @spacing-xxs;
+        }
+    }
+
+    .formueVerdier {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+}
+
+.formueBlokk {
+    border-bottom: @navBorder 2px solid;
+    margin-bottom: @spacing-xl;
+
+    .formuePanelerContainer {
+        margin-bottom: @spacing;
+
+        > :not(:last-child) {
+            margin-bottom: @spacing-xs;
+        }
+    }
+
+    .periodeOgSøppelbøtteContainer {
+        display: flex;
+        justify-content: space-between;
+
+        .periodeContainer {
+            display: flex;
+            margin-bottom: @spacing;
+            > :not(:last-child) {
+                margin-right: @spacing;
+            }
+        }
+
+        .søppelbøtte {
+            height: min-content;
+        }
+    }
+
+    .begrunnelseContainer {
+        margin-bottom: @spacing-xl;
+        width: 50%;
+    }
+}
+
+.statusContainer {
+    display: flex;
+    margin-bottom: @spacing;
+
+    .status {
+        display: flex;
+        align-items: center;
+        margin-left: @spacing;
+
+        .statusInformasjon {
+            margin-left: @spacing-xxs;
+        }
+    }
+}

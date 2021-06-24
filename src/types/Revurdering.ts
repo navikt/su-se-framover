@@ -2,10 +2,10 @@ import { Nullable } from '~lib/types';
 
 import { Attestering } from './Behandling';
 import { Beregning } from './Beregning';
+import { GrunnlagsdataOgVilkårsvurderinger } from './grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Periode } from './Periode';
 import { Simulering } from './Simulering';
 import { Vedtak } from './Vedtak';
-import { GrunnlagsdataOgVilkårsvurderinger } from './Vilkår';
 
 export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> {
     id: string;
@@ -142,6 +142,13 @@ export enum RevurderingErrorCodes {
     FANT_IKKE_AKTØR_ID = 'fant_ikke_aktør_id',
     FANT_IKKE_REVURDERING = 'fant_ikke_revurdering',
 
+    //Ikke_lov...
+    IKKE_LOV_MED_OVERLAPPENDE_PERIODER = 'ikke_lov_med_overlappende_perioder',
+    IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BOSITUASJONPERIODE = 'ikke_lov_med_formueperiode_utenfor_bosituasjonperiode',
+    IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN = 'ikke_lov_med_formueperiode_utenfor_behandlingsperioden',
+    IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS = 'ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps',
+    FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES = 'formue_som_fører_til_opphør_må_revurderes',
+
     //ugyldig...
     UGYLDIG_PERIODE = 'ugyldig_periode',
     UGYLDIG_TILSTAND = 'ugyldig_tilstand',
@@ -170,6 +177,7 @@ export enum RevurderingErrorCodes {
     G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
     VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
     ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON = 'attestant_og_saksbehandler_kan_ikke_være_samme_person',
+    DEPOSITUM_KAN_IKKE_VÆRE_HØYERE_ENN_INNSKUDD = 'depositum_kan_ikke_være_høyere_enn_innskudd',
 
     //revurderingsutfall som ikke støttes
     OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON = 'opphør_og_andre_endringer_i_kombinasjon',
@@ -193,6 +201,7 @@ export enum InformasjonSomRevurderes {
     Uførhet = 'Uførhet',
     Inntekt = 'Inntekt',
     Bosituasjon = 'Bosituasjon',
+    Formue = 'Formue',
 }
 
 export enum Vurderingstatus {
@@ -207,4 +216,36 @@ export interface BosituasjonRequest {
     erEPSUførFlyktning: Nullable<boolean>;
     delerBolig: Nullable<boolean>;
     begrunnelse: Nullable<string>;
+}
+
+export interface FormuegrunnlagVerdier {
+    verdiIkkePrimærbolig: number;
+    verdiEiendommer: number;
+    verdiKjøretøy: number;
+    innskudd: number;
+    verdipapir: number;
+    kontanter: number;
+    pengerSkyldt: number;
+    depositumskonto: number;
+}
+
+export type FormuegrunnlagFormue = Array<{
+    periode: Periode<string>;
+    søkersFormue: FormuegrunnlagVerdier;
+    epsFormue: Nullable<FormuegrunnlagVerdier>;
+    begrunnelse: Nullable<string>;
+}>;
+
+export interface FormuegrunnlagRequest {
+    sakId: string;
+    revurderingId: string;
+    formue: FormuegrunnlagFormue;
+}
+
+export interface RevurderingProps {
+    sakId: string;
+    revurdering: Revurdering;
+    gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    forrigeUrl: string;
+    nesteUrl: (revurdering: Revurdering) => string;
 }

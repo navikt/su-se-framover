@@ -4,8 +4,8 @@ import React from 'react';
 import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~types/Søknad';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import { hentBosituasjongrunnlag } from '../../../pages/saksbehandling/revurdering/revurderingUtils';

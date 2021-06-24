@@ -20,6 +20,7 @@ import {
     fortsettEtterForhåndsvarsel,
     lagreFradragsgrunnlag,
     lagreBosituasjonsgrunnlag,
+    lagreFormuegrunnlag,
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
@@ -27,11 +28,12 @@ import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemote
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { Fradrag } from '~types/Fradrag';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~types/Periode';
 import { Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
-import { UføreResultat, GrunnlagsdataOgVilkårsvurderinger } from '~types/Vilkår';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<
@@ -677,6 +679,10 @@ export default createSlice({
         });
 
         builder.addCase(lagreBosituasjonsgrunnlag.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+        });
+
+        builder.addCase(lagreFormuegrunnlag.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 

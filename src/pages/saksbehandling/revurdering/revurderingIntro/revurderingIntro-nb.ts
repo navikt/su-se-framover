@@ -10,6 +10,7 @@ export default {
     'informasjonSomRevurderes.uførhet': 'Uførhet',
     'informasjonSomRevurderes.inntekt': 'Inntekt',
     'informasjonSomRevurderes.bosituasjon': 'Bosituasjon',
+    'informasjonSomRevurderes.formue': 'Formue',
 
     'info.bosituasjon': 'Ved boforhold kan det være relevant å endre inntekt og formue også',
 };

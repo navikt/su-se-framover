@@ -18,4 +18,21 @@ export default {
     'bosituasjon.label.sats': 'Sats',
     'bosituasjon.sats.ordinær': 'Ordinær',
     'bosituasjon.sats.høy': 'Høy',
+
+    'formue.tittel': 'Formue',
+    'formue.søker': 'Søker',
+    'formue.eps': 'Ektefelle/Samboer',
+    'formue.verdiBolig': 'Verdi på bolig',
+    'formue.verdiEiendom': 'Verdi på eiendom',
+    'formue.verdiKjøretøy': 'Verdi på kjøretøy',
+    'formue.innskudd': 'Innskuddsbeløp',
+    'formue.verdiPapir': 'Verdipapir',
+    'formue.kontanter': 'Kontanter over 1000',
+    'formue.pengerSkyldt': 'Penger skyldt',
+    'formue.depositum': 'Depositumskonto',
+    'formue.begrunnelse': 'Begrunnelse',
+
+    'radTittel.uførhet': 'Uførhet',
+    'radTittel.bosituasjon': 'Bosituasjon',
+    'radTittel.formue': 'Formue',
 };

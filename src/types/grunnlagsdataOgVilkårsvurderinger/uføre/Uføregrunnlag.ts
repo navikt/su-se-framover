@@ -1,6 +1,5 @@
 import { Nullable } from '~lib/types';
-
-import { Periode } from './Periode';
+import { Periode } from '~types/Periode';
 
 export interface Uføregrunnlag {
     periode: Periode<string>;
