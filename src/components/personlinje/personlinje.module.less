@@ -3,23 +3,26 @@
 .container {
     width: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding-right: @spacing-xs;
+    padding: @spacing-xs @spacing;
     border-bottom: 1px solid @navBorder;
 }
 
-.extra {
-    display: flex;
-    align-items: center;
+.icon {
+    margin-right: @spacing-xs;
+    width: 24px;
+    height: 24px;
+}
+
+.navn {
+    text-transform: uppercase;
 }
 
 .saksnummer {
     display: flex;
     align-items: center;
-    margin-right: @spacing-xs;
 }
 
 .separator {
-    margin-right: @spacing-xs;
+    margin: 0 @spacing-xs;
 }

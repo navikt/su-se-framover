@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import { IncomingMessage, ServerResponse } from 'http';
 
+import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
 import exphbs from 'express-handlebars';
@@ -93,6 +94,8 @@ export default async function startServer() {
             allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'X-Requested-With'],
         })
     );
+
+    app.use(compression());
 
     // Session
     setupSession(app);
