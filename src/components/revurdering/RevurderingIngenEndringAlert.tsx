@@ -2,9 +2,9 @@ import { AlertStripeInfo } from 'nav-frontend-alertstriper';
 import { Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 
+import { erGregulering } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
-import { erGregulering } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { OpprettetRevurderingGrunn } from '~types/Revurdering';
 
 import styles from './revurdering.module.less';

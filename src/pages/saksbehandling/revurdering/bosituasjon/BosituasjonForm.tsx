@@ -12,6 +12,7 @@ import { ApiError } from '~api/apiClient';
 import { FnrInput } from '~components/FnrInput/FnrInput';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
+import RevurderingskallFeilet from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
@@ -25,7 +26,6 @@ import { BosituasjonRequest, Revurdering } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
-import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
 import messages from './bosituasjonForm-nb';

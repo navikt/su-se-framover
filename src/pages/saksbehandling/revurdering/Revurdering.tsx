@@ -11,6 +11,11 @@ import { Link, Route, Switch } from 'react-router-dom';
 import { ApiError } from '~api/apiClient';
 import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
+import RevurderingskallFeilet from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
+import {
+    revurderingstegrekkefølge,
+    revurderingstegTilInformasjonSomRevurderes,
+} from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -24,8 +29,6 @@ import { RevurderingSteg } from '../types';
 import Formue from './formue/Formue';
 import messages from './revurdering-nb';
 import styles from './revurdering.module.less';
-import RevurderingskallFeilet from './revurderingskallFeilet/RevurderingskallFeilet';
-import { revurderingstegrekkefølge, revurderingstegTilInformasjonSomRevurderes } from './revurderingUtils';
 
 const NyRevurderingPage = React.lazy(() => import('./revurderingIntro/NyRevurderingPage'));
 const EndreRevurderingPage = React.lazy(() => import('./revurderingIntro/EndreRevurderingPage'));

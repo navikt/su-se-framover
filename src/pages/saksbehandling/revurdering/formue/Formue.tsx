@@ -24,23 +24,7 @@ import * as personApi from '~api/personApi';
 import DatePicker from '~components/datePicker/DatePicker';
 import { Personkort } from '~components/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
-import { lagreFormuegrunnlag } from '~features/revurdering/revurderingActions';
-import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
-import { Nullable } from '~lib/types';
-import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { Periode } from '~types/Periode';
-import { RevurderingProps } from '~types/Revurdering';
-import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
-
-import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
-import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
-import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { hentBosituasjongrunnlag } from '../revurderingUtils';
-
-import messages from './formue-nb';
-import styles from './formue.module.less';
-import FormuevilkårOppsummering from './FormuevilkårOppsummering';
+import Formuestatus from '~features/revurdering/formuestatus/Formuestatus';
 import {
     FormueFormData,
     revurderFormueSchema,
@@ -50,7 +34,22 @@ import {
     getTomFormueData,
     formueFormDataTilFormuegrunnlagRequest,
     erFormueVilkårOppfylt,
-} from './RevurderFormueUtils';
+} from '~features/revurdering/RevurderFormueUtils';
+import { lagreFormuegrunnlag } from '~features/revurdering/revurderingActions';
+import FormuevilkårOppsummering from '~features/revurdering/revurderingoppsummering/formuevilkåroppsummering/FormuevilkårOppsummering';
+import RevurderingskallFeilet from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
+import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
+import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
+import { Nullable } from '~lib/types';
+import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import { Periode } from '~types/Periode';
+import { RevurderingProps } from '~types/Revurdering';
+
+import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
+import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
+
+import messages from './formue-nb';
+import styles from './formue.module.less';
 
 const Formue = (props: RevurderingProps) => {
     const formuegrenser = props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue.formuegrenser;
@@ -142,39 +141,6 @@ const Formue = (props: RevurderingProps) => {
                 ),
             }}
         </ToKolonner>
-    );
-};
-
-export const Formuestatus = (props: { bekreftetFormue: number; erVilkårOppfylt: boolean }) => {
-    const intl = useI18n({ messages });
-
-    return (
-        <div className={styles.statusContainer}>
-            <div>
-                <Normaltekst>{intl.formatMessage({ id: 'formueblokk.totalFormue' })}</Normaltekst>
-                <Undertittel>
-                    {props.bekreftetFormue} {intl.formatMessage({ id: 'panel.kroner' })}
-                </Undertittel>
-            </div>
-
-            <div className={styles.status}>
-                <VilkårvurderingStatusIcon
-                    status={props.erVilkårOppfylt ? VilkårVurderingStatus.Ok : VilkårVurderingStatus.IkkeOk}
-                />
-                <div className={styles.statusInformasjon}>
-                    <p>
-                        {props.erVilkårOppfylt
-                            ? intl.formatMessage({ id: 'formueblokk.vilkårOppfylt' })
-                            : intl.formatMessage({ id: 'formueblokk.vilkårIkkeOppfylt' })}
-                    </p>
-                    <p>
-                        {props.erVilkårOppfylt
-                            ? intl.formatMessage({ id: 'formueblokk.vilkårOppfyltGrunn' })
-                            : intl.formatMessage({ id: 'formueblokk.vilkårIkkeOppfyltGrunn' })}
-                    </p>
-                </div>
-            </div>
-        </div>
     );
 };
 

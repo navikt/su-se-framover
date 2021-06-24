@@ -7,6 +7,20 @@ import { useHistory } from 'react-router-dom';
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import { Revurderingshandling } from '~api/revurderingApi';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
+import Revurderingoppsummering from '~features/revurdering/revurderingoppsummering/Revurderingoppsummering';
+import RevurderingskallFeilet, {
+    feilkodeTilFeilmelding,
+} from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
+import revurderingsfeilMessages from '~features/revurdering/revurderingskallFeilet/revurderingskallFeilet-nb';
+import {
+    erBeregnetIngenEndring,
+    erForhåndsvarslingBesluttet,
+    erGregulering,
+    erIngenForhåndsvarsel,
+    erRevurderingForhåndsvarslet,
+    erRevurderingSimulert,
+    erRevurderingUnderkjent,
+} from '~features/revurdering/revurderingUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n, useAsyncActionCreatorWithArgsTransformer } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -21,25 +35,12 @@ import {
 } from '~types/Revurdering';
 
 import sharedStyles from '../revurdering.module.less';
-import RevurderingskallFeilet, { feilkodeTilFeilmelding } from '../revurderingskallFeilet/RevurderingskallFeilet';
-import revurderingsfeilMessages from '../revurderingskallFeilet/revurderingskallFeilet-nb';
-import {
-    erBeregnetIngenEndring,
-    erForhåndsvarslingBesluttet,
-    erGregulering,
-    erIngenForhåndsvarsel,
-    erRevurderingForhåndsvarslet,
-    erRevurderingSimulert,
-    erRevurderingUnderkjent,
-} from '../revurderingUtils';
 
-import Beregningblokk from './beregningblokk/Beregningblokk';
 import {
     ResultatEtterForhåndsvarselform,
     SendTilAttesteringForm,
     VelgForhåndsvarselForm,
 } from './oppsummeringPageForms/OppsummeringPageForms';
-import Oppsummeringsblokk from './oppsummeringsblokk/Oppsummeringsblokk';
 import messages from './revurderingOppsummeringPage-nb';
 import styles from './revurderingOppsummeringPage.module.less';
 
@@ -283,11 +284,10 @@ const RevurderingOppsummeringPage = (props: {
                         (err) => <RevurderingskallFeilet error={err} />,
                         ([beregning, grunnlagsdataOgVilkårsvurderinger]) => (
                             <div className={styles.content}>
-                                <Oppsummeringsblokk
+                                <Revurderingoppsummering
                                     revurdering={props.revurdering}
                                     grunnlagsdataOgVilkårsvurderinger={grunnlagsdataOgVilkårsvurderinger}
                                 />
-                                <Beregningblokk revurdering={props.revurdering} />
                                 {erRevurderingSimulert(props.revurdering) ||
                                 erBeregnetIngenEndring(props.revurdering) ||
                                 erRevurderingUnderkjent(props.revurdering) ? (

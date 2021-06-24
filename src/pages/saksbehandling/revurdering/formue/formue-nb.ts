@@ -2,11 +2,6 @@ export default {
     'eksisterende.vedtakinfo.tittel': 'Eksisterende vedtaksinformasjon',
 
     'formueblokk.begrunnelse': 'Begrunnelse',
-    'formueblokk.totalFormue': 'Total formue',
-    'formueblokk.vilkårOppfylt': 'Vilkår er oppfylt',
-    'formueblokk.vilkårOppfyltGrunn': 'Formue er ikke høyere 0.5G',
-    'formueblokk.vilkårIkkeOppfylt': 'Vilkår er ikke oppfylt',
-    'formueblokk.vilkårIkkeOppfyltGrunn': 'Formue er høyere enn 0.5G',
 
     'formuepanel.verdiPåBolig': 'Verdier på bolig',
     'formuepanel.verdiPåEiendom': 'Verdier på eiendom',

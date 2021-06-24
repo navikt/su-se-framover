@@ -16,7 +16,7 @@ import {
     Vurderingstatus,
 } from '~types/Revurdering';
 
-import { RevurderingSteg } from '../types';
+import { RevurderingSteg } from '../../pages/saksbehandling/types';
 
 export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurdering =>
     r.status === RevurderingsStatus.OPPRETTET;
@@ -118,6 +118,7 @@ export const finnNesteRevurderingsteg = (
     return førsteIkkeVurderteSteg ?? RevurderingSteg.Oppsummering;
 };
 
+// TODO: flytt til en plass som deles av søknadsbehandling og revurderin
 export const hentBosituasjongrunnlag = (g: GrunnlagsdataOgVilkårsvurderinger): Bosituasjon => {
     if (g.bosituasjon.length > 1) {
         //Dette er en guard for at bosituasjon kan kun ha 1 element helt til vi støtter å ta inn fler

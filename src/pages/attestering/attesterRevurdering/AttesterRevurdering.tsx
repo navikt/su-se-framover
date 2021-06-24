@@ -15,17 +15,17 @@ import Personlinje from '~components/personlinje/Personlinje';
 import RevurderingIngenEndringAlert from '~components/revurdering/RevurderingIngenEndringAlert';
 import RevurderingÅrsakOgBegrunnelse from '~components/revurdering/RevurderingÅrsakOgBegrunnelse';
 import * as revurderingSlice from '~features/revurdering/revurderingActions';
+import RevurderingskallFeilet from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
+import {
+    erRevurderingTilAttestering,
+    erRevurderingIngenEndring,
+    erGregulering,
+} from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup from '~lib/validering';
-import RevurderingskallFeilet from '~pages/saksbehandling/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
-import {
-    erRevurderingTilAttestering,
-    erRevurderingIngenEndring,
-    erGregulering,
-} from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { useAppDispatch } from '~redux/Store';
 import { IverksattRevurdering, RevurderingsStatus, UnderkjentRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';

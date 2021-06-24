@@ -1,11 +1,5 @@
 @import '~/styles/variables.less';
 
-.gjeldendePeriode {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: @spacing-xs;
-}
-
 .nyPeriodeKnappContainer {
     display: flex;
     justify-content: flex-end;
@@ -52,28 +46,6 @@
     }
 }
 
-.oppsummeringsContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: @spacing;
-
-    .formueVerdiTittel {
-        margin-bottom: @spacing-xxs;
-    }
-
-    .formueInfo {
-        > :not(:last-child) {
-            margin-bottom: @spacing-xxs;
-        }
-    }
-
-    .formueVerdier {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-    }
-}
-
 .formueBlokk {
     border-bottom: @navBorder 2px solid;
     margin-bottom: @spacing-xl;
@@ -106,20 +78,5 @@
     .begrunnelseContainer {
         margin-bottom: @spacing-xl;
         width: 50%;
-    }
-}
-
-.statusContainer {
-    display: flex;
-    margin-bottom: @spacing;
-
-    .status {
-        display: flex;
-        align-items: center;
-        margin-left: @spacing;
-
-        .statusInformasjon {
-            margin-left: @spacing-xxs;
-        }
     }
 }

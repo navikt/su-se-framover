@@ -1,6 +1,6 @@
+import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import {
     Behandlingsinformasjon,

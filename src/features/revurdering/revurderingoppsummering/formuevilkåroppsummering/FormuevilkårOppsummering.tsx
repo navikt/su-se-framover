@@ -6,8 +6,8 @@ import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { FormueVilkår, VurderingsperiodeFormue } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 
-import messages from './formue-nb';
-import styles from './formue.module.less';
+import messages from './formuevilkåroppsummering-nb';
+import styles from './formuevilkåroppsummering.module.less';
 
 const FormuevilkårOppsummering = (props: { gjeldendeFormue: FormueVilkår }) => {
     return (

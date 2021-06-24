@@ -24,13 +24,13 @@ import {
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { kanSimuleres } from '~features/behandling/behandlingUtils';
 import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
+import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Beregning } from '~types/Beregning';

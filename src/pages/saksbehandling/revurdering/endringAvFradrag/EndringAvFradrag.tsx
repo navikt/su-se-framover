@@ -20,6 +20,8 @@ import ToKolonner from '~components/toKolonner/ToKolonner';
 import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
 import { getFradragstypeStringMedEpsSpesifisering } from '~features/fradrag/fradragUtils';
 import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions';
+import RevurderingskallFeilet from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
+import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { groupByEq } from '~lib/arrayUtils';
 import * as DateUtils from '~lib/dateUtils';
@@ -39,9 +41,7 @@ import { Revurdering } from '~types/Revurdering';
 import uføreMessages from '../../steg/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
-import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { hentBosituasjongrunnlag } from '../revurderingUtils';
 
 import messages from './endringAvFradrag-nb';
 import styles from './endringAvFradrag.module.less';
