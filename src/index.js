@@ -15,6 +15,7 @@ if (process.env.NODE_ENV !== 'development') {
         // eslint-disable-next-line no-undef
         release: process.env.SENTRY_RELEASE || 'unknown',
         integrations: [new Sentry.Integrations.Breadcrumbs({ console: false })],
+        autoSessionTracking: false,
     });
 }
 
