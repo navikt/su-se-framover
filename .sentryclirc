@@ -1,0 +1,4 @@
+[defaults]
+project=su-se-framover
+url=https://sentry.gc.nav.no/
+org=nav
