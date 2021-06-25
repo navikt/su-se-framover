@@ -23,6 +23,7 @@ export interface OpprettetSøknad {
     saksnummer: number;
     søknad: Søknad;
 }
+
 export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientResult<OpprettetSøknad>> {
     return apiClient({ url: '/soknad', method: 'POST', body: søknad });
 }

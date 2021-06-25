@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { IntlShape } from 'react-intl';
 import { useParams, useHistory, Link, Switch, Route } from 'react-router-dom';
 
+import { fetchMe } from '~api/meApi';
 import { Person } from '~api/personApi';
 import { Personkort } from '~components/Personkort';
 import { useUserContext } from '~context/userContext';
@@ -49,6 +50,7 @@ const Steg = (props: {
     hjelpetekst?: string;
 }) => {
     const sectionRef = React.useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         if (sectionRef.current) {
             sectionRef.current.focus();
@@ -199,16 +201,19 @@ const StartUtfylling = () => {
     const history = useHistory();
 
     useEffect(() => {
-        if (!RemoteData.isSuccess(søkerFraStore)) {
-            return;
-        }
+        // check that user is still logged in first
+        fetchMe().then(() => {
+            if (!RemoteData.isSuccess(søkerFraStore)) {
+                return;
+            }
 
-        trackEvent(
-            søknadNesteSteg({
-                ident: søkerFraStore.value.aktorId,
-                steg: step,
-            })
-        );
+            trackEvent(
+                søknadNesteSteg({
+                    ident: søkerFraStore.value.aktorId,
+                    steg: step,
+                })
+            );
+        });
     }, [step]);
 
     const steg = [
