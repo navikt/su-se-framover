@@ -7,8 +7,8 @@ import { useEffect } from 'react';
 import { IntlShape } from 'react-intl';
 import { useParams, useHistory, Link, Switch, Route } from 'react-router-dom';
 
+import { fetchMe } from '~api/meApi';
 import { Person } from '~api/personApi';
-import * as søknadApi from '~api/søknadApi';
 import { Personkort } from '~components/Personkort';
 import { useUserContext } from '~context/userContext';
 import { SøknadState } from '~features/søknad/søknad.slice';
@@ -18,7 +18,7 @@ import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
 import { trackEvent } from '~lib/tracking/amplitude';
 import { søknadNesteSteg } from '~lib/tracking/trackingEvents';
-import { useAppSelector } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Rolle } from '~types/LoggedInUser';
 import { Søknadstype } from '~types/Søknad';
 
@@ -199,17 +199,11 @@ const StartUtfylling = () => {
     const intl = useI18n({ messages });
     const user = useUserContext();
     const history = useHistory();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
-        const redirectHvisBrukerErUtlogget = async () => {
-            const res = await søknadApi.hentLoginStatus();
+        dispatch(fetchMe);
 
-            if (res.status === 'error') {
-                history.push(routes.home.createURL());
-            }
-        };
-
-        redirectHvisBrukerErUtlogget();
         if (!RemoteData.isSuccess(søkerFraStore)) {
             return;
         }

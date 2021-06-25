@@ -24,13 +24,6 @@ export interface OpprettetSøknad {
     søknad: Søknad;
 }
 
-export async function hentLoginStatus(): Promise<ApiClientResult<string>> {
-    return apiClient({
-        url: '/soknad/loginStatus',
-        method: 'GET',
-    });
-}
-
 export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientResult<OpprettetSøknad>> {
     return apiClient({ url: '/soknad', method: 'POST', body: søknad });
 }
