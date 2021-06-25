@@ -168,6 +168,7 @@ export enum RevurderingErrorCodes {
     EPS_ALDER_ER_NULL = 'eps_alder_er_null',
     KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS = 'kan_ikke_ha_eps_fradrag_uten_eps',
     GJELDENDE_EPS_HAR_FORMUE = 'gjeldende_eps_har_formue',
+    EPS_FORMUE_MED_FLERE_PERIODER_MÅ_REVURDERES = 'eps_formue_med_flere_perioder_må_revurderes',
 
     //generell
     BEGRUNNELSE_KAN_IKKE_VÆRE_TOM = 'begrunnelse_kan_ikke_være_tom',

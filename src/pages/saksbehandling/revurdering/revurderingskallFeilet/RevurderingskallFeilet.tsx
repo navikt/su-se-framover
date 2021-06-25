@@ -85,6 +85,8 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string
     [RevurderingErrorCodes.FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]: 'feil.formue.som.fører.til.opphør.må.revurderes',
     [RevurderingErrorCodes.DEPOSITUM_KAN_IKKE_VÆRE_HØYERE_ENN_INNSKUDD]:
         'feil.depositum.kan.ikke.være.høyere.enn.innskudd',
+    [RevurderingErrorCodes.EPS_FORMUE_MED_FLERE_PERIODER_MÅ_REVURDERES]:
+        'feil.eps.formue.med.flere.perioder.må.revurderes',
 };
 
 export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) => {

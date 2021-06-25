@@ -66,6 +66,8 @@ export default {
 
     'feil.eps.inntekt.med.flere.perioder.må.revurderes':
         'Revurderingsperioden inneholder tvetydig grunnlag for bosituasjon og inntekt. Både bosituasjon og inntekt må revurderes.',
+    'feil.eps.formue.med.flere.perioder.må.revurderes':
+        'Formue må revurderes siden det finnes EPS formue og flere bosituasjonsperioder',
 
     'feil.feilutbetaling.støttes.ikke': 'Simulering indikerer feilutbetaling, systemstøtte for håndtering mangler.',
 
