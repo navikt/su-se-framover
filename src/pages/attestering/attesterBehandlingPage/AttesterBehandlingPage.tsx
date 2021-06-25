@@ -14,10 +14,10 @@ import Behandlingsoppsummering from '~components/oppsummering/Behandlingsoppsumm
 import Personlinje from '~components/personlinje/Personlinje';
 import { erIverksatt, erTilAttestering } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { useI18n } from '~lib/hooks';
+import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { useAppSelector } from '~redux/Store';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
 
@@ -58,39 +58,43 @@ const Attesteringsinnhold = ({
 }) => {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const attesteringStatus = useAppSelector((s) => s.sak.attesteringStatus);
-    const dispatch = useAppDispatch();
     const history = useHistory();
+    const [, attesteringIverksett] = useAsyncActionCreator(sakSlice.attesteringIverksett);
+    const [, attesteringUnderkjent] = useAsyncActionCreator(sakSlice.attesteringUnderkjenn);
+    const [, fetchSak] = useAsyncActionCreator(sakSlice.fetchSak);
+    const redirectTilSaksoversikt = (message: string) => {
+        history.push(Routes.createSakIntroLocation(message, props.sak.id));
+    };
 
     const formik = useFormik<FormData>({
         initialValues: {},
         onSubmit: async (values) => {
             if (values.beslutning) {
-                const response = await dispatch(
-                    sakSlice.attesteringIverksett({
+                attesteringIverksett(
+                    {
                         sakId: props.sak.id,
                         behandlingId: props.behandling.id,
-                    })
+                    },
+                    (res) => {
+                        fetchSak({ sakId: res.sakId }, () => {
+                            redirectTilSaksoversikt(intl.formatMessage({ id: 'status.iverksatt' }));
+                        });
+                    }
                 );
-                if (sakSlice.attesteringIverksett.fulfilled.match(response)) {
-                    const message = intl.formatMessage({ id: 'status.iverksatt' });
-                    history.push(Routes.createSakIntroLocation(message, props.sak.id));
-                }
-                return;
             }
 
             if (values.kommentar && values.grunn) {
-                const response = await dispatch(
-                    sakSlice.attesteringUnderkjenn({
+                attesteringUnderkjent(
+                    {
                         sakId: props.sak.id,
                         behandlingId: props.behandling.id,
                         grunn: values.grunn,
                         kommentar: values.kommentar,
-                    })
+                    },
+                    () => {
+                        redirectTilSaksoversikt(intl.formatMessage({ id: 'status.sendtTilbake' }));
+                    }
                 );
-                if (sakSlice.attesteringUnderkjenn.fulfilled.match(response)) {
-                    const message = intl.formatMessage({ id: 'status.sendtTilbake' });
-                    history.push(Routes.createSakIntroLocation(message, props.sak.id));
-                }
             }
         },
         validationSchema: yup.object<FormData>({

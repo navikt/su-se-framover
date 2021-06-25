@@ -8,6 +8,7 @@ import { Søknad } from './Søknad';
 
 export interface Behandling {
     id: string;
+    sakId: string;
     søknad: Søknad;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     behandlingsinformasjon: Behandlingsinformasjon;
