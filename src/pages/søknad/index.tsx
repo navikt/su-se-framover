@@ -8,6 +8,7 @@ import { IntlShape } from 'react-intl';
 import { useParams, useHistory, Link, Switch, Route } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
+import * as søknadApi from '~api/søknadApi';
 import { Personkort } from '~components/Personkort';
 import { useUserContext } from '~context/userContext';
 import { SøknadState } from '~features/søknad/søknad.slice';
@@ -49,6 +50,7 @@ const Steg = (props: {
     hjelpetekst?: string;
 }) => {
     const sectionRef = React.useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         if (sectionRef.current) {
             sectionRef.current.focus();
@@ -199,6 +201,15 @@ const StartUtfylling = () => {
     const history = useHistory();
 
     useEffect(() => {
+        const redirectHvisBrukerErUtlogget = async () => {
+            const res = await søknadApi.hentLoginStatus();
+
+            if (res.status === 'error') {
+                history.push(routes.home.createURL());
+            }
+        };
+
+        redirectHvisBrukerErUtlogget();
         if (!RemoteData.isSuccess(søkerFraStore)) {
             return;
         }
