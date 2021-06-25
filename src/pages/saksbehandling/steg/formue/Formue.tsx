@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import fnrValidator from '@navikt/fnrvalidator';
+import { startOfMonth } from 'date-fns/esm';
 import { FormikErrors, useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
@@ -26,6 +27,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering, validateNonNegativeNumber } from '~lib/validering';
+import { getSenesteGVerdi } from '~pages/saksbehandling/revurdering/formue/RevurderFormueUtils';
 import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
@@ -78,9 +80,8 @@ const schema = yup.object<FormData>({
 const Formue = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
-
+    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [eps, setEps] = useState<RemoteData.RemoteData<ApiError, personApi.Person>>(RemoteData.initial);
-
     const [kanEndreAnnenPersonsFormue, setKanEndreAnnenPersonsFormue] = useState<boolean>(true);
     const [åpnerNyFormueBlokkMenViserEnBlokk, setÅpnerNyFormueBlokkMenViserEnBlokk] = useState<boolean>(false);
     const søknadInnhold = props.behandling.søknad.søknadInnhold;
@@ -90,15 +91,13 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         RemoteData.initial
     );
 
-    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
-
     const handleSave = async (values: FormData, nesteUrl: string) => {
         if (RemoteData.isPending(eps) && values.epsFnr !== null) return;
 
         const status =
             values.status === FormueStatus.MåInnhenteMerInformasjon
                 ? FormueStatus.MåInnhenteMerInformasjon
-                : totalFormue <= 0.5 * G
+                : totalFormue <= senesteHalvG
                 ? FormueStatus.VilkårOppfylt
                 : FormueStatus.VilkårIkkeOppfylt;
 
@@ -148,8 +147,12 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         });
     };
 
-    // TODO ai: implementera detta i backend
-    const G = 101351;
+    const senesteHalvG = getSenesteGVerdi(
+        props.behandling.stønadsperiode?.periode?.fraOgMed
+            ? startOfMonth(new Date(props.behandling.stønadsperiode.periode.fraOgMed))
+            : null,
+        props.behandling.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser
+    );
 
     const formik = useFormik<FormData>({
         initialValues: getFormue(behandlingsInfo, søknadInnhold, props.behandling.grunnlagsdataOgVilkårsvurderinger),
@@ -204,7 +207,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         formik.values.borSøkerMedEPS ? null : 'søker'
     );
 
-    const vilkårErOppfylt = totalFormue < 0.5 * G;
+    const vilkårErOppfylt = totalFormue <= senesteHalvG;
 
     return (
         <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
