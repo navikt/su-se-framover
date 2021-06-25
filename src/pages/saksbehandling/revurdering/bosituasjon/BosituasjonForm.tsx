@@ -4,7 +4,8 @@ import fnrValidator from '@navikt/fnrvalidator';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import { Ingress, Element, Normaltekst } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Control, Controller, useForm } from 'react-hook-form';
+import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
@@ -18,7 +19,9 @@ import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
-import { BosituasjonRequest, Revurdering, RevurderingProps } from '~types/Revurdering';
+import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
+import { Periode } from '~types/Periode';
+import { BosituasjonRequest, Revurdering } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
@@ -36,7 +39,7 @@ interface BosituasjonFormData {
     begrunnelse: Nullable<string>;
 }
 
-const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[] }) => {
+const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[]; revurderingsperiode: Periode<string> }) => {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     return (
@@ -129,9 +132,96 @@ const getDefaultValues = (revurdering: Revurdering, bosituasjon: Bosituasjon[]):
     };
 };
 
-const BosituasjonForm = (props: RevurderingProps) => {
+const EPSForm = (props: {
+    control: Control<BosituasjonFormData>;
+    setEpsAlder: (alder: Nullable<number>) => void;
+    epsAlder: Nullable<number>;
+    intl: IntlShape;
+}) => {
+    return (
+        <div className={styles.epsFormContainer}>
+            <Controller
+                control={props.control}
+                name="epsFnr"
+                render={({ field, fieldState }) => (
+                    <FnrInput
+                        label={props.intl.formatMessage({ id: 'form.epsFnr' })}
+                        inputId="epsFnr"
+                        name="epsFnr"
+                        autoComplete="on"
+                        onFnrChange={field.onChange}
+                        fnr={field.value ?? ''}
+                        feil={fieldState.error?.message}
+                        onAlderChange={(alder) => props.setEpsAlder(alder)}
+                    />
+                )}
+            />
+            {props.epsAlder && props.epsAlder < 67 && (
+                <Controller
+                    control={props.control}
+                    name="erEPSUførFlyktning"
+                    render={({ field, fieldState }) => (
+                        <RadioGruppe
+                            legend={props.intl.formatMessage({ id: 'form.erEPSUførFlyktning' })}
+                            feil={fieldState.error?.message}
+                        >
+                            <Radio
+                                label="Ja"
+                                name="erEPSUførFlyktning"
+                                checked={field.value === true}
+                                onChange={() => field.onChange(true)}
+                            />
+                            <Radio
+                                label="Nei"
+                                name="erEPSUførFlyktning"
+                                checked={field.value === false}
+                                onChange={() => field.onChange(false)}
+                            />
+                        </RadioGruppe>
+                    )}
+                />
+            )}
+        </div>
+    );
+};
+
+const DelerSøkerBoligForm = (props: { control: Control<BosituasjonFormData>; intl: IntlShape }) => {
+    return (
+        <Controller
+            control={props.control}
+            name="delerSøkerBolig"
+            render={({ field, fieldState }) => (
+                <RadioGruppe
+                    legend={props.intl.formatMessage({ id: 'form.delerSøkerBolig' })}
+                    feil={fieldState.error?.message}
+                >
+                    <Radio
+                        label="Ja"
+                        name="delerSøkerBolig"
+                        checked={field.value === true}
+                        onChange={() => field.onChange(true)}
+                    />
+                    <Radio
+                        label="Nei"
+                        name="delerSøkerBolig"
+                        checked={field.value === false}
+                        onChange={() => field.onChange(false)}
+                    />
+                </RadioGruppe>
+            )}
+        />
+    );
+};
+
+const BosituasjonForm = (props: {
+    sakId: string;
+    revurdering: Revurdering;
+    gjeldendeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    forrigeUrl: string;
+    nesteUrl: (revurdering: Revurdering) => string;
+}) => {
     const intl = useI18n({ messages: { ...messages, ...sharedMessages } });
-    const [epsAlder, setEPSAlder] = useState<Nullable<number>>(null);
+    const [epsAlder, setEpsAlder] = useState<Nullable<number>>(null);
     const [status, setStatus] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const dispatch = useAppDispatch();
     const history = useHistory();
@@ -259,82 +349,6 @@ const BosituasjonForm = (props: RevurderingProps) => {
         }
     }, [epsAlder]);
 
-    const DelerSøkerBoligForm = () => {
-        return (
-            <Controller
-                control={form.control}
-                name="delerSøkerBolig"
-                render={({ field, fieldState }) => (
-                    <RadioGruppe
-                        legend={intl.formatMessage({ id: 'form.delerSøkerBolig' })}
-                        feil={fieldState.error?.message}
-                    >
-                        <Radio
-                            label="Ja"
-                            name="delerSøkerBolig"
-                            checked={field.value === true}
-                            onChange={() => field.onChange(true)}
-                        />
-                        <Radio
-                            label="Nei"
-                            name="delerSøkerBolig"
-                            checked={field.value === false}
-                            onChange={() => field.onChange(false)}
-                        />
-                    </RadioGruppe>
-                )}
-            />
-        );
-    };
-
-    const EPSForm = () => {
-        return (
-            <div className={styles.epsFormContainer}>
-                <Controller
-                    control={form.control}
-                    name="epsFnr"
-                    render={({ field, fieldState }) => (
-                        <FnrInput
-                            label={intl.formatMessage({ id: 'form.epsFnr' })}
-                            inputId="epsFnr"
-                            name="epsFnr"
-                            autoComplete="on"
-                            onFnrChange={field.onChange}
-                            fnr={field.value ?? ''}
-                            feil={fieldState.error?.message}
-                            onAlderChange={(alder) => setEPSAlder(alder)}
-                        />
-                    )}
-                />
-                {epsAlder && epsAlder < 67 && (
-                    <Controller
-                        control={form.control}
-                        name="erEPSUførFlyktning"
-                        render={({ field, fieldState }) => (
-                            <RadioGruppe
-                                legend={intl.formatMessage({ id: 'form.erEPSUførFlyktning' })}
-                                feil={fieldState.error?.message}
-                            >
-                                <Radio
-                                    label="Ja"
-                                    name="erEPSUførFlyktning"
-                                    checked={field.value === true}
-                                    onChange={() => field.onChange(true)}
-                                />
-                                <Radio
-                                    label="Nei"
-                                    name="erEPSUførFlyktning"
-                                    checked={field.value === false}
-                                    onChange={() => field.onChange(false)}
-                                />
-                            </RadioGruppe>
-                        )}
-                    />
-                )}
-            </div>
-        );
-    };
-
     const harEPS = form.watch('harEPS');
 
     useEffect(() => {
@@ -351,7 +365,7 @@ const BosituasjonForm = (props: RevurderingProps) => {
     function resetEPSForm() {
         form.setValue('epsFnr', null);
         form.setValue('erEPSUførFlyktning', null);
-        setEPSAlder(null);
+        setEpsAlder(null);
     }
 
     function resetDelerSøkerBoligForm() {
@@ -392,8 +406,15 @@ const BosituasjonForm = (props: RevurderingProps) => {
                                         </RadioGruppe>
                                     )}
                                 />
-                                {form.watch('harEPS') && <EPSForm />}
-                                {form.watch('harEPS') === false && <DelerSøkerBoligForm />}
+                                {harEPS && (
+                                    <EPSForm
+                                        control={form.control}
+                                        setEpsAlder={setEpsAlder}
+                                        epsAlder={epsAlder}
+                                        intl={intl}
+                                    />
+                                )}
+                                {harEPS === false && <DelerSøkerBoligForm control={form.control} intl={intl} />}
                             </div>
                             <div className={styles.textAreaContainer}>
                                 <Controller
@@ -426,7 +447,10 @@ const BosituasjonForm = (props: RevurderingProps) => {
                     </form>
                 ),
                 right: (
-                    <GjeldendeBosituasjon bosituasjon={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.bosituasjon} />
+                    <GjeldendeBosituasjon
+                        bosituasjon={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.bosituasjon}
+                        revurderingsperiode={props.revurdering.periode}
+                    />
                 ),
             }}
         </ToKolonner>
