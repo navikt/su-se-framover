@@ -18,7 +18,7 @@ import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
 import { trackEvent } from '~lib/tracking/amplitude';
 import { søknadNesteSteg } from '~lib/tracking/trackingEvents';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { useAppSelector } from '~redux/Store';
 import { Rolle } from '~types/LoggedInUser';
 import { Søknadstype } from '~types/Søknad';
 
@@ -199,21 +199,21 @@ const StartUtfylling = () => {
     const intl = useI18n({ messages });
     const user = useUserContext();
     const history = useHistory();
-    const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(fetchMe);
+        // check that user is still logged in first
+        fetchMe().then(() => {
+            if (!RemoteData.isSuccess(søkerFraStore)) {
+                return;
+            }
 
-        if (!RemoteData.isSuccess(søkerFraStore)) {
-            return;
-        }
-
-        trackEvent(
-            søknadNesteSteg({
-                ident: søkerFraStore.value.aktorId,
-                steg: step,
-            })
-        );
+            trackEvent(
+                søknadNesteSteg({
+                    ident: søkerFraStore.value.aktorId,
+                    steg: step,
+                })
+            );
+        });
     }, [step]);
 
     const steg = [
