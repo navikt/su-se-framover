@@ -18,20 +18,20 @@
 
     .content {
         max-width: @container-desktop;
+        padding: 0 @spacing;
 
         .navigeringContainer {
             display: flex;
             justify-content: space-between;
             margin-top: @spacing;
         }
+    }
 
-        .tittelContainer {
-            margin: @spacing 0;
-
-            .pageTittel {
-                margin-bottom: @spacing-xs;
-            }
-        }
+    .tittel {
+        width: 100%;
+        padding: @spacing-xs 10rem;
+        border-bottom: 1px solid @navBorder;
+        margin-bottom: @spacing;
     }
 }
 

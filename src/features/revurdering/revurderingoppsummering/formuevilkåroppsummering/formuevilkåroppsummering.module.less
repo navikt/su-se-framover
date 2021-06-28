@@ -1,0 +1,29 @@
+@import '~/styles/variables.less';
+
+.gjeldendePeriode {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: @spacing-xs;
+}
+
+.oppsummeringsContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: @spacing;
+
+    .formueVerdiTittel {
+        margin-bottom: @spacing-xxs;
+    }
+
+    .formueInfo {
+        > :not(:last-child) {
+            margin-bottom: @spacing-xxs;
+        }
+    }
+
+    .formueVerdier {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+}

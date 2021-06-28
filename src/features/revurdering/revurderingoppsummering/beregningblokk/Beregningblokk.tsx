@@ -3,11 +3,11 @@ import Panel from 'nav-frontend-paneler';
 import { Ingress, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 
+import VisBeregning from '~components/beregningOgSimulering/beregning/VisBeregning';
+import { Utbetalingssimulering } from '~components/beregningOgSimulering/simulering/simulering';
 import { useI18n } from '~lib/hooks';
 import { harBeregninger, harSimulering, Revurdering, RevurderingsStatus } from '~types/Revurdering';
 
-import VisBeregning from '../../../../../components/beregningOgSimulering/beregning/VisBeregning';
-import { Utbetalingssimulering } from '../../../../../components/beregningOgSimulering/simulering/simulering';
 import { erGregulering, erRevurderingIngenEndring } from '../../revurderingUtils';
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 

@@ -1,9 +1,9 @@
 import { Normaltekst, Element } from 'nav-frontend-typografi';
 import * as React from 'react';
 
+import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
-import { getRevurderingsårsakMessageId } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { Revurdering } from '~types/Revurdering';
 
 const RevurderingÅrsakOgBegrunnelse = (props: { revurdering: Revurdering; className?: string }) => {

@@ -41,7 +41,7 @@ import {
     erRevurderingUnderkjent,
     erForhåndsvarselSendt,
     finnNesteRevurderingsteg,
-} from '../revurdering/revurderingUtils';
+} from '../../../features/revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
 import messages from './sakintro-nb';

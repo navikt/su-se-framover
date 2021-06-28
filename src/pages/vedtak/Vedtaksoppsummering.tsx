@@ -9,15 +9,14 @@ import { Link } from 'react-router-dom';
 import { ApiError } from '~api/apiClient';
 import { fetchBrevutkastForRevurdering } from '~api/pdfApi';
 import VisBeregning from '~components/beregningOgSimulering/beregning/VisBeregning';
+import { Utbetalingssimulering } from '~components/beregningOgSimulering/simulering/simulering';
+import RevurderingÅrsakOgBegrunnelse from '~components/revurdering/RevurderingÅrsakOgBegrunnelse';
+import { erGregulering } from '~features/revurdering/revurderingUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { erGregulering } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { VedtakType } from '~types/Vedtak';
-
-import { Utbetalingssimulering } from '../../components/beregningOgSimulering/simulering/simulering';
-import RevurderingÅrsakOgBegrunnelse from '../../components/revurdering/RevurderingÅrsakOgBegrunnelse';
 
 import messages from './vedtaksoppsummering-nb';
 import styles from './vedtaksoppsummering.module.less';

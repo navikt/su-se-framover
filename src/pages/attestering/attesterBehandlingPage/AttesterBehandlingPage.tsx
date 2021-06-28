@@ -130,11 +130,9 @@ const Attesteringsinnhold = ({
         <div className={SharedStyles.container}>
             <Personlinje søker={props.søker} sak={props.sak} />
             <div className={SharedStyles.content}>
-                <div className={SharedStyles.tittelContainer}>
-                    <Innholdstittel className={SharedStyles.pageTittel}>
-                        {intl.formatMessage({ id: 'page.tittel' })}
-                    </Innholdstittel>
-                </div>
+                <Innholdstittel className={SharedStyles.tittel}>
+                    {intl.formatMessage({ id: 'page.tittel' })}
+                </Innholdstittel>
 
                 <Behandlingsoppsummering sak={props.sak} behandling={props.behandling} medBrevutkastknapp />
 

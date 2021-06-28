@@ -17,6 +17,8 @@ import DatePicker from '~components/datePicker/DatePicker';
 import { JaNeiSpørsmål } from '~components/FormElements';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
+import RevurderingskallFeilet from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
+import { erGregulering } from '~features/revurdering/revurderingUtils';
 import * as DateUtils from '~lib/dateUtils';
 import * as FormatUtils from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
@@ -30,9 +32,7 @@ import { UføreResultat, VurderingsperiodeUføre } from '~types/grunnlagsdataOgV
 import { Revurdering } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
-import RevurderingskallFeilet from '../revurderingskallFeilet/RevurderingskallFeilet';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
-import { erGregulering } from '../revurderingUtils';
 
 import messages from './uførhet-nb';
 import styles from './uførhet.module.less';

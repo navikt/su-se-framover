@@ -10,10 +10,10 @@ import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvur
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering } from '~types/Revurdering';
 
-import { Formuestatus } from '../../formue/Formue';
-import FormuevilkårOppsummering, { Formuevurdering } from '../../formue/FormuevilkårOppsummering';
-import { regnUtFormuegrunnlag } from '../../formue/RevurderFormueUtils';
+import Formuestatus from '../../formuestatus/Formuestatus';
+import { regnUtFormuegrunnlag } from '../../RevurderFormueUtils';
 import { hentBosituasjongrunnlag } from '../../revurderingUtils';
+import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåroppsummering/FormuevilkårOppsummering';
 
 import { getBosituasjongrunnlagsblokker, getUførevilkårgrunnlagsblokker, Grunnlagsblokk } from './grunnlagsblokker';
 import messages from './vedtaksinformasjon-nb';
