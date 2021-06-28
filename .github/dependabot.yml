@@ -1,91 +1,13 @@
 version: 2
-registries:
-  npm-registry-npm-pkg-github-com-navikt-data-catalog-components:
-    type: npm-registry
-    url: https://npm.pkg.github.com/@navikt/data-catalog-components
-    token: "${{secrets.NPM_REGISTRY_NPM_PKG_GITHUB_COM_NAVIKT_DATA_CATALOG_COMPONENTS_TOKEN}}"
-  npm-registry-npm-pkg-github-com-deetly-plotly-view:
-    type: npm-registry
-    url: https://npm.pkg.github.com/@deetly/plotly-view
-    token: "${{secrets.NPM_REGISTRY_NPM_PKG_GITHUB_COM_DEETLY_PLOTLY_VIEW_TOKEN}}"
 
 updates:
-- package-ecosystem: npm
-  directory: "/"
-  schedule:
-    interval: weekly
-    time: "04:00"
-  open-pull-requests-limit: 10
-  ignore:
-  - dependency-name: husky
-    versions:
-    - ">= 5.a, < 6"
-  - dependency-name: yup
-    versions:
-    - ">= 0.32.a, < 0.33"
-  - dependency-name: nav-frontend-popover-style
-    versions:
-    - 1.1.1
-  - dependency-name: "@typescript-eslint/eslint-plugin"
-    versions:
-    - 4.22.0
-  - dependency-name: nav-frontend-etiketter
-    versions:
-    - 2.1.1
-  - dependency-name: nav-frontend-alertstriper
-    versions:
-    - 3.1.1
-  - dependency-name: nav-frontend-typografi-style
-    versions:
-    - 1.1.1
-  - dependency-name: "@babel/core"
-    versions:
-    - 7.13.13
-    - 7.13.16
-  - dependency-name: eslint-plugin-react
-    versions:
-    - 7.23.2
-  - dependency-name: nav-frontend-toggle
-    versions:
-    - 1.1.2
-  - dependency-name: nav-frontend-skjema
-    versions:
-    - 3.2.1
-  - dependency-name: nav-frontend-paneler
-    versions:
-    - 2.1.1
-  - dependency-name: nav-frontend-typografi
-    versions:
-    - 3.1.1
-  - dependency-name: "@testing-library/react-hooks"
-    versions:
-    - 5.1.0
-    - 5.1.2
-  - dependency-name: "@sentry/browser"
-    versions:
-    - 6.0.1
-    - 6.0.3
-  - dependency-name: less
-    versions:
-    - 4.1.0
-  - dependency-name: "@testing-library/react"
-    versions:
-    - 11.2.6
-  - dependency-name: nav-frontend-stegindikator-style
-    versions:
-    - 1.1.1
-  - dependency-name: nav-frontend-etiketter-style
-    versions:
-    - 1.1.1
-  - dependency-name: nav-frontend-lenker
-    versions:
-    - 1.1.1
-  - dependency-name: nav-frontend-knapper-style
-    versions:
-    - 1.1.2
-  - dependency-name: nav-frontend-lesmerpanel-style
-    versions:
-    - 0.0.47
-  registries:
-  - npm-registry-npm-pkg-github-com-navikt-data-catalog-components
-  - npm-registry-npm-pkg-github-com-deetly-plotly-view
+    - package-ecosystem: npm
+      directory: '/'
+      schedule:
+          interval: weekly
+          time: '04:00'
+      open-pull-requests-limit: 10
+      ignore:
+          - dependency-name: yup
+            versions:
+                - '< 0.33'
