@@ -27,7 +27,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering, validateNonNegativeNumber } from '~lib/validering';
-import { getSenesteGVerdi } from '~pages/saksbehandling/revurdering/formue/RevurderFormueUtils';
+import { getSenesteHalvGVerdi } from '~pages/saksbehandling/revurdering/formue/RevurderFormueUtils';
 import { hentBosituasjongrunnlag } from '~pages/saksbehandling/revurdering/revurderingUtils';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
@@ -147,7 +147,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         });
     };
 
-    const senesteHalvG = getSenesteGVerdi(
+    const senesteHalvG = getSenesteHalvGVerdi(
         props.behandling.stønadsperiode?.periode?.fraOgMed
             ? startOfMonth(new Date(props.behandling.stønadsperiode.periode.fraOgMed))
             : null,

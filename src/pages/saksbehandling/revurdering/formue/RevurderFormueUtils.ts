@@ -96,11 +96,11 @@ export const erFormueVilkårOppfylt = (
     epsBekreftetFormue: number,
     fraOgMed: Nullable<Date>,
     formuegrenser: Formuegrenser[]
-) => søkersBekreftetFormue + epsBekreftetFormue <= getSenesteGVerdi(fraOgMed, formuegrenser);
+) => søkersBekreftetFormue + epsBekreftetFormue <= getSenesteHalvGVerdi(fraOgMed, formuegrenser);
 
 //hvis fraOgMed ikke er utfyllt, eller vi ikke finner en match for fraOgMed,
 //bruker vi den høyeste g-verdien som default
-export const getSenesteGVerdi = (fraOgMed: Nullable<Date>, formuegrenser: Formuegrenser[]) => {
+export const getSenesteHalvGVerdi = (fraOgMed: Nullable<Date>, formuegrenser: Formuegrenser[]) => {
     const sortert = formuegrenser.slice().sort((a: Formuegrenser, b: Formuegrenser) => {
         return Date.parse(b.gyldigFra) - Date.parse(a.gyldigFra);
     });
