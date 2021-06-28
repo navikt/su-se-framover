@@ -8,7 +8,7 @@ import { IntlShape } from 'react-intl';
 import { useI18n } from '~lib/hooks';
 import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { Revurdering } from '~types/Revurdering';
+import { Revurdering, Vurderingstatus, InformasjonSomRevurderes } from '~types/Revurdering';
 
 import Formuestatus from '../../formuestatus/Formuestatus';
 import { regnUtFormuegrunnlag } from '../../RevurderFormueUtils';
@@ -181,26 +181,38 @@ const Vedtaksinformasjon = (props: {
 }) => {
     const intl = useI18n({ messages });
 
+    const skalViseEndringerIOppsummering = Object.entries(props.revurdering.informasjonSomRevurderes)
+        .filter(([informasjon]) => informasjon !== InformasjonSomRevurderes.Inntekt)
+        .some(([, status]) => status === Vurderingstatus.Vurdert);
+
     return (
         <div className={styles.container}>
-            <Rad overskrift>
-                {{
-                    venstre: <Ingress>{intl.formatMessage({ id: 'heading.nyInfo' })}</Ingress>,
-                    høyre: <Ingress>{intl.formatMessage({ id: 'heading.eksisterende' })}</Ingress>,
-                }}
-            </Rad>
-            <Uførevilkårblokk
-                revurdering={props.revurdering}
-                grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
-            />
-            <Bosituasjonblokk
-                revurdering={props.revurdering}
-                grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
-            />
-            <Formueblokk
-                revurdering={props.revurdering}
-                grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
-            />
+            {skalViseEndringerIOppsummering && (
+                <Rad overskrift>
+                    {{
+                        venstre: <Ingress>{intl.formatMessage({ id: 'heading.nyInfo' })}</Ingress>,
+                        høyre: <Ingress>{intl.formatMessage({ id: 'heading.eksisterende' })}</Ingress>,
+                    }}
+                </Rad>
+            )}
+            {props.revurdering.informasjonSomRevurderes.Uførhet === Vurderingstatus.Vurdert && (
+                <Uførevilkårblokk
+                    revurdering={props.revurdering}
+                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
+                />
+            )}
+            {props.revurdering.informasjonSomRevurderes.Bosituasjon === Vurderingstatus.Vurdert && (
+                <Bosituasjonblokk
+                    revurdering={props.revurdering}
+                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
+                />
+            )}
+            {props.revurdering.informasjonSomRevurderes.Formue === Vurderingstatus.Vurdert && (
+                <Formueblokk
+                    revurdering={props.revurdering}
+                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
+                />
+            )}
         </div>
     );
 };
