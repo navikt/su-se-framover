@@ -5,31 +5,14 @@ import { useHistory } from 'react-router-dom';
 import Revurderingoppsummering from '~features/revurdering/revurderingoppsummering/Revurderingoppsummering';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { Behandling } from '~types/Behandling';
-import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
-import { Vedtak } from '~types/Vedtak';
 
+import { hentInformasjonKnyttetTilVedtak } from './utils';
 import messages from './vedtaksoppsummering-nb';
 import styles from './vedtaksoppsummering.module.less';
 
 interface Props {
     sak: Sak;
-}
-
-function hentRevurderingOgKnyttetBehandling(sak: Sak, vedtak: Vedtak) {
-    const revurderingSomFørteTilVedtak = sak.revurderinger.find(
-        (b) => b.id === vedtak.behandlingId
-    ) as IverksattRevurdering;
-
-    const revurdertBehandling = sak.behandlinger.find(
-        (behandling) => behandling.id === revurderingSomFørteTilVedtak.tilRevurdering.behandlingId
-    ) as Behandling;
-
-    return {
-        revurdering: revurderingSomFørteTilVedtak,
-        behandling: revurdertBehandling,
-    };
 }
 
 const Vedtaksoppsummering = (props: Props) => {
@@ -39,14 +22,30 @@ const Vedtaksoppsummering = (props: Props) => {
     const vedtak = props.sak.vedtak.find((v) => v.id === urlParams.vedtakId);
     if (!vedtak) return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
 
-    const { revurdering, behandling } = hentRevurderingOgKnyttetBehandling(props.sak, vedtak);
+    const vedtaksinformasjon = hentInformasjonKnyttetTilVedtak(props.sak, vedtak);
+
+    const renderOppsummering = () => {
+        switch (vedtaksinformasjon?.type) {
+            case 'revurdering':
+                return (
+                    <Revurderingoppsummering
+                        revurdering={vedtaksinformasjon.revurdering}
+                        grunnlagsdataOgVilkårsvurderinger={
+                            vedtaksinformasjon.forrigeBehandling.grunnlagsdataOgVilkårsvurderinger
+                        }
+                    />
+                );
+
+            // TODO ai: legg till støtte for søknadsbehandlingsoppsummering
+            case 'søknadsbehandling':
+            case undefined:
+                return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
+        }
+    };
 
     return (
         <div className={styles.container}>
-            <Revurderingoppsummering
-                revurdering={revurdering}
-                grunnlagsdataOgVilkårsvurderinger={behandling.grunnlagsdataOgVilkårsvurderinger}
-            />
+            {renderOppsummering()}
 
             <Knapp htmlType="button" className={styles.tilbakeKnapp} onClick={() => history.goBack()}>
                 {intl.formatMessage({ id: 'knapp.tilbake' })}
