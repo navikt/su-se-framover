@@ -1,32 +1,12 @@
 @import '~/styles/variables.less';
 
-.beregningOgSimulering {
-    display: flex;
-
-    > :not(:last-child) {
-        margin-right: @spacing-xl;
-    }
-}
-
 .container {
     display: flex;
     flex-direction: column;
+    margin: @spacing;
     align-items: center;
 
-    .tittel {
-        margin: @spacing 0;
-    }
-
-    .infoHeader {
-        display: flex;
-        margin-bottom: @spacing-l;
-
-        > :not(:last-child) {
-            margin-right: @spacing;
-        }
-    }
-
-    .revurderingInfo {
-        margin-bottom: @spacing;
+    .tilbakeKnapp {
+        margin-top: @spacing;
     }
 }
