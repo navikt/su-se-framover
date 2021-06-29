@@ -17,7 +17,7 @@ type Revurderingsoppsummering = {
 
 type Oppsummering = Revurderingsoppsummering | Søknadsbehandlingsoppsummering;
 export function hentInformasjonKnyttetTilVedtak(sak: Sak, vedtak: Vedtak): Nullable<Oppsummering> {
-    const søknadsbehandling = sak.behandlinger.find((behandling) => behandling.id === vedtak.behandlingId);
+    const søknadsbehandling = sak.behandlinger.find((b) => b.id === vedtak.behandlingId);
     if (søknadsbehandling) {
         return {
             behandling: søknadsbehandling,
@@ -25,7 +25,7 @@ export function hentInformasjonKnyttetTilVedtak(sak: Sak, vedtak: Vedtak): Nulla
         };
     }
 
-    const revurdering = sak.revurderinger.find((revurdering) => revurdering.id === vedtak.behandlingId);
+    const revurdering = sak.revurderinger.find((r) => r.id === vedtak.behandlingId);
     if (revurdering && erRevurderingIverksatt(revurdering)) {
         const forrigeBehandling = [...sak.revurderinger, ...sak.behandlinger].find(
             (behandling) => behandling.id === revurdering.tilRevurdering.behandlingId
