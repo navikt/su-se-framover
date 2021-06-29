@@ -50,7 +50,6 @@ interface FormData {
 interface SatsProps {
     behandlingId: string;
     eps: Nullable<Person>;
-    søker: Person;
     bosituasjon: Nullable<Bosituasjon>;
     søknadInnhold: SøknadInnhold;
     forrigeUrl: string;
@@ -155,7 +154,6 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
         return (
             <SatsForm
                 behandlingId={props.behandling.id}
-                søker={props.søker}
                 eps={null}
                 bosituasjon={hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger) ?? null}
                 søknadInnhold={props.behandling.søknad.søknadInnhold}
@@ -186,7 +184,6 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
             (eps) => (
                 <SatsForm
                     behandlingId={props.behandling.id}
-                    søker={props.søker}
                     eps={eps}
                     bosituasjon={hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger) ?? null}
                     søknadInnhold={props.behandling.søknad.søknadInnhold}

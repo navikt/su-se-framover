@@ -47,7 +47,7 @@ import { RevurderingSteg } from '../types';
 import messages from './sakintro-nb';
 import styles from './sakintro.module.less';
 
-const SuksessStatuser = (props: { locationState: Nullable<Routes.SuccessNotificationState>; intl: IntlShape }) => {
+const SuksessStatuser = (props: { locationState: Nullable<Routes.SuccessNotificationState> }) => {
     return (
         <div className={styles.suksessStatuserContainer}>
             {props.locationState?.notification && (
@@ -98,7 +98,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
 
     return (
         <div className={styles.sakintroContainer}>
-            <SuksessStatuser locationState={locationState} intl={intl} />
+            <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
                 <Innholdstittel className={styles.tittel}>
                     {intl.formatMessage({ id: 'display.saksoversikt.tittel' })}: {props.sak.saksnummer}

@@ -39,6 +39,7 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         'react/prop-types': 'off',
+        'react/no-unused-prop-types': 'error',
         'import/order': [
             1,
             {
