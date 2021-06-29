@@ -235,7 +235,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         <JaNeiSpørsmål
                             id={keyOf<FormData>('borOgOppholderSegINorge')}
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.opphold-i-norge.label" />}
+                            legend={<FormattedMessage id="borOgOppholderINorge.label" />}
                             feil={formik.errors.borOgOppholderSegINorge}
                             state={formik.values.borOgOppholderSegINorge}
                             onChange={(val) => {
@@ -244,14 +244,14 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         />
                         {formik.values.borOgOppholderSegINorge === false && (
                             <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
-                                {intl.formatMessage({ id: 'ikkeOppholdINorge.message' })}
+                                {intl.formatMessage({ id: 'borOgOppholderINorge.ikkeOppholdINorge' })}
                             </AlertStripe>
                         )}
 
                         <JaNeiSpørsmål
                             id={keyOf<FormData>('innlagtPåinstitusjon')}
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.innlagtPåInstitusjon.label" />}
+                            legend={<FormattedMessage id="innlagtPåInstitusjon.label" />}
                             feil={formik.errors.innlagtPåinstitusjon}
                             state={formik.values.innlagtPåinstitusjon}
                             onChange={(val) => {
@@ -269,7 +269,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                             <div className={styles.innlagtPåInstitusjonFelter}>
                                 <div className={styles.datoForInnleggelseContainer}>
                                     <Label htmlFor={keyOf<FormData>('datoForInnleggelse')}>
-                                        <FormattedMessage id="input.datoForInnleggelse.label" />
+                                        <FormattedMessage id="innlagtPåInstitusjon.datoForInnleggelse" />
                                     </Label>
                                     <Datepicker
                                         inputProps={{
@@ -298,7 +298,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                 <div className={styles.datoForUtskrivelseContainer}>
                                     <div className={styles.datoForUtskrivelse}>
                                         <Label htmlFor={keyOf<FormData>('datoForUtskrivelse')}>
-                                            <FormattedMessage id="input.datoForUtskrivelse.label" />
+                                            <FormattedMessage id="innlagtPåInstitusjon.datoForUtskrivelse" />
                                         </Label>
                                         <Datepicker
                                             inputProps={{
@@ -329,7 +329,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                     </div>
                                     <Checkbox
                                         name={keyOf<FormData>('fortsattInnlagt')}
-                                        label={<FormattedMessage id={'input.fortsattInnlagt.label'} />}
+                                        label={<FormattedMessage id={'innlagtPåInstitusjon.fortsattInnlagt'} />}
                                         checked={formik.values.fortsattInnlagt}
                                         onChange={() =>
                                             formik.setValues((v) => ({
@@ -351,7 +351,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         <JaNeiSpørsmål
                             id={keyOf<FormData>('delerBoligMedPersonOver18')}
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.delerBoligMedPersonOver18.label" />}
+                            legend={<FormattedMessage id="delerBolig.delerBoligMedPersonOver18" />}
                             feil={formik.errors.delerBoligMedPersonOver18}
                             state={formik.values.delerBoligMedPersonOver18}
                             onChange={(val) => {
@@ -367,22 +367,20 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                             <RadioPanelGruppe
                                 className={sharedStyles.sporsmal}
                                 feil={formik.errors.delerBoligMed}
-                                legend={<FormattedMessage id={'input.delerBoligMed.label'} />}
+                                legend={<FormattedMessage id={'delerBolig.delerMedHvem'} />}
                                 name={keyOf<FormData>('delerBoligMed')}
                                 radios={[
                                     {
                                         id: keyOf<FormData>('delerBoligMed'),
-                                        label: (
-                                            <FormattedMessage id={'input.delerBoligMedEktefelleEllerSamboer.label'} />
-                                        ),
+                                        label: <FormattedMessage id={'delerBolig.eps'} />,
                                         value: DelerBoligMed.EKTEMAKE_SAMBOER,
                                     },
                                     {
-                                        label: <FormattedMessage id={'input.delerBoligMedBarnOver18.label'} />,
+                                        label: <FormattedMessage id={'delerBolig.voksneBarn'} />,
                                         value: DelerBoligMed.VOKSNE_BARN,
                                     },
                                     {
-                                        label: <FormattedMessage id={'input.delerBoligMedAndreVoksne.label'} />,
+                                        label: <FormattedMessage id={'delerBolig.andreVoksne'} />,
                                         value: DelerBoligMed.ANNEN_VOKSEN,
                                     },
                                 ]}
@@ -419,9 +417,9 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         )}
 
                         <RadioGruppe
-                            legend={intl.formatMessage({ id: 'input.adresse.tittel' })}
+                            legend={intl.formatMessage({ id: 'adresse.hvaErAdresse.tittel' })}
                             feil={formik.errors.borPåAdresse}
-                            description={intl.formatMessage({ id: 'input.adresse.undertittel' })}
+                            description={intl.formatMessage({ id: 'adresse.registrerteAdresser' })}
                         >
                             {adresser.map((a, idx) => (
                                 <div className={styles.adresse} key={a.radioValue.adresselinje}>
@@ -443,7 +441,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                             <div className={styles.adresse}>
                                 <RadioPanel
                                     label={intl.formatMessage({
-                                        id: 'input.adresse.ingenAdresse.harIkkeFastBosted',
+                                        id: 'adresse.ingenAdresse.harIkkeFastBosted',
                                     })}
                                     name={keyOf<FormData>('ingenAdresseGrunn')}
                                     onChange={() =>
@@ -459,7 +457,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                             <div className={styles.adresse}>
                                 <RadioPanel
                                     label={intl.formatMessage({
-                                        id: 'input.adresse.ingenAdresse.borPåAnnenAdresse',
+                                        id: 'adresse.ingenAdresse.borPåAnnenAdresse',
                                     })}
                                     name={keyOf<FormData>('ingenAdresseGrunn')}
                                     onChange={() =>
@@ -475,7 +473,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         </RadioGruppe>
                         {formik.values.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE && (
                             <AlertStripe type="advarsel">
-                                {intl.formatMessage({ id: 'advarsel.adresse.ingenAdresse' })}
+                                {intl.formatMessage({ id: 'adresse.ingenAdresse.borPåAnnenAdresse.advarsel' })}
                             </AlertStripe>
                         )}
                     </div>

@@ -108,9 +108,9 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                         <JaNeiSpørsmål
                             id={keyOf<FormData>('erFlyktning')}
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.flyktning.label" />}
-                            hjelpetekstTittel={intl.formatMessage({ id: 'hjelpetekst.tittel' })}
-                            hjelpetekstBody={intl.formatMessage({ id: 'hjelpetekst.body' })}
+                            legend={<FormattedMessage id="flyktning.label" />}
+                            hjelpetekstTittel={intl.formatMessage({ id: 'flyktning.hjelpetekst.tittel' })}
+                            hjelpetekstBody={intl.formatMessage({ id: 'flyktning.hjelpetekst.body' })}
                             feil={formik.errors.erFlyktning}
                             state={formik.values.erFlyktning}
                             onChange={(val) =>
@@ -122,13 +122,13 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                         />
                         {formik.values.erFlyktning === false && (
                             <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
-                                {intl.formatMessage({ id: 'ikkeRegistrertFlyktning.message' })}
+                                {intl.formatMessage({ id: 'flyktning.måVæreFlyktning' })}
                             </AlertStripe>
                         )}
                         <JaNeiSpørsmål
                             id={keyOf<FormData>('erNorskStatsborger')}
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.norsk.statsborger.label" />}
+                            legend={<FormattedMessage id="norsk.statsborger.label" />}
                             feil={formik.errors.erNorskStatsborger}
                             state={formik.values.erNorskStatsborger}
                             onChange={(val) =>
@@ -144,7 +144,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             <JaNeiSpørsmål
                                 id={keyOf<FormData>('harOppholdstillatelse')}
                                 className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="input.oppholdstillatelse.label" />}
+                                legend={<FormattedMessage id="oppholdstillatelse.label" />}
                                 feil={formik.errors.harOppholdstillatelse}
                                 state={formik.values.harOppholdstillatelse}
                                 onChange={(val) =>
@@ -160,16 +160,16 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             <RadioPanelGruppe
                                 className={sharedStyles.sporsmal}
                                 feil={null}
-                                legend={<FormattedMessage id={'input.hvilken.oppholdstillatelse.label'} />}
+                                legend={<FormattedMessage id={'oppholdstillatelse.type'} />}
                                 name={keyOf<FormData>('typeOppholdstillatelse')}
                                 radios={[
                                     {
                                         id: keyOf<FormData>('typeOppholdstillatelse'),
-                                        label: <FormattedMessage id={'input.permanent.oppholdstillatelse.label'} />,
+                                        label: <FormattedMessage id={'oppholdstillatelse.permanent'} />,
                                         value: TypeOppholdstillatelse.Permanent,
                                     },
                                     {
-                                        label: <FormattedMessage id={'input.midlertidig.oppholdstillatelse.label'} />,
+                                        label: <FormattedMessage id={'oppholdstillatelse.midlertidig'} />,
                                         value: TypeOppholdstillatelse.Midlertidig,
                                     },
                                 ]}
@@ -184,20 +184,20 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                         )}
                         {formik.values.harOppholdstillatelse === false && (
                             <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
-                                {intl.formatMessage({ id: 'ikkeLovligOpphold.message' })}
+                                {intl.formatMessage({ id: 'oppholdstillatelse.ikkeLovligOpphold' })}
                             </AlertStripe>
                         )}
 
                         {formik.values.typeOppholdstillatelse === 'midlertidig' && (
                             <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
-                                {intl.formatMessage({ id: 'midlertidigForlengelse.message' })}
+                                {intl.formatMessage({ id: 'oppholdstillatelse.midlertidig.info' })}
                             </AlertStripe>
                         )}
 
                         <JaNeiSpørsmål
                             id={keyOf<FormData>('statsborgerskapAndreLand')}
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.statsborger.andre.land.label" />}
+                            legend={<FormattedMessage id="statsborger.andre.land.label" />}
                             feil={formik.errors.statsborgerskapAndreLand}
                             state={formik.values.statsborgerskapAndreLand}
                             onChange={(val) =>
@@ -212,7 +212,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                             <Input
                                 id={keyOf<FormData>('statsborgerskapAndreLandFritekst')}
                                 name={keyOf<FormData>('statsborgerskapAndreLandFritekst')}
-                                label={<FormattedMessage id="input.statsborger.andre.land.fritekst.label" />}
+                                label={<FormattedMessage id="statsborger.andre.land.fritekst" />}
                                 feil={formik.errors.statsborgerskapAndreLandFritekst}
                                 value={formik.values.statsborgerskapAndreLandFritekst || ''}
                                 onChange={formik.handleChange}

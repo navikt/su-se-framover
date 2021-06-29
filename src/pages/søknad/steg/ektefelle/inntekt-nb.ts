@@ -1,23 +1,28 @@
 export default {
-    'input.harForventetInntekt.label': 'Forventer ektefelle/samboer å ha arbeidsinntekt fremover?',
-    'input.forventetInntekt.label': 'Forventet arbeidsinntekt i kroner per måned',
-    'hjelpetekst.harForventetInntekt.body': 'Gjelder all inntekt i Norge og utlandet.',
-    'input.mottarPensjon.label': 'Mottar ektefelle/samboer tjenestepensjon eller pensjon?',
-    'input.pensjonsOrdning.label': 'Pensjonsgiver',
-    'input.pensjonsBeløp.label': 'Beløp per måned',
-    'input.harMottattSosialstønad.label':
-        'Har ektefelle/samboer mottatt sosialstønad i løpet av de siste tre månedene?',
-    'input.sosialStønadBeløp.label': 'Beløp i kroner for alle tre månedene',
-    'input.trygdeytelserIUtlandet.label': 'Har ektefelle/samboer trygdeytelser i utlandet?',
-    'input.trygdeytelserIUtlandetBeløp.label': 'Brutto beløp i lokal valuta per år',
-    'input.trygdeytelserIUtlandetType.label': 'Type ytelse',
-    'input.trygdeytelserIUtlandetValuta.label': 'Valuta',
-    'input.andreYtelserINAV.label': 'Har ektefelle/samboer andre ytelser i NAV?',
-    'input.andreYtelserINavYtelse.label': 'Hvilke ytelser?',
-    'input.andreYtelserINavBeløp.label': 'Beløp i kroner per måned',
-    'input.søktAndreYtelserIkkeBehandlet.label':
-        'Har ektefelle/samboer søkt om andre trygdeytelser som ikke er behandlet?',
-    'input.søktAndreYtelserIkkeBehandletBegrunnelse.label': 'Hvilke? ',
+    'forventerInntekt.label': 'Forventer ektefelle/samboer å ha arbeidsinntekt fremover?',
+    'forventerInntekt.hjelpetekst': 'Gjelder all inntekt i Norge og utlandet.',
+    'forventerInntekt.beløp': 'Hvor mye regner de med å tjene i måneden?',
+
+    'andreYtelserINAV.label': 'Har ektefelle/samboer andre ytelser fra NAV?',
+    'andreYtelserINAV.ytelse': 'Hvilke ytelser?',
+    'andreYtelserINAV.beløp': 'Hvor mye penger får de utbetalt i måneden?',
+
+    'søktAndreYtelserIkkeBehandlet.label': 'Har ektefelle/samboer søkt om trygdeytelser som de ikke har fått svar på?',
+    'søktAndreYtelserIkkeBehandlet.begrunnelse': 'Hvilke? ',
+    'søktAndreYtelserIkkeBehandlet.hjelpetekst':
+        'For eksempel alderspensjon, uføretrygd, arbeidsavklaringspenger, sykepenger eller tjenestepensjon.',
+
+    'sosialStønad.label': 'Har ektefelle/samboer fått økonomisk sosialhjelp i løpet av de siste tre månedene?',
+    'sosialStønad.beløp': 'Hvor mye penger har de fått i den tiden? (valgfri)',
+
+    'trygdeytelserIUtlandet.label': 'Har ektfelle/samboer trygdeytelser fra andre land?',
+    'trygdeytelserIUtlandet.beløp': 'Hvor mye får de i lokal valuta i måneden?',
+    'trygdeytelserIUtlandet.ytelse': 'Type ytelse',
+    'trygdeytelserIUtlandet.valuta': 'Valuta',
+
+    'mottarPensjon.label': 'Får ektefelle/samboer tjenestepensjon eller pensjon som ikke er fra NAV?',
+    'mottarPensjon.fra': 'Hvem får de pengene fra?',
+    'mottarPensjon.beløp': 'Hvor mye penger får de i måneden?',
 
     'button.fjernRad.label': 'Fjern rad',
     'button.leggTil.label': 'Legg til',

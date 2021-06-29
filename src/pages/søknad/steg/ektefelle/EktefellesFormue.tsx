@@ -190,7 +190,7 @@ const KjøretøyInputFelter = (props: {
                             <Input
                                 id={`${kjøretøyVerdiId}`}
                                 name={`${kjøretøyVerdiId}`}
-                                label={<FormattedMessage id="input.verdiPåKjøretøyTotal.label" />}
+                                label={<FormattedMessage id="kjøretøy.verdi" />}
                                 feil={
                                     errorForLinje && typeof errorForLinje === 'object' && errorForLinje.verdiPåKjøretøy
                                 }
@@ -208,7 +208,7 @@ const KjøretøyInputFelter = (props: {
                             <Input
                                 id={`${kjøretøyId}`}
                                 name={`${kjøretøyId}`}
-                                label={<FormattedMessage id="input.kjøretøyDeEier.label" />}
+                                label={<FormattedMessage id="kjøretøy.regNr" />}
                                 value={input.kjøretøyDeEier}
                                 feil={
                                     errorForLinje && typeof errorForLinje === 'object' && errorForLinje.kjøretøyDeEier
@@ -290,7 +290,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         <JaNeiSpørsmål
                             id="eierBolig"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.eierDuBolig.label" />}
+                            legend={<FormattedMessage id="eierBolig.label" />}
                             feil={formik.errors.eierBolig}
                             state={formik.values.eierBolig}
                             onChange={(e) =>
@@ -311,7 +311,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                             <JaNeiSpørsmål
                                 id="borIBolig"
                                 className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="input.borIBolig.label" />}
+                                legend={<FormattedMessage id="eierBolig.borIBolig" />}
                                 feil={formik.errors.borIBolig}
                                 state={formik.values.borIBolig}
                                 onChange={(e) =>
@@ -330,7 +330,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                 <Input
                                     id="verdiPåBolig"
                                     name="verdiPåBolig"
-                                    label={<FormattedMessage id="input.verdiPåBolig.label" />}
+                                    label={<FormattedMessage id="eierBolig.formuePåBolig" />}
                                     value={formik.values.verdiPåBolig || ''}
                                     feil={formik.errors.verdiPåBolig}
                                     onChange={formik.handleChange}
@@ -338,7 +338,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                 <Input
                                     id="boligBrukesTil"
                                     name="boligBrukesTil"
-                                    label={<FormattedMessage id="input.boligBrukesTil.label" />}
+                                    label={<FormattedMessage id="eierBolig.boligBrukesTil" />}
                                     value={formik.values.boligBrukesTil || ''}
                                     feil={formik.errors.boligBrukesTil}
                                     onChange={formik.handleChange}
@@ -350,7 +350,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                             <JaNeiSpørsmål
                                 id="depositumskonto"
                                 className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="input.depositumskonto.label" />}
+                                legend={<FormattedMessage id="depositum.label" />}
                                 feil={formik.errors.harDepositumskonto}
                                 state={formik.values.harDepositumskonto}
                                 onChange={(e) =>
@@ -369,7 +369,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                 <Input
                                     id="depositumsBeløp"
                                     name="depositumsBeløp"
-                                    label={<FormattedMessage id="input.depositumsBeløp.label" />}
+                                    label={<FormattedMessage id="depositum.beløp" />}
                                     value={formik.values.depositumsBeløp || ''}
                                     feil={formik.errors.depositumsBeløp}
                                     onChange={formik.handleChange}
@@ -377,7 +377,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                 <Input
                                     id="kontonummer"
                                     name="kontonummer"
-                                    label={<FormattedMessage id="input.kontonummer.label" />}
+                                    label={<FormattedMessage id="depositum.kontonummer" />}
                                     value={formik.values.kontonummer || ''}
                                     feil={formik.errors.kontonummer}
                                     onChange={formik.handleChange}
@@ -389,7 +389,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                             <JaNeiSpørsmål
                                 id="eierMerEnnEnBolig"
                                 className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="input.eierMerEnnEnBolig.label" />}
+                                legend={<FormattedMessage id="andreEiendommer.label" />}
                                 feil={formik.errors.eierMerEnnEnBolig}
                                 state={formik.values.eierMerEnnEnBolig}
                                 onChange={(e) =>
@@ -408,7 +408,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                 <Input
                                     id="verdiPåEiendom"
                                     name="verdiPåEiendom"
-                                    label={<FormattedMessage id="input.verdiPåEiendom.label" />}
+                                    label={<FormattedMessage id="andreEiendommer.verdi" />}
                                     value={formik.values.verdiPåEiendom || ''}
                                     feil={formik.errors.verdiPåEiendom}
                                     onChange={formik.handleChange}
@@ -416,7 +416,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                 <Input
                                     id="eiendomBrukesTil"
                                     name="eiendomBrukesTil"
-                                    label={<FormattedMessage id="input.eiendomBrukesTil.label" />}
+                                    label={<FormattedMessage id="andreEiendommer.brukesTil" />}
                                     value={formik.values.eiendomBrukesTil || ''}
                                     feil={formik.errors.eiendomBrukesTil}
                                     onChange={formik.handleChange}
@@ -427,7 +427,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         <JaNeiSpørsmål
                             id="eierKjøretøy"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.eierKjøretøy.label" />}
+                            legend={<FormattedMessage id="kjøretøy.label" />}
                             feil={formik.errors.eierKjøretøy}
                             state={formik.values.eierKjøretøy}
                             onChange={(e) =>
@@ -483,9 +483,9 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                             className={sharedStyles.sporsmal}
                             legend={
                                 formik.values.harDepositumskonto ? (
-                                    <FormattedMessage id="input.harInnskuddPåKonto.depositum.label" />
+                                    <FormattedMessage id="innskudd.pengerPåKontoInkludertDepositum" />
                                 ) : (
-                                    <FormattedMessage id="input.harInnskuddPåKonto.label" />
+                                    <FormattedMessage id="innskudd.label" />
                                 )
                             }
                             feil={formik.errors.harInnskuddPåKonto}
@@ -504,7 +504,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                 className={sharedStyles.marginBottom}
                                 id="innskuddsBeløp"
                                 name="innskuddsBeløp"
-                                label={<FormattedMessage id="input.innskuddsBeløp.label" />}
+                                label={<FormattedMessage id="innskudd.beløp" />}
                                 value={formik.values.innskuddsBeløp || ''}
                                 feil={formik.errors.innskuddsBeløp}
                                 onChange={formik.handleChange}
@@ -514,7 +514,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         <JaNeiSpørsmål
                             id="harVerdipapir"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.harVerdipapir.label" />}
+                            legend={<FormattedMessage id="verdipapir.label" />}
                             feil={formik.errors.harVerdipapir}
                             state={formik.values.harVerdipapir}
                             onChange={(e) =>
@@ -531,7 +531,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                 className={sharedStyles.marginBottom}
                                 id="verdipapirBeløp"
                                 name="verdipapirBeløp"
-                                label={<FormattedMessage id="input.verdipapirBeløp.label" />}
+                                label={<FormattedMessage id="verdipapir.beløp" />}
                                 value={formik.values.verdipapirBeløp || ''}
                                 feil={formik.errors.verdipapirBeløp}
                                 onChange={formik.handleChange}
@@ -541,7 +541,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         <JaNeiSpørsmål
                             id="skylderNoenMegPenger"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.skylderNoenMegPenger.label" />}
+                            legend={<FormattedMessage id="skylderNoenMegPenger.label" />}
                             feil={formik.errors.skylderNoenMegPenger}
                             state={formik.values.skylderNoenMegPenger}
                             onChange={(e) =>
@@ -558,7 +558,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                 className={sharedStyles.marginBottom}
                                 id="skylderNoenMegPengerBeløp"
                                 name="skylderNoenMegPengerBeløp"
-                                label={<FormattedMessage id="input.skylderNoenMegPengerBeløp.label" />}
+                                label={<FormattedMessage id="skylderNoenMegPenger.beløp" />}
                                 value={formik.values.skylderNoenMegPengerBeløp || ''}
                                 feil={formik.errors.skylderNoenMegPengerBeløp}
                                 onChange={formik.handleChange}
@@ -568,7 +568,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         <JaNeiSpørsmål
                             id="harKontanter"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.harKontanter.label" />}
+                            legend={<FormattedMessage id="harKontanter.label" />}
                             feil={formik.errors.harKontanter}
                             state={formik.values.harKontanter}
                             onChange={(e) =>
@@ -585,7 +585,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                                 className={sharedStyles.marginBottom}
                                 id="kontanterBeløp"
                                 name="kontanterBeløp"
-                                label={<FormattedMessage id="input.kontanterBeløp.label" />}
+                                label={<FormattedMessage id="harKontanter.beløp" />}
                                 value={formik.values.kontanterBeløp || ''}
                                 feil={formik.errors.kontanterBeløp}
                                 onChange={formik.handleChange}

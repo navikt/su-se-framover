@@ -1,24 +1,29 @@
 export default {
-    'input.harForventetInntekt.label': 'Forventer du å ha arbeidsinntekt fremover?',
-    'hjelpetekst.harForventetInntekt.body': 'Gjelder all inntekt i Norge og utlandet.',
-    'input.forventetInntekt.label': 'Forventet arbeidsinntekt i kroner per måned',
-    'input.mottarPensjon.label': 'Mottar du tjenestepensjon eller pensjon?',
-    'input.pensjonsOrdning.label': 'Pensjonsgiver',
-    'input.pensjonsBeløp.label': 'Beløp per måned',
-    'input.harMottattSosialstønad.label': 'Har du mottatt sosialstønad i løpet av de siste tre månedene?',
-    'input.sosialStønadBeløp.label': 'Beløp i kroner for alle tre månedene (valgfri)',
-    'input.trygdeytelserIUtlandet.label': 'Har du trygdeytelser i utlandet?',
-    'input.trygdeytelserIUtlandetBeløp.label': 'Beløp i lokal valuta per måned',
-    'input.trygdeytelserIUtlandetType.label': 'Type ytelse',
-    'input.trygdeytelserIUtlandetValuta.label': 'Valuta',
-    'input.andreYtelserINAV.label': 'Har du andre ytelser i NAV?',
-    'input.andreYtelserINavYtelse.label': 'Hvilke ytelser?',
-    'input.andreYtelserINavBeløp.label': 'Beløp i kroner per måned',
-    'input.søktAndreYtelserIkkeBehandlet.label': 'Har du søkt om andre trygdeytelser som ikke er behandlet?',
-    'input.søktAndreYtelserIkkeBehandletBegrunnelse.label': 'Hvilke? ',
-    'hjelpetekst.søktAndreYtelserIkkeBehandlet.body':
+    'forventerInntekt.label': 'Forventer du å ha arbeidsinntekt fremover?',
+    'forventerInntekt.hjelpetekst': 'Gjelder all inntekt i Norge og utlandet.',
+    'forventerInntekt.beløp': 'Hvor mye regner du med å tjene i måneden?',
+
+    'andreYtelserINAV.label': 'Har du andre ytelser i NAV?',
+    'andreYtelserINAV.ytelse': 'Hvilke ytelser?',
+    'andreYtelserINAV.beløp': 'Hvor mye penger får du utbetalt i måneden?',
+
+    'søktAndreYtelserIkkeBehandlet.label': 'Har du søkt om trygdeytelser som du ikke har fått svar på?',
+    'søktAndreYtelserIkkeBehandlet.begrunnelse': 'Hvilke? ',
+    'søktAndreYtelserIkkeBehandlet.hjelpetekst':
         'For eksempel alderspensjon, uføretrygd, arbeidsavklaringspenger, sykepenger eller tjenestepensjon.',
 
-    'button.fjernRad.label': 'Fjern rad',
-    'button.leggTil.label': 'Legg til',
+    'sosialStønad.label': 'Har du mottatt sosialstønad i løpet av de siste tre månedene?',
+    'sosialStønad.beløp': 'Hvor mye penger har du fått i den tiden? (valgfri)',
+
+    'trygdeytelserIUtlandet.label': 'Har du trygdeytelser fra andre land?',
+    'trygdeytelserIUtlandet.beløp': 'Hvor mye får du i lokal valuta i måneden?',
+    'trygdeytelserIUtlandet.ytelse': 'Type ytelse',
+    'trygdeytelserIUtlandet.valuta': 'Valuta',
+
+    'mottarPensjon.label': 'Får du tjenestepensjon eller pensjon som ikke er fra NAV?',
+    'mottarPensjon.fra': 'Hvem får du pengene fra?',
+    'mottarPensjon.beløp': 'Hvor mye penger får du i måneden?',
+
+    'button.fjernRad': 'Fjern rad',
+    'button.leggTil': 'Legg til',
 };

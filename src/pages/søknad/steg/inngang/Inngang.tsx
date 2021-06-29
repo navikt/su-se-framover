@@ -46,10 +46,6 @@ const index = (props: { nesteUrl: string }) => {
         return (
             <div>
                 <section className={styles.section}>
-                    <Ingress>
-                        <FormattedMessage id="sendeInnDokumentasjon.måSendeInnDok" />
-                    </Ingress>
-
                     <p className={styles.paragraphSpacing}>
                         <FormattedMessage id="sendeInnDokumentasjon.dokGjelder" />
                     </p>
@@ -67,14 +63,14 @@ const index = (props: { nesteUrl: string }) => {
                     </ul>
 
                     <p className={styles.paragraphSpacing}>
-                        <FormattedMessage id="sendeInnDokumentasjon.kanskjeLeggesVed" />
+                        <FormattedMessage id="sendeInnDokumentasjon.ogsåLeggesVed" />
                     </p>
                     <ul className={styles.list}>
                         <li className={styles.listItem}>
-                            <FormattedMessage id="sendeInnDokumentasjon.kanskjeLeggesVed.punkt1" />
+                            <FormattedMessage id="sendeInnDokumentasjon.ogsåLeggesVed.punkt1" />
                         </li>
                         <li className={styles.listItem}>
-                            <FormattedMessage id="sendeInnDokumentasjon.kanskjeLeggesVed.punkt2" />
+                            <FormattedMessage id="sendeInnDokumentasjon.ogsåLeggesVed.punkt2" />
                         </li>
                     </ul>
                 </section>

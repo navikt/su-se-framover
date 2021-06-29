@@ -59,7 +59,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
                     <div className={sharedStyles.formContainer}>
                         <JaNeiSpørsmål
                             id="harUførevedtak"
-                            legend={intl.formatMessage({ id: 'input.uførevedtak.label' })}
+                            legend={intl.formatMessage({ id: 'uførevedtak.label' })}
                             feil={formik.errors.harUførevedtak}
                             state={formik.values.harUførevedtak}
                             onChange={(e) =>
@@ -72,7 +72,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
                     </div>
                     {formik.values.harUførevedtak === false && (
                         <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
-                            {intl.formatMessage({ id: 'feilmelding.uførevedtak.label' })}
+                            {intl.formatMessage({ id: 'uførevedtak.måSøkeUføretrygd.info' })}
                         </AlertStripe>
                     )}
                     <div>
