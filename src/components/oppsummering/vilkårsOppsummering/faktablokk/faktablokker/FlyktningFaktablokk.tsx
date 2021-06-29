@@ -27,7 +27,7 @@ export const FlyktningFaktablokk = (props: FaktablokkProps) => {
             tittel={intl.formatMessage({ id: 'display.fraSøknad' })}
             fakta={[
                 {
-                    tittel: intl.formatMessage({ id: keyOf<typeof søknadMessages>('input.flyktning.label') }),
+                    tittel: intl.formatMessage({ id: keyOf<typeof søknadMessages>('flyktning.label') }),
                     verdi: props.søknadInnhold.flyktningsstatus.registrertFlyktning
                         ? intl.formatMessage({ id: 'fraSøknad.ja' })
                         : intl.formatMessage({ id: 'fraSøknad.nei' }),

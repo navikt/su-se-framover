@@ -29,7 +29,7 @@ export const LovligOppholdFaktablokk = (props: FaktablokkProps) => {
         const arr = [
             booleanToJaNei(
                 props.søknadInnhold.oppholdstillatelse.erNorskStatsborger,
-                søknadMessage('input.norsk.statsborger.label'),
+                søknadMessage('norsk.statsborger.label'),
                 intl
             ),
         ];
@@ -38,7 +38,7 @@ export const LovligOppholdFaktablokk = (props: FaktablokkProps) => {
             arr.push(
                 booleanToJaNei(
                     props.søknadInnhold.oppholdstillatelse.harOppholdstillatelse,
-                    søknadMessage('input.oppholdstillatelse.label'),
+                    søknadMessage('oppholdstillatelse.label'),
                     intl
                 )
             );
@@ -47,7 +47,7 @@ export const LovligOppholdFaktablokk = (props: FaktablokkProps) => {
             arr.push(
                 createFakta(
                     props.søknadInnhold.oppholdstillatelse.typeOppholdstillatelse,
-                    søknadMessage('input.hvilken.oppholdstillatelse.label')
+                    søknadMessage('oppholdstillatelse.type')
                 )
             );
         }
@@ -56,7 +56,7 @@ export const LovligOppholdFaktablokk = (props: FaktablokkProps) => {
             arr.push(
                 createFakta(
                     props.søknadInnhold.oppholdstillatelse.statsborgerskapAndreLandFritekst,
-                    søknadMessage('input.statsborger.andre.land.fritekst.label')
+                    søknadMessage('statsborger.andre.land.fritekst')
                 )
             );
         }
