@@ -65,14 +65,14 @@ export const Formuevurdering = ({ vurdering }: { vurdering: VurderingsperiodeFor
                                 {intl.formatMessage({ id: 'gjeldendeformue.eps' })}
                             </Normaltekst>
                             <div className={classNames(styles.formueVerdier, styles.formueInfo)}>
-                                <Element>{vurdering.grunnlag?.epsFormue.verdiIkkePrimærbolig}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.verdiEiendommer}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.verdiKjøretøy}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.innskudd}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.verdipapir}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.pengerSkyldt}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.kontanter}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.depositumskonto}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.verdiIkkePrimærbolig}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.verdiEiendommer}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.verdiKjøretøy}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.innskudd}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.verdipapir}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.pengerSkyldt}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.kontanter}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.depositumskonto}</Element>
                             </div>
                         </div>
                     )}
