@@ -19,7 +19,7 @@ import messages from './fradragoppsummering-nb';
 import styles from './fradragoppsummering.module.less';
 
 const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
-    const intl = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
+    const { intl, formatMessage } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
     return (
         <ul className={styles.periodeliste}>
             {pipe(
@@ -37,7 +37,7 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                                 A.head(fradragsgruppe),
                                 O.chainNullableK((head) => head.periode),
                                 O.map((periode) => DateUtils.formatPeriode(periode, intl)),
-                                O.getOrElse(() => intl.formatMessage({ id: 'feil.ukjent.periode' }))
+                                O.getOrElse(() => formatMessage('feil.ukjent.periode'))
                             )}
                         </Element>
 
@@ -51,9 +51,7 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                                     {fradrag.utenlandskInntekt !== null && (
                                         <>
                                             <Undertekst className={styles.detailedLinje}>
-                                                {intl.formatMessage({
-                                                    id: 'fradrag.utenlandsk.beløp',
-                                                })}
+                                                {formatMessage('fradrag.utenlandsk.beløp')}
                                             </Undertekst>
                                             <Undertekst className={styles.alignTextRight}>
                                                 {formatCurrency(
@@ -65,9 +63,7 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                                                 )}
                                             </Undertekst>
                                             <Undertekst className={styles.detailedLinje}>
-                                                {intl.formatMessage({
-                                                    id: 'fradrag.utenlandsk.kurs',
-                                                })}
+                                                {formatMessage('fradrag.utenlandsk.kurs')}
                                             </Undertekst>
                                             <Undertekst className={styles.alignTextRight}>
                                                 {intl.formatNumber(fradrag.utenlandskInntekt.kurs)}
