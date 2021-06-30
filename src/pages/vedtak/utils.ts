@@ -5,15 +5,16 @@ import { IverksattRevurdering, Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
 
-type Søknadsbehandlingsoppsummering = {
+interface Søknadsbehandlingsoppsummering {
     behandling: Behandling;
     type: 'søknadsbehandling';
-};
-type Revurderingsoppsummering = {
+}
+
+interface Revurderingsoppsummering {
     revurdering: IverksattRevurdering;
     forrigeBehandling: Behandling | Revurdering;
     type: 'revurdering';
-};
+}
 
 type Oppsummering = Revurderingsoppsummering | Søknadsbehandlingsoppsummering;
 export function hentInformasjonKnyttetTilVedtak(sak: Sak, vedtak: Vedtak): Nullable<Oppsummering> {
