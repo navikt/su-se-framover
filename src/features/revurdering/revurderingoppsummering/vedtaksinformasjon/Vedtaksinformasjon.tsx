@@ -124,8 +124,8 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; intl: IntlS
     return (
         <ul>
             {props.formuevilkår.vurderinger.map((vurdering) => {
-                const søkersFormue = regnUtFormuegrunnlag(vurdering.grunnlag?.søkersFormue);
-                const epsFormue = regnUtFormuegrunnlag(vurdering.grunnlag?.epsFormue);
+                const søkersFormue = regnUtFormuegrunnlag(vurdering.grunnlag.søkersFormue);
+                const epsFormue = regnUtFormuegrunnlag(vurdering.grunnlag.epsFormue);
                 const bekreftetFormue = søkersFormue + epsFormue;
 
                 return (
@@ -137,7 +137,7 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; intl: IntlS
                         />
                         <div className={styles.begrunnelseContainer}>
                             <Normaltekst>{props.intl.formatMessage({ id: 'formue.begrunnelse' })}</Normaltekst>
-                            <Element>{vurdering.grunnlag?.begrunnelse}</Element>
+                            <Element>{vurdering.grunnlag.begrunnelse}</Element>
                         </div>
                     </li>
                 );

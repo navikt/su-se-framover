@@ -63,11 +63,11 @@ export const getDefaultValues = (formueVilkår: Nullable<FormueVilkår>, epsFnr:
                     fraOgMed: new Date(formue.periode.fraOgMed),
                     tilOgMed: new Date(formue.periode.tilOgMed),
                 },
-                søkersFormue: formueGrunnlagVerdierTilVerdierFormData(formue.grunnlag?.søkersFormue) ?? tomFormue,
+                søkersFormue: formueGrunnlagVerdierTilVerdierFormData(formue.grunnlag.søkersFormue) ?? tomFormue,
                 epsFormue: epsFnr
-                    ? formueGrunnlagVerdierTilVerdierFormData(formue.grunnlag?.epsFormue) ?? tomFormue
+                    ? formueGrunnlagVerdierTilVerdierFormData(formue.grunnlag.epsFormue) ?? tomFormue
                     : null,
-                begrunnelse: formue.grunnlag?.begrunnelse ?? '',
+                begrunnelse: formue.grunnlag.begrunnelse ?? '',
             };
         }),
     };
