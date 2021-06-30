@@ -30,5 +30,5 @@ export default {
     'harKontanter.beløp': 'Hvor mye penger har ektefelle/samboer?',
 
     'button.fjernRad.label': 'Fjern rad',
-    'button.leggTil.label': 'Legg til',
+    'button.leggTil.kjøretøy': 'Legg til annet kjøretøy',
 };

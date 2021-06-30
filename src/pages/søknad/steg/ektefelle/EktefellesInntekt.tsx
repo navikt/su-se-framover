@@ -1,6 +1,6 @@
 import { useFormik, FormikErrors } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
-import { Feiloppsummering, Input, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
+import { Feiloppsummering, Input } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -24,16 +24,19 @@ type FormData = SøknadState['inntekt'];
 const trygdeytelserIUtlandetSchema = yup.object({
     beløp: yup
         .number()
-        .typeError('Beløp må være et tall')
+        .typeError('Den lokale valutaen må være et tall')
         .positive()
         .label('Beløp')
-        .required() as yup.Schema<unknown> as yup.Schema<string>,
-    type: yup.string().required(),
-    valuta: yup.string().required(),
+        .required('Fyll ut hvor mye du får i lokal valuta') as yup.Schema<unknown> as yup.Schema<string>,
+    type: yup.string().required('Fyll ut hvilken type ytelsen er'),
+    valuta: yup.string().required('Fyll ut valutaen for ytelsen'),
 });
 
 const schema = yup.object<FormData>({
-    harForventetInntekt: yup.boolean().nullable().required(),
+    harForventetInntekt: yup
+        .boolean()
+        .nullable()
+        .required('Fyll ut om ektefelle/partner/samboer forventer arbeidsinntekt'),
     forventetInntekt: yup
         .number()
         .nullable()
@@ -48,27 +51,29 @@ const schema = yup.object<FormData>({
                 .positive(),
             otherwise: yup.number(),
         }) as yup.Schema<Nullable<string>>,
-    harMottattSosialstønad: yup.boolean().nullable().required(),
+    harMottattSosialstønad: yup
+        .boolean()
+        .nullable()
+        .required('Fyll ut om ektefelle/partner/samboer har mottatt sosialstønad siste 3 måneder'),
     sosialStønadBeløp: yup
         .number()
         .nullable()
-        .defined()
         .when('harMottattSosialstønad', {
             is: true,
             then: yup
                 .number()
-                .typeError('Beløp på andre ytelser må være et tall')
-                .label('Beløp på andre ytelser')
-                .nullable(false)
+                .typeError('Beløp på sosialstønad må være et tall')
+                .label('Beløp på sosialstønad')
+                .nullable()
                 .positive(),
             otherwise: yup.number(),
         }) as yup.Schema<Nullable<string>>,
-    mottarPensjon: yup.boolean().nullable().required(),
+    mottarPensjon: yup.boolean().nullable().required('Fyll ut om ektefelle/partner/samboer mottar pensjon'),
     pensjonsInntekt: yup
         .array(
             yup
                 .object({
-                    ordning: yup.string().required(),
+                    ordning: yup.string().required('Fyll ut hvem ektefelle/partner/samboer mottar pensjon fra'),
                     beløp: yup
                         .number()
                         .defined()
@@ -85,14 +90,14 @@ const schema = yup.object<FormData>({
             then: yup.array().min(1).required(),
             otherwise: yup.array().max(0),
         }),
-    andreYtelserINav: yup.boolean().nullable().required(),
+    andreYtelserINav: yup.boolean().nullable().required('Fyll ut ektefelle/partner/samboer om har andre ytelser i NAV'),
     andreYtelserINavYtelse: yup
         .string()
         .nullable()
         .defined()
         .when('andreYtelserINav', {
             is: true,
-            then: yup.string().nullable().min(1).required(),
+            then: yup.string().nullable().min(1).required('Fyll ut hvilken ytelse det er'),
         }),
     andreYtelserINavBeløp: yup
         .number()
@@ -108,16 +113,22 @@ const schema = yup.object<FormData>({
                 .positive(),
             otherwise: yup.number(),
         }) as yup.Schema<Nullable<string>>,
-    søktAndreYtelserIkkeBehandlet: yup.boolean().nullable().required(),
+    søktAndreYtelserIkkeBehandlet: yup
+        .boolean()
+        .nullable()
+        .required('Fyll ut om ektefelle/partner/samboer har søkt på andre trygdeytelser som dem ikke har fått svar på'),
     søktAndreYtelserIkkeBehandletBegrunnelse: yup
         .string()
         .nullable()
         .defined()
         .when('søktAndreYtelserIkkeBehandlet', {
             is: true,
-            then: yup.string().nullable().min(1).required(),
+            then: yup.string().nullable().min(1).required('Fyll ut hvilke andre ytelser du ikke har fått svar på'),
         }),
-    harTrygdeytelserIUtlandet: yup.boolean().nullable().required(),
+    harTrygdeytelserIUtlandet: yup
+        .boolean()
+        .nullable()
+        .required('Fyll ut om ektefelle/partner/samboer har trygdeytelser i utlandet'),
     trygdeytelserIUtlandet: yup
         .array(trygdeytelserIUtlandetSchema.required())
         .defined()
@@ -137,7 +148,7 @@ const TrygdeytelserInputFelter = (props: {
     onFjernClick: (index: number) => void;
 }) => {
     return (
-        <div>
+        <ul>
             {props.arr.map((input, idx) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[idx] : null;
                 const beløpId = `${props.feltnavn}[${idx}].beløp`;
@@ -145,65 +156,54 @@ const TrygdeytelserInputFelter = (props: {
                 const valutaId = `${props.feltnavn}[${idx}].valuta`;
 
                 return (
-                    <div className={styles.trygdeytelserContainer} key={idx}>
+                    <li className={styles.trygdeytelserContainer} key={idx}>
                         <div className={styles.trippleFelter}>
-                            <div>
-                                <Input
-                                    id={`${beløpId}`}
-                                    name={`${beløpId}`}
-                                    label={<FormattedMessage id="trygdeytelserIUtlandet.beløp" />}
-                                    value={input.beløp}
-                                    onChange={(e) => {
-                                        props.onChange({
-                                            index: idx,
-                                            beløp: e.target.value,
-                                            type: input.type,
-                                            valuta: input.valuta,
-                                        });
-                                    }}
-                                />
-                                {errorForLinje && typeof errorForLinje === 'object' && (
-                                    <SkjemaelementFeilmelding>{errorForLinje.beløp}</SkjemaelementFeilmelding>
-                                )}
-                            </div>
-                            <div>
-                                <Input
-                                    id={`${valutaId}`}
-                                    name={`${valutaId}`}
-                                    label={<FormattedMessage id="trygdeytelserIUtlandet.valuta" />}
-                                    value={input.valuta}
-                                    onChange={(e) => {
-                                        props.onChange({
-                                            index: idx,
-                                            beløp: input.beløp,
-                                            type: input.type,
-                                            valuta: e.target.value,
-                                        });
-                                    }}
-                                />
-                                {errorForLinje && typeof errorForLinje === 'object' && (
-                                    <SkjemaelementFeilmelding>{errorForLinje.valuta}</SkjemaelementFeilmelding>
-                                )}
-                            </div>
-                            <div>
-                                <Input
-                                    id={`${typeId}`}
-                                    name={`${typeId}`}
-                                    label={<FormattedMessage id="trygdeytelserIUtlandet.ytelse" />}
-                                    value={input.type}
-                                    onChange={(e) => {
-                                        props.onChange({
-                                            index: idx,
-                                            beløp: input.beløp,
-                                            type: e.target.value,
-                                            valuta: input.valuta,
-                                        });
-                                    }}
-                                />
-                                {errorForLinje && typeof errorForLinje === 'object' && (
-                                    <SkjemaelementFeilmelding>{errorForLinje.type}</SkjemaelementFeilmelding>
-                                )}
-                            </div>
+                            <Input
+                                id={`${beløpId}`}
+                                name={`${beløpId}`}
+                                label={<FormattedMessage id="trygdeytelserIUtlandet.beløp" />}
+                                value={input.beløp}
+                                feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.beløp}
+                                onChange={(e) => {
+                                    props.onChange({
+                                        index: idx,
+                                        beløp: e.target.value,
+                                        type: input.type,
+                                        valuta: input.valuta,
+                                    });
+                                }}
+                            />
+
+                            <Input
+                                id={`${valutaId}`}
+                                name={`${valutaId}`}
+                                label={<FormattedMessage id="trygdeytelserIUtlandet.valuta" />}
+                                value={input.valuta}
+                                feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.valuta}
+                                onChange={(e) => {
+                                    props.onChange({
+                                        index: idx,
+                                        beløp: input.beløp,
+                                        type: input.type,
+                                        valuta: e.target.value,
+                                    });
+                                }}
+                            />
+                            <Input
+                                id={`${typeId}`}
+                                name={`${typeId}`}
+                                label={<FormattedMessage id="trygdeytelserIUtlandet.ytelse" />}
+                                feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.type}
+                                value={input.type}
+                                onChange={(e) => {
+                                    props.onChange({
+                                        index: idx,
+                                        beløp: input.beløp,
+                                        type: e.target.value,
+                                        valuta: input.valuta,
+                                    });
+                                }}
+                            />
                         </div>
                         {props.arr.length > 1 && (
                             <Knapp
@@ -215,15 +215,15 @@ const TrygdeytelserInputFelter = (props: {
                             </Knapp>
                         )}
                         {errorForLinje && typeof errorForLinje === 'string' && errorForLinje}
-                    </div>
+                    </li>
                 );
             })}
             <div className={sharedStyles.leggTilFeltKnapp}>
                 <Knapp onClick={() => props.onLeggTilClick()} htmlType="button">
-                    <FormattedMessage id="button.leggTil.label" />
+                    <FormattedMessage id="button.leggTil.trygdeytelse" />
                 </Knapp>
             </div>
-        </div>
+        </ul>
     );
 };
 
@@ -316,7 +316,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                             });
                         }}
                     >
-                        Legg til felt
+                        <FormattedMessage id="button.leggTil.pensjonsgiver" />
                     </Knapp>
                 </div>
             </div>

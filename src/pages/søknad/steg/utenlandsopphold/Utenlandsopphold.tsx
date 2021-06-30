@@ -37,8 +37,8 @@ const isTodayOrLater = (val: string) =>
 
 const reiseSchema = yup
     .object<UtenlandsoppholdType>({
-        utreisedato: yup.string().required(),
-        innreisedato: yup.string().required(),
+        utreisedato: yup.string().required('Fyll ut utreisedatoen'),
+        innreisedato: yup.string().required('Fyll ut innreisedatoen'),
     })
     .test({
         name: 'Utenlandsopphold',
@@ -90,7 +90,10 @@ const testUtreise: yup.TestFunction<UtenlandsoppholdType[] | null | undefined> =
 };
 
 const schema = yup.object<FormData>({
-    harReistTilUtlandetSiste90dager: yup.boolean().nullable().required(),
+    harReistTilUtlandetSiste90dager: yup
+        .boolean()
+        .nullable()
+        .required('Fyll ut om du har reist til utlandet de siste 90 dager'),
     harReistDatoer: yup
         .array(reiseSchema.required())
         .defined()
@@ -104,7 +107,10 @@ const schema = yup.object<FormData>({
                 .required(),
             otherwise: yup.array().max(0),
         }),
-    skalReiseTilUtlandetNeste12Måneder: yup.boolean().nullable().required(),
+    skalReiseTilUtlandetNeste12Måneder: yup
+        .boolean()
+        .nullable()
+        .required('Fyll ut om du skal reise til utlandet neste 12 måneder'),
     skalReiseDatoer: yup
         .array(reiseSchema.required())
         .defined()
@@ -216,7 +222,7 @@ const MultiTidsperiodevelger = (props: {
                             onClick={() => props.onFjernClick(index)}
                             htmlType="button"
                         >
-                            <FormattedMessage id="button.fjernReiserad.label" />
+                            <FormattedMessage id="button.fjernReiserad" />
                         </Knapp>
                     </SkjemaGruppe>
                     {errorForLinje && typeof errorForLinje === 'string' && (
@@ -228,7 +234,7 @@ const MultiTidsperiodevelger = (props: {
         <SkjemaelementFeilmelding>{typeof props.errors === 'string' && props.errors}</SkjemaelementFeilmelding>
         <div className={sharedStyles.leggTilFeltKnapp}>
             <Knapp onClick={() => props.onLeggTilClick()} htmlType="button">
-                <FormattedMessage id="button.leggTilReiserad.label" />
+                <FormattedMessage id="button.leggTilReiserad" />
             </Knapp>
         </div>
     </div>

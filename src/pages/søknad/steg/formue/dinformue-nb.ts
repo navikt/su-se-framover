@@ -30,5 +30,5 @@ export default {
     'harKontanter.beløp': 'Hvor mye penger har du?',
 
     'button.fjernRad': 'Fjern rad',
-    'button.leggTil': 'Legg til',
+    'button.leggTil': 'Legg til et annet kjøretøy',
 };

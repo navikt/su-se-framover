@@ -28,11 +28,15 @@ type FormData = ForVeilederDigitalSøknad;
 
 const schema = yup.object<FormData>({
     type: yup.string().required() as yup.Schema<Søknadstype.DigitalSøknad>,
-    harSøkerMøttPersonlig: yup.boolean().nullable().required(),
-    harFullmektigEllerVerge: yup.mixed<Nullable<Vergemål>>().nullable().defined().when('harSøkerMøttPersonlig', {
-        is: false,
-        then: yup.string().nullable().required(),
-    }),
+    harSøkerMøttPersonlig: yup.boolean().nullable().required('Velg om søker har møtt personlig'),
+    harFullmektigEllerVerge: yup
+        .mixed<Nullable<Vergemål>>()
+        .nullable()
+        .defined()
+        .when('harSøkerMøttPersonlig', {
+            is: false,
+            then: yup.string().nullable().required('Velg om søker har fullmektig eller verge'),
+        }),
 });
 
 const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; søker: Person }) => {

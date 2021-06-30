@@ -26,16 +26,20 @@ const kjøretøySchema = yup.object({
         .typeError('Verdi på kjøretøy må være et tall')
         .positive()
         .label('Verdi på kjøretøy')
-        .required() as yup.Schema<unknown> as yup.Schema<string>,
-    kjøretøyDeEier: yup.string().required(),
+        .required('Fyll ut verdien av kjøretøyet') as yup.Schema<unknown> as yup.Schema<string>,
+    kjøretøyDeEier: yup.string().required('Fyll ut registeringsnummeret'),
 });
 
 const schema = yup.object<FormData>({
-    eierBolig: yup.boolean().nullable().required(),
-    borIBolig: yup.boolean().nullable().defined().when('eierBolig', {
-        is: true,
-        then: yup.boolean().nullable().required(),
-    }),
+    eierBolig: yup.boolean().nullable().required('Fyll ut om du eier bolig'),
+    borIBolig: yup
+        .boolean()
+        .nullable()
+        .defined()
+        .when('eierBolig', {
+            is: true,
+            then: yup.boolean().nullable().required('Fyll ut om du bor i boligen'),
+        }),
     verdiPåBolig: yup
         .number()
         .nullable()
@@ -56,17 +60,24 @@ const schema = yup.object<FormData>({
         .defined()
         .when(keyOf<FormData>('borIBolig'), {
             is: false,
-            then: yup.string().nullable().min(1).required(),
+            then: yup.string().nullable().min(1).required('Fyll ut hva boligen brukes til'),
         }),
-    eierMerEnnEnBolig: yup.boolean().nullable().defined().when(keyOf<FormData>('eierBolig'), {
-        is: true,
-        then: yup.boolean().nullable().required(),
-    }),
+    eierMerEnnEnBolig: yup
+        .boolean()
+        .nullable()
+        .defined()
+        .when(keyOf<FormData>('eierBolig'), {
+            is: true,
+            then: yup.boolean().nullable().required('Fyll ut om du eier mer enn én bolig'),
+        }),
     harDepositumskonto: yup
         .boolean()
         .nullable()
         .defined()
-        .when(keyOf<FormData>('eierBolig'), { is: false, then: yup.boolean().nullable().required() }),
+        .when(keyOf<FormData>('eierBolig'), {
+            is: false,
+            then: yup.boolean().nullable().required('Fyll ut om du har depositumskonto'),
+        }),
     depositumsBeløp: yup
         .number()
         .nullable()
@@ -110,9 +121,9 @@ const schema = yup.object<FormData>({
         .defined()
         .when(keyOf<FormData>('eierMerEnnEnBolig'), {
             is: true,
-            then: yup.string().nullable().min(1).required(),
+            then: yup.string().nullable().min(1).required('Fyll ut hva eiendommen brukes til'),
         }),
-    eierKjøretøy: yup.boolean().nullable().required(),
+    eierKjøretøy: yup.boolean().nullable().required('Fyll ut om du eier kjøretøy'),
     kjøretøy: yup
         .array(kjøretøySchema.required())
         .defined()
@@ -121,7 +132,7 @@ const schema = yup.object<FormData>({
             then: yup.array().min(1).required(),
             otherwise: yup.array().max(0),
         }),
-    harInnskuddPåKonto: yup.boolean().nullable().required(),
+    harInnskuddPåKonto: yup.boolean().nullable().required('Fyll ut om du har penger på konto'),
     innskuddsBeløp: yup
         .number()
         .nullable()
@@ -132,7 +143,7 @@ const schema = yup.object<FormData>({
             then: yup.number().typeError('Beløp på innskuddet må være et tall').nullable(false).positive().required(),
             otherwise: yup.number(),
         }) as yup.Schema<Nullable<string>>,
-    harVerdipapir: yup.boolean().nullable().required(),
+    harVerdipapir: yup.boolean().nullable().required('Fyll ut om du har verdipapir'),
     verdipapirBeløp: yup
         .number()
         .nullable()
@@ -142,17 +153,17 @@ const schema = yup.object<FormData>({
             is: true,
             then: yup.number().typeError('Beløp på verdipapir må være et tall').nullable(false).positive(),
         }) as yup.Schema<Nullable<string>>,
-    skylderNoenMegPenger: yup.boolean().nullable().required(),
+    skylderNoenMegPenger: yup.boolean().nullable().required('Fyll ut om noen skylder deg penger'),
     skylderNoenMegPengerBeløp: yup
         .number()
         .nullable()
-        .label('skylderNoenMegPenger beløp')
+        .label('Hvor mye penger skylder de deg beløpet')
         .defined()
         .when(keyOf<FormData>('skylderNoenMegPenger'), {
             is: true,
             then: yup.number().typeError('Beløpet må være et tall').nullable(false).positive(),
         }) as yup.Schema<Nullable<string>>,
-    harKontanter: yup.boolean().nullable().required(),
+    harKontanter: yup.boolean().nullable().required('Fyll ut om du har kontanter'),
     kontanterBeløp: yup
         .number()
         .nullable()
@@ -318,380 +329,379 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
     return (
-        <div className={sharedStyles.container}>
-            <RawIntlProvider value={intl}>
-                <form
-                    onSubmit={(e) => {
-                        setHasSubmitted(true);
-                        formik.handleSubmit(e);
-                        setTimeout(() => {
-                            if (feiloppsummeringref.current) {
-                                feiloppsummeringref.current.focus();
-                            }
-                        }, 0);
-                    }}
-                >
-                    <div className={sharedStyles.formContainer}>
+        <RawIntlProvider value={intl}>
+            <form
+                onSubmit={(e) => {
+                    setHasSubmitted(true);
+                    formik.handleSubmit(e);
+                    setTimeout(() => {
+                        if (feiloppsummeringref.current) {
+                            feiloppsummeringref.current.focus();
+                        }
+                    }, 0);
+                }}
+                className={sharedStyles.container}
+            >
+                <div className={sharedStyles.formContainer}>
+                    <JaNeiSpørsmål
+                        id={keyOf<FormData>('eierBolig')}
+                        className={sharedStyles.sporsmal}
+                        legend={<FormattedMessage id="eierBolig.label" />}
+                        feil={formik.errors.eierBolig}
+                        state={formik.values.eierBolig}
+                        onChange={(e) =>
+                            formik.setValues((v) => ({
+                                ...v,
+                                eierBolig: e,
+                                borIBolig: null,
+                                verdiPåBolig: null,
+                                boligBrukesTil: null,
+                                eierMerEnnEnBolig: null,
+                                harDepositumskonto: null,
+                                depositumsBeløp: null,
+                                kontonummer: null,
+                            }))
+                        }
+                    />
+                    {formik.values.eierBolig && (
                         <JaNeiSpørsmål
-                            id={keyOf<FormData>('eierBolig')}
+                            id={keyOf<FormData>('borIBolig')}
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="eierBolig.label" />}
-                            feil={formik.errors.eierBolig}
-                            state={formik.values.eierBolig}
+                            legend={<FormattedMessage id="eierBolig.borIBolig" />}
+                            feil={formik.errors.borIBolig}
+                            state={formik.values.borIBolig}
                             onChange={(e) =>
                                 formik.setValues((v) => ({
                                     ...v,
-                                    eierBolig: e,
-                                    borIBolig: null,
+                                    borIBolig: e,
                                     verdiPåBolig: null,
                                     boligBrukesTil: null,
-                                    eierMerEnnEnBolig: null,
-                                    harDepositumskonto: null,
+                                }))
+                            }
+                        />
+                    )}
+
+                    {formik.values.borIBolig === false && (
+                        <div className={sharedStyles.inputFelterDiv}>
+                            <Input
+                                id={keyOf<FormData>('verdiPåBolig')}
+                                name={keyOf<FormData>('verdiPåBolig')}
+                                label={<FormattedMessage id="eierBolig.formuePåBolig" />}
+                                value={formik.values.verdiPåBolig || ''}
+                                feil={formik.errors.verdiPåBolig}
+                                onChange={formik.handleChange}
+                                autoComplete="off"
+                                // Dette elementet vises ikke ved sidelast
+                                // eslint-disable-next-line jsx-a11y/no-autofocus
+                                autoFocus
+                            />
+                            <Input
+                                id={keyOf<FormData>('boligBrukesTil')}
+                                name={keyOf<FormData>('boligBrukesTil')}
+                                label={<FormattedMessage id="eierBolig.boligBrukesTil" />}
+                                value={formik.values.boligBrukesTil || ''}
+                                feil={formik.errors.boligBrukesTil}
+                                onChange={formik.handleChange}
+                                autoComplete="off"
+                            />
+                        </div>
+                    )}
+
+                    {formik.values.eierBolig === false && (
+                        <JaNeiSpørsmål
+                            id={keyOf<FormData>('harDepositumskonto')}
+                            className={sharedStyles.sporsmal}
+                            legend={<FormattedMessage id="depositum.label" />}
+                            feil={formik.errors.harDepositumskonto}
+                            state={formik.values.harDepositumskonto}
+                            onChange={(e) =>
+                                formik.setValues((v) => ({
+                                    ...v,
+                                    harDepositumskonto: e,
                                     depositumsBeløp: null,
                                     kontonummer: null,
                                 }))
                             }
                         />
-                        {formik.values.eierBolig && (
-                            <JaNeiSpørsmål
-                                id={keyOf<FormData>('borIBolig')}
-                                className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="eierBolig.borIBolig" />}
-                                feil={formik.errors.borIBolig}
-                                state={formik.values.borIBolig}
-                                onChange={(e) =>
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        borIBolig: e,
-                                        verdiPåBolig: null,
-                                        boligBrukesTil: null,
-                                    }))
-                                }
-                            />
-                        )}
+                    )}
 
-                        {formik.values.borIBolig === false && (
-                            <div className={sharedStyles.inputFelterDiv}>
-                                <Input
-                                    id={keyOf<FormData>('verdiPåBolig')}
-                                    name={keyOf<FormData>('verdiPåBolig')}
-                                    label={<FormattedMessage id="eierBolig.formuePåBolig" />}
-                                    value={formik.values.verdiPåBolig || ''}
-                                    feil={formik.errors.verdiPåBolig}
-                                    onChange={formik.handleChange}
-                                    autoComplete="off"
-                                    // Dette elementet vises ikke ved sidelast
-                                    // eslint-disable-next-line jsx-a11y/no-autofocus
-                                    autoFocus
-                                />
-                                <Input
-                                    id={keyOf<FormData>('boligBrukesTil')}
-                                    name={keyOf<FormData>('boligBrukesTil')}
-                                    label={<FormattedMessage id="eierBolig.boligBrukesTil" />}
-                                    value={formik.values.boligBrukesTil || ''}
-                                    feil={formik.errors.boligBrukesTil}
-                                    onChange={formik.handleChange}
-                                    autoComplete="off"
-                                />
-                            </div>
-                        )}
-
-                        {formik.values.eierBolig === false && (
-                            <JaNeiSpørsmål
-                                id={keyOf<FormData>('harDepositumskonto')}
-                                className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="depositum.label" />}
-                                feil={formik.errors.harDepositumskonto}
-                                state={formik.values.harDepositumskonto}
-                                onChange={(e) =>
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        harDepositumskonto: e,
-                                        depositumsBeløp: null,
-                                        kontonummer: null,
-                                    }))
-                                }
-                            />
-                        )}
-
-                        {formik.values.harDepositumskonto && (
-                            <div className={sharedStyles.inputFelterDiv}>
-                                <Input
-                                    id={keyOf<FormData>('depositumsBeløp')}
-                                    name="depositumsBeløp"
-                                    label={<FormattedMessage id="depositum.beløp" />}
-                                    value={formik.values.depositumsBeløp || ''}
-                                    feil={formik.errors.depositumsBeløp}
-                                    onChange={formik.handleChange}
-                                    autoComplete="off"
-                                    // Dette elementet vises ikke ved sidelast
-                                    // eslint-disable-next-line jsx-a11y/no-autofocus
-                                    autoFocus
-                                />
-                                <Input
-                                    id={keyOf<FormData>('kontonummer')}
-                                    name={keyOf<FormData>('kontonummer')}
-                                    label={<FormattedMessage id="depositum.kontonummer" />}
-                                    value={formik.values.kontonummer || ''}
-                                    feil={formik.errors.kontonummer}
-                                    onChange={formik.handleChange}
-                                    autoComplete="off"
-                                />
-                            </div>
-                        )}
-
-                        {formik.values.eierBolig && (
-                            <JaNeiSpørsmål
-                                id={keyOf<FormData>('eierMerEnnEnBolig')}
-                                className={sharedStyles.sporsmal}
-                                legend={<FormattedMessage id="eiendom.eierAndreEiendommer" />}
-                                feil={formik.errors.eierMerEnnEnBolig}
-                                state={formik.values.eierMerEnnEnBolig}
-                                onChange={(e) =>
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        eierMerEnnEnBolig: e,
-                                        verdiPåEiendom: null,
-                                        eiendomBrukesTil: null,
-                                    }))
-                                }
-                            />
-                        )}
-
-                        {formik.values.eierBolig && formik.values.eierMerEnnEnBolig && (
-                            <div className={sharedStyles.inputFelterDiv}>
-                                <Input
-                                    id={keyOf<FormData>('verdiPåEiendom')}
-                                    name={keyOf<FormData>('verdiPåEiendom')}
-                                    label={<FormattedMessage id="eiendom.samledeVerdi" />}
-                                    value={formik.values.verdiPåEiendom || ''}
-                                    feil={formik.errors.verdiPåEiendom}
-                                    onChange={formik.handleChange}
-                                    autoComplete="off"
-                                    // Dette elementet vises ikke ved sidelast
-                                    // eslint-disable-next-line jsx-a11y/no-autofocus
-                                    autoFocus
-                                />
-                                <Input
-                                    id={keyOf<FormData>('eiendomBrukesTil')}
-                                    name={keyOf<FormData>('eiendomBrukesTil')}
-                                    label={<FormattedMessage id="eiendom.brukesTil" />}
-                                    value={formik.values.eiendomBrukesTil || ''}
-                                    feil={formik.errors.eiendomBrukesTil}
-                                    onChange={formik.handleChange}
-                                    autoComplete="off"
-                                />
-                            </div>
-                        )}
-
-                        <JaNeiSpørsmål
-                            id={keyOf<FormData>('eierKjøretøy')}
-                            className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="kjøretøy.label" />}
-                            feil={formik.errors.eierKjøretøy}
-                            state={formik.values.eierKjøretøy}
-                            onChange={(e) =>
-                                formik.setValues((v) => ({
-                                    ...v,
-                                    eierKjøretøy: e,
-                                    kjøretøy: e ? [{ verdiPåKjøretøy: '', kjøretøyDeEier: '' }] : [],
-                                }))
-                            }
-                        />
-
-                        {formik.values.eierKjøretøy && (
-                            <KjøretøyInputFelter
-                                arr={formik.values.kjøretøy}
-                                errors={formik.errors.kjøretøy}
-                                feltnavn={keyOf<FormData>('kjøretøy')}
-                                onLeggTilClick={() => {
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        kjøretøy: [
-                                            ...formik.values.kjøretøy,
-                                            {
-                                                verdiPåKjøretøy: '',
-                                                kjøretøyDeEier: '',
-                                            },
-                                        ],
-                                    }));
-                                }}
-                                onFjernClick={(index) => {
-                                    formik.setValues({
-                                        ...formik.values,
-                                        kjøretøy: formik.values.kjøretøy.filter((_, i) => index !== i),
-                                    });
-                                }}
-                                onChange={(val) => {
-                                    formik.setValues({
-                                        ...formik.values,
-                                        kjøretøy: formik.values.kjøretøy.map((input, i) =>
-                                            val.index === i
-                                                ? {
-                                                      verdiPåKjøretøy: val.verdiPåKjøretøy,
-                                                      kjøretøyDeEier: val.kjøretøyDeEier,
-                                                  }
-                                                : input
-                                        ),
-                                    });
-                                }}
-                            />
-                        )}
-
-                        <JaNeiSpørsmål
-                            id={keyOf<FormData>('harInnskuddPåKonto')}
-                            className={sharedStyles.sporsmal}
-                            legend={
-                                formik.values.harDepositumskonto ? (
-                                    <FormattedMessage id="innskudd.pengerPåKontoInkludertDepositum" />
-                                ) : (
-                                    <FormattedMessage id="innskudd.label" />
-                                )
-                            }
-                            feil={formik.errors.harInnskuddPåKonto}
-                            state={formik.values.harInnskuddPåKonto}
-                            onChange={(e) =>
-                                formik.setValues((v) => ({
-                                    ...v,
-                                    harInnskuddPåKonto: e,
-                                    innskuddsBeløp: null,
-                                }))
-                            }
-                        />
-
-                        {formik.values.harInnskuddPåKonto && (
+                    {formik.values.harDepositumskonto && (
+                        <div className={sharedStyles.inputFelterDiv}>
                             <Input
-                                className={sharedStyles.marginBottom}
-                                id={keyOf<FormData>('innskuddsBeløp')}
-                                name={keyOf<FormData>('innskuddsBeløp')}
-                                bredde="S"
-                                label={<FormattedMessage id="innskudd.beløp" />}
-                                feil={formik.errors.innskuddsBeløp}
-                                value={formik.values.innskuddsBeløp || ''}
-                                onChange={formik.handleChange}
-                                // Dette elementet vises ikke ved sidelast
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
-                                autoFocus
-                            />
-                        )}
-
-                        <JaNeiSpørsmål
-                            id={keyOf<FormData>('harVerdipapir')}
-                            className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="verdiPapir.label" />}
-                            feil={formik.errors.harVerdipapir}
-                            state={formik.values.harVerdipapir}
-                            onChange={(e) =>
-                                formik.setValues((v) => ({
-                                    ...v,
-                                    harVerdipapir: e,
-                                    verdipapirBeløp: null,
-                                }))
-                            }
-                        />
-
-                        {formik.values.harVerdipapir && (
-                            <Input
-                                className={sharedStyles.marginBottom}
-                                id={keyOf<FormData>('verdipapirBeløp')}
-                                name={keyOf<FormData>('verdipapirBeløp')}
-                                bredde="S"
-                                label={<FormattedMessage id="verdiPapir.beløp" />}
-                                value={formik.values.verdipapirBeløp || ''}
-                                feil={formik.errors.verdipapirBeløp}
+                                id={keyOf<FormData>('depositumsBeløp')}
+                                name="depositumsBeløp"
+                                label={<FormattedMessage id="depositum.beløp" />}
+                                value={formik.values.depositumsBeløp || ''}
+                                feil={formik.errors.depositumsBeløp}
                                 onChange={formik.handleChange}
                                 autoComplete="off"
                                 // Dette elementet vises ikke ved sidelast
                                 // eslint-disable-next-line jsx-a11y/no-autofocus
                                 autoFocus
                             />
-                        )}
+                            <Input
+                                id={keyOf<FormData>('kontonummer')}
+                                name={keyOf<FormData>('kontonummer')}
+                                label={<FormattedMessage id="depositum.kontonummer" />}
+                                value={formik.values.kontonummer || ''}
+                                feil={formik.errors.kontonummer}
+                                onChange={formik.handleChange}
+                                autoComplete="off"
+                            />
+                        </div>
+                    )}
 
+                    {formik.values.eierBolig && (
                         <JaNeiSpørsmål
-                            id={keyOf<FormData>('skylderNoenMegPenger')}
+                            id={keyOf<FormData>('eierMerEnnEnBolig')}
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="skylderNoenMegPenger.label" />}
-                            feil={formik.errors.skylderNoenMegPenger}
-                            state={formik.values.skylderNoenMegPenger}
+                            legend={<FormattedMessage id="eiendom.eierAndreEiendommer" />}
+                            feil={formik.errors.eierMerEnnEnBolig}
+                            state={formik.values.eierMerEnnEnBolig}
                             onChange={(e) =>
                                 formik.setValues((v) => ({
                                     ...v,
-                                    skylderNoenMegPenger: e,
-                                    skylderNoenMegPengerBeløp: null,
+                                    eierMerEnnEnBolig: e,
+                                    verdiPåEiendom: null,
+                                    eiendomBrukesTil: null,
                                 }))
                             }
                         />
+                    )}
 
-                        {formik.values.skylderNoenMegPenger && (
+                    {formik.values.eierBolig && formik.values.eierMerEnnEnBolig && (
+                        <div className={sharedStyles.inputFelterDiv}>
                             <Input
-                                className={sharedStyles.marginBottom}
-                                id={keyOf<FormData>('skylderNoenMegPengerBeløp')}
-                                name={keyOf<FormData>('skylderNoenMegPengerBeløp')}
-                                bredde="S"
-                                label={<FormattedMessage id="skylderNoenMegPenger.beløp" />}
-                                value={formik.values.skylderNoenMegPengerBeløp || ''}
-                                feil={formik.errors.skylderNoenMegPengerBeløp}
+                                id={keyOf<FormData>('verdiPåEiendom')}
+                                name={keyOf<FormData>('verdiPåEiendom')}
+                                label={<FormattedMessage id="eiendom.samledeVerdi" />}
+                                value={formik.values.verdiPåEiendom || ''}
+                                feil={formik.errors.verdiPåEiendom}
                                 onChange={formik.handleChange}
                                 autoComplete="off"
                                 // Dette elementet vises ikke ved sidelast
                                 // eslint-disable-next-line jsx-a11y/no-autofocus
                                 autoFocus
                             />
-                        )}
-
-                        <JaNeiSpørsmål
-                            id={keyOf<FormData>('harKontanter')}
-                            className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="harKontanter.label" />}
-                            feil={formik.errors.harKontanter}
-                            state={formik.values.harKontanter}
-                            onChange={(e) =>
-                                formik.setValues((v) => ({
-                                    ...v,
-                                    harKontanter: e,
-                                    kontanterBeløp: null,
-                                }))
-                            }
-                        />
-
-                        {formik.values.harKontanter && (
                             <Input
-                                className={sharedStyles.marginBottom}
-                                id={keyOf<FormData>('kontanterBeløp')}
-                                name={keyOf<FormData>('kontanterBeløp')}
-                                bredde="S"
-                                label={<FormattedMessage id="harKontanter.beløp" />}
-                                value={formik.values.kontanterBeløp || ''}
-                                feil={formik.errors.kontanterBeløp}
+                                id={keyOf<FormData>('eiendomBrukesTil')}
+                                name={keyOf<FormData>('eiendomBrukesTil')}
+                                label={<FormattedMessage id="eiendom.brukesTil" />}
+                                value={formik.values.eiendomBrukesTil || ''}
+                                feil={formik.errors.eiendomBrukesTil}
                                 onChange={formik.handleChange}
                                 autoComplete="off"
-                                // Dette elementet vises ikke ved sidelast
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
-                                autoFocus
                             />
-                        )}
-                    </div>
-                    <Feiloppsummering
-                        className={sharedStyles.marginBottom}
-                        tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
-                        feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                        hidden={!formikErrorsHarFeil(formik.errors)}
-                        innerRef={feiloppsummeringref}
+                        </div>
+                    )}
+
+                    <JaNeiSpørsmål
+                        id={keyOf<FormData>('eierKjøretøy')}
+                        className={sharedStyles.sporsmal}
+                        legend={<FormattedMessage id="kjøretøy.label" />}
+                        feil={formik.errors.eierKjøretøy}
+                        state={formik.values.eierKjøretøy}
+                        onChange={(e) =>
+                            formik.setValues((v) => ({
+                                ...v,
+                                eierKjøretøy: e,
+                                kjøretøy: e ? [{ verdiPåKjøretøy: '', kjøretøyDeEier: '' }] : [],
+                            }))
+                        }
                     />
-                    <Bunnknapper
-                        previous={{
-                            onClick: () => {
-                                save(formik.values);
-                                history.push(props.forrigeUrl);
-                            },
-                        }}
-                        avbryt={{
-                            toRoute: props.avbrytUrl,
-                        }}
+
+                    {formik.values.eierKjøretøy && (
+                        <KjøretøyInputFelter
+                            arr={formik.values.kjøretøy}
+                            errors={formik.errors.kjøretøy}
+                            feltnavn={keyOf<FormData>('kjøretøy')}
+                            onLeggTilClick={() => {
+                                formik.setValues((v) => ({
+                                    ...v,
+                                    kjøretøy: [
+                                        ...formik.values.kjøretøy,
+                                        {
+                                            verdiPåKjøretøy: '',
+                                            kjøretøyDeEier: '',
+                                        },
+                                    ],
+                                }));
+                            }}
+                            onFjernClick={(index) => {
+                                formik.setValues({
+                                    ...formik.values,
+                                    kjøretøy: formik.values.kjøretøy.filter((_, i) => index !== i),
+                                });
+                            }}
+                            onChange={(val) => {
+                                formik.setValues({
+                                    ...formik.values,
+                                    kjøretøy: formik.values.kjøretøy.map((input, i) =>
+                                        val.index === i
+                                            ? {
+                                                  verdiPåKjøretøy: val.verdiPåKjøretøy,
+                                                  kjøretøyDeEier: val.kjøretøyDeEier,
+                                              }
+                                            : input
+                                    ),
+                                });
+                            }}
+                        />
+                    )}
+
+                    <JaNeiSpørsmål
+                        id={keyOf<FormData>('harInnskuddPåKonto')}
+                        className={sharedStyles.sporsmal}
+                        legend={
+                            formik.values.harDepositumskonto ? (
+                                <FormattedMessage id="innskudd.pengerPåKontoInkludertDepositum" />
+                            ) : (
+                                <FormattedMessage id="innskudd.label" />
+                            )
+                        }
+                        feil={formik.errors.harInnskuddPåKonto}
+                        state={formik.values.harInnskuddPåKonto}
+                        onChange={(e) =>
+                            formik.setValues((v) => ({
+                                ...v,
+                                harInnskuddPåKonto: e,
+                                innskuddsBeløp: null,
+                            }))
+                        }
                     />
-                </form>
-            </RawIntlProvider>
-        </div>
+
+                    {formik.values.harInnskuddPåKonto && (
+                        <Input
+                            className={sharedStyles.marginBottom}
+                            id={keyOf<FormData>('innskuddsBeløp')}
+                            name={keyOf<FormData>('innskuddsBeløp')}
+                            bredde="S"
+                            label={<FormattedMessage id="innskudd.beløp" />}
+                            feil={formik.errors.innskuddsBeløp}
+                            value={formik.values.innskuddsBeløp || ''}
+                            onChange={formik.handleChange}
+                            // Dette elementet vises ikke ved sidelast
+                            // eslint-disable-next-line jsx-a11y/no-autofocus
+                            autoFocus
+                        />
+                    )}
+
+                    <JaNeiSpørsmål
+                        id={keyOf<FormData>('harVerdipapir')}
+                        className={sharedStyles.sporsmal}
+                        legend={<FormattedMessage id="verdiPapir.label" />}
+                        feil={formik.errors.harVerdipapir}
+                        state={formik.values.harVerdipapir}
+                        onChange={(e) =>
+                            formik.setValues((v) => ({
+                                ...v,
+                                harVerdipapir: e,
+                                verdipapirBeløp: null,
+                            }))
+                        }
+                    />
+
+                    {formik.values.harVerdipapir && (
+                        <Input
+                            className={sharedStyles.marginBottom}
+                            id={keyOf<FormData>('verdipapirBeløp')}
+                            name={keyOf<FormData>('verdipapirBeløp')}
+                            bredde="S"
+                            label={<FormattedMessage id="verdiPapir.beløp" />}
+                            value={formik.values.verdipapirBeløp || ''}
+                            feil={formik.errors.verdipapirBeløp}
+                            onChange={formik.handleChange}
+                            autoComplete="off"
+                            // Dette elementet vises ikke ved sidelast
+                            // eslint-disable-next-line jsx-a11y/no-autofocus
+                            autoFocus
+                        />
+                    )}
+
+                    <JaNeiSpørsmål
+                        id={keyOf<FormData>('skylderNoenMegPenger')}
+                        className={sharedStyles.sporsmal}
+                        legend={<FormattedMessage id="skylderNoenMegPenger.label" />}
+                        feil={formik.errors.skylderNoenMegPenger}
+                        state={formik.values.skylderNoenMegPenger}
+                        onChange={(e) =>
+                            formik.setValues((v) => ({
+                                ...v,
+                                skylderNoenMegPenger: e,
+                                skylderNoenMegPengerBeløp: null,
+                            }))
+                        }
+                    />
+
+                    {formik.values.skylderNoenMegPenger && (
+                        <Input
+                            className={sharedStyles.marginBottom}
+                            id={keyOf<FormData>('skylderNoenMegPengerBeløp')}
+                            name={keyOf<FormData>('skylderNoenMegPengerBeløp')}
+                            bredde="S"
+                            label={<FormattedMessage id="skylderNoenMegPenger.beløp" />}
+                            value={formik.values.skylderNoenMegPengerBeløp || ''}
+                            feil={formik.errors.skylderNoenMegPengerBeløp}
+                            onChange={formik.handleChange}
+                            autoComplete="off"
+                            // Dette elementet vises ikke ved sidelast
+                            // eslint-disable-next-line jsx-a11y/no-autofocus
+                            autoFocus
+                        />
+                    )}
+
+                    <JaNeiSpørsmål
+                        id={keyOf<FormData>('harKontanter')}
+                        className={sharedStyles.sporsmal}
+                        legend={<FormattedMessage id="harKontanter.label" />}
+                        feil={formik.errors.harKontanter}
+                        state={formik.values.harKontanter}
+                        onChange={(e) =>
+                            formik.setValues((v) => ({
+                                ...v,
+                                harKontanter: e,
+                                kontanterBeløp: null,
+                            }))
+                        }
+                    />
+
+                    {formik.values.harKontanter && (
+                        <Input
+                            className={sharedStyles.marginBottom}
+                            id={keyOf<FormData>('kontanterBeløp')}
+                            name={keyOf<FormData>('kontanterBeløp')}
+                            bredde="S"
+                            label={<FormattedMessage id="harKontanter.beløp" />}
+                            value={formik.values.kontanterBeløp || ''}
+                            feil={formik.errors.kontanterBeløp}
+                            onChange={formik.handleChange}
+                            autoComplete="off"
+                            // Dette elementet vises ikke ved sidelast
+                            // eslint-disable-next-line jsx-a11y/no-autofocus
+                            autoFocus
+                        />
+                    )}
+                </div>
+                <Feiloppsummering
+                    className={sharedStyles.marginBottom}
+                    tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                    feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                    hidden={!formikErrorsHarFeil(formik.errors)}
+                    innerRef={feiloppsummeringref}
+                />
+                <Bunnknapper
+                    previous={{
+                        onClick: () => {
+                            save(formik.values);
+                            history.push(props.forrigeUrl);
+                        },
+                    }}
+                    avbryt={{
+                        toRoute: props.avbrytUrl,
+                    }}
+                />
+            </form>
+        </RawIntlProvider>
     );
 };
 

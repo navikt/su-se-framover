@@ -25,5 +25,6 @@ export default {
     'mottarPensjon.beløp': 'Hvor mye penger får du i måneden?',
 
     'button.fjernRad': 'Fjern rad',
-    'button.leggTil': 'Legg til',
+    'button.leggTil.trygdeytelse': 'Legg til annen trygdeytelse',
+    'button.leggTil.pensjonsgiver': 'Legg til annen pensjonsgiver',
 };
