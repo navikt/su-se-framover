@@ -35,4 +35,5 @@ export default {
     'radTittel.uførhet': 'Uførhet',
     'radTittel.bosituasjon': 'Bosituasjon',
     'radTittel.formue': 'Formue',
+    'radTittel.fradrag': 'Inntekt',
 };

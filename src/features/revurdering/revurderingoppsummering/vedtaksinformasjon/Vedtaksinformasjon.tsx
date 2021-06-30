@@ -14,6 +14,7 @@ import Formuestatus from '../../formuestatus/Formuestatus';
 import { regnUtFormuegrunnlag } from '../../RevurderFormueUtils';
 import { hentBosituasjongrunnlag } from '../../revurderingUtils';
 import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåroppsummering/FormuevilkårOppsummering';
+import Fradragoppsummering from '../fradragoppsummering/Fradragoppsummering';
 
 import { getBosituasjongrunnlagsblokker, getUførevilkårgrunnlagsblokker, Grunnlagsblokk } from './grunnlagsblokker';
 import messages from './vedtaksinformasjon-nb';
@@ -57,12 +58,12 @@ const Vilkårvisning = (props: { grunnlagsblokker: Grunnlagsblokk[] }) => (
 );
 
 const Uførevilkårblokk = (props: {
-    revurdering: Revurdering;
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    nyeData: GrunnlagsdataOgVilkårsvurderinger;
+    gamleData: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const i18n = useI18n({ messages });
     return pipe(
-        O.fromNullable(props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre),
+        O.fromNullable(props.nyeData.uføre),
         O.fold(
             () => null,
             (uførevilkår) => (
@@ -70,7 +71,7 @@ const Uførevilkårblokk = (props: {
                     {{
                         venstre: <Vilkårvisning grunnlagsblokker={getUførevilkårgrunnlagsblokker(uførevilkår, i18n)} />,
                         høyre: pipe(
-                            O.fromNullable(props.grunnlagsdataOgVilkårsvurderinger.uføre),
+                            O.fromNullable(props.gamleData.uføre),
                             O.fold(
                                 () => null,
                                 (grunnlag) => (
@@ -86,13 +87,13 @@ const Uførevilkårblokk = (props: {
 };
 
 const Bosituasjonblokk = (props: {
-    revurdering: Revurdering;
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    nyeData: GrunnlagsdataOgVilkårsvurderinger;
+    gamleData: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const i18n = useI18n({ messages });
 
     return pipe(
-        O.fromNullable(hentBosituasjongrunnlag(props.revurdering.grunnlagsdataOgVilkårsvurderinger)),
+        O.fromNullable(hentBosituasjongrunnlag(props.nyeData)),
         O.fold(
             () => null,
             (bosituasjongrunnlag) => (
@@ -104,7 +105,7 @@ const Bosituasjonblokk = (props: {
                             />
                         ),
                         høyre: pipe(
-                            O.fromNullable(hentBosituasjongrunnlag(props.grunnlagsdataOgVilkårsvurderinger)),
+                            O.fromNullable(hentBosituasjongrunnlag(props.gamleData)),
                             O.fold(
                                 () => null,
                                 (grunnlag) => (
@@ -123,8 +124,8 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; intl: IntlS
     return (
         <ul>
             {props.formuevilkår.vurderinger.map((vurdering) => {
-                const søkersFormue = regnUtFormuegrunnlag(vurdering.grunnlag?.søkersFormue);
-                const epsFormue = regnUtFormuegrunnlag(vurdering.grunnlag?.epsFormue);
+                const søkersFormue = regnUtFormuegrunnlag(vurdering.grunnlag.søkersFormue);
+                const epsFormue = regnUtFormuegrunnlag(vurdering.grunnlag.epsFormue);
                 const bekreftetFormue = søkersFormue + epsFormue;
 
                 return (
@@ -136,7 +137,7 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; intl: IntlS
                         />
                         <div className={styles.begrunnelseContainer}>
                             <Normaltekst>{props.intl.formatMessage({ id: 'formue.begrunnelse' })}</Normaltekst>
-                            <Element>{vurdering.grunnlag?.begrunnelse}</Element>
+                            <Element>{vurdering.grunnlag.begrunnelse}</Element>
                         </div>
                     </li>
                 );
@@ -146,13 +147,13 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; intl: IntlS
 };
 
 const Formueblokk = (props: {
-    revurdering: Revurdering;
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    nyeData: GrunnlagsdataOgVilkårsvurderinger;
+    gamleData: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     const { intl } = useI18n({ messages });
 
     return pipe(
-        O.fromNullable(props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue),
+        O.fromNullable(props.nyeData.formue),
         O.fold(
             () => null,
             (formuevilkår) => (
@@ -160,7 +161,7 @@ const Formueblokk = (props: {
                     {{
                         venstre: <FormuevilkårVisning formuevilkår={formuevilkår} intl={intl} />,
                         høyre: pipe(
-                            O.fromNullable(props.grunnlagsdataOgVilkårsvurderinger.formue),
+                            O.fromNullable(props.gamleData.formue),
                             O.fold(
                                 () => null,
                                 (gjeldendeFormuevilkår) => (
@@ -172,6 +173,25 @@ const Formueblokk = (props: {
                 </Rad>
             )
         )
+    );
+};
+
+const Fradragblokk = (props: {
+    nyeData: GrunnlagsdataOgVilkårsvurderinger;
+    gamleData: GrunnlagsdataOgVilkårsvurderinger;
+}) => {
+    const { formatMessage } = useI18n({ messages });
+
+    return (
+        <Rad radTittel={formatMessage('radTittel.fradrag')}>
+            {{
+                venstre: <Fradragoppsummering fradrag={props.nyeData.fradrag} />,
+                høyre:
+                    props.gamleData.fradrag.length > 0 ? (
+                        <Fradragoppsummering fradrag={props.gamleData.fradrag} />
+                    ) : null,
+            }}
+        </Rad>
     );
 };
 
@@ -197,20 +217,26 @@ const Vedtaksinformasjon = (props: {
             )}
             {props.revurdering.informasjonSomRevurderes.Uførhet === Vurderingstatus.Vurdert && (
                 <Uførevilkårblokk
-                    revurdering={props.revurdering}
-                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
+                    nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger}
+                    gamleData={props.grunnlagsdataOgVilkårsvurderinger}
                 />
             )}
             {props.revurdering.informasjonSomRevurderes.Bosituasjon === Vurderingstatus.Vurdert && (
                 <Bosituasjonblokk
-                    revurdering={props.revurdering}
-                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
+                    nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger}
+                    gamleData={props.grunnlagsdataOgVilkårsvurderinger}
                 />
             )}
             {props.revurdering.informasjonSomRevurderes.Formue === Vurderingstatus.Vurdert && (
                 <Formueblokk
-                    revurdering={props.revurdering}
-                    grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
+                    nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger}
+                    gamleData={props.grunnlagsdataOgVilkårsvurderinger}
+                />
+            )}
+            {props.revurdering.informasjonSomRevurderes.Inntekt === Vurderingstatus.Vurdert && (
+                <Fradragblokk
+                    nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger}
+                    gamleData={props.grunnlagsdataOgVilkårsvurderinger}
                 />
             )}
         </div>

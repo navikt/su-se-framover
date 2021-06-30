@@ -18,7 +18,7 @@ export interface VurderingsperiodeFormue {
     id: string;
     opprettet: string;
     resultat: FormueResultat;
-    grunnlag?: Formuegrunnlag;
+    grunnlag: Formuegrunnlag;
     periode: Periode<string>;
 }
 

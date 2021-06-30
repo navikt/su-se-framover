@@ -49,30 +49,30 @@ export const Formuevurdering = ({ vurdering }: { vurdering: VurderingsperiodeFor
                             {intl.formatMessage({ id: 'gjeldendeformue.søker' })}
                         </Normaltekst>
                         <div className={classNames(styles.formueVerdier, styles.formueInfo)}>
-                            <Element>{vurdering.grunnlag?.søkersFormue.verdiIkkePrimærbolig}</Element>
-                            <Element>{vurdering.grunnlag?.søkersFormue.verdiEiendommer}</Element>
-                            <Element>{vurdering.grunnlag?.søkersFormue.verdiKjøretøy}</Element>
-                            <Element>{vurdering.grunnlag?.søkersFormue.innskudd}</Element>
-                            <Element>{vurdering.grunnlag?.søkersFormue.verdipapir}</Element>
-                            <Element>{vurdering.grunnlag?.søkersFormue.pengerSkyldt}</Element>
-                            <Element>{vurdering.grunnlag?.søkersFormue.kontanter}</Element>
-                            <Element>{vurdering.grunnlag?.søkersFormue.depositumskonto}</Element>
+                            <Element>{vurdering.grunnlag.søkersFormue.verdiIkkePrimærbolig}</Element>
+                            <Element>{vurdering.grunnlag.søkersFormue.verdiEiendommer}</Element>
+                            <Element>{vurdering.grunnlag.søkersFormue.verdiKjøretøy}</Element>
+                            <Element>{vurdering.grunnlag.søkersFormue.innskudd}</Element>
+                            <Element>{vurdering.grunnlag.søkersFormue.verdipapir}</Element>
+                            <Element>{vurdering.grunnlag.søkersFormue.pengerSkyldt}</Element>
+                            <Element>{vurdering.grunnlag.søkersFormue.kontanter}</Element>
+                            <Element>{vurdering.grunnlag.søkersFormue.depositumskonto}</Element>
                         </div>
                     </div>
-                    {vurdering.grunnlag?.epsFormue && (
+                    {vurdering.grunnlag.epsFormue && (
                         <div>
                             <Normaltekst className={styles.formueVerdiTittel}>
                                 {intl.formatMessage({ id: 'gjeldendeformue.eps' })}
                             </Normaltekst>
                             <div className={classNames(styles.formueVerdier, styles.formueInfo)}>
-                                <Element>{vurdering.grunnlag?.epsFormue.verdiIkkePrimærbolig}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.verdiEiendommer}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.verdiKjøretøy}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.innskudd}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.verdipapir}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.pengerSkyldt}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.kontanter}</Element>
-                                <Element>{vurdering.grunnlag?.epsFormue.depositumskonto}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.verdiIkkePrimærbolig}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.verdiEiendommer}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.verdiKjøretøy}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.innskudd}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.verdipapir}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.pengerSkyldt}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.kontanter}</Element>
+                                <Element>{vurdering.grunnlag.epsFormue.depositumskonto}</Element>
                             </div>
                         </div>
                     )}
