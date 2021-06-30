@@ -21,7 +21,6 @@ import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
-import { Periode } from '~types/Periode';
 import { BosituasjonRequest, Revurdering } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
@@ -39,7 +38,7 @@ interface BosituasjonFormData {
     begrunnelse: Nullable<string>;
 }
 
-const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[]; revurderingsperiode: Periode<string> }) => {
+const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[] }) => {
     const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     return (
@@ -447,10 +446,7 @@ const BosituasjonForm = (props: {
                     </form>
                 ),
                 right: (
-                    <GjeldendeBosituasjon
-                        bosituasjon={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.bosituasjon}
-                        revurderingsperiode={props.revurdering.periode}
-                    />
+                    <GjeldendeBosituasjon bosituasjon={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.bosituasjon} />
                 ),
             }}
         </ToKolonner>

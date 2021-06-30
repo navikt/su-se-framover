@@ -25,75 +25,7 @@ const BehandlingHeader = (props: {
     vedtakForBehandling?: Vedtak;
     medBrevutkastknapp?: boolean;
 }) => {
-    const user = useUserContext();
     const intl = useI18n({ messages });
-    const [lastNedBrevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandling);
-
-    const hentBrev = React.useCallback(async () => {
-        lastNedBrev({
-            sakId: props.sakId,
-            behandlingId: props.behandling.id,
-        });
-    }, [props.sakId, props.behandling.id, lastNedBrevStatus._tag]);
-
-    const Tilleggsinfo = () => {
-        return (
-            <div>
-                <div className={styles.tilleggsinfoContainer}>
-                    <div>
-                        <Element>{intl.formatMessage({ id: 'vurdering.tittel' })}</Element>
-                        <p>{statusTilTekst(props.behandling.status, intl)}</p>
-                    </div>
-                    <div>
-                        <Element> {intl.formatMessage({ id: 'behandlet.av' })}</Element>
-                        <p>{props.behandling.saksbehandler || user.navn}</p>
-                    </div>
-                    {props.behandling.attestering?.attestant && (
-                        <div>
-                            <Element> {intl.formatMessage({ id: 'attestert.av' })}</Element>
-                            <p>{props.behandling.attestering.attestant}</p>
-                        </div>
-                    )}
-
-                    <div>
-                        <Element> {intl.formatMessage({ id: 'behandling.søknadsdato' })}</Element>
-                        <p>{søknadMottatt(props.behandling.søknad, intl)}</p>
-                    </div>
-                    <div>
-                        <Element> {intl.formatMessage({ id: 'behandling.saksbehandlingStartet' })}</Element>
-                        <p>{intl.formatDate(props.behandling.opprettet)}</p>
-                    </div>
-                    {erIverksatt(props.behandling) && (
-                        <div>
-                            <Element> {intl.formatMessage({ id: 'behandling.iverksattDato' })}</Element>
-                            <p>{intl.formatDate(props.vedtakForBehandling?.opprettet)}</p>
-                        </div>
-                    )}
-                    {props.medBrevutkastknapp && (
-                        <div>
-                            <Element>{intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}</Element>
-                            <Knapp
-                                spinner={RemoteData.isPending(lastNedBrevStatus)}
-                                mini
-                                htmlType="button"
-                                onClick={hentBrev}
-                            >
-                                {intl.formatMessage({ id: 'knapp.vis' })}
-                            </Knapp>
-                        </div>
-                    )}
-                </div>
-                <div className={styles.brevutkastFeil}>
-                    {RemoteData.isFailure(lastNedBrevStatus) && (
-                        <AlertStripeFeil>
-                            {lastNedBrevStatus.error?.body?.message ??
-                                intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
-                        </AlertStripeFeil>
-                    )}
-                </div>
-            </div>
-        );
-    };
 
     if (props.behandling?.attestering?.underkjennelse) {
         return (
@@ -112,12 +44,101 @@ const BehandlingHeader = (props: {
                         <p>{props.behandling.attestering.underkjennelse?.kommentar}</p>
                     </div>
                 </div>
-                <Tilleggsinfo />
+                <Tilleggsinfo
+                    sakId={props.sakId}
+                    behandling={props.behandling}
+                    vedtakForBehandling={props.vedtakForBehandling}
+                    medBrevutkastknapp={props.medBrevutkastknapp}
+                    intl={intl}
+                />
             </div>
         );
     }
 
-    return <Tilleggsinfo />;
+    return (
+        <Tilleggsinfo
+            sakId={props.sakId}
+            behandling={props.behandling}
+            vedtakForBehandling={props.vedtakForBehandling}
+            medBrevutkastknapp={props.medBrevutkastknapp}
+            intl={intl}
+        />
+    );
+};
+
+const Tilleggsinfo = (props: {
+    sakId: string;
+    behandling: Behandling;
+    vedtakForBehandling?: Vedtak;
+    medBrevutkastknapp?: boolean;
+    intl: IntlShape;
+}) => {
+    const user = useUserContext();
+
+    const [lastNedBrevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandling);
+    const hentBrev = React.useCallback(async () => {
+        lastNedBrev({
+            sakId: props.sakId,
+            behandlingId: props.behandling.id,
+        });
+    }, [props.sakId, props.behandling.id, lastNedBrevStatus._tag]);
+
+    return (
+        <div>
+            <div className={styles.tilleggsinfoContainer}>
+                <div>
+                    <Element>{props.intl.formatMessage({ id: 'vurdering.tittel' })}</Element>
+                    <p>{statusTilTekst(props.behandling.status, props.intl)}</p>
+                </div>
+                <div>
+                    <Element> {props.intl.formatMessage({ id: 'behandlet.av' })}</Element>
+                    <p>{props.behandling.saksbehandler || user.navn}</p>
+                </div>
+                {props.behandling.attestering?.attestant && (
+                    <div>
+                        <Element> {props.intl.formatMessage({ id: 'attestert.av' })}</Element>
+                        <p>{props.behandling.attestering.attestant}</p>
+                    </div>
+                )}
+
+                <div>
+                    <Element> {props.intl.formatMessage({ id: 'behandling.søknadsdato' })}</Element>
+                    <p>{søknadMottatt(props.behandling.søknad, props.intl)}</p>
+                </div>
+                <div>
+                    <Element> {props.intl.formatMessage({ id: 'behandling.saksbehandlingStartet' })}</Element>
+                    <p>{props.intl.formatDate(props.behandling.opprettet)}</p>
+                </div>
+                {erIverksatt(props.behandling) && (
+                    <div>
+                        <Element> {props.intl.formatMessage({ id: 'behandling.iverksattDato' })}</Element>
+                        <p>{props.intl.formatDate(props.vedtakForBehandling?.opprettet)}</p>
+                    </div>
+                )}
+                {props.medBrevutkastknapp && (
+                    <div>
+                        <Element>{props.intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}</Element>
+                        <Knapp
+                            spinner={RemoteData.isPending(lastNedBrevStatus)}
+                            mini
+                            htmlType="button"
+                            onClick={hentBrev}
+                        >
+                            {props.intl.formatMessage({ id: 'knapp.vis' })}
+                        </Knapp>
+                    </div>
+                )}
+            </div>
+            <div className={styles.brevutkastFeil}>
+                {RemoteData.isFailure(lastNedBrevStatus) && (
+                    <AlertStripeFeil>
+                        {lastNedBrevStatus.error?.body?.message ??
+                            props.intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
+                    </AlertStripeFeil>
+                )}
+            </div>
+        </div>
+    );
 };
 
 function statusTilTekst(behandlingsstatus: Behandlingsstatus, intl: IntlShape): string {

@@ -136,7 +136,6 @@ const LukkSøknad = (props: { sak: Sak }) => {
 
             {formik.values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Avvist && (
                 <Avvist
-                    søknadId={søknad.id}
                     validateForm={() => formik.validateForm()}
                     lukkSøknadBegrunnelse={formik.values.lukkSøknadBegrunnelse}
                     avvistFormData={{

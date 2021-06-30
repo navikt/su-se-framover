@@ -78,7 +78,6 @@ const FradragsSelection = (props: {
     onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
     feil: string | undefined;
     intl: IntlShape;
-    optionLabel: string;
 }) => (
     <div>
         <h3>{props.label}</h3>
@@ -201,7 +200,6 @@ export const FradragInputs = (props: {
                                             : undefined
                                     }
                                     className={styles.fradragtype}
-                                    optionLabel={props.intl.formatMessage({ id: 'fradrag.type.emptyLabel' })}
                                     intl={props.intl}
                                 />
                                 <InputWithFollowText

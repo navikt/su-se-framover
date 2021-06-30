@@ -4,7 +4,6 @@ import Stegindikator from 'nav-frontend-stegindikator';
 import { Undertittel, Feilmelding, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { IntlShape } from 'react-intl';
 import { useParams, useHistory, Link, Switch, Route } from 'react-router-dom';
 
 import { fetchMe } from '~api/meApi';
@@ -45,7 +44,6 @@ const Steg = (props: {
     step: Søknadsteg;
     søknad: SøknadState;
     søker: Person;
-    intl: IntlShape;
     erSaksbehandler: boolean;
     hjelpetekst?: string;
 }) => {
@@ -329,7 +327,6 @@ const StartUtfylling = () => {
                                 step={step}
                                 søknad={søknad}
                                 søker={søker}
-                                intl={intl}
                                 erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
                                 hjelpetekst={steg.find((s) => s.step === step)?.hjelpetekst}
                             />

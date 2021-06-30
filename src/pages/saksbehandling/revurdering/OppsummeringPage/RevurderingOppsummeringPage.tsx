@@ -49,7 +49,6 @@ const OppsummeringshandlingForm = (props: {
     forrigeUrl: string;
     førsteRevurderingstegUrl: string;
     revurdering: SimulertRevurdering | BeregnetIngenEndring | UnderkjentRevurdering;
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     feilmeldinger: ErrorMessage[];
 }) => {
     const history = useHistory();
@@ -296,7 +295,6 @@ const RevurderingOppsummeringPage = (props: {
                                         forrigeUrl={props.forrigeUrl}
                                         førsteRevurderingstegUrl={props.førsteRevurderingstegUrl}
                                         revurdering={props.revurdering}
-                                        grunnlagsdataOgVilkårsvurderinger={grunnlagsdataOgVilkårsvurderinger}
                                         feilmeldinger={beregning.feilmeldinger}
                                     />
                                 ) : (

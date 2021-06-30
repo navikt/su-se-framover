@@ -24,7 +24,6 @@ interface AvvistFormData {
 }
 
 interface AvvistProps {
-    søknadId: string;
     lukkSøknadBegrunnelse: LukkSøknadBegrunnelse;
     validateForm: () => Promise<FormikErrors<LukkSøknadFormData>>;
     avvistFormData: AvvistFormData;

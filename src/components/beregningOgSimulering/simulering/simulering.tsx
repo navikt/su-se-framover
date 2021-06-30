@@ -16,7 +16,6 @@ import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
-import { Sak } from '~types/Sak';
 import { Simulering, SimulertUtbetalingstype } from '~types/Simulering';
 
 import styles from '../beregning/visBeregning.module.less';
@@ -24,7 +23,6 @@ import styles from '../beregning/visBeregning.module.less';
 import messages from './simulering-nb';
 
 interface Props {
-    sak: Sak;
     behandling: Behandling;
 }
 

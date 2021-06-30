@@ -59,7 +59,7 @@ const Behandlingsoppsummering = (props: Props) => {
                 behandlingsinformasjon={props.behandling.behandlingsinformasjon}
             />
             {props.behandling.beregning ? (
-                <VisBeregningOgSimulering sak={props.sak} behandling={props.behandling} />
+                <VisBeregningOgSimulering behandling={props.behandling} />
             ) : (
                 intl.formatMessage({ id: 'feilmelding.ikkeGjortEnBeregning' })
             )}
