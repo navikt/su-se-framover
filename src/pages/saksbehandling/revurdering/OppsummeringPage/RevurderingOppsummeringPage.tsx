@@ -285,7 +285,7 @@ const RevurderingOppsummeringPage = (props: {
                             <div className={styles.content}>
                                 <Revurderingoppsummering
                                     revurdering={props.revurdering}
-                                    grunnlagsdataOgVilkårsvurderinger={grunnlagsdataOgVilkårsvurderinger}
+                                    forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlagsdataOgVilkårsvurderinger}
                                 />
                                 {erRevurderingSimulert(props.revurdering) ||
                                 erBeregnetIngenEndring(props.revurdering) ||

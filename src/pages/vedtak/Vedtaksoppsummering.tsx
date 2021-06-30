@@ -30,7 +30,7 @@ const Vedtaksoppsummering = (props: Props) => {
                 return (
                     <Revurderingoppsummering
                         revurdering={vedtaksinformasjon.revurdering}
-                        grunnlagsdataOgVilkårsvurderinger={
+                        forrigeGrunnlagsdataOgVilkårsvurderinger={
                             vedtaksinformasjon.forrigeBehandling.grunnlagsdataOgVilkårsvurderinger
                         }
                     />

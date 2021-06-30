@@ -9,13 +9,13 @@ import styles from './revurderingoppsummering.module.less';
 
 const Revurderingoppsummering = (props: {
     revurdering: Revurdering;
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
+    forrigeGrunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
     return (
         <div className={styles.container}>
             <Oppsummeringsblokk
                 revurdering={props.revurdering}
-                grunnlagsdataOgVilkårsvurderinger={props.grunnlagsdataOgVilkårsvurderinger}
+                grunnlagsdataOgVilkårsvurderinger={props.forrigeGrunnlagsdataOgVilkårsvurderinger}
             />
             <Beregningblokk revurdering={props.revurdering} />
         </div>
