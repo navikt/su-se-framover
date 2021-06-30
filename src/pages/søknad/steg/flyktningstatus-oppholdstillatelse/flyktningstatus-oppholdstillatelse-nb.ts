@@ -1,26 +1,23 @@
 export default {
-    'input.flyktning.label': 'Er du registrert som flyktning?',
+    'flyktning.label': 'Er du registrert som flyktning?',
+    'flyktning.måVæreFlyktning':
+        'Du må ha flyktningstatus etter utlendingsloven § 28 for å ha rett på supplerende stønad. Du kan fremdeles søke, men vil sannsynligvis få avslag.',
+    'flyktning.hjelpetekst.tittel': 'Hvordan vet jeg om jeg er registrert flyktning?',
+    'flyktning.hjelpetekst.body':
+        'En flyktning er en person som har rett til asyl i Norge. Hvis du er registrert flyktning har du fått et vedtak fra UDI om dette. Har du ikke flyktningstatus etter § 28 i utlendingsloven, har du ikke rett til supplerende stønad for uføre.',
 
-    'input.norsk.statsborger.label': 'Er du norsk statsborger?',
+    'norsk.statsborger.label': 'Er du norsk statsborger?',
 
-    'input.oppholdstillatelse.label': 'Har du oppholdstillatelse i Norge?',
-    'input.hvilken.oppholdstillatelse.label': 'Er oppholdstillatelsen din permanent eller midlertidig?',
-    'input.permanent.oppholdstillatelse.label': 'Permanent',
-    'input.midlertidig.oppholdstillatelse.label': 'Midlertidig',
+    'oppholdstillatelse.label': 'Har du oppholdstillatelse i Norge?',
+    'oppholdstillatelse.ikkeLovligOpphold':
+        'For å ha rett til supplerende stønad må du ha lovlig opphold i Norge. Lovlig opphold er enten statsborgerskap eller oppholdstillatelse. Du kan fremdeles søke, men vil sannsynligvis få avslag.',
 
-    'input.statsborger.andre.land.label': 'Har du statsborgerskap i andre land enn Norge?',
-    'input.statsborger.andre.land.fritekst.label': 'Hvilke land har du statsborgerskap i?',
+    'oppholdstillatelse.type': 'Er oppholdstillatelsen din permanent eller midlertidig?',
+    'oppholdstillatelse.permanent': 'Permanent',
+    'oppholdstillatelse.midlertidig': 'Midlertidig',
+    'oppholdstillatelse.midlertidig.info':
+        'Hvis den midlertidige oppholdstillatelsen din opphører i løpet av de tre neste månedene bør du fornye oppholdstillatelsen din. Hvis oppholdstillatelsen din opphører, mister du retten på supplerende stønad.',
 
-    'ikkeRegistrertFlyktning.message':
-        'Du må ha offisiell flyktningstatus etter § 28 i utlendingsloven for å ha rett på supplerende stønad. Du kan fremdeles søke, men vil sannsynligvis få avslag.',
-
-    'ikkeLovligOpphold.message':
-        'For å ha rett på supplerende stønad må du ha lovlig opphold i Norge. Lovlig opphold er enten statsborgerskap eller oppholdstillatelse. Du kan fremdeles søke, men vil sannsynligvis få avslag.',
-
-    'midlertidigForlengelse.message':
-        'Hvis det er mindre enn tre måneder til den midlertidige oppholdstillatelsen din utgår anbefaler vi deg å søke om fornyelse. Hvis oppholdstillatelsen din går ut, mister du retten på supplerende stønad.',
-
-    'hjelpetekst.tittel': 'Hvordan vet jeg om jeg er registrert flyktning?',
-    'hjelpetekst.body':
-        'En flyktning er en person som fyller kravene til å få beskyttelse (asyl) i Norge. Hvis du er registrert flyktning har du mottatt et vedtak fra UDI om dette. Har du ikke offisiell flyktningstatus etter § 28 i utlendingsloven, har du ikke rett på supplerende stønad for uføre.',
+    'statsborger.andre.land.label': 'Har du statsborgerskap i andre land enn Norge?',
+    'statsborger.andre.land.fritekst': 'Hvilke land har du statsborgerskap i?',
 };

@@ -5,6 +5,7 @@ import { Datepicker, DatepickerLimitations } from 'nav-datovelger';
 import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Label, SkjemaelementFeilmelding, SkjemaGruppe } from 'nav-frontend-skjema';
+import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -145,9 +146,9 @@ const MultiTidsperiodevelger = (props: {
                     >
                         <div>
                             <Label htmlFor={utreisedatoId}>
-                                <FormattedMessage id="input.utreisedato.label" />
+                                <FormattedMessage id="utreisedato.label" />
                                 <span className="sr-only">
-                                    <FormattedMessage id="input.forUtenlandsoppholdX.label" values={{ x: index + 1 }} />
+                                    <FormattedMessage id="forUtenlandsoppholdX.label" values={{ x: index + 1 }} />
                                 </span>
                             </Label>
                             <Datepicker
@@ -180,7 +181,7 @@ const MultiTidsperiodevelger = (props: {
 
                         <div>
                             <Label htmlFor={innreisedatoId}>
-                                <FormattedMessage id="input.innreisedato.label" />
+                                <FormattedMessage id="innreisedato.label" />
                                 <span className="sr-only">
                                     <FormattedMessage id="input.forUtenlandsoppholdX.label" values={{ x: index + 1 }} />
                                 </span>
@@ -293,7 +294,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         <JaNeiSpørsmål
                             id="harReistTilUtlandetSiste90dager"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.harReistSiste90.label" />}
+                            legend={<FormattedMessage id="harReistSiste90.label" />}
                             feil={formik.errors.harReistTilUtlandetSiste90dager}
                             state={formik.values.harReistTilUtlandetSiste90dager}
                             onChange={(val) => {
@@ -356,7 +357,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         <JaNeiSpørsmål
                             id="skalReiseTilUtlandetNeste12Måneder"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.skalReiseNeste12.label" />}
+                            legend={<FormattedMessage id="skalReiseNeste12.label" />}
                             feil={formik.errors.skalReiseTilUtlandetNeste12Måneder}
                             state={formik.values.skalReiseTilUtlandetNeste12Måneder}
                             onChange={(val) => {
@@ -419,10 +420,12 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                     {antallDagerIUtlandet > 90 && (
                         <AlertStripeAdvarsel className={styles.passert90DagerAdvarsel}>
                             {intl.formatMessage(
-                                { id: 'display.passert90Dager' },
+                                { id: 'passert90Dager.info' },
                                 {
                                     // eslint-disable-next-line react/display-name
-                                    linebreak: () => <br />,
+                                    p: (tekst: string) => <Normaltekst>{tekst}</Normaltekst>,
+                                    // eslint-disable-next-line react/display-name
+                                    br: () => <br />,
                                 }
                             )}
                         </AlertStripeAdvarsel>

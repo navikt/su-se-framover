@@ -40,20 +40,20 @@ const createFaktaBlokkArray = (søknadsInnhold: SøknadInnhold, intl: IntlShape)
 
     const arr = [];
     arr.push({
-        tittel: intl.formatMessage({ id: søknadMessage('input.norsk.statsborger.label') }),
+        tittel: intl.formatMessage({ id: søknadMessage('norsk.statsborger.label') }),
         verdi: søknadsInnhold.oppholdstillatelse.erNorskStatsborger
             ? intl.formatMessage({ id: 'fraSøknad.ja' })
             : intl.formatMessage({ id: 'fraSøknad.nei' }),
     });
     if (!søknadsInnhold.oppholdstillatelse.erNorskStatsborger) {
         arr.push({
-            tittel: intl.formatMessage({ id: søknadMessage('input.oppholdstillatelse.label') }),
+            tittel: intl.formatMessage({ id: søknadMessage('oppholdstillatelse.label') }),
             verdi: søknadsInnhold.oppholdstillatelse.harOppholdstillatelse
                 ? intl.formatMessage({ id: 'fraSøknad.ja' })
                 : intl.formatMessage({ id: 'fraSøknad.nei' }),
         });
         arr.push({
-            tittel: intl.formatMessage({ id: søknadMessage('input.hvilken.oppholdstillatelse.label') }),
+            tittel: intl.formatMessage({ id: søknadMessage('oppholdstillatelse.type') }),
             verdi:
                 søknadsInnhold.oppholdstillatelse.typeOppholdstillatelse ??
                 intl.formatMessage({ id: 'fraSøknad.ikkeRegistert' }),
@@ -65,11 +65,11 @@ const createFaktaBlokkArray = (søknadsInnhold: SøknadInnhold, intl: IntlShape)
             ? formatAdresse(søknadsInnhold.boforhold.borPåAdresse)
             : søknadsInnhold.boforhold.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE
             ? intl.formatMessage({
-                  id: keyOf<typeof boOgOppholdSøknadMessages>('input.adresse.ingenAdresse.borPåAnnenAdresse'),
+                  id: keyOf<typeof boOgOppholdSøknadMessages>('adresse.ingenAdresse.borPåAnnenAdresse'),
               })
             : søknadsInnhold.boforhold.ingenAdresseGrunn === IngenAdresseGrunn.HAR_IKKE_FAST_BOSTED
             ? intl.formatMessage({
-                  id: keyOf<typeof boOgOppholdSøknadMessages>('input.adresse.ingenAdresse.harIkkeFastBosted'),
+                  id: keyOf<typeof boOgOppholdSøknadMessages>('adresse.ingenAdresse.harIkkeFastBosted'),
               })
             : intl.formatMessage({ id: 'fraSøknad.ikkeRegistert' }),
     });

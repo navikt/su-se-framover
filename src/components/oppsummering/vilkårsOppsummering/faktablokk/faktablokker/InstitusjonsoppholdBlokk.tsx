@@ -28,23 +28,23 @@ export const InstitusjonsoppholdBlokk = (props: FaktablokkProps) => {
     const fakta = useMemo(() => {
         const arr = [
             {
-                tittel: søknadMessage('input.innlagtPåInstitusjon.label'),
+                tittel: søknadMessage('innlagtPåInstitusjon.label'),
                 verdi: message(props.søknadInnhold.boforhold.innlagtPåInstitusjon ? 'fraSøknad.ja' : 'fraSøknad.nei'),
             },
         ];
 
         if (props.søknadInnhold.boforhold.innlagtPåInstitusjon?.datoForInnleggelse) {
             arr.push({
-                tittel: søknadMessage('input.datoForInnleggelse.label'),
+                tittel: søknadMessage('innlagtPåInstitusjon.datoForInnleggelse'),
                 verdi: intl.formatDate(props.søknadInnhold.boforhold.innlagtPåInstitusjon.datoForInnleggelse),
             });
 
             arr.push({
-                tittel: søknadMessage('input.datoForUtskrivelse.label'),
+                tittel: søknadMessage('innlagtPåInstitusjon.datoForUtskrivelse'),
                 verdi: props.søknadInnhold.boforhold.innlagtPåInstitusjon.datoForUtskrivelse
                     ? intl.formatDate(props.søknadInnhold.boforhold.innlagtPåInstitusjon.datoForUtskrivelse)
                     : props.søknadInnhold.boforhold.innlagtPåInstitusjon.fortsattInnlagt
-                    ? søknadMessage('input.fortsattInnlagt.label')
+                    ? søknadMessage('innlagtPåInstitusjon.fortsattInnlagt')
                     : '',
             });
         }

@@ -48,7 +48,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                     tittel={intl.formatMessage({ id: 'steg.uforevedtak' })}
                 >
                     <Oppsummeringsfelt
-                        label={<FormattedMessage id="input.uførevedtak.label" />}
+                        label={<FormattedMessage id="uførevedtak.label" />}
                         verdi={søknad.harUførevedtak ? 'Ja' : søknad.harUførevedtak === false ? 'Nei' : 'Ubesvart'}
                     />
                     <EndreSvar path={Søknadsteg.Uførevedtak} søker={søker} />
@@ -59,7 +59,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                     tittel={intl.formatMessage({ id: 'steg.flyktningstatus' })}
                 >
                     <Oppsummeringsfelt
-                        label={<FormattedMessage id="input.flyktning.label" />}
+                        label={<FormattedMessage id="flyktning.label" />}
                         verdi={
                             søknad.flyktningstatus.erFlyktning
                                 ? 'Ja'
@@ -69,7 +69,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         }
                     />
                     <Oppsummeringsfelt
-                        label={<FormattedMessage id="input.norsk.statsborger.label" />}
+                        label={<FormattedMessage id="norsk.statsborger.label" />}
                         verdi={
                             søknad.flyktningstatus.erNorskStatsborger
                                 ? 'Ja'
@@ -81,7 +81,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
 
                     {søknad.flyktningstatus.erNorskStatsborger === false && (
                         <Oppsummeringsfelt
-                            label={<FormattedMessage id="input.oppholdstillatelse.label" />}
+                            label={<FormattedMessage id="oppholdstillatelse.label" />}
                             verdi={
                                 søknad.flyktningstatus.harOppholdstillatelse
                                     ? 'Ja'
@@ -94,7 +94,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
 
                     {søknad.flyktningstatus.harOppholdstillatelse && (
                         <Oppsummeringsfelt
-                            label={<FormattedMessage id="input.hvilken.oppholdstillatelse.label" />}
+                            label={<FormattedMessage id="oppholdstillatelse.type" />}
                             verdi={
                                 søknad.flyktningstatus.typeOppholdstillatelse === 'permanent'
                                     ? 'Permanent'
@@ -106,7 +106,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                     )}
 
                     <Oppsummeringsfelt
-                        label={<FormattedMessage id="input.statsborger.andre.land.label" />}
+                        label={<FormattedMessage id="statsborger.andre.land.label" />}
                         verdi={
                             søknad.flyktningstatus.statsborgerskapAndreLand
                                 ? 'Ja'
@@ -118,7 +118,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
 
                     {søknad.flyktningstatus.statsborgerskapAndreLand && (
                         <Oppsummeringsfelt
-                            label={<FormattedMessage id="input.statsborger.andre.land.fritekst.label" />}
+                            label={<FormattedMessage id="statsborger.andre.land.fritekst" />}
                             verdi={søknad.flyktningstatus.statsborgerskapAndreLandFritekst}
                         />
                     )}
@@ -130,7 +130,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                     tittel={intl.formatMessage({ id: 'steg.boOgOppholdINorge' })}
                 >
                     <Oppsummeringsfelt
-                        label={<FormattedMessage id="input.opphold-i-norge.label" />}
+                        label={<FormattedMessage id="borOgOppholderINorge.label" />}
                         verdi={
                             søknad.boOgOpphold.borOgOppholderSegINorge
                                 ? 'Ja'
@@ -140,7 +140,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         }
                     />
                     <Oppsummeringsfelt
-                        label={<FormattedMessage id="input.delerBoligMedPersonOver18.label" />}
+                        label={<FormattedMessage id="delerBolig.delerBoligMedPersonOver18" />}
                         verdi={
                             søknad.boOgOpphold.delerBoligMedPersonOver18
                                 ? 'Ja'
@@ -151,18 +151,18 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                     />
                     {søknad.boOgOpphold.delerBoligMedPersonOver18 && (
                         <Oppsummeringsfelt
-                            label={<FormattedMessage id="input.delerBoligMed.label" />}
+                            label={<FormattedMessage id="delerBolig.delerMedHvem" />}
                             verdi={
                                 søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER
                                     ? intl.formatMessage({
-                                          id: 'input.delerBoligMedEktefelleEllerSamboer.label',
+                                          id: 'delerBolig.eps',
                                       })
                                     : søknad.boOgOpphold.delerBoligMed === DelerBoligMed.VOKSNE_BARN
                                     ? intl.formatMessage({
-                                          id: 'input.delerBoligMedBarnOver18.label',
+                                          id: 'delerBolig.voksneBarn',
                                       })
                                     : intl.formatMessage({
-                                          id: 'input.delerBoligMedAndreVoksne.label',
+                                          id: 'delerBolig.andreVoksne',
                                       })
                             }
                         />
@@ -177,14 +177,14 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                     verdi={søknad.boOgOpphold.ektefellePartnerSamboer.fnr}
                                 />
                                 <Oppsummeringsfelt
-                                    label={<FormattedMessage id="input.ektefelleEllerSamboerUførFlyktning.label" />}
+                                    label={<FormattedMessage id="delerBolig.epsUførFlyktning" />}
                                     verdi={søknad.boOgOpphold.ektefellePartnerSamboer?.erUførFlyktning ? 'Ja' : 'Nei'}
                                 />
                             </>
                         )}
 
                     <Oppsummeringsfelt
-                        label={<FormattedMessage id="input.innlagtPåInstitusjon.label" />}
+                        label={<FormattedMessage id="innlagtPåInstitusjon.label" />}
                         verdi={
                             søknad.boOgOpphold.innlagtPåinstitusjon
                                 ? 'Ja'
@@ -197,7 +197,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                     {søknad.boOgOpphold.innlagtPåinstitusjon && (
                         <>
                             <Oppsummeringsfelt
-                                label={<FormattedMessage id="input.datoForInnleggelse.label" />}
+                                label={<FormattedMessage id="innlagtPåInstitusjon.datoForInnleggelse" />}
                                 verdi={
                                     søknad.boOgOpphold.datoForInnleggelse && (
                                         <FormattedDate value={søknad.boOgOpphold.datoForInnleggelse} />
@@ -207,7 +207,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
 
                             {søknad.boOgOpphold.datoForUtskrivelse ? (
                                 <Oppsummeringsfelt
-                                    label={<FormattedMessage id="input.datoForUtskrivelse.label" />}
+                                    label={<FormattedMessage id="innlagtPåInstitusjon.datoForUtskrivelse" />}
                                     verdi={
                                         søknad.boOgOpphold.datoForInnleggelse && (
                                             <FormattedDate value={søknad.boOgOpphold.datoForUtskrivelse} />
@@ -216,7 +216,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                 />
                             ) : (
                                 <Oppsummeringsfelt
-                                    label={<FormattedMessage id="input.fortsattInnlagt.label" />}
+                                    label={<FormattedMessage id="innlagtPåInstitusjon.fortsattInnlagt" />}
                                     verdi={søknad.boOgOpphold.fortsattInnlagt ? 'Ja' : 'Nei'}
                                 />
                             )}
@@ -275,7 +275,7 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                     tittel={intl.formatMessage({ id: 'steg.utenlandsopphold' })}
                 >
                     <Oppsummeringsfelt
-                        label={<FormattedMessage id="input.harReistSiste90.label" />}
+                        label={<FormattedMessage id="harReistSiste90.label" />}
                         verdi={
                             søknad.utenlandsopphold.harReistTilUtlandetSiste90dager
                                 ? 'Ja'
@@ -288,18 +288,18 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         søknad.utenlandsopphold.harReistDatoer.map((item, index) => (
                             <div className={sharedStyles.inputFelterDiv} key={index}>
                                 <Oppsummeringsfelt
-                                    label={<FormattedMessage id="input.utreisedato.label" />}
+                                    label={<FormattedMessage id="utreisedato.label" />}
                                     verdi={item.utreisedato ? <FormattedDate value={item.utreisedato} /> : 'Ubesvart'}
                                 />
                                 <Oppsummeringsfelt
-                                    label={<FormattedMessage id="input.innreisedato.label" />}
+                                    label={<FormattedMessage id="innreisedato.label" />}
                                     verdi={item.innreisedato ? <FormattedDate value={item.innreisedato} /> : 'Ubesvart'}
                                 />
                             </div>
                         ))}
 
                     <Oppsummeringsfelt
-                        label={<FormattedMessage id="input.skalReiseNeste12.label" />}
+                        label={<FormattedMessage id="skalReiseNeste12.label" />}
                         verdi={
                             søknad.utenlandsopphold.skalReiseTilUtlandetNeste12Måneder
                                 ? 'Ja'
@@ -312,11 +312,11 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                         søknad.utenlandsopphold.skalReiseDatoer.map((item, index) => (
                             <div className={sharedStyles.inputFelterDiv} key={index}>
                                 <Oppsummeringsfelt
-                                    label={<FormattedMessage id="input.utreisedato.label" />}
+                                    label={<FormattedMessage id="utreisedato.label" />}
                                     verdi={item.utreisedato ? <FormattedDate value={item.utreisedato} /> : 'Ubesvart'}
                                 />
                                 <Oppsummeringsfelt
-                                    label={<FormattedMessage id="input.innreisedato.label" />}
+                                    label={<FormattedMessage id="innreisedato.label" />}
                                     verdi={item.innreisedato ? <FormattedDate value={item.innreisedato} /> : 'Ubesvart'}
                                 />
                             </div>

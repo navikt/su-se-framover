@@ -18,81 +18,81 @@ export const FormueOppsummering = ({
     return (
         <>
             <Oppsummeringsfelt
-                label={intl.formatMessage({ id: 'input.eierDuBolig.label' })}
+                label={intl.formatMessage({ id: 'eierBolig.label' })}
                 verdi={formue.eierBolig ? 'Ja' : formue.eierBolig === false ? 'Nei' : 'Ubesvart'}
             />
 
             {formue.eierBolig === false && (
                 <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.depositumskonto.label' })}
+                    label={intl.formatMessage({ id: 'depositum.label' })}
                     verdi={formue.harDepositumskonto ? 'Ja' : formue.harDepositumskonto === false ? 'Nei' : 'Ubesvart'}
                 />
             )}
 
             {formue.harDepositumskonto && (
                 <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.depositumsBeløp.label' })}
+                    label={intl.formatMessage({ id: 'depositum.beløp' })}
                     verdi={formue.depositumsBeløp ? formue.depositumsBeløp : 'Ubesvart'}
                 />
             )}
             {formue.harDepositumskonto && (
                 <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.kontonummer.label' })}
+                    label={intl.formatMessage({ id: 'depositum.kontonummer' })}
                     verdi={formue.kontonummer ? formue.kontonummer : 'Ubesvart'}
                 />
             )}
 
             {formue.eierBolig && (
                 <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.borIBolig.label' })}
+                    label={intl.formatMessage({ id: 'eierBolig.borIBolig' })}
                     verdi={formue.borIBolig ? 'Ja' : formue.borIBolig === false ? 'Nei' : 'Ubesvart'}
                 />
             )}
 
             {formue.borIBolig === false && (
                 <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.verdiPåBolig.label' })}
+                    label={intl.formatMessage({ id: 'eierBolig.formuePåBolig' })}
                     verdi={formue.verdiPåBolig ? formue.verdiPåBolig : 'Ubesvart'}
                 />
             )}
 
             {formue.borIBolig === false && (
                 <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.boligBrukesTil.label' })}
+                    label={intl.formatMessage({ id: 'eierBolig.boligBrukesTil' })}
                     verdi={formue.boligBrukesTil ? formue.boligBrukesTil : 'Ubesvart'}
                 />
             )}
 
             {formue.eierBolig && (
                 <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.eierMerEnnEnBolig.label' })}
+                    label={intl.formatMessage({ id: 'eiendom.eierAndreEiendommer' })}
                     verdi={formue.eierMerEnnEnBolig ? 'Ja' : formue.eierMerEnnEnBolig === false ? 'Nei' : 'Ubesvart'}
                 />
             )}
 
             {formue.eierMerEnnEnBolig && (
                 <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.verdiPåEiendom.label' })}
+                    label={intl.formatMessage({ id: 'eiendom.samledeVerdi' })}
                     verdi={formue.verdiPåEiendom ? formue.verdiPåEiendom : 'Ubesvart'}
                 />
             )}
 
             {formue.eierMerEnnEnBolig && (
                 <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.eiendomBrukesTil.label' })}
+                    label={intl.formatMessage({ id: 'eiendom.brukesTil' })}
                     verdi={formue.eiendomBrukesTil ? formue.eiendomBrukesTil : 'Ubesvart'}
                 />
             )}
 
             <Oppsummeringsfelt
-                label={intl.formatMessage({ id: 'input.eierKjøretøy.label' })}
+                label={intl.formatMessage({ id: 'kjøretøy.label' })}
                 verdi={formue.eierKjøretøy ? 'Ja' : formue.eierKjøretøy === false ? 'Nei' : 'Ubesvart'}
             />
 
             {formue.eierKjøretøy && (
                 <OppsummeringsfeltAvKjøretøy
-                    labelFirstEl={intl.formatMessage({ id: 'input.verdiPåKjøretøyTotal.label' })}
-                    labelScndEl={intl.formatMessage({ id: 'input.kjøretøyDeEier.label' })}
+                    labelFirstEl={intl.formatMessage({ id: 'kjøretøy.verdi' })}
+                    labelScndEl={intl.formatMessage({ id: 'kjøretøy.regNr' })}
                     arr={formue.kjøretøy}
                 />
             )}
@@ -100,44 +100,44 @@ export const FormueOppsummering = ({
             <Oppsummeringsfelt
                 label={
                     formue.harDepositumskonto
-                        ? intl.formatMessage({ id: 'input.harInnskuddPåKonto.depositum.label' })
-                        : intl.formatMessage({ id: 'input.harInnskuddPåKonto.label' })
+                        ? intl.formatMessage({ id: 'innskudd.pengerPåKontoInkludertDepositum' })
+                        : intl.formatMessage({ id: 'innskudd.label' })
                 }
                 verdi={formue.harInnskuddPåKonto ? 'Ja' : formue.harInnskuddPåKonto === false ? 'Nei' : 'Ubesvart'}
             />
             {formue.harInnskuddPåKonto && (
                 <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.innskuddsBeløp.label' })}
+                    label={intl.formatMessage({ id: 'innskudd.beløp' })}
                     verdi={formue.innskuddsBeløp ? formue.innskuddsBeløp : 'Ubesvart'}
                 />
             )}
             <Oppsummeringsfelt
-                label={intl.formatMessage({ id: 'input.harVerdipapir.label' })}
+                label={intl.formatMessage({ id: 'verdipapir.label' })}
                 verdi={formue.harVerdipapir ? 'Ja' : formue.harVerdipapir === false ? 'Nei' : 'Ubesvart'}
             />
             {formue.verdipapirBeløp && (
                 <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.verdipapirBeløp.label' })}
+                    label={intl.formatMessage({ id: 'verdipapir.beløp' })}
                     verdi={formue.verdipapirBeløp ? formue.verdipapirBeløp : 'Ubesvart'}
                 />
             )}
             <Oppsummeringsfelt
-                label={intl.formatMessage({ id: 'input.skylderNoenMegPenger.label' })}
+                label={intl.formatMessage({ id: 'skylderNoenMegPenger.label' })}
                 verdi={formue.skylderNoenMegPenger ? 'Ja' : formue.skylderNoenMegPenger === false ? 'Nei' : 'Ubesvart'}
             />
             {formue.skylderNoenMegPenger && (
                 <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.skylderNoenMegPengerBeløp.label' })}
+                    label={intl.formatMessage({ id: 'skylderNoenMegPenger.beløp' })}
                     verdi={formue.skylderNoenMegPengerBeløp ? formue.skylderNoenMegPengerBeløp : 'Ubesvart'}
                 />
             )}
             <Oppsummeringsfelt
-                label={intl.formatMessage({ id: 'input.harKontanter.label' })}
+                label={intl.formatMessage({ id: 'harKontanter.label' })}
                 verdi={formue.harKontanter ? 'Ja' : formue.harKontanter === false ? 'Nei' : 'Ubesvart'}
             />
             {formue.harKontanter && (
                 <Oppsummeringsfelt
-                    label={intl.formatMessage({ id: 'input.kontanterBeløp.label' })}
+                    label={intl.formatMessage({ id: 'harKontanter.beløp' })}
                     verdi={formue.kontanterBeløp ? formue.kontanterBeløp : 'Ubesvart'}
                 />
             )}

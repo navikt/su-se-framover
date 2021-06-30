@@ -49,7 +49,7 @@ const EktefellePartnerSamboer = (props: Props) => {
             <div className={styles.ufør}>
                 {erEpsUnder67 && (
                     <RadioGruppe
-                        legend={intl.formatMessage({ id: 'input.ektefelleEllerSamboerUførFlyktning.label' })}
+                        legend={intl.formatMessage({ id: 'delerBolig.epsUførFlyktning' })}
                         feil={props.feil?.erUførFlyktning}
                     >
                         <Radio

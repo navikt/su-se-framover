@@ -151,7 +151,7 @@ const TrygdeytelserInputFelter = (props: {
                                 <Input
                                     id={`${beløpId}`}
                                     name={`${beløpId}`}
-                                    label={<FormattedMessage id="input.trygdeytelserIUtlandetBeløp.label" />}
+                                    label={<FormattedMessage id="trygdeytelserIUtlandet.beløp" />}
                                     value={input.beløp}
                                     onChange={(e) => {
                                         props.onChange({
@@ -170,7 +170,7 @@ const TrygdeytelserInputFelter = (props: {
                                 <Input
                                     id={`${valutaId}`}
                                     name={`${valutaId}`}
-                                    label={<FormattedMessage id="input.trygdeytelserIUtlandetValuta.label" />}
+                                    label={<FormattedMessage id="trygdeytelserIUtlandet.valuta" />}
                                     value={input.valuta}
                                     onChange={(e) => {
                                         props.onChange({
@@ -189,7 +189,7 @@ const TrygdeytelserInputFelter = (props: {
                                 <Input
                                     id={`${typeId}`}
                                     name={`${typeId}`}
-                                    label={<FormattedMessage id="input.trygdeytelserIUtlandetType.label" />}
+                                    label={<FormattedMessage id="trygdeytelserIUtlandet.ytelse" />}
                                     value={input.type}
                                     onChange={(e) => {
                                         props.onChange({
@@ -259,7 +259,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                             <Input
                                 id={feltId('ordning')}
                                 className={sharedStyles.inputFelt}
-                                label={<FormattedMessage id="input.pensjonsOrdning.label" />}
+                                label={<FormattedMessage id="mottarPensjon.fra" />}
                                 value={item.ordning}
                                 feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.ordning}
                                 onChange={(e) =>
@@ -274,7 +274,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                             <Input
                                 id={feltId('beløp')}
                                 className={sharedStyles.inputFelt}
-                                label={<FormattedMessage id="input.pensjonsBeløp.label" />}
+                                label={<FormattedMessage id="mottarPensjon.beløp" />}
                                 value={item.beløp}
                                 feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.beløp}
                                 onChange={(e) =>
@@ -337,10 +337,10 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         <JaNeiSpørsmål
                             id="harForventetInntekt"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.harForventetInntekt.label" />}
+                            legend={<FormattedMessage id="forventerInntekt.label" />}
                             feil={formik.errors.harForventetInntekt}
                             state={formik.values.harForventetInntekt}
-                            description={intl.formatMessage({ id: 'hjelpetekst.harForventetInntekt.body' })}
+                            description={intl.formatMessage({ id: 'forventerInntekt.hjelpetekst' })}
                             onChange={(val) =>
                                 formik.setValues({
                                     ...formik.values,
@@ -356,7 +356,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                 feil={formik.errors.forventetInntekt}
                                 className={sharedStyles.marginBottom}
                                 value={formik.values.forventetInntekt || ''}
-                                label={<FormattedMessage id="input.forventetInntekt.label" />}
+                                label={<FormattedMessage id="forventerInntekt.beløp" />}
                                 onChange={formik.handleChange}
                             />
                         )}
@@ -364,7 +364,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         <JaNeiSpørsmål
                             id="andreYtelserINAV"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.andreYtelserINAV.label" />}
+                            legend={<FormattedMessage id="andreYtelserINAV.label" />}
                             feil={formik.errors.andreYtelserINav}
                             state={formik.values.andreYtelserINav}
                             onChange={(val) =>
@@ -377,13 +377,12 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                             }
                         />
 
-                        {/*Flere inputs? */}
                         {formik.values.andreYtelserINav && (
                             <div className={sharedStyles.inputFelterDiv}>
                                 <Input
                                     id="andreYtelserINavYtelse"
                                     name="andreYtelserINavYtelse"
-                                    label={<FormattedMessage id="input.andreYtelserINavYtelse.label" />}
+                                    label={<FormattedMessage id="andreYtelserINAV.ytelse" />}
                                     value={formik.values.andreYtelserINavYtelse || ''}
                                     onChange={formik.handleChange}
                                     feil={formik.errors.andreYtelserINavYtelse}
@@ -391,7 +390,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                 <Input
                                     id="andreYtelserINavBeløp"
                                     name="andreYtelserINavBeløp"
-                                    label={<FormattedMessage id="input.andreYtelserINavBeløp.label" />}
+                                    label={<FormattedMessage id="andreYtelserINAV.beløp" />}
                                     value={formik.values.andreYtelserINavBeløp || ''}
                                     onChange={formik.handleChange}
                                     feil={formik.errors.andreYtelserINavBeløp}
@@ -402,7 +401,8 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         <JaNeiSpørsmål
                             id="søktAndreYtelserIkkeBehandlet"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.søktAndreYtelserIkkeBehandlet.label" />}
+                            legend={<FormattedMessage id="søktAndreYtelserIkkeBehandlet.label" />}
+                            description={intl.formatMessage({ id: 'søktAndreYtelserIkkeBehandlet.hjelpetekst' })}
                             feil={formik.errors.søktAndreYtelserIkkeBehandlet}
                             state={formik.values.søktAndreYtelserIkkeBehandlet}
                             onChange={(val) =>
@@ -419,7 +419,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                 className={sharedStyles.marginBottom}
                                 id="søktAndreYtelserIkkeBehandletBegrunnelse"
                                 name="søktAndreYtelserIkkeBehandletBegrunnelse"
-                                label={<FormattedMessage id="input.søktAndreYtelserIkkeBehandletBegrunnelse.label" />}
+                                label={<FormattedMessage id="søktAndreYtelserIkkeBehandlet.begrunnelse" />}
                                 value={formik.values.søktAndreYtelserIkkeBehandletBegrunnelse || ''}
                                 onChange={formik.handleChange}
                                 feil={formik.errors.søktAndreYtelserIkkeBehandletBegrunnelse}
@@ -429,7 +429,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         <JaNeiSpørsmål
                             id="harMottattSosialstønad"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.harMottattSosialstønad.label" />}
+                            legend={<FormattedMessage id="sosialStønad.label" />}
                             feil={formik.errors.harMottattSosialstønad}
                             state={formik.values.harMottattSosialstønad}
                             onChange={(val) =>
@@ -445,7 +445,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                 className={sharedStyles.marginBottom}
                                 id="sosialStønadBeløp"
                                 name="sosialStønadBeløp"
-                                label={<FormattedMessage id="input.sosialStønadBeløp.label" />}
+                                label={<FormattedMessage id="sosialStønad.beløp" />}
                                 value={formik.values.sosialStønadBeløp || ''}
                                 onChange={formik.handleChange}
                                 feil={formik.errors.sosialStønadBeløp}
@@ -455,7 +455,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         <JaNeiSpørsmål
                             id="trygdeytelserIUtlandet"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.trygdeytelserIUtlandet.label" />}
+                            legend={<FormattedMessage id="trygdeytelserIUtlandet.label" />}
                             feil={formik.errors.harTrygdeytelserIUtlandet}
                             state={formik.values.harTrygdeytelserIUtlandet}
                             onChange={(val) =>
@@ -512,7 +512,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         <JaNeiSpørsmål
                             id="mottarPensjon"
                             className={sharedStyles.sporsmal}
-                            legend={<FormattedMessage id="input.mottarPensjon.label" />}
+                            legend={<FormattedMessage id="mottarPensjon.label" />}
                             feil={formik.errors.mottarPensjon}
                             state={formik.values.mottarPensjon}
                             onChange={(val) =>
