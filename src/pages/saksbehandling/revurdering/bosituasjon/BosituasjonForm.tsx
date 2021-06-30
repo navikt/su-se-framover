@@ -39,7 +39,7 @@ interface BosituasjonFormData {
 }
 
 const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[] }) => {
-    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     return (
         <div>
@@ -219,7 +219,7 @@ const BosituasjonForm = (props: {
     forrigeUrl: string;
     nesteUrl: (revurdering: Revurdering) => string;
 }) => {
-    const intl = useI18n({ messages: { ...messages, ...sharedMessages } });
+    const { intl } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const [epsAlder, setEpsAlder] = useState<Nullable<number>>(null);
     const [status, setStatus] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const dispatch = useAppDispatch();

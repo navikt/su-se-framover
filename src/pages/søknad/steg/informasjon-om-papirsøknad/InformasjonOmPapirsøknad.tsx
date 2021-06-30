@@ -64,7 +64,7 @@ const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string
         validateOnChange: hasSubmitted,
     });
 
-    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
     return (
         <TextProvider messages={{ [Languages.nb]: messages }}>
             <form

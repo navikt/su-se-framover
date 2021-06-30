@@ -69,7 +69,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
         validateOnChange: hasSubmitted,
     });
 
-    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
     return (
         <TextProvider messages={{ [Languages.nb]: messages }}>
             <div>

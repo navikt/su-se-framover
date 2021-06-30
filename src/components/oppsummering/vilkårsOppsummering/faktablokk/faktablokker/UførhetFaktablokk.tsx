@@ -13,7 +13,7 @@ import messages from './faktablokker-nb';
 import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
 
 export const UførhetFaktablokk = (props: FaktablokkProps) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages,
     });
 
@@ -33,7 +33,7 @@ export const UførhetFaktablokk = (props: FaktablokkProps) => {
 };
 
 export const UførhetVilkårsblokk = (props: VilkårsblokkProps<'uførhet'>) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: {
             ...messages,
             ...saksbehandlingMessages,

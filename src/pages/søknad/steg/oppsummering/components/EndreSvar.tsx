@@ -13,7 +13,7 @@ import messages from '../Søknadoppsummering/søknadsoppsummering-nb';
 import styles from '../Søknadoppsummering/søknadsoppsummering.module.less';
 
 export const EndreSvar = (props: { path: Søknadsteg; søker: Person }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     return (
         <Link
             className={styles.endreSvarContainer}

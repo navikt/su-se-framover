@@ -126,7 +126,7 @@ const VisBenyttetEpsFradrag = ({
 );
 
 const VisBeregning = (props: Props) => {
-    const intl = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
+    const { intl } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
 
     return (
         <div className={styles.beregningdetaljer}>

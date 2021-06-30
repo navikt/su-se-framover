@@ -55,7 +55,7 @@ const stegTilTekstId = (steg: RevurderingSteg) => {
 };
 
 const RevurderingPage = (props: { sak: Sak }) => {
-    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
 

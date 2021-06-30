@@ -51,7 +51,7 @@ interface EndringAvFradragFormData {
 }
 
 const GjeldendeFradrag = (props: { fradrag: Fradrag[] }) => {
-    const intl = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
+    const { intl } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
     return (
         <div>
             <Systemtittel className={styles.grunnlagsdataHeading}>
@@ -138,7 +138,7 @@ const EndringAvFradrag = (props: {
     forrigeUrl: string;
     nesteUrl: string;
 }) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages, ...fradragstypeMessages },
     });
     const dispatch = useAppDispatch();

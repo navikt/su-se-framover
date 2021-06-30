@@ -16,7 +16,7 @@ const Vilkårsblokk = (props: {
     saksbehandlingfaktablokk: JSX.Element;
     begrunnelse: Nullable<string>;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     return (
         <div className={styles.blokkContainer}>

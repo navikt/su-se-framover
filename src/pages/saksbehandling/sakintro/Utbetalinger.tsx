@@ -27,7 +27,7 @@ export const Utbetalinger = (props: {
     utbetalingsperioder: Utbetalingsperiode[];
     kanStansesEllerGjenopptas: KanStansesEllerGjenopptas;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     const dispatch = useAppDispatch();
     const { utbetalingsperioder, kanStansesEllerGjenopptas, søker } = props;
     const { stansUtbetalingerStatus, gjenopptaUtbetalingerStatus } = useAppSelector((s) => s.sak);

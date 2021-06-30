@@ -27,7 +27,7 @@ interface Props {
 }
 
 export const Utbetalingssimulering = (props: { simulering: Simulering; utenTittel?: boolean }) => {
-    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
 
     return (
         <div className={styles.simuleringsdetaljer}>

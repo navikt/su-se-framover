@@ -15,7 +15,7 @@ const InntektsOppsummering = ({
     inntekt: SøknadState['inntekt'];
     messages: Record<string, string>;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     return (
         <>
             <Oppsummeringsfelt

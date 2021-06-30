@@ -80,7 +80,7 @@ const schema = yup.object<FormData>({
 const Formue = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
-    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [eps, setEps] = useState<RemoteData.RemoteData<ApiError, personApi.Person>>(RemoteData.initial);
     const [kanEndreAnnenPersonsFormue, setKanEndreAnnenPersonsFormue] = useState<boolean>(true);
     const [åpnerNyFormueBlokkMenViserEnBlokk, setÅpnerNyFormueBlokkMenViserEnBlokk] = useState<boolean>(false);

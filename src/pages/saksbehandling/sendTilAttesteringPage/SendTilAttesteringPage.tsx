@@ -32,7 +32,7 @@ type Props = {
 
 const SendTilAttesteringPage = (props: Props) => {
     const { sak } = props;
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     const dispatch = useAppDispatch();
     const { sendtTilAttesteringStatus } = useAppSelector((s) => s.sak);

@@ -1,7 +1,6 @@
-import { IntlShape } from 'react-intl';
-
 import { formatPeriode } from '~lib/dateUtils';
 import { formatCurrency } from '~lib/formatUtils';
+import { UseI18N } from '~lib/hooks';
 import {
     erBosituasjonFullstendig,
     BosituasjonTyper,
@@ -9,58 +8,66 @@ import {
 } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { UføreResultat, UføreVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 
+import messages from './vedtaksinformasjon-nb';
+
+type Messages = typeof messages;
+
 export type Grunnlagsblokk = Array<{
     label: string;
     verdi: string;
 }>;
 
-export function getUførevilkårgrunnlagsblokker(vilkår: UføreVilkår, intl: IntlShape): Grunnlagsblokk[] {
+export function getUførevilkårgrunnlagsblokker(
+    vilkår: UføreVilkår,
+    { intl, formatMessage }: UseI18N<Messages>
+): Grunnlagsblokk[] {
     return vilkår.vurderinger.map((v) =>
         v.grunnlag && v.resultat === UføreResultat.VilkårOppfylt
             ? [
                   {
-                      label: intl.formatMessage({ id: 'uførhet.label.uføregrad' }),
+                      label: formatMessage('uførhet.label.uføregrad'),
                       verdi: `${v.grunnlag.uføregrad.toString()}%`,
                   },
                   {
-                      label: intl.formatMessage({ id: 'generell.label.periode' }),
+                      label: formatMessage('generell.label.periode'),
                       verdi: formatPeriode(v.grunnlag.periode, intl),
                   },
                   {
-                      label: intl.formatMessage({ id: 'uførhet.label.ieu' }),
+                      label: formatMessage('uførhet.label.ieu'),
                       verdi: formatCurrency(intl, v.grunnlag.forventetInntekt),
                   },
               ]
             : [
                   {
-                      label: intl.formatMessage({ id: 'uførhet.label.harUførevedtak' }),
-                      verdi: intl.formatMessage({ id: 'generell.nei' }),
+                      label: formatMessage('uførhet.label.harUførevedtak'),
+                      verdi: formatMessage('generell.nei'),
                   },
                   {
-                      label: intl.formatMessage({ id: 'generell.label.periode' }),
+                      label: formatMessage('generell.label.periode'),
                       verdi: formatPeriode(v.periode, intl),
                   },
               ]
     );
 }
 
-export function getBosituasjongrunnlagsblokker(b: Bosituasjon, intl: IntlShape): Grunnlagsblokk[] {
+export function getBosituasjongrunnlagsblokker(
+    b: Bosituasjon,
+    { intl, formatMessage }: UseI18N<Messages>
+): Grunnlagsblokk[] {
     if (!erBosituasjonFullstendig(b)) {
         return [];
     }
     const basics = [
         {
-            label: intl.formatMessage({ id: 'generell.label.periode' }),
+            label: formatMessage('generell.label.periode'),
             verdi: formatPeriode(b.periode, intl),
         },
         {
-            label: intl.formatMessage({ id: 'bosituasjon.label.sats' }),
-            verdi: intl.formatMessage({
-                id: b.sats === 'ORDINÆR' ? 'bosituasjon.sats.ordinær' : 'bosituasjon.sats.høy',
-            }),
+            label: formatMessage('bosituasjon.label.sats'),
+            verdi: formatMessage(b.sats === 'ORDINÆR' ? 'bosituasjon.sats.ordinær' : 'bosituasjon.sats.høy'),
         },
         {
-            label: intl.formatMessage({ id: 'generell.label.begrunnelse' }),
+            label: formatMessage('generell.label.begrunnelse'),
             verdi: b.begrunnelse ?? '',
         },
     ];
@@ -70,12 +77,12 @@ export function getBosituasjongrunnlagsblokker(b: Bosituasjon, intl: IntlShape):
                 [
                     ...basics,
                     {
-                        label: intl.formatMessage({ id: 'bosituasjon.label.harEps' }),
-                        verdi: intl.formatMessage({ id: 'generell.nei' }),
+                        label: formatMessage('bosituasjon.label.harEps'),
+                        verdi: formatMessage('generell.nei'),
                     },
                     {
-                        label: intl.formatMessage({ id: 'bosituasjon.label.delerBolig' }),
-                        verdi: intl.formatMessage({ id: 'generell.ja' }),
+                        label: formatMessage('bosituasjon.label.delerBolig'),
+                        verdi: formatMessage('generell.ja'),
                     },
                 ],
             ];
@@ -84,12 +91,12 @@ export function getBosituasjongrunnlagsblokker(b: Bosituasjon, intl: IntlShape):
                 [
                     ...basics,
                     {
-                        label: intl.formatMessage({ id: 'bosituasjon.label.harEps' }),
-                        verdi: intl.formatMessage({ id: 'generell.ja' }),
+                        label: formatMessage('bosituasjon.label.harEps'),
+                        verdi: formatMessage('generell.ja'),
                     },
                     {
-                        label: intl.formatMessage({ id: 'bosituasjon.label.epsUførFlyktning' }),
-                        verdi: intl.formatMessage({ id: 'generell.nei' }),
+                        label: formatMessage('bosituasjon.label.epsUførFlyktning'),
+                        verdi: formatMessage('generell.nei'),
                     },
                 ],
             ];
@@ -98,12 +105,12 @@ export function getBosituasjongrunnlagsblokker(b: Bosituasjon, intl: IntlShape):
                 [
                     ...basics,
                     {
-                        label: intl.formatMessage({ id: 'bosituasjon.label.harEps' }),
-                        verdi: intl.formatMessage({ id: 'generell.ja' }),
+                        label: formatMessage('bosituasjon.label.harEps'),
+                        verdi: formatMessage('generell.ja'),
                     },
                     {
-                        label: intl.formatMessage({ id: 'bosituasjon.label.epsUførFlyktning' }),
-                        verdi: intl.formatMessage({ id: 'generell.nei' }),
+                        label: formatMessage('bosituasjon.label.epsUførFlyktning'),
+                        verdi: formatMessage('generell.nei'),
                     },
                 ],
             ];
@@ -112,12 +119,12 @@ export function getBosituasjongrunnlagsblokker(b: Bosituasjon, intl: IntlShape):
                 [
                     ...basics,
                     {
-                        label: intl.formatMessage({ id: 'bosituasjon.label.harEps' }),
-                        verdi: intl.formatMessage({ id: 'generell.ja' }),
+                        label: formatMessage('bosituasjon.label.harEps'),
+                        verdi: formatMessage('generell.ja'),
                     },
                     {
-                        label: intl.formatMessage({ id: 'bosituasjon.label.epsUførFlyktning' }),
-                        verdi: intl.formatMessage({ id: 'generell.ja' }),
+                        label: formatMessage('bosituasjon.label.epsUførFlyktning'),
+                        verdi: formatMessage('generell.ja'),
                     },
                 ],
             ];
@@ -126,12 +133,12 @@ export function getBosituasjongrunnlagsblokker(b: Bosituasjon, intl: IntlShape):
                 [
                     ...basics,
                     {
-                        label: intl.formatMessage({ id: 'bosituasjon.label.harEps' }),
-                        verdi: intl.formatMessage({ id: 'generell.nei' }),
+                        label: formatMessage('bosituasjon.label.harEps'),
+                        verdi: formatMessage('generell.nei'),
                     },
                     {
-                        label: intl.formatMessage({ id: 'bosituasjon.label.delerBolig' }),
-                        verdi: intl.formatMessage({ id: 'generell.nei' }),
+                        label: formatMessage('bosituasjon.label.delerBolig'),
+                        verdi: formatMessage('generell.nei'),
                     },
                 ],
             ];

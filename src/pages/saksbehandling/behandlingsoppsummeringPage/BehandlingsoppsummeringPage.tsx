@@ -18,7 +18,7 @@ const BehandlingsoppsummeringPage = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
     const behandling = props.sak.behandlinger.find((behandling) => behandling.id === urlParams.behandlingId);
     const vedtakForBehandling = props.sak.vedtak.find((v) => v.behandlingId === behandling?.id);
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     if (!behandling) {
         return <></>;

@@ -16,9 +16,9 @@ interface Props {
 }
 
 const Header = (props: Props) => {
-    const i18n = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     return (
-        <NavHeader title={i18n.formatMessage({ id: 'title' })} titleHref={'/'}>
+        <NavHeader title={intl.formatMessage({ id: 'title' })} titleHref={'/'}>
             {props.user && (
                 <div className={styles.content}>
                     {props.user.roller.includes(Rolle.Saksbehandler) && (
@@ -28,7 +28,7 @@ const Header = (props: Props) => {
                             })}
                             className={styles.papirsoknad}
                         >
-                            {i18n.formatMessage({ id: 'link.papirsøknad' })}
+                            {intl.formatMessage({ id: 'link.papirsøknad' })}
                         </Lenke>
                     )}
                     <Menyknapp

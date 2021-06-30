@@ -16,7 +16,7 @@ export const RevurderingBunnknapper = (props: {
     onLagreOgFortsettSenereClickSpinner?: boolean;
     nesteKnappTekst?: string;
 }) => {
-    const intl = useI18n({ messages: { ...sharedI18n } });
+    const { intl } = useI18n({ messages: { ...sharedI18n } });
 
     return (
         <div>

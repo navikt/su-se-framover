@@ -18,7 +18,7 @@ import AttesterRevurdering from './attesterRevurdering/AttesterRevurdering';
 const Attestering = () => {
     const dispatch = useAppDispatch();
     const urlParams = Routes.useRouteParams<typeof Routes.attestering>();
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     const { sak, søker } = useAppSelector((s) => ({ sak: s.sak.sak, søker: s.søker.søker }));
 
     useEffect(() => {

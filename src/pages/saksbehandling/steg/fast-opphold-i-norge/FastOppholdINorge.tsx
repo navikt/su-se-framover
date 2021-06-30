@@ -49,7 +49,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
-    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const formik = useFormik<FormData>({
         initialValues: {

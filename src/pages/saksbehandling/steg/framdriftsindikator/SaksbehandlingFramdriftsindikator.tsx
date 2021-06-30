@@ -30,7 +30,7 @@ const SaksbehandlingFramdriftsindikator = (props: { sakId: string; behandling: B
     const { behandlingsinformasjon } = props.behandling;
     const vilkårrekkefølge = mapToVilkårsinformasjon(behandlingsinformasjon);
     const beregningsrekkefølge = vilkårsinformasjonForBeregningssteg(props.behandling);
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     const vilkårUrl = (vt: Vilkårtype) =>
         Routes.saksbehandlingVilkårsvurdering.createURL({

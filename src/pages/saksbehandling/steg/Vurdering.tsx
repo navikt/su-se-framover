@@ -12,7 +12,7 @@ export const Vurderingknapper = (props: {
     onLagreOgFortsettSenereClick(): void;
     nesteKnappTekst?: string;
 }) => {
-    const intl = useI18n({ messages: { ...sharedI18n } });
+    const { intl } = useI18n({ messages: { ...sharedI18n } });
 
     return (
         <div className={styles.buttonContainer}>

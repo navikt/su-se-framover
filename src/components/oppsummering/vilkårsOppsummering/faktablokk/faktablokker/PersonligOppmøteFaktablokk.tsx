@@ -15,7 +15,7 @@ import messages from './faktablokker-nb';
 import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
 
 export const PersonligOppmøteFaktablokk = (props: FaktablokkProps) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     return (
         <Faktablokk
@@ -56,7 +56,7 @@ export const PersonligOppmøteFaktablokk = (props: FaktablokkProps) => {
 };
 
 export const PersonligOppmøteVilkårsblokk = (props: VilkårsblokkProps<'personligOppmøte'>) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: {
             ...messages,
             ...saksbehandlingMessages,

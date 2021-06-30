@@ -39,7 +39,7 @@ const VilkårsOppsummering = (props: {
     behandlingstatus: Behandlingsstatus;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     const vilkårsinformasjon = mapToVilkårsinformasjon(props.behandlingsinformasjon);
 
     return (

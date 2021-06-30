@@ -60,21 +60,21 @@ const Uførevilkårblokk = (props: {
     revurdering: Revurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
-    const intl = useI18n({ messages });
+    const i18n = useI18n({ messages });
     return pipe(
         O.fromNullable(props.revurdering.grunnlagsdataOgVilkårsvurderinger.uføre),
         O.fold(
             () => null,
             (uførevilkår) => (
-                <Rad radTittel={intl.formatMessage({ id: 'radTittel.uførhet' })}>
+                <Rad radTittel={i18n.formatMessage('radTittel.uførhet')}>
                     {{
-                        venstre: <Vilkårvisning grunnlagsblokker={getUførevilkårgrunnlagsblokker(uførevilkår, intl)} />,
+                        venstre: <Vilkårvisning grunnlagsblokker={getUførevilkårgrunnlagsblokker(uførevilkår, i18n)} />,
                         høyre: pipe(
                             O.fromNullable(props.grunnlagsdataOgVilkårsvurderinger.uføre),
                             O.fold(
                                 () => null,
                                 (grunnlag) => (
-                                    <Vilkårvisning grunnlagsblokker={getUførevilkårgrunnlagsblokker(grunnlag, intl)} />
+                                    <Vilkårvisning grunnlagsblokker={getUførevilkårgrunnlagsblokker(grunnlag, i18n)} />
                                 )
                             )
                         ),
@@ -89,18 +89,18 @@ const Bosituasjonblokk = (props: {
     revurdering: Revurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
-    const intl = useI18n({ messages });
+    const i18n = useI18n({ messages });
 
     return pipe(
         O.fromNullable(hentBosituasjongrunnlag(props.revurdering.grunnlagsdataOgVilkårsvurderinger)),
         O.fold(
             () => null,
             (bosituasjongrunnlag) => (
-                <Rad radTittel={intl.formatMessage({ id: 'radTittel.bosituasjon' })}>
+                <Rad radTittel={i18n.formatMessage('radTittel.bosituasjon')}>
                     {{
                         venstre: (
                             <Vilkårvisning
-                                grunnlagsblokker={getBosituasjongrunnlagsblokker(bosituasjongrunnlag, intl)}
+                                grunnlagsblokker={getBosituasjongrunnlagsblokker(bosituasjongrunnlag, i18n)}
                             />
                         ),
                         høyre: pipe(
@@ -108,7 +108,7 @@ const Bosituasjonblokk = (props: {
                             O.fold(
                                 () => null,
                                 (grunnlag) => (
-                                    <Vilkårvisning grunnlagsblokker={getBosituasjongrunnlagsblokker(grunnlag, intl)} />
+                                    <Vilkårvisning grunnlagsblokker={getBosituasjongrunnlagsblokker(grunnlag, i18n)} />
                                 )
                             )
                         ),
@@ -149,7 +149,7 @@ const Formueblokk = (props: {
     revurdering: Revurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     return pipe(
         O.fromNullable(props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue),
@@ -179,7 +179,7 @@ const Vedtaksinformasjon = (props: {
     revurdering: Revurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     const skalViseEndringerIOppsummering = Object.entries(props.revurdering.informasjonSomRevurderes)
         .filter(([informasjon]) => informasjon !== InformasjonSomRevurderes.Inntekt)

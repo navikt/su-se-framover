@@ -110,7 +110,7 @@ const Uføreperiodevurdering = (props: {
     maxDate: Date;
     onRemoveClick(): void;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     const value = useWatch({ control: props.control, name: `grunnlag.${props.index}` as `grunnlag.0` });
 
     React.useEffect(() => {
@@ -229,7 +229,7 @@ const Uføreperiodevurdering = (props: {
 };
 
 const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeUrl: string; nesteUrl: string }) => {
-    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const dispatch = useAppDispatch();
     const history = useHistory();
 
@@ -385,7 +385,7 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
 };
 
 const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger }) => {
-    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
     return (
         <div>
             <Systemtittel className={styles.grunnlagsdataHeading}>

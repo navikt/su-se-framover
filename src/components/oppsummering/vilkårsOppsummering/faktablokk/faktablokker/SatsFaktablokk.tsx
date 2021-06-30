@@ -18,7 +18,7 @@ import messages from './faktablokker-nb';
 import { FaktablokkProps } from './faktablokkUtils';
 
 export const SatsFaktablokk = (props: FaktablokkProps) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     const fakta = [];
 
@@ -71,7 +71,7 @@ export const SatsFaktablokk = (props: FaktablokkProps) => {
 };
 
 export const SatsVilkårsblokk = (props: { bosituasjon: Bosituasjon; søknadInnhold: SøknadInnhold }) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: {
             ...messages,
             ...saksbehandlingMessages,

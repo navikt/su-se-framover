@@ -25,7 +25,7 @@ const index = (props: { nesteUrl: string }) => {
     const [hasSubmitted, setHasSubmitted] = React.useState<boolean>(false);
     const [erBekreftet, setErBekreftet] = React.useState<boolean>(false);
 
-    const intl = useI18n({ messages: nb });
+    const { intl } = useI18n({ messages: nb });
 
     React.useEffect(() => {
         dispatch(søknadSlice.actions.resetSøknad());

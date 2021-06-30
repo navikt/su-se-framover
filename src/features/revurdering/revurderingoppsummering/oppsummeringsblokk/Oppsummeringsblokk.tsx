@@ -15,7 +15,7 @@ import messages from './oppsummeringsblokk-nb';
 import styles from './oppsummeringsblokk.module.less';
 
 const Intro = (props: { revurdering: Revurdering }) => {
-    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
     return (
         <div className={styles.intro}>
             {[
@@ -55,7 +55,7 @@ const Oppsummeringsblokk = (props: {
     revurdering: Revurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     return (
         <Oppsummeringspanel
             tittel={intl.formatMessage({ id: 'heading' })}

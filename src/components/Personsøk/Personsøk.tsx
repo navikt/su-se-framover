@@ -28,7 +28,7 @@ interface PersonsøkProps {
 const Personsøk = (props: PersonsøkProps) => {
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     const [input, setInput] = React.useState('');
     const [fnrValidation, setFnrValidation] = React.useState<ValidationResult | null>(null);

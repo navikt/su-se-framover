@@ -54,7 +54,7 @@ import styles from './formue.module.less';
 const Formue = (props: RevurderingProps) => {
     const formuegrenser = props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue.formuegrenser;
     const history = useHistory();
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     const [epsStatus, hentEPS] = useApiCall(personApi.fetchPerson);
     const epsFnr = hentBosituasjongrunnlag(props.revurdering.grunnlagsdataOgVilkårsvurderinger).fnr;
     const [lagreFormuegrunnlagStatus, lagreFormuegrunnlagAction] = useAsyncActionCreator(lagreFormuegrunnlag);
@@ -155,7 +155,7 @@ const FormueBlokk = (props: {
     triggerValidation: UseFormTrigger<FormueFormData>;
     onSlettClick: (index: number) => void;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     const blokkName = `formue.${props.blokkIndex}` as const;
     const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(
         regnUtFormDataVerdier(props.blokkField.søkersFormue)
@@ -319,7 +319,7 @@ const FormuePanel = (props: {
     formController: Control<FormueFormData>;
     triggerValidation: UseFormTrigger<FormueFormData>;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     const [åpen, setÅpen] = useState<boolean>(false);
     const formueTilhører = props.tilhører === 'Søkers' ? 'søkersFormue' : 'epsFormue';
     const panelName = `formue.${props.blokkIndex}.${formueTilhører}` as const;

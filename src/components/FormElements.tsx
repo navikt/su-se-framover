@@ -23,7 +23,7 @@ export const JaNeiSpørsmål = (props: {
     hjelpetekstBody?: string;
     description?: string;
 }) => {
-    const intl = useI18n({ messages: nb });
+    const { intl } = useI18n({ messages: nb });
     return (
         <RadioGruppe
             className={classNames(styles.janeisporsmal, props.className)}

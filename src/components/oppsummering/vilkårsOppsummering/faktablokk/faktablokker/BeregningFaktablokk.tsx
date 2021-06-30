@@ -8,7 +8,7 @@ import messages from './faktablokker-nb';
 import { FaktablokkProps } from './faktablokkUtils';
 
 const BeregningFaktablokk = (props: FaktablokkProps) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     return (
         <div>

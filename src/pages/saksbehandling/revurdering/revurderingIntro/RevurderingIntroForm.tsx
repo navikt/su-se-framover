@@ -88,7 +88,7 @@ const informasjonSomRevurderesMessageId = (i: InformasjonSomRevurderes) => {
 };
 
 const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
-    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const [submittedStatus, setSubmittedStatus] = useState<SubmittedStatus>(SubmittedStatus.NOT_SUBMITTED);
 
     const hasSubmitted = () => submittedStatus === SubmittedStatus.NESTE || submittedStatus === SubmittedStatus.LAGRE;

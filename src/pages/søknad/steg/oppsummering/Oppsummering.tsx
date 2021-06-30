@@ -22,7 +22,7 @@ import Søknadoppsummering from './Søknadoppsummering/Søknadoppsummering';
 const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string; søker: Person }) => {
     const history = useHistory();
     const [søknadFraStore, innsending] = useAppSelector((s) => [s.soknad, s.innsending.søknad]);
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     const dispatch = useAppDispatch();
 
     const handleSubmit = async () => {

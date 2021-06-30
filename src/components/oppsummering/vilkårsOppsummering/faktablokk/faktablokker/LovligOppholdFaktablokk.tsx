@@ -16,7 +16,7 @@ import messages from './faktablokker-nb';
 import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
 
 export const LovligOppholdFaktablokk = (props: FaktablokkProps) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: {
             ...messages,
             ...søknadMessages,
@@ -88,7 +88,7 @@ const createFakta = (verdi: Nullable<string>, tittel: string) => {
 };
 
 export const LovligOppholdVilkårsblokk = (props: VilkårsblokkProps<'lovligOpphold'>) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: {
             ...messages,
             ...saksbehandlingMessages,
