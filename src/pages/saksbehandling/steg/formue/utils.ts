@@ -64,7 +64,6 @@ export function getFormue(
         borSøkerMedEPS:
             behandlingsFormue?.borSøkerMedEPS ??
             søknadsInnhold.boforhold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
-        // TODO ai: støtte flere bosituasjonsgrunnlag senare når det blir aktuellt
         epsFnr:
             hentBosituasjongrunnlag(grunnlagsdata)?.fnr ??
             søknadsInnhold.boforhold.ektefellePartnerSamboer?.fnr ??
