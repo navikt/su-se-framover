@@ -71,7 +71,7 @@ const schema = yup.object<FormData>({
 });
 
 const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
-    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const history = useHistory();
     const [savingState, setSavingState] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const dispatch = useAppDispatch();

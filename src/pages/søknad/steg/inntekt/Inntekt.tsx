@@ -365,7 +365,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
         );
     };
 
-    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
     return (
         <RawIntlProvider value={intl}>
             <div className={sharedStyles.container}>

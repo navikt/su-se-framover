@@ -71,7 +71,7 @@ const schema = yup.object<FormData>({
 
 const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.attesterRevurdering>();
-    const intl = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
     const dispatch = useAppDispatch();
     const history = useHistory();

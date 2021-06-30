@@ -9,7 +9,7 @@ import messages from './formuestatus-nb';
 import styles from './formuestatus.module.less';
 
 const Formuestatus = (props: { bekreftetFormue: number; erVilkårOppfylt: boolean }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     return (
         <div className={styles.statusContainer}>

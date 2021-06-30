@@ -22,7 +22,7 @@ const FormuevilkårOppsummering = (props: { gjeldendeFormue: FormueVilkår }) =>
 };
 
 export const Formuevurdering = ({ vurdering }: { vurdering: VurderingsperiodeFormue }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     return (
         <div>

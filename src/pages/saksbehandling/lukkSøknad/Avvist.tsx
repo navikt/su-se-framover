@@ -36,7 +36,7 @@ interface AvvistProps {
 const Avvist = (props: AvvistProps) => {
     const dispatch = useAppDispatch();
     const urlParams = Routes.useRouteParams<typeof Routes.avsluttSøknadsbehandling>();
-    const intl = useI18n({ messages: nb });
+    const { intl } = useI18n({ messages: nb });
 
     const onSeBrevClick = useCallback(() => {
         if (

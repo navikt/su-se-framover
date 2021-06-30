@@ -33,7 +33,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.avsluttSøknadsbehandling>();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
     const søknad = props.sak.søknader.find((s) => s.id === urlParams.soknadId);
-    const intl = useI18n({ messages: nb });
+    const { intl } = useI18n({ messages: nb });
     const history = useHistory();
 
     const formik = useFormik<LukkSøknadFormData>({

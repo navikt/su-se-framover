@@ -22,7 +22,7 @@ import styles from './faktablokker.module.less';
 import { FaktablokkProps } from './faktablokkUtils';
 
 export const FormueFaktablokk = (props: FaktablokkProps) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     const totalFormueFraSøknad = useMemo(() => {
         const søkersFormueFraSøknad = kalkulerFormueFraSøknad(props.søknadInnhold.formue);
@@ -213,7 +213,7 @@ export const FormueVilkårsblokk = (props: {
     formue: Behandlingsinformasjon['formue'];
     ektefelle: { fnr: Nullable<string> };
 }) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: {
             ...messages,
             ...saksbehandlingMessages,

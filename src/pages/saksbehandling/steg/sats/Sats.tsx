@@ -140,7 +140,7 @@ const getValidationSchema = (eps: Nullable<Person>) => {
 
 const Sats = (props: VilkårsvurderingBaseProps) => {
     const [epsStatus, fetchEps] = useApiCall(fetchPerson);
-    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const history = useHistory();
     const epsFnr = hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr;
 

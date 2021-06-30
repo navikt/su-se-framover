@@ -72,7 +72,7 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
     const locationState = useNotificationFromLocation();
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     const åpneSøknader = props.sak.søknader
         .filter((søknad) => {

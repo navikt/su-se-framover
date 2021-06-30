@@ -36,7 +36,7 @@ export const FnrInput = ({
 }: FnrInputProps) => {
     const [person, setPerson] = useState<RemoteData.RemoteData<ApiError, personApi.Person>>(RemoteData.initial);
     const [harIkkeTilgang, setHarIkkeTilgang] = useState<boolean>(false);
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     async function fetchPerson(fødselsnummer: string) {
         setHarIkkeTilgang(false);

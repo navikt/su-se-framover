@@ -194,7 +194,7 @@ const StartUtfylling = () => {
     const { søker: søkerFraStore } = useAppSelector((s) => s.søker);
     const søknad = useAppSelector((s) => s.soknad);
     const { step } = useParams<{ step: Søknadsteg }>();
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     const user = useUserContext();
     const history = useHistory();
 

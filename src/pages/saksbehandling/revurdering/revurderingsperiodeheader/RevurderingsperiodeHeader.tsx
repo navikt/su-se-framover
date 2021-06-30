@@ -9,7 +9,7 @@ import messages from './revurderingsperiodeheader-nb';
 import styles from './revurderingsperiodeheader.module.less';
 
 const RevurderingsperiodeHeader = (props: { periode: Periode<string> }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     return (
         <div className={styles.container}>
             <Systemtittel className={styles.tittel}>{intl.formatMessage({ id: 'heading' })}</Systemtittel>

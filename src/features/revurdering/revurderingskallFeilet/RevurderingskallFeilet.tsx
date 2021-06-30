@@ -95,7 +95,7 @@ export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMes
 };
 
 const RevurderingskallFeilet = (props: { error?: ApiError }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     return (
         <AlertStripeFeil className={styles.alertstripe}>

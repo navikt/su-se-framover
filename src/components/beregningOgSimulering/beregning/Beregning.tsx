@@ -79,7 +79,7 @@ function getInitialValues(beregning: Nullable<Beregning>): FormData {
 
 const Beregning = (props: VilkårsvurderingBaseProps) => {
     const dispatch = useAppDispatch();
-    const intl = useI18n({ messages: { ...sharedI18n, ...messages, ...fradragstypeMessages } });
+    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages, ...fradragstypeMessages } });
     const [needsBeregning, setNeedsBeregning] = useState(false);
 
     const { beregningStatus, simuleringStatus } = useAppSelector((state) => state.sak);

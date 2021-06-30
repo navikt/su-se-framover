@@ -21,7 +21,7 @@ import styles from './oppsummeringPageForms.module.less';
 const VedtaksbrevInput = (
     props: { sakId: string; revurderingId: string } & Omit<BrevInputProps, 'tittel' | 'placeholder' | 'onVisBrevClick'>
 ) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     return (
         <BrevInput
@@ -44,7 +44,7 @@ const VedtaksbrevInput = (
 const ForhåndsvarselbrevInput = (
     props: { sakId: string; revurderingId: string } & Omit<BrevInputProps, 'tittel' | 'placeholder' | 'onVisBrevClick'>
 ) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     return (
         <BrevInput
@@ -64,7 +64,7 @@ const BeslutningEtterForhåndsvarselRadios = (props: {
     feil?: string;
     onChange(beslutning: BeslutningEtterForhåndsvarsling): void;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     const name = 'beslutningEtterForhåndsvarsel';
     return (
         <RadioGruppe
@@ -109,7 +109,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
         begrunnelse: string;
     }): void;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     interface FormData {
         resultatEtterForhåndsvarsel: Nullable<BeslutningEtterForhåndsvarsling>;
@@ -214,7 +214,7 @@ export const VelgForhåndsvarselForm = (props: {
         fritekstTilBrev: Nullable<string>;
     }
 
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     const form = useForm<FormData>({
         defaultValues: {
@@ -315,7 +315,7 @@ export const SendTilAttesteringForm = (props: {
     brevsending: 'aldriSende' | 'alltidSende' | 'kanVelge';
     onSubmit(args: { fritekstTilBrev: string; skalFøreTilBrevutsending: boolean }): void;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     interface FormData {
         tekstTilVedtaksbrev: string;
         skalFøreTilBrevutsending: boolean;

@@ -7,7 +7,7 @@ import { useI18n } from '~lib/hooks';
 import { Revurdering } from '~types/Revurdering';
 
 const RevurderingÅrsakOgBegrunnelse = (props: { revurdering: Revurdering; className?: string }) => {
-    const intl = useI18n({ messages: sharedMessages });
+    const { intl } = useI18n({ messages: sharedMessages });
     return (
         <div className={props.className}>
             <p>

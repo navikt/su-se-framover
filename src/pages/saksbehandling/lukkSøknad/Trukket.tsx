@@ -28,7 +28,7 @@ interface TrukketProps {
 const Trukket = (props: TrukketProps) => {
     const dispatch = useAppDispatch();
     const [clickedViewLetter, setClickedViewLetter] = useState<boolean>(false);
-    const intl = useI18n({ messages: nb });
+    const { intl } = useI18n({ messages: nb });
 
     const onSeBrevClick = useCallback(() => {
         if (RemoteData.isPending(props.lukketSøknadBrevutkastStatus)) {

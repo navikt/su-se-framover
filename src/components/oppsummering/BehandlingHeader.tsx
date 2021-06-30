@@ -25,7 +25,7 @@ const BehandlingHeader = (props: {
     vedtakForBehandling?: Vedtak;
     medBrevutkastknapp?: boolean;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     if (props.behandling?.attestering?.underkjennelse) {
         return (

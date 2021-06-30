@@ -52,7 +52,7 @@ const OppsummeringshandlingForm = (props: {
     feilmeldinger: ErrorMessage[];
 }) => {
     const history = useHistory();
-    const intl = useI18n({ messages: { ...messages, ...revurderingsfeilMessages } });
+    const { intl } = useI18n({ messages: { ...messages, ...revurderingsfeilMessages } });
     const feilRef = React.useRef<HTMLDivElement>(null);
 
     const [sendTilAttesteringState, sendTilAttestering] = useAsyncActionCreatorWithArgsTransformer(
@@ -249,7 +249,7 @@ const RevurderingOppsummeringPage = (props: {
     grunnlagsdataOgVilkårsvurderinger: RemoteData.RemoteData<ApiError, GrunnlagsdataOgVilkårsvurderinger>;
 }) => {
     const dispatch = useAppDispatch();
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     React.useEffect(() => {
         if (RemoteData.isInitial(props.grunnlagsdataOgVilkårsvurderinger)) {

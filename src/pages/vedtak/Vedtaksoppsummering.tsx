@@ -45,7 +45,7 @@ const vedtaksresultatToTekst = (type: VedtakType, intl: IntlShape): string => {
 /* TODO ai 16.03.2021: Denna støtter pt innvilgede revurderingsvedtak. Må sørge for att søknadsbehandling og andre resultat støttes i framtiden. */
 const Vedtaksoppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     const [fetchVedtaksbrev, setFetchVedtaksbrev] = useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const vedtak = props.sak.vedtak.find((v) => v.id === urlParams.vedtakId);
     if (!vedtak) return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;

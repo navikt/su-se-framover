@@ -207,7 +207,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
     });
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
-    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
     let adresser: Array<{ label: string; radioValue: Adresse }> = [];
 
     if (RemoteData.isSuccess(søker) && søker.value.adresse) {

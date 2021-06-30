@@ -19,7 +19,7 @@ interface Props {
 const EktefellePartnerSamboer = (props: Props) => {
     const epsFormData: EPSFormData = props.value ?? { fnr: null, alder: null, erUførFlyktning: null };
 
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     const erEpsUnder67 = useMemo(() => {
         return epsFormData.alder && epsFormData.alder < 67;

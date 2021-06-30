@@ -37,7 +37,7 @@ const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
     const history = useHistory();
 
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     const { søker, sak } = useAppSelector((s) => ({ søker: s.søker.søker, sak: s.sak.sak }));
     const dispatch = useAppDispatch();

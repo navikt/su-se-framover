@@ -29,7 +29,7 @@ import oppsummeringMessages from './søknadsoppsummering-nb';
 import styles from './søknadsoppsummering.module.less';
 
 const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søker: Person }) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: {
             ...stegMessages,
             ...uførevedtakMessages,

@@ -268,7 +268,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
         validateOnChange: hasSubmitted,
     });
 
-    const intl = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 

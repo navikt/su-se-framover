@@ -13,7 +13,7 @@ export const FormueOppsummering = ({
     formue: SøknadState['formue'];
     messages: Record<string, string>;
 }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     return (
         <>

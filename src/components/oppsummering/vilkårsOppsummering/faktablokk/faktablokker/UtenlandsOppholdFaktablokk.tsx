@@ -17,7 +17,7 @@ import styles from './faktablokker.module.less';
 import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
 
 export const UtenlandsOppholdFaktablokk = (props: FaktablokkProps) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: {
             ...messages,
         },
@@ -69,7 +69,7 @@ function formatDate(date: string) {
 }
 
 export const UtenlandsoppholdVilkårsblokk = (props: VilkårsblokkProps<'oppholdIUtlandet'>) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: {
             ...messages,
             ...saksbehandlingMessages,

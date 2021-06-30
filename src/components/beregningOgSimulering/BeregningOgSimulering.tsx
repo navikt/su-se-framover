@@ -11,7 +11,7 @@ import styles from './beregningOgSimulering.module.less';
 import { VisSimulering } from './simulering/simulering';
 
 const VisBeregningOgSimulering = (props: { behandling: Behandling }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     return props.behandling.beregning ? (
         <div className={styles.beregningOgSimuleringContainer}>
             <VisBeregning beregning={props.behandling.beregning} />

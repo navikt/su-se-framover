@@ -15,7 +15,7 @@ import messages from './beregningblokk-nb';
 import styles from './beregningblokk.module.less';
 
 const Beregningblokk = (props: { revurdering: Revurdering }) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     const alert = React.useMemo(() => {
         if (erRevurderingIngenEndring(props.revurdering)) {

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { AsyncThunk } from '@reduxjs/toolkit';
 import React, { useState } from 'react';
-import { createIntlCache, createIntl } from 'react-intl';
+import { createIntlCache, createIntl, IntlShape } from 'react-intl';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { ApiClientResult, ApiError } from '~api/apiClient';
@@ -9,13 +9,24 @@ import { useAppDispatch } from '~redux/Store';
 
 import { SuccessNotificationState } from './routes';
 
-export const useI18n = (args: { messages: Record<string, string> }) => {
+export type MessageFormatter<T extends Record<string, string>> = (id: keyof T) => string;
+export interface UseI18N<T extends Record<string, string>> {
+    intl: IntlShape;
+    formatMessage: MessageFormatter<T>;
+}
+
+export const useI18n = <T extends Record<string, string>>(args: { messages: T }): UseI18N<T> => {
     const intl = React.useMemo(() => {
         const cache = createIntlCache();
         return createIntl({ locale: 'nb-NO', messages: args.messages }, cache);
     }, [args.messages]);
 
-    return intl;
+    const formatMessage: MessageFormatter<T> = React.useCallback(
+        (id: keyof T) => intl.formatMessage({ id: id as string }),
+        [intl]
+    );
+
+    return { intl, formatMessage };
 };
 
 export const useDocTitle = (title: string) => {

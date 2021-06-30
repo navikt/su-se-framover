@@ -23,7 +23,7 @@ interface Props {
 }
 
 const Behandlingsoppsummering = (props: Props) => {
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
     const periode = props.behandling.stønadsperiode ? getPeriode(props.behandling.stønadsperiode) : null;
 
     return (
@@ -36,7 +36,7 @@ const Behandlingsoppsummering = (props: Props) => {
             />
             <div className={styles.virkningstidspunkt}>
                 <Systemtittel className={styles.tittel}>
-                    {`${intl.formatMessage({ id: 'virkningstidspunkt.tittel' })}: 
+                    {`${intl.formatMessage({ id: 'virkningstidspunkt.tittel' })}:
                     ${
                         periode
                             ? DateUtils.formatPeriode(periode, intl)

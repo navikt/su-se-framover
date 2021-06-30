@@ -15,7 +15,7 @@ import messages from './faktablokker-nb';
 import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
 
 export const InstitusjonsoppholdBlokk = (props: FaktablokkProps) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: {
             ...messages,
             ...søknadMessages,
@@ -56,7 +56,7 @@ export const InstitusjonsoppholdBlokk = (props: FaktablokkProps) => {
 };
 
 export const InstitusjonsoppholdVilkårsblokk = (props: VilkårsblokkProps<'institusjonsopphold'>) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: {
             ...messages,
             ...saksbehandlingMessages,

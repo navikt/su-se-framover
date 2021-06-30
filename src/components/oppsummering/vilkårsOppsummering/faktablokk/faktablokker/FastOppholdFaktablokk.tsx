@@ -20,7 +20,7 @@ import messages from './faktablokker-nb';
 import { FaktablokkProps, VilkårsblokkProps } from './faktablokkUtils';
 
 export const FastOppholdFaktablokk = (props: FaktablokkProps) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: {
             ...messages,
             ...flyktningstatusSøknadMessages,
@@ -77,7 +77,7 @@ const createFaktaBlokkArray = (søknadsInnhold: SøknadInnhold, intl: IntlShape)
 };
 
 export const FastOppholdVilkårsblokk = (props: VilkårsblokkProps<'fastOppholdINorge'>) => {
-    const intl = useI18n({
+    const { intl } = useI18n({
         messages: {
             ...messages,
             ...saksbehandlingMessages,

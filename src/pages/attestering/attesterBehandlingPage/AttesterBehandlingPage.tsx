@@ -243,7 +243,7 @@ const Attesteringsinnhold = ({
 
 const AttesterBehandling = (props: { sak: Sak; søker: Person }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.attesterBehandling>();
-    const intl = useI18n({ messages });
+    const { intl } = useI18n({ messages });
 
     const behandling = props.sak.behandlinger.find((x) => x.id === urlParams.behandlingId);
 
