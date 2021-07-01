@@ -1,10 +1,16 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
+import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
-import React from 'react';
+import NavFrontendSpinner from 'nav-frontend-spinner';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { hentGjeldendeGrunnlagsdataForVedtak } from '~api/revurderingApi';
 import Revurderingoppsummering from '~features/revurdering/revurderingoppsummering/Revurderingoppsummering';
-import { useI18n } from '~lib/hooks';
+import { pipe } from '~lib/fp';
+import { useApiCall, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 
 import { hentInformasjonKnyttetTilVedtak } from './utils';
@@ -14,6 +20,33 @@ import styles from './vedtaksoppsummering.module.less';
 interface Props {
     sak: Sak;
 }
+
+const RevurderingsoppsummeringWithSnapshot = (props: { revurdering: Revurdering; sakId: string; vedtakId: string }) => {
+    const [revurderingSnapshot, hentRevurderingSnapshot] = useApiCall(hentGjeldendeGrunnlagsdataForVedtak);
+
+    useEffect(() => {
+        hentRevurderingSnapshot({ sakId: props.sakId, vedtakId: props.vedtakId });
+    }, []);
+
+    return (
+        <div>
+            {pipe(
+                revurderingSnapshot,
+                RemoteData.fold(
+                    () => <NavFrontendSpinner />,
+                    () => <NavFrontendSpinner />,
+                    (error) => <AlertStripeFeil>{error?.body?.message}</AlertStripeFeil>,
+                    (snapshot) => (
+                        <Revurderingoppsummering
+                            revurdering={props.revurdering}
+                            forrigeGrunnlagsdataOgVilkårsvurderinger={snapshot}
+                        />
+                    )
+                )
+            )}
+        </div>
+    );
+};
 
 const Vedtaksoppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
@@ -28,11 +61,10 @@ const Vedtaksoppsummering = (props: Props) => {
         switch (vedtaksinformasjon?.type) {
             case 'revurdering':
                 return (
-                    <Revurderingoppsummering
+                    <RevurderingsoppsummeringWithSnapshot
                         revurdering={vedtaksinformasjon.revurdering}
-                        forrigeGrunnlagsdataOgVilkårsvurderinger={
-                            vedtaksinformasjon.forrigeBehandling.grunnlagsdataOgVilkårsvurderinger
-                        }
+                        sakId={props.sak.id}
+                        vedtakId={vedtak.id}
                     />
                 );
 
