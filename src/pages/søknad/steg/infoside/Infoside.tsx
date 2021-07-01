@@ -49,9 +49,6 @@ const Infoside = (props: { nesteUrl: string }) => {
                     <p className={styles.paragraphSpacing}>
                         <FormattedMessage id="henterInnInfo.viHenterInfo" />
                     </p>
-                    <p className={styles.paragraphSpacing}>
-                        <FormattedMessage id="henterInnInfo.viHenter" />
-                    </p>
                     <ul className={styles.list}>
                         <li className={styles.listItem}>
                             <FormattedMessage id="henterInnInfo.viHenter.personinfo" />
