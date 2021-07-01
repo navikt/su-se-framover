@@ -16,7 +16,8 @@ export const FormueInput = (props: {
         <Input
             className={props.className}
             name={props.inputName}
-            type="number"
+            type="numeric"
+            pattern="[0-9]*"
             feil={props.feil}
             defaultValue={props.defaultValue}
             onChange={props.onChange}
