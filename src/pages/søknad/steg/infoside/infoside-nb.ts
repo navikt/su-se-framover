@@ -9,8 +9,7 @@ export default {
     'henterInnInfo.ingress': 'Vi vil hente informasjon om deg',
     'henterInnInfo.viHenterInfo':
         'I tillegg til det du selv opplyser i søknaden, vil vi hente inn denne informasjonen: ',
-    'henterInnInfo.viHenter': 'Vi henter:',
-    'henterInnInfo.viHenter.personinfo': 'personinformasjon om deg og ektefelle eller samboer',
+    'henterInnInfo.viHenter.personinfo': 'personinformasjon om deg og ektefellen eller samboer',
     'henterInnInfo.viHenter.arbeidsforhold':
         'opplysninger om arbeidsforholdet ditt fra arbeidsgiver- og arbeidstakerregisteret',
     'henterInnInfo.viHenter.flyktningsstatus': 'flyktningsstatus og oppholdstillatelse fra UDI',

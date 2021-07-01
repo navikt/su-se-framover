@@ -17,7 +17,7 @@ export default {
         'Dokumentasjonen du må legge ved gjelder både søker og eventuelt ektefellen din eller samboeren din.',
     'sendeInnDokumentasjon.måLeggesVed': 'Du må legge ved dette:',
     'sendeInnDokumentasjon.måLeggesVed.punkt1': 'Kopi av pass',
-    'sendeInnDokumentasjon.måLeggesVed.punkt2': 'Kopi av grunnlaget for skatt og siste skattemelding',
+    'sendeInnDokumentasjon.måLeggesVed.punkt2': 'Kopi av grunnlaget for skatt og den siste skattemeldingen',
     'sendeInnDokumentasjon.ogsåLeggesVed': 'Du må også legge ved dette:',
     'sendeInnDokumentasjon.ogsåLeggesVed.punkt1': 'Dokumentasjon som viser at du har formue i utlandet',
     'sendeInnDokumentasjon.ogsåLeggesVed.punkt2': 'Dokumentasjon som viser at du har pensjon i utlandet',
