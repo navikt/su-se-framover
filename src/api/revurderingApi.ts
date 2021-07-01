@@ -223,7 +223,7 @@ export async function hentGjeldendeGrunnlagsdataOgVilkårsvurderinger(
     });
 }
 
-export async function hentGjeldendeGrunnlagsdataForVedtak(args: {
+export async function hentTidligereGrunnlagsdataForVedtak(args: {
     sakId: string;
     vedtakId: string;
 }): Promise<ApiClientResult<GrunnlagsdataOgVilkårsvurderinger>> {

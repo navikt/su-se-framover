@@ -3,9 +3,10 @@ import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect } from 'react';
+import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
-import { hentGjeldendeGrunnlagsdataForVedtak } from '~api/revurderingApi';
+import { hentTidligereGrunnlagsdataForVedtak } from '~api/revurderingApi';
 import Revurderingoppsummering from '~features/revurdering/revurderingoppsummering/Revurderingoppsummering';
 import { pipe } from '~lib/fp';
 import { useApiCall, useI18n } from '~lib/hooks';
@@ -21,8 +22,13 @@ interface Props {
     sak: Sak;
 }
 
-const RevurderingsoppsummeringWithSnapshot = (props: { revurdering: Revurdering; sakId: string; vedtakId: string }) => {
-    const [revurderingSnapshot, hentRevurderingSnapshot] = useApiCall(hentGjeldendeGrunnlagsdataForVedtak);
+const RevurderingsoppsummeringWithSnapshot = (props: {
+    revurdering: Revurdering;
+    sakId: string;
+    vedtakId: string;
+    intl: IntlShape;
+}) => {
+    const [revurderingSnapshot, hentRevurderingSnapshot] = useApiCall(hentTidligereGrunnlagsdataForVedtak);
 
     useEffect(() => {
         hentRevurderingSnapshot({ sakId: props.sakId, vedtakId: props.vedtakId });
@@ -35,7 +41,11 @@ const RevurderingsoppsummeringWithSnapshot = (props: { revurdering: Revurdering;
                 RemoteData.fold(
                     () => <NavFrontendSpinner />,
                     () => <NavFrontendSpinner />,
-                    (error) => <AlertStripeFeil>{error?.body?.message}</AlertStripeFeil>,
+                    (error) => (
+                        <AlertStripeFeil>
+                            {error?.body?.message ?? props.intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
+                        </AlertStripeFeil>
+                    ),
                     (snapshot) => (
                         <Revurderingoppsummering
                             revurdering={props.revurdering}
@@ -63,6 +73,7 @@ const Vedtaksoppsummering = (props: Props) => {
                 return (
                     <RevurderingsoppsummeringWithSnapshot
                         revurdering={vedtaksinformasjon.revurdering}
+                        intl={intl}
                         sakId={props.sak.id}
                         vedtakId={vedtak.id}
                     />

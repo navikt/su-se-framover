@@ -1,7 +1,7 @@
 import { erRevurderingIverksatt } from '~features/revurdering/revurderingUtils';
 import { Nullable } from '~lib/types';
 import { Behandling } from '~types/Behandling';
-import { IverksattRevurdering, Revurdering } from '~types/Revurdering';
+import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
 
@@ -12,7 +12,6 @@ interface Søknadsbehandlingsoppsummering {
 
 interface Revurderingsoppsummering {
     revurdering: IverksattRevurdering;
-    forrigeBehandling: Behandling | Revurdering;
     type: 'revurdering';
 }
 
@@ -28,14 +27,8 @@ export function hentInformasjonKnyttetTilVedtak(sak: Sak, vedtak: Vedtak): Nulla
 
     const revurdering = sak.revurderinger.find((r) => r.id === vedtak.behandlingId);
     if (revurdering && erRevurderingIverksatt(revurdering)) {
-        const forrigeBehandling = [...sak.revurderinger, ...sak.behandlinger].find(
-            (behandling) => behandling.id === revurdering.tilRevurdering.behandlingId
-        );
-        if (!forrigeBehandling) return null;
-
         return {
             revurdering: revurdering,
-            forrigeBehandling: forrigeBehandling,
             type: 'revurdering',
         };
     }
