@@ -10,6 +10,9 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
+    > :not(:last-child) {
+        margin-right: @spacing;
+    }
 
     .fjernradknapp {
         align-self: flex-end;

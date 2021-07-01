@@ -55,7 +55,7 @@ const epsFormDataSchema = yup
             .boolean()
             .when('alder', {
                 is: (val) => val < 67,
-                then: yup.boolean().required('Fyll ut om ektefelle/partner/samboer er ufør flyktning'),
+                then: yup.boolean().required('Fyll ut om ektefelle/samboer er ufør flyktning'),
                 otherwise: yup.boolean().nullable().defined(),
             })
             .defined(),
@@ -85,7 +85,7 @@ const schema = yup.object<FormData>({
         })
         .nullable()
         .defined(),
-    innlagtPåinstitusjon: yup
+    innlagtPåInstitusjon: yup
         .boolean()
         .required('Fyll ut om du har vært innlagt på instituasjon siste 3 måneder')
         .nullable(),
@@ -93,7 +93,7 @@ const schema = yup.object<FormData>({
         .string()
         .nullable()
         .defined()
-        .when('innlagtPåinstitusjon', {
+        .when('innlagtPåInstitusjon', {
             is: true,
             then: yup
                 .string()
@@ -128,7 +128,7 @@ const schema = yup.object<FormData>({
             name: 'datoForUtskivelse er etter innleggelse',
             message: 'Dato for utskrivelse må være etter innleggelse',
             test: function (val) {
-                const innlagtPåinstitusjon = this.parent.innlagtPåinstitusjon;
+                const innlagtPåinstitusjon = this.parent.innlagtPåInstitusjon;
                 const datoForInnleggelse = this.parent.datoForInnleggelse;
                 const fortsattInnlagt = this.parent.fortsattInnlagt;
 
@@ -178,7 +178,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                 delerBoligMedPersonOver18: values.delerBoligMedPersonOver18,
                 delerBoligMed: values.delerBoligMed,
                 ektefellePartnerSamboer: values.ektefellePartnerSamboer,
-                innlagtPåinstitusjon: values.innlagtPåinstitusjon,
+                innlagtPåInstitusjon: values.innlagtPåInstitusjon,
                 datoForInnleggelse: values.datoForInnleggelse,
                 datoForUtskrivelse: values.datoForUtskrivelse,
                 fortsattInnlagt: values.fortsattInnlagt,
@@ -194,7 +194,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
             delerBoligMedPersonOver18: boOgOppholdFraStore.delerBoligMedPersonOver18,
             delerBoligMed: boOgOppholdFraStore.delerBoligMed,
             ektefellePartnerSamboer: boOgOppholdFraStore.ektefellePartnerSamboer,
-            innlagtPåinstitusjon: boOgOppholdFraStore.innlagtPåinstitusjon,
+            innlagtPåInstitusjon: boOgOppholdFraStore.innlagtPåInstitusjon,
             datoForInnleggelse: boOgOppholdFraStore.datoForInnleggelse,
             datoForUtskrivelse: boOgOppholdFraStore.datoForUtskrivelse,
             fortsattInnlagt: boOgOppholdFraStore.fortsattInnlagt,
@@ -238,7 +238,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     <JaNeiSpørsmål
                         id={keyOf<FormData>('borOgOppholderSegINorge')}
                         className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="borOgOppholderINorge.label" />}
+                        legend={<FormattedMessage id="borOgOppholderSegINorge.label" />}
                         feil={formik.errors.borOgOppholderSegINorge}
                         state={formik.values.borOgOppholderSegINorge}
                         onChange={(val) => {
@@ -247,20 +247,20 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     />
                     {formik.values.borOgOppholderSegINorge === false && (
                         <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
-                            {intl.formatMessage({ id: 'borOgOppholderINorge.ikkeOppholdINorge' })}
+                            {intl.formatMessage({ id: 'borOgOppholderSegINorge.ikkeOppholdINorge' })}
                         </AlertStripe>
                     )}
 
                     <JaNeiSpørsmål
-                        id={keyOf<FormData>('innlagtPåinstitusjon')}
+                        id={keyOf<FormData>('innlagtPåInstitusjon')}
                         className={sharedStyles.sporsmal}
                         legend={<FormattedMessage id="innlagtPåInstitusjon.label" />}
-                        feil={formik.errors.innlagtPåinstitusjon}
-                        state={formik.values.innlagtPåinstitusjon}
+                        feil={formik.errors.innlagtPåInstitusjon}
+                        state={formik.values.innlagtPåInstitusjon}
                         onChange={(val) => {
                             formik.setValues((v) => ({
                                 ...v,
-                                innlagtPåinstitusjon: val,
+                                innlagtPåInstitusjon: val,
                                 datoForInnleggelse: null,
                                 datoForUtskrivelse: null,
                                 fortsattInnlagt: false,
@@ -268,7 +268,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         }}
                     />
 
-                    {formik.values.innlagtPåinstitusjon && (
+                    {formik.values.innlagtPåInstitusjon && (
                         <div className={styles.innlagtPåInstitusjonFelter}>
                             <div className={styles.datoForInnleggelseContainer}>
                                 <Label htmlFor={keyOf<FormData>('datoForInnleggelse')}>
@@ -277,7 +277,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                 <Datepicker
                                     inputProps={{
                                         name: keyOf<FormData>('datoForInnleggelse'),
-                                        placeholder: 'dd.mm.åååå',
                                         'aria-invalid': formik.errors.datoForInnleggelse ? true : false,
                                     }}
                                     value={formik.values.datoForInnleggelse ?? ''}
@@ -306,7 +305,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                                     <Datepicker
                                         inputProps={{
                                             name: keyOf<FormData>('datoForUtskrivelse'),
-                                            placeholder: 'dd.mm.åååå',
                                             'aria-invalid': formik.errors.datoForUtskrivelse ? true : false,
                                         }}
                                         value={formik.values.datoForUtskrivelse ?? ''}
@@ -352,7 +350,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     <JaNeiSpørsmål
                         id={keyOf<FormData>('delerBoligMedPersonOver18')}
                         className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="delerBolig.delerBoligMedPersonOver18" />}
+                        legend={<FormattedMessage id="delerBoligMed.delerBoligMedPersonOver18" />}
                         feil={formik.errors.delerBoligMedPersonOver18}
                         state={formik.values.delerBoligMedPersonOver18}
                         onChange={(val) => {
@@ -368,20 +366,20 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         <RadioPanelGruppe
                             className={sharedStyles.sporsmal}
                             feil={formik.errors.delerBoligMed}
-                            legend={<FormattedMessage id={'delerBolig.delerMedHvem'} />}
+                            legend={<FormattedMessage id={'delerBoligMed.delerMedHvem'} />}
                             name={keyOf<FormData>('delerBoligMed')}
                             radios={[
                                 {
                                     id: keyOf<FormData>('delerBoligMed'),
-                                    label: <FormattedMessage id={'delerBolig.eps'} />,
+                                    label: <FormattedMessage id={'delerBoligMed.eps'} />,
                                     value: DelerBoligMed.EKTEMAKE_SAMBOER,
                                 },
                                 {
-                                    label: <FormattedMessage id={'delerBolig.voksneBarn'} />,
+                                    label: <FormattedMessage id={'delerBoligMed.voksneBarn'} />,
                                     value: DelerBoligMed.VOKSNE_BARN,
                                 },
                                 {
-                                    label: <FormattedMessage id={'delerBolig.andreVoksne'} />,
+                                    label: <FormattedMessage id={'delerBoligMed.andreVoksne'} />,
                                     value: DelerBoligMed.ANNEN_VOKSEN,
                                 },
                             ]}

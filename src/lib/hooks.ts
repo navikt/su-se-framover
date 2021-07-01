@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { AsyncThunk } from '@reduxjs/toolkit';
+import { PrimitiveType, FormatXMLElementFn } from 'intl-messageformat';
 import React, { useState } from 'react';
 import { createIntlCache, createIntl, IntlShape } from 'react-intl';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -10,9 +11,18 @@ import { useAppDispatch } from '~redux/Store';
 import { SuccessNotificationState } from './routes';
 
 export type MessageFormatter<T extends Record<string, string>> = (id: keyof T) => string;
+
 export interface UseI18N<T extends Record<string, string>> {
     intl: IntlShape;
     formatMessage: MessageFormatter<T>;
+    formatMessageWithValue(
+        id: keyof T,
+        values: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>
+    ): string;
+    formatMessageWithValue<X = React.ReactNode>(
+        id: keyof T,
+        values: Record<string, PrimitiveType | FormatXMLElementFn<string, X>>
+    ): X;
 }
 
 export const useI18n = <T extends Record<string, string>>(args: { messages: T }): UseI18N<T> => {
@@ -26,7 +36,13 @@ export const useI18n = <T extends Record<string, string>>(args: { messages: T })
         [intl]
     );
 
-    return { intl, formatMessage };
+    const formatMessageWithValue = React.useCallback<UseI18N<T>['formatMessageWithValue']>(
+        <Y>(id: keyof T, values: Record<string, PrimitiveType | FormatXMLElementFn<string, Y>>): Y =>
+            intl.formatMessage({ id: id as string }, values) as Y,
+        [intl]
+    );
+
+    return { intl, formatMessage, formatMessageWithValue };
 };
 
 export const useDocTitle = (title: string) => {

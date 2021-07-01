@@ -1,4 +1,5 @@
 export default {
+    //Nøklene på tekstene må være identisk til EPS'formue spåkfilen
     'eierBolig.label': 'Eier du en bolig?',
     'eierBolig.borIBolig': 'Bor du i boligen?',
     'eierBolig.formuePåBolig': 'Formuesverdi på boligen',
@@ -20,8 +21,8 @@ export default {
     'innskudd.pengerPåKontoInkludertDepositum': 'Har du penger på konto (inkludert depositumskonto)?',
     'innskudd.beløp': 'Hvor mye penger er det på konto?',
 
-    'verdiPapir.label': 'Har du aksjer, aksjefond eller verdipapir?',
-    'verdiPapir.beløp': 'Hvor mye penger er dette verdt?',
+    'verdipapir.label': 'Har du aksjer, aksjefond eller verdipapir?',
+    'verdipapir.beløp': 'Hvor mye penger er dette verdt?',
 
     'skylderNoenMegPenger.label': 'Skylder noen deg mer enn 1000 kr?',
     'skylderNoenMegPenger.beløp': 'Hvor mye skylder de deg?',
@@ -29,6 +30,6 @@ export default {
     'harKontanter.label': 'Har du mer enn 1000 kr i kontanter?',
     'harKontanter.beløp': 'Hvor mye penger har du?',
 
-    'button.fjernRad': 'Fjern rad',
-    'button.leggTil': 'Legg til et annet kjøretøy',
+    'button.fjern.kjøretøy': 'Fjern kjøretøy',
+    'button.leggTil.kjøretøy': 'Legg til et annet kjøretøy',
 };

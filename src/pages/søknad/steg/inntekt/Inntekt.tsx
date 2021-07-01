@@ -2,14 +2,13 @@ import { useFormik, FormikErrors } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Input } from 'nav-frontend-skjema';
 import * as React from 'react';
-import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
-import { keyOf, Nullable } from '~lib/types';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import { keyOf } from '~lib/types';
+import { formikErrorsHarFeil, formikErrorsTilFeiloppsummering, inntektsValideringSchema } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
@@ -21,114 +20,6 @@ import styles from './inntekt.module.less';
 
 type FormData = SøknadState['inntekt'];
 
-const trygdeytelserIUtlandetSchema = yup.object({
-    beløp: yup
-        .number()
-        .typeError('Den lokale valutaen må være et tall')
-        .positive()
-        .required('Fyll ut hvor mye du får i lokal valuta') as yup.Schema<unknown> as yup.Schema<string>,
-    type: yup.string().required('Fyll ut hvilken type ytelsen er'),
-    valuta: yup.string().required('Fyll ut valutaen for ytelsen'),
-});
-
-const schema = yup.object<FormData>({
-    harForventetInntekt: yup.boolean().nullable().required('Fyll ut om du forventer arbeidsinntekt'),
-    forventetInntekt: yup
-        .number()
-        .nullable()
-        .defined()
-        .when('harForventetInntekt', {
-            is: true,
-            then: yup
-                .number()
-                .typeError('Forventet inntekt etter uførhet må være et tall')
-                .label('Forventet inntekt etter uførhet')
-                .nullable(false)
-                .positive(),
-            otherwise: yup.number(),
-        }) as yup.Schema<Nullable<string>>,
-    harMottattSosialstønad: yup.boolean().nullable().required('Fyll ut om du har mottatt sosialstønad siste 3 måneder'),
-    sosialStønadBeløp: yup
-        .number()
-        .nullable()
-        .when('harMottattSosialstønad', {
-            is: true,
-            then: yup
-                .number()
-                .typeError('Beløp på sosialstønad må være et tall')
-                .label('Beløp på sosialstønad')
-                .nullable()
-                .positive(),
-            otherwise: yup.number(),
-        }) as yup.Schema<Nullable<string>>,
-    mottarPensjon: yup.boolean().nullable().required('Fyll ut om du mottar pensjon'),
-    pensjonsInntekt: yup
-        .array(
-            yup
-                .object({
-                    ordning: yup.string().required('Fyll ut hvem du mottar pensjon fra'),
-                    beløp: yup
-                        .number()
-                        .defined()
-                        .label('Pensjonsinntekt')
-                        .typeError('Pensjonsinntekt må et være tall')
-                        .positive()
-                        .required() as unknown as yup.Schema<string>,
-                })
-                .required()
-        )
-        .defined()
-        .when('mottarPensjon', {
-            is: true,
-            then: yup.array().min(1).required(),
-            otherwise: yup.array().max(0),
-        }),
-    andreYtelserINav: yup.boolean().nullable().required('Fyll ut om du har andre ytelser i NAV'),
-    andreYtelserINavYtelse: yup
-        .string()
-        .nullable()
-        .defined()
-        .when('andreYtelserINav', {
-            is: true,
-            then: yup.string().nullable().min(1).required('Fyll ut hvilken ytelse det er'),
-        }),
-    andreYtelserINavBeløp: yup
-        .number()
-        .nullable()
-        .defined()
-        .when('andreYtelserINav', {
-            is: true,
-            then: yup
-                .number()
-                .typeError('Beløp på andre ytelser må være et tall')
-                .label('Beløp på andre ytelser')
-                .nullable(false)
-                .positive(),
-            otherwise: yup.number(),
-        }) as yup.Schema<Nullable<string>>,
-    søktAndreYtelserIkkeBehandlet: yup
-        .boolean()
-        .nullable()
-        .required('Fyll ut om du har søkt på andre trygdeytelser som du ikke har fått svar på'),
-    søktAndreYtelserIkkeBehandletBegrunnelse: yup
-        .string()
-        .nullable()
-        .defined()
-        .when('søktAndreYtelserIkkeBehandlet', {
-            is: true,
-            then: yup.string().nullable().min(1).required('Fyll ut hvilke andre ytelser du ikke har fått svar på'),
-        }),
-    harTrygdeytelserIUtlandet: yup.boolean().nullable().required('Fyll ut om du har trygdeytelser i utlandet'),
-    trygdeytelserIUtlandet: yup
-        .array(trygdeytelserIUtlandetSchema.required())
-        .defined()
-        .when('harTrygdeytelserIUtlandet', {
-            is: true,
-            then: yup.array().min(1).required(),
-            otherwise: yup.array().max(0),
-        }),
-});
-
 const TrygdeytelserInputFelter = (props: {
     arr: Array<{ beløp: string; type: string; valuta: string }>;
     errors: string | string[] | Array<FormikErrors<{ beløp: string; type: string; valuta: string }>> | undefined;
@@ -137,6 +28,8 @@ const TrygdeytelserInputFelter = (props: {
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
 }) => {
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+
     return (
         <ul>
             {props.arr.map((input, idx) => {
@@ -152,7 +45,7 @@ const TrygdeytelserInputFelter = (props: {
                             <Input
                                 id={beløpId}
                                 name={beløpId}
-                                label={<FormattedMessage id="trygdeytelserIUtlandet.beløp" />}
+                                label={formatMessage('trygdeytelserIUtlandet.beløp')}
                                 value={input.beløp}
                                 onChange={(e) => {
                                     props.onChange({
@@ -171,7 +64,7 @@ const TrygdeytelserInputFelter = (props: {
                             <Input
                                 id={valutaId}
                                 name={valutaId}
-                                label={<FormattedMessage id="trygdeytelserIUtlandet.valuta" />}
+                                label={formatMessage('trygdeytelserIUtlandet.valuta')}
                                 value={input.valuta}
                                 onChange={(e) => {
                                     props.onChange({
@@ -187,7 +80,7 @@ const TrygdeytelserInputFelter = (props: {
                             <Input
                                 id={typeId}
                                 name={typeId}
-                                label={<FormattedMessage id="trygdeytelserIUtlandet.ytelse" />}
+                                label={formatMessage('trygdeytelserIUtlandet.ytelse')}
                                 value={input.type}
                                 onChange={(e) => {
                                     props.onChange({
@@ -207,7 +100,7 @@ const TrygdeytelserInputFelter = (props: {
                                 onClick={() => props.onFjernClick(idx)}
                                 htmlType="button"
                             >
-                                <FormattedMessage id="button.fjernRad" />
+                                {formatMessage('button.fjern.trygdeytelse')}
                             </Knapp>
                         )}
                         {errorForLinje && typeof errorForLinje === 'string' && errorForLinje}
@@ -216,7 +109,7 @@ const TrygdeytelserInputFelter = (props: {
             })}
             <div className={sharedStyles.leggTilFeltKnapp}>
                 <Knapp onClick={() => props.onLeggTilClick()} htmlType="button">
-                    <FormattedMessage id="button.leggTil.trygdeytelse" />
+                    {formatMessage('button.leggTil.trygdeytelse')}
                 </Knapp>
             </div>
         </ul>
@@ -229,6 +122,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const formik = useFormik<FormData>({
         initialValues: {
@@ -250,7 +144,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
             save(values);
             history.push(props.nesteUrl);
         },
-        validationSchema: schema,
+        validationSchema: inntektsValideringSchema('søker'),
         validateOnChange: hasSubmitted,
     });
 
@@ -286,45 +180,48 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
                         errorForLinje && typeof errorForLinje !== 'string' && errorForLinje[key];
 
                     return (
-                        <div className={sharedStyles.inputFelterDiv} key={index}>
-                            <Input
-                                id={feltId('ordning')}
-                                className={sharedStyles.inputFelt}
-                                label={<FormattedMessage id="mottarPensjon.fra" />}
-                                value={item.ordning}
-                                onChange={(e) =>
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
-                                            idx === index ? { ordning: e.target.value, beløp: item.beløp } : i
-                                        ),
-                                    }))
-                                }
-                                // Dette elementet vises ikke ved sidelast
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
-                                autoFocus
-                                autoComplete="on"
-                                feil={feltError('ordning')}
-                            />
-                            <Input
-                                id={feltId('beløp')}
-                                className={sharedStyles.inputFelt}
-                                label={<FormattedMessage id="mottarPensjon.beløp" />}
-                                value={item.beløp}
-                                onChange={(e) =>
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
-                                            idx === index ? { ordning: item.ordning, beløp: e.target.value } : i
-                                        ),
-                                    }))
-                                }
-                                autoComplete="off"
-                                feil={feltError('beløp')}
-                            />
+                        <div className={styles.pensjongiverContainer} key={index}>
+                            <div className={styles.pensjonsgiverInputFelter}>
+                                <Input
+                                    id={feltId('ordning')}
+                                    className={sharedStyles.inputFelt}
+                                    label={formatMessage('mottarPensjon.fra')}
+                                    value={item.ordning}
+                                    onChange={(e) =>
+                                        formik.setValues((v) => ({
+                                            ...v,
+                                            pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
+                                                idx === index ? { ordning: e.target.value, beløp: item.beløp } : i
+                                            ),
+                                        }))
+                                    }
+                                    // Dette elementet vises ikke ved sidelast
+                                    // eslint-disable-next-line jsx-a11y/no-autofocus
+                                    autoFocus
+                                    autoComplete="on"
+                                    feil={feltError('ordning')}
+                                />
+                                <Input
+                                    id={feltId('beløp')}
+                                    className={sharedStyles.inputFelt}
+                                    label={formatMessage('mottarPensjon.beløp')}
+                                    value={item.beløp}
+                                    onChange={(e) =>
+                                        formik.setValues((v) => ({
+                                            ...v,
+                                            pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
+                                                idx === index ? { ordning: item.ordning, beløp: e.target.value } : i
+                                            ),
+                                        }))
+                                    }
+                                    autoComplete="off"
+                                    feil={feltError('beløp')}
+                                />
+                            </div>
                             {formik.values.pensjonsInntekt.length > 1 && (
                                 <Knapp
                                     htmlType="button"
+                                    kompakt
                                     className={sharedStyles.fjernFeltLink}
                                     onClick={(e) => {
                                         e.preventDefault();
@@ -337,7 +234,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
                                         }));
                                     }}
                                 >
-                                    {intl.formatMessage({ id: 'button.fjernRad' })}
+                                    {formatMessage('button.fjern.pensjonsgiver')}
                                 </Knapp>
                             )}
                         </div>
@@ -353,265 +250,262 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
                             }));
                         }}
                     >
-                        <FormattedMessage id="button.leggTil.pensjonsgiver" />
+                        {formatMessage('button.leggTil.pensjonsgiver')}
                     </Knapp>
                 </div>
             </div>
         );
     };
 
-    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
     return (
-        <RawIntlProvider value={intl}>
-            <form
-                onSubmit={(e) => {
-                    setHasSubmitted(true);
-                    formik.handleSubmit(e);
-                    setTimeout(() => {
-                        if (feiloppsummeringref.current) {
-                            feiloppsummeringref.current.focus();
-                        }
-                    }, 0);
+        <form
+            onSubmit={(e) => {
+                setHasSubmitted(true);
+                formik.handleSubmit(e);
+                setTimeout(() => {
+                    if (feiloppsummeringref.current) {
+                        feiloppsummeringref.current.focus();
+                    }
+                }, 0);
+            }}
+            className={sharedStyles.container}
+        >
+            <div className={sharedStyles.formContainer}>
+                <JaNeiSpørsmål
+                    id={keyOf<FormData>('harForventetInntekt')}
+                    className={sharedStyles.sporsmal}
+                    legend={formatMessage('forventerInntekt.label')}
+                    description={formatMessage('forventerInntekt.hjelpetekst')}
+                    feil={formik.errors.harForventetInntekt}
+                    state={formik.values.harForventetInntekt}
+                    onChange={(val) =>
+                        formik.setValues((v) => ({
+                            ...v,
+                            harForventetInntekt: val,
+                            forventetInntekt: null,
+                        }))
+                    }
+                />
+
+                {formik.values.harForventetInntekt && (
+                    <Input
+                        id={keyOf<FormData>('forventetInntekt')}
+                        feil={formik.errors.forventetInntekt}
+                        bredde="S"
+                        className={sharedStyles.marginBottom}
+                        value={formik.values.forventetInntekt || ''}
+                        label={formatMessage('forventerInntekt.beløp')}
+                        onChange={formik.handleChange}
+                        autoComplete="off"
+                        // Dette elementet vises ikke ved sidelast
+                        // eslint-disable-next-line jsx-a11y/no-autofocus
+                        autoFocus
+                    />
+                )}
+
+                <JaNeiSpørsmål
+                    id={keyOf<FormData>('andreYtelserINav')}
+                    className={sharedStyles.sporsmal}
+                    legend={formatMessage('andreYtelserINAV.label')}
+                    feil={formik.errors.andreYtelserINav}
+                    state={formik.values.andreYtelserINav}
+                    onChange={(val) =>
+                        formik.setValues((v) => ({
+                            ...v,
+                            andreYtelserINav: val,
+                            andreYtelserINavYtelse: null,
+                            andreYtelserINavBeløp: null,
+                        }))
+                    }
+                />
+
+                {formik.values.andreYtelserINav && (
+                    <div className={sharedStyles.inputFelterDiv}>
+                        <Input
+                            id={keyOf<FormData>('andreYtelserINavYtelse')}
+                            name={keyOf<FormData>('andreYtelserINavYtelse')}
+                            label={formatMessage('andreYtelserINAV.ytelse')}
+                            value={formik.values.andreYtelserINavYtelse || ''}
+                            onChange={formik.handleChange}
+                            feil={formik.errors.andreYtelserINavYtelse}
+                            autoComplete="off"
+                            // Dette elementet vises ikke ved sidelast
+                            // eslint-disable-next-line jsx-a11y/no-autofocus
+                            autoFocus
+                        />
+                        <Input
+                            id={keyOf<FormData>('andreYtelserINavBeløp')}
+                            name={keyOf<FormData>('andreYtelserINavBeløp')}
+                            label={formatMessage('andreYtelserINAV.beløp')}
+                            value={formik.values.andreYtelserINavBeløp || ''}
+                            onChange={formik.handleChange}
+                            feil={formik.errors.andreYtelserINavBeløp}
+                            autoComplete="off"
+                        />
+                    </div>
+                )}
+
+                <JaNeiSpørsmål
+                    id={keyOf<FormData>('søktAndreYtelserIkkeBehandlet')}
+                    className={sharedStyles.sporsmal}
+                    legend={formatMessage('søktAndreYtelserIkkeBehandlet.label')}
+                    feil={formik.errors.søktAndreYtelserIkkeBehandlet}
+                    description={formatMessage('søktAndreYtelserIkkeBehandlet.hjelpetekst')}
+                    state={formik.values.søktAndreYtelserIkkeBehandlet}
+                    onChange={(val) =>
+                        formik.setValues((v) => ({
+                            ...v,
+                            søktAndreYtelserIkkeBehandlet: val,
+                            søktAndreYtelserIkkeBehandletBegrunnelse: null,
+                        }))
+                    }
+                />
+
+                {formik.values.søktAndreYtelserIkkeBehandlet && (
+                    <Input
+                        className={sharedStyles.marginBottom}
+                        id={keyOf<FormData>('søktAndreYtelserIkkeBehandletBegrunnelse')}
+                        name={keyOf<FormData>('søktAndreYtelserIkkeBehandletBegrunnelse')}
+                        bredde="XXL"
+                        label={formatMessage('søktAndreYtelserIkkeBehandlet.begrunnelse')}
+                        value={formik.values.søktAndreYtelserIkkeBehandletBegrunnelse || ''}
+                        onChange={formik.handleChange}
+                        feil={formik.errors.søktAndreYtelserIkkeBehandletBegrunnelse}
+                        autoComplete="off"
+                        // Dette elementet vises ikke ved sidelast
+                        // eslint-disable-next-line jsx-a11y/no-autofocus
+                        autoFocus
+                    />
+                )}
+
+                <JaNeiSpørsmål
+                    id={keyOf<FormData>('harMottattSosialstønad')}
+                    className={sharedStyles.sporsmal}
+                    legend={formatMessage('sosialstønad.label')}
+                    feil={formik.errors.harMottattSosialstønad}
+                    state={formik.values.harMottattSosialstønad}
+                    onChange={(val) =>
+                        formik.setValues((v) => ({
+                            ...v,
+                            harMottattSosialstønad: val,
+                            sosialStønadBeløp: null,
+                        }))
+                    }
+                />
+                {formik.values.harMottattSosialstønad && (
+                    <Input
+                        className={sharedStyles.marginBottom}
+                        id={keyOf<FormData>('sosialStønadBeløp')}
+                        name={keyOf<FormData>('sosialStønadBeløp')}
+                        bredde="S"
+                        label={formatMessage('sosialstønad.beløp')}
+                        value={formik.values.sosialStønadBeløp || ''}
+                        onChange={formik.handleChange}
+                        feil={formik.errors.sosialStønadBeløp}
+                        autoComplete="off"
+                        // Dette elementet vises ikke ved sidelast
+                        // eslint-disable-next-line jsx-a11y/no-autofocus
+                        autoFocus
+                    />
+                )}
+
+                <JaNeiSpørsmål
+                    id={keyOf<FormData>('harTrygdeytelserIUtlandet')}
+                    className={sharedStyles.sporsmal}
+                    legend={formatMessage('trygdeytelserIUtlandet.label')}
+                    feil={formik.errors.harTrygdeytelserIUtlandet}
+                    state={formik.values.harTrygdeytelserIUtlandet}
+                    onChange={(val) =>
+                        formik.setValues((v) => ({
+                            ...v,
+                            harTrygdeytelserIUtlandet: val,
+                            trygdeytelserIUtlandet: val ? [{ beløp: '', type: '', valuta: '' }] : [],
+                        }))
+                    }
+                />
+                {formik.values.harTrygdeytelserIUtlandet && (
+                    <TrygdeytelserInputFelter
+                        arr={formik.values.trygdeytelserIUtlandet}
+                        errors={formik.errors.trygdeytelserIUtlandet}
+                        feltnavn={keyOf<FormData>('trygdeytelserIUtlandet')}
+                        onLeggTilClick={() => {
+                            formik.setValues((v) => ({
+                                ...v,
+                                trygdeytelserIUtlandet: [
+                                    ...formik.values.trygdeytelserIUtlandet,
+                                    {
+                                        beløp: '',
+                                        type: '',
+                                        valuta: '',
+                                    },
+                                ],
+                            }));
+                        }}
+                        onFjernClick={(index) => {
+                            formik.setValues((v) => ({
+                                ...v,
+                                trygdeytelserIUtlandet: formik.values.trygdeytelserIUtlandet.filter(
+                                    (_, i) => index !== i
+                                ),
+                            }));
+                        }}
+                        onChange={(val) => {
+                            formik.setValues((v) => ({
+                                ...v,
+                                trygdeytelserIUtlandet: formik.values.trygdeytelserIUtlandet.map((input, i) =>
+                                    val.index === i
+                                        ? {
+                                              beløp: val.beløp,
+                                              type: val.type,
+                                              valuta: val.valuta,
+                                          }
+                                        : input
+                                ),
+                            }));
+                        }}
+                    />
+                )}
+
+                <JaNeiSpørsmål
+                    id={keyOf<FormData>('mottarPensjon')}
+                    className={sharedStyles.sporsmal}
+                    legend={formatMessage('mottarPensjon.label')}
+                    feil={formik.errors.mottarPensjon}
+                    state={formik.values.mottarPensjon}
+                    onChange={(val) =>
+                        formik.setValues((v) => ({
+                            ...v,
+                            mottarPensjon: val,
+                            pensjonsInntekt: val
+                                ? formik.values.pensjonsInntekt.length === 0
+                                    ? [{ ordning: '', beløp: '' }]
+                                    : formik.values.pensjonsInntekt
+                                : [],
+                        }))
+                    }
+                />
+                {formik.values.mottarPensjon && pensjonsInntekter()}
+            </div>
+            <Feiloppsummering
+                className={sharedStyles.marginBottom}
+                tittel={formatMessage('feiloppsummering.title')}
+                feil={formikErrorsTilFeiloppsummering(formik.errors)}
+                hidden={!formikErrorsHarFeil(formik.errors)}
+                innerRef={feiloppsummeringref}
+            />
+
+            <Bunnknapper
+                previous={{
+                    onClick: () => {
+                        save(formik.values);
+                        history.push(props.forrigeUrl);
+                    },
                 }}
-                className={sharedStyles.container}
-            >
-                <div className={sharedStyles.formContainer}>
-                    <JaNeiSpørsmål
-                        id={keyOf<FormData>('harForventetInntekt')}
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="forventerInntekt.label" />}
-                        description={intl.formatMessage({ id: 'forventerInntekt.hjelpetekst' })}
-                        feil={formik.errors.harForventetInntekt}
-                        state={formik.values.harForventetInntekt}
-                        onChange={(val) =>
-                            formik.setValues((v) => ({
-                                ...v,
-                                harForventetInntekt: val,
-                                forventetInntekt: null,
-                            }))
-                        }
-                    />
-
-                    {formik.values.harForventetInntekt && (
-                        <Input
-                            id={keyOf<FormData>('forventetInntekt')}
-                            feil={formik.errors.forventetInntekt}
-                            bredde="S"
-                            className={sharedStyles.marginBottom}
-                            value={formik.values.forventetInntekt || ''}
-                            label={<FormattedMessage id="forventerInntekt.beløp" />}
-                            onChange={formik.handleChange}
-                            autoComplete="off"
-                            // Dette elementet vises ikke ved sidelast
-                            // eslint-disable-next-line jsx-a11y/no-autofocus
-                            autoFocus
-                        />
-                    )}
-
-                    <JaNeiSpørsmål
-                        id={keyOf<FormData>('andreYtelserINav')}
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="andreYtelserINAV.label" />}
-                        feil={formik.errors.andreYtelserINav}
-                        state={formik.values.andreYtelserINav}
-                        onChange={(val) =>
-                            formik.setValues((v) => ({
-                                ...v,
-                                andreYtelserINav: val,
-                                andreYtelserINavYtelse: null,
-                                andreYtelserINavBeløp: null,
-                            }))
-                        }
-                    />
-
-                    {formik.values.andreYtelserINav && (
-                        <div className={sharedStyles.inputFelterDiv}>
-                            <Input
-                                id={keyOf<FormData>('andreYtelserINavYtelse')}
-                                name={keyOf<FormData>('andreYtelserINavYtelse')}
-                                label={<FormattedMessage id="andreYtelserINAV.ytelse" />}
-                                value={formik.values.andreYtelserINavYtelse || ''}
-                                onChange={formik.handleChange}
-                                feil={formik.errors.andreYtelserINavYtelse}
-                                autoComplete="off"
-                                // Dette elementet vises ikke ved sidelast
-                                // eslint-disable-next-line jsx-a11y/no-autofocus
-                                autoFocus
-                            />
-                            <Input
-                                id={keyOf<FormData>('andreYtelserINavBeløp')}
-                                name={keyOf<FormData>('andreYtelserINavBeløp')}
-                                label={<FormattedMessage id="andreYtelserINAV.beløp" />}
-                                value={formik.values.andreYtelserINavBeløp || ''}
-                                onChange={formik.handleChange}
-                                feil={formik.errors.andreYtelserINavBeløp}
-                                autoComplete="off"
-                            />
-                        </div>
-                    )}
-
-                    <JaNeiSpørsmål
-                        id={keyOf<FormData>('søktAndreYtelserIkkeBehandlet')}
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="søktAndreYtelserIkkeBehandlet.label" />}
-                        feil={formik.errors.søktAndreYtelserIkkeBehandlet}
-                        description={intl.formatMessage({ id: 'søktAndreYtelserIkkeBehandlet.hjelpetekst' })}
-                        state={formik.values.søktAndreYtelserIkkeBehandlet}
-                        onChange={(val) =>
-                            formik.setValues((v) => ({
-                                ...v,
-                                søktAndreYtelserIkkeBehandlet: val,
-                                søktAndreYtelserIkkeBehandletBegrunnelse: null,
-                            }))
-                        }
-                    />
-
-                    {formik.values.søktAndreYtelserIkkeBehandlet && (
-                        <Input
-                            className={sharedStyles.marginBottom}
-                            id={keyOf<FormData>('søktAndreYtelserIkkeBehandletBegrunnelse')}
-                            name={keyOf<FormData>('søktAndreYtelserIkkeBehandletBegrunnelse')}
-                            bredde="XXL"
-                            label={<FormattedMessage id="søktAndreYtelserIkkeBehandlet.begrunnelse" />}
-                            value={formik.values.søktAndreYtelserIkkeBehandletBegrunnelse || ''}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.søktAndreYtelserIkkeBehandletBegrunnelse}
-                            autoComplete="off"
-                            // Dette elementet vises ikke ved sidelast
-                            // eslint-disable-next-line jsx-a11y/no-autofocus
-                            autoFocus
-                        />
-                    )}
-
-                    <JaNeiSpørsmål
-                        id={keyOf<FormData>('harMottattSosialstønad')}
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="sosialStønad.label" />}
-                        feil={formik.errors.harMottattSosialstønad}
-                        state={formik.values.harMottattSosialstønad}
-                        onChange={(val) =>
-                            formik.setValues((v) => ({
-                                ...v,
-                                harMottattSosialstønad: val,
-                                sosialStønadBeløp: null,
-                            }))
-                        }
-                    />
-                    {formik.values.harMottattSosialstønad && (
-                        <Input
-                            className={sharedStyles.marginBottom}
-                            id={keyOf<FormData>('sosialStønadBeløp')}
-                            name={keyOf<FormData>('sosialStønadBeløp')}
-                            bredde="S"
-                            label={<FormattedMessage id="sosialStønad.beløp" />}
-                            value={formik.values.sosialStønadBeløp || ''}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.sosialStønadBeløp}
-                            autoComplete="off"
-                            // Dette elementet vises ikke ved sidelast
-                            // eslint-disable-next-line jsx-a11y/no-autofocus
-                            autoFocus
-                        />
-                    )}
-
-                    <JaNeiSpørsmål
-                        id={keyOf<FormData>('harTrygdeytelserIUtlandet')}
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="trygdeytelserIUtlandet.label" />}
-                        feil={formik.errors.harTrygdeytelserIUtlandet}
-                        state={formik.values.harTrygdeytelserIUtlandet}
-                        onChange={(val) =>
-                            formik.setValues((v) => ({
-                                ...v,
-                                harTrygdeytelserIUtlandet: val,
-                                trygdeytelserIUtlandet: val ? [{ beløp: '', type: '', valuta: '' }] : [],
-                            }))
-                        }
-                    />
-                    {formik.values.harTrygdeytelserIUtlandet && (
-                        <TrygdeytelserInputFelter
-                            arr={formik.values.trygdeytelserIUtlandet}
-                            errors={formik.errors.trygdeytelserIUtlandet}
-                            feltnavn={keyOf<FormData>('trygdeytelserIUtlandet')}
-                            onLeggTilClick={() => {
-                                formik.setValues((v) => ({
-                                    ...v,
-                                    trygdeytelserIUtlandet: [
-                                        ...formik.values.trygdeytelserIUtlandet,
-                                        {
-                                            beløp: '',
-                                            type: '',
-                                            valuta: '',
-                                        },
-                                    ],
-                                }));
-                            }}
-                            onFjernClick={(index) => {
-                                formik.setValues((v) => ({
-                                    ...v,
-                                    trygdeytelserIUtlandet: formik.values.trygdeytelserIUtlandet.filter(
-                                        (_, i) => index !== i
-                                    ),
-                                }));
-                            }}
-                            onChange={(val) => {
-                                formik.setValues((v) => ({
-                                    ...v,
-                                    trygdeytelserIUtlandet: formik.values.trygdeytelserIUtlandet.map((input, i) =>
-                                        val.index === i
-                                            ? {
-                                                  beløp: val.beløp,
-                                                  type: val.type,
-                                                  valuta: val.valuta,
-                                              }
-                                            : input
-                                    ),
-                                }));
-                            }}
-                        />
-                    )}
-
-                    <JaNeiSpørsmål
-                        id={keyOf<FormData>('mottarPensjon')}
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="mottarPensjon.label" />}
-                        feil={formik.errors.mottarPensjon}
-                        state={formik.values.mottarPensjon}
-                        onChange={(val) =>
-                            formik.setValues((v) => ({
-                                ...v,
-                                mottarPensjon: val,
-                                pensjonsInntekt: val
-                                    ? formik.values.pensjonsInntekt.length === 0
-                                        ? [{ ordning: '', beløp: '' }]
-                                        : formik.values.pensjonsInntekt
-                                    : [],
-                            }))
-                        }
-                    />
-                    {formik.values.mottarPensjon && pensjonsInntekter()}
-                </div>
-                <Feiloppsummering
-                    className={sharedStyles.marginBottom}
-                    tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
-                    feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                    hidden={!formikErrorsHarFeil(formik.errors)}
-                    innerRef={feiloppsummeringref}
-                />
-
-                <Bunnknapper
-                    previous={{
-                        onClick: () => {
-                            save(formik.values);
-                            history.push(props.forrigeUrl);
-                        },
-                    }}
-                    avbryt={{
-                        toRoute: props.avbrytUrl,
-                    }}
-                />
-            </form>
-        </RawIntlProvider>
+                avbryt={{
+                    toRoute: props.avbrytUrl,
+                }}
+            />
+        </form>
     );
 };
 

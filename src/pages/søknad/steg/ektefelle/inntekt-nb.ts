@@ -12,8 +12,8 @@ export default {
     'søktAndreYtelserIkkeBehandlet.hjelpetekst':
         'For eksempel alderspensjon, uføretrygd, arbeidsavklaringspenger, sykepenger eller tjenestepensjon.',
 
-    'sosialStønad.label': 'Har ektefelle/samboer fått økonomisk sosialhjelp i løpet av de siste tre månedene?',
-    'sosialStønad.beløp': 'Hvor mye penger har de fått i den tiden? (valgfri)',
+    'sosialstønad.label': 'Har ektefelle/samboer fått økonomisk sosialhjelp i løpet av de siste tre månedene?',
+    'sosialstønad.beløp': 'Hvor mye penger har de fått i den tiden? (valgfri)',
 
     'trygdeytelserIUtlandet.label': 'Har ektfelle/samboer trygdeytelser fra andre land?',
     'trygdeytelserIUtlandet.beløp': 'Hvor mye får de i lokal valuta i måneden?',
@@ -24,7 +24,8 @@ export default {
     'mottarPensjon.fra': 'Hvem får de pengene fra?',
     'mottarPensjon.beløp': 'Hvor mye penger får de i måneden?',
 
-    'button.fjernRad.label': 'Fjern rad',
+    'button.fjern.trygdeytelse': 'Fjern trygdeytelse',
+    'button.fjern.pensjonsgiver': 'Fjern pensjonsgiver',
     'button.leggTil.trygdeytelse': 'Legg til annen trygdeytelse',
     'button.leggTil.pensjonsgiver': 'Legg til annen pensjonsgiver',
 };
