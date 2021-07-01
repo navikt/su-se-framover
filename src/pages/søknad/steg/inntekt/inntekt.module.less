@@ -3,7 +3,6 @@
 .trygdeytelserContainer {
     display: flex;
     flex-direction: column;
-    justify-content: right;
     margin-bottom: @spacing-l;
 
     .trippleFelter {
@@ -15,5 +14,22 @@
     .fjernFeltButton {
         display: flex;
         align-self: flex-end;
+    }
+}
+
+.pensjongiverContainer {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: @spacing;
+    > :last-child {
+        align-items: flex-end;
+    }
+}
+
+.pensjonsgiverInputFelter {
+    display: flex;
+    margin-bottom: @spacing-xs;
+    > :not(:last-child) {
+        margin-right: @spacing;
     }
 }

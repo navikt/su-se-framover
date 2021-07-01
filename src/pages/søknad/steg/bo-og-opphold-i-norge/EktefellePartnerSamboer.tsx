@@ -19,7 +19,7 @@ interface Props {
 const EktefellePartnerSamboer = (props: Props) => {
     const epsFormData: EPSFormData = props.value ?? { fnr: null, alder: null, erUførFlyktning: null };
 
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
 
     const erEpsUnder67 = useMemo(() => {
         return epsFormData.alder && epsFormData.alder < 67;
@@ -49,7 +49,7 @@ const EktefellePartnerSamboer = (props: Props) => {
             <div className={styles.ufør}>
                 {erEpsUnder67 && (
                     <RadioGruppe
-                        legend={intl.formatMessage({ id: 'delerBolig.epsUførFlyktning' })}
+                        legend={formatMessage('delerBoligMed.epsUførFlyktning')}
                         feil={props.feil?.erUførFlyktning}
                     >
                         <Radio
@@ -80,7 +80,7 @@ const EktefellePartnerSamboer = (props: Props) => {
             </div>
             {typeof props.feil === 'string' && (
                 <SkjemaelementFeilmelding>
-                    {intl.formatMessage({ id: 'ektefelleEllerSamboer.feil.felteneMåFyllesUt' })}
+                    {formatMessage('ektefelleEllerSamboer.feil.felteneMåFyllesUt')}
                 </SkjemaelementFeilmelding>
             )}
         </div>

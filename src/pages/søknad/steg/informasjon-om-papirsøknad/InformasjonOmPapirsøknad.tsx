@@ -24,13 +24,22 @@ type FormData = ForVeilederPapirsøknad;
 
 const schema = yup.object<FormData>({
     type: yup.string().required() as yup.Schema<Søknadstype.Papirsøknad>,
-    mottaksdatoForSøknad: yup.date().nullable().required() as unknown as yup.Schema<string>,
-    grunnForPapirinnsending: yup.mixed<GrunnForPapirinnsending>().oneOf(Object.values(GrunnForPapirinnsending)),
-    annenGrunn: yup.string().nullable().defined().when('grunnForPapirinnsending', {
-        is: GrunnForPapirinnsending.Annet,
-        then: yup.string().required(),
-        otherwise: yup.string().nullable().defined(),
-    }),
+    mottaksdatoForSøknad: yup
+        .date()
+        .nullable()
+        .required('Fyll ut mottaksdatoen for søknaden') as unknown as yup.Schema<string>,
+    grunnForPapirinnsending: yup
+        .mixed<GrunnForPapirinnsending>()
+        .oneOf(Object.values(GrunnForPapirinnsending), 'Velg hvorfor søknaden var sendt inn uten personlig oppmøte'),
+    annenGrunn: yup
+        .string()
+        .nullable()
+        .defined()
+        .when('grunnForPapirinnsending', {
+            is: GrunnForPapirinnsending.Annet,
+            then: yup.string().required('Fyll ut begrunnelse for hvorfor søker ikke møtte opp personlig'),
+            otherwise: yup.string().nullable().defined(),
+        }),
 });
 
 const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
@@ -81,7 +90,6 @@ const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string
                     <Datepicker
                         inputProps={{
                             name: 'utreisedato',
-                            placeholder: 'dd.mm.åååå',
                             'aria-invalid': formik.errors.mottaksdatoForSøknad ? true : false,
                         }}
                         value={formik.values.mottaksdatoForSøknad ?? undefined}

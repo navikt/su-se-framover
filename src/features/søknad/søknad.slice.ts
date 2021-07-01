@@ -36,7 +36,7 @@ export interface SøknadState {
         delerBoligMedPersonOver18: Nullable<boolean>;
         delerBoligMed: Nullable<DelerBoligMed>;
         ektefellePartnerSamboer: Nullable<EPSFormData>;
-        innlagtPåinstitusjon: Nullable<boolean>;
+        innlagtPåInstitusjon: Nullable<boolean>;
         datoForInnleggelse: Nullable<string>;
         datoForUtskrivelse: Nullable<string>;
         fortsattInnlagt: boolean;
@@ -162,7 +162,7 @@ const initialState = (type: Søknadstype = Søknadstype.DigitalSøknad): Søknad
         delerBoligMedPersonOver18: null,
         delerBoligMed: null,
         ektefellePartnerSamboer: null,
-        innlagtPåinstitusjon: null,
+        innlagtPåInstitusjon: null,
         datoForInnleggelse: null,
         datoForUtskrivelse: null,
         fortsattInnlagt: false,

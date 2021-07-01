@@ -1,4 +1,5 @@
 export default {
+    //Nøklene på tekstene må være identisk til EPS'formue spåkfilen
     'eierBolig.label': 'Eier ektefelle/samboer en bolig?',
     'eierBolig.borIBolig': 'Bor ektefelle/samboer i boligen?',
     'eierBolig.formuePåBolig': 'Boligens formueverdi',
@@ -8,9 +9,9 @@ export default {
     'depositum.beløp': 'Beløpet på depositumskontoen',
     'depositum.kontonummer': 'Kontonummer',
 
-    'andreEiendommer.label': 'Eier ektefelle/samboer andre eiendommer i Norge eller i andre land?',
-    'andreEiendommer.verdi': 'Eiendommenes samlede verdi',
-    'andreEiendommer.brukesTil': 'Hva brukes eiendommene til?',
+    'eiendom.eierAndreEiendommer': 'Eier ektefelle/samboer andre eiendommer i Norge eller i andre land?',
+    'eiendom.samledeVerdi': 'Eiendommenes samlede verdi',
+    'eiendom.brukesTil': 'Hva brukes eiendommene til?',
 
     'kjøretøy.label': 'Eier ektefelle/samboer bil, campingvogn eller kjøretøy?',
     'kjøretøy.regNr': 'Registreringsnummer',
@@ -29,6 +30,6 @@ export default {
     'harKontanter.label': 'Har ektefelle/samboer kontanter over 1000 kr?',
     'harKontanter.beløp': 'Hvor mye penger har ektefelle/samboer?',
 
-    'button.fjernRad.label': 'Fjern rad',
-    'button.leggTil.label': 'Legg til',
+    'button.fjern.kjøretøy': 'Fjern kjøretøy',
+    'button.leggTil.kjøretøy': 'Legg til annet kjøretøy',
 };

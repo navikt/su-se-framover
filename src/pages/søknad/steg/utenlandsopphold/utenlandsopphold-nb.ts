@@ -8,8 +8,8 @@ export default {
     'forUtenlandsoppholdX.label': ' for utenlandsopphold {x}',
     'gruppe.tidligereUtenlandsopphold.legend': 'Tidligere utenlandsopphold',
     'gruppe.kommendeUtenlandsopphold.legend': 'Kommende utenlandsopphold',
-    'button.fjernReiserad.label': 'Fjern rad',
-    'button.leggTilReiserad.label': 'Legg til',
+    'button.fjernReiserad': 'Fjern utenlandsopphold',
+    'button.leggTilReiserad': 'Legg til et annet',
     'passert90Dager.info':
         '<p>Du har planer om å oppholde deg i utlandet i mer enn 90 dager.</p>' +
         '<br></br>' +

@@ -61,7 +61,6 @@ const Trukket = (props: TrukketProps) => {
                 <Datepicker
                     inputProps={{
                         name: 'datoSøkerTrakkSøknad',
-                        placeholder: 'dd.mm.åååå',
                         'aria-invalid':
                             props.feilmelding || (clickedViewLetter && props.datoSøkerTrakkSøknad === null)
                                 ? true

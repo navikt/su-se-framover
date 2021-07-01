@@ -12,8 +12,8 @@ export default {
     'søktAndreYtelserIkkeBehandlet.hjelpetekst':
         'For eksempel alderspensjon, uføretrygd, arbeidsavklaringspenger, sykepenger eller tjenestepensjon.',
 
-    'sosialStønad.label': 'Har du mottatt økonomisk sosialhjelp i løpet av de siste tre månedene?',
-    'sosialStønad.beløp': 'Hvor mye penger har du fått i den tiden? (valgfri)',
+    'sosialstønad.label': 'Har du mottatt økonomisk sosialhjelp i løpet av de siste tre månedene?',
+    'sosialstønad.beløp': 'Hvor mye penger har du fått i den tiden? (valgfri)',
 
     'trygdeytelserIUtlandet.label': 'Har du trygdeytelser fra andre land?',
     'trygdeytelserIUtlandet.beløp': 'Hvor mye får du i lokal valuta i måneden?',
@@ -24,6 +24,8 @@ export default {
     'mottarPensjon.fra': 'Hvem får du pengene fra?',
     'mottarPensjon.beløp': 'Hvor mye penger får du i måneden?',
 
-    'button.fjernRad': 'Fjern rad',
-    'button.leggTil': 'Legg til',
+    'button.fjern.trygdeytelse': 'Fjern trygdeytelse',
+    'button.fjern.pensjonsgiver': 'Fjern pensjonsgiver',
+    'button.leggTil.trygdeytelse': 'Legg til annen trygdeytelse',
+    'button.leggTil.pensjonsgiver': 'Legg til annen pensjonsgiver',
 };
