@@ -20,6 +20,7 @@ import styles from './personsøk.module.less';
 
 interface PersonsøkProps {
     person: RemoteData.RemoteData<ApiError, Person>;
+    autofocusPersonsøk?: boolean;
     onFetchByFnr(fnr: string): void;
     onFetchBySaksnummer?(saksnummer: string): void;
     onReset(): void;
@@ -94,7 +95,7 @@ const Personsøk = (props: PersonsøkProps) => {
                     </Label>
                     <div className={styles.inputfeltcontainer}>
                         <Input
-                            id="input"
+                            id="fnr"
                             name="input"
                             className={styles.inputfelt}
                             autoComplete="on"
@@ -104,7 +105,7 @@ const Personsøk = (props: PersonsøkProps) => {
                             value={input}
                             // Så lenge denne er det eneste på siden sin så ønsker vi at den skal autofokuseres
                             // eslint-disable-next-line jsx-a11y/no-autofocus
-                            autoFocus
+                            autoFocus={props.autofocusPersonsøk}
                         />
                         <Søkeknapp htmlType="submit">
                             <span>
