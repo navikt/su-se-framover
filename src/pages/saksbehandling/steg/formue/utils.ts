@@ -135,8 +135,7 @@ export function regnUtFormueVerdier(verdier: Nullable<FormueVerdier>) {
                 return Math.max((verdier?.innskudd ?? 0) - (verdier?.depositumskonto ?? 0), 0);
             }
             return verdier[keyNavn];
-        })
-        .filter(Boolean) as number[];
+        }) as number[];
 
     return formuer.reduce((acc, formue) => acc + formue, 0);
 }
