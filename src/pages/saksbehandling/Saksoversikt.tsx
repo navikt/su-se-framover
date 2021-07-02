@@ -181,6 +181,7 @@ const Saksoversikt = () => {
                                 }
                             }}
                             person={søker}
+                            autofocusPersonsøk
                         />
                         {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
                             <AlertStripe type="feil">{visErrorMelding(sak.error)}</AlertStripe>
