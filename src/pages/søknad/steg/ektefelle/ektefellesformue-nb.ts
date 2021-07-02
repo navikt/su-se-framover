@@ -5,7 +5,7 @@ export default {
     'eierBolig.formuePåBolig': 'Boligens formueverdi',
     'eierBolig.boligBrukesTil': 'Hva brukes boligen til?',
 
-    'depositum.label': 'Har ektefelle/samboer en depositumskonto som leietaker?',
+    'depositum.label': 'Har ektefelle/samboer depositumskonto som leietaker?',
     'depositum.beløp': 'Beløpet på depositumskontoen',
     'depositum.kontonummer': 'Kontonummer',
 
@@ -13,9 +13,9 @@ export default {
     'eiendom.samledeVerdi': 'Eiendommenes samlede verdi',
     'eiendom.brukesTil': 'Hva brukes eiendommene til?',
 
-    'kjøretøy.label': 'Eier ektefelle/samboer bil, campingvogn eller kjøretøy?',
+    'kjøretøy.label': 'Eier ektefelle/samboer bil, campingvogn eller andre kjøretøy?',
     'kjøretøy.regNr': 'Registreringsnummer',
-    'kjøretøy.verdi': 'Verdien av kjøretøyet',
+    'kjøretøy.verdi': 'Kjøretøyets verdi',
 
     'innskudd.label': 'Har ektefelle/samboer penger på konto?',
     'innskudd.pengerPåKontoInkludertDepositum': 'Har ektefelle/samboer penger på konto (inkludert depositumskonto)?',
@@ -27,7 +27,7 @@ export default {
     'skylderNoenMegPenger.label': 'Skylder noen ektefelle/samboer mer enn 1000 kr?',
     'skylderNoenMegPenger.beløp': 'Hvor mye skylder de ektefelle/samboer?',
 
-    'harKontanter.label': 'Har ektefelle/samboer kontanter over 1000 kr?',
+    'harKontanter.label': 'Har ektefelle/samboer mer enn 1000 kroner i kontanter?',
     'harKontanter.beløp': 'Hvor mye penger har ektefelle/samboer?',
 
     'button.fjern.kjøretøy': 'Fjern kjøretøy',

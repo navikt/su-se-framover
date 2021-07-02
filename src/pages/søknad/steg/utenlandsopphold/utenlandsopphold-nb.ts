@@ -1,6 +1,6 @@
 export default {
     'harReistSiste90.label': 'Har du reist til utlandet de siste 90 dagene?',
-    'skalReiseNeste12.label': 'Har du planlagt å reise til utlandet i de neste 12 månedene?',
+    'skalReiseNeste12.label': 'Har du planer om å reise til utlandet i de neste 12 månedene?',
 
     'innreisedato.label': 'Innreisedato',
     'utreisedato.label': 'Utreisedato',

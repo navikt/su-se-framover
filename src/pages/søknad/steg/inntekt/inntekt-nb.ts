@@ -12,7 +12,7 @@ export default {
     'søktAndreYtelserIkkeBehandlet.hjelpetekst':
         'For eksempel alderspensjon, uføretrygd, arbeidsavklaringspenger, sykepenger eller tjenestepensjon.',
 
-    'sosialstønad.label': 'Har du mottatt økonomisk sosialhjelp i løpet av de siste tre månedene?',
+    'sosialstønad.label': 'Har du fått økonomisk sosialhjelp i løpet av de siste tre månedene?',
     'sosialstønad.beløp': 'Hvor mye penger har du fått i den tiden? (valgfri)',
 
     'trygdeytelserIUtlandet.label': 'Har du trygdeytelser fra andre land?',

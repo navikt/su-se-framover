@@ -9,10 +9,10 @@ export default {
     'henterInnInfo.ingress': 'Vi vil hente informasjon om deg',
     'henterInnInfo.viHenterInfo':
         'I tillegg til det du selv opplyser i søknaden, vil vi hente inn denne informasjonen: ',
-    'henterInnInfo.viHenter.personinfo': 'personinformasjon om deg og ektefellen eller samboer',
+    'henterInnInfo.viHenter.personinfo': 'personinformasjon om deg og ektefellen eller samboeren din',
     'henterInnInfo.viHenter.arbeidsforhold':
         'opplysninger om arbeidsforholdet ditt fra arbeidsgiver- og arbeidstakerregisteret',
-    'henterInnInfo.viHenter.flyktningsstatus': 'flyktningsstatus og oppholdstillatelse fra UDI',
+    'henterInnInfo.viHenter.flyktningsstatus': 'flyktningstatus og oppholdstillatelse fra UDI',
     'henterInnInfo.brukerTidligereOpplysninger':
         'Hvis det er nødvendig kan vi bruke opplysninger du har gitt oss før, eller som du har gitt oss i andre sammenhenger.',
     'henterInnInfo.personvernLinkTekst': 'Mer om hvordan NAV håndterer dine personopplysninger',

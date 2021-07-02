@@ -21,6 +21,6 @@ export default {
     'adresse.registrerteAdresser': 'Her er adressene vi finner som er registrert på deg. Velg den du bor på.',
     'adresse.ingenAdresse.borPåAnnenAdresse': 'Bor på en annen adresse',
     'adresse.ingenAdresse.borPåAnnenAdresse.advarsel':
-        'Hvis du ikke bor på noen av adressene som finnes registrert på deg må du oppdatere adressen i Folkeregisteret.',
+        'Hvis du ikke bor på noen av disse adressene, må du oppdatere adressen i Folkeregisteret.',
     'adresse.ingenAdresse.harIkkeFastBosted': 'Har ikke fast bosted',
 };
