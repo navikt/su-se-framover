@@ -10,20 +10,16 @@ import { useAppDispatch } from '~redux/Store';
 
 import { SuccessNotificationState } from './routes';
 
-export type MessageFormatter<T extends Record<string, string>> = (id: keyof T) => string;
-
 export interface UseI18N<T extends Record<string, string>> {
     intl: IntlShape;
-    formatMessage: MessageFormatter<T>;
-    formatMessageWithValue(
+    formatMessage(id: keyof T, values?: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>): string;
+    formatMessage<X = React.ReactNode>(
         id: keyof T,
-        values: Record<string, PrimitiveType | FormatXMLElementFn<string, string>>
-    ): string;
-    formatMessageWithValue<X = React.ReactNode>(
-        id: keyof T,
-        values: Record<string, PrimitiveType | FormatXMLElementFn<string, X>>
+        values?: Record<string, PrimitiveType | FormatXMLElementFn<string, X>>
     ): X;
 }
+
+export type MessageFormatter<T extends Record<string, string>> = UseI18N<T>['formatMessage'];
 
 export const useI18n = <T extends Record<string, string>>(args: { messages: T }): UseI18N<T> => {
     const intl = React.useMemo(() => {
@@ -31,18 +27,13 @@ export const useI18n = <T extends Record<string, string>>(args: { messages: T })
         return createIntl({ locale: 'nb-NO', messages: args.messages }, cache);
     }, [args.messages]);
 
-    const formatMessage: MessageFormatter<T> = React.useCallback(
-        (id: keyof T) => intl.formatMessage({ id: id as string }),
-        [intl]
-    );
-
-    const formatMessageWithValue = React.useCallback<UseI18N<T>['formatMessageWithValue']>(
+    const formatMessage = React.useCallback<UseI18N<T>['formatMessage']>(
         <Y>(id: keyof T, values: Record<string, PrimitiveType | FormatXMLElementFn<string, Y>>): Y =>
             intl.formatMessage({ id: id as string }, values) as Y,
         [intl]
     );
 
-    return { intl, formatMessage, formatMessageWithValue };
+    return { intl, formatMessage };
 };
 
 export const useDocTitle = (title: string) => {

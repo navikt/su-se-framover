@@ -135,7 +135,7 @@ const MultiTidsperiodevelger = (props: {
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
 }) => {
-    const { formatMessage, formatMessageWithValue } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     return (
         <div>
@@ -157,7 +157,7 @@ const MultiTidsperiodevelger = (props: {
                                 <Label htmlFor={utreisedatoId}>
                                     {formatMessage('utreisedato.label')}
                                     <span className="sr-only">
-                                        {formatMessageWithValue('forUtenlandsoppholdX.label', { x: index + 1 })}
+                                        {formatMessage('forUtenlandsoppholdX.label', { x: index + 1 })}
                                     </span>
                                 </Label>
                                 <Datepicker
@@ -193,7 +193,7 @@ const MultiTidsperiodevelger = (props: {
                                 <Label htmlFor={innreisedatoId}>
                                     {formatMessage('innreisedato.label')}
                                     <span className="sr-only">
-                                        {formatMessageWithValue('forUtenlandsoppholdX.label', { x: index + 1 })}
+                                        {formatMessage('forUtenlandsoppholdX.label', { x: index + 1 })}
                                     </span>
                                 </Label>
                                 <Datepicker
@@ -283,7 +283,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
         validateOnChange: hasSubmitted,
     });
 
-    const { intl, formatMessage, formatMessageWithValue } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { intl, formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
@@ -435,7 +435,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 </div>
                 {antallDagerIUtlandet > 90 && (
                     <AlertStripeAdvarsel className={styles.passert90DagerAdvarsel}>
-                        {formatMessageWithValue('passert90Dager.info', {
+                        {formatMessage('passert90Dager.info', {
                             // eslint-disable-next-line react/display-name
                             p: (tekst) => <Normaltekst>{tekst}</Normaltekst>,
                             // eslint-disable-next-line react/display-name
