@@ -5,33 +5,36 @@ import { Behandlingsinformasjon, FormueStatus, FormueVerdier } from '~types/Beha
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~types/Søknad';
 
-export const keyNavnForFormue: Array<keyof FormueVerdier> = [
-    'verdiIkkePrimærbolig',
-    'verdiEiendommer',
-    'verdiKjøretøy',
-    'innskudd',
+export interface FormDataVerdier {
+    verdiPåBolig: string;
+    verdiPåEiendom: string;
+    verdiPåKjøretøy: string;
+    innskuddsbeløp: string;
+    verdipapir: string;
+    stårNoenIGjeldTilDeg: string;
+    kontanterOver1000: string;
+    depositumskonto: string;
+}
+
+export interface FormueFormData {
+    status: FormueStatus;
+    epsFnr: Nullable<string>;
+    verdier: Nullable<FormDataVerdier>;
+    borSøkerMedEPS: boolean;
+    epsVerdier: Nullable<FormDataVerdier>;
+    begrunnelse: Nullable<string>;
+}
+
+export const keyNavnForFormue: Array<keyof FormDataVerdier> = [
+    'verdiPåBolig',
+    'verdiPåEiendom',
+    'verdiPåKjøretøy',
+    'innskuddsbeløp',
     'verdipapir',
-    'pengerSkyldt',
-    'kontanter',
+    'stårNoenIGjeldTilDeg',
+    'kontanterOver1000',
     'depositumskonto',
 ];
-
-export function kalkulerFormue(verdier: Nullable<FormueVerdier>) {
-    if (!verdier) {
-        return 0;
-    }
-    const formuer = keyNavnForFormue
-        .filter((keyNavn) => keyNavn !== 'depositumskonto')
-        .map((keyNavn) => {
-            if (keyNavn === 'innskudd') {
-                return Math.max((verdier?.innskudd ?? 0) - (verdier?.depositumskonto ?? 0), 0);
-            }
-            return verdier[keyNavn];
-        })
-        .filter(Boolean) as number[];
-
-    return formuer.reduce((acc, formue) => acc + formue, 0);
-}
 
 export function totalVerdiKjøretøy(kjøretøyArray: Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>) {
     return kjøretøyArray.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0);
@@ -49,7 +52,7 @@ export function kalkulerFormueFraSøknad(f: SøknadInnhold['formue']) {
     ].reduce((acc, formue) => acc + formue, 0);
 }
 
-export function getFormue(
+export function getFormueInitialValues(
     behandlingsInfo: Behandlingsinformasjon,
     søknadsInnhold: SøknadInnhold,
     grunnlagsdata: GrunnlagsdataOgVilkårsvurderinger
@@ -57,8 +60,11 @@ export function getFormue(
     const behandlingsFormue = behandlingsInfo.formue;
 
     return {
-        verdier: getVerdier(behandlingsInfo.formue?.verdier ?? null, søknadsInnhold.formue),
-        epsVerdier: getVerdier(behandlingsInfo.formue?.epsVerdier ?? null, søknadsInnhold.ektefelle?.formue ?? null),
+        verdier: getInitialVerdier(behandlingsInfo.formue?.verdier ?? null, søknadsInnhold.formue),
+        epsVerdier: getInitialVerdier(
+            behandlingsInfo.formue?.epsVerdier ?? null,
+            søknadsInnhold.ektefelle?.formue ?? null
+        ),
         status: behandlingsFormue?.status ?? FormueStatus.VilkårOppfylt,
         begrunnelse: behandlingsFormue?.begrunnelse ?? null,
         borSøkerMedEPS:
@@ -71,25 +77,66 @@ export function getFormue(
     };
 }
 
-export function getVerdier(
+export function getInitialVerdier(
     verdier: Nullable<FormueVerdier>,
     søknadsFormue: Nullable<SøknadInnhold['formue']>
-): FormueVerdier {
+): FormDataVerdier {
     return {
-        verdiIkkePrimærbolig: verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0,
-        verdiEiendommer: verdier?.verdiEiendommer ?? søknadsFormue?.verdiPåEiendom ?? 0,
-        verdiKjøretøy: verdier?.verdiKjøretøy ?? totalVerdiKjøretøy(søknadsFormue?.kjøretøy ?? []) ?? 0,
-        innskudd: verdier?.innskudd ?? (søknadsFormue?.innskuddsBeløp ?? 0) + (søknadsFormue?.depositumsBeløp ?? 0),
-        verdipapir: verdier?.verdipapir ?? søknadsFormue?.verdipapirBeløp ?? 0,
-        pengerSkyldt: verdier?.pengerSkyldt ?? søknadsFormue?.skylderNoenMegPengerBeløp ?? 0,
-        kontanter: verdier?.kontanter ?? søknadsFormue?.kontanterBeløp ?? 0,
-        depositumskonto: verdier?.depositumskonto ?? søknadsFormue?.depositumsBeløp ?? 0,
+        verdiPåBolig: (verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0).toString(),
+        verdiPåEiendom: (verdier?.verdiEiendommer ?? søknadsFormue?.verdiPåEiendom ?? 0).toString(),
+        verdiPåKjøretøy: (verdier?.verdiKjøretøy ?? totalVerdiKjøretøy(søknadsFormue?.kjøretøy ?? []) ?? 0).toString(),
+        innskuddsbeløp: (
+            verdier?.innskudd ?? (søknadsFormue?.innskuddsBeløp ?? 0) + (søknadsFormue?.depositumsBeløp ?? 0)
+        ).toString(),
+        verdipapir: (verdier?.verdipapir ?? søknadsFormue?.verdipapirBeløp ?? 0).toString(),
+        stårNoenIGjeldTilDeg: (verdier?.pengerSkyldt ?? søknadsFormue?.skylderNoenMegPengerBeløp ?? 0).toString(),
+        kontanterOver1000: (verdier?.kontanter ?? søknadsFormue?.kontanterBeløp ?? 0).toString(),
+        depositumskonto: (verdier?.depositumskonto ?? søknadsFormue?.depositumsBeløp ?? 0).toString(),
     };
 }
 
-export function getInitialVerdier(): FormueVerdier {
-    const verdier: Partial<FormueVerdier> = {};
+export const formDataVerdierTilFormueVerdier = (verdier: FormDataVerdier): FormueVerdier => {
+    const parsedVerdier = Object.fromEntries(
+        Object.entries(verdier).map((verdi) => [verdi[0], Number.parseInt(verdi[1], 10)])
+    );
 
-    keyNavnForFormue.forEach((keyNavn) => (verdier[keyNavn] = 0));
-    return verdier as FormueVerdier;
+    return {
+        verdiIkkePrimærbolig: parsedVerdier.verdiPåBolig,
+        verdiEiendommer: parsedVerdier.verdiPåEiendom,
+        verdiKjøretøy: parsedVerdier.verdiPåKjøretøy,
+        innskudd: parsedVerdier.innskuddsbeløp,
+        verdipapir: parsedVerdier.verdipapir,
+        pengerSkyldt: parsedVerdier.stårNoenIGjeldTilDeg,
+        kontanter: parsedVerdier.kontanterOver1000,
+        depositumskonto: parsedVerdier.depositumskonto,
+    };
+};
+
+export function regnUtFormueVerdier(verdier: Nullable<FormueVerdier>) {
+    if (!verdier) {
+        return 0;
+    }
+
+    const keyNavnForFormueVerdier: Array<keyof FormueVerdier> = [
+        'verdiIkkePrimærbolig',
+        'verdiEiendommer',
+        'verdiKjøretøy',
+        'innskudd',
+        'verdipapir',
+        'pengerSkyldt',
+        'kontanter',
+        'depositumskonto',
+    ];
+
+    const formuer = keyNavnForFormueVerdier
+        .filter((keyNavn) => keyNavn !== 'depositumskonto')
+        .map((keyNavn) => {
+            if (keyNavn === 'innskudd') {
+                return Math.max((verdier?.innskudd ?? 0) - (verdier?.depositumskonto ?? 0), 0);
+            }
+            return verdier[keyNavn];
+        })
+        .filter(Boolean) as number[];
+
+    return formuer.reduce((acc, formue) => acc + formue, 0);
 }

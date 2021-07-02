@@ -126,6 +126,7 @@ const summerFormue = (formue: number[]) => {
     }, 0);
 };
 
+//TODO: finn et fint sted denne kan ligge i som omfatter revurdering og saksbehandling
 export const regnUtFormDataVerdier = (verdier: Nullable<VerdierFormData>) => {
     if (!verdier) {
         return 0;
