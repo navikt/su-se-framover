@@ -21,7 +21,7 @@ import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';
 import personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
-import { getSenesteHalvGVerdi } from '~features/revurdering/RevurderFormueUtils';
+import { getSenesteHalvGVerdi, regnUtFormDataVerdier } from '~features/revurdering/RevurderFormueUtils';
 import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
 import sakSlice, { lagreBehandlingsinformasjon, lagreEpsGrunnlag } from '~features/saksoversikt/sak.slice';
 import { removeSpaces } from '~lib/formatUtils';
@@ -29,10 +29,14 @@ import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering, validateNonNegativeNumber } from '~lib/validering';
+import yup, {
+    formikErrorsHarFeil,
+    formikErrorsTilFeiloppsummering,
+    validateStringAsNonNegativeNumber,
+} from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
-import { FormueStatus, Formue, FormueVerdier } from '~types/Behandlingsinformasjon';
+import { FormueStatus, Formue } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
@@ -42,31 +46,39 @@ import { Vurderingknapper } from '../Vurdering';
 import messages from './formue-nb';
 import styles from './formue.module.less';
 import { FormueInput, ShowSum } from './FormueComponents';
-import { getInitialVerdier, getFormue, kalkulerFormue, getVerdier, keyNavnForFormue } from './utils';
+import {
+    keyNavnForFormue,
+    FormueFormData,
+    getFormueInitialValues,
+    formDataVerdierTilFormueVerdier,
+    FormDataVerdier,
+} from './utils';
 
-type FormData = Formue & {
-    borSøkerMedEPS: Nullable<boolean>;
-    epsFnr: Nullable<string>;
-};
-
-const VerdierSchema: yup.ObjectSchema<FormueVerdier | undefined> = yup.object<FormueVerdier>({
-    verdiIkkePrimærbolig: validateNonNegativeNumber,
-    verdiEiendommer: validateNonNegativeNumber,
-    verdiKjøretøy: validateNonNegativeNumber,
-    innskudd: validateNonNegativeNumber,
-    verdipapir: validateNonNegativeNumber,
-    pengerSkyldt: validateNonNegativeNumber,
-    kontanter: validateNonNegativeNumber,
-    depositumskonto: validateNonNegativeNumber,
+const VerdierSchema: yup.ObjectSchema<FormDataVerdier | undefined> = yup.object<FormDataVerdier>({
+    verdiPåBolig: validateStringAsNonNegativeNumber,
+    verdiPåEiendom: validateStringAsNonNegativeNumber,
+    verdiPåKjøretøy: validateStringAsNonNegativeNumber,
+    innskuddsbeløp: validateStringAsNonNegativeNumber,
+    verdipapir: validateStringAsNonNegativeNumber,
+    stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber,
+    kontanterOver1000: validateStringAsNonNegativeNumber,
+    depositumskonto: validateStringAsNonNegativeNumber,
 });
 
-const schema = yup.object<FormData>({
+const schema = yup.object<FormueFormData>({
     status: yup
         .mixed()
         .required()
         .oneOf([FormueStatus.VilkårOppfylt, FormueStatus.MåInnhenteMerInformasjon, FormueStatus.VilkårIkkeOppfylt]),
     verdier: VerdierSchema.required(),
-    epsVerdier: VerdierSchema.required(),
+    epsVerdier: yup
+        .object<FormDataVerdier>()
+        .when('borSøkerMedEPS', {
+            is: true,
+            then: VerdierSchema.required(),
+            otherwise: yup.object().nullable().defined(),
+        })
+        .defined(),
     begrunnelse: yup.string().defined(),
     borSøkerMedEPS: yup.boolean().required().typeError('Feltet må fylles ut'),
     epsFnr: yup.mixed<string>().when('borSøkerMedEPS', {
@@ -78,9 +90,10 @@ const schema = yup.object<FormData>({
 });
 
 const Formue = (props: VilkårsvurderingBaseProps) => {
+    const history = useHistory();
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
-    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [eps, setEps] = useState<RemoteData.RemoteData<ApiError, personApi.Person>>(RemoteData.initial);
     const [kanEndreAnnenPersonsFormue, setKanEndreAnnenPersonsFormue] = useState<boolean>(true);
     const [åpnerNyFormueBlokkMenViserEnBlokk, setÅpnerNyFormueBlokkMenViserEnBlokk] = useState<boolean>(false);
@@ -91,7 +104,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         RemoteData.initial
     );
 
-    const handleSave = async (values: FormData, nesteUrl: string) => {
+    const handleSave = async (values: FormueFormData, nesteUrl: string) => {
         if (RemoteData.isPending(eps) && values.epsFnr !== null) return;
 
         const status =
@@ -103,9 +116,13 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
         const formueValues: Formue = {
             status,
-            verdier: values.verdier,
+            //Validering fanger denne
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            verdier: formDataVerdierTilFormueVerdier(values.verdier!),
             borSøkerMedEPS: values.borSøkerMedEPS,
-            epsVerdier: values.borSøkerMedEPS ? values.epsVerdier : null,
+            //Validering fanger denne
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            epsVerdier: values.borSøkerMedEPS ? formDataVerdierTilFormueVerdier(values.epsVerdier!) : null,
             begrunnelse: values.begrunnelse,
         };
 
@@ -154,8 +171,12 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         props.behandling.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser
     );
 
-    const formik = useFormik<FormData>({
-        initialValues: getFormue(behandlingsInfo, søknadInnhold, props.behandling.grunnlagsdataOgVilkårsvurderinger),
+    const formik = useFormik<FormueFormData>({
+        initialValues: getFormueInitialValues(
+            behandlingsInfo,
+            søknadInnhold,
+            props.behandling.grunnlagsdataOgVilkårsvurderinger
+        ),
         async onSubmit() {
             handleSave(formik.values, props.nesteUrl);
         },
@@ -163,14 +184,12 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
         validateOnChange: hasSubmitted,
     });
 
-    const history = useHistory();
-
     const søkersFormue = useMemo(() => {
-        return kalkulerFormue(formik.values.verdier);
+        return regnUtFormDataVerdier(formik.values.verdier);
     }, [formik.values.verdier]);
 
     const ektefellesFormue = useMemo(() => {
-        return kalkulerFormue(formik.values.epsVerdier);
+        return regnUtFormDataVerdier(formik.values.epsVerdier);
     }, [formik.values.epsVerdier]);
 
     const totalFormue = søkersFormue + (formik.values.borSøkerMedEPS ? ektefellesFormue : 0);
@@ -210,7 +229,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     const vilkårErOppfylt = totalFormue <= senesteHalvG;
 
     return (
-        <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
                     <form
@@ -220,7 +239,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         }}
                     >
                         <div className={styles.ektefellePartnerSamboer}>
-                            <Element>{intl.formatMessage({ id: 'input.label.borSøkerMedEktefelle' })}</Element>
+                            <Element>{formatMessage('input.label.borSøkerMedEktefelle')}</Element>
                             <RadioGruppe feil={formik.errors.borSøkerMedEPS}>
                                 <Radio
                                     label="Ja"
@@ -245,9 +264,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                             ...formik.values,
                                             borSøkerMedEPS: false,
                                             epsFnr: null,
-                                            epsVerdier: søknadInnhold.ektefelle
-                                                ? getVerdier(formik.values.epsVerdier, søknadInnhold.ektefelle?.formue)
-                                                : getInitialVerdier(),
+                                            epsVerdier: null,
                                         });
 
                                         setInputToShow('søker');
@@ -256,9 +273,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             </RadioGruppe>
                             {formik.values.borSøkerMedEPS && (
                                 <>
-                                    <Element>
-                                        {intl.formatMessage({ id: 'input.label.ektefellesFødselsnummer' })}
-                                    </Element>
+                                    <Element>{formatMessage('input.label.ektefellesFødselsnummer')}</Element>
                                     <div className={styles.fnrInput}>
                                         <Input
                                             name="epsFnr"
@@ -286,31 +301,23 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                                     onRequestClose={() => {
                                                                         return;
                                                                     }}
-                                                                    contentLabel={intl.formatMessage({
-                                                                        id: 'modal.skjerming.ariaBeskrivelse',
-                                                                    })}
+                                                                    contentLabel={formatMessage(
+                                                                        'modal.skjerming.ariaBeskrivelse'
+                                                                    )}
                                                                     closeButton={false}
                                                                     contentClass={styles.modalInnhold}
                                                                 >
                                                                     <Undertittel>
-                                                                        {intl.formatMessage({
-                                                                            id: 'modal.skjerming.heading',
-                                                                        })}
+                                                                        {formatMessage('modal.skjerming.heading')}
                                                                     </Undertittel>
                                                                     <Tekstomrade
                                                                         className={styles.modalTekst}
                                                                         rules={[BoldRule, HighlightRule, LinebreakRule]}
                                                                     >
-                                                                        {intl.formatMessage(
-                                                                            {
-                                                                                id: 'modal.skjerming.innhold',
-                                                                            },
-                                                                            {
-                                                                                navn: showName(props.søker.navn),
-                                                                                fnr: søknadInnhold.personopplysninger
-                                                                                    .fnr,
-                                                                            }
-                                                                        )}
+                                                                        {formatMessage('modal.skjerming.innhold', {
+                                                                            navn: showName(props.søker.navn),
+                                                                            fnr: søknadInnhold.personopplysninger.fnr,
+                                                                        })}
                                                                     </Tekstomrade>
                                                                     <Knapp
                                                                         htmlType="button"
@@ -320,9 +327,9 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                                     </Knapp>
                                                                 </ModalWrapper>
                                                             ) : err.statusCode === ErrorCode.NotFound ? (
-                                                                intl.formatMessage({ id: 'feilmelding.ikkeFunnet' })
+                                                                formatMessage('feilmelding.ikkeFunnet')
                                                             ) : (
-                                                                intl.formatMessage({ id: 'feilmelding.ukjent' })
+                                                                formatMessage('feilmelding.ukjent')
                                                             )}
                                                         </AlertStripe>
                                                     ),
@@ -341,13 +348,13 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                     keyNavnForFormue.map((keyNavn) => (
                                         <FormueInput
                                             key={keyNavn}
-                                            tittel={intl.formatMessage({ id: `input.label.${keyNavn}` })}
+                                            tittel={formatMessage(`input.label.${keyNavn}`)}
                                             className={styles.formueInput}
                                             inputName={`verdier.${keyNavn}`}
                                             onChange={formik.handleChange}
-                                            defaultValue={formik.values.verdier?.[keyNavn] ?? 0}
+                                            defaultValue={formik.values.verdier?.[keyNavn] ?? '0'}
                                             feil={
-                                                (formik.errors.verdier as FormikErrors<FormueVerdier> | undefined)?.[
+                                                (formik.errors.verdier as FormikErrors<FormDataVerdier> | undefined)?.[
                                                     keyNavn
                                                 ]
                                             }
@@ -356,10 +363,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
 
                                 {formik.values.borSøkerMedEPS && (
                                     <>
-                                        <ShowSum
-                                            tittel={intl.formatMessage({ id: 'display.søkersFormue' })}
-                                            sum={søkersFormue}
-                                        />
+                                        <ShowSum tittel={formatMessage('display.søkersFormue')} sum={søkersFormue} />
 
                                         {inputToShow !== 'søker' ? (
                                             <div>
@@ -375,13 +379,11 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                     }}
                                                     htmlType="button"
                                                 >
-                                                    {intl.formatMessage({ id: 'knapp.endreSøkersFormue' })}
+                                                    {formatMessage('knapp.endreSøkersFormue')}
                                                 </Knapp>
                                                 {åpnerNyFormueBlokkMenViserEnBlokk && (
                                                     <Feilmelding>
-                                                        {intl.formatMessage({
-                                                            id: 'feil.åpnerAnnenPersonFormueMenViserInput',
-                                                        })}
+                                                        {formatMessage('feil.åpnerAnnenPersonFormueMenViserInput')}
                                                     </Feilmelding>
                                                 )}
                                             </div>
@@ -412,22 +414,22 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                         keyNavnForFormue.map((keyNavn) => (
                                             <FormueInput
                                                 key={keyNavn}
-                                                tittel={intl.formatMessage({ id: `input.label.${keyNavn}` })}
+                                                tittel={formatMessage(`input.label.${keyNavn}`)}
                                                 className={styles.formueInput}
                                                 inputName={`epsVerdier.${keyNavn}`}
                                                 onChange={formik.handleChange}
-                                                defaultValue={formik.values.epsVerdier?.[keyNavn] ?? 0}
+                                                defaultValue={formik.values.epsVerdier?.[keyNavn] ?? '0'}
                                                 feil={
                                                     (
                                                         formik.errors.epsVerdier as
-                                                            | FormikErrors<FormueVerdier>
+                                                            | FormikErrors<FormDataVerdier>
                                                             | undefined
                                                     )?.[keyNavn]
                                                 }
                                             />
                                         ))}
                                     <ShowSum
-                                        tittel={intl.formatMessage({ id: 'display.ektefellesFormue' })}
+                                        tittel={formatMessage('display.ektefellesFormue')}
                                         sum={ektefellesFormue}
                                     />
 
@@ -445,13 +447,11 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                 }}
                                                 htmlType="button"
                                             >
-                                                {intl.formatMessage({ id: 'knapp.endreEktefellesFormue' })}
+                                                {formatMessage('knapp.endreEktefellesFormue')}
                                             </Knapp>
                                             {åpnerNyFormueBlokkMenViserEnBlokk && (
                                                 <Feilmelding>
-                                                    {intl.formatMessage({
-                                                        id: 'feil.åpnerAnnenPersonFormueMenViserInput',
-                                                    })}
+                                                    {formatMessage('feil.åpnerAnnenPersonFormueMenViserInput')}
                                                 </Feilmelding>
                                             )}
                                         </div>
@@ -477,7 +477,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         </div>
 
                         <div className={styles.totalFormueContainer}>
-                            <ShowSum tittel={intl.formatMessage({ id: 'display.totalt' })} sum={totalFormue} />
+                            <ShowSum tittel={formatMessage('display.totalt')} sum={totalFormue} />
 
                             <div className={styles.status}>
                                 <VilkårvurderingStatusIcon
@@ -486,20 +486,20 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                 <div className={styles.statusInformasjon}>
                                     <p>
                                         {vilkårErOppfylt
-                                            ? intl.formatMessage({ id: 'display.vilkårOppfylt' })
-                                            : intl.formatMessage({ id: 'display.vilkårIkkeOppfylt' })}
+                                            ? formatMessage('display.vilkårOppfylt')
+                                            : formatMessage('display.vilkårIkkeOppfylt')}
                                     </p>
                                     <p>
                                         {vilkårErOppfylt
-                                            ? intl.formatMessage({ id: 'display.vilkårOppfyltGrunn' })
-                                            : intl.formatMessage({ id: 'display.vilkårIkkeOppfyltGrunn' })}
+                                            ? formatMessage('display.vilkårOppfyltGrunn')
+                                            : formatMessage('display.vilkårIkkeOppfyltGrunn')}
                                     </p>
                                 </div>
                             </div>
                         </div>
 
                         <Textarea
-                            label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                            label={formatMessage('input.label.begrunnelse')}
                             name="begrunnelse"
                             value={formik.values.begrunnelse || ''}
                             onChange={formik.handleChange}
@@ -507,7 +507,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         />
 
                         <Checkbox
-                            label={intl.formatMessage({ id: 'checkbox.henteMerInfo' })}
+                            label={formatMessage('checkbox.henteMerInfo')}
                             name="status"
                             className={styles.henteMerInfoCheckbox}
                             checked={formik.values.status === FormueStatus.MåInnhenteMerInformasjon}
@@ -526,16 +526,12 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             RemoteData.combine(lagreBehandlingsinformasjonStatus, lagreEpsGrunnlagStatus),
                             RemoteData.fold(
                                 () => null,
-                                () => (
-                                    <NavFrontendSpinner>
-                                        {intl.formatMessage({ id: 'display.lagre.lagrer' })}
-                                    </NavFrontendSpinner>
-                                ),
+                                () => <NavFrontendSpinner>{formatMessage('display.lagre.lagrer')}</NavFrontendSpinner>,
                                 (error) => (
                                     <AlertStripe type="feil">
                                         {error.body?.code === 'ugyldige_verdier_på_formue'
-                                            ? intl.formatMessage({ id: 'feilmelding.ugyldigeVerdier.depositum' })
-                                            : intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                            ? formatMessage('feilmelding.ugyldigeVerdier.depositum')
+                                            : formatMessage('display.lagre.lagringFeilet')}
                                     </AlertStripe>
                                 ),
                                 () => null
@@ -543,7 +539,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         )}
 
                         <Feiloppsummering
-                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                            tittel={formatMessage('feiloppsummering.title')}
                             feil={formikErrorsTilFeiloppsummering(formik.errors)}
                             hidden={!formikErrorsHarFeil(formik.errors)}
                         />

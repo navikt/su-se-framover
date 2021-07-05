@@ -24,7 +24,7 @@ import * as FormatUtils from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup, { hookFormErrorsTilFeiloppsummering, validateNonNegativeNumber } from '~lib/validering';
+import yup, { hookFormErrorsTilFeiloppsummering, validateStringAsNonNegativeNumber } from '~lib/validering';
 import sharedMessages from '~pages/saksbehandling/steg/sharedI18n-nb';
 import { useAppDispatch } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -70,12 +70,17 @@ const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
             : yup.bool().required().defined(),
         uføregrad: yup.mixed<string>().when('oppfylt', {
             is: true,
-            then: validateNonNegativeNumber.max(100, 'Uføregrad må være mellom 0 og 100'),
+            then: yup
+                .number()
+                .required('Feltet må fylles ut')
+                .min(0, 'Feltet må være større eller lik 0')
+                .typeError('Feltet må være et tall')
+                .max(100, 'Uføregrad må være mellom 0 og 100'),
             otherwise: yup.string().notRequired(),
         }),
         forventetInntekt: yup.mixed<string>().when('oppfylt', {
             is: true,
-            then: validateNonNegativeNumber,
+            then: validateStringAsNonNegativeNumber,
             otherwise: yup.string().notRequired(),
         }),
     });

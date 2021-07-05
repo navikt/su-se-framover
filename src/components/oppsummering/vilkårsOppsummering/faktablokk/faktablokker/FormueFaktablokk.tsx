@@ -9,7 +9,7 @@ import { formatCurrency } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import saksbehandlingMessages from '~pages/saksbehandling/steg/formue/formue-nb';
-import { kalkulerFormue, kalkulerFormueFraSøknad } from '~pages/saksbehandling/steg/formue/utils';
+import { regnUtFormueVerdier, kalkulerFormueFraSøknad } from '~pages/saksbehandling/steg/formue/utils';
 import { delerBoligMedFormatted } from '~pages/saksbehandling/steg/sharedUtils';
 import { Behandlingsinformasjon, FormueStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
@@ -223,10 +223,10 @@ export const FormueVilkårsblokk = (props: {
         if (!props.formue) {
             return 0;
         }
-        const søkersFormueFraSøknad = kalkulerFormue(props.formue.verdier);
+        const søkersFormueFraSøknad = regnUtFormueVerdier(props.formue.verdier);
 
         if (props.formue.borSøkerMedEPS && props.formue.epsVerdier) {
-            return søkersFormueFraSøknad + kalkulerFormue(props.formue.epsVerdier);
+            return søkersFormueFraSøknad + regnUtFormueVerdier(props.formue.epsVerdier);
         }
 
         return søkersFormueFraSøknad;

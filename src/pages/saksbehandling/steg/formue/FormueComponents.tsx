@@ -7,7 +7,7 @@ export const FormueInput = (props: {
     className: string;
     tittel: string;
     inputName: string;
-    defaultValue: number;
+    defaultValue: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     feil: string | undefined;
 }) => (
