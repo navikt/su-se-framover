@@ -228,7 +228,7 @@ export async function hentTidligereGrunnlagsdataForVedtak(args: {
     vedtakId: string;
 }): Promise<ApiClientResult<GrunnlagsdataOgVilkårsvurderinger>> {
     return apiClient<GrunnlagsdataOgVilkårsvurderinger>({
-        url: `/saker/${args.sakId}/revurderinger/${args.vedtakId}/oppsummering`,
+        url: `/saker/${args.sakId}/revurderinger/historisk/vedtak/${args.vedtakId}/grunnlagsdataOgVilkårsvurderinger`,
         method: 'GET',
     });
 }
