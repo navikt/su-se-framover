@@ -231,8 +231,8 @@ export const inntektsValideringSchema = (formueTilhører: 'søker' | 'eps') => {
                 is: true,
                 then: yup
                     .number()
-                    .typeError('Forventet inntekt etter uførhet må være et tall')
-                    .label('Forventet inntekt etter uførhet')
+                    .typeError('Forventet inntekt må være et tall')
+                    .label('Forventet inntekt')
                     .nullable(false)
                     .positive(),
                 otherwise: yup.number(),

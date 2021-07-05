@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { useFormik, FormikErrors } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Input } from 'nav-frontend-skjema';
@@ -131,64 +132,67 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
 
     const pensjonsInntekter = () => {
         return (
-            <div>
+            <ul>
                 {formik.values.pensjonsInntekt.map((item: { ordning: string; beløp: string }, index: number) => {
                     const feltId = (key: keyof typeof item) => `pensjonsInntekt[${index}].${key}`;
                     const errorForLinje = Array.isArray(formik.errors.pensjonsInntekt)
                         ? formik.errors.pensjonsInntekt[index]
                         : null;
                     return (
-                        <div className={styles.pensjongiverContainer} key={index}>
-                            <div className={styles.pensjonsgiverInputFelter}>
-                                <Input
-                                    id={feltId('ordning')}
-                                    className={sharedStyles.inputFelt}
-                                    label={formatMessage('mottarPensjon.fra')}
-                                    value={item.ordning}
-                                    feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.ordning}
-                                    onChange={(e) =>
-                                        formik.setValues({
-                                            ...formik.values,
-                                            pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
-                                                idx === index ? { ordning: e.target.value, beløp: item.beløp } : i
-                                            ),
-                                        })
-                                    }
-                                />
-                                <Input
-                                    id={feltId('beløp')}
-                                    className={sharedStyles.inputFelt}
-                                    label={formatMessage('mottarPensjon.beløp')}
-                                    value={item.beløp}
-                                    feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.beløp}
-                                    onChange={(e) =>
-                                        formik.setValues({
-                                            ...formik.values,
-                                            pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
-                                                idx === index ? { ordning: item.ordning, beløp: e.target.value } : i
-                                            ),
-                                        })
-                                    }
-                                />
-                            </div>
-                            {formik.values.pensjonsInntekt.length > 1 && (
-                                <Knapp
-                                    className={sharedStyles.fjernFeltLink}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        formik.setValues({
-                                            ...formik.values,
-                                            pensjonsInntekt: [
-                                                ...formik.values.pensjonsInntekt.slice(0, index),
-                                                ...formik.values.pensjonsInntekt.slice(index + 1),
-                                            ],
-                                        });
-                                    }}
-                                >
-                                    {formatMessage('button.fjern.pensjonsgiver')}
-                                </Knapp>
-                            )}
-                        </div>
+                        <li
+                            className={classNames(sharedStyles.inputFelterOgFjernKnappContainer, {
+                                [sharedStyles.radfeil]: errorForLinje && typeof errorForLinje === 'object',
+                            })}
+                            key={index}
+                        >
+                            <Input
+                                id={feltId('ordning')}
+                                label={formatMessage('mottarPensjon.fra')}
+                                value={item.ordning}
+                                feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.ordning}
+                                onChange={(e) =>
+                                    formik.setValues({
+                                        ...formik.values,
+                                        pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
+                                            idx === index ? { ordning: e.target.value, beløp: item.beløp } : i
+                                        ),
+                                    })
+                                }
+                            />
+                            <Input
+                                id={feltId('beløp')}
+                                label={formatMessage('mottarPensjon.beløp')}
+                                value={item.beløp}
+                                feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.beløp}
+                                onChange={(e) =>
+                                    formik.setValues({
+                                        ...formik.values,
+                                        pensjonsInntekt: formik.values.pensjonsInntekt.map((i, idx) =>
+                                            idx === index ? { ordning: item.ordning, beløp: e.target.value } : i
+                                        ),
+                                    })
+                                }
+                            />
+                            <Knapp
+                                htmlType="button"
+                                kompakt
+                                className={classNames(sharedStyles.fjernradknapp, {
+                                    [sharedStyles.skjult]: formik.values.pensjonsInntekt.length < 2,
+                                })}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    formik.setValues({
+                                        ...formik.values,
+                                        pensjonsInntekt: [
+                                            ...formik.values.pensjonsInntekt.slice(0, index),
+                                            ...formik.values.pensjonsInntekt.slice(index + 1),
+                                        ],
+                                    });
+                                }}
+                            >
+                                {formatMessage('button.fjern.pensjonsgiver')}
+                            </Knapp>
+                        </li>
                     );
                 })}
                 <div className={sharedStyles.leggTilFeltKnapp}>
@@ -204,7 +208,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         {formatMessage('button.leggTil.pensjonsgiver')}
                     </Knapp>
                 </div>
-            </div>
+            </ul>
         );
     };
 

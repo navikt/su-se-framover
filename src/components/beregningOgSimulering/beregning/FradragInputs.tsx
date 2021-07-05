@@ -364,7 +364,9 @@ export const FradragInputs = (props: {
 
             <div className={styles.leggTilNyttFradragContainer}>
                 <Knapp onClick={() => props.onLeggTilClick()} htmlType="button" mini>
-                    {props.intl.formatMessage({ id: 'knapp.fradrag.leggtil' })}
+                    {props.fradrag.length === 0
+                        ? props.intl.formatMessage({ id: 'knapp.fradrag.leggtil' })
+                        : props.intl.formatMessage({ id: 'knapp.fradrag.leggtil.annet' })}
                 </Knapp>
             </div>
         </div>

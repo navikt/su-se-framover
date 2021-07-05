@@ -44,7 +44,8 @@ export default {
 
     'fradrag.eps.fribeløp': 'Fribeløp',
 
-    'knapp.fradrag.leggtil': 'Legg til et annet fradrag',
+    'knapp.fradrag.leggtil': 'Legg til fradrag',
+    'knapp.fradrag.leggtil.annet': 'Legg til et annet fradrag',
     'knapp.fradrag.fjern': 'Fjern fradrag',
     'knapp.startBeregning': 'Start beregning',
     'knapp.startNyBeregning': 'Ny beregning',

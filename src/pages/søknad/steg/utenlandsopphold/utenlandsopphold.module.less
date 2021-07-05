@@ -5,30 +5,6 @@
     margin-bottom: @spacing;
 }
 
-.reiserad {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-    > :not(:last-child) {
-        margin-right: @spacing;
-    }
-
-    .fjernradknapp {
-        align-self: flex-end;
-
-        &.skjult {
-            visibility: hidden;
-        }
-    }
-
-    &.feltfeil {
-        .fjernradknapp {
-            align-self: center;
-        }
-    }
-}
-
 .passert90DagerAdvarsel {
     margin-bottom: @spacing;
 }
