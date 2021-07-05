@@ -222,3 +222,13 @@ export async function hentGjeldendeGrunnlagsdataOgVilkårsvurderinger(
         method: 'GET',
     });
 }
+
+export async function hentTidligereGrunnlagsdataForVedtak(args: {
+    sakId: string;
+    vedtakId: string;
+}): Promise<ApiClientResult<GrunnlagsdataOgVilkårsvurderinger>> {
+    return apiClient<GrunnlagsdataOgVilkårsvurderinger>({
+        url: `/saker/${args.sakId}/revurderinger/${args.vedtakId}/oppsummering`,
+        method: 'GET',
+    });
+}

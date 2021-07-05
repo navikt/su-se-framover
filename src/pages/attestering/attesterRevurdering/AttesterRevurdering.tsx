@@ -188,7 +188,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                             <div className={styles.oppsummeringContainer}>
                                 <Revurderingoppsummering
                                     revurdering={revurdering}
-                                    grunnlagsdataOgVilkårsvurderinger={grunnlag}
+                                    forrigeGrunnlagsdataOgVilkårsvurderinger={grunnlag}
                                 />
                             </div>
                             {revurdering.skalFøreTilBrevutsending && !erGregulering(revurdering.årsak) && (
