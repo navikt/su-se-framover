@@ -148,8 +148,8 @@ const MultiTidsperiodevelger = (props: {
                 return (
                     <div key={baseId} id={baseId} className={styles.reiseradContainer}>
                         <SkjemaGruppe
-                            className={classNames(styles.reiserad, {
-                                [styles.feltfeil]: errorForLinje && typeof errorForLinje === 'object',
+                            className={classNames(sharedStyles.inputFelterOgFjernKnappContainer, {
+                                [sharedStyles.radfeil]: errorForLinje && typeof errorForLinje === 'object',
                             })}
                             legend={<span className="sr-only">{props.legend}</span>}
                         >
@@ -225,8 +225,8 @@ const MultiTidsperiodevelger = (props: {
                                 )}
                             </div>
                             <Knapp
-                                className={classNames(styles.fjernradknapp, {
-                                    [styles.skjult]: props.perioder.length < 2,
+                                className={classNames(sharedStyles.fjernradknapp, {
+                                    [sharedStyles.skjult]: props.perioder.length < 2,
                                 })}
                                 onClick={() => props.onFjernClick(index)}
                                 htmlType="button"

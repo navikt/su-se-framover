@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { useFormik, FormikErrors } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
 import { Input, Feiloppsummering } from 'nav-frontend-skjema';
@@ -38,7 +39,12 @@ const KjøretøyInputFelter = (props: {
                 const kjøretøyVerdiId = idLink('verdiPåKjøretøy');
 
                 return (
-                    <div className={sharedStyles.inputFelterDiv} key={idx}>
+                    <div
+                        className={classNames(sharedStyles.inputFelterOgFjernKnappContainer, {
+                            [sharedStyles.radfeil]: errorForLinje && typeof errorForLinje === 'object',
+                        })}
+                        key={idx}
+                    >
                         <Input
                             id={kjøretøyId}
                             name={kjøretøyId}
@@ -72,15 +78,15 @@ const KjøretøyInputFelter = (props: {
                             }}
                             autoComplete="off"
                         />
-                        {props.arr.length > 1 && (
-                            <Knapp
-                                className={sharedStyles.fjernFeltLink}
-                                onClick={() => props.onFjernClick(idx)}
-                                htmlType="button"
-                            >
-                                {formatMessage('button.fjern.kjøretøy')}
-                            </Knapp>
-                        )}
+                        <Knapp
+                            className={classNames(sharedStyles.fjernradknapp, {
+                                [sharedStyles.skjult]: props.arr.length < 2,
+                            })}
+                            onClick={() => props.onFjernClick(idx)}
+                            htmlType="button"
+                        >
+                            {formatMessage('button.fjern.kjøretøy')}
+                        </Knapp>
                         {errorForLinje && typeof errorForLinje === 'string' && errorForLinje}
                     </div>
                 );
