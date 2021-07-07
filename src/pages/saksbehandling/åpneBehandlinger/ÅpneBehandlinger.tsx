@@ -1,8 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import classNames from 'classnames';
 import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Sidetittel, Undertittel } from 'nav-frontend-typografi';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ import { formatDateTimeWtihoutIntl } from '~lib/dateUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { ÅpenBehandlingStatus, ÅpenBehandlingType } from '~types/Sak';
+import { ÅpenBehandling, ÅpenBehandlingStatus, ÅpenBehandlingType } from '~types/Sak';
 
 import messages from './åpneBehandlinger-nb';
 import styles from './åpneBehandlinger.module.less';
@@ -53,15 +53,14 @@ const ÅpneBehandlinger = () => {
 
     return (
         <div>
-            <Sidetittel className={styles.sidetittel}>{formatMessage('side.tittel')}</Sidetittel>
             {pipe(
                 hentÅpneBehandlingerStatus,
                 RemoteData.fold(
                     () => <NavFrontendSpinner />,
                     () => <NavFrontendSpinner />,
                     () => <AlertStripeFeil>{formatMessage('feil.feilOppstod')}</AlertStripeFeil>,
-                    (sakerMedÅpneBehandlinger) => {
-                        if (sakerMedÅpneBehandlinger.length === 0) {
+                    (åpneBehandlinger: ÅpenBehandling[]) => {
+                        if (åpneBehandlinger.length === 0) {
                             return (
                                 <AlertStripeSuksess>
                                     {formatMessage('behandling.ingenÅpneBehandlinger')}
@@ -69,67 +68,77 @@ const ÅpneBehandlinger = () => {
                             );
                         }
                         return (
-                            <ul>
-                                {sakerMedÅpneBehandlinger.map((sakMedÅpenBehandling) => (
-                                    <li
-                                        key={sakMedÅpenBehandling.saksnummer}
-                                        className={styles.sakMedÅpenBehandlingContainer}
-                                    >
-                                        <Undertittel>
-                                            {formatMessage('sak.saksnummer')}: {sakMedÅpenBehandling.saksnummer}
-                                        </Undertittel>
+                            <div>
+                                <table className="tabell">
+                                    <caption role="alert" aria-live="polite">
+                                        Tabell av åpne behandlinger. Ikke sortert.
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th role="columnheader" aria-sort="none">
+                                                <button aria-label="Sorter type behandling">
+                                                    {formatMessage('sak.saksnummer')}
+                                                </button>
+                                            </th>
+                                            <th role="columnheader" aria-sort="none">
+                                                <button aria-label="Sorter type behandling">
+                                                    {formatMessage('behandling.typeBehandling')}
+                                                </button>
+                                            </th>
+                                            <th role="columnheader" aria-sort="none">
+                                                <button aria-label="Sorter status">
+                                                    {formatMessage('behandling.status')}
+                                                </button>
+                                            </th>
+                                            <th role="columnheader" aria-sort="none">
+                                                <button aria-label="Sorter etter opprettet">
+                                                    {formatMessage('behandling.opprettet')}
+                                                </button>
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {åpneBehandlinger.map((åpenBehandling) => (
+                                            <tr key={åpenBehandling.behandlingId}>
+                                                <td>{åpenBehandling.saksnummer}</td>
+                                                <td>
+                                                    {formatBehandlingsType(
+                                                        åpenBehandling.typeBehandling,
+                                                        formatMessage
+                                                    )}
+                                                </td>
+                                                <td>{formatBehandlignsStatus(åpenBehandling.status, formatMessage)}</td>
+                                                <td>{formatDateTimeWtihoutIntl(åpenBehandling.opprettet)}</td>
+                                                <td>
+                                                    <Knapp
+                                                        className={classNames(styles.tilSaksoversiktKnapp, '')}
+                                                        onClick={async () => {
+                                                            hentSak(
+                                                                { saksnummer: åpenBehandling.saksnummer },
+                                                                (sak) => {
+                                                                    history.push(
+                                                                        Routes.saksoversiktValgtSak.createURL({
+                                                                            sakId: sak.id,
+                                                                        })
+                                                                    );
+                                                                }
+                                                            );
+                                                        }}
+                                                        spinner={RemoteData.isPending(hentSakStatus)}
+                                                    >
+                                                        {formatMessage('sak.tilSaksoversikt')}
+                                                    </Knapp>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
 
-                                        <table className="tabell tabell--stripet">
-                                            <thead>
-                                                <tr>
-                                                    <th>{formatMessage('behandling.typeBehandling')}</th>
-                                                    <th>{formatMessage('behandling.status')}</th>
-                                                    <th>{formatMessage('behandling.opprettet')}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {sakMedÅpenBehandling.åpneBehandlinger.map((åpenBehandling, idx) => (
-                                                    <tr key={idx}>
-                                                        <td>
-                                                            {formatBehandlingsType(
-                                                                åpenBehandling.typeBehandling,
-                                                                formatMessage
-                                                            )}
-                                                        </td>
-                                                        <td>
-                                                            {formatBehandlignsStatus(
-                                                                åpenBehandling.status,
-                                                                formatMessage
-                                                            )}
-                                                        </td>
-                                                        <td>{formatDateTimeWtihoutIntl(åpenBehandling.opprettet)}</td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                        <Knapp
-                                            className={styles.tilSaksoversiktKnapp}
-                                            onClick={async () => {
-                                                hentSak({ sakId: sakMedÅpenBehandling.saksnummer }, (sak) => {
-                                                    history.push(
-                                                        Routes.saksoversiktValgtSak.createURL({
-                                                            sakId: sak.id,
-                                                        })
-                                                    );
-                                                });
-                                            }}
-                                            spinner={RemoteData.isPending(hentSakStatus)}
-                                        >
-                                            {formatMessage('sak.tilSaksoversikt')}
-                                        </Knapp>
-                                        {RemoteData.isFailure(hentSakStatus) && (
-                                            <AlertStripeFeil>
-                                                {formatMessage('feil.sak.kunneIkkeHente')}
-                                            </AlertStripeFeil>
-                                        )}
-                                    </li>
-                                ))}
-                            </ul>
+                                {RemoteData.isFailure(hentSakStatus) && (
+                                    <AlertStripeFeil>{formatMessage('feil.sak.kunneIkkeHente')}</AlertStripeFeil>
+                                )}
+                            </div>
                         );
                     }
                 )

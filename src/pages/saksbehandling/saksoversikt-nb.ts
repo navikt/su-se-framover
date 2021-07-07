@@ -7,5 +7,7 @@ export default {
     'feilmelding.generisk': 'Feilet med status {statusCode}',
     'feilmelding.fantIkkeSak': 'Fant ingen sak for denne brukeren',
 
+    'lenke.seÅpneBehandlinger': 'Se åpne behandlinger',
+
     'page.behandlingsoppsummering.tittel': 'Vedtak',
 };

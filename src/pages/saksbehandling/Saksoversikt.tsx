@@ -4,7 +4,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
-import { Link, Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
@@ -168,29 +168,31 @@ const Saksoversikt = () => {
                     )}
                 </Route>
                 <Route path={Routes.saksoversiktIndex.path}>
-                    <div className={styles.search}>
-                        <Personsøk
-                            onReset={() => {
-                                dispatch(personSlice.default.actions.resetSøker());
-                                dispatch(sakSlice.default.actions.resetSak());
-                            }}
-                            onFetchByFnr={(fnr) => {
-                                dispatch(personSlice.fetchPerson({ fnr }));
-                                dispatch(sakSlice.fetchSak({ fnr }));
-                            }}
-                            onFetchBySaksnummer={async (saksnummer) => {
-                                const res = await dispatch(sakSlice.fetchSak({ saksnummer }));
-                                if (sakSlice.fetchSak.fulfilled.match(res)) {
-                                    dispatch(personSlice.fetchPerson({ fnr: res.payload.fnr }));
-                                }
-                            }}
-                            person={søker}
-                            autofocusPersonsøk
-                        />
-                        <Link to={Routes.saksoversiktÅpneBehandlinger.createURL()}>klikk meg :)</Link>
-                        {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
-                            <AlertStripe type="feil">{visErrorMelding(sak.error)}</AlertStripe>
-                        )}
+                    <div className={styles.saksoversiktContainer}>
+                        <div className={styles.search}>
+                            <Personsøk
+                                onReset={() => {
+                                    dispatch(personSlice.default.actions.resetSøker());
+                                    dispatch(sakSlice.default.actions.resetSak());
+                                }}
+                                onFetchByFnr={(fnr) => {
+                                    dispatch(personSlice.fetchPerson({ fnr }));
+                                    dispatch(sakSlice.fetchSak({ fnr }));
+                                }}
+                                onFetchBySaksnummer={async (saksnummer) => {
+                                    const res = await dispatch(sakSlice.fetchSak({ saksnummer }));
+                                    if (sakSlice.fetchSak.fulfilled.match(res)) {
+                                        dispatch(personSlice.fetchPerson({ fnr: res.payload.fnr }));
+                                    }
+                                }}
+                                person={søker}
+                                autofocusPersonsøk
+                            />
+                            {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
+                                <AlertStripe type="feil">{visErrorMelding(sak.error)}</AlertStripe>
+                            )}
+                        </div>
+                        <ÅpneBehandlinger />
                     </div>
                 </Route>
             </Switch>

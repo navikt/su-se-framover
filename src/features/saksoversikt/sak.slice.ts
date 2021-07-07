@@ -32,7 +32,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkå
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~types/Periode';
 import { Revurdering } from '~types/Revurdering';
-import { Sak, SakMedÅpneBehandlinger } from '~types/Sak';
+import { Sak, ÅpenBehandling } from '~types/Sak';
 import { Sats } from '~types/Sats';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
@@ -52,17 +52,16 @@ export const fetchSak = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const hentÅpneBehandlingerForAlleSaker = createAsyncThunk<
-    SakMedÅpneBehandlinger[],
-    void,
-    { rejectValue: ApiError }
->('sak/hentÅpneBehandlingerForAlleSaker', async (_, thunkApi) => {
-    const res = await sakApi.hentÅpneBehandlingerForAlleSaker();
-    if (res.status === 'ok') {
-        return res.data;
+export const hentÅpneBehandlingerForAlleSaker = createAsyncThunk<ÅpenBehandling[], void, { rejectValue: ApiError }>(
+    'sak/hentÅpneBehandlingerForAlleSaker',
+    async (_, thunkApi) => {
+        const res = await sakApi.hentÅpneBehandlingerForAlleSaker();
+        if (res.status === 'ok') {
+            return res.data;
+        }
+        return thunkApi.rejectWithValue(res.error);
     }
-    return thunkApi.rejectWithValue(res.error);
-});
+);
 
 export const stansUtbetalinger = createAsyncThunk<Sak, { sakId: string }, { rejectValue: ApiError }>(
     'utbetalinger/stans',

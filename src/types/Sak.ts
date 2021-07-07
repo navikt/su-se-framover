@@ -23,12 +23,9 @@ export enum KanStansesEllerGjenopptas {
     INGEN = 'INGEN',
 }
 
-export interface SakMedÅpneBehandlinger {
+export interface ÅpenBehandling {
     saksnummer: string;
-    åpneBehandlinger: ÅpenBehandling[];
-}
-
-interface ÅpenBehandling {
+    behandlingId: string;
     typeBehandling: ÅpenBehandlingType;
     status: ÅpenBehandlingStatus;
     opprettet: string;
