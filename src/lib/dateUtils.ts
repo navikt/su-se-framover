@@ -1,5 +1,5 @@
 import * as DateFns from 'date-fns';
-import { FormatDateOptions, IntlShape } from 'react-intl';
+import { createIntl, createIntlCache, FormatDateOptions, IntlShape } from 'react-intl';
 
 import { Periode } from '../types/Periode';
 
@@ -15,8 +15,15 @@ const formatDateOptions: FormatDateOptions = {
     day: '2-digit',
 };
 
+const cache = createIntlCache();
+const intl = createIntl({ locale: 'nb-NO' }, cache);
+
 export const formatDateTime = (time: string, intl: IntlShape) => {
     return `${intl.formatDate(time, formatDateOptions)} ${intl.formatTime(time)}`;
+};
+
+export const formatDateTimeWtihoutIntl = (dateTime: string) => {
+    return `${intl.formatDate(dateTime, formatDateOptions)} ${intl.formatTime(dateTime)}`;
 };
 
 export const formatMonthYear = (date: string, intl: IntlShape) =>

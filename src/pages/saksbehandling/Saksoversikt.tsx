@@ -4,7 +4,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Link, Route, Switch, useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
@@ -22,6 +22,7 @@ import { useAppSelector, useAppDispatch } from '~redux/Store';
 
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
+import ÅpneBehandlinger from './åpneBehandlinger/ÅpneBehandlinger';
 
 const Vilkår = React.lazy(() => import('./steg/vilkår/Vilkår'));
 const SendTilAttesteringPage = React.lazy(() => import('./sendTilAttesteringPage/SendTilAttesteringPage'));
@@ -83,6 +84,9 @@ const Saksoversikt = () => {
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
             <Switch>
+                <Route path={Routes.saksoversiktÅpneBehandlinger.path}>
+                    <ÅpneBehandlinger />
+                </Route>
                 <Route path={Routes.saksoversiktValgtSak.path}>
                     {pipe(
                         RemoteData.combine(søker, sak),
@@ -183,6 +187,7 @@ const Saksoversikt = () => {
                             person={søker}
                             autofocusPersonsøk
                         />
+                        <Link to={Routes.saksoversiktÅpneBehandlinger.createURL()}>klikk meg :)</Link>
                         {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
                             <AlertStripe type="feil">{visErrorMelding(sak.error)}</AlertStripe>
                         )}

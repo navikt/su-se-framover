@@ -22,14 +22,15 @@ export const home: Route<never> = {
     createURL: () => '/',
 };
 
-export const soknad: Route<never> = {
-    path: '/soknad/',
-    createURL: () => '/soknad/',
-};
-
 export const drift: Route<never> = {
     path: '/drift/',
     createURL: () => '/drift/',
+};
+
+//-------------Søknad--------------------------------
+export const soknad: Route<never> = {
+    path: '/soknad/',
+    createURL: () => '/soknad/',
 };
 
 export const soknadPersonSøk: Route<{ papirsøknad?: boolean }> = {
@@ -47,16 +48,15 @@ export const søkandskvittering: Route<never> = {
     createURL: () => `/soknad/kvittering`,
 };
 
-//---------------Vedtak--------------------------------
-export const vedtaksoppsummering: Route<{ sakId: string; vedtakId: string }> = {
-    path: `/saksoversikt/:sakId/vedtak/:vedtakId/`,
-    createURL: ({ sakId, vedtakId }) => `/saksoversikt/${sakId}/vedtak/${vedtakId}/`,
-};
-
-//---------------Søknadsbehandling & revurdering------
+//-------------Saksoversikt--------------------------------
 export const saksoversiktIndex: Route<never> = {
     path: '/saksoversikt/:sakId?/:behandlingId?/:meny?/:vilkar?/',
     createURL: () => '/saksoversikt',
+};
+
+export const saksoversiktÅpneBehandlinger: Route<never> = {
+    path: '/saksoversikt/apneBehandlinger/',
+    createURL: () => '/saksoversikt/apneBehandlinger',
 };
 
 export const saksoversiktValgtSak: Route<{
@@ -66,6 +66,13 @@ export const saksoversiktValgtSak: Route<{
     createURL: (args) => `/saksoversikt/${args.sakId}`,
 };
 
+//---------------Vedtak--------------------------------
+export const vedtaksoppsummering: Route<{ sakId: string; vedtakId: string }> = {
+    path: `/saksoversikt/:sakId/vedtak/:vedtakId/`,
+    createURL: ({ sakId, vedtakId }) => `/saksoversikt/${sakId}/vedtak/${vedtakId}/`,
+};
+
+//---------------Søknadsbehandling & revurdering------
 export const avsluttSøknadsbehandling: Route<{
     sakId: string;
     soknadId: string;

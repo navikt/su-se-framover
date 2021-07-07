@@ -32,7 +32,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkå
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~types/Periode';
 import { Revurdering } from '~types/Revurdering';
-import { Sak } from '~types/Sak';
+import { Sak, SakMedÅpneBehandlinger } from '~types/Sak';
 import { Sats } from '~types/Sats';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
@@ -46,6 +46,18 @@ export const fetchSak = createAsyncThunk<
         : 'saksnummer' in arg
         ? sakApi.fetchSakBySaksnummer(arg.saksnummer)
         : sakApi.fetchSakBySakId(arg.sakId));
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const hentÅpneBehandlingerForAlleSaker = createAsyncThunk<
+    SakMedÅpneBehandlinger[],
+    void,
+    { rejectValue: ApiError }
+>('sak/hentÅpneBehandlingerForAlleSaker', async (_, thunkApi) => {
+    const res = await sakApi.hentÅpneBehandlingerForAlleSaker();
     if (res.status === 'ok') {
         return res.data;
     }
