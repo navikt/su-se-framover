@@ -5,7 +5,7 @@ import Input from 'nav-frontend-skjema/lib/input';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { JaNeiSpørsmål } from '~/components/FormElements';
+import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { TypeOppholdstillatelse } from '~features/søknad/types';
 import { useI18n } from '~lib/hooks';

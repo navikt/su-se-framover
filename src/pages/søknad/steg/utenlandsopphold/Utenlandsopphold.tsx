@@ -9,7 +9,7 @@ import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { JaNeiSpørsmål } from '~/components/FormElements';
+import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { Utenlandsopphold as UtenlandsoppholdType } from '~features/søknad/types';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~lib/dateUtils';

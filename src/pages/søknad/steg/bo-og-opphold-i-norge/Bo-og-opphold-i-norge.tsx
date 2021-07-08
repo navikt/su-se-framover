@@ -16,7 +16,7 @@ import {
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { JaNeiSpørsmål } from '~/components/FormElements';
+import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { Adresse, IngenAdresseGrunn } from '~api/personApi';
 import { DelerBoligMed, EPSFormData } from '~features/søknad/types';

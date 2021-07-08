@@ -15,7 +15,7 @@ import { useHistory } from 'react-router-dom';
 import { ApiError, ErrorCode } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import { FormueFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FormueFaktablokk';
-import { Personkort } from '~components/Personkort';
+import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';

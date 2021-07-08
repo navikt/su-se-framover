@@ -7,7 +7,7 @@ import { showName } from '~features/person/personUtils';
 import { useI18n } from '~lib/hooks';
 import { Sak } from '~types/Sak';
 
-import { PersonAdvarsel } from '../PersonAdvarsel';
+import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 
 import GenderIcon from './GenderIcon';
 import messages from './personlinje-nb';

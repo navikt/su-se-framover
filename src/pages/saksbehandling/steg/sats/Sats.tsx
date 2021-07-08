@@ -11,9 +11,9 @@ import { useHistory } from 'react-router-dom';
 
 import { Sats as FaktiskSats } from '~/types/Sats';
 import { Person, fetchPerson } from '~api/personApi';
-import { SuperRadioGruppe } from '~components/FormElements';
+import { SuperRadioGruppe } from '~components/formElements/FormElements';
 import { SatsFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
-import { Personkort } from '~components/Personkort';
+import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { eqBosituasjon } from '~features/behandling/behandlingUtils';
 import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';

@@ -13,7 +13,7 @@ import { removeSpaces } from '~lib/formatUtils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 
-import { Personkort } from '../Personkort';
+import { Personkort } from '../personkort/Personkort';
 
 import messages from './personsøk-nb';
 import styles from './personsøk.module.less';

@@ -13,7 +13,7 @@ import { FeatureToggle } from '~api/featureToggleApi';
 import { UserProvider } from '~context/userContext';
 import enableHotjar from '~lib/tracking/hotjar';
 
-import ErrorBoundary from './components/ErrorBoundary';
+import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
 import Header from './components/header/Header';
 import WithDocTitle from './components/WithDocTitle';
 import * as meSlice from './features/me/me.slice';

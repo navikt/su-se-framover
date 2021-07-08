@@ -8,7 +8,7 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
-import Hendelseslogg from '~components/Hendelseslogg';
+import Hendelseslogg from '~components/hendelseslog/Hendelseslogg';
 import Personlinje from '~components/personlinje/Personlinje';
 import Personsøk from '~components/Personsøk/Personsøk';
 import { Languages } from '~components/TextProvider';

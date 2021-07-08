@@ -11,7 +11,7 @@ import {
     erUnderkjent,
     erVilkårsvurderingerVurdertAvslag,
 } from '~/features/behandling/behandlingUtils';
-import { SuperRadioGruppe } from '~components/FormElements';
+import { SuperRadioGruppe } from '~components/formElements/FormElements';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksoversikt/utils';

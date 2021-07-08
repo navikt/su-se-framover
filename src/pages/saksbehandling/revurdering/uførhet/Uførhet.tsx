@@ -14,7 +14,7 @@ import { v4 as uuid } from 'uuid';
 
 import { ApiError } from '~api/apiClient';
 import DatePicker from '~components/datePicker/DatePicker';
-import { JaNeiSpørsmål } from '~components/FormElements';
+import { JaNeiSpørsmål } from '~components/formElements/FormElements';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import RevurderingskallFeilet from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';

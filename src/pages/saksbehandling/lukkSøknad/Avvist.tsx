@@ -5,7 +5,7 @@ import { RadioPanelGruppe, Textarea } from 'nav-frontend-skjema';
 import React, { useCallback } from 'react';
 
 import { ApiError } from '~api/apiClient';
-import { JaNeiSpørsmål } from '~components/FormElements';
+import { JaNeiSpørsmål } from '~components/formElements/FormElements';
 import { hentLukketSøknadBrevutkast } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';

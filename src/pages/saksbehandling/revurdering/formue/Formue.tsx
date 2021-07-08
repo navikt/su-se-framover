@@ -22,7 +22,7 @@ import { useHistory } from 'react-router-dom';
 
 import * as personApi from '~api/personApi';
 import DatePicker from '~components/datePicker/DatePicker';
-import { Personkort } from '~components/Personkort';
+import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import Formuestatus from '~features/revurdering/formuestatus/Formuestatus';
 import {

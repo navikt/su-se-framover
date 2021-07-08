@@ -5,7 +5,7 @@ import { Input, Feiloppsummering } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { JaNeiSpørsmål } from '~/components/FormElements';
+import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
 import { formikErrorsTilFeiloppsummering, formikErrorsHarFeil, formueValideringSchema } from '~lib/validering';

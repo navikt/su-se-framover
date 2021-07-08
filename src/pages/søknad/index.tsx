@@ -8,7 +8,7 @@ import { useParams, useHistory, Link, Switch, Route } from 'react-router-dom';
 
 import { fetchMe } from '~api/meApi';
 import { Person } from '~api/personApi';
-import { Personkort } from '~components/Personkort';
+import { Personkort } from '~components/personkort/Personkort';
 import { useUserContext } from '~context/userContext';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { DelerBoligMed } from '~features/søknad/types';

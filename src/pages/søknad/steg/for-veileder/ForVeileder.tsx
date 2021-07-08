@@ -6,7 +6,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
-import { JaNeiSpørsmål } from '~/components/FormElements';
+import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { ForVeilederDigitalSøknad } from '~/features/søknad/søknad.slice';
 import { Person } from '~api/personApi';
 import TextProvider, { Languages } from '~components/TextProvider';
