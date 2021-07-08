@@ -7,7 +7,7 @@ import { keyOf } from '~lib/types';
 import søknadMessages from '~pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
 import { InstitusjonsoppholdStatus } from '~types/Behandlingsinformasjon';
 
-import saksbehandlingMessages from '../../../../../pages/saksbehandling/steg/institusjonsopphold/institusjonsopphold-nb';
+import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/institusjonsopphold/institusjonsopphold-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 

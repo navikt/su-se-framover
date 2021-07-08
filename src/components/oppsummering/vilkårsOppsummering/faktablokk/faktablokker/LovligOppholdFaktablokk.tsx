@@ -8,7 +8,7 @@ import { keyOf, Nullable } from '~lib/types';
 import søknadMessages from '~pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';
 
-import saksbehandlingMessages from '../../../../../pages/saksbehandling/steg/lovlig-opphold-i-norge/lovligOppholdINorge-nb';
+import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/lovlig-opphold-i-norge/lovligOppholdINorge-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 

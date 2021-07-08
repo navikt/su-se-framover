@@ -9,8 +9,8 @@ import { Sats } from '~types/Sats';
 import { SøknadInnhold } from '~types/Søknad';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
-import saksbehandlingMessages from '../../../../../pages/saksbehandling/steg/sats/sats-nb';
-import { delerBoligMedFormatted } from '../../../../../pages/saksbehandling/steg/sharedUtils';
+import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/sats/sats-nb';
+import { delerBoligMedFormatted } from '../../../../../pages/saksbehandling/søknadsbehandling/sharedUtils';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 

@@ -24,7 +24,7 @@ import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
 import ÅpneBehandlinger from './åpneBehandlinger/ÅpneBehandlinger';
 
-const Vilkår = React.lazy(() => import('./steg/vilkår/Vilkår'));
+const Vilkår = React.lazy(() => import('./søknadsbehandling/vilkår/Vilkår'));
 const SendTilAttesteringPage = React.lazy(() => import('./sendTilAttesteringPage/SendTilAttesteringPage'));
 const Vedtaksoppsummering = React.lazy(() => import('~pages/vedtak/Vedtaksoppsummering'));
 const BehandlingsoppsummeringPage = React.lazy(

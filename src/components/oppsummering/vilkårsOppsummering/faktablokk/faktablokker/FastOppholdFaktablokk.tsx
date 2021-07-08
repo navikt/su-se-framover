@@ -12,7 +12,7 @@ import flyktningstatusSøknadMessages from '~pages/søknad/steg/flyktningstatus-
 import { FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
-import saksbehandlingMessages from '../../../../../pages/saksbehandling/steg/fast-opphold-i-norge/fastOppholdINorge-nb';
+import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/fast-opphold-i-norge/fastOppholdINorge-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 

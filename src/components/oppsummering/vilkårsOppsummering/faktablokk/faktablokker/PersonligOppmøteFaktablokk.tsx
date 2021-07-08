@@ -7,7 +7,7 @@ import { useI18n } from '~lib/hooks';
 import { PersonligOppmøteStatus } from '~types/Behandlingsinformasjon';
 import { Søknadstype } from '~types/Søknad';
 
-import saksbehandlingMessages from '../../../../../pages/saksbehandling/steg/personlig-oppmøte/personligOppmøte-nb';
+import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/personlig-oppmøte/personligOppmøte-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 

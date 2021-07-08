@@ -8,7 +8,7 @@ import { useI18n } from '~lib/hooks';
 import { keyOf } from '~lib/types';
 import { OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
 
-import saksbehandlingMessages from '../../../../../pages/saksbehandling/steg/opphold-i-utlandet/oppholdIUtlandet-nb';
+import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/opphold-i-utlandet/oppholdIUtlandet-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk, { customFakta, FaktaSpacing } from '../Faktablokk';
 

@@ -7,7 +7,7 @@ import { keyOf } from '~lib/types';
 import søknadMessages from '~pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { FlyktningStatus } from '~types/Behandlingsinformasjon';
 
-import saksbehandlingMessages from '../../../../../pages/saksbehandling/steg/flyktning/flyktning-nb';
+import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/flyktning/flyktning-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 

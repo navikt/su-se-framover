@@ -15,7 +15,7 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { UførhetInput } from '~pages/saksbehandling/steg/uførhet/UføreInput';
+import { UførhetInput } from '~pages/saksbehandling/søknadsbehandling/uførhet/UføreInput';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 

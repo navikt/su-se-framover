@@ -8,9 +8,9 @@ import { Vilkårsinformasjon, vilkårTittelFormatted } from '~features/saksovers
 import { formatCurrency } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
-import saksbehandlingMessages from '~pages/saksbehandling/steg/formue/formue-nb';
-import { regnUtFormueVerdier, kalkulerFormueFraSøknad } from '~pages/saksbehandling/steg/formue/utils';
-import { delerBoligMedFormatted } from '~pages/saksbehandling/steg/sharedUtils';
+import saksbehandlingMessages from '~pages/saksbehandling/søknadsbehandling/formue/formue-nb';
+import { regnUtFormueVerdier, kalkulerFormueFraSøknad } from '~pages/saksbehandling/søknadsbehandling/formue/utils';
+import { delerBoligMedFormatted } from '~pages/saksbehandling/søknadsbehandling/sharedUtils';
 import { Behandlingsinformasjon, FormueStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 

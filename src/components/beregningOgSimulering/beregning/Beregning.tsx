@@ -36,9 +36,9 @@ import { Behandlingsstatus } from '~types/Behandling';
 import { Beregning } from '~types/Beregning';
 import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
 
-import sharedI18n from '../../../pages/saksbehandling/steg/sharedI18n-nb';
-import { VilkårsvurderingBaseProps } from '../../../pages/saksbehandling/steg/types';
-import { Vurderingknapper } from '../../../pages/saksbehandling/steg/Vurdering';
+import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
+import { VilkårsvurderingBaseProps } from '../../../pages/saksbehandling/søknadsbehandling/types';
+import { Vurderingknapper } from '../../../pages/saksbehandling/søknadsbehandling/Vurdering';
 import BeregningFaktablokk from '../../oppsummering/vilkårsOppsummering/faktablokk/faktablokker/BeregningFaktablokk';
 
 import messages from './beregning-nb';
