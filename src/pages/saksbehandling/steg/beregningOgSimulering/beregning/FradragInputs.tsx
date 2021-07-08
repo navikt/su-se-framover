@@ -164,17 +164,25 @@ const TilOgMedRadios = (props: {
         return null;
     }
 
-    const currentAndPrevious2Months = [
-        DateFns.subMonths(DateFns.endOfMonth(new Date()), 0),
-        DateFns.subMonths(DateFns.endOfMonth(new Date()), 1),
-        DateFns.subMonths(DateFns.endOfMonth(new Date()), 2),
-    ];
+    const forrigeKalendermåned = DateFns.subMonths(DateFns.endOfMonth(new Date()), 1);
+
+    const getTilOgMedDatoer = (startDate?: Nullable<Date>, endDate?: Nullable<Date>) => {
+        if (!startDate || !endDate) {
+            return [];
+        }
+
+        const dateInterval = DateFns.eachMonthOfInterval({
+            start: startDate,
+            end: endDate,
+        });
+
+        return dateInterval.map((date) => DateFns.endOfMonth(date));
+    };
 
     return (
         <ul>
-            {currentAndPrevious2Months
+            {getTilOgMedDatoer(beregningStartDato, forrigeKalendermåned)
                 .filter((date) => !DateFns.isBefore(date, periodeFraOgMed))
-                .reverse()
                 .map((date) => {
                     return (
                         <Radio
