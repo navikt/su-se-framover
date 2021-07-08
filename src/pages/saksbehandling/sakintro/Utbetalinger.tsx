@@ -60,7 +60,7 @@ export const Utbetalinger = (props: {
                 <div className={styles.stønadsperiodeHeader}>
                     <Undertittel>
                         {intl.formatDate(utbetalingsperioder[0].fraOgMed, { month: '2-digit', year: 'numeric' })} -{' '}
-                        {formatMonthYear(sisteUtbetalingsDato.toString(), intl)}
+                        {formatMonthYear(sisteUtbetalingsDato.toString())}
                     </Undertittel>
                     {kanGjenopptas ? (
                         <div className={styles.ikonContainer}>

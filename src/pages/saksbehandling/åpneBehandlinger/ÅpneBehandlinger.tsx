@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { fetchSak, hentÅpneBehandlingerForAlleSaker } from '~features/saksoversikt/sak.slice';
-import { formatDateTimeWtihoutIntl } from '~lib/dateUtils';
+import { formatDateTime } from '~lib/dateUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -182,7 +182,7 @@ const ÅpneBehandlingerTabell = (props: { tabelldata: ÅpenBehandling[] }) => {
                             {formatÅpenBehandlignsStatus(åpenBehandling.status, formatMessage)}
                         </td>
                         <td className={classNames({ ['tabell__td--sortert']: sortertKolonne === 'opprettet' })}>
-                            {formatDateTimeWtihoutIntl(åpenBehandling.opprettet)}
+                            {formatDateTime(åpenBehandling.opprettet)}
                         </td>
                         <td>
                             <KnappOgStatus saksnummer={åpenBehandling.saksnummer} />

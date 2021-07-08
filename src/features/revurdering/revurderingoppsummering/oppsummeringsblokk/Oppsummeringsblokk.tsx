@@ -25,11 +25,11 @@ const Intro = (props: { revurdering: Revurdering }) => {
                 },
                 {
                     tittel: intl.formatMessage({ id: 'label.periode' }),
-                    verdi: DateUtils.formatPeriode(props.revurdering.periode, intl),
+                    verdi: DateUtils.formatPeriode(props.revurdering.periode),
                 },
                 {
                     tittel: intl.formatMessage({ id: 'label.startet' }),
-                    verdi: DateUtils.formatDateTime(props.revurdering.opprettet, intl),
+                    verdi: DateUtils.formatDateTime(props.revurdering.opprettet),
                 },
                 {
                     tittel: intl.formatMessage({ id: 'label.årsak' }),
