@@ -14,8 +14,10 @@ export default {
     'behandling.status.tilAttestering': 'Til attestering',
     'behandling.status.underBehandling': 'Under behandling',
 
+    'tabell.caption': 'Tabell av åpne behandlinger',
+
     'sak.saksnummer': 'Saksnummer',
-    'sak.tilSaksoversikt': 'Til saksoversikt',
+    'sak.seSak': 'Se sak',
 
     'feil.feilOppstod': 'En feil oppstod',
     'feil.sak.kunneIkkeHente': 'Kunne ikke hente sak',
