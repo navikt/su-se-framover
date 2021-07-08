@@ -80,13 +80,16 @@ const ÅpneBehandlingerTabell = (props: { tabelldata: ÅpenBehandling[] }) => {
     const [sortVerdi, setSortVerdi] = useState<AriaSortVerdier>('none');
     const [sortertKolonne, setSortertKolonne] = useState<Kolonner | 'ingen'>('ingen');
 
+    const erKolonneSortertEtter = (k: Kolonner) => k === sortertKolonne;
+    const erSortVerdi = (s: AriaSortVerdier) => s === sortVerdi;
+
     const onTabellHeaderClick = (kolonne: Kolonner) => {
         sort(kolonne);
         setSortertKolonne(kolonne);
     };
     const sort = (kolonne: Kolonner) => {
         const sortert = tabell.slice().sort((a: ÅpenBehandling, b: ÅpenBehandling) => {
-            if (sortVerdi === 'ascending') {
+            if (erSortVerdi('ascending')) {
                 setSortVerdi('descending');
                 return a[kolonne] > b[kolonne] ? 1 : a[kolonne] < b[kolonne] ? -1 : 0;
             }
@@ -97,7 +100,7 @@ const ÅpneBehandlingerTabell = (props: { tabelldata: ÅpenBehandling[] }) => {
     };
 
     return (
-        <table className={'tabell'}>
+        <table className={classNames('tabell', styles.tabell)}>
             <caption role="alert" aria-live="polite">
                 {formatMessage('tabell.caption')}
             </caption>
@@ -105,14 +108,13 @@ const ÅpneBehandlingerTabell = (props: { tabelldata: ÅpenBehandling[] }) => {
                 <tr>
                     <th
                         role="columnheader"
-                        aria-sort={sortertKolonne === 'saksnummer' ? sortVerdi : 'none'}
-                        className={
-                            sortertKolonne === 'saksnummer'
-                                ? sortVerdi === 'ascending'
-                                    ? 'tabell__th--sortert-asc'
-                                    : 'tabell__th--sortert-desc'
-                                : undefined
-                        }
+                        aria-sort={erKolonneSortertEtter('saksnummer') ? sortVerdi : 'none'}
+                        className={classNames({
+                            ['tabell__th--sortert-asc']:
+                                erKolonneSortertEtter('saksnummer') && erSortVerdi('ascending'),
+                            ['tabell__th--sortert-desc']:
+                                erKolonneSortertEtter('saksnummer') && erSortVerdi('descending'),
+                        })}
                     >
                         <button aria-label="Sorter saksnummer" onClick={() => onTabellHeaderClick('saksnummer')}>
                             {formatMessage('sak.saksnummer')}
@@ -120,14 +122,13 @@ const ÅpneBehandlingerTabell = (props: { tabelldata: ÅpenBehandling[] }) => {
                     </th>
                     <th
                         role="columnheader"
-                        aria-sort={sortertKolonne === 'typeBehandling' ? sortVerdi : 'none'}
-                        className={
-                            sortertKolonne === 'typeBehandling'
-                                ? sortVerdi === 'ascending'
-                                    ? 'tabell__th--sortert-asc'
-                                    : 'tabell__th--sortert-desc'
-                                : undefined
-                        }
+                        aria-sort={erKolonneSortertEtter('typeBehandling') ? sortVerdi : 'none'}
+                        className={classNames({
+                            ['tabell__th--sortert-asc']:
+                                erKolonneSortertEtter('typeBehandling') && erSortVerdi('ascending'),
+                            ['tabell__th--sortert-desc']:
+                                erKolonneSortertEtter('typeBehandling') && erSortVerdi('descending'),
+                        })}
                     >
                         <button
                             aria-label="Sorter type behandling"
@@ -138,14 +139,11 @@ const ÅpneBehandlingerTabell = (props: { tabelldata: ÅpenBehandling[] }) => {
                     </th>
                     <th
                         role="columnheader"
-                        aria-sort={sortertKolonne === 'status' ? sortVerdi : 'none'}
-                        className={
-                            sortertKolonne === 'status'
-                                ? sortVerdi === 'ascending'
-                                    ? 'tabell__th--sortert-asc'
-                                    : 'tabell__th--sortert-desc'
-                                : undefined
-                        }
+                        aria-sort={erKolonneSortertEtter('status') ? sortVerdi : 'none'}
+                        className={classNames({
+                            ['tabell__th--sortert-asc']: erKolonneSortertEtter('status') && erSortVerdi('ascending'),
+                            ['tabell__th--sortert-desc']: erKolonneSortertEtter('status') && erSortVerdi('descending'),
+                        })}
                     >
                         <button aria-label="Sorter status" onClick={() => onTabellHeaderClick('status')}>
                             {formatMessage('behandling.status')}
@@ -153,14 +151,12 @@ const ÅpneBehandlingerTabell = (props: { tabelldata: ÅpenBehandling[] }) => {
                     </th>
                     <th
                         role="columnheader"
-                        aria-sort={sortertKolonne === 'opprettet' ? sortVerdi : 'none'}
-                        className={
-                            sortertKolonne === 'opprettet'
-                                ? sortVerdi === 'ascending'
-                                    ? 'tabell__th--sortert-asc'
-                                    : 'tabell__th--sortert-desc'
-                                : undefined
-                        }
+                        aria-sort={erKolonneSortertEtter('opprettet') ? sortVerdi : 'none'}
+                        className={classNames({
+                            ['tabell__th--sortert-asc']: erKolonneSortertEtter('opprettet') && erSortVerdi('ascending'),
+                            ['tabell__th--sortert-desc']:
+                                erKolonneSortertEtter('opprettet') && erSortVerdi('descending'),
+                        })}
                     >
                         <button aria-label="Sorter etter opprettet" onClick={() => onTabellHeaderClick('opprettet')}>
                             {formatMessage('behandling.opprettet')}
@@ -172,16 +168,18 @@ const ÅpneBehandlingerTabell = (props: { tabelldata: ÅpenBehandling[] }) => {
             <tbody>
                 {tabell.map((åpenBehandling) => (
                     <tr key={åpenBehandling.behandlingId}>
-                        <td className={classNames({ ['tabell__td--sortert']: sortertKolonne === 'saksnummer' })}>
+                        <td className={classNames({ ['tabell__td--sortert']: erKolonneSortertEtter('saksnummer') })}>
                             {åpenBehandling.saksnummer}
                         </td>
-                        <td className={classNames({ ['tabell__td--sortert']: sortertKolonne === 'typeBehandling' })}>
+                        <td
+                            className={classNames({ ['tabell__td--sortert']: erKolonneSortertEtter('typeBehandling') })}
+                        >
                             {formatÅpenBehandlingsType(åpenBehandling.typeBehandling, formatMessage)}
                         </td>
-                        <td className={classNames({ ['tabell__td--sortert']: sortertKolonne === 'status' })}>
+                        <td className={classNames({ ['tabell__td--sortert']: erKolonneSortertEtter('status') })}>
                             {formatÅpenBehandlignsStatus(åpenBehandling.status, formatMessage)}
                         </td>
-                        <td className={classNames({ ['tabell__td--sortert']: sortertKolonne === 'opprettet' })}>
+                        <td className={classNames({ ['tabell__td--sortert']: erKolonneSortertEtter('opprettet') })}>
                             {formatDateTime(åpenBehandling.opprettet)}
                         </td>
                         <td>
