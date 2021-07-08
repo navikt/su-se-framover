@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Delete } from '@navikt/ds-icons';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { Knapp } from 'nav-frontend-knapper';
@@ -12,7 +13,6 @@ import { useHistory } from 'react-router';
 import { v4 as uuid } from 'uuid';
 
 import { ApiError } from '~api/apiClient';
-import { TrashBin } from '~assets/Icons';
 import DatePicker from '~components/datePicker/DatePicker';
 import { JaNeiSpørsmål } from '~components/FormElements';
 import ToKolonner from '~components/toKolonner/ToKolonner';
@@ -181,7 +181,7 @@ const Uføreperiodevurdering = (props: {
                         kompakt
                         aria-label={intl.formatMessage({ id: 'input.fjernPeriode.label' })}
                     >
-                        <TrashBin width="24px" height="24px" />
+                        <Delete />
                     </Knapp>
                 </div>
                 <Controller
