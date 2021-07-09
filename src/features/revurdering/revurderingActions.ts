@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import * as revurderingApi from '~api/revurderingApi';
 import { Nullable } from '~lib/types';
-import { UnderkjennRevurderingGrunn } from '~pages/attestering/attesterRevurdering/AttesterRevurdering';
+import { UnderkjennRevurderingGrunn } from '~pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
