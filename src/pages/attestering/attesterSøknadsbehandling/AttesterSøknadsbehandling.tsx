@@ -23,8 +23,8 @@ import { Sak } from '~types/Sak';
 
 import SharedStyles from '../sharedStyles.module.less';
 
-import messages from './attesteringPage-nb';
-import styles from './attesteringPage.module.less';
+import messages from './attesterSøknadsbehandling-nb';
+import styles from './attesterSøknadsbehandling.module.less';
 
 interface FormData {
     beslutning?: boolean;

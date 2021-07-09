@@ -11,9 +11,9 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
-import AttesterBehandling from './attesterBehandlingPage/AttesterBehandlingPage';
 import messages from './attestering-nb';
 import AttesterRevurdering from './attesterRevurdering/AttesterRevurdering';
+import AttesterSøknadsbehandling from './attesterSøknadsbehandling/AttesterSøknadsbehandling';
 
 const Attestering = () => {
     const dispatch = useAppDispatch();
@@ -43,7 +43,7 @@ const Attestering = () => {
                 return (
                     <Switch>
                         <Route path={Routes.attesterBehandling.path}>
-                            <AttesterBehandling sak={sakValue} søker={søkerValue} />
+                            <AttesterSøknadsbehandling sak={sakValue} søker={søkerValue} />
                         </Route>
                         <Route path={Routes.attesterRevurdering.path}>
                             <AttesterRevurdering sak={sakValue} søker={søkerValue} />
