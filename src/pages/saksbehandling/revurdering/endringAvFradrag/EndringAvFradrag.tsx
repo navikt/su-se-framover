@@ -13,10 +13,10 @@ import {
     FradragInputs,
     fradragSchema,
 } from '~components/beregningOgSimulering/beregning/FradragInputs';
+import Fradragoppsummering from '~components/revurdering/fradragoppsummering/Fradragoppsummering';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
 import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions';
-import Fradragoppsummering from '~features/revurdering/revurderingoppsummering/fradragoppsummering/Fradragoppsummering';
 import RevurderingskallFeilet from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';

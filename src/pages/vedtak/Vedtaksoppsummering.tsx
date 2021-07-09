@@ -7,7 +7,7 @@ import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { hentTidligereGrunnlagsdataForVedtak } from '~api/revurderingApi';
-import Revurderingoppsummering from '~features/revurdering/revurderingoppsummering/Revurderingoppsummering';
+import Revurderingoppsummering from '~components/revurdering/Revurderingoppsummering';
 import { pipe } from '~lib/fp';
 import { useApiCall, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';

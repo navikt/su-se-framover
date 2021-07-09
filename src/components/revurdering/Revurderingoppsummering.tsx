@@ -1,9 +1,9 @@
 import * as React from 'react';
 
+import Beregningblokk from '~components/revurdering/beregningblokk/Beregningblokk';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering } from '~types/Revurdering';
 
-import Beregningblokk from './beregningblokk/Beregningblokk';
 import Oppsummeringsblokk from './oppsummeringsblokk/Oppsummeringsblokk';
 import styles from './revurderingoppsummering.module.less';
 

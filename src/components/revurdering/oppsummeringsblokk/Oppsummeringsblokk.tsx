@@ -1,13 +1,13 @@
 import { Normaltekst, Element } from 'nav-frontend-typografi';
 import * as React from 'react';
 
+import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering } from '~types/Revurdering';
 
-import * as RevurderingUtils from '../../revurderingUtils';
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 import Vedtaksinformasjon from '../vedtaksinformasjon/Vedtaksinformasjon';
 
@@ -34,7 +34,7 @@ const Intro = (props: { revurdering: Revurdering }) => {
                 {
                     tittel: intl.formatMessage({ id: 'label.årsak' }),
                     verdi: intl.formatMessage({
-                        id: RevurderingUtils.getRevurderingsårsakMessageId(props.revurdering.årsak),
+                        id: getRevurderingsårsakMessageId(props.revurdering.årsak),
                     }),
                 },
                 {

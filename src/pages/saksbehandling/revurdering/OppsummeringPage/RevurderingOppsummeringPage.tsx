@@ -6,8 +6,8 @@ import { useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import { Revurderingshandling } from '~api/revurderingApi';
+import Revurderingoppsummering from '~components/revurdering/Revurderingoppsummering';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
-import Revurderingoppsummering from '~features/revurdering/revurderingoppsummering/Revurderingoppsummering';
 import RevurderingskallFeilet, {
     feilkodeTilFeilmelding,
 } from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';

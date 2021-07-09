@@ -5,14 +5,14 @@ import { Normaltekst, Element, Ingress } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
+import Formuestatus from '~features/revurdering/formuestatus/Formuestatus';
+import { regnUtFormuegrunnlag } from '~features/revurdering/RevurderFormueUtils';
+import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
 import { useI18n } from '~lib/hooks';
 import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering, Vurderingstatus, InformasjonSomRevurderes } from '~types/Revurdering';
 
-import Formuestatus from '../../formuestatus/Formuestatus';
-import { regnUtFormuegrunnlag } from '../../RevurderFormueUtils';
-import { hentBosituasjongrunnlag } from '../../revurderingUtils';
 import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåroppsummering/FormuevilkårOppsummering';
 import Fradragoppsummering from '../fradragoppsummering/Fradragoppsummering';
 
