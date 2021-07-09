@@ -27,8 +27,8 @@ import ÅpneBehandlinger from './åpneBehandlinger/ÅpneBehandlinger';
 const Vilkår = React.lazy(() => import('./søknadsbehandling/vilkår/Vilkår'));
 const SendTilAttesteringPage = React.lazy(() => import('./sendTilAttesteringPage/SendTilAttesteringPage'));
 const Vedtaksoppsummering = React.lazy(() => import('~pages/vedtak/Vedtaksoppsummering'));
-const BehandlingsoppsummeringPage = React.lazy(
-    () => import('./behandlingsoppsummeringPage/BehandlingsoppsummeringPage')
+const Søknadsbehandlingvedtakoppsummering = React.lazy(
+    () => import('./søknadsbehandlingvedtakoppsummering/Søknadsbehandlingvedtakoppsummering')
 );
 const LukkSøknad = React.lazy(() => import('./lukkSøknad/LukkSøknad'));
 const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));
@@ -150,7 +150,8 @@ const Saksoversikt = () => {
                                                                     })}
                                                                 </Innholdstittel>
                                                             </div>
-                                                            <BehandlingsoppsummeringPage sak={sak} />
+                                                            lol
+                                                            <Søknadsbehandlingvedtakoppsummering sak={sak} />
                                                         </Route>
                                                     </Switch>
                                                 </div>

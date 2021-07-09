@@ -89,7 +89,6 @@ const Vedtaksoppsummering = (props: Props) => {
     return (
         <div className={styles.container}>
             {renderOppsummering()}
-
             <Knapp htmlType="button" className={styles.tilbakeKnapp} onClick={() => history.goBack()}>
                 {intl.formatMessage({ id: 'knapp.tilbake' })}
             </Knapp>

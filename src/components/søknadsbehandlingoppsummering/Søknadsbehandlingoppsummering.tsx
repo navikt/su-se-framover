@@ -11,9 +11,9 @@ import { Periode } from '~types/Periode';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
 
-import BehandlingHeader from './BehandlingHeader';
-import messages from './behandlingsoppsummering-nb';
-import styles from './behandlingsoppsummering.module.less';
+import messages from './søknadsbehandling-nb';
+import SøknadsbehandlingHeader from './SøknadsbehandlingHeader';
+import styles from './søknadsbehandlingoppsummering.module.less';
 
 interface Props {
     sak: Sak;
@@ -22,13 +22,13 @@ interface Props {
     medBrevutkastknapp?: boolean;
 }
 
-const Behandlingsoppsummering = (props: Props) => {
+const Søknadsbehandlingoppsummering = (props: Props) => {
     const { intl } = useI18n({ messages });
     const periode = props.behandling.stønadsperiode ? getPeriode(props.behandling.stønadsperiode) : null;
 
     return (
         <div>
-            <BehandlingHeader
+            <SøknadsbehandlingHeader
                 sakId={props.sak.id}
                 behandling={props.behandling}
                 vedtakForBehandling={props.vedtakForBehandling}
@@ -75,4 +75,4 @@ function getPeriode(behandlingsperiode: Behandlingsperiode): Nullable<Periode<st
     return { fraOgMed: fraOgMed, tilOgMed: tilOgMed };
 }
 
-export default Behandlingsoppsummering;
+export default Søknadsbehandlingoppsummering;

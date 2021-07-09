@@ -7,7 +7,7 @@ import React, { useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import * as PdfApi from '~api/pdfApi';
-import Behandlingsoppsummering from '~components/oppsummering/Behandlingsoppsummering';
+import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import {
     erAvslått,
     erUnderkjent,
@@ -79,7 +79,7 @@ const SendTilAttesteringPage = (props: Props) => {
                         </Innholdstittel>
                     </div>
 
-                    <Behandlingsoppsummering sak={sak} behandling={behandling} />
+                    <Søknadsbehandlingoppsummering sak={sak} behandling={behandling} />
                 </div>
                 <div className={styles.fritekstareaOuterContainer}>
                     <div className={styles.fritekstareaContainer}>

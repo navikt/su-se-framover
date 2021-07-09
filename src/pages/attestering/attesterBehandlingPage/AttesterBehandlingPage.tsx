@@ -10,8 +10,8 @@ import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
-import Behandlingsoppsummering from '~components/oppsummering/Behandlingsoppsummering';
 import Personlinje from '~components/personlinje/Personlinje';
+import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import { erIverksatt, erTilAttestering } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useAsyncActionCreator, useI18n } from '~lib/hooks';
@@ -134,7 +134,7 @@ const Attesteringsinnhold = ({
                     {intl.formatMessage({ id: 'page.tittel' })}
                 </Innholdstittel>
 
-                <Behandlingsoppsummering sak={props.sak} behandling={props.behandling} medBrevutkastknapp />
+                <Søknadsbehandlingoppsummering sak={props.sak} behandling={props.behandling} medBrevutkastknapp />
 
                 <div className={SharedStyles.navigeringContainer}>
                     {erTilAttestering(props.behandling) && (

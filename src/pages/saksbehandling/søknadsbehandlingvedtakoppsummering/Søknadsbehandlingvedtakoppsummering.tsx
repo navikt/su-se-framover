@@ -2,19 +2,19 @@ import classNames from 'classnames';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import Behandlingsoppsummering from '~components/oppsummering/Behandlingsoppsummering';
+import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 
-import messages from './behandlingsoppsummeringPage-nb';
-import styles from './behandlingsoppsummeringPage.module.less';
+import messages from './søknadsbehandlingvedtakoppsummering-nb';
+import styles from './søknadsbehandlingvedtakoppsummering.module.less';
 
 interface Props {
     sak: Sak;
 }
 
-const BehandlingsoppsummeringPage = (props: Props) => {
+const Søknadsbehandlingvedtakoppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
     const behandling = props.sak.behandlinger.find((behandling) => behandling.id === urlParams.behandlingId);
     const vedtakForBehandling = props.sak.vedtak.find((v) => v.behandlingId === behandling?.id);
@@ -26,7 +26,7 @@ const BehandlingsoppsummeringPage = (props: Props) => {
 
     return (
         <div className={styles.oppsummeringContainer}>
-            <Behandlingsoppsummering
+            <Søknadsbehandlingoppsummering
                 sak={props.sak}
                 behandling={behandling}
                 vedtakForBehandling={vedtakForBehandling}
@@ -47,4 +47,4 @@ const BehandlingsoppsummeringPage = (props: Props) => {
     );
 };
 
-export default BehandlingsoppsummeringPage;
+export default Søknadsbehandlingvedtakoppsummering;

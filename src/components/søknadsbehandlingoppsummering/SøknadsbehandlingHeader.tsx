@@ -16,12 +16,12 @@ import { søknadMottatt } from '~lib/søknadUtils';
 import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
 import { Vedtak } from '~types/Vedtak';
 
-import styles from './behandlingHeader.module.less';
-import messages from './behandlingsoppsummering-nb';
+import messages from './søknadsbehandling-nb';
+import styles from './søknadsbehandlingHeader.module.less';
 
 const iconWidth = '24px';
 
-const BehandlingHeader = (props: {
+const SøknadsbehandlingHeader = (props: {
     sakId: string;
     behandling: Behandling;
     vedtakForBehandling?: Vedtak;
@@ -181,4 +181,4 @@ function underkjentGrunnTilTekst(grunn: UnderkjennelseGrunn, intl: IntlShape): s
     }
 }
 
-export default BehandlingHeader;
+export default SøknadsbehandlingHeader;
