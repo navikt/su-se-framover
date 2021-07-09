@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Beregningblokk from '~components/revurdering/beregningblokk/Beregningblokk';
+import Beregningblokk from '~components/revurdering/oppsummering/beregningblokk/Beregningblokk';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering } from '~types/Revurdering';
 

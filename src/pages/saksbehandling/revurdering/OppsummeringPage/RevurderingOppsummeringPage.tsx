@@ -6,12 +6,12 @@ import { useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import { Revurderingshandling } from '~api/revurderingApi';
-import Revurderingoppsummering from '~components/revurdering/Revurderingoppsummering';
-import * as RevurderingActions from '~features/revurdering/revurderingActions';
+import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
 import RevurderingskallFeilet, {
     feilkodeTilFeilmelding,
-} from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
-import revurderingsfeilMessages from '~features/revurdering/revurderingskallFeilet/revurderingskallFeilet-nb';
+} from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
+import revurderingsfeilMessages from '~components/revurdering/revurderingskallFeilet/revurderingskallFeilet-nb';
+import * as RevurderingActions from '~features/revurdering/revurderingActions';
 import {
     erBeregnetIngenEndring,
     erForhåndsvarslingBesluttet,

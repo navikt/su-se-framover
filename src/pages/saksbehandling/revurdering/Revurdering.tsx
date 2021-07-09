@@ -10,8 +10,8 @@ import { Link, Route, Switch } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
+import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
-import RevurderingskallFeilet from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import {
     revurderingstegrekkefølge,
     revurderingstegTilInformasjonSomRevurderes,
