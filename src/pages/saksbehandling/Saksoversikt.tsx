@@ -25,10 +25,12 @@ import styles from './saksoversikt.module.less';
 import ÅpneBehandlinger from './åpneBehandlinger/ÅpneBehandlinger';
 
 const Vilkår = React.lazy(() => import('./søknadsbehandling/vilkår/Vilkår'));
-const SendTilAttesteringPage = React.lazy(() => import('./sendTilAttesteringPage/SendTilAttesteringPage'));
-const Vedtaksoppsummering = React.lazy(() => import('~pages/vedtak/Vedtaksoppsummering'));
+const SendTilAttesteringPage = React.lazy(
+    () => import('./søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage')
+);
+const Vedtaksoppsummering = React.lazy(() => import('~pages/saksbehandling/vedtak/Vedtaksoppsummering'));
 const Søknadsbehandlingvedtakoppsummering = React.lazy(
-    () => import('./søknadsbehandlingvedtakoppsummering/Søknadsbehandlingvedtakoppsummering')
+    () => import('./vedtak/søknadsbehandlingvedtakoppsummering/Søknadsbehandlingvedtakoppsummering')
 );
 const LukkSøknad = React.lazy(() => import('./lukkSøknad/LukkSøknad'));
 const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));
@@ -150,7 +152,6 @@ const Saksoversikt = () => {
                                                                     })}
                                                                 </Innholdstittel>
                                                             </div>
-                                                            lol
                                                             <Søknadsbehandlingvedtakoppsummering sak={sak} />
                                                         </Route>
                                                     </Switch>

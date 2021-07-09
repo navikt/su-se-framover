@@ -1,19 +1,12 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
-import NavFrontendSpinner from 'nav-frontend-spinner';
-import React, { useEffect } from 'react';
-import { IntlShape } from 'react-intl';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { hentTidligereGrunnlagsdataForVedtak } from '~api/revurderingApi';
-import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
-import { pipe } from '~lib/fp';
-import { useApiCall, useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 
+import RevurderingsoppsummeringWithSnapshot from './revurderingsvedtakWithSnapshot/RevurderingsoppsummeringWithSnapshot';
 import { hentInformasjonKnyttetTilVedtak } from './utils';
 import messages from './vedtaksoppsummering-nb';
 import styles from './vedtaksoppsummering.module.less';
@@ -21,42 +14,6 @@ import styles from './vedtaksoppsummering.module.less';
 interface Props {
     sak: Sak;
 }
-
-const RevurderingsoppsummeringWithSnapshot = (props: {
-    revurdering: Revurdering;
-    sakId: string;
-    vedtakId: string;
-    intl: IntlShape;
-}) => {
-    const [revurderingSnapshot, hentRevurderingSnapshot] = useApiCall(hentTidligereGrunnlagsdataForVedtak);
-
-    useEffect(() => {
-        hentRevurderingSnapshot({ sakId: props.sakId, vedtakId: props.vedtakId });
-    }, []);
-
-    return (
-        <div>
-            {pipe(
-                revurderingSnapshot,
-                RemoteData.fold(
-                    () => <NavFrontendSpinner />,
-                    () => <NavFrontendSpinner />,
-                    (error) => (
-                        <AlertStripeFeil>
-                            {error?.body?.message ?? props.intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
-                        </AlertStripeFeil>
-                    ),
-                    (snapshot) => (
-                        <Revurderingoppsummering
-                            revurdering={props.revurdering}
-                            forrigeGrunnlagsdataOgVilkårsvurderinger={snapshot}
-                        />
-                    )
-                )
-            )}
-        </div>
-    );
-};
 
 const Vedtaksoppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.vedtaksoppsummering>();
