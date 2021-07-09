@@ -23,10 +23,10 @@ import { useHistory } from 'react-router-dom';
 import * as personApi from '~api/personApi';
 import DatePicker from '~components/datePicker/DatePicker';
 import { Personkort } from '~components/personkort/Personkort';
+import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
 import FormuevilkårOppsummering from '~components/revurdering/oppsummering/formuevilkåroppsummering/FormuevilkårOppsummering';
 import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import Formuestatus from '~features/revurdering/formuestatus/Formuestatus';
 import {
     FormueFormData,
     revurderFormueSchema,
