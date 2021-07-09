@@ -11,9 +11,9 @@ import { useI18n } from '~lib/hooks';
 import { formikErrorsTilFeiloppsummering, formikErrorsHarFeil, formueValideringSchema } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
-import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import sharedStyles from '../../steg-shared.module.less';
-import sharedI18n from '../steg-shared-i18n';
+import Bunnknapper from '../../../bunnknapper/Bunnknapper';
+import sharedStyles from '../../../steg-shared.module.less';
+import sharedI18n from '../../steg-shared-i18n';
 
 import messages from './ektefellesformue-nb';
 
