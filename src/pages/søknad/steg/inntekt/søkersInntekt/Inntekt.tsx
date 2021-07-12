@@ -12,9 +12,9 @@ import { keyOf } from '~lib/types';
 import { formikErrorsHarFeil, formikErrorsTilFeiloppsummering, inntektsValideringSchema } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
-import Bunnknapper from '../../bunnknapper/Bunnknapper';
-import sharedStyles from '../../steg-shared.module.less';
-import sharedI18n from '../steg-shared-i18n';
+import Bunnknapper from '../../../bunnknapper/Bunnknapper';
+import sharedStyles from '../../../steg-shared.module.less';
+import sharedI18n from '../../steg-shared-i18n';
 
 import messages from './inntekt-nb';
 import styles from './inntekt.module.less';
