@@ -14,8 +14,6 @@ export default {
     'eiendom.brukesTil': 'Hva brukes eiendommene til?',
 
     'kjøretøy.label': 'Eier du bil, campingvogn eller andre kjøretøy?',
-    'kjøretøy.regNr': 'Registreringsnummer',
-    'kjøretøy.verdi': 'Kjøretøyets verdi',
 
     'innskudd.label': 'Har du penger på konto?',
     'innskudd.pengerPåKontoInkludertDepositum': 'Har du penger på konto (inkludert depositumskonto)?',
@@ -29,7 +27,4 @@ export default {
 
     'harKontanter.label': 'Har du mer enn 1000 kr i kontanter?',
     'harKontanter.beløp': 'Hvor mye penger har du?',
-
-    'button.fjern.kjøretøy': 'Fjern kjøretøy',
-    'button.leggTil.kjøretøy': 'Legg til et annet kjøretøy',
 };

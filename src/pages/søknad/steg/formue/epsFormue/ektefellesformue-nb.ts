@@ -14,8 +14,6 @@ export default {
     'eiendom.brukesTil': 'Hva brukes eiendommene til?',
 
     'kjøretøy.label': 'Eier ektefelle/samboer bil, campingvogn eller andre kjøretøy?',
-    'kjøretøy.regNr': 'Registreringsnummer',
-    'kjøretøy.verdi': 'Kjøretøyets verdi',
 
     'innskudd.label': 'Har ektefelle/samboer penger på konto?',
     'innskudd.pengerPåKontoInkludertDepositum': 'Har ektefelle/samboer penger på konto (inkludert depositumskonto)?',
@@ -29,7 +27,4 @@ export default {
 
     'harKontanter.label': 'Har ektefelle/samboer mer enn 1000 kroner i kontanter?',
     'harKontanter.beløp': 'Hvor mye penger har ektefelle/samboer?',
-
-    'button.fjern.kjøretøy': 'Fjern kjøretøy',
-    'button.leggTil.kjøretøy': 'Legg til annet kjøretøy',
 };
