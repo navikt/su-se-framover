@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useFormik, FormikErrors } from 'formik';
+import { useFormik } from 'formik';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Input } from 'nav-frontend-skjema';
 import * as React from 'react';
@@ -14,101 +14,11 @@ import { useI18n } from '../../../../../lib/hooks';
 import Bunnknapper from '../../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../../steg-shared.module.less';
 import sharedI18n from '../../steg-shared-i18n';
-import styles from '../søkersInntekt/inntekt.module.less';
+import TrygdeytelserInputFelter from '../TrygdeytelserInputs/TrygdeytelserInputs';
 
 import messages from './inntekt-nb';
 
 type FormData = SøknadState['inntekt'];
-
-const TrygdeytelserInputFelter = (props: {
-    arr: Array<{ beløp: string; type: string; valuta: string }>;
-    errors: string | string[] | Array<FormikErrors<{ beløp: string; type: string; valuta: string }>> | undefined;
-    feltnavn: string;
-    onChange: (element: { index: number; beløp: string; type: string; valuta: string }) => void;
-    onLeggTilClick: () => void;
-    onFjernClick: (index: number) => void;
-}) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-
-    return (
-        <ul>
-            {props.arr.map((input, idx) => {
-                const errorForLinje = Array.isArray(props.errors) ? props.errors[idx] : null;
-                const beløpId = `${props.feltnavn}[${idx}].beløp`;
-                const typeId = `${props.feltnavn}[${idx}].type`;
-                const valutaId = `${props.feltnavn}[${idx}].valuta`;
-
-                return (
-                    <li className={styles.trygdeytelserContainer} key={idx}>
-                        <div className={styles.trippleFelter}>
-                            <Input
-                                id={`${beløpId}`}
-                                name={`${beløpId}`}
-                                label={formatMessage('trygdeytelserIUtlandet.beløp')}
-                                value={input.beløp}
-                                feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.beløp}
-                                onChange={(e) => {
-                                    props.onChange({
-                                        index: idx,
-                                        beløp: e.target.value,
-                                        type: input.type,
-                                        valuta: input.valuta,
-                                    });
-                                }}
-                            />
-
-                            <Input
-                                id={`${valutaId}`}
-                                name={`${valutaId}`}
-                                label={formatMessage('trygdeytelserIUtlandet.valuta')}
-                                value={input.valuta}
-                                feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.valuta}
-                                onChange={(e) => {
-                                    props.onChange({
-                                        index: idx,
-                                        beløp: input.beløp,
-                                        type: input.type,
-                                        valuta: e.target.value,
-                                    });
-                                }}
-                            />
-                            <Input
-                                id={`${typeId}`}
-                                name={`${typeId}`}
-                                label={formatMessage('trygdeytelserIUtlandet.ytelse')}
-                                feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.type}
-                                value={input.type}
-                                onChange={(e) => {
-                                    props.onChange({
-                                        index: idx,
-                                        beløp: input.beløp,
-                                        type: e.target.value,
-                                        valuta: input.valuta,
-                                    });
-                                }}
-                            />
-                        </div>
-                        {props.arr.length > 1 && (
-                            <Knapp
-                                className={styles.fjernFeltButton}
-                                onClick={() => props.onFjernClick(idx)}
-                                htmlType="button"
-                            >
-                                {formatMessage('button.fjern.trygdeytelse')}
-                            </Knapp>
-                        )}
-                        {errorForLinje && typeof errorForLinje === 'string' && errorForLinje}
-                    </li>
-                );
-            })}
-            <div className={sharedStyles.leggTilFeltKnapp}>
-                <Knapp onClick={() => props.onLeggTilClick()} htmlType="button">
-                    {formatMessage('button.leggTil.trygdeytelse')}
-                </Knapp>
-            </div>
-        </ul>
-    );
-};
 
 const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: string }) => {
     const ektefelle = useAppSelector((s) => s.soknad.ektefelle);

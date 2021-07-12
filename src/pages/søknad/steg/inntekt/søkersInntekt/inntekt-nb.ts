@@ -16,16 +16,11 @@ export default {
     'sosialstønad.beløp': 'Hvor mye penger har du fått i den tiden? (valgfri)',
 
     'trygdeytelserIUtlandet.label': 'Har du trygdeytelser fra andre land?',
-    'trygdeytelserIUtlandet.beløp': 'Hvor mye får du i lokal valuta i måneden?',
-    'trygdeytelserIUtlandet.ytelse': 'Type ytelse',
-    'trygdeytelserIUtlandet.valuta': 'Valuta',
 
     'mottarPensjon.label': 'Får du tjenestepensjon eller pensjon som ikke er fra NAV?',
     'mottarPensjon.fra': 'Hvem får du pengene fra?',
     'mottarPensjon.beløp': 'Hvor mye penger får du i måneden?',
 
-    'button.fjern.trygdeytelse': 'Fjern trygdeytelse',
     'button.fjern.pensjonsgiver': 'Fjern pensjonsgiver',
-    'button.leggTil.trygdeytelse': 'Legg til annen trygdeytelse',
     'button.leggTil.pensjonsgiver': 'Legg til annen pensjonsgiver',
 };
