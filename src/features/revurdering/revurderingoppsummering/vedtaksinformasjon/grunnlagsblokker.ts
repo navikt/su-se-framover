@@ -19,7 +19,7 @@ export type Grunnlagsblokk = Array<{
 
 export function getUførevilkårgrunnlagsblokker(
     vilkår: UføreVilkår,
-    { intl, formatMessage }: UseI18N<Messages>
+    { formatMessage }: UseI18N<Messages>
 ): Grunnlagsblokk[] {
     return vilkår.vurderinger.map((v) =>
         v.grunnlag && v.resultat === UføreResultat.VilkårOppfylt
@@ -30,11 +30,11 @@ export function getUførevilkårgrunnlagsblokker(
                   },
                   {
                       label: formatMessage('generell.label.periode'),
-                      verdi: formatPeriode(v.grunnlag.periode, intl),
+                      verdi: formatPeriode(v.grunnlag.periode),
                   },
                   {
                       label: formatMessage('uførhet.label.ieu'),
-                      verdi: formatCurrency(intl, v.grunnlag.forventetInntekt),
+                      verdi: formatCurrency(v.grunnlag.forventetInntekt),
                   },
               ]
             : [
@@ -44,23 +44,20 @@ export function getUførevilkårgrunnlagsblokker(
                   },
                   {
                       label: formatMessage('generell.label.periode'),
-                      verdi: formatPeriode(v.periode, intl),
+                      verdi: formatPeriode(v.periode),
                   },
               ]
     );
 }
 
-export function getBosituasjongrunnlagsblokker(
-    b: Bosituasjon,
-    { intl, formatMessage }: UseI18N<Messages>
-): Grunnlagsblokk[] {
+export function getBosituasjongrunnlagsblokker(b: Bosituasjon, { formatMessage }: UseI18N<Messages>): Grunnlagsblokk[] {
     if (!erBosituasjonFullstendig(b)) {
         return [];
     }
     const basics = [
         {
             label: formatMessage('generell.label.periode'),
-            verdi: formatPeriode(b.periode, intl),
+            verdi: formatPeriode(b.periode),
         },
         {
             label: formatMessage('bosituasjon.label.sats'),

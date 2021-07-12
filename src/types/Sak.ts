@@ -22,3 +22,23 @@ export enum KanStansesEllerGjenopptas {
     GJENOPPTA = 'GJENOPPTA',
     INGEN = 'INGEN',
 }
+
+export interface ÅpenBehandling {
+    saksnummer: string;
+    behandlingId: string;
+    typeBehandling: ÅpenBehandlingType;
+    status: ÅpenBehandlingStatus;
+    opprettet: string;
+}
+
+export enum ÅpenBehandlingType {
+    SØKNADSBEHANDLING = 'SØKNADSBEHANDLING',
+    REVURDERING = 'REVURDERING',
+}
+
+export enum ÅpenBehandlingStatus {
+    UNDER_BEHANDLING = 'UNDER_BEHANDLING',
+    NY_SØKNAD = 'NY_SØKNAD',
+    UNDERKJENT = 'UNDERKJENT',
+    TIL_ATTESTERING = 'TIL_ATTESTERING',
+}

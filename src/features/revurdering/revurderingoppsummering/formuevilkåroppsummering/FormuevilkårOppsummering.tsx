@@ -28,7 +28,7 @@ export const Formuevurdering = ({ vurdering }: { vurdering: VurderingsperiodeFor
         <div>
             <div className={styles.gjeldendePeriode}>
                 <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.gjeldendePeriode' })}</Normaltekst>
-                <Element>{DateUtils.formatPeriode(vurdering.periode, intl)}</Element>
+                <Element>{DateUtils.formatPeriode(vurdering.periode)}</Element>
             </div>
             <div className={styles.oppsummeringsContainer}>
                 <div className={styles.formueInfo}>

@@ -14,9 +14,9 @@ const RevurderingsperiodeHeader = (props: { periode: Periode<string> }) => {
         <div className={styles.container}>
             <Systemtittel className={styles.tittel}>{intl.formatMessage({ id: 'heading' })}</Systemtittel>
             <Undertittel>
-                {DateUtils.formatMonthYear(props.periode.fraOgMed, intl)}
+                {DateUtils.formatMonthYear(props.periode.fraOgMed)}
                 {' – '}
-                {DateUtils.formatMonthYear(props.periode.tilOgMed, intl)}
+                {DateUtils.formatMonthYear(props.periode.tilOgMed)}
             </Undertittel>
         </div>
     );

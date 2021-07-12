@@ -1,9 +1,12 @@
 import * as DateFns from 'date-fns';
-import { FormatDateOptions, IntlShape } from 'react-intl';
+import { createIntl, createIntlCache, FormatDateOptions } from 'react-intl';
 
 import { Periode } from '../types/Periode';
 
 import { Nullable } from './types';
+
+const cache = createIntlCache();
+const intl = createIntl({ locale: 'nb-NO' }, cache);
 
 enum DateFormats {
     IsoDateOnly = 'yyyy-MM-dd',
@@ -15,11 +18,11 @@ const formatDateOptions: FormatDateOptions = {
     day: '2-digit',
 };
 
-export const formatDateTime = (time: string, intl: IntlShape) => {
+export const formatDateTime = (time: string) => {
     return `${intl.formatDate(time, formatDateOptions)} ${intl.formatTime(time)}`;
 };
 
-export const formatMonthYear = (date: string, intl: IntlShape) =>
+export const formatMonthYear = (date: string) =>
     intl.formatDate(date, {
         ...formatDateOptions,
         day: undefined,
@@ -62,8 +65,8 @@ export const toStringDateOrNull = (date: Date | null) => {
 };
 
 // Tipper det ikke blir nødvendig med "overload" for Periode<Date>
-export const formatPeriode = (periode: Periode<string>, intl: IntlShape) =>
-    `${formatMonthYear(periode.fraOgMed, intl)} – ${formatMonthYear(periode.tilOgMed, intl)}`;
+export const formatPeriode = (periode: Periode<string>) =>
+    `${formatMonthYear(periode.fraOgMed)} – ${formatMonthYear(periode.tilOgMed)}`;
 
 export const toIsoDateOnlyString = (date: Date) => DateFns.format(date, DateFormats.IsoDateOnly);
 

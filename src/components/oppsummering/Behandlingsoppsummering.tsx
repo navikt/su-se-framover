@@ -39,7 +39,7 @@ const Behandlingsoppsummering = (props: Props) => {
                     {`${intl.formatMessage({ id: 'virkningstidspunkt.tittel' })}:
                     ${
                         periode
-                            ? DateUtils.formatPeriode(periode, intl)
+                            ? DateUtils.formatPeriode(periode)
                             : intl.formatMessage({ id: 'virkningstidspunkt.periode.mangler' })
                     }`}
                 </Systemtittel>

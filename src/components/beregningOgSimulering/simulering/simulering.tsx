@@ -40,7 +40,7 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                 <span>{intl.formatMessage({ id: 'totaltBeløp' })}</span>
                 <span />
                 <span className={styles.beløp}>
-                    {formatCurrency(intl, props.simulering.totalBruttoYtelse, {
+                    {formatCurrency(props.simulering.totalBruttoYtelse, {
                         numDecimals: 0,
                     })}
                 </span>
@@ -67,16 +67,15 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                                     key={head.fraOgMed + head.tilOgMed}
                                 >
                                     <span className={styles.periode}>{`${formatMonthYear(
-                                        head.fraOgMed,
-                                        intl
-                                    )} - ${formatMonthYear(last.tilOgMed, intl)}`}</span>
+                                        head.fraOgMed
+                                    )} - ${formatMonthYear(last.tilOgMed)}`}</span>
                                     <span className={styles.type}>
                                         {head.type !== SimulertUtbetalingstype.ORDINÆR
                                             ? intl.formatMessage({ id: simulertUtbetalingstypeToResourceId(head.type) })
                                             : ''}
                                     </span>
                                     <span className={styles.beløp}>
-                                        {formatCurrency(intl, head.bruttoYtelse, {
+                                        {formatCurrency(head.bruttoYtelse, {
                                             numDecimals: 0,
                                         })}{' '}
                                         {intl.formatMessage({ id: 'iMnd' })}

@@ -400,9 +400,9 @@ const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: GrunnlagsdataOgVil
                 {props.vilkårsvurderinger.uføre?.vurderinger.map((item) => (
                     <li key={item.periode.fraOgMed + item.periode.tilOgMed}>
                         <Element>
-                            {DateUtils.formatMonthYear(item.periode.fraOgMed, intl)}
+                            {DateUtils.formatMonthYear(item.periode.fraOgMed)}
                             {' – '}
-                            {DateUtils.formatMonthYear(item.periode.tilOgMed, intl)}
+                            {DateUtils.formatMonthYear(item.periode.tilOgMed)}
                         </Element>
                         <div>
                             <Normaltekst>{intl.formatMessage({ id: 'gjeldende.vilkårOppfylt' })}</Normaltekst>
@@ -423,9 +423,7 @@ const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: GrunnlagsdataOgVil
                             <div>
                                 <Normaltekst>{intl.formatMessage({ id: 'gjeldende.inntektEtterUførhet' })}</Normaltekst>
                                 <Element>
-                                    {item.grunnlag
-                                        ? FormatUtils.formatCurrency(intl, item.grunnlag.forventetInntekt)
-                                        : '—'}
+                                    {item.grunnlag ? FormatUtils.formatCurrency(item.grunnlag.forventetInntekt) : '—'}
                                 </Element>
                             </div>
                             {item.begrunnelse && (

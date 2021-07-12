@@ -22,6 +22,7 @@ import { useAppSelector, useAppDispatch } from '~redux/Store';
 
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
+import ÅpneBehandlinger from './åpneBehandlinger/ÅpneBehandlinger';
 
 const Vilkår = React.lazy(() => import('./steg/vilkår/Vilkår'));
 const SendTilAttesteringPage = React.lazy(() => import('./sendTilAttesteringPage/SendTilAttesteringPage'));
@@ -83,6 +84,9 @@ const Saksoversikt = () => {
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
             <Switch>
+                <Route path={Routes.saksoversiktÅpneBehandlinger.path}>
+                    <ÅpneBehandlinger />
+                </Route>
                 <Route path={Routes.saksoversiktValgtSak.path}>
                     {pipe(
                         RemoteData.combine(søker, sak),
@@ -164,28 +168,31 @@ const Saksoversikt = () => {
                     )}
                 </Route>
                 <Route path={Routes.saksoversiktIndex.path}>
-                    <div className={styles.search}>
-                        <Personsøk
-                            onReset={() => {
-                                dispatch(personSlice.default.actions.resetSøker());
-                                dispatch(sakSlice.default.actions.resetSak());
-                            }}
-                            onFetchByFnr={(fnr) => {
-                                dispatch(personSlice.fetchPerson({ fnr }));
-                                dispatch(sakSlice.fetchSak({ fnr }));
-                            }}
-                            onFetchBySaksnummer={async (saksnummer) => {
-                                const res = await dispatch(sakSlice.fetchSak({ saksnummer }));
-                                if (sakSlice.fetchSak.fulfilled.match(res)) {
-                                    dispatch(personSlice.fetchPerson({ fnr: res.payload.fnr }));
-                                }
-                            }}
-                            person={søker}
-                            autofocusPersonsøk
-                        />
-                        {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
-                            <AlertStripe type="feil">{visErrorMelding(sak.error)}</AlertStripe>
-                        )}
+                    <div className={styles.saksoversiktContainer}>
+                        <div className={styles.search}>
+                            <Personsøk
+                                onReset={() => {
+                                    dispatch(personSlice.default.actions.resetSøker());
+                                    dispatch(sakSlice.default.actions.resetSak());
+                                }}
+                                onFetchByFnr={(fnr) => {
+                                    dispatch(personSlice.fetchPerson({ fnr }));
+                                    dispatch(sakSlice.fetchSak({ fnr }));
+                                }}
+                                onFetchBySaksnummer={async (saksnummer) => {
+                                    const res = await dispatch(sakSlice.fetchSak({ saksnummer }));
+                                    if (sakSlice.fetchSak.fulfilled.match(res)) {
+                                        dispatch(personSlice.fetchPerson({ fnr: res.payload.fnr }));
+                                    }
+                                }}
+                                person={søker}
+                                autofocusPersonsøk
+                            />
+                            {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
+                                <AlertStripe type="feil">{visErrorMelding(sak.error)}</AlertStripe>
+                            )}
+                        </div>
+                        <ÅpneBehandlinger />
                     </div>
                 </Route>
             </Switch>

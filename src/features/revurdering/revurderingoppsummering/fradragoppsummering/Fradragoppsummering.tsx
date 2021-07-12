@@ -36,7 +36,7 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                             {pipe(
                                 A.head(fradragsgruppe),
                                 O.chainNullableK((head) => head.periode),
-                                O.map((periode) => DateUtils.formatPeriode(periode, intl)),
+                                O.map((periode) => DateUtils.formatPeriode(periode)),
                                 O.getOrElse(() => formatMessage('feil.ukjent.periode'))
                             )}
                         </Element>
@@ -47,20 +47,16 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                                     <span>
                                         {getFradragstypeStringMedEpsSpesifisering(fradrag.type, fradrag.tilhører, intl)}
                                     </span>
-                                    <span>{formatCurrency(intl, fradrag.beløp)}</span>
+                                    <span>{formatCurrency(fradrag.beløp)}</span>
                                     {fradrag.utenlandskInntekt !== null && (
                                         <>
                                             <Undertekst className={styles.detailedLinje}>
                                                 {formatMessage('fradrag.utenlandsk.beløp')}
                                             </Undertekst>
                                             <Undertekst className={styles.alignTextRight}>
-                                                {formatCurrency(
-                                                    intl,
-                                                    fradrag.utenlandskInntekt.beløpIUtenlandskValuta,
-                                                    {
-                                                        currency: fradrag.utenlandskInntekt.valuta,
-                                                    }
-                                                )}
+                                                {formatCurrency(fradrag.utenlandskInntekt.beløpIUtenlandskValuta, {
+                                                    currency: fradrag.utenlandskInntekt.valuta,
+                                                })}
                                             </Undertekst>
                                             <Undertekst className={styles.detailedLinje}>
                                                 {formatMessage('fradrag.utenlandsk.kurs')}

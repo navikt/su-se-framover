@@ -60,7 +60,7 @@ export const FormueFaktablokk = (props: FaktablokkProps) => {
                     FaktaSpacing,
                     {
                         tittel: intl.formatMessage({ id: 'formue.totalt' }),
-                        verdi: formatCurrency(intl, totalFormueFraSøknad),
+                        verdi: formatCurrency(totalFormueFraSøknad),
                     },
                     FaktaSpacing,
                     {
@@ -129,7 +129,6 @@ function søknadsfakta(innhold: SøknadInnhold, intl: IntlShape): Fakta[] {
         },
     ].map((f) =>
         formuelinje({
-            intl,
             harEktefelle: innhold.ektefelle !== null,
             tittel: f.tittel,
             verdi: f.verdi ?? 0,
@@ -184,7 +183,6 @@ function saksbehandlingfakta(info: Behandlingsinformasjon['formue'], intl: IntlS
         },
     ].map((f) =>
         formuelinje({
-            intl,
             harEktefelle: info?.borSøkerMedEPS ?? false,
             tittel: f.tittel,
             verdi: f.verdi ?? 0,
@@ -193,16 +191,16 @@ function saksbehandlingfakta(info: Behandlingsinformasjon['formue'], intl: IntlS
     );
 }
 
-function formuelinje(f: { intl: IntlShape; harEktefelle: boolean; tittel: string; verdi: number; epsVerdi: number }) {
+function formuelinje(f: { harEktefelle: boolean; tittel: string; verdi: number; epsVerdi: number }) {
     return {
         tittel: f.tittel,
         verdi: f.harEktefelle ? (
             <div className={styles.formueForBrukerOgEps}>
-                <span className={styles.søker}>{formatCurrency(f.intl, f.verdi ?? 0)}</span>
-                <span className={styles.eps}>{formatCurrency(f.intl, f.epsVerdi ?? 0)}</span>
+                <span className={styles.søker}>{formatCurrency(f.verdi ?? 0)}</span>
+                <span className={styles.eps}>{formatCurrency(f.epsVerdi ?? 0)}</span>
             </div>
         ) : (
-            formatCurrency(f.intl, f.verdi ?? 0)
+            formatCurrency(f.verdi ?? 0)
         ),
     };
 }
@@ -270,7 +268,7 @@ export const FormueVilkårsblokk = (props: {
                                 FaktaSpacing,
                                 {
                                     tittel: message('formue.totalt'),
-                                    verdi: formatCurrency(intl, totalFormue),
+                                    verdi: formatCurrency(totalFormue),
                                 },
                                 FaktaSpacing,
                                 {

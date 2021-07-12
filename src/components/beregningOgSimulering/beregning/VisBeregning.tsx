@@ -82,26 +82,26 @@ const VisBenyttetEpsFradrag = ({
     <DetaljertFradrag
         tittel={{
             label: getFradragstypeString(fradrag.type, intl),
-            verdi: formatCurrency(intl, -fradrag.beløp),
+            verdi: formatCurrency(-fradrag.beløp),
         }}
         detaljer={[
             ...epsInputFradrag.flatMap((f) => {
                 if (!f.utenlandskInntekt) {
                     return {
                         label: getFradragstypeString(f.type, intl),
-                        verdi: formatCurrency(intl, -f.beløp),
+                        verdi: formatCurrency(-f.beløp),
                     };
                 }
                 return [
                     {
                         label: getFradragstypeString(f.type, intl),
-                        verdi: formatCurrency(intl, -f.beløp),
+                        verdi: formatCurrency(-f.beløp),
                     },
                     {
                         label: intl.formatMessage({
                             id: 'fradrag.utenlandsk.beløp',
                         }),
-                        verdi: formatCurrency(intl, f.utenlandskInntekt.beløpIUtenlandskValuta, {
+                        verdi: formatCurrency(f.utenlandskInntekt.beløpIUtenlandskValuta, {
                             currency: f.utenlandskInntekt.valuta,
                         }),
                         epsUtland: true,
@@ -119,7 +119,7 @@ const VisBenyttetEpsFradrag = ({
                 label: intl.formatMessage({
                     id: 'fradrag.eps.fribeløp',
                 }),
-                verdi: formatCurrency(intl, epsFribeløp),
+                verdi: formatCurrency(epsFribeløp),
             },
         ]}
     />
@@ -139,7 +139,6 @@ const VisBeregning = (props: Props) => {
                 <span>{intl.formatMessage({ id: 'display.totaltBeløp' })}</span>
                 <span>
                     {formatCurrency(
-                        intl,
                         props.beregning.månedsberegninger.reduce((acc, val) => acc + val.beløp, 0),
                         {
                             numDecimals: 0,
@@ -160,10 +159,7 @@ const VisBeregning = (props: Props) => {
                                     beløp: 0,
                                 }),
                                 ([head, last]) => ({
-                                    tittel: `${formatMonthYear(head.fraOgMed, intl)} - ${formatMonthYear(
-                                        last.tilOgMed,
-                                        intl
-                                    )}`,
+                                    tittel: `${formatMonthYear(head.fraOgMed)} - ${formatMonthYear(last.tilOgMed)}`,
                                     beløp: head.beløp,
                                 })
                             ),
@@ -171,7 +167,7 @@ const VisBeregning = (props: Props) => {
                                 <Element tag="h3" className={classNames(styles.periodeoverskrift, styles.linje)}>
                                     <span>{tittel}</span>
                                     <span>
-                                        {formatCurrency(intl, beløp, {
+                                        {formatCurrency(beløp, {
                                             numDecimals: 0,
                                         })}{' '}
                                         i mnd
@@ -190,7 +186,7 @@ const VisBeregning = (props: Props) => {
                                                 : 'display.visBeregning.sats.ordinær',
                                     })}
                                 </span>
-                                <span>{formatCurrency(intl, månedsberegninger[0].satsbeløp)}</span>
+                                <span>{formatCurrency(månedsberegninger[0].satsbeløp)}</span>
                             </li>
                             {pipe(
                                 månedsberegninger[0],
@@ -218,7 +214,7 @@ const VisBeregning = (props: Props) => {
                                             <DetaljertFradrag
                                                 tittel={{
                                                     label: getFradragstypeString(fradrag.type, intl),
-                                                    verdi: formatCurrency(intl, -fradrag.beløp),
+                                                    verdi: formatCurrency(-fradrag.beløp),
                                                 }}
                                                 detaljer={[
                                                     {
@@ -226,7 +222,6 @@ const VisBeregning = (props: Props) => {
                                                             id: 'fradrag.utenlandsk.beløp',
                                                         }),
                                                         verdi: formatCurrency(
-                                                            intl,
                                                             fradrag.utenlandskInntekt.beløpIUtenlandskValuta,
                                                             {
                                                                 currency: fradrag.utenlandskInntekt.valuta,
@@ -242,7 +237,7 @@ const VisBeregning = (props: Props) => {
                                         ) : (
                                             <>
                                                 <span>{getFradragstypeString(fradrag.type, intl)}</span>
-                                                <span>{formatCurrency(intl, -fradrag.beløp)}</span>
+                                                <span>{formatCurrency(-fradrag.beløp)}</span>
                                             </>
                                         )}
                                     </li>
@@ -261,27 +256,26 @@ const VisBeregning = (props: Props) => {
                                             label:
                                                 getFradragstypeString(Fradragstype.BeregnetFradragEPS, intl) +
                                                 ' (lavere enn fribeløp, ikke inkludert)',
-                                            verdi: formatCurrency(intl, 0),
+                                            verdi: formatCurrency(0),
                                         }}
                                         detaljer={[
                                             ...månedsberegninger[0].epsInputFradrag.flatMap((f) => {
                                                 if (!f.utenlandskInntekt) {
                                                     return {
                                                         label: getFradragstypeString(f.type, intl),
-                                                        verdi: formatCurrency(intl, -f.beløp),
+                                                        verdi: formatCurrency(-f.beløp),
                                                     };
                                                 }
                                                 return [
                                                     {
                                                         label: getFradragstypeString(f.type, intl),
-                                                        verdi: formatCurrency(intl, -f.beløp),
+                                                        verdi: formatCurrency(-f.beløp),
                                                     },
                                                     {
                                                         label: intl.formatMessage({
                                                             id: 'fradrag.utenlandsk.beløp',
                                                         }),
                                                         verdi: formatCurrency(
-                                                            intl,
                                                             f.utenlandskInntekt.beløpIUtenlandskValuta,
                                                             {
                                                                 currency: f.utenlandskInntekt.valuta,
@@ -302,7 +296,7 @@ const VisBeregning = (props: Props) => {
                                                 label: intl.formatMessage({
                                                     id: 'fradrag.eps.fribeløp',
                                                 }),
-                                                verdi: formatCurrency(intl, månedsberegninger[0].epsFribeløp),
+                                                verdi: formatCurrency(månedsberegninger[0].epsFribeløp),
                                             },
                                         ]}
                                     />
