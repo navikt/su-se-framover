@@ -6,6 +6,7 @@ import { useI18n } from '~lib/hooks';
 import inntektMessages from '~pages/søknad/steg/inntekt/søkersInntekt/inntekt-nb';
 
 import sharedStyles from '../../../steg-shared.module.less';
+import { pensjonsinntekterMessages } from '../../inntekt/Pensjonsinntekter';
 import { trygdeytelserMessages } from '../../inntekt/TrygdeytelserInputs/TrygdeytelserInputs';
 
 import { OppsummeringAvTrygdeytelser } from './OppsummeringAvTrygdeytelser';
@@ -20,8 +21,8 @@ const InntektsOppsummering = ({
 }) => {
     const { formatMessage } =
         tilhører === 'søker'
-            ? useI18n({ messages: { ...inntektMessages, ...trygdeytelserMessages } })
-            : useI18n({ messages: { ...epsInntektMessages, ...trygdeytelserMessages } });
+            ? useI18n({ messages: { ...inntektMessages, ...trygdeytelserMessages, ...pensjonsinntekterMessages } })
+            : useI18n({ messages: { ...epsInntektMessages, ...trygdeytelserMessages, ...pensjonsinntekterMessages } });
 
     return (
         <>

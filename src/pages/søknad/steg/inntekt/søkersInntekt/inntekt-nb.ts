@@ -18,9 +18,4 @@ export default {
     'trygdeytelserIUtlandet.label': 'Har du trygdeytelser fra andre land?',
 
     'mottarPensjon.label': 'Får du tjenestepensjon eller pensjon som ikke er fra NAV?',
-    'mottarPensjon.fra': 'Hvem får du pengene fra?',
-    'mottarPensjon.beløp': 'Hvor mye penger får du i måneden?',
-
-    'button.fjern.pensjonsgiver': 'Fjern pensjonsgiver',
-    'button.leggTil.pensjonsgiver': 'Legg til annen pensjonsgiver',
 };
