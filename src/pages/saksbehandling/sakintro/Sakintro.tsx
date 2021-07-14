@@ -30,12 +30,16 @@ import { Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 import { Vedtak } from '~types/Vedtak';
-import { erIverksatt, erTilAttestering, hentSisteVurdertSaksbehandlingssteg } from '~utils/behandling/behandlingUtils';
+import {
+    erIverksatt,
+    erTilAttestering,
+    hentSisteVurdertSaksbehandlingssteg,
+} from '~utilsLOL/behandling/behandlingUtils';
 import {
     getIverksatteInnvilgedeSøknader,
     søknadMottatt,
     getIverksatteAvslåtteSøknader,
-} from '~utils/søknad/søknadUtils';
+} from '~utilsLOL/søknad/søknadUtils';
 
 import {
     erRevurderingTilAttestering,
@@ -44,7 +48,7 @@ import {
     erRevurderingUnderkjent,
     erForhåndsvarselSendt,
     finnNesteRevurderingsteg,
-} from '../../../utils/revurdering/revurderingUtils';
+} from '../../../utilsLOL/revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
 import messages from './sakintro-nb';

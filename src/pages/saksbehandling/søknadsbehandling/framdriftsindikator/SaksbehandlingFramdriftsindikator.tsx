@@ -9,7 +9,7 @@ import {
     mapToVilkårsinformasjon,
     vilkårsinformasjonForBeregningssteg,
     vilkårTittelFormatted,
-} from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+} from '~utilsLOL/søknadsbehandling/vilkår/vilkårUtils';
 
 import messages from './saksbehandlingFramdriftsindikator-nb';
 

@@ -11,7 +11,7 @@ import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Restans } from '~types/Restans';
-import { formatDateTime } from '~utils/date/dateUtils';
+import { formatDateTime } from '~utilsLOL/date/dateUtils';
 
 import messages from './restanser-nb';
 import styles from './restanser.module.less';

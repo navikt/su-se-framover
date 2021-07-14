@@ -24,7 +24,7 @@ import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { IverksattRevurdering, RevurderingsStatus, UnderkjentRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
-import { erRevurderingTilAttestering, erGregulering } from '~utils/revurdering/revurderingUtils';
+import { erRevurderingTilAttestering, erGregulering } from '~utilsLOL/revurdering/revurderingUtils';
 
 import SharedStyles from '../sharedStyles.module.less';
 

@@ -15,8 +15,8 @@ import { useI18n } from '~lib/hooks';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { KanStansesEllerGjenopptas } from '~types/Sak';
 import { compareUtbetalingsperiode, Utbetalingsperiode, Utbetalingstype } from '~types/Utbetalingsperiode';
-import { formatMonthYear } from '~utils/date/dateUtils';
-import { showName } from '~utils/person/personUtils';
+import { formatMonthYear } from '~utilsLOL/date/dateUtils';
+import { showName } from '~utilsLOL/person/personUtils';
 
 import messages from './utbetalinger-nb';
 import styles from './utbetalinger.module.less';

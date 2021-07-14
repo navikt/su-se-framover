@@ -15,7 +15,7 @@ import { Utenlandsopphold as UtenlandsoppholdType } from '~features/søknad/type
 import { useI18n } from '~lib/hooks';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
-import { kalkulerTotaltAntallDagerIUtlandet } from '~utils/date/dateUtils';
+import { kalkulerTotaltAntallDagerIUtlandet } from '~utilsLOL/date/dateUtils';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';

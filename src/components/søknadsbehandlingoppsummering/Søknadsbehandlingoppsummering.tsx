@@ -9,7 +9,7 @@ import { Behandling, Behandlingsperiode } from '~types/Behandling';
 import { Periode } from '~types/Periode';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
-import * as DateUtils from '~utils/date/dateUtils';
+import * as DateUtils from '~utilsLOL/date/dateUtils';
 
 import messages from './søknadsbehandling-nb';
 import SøknadsbehandlingHeader from './SøknadsbehandlingHeader';

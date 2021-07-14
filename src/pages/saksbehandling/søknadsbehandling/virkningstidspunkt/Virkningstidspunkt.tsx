@@ -21,7 +21,7 @@ import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
-import * as DateUtils from '~utils/date/dateUtils';
+import * as DateUtils from '~utilsLOL/date/dateUtils';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';

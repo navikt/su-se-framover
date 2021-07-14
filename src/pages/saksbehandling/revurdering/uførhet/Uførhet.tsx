@@ -27,9 +27,9 @@ import { useAppDispatch } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat, VurderingsperiodeUføre } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Revurdering } from '~types/Revurdering';
-import * as DateUtils from '~utils/date/dateUtils';
-import * as FormatUtils from '~utils/format/formatUtils';
-import { erGregulering } from '~utils/revurdering/revurderingUtils';
+import * as DateUtils from '~utilsLOL/date/dateUtils';
+import * as FormatUtils from '~utilsLOL/format/formatUtils';
+import { erGregulering } from '~utilsLOL/revurdering/revurderingUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';

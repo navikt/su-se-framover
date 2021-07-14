@@ -12,7 +12,7 @@ import { SøknadState } from '~features/søknad/søknad.slice';
 import { DelerBoligMed } from '~features/søknad/types';
 import { useI18n } from '~lib/hooks';
 import { Søknadsteg } from '~pages/søknad/types';
-import { formatAdresse } from '~utils/format/formatUtils';
+import { formatAdresse } from '~utilsLOL/format/formatUtils';
 
 import sharedStyles from '../../../steg-shared.module.less';
 import { EndreSvar } from '../components/EndreSvar';

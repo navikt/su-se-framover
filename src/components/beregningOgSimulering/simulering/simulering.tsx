@@ -14,9 +14,9 @@ import { useI18n } from '~lib/hooks';
 import { useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { Simulering, SimulertUtbetalingstype } from '~types/Simulering';
-import { groupWhile } from '~utils/array/arrayUtils';
-import { formatMonthYear } from '~utils/date/dateUtils';
-import { formatCurrency } from '~utils/format/formatUtils';
+import { groupWhile } from '~utilsLOL/array/arrayUtils';
+import { formatMonthYear } from '~utilsLOL/date/dateUtils';
+import { formatCurrency } from '~utilsLOL/format/formatUtils';
 
 import styles from '../beregning/visBeregning.module.less';
 

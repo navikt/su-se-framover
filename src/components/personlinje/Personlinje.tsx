@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Kjønn, Person } from '~api/personApi';
 import { useI18n } from '~lib/hooks';
 import { Sak } from '~types/Sak';
-import { showName } from '~utils/person/personUtils';
+import { showName } from '~utilsLOL/person/personUtils';
 
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 

@@ -23,8 +23,8 @@ import {
     Behandlingsinformasjon,
 } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
-import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~utils/behandling/behandlingUtils';
-import { Vilkårsinformasjon, mapToVilkårsinformasjon } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~utilsLOL/behandling/behandlingUtils';
+import { Vilkårsinformasjon, mapToVilkårsinformasjon } from '~utilsLOL/søknadsbehandling/vilkår/vilkårUtils';
 
 import { PersonligOppmøteFaktablokk } from '../../../../components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import sharedI18n from '../sharedI18n-nb';

@@ -33,15 +33,15 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { FormueStatus, Formue } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
-import { removeSpaces } from '~utils/format/formatUtils';
-import { showName } from '~utils/person/personUtils';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+import { removeSpaces } from '~utilsLOL/format/formatUtils';
+import { showName } from '~utilsLOL/person/personUtils';
+import { hentBosituasjongrunnlag } from '~utilsLOL/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 import {
     getSenesteHalvGVerdi,
     regnUtFormDataVerdier,
     VerdierFormData,
     verdierId,
-} from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+} from '~utilsLOL/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';

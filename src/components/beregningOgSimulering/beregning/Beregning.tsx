@@ -31,10 +31,10 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Beregning } from '~types/Beregning';
 import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
-import { kanSimuleres } from '~utils/behandling/behandlingUtils';
-import * as DateUtils from '~utils/date/dateUtils';
-import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+import { kanSimuleres } from '~utilsLOL/behandling/behandlingUtils';
+import * as DateUtils from '~utilsLOL/date/dateUtils';
+import fradragstypeMessages from '~utilsLOL/søknadsbehandling/fradrag/fradragstyper-nb';
+import { hentBosituasjongrunnlag } from '~utilsLOL/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../../../pages/saksbehandling/søknadsbehandling/types';

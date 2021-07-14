@@ -1,4 +1,4 @@
-import { formatAdresse } from '~utils/format/formatUtils';
+import { formatAdresse } from '~utilsLOL/format/formatUtils';
 
 describe('Adresser blir riktig formatert', () => {
     const adresse = {

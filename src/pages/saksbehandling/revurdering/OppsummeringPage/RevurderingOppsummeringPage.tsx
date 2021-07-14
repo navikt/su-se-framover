@@ -32,7 +32,7 @@ import {
     erRevurderingForhåndsvarslet,
     erRevurderingSimulert,
     erRevurderingUnderkjent,
-} from '~utils/revurdering/revurderingUtils';
+} from '~utilsLOL/revurdering/revurderingUtils';
 
 import sharedStyles from '../revurdering.module.less';
 

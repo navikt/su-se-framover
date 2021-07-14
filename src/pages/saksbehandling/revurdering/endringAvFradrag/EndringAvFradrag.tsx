@@ -26,9 +26,9 @@ import { useAppDispatch } from '~redux/Store';
 import { Fradrag, FradragTilhører } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering } from '~types/Revurdering';
-import * as DateUtils from '~utils/date/dateUtils';
-import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+import * as DateUtils from '~utilsLOL/date/dateUtils';
+import fradragstypeMessages from '~utilsLOL/søknadsbehandling/fradrag/fradragstyper-nb';
+import { hentBosituasjongrunnlag } from '~utilsLOL/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';

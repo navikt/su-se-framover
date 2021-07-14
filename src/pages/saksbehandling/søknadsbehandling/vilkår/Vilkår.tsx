@@ -5,8 +5,8 @@ import { Person } from '~api/personApi';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
-import { erVilkårsvurderingerVurdertAvslag } from '~utils/behandling/behandlingUtils';
-import { createVilkårUrl } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+import { erVilkårsvurderingerVurdertAvslag } from '~utilsLOL/behandling/behandlingUtils';
+import { createVilkårUrl } from '~utilsLOL/søknadsbehandling/vilkår/vilkårUtils';
 
 import Beregning from '../../../../components/beregningOgSimulering/beregning/Beregning';
 import FastOppholdINorge from '../fast-opphold-i-norge/FastOppholdINorge';

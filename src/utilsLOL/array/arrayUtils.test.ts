@@ -1,6 +1,6 @@
 import * as N from 'fp-ts/lib/number';
 
-import { groupByEq, groupWhile, spanLeftWithIndex } from '~utils/array/arrayUtils';
+import { groupByEq, groupWhile, spanLeftWithIndex } from '~utilsLOL/array/arrayUtils';
 
 import { pipe } from '../../lib/fp';
 

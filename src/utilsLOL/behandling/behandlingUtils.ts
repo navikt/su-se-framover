@@ -19,7 +19,7 @@ import {
     mapToVilkårsinformasjon,
     Vilkårsinformasjon,
     vilkårsinformasjonForBeregningssteg,
-} from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+} from '~utilsLOL/søknadsbehandling/vilkår/vilkårUtils';
 
 export const findBehandling = (sak: Sak, behandlingId: string) => {
     return sak.behandlinger.find((b) => b.id === behandlingId);

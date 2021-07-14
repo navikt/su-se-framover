@@ -5,9 +5,9 @@ import { Nullable } from '~lib/types';
 import { Behandlingsinformasjon, Formue, FormueStatus, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~types/Søknad';
-import { totalVerdiKjøretøy } from '~utils/søknadsbehandling/formue/formueUtils';
-import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
-import { VerdierFormData } from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+import { totalVerdiKjøretøy } from '~utilsLOL/søknadsbehandling/formue/formueUtils';
+import { hentBosituasjongrunnlag } from '~utilsLOL/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
+import { VerdierFormData } from '~utilsLOL/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 export interface FormueFormData {
     status: FormueStatus;
