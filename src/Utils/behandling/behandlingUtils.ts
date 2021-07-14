@@ -2,11 +2,6 @@ import * as Arr from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
 import * as Option from 'fp-ts/Option';
 
-import {
-    mapToVilkårsinformasjon,
-    Vilkårsinformasjon,
-    vilkårsinformasjonForBeregningssteg,
-} from '~features/saksoversikt/utils';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import {
     FastOppholdINorgeStatus,
@@ -20,6 +15,11 @@ import {
 } from '~types/Behandlingsinformasjon';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
+import {
+    mapToVilkårsinformasjon,
+    Vilkårsinformasjon,
+    vilkårsinformasjonForBeregningssteg,
+} from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 export const findBehandling = (sak: Sak, behandlingId: string) => {
     return sak.behandlinger.find((b) => b.id === behandlingId);

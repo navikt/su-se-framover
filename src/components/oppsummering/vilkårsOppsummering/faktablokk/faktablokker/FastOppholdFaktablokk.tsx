@@ -3,7 +3,6 @@ import React from 'react';
 import { IntlShape } from 'react-intl';
 
 import { IngenAdresseGrunn } from '~api/personApi';
-import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { formatAdresse } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import { keyOf } from '~lib/types';
@@ -11,6 +10,7 @@ import boOgOppholdSøknadMessages from '~pages/søknad/steg/bo-og-opphold-i-norg
 import flyktningstatusSøknadMessages from '~pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
+import { vilkårTittelFormatted } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/fast-opphold-i-norge/fastOppholdINorge-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';

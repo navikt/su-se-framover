@@ -10,7 +10,6 @@ import { useHistory } from 'react-router-dom';
 import { SuperRadioGruppe } from '~components/formElements/FormElements';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
-import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksoversikt/utils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -25,6 +24,7 @@ import {
 } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~Utils/behandling/behandlingUtils';
+import { Vilkårsinformasjon, mapToVilkårsinformasjon } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import { PersonligOppmøteFaktablokk } from '../../../../components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import sharedI18n from '../sharedI18n-nb';

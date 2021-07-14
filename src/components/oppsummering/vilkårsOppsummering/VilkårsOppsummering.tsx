@@ -1,7 +1,6 @@
 import { Systemtittel } from 'nav-frontend-typografi';
 import React from 'react';
 
-import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
@@ -9,6 +8,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkå
 import { SøknadInnhold } from '~types/Søknad';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
+import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import { FastOppholdVilkårsblokk } from './faktablokk/faktablokker/FastOppholdFaktablokk';
 import { FlyktningVilkårsblokk } from './faktablokk/faktablokker/FlyktningFaktablokk';

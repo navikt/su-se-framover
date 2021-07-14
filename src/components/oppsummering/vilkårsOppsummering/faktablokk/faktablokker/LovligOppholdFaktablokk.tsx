@@ -2,11 +2,11 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import React, { useMemo } from 'react';
 import { IntlShape } from 'react-intl';
 
-import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import { keyOf, Nullable } from '~lib/types';
 import søknadMessages from '~pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';
+import { vilkårTittelFormatted } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/lovlig-opphold-i-norge/lovligOppholdINorge-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';

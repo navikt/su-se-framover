@@ -1,11 +1,11 @@
 import AlertStripe from 'nav-frontend-alertstriper';
 import React from 'react';
 
-import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import { keyOf } from '~lib/types';
 import søknadMessages from '~pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { FlyktningStatus } from '~types/Behandlingsinformasjon';
+import { vilkårTittelFormatted } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/flyktning/flyktning-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';

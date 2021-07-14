@@ -4,7 +4,6 @@ import { Element } from 'nav-frontend-typografi';
 import React, { useMemo } from 'react';
 import { IntlShape } from 'react-intl';
 
-import { Vilkårsinformasjon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { formatCurrency } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
@@ -17,6 +16,7 @@ import {
     regnUtFormueVerdier,
     totalVerdiKjøretøy,
 } from '~Utils/søknadsbehandling/formue/formueUtils';
+import { Vilkårsinformasjon, vilkårTittelFormatted } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk, { Fakta, FaktaSpacing } from '../Faktablokk';

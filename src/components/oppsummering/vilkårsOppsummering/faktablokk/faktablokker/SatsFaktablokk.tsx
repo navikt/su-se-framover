@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { DelerBoligMed } from '~features/søknad/types';
 import { useI18n } from '~lib/hooks';
 import { keyOf } from '~lib/types';
@@ -8,6 +7,7 @@ import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasj
 import { Sats } from '~types/Sats';
 import { SøknadInnhold } from '~types/Søknad';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
+import { vilkårTittelFormatted } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/sats/sats-nb';
 import { delerBoligMedFormatted } from '../../../../../pages/saksbehandling/søknadsbehandling/sharedUtils';

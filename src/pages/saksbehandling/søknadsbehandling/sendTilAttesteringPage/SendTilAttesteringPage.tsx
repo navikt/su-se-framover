@@ -9,7 +9,6 @@ import { Link, useHistory } from 'react-router-dom';
 import * as PdfApi from '~api/pdfApi';
 import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { createVilkårUrl, mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
 import { useBrevForhåndsvisning, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
@@ -22,6 +21,7 @@ import {
     erBeregnetAvslag,
     erVilkårsvurderingerVurdertAvslag,
 } from '~Utils/behandling/behandlingUtils';
+import { createVilkårUrl, mapToVilkårsinformasjon } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import messages from './sendTilAttesteringPage-nb';
 import styles from './sendTilAttesteringPage.module.less';

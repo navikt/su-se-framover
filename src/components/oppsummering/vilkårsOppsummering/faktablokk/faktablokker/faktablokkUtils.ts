@@ -1,6 +1,6 @@
-import { Vilkårsinformasjon } from '~features/saksoversikt/utils';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
+import { Vilkårsinformasjon } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 export interface FaktablokkProps {
     søknadInnhold: SøknadInnhold;

@@ -1,15 +1,15 @@
 import React from 'react';
 
 import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
-import {
-    vilkårTittelFormatted,
-    mapToVilkårsinformasjon,
-    vilkårsinformasjonForBeregningssteg,
-} from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Behandling } from '~types/Behandling';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import {
+    mapToVilkårsinformasjon,
+    vilkårsinformasjonForBeregningssteg,
+    vilkårTittelFormatted,
+} from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import messages from './saksbehandlingFramdriftsindikator-nb';
 

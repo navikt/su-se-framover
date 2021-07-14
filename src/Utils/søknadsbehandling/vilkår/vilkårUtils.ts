@@ -24,6 +24,13 @@ export const createVilkårUrl = (props: { sakId: string; behandlingId: string; v
         vilkar: props.vilkar,
     });
 
+export interface Vilkårsinformasjon {
+    status: VilkårVurderingStatus;
+    vilkårtype: Vilkårtype;
+    begrunnelse: Nullable<string>;
+    erStartet: boolean;
+}
+
 export const vilkårTittelFormatted = (type: Vilkårtype) => {
     switch (type) {
         case Vilkårtype.Virkningstidspunkt:
@@ -54,13 +61,6 @@ export const vilkårTittelFormatted = (type: Vilkårtype) => {
             return 'Beregning';
     }
 };
-
-export interface Vilkårsinformasjon {
-    status: VilkårVurderingStatus;
-    vilkårtype: Vilkårtype;
-    begrunnelse: Nullable<string>;
-    erStartet: boolean;
-}
 
 export const mapToVilkårsinformasjon = (behandlingsinformasjon: Behandlingsinformasjon): Vilkårsinformasjon[] => {
     const {

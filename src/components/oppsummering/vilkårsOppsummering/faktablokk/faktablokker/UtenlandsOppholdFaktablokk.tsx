@@ -2,11 +2,11 @@ import * as DateFns from 'date-fns';
 import AlertStripe from 'nav-frontend-alertstriper';
 import React from 'react';
 
-import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { keyOf } from '~lib/types';
 import { OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
+import { vilkårTittelFormatted } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/opphold-i-utlandet/oppholdIUtlandet-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';

@@ -1,11 +1,11 @@
 import AlertStripe from 'nav-frontend-alertstriper';
 import React from 'react';
 
-import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { GrunnForPapirinnsending } from '~features/søknad/types';
 import { useI18n } from '~lib/hooks';
 import { PersonligOppmøteStatus } from '~types/Behandlingsinformasjon';
 import { Søknadstype } from '~types/Søknad';
+import { vilkårTittelFormatted } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/personlig-oppmøte/personligOppmøte-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
