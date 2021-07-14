@@ -10,7 +10,7 @@ import { Vilkårtype } from '~types/Vilkårsvurdering';
 import { vilkårTittelFormatted } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/sats/sats-nb';
-import { delerBoligMedFormatted } from '../../../../../pages/saksbehandling/søknadsbehandling/sharedUtils';
+import { delerBoligMedFormatted } from '../../../../../Utils/søknadsbehandling/søknadsbehandlingUtils';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 

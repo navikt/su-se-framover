@@ -8,7 +8,6 @@ import { formatCurrency } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import saksbehandlingMessages from '~pages/saksbehandling/søknadsbehandling/formue/formue-nb';
-import { delerBoligMedFormatted } from '~pages/saksbehandling/søknadsbehandling/sharedUtils';
 import { Behandlingsinformasjon, FormueStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 import {
@@ -16,6 +15,7 @@ import {
     regnUtFormueVerdier,
     totalVerdiKjøretøy,
 } from '~Utils/søknadsbehandling/formue/formueUtils';
+import { delerBoligMedFormatted } from '~Utils/søknadsbehandling/søknadsbehandlingUtils';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import Vilkårsblokk from '../../VilkårsBlokk';
