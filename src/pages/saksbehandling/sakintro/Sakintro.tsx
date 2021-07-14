@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import classNames from 'classnames';
-import { isEmpty } from 'fp-ts/lib/Array';
+import { isEmpty, last } from 'fp-ts/lib/Array';
+import { toNullable } from 'fp-ts/lib/Option';
 import AlertStripe, { AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { EtikettInfo } from 'nav-frontend-etiketter';
 import Ikon from 'nav-frontend-ikoner-assets';
@@ -21,14 +22,16 @@ import {
     hentSisteVurdertSaksbehandlingssteg,
 } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { formatDateTime } from '~lib/dateUtils';
 import { useFeatureToggle } from '~lib/featureToggles';
+import { pipe } from '~lib/fp';
 import { useI18n, useNotificationFromLocation } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { getIverksatteInnvilgedeSøknader, søknadMottatt, getIverksatteAvslåtteSøknader } from '~lib/søknadUtils';
 import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
-import { Behandling, UnderkjennelseGrunn, Underkjennelse } from '~types/Behandling';
+import { Behandling, UnderkjennelseGrunn, Underkjennelse, Attestering } from '~types/Behandling';
 import { Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
@@ -68,6 +71,21 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
         default:
             return 'display.søknad.lukket.ukjentLukking';
     }
+};
+
+const hentUnderkjenteAttesteringer = (
+    attesteringer: Attestering[]
+): Array<{
+    underkjennelse: Underkjennelse;
+    opprettet: string;
+}> => {
+    return attesteringer
+        .filter((a) => a.underkjennelse !== null)
+        .map((a) => ({
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            underkjennelse: a.underkjennelse!,
+            opprettet: a.opprettet,
+        }));
 };
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
@@ -146,7 +164,10 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
     );
 };
 
-const UnderkjennelsesInformasjon = (props: { underkjennelse: Underkjennelse; intl: IntlShape }) => {
+const UnderkjennelsesInformasjon = (props: {
+    underkjennelser: Array<{ underkjennelse: Underkjennelse; opprettet: string }>;
+    intl: IntlShape;
+}) => {
     return (
         <div className={styles.underkjennelseContainer}>
             <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
@@ -155,22 +176,30 @@ const UnderkjennelsesInformasjon = (props: { underkjennelse: Underkjennelse; int
                 })}
             </AlertStripe>
             <div className={styles.underkjennelse}>
-                <div className={styles.underkjenningsinfo}>
-                    <Element>
-                        {props.intl.formatMessage({
-                            id: 'display.attestering.sendtTilbakeFordi',
-                        })}
-                    </Element>
-                    <Normaltekst>{grunnToText(props.underkjennelse.grunn, props.intl)}</Normaltekst>
-                </div>
-                <div className={styles.underkjenningsinfo}>
-                    <Element>
-                        {props.intl.formatMessage({
-                            id: 'display.attestering.kommentar',
-                        })}
-                    </Element>
-                    <Normaltekst>{props.underkjennelse.kommentar}</Normaltekst>
-                </div>
+                {props.underkjennelser.map((attestering) => (
+                    <>
+                        <div className={styles.underkjenningsinfo}>
+                            <Element>{props.intl.formatMessage({ id: 'display.attestering.tidspunkt' })}</Element>
+                            <Normaltekst>{formatDateTime(attestering.opprettet)}</Normaltekst>
+                        </div>
+                        <div className={styles.underkjenningsinfo}>
+                            <Element>
+                                {props.intl.formatMessage({
+                                    id: 'display.attestering.sendtTilbakeFordi',
+                                })}
+                            </Element>
+                            <Normaltekst>{grunnToText(attestering.underkjennelse.grunn, props.intl)}</Normaltekst>
+                        </div>
+                        <div className={styles.underkjenningsinfo}>
+                            <Element>
+                                {props.intl.formatMessage({
+                                    id: 'display.attestering.kommentar',
+                                })}
+                            </Element>
+                            <Normaltekst>{attestering.underkjennelse.kommentar}</Normaltekst>
+                        </div>
+                    </>
+                ))}
             </div>
         </div>
     );
@@ -192,6 +221,8 @@ const ÅpneSøknader = (props: {
             <ol>
                 {props.åpneSøknader.map((s) => {
                     const behandling = props.behandlinger.find((b) => b.søknad.id === s.id);
+                    const attesteringer = behandling?.attesteringer ?? [];
+                    const senesteAttestering = pipe(attesteringer, last, toNullable);
 
                     return (
                         <div key={s.id}>
@@ -207,9 +238,9 @@ const ÅpneSøknader = (props: {
                                             </Element>
                                             <Normaltekst>{søknadMottatt(s, props.intl)}</Normaltekst>
                                         </div>
-                                        {behandling?.attestering?.underkjennelse && (
+                                        {senesteAttestering?.underkjennelse && (
                                             <UnderkjennelsesInformasjon
-                                                underkjennelse={behandling.attestering.underkjennelse}
+                                                underkjennelser={hentUnderkjenteAttesteringer(attesteringer)}
                                                 intl={props.intl}
                                             />
                                         )}
@@ -289,7 +320,7 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                                             //underkjent revurdering har alltid en underkjennelse
                                             /* eslint-disable @typescript-eslint/no-non-null-assertion */
                                             <UnderkjennelsesInformasjon
-                                                underkjennelse={r.attestering.underkjennelse!}
+                                                underkjennelser={hentUnderkjenteAttesteringer(r.attesteringer)}
                                                 intl={props.intl}
                                             />
                                         )}
@@ -363,7 +394,7 @@ const RevurderingStartetKnapper = (props: {
                 ) : (
                     !erRevurderingTilAttestering(revurdering) &&
                     !erRevurderingIverksatt(revurdering) &&
-                    user.navIdent !== revurdering.attestering?.attestant && (
+                    user.navIdent !== pipe(revurdering.attesteringer, last, toNullable)?.attestant && (
                         <Link
                             className="knapp knapp--mini"
                             to={Routes.revurderValgtRevurdering.createURL({
@@ -574,7 +605,7 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
                 ) : (
                     !erTilAttestering(b) &&
                     !erIverksatt(b) &&
-                    user.navIdent !== b.attestering?.attestant && (
+                    user.navIdent !== pipe(b.attesteringer ?? [], last, toNullable)?.attestant && (
                         <Link
                             className="knapp knapp--mini"
                             to={Routes.saksbehandlingVilkårsvurdering.createURL({

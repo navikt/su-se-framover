@@ -4,6 +4,7 @@ export default {
     'display.attestering.tilAttestering': 'Til attestering',
     'display.attestering.sendtTilbakeFordi': 'Sendt tilbake fordi',
     'display.attestering.kommentar': 'Kommentar',
+    'display.attestering.tidspunkt': 'Tidspunkt',
 
     'display.avslåtteSøknader.tittel': 'Avslåtte søknad',
 
