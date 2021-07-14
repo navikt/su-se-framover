@@ -8,13 +8,6 @@ import { Link, useHistory } from 'react-router-dom';
 
 import * as PdfApi from '~api/pdfApi';
 import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
-import {
-    erAvslått,
-    erUnderkjent,
-    erSimulert,
-    erBeregnetAvslag,
-    erVilkårsvurderingerVurdertAvslag,
-} from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { createVilkårUrl, mapToVilkårsinformasjon } from '~features/saksoversikt/utils';
 import { useBrevForhåndsvisning, useI18n } from '~lib/hooks';
@@ -22,6 +15,13 @@ import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { Sak } from '~types/Sak';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import {
+    erAvslått,
+    erUnderkjent,
+    erSimulert,
+    erBeregnetAvslag,
+    erVilkårsvurderingerVurdertAvslag,
+} from '~Utils/behandling/behandlingUtils';
 
 import messages from './sendTilAttesteringPage-nb';
 import styles from './sendTilAttesteringPage.module.less';

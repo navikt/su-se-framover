@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
+import { Eq } from 'fp-ts/lib/Eq';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
@@ -15,7 +16,6 @@ import { SuperRadioGruppe } from '~components/formElements/FormElements';
 import { SatsFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import { eqBosituasjon } from '~features/behandling/behandlingUtils';
 import { lagreBosituasjonGrunnlag } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
@@ -57,6 +57,19 @@ interface SatsProps {
     sakId: string;
     intl: IntlShape;
 }
+
+const eqBosituasjon: Eq<
+    Nullable<{
+        delerBolig: Nullable<boolean>;
+        ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
+        begrunnelse: Nullable<string>;
+    }>
+> = {
+    equals: (sats1, sats2) =>
+        sats1?.delerBolig === sats2?.delerBolig &&
+        sats1?.ektemakeEllerSamboerUførFlyktning === sats2?.ektemakeEllerSamboerUførFlyktning &&
+        sats1?.begrunnelse === sats2?.begrunnelse,
+};
 
 const tilBosituasjonsgrunnlag = (values: FormData, eps: Nullable<Person>) => {
     return {

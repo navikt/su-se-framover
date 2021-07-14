@@ -1,6 +1,8 @@
+import { Eq } from 'fp-ts/lib/Eq';
+
 import { DelerBoligMed } from '~features/søknad/types';
 import { Nullable } from '~lib/types';
-import { Behandlingsinformasjon, FormueStatus, FormueVerdier } from '~types/Behandlingsinformasjon';
+import { Behandlingsinformasjon, Formue, FormueStatus, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~types/Søknad';
 import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
@@ -75,3 +77,29 @@ function getInitialVerdier(
         depositumskonto: (verdier?.depositumskonto ?? søknadsFormue?.depositumsBeløp ?? 0).toString(),
     };
 }
+
+export const eqEktefelle: Eq<
+    Nullable<{
+        fnr: Nullable<string>;
+    }>
+> = {
+    equals: (ektefelle1, ektefelle2) => ektefelle1?.fnr === ektefelle2?.fnr,
+};
+
+export const eqFormue: Eq<Nullable<Formue>> = {
+    equals: (formue1, formue2) =>
+        formue1?.status === formue2?.status &&
+        eqVerdier.equals(formue1?.verdier ?? null, formue2?.verdier ?? null) &&
+        eqVerdier.equals(formue1?.epsVerdier ?? null, formue2?.epsVerdier ?? null) &&
+        formue1?.begrunnelse === formue2?.begrunnelse,
+};
+const eqVerdier: Eq<Nullable<FormueVerdier>> = {
+    equals: (verdier1, verdier2) =>
+        verdier1?.verdiIkkePrimærbolig === verdier2?.verdiIkkePrimærbolig &&
+        verdier1?.verdiKjøretøy === verdier2?.verdiKjøretøy &&
+        verdier1?.innskudd === verdier2?.innskudd &&
+        verdier1?.verdipapir === verdier2?.verdipapir &&
+        verdier1?.pengerSkyldt === verdier2?.pengerSkyldt &&
+        verdier1?.kontanter === verdier2?.kontanter &&
+        verdier1?.depositumskonto === verdier2?.depositumskonto,
+};

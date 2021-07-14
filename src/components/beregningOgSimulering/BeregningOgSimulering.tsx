@@ -1,9 +1,9 @@
 import { Element } from 'nav-frontend-typografi';
 import React from 'react';
 
-import { erBeregnetAvslag } from '~features/behandling/behandlingUtils';
 import { useI18n } from '~lib/hooks';
 import { Behandling } from '~types/Behandling';
+import { erBeregnetAvslag } from '~Utils/behandling/behandlingUtils';
 
 import messages from './beregning/beregning-nb';
 import VisBeregning from './beregning/VisBeregning';

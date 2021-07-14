@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
+import { Eq } from 'fp-ts/lib/Eq';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -7,7 +8,6 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import { eqOppholdIUtlandet } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
@@ -29,6 +29,12 @@ interface FormData {
     status: Nullable<OppholdIUtlandetStatus>;
     begrunnelse: Nullable<string>;
 }
+
+const eqOppholdIUtlandet: Eq<Nullable<OppholdIUtlandetType>> = {
+    equals: (oppholdIUtlandet1, oppholdIUtlandet2) =>
+        oppholdIUtlandet1?.status === oppholdIUtlandet2?.status &&
+        oppholdIUtlandet1?.begrunnelse === oppholdIUtlandet2?.begrunnelse,
+};
 
 const schema = yup.object<FormData>({
     status: yup.mixed().defined().oneOf(Object.values(OppholdIUtlandetStatus), 'Vennligst velg et alternativ '),

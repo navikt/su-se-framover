@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
+import { Eq } from 'fp-ts/lib/Eq';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -7,7 +8,6 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import { eqLovligOppholdINorge } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
@@ -29,6 +29,10 @@ interface FormData {
     status: Nullable<LovligOppholdStatus>;
     begrunnelse: Nullable<string>;
 }
+
+const eqLovligOppholdINorge: Eq<Nullable<LovligOpphold>> = {
+    equals: (lovlig1, lovlig2) => lovlig1?.status === lovlig2?.status && lovlig1?.begrunnelse === lovlig2?.begrunnelse,
+};
 
 const schema = yup.object<FormData>({
     status: yup

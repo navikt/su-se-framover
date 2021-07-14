@@ -18,7 +18,6 @@ import { FormueFaktablokk } from '~components/oppsummering/vilkårsOppsummering/
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
-import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';
 import personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
 import sakSlice, { lagreBehandlingsinformasjon, lagreEpsGrunnlag } from '~features/saksoversikt/sak.slice';
@@ -51,7 +50,13 @@ import { Vurderingknapper } from '../Vurdering';
 import messages from './formue-nb';
 import styles from './formue.module.less';
 import { FormueInput, ShowSum } from './FormueComponents';
-import { FormueFormData, getFormueInitialValues, formDataVerdierTilFormueVerdier } from './utils';
+import {
+    FormueFormData,
+    getFormueInitialValues,
+    formDataVerdierTilFormueVerdier,
+    eqFormue,
+    eqEktefelle,
+} from './utils';
 
 const VerdierSchema: yup.ObjectSchema<VerdierFormData | undefined> = yup.object<VerdierFormData>({
     verdiPåBolig: validateStringAsNonNegativeNumber,

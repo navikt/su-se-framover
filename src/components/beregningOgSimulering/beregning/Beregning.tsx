@@ -22,7 +22,6 @@ import {
     FradragInputs,
 } from '~components/beregningOgSimulering/beregning/FradragInputs';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import { kanSimuleres } from '~features/behandling/behandlingUtils';
 import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import * as DateUtils from '~lib/dateUtils';
@@ -34,6 +33,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Beregning } from '~types/Beregning';
 import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
+import { kanSimuleres } from '~Utils/behandling/behandlingUtils';
 import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
 
 import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI18n-nb';

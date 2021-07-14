@@ -16,11 +16,6 @@ import { ApiError } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
 import { Person } from '~api/personApi';
 import { useUserContext } from '~context/userContext';
-import {
-    erIverksatt,
-    erTilAttestering,
-    hentSisteVurdertSaksbehandlingssteg,
-} from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { formatDateTime } from '~lib/dateUtils';
 import { useFeatureToggle } from '~lib/featureToggles';
@@ -36,6 +31,7 @@ import { Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 import { Vedtak } from '~types/Vedtak';
+import { erIverksatt, erTilAttestering, hentSisteVurdertSaksbehandlingssteg } from '~Utils/behandling/behandlingUtils';
 
 import {
     erRevurderingTilAttestering,

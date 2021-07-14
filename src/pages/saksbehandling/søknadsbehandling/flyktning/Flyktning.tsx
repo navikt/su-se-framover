@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
+import { Eq } from 'fp-ts/lib/Eq';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -7,7 +8,6 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import { eqFlyktning, erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~features/behandling/behandlingUtils';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
@@ -17,6 +17,7 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Flyktning as FlyktningType, FlyktningStatus, UførhetStatus } from '~types/Behandlingsinformasjon';
+import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~Utils/behandling/behandlingUtils';
 
 import { FlyktningFaktablokk } from '../../../../components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FlyktningFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -30,6 +31,11 @@ interface FormData {
     status: Nullable<FlyktningStatus>;
     begrunnelse: Nullable<string>;
 }
+
+const eqFlyktning: Eq<Nullable<FlyktningType>> = {
+    equals: (flyktning1, flyktning2) =>
+        flyktning1?.status === flyktning2?.status && flyktning1?.begrunnelse === flyktning2?.begrunnelse,
+};
 
 const schema = yup.object<FormData>({
     status: yup

@@ -2,11 +2,11 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
-import { erVilkårsvurderingerVurdertAvslag } from '~features/behandling/behandlingUtils';
 import { createVilkårUrl } from '~features/saksoversikt/utils';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
+import { erVilkårsvurderingerVurdertAvslag } from '~Utils/behandling/behandlingUtils';
 
 import Beregning from '../../../../components/beregningOgSimulering/beregning/Beregning';
 import FastOppholdINorge from '../fast-opphold-i-norge/FastOppholdINorge';

@@ -12,7 +12,6 @@ import { Link, useHistory } from 'react-router-dom';
 import { Person } from '~api/personApi';
 import Personlinje from '~components/personlinje/Personlinje';
 import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
-import { erIverksatt, erTilAttestering } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -20,6 +19,7 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppSelector } from '~redux/Store';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
+import { erIverksatt, erTilAttestering } from '~Utils/behandling/behandlingUtils';
 
 import SharedStyles from '../sharedStyles.module.less';
 

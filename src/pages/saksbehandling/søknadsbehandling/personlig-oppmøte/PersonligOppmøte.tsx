@@ -1,16 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
+import { Eq } from 'fp-ts/lib/Eq';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import {
-    eqPersonligOppmøte,
-    erUnderkjent,
-    erVilkårsvurderingerVurdertAvslag,
-} from '~/features/behandling/behandlingUtils';
 import { SuperRadioGruppe } from '~components/formElements/FormElements';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
@@ -28,6 +24,7 @@ import {
     Behandlingsinformasjon,
 } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~Utils/behandling/behandlingUtils';
 
 import { PersonligOppmøteFaktablokk } from '../../../../components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
@@ -56,6 +53,12 @@ interface FormData {
     grunnForManglendePersonligOppmøte: Nullable<GrunnForManglendePersonligOppmøte>;
     begrunnelse: Nullable<string>;
 }
+
+const eqPersonligOppmøte: Eq<Nullable<PersonligOppmøteType>> = {
+    equals: (personligOppmøte1, personligOppmøte2) =>
+        personligOppmøte1?.status === personligOppmøte2?.status &&
+        personligOppmøte1?.begrunnelse === personligOppmøte2?.begrunnelse,
+};
 
 const schema = yup.object<FormData>({
     møttPersonlig: yup
