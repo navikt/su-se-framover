@@ -14,7 +14,7 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
     periode: Periode<string>;
     tilRevurdering: Vedtak;
     saksbehandler: string;
-    attestering: Nullable<Attestering>;
+    attesteringer: Attestering[];
     fritekstTilBrev: string;
     årsak: OpprettetRevurderingGrunn;
     begrunnelse: Nullable<string>;
@@ -54,7 +54,6 @@ export interface RevurderingTilAttestering
 export interface IverksattRevurdering
     extends Revurdering<RevurderingsStatus.IVERKSATT_INNVILGET | RevurderingsStatus.IVERKSATT_OPPHØRT> {
     beregninger: Beregninger;
-    attestering: Attestering;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
 }
@@ -62,7 +61,6 @@ export interface IverksattRevurdering
 export interface UnderkjentRevurdering
     extends Revurdering<RevurderingsStatus.UNDERKJENT_INNVILGET | RevurderingsStatus.UNDERKJENT_OPPHØRT> {
     beregninger: Beregninger;
-    attestering: Attestering;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
 }
