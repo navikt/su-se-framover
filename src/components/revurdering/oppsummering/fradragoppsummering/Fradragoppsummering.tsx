@@ -30,8 +30,8 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                         Eq.contramap((f) => f.periode)
                     )
                 ),
-                A.mapWithIndex((idx, fradragsgruppe) => (
-                    <li key={idx}>
+                A.mapWithIndex((index, fradragsgruppe) => (
+                    <li key={index}>
                         <Element className={styles.fradragperiodeHeader}>
                             {pipe(
                                 A.head(fradragsgruppe),

@@ -68,6 +68,7 @@ export function getBosituasjongrunnlagsblokker(b: Bosituasjon, { formatMessage }
             verdi: b.begrunnelse ?? '',
         },
     ];
+
     switch (b.type) {
         case BosituasjonTyper.DELER_BOLIG_MED_VOKSNE:
             return [
@@ -80,34 +81,6 @@ export function getBosituasjongrunnlagsblokker(b: Bosituasjon, { formatMessage }
                     {
                         label: formatMessage('bosituasjon.label.delerBolig'),
                         verdi: formatMessage('generell.ja'),
-                    },
-                ],
-            ];
-        case BosituasjonTyper.EPS_IKKE_UFØR_FLYKTNING:
-            return [
-                [
-                    ...basics,
-                    {
-                        label: formatMessage('bosituasjon.label.harEps'),
-                        verdi: formatMessage('generell.ja'),
-                    },
-                    {
-                        label: formatMessage('bosituasjon.label.epsUførFlyktning'),
-                        verdi: formatMessage('generell.nei'),
-                    },
-                ],
-            ];
-        case BosituasjonTyper.EPS_OVER_67:
-            return [
-                [
-                    ...basics,
-                    {
-                        label: formatMessage('bosituasjon.label.harEps'),
-                        verdi: formatMessage('generell.ja'),
-                    },
-                    {
-                        label: formatMessage('bosituasjon.label.epsUførFlyktning'),
-                        verdi: formatMessage('generell.nei'),
                     },
                 ],
             ];
@@ -136,6 +109,21 @@ export function getBosituasjongrunnlagsblokker(b: Bosituasjon, { formatMessage }
                     {
                         label: formatMessage('bosituasjon.label.delerBolig'),
                         verdi: formatMessage('generell.nei'),
+                    },
+                ],
+            ];
+        case BosituasjonTyper.EPS_IKKE_UFØR_FLYKTNING:
+        case BosituasjonTyper.EPS_OVER_67:
+            return [
+                [
+                    ...basics,
+                    {
+                        label: formatMessage('bosituasjon.label.harEps'),
+                        verdi: formatMessage('generell.ja'),
+                    },
+                    {
+                        label: formatMessage('bosituasjon.label.epsUførFlyktning'),
+                        verdi: formatMessage('generell.ja'),
                     },
                 ],
             ];

@@ -593,7 +593,7 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
                 {erTilAttestering(b) && user.isAttestant && user.navIdent !== b.saksbehandler ? (
                     <Link
                         className="knapp knapp--mini"
-                        to={Routes.attesterBehandling.createURL({
+                        to={Routes.attesterSøknadsbehandling.createURL({
                             sakId: props.sakId,
                             behandlingId: b.id,
                         })}

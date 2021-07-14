@@ -7,6 +7,7 @@ import { Behandling } from '~types/Behandling';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 import {
     mapToVilkårsinformasjon,
+    Vilkårsinformasjon,
     vilkårsinformasjonForBeregningssteg,
     vilkårTittelFormatted,
 } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
@@ -39,6 +40,16 @@ const SaksbehandlingFramdriftsindikator = (props: { sakId: string; behandling: B
             vilkar: vt,
         });
 
+    const hentLinjerFraVilkårsinformasjon = (vilkårsinformasjon: Vilkårsinformasjon[]) => {
+        return vilkårsinformasjon.map((v) => ({
+            id: v.vilkårtype,
+            erKlikkbar: v.erStartet,
+            label: vilkårTittelFormatted(v.vilkårtype),
+            status: vilkårstatusTilLinjestatus(v.status),
+            url: vilkårUrl(v.vilkårtype),
+        }));
+    };
+
     return (
         <Framdriftsindikator
             aktivId={props.vilkår}
@@ -53,24 +64,12 @@ const SaksbehandlingFramdriftsindikator = (props: { sakId: string; behandling: B
                 {
                     id: 'vilkår',
                     tittel: intl.formatMessage({ id: 'vilkår' }),
-                    linjer: vilkårrekkefølge.map((v) => ({
-                        id: v.vilkårtype,
-                        erKlikkbar: v.erStartet,
-                        label: vilkårTittelFormatted(v.vilkårtype),
-                        status: vilkårstatusTilLinjestatus(v.status),
-                        url: vilkårUrl(v.vilkårtype),
-                    })),
+                    linjer: hentLinjerFraVilkårsinformasjon(vilkårrekkefølge),
                 },
                 {
                     id: 'beregning',
                     tittel: intl.formatMessage({ id: 'beregning' }),
-                    linjer: beregningsrekkefølge.map((v) => ({
-                        id: v.vilkårtype,
-                        erKlikkbar: v.erStartet,
-                        label: vilkårTittelFormatted(v.vilkårtype),
-                        status: vilkårstatusTilLinjestatus(v.status),
-                        url: vilkårUrl(v.vilkårtype),
-                    })),
+                    linjer: hentLinjerFraVilkårsinformasjon(beregningsrekkefølge),
                 },
             ]}
         />

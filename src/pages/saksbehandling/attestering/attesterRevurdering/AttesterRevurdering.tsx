@@ -113,7 +113,6 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 }
 
                 if (RevurderingActions.iverksettRevurdering.rejected.match(res)) {
-                    //TODO: fix at res.payload kan være undefined?
                     if (!res.payload) return;
                     setSendtBeslutning(RemoteData.failure(res.payload));
                 }
@@ -136,7 +135,6 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 }
 
                 if (RevurderingActions.underkjennRevurdering.rejected.match(res)) {
-                    //TODO: fix at res.payload kan være undefined?
                     if (!res.payload) return;
                     setSendtBeslutning(RemoteData.failure(res.payload));
                 }

@@ -241,8 +241,8 @@ const Attesteringsinnhold = ({
     );
 };
 
-const AttesterBehandling = (props: { sak: Sak; søker: Person }) => {
-    const urlParams = Routes.useRouteParams<typeof Routes.attesterBehandling>();
+const AttesterSøknadsbehandling = (props: { sak: Sak; søker: Person }) => {
+    const urlParams = Routes.useRouteParams<typeof Routes.attesterSøknadsbehandling>();
     const { intl } = useI18n({ messages });
 
     const behandling = props.sak.behandlinger.find((x) => x.id === urlParams.behandlingId);
@@ -253,4 +253,4 @@ const AttesterBehandling = (props: { sak: Sak; søker: Person }) => {
     return <Attesteringsinnhold behandling={behandling} sak={props.sak} søker={props.søker} intl={intl} />;
 };
 
-export default AttesterBehandling;
+export default AttesterSøknadsbehandling;

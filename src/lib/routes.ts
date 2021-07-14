@@ -136,7 +136,7 @@ export const attestering: Route<{ sakId: string }> = {
     createURL: (args) => `/attestering/${args.sakId}`,
 };
 
-export const attesterBehandling: Route<{ sakId: string; behandlingId: string }> = {
+export const attesterSøknadsbehandling: Route<{ sakId: string; behandlingId: string }> = {
     path: '/attestering/:sakId/behandling/:behandlingId/',
     createURL: (args) => `/attestering/${args.sakId}/behandling/${args.behandlingId}`,
 };

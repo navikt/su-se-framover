@@ -12,14 +12,12 @@ type Props = {
 };
 
 const hentSøknadMottattHendelser = (sak: Sak) => {
-    const mottattHendelser: Hendelse[] = sak.søknader.map((søknad) => ({
+    return sak.søknader.map((søknad) => ({
         overskrift: 'Søknad mottatt!',
         underoverskrift: '',
         tidspunkt: søknad.opprettet,
         melding: `Søknad ble mottatt, søknadsid: ${søknad.id}`,
     }));
-
-    return mottattHendelser;
 };
 
 const Hendelseslogg = ({ sak }: Props) => {

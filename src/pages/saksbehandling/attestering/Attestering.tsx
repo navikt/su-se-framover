@@ -42,7 +42,7 @@ const Attestering = () => {
             ([sakValue, søkerValue]) => {
                 return (
                     <Switch>
-                        <Route path={Routes.attesterBehandling.path}>
+                        <Route path={Routes.attesterSøknadsbehandling.path}>
                             <AttesterSøknadsbehandling sak={sakValue} søker={søkerValue} />
                         </Route>
                         <Route path={Routes.attesterRevurdering.path}>

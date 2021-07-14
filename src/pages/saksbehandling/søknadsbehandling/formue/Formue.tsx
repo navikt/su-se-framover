@@ -31,7 +31,7 @@ import yup, {
 } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
-import { FormueStatus, Formue } from '~types/Behandlingsinformasjon';
+import { FormueStatus, Formue as FormueType } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 import { removeSpaces } from '~utils/format/formatUtils';
 import { showName } from '~utils/person/personUtils';
@@ -118,7 +118,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                 ? FormueStatus.VilkårOppfylt
                 : FormueStatus.VilkårIkkeOppfylt;
 
-        const formueValues: Formue = {
+        const formueValues: FormueType = {
             status,
             //Validering fanger denne
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -231,6 +231,25 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
     );
 
     const vilkårErOppfylt = totalFormue <= senesteHalvG;
+
+    const onLagreClick = () => {
+        formik.validateForm().then((res) => {
+            if (Object.keys(res).length === 0) {
+                setInputToShow(null);
+                setKanEndreAnnenPersonsFormue(true);
+                setÅpnerNyFormueBlokkMenViserEnBlokk(false);
+            }
+        });
+    };
+
+    const onEndreFormue = (søkerEllerEktefelle: 'søker' | 'ektefelle') => {
+        if (kanEndreAnnenPersonsFormue) {
+            setInputToShow(søkerEllerEktefelle);
+            setKanEndreAnnenPersonsFormue(false);
+        } else {
+            setÅpnerNyFormueBlokkMenViserEnBlokk(true);
+        }
+    };
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
@@ -373,14 +392,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                             <div>
                                                 <Knapp
                                                     className={styles.toggleInput}
-                                                    onClick={() => {
-                                                        if (kanEndreAnnenPersonsFormue) {
-                                                            setInputToShow('søker');
-                                                            setKanEndreAnnenPersonsFormue(false);
-                                                        } else {
-                                                            setÅpnerNyFormueBlokkMenViserEnBlokk(true);
-                                                        }
-                                                    }}
+                                                    onClick={() => onEndreFormue('søker')}
                                                     htmlType="button"
                                                 >
                                                     {formatMessage('knapp.endreSøkersFormue')}
@@ -395,15 +407,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                             <Knapp
                                                 htmlType="button"
                                                 className={styles.toggleInput}
-                                                onClick={() => {
-                                                    formik.validateForm().then((res) => {
-                                                        if (Object.keys(res).length === 0) {
-                                                            setInputToShow(null);
-                                                            setKanEndreAnnenPersonsFormue(true);
-                                                            setÅpnerNyFormueBlokkMenViserEnBlokk(false);
-                                                        }
-                                                    });
-                                                }}
+                                                onClick={() => onLagreClick()}
                                             >
                                                 Lagre
                                             </Knapp>
@@ -441,14 +445,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                         <div>
                                             <Knapp
                                                 className={styles.toggleInput}
-                                                onClick={() => {
-                                                    if (kanEndreAnnenPersonsFormue) {
-                                                        setInputToShow('ektefelle');
-                                                        setKanEndreAnnenPersonsFormue(false);
-                                                    } else {
-                                                        setÅpnerNyFormueBlokkMenViserEnBlokk(true);
-                                                    }
-                                                }}
+                                                onClick={() => onEndreFormue('ektefelle')}
                                                 htmlType="button"
                                             >
                                                 {formatMessage('knapp.endreEktefellesFormue')}
@@ -463,15 +460,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                         <Knapp
                                             className={styles.toggleInput}
                                             htmlType="button"
-                                            onClick={() => {
-                                                formik.validateForm().then((res) => {
-                                                    if (Object.keys(res).length === 0) {
-                                                        setInputToShow(null);
-                                                        setKanEndreAnnenPersonsFormue(true);
-                                                        setÅpnerNyFormueBlokkMenViserEnBlokk(false);
-                                                    }
-                                                });
-                                            }}
+                                            onClick={() => onLagreClick()}
                                         >
                                             Lagre
                                         </Knapp>
