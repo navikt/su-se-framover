@@ -6,12 +6,12 @@ import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
 import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
-import { regnUtFormuegrunnlag } from '~features/revurdering/RevurderFormueUtils';
-import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
 import { useI18n } from '~lib/hooks';
 import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering, Vurderingstatus, InformasjonSomRevurderes } from '~types/Revurdering';
+import { regnUtFormuegrunnlag } from '~Utils/revurdering/formue/RevurderFormueUtils';
+import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
 
 import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåroppsummering/FormuevilkårOppsummering';
 import Fradragoppsummering from '../fradragoppsummering/Fradragoppsummering';

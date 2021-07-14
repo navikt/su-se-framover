@@ -1,9 +1,9 @@
-import { erRevurderingIverksatt } from '~features/revurdering/revurderingUtils';
 import { Nullable } from '~lib/types';
 import { Behandling } from '~types/Behandling';
 import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
+import { erRevurderingIverksatt } from '~Utils/revurdering/revurderingUtils';
 
 interface Søknadsbehandlingsoppsummering {
     behandling: Behandling;

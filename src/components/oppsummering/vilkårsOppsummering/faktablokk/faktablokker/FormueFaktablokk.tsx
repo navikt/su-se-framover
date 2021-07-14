@@ -9,10 +9,10 @@ import { formatCurrency } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import saksbehandlingMessages from '~pages/saksbehandling/søknadsbehandling/formue/formue-nb';
-import { regnUtFormueVerdier, kalkulerFormueFraSøknad } from '~pages/saksbehandling/søknadsbehandling/formue/utils';
 import { delerBoligMedFormatted } from '~pages/saksbehandling/søknadsbehandling/sharedUtils';
 import { Behandlingsinformasjon, FormueStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
+import { kalkulerFormueFraSøknad, regnUtFormueVerdier } from '~Utils/søknadsbehandling/formue/formueUtils';
 
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk, { Fakta, FaktaSpacing } from '../Faktablokk';

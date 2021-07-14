@@ -18,7 +18,6 @@ import { JaNeiSpørsmål } from '~components/formElements/FormElements';
 import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
-import { erGregulering } from '~features/revurdering/revurderingUtils';
 import * as DateUtils from '~lib/dateUtils';
 import * as FormatUtils from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
@@ -30,6 +29,7 @@ import { useAppDispatch } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat, VurderingsperiodeUføre } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Revurdering } from '~types/Revurdering';
+import { erGregulering } from '~Utils/revurdering/revurderingUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';

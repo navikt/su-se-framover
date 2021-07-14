@@ -27,29 +27,28 @@ import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
 import FormuevilkårOppsummering from '~components/revurdering/oppsummering/formuevilkåroppsummering/FormuevilkårOppsummering';
 import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import {
-    FormueFormData,
-    revurderFormueSchema,
-    VerdierFormData,
-    getDefaultValues,
-    regnUtFormDataVerdier,
-    getTomFormueData,
-    formueFormDataTilFormuegrunnlagRequest,
-    erFormueVilkårOppfylt,
-} from '~features/revurdering/RevurderFormueUtils';
 import { lagreFormuegrunnlag } from '~features/revurdering/revurderingActions';
-import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
 import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { Periode } from '~types/Periode';
 import { RevurderingProps } from '~types/Revurdering';
+import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
+import { regnUtFormDataVerdier, verdierId } from '~Utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
 
 import messages from './formue-nb';
 import styles from './formue.module.less';
+import {
+    erFormueVilkårOppfylt,
+    FormueFormData,
+    formueFormDataTilFormuegrunnlagRequest,
+    getDefaultValues,
+    getTomFormueData,
+    revurderFormueSchema,
+} from './formueUtils';
 
 const Formue = (props: RevurderingProps) => {
     const formuegrenser = props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue.formuegrenser;
@@ -349,17 +348,6 @@ const FormuePanel = (props: {
             }
         });
     };
-
-    const verdierId: Array<keyof VerdierFormData> = [
-        'verdiPåBolig',
-        'verdiPåEiendom',
-        'verdiPåKjøretøy',
-        'innskuddsbeløp',
-        'verdipapir',
-        'stårNoenIGjeldTilDeg',
-        'kontanterOver1000',
-        'depositumskonto',
-    ];
 
     return (
         <EkspanderbartpanelBase

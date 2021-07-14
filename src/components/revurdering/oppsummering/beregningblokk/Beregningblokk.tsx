@@ -8,7 +8,7 @@ import { Utbetalingssimulering } from '~components/beregningOgSimulering/simuler
 import { useI18n } from '~lib/hooks';
 import { harBeregninger, harSimulering, Revurdering, RevurderingsStatus } from '~types/Revurdering';
 
-import { erGregulering, erRevurderingIngenEndring } from '../../../../features/revurdering/revurderingUtils';
+import { erGregulering, erRevurderingIngenEndring } from '../../../../Utils/revurdering/revurderingUtils';
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 
 import messages from './beregningblokk-nb';

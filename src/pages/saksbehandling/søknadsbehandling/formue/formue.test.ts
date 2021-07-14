@@ -1,10 +1,12 @@
-import { regnUtFormDataVerdier } from '~features/revurdering/RevurderFormueUtils';
 import { FormueVerdier } from '~types/Behandlingsinformasjon';
-
-import { FormDataVerdier, kalkulerFormueFraSøknad, regnUtFormueVerdier } from './utils';
+import { kalkulerFormueFraSøknad, regnUtFormueVerdier } from '~Utils/søknadsbehandling/formue/formueUtils';
+import {
+    regnUtFormDataVerdier,
+    VerdierFormData,
+} from '~Utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 describe('kalkulation for formue', () => {
-    const formue: FormDataVerdier = {
+    const formue: VerdierFormData = {
         verdiPåBolig: '1000',
         verdiPåEiendom: '1000',
         verdiPåKjøretøy: '1000',
@@ -35,7 +37,7 @@ describe('kalkulation for formue', () => {
     });
 
     it('total formue kan ikke bli negativ', () => {
-        const formueMedHøyDepositumskonto: FormDataVerdier = {
+        const formueMedHøyDepositumskonto: VerdierFormData = {
             ...formue,
             depositumskonto: '100000000',
         };

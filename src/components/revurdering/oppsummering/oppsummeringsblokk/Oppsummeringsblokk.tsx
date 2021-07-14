@@ -1,12 +1,12 @@
 import { Normaltekst, Element } from 'nav-frontend-typografi';
 import * as React from 'react';
 
-import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering } from '~types/Revurdering';
+import { getRevurderingsårsakMessageId } from '~Utils/revurdering/revurderingUtils';
 
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 import Vedtaksinformasjon from '../vedtaksinformasjon/Vedtaksinformasjon';

@@ -15,7 +15,6 @@ import Personlinje from '~components/personlinje/Personlinje';
 import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
 import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
-import { erRevurderingTilAttestering, erGregulering } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
@@ -25,6 +24,7 @@ import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { IverksattRevurdering, RevurderingsStatus, UnderkjentRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
+import { erRevurderingTilAttestering, erGregulering } from '~Utils/revurdering/revurderingUtils';
 
 import SharedStyles from '../sharedStyles.module.less';
 

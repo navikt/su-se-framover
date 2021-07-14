@@ -21,8 +21,6 @@ import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { eqEktefelle, eqFormue } from '~features/behandling/behandlingUtils';
 import personSlice from '~features/person/person.slice';
 import { showName } from '~features/person/personUtils';
-import { getSenesteHalvGVerdi, regnUtFormDataVerdier } from '~features/revurdering/RevurderFormueUtils';
-import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
 import sakSlice, { lagreBehandlingsinformasjon, lagreEpsGrunnlag } from '~features/saksoversikt/sak.slice';
 import { removeSpaces } from '~lib/formatUtils';
 import { pipe } from '~lib/fp';
@@ -38,6 +36,13 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { FormueStatus, Formue } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
+import {
+    getSenesteHalvGVerdi,
+    regnUtFormDataVerdier,
+    VerdierFormData,
+    verdierId,
+} from '~Utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -46,15 +51,9 @@ import { Vurderingknapper } from '../Vurdering';
 import messages from './formue-nb';
 import styles from './formue.module.less';
 import { FormueInput, ShowSum } from './FormueComponents';
-import {
-    keyNavnForFormue,
-    FormueFormData,
-    getFormueInitialValues,
-    formDataVerdierTilFormueVerdier,
-    FormDataVerdier,
-} from './utils';
+import { FormueFormData, getFormueInitialValues, formDataVerdierTilFormueVerdier } from './utils';
 
-const VerdierSchema: yup.ObjectSchema<FormDataVerdier | undefined> = yup.object<FormDataVerdier>({
+const VerdierSchema: yup.ObjectSchema<VerdierFormData | undefined> = yup.object<VerdierFormData>({
     verdiPåBolig: validateStringAsNonNegativeNumber,
     verdiPåEiendom: validateStringAsNonNegativeNumber,
     verdiPåKjøretøy: validateStringAsNonNegativeNumber,
@@ -72,7 +71,7 @@ const schema = yup.object<FormueFormData>({
         .oneOf([FormueStatus.VilkårOppfylt, FormueStatus.MåInnhenteMerInformasjon, FormueStatus.VilkårIkkeOppfylt]),
     verdier: VerdierSchema.required(),
     epsVerdier: yup
-        .object<FormDataVerdier>()
+        .object<VerdierFormData>()
         .when('borSøkerMedEPS', {
             is: true,
             then: VerdierSchema.required(),
@@ -345,7 +344,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                         <div className={styles.formueInputContainer}>
                             <div className={inputToShow === 'søker' ? styles.aktivFormueBlokk : undefined}>
                                 {inputToShow === 'søker' &&
-                                    keyNavnForFormue.map((keyNavn) => (
+                                    verdierId.map((keyNavn) => (
                                         <FormueInput
                                             key={keyNavn}
                                             tittel={formatMessage(`input.label.${keyNavn}`)}
@@ -354,7 +353,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                             onChange={formik.handleChange}
                                             defaultValue={formik.values.verdier?.[keyNavn] ?? '0'}
                                             feil={
-                                                (formik.errors.verdier as FormikErrors<FormDataVerdier> | undefined)?.[
+                                                (formik.errors.verdier as FormikErrors<VerdierFormData> | undefined)?.[
                                                     keyNavn
                                                 ]
                                             }
@@ -411,7 +410,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                             {formik.values.borSøkerMedEPS && (
                                 <div className={inputToShow === 'ektefelle' ? styles.aktivFormueBlokk : undefined}>
                                     {inputToShow === 'ektefelle' &&
-                                        keyNavnForFormue.map((keyNavn) => (
+                                        verdierId.map((keyNavn) => (
                                             <FormueInput
                                                 key={keyNavn}
                                                 tittel={formatMessage(`input.label.${keyNavn}`)}
@@ -422,7 +421,7 @@ const Formue = (props: VilkårsvurderingBaseProps) => {
                                                 feil={
                                                     (
                                                         formik.errors.epsVerdier as
-                                                            | FormikErrors<FormDataVerdier>
+                                                            | FormikErrors<VerdierFormData>
                                                             | undefined
                                                     )?.[keyNavn]
                                                 }

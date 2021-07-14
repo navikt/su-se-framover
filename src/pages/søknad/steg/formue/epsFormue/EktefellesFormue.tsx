@@ -6,12 +6,13 @@ import { useHistory } from 'react-router-dom';
 import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
-import { formikErrorsTilFeiloppsummering, formikErrorsHarFeil, formueValideringSchema } from '~lib/validering';
+import { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
 import Bunnknapper from '../../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../../steg-shared.module.less';
 import sharedI18n from '../../steg-shared-i18n';
+import { formueValideringSchema } from '../formueSøknadUtils';
 import KjøretøyInputFelter from '../KjøretøyInputFelter';
 
 import messages from './ektefellesformue-nb';

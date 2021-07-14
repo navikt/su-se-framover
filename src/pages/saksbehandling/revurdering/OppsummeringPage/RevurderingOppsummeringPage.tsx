@@ -12,15 +12,6 @@ import RevurderingskallFeilet, {
 } from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import revurderingsfeilMessages from '~components/revurdering/revurderingskallFeilet/revurderingskallFeilet-nb';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
-import {
-    erBeregnetIngenEndring,
-    erForhåndsvarslingBesluttet,
-    erGregulering,
-    erIngenForhåndsvarsel,
-    erRevurderingForhåndsvarslet,
-    erRevurderingSimulert,
-    erRevurderingUnderkjent,
-} from '~features/revurdering/revurderingUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n, useAsyncActionCreatorWithArgsTransformer } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -33,6 +24,15 @@ import {
     SimulertRevurdering,
     UnderkjentRevurdering,
 } from '~types/Revurdering';
+import {
+    erBeregnetIngenEndring,
+    erForhåndsvarslingBesluttet,
+    erGregulering,
+    erIngenForhåndsvarsel,
+    erRevurderingForhåndsvarslet,
+    erRevurderingSimulert,
+    erRevurderingUnderkjent,
+} from '~Utils/revurdering/revurderingUtils';
 
 import sharedStyles from '../revurdering.module.less';
 

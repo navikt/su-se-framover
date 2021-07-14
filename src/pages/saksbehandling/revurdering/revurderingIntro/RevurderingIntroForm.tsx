@@ -10,13 +10,13 @@ import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~api/apiClient';
 import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
-import { getRevurderingsårsakMessageId } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { customFormikSubmit } from '~lib/formikUtils';
 import { useI18n } from '~lib/hooks';
 import { keyOf, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { InformasjonSomRevurderes, OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
+import { getRevurderingsårsakMessageId } from '~Utils/revurdering/revurderingUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';

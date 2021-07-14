@@ -5,26 +5,21 @@ import { Nullable } from '~lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~lib/validering';
 import { Formuegrenser, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { FormuegrunnlagFormue, FormuegrunnlagVerdier } from '~types/Revurdering';
+import {
+    getSenesteHalvGVerdi,
+    VerdierFormData,
+} from '~Utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 export interface FormueFormData {
     formue: FormueData[];
 }
-export interface FormueData {
+
+interface FormueData {
     epsFnr: Nullable<string>;
     periode: { fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> };
     søkersFormue: VerdierFormData;
     epsFormue: Nullable<VerdierFormData>;
     begrunnelse: Nullable<string>;
-}
-export interface VerdierFormData {
-    verdiPåBolig: string;
-    verdiPåEiendom: string;
-    verdiPåKjøretøy: string;
-    innskuddsbeløp: string;
-    verdipapir: string;
-    kontanterOver1000: string;
-    stårNoenIGjeldTilDeg: string;
-    depositumskonto: string;
 }
 
 const tomFormue: VerdierFormData = {
@@ -73,6 +68,13 @@ export const getDefaultValues = (formueVilkår: Nullable<FormueVilkår>, epsFnr:
     };
 };
 
+export const erFormueVilkårOppfylt = (
+    søkersBekreftetFormue: number,
+    epsBekreftetFormue: number,
+    fraOgMed: Nullable<Date>,
+    formuegrenser: Formuegrenser[]
+) => søkersBekreftetFormue + epsBekreftetFormue <= getSenesteHalvGVerdi(fraOgMed, formuegrenser);
+
 export const formueFormDataTilFormuegrunnlagRequest = (data: FormueData[]): FormuegrunnlagFormue => {
     return data.map((formue) => {
         return {
@@ -89,92 +91,6 @@ export const formueFormDataTilFormuegrunnlagRequest = (data: FormueData[]): Form
             begrunnelse: formue.begrunnelse,
         };
     });
-};
-
-export const erFormueVilkårOppfylt = (
-    søkersBekreftetFormue: number,
-    epsBekreftetFormue: number,
-    fraOgMed: Nullable<Date>,
-    formuegrenser: Formuegrenser[]
-) => søkersBekreftetFormue + epsBekreftetFormue <= getSenesteHalvGVerdi(fraOgMed, formuegrenser);
-
-//hvis fraOgMed ikke er utfyllt, eller vi ikke finner en match for fraOgMed,
-//bruker vi den høyeste g-verdien som default
-export const getSenesteHalvGVerdi = (fraOgMed: Nullable<Date>, formuegrenser: Formuegrenser[]) => {
-    const sortert = formuegrenser.slice().sort((a: Formuegrenser, b: Formuegrenser) => {
-        return Date.parse(b.gyldigFra) - Date.parse(a.gyldigFra);
-    });
-
-    if (!fraOgMed) {
-        return sortert[0].beløp;
-    }
-
-    const senesteGrense = sortert.find((grense) => {
-        const parsed = DateFns.startOfDay(new Date(grense.gyldigFra));
-        return DateFns.isAfter(fraOgMed, parsed) || DateFns.isEqual(fraOgMed, parsed);
-    });
-
-    return senesteGrense?.beløp ?? sortert[0].beløp;
-};
-
-const summerFormue = (formue: number[]) => {
-    return formue.reduce((prev, current) => {
-        if (isNaN(current)) {
-            return prev + 0;
-        }
-        return prev + current;
-    }, 0);
-};
-
-//TODO: finn et fint sted denne kan ligge i som omfatter revurdering og saksbehandling
-export const regnUtFormDataVerdier = (verdier: Nullable<VerdierFormData>) => {
-    if (!verdier) {
-        return 0;
-    }
-
-    //https://trello.com/c/cKPqPVXP/513-saksbehandling-formue-depositumskonto-trekkes-ikke-ifra-innskudd-p%C3%A5-konto
-    //"depositum trekkes fra innskudd på konto(men det kan ikke bli minusbeløp), så summeres innskudd på konto med resten."
-    const innskudd = Math.max(
-        (verdier.innskuddsbeløp ? Number(verdier.innskuddsbeløp) : 0) -
-            (verdier.depositumskonto ? Number(verdier.depositumskonto) : 0),
-        0
-    );
-
-    const skalAdderes = [
-        verdier.verdiPåBolig,
-        verdier.verdiPåEiendom,
-        verdier.verdiPåKjøretøy,
-        verdier.verdipapir,
-        verdier.stårNoenIGjeldTilDeg,
-        verdier.kontanterOver1000,
-    ];
-
-    const skalAdderesParsed = skalAdderes.map((verdi) => Number.parseInt(verdi, 0));
-
-    const formue = [...skalAdderesParsed, innskudd];
-
-    return summerFormue(formue);
-};
-
-export const regnUtFormuegrunnlag = (verdier?: Nullable<FormuegrunnlagVerdier>) => {
-    if (!verdier) {
-        return 0;
-    }
-
-    const innskudd = Math.max(verdier.innskudd - verdier.depositumskonto, 0);
-
-    const skalAdderes = [
-        verdier.verdiIkkePrimærbolig,
-        verdier.verdiEiendommer,
-        verdier.verdiKjøretøy,
-        verdier.verdipapir,
-        verdier.pengerSkyldt,
-        verdier.kontanter,
-    ];
-
-    const formue = [...skalAdderes, innskudd];
-
-    return summerFormue(formue);
 };
 
 const formDataVerdierToNumber = (stringVerdier: Nullable<VerdierFormData>): FormuegrunnlagVerdier | null => {

@@ -1,4 +1,3 @@
-import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
@@ -16,6 +15,7 @@ import {
 } from '~types/Behandlingsinformasjon';
 import { erBosituasjonFullstendig } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
 
 export const createVilkårUrl = (props: { sakId: string; behandlingId: string; vilkar: Vilkårtype }) =>
     Routes.saksbehandlingVilkårsvurdering.createURL({

@@ -3,12 +3,12 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { opprettRevurdering } from '~features/revurdering/revurderingActions';
-import { finnNesteRevurderingsteg } from '~features/revurdering/revurderingUtils';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { InformasjonSomRevurderes, OpprettetRevurderingGrunn } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { compareUtbetalingsperiode } from '~types/Utbetalingsperiode';
+import { finnNesteRevurderingsteg } from '~Utils/revurdering/revurderingUtils';
 
 import RevurderingIntroForm from './RevurderingIntroForm';
 

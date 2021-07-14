@@ -16,7 +16,6 @@ import { SatsFaktablokk } from '~components/oppsummering/vilkårsOppsummering/fa
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { eqBosituasjon } from '~features/behandling/behandlingUtils';
-import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
 import { lagreBosituasjonGrunnlag } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
@@ -25,6 +24,7 @@ import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { SøknadInnhold } from '~types/Søknad';
+import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
