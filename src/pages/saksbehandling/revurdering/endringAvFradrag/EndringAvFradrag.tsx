@@ -18,7 +18,6 @@ import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeil
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
-import * as DateUtils from '~lib/dateUtils';
 import { customFormikSubmit } from '~lib/formikUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -27,8 +26,9 @@ import { useAppDispatch } from '~redux/Store';
 import { Fradrag, FradragTilhører } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering } from '~types/Revurdering';
-import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
-import fradragstypeMessages from '~Utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import * as DateUtils from '~utils/date/dateUtils';
+import { hentBosituasjongrunnlag } from '~utils/revurdering/revurderingUtils';
+import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
 
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Person, Kjønn } from '~api/personApi';
 import { KjønnKvinne, KjønnMann, KjønnUkjent } from '~assets/Icons';
 
-import { showName } from '../../Utils/person/personUtils';
+import { showName } from '../../utils/person/personUtils';
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 
 import styles from './personkort.module.less';

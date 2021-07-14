@@ -11,11 +11,11 @@ import DatePicker from 'react-datepicker';
 import { IntlShape } from 'react-intl';
 
 import InntektFraUtland from '~components/beregningOgSimulering/beregning/InntektFraUtland';
-import { toStringDateOrNull } from '~lib/dateUtils';
 import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsPositiveNumber } from '~lib/validering';
 import { Fradrag, Fradragstype } from '~types/Fradrag';
-import { getFradragstypeString } from '~Utils/søknadsbehandling/fradrag/fradragUtils';
+import { toStringDateOrNull } from '~utils/date/dateUtils';
+import { getFradragstypeString } from '~utils/søknadsbehandling/fradrag/fradragUtils';
 
 import { UtenlandskInntektFormData } from './beregningstegTypes';
 import styles from './fradragInputs.module.less';

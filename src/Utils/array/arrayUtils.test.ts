@@ -1,7 +1,8 @@
 import * as N from 'fp-ts/lib/number';
 
-import { groupWhile, groupByEq, spanLeftWithIndex } from './arrayUtils';
-import { pipe } from './fp';
+import { groupByEq, groupWhile, spanLeftWithIndex } from '~utils/array/arrayUtils';
+
+import { pipe } from '../../lib/fp';
 
 describe('groupByEq', () => {
     it('returns an array with each group as array', () =>

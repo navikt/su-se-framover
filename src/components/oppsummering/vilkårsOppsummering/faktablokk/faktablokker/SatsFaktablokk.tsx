@@ -7,10 +7,10 @@ import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasj
 import { Sats } from '~types/Sats';
 import { SøknadInnhold } from '~types/Søknad';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
-import { vilkårTittelFormatted } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
+import { vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/sats/sats-nb';
-import { delerBoligMedFormatted } from '../../../../../Utils/søknadsbehandling/søknadsbehandlingUtils';
+import { delerBoligMedFormatted } from '../../../../../utils/søknadsbehandling/søknadsbehandlingUtils';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 

@@ -10,9 +10,9 @@ import utenlandsoppholdMessages from '~/pages/søknad/steg/utenlandsopphold/uten
 import { Person } from '~api/personApi';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { DelerBoligMed } from '~features/søknad/types';
-import { formatAdresse } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import { Søknadsteg } from '~pages/søknad/types';
+import { formatAdresse } from '~utils/format/formatUtils';
 
 import sharedStyles from '../../../steg-shared.module.less';
 import { EndreSvar } from '../components/EndreSvar';

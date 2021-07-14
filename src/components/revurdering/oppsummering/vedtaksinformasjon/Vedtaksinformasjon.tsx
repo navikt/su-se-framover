@@ -10,8 +10,8 @@ import { useI18n } from '~lib/hooks';
 import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering, Vurderingstatus, InformasjonSomRevurderes } from '~types/Revurdering';
-import { regnUtFormuegrunnlag } from '~Utils/revurdering/formue/RevurderFormueUtils';
-import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
+import { regnUtFormuegrunnlag } from '~utils/revurdering/formue/RevurderFormueUtils';
+import { hentBosituasjongrunnlag } from '~utils/revurdering/revurderingUtils';
 
 import FormuevilkårOppsummering, { Formuevurdering } from '../formuevilkåroppsummering/FormuevilkårOppsummering';
 import Fradragoppsummering from '../fradragoppsummering/Fradragoppsummering';

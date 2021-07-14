@@ -4,19 +4,19 @@ import { Element } from 'nav-frontend-typografi';
 import React, { useMemo } from 'react';
 import { IntlShape } from 'react-intl';
 
-import { formatCurrency } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import saksbehandlingMessages from '~pages/saksbehandling/søknadsbehandling/formue/formue-nb';
 import { Behandlingsinformasjon, FormueStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
+import { formatCurrency } from '~utils/format/formatUtils';
 import {
     kalkulerFormueFraSøknad,
     regnUtFormueVerdier,
     totalVerdiKjøretøy,
-} from '~Utils/søknadsbehandling/formue/formueUtils';
-import { delerBoligMedFormatted } from '~Utils/søknadsbehandling/søknadsbehandlingUtils';
-import { Vilkårsinformasjon, vilkårTittelFormatted } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
+} from '~utils/søknadsbehandling/formue/formueUtils';
+import { delerBoligMedFormatted } from '~utils/søknadsbehandling/søknadsbehandlingUtils';
+import { Vilkårsinformasjon, vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk, { Fakta, FaktaSpacing } from '../Faktablokk';

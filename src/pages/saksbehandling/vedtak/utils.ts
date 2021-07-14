@@ -3,7 +3,7 @@ import { Behandling } from '~types/Behandling';
 import { IverksattRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
-import { erRevurderingIverksatt } from '~Utils/revurdering/revurderingUtils';
+import { erRevurderingIverksatt } from '~utils/revurdering/revurderingUtils';
 
 interface Søknadsbehandlingsoppsummering {
     behandling: Behandling;

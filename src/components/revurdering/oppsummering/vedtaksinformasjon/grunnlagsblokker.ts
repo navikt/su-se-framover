@@ -1,5 +1,3 @@
-import { formatPeriode } from '~lib/dateUtils';
-import { formatCurrency } from '~lib/formatUtils';
 import { UseI18N } from '~lib/hooks';
 import {
     erBosituasjonFullstendig,
@@ -7,6 +5,8 @@ import {
     Bosituasjon,
 } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { UføreResultat, UføreVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { formatPeriode } from '~utils/date/dateUtils';
+import { formatCurrency } from '~utils/format/formatUtils';
 
 import messages from './vedtaksinformasjon-nb';
 

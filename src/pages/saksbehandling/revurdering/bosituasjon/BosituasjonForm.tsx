@@ -14,7 +14,6 @@ import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeil
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
-import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
@@ -22,6 +21,7 @@ import { useAppDispatch } from '~redux/Store';
 import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { BosituasjonRequest, Revurdering } from '~types/Revurdering';
+import * as DateUtils from '~utils/date/dateUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';

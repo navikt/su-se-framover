@@ -11,12 +11,12 @@ import { IntlShape } from 'react-intl';
 
 import { Person } from '~api/personApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { formatMonthYear } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { KanStansesEllerGjenopptas } from '~types/Sak';
 import { compareUtbetalingsperiode, Utbetalingsperiode, Utbetalingstype } from '~types/Utbetalingsperiode';
-import { showName } from '~Utils/person/personUtils';
+import { formatMonthYear } from '~utils/date/dateUtils';
+import { showName } from '~utils/person/personUtils';
 
 import messages from './utbetalinger-nb';
 import styles from './utbetalinger.module.less';

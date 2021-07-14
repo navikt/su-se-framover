@@ -15,13 +15,13 @@ import { ApiError, ErrorCode } from '~api/apiClient';
 import DatePicker from '~components/datePicker/DatePicker';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as SakSlice from '~features/saksoversikt/sak.slice';
-import * as DateUtils from '~lib/dateUtils';
 import { nullableMap, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
+import * as DateUtils from '~utils/date/dateUtils';
 
 import sharedMessages from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';

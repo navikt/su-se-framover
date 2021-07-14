@@ -7,8 +7,8 @@ import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~types/Søknad';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
-import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
-import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
+import { hentBosituasjongrunnlag } from '~utils/revurdering/revurderingUtils';
+import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import { FastOppholdVilkårsblokk } from './faktablokk/faktablokker/FastOppholdFaktablokk';
 import { FlyktningVilkårsblokk } from './faktablokk/faktablokker/FlyktningFaktablokk';

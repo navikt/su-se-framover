@@ -4,16 +4,16 @@ import * as O from 'fp-ts/Option';
 import { Undertekst, Element } from 'nav-frontend-typografi';
 import * as React from 'react';
 
-import { groupByEq } from '~lib/arrayUtils';
-import * as DateUtils from '~lib/dateUtils';
-import { formatCurrency } from '~lib/formatUtils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { eqNullable } from '~lib/types';
 import { Fradrag } from '~types/Fradrag';
 import { eqStringPeriode } from '~types/Periode';
-import fradragstypeMessages from '~Utils/søknadsbehandling/fradrag/fradragstyper-nb';
-import { getFradragstypeStringMedEpsSpesifisering } from '~Utils/søknadsbehandling/fradrag/fradragUtils';
+import { groupByEq } from '~utils/array/arrayUtils';
+import * as DateUtils from '~utils/date/dateUtils';
+import { formatCurrency } from '~utils/format/formatUtils';
+import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import { getFradragstypeStringMedEpsSpesifisering } from '~utils/søknadsbehandling/fradrag/fradragUtils';
 
 import messages from './fradragoppsummering-nb';
 import styles from './fradragoppsummering.module.less';

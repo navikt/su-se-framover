@@ -2,9 +2,9 @@ import classNames from 'classnames';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 import React from 'react';
 
-import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { FormueVilkår, VurderingsperiodeFormue } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
+import * as DateUtils from '~utils/date/dateUtils';
 
 import messages from './formuevilkåroppsummering-nb';
 import styles from './formuevilkåroppsummering.module.less';

@@ -2,7 +2,7 @@ import * as DateFns from 'date-fns';
 
 import { Nullable } from '~lib/types';
 import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
-import { summerFormue } from '~Utils/revurdering/formue/RevurderFormueUtils';
+import { summerFormue } from '~utils/revurdering/formue/RevurderFormueUtils';
 
 export interface VerdierFormData {
     verdiPåBolig: string;

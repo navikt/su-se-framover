@@ -13,8 +13,8 @@ import { useUserContext } from '~context/userContext';
 import { useI18n, useBrevForhåndsvisning } from '~lib/hooks';
 import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
 import { Vedtak } from '~types/Vedtak';
-import { erIverksatt } from '~Utils/behandling/behandlingUtils';
-import { søknadMottatt } from '~Utils/søknad/søknadUtils';
+import { erIverksatt } from '~utils/behandling/behandlingUtils';
+import { søknadMottatt } from '~utils/søknad/søknadUtils';
 
 import messages from './søknadsbehandling-nb';
 import styles from './søknadsbehandlingHeader.module.less';

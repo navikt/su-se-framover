@@ -33,8 +33,8 @@ import { Nullable } from '~lib/types';
 import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { Periode } from '~types/Periode';
 import { RevurderingProps } from '~types/Revurdering';
-import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
-import { regnUtFormDataVerdier, verdierId } from '~Utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+import { hentBosituasjongrunnlag } from '~utils/revurdering/revurderingUtils';
+import { regnUtFormDataVerdier, verdierId } from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';

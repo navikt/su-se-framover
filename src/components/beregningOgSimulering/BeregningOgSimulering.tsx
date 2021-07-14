@@ -3,7 +3,7 @@ import React from 'react';
 
 import { useI18n } from '~lib/hooks';
 import { Behandling } from '~types/Behandling';
-import { erBeregnetAvslag } from '~Utils/behandling/behandlingUtils';
+import { erBeregnetAvslag } from '~utils/behandling/behandlingUtils';
 
 import messages from './beregning/beregning-nb';
 import VisBeregning from './beregning/VisBeregning';

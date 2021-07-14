@@ -17,7 +17,7 @@ import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Søknadstype } from '~types/Søknad';
-import { showName } from '~Utils/person/personUtils';
+import { showName } from '~utils/person/personUtils';
 
 import messages from './kvittering-nb';
 import styles from './kvittering.module.less';

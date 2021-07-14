@@ -19,7 +19,7 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppSelector } from '~redux/Store';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Sak } from '~types/Sak';
-import { erIverksatt, erTilAttestering } from '~Utils/behandling/behandlingUtils';
+import { erIverksatt, erTilAttestering } from '~utils/behandling/behandlingUtils';
 
 import SharedStyles from '../sharedStyles.module.less';
 

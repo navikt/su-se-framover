@@ -1,9 +1,8 @@
 import * as DateFns from 'date-fns';
 import { createIntl, createIntlCache, FormatDateOptions } from 'react-intl';
 
-import { Periode } from '../types/Periode';
-
-import { Nullable } from './types';
+import { Nullable } from '~lib/types';
+import { Periode } from '~types/Periode';
 
 const cache = createIntlCache();
 const intl = createIntl({ locale: 'nb-NO' }, cache);

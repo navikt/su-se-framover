@@ -20,8 +20,8 @@ import {
     erSimulert,
     erBeregnetAvslag,
     erVilkårsvurderingerVurdertAvslag,
-} from '~Utils/behandling/behandlingUtils';
-import { createVilkårUrl, mapToVilkårsinformasjon } from '~Utils/søknadsbehandling/vilkår/vilkårUtils';
+} from '~utils/behandling/behandlingUtils';
+import { createVilkårUrl, mapToVilkårsinformasjon } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import messages from './sendTilAttesteringPage-nb';
 import styles from './sendTilAttesteringPage.module.less';

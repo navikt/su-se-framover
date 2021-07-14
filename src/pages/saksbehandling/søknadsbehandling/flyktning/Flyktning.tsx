@@ -17,7 +17,7 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Flyktning as FlyktningType, FlyktningStatus, UførhetStatus } from '~types/Behandlingsinformasjon';
-import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~Utils/behandling/behandlingUtils';
+import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~utils/behandling/behandlingUtils';
 
 import { FlyktningFaktablokk } from '../../../../components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FlyktningFaktablokk';
 import sharedI18n from '../sharedI18n-nb';

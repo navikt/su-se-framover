@@ -9,14 +9,14 @@ import { Systemtittel, Element } from 'nav-frontend-typografi';
 import React from 'react';
 
 import sharedMessages from '~components/beregningOgSimulering/beregning/beregning-nb';
-import { groupWhile } from '~lib/arrayUtils';
-import { formatMonthYear } from '~lib/dateUtils';
-import { formatCurrency } from '~lib/formatUtils';
 import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { Simulering, SimulertUtbetalingstype } from '~types/Simulering';
+import { groupWhile } from '~utils/array/arrayUtils';
+import { formatMonthYear } from '~utils/date/dateUtils';
+import { formatCurrency } from '~utils/format/formatUtils';
 
 import styles from '../beregning/visBeregning.module.less';
 

@@ -3,13 +3,13 @@ import * as React from 'react';
 
 import VisBeregningOgSimulering from '~components/beregningOgSimulering/BeregningOgSimulering';
 import VilkårsOppsummering from '~components/oppsummering/vilkårsOppsummering/VilkårsOppsummering';
-import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import { Behandling, Behandlingsperiode } from '~types/Behandling';
 import { Periode } from '~types/Periode';
 import { Sak } from '~types/Sak';
 import { Vedtak } from '~types/Vedtak';
+import * as DateUtils from '~utils/date/dateUtils';
 
 import messages from './søknadsbehandling-nb';
 import SøknadsbehandlingHeader from './SøknadsbehandlingHeader';

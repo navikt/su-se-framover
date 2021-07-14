@@ -22,7 +22,7 @@ import { Sak } from '~types/Sak';
 import {
     revurderingstegrekkefølge,
     revurderingstegTilInformasjonSomRevurderes,
-} from '~Utils/revurdering/revurderingUtils';
+} from '~utils/revurdering/revurderingUtils';
 
 import { RevurderingSteg } from '../types';
 

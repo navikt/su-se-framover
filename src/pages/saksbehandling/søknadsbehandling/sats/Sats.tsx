@@ -24,7 +24,7 @@ import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { SøknadInnhold } from '~types/Søknad';
-import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
+import { hentBosituasjongrunnlag } from '~utils/revurdering/revurderingUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';

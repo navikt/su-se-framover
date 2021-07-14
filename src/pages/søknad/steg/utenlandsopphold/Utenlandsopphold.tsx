@@ -12,10 +12,10 @@ import { useHistory } from 'react-router-dom';
 import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { Utenlandsopphold as UtenlandsoppholdType } from '~features/søknad/types';
-import { kalkulerTotaltAntallDagerIUtlandet } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
+import { kalkulerTotaltAntallDagerIUtlandet } from '~utils/date/dateUtils';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';

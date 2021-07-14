@@ -1,9 +1,9 @@
 import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 
-import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { Periode } from '~types/Periode';
+import * as DateUtils from '~utils/date/dateUtils';
 
 import messages from './revurderingsperiodeheader-nb';
 import styles from './revurderingsperiodeheader.module.less';

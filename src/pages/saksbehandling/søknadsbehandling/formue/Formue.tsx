@@ -20,7 +20,6 @@ import ToKolonner from '~components/toKolonner/ToKolonner';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import personSlice from '~features/person/person.slice';
 import sakSlice, { lagreBehandlingsinformasjon, lagreEpsGrunnlag } from '~features/saksoversikt/sak.slice';
-import { removeSpaces } from '~lib/formatUtils';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -34,14 +33,15 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { FormueStatus, Formue } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
-import { showName } from '~Utils/person/personUtils';
-import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
+import { removeSpaces } from '~utils/format/formatUtils';
+import { showName } from '~utils/person/personUtils';
+import { hentBosituasjongrunnlag } from '~utils/revurdering/revurderingUtils';
 import {
     getSenesteHalvGVerdi,
     regnUtFormDataVerdier,
     VerdierFormData,
     verdierId,
-} from '~Utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+} from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';

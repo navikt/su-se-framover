@@ -20,11 +20,11 @@ import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { Adresse, IngenAdresseGrunn } from '~api/personApi';
 import { DelerBoligMed, EPSFormData } from '~features/søknad/types';
-import { formatAdresse } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import { keyOf } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { formatAdresse } from '~utils/format/formatUtils';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';

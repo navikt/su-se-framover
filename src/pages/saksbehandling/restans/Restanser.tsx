@@ -7,11 +7,11 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { fetchSak, hentÅpneBehandlingerForAlleSaker } from '~features/saksoversikt/sak.slice';
-import { formatDateTime } from '~lib/dateUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Restans } from '~types/Restans';
+import { formatDateTime } from '~utils/date/dateUtils';
 
 import messages from './restanser-nb';
 import styles from './restanser.module.less';
