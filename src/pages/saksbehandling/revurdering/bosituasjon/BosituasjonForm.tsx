@@ -21,7 +21,7 @@ import { useAppDispatch } from '~redux/Store';
 import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { BosituasjonRequest, Revurdering } from '~types/Revurdering';
-import * as DateUtils from '~utilsLOL/date/dateUtils';
+import * as DateUtils from '~utils/date/dateUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';

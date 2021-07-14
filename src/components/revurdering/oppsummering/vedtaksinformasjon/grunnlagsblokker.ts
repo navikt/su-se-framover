@@ -5,8 +5,8 @@ import {
     Bosituasjon,
 } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { UføreResultat, UføreVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { formatPeriode } from '~utilsLOL/date/dateUtils';
-import { formatCurrency } from '~utilsLOL/format/formatUtils';
+import { formatPeriode } from '~utils/date/dateUtils';
+import { formatCurrency } from '~utils/format/formatUtils';
 
 import messages from './vedtaksinformasjon-nb';
 

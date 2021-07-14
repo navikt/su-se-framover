@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { useI18n } from '~lib/hooks';
 import { Periode } from '~types/Periode';
-import * as DateUtils from '~utilsLOL/date/dateUtils';
+import * as DateUtils from '~utils/date/dateUtils';
 
 import messages from './revurderingsperiodeheader-nb';
 import styles from './revurderingsperiodeheader.module.less';

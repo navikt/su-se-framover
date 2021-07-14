@@ -9,8 +9,8 @@ import boOgOppholdSøknadMessages from '~pages/søknad/steg/bo-og-opphold-i-norg
 import flyktningstatusSøknadMessages from '~pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
-import { formatAdresse } from '~utilsLOL/format/formatUtils';
-import { vilkårTittelFormatted } from '~utilsLOL/søknadsbehandling/vilkår/vilkårUtils';
+import { formatAdresse } from '~utils/format/formatUtils';
+import { vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/fast-opphold-i-norge/fastOppholdINorge-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';

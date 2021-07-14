@@ -16,7 +16,7 @@ import { useI18n } from '~lib/hooks';
 import { keyOf, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { InformasjonSomRevurderes, OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
-import { getRevurderingsårsakMessageId } from '~utilsLOL/revurdering/revurderingUtils';
+import { getRevurderingsårsakMessageId } from '~utils/revurdering/revurderingUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';

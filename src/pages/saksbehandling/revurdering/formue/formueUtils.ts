@@ -4,11 +4,11 @@ import { Nullable } from '~lib/types';
 import yup, { validateStringAsNonNegativeNumber } from '~lib/validering';
 import { Formuegrenser, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { FormuegrunnlagFormue, FormuegrunnlagVerdier } from '~types/Revurdering';
-import * as DateUtils from '~utilsLOL/date/dateUtils';
+import * as DateUtils from '~utils/date/dateUtils';
 import {
     getSenesteHalvGVerdi,
     VerdierFormData,
-} from '~utilsLOL/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+} from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 export interface FormueFormData {
     formue: FormueData[];

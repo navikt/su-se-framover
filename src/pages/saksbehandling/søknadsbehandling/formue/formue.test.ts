@@ -1,9 +1,9 @@
 import { FormueVerdier } from '~types/Behandlingsinformasjon';
-import { kalkulerFormueFraSøknad, regnUtFormueVerdier } from '~utilsLOL/søknadsbehandling/formue/formueUtils';
+import { kalkulerFormueFraSøknad, regnUtFormueVerdier } from '~utils/søknadsbehandling/formue/formueUtils';
 import {
     regnUtFormDataVerdier,
     VerdierFormData,
-} from '~utilsLOL/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+} from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 describe('kalkulation for formue', () => {
     const formue: VerdierFormData = {

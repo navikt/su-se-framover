@@ -24,7 +24,7 @@ import { useI18n } from '~lib/hooks';
 import { keyOf } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { formatAdresse } from '~utilsLOL/format/formatUtils';
+import { formatAdresse } from '~utils/format/formatUtils';
 
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';

@@ -5,7 +5,7 @@ import { GrunnForPapirinnsending } from '~features/søknad/types';
 import { useI18n } from '~lib/hooks';
 import { PersonligOppmøteStatus } from '~types/Behandlingsinformasjon';
 import { Søknadstype } from '~types/Søknad';
-import { vilkårTittelFormatted } from '~utilsLOL/søknadsbehandling/vilkår/vilkårUtils';
+import { vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/personlig-oppmøte/personligOppmøte-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';

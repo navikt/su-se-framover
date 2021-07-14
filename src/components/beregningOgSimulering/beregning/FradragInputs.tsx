@@ -14,8 +14,8 @@ import InntektFraUtland from '~components/beregningOgSimulering/beregning/Inntek
 import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsPositiveNumber } from '~lib/validering';
 import { Fradrag, Fradragstype } from '~types/Fradrag';
-import { toStringDateOrNull } from '~utilsLOL/date/dateUtils';
-import { getFradragstypeString } from '~utilsLOL/søknadsbehandling/fradrag/fradragUtils';
+import { toStringDateOrNull } from '~utils/date/dateUtils';
+import { getFradragstypeString } from '~utils/søknadsbehandling/fradrag/fradragUtils';
 
 import { UtenlandskInntektFormData } from './beregningstegTypes';
 import styles from './fradragInputs.module.less';

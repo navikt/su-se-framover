@@ -9,11 +9,11 @@ import { useI18n } from '~lib/hooks';
 import { eqNullable } from '~lib/types';
 import { Fradrag } from '~types/Fradrag';
 import { eqStringPeriode } from '~types/Periode';
-import { groupByEq } from '~utilsLOL/array/arrayUtils';
-import * as DateUtils from '~utilsLOL/date/dateUtils';
-import { formatCurrency } from '~utilsLOL/format/formatUtils';
-import fradragstypeMessages from '~utilsLOL/søknadsbehandling/fradrag/fradragstyper-nb';
-import { getFradragstypeStringMedEpsSpesifisering } from '~utilsLOL/søknadsbehandling/fradrag/fradragUtils';
+import { groupByEq } from '~utils/array/arrayUtils';
+import * as DateUtils from '~utils/date/dateUtils';
+import { formatCurrency } from '~utils/format/formatUtils';
+import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import { getFradragstypeStringMedEpsSpesifisering } from '~utils/søknadsbehandling/fradrag/fradragUtils';
 
 import messages from './fradragoppsummering-nb';
 import styles from './fradragoppsummering.module.less';

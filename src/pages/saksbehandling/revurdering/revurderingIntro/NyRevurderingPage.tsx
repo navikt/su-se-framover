@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { InformasjonSomRevurderes, OpprettetRevurderingGrunn } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { compareUtbetalingsperiode } from '~types/Utbetalingsperiode';
-import { finnNesteRevurderingsteg } from '~utilsLOL/revurdering/revurderingUtils';
+import { finnNesteRevurderingsteg } from '~utils/revurdering/revurderingUtils';
 
 import RevurderingIntroForm from './RevurderingIntroForm';
 

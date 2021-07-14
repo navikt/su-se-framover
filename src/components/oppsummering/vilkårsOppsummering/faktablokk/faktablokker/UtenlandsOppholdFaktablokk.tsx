@@ -5,8 +5,8 @@ import React from 'react';
 import { useI18n } from '~lib/hooks';
 import { keyOf } from '~lib/types';
 import { OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
-import { kalkulerTotaltAntallDagerIUtlandet } from '~utilsLOL/date/dateUtils';
-import { vilkårTittelFormatted } from '~utilsLOL/søknadsbehandling/vilkår/vilkårUtils';
+import { kalkulerTotaltAntallDagerIUtlandet } from '~utils/date/dateUtils';
+import { vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/opphold-i-utlandet/oppholdIUtlandet-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';

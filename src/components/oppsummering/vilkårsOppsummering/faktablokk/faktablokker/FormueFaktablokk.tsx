@@ -9,14 +9,14 @@ import { Nullable } from '~lib/types';
 import saksbehandlingMessages from '~pages/saksbehandling/søknadsbehandling/formue/formue-nb';
 import { Behandlingsinformasjon, FormueStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
-import { formatCurrency } from '~utilsLOL/format/formatUtils';
+import { formatCurrency } from '~utils/format/formatUtils';
 import {
     kalkulerFormueFraSøknad,
     regnUtFormueVerdier,
     totalVerdiKjøretøy,
-} from '~utilsLOL/søknadsbehandling/formue/formueUtils';
-import { delerBoligMedFormatted } from '~utilsLOL/søknadsbehandling/søknadsbehandlingUtils';
-import { Vilkårsinformasjon, vilkårTittelFormatted } from '~utilsLOL/søknadsbehandling/vilkår/vilkårUtils';
+} from '~utils/søknadsbehandling/formue/formueUtils';
+import { delerBoligMedFormatted } from '~utils/søknadsbehandling/søknadsbehandlingUtils';
+import { Vilkårsinformasjon, vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk, { Fakta, FaktaSpacing } from '../Faktablokk';

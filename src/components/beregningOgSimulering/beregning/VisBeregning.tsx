@@ -13,11 +13,11 @@ import { useI18n } from '~lib/hooks';
 import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~types/Beregning';
 import { Fradrag, Fradragstype } from '~types/Fradrag';
 import { Sats } from '~types/Sats';
-import { groupBy, groupByEq } from '~utilsLOL/array/arrayUtils';
-import { formatMonthYear } from '~utilsLOL/date/dateUtils';
-import { formatCurrency } from '~utilsLOL/format/formatUtils';
-import fradragstypeMessages from '~utilsLOL/søknadsbehandling/fradrag/fradragstyper-nb';
-import { getFradragstypeString } from '~utilsLOL/søknadsbehandling/fradrag/fradragUtils';
+import { groupBy, groupByEq } from '~utils/array/arrayUtils';
+import { formatMonthYear } from '~utils/date/dateUtils';
+import { formatCurrency } from '~utils/format/formatUtils';
+import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import { getFradragstypeString } from '~utils/søknadsbehandling/fradrag/fradragUtils';
 
 import styles from './visBeregning.module.less';
 

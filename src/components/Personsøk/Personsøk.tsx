@@ -11,7 +11,7 @@ import { ApiError, ErrorCode } from '~api/apiClient';
 import { Person } from '~api/personApi';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
-import { removeSpaces } from '~utilsLOL/format/formatUtils';
+import { removeSpaces } from '~utils/format/formatUtils';
 
 import { Personkort } from '../personkort/Personkort';
 
