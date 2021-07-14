@@ -147,7 +147,7 @@
         "@testing-library/react-hooks": "^7.0.0",
         "@types/amplitude-js": "^8.0.1",
         "@types/classnames": "^2.3.1",
-        "@types/js-cookie": "^2.2.6",
+        "@types/js-cookie": "^2.2.7",
         "@types/parcel-env": "0.0.0",
         "@types/react-redux": "^7.1.16",
         "@types/react-router-dom": "^5.1.8",
