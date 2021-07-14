@@ -20,9 +20,9 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
+import Restanser from './restans/Restanser';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
-import ÅpneBehandlinger from './åpneBehandlinger/ÅpneBehandlinger';
 
 const Vilkår = React.lazy(() => import('./søknadsbehandling/vilkår/Vilkår'));
 const SendTilAttesteringPage = React.lazy(
@@ -86,9 +86,6 @@ const Saksoversikt = () => {
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
             <Switch>
-                <Route path={Routes.saksoversiktÅpneBehandlinger.path}>
-                    <ÅpneBehandlinger />
-                </Route>
                 <Route path={Routes.saksoversiktValgtSak.path}>
                     {pipe(
                         RemoteData.combine(søker, sak),
@@ -194,7 +191,7 @@ const Saksoversikt = () => {
                                 <AlertStripe type="feil">{visErrorMelding(sak.error)}</AlertStripe>
                             )}
                         </div>
-                        <ÅpneBehandlinger />
+                        <Restanser />
                     </div>
                 </Route>
             </Switch>

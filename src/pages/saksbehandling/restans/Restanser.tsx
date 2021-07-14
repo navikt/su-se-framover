@@ -11,16 +11,16 @@ import { formatDateTime } from '~lib/dateUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { ÅpenBehandling } from '~types/Sak';
+import { Restans } from '~types/Restans';
 
-import messages from './åpneBehandlinger-nb';
-import styles from './åpneBehandlinger.module.less';
-import { formatÅpenBehandlingsType, formatÅpenBehandlignsStatus } from './åpneBehandlingerUtils';
+import messages from './restanser-nb';
+import styles from './restanser.module.less';
+import { formatRestansType, formatRestansStatus } from './restanserUtils';
 
 type Kolonner = 'saksnummer' | 'typeBehandling' | 'status' | 'opprettet';
 type AriaSortVerdier = 'none' | 'ascending' | 'descending';
 
-const ÅpneBehandlinger = () => {
+const Restanser = () => {
     const { formatMessage } = useI18n({ messages });
     const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useAsyncActionCreator(hentÅpneBehandlingerForAlleSaker);
 
@@ -34,11 +34,11 @@ const ÅpneBehandlinger = () => {
             () => <NavFrontendSpinner />,
             () => <NavFrontendSpinner />,
             () => <AlertStripeFeil>{formatMessage('feil.feilOppstod')}</AlertStripeFeil>,
-            (åpneBehandlinger: ÅpenBehandling[]) => {
-                if (åpneBehandlinger.length === 0) {
+            (restanser: Restans[]) => {
+                if (restanser.length === 0) {
                     return <AlertStripeSuksess>{formatMessage('behandling.ingenÅpneBehandlinger')}</AlertStripeSuksess>;
                 }
-                return <ÅpneBehandlingerTabell tabelldata={åpneBehandlinger} />;
+                return <RestanserTabell tabelldata={restanser} />;
             }
         )
     );
@@ -73,10 +73,10 @@ const KnappOgStatus = (props: { saksnummer: string }) => {
     );
 };
 
-const ÅpneBehandlingerTabell = (props: { tabelldata: ÅpenBehandling[] }) => {
+const RestanserTabell = (props: { tabelldata: Restans[] }) => {
     const { formatMessage } = useI18n({ messages });
 
-    const [tabell, setTabell] = useState<ÅpenBehandling[]>(props.tabelldata);
+    const [tabell, setTabell] = useState<Restans[]>(props.tabelldata);
     const [sortVerdi, setSortVerdi] = useState<AriaSortVerdier>('none');
     const [sortertKolonne, setSortertKolonne] = useState<Kolonner | 'ingen'>('ingen');
 
@@ -88,7 +88,7 @@ const ÅpneBehandlingerTabell = (props: { tabelldata: ÅpenBehandling[] }) => {
         setSortertKolonne(kolonne);
     };
     const sort = (kolonne: Kolonner) => {
-        const sortert = tabell.slice().sort((a: ÅpenBehandling, b: ÅpenBehandling) => {
+        const sortert = tabell.slice().sort((a: Restans, b: Restans) => {
             if (erSortVerdi('ascending')) {
                 setSortVerdi('descending');
                 return a[kolonne] > b[kolonne] ? 1 : a[kolonne] < b[kolonne] ? -1 : 0;
@@ -166,24 +166,24 @@ const ÅpneBehandlingerTabell = (props: { tabelldata: ÅpenBehandling[] }) => {
                 </tr>
             </thead>
             <tbody>
-                {tabell.map((åpenBehandling) => (
-                    <tr key={åpenBehandling.behandlingId}>
+                {tabell.map((restans) => (
+                    <tr key={restans.behandlingId}>
                         <td className={classNames({ ['tabell__td--sortert']: erKolonneSortertEtter('saksnummer') })}>
-                            {åpenBehandling.saksnummer}
+                            {restans.saksnummer}
                         </td>
                         <td
                             className={classNames({ ['tabell__td--sortert']: erKolonneSortertEtter('typeBehandling') })}
                         >
-                            {formatÅpenBehandlingsType(åpenBehandling.typeBehandling, formatMessage)}
+                            {formatRestansType(restans.typeBehandling, formatMessage)}
                         </td>
                         <td className={classNames({ ['tabell__td--sortert']: erKolonneSortertEtter('status') })}>
-                            {formatÅpenBehandlignsStatus(åpenBehandling.status, formatMessage)}
+                            {formatRestansStatus(restans.status, formatMessage)}
                         </td>
                         <td className={classNames({ ['tabell__td--sortert']: erKolonneSortertEtter('opprettet') })}>
-                            {formatDateTime(åpenBehandling.opprettet)}
+                            {formatDateTime(restans.opprettet)}
                         </td>
                         <td>
-                            <KnappOgStatus saksnummer={åpenBehandling.saksnummer} />
+                            <KnappOgStatus saksnummer={restans.saksnummer} />
                         </td>
                     </tr>
                 ))}
@@ -192,4 +192,4 @@ const ÅpneBehandlingerTabell = (props: { tabelldata: ÅpenBehandling[] }) => {
     );
 };
 
-export default ÅpneBehandlinger;
+export default Restanser;

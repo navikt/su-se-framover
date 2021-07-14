@@ -54,11 +54,6 @@ export const saksoversiktIndex: Route<never> = {
     createURL: () => '/saksoversikt',
 };
 
-export const saksoversiktÅpneBehandlinger: Route<never> = {
-    path: '/saksoversikt/apneBehandlinger/',
-    createURL: () => '/saksoversikt/apneBehandlinger',
-};
-
 export const saksoversiktValgtSak: Route<{
     sakId: string;
 }> = {
