@@ -16,7 +16,6 @@ import {
 import Fradragoppsummering from '~components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
 import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
 import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import * as DateUtils from '~lib/dateUtils';
@@ -29,6 +28,7 @@ import { Fradrag, FradragTilhører } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering } from '~types/Revurdering';
 import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
+import fradragstypeMessages from '~Utils/søknadsbehandling/fradrag/fradragstyper-nb';
 
 import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';

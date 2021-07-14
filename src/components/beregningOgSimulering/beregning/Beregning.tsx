@@ -22,7 +22,6 @@ import {
     FradragInputs,
 } from '~components/beregningOgSimulering/beregning/FradragInputs';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
@@ -35,6 +34,7 @@ import { Beregning } from '~types/Beregning';
 import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
 import { kanSimuleres } from '~Utils/behandling/behandlingUtils';
 import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
+import fradragstypeMessages from '~Utils/søknadsbehandling/fradrag/fradragstyper-nb';
 
 import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../../../pages/saksbehandling/søknadsbehandling/types';
