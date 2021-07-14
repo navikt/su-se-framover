@@ -15,7 +15,7 @@ import {
 } from '~types/Behandlingsinformasjon';
 import { erBosituasjonFullstendig } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
-import { hentBosituasjongrunnlag } from '~utils/revurdering/revurderingUtils';
+import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 export const createVilkårUrl = (props: { sakId: string; behandlingId: string; vilkar: Vilkårtype }) =>
     Routes.saksbehandlingVilkårsvurdering.createURL({

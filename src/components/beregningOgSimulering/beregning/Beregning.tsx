@@ -33,8 +33,8 @@ import { Beregning } from '~types/Beregning';
 import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
 import { kanSimuleres } from '~utils/behandling/behandlingUtils';
 import * as DateUtils from '~utils/date/dateUtils';
-import { hentBosituasjongrunnlag } from '~utils/revurdering/revurderingUtils';
 import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../../../pages/saksbehandling/søknadsbehandling/types';

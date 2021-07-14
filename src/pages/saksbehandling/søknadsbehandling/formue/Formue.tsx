@@ -35,7 +35,7 @@ import { FormueStatus, Formue } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 import { removeSpaces } from '~utils/format/formatUtils';
 import { showName } from '~utils/person/personUtils';
-import { hentBosituasjongrunnlag } from '~utils/revurdering/revurderingUtils';
+import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 import {
     getSenesteHalvGVerdi,
     regnUtFormDataVerdier,
