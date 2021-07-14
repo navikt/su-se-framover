@@ -22,6 +22,7 @@ import {
     hentSisteVurdertSaksbehandlingssteg,
 } from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { formatDateTime } from '~lib/dateUtils';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
 import { useI18n, useNotificationFromLocation } from '~lib/hooks';
@@ -174,30 +175,32 @@ const UnderkjennelsesInformasjon = (props: {
                     id: 'behandling.attestering.advarsel',
                 })}
             </AlertStripe>
-            {props.underkjennelser.map((attestering, index) => (
-                <div className={styles.underkjennelse} key={index}>
-                    <div className={styles.underkjenningsinfo}>
-                        <Element>Tidspunkt</Element>
-                        <Normaltekst>{attestering.opprettet}</Normaltekst>
-                    </div>
-                    <div className={styles.underkjenningsinfo}>
-                        <Element>
-                            {props.intl.formatMessage({
-                                id: 'display.attestering.sendtTilbakeFordi',
-                            })}
-                        </Element>
-                        <Normaltekst>{grunnToText(attestering.underkjennelse.grunn, props.intl)}</Normaltekst>
-                    </div>
-                    <div className={styles.underkjenningsinfo}>
-                        <Element>
-                            {props.intl.formatMessage({
-                                id: 'display.attestering.kommentar',
-                            })}
-                        </Element>
-                        <Normaltekst>{attestering.underkjennelse.kommentar}</Normaltekst>
-                    </div>
-                </div>
-            ))}
+            <div className={styles.underkjennelse}>
+                {props.underkjennelser.map((attestering) => (
+                    <>
+                        <div className={styles.underkjenningsinfo}>
+                            <Element>{props.intl.formatMessage({ id: 'display.attestering.tidspunkt' })}</Element>
+                            <Normaltekst>{formatDateTime(attestering.opprettet)}</Normaltekst>
+                        </div>
+                        <div className={styles.underkjenningsinfo}>
+                            <Element>
+                                {props.intl.formatMessage({
+                                    id: 'display.attestering.sendtTilbakeFordi',
+                                })}
+                            </Element>
+                            <Normaltekst>{grunnToText(attestering.underkjennelse.grunn, props.intl)}</Normaltekst>
+                        </div>
+                        <div className={styles.underkjenningsinfo}>
+                            <Element>
+                                {props.intl.formatMessage({
+                                    id: 'display.attestering.kommentar',
+                                })}
+                            </Element>
+                            <Normaltekst>{attestering.underkjennelse.kommentar}</Normaltekst>
+                        </div>
+                    </>
+                ))}
+            </div>
         </div>
     );
 };
