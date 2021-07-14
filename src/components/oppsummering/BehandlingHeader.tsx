@@ -1,4 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { last } from 'fp-ts/lib/Array';
+import { isSome } from 'fp-ts/lib/Option';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Knapp } from 'nav-frontend-knapper';
@@ -26,8 +28,9 @@ const BehandlingHeader = (props: {
     medBrevutkastknapp?: boolean;
 }) => {
     const { intl } = useI18n({ messages });
+    const senesteAttestering = last(props.behandling.attesteringer);
 
-    if (props.behandling?.attestering?.underkjennelse) {
+    if (isSome(senesteAttestering) && senesteAttestering.value.underkjennelse) {
         return (
             <div className={styles.behandlingUnderkjentContainer}>
                 <div className={styles.ikonContainer}>
@@ -37,11 +40,11 @@ const BehandlingHeader = (props: {
                 <div className={styles.grunnOgKommentarContainer}>
                     <div>
                         <Element>{intl.formatMessage({ id: 'underkjent.grunn' })}</Element>
-                        <p>{underkjentGrunnTilTekst(props.behandling.attestering.underkjennelse?.grunn, intl)}</p>
+                        <p>{underkjentGrunnTilTekst(senesteAttestering.value.underkjennelse.grunn, intl)}</p>
                     </div>
                     <div>
                         <Element>{intl.formatMessage({ id: 'underkjent.kommentar' })}</Element>
-                        <p>{props.behandling.attestering.underkjennelse?.kommentar}</p>
+                        <p>{senesteAttestering.value.underkjennelse.kommentar}</p>
                     </div>
                 </div>
                 <Tilleggsinfo
@@ -74,6 +77,7 @@ const Tilleggsinfo = (props: {
     intl: IntlShape;
 }) => {
     const user = useUserContext();
+    const senesteAttestering = last(props.behandling.attesteringer);
 
     const [lastNedBrevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandling);
     const hentBrev = React.useCallback(async () => {
@@ -94,10 +98,10 @@ const Tilleggsinfo = (props: {
                     <Element> {props.intl.formatMessage({ id: 'behandlet.av' })}</Element>
                     <p>{props.behandling.saksbehandler || user.navn}</p>
                 </div>
-                {props.behandling.attestering?.attestant && (
+                {isSome(senesteAttestering) && (
                     <div>
                         <Element> {props.intl.formatMessage({ id: 'attestert.av' })}</Element>
-                        <p>{props.behandling.attestering.attestant}</p>
+                        <p>{senesteAttestering.value.attestant}</p>
                     </div>
                 )}
 

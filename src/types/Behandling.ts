@@ -16,7 +16,7 @@ export interface Behandling {
     status: Behandlingsstatus;
     simulering: Nullable<Simulering>;
     opprettet: string;
-    attestering: Nullable<Attestering>;
+    attesteringer: Attestering[];
     saksbehandler: Nullable<string>;
     hendelser: Nullable<Hendelse[]>;
     satsBeløp: Nullable<number>;
@@ -55,6 +55,7 @@ export interface Hendelse {
 
 export interface Attestering {
     attestant: string;
+    opprettet: string;
     underkjennelse: Nullable<Underkjennelse>;
 }
 
