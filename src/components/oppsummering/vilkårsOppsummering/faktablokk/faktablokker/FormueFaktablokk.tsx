@@ -12,7 +12,11 @@ import saksbehandlingMessages from '~pages/saksbehandling/søknadsbehandling/for
 import { delerBoligMedFormatted } from '~pages/saksbehandling/søknadsbehandling/sharedUtils';
 import { Behandlingsinformasjon, FormueStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
-import { kalkulerFormueFraSøknad, regnUtFormueVerdier } from '~Utils/søknadsbehandling/formue/formueUtils';
+import {
+    kalkulerFormueFraSøknad,
+    regnUtFormueVerdier,
+    totalVerdiKjøretøy,
+} from '~Utils/søknadsbehandling/formue/formueUtils';
 
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk, { Fakta, FaktaSpacing } from '../Faktablokk';
@@ -99,8 +103,8 @@ function søknadsfakta(innhold: SøknadInnhold, intl: IntlShape): Fakta[] {
         },
         {
             tittel: message('formue.verdiPåKjøretøy'),
-            verdi: innhold.formue.kjøretøy?.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0),
-            epsVerdi: innhold.ektefelle?.formue.kjøretøy?.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0),
+            verdi: innhold.formue.kjøretøy ? totalVerdiKjøretøy(innhold.formue.kjøretøy) : 0,
+            epsVerdi: innhold.ektefelle?.formue.kjøretøy ? totalVerdiKjøretøy(innhold.ektefelle.formue.kjøretøy) : 0,
         },
         {
             tittel: message('formue.innskuddsbeløp'),

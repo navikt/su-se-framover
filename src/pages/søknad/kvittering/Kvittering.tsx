@@ -12,12 +12,12 @@ import { ApiError } from '~api/apiClient';
 import { fetchSøknadutskrift } from '~api/pdfApi';
 import { OpprettetSøknad } from '~api/søknadApi';
 import * as personSlice from '~features/person/person.slice';
-import { showName } from '~features/person/personUtils';
 import * as søknadslice from '~features/søknad/søknad.slice';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Søknadstype } from '~types/Søknad';
+import { showName } from '~Utils/person/personUtils';
 
 import messages from './kvittering-nb';
 import styles from './kvittering.module.less';

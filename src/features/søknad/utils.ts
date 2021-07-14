@@ -1,7 +1,20 @@
 import { Adresse } from '~api/personApi';
 import { Nullable } from '~lib/types';
+import { EktefellePartnerSamboer } from '~types/Søknad';
 
 import { AdresseFraSøknad, SøknadState } from './søknad.slice';
+import { EPSFormData } from './types';
+
+export const toEktefellePartnerSamboer = (eps: Nullable<EPSFormData>): Nullable<EktefellePartnerSamboer> => {
+    if (eps?.fnr) {
+        return {
+            fnr: eps.fnr,
+            erUførFlyktning: eps.erUførFlyktning,
+        };
+    }
+
+    return null;
+};
 
 export const toFormue = (formue: SøknadState['formue']) => {
     return {

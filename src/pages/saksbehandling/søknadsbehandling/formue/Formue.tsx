@@ -19,7 +19,6 @@ import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import personSlice from '~features/person/person.slice';
-import { showName } from '~features/person/personUtils';
 import sakSlice, { lagreBehandlingsinformasjon, lagreEpsGrunnlag } from '~features/saksoversikt/sak.slice';
 import { removeSpaces } from '~lib/formatUtils';
 import { pipe } from '~lib/fp';
@@ -35,6 +34,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { FormueStatus, Formue } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import { showName } from '~Utils/person/personUtils';
 import { hentBosituasjongrunnlag } from '~Utils/revurdering/revurderingUtils';
 import {
     getSenesteHalvGVerdi,

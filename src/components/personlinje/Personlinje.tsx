@@ -3,9 +3,9 @@ import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 
 import { Kjønn, Person } from '~api/personApi';
-import { showName } from '~features/person/personUtils';
 import { useI18n } from '~lib/hooks';
 import { Sak } from '~types/Sak';
+import { showName } from '~Utils/person/personUtils';
 
 import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 
