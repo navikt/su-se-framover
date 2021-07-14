@@ -1,8 +1,8 @@
 import { IntlShape } from 'react-intl';
 
-import { Behandlingsstatus } from '../types/Behandling';
-import { Sak } from '../types/Sak';
-import { Søknad, Søknadstype } from '../types/Søknad';
+import { Behandlingsstatus } from '../../types/Behandling';
+import { Sak } from '../../types/Sak';
+import { Søknad, Søknadstype } from '../../types/Søknad';
 
 export function søknadMottatt(søknad: Søknad, intl: IntlShape): string {
     if (søknad.søknadInnhold.forNav.type === Søknadstype.Papirsøknad) {

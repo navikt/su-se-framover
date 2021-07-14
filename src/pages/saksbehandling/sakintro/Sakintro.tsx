@@ -22,7 +22,6 @@ import { useFeatureToggle } from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
 import { useI18n, useNotificationFromLocation } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { getIverksatteInnvilgedeSøknader, søknadMottatt, getIverksatteAvslåtteSøknader } from '~lib/søknadUtils';
 import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
@@ -32,6 +31,11 @@ import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 import { Vedtak } from '~types/Vedtak';
 import { erIverksatt, erTilAttestering, hentSisteVurdertSaksbehandlingssteg } from '~Utils/behandling/behandlingUtils';
+import {
+    getIverksatteInnvilgedeSøknader,
+    søknadMottatt,
+    getIverksatteAvslåtteSøknader,
+} from '~Utils/søknad/søknadUtils';
 
 import {
     erRevurderingTilAttestering,
