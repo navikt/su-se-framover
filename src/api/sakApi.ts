@@ -27,5 +27,5 @@ export async function fetchSakBySakId(sakId: string): Promise<ApiClientResult<Sa
 }
 
 export async function hentÅpneBehandlingerForAlleSaker(): Promise<ApiClientResult<ÅpenBehandling[]>> {
-    return apiClient({ url: `/saker/`, method: 'GET' });
+    return apiClient({ url: `/saker/restanser`, method: 'GET' });
 }
