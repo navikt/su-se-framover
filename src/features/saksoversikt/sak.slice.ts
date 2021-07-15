@@ -56,7 +56,7 @@ export const fetchSak = createAsyncThunk<
 export const hentÅpneBehandlingerForAlleSaker = createAsyncThunk<Restans[], void, { rejectValue: ApiError }>(
     'sak/hentÅpneBehandlingerForAlleSaker',
     async (_, thunkApi) => {
-        const res = await sakApi.hentÅpneBehandlingerForAlleSaker();
+        const res = await sakApi.hentRestanser();
         if (res.status === 'ok') {
             return res.data;
         }

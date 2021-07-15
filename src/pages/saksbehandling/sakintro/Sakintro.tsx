@@ -17,7 +17,6 @@ import { FeatureToggle } from '~api/featureToggleApi';
 import { Person } from '~api/personApi';
 import { useUserContext } from '~context/userContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { formatDateTime } from '~lib/dateUtils';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
 import { useI18n, useNotificationFromLocation } from '~lib/hooks';
@@ -31,6 +30,7 @@ import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 import { Vedtak } from '~types/Vedtak';
 import { erIverksatt, erTilAttestering, hentSisteVurdertSaksbehandlingssteg } from '~utils/behandling/behandlingUtils';
+import { formatDateTime } from '~utils/date/dateUtils';
 import {
     getIverksatteInnvilgedeSøknader,
     søknadMottatt,
