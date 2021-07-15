@@ -13,14 +13,11 @@ import {
     FradragInputs,
     fradragSchema,
 } from '~components/beregningOgSimulering/beregning/FradragInputs';
+import Fradragoppsummering from '~components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
+import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
 import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions';
-import Fradragoppsummering from '~features/revurdering/revurderingoppsummering/fradragoppsummering/Fradragoppsummering';
-import RevurderingskallFeilet from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
-import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
-import * as DateUtils from '~lib/dateUtils';
 import { customFormikSubmit } from '~lib/formikUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -29,8 +26,11 @@ import { useAppDispatch } from '~redux/Store';
 import { Fradrag, FradragTilhører } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering } from '~types/Revurdering';
+import * as DateUtils from '~utils/date/dateUtils';
+import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
-import uføreMessages from '../../steg/uførhet/uførhet-nb';
+import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';

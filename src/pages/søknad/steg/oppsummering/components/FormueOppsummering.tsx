@@ -1,9 +1,11 @@
 import React from 'react';
 
-import epsFormueMessages from '~/pages/søknad/steg/ektefelle/ektefellesformue-nb';
-import formueMessages from '~/pages/søknad/steg/formue/dinformue-nb';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
+import epsFormueMessages from '~pages/søknad/steg/formue/epsFormue/ektefellesformue-nb';
+import formueMessages from '~pages/søknad/steg/formue/søkersFormue/dinformue-nb';
+
+import { kjøretøyMessages } from '../../formue/KjøretøyInputFelter';
 
 import { Oppsummeringsfelt } from './Oppsummeringsfelt';
 import { OppsummeringsfeltAvKjøretøy } from './OppsummeringsfeltAvKjøretøy';
@@ -16,7 +18,9 @@ export const FormueOppsummering = ({
     tilhører: 'søker' | 'eps';
 }) => {
     const { formatMessage } =
-        tilhører === 'søker' ? useI18n({ messages: formueMessages }) : useI18n({ messages: epsFormueMessages });
+        tilhører === 'søker'
+            ? useI18n({ messages: { ...formueMessages, ...kjøretøyMessages } })
+            : useI18n({ messages: { ...epsFormueMessages, ...kjøretøyMessages } });
 
     return (
         <>

@@ -1,14 +1,14 @@
 import { Systemtittel } from 'nav-frontend-typografi';
 import React from 'react';
 
-import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
-import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~types/Søknad';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
+import { mapToVilkårsinformasjon, Vilkårsinformasjon } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
+import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import { FastOppholdVilkårsblokk } from './faktablokk/faktablokker/FastOppholdFaktablokk';
 import { FlyktningVilkårsblokk } from './faktablokk/faktablokker/FlyktningFaktablokk';

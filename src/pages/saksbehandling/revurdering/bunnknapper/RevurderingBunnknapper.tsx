@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { useI18n } from '~lib/hooks';
 
-import sharedI18n from '../../../saksbehandling/steg/sharedI18n-nb';
+import sharedI18n from '../../søknadsbehandling/sharedI18n-nb';
 
 import styles from './revurderingBunnknapper.module.less';
 

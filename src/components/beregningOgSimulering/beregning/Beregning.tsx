@@ -22,11 +22,7 @@ import {
     FradragInputs,
 } from '~components/beregningOgSimulering/beregning/FradragInputs';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import { kanSimuleres } from '~features/behandling/behandlingUtils';
-import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
-import { hentBosituasjongrunnlag } from '~features/revurdering/revurderingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import * as DateUtils from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
@@ -35,10 +31,14 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Behandlingsstatus } from '~types/Behandling';
 import { Beregning } from '~types/Beregning';
 import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
+import { kanSimuleres } from '~utils/behandling/behandlingUtils';
+import * as DateUtils from '~utils/date/dateUtils';
+import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
-import sharedI18n from '../../../pages/saksbehandling/steg/sharedI18n-nb';
-import { VilkårsvurderingBaseProps } from '../../../pages/saksbehandling/steg/types';
-import { Vurderingknapper } from '../../../pages/saksbehandling/steg/Vurdering';
+import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
+import { VilkårsvurderingBaseProps } from '../../../pages/saksbehandling/søknadsbehandling/types';
+import { Vurderingknapper } from '../../../pages/saksbehandling/søknadsbehandling/Vurdering';
 import BeregningFaktablokk from '../../oppsummering/vilkårsOppsummering/faktablokk/faktablokker/BeregningFaktablokk';
 
 import messages from './beregning-nb';

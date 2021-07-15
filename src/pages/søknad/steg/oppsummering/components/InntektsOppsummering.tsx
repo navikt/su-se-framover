@@ -1,11 +1,13 @@
 import React from 'react';
 
-import epsInntektMessages from '~/pages/søknad/steg/ektefelle/inntekt-nb';
-import inntektMessages from '~/pages/søknad/steg/inntekt/inntekt-nb';
+import epsInntektMessages from '~/pages/søknad/steg/inntekt/epsInntekt/inntekt-nb';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { useI18n } from '~lib/hooks';
+import inntektMessages from '~pages/søknad/steg/inntekt/søkersInntekt/inntekt-nb';
 
 import sharedStyles from '../../../steg-shared.module.less';
+import { pensjonsinntekterMessages } from '../../inntekt/Pensjonsinntekter';
+import { trygdeytelserMessages } from '../../inntekt/TrygdeytelserInputs/TrygdeytelserInputs';
 
 import { OppsummeringAvTrygdeytelser } from './OppsummeringAvTrygdeytelser';
 import { Oppsummeringsfelt } from './Oppsummeringsfelt';
@@ -18,7 +20,9 @@ const InntektsOppsummering = ({
     tilhører: 'søker' | 'eps';
 }) => {
     const { formatMessage } =
-        tilhører === 'søker' ? useI18n({ messages: inntektMessages }) : useI18n({ messages: epsInntektMessages });
+        tilhører === 'søker'
+            ? useI18n({ messages: { ...inntektMessages, ...trygdeytelserMessages, ...pensjonsinntekterMessages } })
+            : useI18n({ messages: { ...epsInntektMessages, ...trygdeytelserMessages, ...pensjonsinntekterMessages } });
 
     return (
         <>

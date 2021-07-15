@@ -1,3 +1,4 @@
+import { Delete } from '@navikt/ds-icons';
 import { lastDayOfMonth } from 'date-fns';
 import * as DateFns from 'date-fns';
 import { FormikErrors } from 'formik';
@@ -9,13 +10,12 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { IntlShape } from 'react-intl';
 
-import { TrashBin } from '~assets/Icons';
 import InntektFraUtland from '~components/beregningOgSimulering/beregning/InntektFraUtland';
-import { getFradragstypeString } from '~features/fradrag/fradragUtils';
-import { toStringDateOrNull } from '~lib/dateUtils';
 import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsPositiveNumber } from '~lib/validering';
 import { Fradrag, Fradragstype } from '~types/Fradrag';
+import { toStringDateOrNull } from '~utils/date/dateUtils';
+import { getFradragstypeString } from '~utils/søknadsbehandling/fradrag/fradragUtils';
 
 import { UtenlandskInntektFormData } from './beregningstegTypes';
 import styles from './fradragInputs.module.less';
@@ -221,7 +221,7 @@ export const FradragInputs = (props: {
                                     htmlType={'button'}
                                     onClick={() => props.onFjernClick(index)}
                                 >
-                                    <TrashBin width={'10'} height={'10'} />
+                                    <Delete />
                                 </Knapp>
                             </div>
                             <div className={styles.checkboxContainer}>

@@ -1,8 +1,8 @@
+import { Edit } from '@navikt/ds-icons';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
-import { PencilIcon } from '~assets/Icons';
 import { useI18n } from '~lib/hooks';
 import * as routes from '~lib/routes';
 import { trackEvent } from '~lib/tracking/amplitude';
@@ -21,7 +21,7 @@ export const EndreSvar = (props: { path: Søknadsteg; søker: Person }) => {
             onClick={() => trackEvent(søknadOppsummeringEndreSvarKlikk({ ident: props.søker.aktorId }))}
         >
             <span className={styles.marginRight}>
-                <PencilIcon width="15" height="15" />
+                <Edit />
             </span>
             <span>{intl.formatMessage({ id: 'oppsummering.endreSvar' })}</span>
         </Link>

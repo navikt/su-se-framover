@@ -1,11 +1,11 @@
 import AlertStripe from 'nav-frontend-alertstriper';
 import React from 'react';
 
-import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import { UførhetStatus } from '~types/Behandlingsinformasjon';
+import { vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
-import saksbehandlingMessages from '../../../../../pages/saksbehandling/steg/uførhet/uførhet-nb';
+import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/uførhet/uførhet-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk, { FaktaSpacing } from '../Faktablokk';
 

@@ -1,6 +1,5 @@
 import { Nullable } from '~lib/types';
 
-import { Behandlingsinformasjon } from './Behandlingsinformasjon';
 import { Beregning } from './Beregning';
 import { Periode } from './Periode';
 import { Simulering } from './Simulering';
@@ -8,7 +7,6 @@ import { Simulering } from './Simulering';
 export interface Vedtak {
     id: string;
     opprettet: string;
-    behandlingsinformasjon: Behandlingsinformasjon;
     beregning: Nullable<Beregning>;
     simulering?: Simulering;
     attestant: string;

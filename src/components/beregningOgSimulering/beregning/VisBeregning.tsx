@@ -8,16 +8,16 @@ import React from 'react';
 import { IntlShape } from 'react-intl';
 
 import messages from '~components/beregningOgSimulering/beregning/beregning-nb';
-import fradragstypeMessages from '~features/fradrag/fradragstyper-nb';
-import { getFradragstypeString } from '~features/fradrag/fradragUtils';
-import { groupBy, groupByEq } from '~lib/arrayUtils';
-import { formatMonthYear } from '~lib/dateUtils';
-import { formatCurrency } from '~lib/formatUtils';
 import { combineOptions, pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~types/Beregning';
 import { Fradrag, Fradragstype } from '~types/Fradrag';
 import { Sats } from '~types/Sats';
+import { groupBy, groupByEq } from '~utils/array/arrayUtils';
+import { formatMonthYear } from '~utils/date/dateUtils';
+import { formatCurrency } from '~utils/format/formatUtils';
+import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
+import { getFradragstypeString } from '~utils/søknadsbehandling/fradrag/fradragUtils';
 
 import styles from './visBeregning.module.less';
 

@@ -1,6 +1,6 @@
-import { toDateOrNull } from '~lib/dateUtils';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Fradrag, FradragTilhører } from '~types/Fradrag';
+import { toDateOrNull } from '~utils/date/dateUtils';
 
 export const erIGyldigStatusForÅKunneBeregne = (behandling: Behandling) =>
     [

@@ -4,15 +4,19 @@ import { Element } from 'nav-frontend-typografi';
 import React, { useMemo } from 'react';
 import { IntlShape } from 'react-intl';
 
-import { Vilkårsinformasjon, vilkårTittelFormatted } from '~features/saksoversikt/utils';
-import { formatCurrency } from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
-import saksbehandlingMessages from '~pages/saksbehandling/steg/formue/formue-nb';
-import { regnUtFormueVerdier, kalkulerFormueFraSøknad } from '~pages/saksbehandling/steg/formue/utils';
-import { delerBoligMedFormatted } from '~pages/saksbehandling/steg/sharedUtils';
+import saksbehandlingMessages from '~pages/saksbehandling/søknadsbehandling/formue/formue-nb';
 import { Behandlingsinformasjon, FormueStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
+import { formatCurrency } from '~utils/format/formatUtils';
+import {
+    kalkulerFormueFraSøknad,
+    regnUtFormueVerdier,
+    totalVerdiKjøretøy,
+} from '~utils/søknadsbehandling/formue/formueUtils';
+import { delerBoligMedFormatted } from '~utils/søknadsbehandling/søknadsbehandlingUtils';
+import { Vilkårsinformasjon, vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk, { Fakta, FaktaSpacing } from '../Faktablokk';
@@ -99,8 +103,8 @@ function søknadsfakta(innhold: SøknadInnhold, intl: IntlShape): Fakta[] {
         },
         {
             tittel: message('formue.verdiPåKjøretøy'),
-            verdi: innhold.formue.kjøretøy?.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0),
-            epsVerdi: innhold.ektefelle?.formue.kjøretøy?.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0),
+            verdi: innhold.formue.kjøretøy ? totalVerdiKjøretøy(innhold.formue.kjøretøy) : 0,
+            epsVerdi: innhold.ektefelle?.formue.kjøretøy ? totalVerdiKjøretøy(innhold.ektefelle.formue.kjøretøy) : 0,
         },
         {
             tittel: message('formue.innskuddsbeløp'),

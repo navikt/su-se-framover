@@ -16,18 +16,11 @@ import { ApiError } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
 import { Person } from '~api/personApi';
 import { useUserContext } from '~context/userContext';
-import {
-    erIverksatt,
-    erTilAttestering,
-    hentSisteVurdertSaksbehandlingssteg,
-} from '~features/behandling/behandlingUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { formatDateTime } from '~lib/dateUtils';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
 import { useI18n, useNotificationFromLocation } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { getIverksatteInnvilgedeSøknader, søknadMottatt, getIverksatteAvslåtteSøknader } from '~lib/søknadUtils';
 import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
@@ -36,6 +29,13 @@ import { Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 import { Vedtak } from '~types/Vedtak';
+import { erIverksatt, erTilAttestering, hentSisteVurdertSaksbehandlingssteg } from '~utils/behandling/behandlingUtils';
+import { formatDateTime } from '~utils/date/dateUtils';
+import {
+    getIverksatteInnvilgedeSøknader,
+    søknadMottatt,
+    getIverksatteAvslåtteSøknader,
+} from '~utils/søknad/søknadUtils';
 
 import {
     erRevurderingTilAttestering,
@@ -44,7 +44,7 @@ import {
     erRevurderingUnderkjent,
     erForhåndsvarselSendt,
     finnNesteRevurderingsteg,
-} from '../../../features/revurdering/revurderingUtils';
+} from '../../../utils/revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
 import messages from './sakintro-nb';
@@ -593,7 +593,7 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
                 {erTilAttestering(b) && user.isAttestant && user.navIdent !== b.saksbehandler ? (
                     <Link
                         className="knapp knapp--mini"
-                        to={Routes.attesterBehandling.createURL({
+                        to={Routes.attesterSøknadsbehandling.createURL({
                             sakId: props.sakId,
                             behandlingId: b.id,
                         })}

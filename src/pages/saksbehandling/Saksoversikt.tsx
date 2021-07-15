@@ -8,7 +8,7 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
-import Hendelseslogg from '~components/Hendelseslogg';
+import Hendelseslogg from '~components/hendelseslog/Hendelseslogg';
 import Personlinje from '~components/personlinje/Personlinje';
 import Personsøk from '~components/Personsøk/Personsøk';
 import { Languages } from '~components/TextProvider';
@@ -20,15 +20,17 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
+import Restanser from './restans/Restanser';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
-import ÅpneBehandlinger from './åpneBehandlinger/ÅpneBehandlinger';
 
-const Vilkår = React.lazy(() => import('./steg/vilkår/Vilkår'));
-const SendTilAttesteringPage = React.lazy(() => import('./sendTilAttesteringPage/SendTilAttesteringPage'));
-const Vedtaksoppsummering = React.lazy(() => import('~pages/vedtak/Vedtaksoppsummering'));
-const BehandlingsoppsummeringPage = React.lazy(
-    () => import('./behandlingsoppsummeringPage/BehandlingsoppsummeringPage')
+const Vilkår = React.lazy(() => import('./søknadsbehandling/vilkår/Vilkår'));
+const SendTilAttesteringPage = React.lazy(
+    () => import('./søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage')
+);
+const Vedtaksoppsummering = React.lazy(() => import('~pages/saksbehandling/vedtak/Vedtaksoppsummering'));
+const Søknadsbehandlingvedtakoppsummering = React.lazy(
+    () => import('./vedtak/søknadsbehandlingvedtakoppsummering/Søknadsbehandlingvedtakoppsummering')
 );
 const LukkSøknad = React.lazy(() => import('./lukkSøknad/LukkSøknad'));
 const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));
@@ -84,9 +86,6 @@ const Saksoversikt = () => {
     return (
         <IntlProvider locale={Languages.nb} messages={messages}>
             <Switch>
-                <Route path={Routes.saksoversiktÅpneBehandlinger.path}>
-                    <ÅpneBehandlinger />
-                </Route>
                 <Route path={Routes.saksoversiktValgtSak.path}>
                     {pipe(
                         RemoteData.combine(søker, sak),
@@ -150,7 +149,7 @@ const Saksoversikt = () => {
                                                                     })}
                                                                 </Innholdstittel>
                                                             </div>
-                                                            <BehandlingsoppsummeringPage sak={sak} />
+                                                            <Søknadsbehandlingvedtakoppsummering sak={sak} />
                                                         </Route>
                                                     </Switch>
                                                 </div>
@@ -192,7 +191,7 @@ const Saksoversikt = () => {
                                 <AlertStripe type="feil">{visErrorMelding(sak.error)}</AlertStripe>
                             )}
                         </div>
-                        <ÅpneBehandlinger />
+                        <Restanser />
                     </div>
                 </Route>
             </Switch>

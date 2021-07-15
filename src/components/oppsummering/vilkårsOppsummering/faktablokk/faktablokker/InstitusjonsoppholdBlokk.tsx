@@ -1,13 +1,13 @@
 import AlertStripe from 'nav-frontend-alertstriper';
 import React, { useMemo } from 'react';
 
-import { vilkårTittelFormatted } from '~features/saksoversikt/utils';
 import { useI18n } from '~lib/hooks';
 import { keyOf } from '~lib/types';
 import søknadMessages from '~pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
 import { InstitusjonsoppholdStatus } from '~types/Behandlingsinformasjon';
+import { vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
-import saksbehandlingMessages from '../../../../../pages/saksbehandling/steg/institusjonsopphold/institusjonsopphold-nb';
+import saksbehandlingMessages from '../../../../../pages/saksbehandling/søknadsbehandling/institusjonsopphold/institusjonsopphold-nb';
 import Vilkårsblokk from '../../VilkårsBlokk';
 import Faktablokk from '../Faktablokk';
 

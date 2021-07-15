@@ -10,13 +10,13 @@ import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 
 import { Person } from '~api/personApi';
-import { showName } from '~features/person/personUtils';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { formatMonthYear } from '~lib/dateUtils';
 import { useI18n } from '~lib/hooks';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { KanStansesEllerGjenopptas } from '~types/Sak';
 import { compareUtbetalingsperiode, Utbetalingsperiode, Utbetalingstype } from '~types/Utbetalingsperiode';
+import { formatMonthYear } from '~utils/date/dateUtils';
+import { showName } from '~utils/person/personUtils';
 
 import messages from './utbetalinger-nb';
 import styles from './utbetalinger.module.less';

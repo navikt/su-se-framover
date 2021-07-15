@@ -5,13 +5,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiError } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import * as søknadApi from '~api/søknadApi';
-import { toEktefellePartnerSamboer } from '~pages/søknad/steg/bo-og-opphold-i-norge/utils';
 import { handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { SøknadInnhold, Søknadstype } from '~types/Søknad';
 
 import { SøknadState } from './søknad.slice';
 import { DelerBoligMed } from './types';
-import { toAdresseFraSøknad, toFormue, toInntekt } from './utils';
+import { toAdresseFraSøknad, toEktefellePartnerSamboer, toFormue, toInntekt } from './utils';
 
 export const sendSøknad = createAsyncThunk<
     søknadApi.OpprettetSøknad,

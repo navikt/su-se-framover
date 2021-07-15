@@ -3,11 +3,11 @@ import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 
 import { Kjønn, Person } from '~api/personApi';
-import { showName } from '~features/person/personUtils';
 import { useI18n } from '~lib/hooks';
 import { Sak } from '~types/Sak';
+import { showName } from '~utils/person/personUtils';
 
-import { PersonAdvarsel } from '../PersonAdvarsel';
+import { PersonAdvarsel } from '../personadvarsel/PersonAdvarsel';
 
 import GenderIcon from './GenderIcon';
 import messages from './personlinje-nb';

@@ -13,7 +13,7 @@ import { FeatureToggle } from '~api/featureToggleApi';
 import { UserProvider } from '~context/userContext';
 import enableHotjar from '~lib/tracking/hotjar';
 
-import ErrorBoundary from './components/ErrorBoundary';
+import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
 import Header from './components/header/Header';
 import WithDocTitle from './components/WithDocTitle';
 import * as meSlice from './features/me/me.slice';
@@ -26,7 +26,7 @@ import { LoggedInUser } from './types/LoggedInUser';
 
 import './externalStyles';
 
-const Attestering = React.lazy(() => import('~pages/attestering/Attestering'));
+const Attestering = React.lazy(() => import('~pages/saksbehandling/attestering/Attestering'));
 const Drift = React.lazy(() => import('~pages/drift'));
 const HomePage = React.lazy(() => import('~pages/HomePage'));
 const Saksoversikt = React.lazy(() => import('~pages/saksbehandling/Saksoversikt'));

@@ -1,4 +1,5 @@
-import { Sak, ÅpenBehandling } from '~types/Sak';
+import { Restans } from '~types/Restans';
+import { Sak } from '~types/Sak';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -26,6 +27,6 @@ export async function fetchSakBySakId(sakId: string): Promise<ApiClientResult<Sa
     return apiClient({ url: `/saker/${sakId}`, method: 'GET' });
 }
 
-export async function hentÅpneBehandlingerForAlleSaker(): Promise<ApiClientResult<ÅpenBehandling[]>> {
+export async function hentRestanser(): Promise<ApiClientResult<Restans[]>> {
     return apiClient({ url: `/saker/restanser`, method: 'GET' });
 }

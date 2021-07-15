@@ -31,8 +31,9 @@ import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Periode } from '~types/Periode';
+import { Restans } from '~types/Restans';
 import { Revurdering } from '~types/Revurdering';
-import { Sak, ÅpenBehandling } from '~types/Sak';
+import { Sak } from '~types/Sak';
 import { Sats } from '~types/Sats';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
@@ -52,10 +53,10 @@ export const fetchSak = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const hentÅpneBehandlingerForAlleSaker = createAsyncThunk<ÅpenBehandling[], void, { rejectValue: ApiError }>(
+export const hentÅpneBehandlingerForAlleSaker = createAsyncThunk<Restans[], void, { rejectValue: ApiError }>(
     'sak/hentÅpneBehandlingerForAlleSaker',
     async (_, thunkApi) => {
-        const res = await sakApi.hentÅpneBehandlingerForAlleSaker();
+        const res = await sakApi.hentRestanser();
         if (res.status === 'ok') {
             return res.data;
         }

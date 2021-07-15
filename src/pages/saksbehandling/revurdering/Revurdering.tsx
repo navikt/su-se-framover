@@ -10,12 +10,8 @@ import { Link, Route, Switch } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
+import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
-import RevurderingskallFeilet from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
-import {
-    revurderingstegrekkefølge,
-    revurderingstegTilInformasjonSomRevurderes,
-} from '~features/revurdering/revurderingUtils';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -23,6 +19,10 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering, Vurderingstatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
+import {
+    revurderingstegrekkefølge,
+    revurderingstegTilInformasjonSomRevurderes,
+} from '~utils/revurdering/revurderingUtils';
 
 import { RevurderingSteg } from '../types';
 

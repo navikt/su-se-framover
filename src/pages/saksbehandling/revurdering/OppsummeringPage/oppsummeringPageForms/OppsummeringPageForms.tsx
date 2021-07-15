@@ -7,7 +7,7 @@ import { Controller, useForm } from 'react-hook-form';
 import * as pdfApi from '~api/pdfApi';
 import { Revurderingshandling } from '~api/revurderingApi';
 import { BrevInput, BrevInputProps } from '~components/brevInput/BrevInput';
-import RevurderingskallFeilet from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
+import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import { ApiResult, useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';

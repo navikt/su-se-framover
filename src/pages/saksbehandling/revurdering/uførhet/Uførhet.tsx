@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Delete } from '@navikt/ds-icons';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { Knapp } from 'nav-frontend-knapper';
@@ -12,24 +13,23 @@ import { useHistory } from 'react-router';
 import { v4 as uuid } from 'uuid';
 
 import { ApiError } from '~api/apiClient';
-import { TrashBin } from '~assets/Icons';
 import DatePicker from '~components/datePicker/DatePicker';
-import { JaNeiSpørsmål } from '~components/FormElements';
+import { JaNeiSpørsmål } from '~components/formElements/FormElements';
+import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
-import RevurderingskallFeilet from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
-import { erGregulering } from '~features/revurdering/revurderingUtils';
-import * as DateUtils from '~lib/dateUtils';
-import * as FormatUtils from '~lib/formatUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering, validateStringAsNonNegativeNumber } from '~lib/validering';
-import sharedMessages from '~pages/saksbehandling/steg/sharedI18n-nb';
+import sharedMessages from '~pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
 import { useAppDispatch } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat, VurderingsperiodeUføre } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
 import { Revurdering } from '~types/Revurdering';
+import * as DateUtils from '~utils/date/dateUtils';
+import * as FormatUtils from '~utils/format/formatUtils';
+import { erGregulering } from '~utils/revurdering/revurderingUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
@@ -181,7 +181,7 @@ const Uføreperiodevurdering = (props: {
                         kompakt
                         aria-label={intl.formatMessage({ id: 'input.fjernPeriode.label' })}
                     >
-                        <TrashBin width="24px" height="24px" />
+                        <Delete />
                     </Knapp>
                 </div>
                 <Controller

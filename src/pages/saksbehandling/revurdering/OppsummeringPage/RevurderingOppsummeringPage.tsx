@@ -6,21 +6,12 @@ import { useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import { Revurderingshandling } from '~api/revurderingApi';
-import * as RevurderingActions from '~features/revurdering/revurderingActions';
-import Revurderingoppsummering from '~features/revurdering/revurderingoppsummering/Revurderingoppsummering';
+import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
 import RevurderingskallFeilet, {
     feilkodeTilFeilmelding,
-} from '~features/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
-import revurderingsfeilMessages from '~features/revurdering/revurderingskallFeilet/revurderingskallFeilet-nb';
-import {
-    erBeregnetIngenEndring,
-    erForhåndsvarslingBesluttet,
-    erGregulering,
-    erIngenForhåndsvarsel,
-    erRevurderingForhåndsvarslet,
-    erRevurderingSimulert,
-    erRevurderingUnderkjent,
-} from '~features/revurdering/revurderingUtils';
+} from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
+import revurderingsfeilMessages from '~components/revurdering/revurderingskallFeilet/revurderingskallFeilet-nb';
+import * as RevurderingActions from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n, useAsyncActionCreatorWithArgsTransformer } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -33,6 +24,15 @@ import {
     SimulertRevurdering,
     UnderkjentRevurdering,
 } from '~types/Revurdering';
+import {
+    erBeregnetIngenEndring,
+    erForhåndsvarslingBesluttet,
+    erGregulering,
+    erIngenForhåndsvarsel,
+    erRevurderingForhåndsvarslet,
+    erRevurderingSimulert,
+    erRevurderingUnderkjent,
+} from '~utils/revurdering/revurderingUtils';
 
 import sharedStyles from '../revurdering.module.less';
 
