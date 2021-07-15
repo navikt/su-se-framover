@@ -5,9 +5,9 @@ import messages from './restanser-nb';
 export const formatRestansType = (type: RestansType, formatMessage: (string: keyof typeof messages) => string) => {
     switch (type) {
         case RestansType.REVURDERING:
-            return formatMessage('behandling.typeBehandling.revurdering');
+            return formatMessage('restans.typeBehandling.revurdering');
         case RestansType.SØKNADSBEHANDLING:
-            return formatMessage('behandling.typeBehandling.søknadsbehandling');
+            return formatMessage('restans.typeBehandling.søknadsbehandling');
     }
 };
 
@@ -17,12 +17,12 @@ export const formatRestansStatus = (
 ) => {
     switch (status) {
         case RestansStatus.NY_SØKNAD:
-            return formatMessage('behandling.status.nySøknad');
+            return formatMessage('restans.status.nySøknad');
         case RestansStatus.TIL_ATTESTERING:
-            return formatMessage('behandling.status.tilAttestering');
+            return formatMessage('restans.status.tilAttestering');
         case RestansStatus.UNDERKJENT:
-            return formatMessage('behandling.status.underkjent');
+            return formatMessage('restans.status.underkjent');
         case RestansStatus.UNDER_BEHANDLING:
-            return formatMessage('behandling.status.underBehandling');
+            return formatMessage('restans.status.underBehandling');
     }
 };

@@ -1,13 +1,30 @@
 @import '~/styles/variables.less';
 
-.sidetittel {
-    margin-bottom: @spacing;
-}
-
 .tabell {
     margin-bottom: @spacing-xxl;
 }
 
 .seSakKnapp {
     align-self: flex-end;
+}
+
+.checkboxWrapper {
+    margin-bottom: @spacing-xs;
+}
+
+.tittelOgCheckboxerContainer {
+    :first-child {
+        margin-bottom: @spacing-xxs;
+    }
+}
+
+.checkboxContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+
+    > :not(:last-child) {
+        margin-right: @spacing;
+    }
+
+    margin-bottom: @spacing-xxs;
 }
