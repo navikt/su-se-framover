@@ -44,7 +44,6 @@ const Restanser = () => {
                 if (restanser.length === 0) {
                     return <AlertStripeSuksess>{formatMessage('restans.ingenRestanser')}</AlertStripeSuksess>;
                 }
-                //return <RestanserTabell tabelldata={restanser} />;
                 return <RestansFiltreringOgTabell tabelldata={restanser} />;
             }
         )
