@@ -12,8 +12,8 @@ export enum RestansType {
 }
 
 export enum RestansStatus {
-    UNDER_BEHANDLING = 'UNDER_BEHANDLING',
     NY_SØKNAD = 'NY_SØKNAD',
-    UNDERKJENT = 'UNDERKJENT',
+    UNDER_BEHANDLING = 'UNDER_BEHANDLING',
     TIL_ATTESTERING = 'TIL_ATTESTERING',
+    UNDERKJENT = 'UNDERKJENT',
 }

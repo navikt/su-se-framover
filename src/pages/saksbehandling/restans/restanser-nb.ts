@@ -3,14 +3,14 @@ export default {
     'restans.opprettet': 'Opprettet',
 
     'restans.typeBehandling': 'Type behandling',
-    'restans.typeBehandling.revurdering': 'Revurdering',
-    'restans.typeBehandling.søknadsbehandling': 'Søknadsbehandling',
+    'restans.typeBehandling.REVURDERING': 'Revurdering',
+    'restans.typeBehandling.SØKNADSBEHANDLING': 'Søknadsbehandling',
 
     'restans.status': 'Status',
-    'restans.status.nySøknad': 'Ny søknad',
-    'restans.status.underkjent': 'Underkjent',
-    'restans.status.tilAttestering': 'Til attestering',
-    'restans.status.underBehandling': 'Under behandling',
+    'restans.status.NY_SØKNAD': 'Ny søknad',
+    'restans.status.UNDERKJENT': 'Underkjent',
+    'restans.status.TIL_ATTESTERING': 'Til attestering',
+    'restans.status.UNDER_BEHANDLING': 'Under behandling',
 
     'tabell.caption': 'Tabell av restanser',
 

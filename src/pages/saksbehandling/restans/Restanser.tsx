@@ -17,7 +17,7 @@ import { formatDateTime } from '~utils/date/dateUtils';
 
 import messages from './restanser-nb';
 import styles from './restanser.module.less';
-import { formatRestansType, formatRestansStatus } from './restanserUtils';
+import { formatRestansType, formatRestansStatus, filtrerTabell } from './restanserUtils';
 
 type Kolonner = 'saksnummer' | 'typeBehandling' | 'status' | 'opprettet';
 type AriaSortVerdier = 'none' | 'ascending' | 'descending';
@@ -96,30 +96,6 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
         filtrerOgSorterTabell();
     };
 
-    const filtrererTypeOgStatus = () => {
-        const typer = Object.values(RestansType);
-        const statuser = Object.values(RestansStatus);
-
-        const hasType = typer.some((t) => filtrerteVerdier.has(t));
-        const hasStatus = statuser.some((s) => filtrerteVerdier.has(s));
-
-        return hasType && hasStatus;
-    };
-
-    const filtrerTypeOgStatus = (r: Restans) => {
-        if (filtrerteVerdier.has(r.status) && filtrerteVerdier.has(r.typeBehandling)) {
-            return true;
-        }
-        return false;
-    };
-
-    const filtrerTypeEllerStatus = (r: Restans) => {
-        if (filtrerteVerdier.has(r.status) || filtrerteVerdier.has(r.typeBehandling)) {
-            return true;
-        }
-        return false;
-    };
-
     const addOrRemoveFromFiltration = (s: RestansStatus | RestansType) => {
         if (filtrerteVerdier.has(s)) {
             filtrerteVerdier.delete(s);
@@ -132,7 +108,7 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
         if (kolonne === 'ingen') {
             return restanser;
         }
-        const sortert = restanser.sort((a: Restans, b: Restans) => {
+        return restanser.slice().sort((a: Restans, b: Restans) => {
             if (erSortVerdi('ascending')) {
                 setSortVerdi('descending');
                 return a[kolonne] > b[kolonne] ? 1 : a[kolonne] < b[kolonne] ? -1 : 0;
@@ -140,20 +116,10 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
             setSortVerdi('ascending');
             return a[kolonne] > b[kolonne] ? -1 : a[kolonne] < b[kolonne] ? 1 : 0;
         });
-        return sortert;
     };
 
     const filtrerOgSorterTabell = () => {
-        const filtrertTabell =
-            filtrerteVerdier.size >= 1
-                ? props.tabelldata.filter((r) => {
-                      if (filtrererTypeOgStatus()) {
-                          return filtrerTypeOgStatus(r);
-                      }
-
-                      return filtrerTypeEllerStatus(r);
-                  })
-                : props.tabelldata;
+        const filtrertTabell = filtrerTabell(props.tabelldata, filtrerteVerdier);
         const sortert = sort(filtrertTabell, sortertKolonne);
         setTabell(sortert);
     };
@@ -164,35 +130,25 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                 <div className={styles.tittelOgCheckboxerContainer}>
                     <Element>{formatMessage('restans.typeBehandling')}</Element>
                     <div className={styles.checkboxContainer}>
-                        <Checkbox
-                            label={formatMessage('restans.typeBehandling.søknadsbehandling')}
-                            onChange={() => handleCheckboxChange(RestansType.SØKNADSBEHANDLING)}
-                        />
-                        <Checkbox
-                            label={formatMessage('restans.typeBehandling.revurdering')}
-                            onChange={() => handleCheckboxChange(RestansType.REVURDERING)}
-                        />
+                        {Object.values(RestansType).map((t) => (
+                            <Checkbox
+                                key={t}
+                                label={formatMessage(`restans.typeBehandling.${t}`)}
+                                onChange={() => handleCheckboxChange(t)}
+                            />
+                        ))}
                     </div>
                 </div>
                 <div className={styles.tittelOgCheckboxerContainer}>
                     <Element>{formatMessage('restans.status')}</Element>
                     <div className={styles.checkboxContainer}>
-                        <Checkbox
-                            label={formatMessage('restans.status.nySøknad')}
-                            onChange={() => handleCheckboxChange(RestansStatus.NY_SØKNAD)}
-                        />
-                        <Checkbox
-                            label={formatMessage('restans.status.underBehandling')}
-                            onChange={() => handleCheckboxChange(RestansStatus.UNDER_BEHANDLING)}
-                        />
-                        <Checkbox
-                            label={formatMessage('restans.status.tilAttestering')}
-                            onChange={() => handleCheckboxChange(RestansStatus.TIL_ATTESTERING)}
-                        />
-                        <Checkbox
-                            label={formatMessage('restans.status.underkjent')}
-                            onChange={() => handleCheckboxChange(RestansStatus.UNDERKJENT)}
-                        />
+                        {Object.values(RestansStatus).map((s) => (
+                            <Checkbox
+                                key={s}
+                                label={formatMessage(`restans.status.${s}`)}
+                                onChange={() => handleCheckboxChange(s)}
+                            />
+                        ))}
                     </div>
                 </div>
             </div>
