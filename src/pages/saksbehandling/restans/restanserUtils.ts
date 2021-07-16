@@ -2,6 +2,9 @@ import { Restans, RestansStatus, RestansType } from '~types/Restans';
 
 import messages from './restanser-nb';
 
+export type RestansKolonner = 'saksnummer' | 'typeBehandling' | 'status' | 'opprettet';
+export type AriaSortVerdier = 'none' | 'ascending' | 'descending';
+
 export const formatRestansType = (type: RestansType, formatMessage: (string: keyof typeof messages) => string) => {
     switch (type) {
         case RestansType.REVURDERING:
@@ -25,6 +28,18 @@ export const formatRestansStatus = (
         case RestansStatus.UNDER_BEHANDLING:
             return formatMessage('restans.status.UNDER_BEHANDLING');
     }
+};
+
+export const sortTabell = (restanser: Restans[], kolonne: RestansKolonner | 'ingen', sortVerdi: AriaSortVerdier) => {
+    if (kolonne === 'ingen' || sortVerdi === 'none') {
+        return restanser;
+    }
+    return restanser.slice().sort((a: Restans, b: Restans) => {
+        if (sortVerdi === 'ascending') {
+            return a[kolonne] > b[kolonne] ? 1 : a[kolonne] < b[kolonne] ? -1 : 0;
+        }
+        return a[kolonne] > b[kolonne] ? -1 : a[kolonne] < b[kolonne] ? 1 : 0;
+    });
 };
 
 export const filtrerTabell = (restanser: Restans[], filtrerteVerdier: Set<RestansStatus | RestansType>) => {

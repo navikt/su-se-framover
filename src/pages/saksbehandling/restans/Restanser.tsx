@@ -10,17 +10,21 @@ import { useHistory } from 'react-router-dom';
 
 import { fetchSak, hentRestanser } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
-import { useAsyncActionCreator, useI18n } from '~lib/hooks';
+import { useAsyncActionCreator, useI18n, useSetState } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Restans, RestansStatus, RestansType } from '~types/Restans';
 import { formatDateTime } from '~utils/date/dateUtils';
 
 import messages from './restanser-nb';
 import styles from './restanser.module.less';
-import { formatRestansType, formatRestansStatus, filtrerTabell } from './restanserUtils';
-
-type Kolonner = 'saksnummer' | 'typeBehandling' | 'status' | 'opprettet';
-type AriaSortVerdier = 'none' | 'ascending' | 'descending';
+import {
+    formatRestansType,
+    formatRestansStatus,
+    filtrerTabell,
+    AriaSortVerdier,
+    RestansKolonner,
+    sortTabell,
+} from './restanserUtils';
 
 const Restanser = () => {
     const { formatMessage } = useI18n({ messages });
@@ -40,7 +44,8 @@ const Restanser = () => {
                 if (restanser.length === 0) {
                     return <AlertStripeSuksess>{formatMessage('restans.ingenRestanser')}</AlertStripeSuksess>;
                 }
-                return <RestanserTabell tabelldata={restanser} />;
+                //return <RestanserTabell tabelldata={restanser} />;
+                return <RestansFiltreringOgTabell tabelldata={restanser} />;
             }
         )
     );
@@ -75,25 +80,16 @@ const KnappOgStatus = (props: { saksnummer: string }) => {
     );
 };
 
-const RestanserTabell = (props: { tabelldata: Restans[] }) => {
+const RestansFiltreringOgTabell = (props: { tabelldata: Restans[] }) => {
     const { formatMessage } = useI18n({ messages });
-
-    const [tabell, setTabell] = useState<Restans[]>(props.tabelldata);
-    const [sortVerdi, setSortVerdi] = useState<AriaSortVerdier>('none');
-    const [sortertKolonne, setSortertKolonne] = useState<Kolonner | 'ingen'>('ingen');
     const [filtrerteVerdier] = useState(new Set<RestansStatus | RestansType>());
 
-    const erKolonneSortertEtter = (k: Kolonner) => k === sortertKolonne;
-    const erSortVerdi = (s: AriaSortVerdier) => s === sortVerdi;
-
-    const onTabellHeaderClick = (kolonne: Kolonner) => {
-        setTabell(sort(tabell, kolonne));
-        setSortertKolonne(kolonne);
-    };
+    const [tabell, setTabell] = useState<Restans[]>(props.tabelldata);
 
     const handleCheckboxChange = (s: RestansStatus | RestansType) => {
         addOrRemoveFromFiltration(s);
-        filtrerOgSorterTabell();
+        const filtrertTabell = filtrerTabell(props.tabelldata, filtrerteVerdier);
+        setTabell(filtrertTabell);
     };
 
     const addOrRemoveFromFiltration = (s: RestansStatus | RestansType) => {
@@ -102,26 +98,6 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
         } else {
             filtrerteVerdier.add(s);
         }
-    };
-
-    const sort = (restanser: Restans[], kolonne: Kolonner | 'ingen') => {
-        if (kolonne === 'ingen') {
-            return restanser;
-        }
-        return restanser.slice().sort((a: Restans, b: Restans) => {
-            if (erSortVerdi('ascending')) {
-                setSortVerdi('descending');
-                return a[kolonne] > b[kolonne] ? 1 : a[kolonne] < b[kolonne] ? -1 : 0;
-            }
-            setSortVerdi('ascending');
-            return a[kolonne] > b[kolonne] ? -1 : a[kolonne] < b[kolonne] ? 1 : 0;
-        });
-    };
-
-    const filtrerOgSorterTabell = () => {
-        const filtrertTabell = filtrerTabell(props.tabelldata, filtrerteVerdier);
-        const sortert = sort(filtrertTabell, sortertKolonne);
-        setTabell(sortert);
     };
 
     return (
@@ -152,6 +128,48 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                     </div>
                 </div>
             </div>
+            <RestanserTabell tabelldata={tabell} />
+        </div>
+    );
+};
+
+const RestanserTabell = (props: { tabelldata: Restans[] }) => {
+    const { formatMessage } = useI18n({ messages });
+
+    const [sortertTabell, setSortertTabell] = useState<Restans[]>(props.tabelldata);
+    const [sortVerdi, setSortVerdi, getSortVerdi] = useSetState<AriaSortVerdier>('none');
+    const [sortertKolonne, setSortertKolonne] = useState<RestansKolonner | 'ingen'>('ingen');
+
+    const erKolonneSortertEtter = (k: RestansKolonner) => k === sortertKolonne;
+    const erSortVerdi = (s: AriaSortVerdier) => s === sortVerdi;
+
+    const onTabellHeaderClick = async (kolonne: RestansKolonner) => {
+        const currentSortVerdi = await getUpdatedSortVerdi();
+        const sortert = sortTabell(props.tabelldata, kolonne, currentSortVerdi);
+        setSortertTabell(sortert);
+        setSortertKolonne(kolonne);
+    };
+
+    const getUpdatedSortVerdi = (): Promise<AriaSortVerdier> => {
+        if (erSortVerdi('ascending')) {
+            setSortVerdi('descending');
+        } else if (erSortVerdi('descending') || erSortVerdi('none')) {
+            setSortVerdi('ascending');
+        }
+        return getSortVerdi();
+    };
+
+    useEffect(() => {
+        if (erSortVerdi('none')) {
+            setSortertTabell(props.tabelldata);
+        } else {
+            const sortert = sortTabell(props.tabelldata, sortertKolonne, sortVerdi);
+            setSortertTabell(sortert);
+        }
+    }, [props.tabelldata]);
+
+    return (
+        <div>
             <table className={classNames('tabell', styles.tabell)}>
                 <caption role="alert" aria-live="polite">
                     {formatMessage('tabell.caption')}
@@ -224,7 +242,7 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {tabell.map((restans) => (
+                    {sortertTabell.map((restans) => (
                         <tr key={restans.behandlingId}>
                             <td
                                 className={classNames({ ['tabell__td--sortert']: erKolonneSortertEtter('saksnummer') })}
