@@ -37,6 +37,24 @@ export interface Adresse {
     adresseformat: string;
 }
 
+export interface Sivilstand {
+    type: SivilstandTyper;
+    relatertVedSivilstand: Nullable<string>;
+}
+
+export enum SivilstandTyper {
+    UOPPGITT = 'UOPPGITT',
+    UGIFT = 'UGIFT',
+    GIFT = 'GIFT',
+    ENKE_ELLER_ENKEMANN = 'ENKE_ELLER_ENKEMANN',
+    SKILT = 'SKILT',
+    SEPARERT = 'SEPARERT',
+    REGISTRERT_PARTNER = 'REGISTRERT_PARTNER',
+    SEPARERT_PARTNER = 'SEPARERT_PARTNER',
+    SKILT_PARTNER = 'SKILT_PARTNER',
+    GJENLEVENDE_PARTNER = 'GJENLEVENDE_PARTNER',
+}
+
 export interface Person {
     fnr: string;
     aktorId: string;
@@ -52,6 +70,7 @@ export interface Person {
     statsborgerskap: Nullable<string>;
     adressebeskyttelse: Nullable<Adressebeskyttelse>;
     skjermet: Nullable<boolean>;
+    sivilstand: Nullable<Sivilstand>;
     kontaktinfo: Nullable<{
         epostadresse: Nullable<string>;
         mobiltelefonnummer: Nullable<string>;
