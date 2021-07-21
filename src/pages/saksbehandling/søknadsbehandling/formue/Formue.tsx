@@ -44,7 +44,6 @@ import {
 } from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 import sharedI18n from '../sharedI18n-nb';
-import { VilkårsvurderingBaseProps } from '../types';
 import { Vurderingknapper } from '../Vurdering';
 
 import messages from './formue-nb';
@@ -93,7 +92,13 @@ const schema = yup.object<FormueFormData>({
     }),
 });
 
-const Formue = (props: VilkårsvurderingBaseProps) => {
+const Formue = (props: {
+    behandling: Behandling;
+    forrigeUrl: string;
+    nesteUrl: string;
+    sakId: string;
+    søker: personApi.Person;
+}) => {
     const history = useHistory();
     const dispatch = useAppDispatch();
     const [hasSubmitted, setHasSubmitted] = useState(false);
