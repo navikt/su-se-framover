@@ -10,7 +10,7 @@ import { useHistory } from 'react-router-dom';
 
 import { fetchSak, hentRestanser } from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
-import { useAsyncActionCreator, useI18n, useSetState } from '~lib/hooks';
+import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Restans, RestansStatus, RestansType } from '~types/Restans';
 import { formatDateTime } from '~utils/date/dateUtils';
@@ -136,26 +136,27 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
     const { formatMessage } = useI18n({ messages });
 
     const [sortertTabell, setSortertTabell] = useState<Restans[]>(props.tabelldata);
-    const [sortVerdi, setSortVerdi, getSortVerdi] = useSetState<AriaSortVerdier>('none');
+    const [sortVerdi, setSortVerdi] = useState<AriaSortVerdier>('none');
     const [sortertKolonne, setSortertKolonne] = useState<RestansKolonner | 'ingen'>('ingen');
 
     const erKolonneSortertEtter = (k: RestansKolonner) => k === sortertKolonne;
     const erSortVerdi = (s: AriaSortVerdier) => s === sortVerdi;
 
     const onTabellHeaderClick = async (kolonne: RestansKolonner) => {
-        const currentSortVerdi = await getUpdatedSortVerdi();
+        const currentSortVerdi = getCurrentSortVerdi();
         const sortert = sortTabell(props.tabelldata, kolonne, currentSortVerdi);
         setSortertTabell(sortert);
         setSortertKolonne(kolonne);
     };
 
-    const getUpdatedSortVerdi = (): Promise<AriaSortVerdier> => {
+    const getCurrentSortVerdi = (): AriaSortVerdier => {
         if (erSortVerdi('ascending')) {
             setSortVerdi('descending');
-        } else if (erSortVerdi('descending') || erSortVerdi('none')) {
-            setSortVerdi('ascending');
+            return 'descending';
         }
-        return getSortVerdi();
+
+        setSortVerdi('ascending');
+        return 'ascending';
     };
 
     useEffect(() => {
@@ -166,6 +167,17 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
             setSortertTabell(sortert);
         }
     }, [props.tabelldata]);
+
+    const getHeaderClassName = (kolonne: RestansKolonner) => {
+        return classNames({
+            ['tabell__th--sortert-asc']: erKolonneSortertEtter(kolonne) && erSortVerdi('ascending'),
+            ['tabell__th--sortert-desc']: erKolonneSortertEtter(kolonne) && erSortVerdi('descending'),
+        });
+    };
+
+    const getRowClassName = (kolonne: RestansKolonner) => {
+        return classNames({ ['tabell__td--sortert']: erKolonneSortertEtter(kolonne) });
+    };
 
     return (
         <div>
@@ -178,12 +190,7 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                         <th
                             role="columnheader"
                             aria-sort={erKolonneSortertEtter('saksnummer') ? sortVerdi : 'none'}
-                            className={classNames({
-                                ['tabell__th--sortert-asc']:
-                                    erKolonneSortertEtter('saksnummer') && erSortVerdi('ascending'),
-                                ['tabell__th--sortert-desc']:
-                                    erKolonneSortertEtter('saksnummer') && erSortVerdi('descending'),
-                            })}
+                            className={getHeaderClassName('saksnummer')}
                         >
                             <button aria-label="Sorter saksnummer" onClick={() => onTabellHeaderClick('saksnummer')}>
                                 {formatMessage('sak.saksnummer')}
@@ -192,12 +199,7 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                         <th
                             role="columnheader"
                             aria-sort={erKolonneSortertEtter('typeBehandling') ? sortVerdi : 'none'}
-                            className={classNames({
-                                ['tabell__th--sortert-asc']:
-                                    erKolonneSortertEtter('typeBehandling') && erSortVerdi('ascending'),
-                                ['tabell__th--sortert-desc']:
-                                    erKolonneSortertEtter('typeBehandling') && erSortVerdi('descending'),
-                            })}
+                            className={getHeaderClassName('typeBehandling')}
                         >
                             <button
                                 aria-label="Sorter type behandling"
@@ -209,12 +211,7 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                         <th
                             role="columnheader"
                             aria-sort={erKolonneSortertEtter('status') ? sortVerdi : 'none'}
-                            className={classNames({
-                                ['tabell__th--sortert-asc']:
-                                    erKolonneSortertEtter('status') && erSortVerdi('ascending'),
-                                ['tabell__th--sortert-desc']:
-                                    erKolonneSortertEtter('status') && erSortVerdi('descending'),
-                            })}
+                            className={getHeaderClassName('status')}
                         >
                             <button aria-label="Sorter status" onClick={() => onTabellHeaderClick('status')}>
                                 {formatMessage('restans.status')}
@@ -223,12 +220,7 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                         <th
                             role="columnheader"
                             aria-sort={erKolonneSortertEtter('opprettet') ? sortVerdi : 'none'}
-                            className={classNames({
-                                ['tabell__th--sortert-asc']:
-                                    erKolonneSortertEtter('opprettet') && erSortVerdi('ascending'),
-                                ['tabell__th--sortert-desc']:
-                                    erKolonneSortertEtter('opprettet') && erSortVerdi('descending'),
-                            })}
+                            className={getHeaderClassName('opprettet')}
                         >
                             <button
                                 aria-label="Sorter etter opprettet"
@@ -243,24 +235,14 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                 <tbody>
                     {sortertTabell.map((restans) => (
                         <tr key={restans.behandlingId}>
-                            <td
-                                className={classNames({ ['tabell__td--sortert']: erKolonneSortertEtter('saksnummer') })}
-                            >
-                                {restans.saksnummer}
-                            </td>
-                            <td
-                                className={classNames({
-                                    ['tabell__td--sortert']: erKolonneSortertEtter('typeBehandling'),
-                                })}
-                            >
+                            <td className={getRowClassName('saksnummer')}>{restans.saksnummer}</td>
+                            <td className={getRowClassName('typeBehandling')}>
                                 {formatRestansType(restans.typeBehandling, formatMessage)}
                             </td>
-                            <td className={classNames({ ['tabell__td--sortert']: erKolonneSortertEtter('status') })}>
+                            <td className={getRowClassName('status')}>
                                 {formatRestansStatus(restans.status, formatMessage)}
                             </td>
-                            <td className={classNames({ ['tabell__td--sortert']: erKolonneSortertEtter('opprettet') })}>
-                                {formatDateTime(restans.opprettet)}
-                            </td>
+                            <td className={getRowClassName('opprettet')}>{formatDateTime(restans.opprettet)}</td>
                             <td>
                                 <KnappOgStatus saksnummer={restans.saksnummer} />
                             </td>

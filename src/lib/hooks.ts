@@ -153,24 +153,3 @@ export function useBrevForhåndsvisning<T>(
         },
     ];
 }
-
-/**
- * En useState variant der man har muligheten til å awaite en verdi hvis man trenger den med en gang
- * @param initialState Den initielle verdien av staten
- * @returns state, setState, og getState
- */
-export const useSetState = <T>(initialState: T | (() => T)) => {
-    const [state, setState] = useState<T>(initialState);
-
-    const getState = async (): Promise<T> => {
-        let value: unknown;
-
-        await setState((currentState) => {
-            value = currentState;
-            return currentState;
-        });
-        return value as T;
-    };
-
-    return [state, setState, getState] as [T, typeof setState, typeof getState];
-};
