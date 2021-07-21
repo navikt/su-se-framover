@@ -1,20 +1,18 @@
 export default {
-    'side.tittel': 'Saker med åpne behandlinger',
+    'restans.ingenRestanser': 'Ingen restanser',
+    'restans.opprettet': 'Opprettet',
 
-    'behandling.ingenÅpneBehandlinger': 'Ingen åpne behandlinger',
-    'behandling.opprettet': 'Opprettet',
+    'restans.typeBehandling': 'Type behandling',
+    'restans.typeBehandling.REVURDERING': 'Revurdering',
+    'restans.typeBehandling.SØKNADSBEHANDLING': 'Søknadsbehandling',
 
-    'behandling.typeBehandling': 'Type behandling',
-    'behandling.typeBehandling.revurdering': 'Revurdering',
-    'behandling.typeBehandling.søknadsbehandling': 'Søknadsbehandling',
+    'restans.status': 'Status',
+    'restans.status.NY_SØKNAD': 'Ny søknad',
+    'restans.status.UNDERKJENT': 'Underkjent',
+    'restans.status.TIL_ATTESTERING': 'Til attestering',
+    'restans.status.UNDER_BEHANDLING': 'Under behandling',
 
-    'behandling.status': 'Status',
-    'behandling.status.nySøknad': 'Ny søknad',
-    'behandling.status.underkjent': 'Underkjent',
-    'behandling.status.tilAttestering': 'Til attestering',
-    'behandling.status.underBehandling': 'Under behandling',
-
-    'tabell.caption': 'Tabell av åpne behandlinger',
+    'tabell.caption': 'Tabell av restanser',
 
     'sak.saksnummer': 'Saksnummer',
     'sak.seSak': 'Se sak',
