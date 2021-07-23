@@ -51,7 +51,7 @@
         "@navikt/nap-side-menu": "^1.0.7",
         "@reduxjs/toolkit": "^1.6.0",
         "@sentry/browser": "^6.6.0",
-        "@sentry/cli": "^1.66.0",
+        "@sentry/cli": "^1.67.2",
         "@types/jest": "^26.0.24",
         "@types/jsonwebtoken": "^8.5.4",
         "@types/react-collapse": "^5.0.1",
