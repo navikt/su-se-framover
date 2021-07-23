@@ -49,7 +49,7 @@
         "@navikt/nap-clipboard": "^1.0.1",
         "@navikt/nap-header": "^1.0.10",
         "@navikt/nap-side-menu": "^1.0.7",
-        "@reduxjs/toolkit": "^1.6.0",
+        "@reduxjs/toolkit": "^1.6.1",
         "@sentry/browser": "^6.6.0",
         "@sentry/cli": "^1.67.2",
         "@types/jest": "^26.0.24",
