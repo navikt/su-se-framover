@@ -52,7 +52,7 @@
         "@reduxjs/toolkit": "^1.6.0",
         "@sentry/browser": "^6.6.0",
         "@sentry/cli": "^1.66.0",
-        "@types/jest": "^26.0.22",
+        "@types/jest": "^26.0.24",
         "@types/jsonwebtoken": "^8.5.4",
         "@types/react-collapse": "^5.0.1",
         "@types/react-datepicker": "^4.1.3",
