@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import * as React from 'react';
 
-import { ApiError } from '~/api/apiClient';
+import { ApiClientResult, ApiError, ErrorCode } from '~/api/apiClient';
 import { fetchAll as fetchAllFeatureToggles, FeatureToggle, FeatureToggles } from '~/api/featureToggleApi';
 
 import { pipe } from './fp';
@@ -26,16 +26,38 @@ export const useFeatureToggle = (feature: FeatureToggle): boolean => {
 export const FeatureToggleProvider: React.FC = ({ children }) => {
     const [data, setData] = React.useState<RemoteData.RemoteData<ApiError, FeatureToggles>>(RemoteData.initial);
 
+    const fetchToggles = React.useCallback(async () => {
+        try {
+            return await fetchAllFeatureToggles();
+        } catch (e) {
+            if (e instanceof TypeError) {
+                // Noe gikk feil med nettverkskallet. Dette er typisk i test når man mister tilgang til naisdevice.
+                // Unødvendig at dette pushes til Sentry, så vi håndterer det selv.
+                // Kan eventuelt vurdere å kun gjøre dette i test.
+                const error: ApiClientResult<FeatureToggles> = {
+                    status: 'error',
+                    error: {
+                        statusCode: ErrorCode.Unknown,
+                        body: null,
+                        correlationId: '',
+                    },
+                };
+                return error;
+            } else {
+                throw e;
+            }
+        }
+    }, [fetchAllFeatureToggles]);
+
     const fetchInitial = async () => {
         setData(RemoteData.pending);
 
-        const res = await fetchAllFeatureToggles();
-
+        const res = await fetchToggles();
         setData(res.status === 'ok' ? RemoteData.success(res.data) : RemoteData.failure(res.error));
     };
 
     const update = async () => {
-        const res = await fetchAllFeatureToggles();
+        const res = await fetchToggles();
 
         if (res.status === 'ok') {
             console.log('Oppdaterte feature toggles');
