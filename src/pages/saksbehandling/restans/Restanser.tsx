@@ -8,10 +8,12 @@ import { Element } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { fetchSak, hentRestanser } from '~features/saksoversikt/sak.slice';
+import * as personSlice from '~features/person/person.slice';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
+import { useAppDispatch } from '~redux/Store';
 import { Restans, RestansStatus, RestansType } from '~types/Restans';
 import { formatDateTime } from '~utils/date/dateUtils';
 
@@ -28,7 +30,7 @@ import {
 
 const Restanser = () => {
     const { formatMessage } = useI18n({ messages });
-    const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useAsyncActionCreator(hentRestanser);
+    const [hentÅpneBehandlingerStatus, hentÅpneBehandlinger] = useAsyncActionCreator(sakSlice.hentRestanser);
 
     useEffect(() => {
         hentÅpneBehandlinger();
@@ -51,15 +53,21 @@ const Restanser = () => {
 };
 
 const KnappOgStatus = (props: { saksnummer: string }) => {
-    const [hentSakStatus, hentSak] = useAsyncActionCreator(fetchSak);
+    const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
     const { formatMessage } = useI18n({ messages });
     const history = useHistory();
+    const dispatch = useAppDispatch();
 
     return (
         <div>
             <Flatknapp
                 className={styles.seSakKnapp}
                 onClick={async () => {
+                    //Siden man kan ha søkt opp en person og/eller før man velger å trykke på hent sak
+                    //så resetter vi person og sak slik at når saksbehandler henter sak
+                    //gjennom knappene, vil vi hente alt korrekt
+                    dispatch(personSlice.default.actions.resetSøker());
+                    dispatch(sakSlice.default.actions.resetSak());
                     hentSak({ saksnummer: props.saksnummer }, (sak) => {
                         history.push(
                             Routes.saksoversiktValgtSak.createURL({
