@@ -2,24 +2,22 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { last } from 'fp-ts/lib/Array';
 import { isSome } from 'fp-ts/lib/Option';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
-import Ikon from 'nav-frontend-ikoner-assets';
 import { Knapp } from 'nav-frontend-knapper';
 import { Element } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
 import * as PdfApi from '~api/pdfApi';
+import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useUserContext } from '~context/userContext';
 import { useI18n, useBrevForhåndsvisning } from '~lib/hooks';
-import { Behandling, Behandlingsstatus, UnderkjennelseGrunn } from '~types/Behandling';
+import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Vedtak } from '~types/Vedtak';
 import { erIverksatt } from '~utils/behandling/behandlingUtils';
 import { søknadMottatt } from '~utils/søknad/søknadUtils';
 
 import messages from './søknadsbehandling-nb';
 import styles from './søknadsbehandlingHeader.module.less';
-
-const iconWidth = '24px';
 
 const SøknadsbehandlingHeader = (props: {
     sakId: string;
@@ -28,25 +26,12 @@ const SøknadsbehandlingHeader = (props: {
     medBrevutkastknapp?: boolean;
 }) => {
     const { intl } = useI18n({ messages });
-    const senesteAttestering = last(props.behandling.attesteringer);
+    const underkjenteAttesteringer = props.behandling.attesteringer.filter((att) => att.underkjennelse != null);
 
-    if (isSome(senesteAttestering) && senesteAttestering.value.underkjennelse) {
+    if (underkjenteAttesteringer.length > 0) {
         return (
             <div className={styles.behandlingUnderkjentContainer}>
-                <div className={styles.ikonContainer}>
-                    <Ikon kind="advarsel-sirkel-fyll" className={styles.ikon} width={iconWidth} />
-                    <p>{intl.formatMessage({ id: 'underkjent.sendtTilbakeFraAttestering' })}</p>
-                </div>
-                <div className={styles.grunnOgKommentarContainer}>
-                    <div>
-                        <Element>{intl.formatMessage({ id: 'underkjent.grunn' })}</Element>
-                        <p>{underkjentGrunnTilTekst(senesteAttestering.value.underkjennelse.grunn, intl)}</p>
-                    </div>
-                    <div>
-                        <Element>{intl.formatMessage({ id: 'underkjent.kommentar' })}</Element>
-                        <p>{senesteAttestering.value.underkjennelse.kommentar}</p>
-                    </div>
-                </div>
+                <UnderkjenteAttesteringer attesteringer={props.behandling.attesteringer} />
                 <Tilleggsinfo
                     sakId={props.sakId}
                     behandling={props.behandling}
@@ -159,23 +144,6 @@ function statusTilTekst(behandlingsstatus: Behandlingsstatus, intl: IntlShape): 
         case Behandlingsstatus.IVERKSATT_INNVILGET:
         case Behandlingsstatus.UNDERKJENT_INNVILGET:
             return intl.formatMessage({ id: 'vurdering.innvilgelse' });
-        default:
-            return '';
-    }
-}
-
-function underkjentGrunnTilTekst(grunn: UnderkjennelseGrunn, intl: IntlShape): string {
-    switch (grunn) {
-        case UnderkjennelseGrunn.INNGANGSVILKÅRENE_ER_FEILVURDERT:
-            return intl.formatMessage({ id: 'underkjent.grunn.InngangsvilkåreneErFeilvurdert' });
-        case UnderkjennelseGrunn.BEREGNINGEN_ER_FEIL:
-            return intl.formatMessage({ id: 'underkjent.grunn.BeregningenErFeil' });
-        case UnderkjennelseGrunn.DOKUMENTASJON_MANGLER:
-            return intl.formatMessage({ id: 'underkjent.grunn.DokumentasjonenMangler' });
-        case UnderkjennelseGrunn.VEDTAKSBREVET_ER_FEIL:
-            return intl.formatMessage({ id: 'underkjent.grunn.VedtaksbrevetErFeil' });
-        case UnderkjennelseGrunn.ANDRE_FORHOLD:
-            return intl.formatMessage({ id: 'underkjent.grunn.AndreForhold' });
         default:
             return '';
     }

@@ -216,10 +216,7 @@ const OppsummeringshandlingForm = (props: {
                     brevsending="alltidSende"
                     submitStatus={sendTilAttesteringState}
                     onSubmit={(args) =>
-                        sendTilAttestering({
-                            vedtaksbrevtekst: args.fritekstTilBrev,
-                            skalFøreTilBrevutsending: true,
-                        })
+                        sendTilAttestering({ vedtaksbrevtekst: args.fritekstTilBrev, skalFøreTilBrevutsending: true })
                     }
                 />
             ) : (

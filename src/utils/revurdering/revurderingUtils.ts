@@ -26,7 +26,7 @@ export const erBeregnetIngenEndring = (r: Revurdering): r is BeregnetIngenEndrin
     r.status === RevurderingsStatus.BEREGNET_INGEN_ENDRING;
 
 export const erRevurderingForhåndsvarslet = (r: Revurdering) =>
-    erForhåndsvarselSendt(r) || erForhåndsvarslingBesluttet(r);
+    erForhåndsvarselSendt(r) || erForhåndsvarslingBesluttet(r) || erIngenForhåndsvarsel(r);
 export const erForhåndsvarselSendt = (r: Revurdering) => r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesSendt;
 export const erForhåndsvarslingBesluttet = (r: Revurdering) =>
     r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesBesluttet;
