@@ -44,11 +44,15 @@ const eqBehandlingsperiode = struct<FormData>({
 });
 
 const schema = yup.object<FormData>({
-    fraOgMed: yup.date().nullable().required().min(TIDLIGST_MULIG_START_DATO),
+    fraOgMed: yup
+        .date()
+        .nullable()
+        .required('Du må velge virkningstidspunkt for supplerende stønad')
+        .min(TIDLIGST_MULIG_START_DATO),
     tilOgMed: yup
         .date()
         .nullable()
-        .required()
+        .required('Du må velge til-og-med-dato')
         .test('maks12MndStønadsperiode', 'Stønadsperioden kan ikke være lenger enn 12 måneder', function (tilOgMed) {
             const { fraOgMed } = this.parent;
             if (!tilOgMed || !fraOgMed) {
@@ -71,7 +75,7 @@ const schema = yup.object<FormData>({
 });
 
 const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
-    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const history = useHistory();
     const [savingState, setSavingState] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const dispatch = useAppDispatch();
@@ -151,7 +155,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     };
 
     return (
-        <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
                     <form onSubmit={form.handleSubmit(handleSubmit)} className={styles.container}>
@@ -162,7 +166,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                 <DatePicker
                                     {...field}
                                     id="fraOgMed"
-                                    label={intl.formatMessage({ id: 'datovelger.fom.label' })}
+                                    label={formatMessage('datovelger.fom.label')}
                                     dateFormat="MM/yyyy"
                                     showMonthYearPicker
                                     isClearable
@@ -180,7 +184,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                 <DatePicker
                                     {...field}
                                     id="tilOgMed"
-                                    label={intl.formatMessage({ id: 'datovelger.tom.label' })}
+                                    label={formatMessage('datovelger.tom.label')}
                                     dateFormat="MM/yyyy"
                                     showMonthYearPicker
                                     isClearable
@@ -196,7 +200,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                             render={({ field, fieldState }) => (
                                 <Textarea
                                     {...field}
-                                    label={intl.formatMessage({ id: 'begrunnelse.label' })}
+                                    label={formatMessage('begrunnelse.label')}
                                     feil={fieldState.error?.message}
                                 />
                             )}
@@ -205,21 +209,13 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                             savingState,
                             RemoteData.fold(
                                 () => null,
-                                () => (
-                                    <NavFrontendSpinner>
-                                        {intl.formatMessage({ id: 'state.lagrer' })}
-                                    </NavFrontendSpinner>
-                                ),
-                                () => (
-                                    <AlertStripe type="feil">
-                                        {intl.formatMessage({ id: 'state.lagringFeilet' })}
-                                    </AlertStripe>
-                                ),
+                                () => <NavFrontendSpinner>{formatMessage('state.lagrer')}</NavFrontendSpinner>,
+                                () => <AlertStripe type="feil">{formatMessage('state.lagringFeilet')}</AlertStripe>,
                                 () => null
                             )
                         )}
                         <Feiloppsummering
-                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                            tittel={formatMessage('feiloppsummering.title')}
                             hidden={!isSubmitted || isValid}
                             feil={hookFormErrorsTilFeiloppsummering(errors)}
                         />
