@@ -1,35 +1,32 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { yupResolver } from '@hookform/resolvers/yup';
 import fnrValidator from '@navikt/fnrvalidator';
 import { startOfMonth } from 'date-fns/esm';
-import { FormikErrors, useFormik } from 'formik';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import ModalWrapper from 'nav-frontend-modal';
-import { Input, Textarea, Checkbox, RadioGruppe, Radio, Feiloppsummering } from 'nav-frontend-skjema';
+import { Input, Textarea, Checkbox, RadioGruppe, Radio, Feiloppsummering, SkjemaGruppe } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import Tekstomrade, { BoldRule, HighlightRule, LinebreakRule } from 'nav-frontend-tekstomrade';
 import { Element, Feilmelding, Undertittel } from 'nav-frontend-typografi';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { ApiError, ErrorCode } from '~api/apiClient';
+import { ErrorCode } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import { FormueFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FormueFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import personSlice from '~features/person/person.slice';
-import sakSlice, { lagreBehandlingsinformasjon, lagreEpsGrunnlag } from '~features/saksoversikt/sak.slice';
+import sakSliceActions, * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/hooks';
+import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup, {
-    formikErrorsHarFeil,
-    formikErrorsTilFeiloppsummering,
-    validateStringAsNonNegativeNumber,
-} from '~lib/validering';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
+import yup, { hookFormErrorsTilFeiloppsummering, validateStringAsNonNegativeNumber } from '~lib/validering';
+import { useAppDispatch } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { FormueStatus, Formue as FormueType } from '~types/Behandlingsinformasjon';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
@@ -58,14 +55,14 @@ import {
 } from './utils';
 
 const VerdierSchema: yup.ObjectSchema<VerdierFormData | undefined> = yup.object<VerdierFormData>({
-    verdiPåBolig: validateStringAsNonNegativeNumber,
-    verdiPåEiendom: validateStringAsNonNegativeNumber,
-    verdiPåKjøretøy: validateStringAsNonNegativeNumber,
-    innskuddsbeløp: validateStringAsNonNegativeNumber,
-    verdipapir: validateStringAsNonNegativeNumber,
-    stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber,
-    kontanterOver1000: validateStringAsNonNegativeNumber,
-    depositumskonto: validateStringAsNonNegativeNumber,
+    verdiPåBolig: validateStringAsNonNegativeNumber('Verdi boliger'),
+    verdiPåEiendom: validateStringAsNonNegativeNumber('Verdi på eiendommene'),
+    verdiPåKjøretøy: validateStringAsNonNegativeNumber('Verdi bil'),
+    innskuddsbeløp: validateStringAsNonNegativeNumber('Innskudd på konto'),
+    verdipapir: validateStringAsNonNegativeNumber('Verdipapirer og aksjefond'),
+    stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber('Om noen skylder søker penger'),
+    kontanterOver1000: validateStringAsNonNegativeNumber('Kontanter'),
+    depositumskonto: validateStringAsNonNegativeNumber('Depositumskontoverdi'),
 });
 
 const schema = yup.object<FormueFormData>({
@@ -78,19 +75,30 @@ const schema = yup.object<FormueFormData>({
         .object<VerdierFormData>()
         .when('borSøkerMedEPS', {
             is: true,
-            then: VerdierSchema.required(),
+            then: VerdierSchema.required('Du må legge inn ektefelle/samboers formue'),
             otherwise: yup.object().nullable().defined(),
         })
         .defined(),
     begrunnelse: yup.string().defined(),
-    borSøkerMedEPS: yup.boolean().required().typeError('Feltet må fylles ut'),
+    borSøkerMedEPS: yup
+        .boolean()
+        .required('Du må velge om søker bor med en ektefelle eller samboer')
+        .typeError('Feltet må fylles ut'),
     epsFnr: yup.mixed<string>().when('borSøkerMedEPS', {
         is: true,
-        then: yup.mixed<string>().test('erGyldigFnr', 'Fnr er ikke gyldig', (fnr) => {
-            return fnr && fnrValidator.fnr(fnr).status === 'valid';
-        }),
+        then: yup
+            .mixed<string>()
+            .required('Du må legge inn ektefelle/samboers fødselsnummer')
+            .test('erGyldigFnr', 'Du må legge inn et gyldig fødselsnummer', (fnr) => {
+                return fnr && fnrValidator.fnr(fnr).status === 'valid';
+            }),
     }),
 });
+
+enum Hvem {
+    Søker = 'søker',
+    Ektefelle = 'ektefelle',
+}
 
 const Formue = (props: {
     behandling: Behandling;
@@ -101,19 +109,24 @@ const Formue = (props: {
 }) => {
     const history = useHistory();
     const dispatch = useAppDispatch();
-    const [hasSubmitted, setHasSubmitted] = useState(false);
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    const [eps, setEps] = useState<RemoteData.RemoteData<ApiError, personApi.Person>>(RemoteData.initial);
-    const [kanEndreAnnenPersonsFormue, setKanEndreAnnenPersonsFormue] = useState<boolean>(true);
+    const [eps, fetchEps, resetEpsToInitial] = useApiCall(personApi.fetchPerson);
     const [åpnerNyFormueBlokkMenViserEnBlokk, setÅpnerNyFormueBlokkMenViserEnBlokk] = useState<boolean>(false);
     const søknadInnhold = props.behandling.søknad.søknadInnhold;
-    const behandlingsInfo = props.behandling.behandlingsinformasjon;
-    const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
-    const [lagreEpsGrunnlagStatus, setLagreEpsGrunnlagStatus] = useState<RemoteData.RemoteData<ApiError, Behandling>>(
-        RemoteData.initial
+    const [lagreBehandlingsinformasjonStatus, lagreBehandlingsinformasjon] = useAsyncActionCreator(
+        sakSlice.lagreBehandlingsinformasjon
+    );
+    const [lagreEpsGrunnlagStatus, lagreEpsGrunnlag] = useAsyncActionCreator(sakSlice.lagreEpsGrunnlag);
+    const feiloppsummeringRef = useRef<HTMLDivElement>(null);
+
+    const senesteHalvG = getSenesteHalvGVerdi(
+        props.behandling.stønadsperiode?.periode?.fraOgMed
+            ? startOfMonth(new Date(props.behandling.stønadsperiode.periode.fraOgMed))
+            : null,
+        props.behandling.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser
     );
 
-    const handleSave = async (values: FormueFormData, nesteUrl: string) => {
+    const handleSave = (nesteUrl: string) => async (values: FormueFormData) => {
         if (RemoteData.isPending(eps) && values.epsFnr !== null) return;
 
         const status =
@@ -145,112 +158,106 @@ const Formue = (props: {
             return;
         }
 
-        setLagreEpsGrunnlagStatus(RemoteData.pending);
-        await dispatch(
-            lagreEpsGrunnlag({
+        lagreEpsGrunnlag(
+            {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 epsFnr: values.epsFnr,
-            })
-        ).then(async (epsGrunnlagRes) => {
-            if (lagreEpsGrunnlag.fulfilled.match(epsGrunnlagRes)) {
-                const res = await dispatch(
-                    lagreBehandlingsinformasjon({
+            },
+            () => {
+                lagreBehandlingsinformasjon(
+                    {
                         sakId: props.sakId,
                         behandlingId: props.behandling.id,
                         behandlingsinformasjon: { formue: formueValues },
-                    })
+                    },
+                    () => {
+                        history.push(nesteUrl);
+                    }
                 );
-
-                if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
-                    history.push(nesteUrl);
-                }
             }
-            if (lagreEpsGrunnlag.rejected.match(epsGrunnlagRes)) {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                setLagreEpsGrunnlagStatus(RemoteData.failure(epsGrunnlagRes.payload!));
-            }
-        });
+        );
     };
 
-    const senesteHalvG = getSenesteHalvGVerdi(
-        props.behandling.stønadsperiode?.periode?.fraOgMed
-            ? startOfMonth(new Date(props.behandling.stønadsperiode.periode.fraOgMed))
-            : null,
-        props.behandling.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser
-    );
-
-    const formik = useFormik<FormueFormData>({
-        initialValues: getFormueInitialValues(
-            behandlingsInfo,
+    const {
+        formState: { isValid, isSubmitted, errors, isDirty },
+        ...form
+    } = useForm<FormueFormData>({
+        defaultValues: getFormueInitialValues(
+            props.behandling.behandlingsinformasjon,
             søknadInnhold,
             props.behandling.grunnlagsdataOgVilkårsvurderinger
         ),
-        async onSubmit() {
-            handleSave(formik.values, props.nesteUrl);
-        },
-        validationSchema: schema,
-        validateOnChange: hasSubmitted,
+        resolver: yupResolver(schema),
     });
+    const watch = form.watch();
 
     const søkersFormue = useMemo(() => {
-        return regnUtFormDataVerdier(formik.values.verdier);
-    }, [formik.values.verdier]);
+        return regnUtFormDataVerdier(watch.verdier);
+    }, [watch.verdier]);
 
     const ektefellesFormue = useMemo(() => {
-        return regnUtFormDataVerdier(formik.values.epsVerdier);
-    }, [formik.values.epsVerdier]);
+        return regnUtFormDataVerdier(watch.epsVerdier);
+    }, [watch.epsVerdier]);
 
-    const totalFormue = søkersFormue + (formik.values.borSøkerMedEPS ? ektefellesFormue : 0);
+    const totalFormue = søkersFormue + (watch.borSøkerMedEPS ? ektefellesFormue : 0);
 
     useEffect(() => {
-        async function fetchPerson(fnr: Nullable<string>) {
-            if (!fnr || fnrValidator.fnr(fnr).status === 'invalid') {
-                return;
-            }
-            setEps(RemoteData.pending);
-
-            const res = await personApi.fetchPerson(fnr);
-            if (res.status === 'error') {
-                setEps(RemoteData.failure(res.error));
-            } else {
-                setEps(RemoteData.success(res.data));
-            }
-        }
-
-        if (fnrValidator.fnr(formik.values.epsFnr || '').status === 'valid') {
-            fetchPerson(formik.values.epsFnr);
+        if (watch.epsFnr && fnrValidator.fnr(watch.epsFnr).status === 'valid') {
+            fetchEps(watch.epsFnr);
         } else {
-            setEps(RemoteData.initial);
+            resetEpsToInitial();
         }
-    }, [formik.values.epsFnr]);
+    }, [watch.epsFnr]);
 
-    const handleEpsSkjermingModalContinueClick = async () => {
-        await handleSave(formik.values, Routes.home.createURL());
-        dispatch(sakSlice.actions.resetSak());
-        dispatch(personSlice.actions.resetSøker());
+    useEffect(() => {
+        if (!isDirty) {
+            return;
+        }
+        form.setValue('epsFnr', null);
+        setÅpnerNyFormueBlokkMenViserEnBlokk(false);
+        if (!watch.borSøkerMedEPS) {
+            form.setValue('epsVerdier', null);
+            setInputToShow(Hvem.Søker);
+        } else {
+            form.setValue('epsVerdier', {
+                verdiPåBolig: '0',
+                verdiPåEiendom: '0',
+                verdiPåKjøretøy: '0',
+                innskuddsbeløp: '0',
+                verdipapir: '0',
+                kontanterOver1000: '0',
+                stårNoenIGjeldTilDeg: '0',
+                depositumskonto: '0',
+            });
+        }
+    }, [watch.borSøkerMedEPS]);
+
+    const handleEpsSkjermingModalContinueClick = () => {
+        form.handleSubmit(handleSave(Routes.home.createURL()), () => {
+            dispatch(sakSliceActions.actions.resetSak());
+            dispatch(personSlice.actions.resetSøker());
+        });
     };
 
-    const [inputToShow, setInputToShow] = useState<'søker' | 'ektefelle' | null>(
-        formik.values.borSøkerMedEPS ? null : 'søker'
-    );
+    const [inputToShow, setInputToShow] = useState<Nullable<Hvem>>(watch.borSøkerMedEPS ? null : Hvem.Søker);
 
     const vilkårErOppfylt = totalFormue <= senesteHalvG;
 
-    const onLagreClick = () => {
-        formik.validateForm().then((res) => {
-            if (Object.keys(res).length === 0) {
+    const onLagreClick = (hvem: Hvem) => {
+        form.trigger(hvem === Hvem.Søker ? 'verdier' : 'epsVerdier', {
+            shouldFocus: true,
+        }).then((isValid) => {
+            if (isValid) {
                 setInputToShow(null);
-                setKanEndreAnnenPersonsFormue(true);
                 setÅpnerNyFormueBlokkMenViserEnBlokk(false);
             }
         });
     };
 
-    const onEndreFormue = (søkerEllerEktefelle: 'søker' | 'ektefelle') => {
-        if (kanEndreAnnenPersonsFormue) {
+    const onEndreFormueClick = (søkerEllerEktefelle: Hvem) => {
+        if (inputToShow === null) {
             setInputToShow(søkerEllerEktefelle);
-            setKanEndreAnnenPersonsFormue(false);
         } else {
             setÅpnerNyFormueBlokkMenViserEnBlokk(true);
         }
@@ -261,59 +268,57 @@ const Formue = (props: {
             {{
                 left: (
                     <form
-                        onSubmit={(e) => {
-                            setHasSubmitted(true);
-                            formik.handleSubmit(e);
-                        }}
+                        onSubmit={form.handleSubmit(handleSave(props.nesteUrl), () => {
+                            setTimeout(() => {
+                                feiloppsummeringRef.current?.focus();
+                            }, 0);
+                        })}
                     >
                         <div className={styles.ektefellePartnerSamboer}>
                             <Element>{formatMessage('input.label.borSøkerMedEktefelle')}</Element>
-                            <RadioGruppe feil={formik.errors.borSøkerMedEPS}>
-                                <Radio
-                                    label="Ja"
-                                    name="borSøkerMedEPS"
-                                    checked={Boolean(formik.values.borSøkerMedEPS)}
-                                    onChange={() => {
-                                        formik.setValues({
-                                            ...formik.values,
-                                            borSøkerMedEPS: true,
-                                            epsFnr: null,
-                                        });
-
-                                        setInputToShow(null);
-                                    }}
-                                />
-                                <Radio
-                                    label="Nei"
-                                    name="borSøkerMedEPS"
-                                    checked={formik.values.borSøkerMedEPS === false}
-                                    onChange={() => {
-                                        formik.setValues({
-                                            ...formik.values,
-                                            borSøkerMedEPS: false,
-                                            epsFnr: null,
-                                            epsVerdier: null,
-                                        });
-
-                                        setInputToShow('søker');
-                                    }}
-                                />
-                            </RadioGruppe>
-                            {formik.values.borSøkerMedEPS && (
+                            <Controller
+                                control={form.control}
+                                name="borSøkerMedEPS"
+                                render={({ field, fieldState }) => (
+                                    <RadioGruppe feil={fieldState.error?.message} onBlur={field.onBlur}>
+                                        <Radio
+                                            id={field.name}
+                                            radioRef={field.ref}
+                                            label="Ja"
+                                            name={field.name}
+                                            checked={field.value}
+                                            onChange={() => {
+                                                field.onChange(true);
+                                            }}
+                                        />
+                                        <Radio
+                                            label="Nei"
+                                            name={field.name}
+                                            checked={field.value === false}
+                                            onChange={() => {
+                                                field.onChange(false);
+                                            }}
+                                        />
+                                    </RadioGruppe>
+                                )}
+                            />
+                            {watch.borSøkerMedEPS && (
                                 <>
                                     <Element>{formatMessage('input.label.ektefellesFødselsnummer')}</Element>
                                     <div className={styles.fnrInput}>
-                                        <Input
+                                        <Controller
+                                            control={form.control}
                                             name="epsFnr"
-                                            value={formik.values.epsFnr ?? ''}
-                                            onChange={(e) =>
-                                                formik.setValues((values) => ({
-                                                    ...values,
-                                                    epsFnr: removeSpaces(e.target.value),
-                                                }))
-                                            }
-                                            bredde="S"
-                                            feil={formik.errors.epsFnr}
+                                            render={({ field, fieldState }) => (
+                                                <Input
+                                                    id={field.name}
+                                                    bredde="S"
+                                                    feil={fieldState.error?.message}
+                                                    {...field}
+                                                    value={field.value ?? ''}
+                                                    onChange={(e) => field.onChange(removeSpaces(e.target.value))}
+                                                />
+                                            )}
                                         />
                                         <div className={styles.result}>
                                             {pipe(
@@ -323,7 +328,7 @@ const Formue = (props: {
                                                     () => <NavFrontendSpinner />,
                                                     (err) => (
                                                         <AlertStripe type="feil">
-                                                            {err.statusCode === ErrorCode.Unauthorized ? (
+                                                            {err?.statusCode === ErrorCode.Unauthorized ? (
                                                                 <ModalWrapper
                                                                     isOpen={true}
                                                                     onRequestClose={() => {
@@ -354,7 +359,7 @@ const Formue = (props: {
                                                                         OK
                                                                     </Knapp>
                                                                 </ModalWrapper>
-                                                            ) : err.statusCode === ErrorCode.NotFound ? (
+                                                            ) : err?.statusCode === ErrorCode.NotFound ? (
                                                                 formatMessage('feilmelding.ikkeFunnet')
                                                             ) : (
                                                                 formatMessage('feilmelding.ukjent')
@@ -371,33 +376,44 @@ const Formue = (props: {
                         </div>
 
                         <div className={styles.formueInputContainer}>
-                            <div className={inputToShow === 'søker' ? styles.aktivFormueBlokk : undefined}>
-                                {inputToShow === 'søker' &&
+                            <SkjemaGruppe
+                                className={inputToShow === Hvem.Søker ? styles.aktivFormueBlokk : undefined}
+                                feil={
+                                    errors.verdier &&
+                                    inputToShow !== Hvem.Søker &&
+                                    formatMessage('feil.måLeggeInn.søkersFormue')
+                                }
+                                utenFeilPropagering
+                            >
+                                {inputToShow === Hvem.Søker &&
                                     verdierId.map((keyNavn) => (
-                                        <FormueInput
+                                        <Controller
                                             key={keyNavn}
-                                            tittel={formatMessage(`input.label.${keyNavn}`)}
-                                            className={styles.formueInput}
-                                            inputName={`verdier.${keyNavn}`}
-                                            onChange={formik.handleChange}
-                                            defaultValue={formik.values.verdier?.[keyNavn] ?? '0'}
-                                            feil={
-                                                (formik.errors.verdier as FormikErrors<VerdierFormData> | undefined)?.[
-                                                    keyNavn
-                                                ]
-                                            }
+                                            control={form.control}
+                                            name={`verdier.${keyNavn}` as const}
+                                            render={({ field, fieldState }) => (
+                                                <FormueInput
+                                                    tittel={formatMessage(`input.label.${keyNavn}`)}
+                                                    className={styles.formueInput}
+                                                    inputName={field.name}
+                                                    onChange={field.onChange}
+                                                    defaultValue={field.value ?? '0'}
+                                                    feil={fieldState.error?.message}
+                                                    inputRef={field.ref}
+                                                />
+                                            )}
                                         />
                                     ))}
 
-                                {formik.values.borSøkerMedEPS && (
+                                {watch.borSøkerMedEPS && (
                                     <>
                                         <ShowSum tittel={formatMessage('display.søkersFormue')} sum={søkersFormue} />
 
-                                        {inputToShow !== 'søker' ? (
+                                        {inputToShow !== Hvem.Søker ? (
                                             <div>
                                                 <Knapp
                                                     className={styles.toggleInput}
-                                                    onClick={() => onEndreFormue('søker')}
+                                                    onClick={() => onEndreFormueClick(Hvem.Søker)}
                                                     htmlType="button"
                                                 >
                                                     {formatMessage('knapp.endreSøkersFormue')}
@@ -412,33 +428,42 @@ const Formue = (props: {
                                             <Knapp
                                                 htmlType="button"
                                                 className={styles.toggleInput}
-                                                onClick={() => onLagreClick()}
+                                                onClick={() => onLagreClick(Hvem.Søker)}
                                             >
                                                 Lagre
                                             </Knapp>
                                         )}
                                     </>
                                 )}
-                            </div>
+                            </SkjemaGruppe>
 
-                            {formik.values.borSøkerMedEPS && (
-                                <div className={inputToShow === 'ektefelle' ? styles.aktivFormueBlokk : undefined}>
-                                    {inputToShow === 'ektefelle' &&
+                            {watch.borSøkerMedEPS && (
+                                <SkjemaGruppe
+                                    className={inputToShow === Hvem.Ektefelle ? styles.aktivFormueBlokk : undefined}
+                                    feil={
+                                        errors.epsVerdier &&
+                                        inputToShow !== Hvem.Ektefelle &&
+                                        formatMessage('feil.måLeggeInn.epsFormue')
+                                    }
+                                    utenFeilPropagering
+                                >
+                                    {inputToShow === Hvem.Ektefelle &&
                                         verdierId.map((keyNavn) => (
-                                            <FormueInput
+                                            <Controller
                                                 key={keyNavn}
-                                                tittel={formatMessage(`input.label.${keyNavn}`)}
-                                                className={styles.formueInput}
-                                                inputName={`epsVerdier.${keyNavn}`}
-                                                onChange={formik.handleChange}
-                                                defaultValue={formik.values.epsVerdier?.[keyNavn] ?? '0'}
-                                                feil={
-                                                    (
-                                                        formik.errors.epsVerdier as
-                                                            | FormikErrors<VerdierFormData>
-                                                            | undefined
-                                                    )?.[keyNavn]
-                                                }
+                                                control={form.control}
+                                                name={`epsVerdier.${keyNavn}` as const}
+                                                render={({ field, fieldState }) => (
+                                                    <FormueInput
+                                                        tittel={formatMessage(`input.label.${keyNavn}`)}
+                                                        className={styles.formueInput}
+                                                        inputName={field.name}
+                                                        onChange={field.onChange}
+                                                        defaultValue={field.value ?? '0'}
+                                                        feil={fieldState.error?.message}
+                                                        inputRef={field.ref}
+                                                    />
+                                                )}
                                             />
                                         ))}
                                     <ShowSum
@@ -446,11 +471,11 @@ const Formue = (props: {
                                         sum={ektefellesFormue}
                                     />
 
-                                    {inputToShow !== 'ektefelle' ? (
+                                    {inputToShow !== Hvem.Ektefelle ? (
                                         <div>
                                             <Knapp
                                                 className={styles.toggleInput}
-                                                onClick={() => onEndreFormue('ektefelle')}
+                                                onClick={() => onEndreFormueClick(Hvem.Ektefelle)}
                                                 htmlType="button"
                                             >
                                                 {formatMessage('knapp.endreEktefellesFormue')}
@@ -465,12 +490,12 @@ const Formue = (props: {
                                         <Knapp
                                             className={styles.toggleInput}
                                             htmlType="button"
-                                            onClick={() => onLagreClick()}
+                                            onClick={() => onLagreClick(Hvem.Ektefelle)}
                                         >
                                             Lagre
                                         </Knapp>
                                     )}
-                                </div>
+                                </SkjemaGruppe>
                             )}
                         </div>
 
@@ -496,28 +521,38 @@ const Formue = (props: {
                             </div>
                         </div>
 
-                        <Textarea
-                            label={formatMessage('input.label.begrunnelse')}
+                        <Controller
+                            control={form.control}
                             name="begrunnelse"
-                            value={formik.values.begrunnelse || ''}
-                            onChange={formik.handleChange}
-                            feil={formik.errors.begrunnelse}
+                            render={({ field, fieldState }) => (
+                                <Textarea
+                                    label={formatMessage('input.label.begrunnelse')}
+                                    {...field}
+                                    value={field.value || ''}
+                                    feil={fieldState.error?.message}
+                                />
+                            )}
                         />
 
-                        <Checkbox
-                            label={formatMessage('checkbox.henteMerInfo')}
+                        <Controller
+                            control={form.control}
                             name="status"
-                            className={styles.henteMerInfoCheckbox}
-                            checked={formik.values.status === FormueStatus.MåInnhenteMerInformasjon}
-                            onChange={() => {
-                                formik.setValues({
-                                    ...formik.values,
-                                    status:
-                                        formik.values.status === FormueStatus.VilkårOppfylt
-                                            ? FormueStatus.MåInnhenteMerInformasjon
-                                            : FormueStatus.VilkårOppfylt,
-                                });
-                            }}
+                            render={({ field, fieldState }) => (
+                                <Checkbox
+                                    label={formatMessage('checkbox.henteMerInfo')}
+                                    className={styles.henteMerInfoCheckbox}
+                                    {...field}
+                                    feil={fieldState.error?.message}
+                                    checked={field.value === FormueStatus.MåInnhenteMerInformasjon}
+                                    onChange={() => {
+                                        field.onChange(
+                                            field.value === FormueStatus.VilkårOppfylt
+                                                ? FormueStatus.MåInnhenteMerInformasjon
+                                                : FormueStatus.VilkårOppfylt
+                                        );
+                                    }}
+                                />
+                            )}
                         />
 
                         {pipe(
@@ -527,7 +562,7 @@ const Formue = (props: {
                                 () => <NavFrontendSpinner>{formatMessage('display.lagre.lagrer')}</NavFrontendSpinner>,
                                 (error) => (
                                     <AlertStripe type="feil">
-                                        {error.body?.code === 'ugyldige_verdier_på_formue'
+                                        {error?.body?.code === 'ugyldige_verdier_på_formue'
                                             ? formatMessage('feilmelding.ugyldigeVerdier.depositum')
                                             : formatMessage('display.lagre.lagringFeilet')}
                                     </AlertStripe>
@@ -538,22 +573,23 @@ const Formue = (props: {
 
                         <Feiloppsummering
                             tittel={formatMessage('feiloppsummering.title')}
-                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                            hidden={!formikErrorsHarFeil(formik.errors)}
+                            hidden={!isSubmitted || isValid}
+                            feil={hookFormErrorsTilFeiloppsummering(errors)}
+                            innerRef={feiloppsummeringRef}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                formik.validateForm().then((res) => {
-                                    if (Object.keys(res).length === 0) {
-                                        handleSave(
-                                            formik.values,
-                                            Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })
-                                        );
+                                form.handleSubmit(
+                                    handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
+                                    () => {
+                                        setTimeout(() => {
+                                            feiloppsummeringRef.current?.focus();
+                                        }, 0);
                                     }
-                                });
+                                );
                             }}
                         />
                     </form>

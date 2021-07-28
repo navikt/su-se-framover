@@ -10,6 +10,8 @@ export default {
     'display.vilkårIkkeOppfyltGrunn': 'Formue er høyere enn 0.5G',
 
     'feil.åpnerAnnenPersonFormueMenViserInput': 'Du må lagre den andre formuen før du kan endre denne.',
+    'feil.måLeggeInn.søkersFormue': 'Du må legge inn søkers formue',
+    'feil.måLeggeInn.epsFormue': 'Du må legge inn ektefelle/samboers formue',
 
     'input.label.verdiPåBolig': 'Verdi boliger som ikke er primærbolig',
     'input.label.verdiPåEiendom': 'Verdi på eiendommene',
