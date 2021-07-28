@@ -12,6 +12,8 @@ export default {
     'restans.status.TIL_ATTESTERING': 'Til attestering',
     'restans.status.UNDER_BEHANDLING': 'Under behandling',
 
+    'tabell.antallSaker': 'Antall saker:',
+
     'tabell.caption': 'Tabell av restanser',
 
     'sak.saksnummer': 'Saksnummer',

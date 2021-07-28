@@ -4,7 +4,7 @@ import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Flatknapp } from 'nav-frontend-knapper';
 import { Checkbox } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Element } from 'nav-frontend-typografi';
+import { Element, Normaltekst } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -237,7 +237,11 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                                 {formatMessage('restans.opprettet')}
                             </button>
                         </th>
-                        <th></th>
+                        <th>
+                            <Normaltekst className={styles.antallSakerHeaderTekst}>
+                                {formatMessage('tabell.antallSaker')} {sortertTabell.length}
+                            </Normaltekst>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
