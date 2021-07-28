@@ -1,28 +1,14 @@
 @import '~/styles/variables.less';
 
-.underkjennelsesInformasjonsContainer {
-    display: flex;
-
-    > :not(:last-child) {
-        margin-right: @spacing-s;
-    }
-}
-
-.informasjonsElementContainer {
+.underkjentAttesteringContainer {
+    display: grid;
+    grid-template-columns: 130px 225px 1fr;
     margin-bottom: @spacing-xs;
 }
 
 .ikon {
     margin-bottom: @spacing-xs;
     margin-right: @spacing-xs;
-}
-
-.tidspunkt {
-    white-space: nowrap;
-}
-
-.grunn {
-    white-space: nowrap;
 }
 
 .kommentar {

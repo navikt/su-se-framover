@@ -11,15 +11,7 @@ import styles from './underkjenteAttesteringer.module.less';
 
 const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
     const underkjenteAttesteringer = props.attesteringer.filter((att) => att.underkjennelse != null);
-
     const { formatMessage } = useI18n({ messages });
-
-    const tidspunkter = underkjenteAttesteringer.map((a) => a.opprettet);
-    /* underkjente attesteringer har alltid grunn og kommentar */
-    /* eslint-disable @typescript-eslint/no-non-null-assertion */
-    const grunner = underkjenteAttesteringer.map((a) => a.underkjennelse!.grunn);
-    const kommentarer = underkjenteAttesteringer.map((a) => a.underkjennelse!.kommentar);
-    /*eslint-enable @typescript-eslint/no-non-null-assertion*/
 
     return (
         <div>
@@ -28,34 +20,27 @@ const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
                     {formatMessage('underkjent.sendtTilbakeFraAttestering')}
                 </AlertStripe>
             )}
-            <div className={styles.underkjennelsesInformasjonsContainer}>
-                <ul>
-                    {tidspunkter.map((t) => (
-                        <li key={t} className={styles.informasjonsElementContainer}>
+            <ul>
+                {underkjenteAttesteringer.map((a) => (
+                    <li key={a.opprettet} className={styles.underkjentAttesteringContainer}>
+                        <div>
                             <Element>{formatMessage('underkjent.tidspunkt')}</Element>
-                            <Normaltekst className={styles.tidspunkt}>{formatDateTime(t)}</Normaltekst>
-                        </li>
-                    ))}
-                </ul>
-                <ul>
-                    {grunner.map((g, i) => (
-                        <li key={i} className={styles.informasjonsElementContainer}>
+                            <Normaltekst>{formatDateTime(a.opprettet)}</Normaltekst>
+                        </div>
+                        {/* underkjente attesteringer har alltid grunn og kommentar */}
+                        {/* eslint-disable @typescript-eslint/no-non-null-assertion */}
+                        <div>
                             <Element>{formatMessage('underkjent.grunn')}</Element>
-                            <Normaltekst className={styles.grunn}>
-                                {underkjentGrunnTilTekst(g, formatMessage)}
-                            </Normaltekst>
-                        </li>
-                    ))}
-                </ul>
-                <ul>
-                    {kommentarer.map((k) => (
-                        <li key={k} className={styles.informasjonsElementContainer}>
+                            <Normaltekst>{underkjentGrunnTilTekst(a.underkjennelse!.grunn, formatMessage)}</Normaltekst>
+                        </div>
+                        <div>
                             <Element>{formatMessage('underkjent.kommentar')}</Element>
-                            <Normaltekst className={styles.kommentar}>{k}</Normaltekst>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+                            <Normaltekst className={styles.kommentar}>{a.underkjennelse!.kommentar}</Normaltekst>
+                        </div>
+                        {/* eslint-enable @typescript-eslint/no-non-null-assertion */}
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 };
