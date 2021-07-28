@@ -9,6 +9,12 @@
     }
 }
 
+.introContainer {
+    > :not(:last-child) {
+        margin-bottom: @spacing-s;
+    }
+}
+
 .intro {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

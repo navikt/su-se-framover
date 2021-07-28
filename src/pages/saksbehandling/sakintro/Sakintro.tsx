@@ -15,6 +15,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { ApiError } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
 import { Person } from '~api/personApi';
+import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useUserContext } from '~context/userContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
@@ -24,13 +25,12 @@ import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
-import { Behandling, UnderkjennelseGrunn, Underkjennelse, Attestering } from '~types/Behandling';
+import { Behandling } from '~types/Behandling';
 import { Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 import { Vedtak } from '~types/Vedtak';
 import { erIverksatt, erTilAttestering, hentSisteVurdertSaksbehandlingssteg } from '~utils/behandling/behandlingUtils';
-import { formatDateTime } from '~utils/date/dateUtils';
 import {
     getIverksatteInnvilgedeSøknader,
     søknadMottatt,
@@ -41,7 +41,6 @@ import {
     erRevurderingTilAttestering,
     erRevurderingIverksatt,
     erRevurderingSimulert,
-    erRevurderingUnderkjent,
     erForhåndsvarselSendt,
     finnNesteRevurderingsteg,
 } from '../../../utils/revurdering/revurderingUtils';
@@ -71,21 +70,6 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
         default:
             return 'display.søknad.lukket.ukjentLukking';
     }
-};
-
-const hentUnderkjenteAttesteringer = (
-    attesteringer: Attestering[]
-): Array<{
-    underkjennelse: Underkjennelse;
-    opprettet: string;
-}> => {
-    return attesteringer
-        .filter((a) => a.underkjennelse !== null)
-        .map((a) => ({
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            underkjennelse: a.underkjennelse!,
-            opprettet: a.opprettet,
-        }));
 };
 
 const Sakintro = (props: { sak: Sak; søker: Person }) => {
@@ -164,47 +148,6 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
     );
 };
 
-const UnderkjennelsesInformasjon = (props: {
-    underkjennelser: Array<{ underkjennelse: Underkjennelse; opprettet: string }>;
-    intl: IntlShape;
-}) => {
-    return (
-        <div className={styles.underkjennelseContainer}>
-            <AlertStripe type="advarsel" form="inline" className={styles.advarsel}>
-                {props.intl.formatMessage({
-                    id: 'behandling.attestering.advarsel',
-                })}
-            </AlertStripe>
-            <div className={styles.underkjennelse}>
-                {props.underkjennelser.map((attestering) => (
-                    <>
-                        <div className={styles.underkjenningsinfo}>
-                            <Element>{props.intl.formatMessage({ id: 'display.attestering.tidspunkt' })}</Element>
-                            <Normaltekst>{formatDateTime(attestering.opprettet)}</Normaltekst>
-                        </div>
-                        <div className={styles.underkjenningsinfo}>
-                            <Element>
-                                {props.intl.formatMessage({
-                                    id: 'display.attestering.sendtTilbakeFordi',
-                                })}
-                            </Element>
-                            <Normaltekst>{grunnToText(attestering.underkjennelse.grunn, props.intl)}</Normaltekst>
-                        </div>
-                        <div className={styles.underkjenningsinfo}>
-                            <Element>
-                                {props.intl.formatMessage({
-                                    id: 'display.attestering.kommentar',
-                                })}
-                            </Element>
-                            <Normaltekst>{attestering.underkjennelse.kommentar}</Normaltekst>
-                        </div>
-                    </>
-                ))}
-            </div>
-        </div>
-    );
-};
-
 const ÅpneSøknader = (props: {
     åpneSøknader: Søknad[];
     behandlinger: Behandling[];
@@ -239,10 +182,7 @@ const ÅpneSøknader = (props: {
                                             <Normaltekst>{søknadMottatt(s, props.intl)}</Normaltekst>
                                         </div>
                                         {senesteAttestering?.underkjennelse && (
-                                            <UnderkjennelsesInformasjon
-                                                underkjennelser={hentUnderkjenteAttesteringer(attesteringer)}
-                                                intl={props.intl}
-                                            />
+                                            <UnderkjenteAttesteringer attesteringer={attesteringer} />
                                         )}
                                     </div>
                                     <div className={styles.knapper}>
@@ -280,9 +220,8 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
             </Ingress>
             <ol>
                 {props.revurderinger.map((r) => {
-                    const behandling = props.sak.behandlinger.find((b) => b.id === r.tilRevurdering.id);
-                    const vedtakForBehandling = props.sak.vedtak.find((v) => v.behandlingId === behandling?.id);
-
+                    const vedtakForBehandling = props.sak.vedtak.find((v) => v.behandlingId === r.id);
+                    const underkjenteRevurderinger = r.attesteringer.filter((a) => a.underkjennelse !== null);
                     return (
                         <div key={r.id}>
                             <Panel border className={styles.søknad}>
@@ -316,13 +255,10 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                                                 </Normaltekst>
                                             </div>
                                         )}
-                                        {erRevurderingUnderkjent(r) && (
-                                            //underkjent revurdering har alltid en underkjennelse
-                                            /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                                            <UnderkjennelsesInformasjon
-                                                underkjennelser={hentUnderkjenteAttesteringer(r.attesteringer)}
-                                                intl={props.intl}
-                                            />
+                                        {underkjenteRevurderinger.length > 0 && !erRevurderingIverksatt(r) && (
+                                            <div className={styles.underkjenteAttesteringerContainer}>
+                                                <UnderkjenteAttesteringer attesteringer={r.attesteringer} />
+                                            </div>
                                         )}
                                     </div>
                                     <div className={styles.knapper}>
@@ -476,25 +412,6 @@ const IverksattInnvilgedeSøknader = (props: {
             </ol>
         </div>
     );
-};
-
-const grunnToText = (grunn: UnderkjennelseGrunn, intl: IntlShape): string => {
-    switch (grunn) {
-        case UnderkjennelseGrunn.DOKUMENTASJON_MANGLER:
-            return intl.formatMessage({ id: 'behandling.underkjent.dokumentasjonMangler' });
-
-        case UnderkjennelseGrunn.BEREGNINGEN_ER_FEIL:
-            return intl.formatMessage({ id: 'behandling.underkjent.beregningenErFeil' });
-
-        case UnderkjennelseGrunn.INNGANGSVILKÅRENE_ER_FEILVURDERT:
-            return intl.formatMessage({ id: 'behandling.underkjent.InngangsvilkåreneErFeilvurdert' });
-
-        case UnderkjennelseGrunn.VEDTAKSBREVET_ER_FEIL:
-            return intl.formatMessage({ id: 'behandling.underkjent.vedtaksbrevetErFeil' });
-
-        case UnderkjennelseGrunn.ANDRE_FORHOLD:
-            return intl.formatMessage({ id: 'behandling.underkjent.andreForhold' });
-    }
 };
 
 const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: string; intl: IntlShape }) => {

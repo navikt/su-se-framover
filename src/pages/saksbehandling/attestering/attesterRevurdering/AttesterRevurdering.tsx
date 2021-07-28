@@ -182,7 +182,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                     () => <NavFrontendSpinner />,
                     (err) => <RevurderingskallFeilet error={err} />,
                     (grunnlag) => (
-                        <div className={SharedStyles.content}>
+                        <div>
                             <div className={styles.oppsummeringContainer}>
                                 <Revurderingoppsummering
                                     revurdering={revurdering}

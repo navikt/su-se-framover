@@ -55,8 +55,8 @@ export default {
     'revurdering.oppsummering': 'Se oppsummering',
     'revurdering.tittel': 'Revurderinger',
     'revurdering.undertittel': 'Revurdering',
-    'revurdering.opprettet': 'Opprettet',
-    'revurdering.iverksattDato': 'Iverksatt dato',
+    'revurdering.opprettet': 'Opprettet:',
+    'revurdering.iverksattDato': 'Iverksatt dato:',
 
     'revurdering.label.forhåndsvarselSendt': 'Forhåndsvarsel sendt',
 

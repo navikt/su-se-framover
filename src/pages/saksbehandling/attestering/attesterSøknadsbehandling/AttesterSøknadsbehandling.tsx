@@ -129,7 +129,7 @@ const Attesteringsinnhold = ({
     return (
         <div className={SharedStyles.container}>
             <Personlinje søker={props.søker} sak={props.sak} />
-            <div className={SharedStyles.content}>
+            <div>
                 <Innholdstittel className={SharedStyles.tittel}>
                     {intl.formatMessage({ id: 'page.tittel' })}
                 </Innholdstittel>
