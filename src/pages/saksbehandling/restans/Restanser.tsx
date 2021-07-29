@@ -4,7 +4,7 @@ import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Flatknapp } from 'nav-frontend-knapper';
 import { Checkbox } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Element, Normaltekst } from 'nav-frontend-typografi';
+import { Element, Ingress } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -109,6 +109,9 @@ const RestansFiltreringOgTabell = (props: { tabelldata: Restans[] }) => {
 
     return (
         <div>
+            <Ingress className={styles.antallSakerHeaderTekst}>
+                {formatMessage('tabell.antallSaker')} {tabell.length}
+            </Ingress>
             <div className={styles.checkboxWrapper}>
                 <div className={styles.tittelOgCheckboxerContainer}>
                     <Element>{formatMessage('restans.typeBehandling')}</Element>
@@ -237,11 +240,7 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                                 {formatMessage('restans.opprettet')}
                             </button>
                         </th>
-                        <th>
-                            <Normaltekst className={styles.antallSakerHeaderTekst}>
-                                {formatMessage('tabell.antallSaker')} {sortertTabell.length}
-                            </Normaltekst>
-                        </th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
