@@ -1,9 +1,14 @@
 @import '~/styles/variables.less';
 
-.underkjentAttesteringContainer {
-    display: grid;
-    grid-template-columns: 130px 225px 1fr;
-    margin-bottom: @spacing-xs;
+.tabell {
+    th {
+        text-align: start;
+    }
+    th:not(:last-child),
+    td:not(:last-child) {
+        padding-right: @spacing;
+        padding-bottom: @spacing-xxs;
+    }
 }
 
 .ikon {
@@ -11,7 +16,10 @@
     margin-right: @spacing-xs;
 }
 
+.tidspunkt {
+    white-space: nowrap;
+}
+
 .kommentar {
     white-space: pre-wrap;
-    max-width: 750px;
 }

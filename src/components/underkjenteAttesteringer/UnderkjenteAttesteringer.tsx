@@ -20,27 +20,41 @@ const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
                     {formatMessage('underkjent.sendtTilbakeFraAttestering')}
                 </AlertStripe>
             )}
-            <ul>
-                {underkjenteAttesteringer.map((a) => (
-                    <li key={a.opprettet} className={styles.underkjentAttesteringContainer}>
-                        <div>
+            <table className={styles.tabell}>
+                <thead>
+                    <tr>
+                        <th>
                             <Element>{formatMessage('underkjent.tidspunkt')}</Element>
-                            <Normaltekst>{formatDateTime(a.opprettet)}</Normaltekst>
-                        </div>
-                        {/* underkjente attesteringer har alltid grunn og kommentar */}
-                        {/* eslint-disable @typescript-eslint/no-non-null-assertion */}
-                        <div>
+                        </th>
+                        <th>
                             <Element>{formatMessage('underkjent.grunn')}</Element>
-                            <Normaltekst>{underkjentGrunnTilTekst(a.underkjennelse!.grunn, formatMessage)}</Normaltekst>
-                        </div>
-                        <div>
+                        </th>
+                        <th>
                             <Element>{formatMessage('underkjent.kommentar')}</Element>
-                            <Normaltekst className={styles.kommentar}>{a.underkjennelse!.kommentar}</Normaltekst>
-                        </div>
-                        {/* eslint-enable @typescript-eslint/no-non-null-assertion */}
-                    </li>
-                ))}
-            </ul>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {underkjenteAttesteringer.map((a) => (
+                        <tr key={a.opprettet}>
+                            <td>
+                                <Normaltekst className={styles.tidspunkt}>{formatDateTime(a.opprettet)}</Normaltekst>
+                            </td>
+                            {/* underkjente attesteringer har alltid grunn og kommentar */}
+                            {/* eslint-disable @typescript-eslint/no-non-null-assertion */}
+                            <td>
+                                <Normaltekst>
+                                    {underkjentGrunnTilTekst(a.underkjennelse!.grunn, formatMessage)}
+                                </Normaltekst>
+                            </td>
+                            <td>
+                                <Normaltekst className={styles.kommentar}>{a.underkjennelse!.kommentar}</Normaltekst>
+                            </td>
+                            {/* eslint-enable @typescript-eslint/no-non-null-assertion */}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };
