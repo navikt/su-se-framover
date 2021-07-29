@@ -151,14 +151,14 @@ export const revurderFormueSchema = yup.object<FormueFormData>({
                         .required(),
                     søkersFormue: yup
                         .object<VerdierFormData>({
-                            verdiPåBolig: validateStringAsNonNegativeNumber,
-                            verdiPåEiendom: validateStringAsNonNegativeNumber,
-                            verdiPåKjøretøy: validateStringAsNonNegativeNumber,
-                            innskuddsbeløp: validateStringAsNonNegativeNumber,
-                            verdipapir: validateStringAsNonNegativeNumber,
-                            kontanterOver1000: validateStringAsNonNegativeNumber,
-                            stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber,
-                            depositumskonto: validateStringAsNonNegativeNumber,
+                            verdiPåBolig: validateStringAsNonNegativeNumber(),
+                            verdiPåEiendom: validateStringAsNonNegativeNumber(),
+                            verdiPåKjøretøy: validateStringAsNonNegativeNumber(),
+                            innskuddsbeløp: validateStringAsNonNegativeNumber(),
+                            verdipapir: validateStringAsNonNegativeNumber(),
+                            kontanterOver1000: validateStringAsNonNegativeNumber(),
+                            stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber(),
+                            depositumskonto: validateStringAsNonNegativeNumber(),
                         })
                         .required(),
                     epsFormue: yup
@@ -168,14 +168,14 @@ export const revurderFormueSchema = yup.object<FormueFormData>({
                             is: (val) => val !== null,
                             then: yup
                                 .object<VerdierFormData>({
-                                    verdiPåBolig: validateStringAsNonNegativeNumber,
-                                    verdiPåEiendom: validateStringAsNonNegativeNumber,
-                                    verdiPåKjøretøy: validateStringAsNonNegativeNumber,
-                                    innskuddsbeløp: validateStringAsNonNegativeNumber,
-                                    verdipapir: validateStringAsNonNegativeNumber,
-                                    kontanterOver1000: validateStringAsNonNegativeNumber,
-                                    stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber,
-                                    depositumskonto: validateStringAsNonNegativeNumber,
+                                    verdiPåBolig: validateStringAsNonNegativeNumber(),
+                                    verdiPåEiendom: validateStringAsNonNegativeNumber(),
+                                    verdiPåKjøretøy: validateStringAsNonNegativeNumber(),
+                                    innskuddsbeløp: validateStringAsNonNegativeNumber(),
+                                    verdipapir: validateStringAsNonNegativeNumber(),
+                                    kontanterOver1000: validateStringAsNonNegativeNumber(),
+                                    stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber(),
+                                    depositumskonto: validateStringAsNonNegativeNumber(),
                                 })
                                 .required(),
                             otherwise: yup.object().notRequired(),

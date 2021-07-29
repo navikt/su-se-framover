@@ -13,11 +13,15 @@ export const validateStringAsPositiveNumber = yup
     .moreThan(0, 'Feltet må være et positivt tall høyere enn 0')
     .typeError('Feltet må være et tall') as unknown as yup.Schema<string>;
 
-export const validateStringAsNonNegativeNumber = yup
-    .number()
-    .required('Feltet må fylles ut')
-    .min(0, 'Feltet må være større eller lik 0')
-    .typeError('Feltet må være et tall') as unknown as yup.Schema<string>;
+export function validateStringAsNonNegativeNumber(name = 'feltet') {
+    // Vi ønsker at tom streng skal regnes som at feltet ikke er fylt inn,
+    // men yup.number() vil behandle det som et ugyldig tall.
+    return yup.lazy((val) =>
+        val === ''
+            ? yup.string().required().label(name)
+            : yup.number().required().min(0).label(name).typeError(`${name} må være et tall`)
+    ) as yup.Schema<string>;
+}
 
 const norskLocale: yup.LocaleObject = {
     mixed: {
@@ -25,9 +29,6 @@ const norskLocale: yup.LocaleObject = {
         required: (data) => `${label(data)} må fylles ut`,
         oneOf: (data) => `${label(data)} må være én av disse verdiene: ${data.values}`,
         notOneOf: (data) => `${label(data)} kan ikke være en av disse verdiene: ${data.values}`,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        // Denne mangler i typedefinisjonen
         defined: (data) => `${label(data)} må være satt`,
         // notType: _data => {
         //     throw new Error('Ikke bruk denne regelen pls');
@@ -89,11 +90,11 @@ export function formikErrorsTilFeiloppsummering<T extends Record<string, any>>(
                         },
                     ];
                 }
-                return formikErrorsTilFeiloppsummering(withFullPathKey(`${key}[${index}]`, x));
+                return formikErrorsTilFeiloppsummering(withFullPathKeyNames(`${key}[${index}]`, x));
             });
         }
         if (typeof val === 'object') {
-            return formikErrorsTilFeiloppsummering(withFullPathKey(key, val));
+            return formikErrorsTilFeiloppsummering(withFullPathKeyNames(key, val));
         }
         return {
             skjemaelementId: key,
@@ -111,8 +112,12 @@ export function hookFormErrorsTilFeiloppsummering<T>(errors: FieldErrors<T>): Fe
                 if (typeof x === 'undefined' || x === null) {
                     return [];
                 }
-                return hookFormErrorsTilFeiloppsummering(withFullPathKey(`${key}.${index}`, x));
+                return hookFormErrorsTilFeiloppsummering(withFullPathKeyNames(`${key}.${index}`, x));
             });
+        }
+        // Hvis vi ikke har 'type' eller 'message' så er det sannsynligvis et nøstet objekt med errors
+        if (typeof v.type === 'undefined' && typeof v.message === 'undefined') {
+            return hookFormErrorsTilFeiloppsummering(withFullPathKeyNames(key, v));
         }
         return [
             {
@@ -123,7 +128,7 @@ export function hookFormErrorsTilFeiloppsummering<T>(errors: FieldErrors<T>): Fe
     });
 }
 
-const withFullPathKey = (basePath: string, x: Record<string, unknown>) =>
+const withFullPathKeyNames = (basePath: string, x: Record<string, unknown>) =>
     Object.entries(x).reduce(
         (acc, [k, v]) => ({
             ...acc,

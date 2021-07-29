@@ -80,7 +80,7 @@ const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
         }),
         forventetInntekt: yup.mixed<string>().when('oppfylt', {
             is: true,
-            then: validateStringAsNonNegativeNumber,
+            then: validateStringAsNonNegativeNumber(),
             otherwise: yup.string().notRequired(),
         }),
     });
