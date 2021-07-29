@@ -1,8 +1,19 @@
 @import '~/styles/variables.less';
 
+.tabell {
+    th {
+        text-align: start;
+    }
+    th:not(:last-child),
+    td:not(:last-child) {
+        padding-right: @spacing;
+        padding-bottom: @spacing-xxs;
+    }
+}
+
 .underkjentAttesteringContainer {
     display: grid;
-    grid-template-columns: 130px 225px 1fr;
+    grid-template-columns: 1fr 1fr;
     margin-bottom: @spacing-xs;
 }
 
@@ -11,7 +22,10 @@
     margin-right: @spacing-xs;
 }
 
+.tidspunkt {
+    white-space: nowrap;
+}
+
 .kommentar {
     white-space: pre-wrap;
-    max-width: 750px;
 }

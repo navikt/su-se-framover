@@ -3,6 +3,11 @@
 .behandlingUnderkjentContainer {
     display: flex;
     flex-direction: column;
+    max-width: @container-md;
+
+    > :not(:last-child) {
+        margin-bottom: @spacing;
+    }
 }
 
 .tilleggsinfoContainer {
