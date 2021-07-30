@@ -1,21 +1,21 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { useFormik } from 'formik';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Eq } from 'fp-ts/lib/Eq';
 import AlertStripe from 'nav-frontend-alertstriper';
-import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
+import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { SuperRadioGruppe } from '~components/formElements/FormElements';
+import { PersonligOppmøteFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/hooks';
+import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { Behandlingsstatus } from '~types/Behandling';
 import {
     PersonligOppmøteStatus,
@@ -26,7 +26,6 @@ import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~utils/behandling/behandlingUtils';
 import { Vilkårsinformasjon, mapToVilkårsinformasjon } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
-import { PersonligOppmøteFaktablokk } from '../../../../components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import sharedI18n from '../sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../types';
 import { Vurderingknapper } from '../Vurdering';
@@ -63,17 +62,23 @@ const eqPersonligOppmøte: Eq<Nullable<PersonligOppmøteType>> = {
 const schema = yup.object<FormData>({
     møttPersonlig: yup
         .mixed<HarMøttPersonlig>()
-        .oneOf(Object.values(HarMøttPersonlig))
+        .oneOf(Object.values(HarMøttPersonlig), 'Du må velge om bruker har møtt personlig')
         .required()
         .typeError('Du må svare for å gå videre til neste steg.'),
     grunnForManglendePersonligOppmøte: yup
-        .mixed<GrunnForManglendePersonligOppmøte>()
+        .mixed<Nullable<GrunnForManglendePersonligOppmøte>>()
         .nullable()
         .defined()
         .when('møttPersonlig', {
-            is: false,
-            then: yup.string().defined().oneOf(Object.values(GrunnForManglendePersonligOppmøte)),
-            otherwise: yup.string().nullable().defined(),
+            is: HarMøttPersonlig.Nei,
+            then: yup
+                .mixed()
+                .oneOf(
+                    Object.values(GrunnForManglendePersonligOppmøte),
+                    'Du må velge hvorfor bruker ikke har møtt personlig'
+                )
+                .required(),
+            otherwise: yup.mixed().nullable().defined(),
         }),
     begrunnelse: yup.string().nullable().defined(),
 });
@@ -199,12 +204,40 @@ const erFerdigbehandletMedAvslag = (vilkårsinformasjon: Vilkårsinformasjon[]):
 };
 
 const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
-    const dispatch = useAppDispatch();
-    const [hasSubmitted, setHasSubmitted] = useState(false);
-    const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
-    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const [lagreBehandlingsinformasjonStatus, lagreBehandlingsinformasjon] = useAsyncActionCreator(
+        sakSlice.lagreBehandlingsinformasjon
+    );
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const feiloppsummeringRef = useRef<HTMLDivElement>(null);
+    const advarselRef = useRef<HTMLDivElement>(null);
+    const history = useHistory();
 
-    const handleLagreOgFortsettSenere = async (values: FormData) => {
+    const {
+        formState: { isSubmitted, isValid, errors },
+        ...form
+    } = useForm({
+        defaultValues: getInitialFormValues(props.behandling.behandlingsinformasjon.personligOppmøte),
+        resolver: yupResolver(schema),
+    });
+
+    const watch = form.watch();
+
+    const oppdatertVilkårsinformasjon = useMemo(
+        () => tilOppdatertVilkårsinformasjon(watch, props.behandling.behandlingsinformasjon),
+        [watch, props.behandling.behandlingsinformasjon]
+    );
+
+    useEffect(() => {
+        if (watch.møttPersonlig !== HarMøttPersonlig.Nei && watch.grunnForManglendePersonligOppmøte !== null) {
+            form.setValue('grunnForManglendePersonligOppmøte', null);
+        }
+        // Av en eller annen grunn blir ikke validering trigget riktig av seg selv, så vi gjør det manuelt
+        if (isSubmitted) {
+            form.trigger('grunnForManglendePersonligOppmøte');
+        }
+    }, [watch.møttPersonlig]);
+
+    const handleLagreOgFortsettSenere = (values: FormData) => {
         const personligOppmøteStatus = toPersonligOppmøteStatus(values);
         if (!personligOppmøteStatus) {
             return;
@@ -220,8 +253,8 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        const res = await dispatch(
-            lagreBehandlingsinformasjon({
+        lagreBehandlingsinformasjon(
+            {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
@@ -230,17 +263,14 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                         begrunnelse: values.begrunnelse,
                     },
                 },
-            })
+            },
+            () => {
+                history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+            }
         );
-
-        if (!res) return;
-
-        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
-        }
     };
 
-    const handleSave = async (values: FormData, nesteUrl: string) => {
+    const handleSave = (values: FormData) => {
         const personligOppmøteStatus = toPersonligOppmøteStatus(values);
         if (!personligOppmøteStatus) {
             return;
@@ -273,12 +303,12 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             ) &&
             !erVilkårsvurderingerVurdertAvslag(props.behandling)
         ) {
-            history.push(nesteUrl);
+            history.push(props.nesteUrl);
             return;
         }
 
-        const res = await dispatch(
-            lagreBehandlingsinformasjon({
+        lagreBehandlingsinformasjon(
+            {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
@@ -287,143 +317,160 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                         begrunnelse: values.begrunnelse,
                     },
                 },
-            })
-        );
-
-        if (!res) return;
-
-        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
-            if (res.payload.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
-                return history.push(
-                    Routes.saksbehandlingSendTilAttestering.createURL({
-                        sakId: props.sakId,
-                        behandlingId: props.behandling.id,
-                    })
-                );
+            },
+            (res) => {
+                if (res.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
+                    history.push(
+                        Routes.saksbehandlingSendTilAttestering.createURL({
+                            sakId: props.sakId,
+                            behandlingId: props.behandling.id,
+                        })
+                    );
+                } else {
+                    history.push(props.nesteUrl);
+                }
             }
-            history.push(nesteUrl);
-        }
+        );
     };
 
-    const advarselRef = useRef<HTMLDivElement>(null);
-
-    const formik = useFormik<FormData>({
-        initialValues: getInitialFormValues(props.behandling.behandlingsinformasjon.personligOppmøte),
-        async onSubmit(values) {
-            handleSave(values, props.nesteUrl);
-        },
-        validationSchema: schema,
-        validateOnChange: hasSubmitted,
-    });
-
-    const history = useHistory();
-
-    const oppdatertVilkårsinformasjon = tilOppdatertVilkårsinformasjon(
-        formik.values,
-        props.behandling.behandlingsinformasjon
-    );
-
     return (
-        <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
                     <form
-                        onSubmit={(e) => {
-                            setHasSubmitted(true);
-                            formik.handleSubmit(e);
-                        }}
+                        onSubmit={form.handleSubmit(handleSave, () => {
+                            setTimeout(() => {
+                                feiloppsummeringRef.current?.focus();
+                            }, 0);
+                        })}
                     >
                         <div className={styles.formElement}>
-                            <SuperRadioGruppe
-                                id="møttPersonlig"
-                                legend={intl.formatMessage({ id: 'radio.personligOppmøte.legend' })}
-                                values={formik.values}
-                                errors={formik.errors}
-                                onChange={formik.setValues}
-                                property="møttPersonlig"
-                                options={[
-                                    {
-                                        label: intl.formatMessage({ id: 'radio.label.ja' }),
-                                        radioValue: HarMøttPersonlig.Ja,
-                                    },
-                                    {
-                                        label: intl.formatMessage({ id: 'radio.label.nei' }),
-                                        radioValue: HarMøttPersonlig.Nei,
-                                    },
-                                    {
-                                        label: intl.formatMessage({ id: 'radio.label.uavklart' }),
-                                        radioValue: HarMøttPersonlig.Uavklart,
-                                    },
-                                ]}
+                            <Controller
+                                control={form.control}
+                                name="møttPersonlig"
+                                render={({ field, fieldState }) => (
+                                    <RadioGruppe
+                                        legend={formatMessage('radio.personligOppmøte.legend')}
+                                        feil={fieldState.error?.message}
+                                        onBlur={field.onBlur}
+                                    >
+                                        <Radio
+                                            id={field.name}
+                                            label={formatMessage('radio.label.ja')}
+                                            name={field.name}
+                                            checked={field.value === HarMøttPersonlig.Ja}
+                                            onChange={() => {
+                                                field.onChange(HarMøttPersonlig.Ja);
+                                            }}
+                                            radioRef={field.ref}
+                                        />
+                                        <Radio
+                                            label={formatMessage('radio.label.nei')}
+                                            name={field.name}
+                                            checked={field.value === HarMøttPersonlig.Nei}
+                                            onChange={() => {
+                                                field.onChange(HarMøttPersonlig.Nei);
+                                            }}
+                                        />
+                                        <Radio
+                                            label={formatMessage('radio.label.uavklart')}
+                                            name={field.name}
+                                            checked={field.value === HarMøttPersonlig.Uavklart}
+                                            onChange={() => {
+                                                field.onChange(HarMøttPersonlig.Uavklart);
+                                            }}
+                                        />
+                                    </RadioGruppe>
+                                )}
                             />
                         </div>
-                        {formik.values.møttPersonlig === HarMøttPersonlig.Nei && (
+                        {watch.møttPersonlig === HarMøttPersonlig.Nei && (
                             <div className={styles.formElement}>
-                                <SuperRadioGruppe
-                                    id="grunnForManglendePersonligOppmøte"
-                                    legend={intl.formatMessage({ id: 'radio.personligOppmøte.grunn.legend' })}
-                                    values={formik.values}
-                                    errors={formik.errors}
-                                    onChange={formik.setValues}
-                                    property="grunnForManglendePersonligOppmøte"
-                                    options={[
-                                        {
-                                            label: intl.formatMessage({
-                                                id: 'radio.personligOppmøte.grunn.sykMedLegeerklæringOgFullmakt',
-                                            }),
-                                            radioValue: GrunnForManglendePersonligOppmøte.SykMedLegeerklæringOgFullmakt,
-                                        },
-                                        {
-                                            label: intl.formatMessage({
-                                                id: 'radio.personligOppmøte.grunn.oppnevntVergeSøktPerPost',
-                                            }),
-                                            radioValue: GrunnForManglendePersonligOppmøte.OppnevntVergeSøktPerPost,
-                                        },
-                                        {
-                                            label: intl.formatMessage({
-                                                id: 'radio.personligOppmøte.grunn.kortvarigSykMedLegeerklæring',
-                                            }),
-                                            radioValue: GrunnForManglendePersonligOppmøte.KortvarigSykMedLegeerklæring,
-                                        },
-                                        {
-                                            label: intl.formatMessage({
-                                                id: 'radio.personligOppmøte.grunn.midlertidigUnntakFraOppmøteplikt',
-                                            }),
-                                            radioValue:
-                                                GrunnForManglendePersonligOppmøte.MidlertidigUnntakFraOppmøteplikt,
-                                        },
-                                        {
-                                            label: intl.formatMessage({
-                                                id: 'radio.personligOppmøte.grunn.brukerIkkeMøttOppfyllerIkkeVilkår',
-                                            }),
-                                            radioValue:
-                                                GrunnForManglendePersonligOppmøte.BrukerIkkeMøttOppfyllerIkkeVilkår,
-                                        },
-                                    ]}
+                                <Controller
+                                    control={form.control}
+                                    name="grunnForManglendePersonligOppmøte"
+                                    render={({ field, fieldState }) => (
+                                        <RadioGruppe
+                                            legend={formatMessage('radio.personligOppmøte.grunn.legend')}
+                                            feil={fieldState.error?.message}
+                                            onBlur={field.onBlur}
+                                        >
+                                            {[
+                                                {
+                                                    label: formatMessage(
+                                                        'radio.personligOppmøte.grunn.sykMedLegeerklæringOgFullmakt'
+                                                    ),
+                                                    radioValue:
+                                                        GrunnForManglendePersonligOppmøte.SykMedLegeerklæringOgFullmakt,
+                                                },
+                                                {
+                                                    label: formatMessage(
+                                                        'radio.personligOppmøte.grunn.oppnevntVergeSøktPerPost'
+                                                    ),
+                                                    radioValue:
+                                                        GrunnForManglendePersonligOppmøte.OppnevntVergeSøktPerPost,
+                                                },
+                                                {
+                                                    label: formatMessage(
+                                                        'radio.personligOppmøte.grunn.kortvarigSykMedLegeerklæring'
+                                                    ),
+                                                    radioValue:
+                                                        GrunnForManglendePersonligOppmøte.KortvarigSykMedLegeerklæring,
+                                                },
+                                                {
+                                                    label: formatMessage(
+                                                        'radio.personligOppmøte.grunn.midlertidigUnntakFraOppmøteplikt'
+                                                    ),
+                                                    radioValue:
+                                                        GrunnForManglendePersonligOppmøte.MidlertidigUnntakFraOppmøteplikt,
+                                                },
+                                                {
+                                                    label: formatMessage(
+                                                        'radio.personligOppmøte.grunn.brukerIkkeMøttOppfyllerIkkeVilkår'
+                                                    ),
+                                                    radioValue:
+                                                        GrunnForManglendePersonligOppmøte.BrukerIkkeMøttOppfyllerIkkeVilkår,
+                                                },
+                                            ].map(({ label, radioValue }, idx) => (
+                                                <Radio
+                                                    id={idx === 0 ? field.name : undefined}
+                                                    radioRef={idx === 0 ? field.ref : undefined}
+                                                    key={radioValue}
+                                                    label={label}
+                                                    name={field.name}
+                                                    checked={field.value === radioValue}
+                                                    onChange={() => {
+                                                        field.onChange(radioValue);
+                                                    }}
+                                                />
+                                            ))}
+                                        </RadioGruppe>
+                                    )}
                                 />
                             </div>
                         )}
                         <div className={styles.formElement}>
-                            <Textarea
-                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                            <Controller
+                                control={form.control}
                                 name="begrunnelse"
-                                feil={formik.errors.begrunnelse}
-                                value={formik.values.begrunnelse ?? ''}
-                                onChange={formik.handleChange}
+                                render={({ field, fieldState }) => (
+                                    <Textarea
+                                        label={formatMessage('input.label.begrunnelse')}
+                                        {...field}
+                                        feil={fieldState.error?.message}
+                                        value={field.value ?? ''}
+                                    />
+                                )}
                             />
                         </div>
                         {pipe(
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(
                                 () => null,
-                                () => (
-                                    <NavFrontendSpinner>
-                                        {intl.formatMessage({ id: 'display.lagre.lagrer' })}
-                                    </NavFrontendSpinner>
-                                ),
+                                () => <NavFrontendSpinner>{formatMessage('display.lagre.lagrer')}</NavFrontendSpinner>,
                                 () => (
                                     <AlertStripe type="feil">
-                                        {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                        {formatMessage('display.lagre.lagringFeilet')}
                                     </AlertStripe>
                                 ),
                                 () => null
@@ -440,31 +487,32 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                             {oppdatertVilkårsinformasjon !== 'personligOppmøteIkkeVurdert' &&
                                 erVurdertUtenAvslagMenIkkeFerdigbehandlet(oppdatertVilkårsinformasjon) && (
                                     <AlertStripe type="advarsel">
-                                        {intl.formatMessage({ id: 'alert.ikkeFerdigbehandlet' })}
+                                        {formatMessage('alert.ikkeFerdigbehandlet')}
                                     </AlertStripe>
                                 )}
                         </div>
 
                         <Feiloppsummering
-                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
-                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                            hidden={!formikErrorsHarFeil(formik.errors)}
+                            tittel={formatMessage('feiloppsummering.title')}
+                            hidden={!isSubmitted || isValid}
+                            feil={hookFormErrorsTilFeiloppsummering(errors)}
+                            innerRef={feiloppsummeringRef}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                formik.validateForm().then((res) => {
-                                    if (Object.keys(res).length === 0) {
-                                        handleLagreOgFortsettSenere(formik.values);
-                                    }
+                                form.handleSubmit(handleLagreOgFortsettSenere, () => {
+                                    setTimeout(() => {
+                                        feiloppsummeringRef.current?.focus();
+                                    }, 0);
                                 });
                             }}
                             nesteKnappTekst={
                                 oppdatertVilkårsinformasjon !== 'personligOppmøteIkkeVurdert' &&
                                 erFerdigbehandletMedAvslag(oppdatertVilkårsinformasjon)
-                                    ? intl.formatMessage({ id: 'button.tilVedtak.label' })
+                                    ? formatMessage('button.tilVedtak.label')
                                     : undefined
                             }
                         />
