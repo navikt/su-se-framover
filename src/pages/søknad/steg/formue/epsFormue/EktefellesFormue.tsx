@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/hooks';
 import { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
@@ -52,11 +53,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
             onSubmit={(e) => {
                 setHasSubmitted(true);
                 formik.handleSubmit(e);
-                setTimeout(() => {
-                    if (feiloppsummeringref.current) {
-                        feiloppsummeringref.current.focus();
-                    }
-                }, 0);
+                focusAfterTimeout(feiloppsummeringref)();
             }}
             className={sharedStyles.container}
         >

@@ -21,6 +21,7 @@ import ToKolonner from '~components/toKolonner/ToKolonner';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import personSlice from '~features/person/person.slice';
 import sakSliceActions, * as sakSlice from '~features/saksoversikt/sak.slice';
+import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
 import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -268,11 +269,7 @@ const Formue = (props: {
             {{
                 left: (
                     <form
-                        onSubmit={form.handleSubmit(handleSave(props.nesteUrl), () => {
-                            setTimeout(() => {
-                                feiloppsummeringRef.current?.focus();
-                            }, 0);
-                        })}
+                        onSubmit={form.handleSubmit(handleSave(props.nesteUrl), focusAfterTimeout(feiloppsummeringRef))}
                     >
                         <div className={styles.ektefellePartnerSamboer}>
                             <Element>{formatMessage('input.label.borSøkerMedEktefelle')}</Element>
@@ -584,11 +581,7 @@ const Formue = (props: {
                             onLagreOgFortsettSenereClick={() => {
                                 form.handleSubmit(
                                     handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
-                                    () => {
-                                        setTimeout(() => {
-                                            feiloppsummeringRef.current?.focus();
-                                        }, 0);
-                                    }
+                                    focusAfterTimeout(feiloppsummeringRef)
                                 );
                             }}
                         />

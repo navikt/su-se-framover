@@ -11,7 +11,7 @@ import DatePicker from 'react-datepicker';
 import { ApiError } from '~api/apiClient';
 import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
-import { customFormikSubmit } from '~lib/formikUtils';
+import { customFormikSubmit } from '~lib/formUtils';
 import { useI18n } from '~lib/hooks';
 import { keyOf, Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';

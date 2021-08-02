@@ -18,6 +18,7 @@ import { JaNeiSpørsmål } from '~components/formElements/FormElements';
 import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
+import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -321,15 +322,7 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
     }, [grunnlagValues.fields]);
 
     return (
-        <form
-            onSubmit={form.handleSubmit(handleSubmit, () => {
-                setTimeout(() => {
-                    if (feiloppsummeringRef.current) {
-                        return feiloppsummeringRef.current.focus();
-                    }
-                }, 0);
-            })}
-        >
+        <form onSubmit={form.handleSubmit(handleSubmit, focusAfterTimeout(feiloppsummeringRef))}>
             <ul className={styles.periodeliste}>
                 {grunnlagValues.fields.map((item, idx) => (
                     <Uføreperiodevurdering

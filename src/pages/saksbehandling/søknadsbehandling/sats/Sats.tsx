@@ -16,6 +16,7 @@ import { SatsFaktablokk } from '~components/oppsummering/vilkårsOppsummering/fa
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreBosituasjonGrunnlag } from '~features/saksoversikt/sak.slice';
+import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
 import { MessageFormatter, useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -271,11 +272,7 @@ const SatsForm = (props: SatsProps) => {
             {{
                 left: (
                     <form
-                        onSubmit={form.handleSubmit(handleSave(props.nesteUrl), () => {
-                            setTimeout(() => {
-                                feiloppsummeringRef.current?.focus();
-                            }, 0);
-                        })}
+                        onSubmit={form.handleSubmit(handleSave(props.nesteUrl), focusAfterTimeout(feiloppsummeringRef))}
                     >
                         <div>
                             {eps && (
@@ -403,11 +400,7 @@ const SatsForm = (props: SatsProps) => {
                             onLagreOgFortsettSenereClick={() => {
                                 form.handleSubmit(
                                     handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
-                                    () => {
-                                        setTimeout(() => {
-                                            feiloppsummeringRef.current?.focus();
-                                        }, 0);
-                                    }
+                                    focusAfterTimeout(feiloppsummeringRef)
                                 );
                             }}
                         />

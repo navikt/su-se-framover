@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom';
 import { FlyktningFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FlyktningFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -152,13 +153,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <form
-                        onSubmit={form.handleSubmit(handleSave, () => {
-                            setTimeout(() => {
-                                feiloppsummeringRef.current?.focus();
-                            }, 0);
-                        })}
-                    >
+                    <form onSubmit={form.handleSubmit(handleSave, focusAfterTimeout(feiloppsummeringRef))}>
                         <Controller
                             control={form.control}
                             name="status"
@@ -237,13 +232,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() =>
-                                form.handleSubmit(handleLagreOgFortsettSenere, () => {
-                                    setTimeout(() => {
-                                        if (feiloppsummeringRef.current) {
-                                            return feiloppsummeringRef.current.focus();
-                                        }
-                                    }, 0);
-                                })
+                                form.handleSubmit(handleLagreOgFortsettSenere, focusAfterTimeout(feiloppsummeringRef))
                             }
                             nesteKnappTekst={vilGiTidligAvslag ? formatMessage('knapp.tilVedtaket') : undefined}
                         />

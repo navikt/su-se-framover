@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom';
 import { LovligOppholdFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/LovligOppholdFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -94,11 +95,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             {{
                 left: (
                     <form
-                        onSubmit={form.handleSubmit(handleSave(props.nesteUrl), () => {
-                            setTimeout(() => {
-                                feiloppsummeringRef.current?.focus();
-                            }, 0);
-                        })}
+                        onSubmit={form.handleSubmit(handleSave(props.nesteUrl), focusAfterTimeout(feiloppsummeringRef))}
                     >
                         <Controller
                             control={form.control}
@@ -173,11 +170,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             onLagreOgFortsettSenereClick={() =>
                                 form.handleSubmit(
                                     handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
-                                    () => {
-                                        setTimeout(() => {
-                                            feiloppsummeringRef.current?.focus();
-                                        }, 0);
-                                    }
+                                    focusAfterTimeout(feiloppsummeringRef)
                                 )
                             }
                         />

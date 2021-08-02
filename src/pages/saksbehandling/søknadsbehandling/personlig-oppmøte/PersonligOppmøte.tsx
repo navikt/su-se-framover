@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom';
 import { PersonligOppmøteFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
@@ -337,13 +338,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
-                    <form
-                        onSubmit={form.handleSubmit(handleSave, () => {
-                            setTimeout(() => {
-                                feiloppsummeringRef.current?.focus();
-                            }, 0);
-                        })}
-                    >
+                    <form onSubmit={form.handleSubmit(handleSave, focusAfterTimeout(feiloppsummeringRef))}>
                         <div className={styles.formElement}>
                             <Controller
                                 control={form.control}
@@ -503,11 +498,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                form.handleSubmit(handleLagreOgFortsettSenere, () => {
-                                    setTimeout(() => {
-                                        feiloppsummeringRef.current?.focus();
-                                    }, 0);
-                                });
+                                form.handleSubmit(handleLagreOgFortsettSenere, focusAfterTimeout(feiloppsummeringRef));
                             }}
                             nesteKnappTekst={
                                 oppdatertVilkårsinformasjon !== 'personligOppmøteIkkeVurdert' &&

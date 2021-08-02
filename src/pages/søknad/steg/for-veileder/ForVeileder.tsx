@@ -11,6 +11,7 @@ import søknadSlice, { ForVeilederDigitalSøknad } from '~/features/søknad/søk
 import { Person } from '~api/personApi';
 import TextProvider, { Languages } from '~components/TextProvider';
 import { Vergemål } from '~features/søknad/types';
+import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/hooks';
 import { Nullable } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
@@ -81,11 +82,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                     onSubmit={(e) => {
                         setHasSubmitted(true);
                         formik.handleSubmit(e);
-                        setTimeout(() => {
-                            if (feiloppsummeringref.current) {
-                                feiloppsummeringref.current.focus();
-                            }
-                        }, 0);
+                        focusAfterTimeout(feiloppsummeringref)();
                     }}
                 >
                     <Panel border className={styles.panelMargin}>

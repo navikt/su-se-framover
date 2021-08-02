@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/hooks';
 import { keyOf } from '~lib/types';
 import { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
@@ -77,11 +78,7 @@ const DinInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: st
             onSubmit={(e) => {
                 setHasSubmitted(true);
                 formik.handleSubmit(e);
-                setTimeout(() => {
-                    if (feiloppsummeringref.current) {
-                        feiloppsummeringref.current.focus();
-                    }
-                }, 0);
+                focusAfterTimeout(feiloppsummeringref)();
             }}
             className={sharedStyles.container}
         >
