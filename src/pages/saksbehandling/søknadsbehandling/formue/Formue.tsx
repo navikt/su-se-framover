@@ -281,7 +281,7 @@ const Formue = (props: {
                                         <Radio
                                             id={field.name}
                                             radioRef={field.ref}
-                                            label="Ja"
+                                            label={formatMessage('radio.label.ja')}
                                             name={field.name}
                                             checked={field.value}
                                             onChange={() => {
@@ -289,7 +289,7 @@ const Formue = (props: {
                                             }}
                                         />
                                         <Radio
-                                            label="Nei"
+                                            label={formatMessage('radio.label.nei')}
                                             name={field.name}
                                             checked={field.value === false}
                                             onChange={() => {
