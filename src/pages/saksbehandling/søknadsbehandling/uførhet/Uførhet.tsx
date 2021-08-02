@@ -63,7 +63,7 @@ const schema = yup.object<FormData>({
                 .min(1)
                 .max(100)
                 .required('Du må oppgi uføregrad')
-                .typeError('Uføregrad må være et tall'),
+                .typeError('Uføregrad må være mellom 1 og 100'),
             otherwise: yup.number().nullable().defined(),
         }) as unknown as yup.Schema<string>,
     forventetInntekt: yup
