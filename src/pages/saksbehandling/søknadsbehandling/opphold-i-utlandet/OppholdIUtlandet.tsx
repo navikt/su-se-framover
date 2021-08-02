@@ -116,7 +116,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                                         id={field.name}
                                         radioRef={field.ref}
                                         label={formatMessage('radio.label.ja')}
-                                        name="status"
+                                        name={field.name}
                                         onChange={() =>
                                             field.onChange(OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet)
                                         }
@@ -124,13 +124,13 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                                     />
                                     <Radio
                                         label={formatMessage('radio.label.nei')}
-                                        name="status"
+                                        name={field.name}
                                         onChange={() => field.onChange(OppholdIUtlandetStatus.SkalHoldeSegINorge)}
                                         checked={field.value === OppholdIUtlandetStatus.SkalHoldeSegINorge}
                                     />
                                     <Radio
                                         label={formatMessage('radio.label.uavklart')}
-                                        name="status"
+                                        name={field.name}
                                         onChange={() => field.onChange(OppholdIUtlandetStatus.Uavklart)}
                                         checked={field.value === OppholdIUtlandetStatus.Uavklart}
                                     />

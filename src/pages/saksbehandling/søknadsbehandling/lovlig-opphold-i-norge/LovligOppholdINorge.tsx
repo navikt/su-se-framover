@@ -109,20 +109,20 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                     <Radio
                                         id={field.name}
                                         label={formatMessage('radio.label.ja')}
-                                        name="lovligOppholdINorge"
+                                        name={field.name}
                                         onChange={() => field.onChange(LovligOppholdStatus.VilkårOppfylt)}
                                         checked={field.value === LovligOppholdStatus.VilkårOppfylt}
                                         radioRef={field.ref}
                                     />
                                     <Radio
                                         label={formatMessage('radio.label.nei')}
-                                        name="lovligOppholdINorge"
+                                        name={field.name}
                                         onChange={() => field.onChange(LovligOppholdStatus.VilkårIkkeOppfylt)}
                                         checked={field.value === LovligOppholdStatus.VilkårIkkeOppfylt}
                                     />
                                     <Radio
                                         label={formatMessage('radio.label.uavklart')}
-                                        name="lovligOppholdINorge"
+                                        name={field.name}
                                         onChange={() => field.onChange(LovligOppholdStatus.Uavklart)}
                                         checked={field.value === LovligOppholdStatus.Uavklart}
                                     />

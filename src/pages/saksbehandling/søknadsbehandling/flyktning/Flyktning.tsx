@@ -166,20 +166,20 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                     <Radio
                                         id={field.name}
                                         label={formatMessage('radio.label.ja')}
-                                        name="registertFlyktning"
+                                        name={field.name}
                                         onChange={() => field.onChange(FlyktningStatus.VilkårOppfylt)}
                                         defaultChecked={field.value === FlyktningStatus.VilkårOppfylt}
                                         radioRef={field.ref}
                                     />
                                     <Radio
                                         label={formatMessage('radio.label.nei')}
-                                        name="registertFlyktning"
+                                        name={field.name}
                                         onChange={() => field.onChange(FlyktningStatus.VilkårIkkeOppfylt)}
                                         defaultChecked={field.value === FlyktningStatus.VilkårIkkeOppfylt}
                                     />
                                     <Radio
                                         label={formatMessage('radio.label.uavklart')}
-                                        name="registertFlyktning"
+                                        name={field.name}
                                         onChange={() => field.onChange(FlyktningStatus.Uavklart)}
                                         defaultChecked={field.value === FlyktningStatus.Uavklart}
                                     />

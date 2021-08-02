@@ -171,20 +171,20 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                         <Radio
                                             id={field.name}
                                             label={formatMessage('radio.label.ja')}
-                                            name="status"
+                                            name={field.name}
                                             onChange={() => field.onChange(UføreResultat.VilkårOppfylt)}
                                             defaultChecked={field.value === UføreResultat.VilkårOppfylt}
                                             radioRef={field.ref}
                                         />
                                         <Radio
                                             label={formatMessage('radio.label.nei')}
-                                            name="status"
+                                            name={field.name}
                                             onChange={() => field.onChange(UføreResultat.VilkårIkkeOppfylt)}
                                             defaultChecked={field.value === UføreResultat.VilkårIkkeOppfylt}
                                         />
                                         <Radio
                                             label={formatMessage('radio.label.uføresakTilBehandling')}
-                                            name="status"
+                                            name={field.name}
                                             onChange={() => field.onChange(UføreResultat.HarUføresakTilBehandling)}
                                             defaultChecked={field.value === UføreResultat.HarUføresakTilBehandling}
                                         />

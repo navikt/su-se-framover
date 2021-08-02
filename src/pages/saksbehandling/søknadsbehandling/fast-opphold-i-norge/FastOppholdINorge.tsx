@@ -109,19 +109,19 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                     <Radio
                                         id={field.name}
                                         label={formatMessage('radio.label.ja')}
-                                        name="fastOppholdINorge"
+                                        name={field.name}
                                         checked={field.value === FastOppholdINorgeStatus.VilkårOppfylt}
                                         onChange={() => field.onChange(FastOppholdINorgeStatus.VilkårOppfylt)}
                                     />
                                     <Radio
                                         label={formatMessage('radio.label.nei')}
-                                        name="fastOppholdINorge"
+                                        name={field.name}
                                         checked={field.value === FastOppholdINorgeStatus.VilkårIkkeOppfylt}
                                         onChange={() => field.onChange(FastOppholdINorgeStatus.VilkårIkkeOppfylt)}
                                     />
                                     <Radio
                                         label={formatMessage('radio.label.uavklart')}
-                                        name="fastOppholdINorge"
+                                        name={field.name}
                                         checked={field.value === FastOppholdINorgeStatus.Uavklart}
                                         onChange={() => field.onChange(FastOppholdINorgeStatus.Uavklart)}
                                     />

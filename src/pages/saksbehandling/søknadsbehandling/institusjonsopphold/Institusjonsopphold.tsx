@@ -118,20 +118,20 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
                                     <Radio
                                         id={field.name}
                                         label={formatMessage('radio.label.ja')}
-                                        name="institusjonsopphold"
+                                        name={field.name}
                                         checked={field.value === InstitusjonsoppholdStatus.VilkårIkkeOppfylt}
                                         onChange={() => field.onChange(InstitusjonsoppholdStatus.VilkårIkkeOppfylt)}
                                         radioRef={field.ref}
                                     />
                                     <Radio
                                         label={formatMessage('radio.label.nei')}
-                                        name="institusjonsopphold"
+                                        name={field.name}
                                         checked={field.value === InstitusjonsoppholdStatus.VilkårOppfylt}
                                         onChange={() => field.onChange(InstitusjonsoppholdStatus.VilkårOppfylt)}
                                     />
                                     <Radio
                                         label={formatMessage('radio.label.uavklart')}
-                                        name="institusjonsopphold"
+                                        name={field.name}
                                         checked={field.value === InstitusjonsoppholdStatus.Uavklart}
                                         onChange={() => field.onChange(InstitusjonsoppholdStatus.Uavklart)}
                                     />
