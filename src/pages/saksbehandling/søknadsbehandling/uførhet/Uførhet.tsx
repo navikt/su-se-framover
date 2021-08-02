@@ -49,7 +49,7 @@ const schema = yup.object<FormData>({
         .defined()
         .oneOf(
             [UføreResultat.VilkårOppfylt, UføreResultat.VilkårIkkeOppfylt, UføreResultat.HarUføresakTilBehandling],
-            'Du må velge om vilkåret er oppfylt'
+            'Du må velge om bruker har uføresak til behandling'
         ),
     uføregrad: yup
         .number()
