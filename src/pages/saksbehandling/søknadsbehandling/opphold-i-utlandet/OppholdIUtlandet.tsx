@@ -43,7 +43,7 @@ const schema = yup.object<FormData>({
         .defined()
         .oneOf(
             Object.values(OppholdIUtlandetStatus),
-            'Du må velge om søker har planlagt å holde seg for lenge i utlandet'
+            'Du må velge om søker har planlagt å oppholde seg for lenge i utlandet'
         ),
     begrunnelse: yup.string().defined(),
 });
