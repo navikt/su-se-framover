@@ -56,7 +56,7 @@ import {
 } from './utils';
 
 const VerdierSchema: yup.ObjectSchema<VerdierFormData | undefined> = yup.object<VerdierFormData>({
-    verdiPåBolig: validateStringAsNonNegativeNumber('Verdi boliger'),
+    verdiPåBolig: validateStringAsNonNegativeNumber('Verdi på boliger'),
     verdiPåEiendom: validateStringAsNonNegativeNumber('Verdi på eiendommene'),
     verdiPåKjøretøy: validateStringAsNonNegativeNumber('Verdi bil'),
     innskuddsbeløp: validateStringAsNonNegativeNumber('Innskudd på konto'),
