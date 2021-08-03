@@ -25,7 +25,7 @@ spec:
         - "{{ingress}}/oauth2/callback"
   webproxy: true
   replicas:
-    min: 1
+    min: 2
   liveness:
     path: isAlive
     port: 8080
