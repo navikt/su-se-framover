@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IntlProvider, MessageFormatElement } from 'react-intl';
 
 export enum Languages {
-    nb = 'nb-NO',
+    nb = 'nb',
 }
 
 const TextProvider = <T extends Record<string, string> | Record<string, MessageFormatElement[]>>(props: {
@@ -10,7 +10,7 @@ const TextProvider = <T extends Record<string, string> | Record<string, MessageF
     children: React.ReactNode | React.ReactNode[];
 }) => {
     return (
-        <IntlProvider locale="nb-NO" messages={props.messages[Languages.nb]}>
+        <IntlProvider locale={Languages.nb} messages={props.messages[Languages.nb]}>
             {props.children}
         </IntlProvider>
     );

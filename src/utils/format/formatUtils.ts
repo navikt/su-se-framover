@@ -1,11 +1,12 @@
 import { createIntl, createIntlCache } from 'react-intl';
 
 import { Adresse } from '~api/personApi';
+import { Languages } from '~components/TextProvider';
 import { AdresseFraSøknad } from '~features/søknad/søknad.slice';
 import { Nullable } from '~lib/types';
 
 const cache = createIntlCache();
-const intl = createIntl({ locale: 'nb-NO' }, cache);
+const intl = createIntl({ locale: Languages.nb }, cache);
 
 export function formatCurrency(
     amount: number,
