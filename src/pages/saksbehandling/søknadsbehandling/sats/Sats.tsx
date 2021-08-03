@@ -1,27 +1,27 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { useFormik } from 'formik';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Eq } from 'fp-ts/lib/Eq';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element, Feilmelding } from 'nav-frontend-typografi';
-import React, { useEffect, useState } from 'react';
-import { IntlShape } from 'react-intl';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { Sats as FaktiskSats } from '~/types/Sats';
 import { Person, fetchPerson } from '~api/personApi';
-import { SuperRadioGruppe } from '~components/formElements/FormElements';
 import { SatsFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreBosituasjonGrunnlag } from '~features/saksoversikt/sak.slice';
+import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
-import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
+import { MessageFormatter, useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import { eqNullable, Nullable } from '~lib/types';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { SøknadInnhold } from '~types/Søknad';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -55,7 +55,7 @@ interface SatsProps {
     forrigeUrl: string;
     nesteUrl: string;
     sakId: string;
-    intl: IntlShape;
+    formatMessage: MessageFormatter<typeof sharedI18n & typeof messages>;
 }
 
 const eqBosituasjon: Eq<
@@ -64,12 +64,12 @@ const eqBosituasjon: Eq<
         ektemakeEllerSamboerUførFlyktning: Nullable<boolean>;
         begrunnelse: Nullable<string>;
     }>
-> = {
+> = eqNullable({
     equals: (sats1, sats2) =>
-        sats1?.delerBolig === sats2?.delerBolig &&
-        sats1?.ektemakeEllerSamboerUførFlyktning === sats2?.ektemakeEllerSamboerUførFlyktning &&
-        sats1?.begrunnelse === sats2?.begrunnelse,
-};
+        sats1.delerBolig === sats2.delerBolig &&
+        sats1.ektemakeEllerSamboerUførFlyktning === sats2.ektemakeEllerSamboerUførFlyktning &&
+        sats1.begrunnelse === sats2.begrunnelse,
+});
 
 const tilBosituasjonsgrunnlag = (values: FormData, eps: Nullable<Person>) => {
     return {
@@ -131,7 +131,7 @@ const getValidationSchema = (eps: Nullable<Person>) => {
         delerSøkerBolig: yup
             .boolean()
             .defined()
-            .test('deler søker bolig', 'Feltet må fylles ut', function (delerSøkerBolig) {
+            .test('deler søker bolig', 'Du må velge om søker deler bolig', function (delerSøkerBolig) {
                 if (!eps) {
                     return delerSøkerBolig !== null;
                 }
@@ -140,7 +140,7 @@ const getValidationSchema = (eps: Nullable<Person>) => {
         mottarEktemakeEllerSamboerSU: yup
             .boolean()
             .defined()
-            .test('eps mottar SU', 'Feltet må fylles ut', function (mottarSu) {
+            .test('eps mottar SU', 'Du må velge om ektefelle/samboer mottar supplerende stønad', function (mottarSu) {
                 if (eps && eps.alder && eps.alder < 67) {
                     return mottarSu !== null;
                 }
@@ -153,7 +153,7 @@ const getValidationSchema = (eps: Nullable<Person>) => {
 
 const Sats = (props: VilkårsvurderingBaseProps) => {
     const [epsStatus, fetchEps] = useApiCall(fetchPerson);
-    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const history = useHistory();
     const epsFnr = hentBosituasjongrunnlag(props.behandling.grunnlagsdataOgVilkårsvurderinger).fnr;
 
@@ -173,7 +173,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                 forrigeUrl={props.forrigeUrl}
                 nesteUrl={props.nesteUrl}
                 sakId={props.sakId}
-                intl={intl}
+                formatMessage={formatMessage}
             />
         );
     }
@@ -184,13 +184,13 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
             () => <NavFrontendSpinner />,
             () => (
                 <div className={styles.epsFeilContainer}>
-                    <Feilmelding>{intl.formatMessage({ id: 'feilmelding.pdlFeil' })}</Feilmelding>
+                    <Feilmelding>{formatMessage('feilmelding.pdlFeil')}</Feilmelding>
                     <Hovedknapp
                         onClick={() => {
                             history.push(props.forrigeUrl);
                         }}
                     >
-                        {intl.formatMessage({ id: 'knapp.tilbake' })}
+                        {formatMessage('knapp.tilbake')}
                     </Hovedknapp>
                 </div>
             ),
@@ -203,7 +203,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
                     forrigeUrl={props.forrigeUrl}
                     nesteUrl={props.nesteUrl}
                     sakId={props.sakId}
-                    intl={intl}
+                    formatMessage={formatMessage}
                 />
             )
         )
@@ -224,20 +224,24 @@ function getInitialValues(eps: Nullable<Person>, bosituasjon: Nullable<Bosituasj
 
 const SatsForm = (props: SatsProps) => {
     const history = useHistory();
-    const [hasSubmitted, setHasSubmitted] = useState(false);
-    const eps = props.eps;
+    const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const [lagreBosituasjonStatus, lagreBosituasjon] = useAsyncActionCreator(lagreBosituasjonGrunnlag);
 
-    const formik = useFormik<FormData>({
-        initialValues: getInitialValues(eps, props.bosituasjon),
-        validationSchema: getValidationSchema(eps),
-        validateOnChange: hasSubmitted,
-        async onSubmit(values) {
-            handleSave(values, props.nesteUrl);
-        },
+    const eps = props.eps;
+
+    const {
+        formState: { isSubmitted, isValid, errors },
+        ...form
+    } = useForm({
+        defaultValues: getInitialValues(eps, props.bosituasjon),
+        resolver: yupResolver(getValidationSchema(eps)),
     });
 
-    const handleSave = async (values: FormData, nesteUrl: string) => {
+    const watch = form.watch();
+
+    const sats = useMemo(() => utledSats(watch, Boolean(eps), eps?.alder), [eps, watch]);
+
+    const handleSave = (nesteUrl: string) => (values: FormData) => {
         const bosituasjonsvalg = tilBosituasjonsValg(values, eps);
         if (!bosituasjonsvalg) {
             return;
@@ -264,110 +268,106 @@ const SatsForm = (props: SatsProps) => {
     };
 
     return (
-        <ToKolonner tittel={props.intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={props.formatMessage('page.tittel')}>
             {{
                 left: (
                     <form
-                        onSubmit={(e) => {
-                            setHasSubmitted(true);
-                            formik.handleSubmit(e);
-                        }}
+                        onSubmit={form.handleSubmit(handleSave(props.nesteUrl), focusAfterTimeout(feiloppsummeringRef))}
                     >
                         <div>
                             {eps && (
                                 <div className={styles.personkortContainer}>
                                     <Element className={styles.personkortTittel}>
-                                        {props.intl.formatMessage({ id: 'display.eps.label' })}
+                                        {props.formatMessage('display.eps.label')}
                                     </Element>
                                     <Personkort person={eps} />
                                 </div>
                             )}
                         </div>
                         {!eps && (
-                            <RadioGruppe
-                                legend={props.intl.formatMessage({ id: 'radio.delerSøkerBoligOver18.legend' })}
-                                feil={formik.errors.delerSøkerBolig}
-                            >
-                                <Radio
-                                    label={props.intl.formatMessage({ id: 'radio.label.ja' })}
-                                    name="delerSøkerBolig"
-                                    checked={formik.values.delerSøkerBolig === true}
-                                    onChange={() => {
-                                        formik.setValues((v) => ({
-                                            ...v,
-                                            delerSøkerBolig: true,
-                                        }));
-                                    }}
-                                />
-                                <Radio
-                                    label={props.intl.formatMessage({ id: 'radio.label.nei' })}
-                                    name="delerSøkerBolig"
-                                    checked={formik.values.delerSøkerBolig === false}
-                                    onChange={() => {
-                                        formik.setValues((v) => ({
-                                            ...v,
-                                            delerSøkerBolig: false,
-                                        }));
-                                    }}
-                                />
-                            </RadioGruppe>
-                        )}
-                        {eps?.alder && eps.alder < 67 ? (
-                            <SuperRadioGruppe
-                                id="mottarEktemakeEllerSamboerSU"
-                                legend={props.intl.formatMessage({
-                                    id: 'radio.ektemakeEllerSamboerUførFlyktning.legend',
-                                })}
-                                values={formik.values}
-                                errors={formik.errors}
-                                onChange={(val) => {
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        mottarEktemakeEllerSamboerSU: val.mottarEktemakeEllerSamboerSU,
-                                    }));
-                                }}
-                                property="mottarEktemakeEllerSamboerSU"
-                                options={[
-                                    {
-                                        label: props.intl.formatMessage({
-                                            id: 'radio.label.ja',
-                                        }),
-                                        radioValue: true,
-                                    },
-                                    {
-                                        label: props.intl.formatMessage({
-                                            id: 'radio.label.nei',
-                                        }),
-                                        radioValue: false,
-                                    },
-                                ]}
+                            <Controller
+                                control={form.control}
+                                name="delerSøkerBolig"
+                                render={({ field, fieldState }) => (
+                                    <RadioGruppe
+                                        legend={props.formatMessage('radio.delerSøkerBoligOver18.legend')}
+                                        feil={fieldState.error?.message}
+                                        onBlur={field.onBlur}
+                                    >
+                                        <Radio
+                                            label={props.formatMessage('radio.label.ja')}
+                                            id={field.name}
+                                            name={field.name}
+                                            checked={field.value === true}
+                                            onChange={() => {
+                                                field.onChange(true);
+                                            }}
+                                            radioRef={field.ref}
+                                        />
+                                        <Radio
+                                            label={props.formatMessage('radio.label.nei')}
+                                            name={field.name}
+                                            checked={field.value === false}
+                                            onChange={() => {
+                                                field.onChange(false);
+                                            }}
+                                        />
+                                    </RadioGruppe>
+                                )}
                             />
-                        ) : (
-                            ''
                         )}
-                        {utledSats(formik.values, Boolean(eps), eps?.alder) && (
+                        {eps?.alder && eps.alder < 67 && (
+                            <Controller
+                                control={form.control}
+                                name="mottarEktemakeEllerSamboerSU"
+                                render={({ field, fieldState }) => (
+                                    <RadioGruppe
+                                        legend={props.formatMessage('radio.ektemakeEllerSamboerUførFlyktning.legend')}
+                                        feil={fieldState.error?.message}
+                                        onBlur={field.onBlur}
+                                    >
+                                        <Radio
+                                            label={props.formatMessage('radio.label.ja')}
+                                            id={field.name}
+                                            name={field.name}
+                                            radioRef={field.ref}
+                                            checked={field.value === true}
+                                            onChange={() => {
+                                                field.onChange(true);
+                                            }}
+                                        />
+                                        <Radio
+                                            label={props.formatMessage('radio.label.nei')}
+                                            name={field.name}
+                                            checked={field.value === false}
+                                            onChange={() => {
+                                                field.onChange(false);
+                                            }}
+                                        />
+                                    </RadioGruppe>
+                                )}
+                            />
+                        )}
+                        {sats && (
                             <>
                                 <hr />
-                                <span>
-                                    {`${props.intl.formatMessage({ id: 'display.sats' })} ${utledSats(
-                                        formik.values,
-                                        Boolean(eps),
-                                        eps?.alder
-                                    )}`}
-                                </span>
+                                <span>{`${props.formatMessage('display.sats')} ${sats}`}</span>
                                 <hr />
                                 <hr />
                             </>
                         )}
                         <div className={styles.textareaContainer}>
-                            <Textarea
-                                label={props.intl.formatMessage({
-                                    id: 'input.label.begrunnelse',
-                                })}
+                            <Controller
+                                control={form.control}
                                 name="begrunnelse"
-                                value={formik.values.begrunnelse ?? ''}
-                                feil={formik.errors.begrunnelse}
-                                onChange={formik.handleChange}
+                                render={({ field, fieldState }) => (
+                                    <Textarea
+                                        label={props.formatMessage('input.label.begrunnelse')}
+                                        {...field}
+                                        value={field.value ?? ''}
+                                        feil={fieldState.error?.message}
+                                    />
+                                )}
                             />
                         </div>
                         {pipe(
@@ -376,35 +376,32 @@ const SatsForm = (props: SatsProps) => {
                                 () => null,
                                 () => (
                                     <NavFrontendSpinner>
-                                        {props.intl.formatMessage({ id: 'display.lagre.lagrer' })}
+                                        {props.formatMessage('display.lagre.lagrer')}
                                     </NavFrontendSpinner>
                                 ),
                                 () => (
                                     <AlertStripe type="feil">
-                                        {props.intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                        {props.formatMessage('display.lagre.lagringFeilet')}
                                     </AlertStripe>
                                 ),
                                 () => null
                             )
                         )}
                         <Feiloppsummering
-                            tittel={props.intl.formatMessage({ id: 'feiloppsummering.title' })}
-                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                            hidden={!formikErrorsHarFeil(formik.errors)}
+                            tittel={props.formatMessage('feiloppsummering.title')}
+                            hidden={!isSubmitted || isValid}
+                            feil={hookFormErrorsTilFeiloppsummering(errors)}
+                            innerRef={feiloppsummeringRef}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                formik.validateForm().then((res) => {
-                                    if (Object.keys(res).length === 0) {
-                                        handleSave(
-                                            formik.values,
-                                            Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })
-                                        );
-                                    }
-                                });
+                                form.handleSubmit(
+                                    handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
+                                    focusAfterTimeout(feiloppsummeringRef)
+                                );
                             }}
                         />
                     </form>

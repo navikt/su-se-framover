@@ -9,6 +9,7 @@ import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
+import { focusAfterTimeout } from '../../../../lib/formUtils';
 import { useI18n } from '../../../../lib/hooks';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
@@ -46,11 +47,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
         <form
             onSubmit={(e) => {
                 formik.handleSubmit(e);
-                setTimeout(() => {
-                    if (feiloppsummeringref.current) {
-                        feiloppsummeringref.current.focus();
-                    }
-                }, 0);
+                focusAfterTimeout(feiloppsummeringref)();
             }}
             className={sharedStyles.container}
         >

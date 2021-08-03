@@ -1,26 +1,27 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { useFormik } from 'formik';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Eq } from 'fp-ts/lib/Eq';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
+import { InstitusjonsoppholdBlokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/InstitusjonsoppholdBlokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import { lagreBehandlingsinformasjon } from '~features/saksoversikt/sak.slice';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
+import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/hooks';
+import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
+import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import {
     InstitusjonsoppholdStatus,
     Institusjonsopphold as InstitusjonsoppholdType,
 } from '~types/Behandlingsinformasjon';
 
-import { InstitusjonsoppholdBlokk } from '../../../../components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/InstitusjonsoppholdBlokk';
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
 import { VilkårsvurderingBaseProps } from '../types';
@@ -43,37 +44,30 @@ const schema = yup.object<InstitusjonsoppholdFormData>({
     status: yup
         .mixed()
         .defined()
-        .oneOf(
-            [
-                InstitusjonsoppholdStatus.VilkårOppfylt,
-                InstitusjonsoppholdStatus.VilkårIkkeOppfylt,
-                InstitusjonsoppholdStatus.Uavklart,
-            ],
-            'Vennligst velg et alternativ'
-        ),
+        .oneOf(Object.values(InstitusjonsoppholdStatus), 'Du må velge om institusjonsoppholdet skal føre til avslag'),
     begrunnelse: yup.string().defined(),
 });
 
 const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
-    const dispatch = useAppDispatch();
+    const [lagreBehandlingsinformasjonStatus, lagreBehandlingsinformasjon] = useAsyncActionCreator(
+        sakSlice.lagreBehandlingsinformasjon
+    );
+    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
-    const [hasSubmitted, setHasSubmitted] = useState(false);
-    const lagreBehandlingsinformasjonStatus = useAppSelector((s) => s.sak.lagreBehandlingsinformasjonStatus);
-    const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
-    const formik = useFormik<InstitusjonsoppholdFormData>({
-        initialValues: {
+    const {
+        formState: { isValid, isSubmitted, errors },
+        ...form
+    } = useForm({
+        defaultValues: {
             status: props.behandling.behandlingsinformasjon.institusjonsopphold?.status ?? null,
             begrunnelse: props.behandling.behandlingsinformasjon.institusjonsopphold?.begrunnelse ?? null,
         },
-        async onSubmit(values) {
-            handleSave(values, props.nesteUrl);
-        },
-        validationSchema: schema,
-        validateOnChange: hasSubmitted,
+        resolver: yupResolver(schema),
     });
 
-    const handleSave = async (values: InstitusjonsoppholdFormData, nesteUrl: string) => {
+    const handleSave = (nesteUrl: string) => (values: InstitusjonsoppholdFormData) => {
         if (!values.status) return;
 
         const institusjonsValues: InstitusjonsoppholdType = {
@@ -91,117 +85,101 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        const res = await dispatch(
-            lagreBehandlingsinformasjon({
+        lagreBehandlingsinformasjon(
+            {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
                     institusjonsopphold: institusjonsValues,
                 },
-            })
+            },
+            () => {
+                history.push(nesteUrl);
+            }
         );
-        if (lagreBehandlingsinformasjon.fulfilled.match(res)) {
-            history.push(nesteUrl);
-        }
     };
 
     return (
-        <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
+        <ToKolonner tittel={formatMessage('page.tittel')}>
             {{
                 left: (
                     <form
-                        onSubmit={(e) => {
-                            setHasSubmitted(true);
-                            formik.handleSubmit(e);
-                        }}
+                        onSubmit={form.handleSubmit(handleSave(props.nesteUrl), focusAfterTimeout(feiloppsummeringRef))}
                     >
-                        <RadioGruppe
-                            legend={intl.formatMessage({ id: 'radio.institusjonsoppholdFørerTilAvslag.legend' })}
-                            feil={formik.errors.status}
-                        >
-                            <Radio
-                                label={intl.formatMessage({ id: 'radio.label.ja' })}
-                                name="institusjonsopphold"
-                                checked={formik.values.status === InstitusjonsoppholdStatus.VilkårIkkeOppfylt}
-                                onChange={() =>
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        status: InstitusjonsoppholdStatus.VilkårIkkeOppfylt,
-                                    }))
-                                }
-                            />
-                            <Radio
-                                label={intl.formatMessage({ id: 'radio.label.nei' })}
-                                name="institusjonsopphold"
-                                checked={formik.values.status === InstitusjonsoppholdStatus.VilkårOppfylt}
-                                onChange={() =>
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        status: InstitusjonsoppholdStatus.VilkårOppfylt,
-                                    }))
-                                }
-                            />
-                            <Radio
-                                label={intl.formatMessage({ id: 'radio.label.uavklart' })}
-                                name="institusjonsopphold"
-                                checked={formik.values.status === InstitusjonsoppholdStatus.Uavklart}
-                                onChange={() =>
-                                    formik.setValues((v) => ({
-                                        ...v,
-                                        status: InstitusjonsoppholdStatus.Uavklart,
-                                    }))
-                                }
-                            />
-                        </RadioGruppe>
+                        <Controller
+                            control={form.control}
+                            name="status"
+                            render={({ field, fieldState }) => (
+                                <RadioGruppe
+                                    legend={formatMessage('radio.institusjonsoppholdFørerTilAvslag.legend')}
+                                    feil={fieldState.error?.message}
+                                    onBlur={field.onBlur}
+                                >
+                                    <Radio
+                                        id={field.name}
+                                        label={formatMessage('radio.label.ja')}
+                                        name={field.name}
+                                        checked={field.value === InstitusjonsoppholdStatus.VilkårIkkeOppfylt}
+                                        onChange={() => field.onChange(InstitusjonsoppholdStatus.VilkårIkkeOppfylt)}
+                                        radioRef={field.ref}
+                                    />
+                                    <Radio
+                                        label={formatMessage('radio.label.nei')}
+                                        name={field.name}
+                                        checked={field.value === InstitusjonsoppholdStatus.VilkårOppfylt}
+                                        onChange={() => field.onChange(InstitusjonsoppholdStatus.VilkårOppfylt)}
+                                    />
+                                    <Radio
+                                        label={formatMessage('radio.label.uavklart')}
+                                        name={field.name}
+                                        checked={field.value === InstitusjonsoppholdStatus.Uavklart}
+                                        onChange={() => field.onChange(InstitusjonsoppholdStatus.Uavklart)}
+                                    />
+                                </RadioGruppe>
+                            )}
+                        />
                         <div className={sharedStyles.textareaContainer}>
-                            <Textarea
-                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                            <Controller
+                                control={form.control}
                                 name="begrunnelse"
-                                feil={formik.errors.begrunnelse}
-                                value={formik.values.begrunnelse ?? ''}
-                                onChange={(e) => {
-                                    formik.setValues({
-                                        ...formik.values,
-                                        begrunnelse: e.target.value ? e.target.value : null,
-                                    });
-                                }}
+                                render={({ field, fieldState }) => (
+                                    <Textarea
+                                        label={formatMessage('input.label.begrunnelse')}
+                                        {...field}
+                                        feil={fieldState.error?.message}
+                                        value={field.value ?? ''}
+                                    />
+                                )}
                             />
                         </div>
                         {pipe(
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(
                                 () => null,
-                                () => (
-                                    <NavFrontendSpinner>
-                                        {intl.formatMessage({ id: 'display.lagre.lagrer' })}
-                                    </NavFrontendSpinner>
-                                ),
+                                () => <NavFrontendSpinner>{formatMessage('display.lagre.lagrer')}</NavFrontendSpinner>,
                                 () => (
                                     <AlertStripe type="feil">
-                                        {intl.formatMessage({ id: 'display.lagre.lagringFeilet' })}
+                                        {formatMessage('display.lagre.lagringFeilet')}
                                     </AlertStripe>
                                 ),
                                 () => null
                             )
                         )}
                         <Feiloppsummering
-                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
-                            feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                            hidden={!formikErrorsHarFeil(formik.errors)}
+                            tittel={formatMessage('feiloppsummering.title')}
+                            hidden={!isSubmitted || isValid}
+                            feil={hookFormErrorsTilFeiloppsummering(errors)}
+                            innerRef={feiloppsummeringRef}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
                             onLagreOgFortsettSenereClick={() => {
-                                formik.validateForm().then((res) => {
-                                    if (Object.keys(res).length === 0) {
-                                        handleSave(
-                                            formik.values,
-                                            Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })
-                                        );
-                                    }
-                                });
+                                form.handleSubmit(
+                                    handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
+                                    focusAfterTimeout(feiloppsummeringRef)
+                                );
                             }}
                         />
                     </form>

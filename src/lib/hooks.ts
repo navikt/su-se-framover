@@ -116,7 +116,7 @@ export function useAsyncActionCreatorWithArgsTransformer<
 
 export function useApiCall<T, U>(
     fn: (req: T) => Promise<ApiClientResult<U>>
-): [ApiResult<U>, (args: T, onSuccess?: (result: U) => void) => void] {
+): [ApiResult<U>, (args: T, onSuccess?: (result: U) => void) => void, () => void] {
     const [apiResult, setApiResult] = useState<ApiResult<U>>(RemoteData.initial);
 
     const callFn = React.useCallback(
@@ -136,7 +136,11 @@ export function useApiCall<T, U>(
         [apiResult, fn]
     );
 
-    return [apiResult, callFn];
+    const resetToInitial = React.useCallback(() => {
+        setApiResult(RemoteData.initial);
+    }, [setApiResult]);
+
+    return [apiResult, callFn, resetToInitial];
 }
 
 export function useBrevForhåndsvisning<T>(

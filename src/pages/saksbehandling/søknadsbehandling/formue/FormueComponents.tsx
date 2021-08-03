@@ -1,6 +1,6 @@
 import { Input, Label } from 'nav-frontend-skjema';
 import { Element, Undertittel } from 'nav-frontend-typografi';
-import React from 'react';
+import React, { RefCallback } from 'react';
 import { useIntl } from 'react-intl';
 
 export const FormueInput = (props: {
@@ -10,10 +10,12 @@ export const FormueInput = (props: {
     defaultValue: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     feil: string | undefined;
+    inputRef?: RefCallback<HTMLInputElement>;
 }) => (
     <>
         <Label htmlFor={props.inputName}> {props.tittel} </Label>
         <Input
+            id={props.inputName}
             className={props.className}
             name={props.inputName}
             type="numeric"
@@ -21,6 +23,7 @@ export const FormueInput = (props: {
             feil={props.feil}
             defaultValue={props.defaultValue}
             onChange={props.onChange}
+            inputRef={props.inputRef}
         />
     </>
 );

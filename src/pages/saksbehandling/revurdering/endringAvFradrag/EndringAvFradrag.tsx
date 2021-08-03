@@ -18,7 +18,7 @@ import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeil
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
-import { customFormikSubmit } from '~lib/formikUtils';
+import { customFormikSubmit } from '~lib/formUtils';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';

@@ -12,6 +12,7 @@ import { useHistory } from 'react-router-dom';
 import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { Utenlandsopphold as UtenlandsoppholdType } from '~features/søknad/types';
+import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/hooks';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
@@ -299,11 +300,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 onSubmit={(e) => {
                     setHasSubmitted(true);
                     formik.handleSubmit(e);
-                    setTimeout(() => {
-                        if (feiloppsummeringref.current) {
-                            feiloppsummeringref.current.focus();
-                        }
-                    }, 0);
+                    focusAfterTimeout(feiloppsummeringref)();
                 }}
             >
                 <div className={sharedStyles.formContainer}>
