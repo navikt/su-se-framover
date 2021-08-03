@@ -1,11 +1,12 @@
 import * as DateFns from 'date-fns';
 import { createIntl, createIntlCache, FormatDateOptions } from 'react-intl';
 
+import { Languages } from '~components/TextProvider';
 import { Nullable } from '~lib/types';
 import { Periode } from '~types/Periode';
 
 const cache = createIntlCache();
-const intl = createIntl({ locale: 'nb-NO' }, cache);
+const intl = createIntl({ locale: Languages.nb }, cache);
 
 enum DateFormats {
     IsoDateOnly = 'yyyy-MM-dd',
