@@ -123,7 +123,7 @@ export function getBosituasjongrunnlagsblokker(b: Bosituasjon, { formatMessage }
                     },
                     {
                         label: formatMessage('bosituasjon.label.epsUførFlyktning'),
-                        verdi: formatMessage('generell.ja'),
+                        verdi: formatMessage('generell.nei'),
                     },
                 ],
             ];
