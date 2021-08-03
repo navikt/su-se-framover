@@ -113,7 +113,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 uføregrad: values.uføregrad ? parseInt(values.uføregrad, 10) : null,
-                forventetInntekt: values.forventetInntekt ? parseInt(values.forventetInntekt, 10) : null,
+                forventetInntekt: values.forventetInntekt !== null ? parseInt(values.forventetInntekt, 10) : null,
                 begrunnelse: values.begrunnelse ?? '',
                 resultat: values.status,
                 periode: {
