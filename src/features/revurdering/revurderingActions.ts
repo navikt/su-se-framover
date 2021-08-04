@@ -17,7 +17,6 @@ import {
     OpprettetRevurderingGrunn,
     RevurderingErrorCodes,
     BeslutningEtterForhåndsvarsling,
-    LeggTilUføreResponse,
     InformasjonSomRevurderes,
     Revurdering,
     BosituasjonRequest,
@@ -189,7 +188,7 @@ export const fortsettEtterForhåndsvarsel = createAsyncThunk<
 );
 
 export const lagreUføregrunnlag = createAsyncThunk<
-    LeggTilUføreResponse,
+    OpprettetRevurdering,
     {
         sakId: string;
         revurderingId: string;
@@ -204,6 +203,7 @@ export const lagreUføregrunnlag = createAsyncThunk<
     { rejectValue: ApiError }
 >('revurdering/grunnlag/uføre/lagre', async (arg, thunkApi) => {
     const res = await revurderingApi.lagreUføregrunnlag(arg);
+
     if (res.status === 'ok') {
         return res.data;
     }

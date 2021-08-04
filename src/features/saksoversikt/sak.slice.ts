@@ -683,7 +683,7 @@ export default createSlice({
         });
 
         builder.addCase(lagreUføregrunnlagForRevurdering.fulfilled, (state, action) => {
-            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
 
         builder.addCase(lagreFradragsgrunnlag.fulfilled, (state, action) => {
