@@ -191,10 +191,6 @@ export enum RevurderingErrorCodes {
     //feilutbetaling
     FEILUTBETALING_STØTTES_IKKE = 'feilutbetalinger_støttes_ikke',
 }
-export interface LeggTilUføreResponse {
-    revurdering: Revurdering;
-    gjeldendeVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
-}
 
 export enum InformasjonSomRevurderes {
     Uførhet = 'Uførhet',

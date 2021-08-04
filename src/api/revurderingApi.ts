@@ -15,7 +15,6 @@ import {
     OpprettetRevurderingGrunn,
     RevurderingErrorCodes,
     BeslutningEtterForhåndsvarsling,
-    LeggTilUføreResponse,
     InformasjonSomRevurderes,
     Revurdering,
     BosituasjonRequest,
@@ -171,7 +170,7 @@ export async function lagreUføregrunnlag(arg: {
         begrunnelse: Nullable<string>;
     }>;
 }) {
-    return apiClient<LeggTilUføreResponse>({
+    return apiClient<OpprettetRevurdering>({
         url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/uføregrunnlag`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
