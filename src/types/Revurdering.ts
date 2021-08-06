@@ -158,7 +158,6 @@ export enum RevurderingErrorCodes {
     KUNNE_IKKE_OPPRETTE_OPPGAVE = 'kunne_ikke_opprette_oppgave',
     KUNNE_IKKE_DISTRIBUERE_BREV = 'kunne_ikke_distribuere_brev',
     KUNNE_IKKE_JOURNALFØRE_BREV = 'kunne_ikke_journalføre_brev',
-    KUNNE_IKKE_KONTROLL_SIMULERE = 'kunne_ikke_kontrollsimulere',
     KUNNE_IKKE_UTBETALE = 'kunne_ikke_utbetale',
     KUNNE_IKKE_SLÅ_OPP_EPS = 'kunne_ikke_slå_opp_eps',
 
@@ -171,7 +170,6 @@ export enum RevurderingErrorCodes {
     //generell
     BEGRUNNELSE_KAN_IKKE_VÆRE_TOM = 'begrunnelse_kan_ikke_være_tom',
     UFULLSTENDIG_BEHANDLINGSINFORMASJON = 'ufullstendig_behandlingsinformasjon',
-    SIMULERING_FEILET = 'simulering_feilet',
     SISTE_MÅNED_VED_NEDGANG_I_STØNADEN = 'siste_måned_ved_nedgang_i_stønaden',
     G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
     VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
@@ -190,6 +188,16 @@ export enum RevurderingErrorCodes {
 
     //feilutbetaling
     FEILUTBETALING_STØTTES_IKKE = 'feilutbetalinger_støttes_ikke',
+
+    //simulering
+    SIMULERING_FEILET = 'simulering_feilet',
+    SIMULERING_FEILET_OPPDRAG_STENGT_ELLER_NEDE = 'simulering_oppdrag_stengt_eller_nede',
+    SIMULERING_FEILET_FINNER_IKKE_PERSON = 'simulering_finner_ikke_person_i_tps',
+    SIMULERING_FEILET_FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM = 'simulering_finner_ikke_kjøreplansperiode_for_fom',
+    KONTROLLSIMULERING_FEILET = 'kunne_ikke_kontrollsimulere',
+    KONTROLLSIMULERING_FEILET_OPPDRAG_STENGT_ELLER_NEDE = 'kontrollsimulering_oppdrag_er_stengt_eller_nede',
+    KONTROLLSIMULERING_FEILET_FINNER_IKKE_PERSON = 'kontrollsimulering_finner_ikke_person_i_tps',
+    KONTROLLSIMULERING_FEILET_FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM = 'kontrollsimulering_finner_ikke_kjøreplansperiode_for_fom',
 }
 
 export enum InformasjonSomRevurderes {

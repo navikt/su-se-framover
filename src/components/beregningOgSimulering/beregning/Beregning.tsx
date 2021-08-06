@@ -332,10 +332,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                         {intl.formatMessage({ id: 'display.simulerer' })}
                                     </NavFrontendSpinner>
                                 ),
-                                () => (
-                                    <AlertStripe type="feil">
-                                        {intl.formatMessage({ id: 'alert.feil.simuleringFeilet' })}
-                                    </AlertStripe>
+                                (error) => (
+                                    <AlertStripe type="feil">{simuleringsfeilmelding(error?.body?.code)}</AlertStripe>
                                 ),
                                 () => null
                             )
@@ -361,6 +359,19 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             }}
         </ToKolonner>
     );
+
+    function simuleringsfeilmelding(errorCode: string | undefined) {
+        switch (errorCode) {
+            case 'simulering_oppdrag_stengt_eller_nede':
+                return intl.formatMessage({ id: 'alert.feil.simuleringFeilet.oppdragStengtEllerNede' });
+            case 'simulering_finner_ikke_person_i_tps':
+                return intl.formatMessage({ id: 'alert.feil.simuleringFeilet.finnerIkkePerson' });
+            case 'simulering_finner_ikke_kjøreplansperiode_for_fom':
+                return intl.formatMessage({ id: 'alert.feil.simuleringFeilet.finnerIkkeKjøreplansperiodeForFom' });
+            default:
+                return intl.formatMessage({ id: 'alert.feil.simuleringFeilet' });
+        }
+    }
 };
 
 function erFradragLike(fradrag: Fradrag[] | undefined, formFradrag: FradragFormData[]): boolean {

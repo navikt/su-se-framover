@@ -227,8 +227,11 @@ const Attesteringsinnhold = ({
                                     <AlertStripe type="feil">
                                         <p>{intl.formatMessage({ id: 'status.feilet' })}</p>
                                         <p>
-                                            {attesteringStatus.error.body?.message ||
-                                                intl.formatMessage({ id: 'feil.ukjentFeil' })}
+                                            {
+                                                // TODO: Map error.code til feilmelding i stedet for å vise feilmelding fra backend direkte
+                                                attesteringStatus.error.body?.message ||
+                                                    intl.formatMessage({ id: 'feil.ukjentFeil' })
+                                            }
                                         </p>
                                     </AlertStripe>
                                 </div>
