@@ -13,6 +13,10 @@ const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
     const underkjenteAttesteringer = props.attesteringer.filter((att) => att.underkjennelse != null);
     const { formatMessage } = useI18n({ messages });
 
+    if (underkjenteAttesteringer.length === 0) {
+        return null;
+    }
+
     return (
         <div>
             {underkjenteAttesteringer.length > 0 && (
