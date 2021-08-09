@@ -22,7 +22,6 @@ export default {
     'feil.kunne.ikke.opprette.oppgave': 'Kunne ikke opprette oppgave',
     'feil.kunne.ikke.journalføre.brev': 'Kunne ikke journalføre brev',
     'feil.kunne.ikke.distribuere.brev': 'Distribuering av brev feilet',
-    'feil.kunne.ikke.kontroll.simulere': 'Kunne ikke kontrollsimulere',
     'feil.kunne.ikke.utbetale': 'Kunne ikke utbetale',
     'feil.kunne.ikke.slå.opp.eps': 'Kunne ikke slå opp ektefelle eller samboer i PDL',
 
@@ -34,6 +33,17 @@ export default {
 
     'feil.siste.måned.ved.nedgang.i.stønaden': 'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
     'feil.simulering.feilet': 'Simulering feilet',
+    'feil.simulering.feilet.oppdragStengtEllerNede':
+        'Simulering feilet. Oppdrag/UR er stengt eller nede. Prøv på nytt eller prøv igjen i Oppdrags åpningstid.',
+    'feil.simulering.feilet.finnerIkkePerson': 'Simulering feilet. Finner ikke person i TPS.',
+    'feil.simulering.feilet.finnerIkkeKjøreplansperiodeForFom':
+        'Simulering feilet. Finner ikke kjøreplansperiode for fom-dato. Kjøreplan finnes som regel bare for inneværende år.',
+    'feil.kontrollsimulering.feilet': 'Kontrollsimulering feilet',
+    'feil.kontrollsimulering.feilet.oppdragStengtEllerNede':
+        'Kontrollsimulering feilet. Oppdrag/UR er stengt eller nede. Prøv på nytt eller prøv igjen i Oppdrags åpningstid.',
+    'feil.kontrollsimulering.feilet.finnerIkkePerson': 'Kontrollsimulering feilet. Finner ikke person i TPS.',
+    'feil.kontrollsimulering.feilet.finnerIkkeKjøreplansperiodeForFom':
+        'Kontrollsimulering feilet. Finner ikke kjøreplansperiode for fom-dato. Kjøreplan finnes som regel bare for inneværende år.',
     'feil.ufullstendig.behandlingsinformasjon': 'Ufullstendig behandlingsinformasjon',
     'feil.gregulering.kan.ikke.føre.til.opphør': 'G-regulering kan ikke føre til opphør',
     'feil.eps.alder.er.null': 'Alderen til ektefelle eller samboer er null',

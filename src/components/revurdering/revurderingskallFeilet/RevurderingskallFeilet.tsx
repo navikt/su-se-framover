@@ -37,7 +37,6 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string
     [RevurderingErrorCodes.KUNNE_IKKE_OPPRETTE_OPPGAVE]: 'feil.kunne.ikke.opprette.oppgave',
     [RevurderingErrorCodes.KUNNE_IKKE_JOURNALFØRE_BREV]: 'feil.kunne.ikke.journalføre.brev',
     [RevurderingErrorCodes.KUNNE_IKKE_DISTRIBUERE_BREV]: 'feil.kunne.ikke.distribuere.brev',
-    [RevurderingErrorCodes.KUNNE_IKKE_KONTROLL_SIMULERE]: 'feil.kunne.ikke.kontroll.simulere',
     [RevurderingErrorCodes.KUNNE_IKKE_UTBETALE]: 'feil.kunne.ikke.utbetale',
     [RevurderingErrorCodes.KUNNE_IKKE_SLÅ_OPP_EPS]: 'feil.kunne.ikke.slå.opp.eps',
 
@@ -56,7 +55,6 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string
 
     //generell
     [RevurderingErrorCodes.UFULLSTENDIG_BEHANDLINGSINFORMASJON]: 'feil.ufullstendig.behandlingsinformasjon',
-    [RevurderingErrorCodes.SIMULERING_FEILET]: 'feil.simulering.feilet',
     [RevurderingErrorCodes.SISTE_MÅNED_VED_NEDGANG_I_STØNADEN]: 'feil.siste.måned.ved.nedgang.i.stønaden',
     [RevurderingErrorCodes.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'feil.gregulering.kan.ikke.føre.til.opphør',
     [RevurderingErrorCodes.BEGRUNNELSE_KAN_IKKE_VÆRE_TOM]: 'feil.begrunnelse.kan.ikke.være.tom',
@@ -87,6 +85,21 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string
         'feil.depositum.kan.ikke.være.høyere.enn.innskudd',
     [RevurderingErrorCodes.EPS_FORMUE_MED_FLERE_PERIODER_MÅ_REVURDERES]:
         'feil.eps.formue.med.flere.perioder.må.revurderes',
+
+    //Simulering
+    [RevurderingErrorCodes.SIMULERING_FEILET]: 'feil.simulering.feilet',
+    [RevurderingErrorCodes.SIMULERING_FEILET_OPPDRAG_STENGT_ELLER_NEDE]:
+        'feil.simulering.feilet.oppdragStengtEllerNede',
+    [RevurderingErrorCodes.SIMULERING_FEILET_FINNER_IKKE_PERSON]: 'feil.simulering.feilet.finnerIkkePerson',
+    [RevurderingErrorCodes.SIMULERING_FEILET_FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM]:
+        'feil.simulering.feilet.finnerIkkeKjøreplansperiodeForFom',
+    [RevurderingErrorCodes.KONTROLLSIMULERING_FEILET]: 'feil.kontrollsimulering.feilet',
+    [RevurderingErrorCodes.KONTROLLSIMULERING_FEILET_OPPDRAG_STENGT_ELLER_NEDE]:
+        'feil.kontrollsimulering.feilet.oppdragStengtEllerNede',
+    [RevurderingErrorCodes.KONTROLLSIMULERING_FEILET_FINNER_IKKE_PERSON]:
+        'feil.kontrollsimulering.feilet.finnerIkkePerson',
+    [RevurderingErrorCodes.KONTROLLSIMULERING_FEILET_FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM]:
+        'feil.kontrollsimulering.feilet.finnerIkkeKjøreplansperiodeForFom',
 };
 
 export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) => {

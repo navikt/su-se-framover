@@ -24,7 +24,6 @@ export default {
     'feil.kanIkkeRevurdere': 'Det finnes ingen perioder for revurdering',
 
     'feil.siste.måned.ved.nedgang.i.stønaden': 'Kan ikke velge siste måned av stønadsperioden ved nedgang i stønaden',
-    'feil.simulering.feilet': 'Simulering feilet',
     'feil.ufullstendig.behandlingsinformasjon': 'Ufullstendig behandlingsinformasjon',
     'feil.g_regulering_kan_ikke_føre_til_opphør': 'G-regulering kan ikke føre til opphør',
 };
