@@ -20,7 +20,6 @@ import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 
-import Restanser from './restans/Restanser';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
 
@@ -191,7 +190,9 @@ const Saksoversikt = () => {
                                 <AlertStripe type="feil">{visErrorMelding(sak.error)}</AlertStripe>
                             )}
                         </div>
-                        <Restanser />
+                        {/* TODO 10.07.21: Skrur av denne til siste kommentar i https://trello.com/c/GtHzrIpP/869-se-alle-%C3%A5pne-s%C3%B8knadsbehandlinger er fikset 
+                            <Restanser /> 
+                        */}
                     </div>
                 </Route>
             </Switch>
