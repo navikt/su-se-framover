@@ -1,9 +1,11 @@
+import { Nullable } from '~lib/types';
+
 export interface Restans {
     saksnummer: string;
     behandlingId: string;
     typeBehandling: RestansType;
     status: RestansStatus;
-    opprettet: string;
+    behandlingStartet: Nullable<string>;
 }
 
 export enum RestansType {

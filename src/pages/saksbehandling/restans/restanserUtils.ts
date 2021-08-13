@@ -1,8 +1,13 @@
+import * as arr from 'fp-ts/Array';
+import * as Ord from 'fp-ts/Ord';
+import * as S from 'fp-ts/string';
+
+import { pipe } from '~lib/fp';
 import { Restans, RestansStatus, RestansType } from '~types/Restans';
 
 import messages from './restanser-nb';
 
-export type RestansKolonner = 'saksnummer' | 'typeBehandling' | 'status' | 'opprettet';
+export type RestansKolonner = 'saksnummer' | 'typeBehandling' | 'status' | 'behandlingStartet';
 export type AriaSortVerdier = 'none' | 'ascending' | 'descending';
 
 export const formatRestansType = (type: RestansType, formatMessage: (string: keyof typeof messages) => string) => {
@@ -34,47 +39,13 @@ export const sortTabell = (restanser: Restans[], kolonne: RestansKolonner | 'ing
     if (kolonne === 'ingen' || sortVerdi === 'none') {
         return restanser;
     }
-    return restanser.slice().sort((a: Restans, b: Restans) => {
-        if (sortVerdi === 'ascending') {
-            return a[kolonne] > b[kolonne] ? 1 : a[kolonne] < b[kolonne] ? -1 : 0;
-        }
-        return a[kolonne] > b[kolonne] ? -1 : a[kolonne] < b[kolonne] ? 1 : 0;
-    });
-};
 
-export const filtrerTabell = (restanser: Restans[], filtrerteVerdier: Set<RestansStatus | RestansType>) => {
-    if (filtrerteVerdier.size >= 1) {
-        return restanser.filter((r) => {
-            if (filtrererTypeOgStatus(filtrerteVerdier)) {
-                return filtrerTypeOgStatus(r, filtrerteVerdier);
-            }
+    return pipe(restanser, arr.sortBy([kolonneOgRetning(kolonne, sortVerdi)]));
 
-            return filtrerTypeEllerStatus(r, filtrerteVerdier);
-        });
+    function kolonneOgRetning(kolonne: RestansKolonner, sortVerdi: AriaSortVerdier): Ord.Ord<Restans> {
+        return pipe(
+            sortVerdi === 'ascending' ? Ord.reverse(S.Ord) : S.Ord,
+            Ord.contramap((r: Restans) => r[kolonne] || '')
+        );
     }
-    return restanser;
-};
-
-const filtrererTypeOgStatus = (filtrerteVerdier: Set<RestansStatus | RestansType>) => {
-    const typer = Object.values(RestansType);
-    const statuser = Object.values(RestansStatus);
-
-    const hasType = typer.some((t) => filtrerteVerdier.has(t));
-    const hasStatus = statuser.some((s) => filtrerteVerdier.has(s));
-
-    return hasType && hasStatus;
-};
-
-const filtrerTypeOgStatus = (r: Restans, filtrerteVerdier: Set<RestansStatus | RestansType>) => {
-    if (filtrerteVerdier.has(r.status) && filtrerteVerdier.has(r.typeBehandling)) {
-        return true;
-    }
-    return false;
-};
-
-const filtrerTypeEllerStatus = (r: Restans, filtrerteVerdier: Set<RestansStatus | RestansType>) => {
-    if (filtrerteVerdier.has(r.status) || filtrerteVerdier.has(r.typeBehandling)) {
-        return true;
-    }
-    return false;
 };

@@ -1,10 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import classNames from 'classnames';
 import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
+import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import { Flatknapp } from 'nav-frontend-knapper';
-import { Checkbox } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Element, Ingress } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -14,19 +13,12 @@ import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { useAppDispatch } from '~redux/Store';
-import { Restans, RestansStatus, RestansType } from '~types/Restans';
+import { Restans } from '~types/Restans';
 import { formatDateTime } from '~utils/date/dateUtils';
 
 import messages from './restanser-nb';
 import styles from './restanser.module.less';
-import {
-    formatRestansType,
-    formatRestansStatus,
-    filtrerTabell,
-    AriaSortVerdier,
-    RestansKolonner,
-    sortTabell,
-} from './restanserUtils';
+import { AriaSortVerdier, formatRestansStatus, formatRestansType, RestansKolonner, sortTabell } from './restanserUtils';
 
 const Restanser = () => {
     const { formatMessage } = useI18n({ messages });
@@ -46,7 +38,11 @@ const Restanser = () => {
                 if (restanser.length === 0) {
                     return <AlertStripeSuksess>{formatMessage('restans.ingenRestanser')}</AlertStripeSuksess>;
                 }
-                return <RestansFiltreringOgTabell tabelldata={restanser} />;
+                return (
+                    <Ekspanderbartpanel tittel={formatMessage('åpne.behandlinger.overskrift')}>
+                        <RestanserTabell tabelldata={restanser} />
+                    </Ekspanderbartpanel>
+                );
             }
         )
     );
@@ -83,62 +79,6 @@ const KnappOgStatus = (props: { saksnummer: string }) => {
             {RemoteData.isFailure(hentSakStatus) && (
                 <AlertStripeFeil>{formatMessage('feil.sak.kunneIkkeHente')}</AlertStripeFeil>
             )}
-        </div>
-    );
-};
-
-const RestansFiltreringOgTabell = (props: { tabelldata: Restans[] }) => {
-    const { formatMessage } = useI18n({ messages });
-    const [filtrerteVerdier] = useState(new Set<RestansStatus | RestansType>());
-
-    const [tabell, setTabell] = useState<Restans[]>(props.tabelldata);
-
-    const handleCheckboxChange = (s: RestansStatus | RestansType) => {
-        addOrRemoveFromFiltration(s);
-        const filtrertTabell = filtrerTabell(props.tabelldata, filtrerteVerdier);
-        setTabell(filtrertTabell);
-    };
-
-    const addOrRemoveFromFiltration = (s: RestansStatus | RestansType) => {
-        if (filtrerteVerdier.has(s)) {
-            filtrerteVerdier.delete(s);
-        } else {
-            filtrerteVerdier.add(s);
-        }
-    };
-
-    return (
-        <div>
-            <Ingress className={styles.antallSakerHeaderTekst}>
-                {formatMessage('tabell.antallSaker')} {tabell.length}
-            </Ingress>
-            <div className={styles.checkboxWrapper}>
-                <div className={styles.tittelOgCheckboxerContainer}>
-                    <Element>{formatMessage('restans.typeBehandling')}</Element>
-                    <div className={styles.checkboxContainer}>
-                        {Object.values(RestansType).map((t) => (
-                            <Checkbox
-                                key={t}
-                                label={formatMessage(`restans.typeBehandling.${t}`)}
-                                onChange={() => handleCheckboxChange(t)}
-                            />
-                        ))}
-                    </div>
-                </div>
-                <div className={styles.tittelOgCheckboxerContainer}>
-                    <Element>{formatMessage('restans.status')}</Element>
-                    <div className={styles.checkboxContainer}>
-                        {Object.values(RestansStatus).map((s) => (
-                            <Checkbox
-                                key={s}
-                                label={formatMessage(`restans.status.${s}`)}
-                                onChange={() => handleCheckboxChange(s)}
-                            />
-                        ))}
-                    </div>
-                </div>
-            </div>
-            <RestanserTabell tabelldata={tabell} />
         </div>
     );
 };
@@ -193,9 +133,6 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
     return (
         <div>
             <table className={classNames('tabell', styles.tabell)}>
-                <caption role="alert" aria-live="polite">
-                    {formatMessage('tabell.caption')}
-                </caption>
                 <thead>
                     <tr>
                         <th
@@ -203,7 +140,10 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                             aria-sort={erKolonneSortertEtter('saksnummer') ? sortVerdi : 'none'}
                             className={getHeaderClassName('saksnummer')}
                         >
-                            <button aria-label="Sorter saksnummer" onClick={() => onTabellHeaderClick('saksnummer')}>
+                            <button
+                                aria-label="Sorter etter saksnummer"
+                                onClick={() => onTabellHeaderClick('saksnummer')}
+                            >
                                 {formatMessage('sak.saksnummer')}
                             </button>
                         </th>
@@ -213,7 +153,7 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                             className={getHeaderClassName('typeBehandling')}
                         >
                             <button
-                                aria-label="Sorter type behandling"
+                                aria-label="Sorter etter type behandling"
                                 onClick={() => onTabellHeaderClick('typeBehandling')}
                             >
                                 {formatMessage('restans.typeBehandling')}
@@ -224,20 +164,20 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                             aria-sort={erKolonneSortertEtter('status') ? sortVerdi : 'none'}
                             className={getHeaderClassName('status')}
                         >
-                            <button aria-label="Sorter status" onClick={() => onTabellHeaderClick('status')}>
+                            <button aria-label="Sorter etter status" onClick={() => onTabellHeaderClick('status')}>
                                 {formatMessage('restans.status')}
                             </button>
                         </th>
                         <th
                             role="columnheader"
-                            aria-sort={erKolonneSortertEtter('opprettet') ? sortVerdi : 'none'}
-                            className={getHeaderClassName('opprettet')}
+                            aria-sort={erKolonneSortertEtter('behandlingStartet') ? sortVerdi : 'none'}
+                            className={getHeaderClassName('behandlingStartet')}
                         >
                             <button
-                                aria-label="Sorter etter opprettet"
-                                onClick={() => onTabellHeaderClick('opprettet')}
+                                aria-label="Sorter etter når behandling startet"
+                                onClick={() => onTabellHeaderClick('behandlingStartet')}
                             >
-                                {formatMessage('restans.opprettet')}
+                                {formatMessage('restans.behandling.startet')}
                             </button>
                         </th>
                         <th></th>
@@ -253,7 +193,9 @@ const RestanserTabell = (props: { tabelldata: Restans[] }) => {
                             <td className={getRowClassName('status')}>
                                 {formatRestansStatus(restans.status, formatMessage)}
                             </td>
-                            <td className={getRowClassName('opprettet')}>{formatDateTime(restans.opprettet)}</td>
+                            <td className={getRowClassName('behandlingStartet')}>
+                                {restans.behandlingStartet ? formatDateTime(restans.behandlingStartet) : ''}
+                            </td>
                             <td>
                                 <KnappOgStatus saksnummer={restans.saksnummer} />
                             </td>
