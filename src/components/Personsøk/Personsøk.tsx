@@ -78,7 +78,6 @@ const Personsøk = (props: PersonsøkProps) => {
     return (
         <RawIntlProvider value={intl}>
             <form
-                className={styles.formContainer}
                 onSubmit={(e) => {
                     e.stopPropagation();
                     e.preventDefault();

@@ -1,6 +1,6 @@
 export default {
     'restans.ingenRestanser': 'Ingen restanser',
-    'restans.opprettet': 'Opprettet',
+    'restans.behandling.startet': 'Behandling startet',
 
     'restans.typeBehandling': 'Type behandling',
     'restans.typeBehandling.REVURDERING': 'Revurdering',
@@ -12,9 +12,7 @@ export default {
     'restans.status.TIL_ATTESTERING': 'Til attestering',
     'restans.status.UNDER_BEHANDLING': 'Under behandling',
 
-    'tabell.antallSaker': 'Antall saker:',
-
-    'tabell.caption': 'Tabell av restanser',
+    'åpne.behandlinger.overskrift': 'Åpne behandlinger',
 
     'sak.saksnummer': 'Saksnummer',
     'sak.seSak': 'Se sak',
