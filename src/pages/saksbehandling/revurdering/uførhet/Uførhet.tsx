@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
+import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
 import { Feiloppsummering, Input } from 'nav-frontend-skjema';
@@ -235,12 +236,13 @@ const Uføreperiodevurdering = (props: {
 };
 
 const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeUrl: string; nesteUrl: string }) => {
-    const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const dispatch = useAppDispatch();
     const history = useHistory();
 
     const [pressedButton, setPressedButton] = React.useState<'ingen' | 'neste' | 'lagre'>('ingen');
     const [savingState, setSavingState] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
+    const [harOverlappendePerioder, setHarOverlappendePerioder] = React.useState(false);
     const feiloppsummeringRef = React.useRef<HTMLDivElement>(null);
 
     const {
@@ -261,8 +263,31 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
         name: 'grunnlag',
     });
 
+    const watchGrunnlag = form.watch('grunnlag');
+
+    React.useEffect(
+        () => {
+            const harOverlapp = watchGrunnlag.some((v1) =>
+                watchGrunnlag.some(
+                    (v2) =>
+                        v1.id !== v2.id &&
+                        DateFns.areIntervalsOverlapping(
+                            {
+                                start: v1.fraOgMed ?? DateFns.minTime,
+                                end: v1.tilOgMed ?? DateFns.maxTime,
+                            },
+                            { start: v2.fraOgMed ?? DateFns.minTime, end: v2.tilOgMed ?? DateFns.maxTime },
+                            { inclusive: true }
+                        )
+                )
+            );
+            setHarOverlappendePerioder(harOverlapp);
+        },
+        watchGrunnlag.flatMap((f) => [f.fraOgMed, f.tilOgMed])
+    );
+
     const save = async (values: FormData) => {
-        if (RemoteData.isPending(savingState)) {
+        if (harOverlappendePerioder || RemoteData.isPending(savingState)) {
             return false;
         }
         setSavingState(RemoteData.pending);
@@ -360,16 +385,21 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                         );
                     }}
                 >
-                    {intl.formatMessage({ id: 'button.nyPeriode.label' })}
+                    {formatMessage('button.nyPeriode.label')}
                 </Knapp>
             </div>
             <Feiloppsummering
-                tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                tittel={formatMessage('feiloppsummering.title')}
                 className={styles.feiloppsummering}
                 feil={hookFormErrorsTilFeiloppsummering(errors)}
                 hidden={isValid || !isSubmitted}
                 innerRef={feiloppsummeringRef}
             />
+            {isSubmitted && harOverlappendePerioder && (
+                <AlertStripeAdvarsel className={styles.feiloppsummering}>
+                    {formatMessage('feil.overlappendePerioder')}
+                </AlertStripeAdvarsel>
+            )}
             {RemoteData.isFailure(savingState) && <RevurderingskallFeilet error={savingState.error} />}
             <RevurderingBunnknapper
                 onNesteClick="submit"
