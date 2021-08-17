@@ -267,19 +267,22 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
 
     React.useEffect(
         () => {
-            const harOverlapp = watchGrunnlag.some((v1) =>
-                watchGrunnlag.some(
-                    (v2) =>
-                        v1.id !== v2.id &&
-                        DateFns.areIntervalsOverlapping(
-                            {
-                                start: v1.fraOgMed ?? DateFns.minTime,
-                                end: v1.tilOgMed ?? DateFns.maxTime,
-                            },
-                            { start: v2.fraOgMed ?? DateFns.minTime, end: v2.tilOgMed ?? DateFns.maxTime },
-                            { inclusive: true }
-                        )
-                )
+            const harOverlapp = watchGrunnlag.some(
+                (v1) =>
+                    DateUtils.isValidInterval(v1.fraOgMed, v1.tilOgMed) &&
+                    watchGrunnlag.some(
+                        (v2) =>
+                            v1.id !== v2.id &&
+                            DateUtils.isValidInterval(v2.fraOgMed, v2.tilOgMed) &&
+                            DateFns.areIntervalsOverlapping(
+                                {
+                                    start: v1.fraOgMed ?? DateFns.minTime,
+                                    end: v1.tilOgMed ?? DateFns.maxTime,
+                                },
+                                { start: v2.fraOgMed ?? DateFns.minTime, end: v2.tilOgMed ?? DateFns.maxTime },
+                                { inclusive: true }
+                            )
+                    )
             );
             setHarOverlappendePerioder(harOverlapp);
         },
