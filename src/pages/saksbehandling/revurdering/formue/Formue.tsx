@@ -196,14 +196,8 @@ const FormueBlokk = (props: {
                                 isClearable
                                 autoComplete="off"
                                 value={field.value}
-                                onChange={(date) => {
-                                    field.onChange(
-                                        date
-                                            ? Array.isArray(date)
-                                                ? DateFns.startOfMonth(date[0])
-                                                : DateFns.startOfMonth(date)
-                                            : null
-                                    );
+                                onChange={(date: Date | null) => {
+                                    field.onChange(date ? DateFns.startOfMonth(date) : null);
                                 }}
                                 feil={fieldState.error?.message}
                                 minDate={revurderingsperiode.fraOgMed}
@@ -225,14 +219,8 @@ const FormueBlokk = (props: {
                                 isClearable
                                 autoComplete="off"
                                 value={field.value}
-                                onChange={(date) => {
-                                    field.onChange(
-                                        date
-                                            ? Array.isArray(date)
-                                                ? DateFns.endOfMonth(date[0])
-                                                : DateFns.endOfMonth(date)
-                                            : null
-                                    );
+                                onChange={(date: Date | null) => {
+                                    field.onChange(date ? DateFns.startOfMonth(date) : null);
                                 }}
                                 feil={fieldState.error?.message}
                                 minDate={watch.periode.fraOgMed}
