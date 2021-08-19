@@ -81,7 +81,7 @@ const schema = yup.object<FormData>({
                 .typeError('Feltet må være et tall'),
             otherwise: yup.number().nullable().defined(),
         }) as unknown as yup.Schema<string>,
-    begrunnelse: yup.string().defined().default(null),
+    begrunnelse: yup.string().nullable().defined().default(null),
 });
 
 const Uførhet = (props: VilkårsvurderingBaseProps) => {
