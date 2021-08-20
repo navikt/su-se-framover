@@ -167,12 +167,10 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
-                            onLagreOgFortsettSenereClick={() =>
-                                form.handleSubmit(
-                                    handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
-                                    focusAfterTimeout(feiloppsummeringRef)
-                                )
-                            }
+                            onLagreOgFortsettSenereClick={form.handleSubmit(
+                                handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
+                                focusAfterTimeout(feiloppsummeringRef)
+                            )}
                         />
                     </form>
                 ),
