@@ -29,7 +29,6 @@ export async function startBeregning(
     sakId: string,
     behandlingId: string,
     arg: {
-        fradrag: Fradrag[];
         begrunnelse: Nullable<string>;
     }
 ): Promise<ApiClientResult<Behandling>> {
@@ -37,8 +36,21 @@ export async function startBeregning(
         url: `/saker/${sakId}/behandlinger/${behandlingId}/beregn`,
         method: 'POST',
         body: {
-            fradrag: arg.fradrag,
             begrunnelse: arg.begrunnelse,
+        },
+    });
+}
+
+export async function lagreFradragsgrunnlag(
+    sakId: string,
+    behandlingId: string,
+    fradrag: Fradrag[]
+): Promise<ApiClientResult<Behandling>> {
+    return apiClient({
+        url: `/saker/${sakId}/behandlinger/${behandlingId}/grunnlag/fradrag`,
+        method: 'POST',
+        body: {
+            fradrag: fradrag,
         },
     });
 }
