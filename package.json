@@ -55,7 +55,7 @@
         "@sentry/browser": "^6.11.0",
         "@sentry/cli": "^1.68.0",
         "@types/jest": "^27.0.1",
-        "@types/jsonwebtoken": "^8.5.4",
+        "@types/jsonwebtoken": "^8.5.5",
         "@types/react-collapse": "^5.0.1",
         "@types/react-datepicker": "^4.1.4",
         "amplitude-js": "^8.5.0",
