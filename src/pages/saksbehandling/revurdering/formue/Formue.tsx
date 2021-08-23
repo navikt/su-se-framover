@@ -14,7 +14,6 @@ import {
     FieldArrayWithId,
     useFieldArray,
     useForm,
-    useFormState,
     UseFormTrigger,
     useWatch,
 } from 'react-hook-form';
@@ -316,11 +315,6 @@ const FormuePanel = (props: {
         control: props.formController,
     });
 
-    const { errors } = useFormState({
-        name: panelName,
-        control: props.formController,
-    });
-
     const handlePanelKlikk = () => (åpen ? handleBekreftClick() : setÅpen(true));
 
     let utregnetFormue = regnUtFormDataVerdier(formueVerdier);
@@ -363,17 +357,19 @@ const FormuePanel = (props: {
                             name={`${panelName}.${id}`}
                             control={props.formController}
                             defaultValue={formueVerdier?.[id] ?? '0'}
-                            render={({ field }) => (
-                                <Input
-                                    id={field.name}
-                                    label={intl.formatMessage({ id: `formuepanel.${id}` })}
-                                    {...field}
-                                    feil={errors.formue?.[props.blokkIndex]?.[formueTilhører]?.[id]?.message}
-                                    bredde="M"
-                                    inputMode="numeric"
-                                    pattern="[0-9]*"
-                                />
-                            )}
+                            render={({ field, fieldState }) => {
+                                return (
+                                    <Input
+                                        id={field.name}
+                                        label={intl.formatMessage({ id: `formuepanel.${id}` })}
+                                        {...field}
+                                        feil={fieldState.error?.message}
+                                        bredde="M"
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
+                                    />
+                                );
+                            }}
                         />
                     );
                 })}
