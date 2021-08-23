@@ -15,8 +15,7 @@ export default {
     'radio.delerSøkerBoligOver18.legend': 'Deler søker bolig med noen over 18 år?',
     'radio.hvemDelerSøkerBoligMed.legend': 'Hvem deler søker bolig med?',
     'radio.ektemakeEllerSamboerUnder67år.legend': 'Er ektefelle/samboer under 67 år?',
-    'radio.ektemakeEllerSamboerUførFlyktning.legend':
-        'Mottar ektefelle/samboer supplerende stønad for uføre flyktninger?',
+    'radio.ektemakeEllerSamboerUførFlyktning.legend': 'Er ektefelle eller samboer ufør flyktning?',
 
     'radio.label.ektemakeEllerSamboer': 'Ektefelle/samboer',
     'radio.label.voksneBarn': 'Voksne barn',
