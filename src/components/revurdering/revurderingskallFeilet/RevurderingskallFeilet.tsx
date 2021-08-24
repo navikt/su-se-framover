@@ -93,13 +93,7 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string
     [RevurderingErrorCodes.SIMULERING_FEILET_FINNER_IKKE_PERSON]: 'feil.simulering.feilet.finnerIkkePerson',
     [RevurderingErrorCodes.SIMULERING_FEILET_FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM]:
         'feil.simulering.feilet.finnerIkkeKjøreplansperiodeForFom',
-    [RevurderingErrorCodes.KONTROLLSIMULERING_FEILET]: 'feil.kontrollsimulering.feilet',
-    [RevurderingErrorCodes.KONTROLLSIMULERING_FEILET_OPPDRAG_STENGT_ELLER_NEDE]:
-        'feil.kontrollsimulering.feilet.oppdragStengtEllerNede',
-    [RevurderingErrorCodes.KONTROLLSIMULERING_FEILET_FINNER_IKKE_PERSON]:
-        'feil.kontrollsimulering.feilet.finnerIkkePerson',
-    [RevurderingErrorCodes.KONTROLLSIMULERING_FEILET_FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM]:
-        'feil.kontrollsimulering.feilet.finnerIkkeKjøreplansperiodeForFom',
+    [RevurderingErrorCodes.SIMULERING_FEILET_OPPDRAGET_FINNES_IKKE]: 'feil.simulering.feilet.oppdragetFinnesIkke',
 };
 
 export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) => {

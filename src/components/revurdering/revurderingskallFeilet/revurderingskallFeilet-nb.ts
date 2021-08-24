@@ -38,12 +38,8 @@ export default {
     'feil.simulering.feilet.finnerIkkePerson': 'Simulering feilet. Finner ikke person i TPS.',
     'feil.simulering.feilet.finnerIkkeKjøreplansperiodeForFom':
         'Simulering feilet. Finner ikke kjøreplansperiode for fom-dato. Kjøreplan finnes som regel bare for inneværende år.',
-    'feil.kontrollsimulering.feilet': 'Kontrollsimulering feilet',
-    'feil.kontrollsimulering.feilet.oppdragStengtEllerNede':
-        'Kontrollsimulering feilet. Oppdrag/UR er stengt eller nede. Prøv på nytt eller prøv igjen i Oppdrags åpningstid.',
-    'feil.kontrollsimulering.feilet.finnerIkkePerson': 'Kontrollsimulering feilet. Finner ikke person i TPS.',
-    'feil.kontrollsimulering.feilet.finnerIkkeKjøreplansperiodeForFom':
-        'Kontrollsimulering feilet. Finner ikke kjøreplansperiode for fom-dato. Kjøreplan finnes som regel bare for inneværende år.',
+    'feil.simulering.feilet.oppdragetFinnesIkke':
+        'Simulering feilet. Oppdraget finnes ikke, brukerens transaksjoner er sannsynligvis fjernet fra Oppdrag.',
     'feil.ufullstendig.behandlingsinformasjon': 'Ufullstendig behandlingsinformasjon',
     'feil.gregulering.kan.ikke.føre.til.opphør': 'G-regulering kan ikke føre til opphør',
     'feil.eps.alder.er.null': 'Alderen til ektefelle eller samboer er null',
