@@ -18,8 +18,9 @@ import { useFeatureToggle } from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
-import { useAppSelector, useAppDispatch } from '~redux/Store';
+import { useAppDispatch, useAppSelector } from '~redux/Store';
 
+import Restanser from './restans/Restanser';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
 
@@ -166,7 +167,7 @@ const Saksoversikt = () => {
                     )}
                 </Route>
                 <Route path={Routes.saksoversiktIndex.path}>
-                    <div className={styles.saksoversiktContainer}>
+                    <div className={styles.saksoversiktForside}>
                         <div className={styles.search}>
                             <Personsøk
                                 onReset={() => {
@@ -190,9 +191,7 @@ const Saksoversikt = () => {
                                 <AlertStripe type="feil">{visErrorMelding(sak.error)}</AlertStripe>
                             )}
                         </div>
-                        {/* TODO 10.07.21: Skrur av denne til siste kommentar i https://trello.com/c/GtHzrIpP/869-se-alle-%C3%A5pne-s%C3%B8knadsbehandlinger er fikset 
-                            <Restanser /> 
-                        */}
+                        <Restanser />
                     </div>
                 </Route>
             </Switch>

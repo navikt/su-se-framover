@@ -58,6 +58,8 @@ export const isValidDayMonthYearFormat = (date: Nullable<string>): boolean => {
     return DateFns.isValid(DateFns.parse(date, 'dd.MM.yyyy', new Date()));
 };
 
+export const isValidInterval = (fom: Nullable<Date>, tom: Nullable<Date>) => fom && tom && DateFns.isAfter(tom, fom);
+
 export const toStringDateOrNull = (date: Date | null) => {
     if (!date) return null;
 

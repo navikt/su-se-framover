@@ -497,9 +497,10 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
-                            onLagreOgFortsettSenereClick={() => {
-                                form.handleSubmit(handleLagreOgFortsettSenere, focusAfterTimeout(feiloppsummeringRef));
-                            }}
+                            onLagreOgFortsettSenereClick={form.handleSubmit(
+                                handleLagreOgFortsettSenere,
+                                focusAfterTimeout(feiloppsummeringRef)
+                            )}
                             nesteKnappTekst={
                                 oppdatertVilkårsinformasjon !== 'personligOppmøteIkkeVurdert' &&
                                 erFerdigbehandletMedAvslag(oppdatertVilkårsinformasjon)

@@ -19,7 +19,7 @@ export default {
     'vedlegg.måLeggesMed.puntk1': 'Kopi av pass',
     'vedlegg.måLeggesMed.puntk2': 'Kopi av grunnlaget for skatt og siste skattemelding',
     'vedlegg.formueIUtlandet':
-        'Hvis søker og eventuelt søkers ektefelle/samboer har formue i utlandet eller mottar pensjon fra utlandet, må dette dokumenters:',
+        'Hvis søker og eventuelt søkers ektefelle/samboer har formue i utlandet eller mottar pensjon fra utlandet, må dette dokumenteres:',
     'vedlegg.formueIUtlandet.punkt1': 'Dokumentering av formue i utlandet',
     'vedlegg.formueIUtlandet.punkt2': 'Dokumentering av pensjon fra utlandet',
     'vedlegg.søkerManglerDok': 'Hvis søker mangler dokumentasjon kan søker ettersende dette.',

@@ -10,7 +10,7 @@ export default {
     'eksisterende.vedtakinfo.eps': 'Ektefelle eller samboer',
     'eksisterende.vedtakinfo.over18år': 'Voksne over 18 år',
     'eksisterende.vedtakinfo.enslig': 'Enslig',
-    'eksisterende.vedtakinfo.mottarSU': 'Mottar supplerende stønad for uføre flyktninger?',
+    'eksisterende.vedtakinfo.mottarSU': 'Er ektefelle eller samboer ufør flyktning?',
     'eksisterende.vedtakinfo.sats': 'Sats',
     'eksisterende.vedtakinfo.ja': 'Ja',
     'eksisterende.vedtakinfo.nei': 'Nei',

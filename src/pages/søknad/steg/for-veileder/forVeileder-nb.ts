@@ -3,7 +3,7 @@ export default {
     'info.kontaktinfo.mangler': 'Finner ingen registrert informasjon i kontakt- og reservasjonsregisteret',
     'info.telefon.tittel': 'Telefonnummer i NAV',
     'info.telefon.body':
-        'Hvis telefonnummer eller e-post ikke stemmer må dette entes oppdateres i kontakt-og reservasjonsregisteret eller registreres i NAV sin persondataløsning (PDL)',
+        'Hvis telefonnummer eller e-post ikke stemmer må dette enten oppdateres i kontakt-og reservasjonsregisteret eller registreres i NAV sin persondataløsning (PDL)',
     'info.kontaktform.tittel': 'Kontaktform',
     'info.kontaktform.body':
         'Hvis søker ønsker å reservere seg mot digital kommunikasjon kan dette gjøres på https://www.norge.no/reservasjon.',

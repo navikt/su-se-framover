@@ -15,4 +15,6 @@ export default {
     'gjeldende.uføregrad': 'Uføregrad:',
     'gjeldende.inntektEtterUførhet': 'Inntekt etter uførhet:',
     'gjeldende.begrunnelse': 'Begrunnelse',
+
+    'feil.overlappendePerioder': 'To eller flere av periodene overlapper. Du må rette opp i det før du kan gå videre.',
 };
