@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
@@ -29,9 +28,6 @@ const SendTilAttesteringPage = React.lazy(
     () => import('./søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage')
 );
 const Vedtaksoppsummering = React.lazy(() => import('~pages/saksbehandling/vedtak/Vedtaksoppsummering'));
-const Søknadsbehandlingvedtakoppsummering = React.lazy(
-    () => import('./vedtak/søknadsbehandlingvedtakoppsummering/Søknadsbehandlingvedtakoppsummering')
-);
 const LukkSøknad = React.lazy(() => import('./lukkSøknad/LukkSøknad'));
 const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));
 const Sakintro = React.lazy(() => import('./sakintro/Sakintro'));
@@ -140,16 +136,6 @@ const Saksoversikt = () => {
                                                         </Route>
                                                         <Route path={Routes.saksbehandlingVilkårsvurdering.path}>
                                                             <Vilkår sak={sak} søker={søker} />
-                                                        </Route>
-                                                        <Route path={Routes.saksbehandlingOppsummering.path}>
-                                                            <div className={styles.tittelContainer}>
-                                                                <Innholdstittel className={styles.pageTittel}>
-                                                                    {intl.formatMessage({
-                                                                        id: 'page.behandlingsoppsummering.tittel',
-                                                                    })}
-                                                                </Innholdstittel>
-                                                            </div>
-                                                            <Søknadsbehandlingvedtakoppsummering sak={sak} />
                                                         </Route>
                                                     </Switch>
                                                 </div>

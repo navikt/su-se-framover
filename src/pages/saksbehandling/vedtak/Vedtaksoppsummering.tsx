@@ -2,6 +2,7 @@ import { Knapp } from 'nav-frontend-knapper';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import { useI18n } from '~lib/hooks';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
@@ -35,10 +36,16 @@ const Vedtaksoppsummering = (props: Props) => {
                         vedtakId={vedtak.id}
                     />
                 );
-
-            // TODO ai: legg till støtte for søknadsbehandlingsoppsummering
             case 'søknadsbehandling':
-            case undefined:
+                return (
+                    <Søknadsbehandlingoppsummering
+                        sak={props.sak}
+                        behandling={vedtaksinformasjon.behandling}
+                        vedtakForBehandling={vedtak}
+                        medBrevutkastknapp
+                    />
+                );
+            default:
                 return <div>{intl.formatMessage({ id: 'feilmelding.fantIkkeVedtak' })}</div>;
         }
     };
