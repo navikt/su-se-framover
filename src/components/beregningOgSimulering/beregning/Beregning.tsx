@@ -362,12 +362,14 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 
     function simuleringsfeilmelding(errorCode: string | undefined) {
         switch (errorCode) {
-            case 'simulering_oppdrag_stengt_eller_nede':
+            case 'simulering_feilet_oppdrag_stengt_eller_nede':
                 return intl.formatMessage({ id: 'alert.feil.simuleringFeilet.oppdragStengtEllerNede' });
-            case 'simulering_finner_ikke_person_i_tps':
+            case 'simulering_feilet_finner_ikke_person_i_tps':
                 return intl.formatMessage({ id: 'alert.feil.simuleringFeilet.finnerIkkePerson' });
-            case 'simulering_finner_ikke_kjøreplansperiode_for_fom':
+            case 'simulering_feilet_finner_ikke_kjøreplansperiode_for_fom':
                 return intl.formatMessage({ id: 'alert.feil.simuleringFeilet.finnerIkkeKjøreplansperiodeForFom' });
+            case 'simulering_feilet_oppdraget_finnes_ikke':
+                return intl.formatMessage({ id: 'alert.feil.simuleringFeilet.oppdragetFinnesIkke' });
             default:
                 return intl.formatMessage({ id: 'alert.feil.simuleringFeilet' });
         }
