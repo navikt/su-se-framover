@@ -25,10 +25,10 @@ import {
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
-import { Dokument, DokumentIdType } from '~pages/saksbehandling/dokument/Dokument';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
+import { Dokument, DokumentIdType } from '~types/dokument/Dokument';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -70,8 +70,8 @@ export const hentDokumenter = createAsyncThunk<
     Dokument[],
     { id: string; idType: DokumentIdType },
     { rejectValue: ApiError }
->('sak/dokumenter', async ({ id, idType }, thunkApi) => {
-    const res = await dokumentApi.hentDokumenter(id, idType);
+>('sak/dokumenter', async (args, thunkApi) => {
+    const res = await dokumentApi.hentDokumenter(args);
     if (res.status === 'ok') {
         return res.data;
     }

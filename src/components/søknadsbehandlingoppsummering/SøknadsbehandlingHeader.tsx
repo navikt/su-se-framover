@@ -7,13 +7,16 @@ import { Element } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
+import * as DokumentApi from '~api/dokumentApi';
 import * as PdfApi from '~api/pdfApi';
 import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useUserContext } from '~context/userContext';
-import { useI18n, useBrevForhåndsvisning } from '~lib/hooks';
+import { useI18n, useApiCall } from '~lib/hooks';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
+import { DokumentIdType } from '~types/dokument/Dokument';
 import { Vedtak } from '~types/Vedtak';
 import { erIverksatt } from '~utils/behandling/behandlingUtils';
+import { getBlob } from '~utils/dokumentUtils';
 import { søknadMottatt } from '~utils/søknad/søknadUtils';
 
 import messages from './søknadsbehandling-nb';
@@ -64,13 +67,35 @@ const Tilleggsinfo = (props: {
     const user = useUserContext();
     const senesteAttestering = last(props.behandling.attesteringer);
 
-    const [lastNedBrevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandling);
+    const [hentDokumenterStatus, hentDokumenter] = useApiCall(DokumentApi.hentDokumenter);
+    const [hentBrevutkastStatus, hentBrevutkast] = useApiCall(PdfApi.fetchBrevutkastForSøknadsbehandling);
+
     const hentBrev = React.useCallback(async () => {
-        lastNedBrev({
-            sakId: props.sakId,
-            behandlingId: props.behandling.id,
-        });
-    }, [props.sakId, props.behandling.id, lastNedBrevStatus._tag]);
+        const handleSuccess = (b: Blob) => window.open(URL.createObjectURL(b));
+
+        // Hvis vi har et vedtak så ønsker vi å se det faktiske vedtaksbrevet.
+        // Hvis ikke, så er det sannsynligvis fordi behandlingen ikke er iverksatt,
+        // og at utkast da er det eneste vi har.
+        if (props.vedtakForBehandling) {
+            hentDokumenter(
+                {
+                    id: props.vedtakForBehandling.id,
+                    idType: DokumentIdType.Vedtak,
+                },
+                (dokumenter) => handleSuccess(getBlob(dokumenter[0]))
+            );
+        } else {
+            hentBrevutkast(
+                {
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                },
+                handleSuccess
+            );
+        }
+    }, [props.behandling.id]);
+
+    const lastNedBrevStatus = RemoteData.combine(hentDokumenterStatus, hentBrevutkastStatus);
 
     return (
         <div>
