@@ -2,7 +2,7 @@ import { Nullable } from '~lib/types';
 import { FormueVerdier } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 
-export function totalVerdiKjøretøy(kjøretøyArray: Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>) {
+function totalVerdiKjøretøy(kjøretøyArray: Array<{ verdiPåKjøretøy: number; kjøretøyDeEier: string }>) {
     return kjøretøyArray.reduce((acc, kjøretøy) => acc + kjøretøy.verdiPåKjøretøy, 0);
 }
 
