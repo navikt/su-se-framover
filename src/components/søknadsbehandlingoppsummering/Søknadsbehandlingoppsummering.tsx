@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import VisBeregningOgSimulering from '~components/beregningOgSimulering/BeregningOgSimulering';
 import VilkårsOppsummering from '~components/oppsummering/vilkårsOppsummering/VilkårsOppsummering';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import { Behandling, Behandlingsperiode } from '~types/Behandling';
 import { Periode } from '~types/Periode';

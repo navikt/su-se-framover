@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Behandling } from '~types/Behandling';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';

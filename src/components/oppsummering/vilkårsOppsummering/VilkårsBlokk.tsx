@@ -2,7 +2,7 @@ import { Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
 
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 

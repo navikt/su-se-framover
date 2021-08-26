@@ -11,7 +11,7 @@ import { IntlShape } from 'react-intl';
 
 import { Person } from '~api/personApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { KanStansesEllerGjenopptas } from '~types/Sak';
 import { compareUtbetalingsperiode, Utbetalingsperiode, Utbetalingstype } from '~types/Utbetalingsperiode';

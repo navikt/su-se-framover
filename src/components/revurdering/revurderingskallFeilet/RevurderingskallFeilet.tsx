@@ -3,7 +3,7 @@ import React from 'react';
 import { IntlShape } from 'react-intl';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import { RevurderingErrorCodes } from '~types/Revurdering';
 

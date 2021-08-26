@@ -5,7 +5,7 @@ import { Radio, RadioGruppe, RadioPanel } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 import { Collapse } from 'react-collapse';
 
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { trackEvent } from '~lib/tracking/amplitude';
 import { søknadHjelpeTekstKlikk } from '~lib/tracking/trackingEvents';
 

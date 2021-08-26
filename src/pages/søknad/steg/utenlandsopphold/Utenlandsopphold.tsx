@@ -13,7 +13,7 @@ import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { Utenlandsopphold as UtenlandsoppholdType } from '~features/søknad/types';
 import { focusAfterTimeout } from '~lib/formUtils';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~utils/date/dateUtils';

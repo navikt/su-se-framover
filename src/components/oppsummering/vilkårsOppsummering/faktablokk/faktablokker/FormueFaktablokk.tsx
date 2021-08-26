@@ -4,7 +4,7 @@ import { Element } from 'nav-frontend-typografi';
 import React, { useMemo } from 'react';
 import { IntlShape } from 'react-intl';
 
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import saksbehandlingMessages from '~pages/saksbehandling/søknadsbehandling/formue/formue-nb';
 import { Behandlingsinformasjon, FormueStatus } from '~types/Behandlingsinformasjon';

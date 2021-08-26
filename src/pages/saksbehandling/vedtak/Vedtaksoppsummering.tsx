@@ -2,7 +2,7 @@ import { Knapp } from 'nav-frontend-knapper';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 

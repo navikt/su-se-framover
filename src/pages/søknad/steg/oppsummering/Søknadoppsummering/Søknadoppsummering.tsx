@@ -10,7 +10,7 @@ import utenlandsoppholdMessages from '~/pages/søknad/steg/utenlandsopphold/uten
 import { Person } from '~api/personApi';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { DelerBoligMed } from '~features/søknad/types';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { Søknadsteg } from '~pages/søknad/types';
 import { formatAdresse } from '~utils/format/formatUtils';
 

@@ -3,7 +3,7 @@ import React from 'react';
 import { IntlShape } from 'react-intl';
 
 import { IngenAdresseGrunn } from '~api/personApi';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { keyOf } from '~lib/types';
 import boOgOppholdSøknadMessages from '~pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
 import flyktningstatusSøknadMessages from '~pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';

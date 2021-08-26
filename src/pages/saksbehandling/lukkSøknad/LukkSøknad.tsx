@@ -10,7 +10,7 @@ import { useHistory } from 'react-router-dom';
 
 import { LukkSøknadBodyTypes } from '~api/søknadApi';
 import { lukkSøknad } from '~features/saksoversikt/sak.slice';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Sak } from '~types/Sak';

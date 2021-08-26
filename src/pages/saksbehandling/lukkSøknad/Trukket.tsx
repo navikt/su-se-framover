@@ -7,7 +7,7 @@ import React, { useCallback, useState } from 'react';
 
 import { ApiError } from '~api/apiClient';
 import { hentLukketSøknadBrevutkast } from '~features/saksoversikt/sak.slice';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { useAppDispatch } from '~redux/Store';
 import { LukkSøknadBegrunnelse } from '~types/Søknad';
 
