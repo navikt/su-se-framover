@@ -13,7 +13,7 @@ import { useUserContext } from '~context/userContext';
 import { SøknadState } from '~features/søknad/søknad.slice';
 import { DelerBoligMed } from '~features/søknad/types';
 import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as routes from '~lib/routes';
 import { trackEvent } from '~lib/tracking/amplitude';
 import { søknadNesteSteg } from '~lib/tracking/trackingEvents';

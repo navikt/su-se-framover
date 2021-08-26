@@ -5,7 +5,8 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
-import TextProvider, { Languages } from '~components/TextProvider';
+import TextProvider from '~components/TextProvider';
+import { Languages } from '~lib/i18n';
 
 import messages from './bunnknapper-nb';
 import styles from './bunnknapper.module.less';

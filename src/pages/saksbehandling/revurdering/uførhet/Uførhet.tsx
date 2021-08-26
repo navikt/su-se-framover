@@ -20,7 +20,7 @@ import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeil
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import { focusAfterTimeout } from '~lib/formUtils';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering, validateStringAsNonNegativeNumber } from '~lib/validering';

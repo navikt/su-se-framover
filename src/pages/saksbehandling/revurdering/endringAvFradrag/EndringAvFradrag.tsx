@@ -19,7 +19,7 @@ import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { customFormikSubmit } from '~lib/formUtils';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';

@@ -16,7 +16,7 @@ import DatePicker from '~components/datePicker/DatePicker';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as SakSlice from '~features/saksoversikt/sak.slice';
 import { nullableMap, pipe } from '~lib/fp';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';

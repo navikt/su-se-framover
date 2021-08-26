@@ -2,7 +2,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import React, { useMemo } from 'react';
 import { IntlShape } from 'react-intl';
 
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { keyOf, Nullable } from '~lib/types';
 import søknadMessages from '~pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';

@@ -10,7 +10,7 @@ import React from 'react';
 
 import sharedMessages from '~components/beregningOgSimulering/beregning/beregning-nb';
 import { combineOptions, pipe } from '~lib/fp';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { useAppSelector } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { Simulering, SimulertUtbetalingstype } from '~types/Simulering';

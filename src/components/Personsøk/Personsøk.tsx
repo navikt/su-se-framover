@@ -10,7 +10,7 @@ import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { ApiError, ErrorCode } from '~api/apiClient';
 import { Person } from '~api/personApi';
 import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { removeSpaces } from '~utils/format/formatUtils';
 
 import { Personkort } from '../personkort/Personkort';

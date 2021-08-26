@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 
 import { FnrInput } from '~components/FnrInput/FnrInput';
 import { EPSFormData } from '~features/søknad/types';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { keyOf, Nullable } from '~lib/types';
 
 import messages from './bo-og-opphold-i-norge-nb';

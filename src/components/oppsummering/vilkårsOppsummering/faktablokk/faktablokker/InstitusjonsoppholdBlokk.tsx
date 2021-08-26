@@ -1,7 +1,7 @@
 import AlertStripe from 'nav-frontend-alertstriper';
 import React, { useMemo } from 'react';
 
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { keyOf } from '~lib/types';
 import søknadMessages from '~pages/søknad/steg/bo-og-opphold-i-norge/bo-og-opphold-i-norge-nb';
 import { InstitusjonsoppholdStatus } from '~types/Behandlingsinformasjon';

@@ -4,7 +4,7 @@ import { Knapp } from 'nav-frontend-knapper';
 import { Input } from 'nav-frontend-skjema';
 import * as React from 'react';
 
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 
 import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';

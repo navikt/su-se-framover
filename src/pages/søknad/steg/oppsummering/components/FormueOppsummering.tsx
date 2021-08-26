@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { SøknadState } from '~features/søknad/søknad.slice';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import epsFormueMessages from '~pages/søknad/steg/formue/epsFormue/ektefellesformue-nb';
 import formueMessages from '~pages/søknad/steg/formue/søkersFormue/dinformue-nb';
 

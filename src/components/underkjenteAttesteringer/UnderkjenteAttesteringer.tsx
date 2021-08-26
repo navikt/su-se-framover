@@ -2,7 +2,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 import React from 'react';
 
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { Attestering, UnderkjennelseGrunn } from '~types/Behandling';
 import { formatDateTime } from '~utils/date/dateUtils';
 

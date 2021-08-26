@@ -1,7 +1,7 @@
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import React from 'react';
 
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 
 import sharedI18n from './sharedI18n-nb';
 import styles from './vurdering.module.less';

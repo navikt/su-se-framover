@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as routes from '~lib/routes';
 import { trackEvent } from '~lib/tracking/amplitude';
 import { søknadOppsummeringEndreSvarKlikk } from '~lib/tracking/trackingEvents';
