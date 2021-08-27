@@ -2,7 +2,7 @@ import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 import messages from './formuestatus-nb';

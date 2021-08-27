@@ -6,9 +6,9 @@ import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import søknadSlice, { ForVeilederPapirsøknad } from '~/features/søknad/søknad.slice';
-import TextProvider, { Languages } from '~components/TextProvider';
+import TextProvider from '~components/TextProvider';
 import { GrunnForPapirinnsending } from '~features/søknad/types';
-import { useI18n } from '~lib/hooks';
+import { useI18n, Languages } from '~lib/i18n';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Søknadstype } from '~types/Søknad';

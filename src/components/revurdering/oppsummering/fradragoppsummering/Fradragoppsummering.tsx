@@ -5,7 +5,7 @@ import { Undertekst, Element } from 'nav-frontend-typografi';
 import * as React from 'react';
 
 import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { eqNullable } from '~lib/types';
 import { Fradrag } from '~types/Fradrag';
 import { eqStringPeriode } from '~types/Periode';

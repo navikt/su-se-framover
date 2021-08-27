@@ -14,7 +14,8 @@ import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
-import { useAsyncActionCreator, useI18n } from '~lib/hooks';
+import { useAsyncActionCreator } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
@@ -81,7 +82,7 @@ const schema = yup.object<FormData>({
                 .typeError('Feltet må være et tall'),
             otherwise: yup.number().nullable().defined(),
         }) as unknown as yup.Schema<string>,
-    begrunnelse: yup.string().defined().default(null),
+    begrunnelse: yup.string().nullable().defined().default(null),
 });
 
 const Uførhet = (props: VilkårsvurderingBaseProps) => {

@@ -10,12 +10,11 @@ import { FeatureToggle } from '~api/featureToggleApi';
 import Hendelseslogg from '~components/hendelseslog/Hendelseslogg';
 import Personlinje from '~components/personlinje/Personlinje';
 import Personsøk from '~components/Personsøk/Personsøk';
-import { Languages } from '~components/TextProvider';
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
-import { useI18n } from '~lib/hooks';
+import { useI18n, Languages } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 

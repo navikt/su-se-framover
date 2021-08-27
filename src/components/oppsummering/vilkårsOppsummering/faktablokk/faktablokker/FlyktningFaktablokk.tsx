@@ -1,7 +1,7 @@
 import AlertStripe from 'nav-frontend-alertstriper';
 import React from 'react';
 
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { keyOf } from '~lib/types';
 import søknadMessages from '~pages/søknad/steg/flyktningstatus-oppholdstillatelse/flyktningstatus-oppholdstillatelse-nb';
 import { FlyktningStatus } from '~types/Behandlingsinformasjon';

@@ -1,4 +1,4 @@
-import { UseI18N } from '~lib/hooks';
+import { UseI18N } from '~lib/i18n';
 import {
     erBosituasjonFullstendig,
     BosituasjonTyper,

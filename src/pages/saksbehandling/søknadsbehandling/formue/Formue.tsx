@@ -23,7 +23,8 @@ import personSlice from '~features/person/person.slice';
 import sakSliceActions, * as sakSlice from '~features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
-import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
+import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering, validateStringAsNonNegativeNumber } from '~lib/validering';
@@ -394,7 +395,9 @@ const Formue = (props: {
                                                     className={styles.formueInput}
                                                     inputName={field.name}
                                                     onChange={field.onChange}
-                                                    defaultValue={field.value ?? '0'}
+                                                    defaultValue={
+                                                        keyNavn === 'verdiPåKjøretøy' ? '' : field.value ?? '0'
+                                                    }
                                                     feil={fieldState.error?.message}
                                                     inputRef={field.ref}
                                                 />
@@ -578,12 +581,10 @@ const Formue = (props: {
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
-                            onLagreOgFortsettSenereClick={() => {
-                                form.handleSubmit(
-                                    handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
-                                    focusAfterTimeout(feiloppsummeringRef)
-                                );
-                            }}
+                            onLagreOgFortsettSenereClick={form.handleSubmit(
+                                handleSave(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })),
+                                focusAfterTimeout(feiloppsummeringRef)
+                            )}
                         />
                     </form>
                 ),

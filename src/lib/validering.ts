@@ -16,11 +16,15 @@ export const validateStringAsPositiveNumber = yup
 export function validateStringAsNonNegativeNumber(name = 'feltet') {
     // Vi ønsker at tom streng skal regnes som at feltet ikke er fylt inn,
     // men yup.number() vil behandle det som et ugyldig tall.
-    return yup.lazy((val) =>
-        val === ''
-            ? yup.string().required().label(name)
-            : yup.number().required().min(0).label(name).typeError(`${name} må være et tall`)
-    ) as yup.Schema<string>;
+    // Vi sjekker derfor eksplisitt på om `originalValue` (verdien før yup konverterte til number)
+    // var tom streng og tvinger den da til 'ikke-utfylt'.
+    return yup
+        .number()
+        .transform((value, originalValue) => (originalValue === '' ? undefined : value))
+        .required()
+        .min(0)
+        .label(name)
+        .typeError(`${name} må være et tall`) as unknown as yup.Schema<string>;
 }
 
 const norskLocale: yup.LocaleObject = {

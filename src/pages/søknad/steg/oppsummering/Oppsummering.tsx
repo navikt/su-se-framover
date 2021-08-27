@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
 import * as innsendingSlice from '~features/søknad/innsending.slice';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { trackEvent } from '~lib/tracking/amplitude';
 import { søknadSendInn } from '~lib/tracking/trackingEvents';
 import { useAppDispatch, useAppSelector } from '~redux/Store';

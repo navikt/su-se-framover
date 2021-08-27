@@ -13,7 +13,8 @@ import RevurderingskallFeilet, {
 import revurderingsfeilMessages from '~components/revurdering/revurderingskallFeilet/revurderingskallFeilet-nb';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
-import { useAsyncActionCreator, useI18n, useAsyncActionCreatorWithArgsTransformer } from '~lib/hooks';
+import { useAsyncActionCreator, useAsyncActionCreatorWithArgsTransformer } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';

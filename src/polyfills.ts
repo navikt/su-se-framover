@@ -1,7 +1,7 @@
 import { shouldPolyfill as shouldPolyfillDateTime } from '@formatjs/intl-datetimeformat/should-polyfill';
 import { shouldPolyfill as shouldPolyfillNumber } from '@formatjs/intl-numberformat/should-polyfill';
 
-import { Languages } from '~components/TextProvider';
+import { Languages } from '~lib/i18n';
 
 export default async function polyfill() {
     /*

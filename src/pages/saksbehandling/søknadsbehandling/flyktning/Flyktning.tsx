@@ -13,7 +13,8 @@ import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
-import { useAsyncActionCreator, useI18n } from '~lib/hooks';
+import { useAsyncActionCreator } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
@@ -231,9 +232,10 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                             onTilbakeClick={() => {
                                 history.push(props.forrigeUrl);
                             }}
-                            onLagreOgFortsettSenereClick={() =>
-                                form.handleSubmit(handleLagreOgFortsettSenere, focusAfterTimeout(feiloppsummeringRef))
-                            }
+                            onLagreOgFortsettSenereClick={form.handleSubmit(
+                                handleLagreOgFortsettSenere,
+                                focusAfterTimeout(feiloppsummeringRef)
+                            )}
                             nesteKnappTekst={vilGiTidligAvslag ? formatMessage('knapp.tilVedtaket') : undefined}
                         />
                     </form>

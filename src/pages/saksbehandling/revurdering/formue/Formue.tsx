@@ -14,7 +14,6 @@ import {
     FieldArrayWithId,
     useFieldArray,
     useForm,
-    useFormState,
     UseFormTrigger,
     useWatch,
 } from 'react-hook-form';
@@ -28,7 +27,8 @@ import FormuevilkårOppsummering from '~components/revurdering/oppsummering/form
 import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreFormuegrunnlag } from '~features/revurdering/revurderingActions';
-import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
+import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { Periode } from '~types/Periode';
@@ -196,14 +196,8 @@ const FormueBlokk = (props: {
                                 isClearable
                                 autoComplete="off"
                                 value={field.value}
-                                onChange={(date) => {
-                                    field.onChange(
-                                        date
-                                            ? Array.isArray(date)
-                                                ? DateFns.startOfMonth(date[0])
-                                                : DateFns.startOfMonth(date)
-                                            : null
-                                    );
+                                onChange={(date: Date | null) => {
+                                    field.onChange(date ? DateFns.startOfMonth(date) : null);
                                 }}
                                 feil={fieldState.error?.message}
                                 minDate={revurderingsperiode.fraOgMed}
@@ -225,14 +219,8 @@ const FormueBlokk = (props: {
                                 isClearable
                                 autoComplete="off"
                                 value={field.value}
-                                onChange={(date) => {
-                                    field.onChange(
-                                        date
-                                            ? Array.isArray(date)
-                                                ? DateFns.endOfMonth(date[0])
-                                                : DateFns.endOfMonth(date)
-                                            : null
-                                    );
+                                onChange={(date: Date | null) => {
+                                    field.onChange(date ? DateFns.startOfMonth(date) : null);
                                 }}
                                 feil={fieldState.error?.message}
                                 minDate={watch.periode.fraOgMed}
@@ -328,11 +316,6 @@ const FormuePanel = (props: {
         control: props.formController,
     });
 
-    const { errors } = useFormState({
-        name: panelName,
-        control: props.formController,
-    });
-
     const handlePanelKlikk = () => (åpen ? handleBekreftClick() : setÅpen(true));
 
     let utregnetFormue = regnUtFormDataVerdier(formueVerdier);
@@ -375,17 +358,19 @@ const FormuePanel = (props: {
                             name={`${panelName}.${id}`}
                             control={props.formController}
                             defaultValue={formueVerdier?.[id] ?? '0'}
-                            render={({ field }) => (
-                                <Input
-                                    id={field.name}
-                                    label={intl.formatMessage({ id: `formuepanel.${id}` })}
-                                    {...field}
-                                    feil={errors.formue?.[props.blokkIndex]?.[formueTilhører]?.[id]?.message}
-                                    bredde="M"
-                                    inputMode="numeric"
-                                    pattern="[0-9]*"
-                                />
-                            )}
+                            render={({ field, fieldState }) => {
+                                return (
+                                    <Input
+                                        id={field.name}
+                                        label={intl.formatMessage({ id: `formuepanel.${id}` })}
+                                        {...field}
+                                        feil={fieldState.error?.message}
+                                        bredde="M"
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
+                                    />
+                                );
+                            }}
                         />
                     );
                 })}

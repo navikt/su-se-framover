@@ -9,7 +9,7 @@ import { useHistory, Link } from 'react-router-dom';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
 import søknadSlice from '~features/søknad/søknad.slice';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Søknadstype } from '~types/Søknad';

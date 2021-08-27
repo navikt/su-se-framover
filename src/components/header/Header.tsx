@@ -3,7 +3,7 @@ import Lenke from 'nav-frontend-lenker';
 import React from 'react';
 
 import Config from '~/config';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { LoggedInUser, Rolle } from '~types/LoggedInUser';
 

@@ -37,7 +37,7 @@ export default {
     'formue.ektefellesFormue': 'Ektefelles totale formue',
     'formue.verdiPåBolig': 'Verdi på bolig',
     'formue.verdiPåEiendom': 'Verdi på eiendom',
-    'formue.verdiPåKjøretøy': 'Verdi på Kjøretøy',
+    'formue.verdiPåKjøretøy': 'Verdi på kjøretøy',
     'formue.innskuddsbeløp': 'Innskuddsbeløp',
     'formue.verdipapirbeløp': 'Verdipapirbeløp',
     'formue.kontanter': 'Kontanter over 1000',
@@ -54,7 +54,7 @@ export default {
     'sats.harOppholdstillatelse': 'Har oppholdstillatelse?',
     'sats.hvemDelerSøkerBoligMed': 'Hvem deler søker bolig med?',
     'sats.hvemDelerSøkerBoligMed.ingen': 'Ingen',
-    'sats.ektemakeEllerSamboerUførFlyktning': 'Mottar ektemake eller samboer supplerende stønad for uføre flyktninger?',
+    'sats.ektemakeEllerSamboerUførFlyktning': 'Er ektefelle eller samboer ufør flyktning?',
 
     'personligOppmøte.hvemHarMøtt': 'Hvem har møtt opp?',
     'personligOppmøte.personligOppmøte': 'Personlig',

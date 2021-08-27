@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import VisBeregning from '~components/beregningOgSimulering/beregning/VisBeregning';
 import { Utbetalingssimulering } from '~components/beregningOgSimulering/simulering/simulering';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { harBeregninger, harSimulering, Revurdering, RevurderingsStatus } from '~types/Revurdering';
 
 import { erGregulering, erRevurderingIngenEndring } from '../../../../utils/revurdering/revurderingUtils';

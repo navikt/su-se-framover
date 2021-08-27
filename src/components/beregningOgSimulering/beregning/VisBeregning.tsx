@@ -9,7 +9,7 @@ import { IntlShape } from 'react-intl';
 
 import messages from '~components/beregningOgSimulering/beregning/beregning-nb';
 import { combineOptions, pipe } from '~lib/fp';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { Beregning, eqMånedsberegningBortsettFraPeriode, Månedsberegning } from '~types/Beregning';
 import { Fradrag, Fradragstype } from '~types/Fradrag';
 import { Sats } from '~types/Sats';
