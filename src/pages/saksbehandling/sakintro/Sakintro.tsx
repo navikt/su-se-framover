@@ -135,11 +135,11 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                     />
                     {revurderingToggle && <Revurderinger sak={props.sak} revurderinger={revurderinger} intl={intl} />}
                     <IverksattInnvilgedeSøknader
-                        sakId={props.sak.id}
+                        sak={props.sak}
                         iverksatteInnvilgedeSøknader={iverksatteInnvilgedeSøknader}
                         intl={intl}
                     />
-                    <AvslåtteSøknader sakId={props.sak.id} avslåtteSøknader={avslåtteSøknader} intl={intl} />
+                    <AvslåtteSøknader sak={props.sak} avslåtteSøknader={avslåtteSøknader} intl={intl} />
                     <LukkedeSøknader lukkedeSøknader={lukkedeSøknader} intl={intl} />
                 </div>
             ) : (
@@ -357,7 +357,7 @@ const IverksattInnvilgedeSøknader = (props: {
         søknadensBehandlingsId: string | undefined;
         søknad: Søknad;
     }>;
-    sakId: string;
+    sak: Sak;
     intl: IntlShape;
 }) => {
     if (props.iverksatteInnvilgedeSøknader.length === 0) return null;
@@ -369,7 +369,13 @@ const IverksattInnvilgedeSøknader = (props: {
             </Ingress>
             <ol>
                 {props.iverksatteInnvilgedeSøknader.map((s) => {
-                    if (!s.søknadensBehandlingsId) return <></>;
+                    if (!s.søknadensBehandlingsId) {
+                        return null;
+                    }
+                    const vedtak = props.sak.vedtak.find((v) => v.behandlingId === s.søknadensBehandlingsId);
+                    if (!vedtak) {
+                        return null;
+                    }
 
                     return (
                         <div key={s.søknad.id}>
@@ -397,9 +403,9 @@ const IverksattInnvilgedeSøknader = (props: {
                                     <div className={(styles.knapper, styles.flexColumn)}>
                                         <Link
                                             className="knapp"
-                                            to={Routes.saksbehandlingOppsummering.createURL({
-                                                sakId: props.sakId,
-                                                behandlingId: s.søknadensBehandlingsId,
+                                            to={Routes.vedtaksoppsummering.createURL({
+                                                sakId: props.sak.id,
+                                                vedtakId: vedtak.id,
                                             })}
                                         >
                                             {props.intl.formatMessage({ id: 'display.behandling.seOppsummering' })}
@@ -587,7 +593,7 @@ const LukkedeSøknader = (props: { lukkedeSøknader: Søknad[]; intl: IntlShape 
 };
 
 const AvslåtteSøknader = (props: {
-    sakId: string;
+    sak: Sak;
     avslåtteSøknader: Array<{
         iverksattDato: string | undefined;
         søknadensBehandlingsId: string | undefined;
@@ -606,7 +612,13 @@ const AvslåtteSøknader = (props: {
             </Ingress>
             <ol>
                 {props.avslåtteSøknader.map((s) => {
-                    if (!s.søknadensBehandlingsId) return <></>;
+                    if (!s.søknadensBehandlingsId) {
+                        return null;
+                    }
+                    const vedtak = props.sak.vedtak.find((v) => v.behandlingId === s.søknadensBehandlingsId);
+                    if (!vedtak) {
+                        return null;
+                    }
 
                     return (
                         <li key={s.søknad.id}>
@@ -635,9 +647,9 @@ const AvslåtteSøknader = (props: {
                                 <div className={(styles.knapper, styles.flexColumn)}>
                                     <Link
                                         className="knapp"
-                                        to={Routes.saksbehandlingOppsummering.createURL({
-                                            sakId: props.sakId,
-                                            behandlingId: s.søknadensBehandlingsId,
+                                        to={Routes.vedtaksoppsummering.createURL({
+                                            sakId: props.sak.id,
+                                            vedtakId: vedtak.id,
                                         })}
                                     >
                                         {props.intl.formatMessage({ id: 'revurdering.oppsummering' })}

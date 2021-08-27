@@ -1,4 +1,4 @@
-import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
+import { Innholdstittel, Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 
 import VisBeregningOgSimulering from '~components/beregningOgSimulering/BeregningOgSimulering';
@@ -23,11 +23,12 @@ interface Props {
 }
 
 const Søknadsbehandlingoppsummering = (props: Props) => {
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     const periode = props.behandling.stønadsperiode ? getPeriode(props.behandling.stønadsperiode) : null;
 
     return (
         <div>
+            <Innholdstittel className={styles.tittel}>{formatMessage('tittel')}</Innholdstittel>
             <SøknadsbehandlingHeader
                 sakId={props.sak.id}
                 behandling={props.behandling}
@@ -36,16 +37,14 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
             />
             <div className={styles.virkningstidspunkt}>
                 <Systemtittel className={styles.tittel}>
-                    {`${intl.formatMessage({ id: 'virkningstidspunkt.tittel' })}:
+                    {`${formatMessage('virkningstidspunkt.tittel')}:
                     ${
-                        periode
-                            ? DateUtils.formatPeriode(periode)
-                            : intl.formatMessage({ id: 'virkningstidspunkt.periode.mangler' })
+                        periode ? DateUtils.formatPeriode(periode) : formatMessage('virkningstidspunkt.periode.mangler')
                     }`}
                 </Systemtittel>
                 {props.behandling.stønadsperiode?.begrunnelse ? (
                     <div>
-                        <Undertittel>{intl.formatMessage({ id: 'virkningstidspunkt.begrunnelse' })}</Undertittel>
+                        <Undertittel>{formatMessage('virkningstidspunkt.begrunnelse')}</Undertittel>
                         <p>{props.behandling.stønadsperiode?.begrunnelse}</p>
                     </div>
                 ) : (
@@ -61,7 +60,7 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
             {props.behandling.beregning ? (
                 <VisBeregningOgSimulering behandling={props.behandling} />
             ) : (
-                intl.formatMessage({ id: 'feilmelding.ikkeGjortEnBeregning' })
+                formatMessage('feilmelding.ikkeGjortEnBeregning')
             )}
         </div>
     );
