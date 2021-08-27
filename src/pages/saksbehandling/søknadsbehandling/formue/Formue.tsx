@@ -395,7 +395,9 @@ const Formue = (props: {
                                                     className={styles.formueInput}
                                                     inputName={field.name}
                                                     onChange={field.onChange}
-                                                    defaultValue={field.value ?? '0'}
+                                                    defaultValue={
+                                                        keyNavn === 'verdiPåKjøretøy' ? '' : field.value ?? '0'
+                                                    }
                                                     feil={fieldState.error?.message}
                                                     inputRef={field.ref}
                                                 />
