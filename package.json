@@ -66,7 +66,7 @@
         "country-data-list": "^1.2.1",
         "date-fns": "^2.23.0",
         "dayjs": "^1.10.6",
-        "deasync": "^0.1.22",
+        "deasync": "^0.1.23",
         "formik": "^2.2.9",
         "fp-ts": "^2.11.1",
         "jsonwebtoken": "^8.5.1",
