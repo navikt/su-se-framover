@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { ApiError } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import { Personkort } from '~components/personkort/Personkort';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 
 import messages from './FnrInput-nb';

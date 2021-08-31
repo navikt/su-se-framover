@@ -5,7 +5,6 @@ import { Nullable } from '~lib/types';
 import { Behandlingsinformasjon, Formue, FormueStatus, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~types/Søknad';
-import { totalVerdiKjøretøy } from '~utils/søknadsbehandling/formue/formueUtils';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 import { VerdierFormData } from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
@@ -67,7 +66,7 @@ function getInitialVerdier(
     return {
         verdiPåBolig: (verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0).toString(),
         verdiPåEiendom: (verdier?.verdiEiendommer ?? søknadsFormue?.verdiPåEiendom ?? 0).toString(),
-        verdiPåKjøretøy: (verdier?.verdiKjøretøy ?? totalVerdiKjøretøy(søknadsFormue?.kjøretøy ?? []) ?? 0).toString(),
+        verdiPåKjøretøy: '',
         innskuddsbeløp: (
             verdier?.innskudd ?? (søknadsFormue?.innskuddsBeløp ?? 0) + (søknadsFormue?.depositumsBeløp ?? 0)
         ).toString(),

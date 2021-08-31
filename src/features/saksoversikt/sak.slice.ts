@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice, Dictionary } from '@reduxjs/toolkit';
 
 import { ApiError } from '~api/apiClient';
 import * as behandlingApi from '~api/behandlingApi';
+import * as dokumentApi from '~api/dokumentApi';
 import * as sakApi from '~api/sakApi';
 import * as søknadApi from '~api/søknadApi';
 import { LukkSøknadBodyTypes } from '~api/søknadApi';
@@ -27,6 +28,7 @@ import { Nullable } from '~lib/types';
 import { createApiCallAsyncThunk, handleAsyncThunk, simpleRejectedActionToRemoteData } from '~redux/utils';
 import { Behandling, UnderkjennelseGrunn } from '~types/Behandling';
 import { Behandlingsinformasjon } from '~types/Behandlingsinformasjon';
+import { Dokument, DokumentIdType } from '~types/dokument/Dokument';
 import { Fradrag } from '~types/Fradrag';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
@@ -62,6 +64,18 @@ export const hentRestanser = createAsyncThunk<Restans[], void, { rejectValue: Ap
         return thunkApi.rejectWithValue(res.error);
     }
 );
+
+export const hentDokumenter = createAsyncThunk<
+    Dokument[],
+    { id: string; idType: DokumentIdType },
+    { rejectValue: ApiError }
+>('sak/dokumenter', async (args, thunkApi) => {
+    const res = await dokumentApi.hentDokumenter(args);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
 
 export const stansUtbetalinger = createAsyncThunk<Sak, { sakId: string }, { rejectValue: ApiError }>(
     'utbetalinger/stans',

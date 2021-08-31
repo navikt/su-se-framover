@@ -1,7 +1,7 @@
 import * as DateFns from 'date-fns';
 import { createIntl, createIntlCache, FormatDateOptions } from 'react-intl';
 
-import { Languages } from '~components/TextProvider';
+import { Languages } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import { Periode } from '~types/Periode';
 

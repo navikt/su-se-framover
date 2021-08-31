@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { focusAfterTimeout } from '~lib/formUtils';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 

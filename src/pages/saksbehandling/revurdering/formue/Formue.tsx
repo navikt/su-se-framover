@@ -27,7 +27,8 @@ import FormuevilkårOppsummering from '~components/revurdering/oppsummering/form
 import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreFormuegrunnlag } from '~features/revurdering/revurderingActions';
-import { useApiCall, useAsyncActionCreator, useI18n } from '~lib/hooks';
+import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { Periode } from '~types/Periode';

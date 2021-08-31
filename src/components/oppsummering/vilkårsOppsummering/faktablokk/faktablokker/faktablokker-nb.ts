@@ -37,7 +37,7 @@ export default {
     'formue.ektefellesFormue': 'Ektefelles totale formue',
     'formue.verdiPåBolig': 'Verdi på bolig',
     'formue.verdiPåEiendom': 'Verdi på eiendom',
-    'formue.verdiPåKjøretøy': 'Verdi på Kjøretøy',
+    'formue.verdiPåKjøretøy': 'Verdi på kjøretøy',
     'formue.innskuddsbeløp': 'Innskuddsbeløp',
     'formue.verdipapirbeløp': 'Verdipapirbeløp',
     'formue.kontanter': 'Kontanter over 1000',

@@ -1,7 +1,7 @@
 import { Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { Periode } from '~types/Periode';
 import * as DateUtils from '~utils/date/dateUtils';
 

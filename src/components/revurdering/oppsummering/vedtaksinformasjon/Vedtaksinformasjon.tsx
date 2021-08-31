@@ -6,7 +6,7 @@ import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
 import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering, Vurderingstatus, InformasjonSomRevurderes } from '~types/Revurdering';

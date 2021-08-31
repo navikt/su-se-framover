@@ -8,7 +8,8 @@ import * as React from 'react';
 
 import { ErrorCode } from '~api/apiClient';
 import { fetchPerson, Kjønn, Person, Sivilstand as ISivilstand, SivilstandTyper } from '~api/personApi';
-import { useApiCall, useI18n } from '~lib/hooks';
+import { useApiCall } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { Sak } from '~types/Sak';
 import { showName, formatFnr } from '~utils/person/personUtils';
 

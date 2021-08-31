@@ -2,19 +2,14 @@ import classNames from 'classnames';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Element } from 'nav-frontend-typografi';
 import React, { useMemo } from 'react';
-import { IntlShape } from 'react-intl';
 
-import { useI18n } from '~lib/hooks';
+import { MessageFormatter, useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import saksbehandlingMessages from '~pages/saksbehandling/søknadsbehandling/formue/formue-nb';
 import { Behandlingsinformasjon, FormueStatus } from '~types/Behandlingsinformasjon';
 import { SøknadInnhold } from '~types/Søknad';
 import { formatCurrency } from '~utils/format/formatUtils';
-import {
-    kalkulerFormueFraSøknad,
-    regnUtFormueVerdier,
-    totalVerdiKjøretøy,
-} from '~utils/søknadsbehandling/formue/formueUtils';
+import { regnUtFormueVerdier } from '~utils/søknadsbehandling/formue/formueUtils';
 import { delerBoligMedFormatted } from '~utils/søknadsbehandling/søknadsbehandlingUtils';
 import { Vilkårsinformasjon, vilkårTittelFormatted } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
@@ -26,58 +21,41 @@ import styles from './faktablokker.module.less';
 import { FaktablokkProps } from './faktablokkUtils';
 
 export const FormueFaktablokk = (props: FaktablokkProps) => {
-    const { intl } = useI18n({ messages });
-
-    const totalFormueFraSøknad = useMemo(() => {
-        const søkersFormueFraSøknad = kalkulerFormueFraSøknad(props.søknadInnhold.formue);
-
-        if (props.søknadInnhold.ektefelle) {
-            return søkersFormueFraSøknad + kalkulerFormueFraSøknad(props.søknadInnhold.ektefelle.formue);
-        }
-
-        return søkersFormueFraSøknad;
-    }, [props.søknadInnhold.formue]);
-
-    const message = (s: keyof typeof messages) => intl.formatMessage({ id: s });
+    const { formatMessage } = useI18n({ messages });
 
     return (
         <div>
             <Faktablokk
-                tittel={message('display.fraSøknad')}
+                tittel={formatMessage('display.fraSøknad')}
                 fakta={[
                     {
-                        tittel: message('formue.tittel'),
+                        tittel: formatMessage('formue.tittel'),
                         verdi: (
                             <div
                                 className={classNames(styles.formueForBrukerOgEps, styles.formueForBrukerOgEpsHeading)}
                             >
-                                <span className={styles.søker}>{message('formue.heading.søker')}</span>
+                                <span className={styles.søker}>{formatMessage('formue.heading.søker')}</span>
                                 {props.søknadInnhold.boforhold.ektefellePartnerSamboer !== null && (
                                     <span className={classNames(styles.eps, styles.breakPls)}>
-                                        {message('formue.heading.eps')}
+                                        {formatMessage('formue.heading.eps')}
                                     </span>
                                 )}
                             </div>
                         ),
                     },
-                    ...søknadsfakta(props.søknadInnhold, intl),
+                    ...søknadsfakta(props.søknadInnhold, formatMessage),
                     FaktaSpacing,
                     {
-                        tittel: intl.formatMessage({ id: 'formue.totalt' }),
-                        verdi: formatCurrency(totalFormueFraSøknad),
-                    },
-                    FaktaSpacing,
-                    {
-                        tittel: message('formue.delerBoligMed'),
+                        tittel: formatMessage('formue.delerBoligMed'),
                         verdi: props.søknadInnhold.boforhold.delerBoligMed
                             ? delerBoligMedFormatted(props.søknadInnhold.boforhold.delerBoligMed)
-                            : intl.formatMessage({ id: 'formue.delerBoligMed.ingen' }),
+                            : formatMessage('formue.delerBoligMed.ingen'),
                     },
                     ...(props.søknadInnhold.boforhold.ektefellePartnerSamboer === null
                         ? []
                         : [
                               {
-                                  tittel: message('formue.epsFnr'),
+                                  tittel: formatMessage('formue.epsFnr'),
                                   verdi: props.søknadInnhold.boforhold.ektefellePartnerSamboer.fnr,
                               },
                           ]),
@@ -87,47 +65,52 @@ export const FormueFaktablokk = (props: FaktablokkProps) => {
     );
 };
 
-function søknadsfakta(innhold: SøknadInnhold, intl: IntlShape): Fakta[] {
-    const message = (s: keyof typeof messages) => intl.formatMessage({ id: s });
+const IGNORER_VERDI = 'IGNORER_VERDI' as const;
 
+function søknadsfakta(innhold: SøknadInnhold, formatMessage: MessageFormatter<typeof messages>): Fakta[] {
     return [
         {
-            tittel: message('formue.verdiPåBolig'),
+            tittel: formatMessage('formue.verdiPåBolig'),
             verdi: innhold.formue.verdiPåBolig,
             epsVerdi: innhold.ektefelle?.formue.verdiPåBolig,
         },
         {
-            tittel: message('formue.verdiPåEiendom'),
+            tittel: formatMessage('formue.verdiPåEiendom'),
             verdi: innhold.formue.verdiPåEiendom,
             epsVerdi: innhold.ektefelle?.formue.verdiPåBolig,
         },
+        ...(innhold.formue.kjøretøy?.map((k) => ({
+            tittel: `${formatMessage('formue.verdiPåKjøretøy')} (${k.kjøretøyDeEier})`,
+            verdi: k.verdiPåKjøretøy,
+            epsVerdi: IGNORER_VERDI,
+        })) ?? []),
+        ...(innhold.ektefelle?.formue.kjøretøy?.map((k) => ({
+            tittel: `${formatMessage('formue.verdiPåKjøretøy')} (${k.kjøretøyDeEier})`,
+            verdi: IGNORER_VERDI,
+            epsVerdi: k.verdiPåKjøretøy,
+        })) ?? []),
         {
-            tittel: message('formue.verdiPåKjøretøy'),
-            verdi: innhold.formue.kjøretøy ? totalVerdiKjøretøy(innhold.formue.kjøretøy) : 0,
-            epsVerdi: innhold.ektefelle?.formue.kjøretøy ? totalVerdiKjøretøy(innhold.ektefelle.formue.kjøretøy) : 0,
-        },
-        {
-            tittel: message('formue.innskuddsbeløp'),
+            tittel: formatMessage('formue.innskuddsbeløp'),
             verdi: innhold.formue.innskuddsBeløp,
             epsVerdi: innhold.ektefelle?.formue.innskuddsBeløp,
         },
         {
-            tittel: message('formue.verdipapirbeløp'),
+            tittel: formatMessage('formue.verdipapirbeløp'),
             verdi: innhold.formue.verdipapirBeløp,
             epsVerdi: innhold.ektefelle?.formue.verdipapirBeløp,
         },
         {
-            tittel: message('formue.kontanter'),
+            tittel: formatMessage('formue.kontanter'),
             verdi: innhold.formue.kontanterBeløp,
             epsVerdi: innhold.ektefelle?.formue.kontanterBeløp,
         },
         {
-            tittel: message('formue.skylderNoenSøkerPengerBeløp'),
+            tittel: formatMessage('formue.skylderNoenSøkerPengerBeløp'),
             verdi: innhold.formue.skylderNoenMegPengerBeløp,
             epsVerdi: innhold.ektefelle?.formue.skylderNoenMegPengerBeløp,
         },
         {
-            tittel: message('formue.depositumsBeløp'),
+            tittel: formatMessage('formue.depositumsBeløp'),
             verdi: innhold.formue.depositumsBeløp,
             epsVerdi: innhold.ektefelle?.formue.depositumsBeløp,
         },
@@ -141,47 +124,48 @@ function søknadsfakta(innhold: SøknadInnhold, intl: IntlShape): Fakta[] {
     );
 }
 
-function saksbehandlingfakta(info: Behandlingsinformasjon['formue'], intl: IntlShape): Fakta[] {
-    const message = (s: keyof typeof messages) => intl.formatMessage({ id: s });
-
+function saksbehandlingfakta(
+    info: Behandlingsinformasjon['formue'],
+    formatMessage: MessageFormatter<typeof messages>
+): Fakta[] {
     return [
         {
-            tittel: message('formue.verdiPåBolig'),
+            tittel: formatMessage('formue.verdiPåBolig'),
             verdi: info?.verdier?.verdiIkkePrimærbolig,
             epsVerdi: info?.epsVerdier?.verdiIkkePrimærbolig,
         },
         {
-            tittel: message('formue.verdiPåEiendom'),
+            tittel: formatMessage('formue.verdiPåEiendom'),
             verdi: info?.verdier?.verdiEiendommer,
             epsVerdi: info?.epsVerdier?.verdiEiendommer,
         },
         {
-            tittel: message('formue.verdiPåKjøretøy'),
+            tittel: formatMessage('formue.verdiPåKjøretøy'),
             verdi: info?.verdier?.verdiKjøretøy,
             epsVerdi: info?.epsVerdier?.verdiKjøretøy,
         },
         {
-            tittel: message('formue.innskuddsbeløp'),
+            tittel: formatMessage('formue.innskuddsbeløp'),
             verdi: info?.verdier?.innskudd,
             epsVerdi: info?.epsVerdier?.innskudd,
         },
         {
-            tittel: message('formue.verdipapirbeløp'),
+            tittel: formatMessage('formue.verdipapirbeløp'),
             verdi: info?.verdier?.verdipapir,
             epsVerdi: info?.epsVerdier?.verdipapir,
         },
         {
-            tittel: message('formue.kontanter'),
+            tittel: formatMessage('formue.kontanter'),
             verdi: info?.verdier?.kontanter,
             epsVerdi: info?.epsVerdier?.kontanter,
         },
         {
-            tittel: message('formue.skylderNoenSøkerPengerBeløp'),
+            tittel: formatMessage('formue.skylderNoenSøkerPengerBeløp'),
             verdi: info?.verdier?.pengerSkyldt,
             epsVerdi: info?.epsVerdier?.pengerSkyldt,
         },
         {
-            tittel: message('formue.depositumsBeløp'),
+            tittel: formatMessage('formue.depositumsBeløp'),
             verdi: info?.verdier?.depositumskonto,
             epsVerdi: info?.epsVerdier?.depositumskonto,
         },
@@ -195,14 +179,23 @@ function saksbehandlingfakta(info: Behandlingsinformasjon['formue'], intl: IntlS
     );
 }
 
-function formuelinje(f: { harEktefelle: boolean; tittel: string; verdi: number; epsVerdi: number }) {
+function formuelinje(f: {
+    harEktefelle: boolean;
+    tittel: string;
+    verdi: number | typeof IGNORER_VERDI;
+    epsVerdi: number | typeof IGNORER_VERDI;
+}) {
     return {
         tittel: f.tittel,
         verdi: f.harEktefelle ? (
             <div className={styles.formueForBrukerOgEps}>
-                <span className={styles.søker}>{formatCurrency(f.verdi ?? 0)}</span>
-                <span className={styles.eps}>{formatCurrency(f.epsVerdi ?? 0)}</span>
+                <span className={styles.søker}>{f.verdi === IGNORER_VERDI ? '-' : formatCurrency(f.verdi ?? 0)}</span>
+                <span className={styles.eps}>
+                    {f.epsVerdi === IGNORER_VERDI ? '-' : formatCurrency(f.epsVerdi ?? 0)}
+                </span>
             </div>
+        ) : f.verdi === IGNORER_VERDI ? (
+            '-'
         ) : (
             formatCurrency(f.verdi ?? 0)
         ),
@@ -215,7 +208,7 @@ export const FormueVilkårsblokk = (props: {
     formue: Behandlingsinformasjon['formue'];
     ektefelle: { fnr: Nullable<string> };
 }) => {
-    const { intl } = useI18n({
+    const { formatMessage } = useI18n({
         messages: {
             ...messages,
             ...saksbehandlingMessages,
@@ -234,9 +227,6 @@ export const FormueVilkårsblokk = (props: {
         return søkersFormueFraSøknad;
     }, [props.formue?.verdier, props.formue?.epsVerdier]);
 
-    const message = (s: keyof typeof messages) => intl.formatMessage({ id: s });
-    const saksbehandlingMessage = (s: keyof typeof saksbehandlingMessages) => intl.formatMessage({ id: s });
-
     return (
         <Vilkårsblokk
             tittel={vilkårTittelFormatted(props.info.vilkårtype)}
@@ -244,14 +234,14 @@ export const FormueVilkårsblokk = (props: {
             søknadfaktablokk={<FormueFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
                 props.formue === null ? (
-                    <AlertStripe type="info">{message('display.ikkeVurdert')}</AlertStripe>
+                    <AlertStripe type="info">{formatMessage('display.ikkeVurdert')}</AlertStripe>
                 ) : (
                     <div>
                         <Faktablokk
-                            tittel={message('display.fraSaksbehandling')}
+                            tittel={formatMessage('display.fraSaksbehandling')}
                             fakta={[
                                 {
-                                    tittel: message('formue.tittel'),
+                                    tittel: formatMessage('formue.tittel'),
                                     verdi: (
                                         <div
                                             className={classNames(
@@ -259,30 +249,32 @@ export const FormueVilkårsblokk = (props: {
                                                 styles.formueForBrukerOgEpsHeading
                                             )}
                                         >
-                                            <span className={styles.søker}>{message('formue.heading.søker')}</span>
+                                            <span className={styles.søker}>
+                                                {formatMessage('formue.heading.søker')}
+                                            </span>
                                             {props.formue.borSøkerMedEPS && (
                                                 <span className={classNames(styles.eps, styles.breakPls)}>
-                                                    {message('formue.heading.eps')}
+                                                    {formatMessage('formue.heading.eps')}
                                                 </span>
                                             )}
                                         </div>
                                     ),
                                 },
-                                ...saksbehandlingfakta(props.formue, intl),
+                                ...saksbehandlingfakta(props.formue, formatMessage),
                                 FaktaSpacing,
                                 {
-                                    tittel: message('formue.totalt'),
+                                    tittel: formatMessage('formue.totalt'),
                                     verdi: formatCurrency(totalFormue),
                                 },
                                 FaktaSpacing,
                                 {
-                                    tittel: saksbehandlingMessage('input.label.borSøkerMedEktefelle'),
+                                    tittel: formatMessage('input.label.borSøkerMedEktefelle'),
                                     verdi: props.formue.borSøkerMedEPS ? 'Ja' : 'Nei',
                                 },
                                 ...(props.ektefelle.fnr
                                     ? [
                                           {
-                                              tittel: saksbehandlingMessage('input.label.ektefellesFødselsnummer'),
+                                              tittel: formatMessage('input.label.ektefellesFødselsnummer'),
                                               verdi: props.ektefelle.fnr,
                                           },
                                       ]
@@ -293,17 +285,17 @@ export const FormueVilkårsblokk = (props: {
                         <div>
                             {props.formue.status === FormueStatus.VilkårOppfylt ? (
                                 <>
-                                    <Element>{saksbehandlingMessage('display.vilkårOppfylt')}</Element>
-                                    <p>{saksbehandlingMessage('display.vilkårOppfyltGrunn')}</p>
+                                    <Element>{formatMessage('display.vilkårOppfylt')}</Element>
+                                    <p>{formatMessage('display.vilkårOppfyltGrunn')}</p>
                                 </>
                             ) : props.formue.status === FormueStatus.VilkårIkkeOppfylt ? (
                                 <>
-                                    <p>{saksbehandlingMessage('display.vilkårIkkeOppfylt')}</p>
-                                    <p>{saksbehandlingMessage('display.vilkårIkkeOppfyltGrunn')}</p>
+                                    <p>{formatMessage('display.vilkårIkkeOppfylt')}</p>
+                                    <p>{formatMessage('display.vilkårIkkeOppfyltGrunn')}</p>
                                 </>
                             ) : (
                                 <>
-                                    <p>{message('fraSøknad.uavklart')}</p>
+                                    <p>{formatMessage('fraSøknad.uavklart')}</p>
                                 </>
                             )}
                         </div>

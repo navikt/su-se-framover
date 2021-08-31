@@ -191,13 +191,10 @@ export enum RevurderingErrorCodes {
 
     //simulering
     SIMULERING_FEILET = 'simulering_feilet',
-    SIMULERING_FEILET_OPPDRAG_STENGT_ELLER_NEDE = 'simulering_oppdrag_stengt_eller_nede',
-    SIMULERING_FEILET_FINNER_IKKE_PERSON = 'simulering_finner_ikke_person_i_tps',
-    SIMULERING_FEILET_FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM = 'simulering_finner_ikke_kjøreplansperiode_for_fom',
-    KONTROLLSIMULERING_FEILET = 'kunne_ikke_kontrollsimulere',
-    KONTROLLSIMULERING_FEILET_OPPDRAG_STENGT_ELLER_NEDE = 'kontrollsimulering_oppdrag_er_stengt_eller_nede',
-    KONTROLLSIMULERING_FEILET_FINNER_IKKE_PERSON = 'kontrollsimulering_finner_ikke_person_i_tps',
-    KONTROLLSIMULERING_FEILET_FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM = 'kontrollsimulering_finner_ikke_kjøreplansperiode_for_fom',
+    SIMULERING_FEILET_OPPDRAG_STENGT_ELLER_NEDE = 'simulering_feilet_oppdrag_stengt_eller_nede',
+    SIMULERING_FEILET_FINNER_IKKE_PERSON = 'simulering_feilet_finner_ikke_person_i_tps',
+    SIMULERING_FEILET_FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM = 'simulering_feilet_finner_ikke_kjøreplansperiode_for_fom',
+    SIMULERING_FEILET_OPPDRAGET_FINNES_IKKE = 'simulering_feilet_oppdraget_finnes_ikke',
 }
 
 export enum InformasjonSomRevurderes {

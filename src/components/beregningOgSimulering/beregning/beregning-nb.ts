@@ -7,6 +7,8 @@ export default {
     'alert.feil.simuleringFeilet.finnerIkkePerson': 'Simulering feilet. Finner ikke person i TPS.',
     'alert.feil.simuleringFeilet.finnerIkkeKjøreplansperiodeForFom':
         'Simulering feilet. Finner ikke kjøreplansperiode for fom-dato. Kjøreplan finnes som regel bare for inneværende år.',
+    'alert.feil.simuleringFeilet.oppdragetFinnesIkke':
+        'Simulering feilet. Oppdraget finnes ikke, brukerens transaksjoner er sannsynligvis fjernet fra Oppdrag.',
 
     'beregning.behandlingErIkkeFerdig': 'Behandlingen er ikke ferdig.',
 

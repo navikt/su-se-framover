@@ -2,7 +2,7 @@ import React from 'react';
 
 import epsInntektMessages from '~/pages/søknad/steg/inntekt/epsInntekt/inntekt-nb';
 import { SøknadState } from '~features/søknad/søknad.slice';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import inntektMessages from '~pages/søknad/steg/inntekt/søkersInntekt/inntekt-nb';
 
 import sharedStyles from '../../../steg-shared.module.less';

@@ -2,7 +2,7 @@ import * as DateFns from 'date-fns';
 import AlertStripe from 'nav-frontend-alertstriper';
 import React from 'react';
 
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { keyOf } from '~lib/types';
 import { OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~utils/date/dateUtils';

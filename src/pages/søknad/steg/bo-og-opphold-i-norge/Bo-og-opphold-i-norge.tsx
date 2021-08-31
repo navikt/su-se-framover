@@ -21,7 +21,7 @@ import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { Adresse, IngenAdresseGrunn } from '~api/personApi';
 import { DelerBoligMed, EPSFormData } from '~features/søknad/types';
 import { focusAfterTimeout } from '~lib/formUtils';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { keyOf } from '~lib/types';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';

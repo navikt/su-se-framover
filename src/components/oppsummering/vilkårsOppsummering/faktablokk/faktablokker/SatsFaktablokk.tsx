@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { DelerBoligMed } from '~features/søknad/types';
-import { useI18n } from '~lib/hooks';
+import { useI18n } from '~lib/i18n';
 import { keyOf } from '~lib/types';
 import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { Sats } from '~types/Sats';
