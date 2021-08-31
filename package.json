@@ -57,7 +57,7 @@
         "@types/jest": "^27.0.1",
         "@types/jsonwebtoken": "^8.5.5",
         "@types/react-collapse": "^5.0.1",
-        "@types/react-datepicker": "^4.1.4",
+        "@types/react-datepicker": "^4.1.5",
         "amplitude-js": "^8.5.0",
         "autoprefixer": "^10.3.3",
         "babel-polyfill": "^6.26.0",
