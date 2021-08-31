@@ -36,7 +36,6 @@ import { Periode } from '~types/Periode';
 import { Restans } from '~types/Restans';
 import { Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
-import { Sats } from '~types/Sats';
 import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 
 export const fetchSak = createAsyncThunk<
@@ -219,10 +218,22 @@ export const lagreBosituasjonGrunnlag = createAsyncThunk<
 
 export const startBeregning = createAsyncThunk<
     Behandling,
-    { sakId: string; behandlingId: string; sats: Sats; fradrag: Fradrag[]; begrunnelse: Nullable<string> },
+    { sakId: string; behandlingId: string; begrunnelse: Nullable<string> },
     { rejectValue: ApiError }
->('beregning/start', async ({ sakId, behandlingId, fradrag, begrunnelse }, thunkApi) => {
-    const res = await behandlingApi.startBeregning(sakId, behandlingId, { fradrag, begrunnelse });
+>('beregning/start', async ({ sakId, behandlingId, begrunnelse }, thunkApi) => {
+    const res = await behandlingApi.startBeregning(sakId, behandlingId, { begrunnelse });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreFradrag = createAsyncThunk<
+    Behandling,
+    { sakId: string; behandlingId: string; fradrag: Fradrag[] },
+    { rejectValue: ApiError }
+>('beregning/grunnlag/fradrag', async ({ sakId, behandlingId, fradrag }, thunkApi) => {
+    const res = await behandlingApi.lagreFradragsgrunnlag(sakId, behandlingId, fradrag);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -687,6 +698,16 @@ export default createSlice({
         });
 
         builder.addCase(lagreBosituasjonGrunnlag.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    behandlinger: sak.behandlinger.map((b) => (b.id === action.payload.id ? action.payload : b)),
+                }))
+            );
+        });
+
+        builder.addCase(lagreFradrag.fulfilled, (state, action) => {
             state.sak = pipe(
                 state.sak,
                 RemoteData.map((sak) => ({

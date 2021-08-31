@@ -31,12 +31,15 @@ export type ApiResult<U, TErrorCode extends string = string> = RemoteData.Remote
 >;
 export function useAsyncActionCreator<T, U, TErrorCode extends string = string>(
     actionCreator: AsyncThunk<U, T, { rejectValue: ApiError<TErrorCode> }>
-): [ApiResult<U, TErrorCode>, (args: T, onSuccess?: (result: U) => void) => void] {
+): [
+    ApiResult<U, TErrorCode>,
+    (args: T, onSuccess?: (result: U) => void, onFailure?: (error: ApiError<TErrorCode> | undefined) => void) => void
+] {
     const [apiResult, setApiResult] = useState<ApiResult<U, TErrorCode>>(RemoteData.initial);
     const dispatch = useAppDispatch();
 
     const callFn = React.useCallback(
-        (args: T, onSuccess?: (result: U) => void) => {
+        (args: T, onSuccess?: (result: U) => void, onFailure?: (error: ApiError<TErrorCode> | undefined) => void) => {
             if (!RemoteData.isPending(apiResult)) {
                 setApiResult(RemoteData.pending);
 
@@ -46,6 +49,7 @@ export function useAsyncActionCreator<T, U, TErrorCode extends string = string>(
                         onSuccess?.(action.payload);
                     } else {
                         setApiResult(RemoteData.failure(action.payload));
+                        onFailure?.(action.payload);
                     }
                 });
             }
