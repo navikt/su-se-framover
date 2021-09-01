@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
+import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -247,7 +248,8 @@ const RevurderingOppsummeringPage = (props: {
     grunnlagsdataOgVilkårsvurderinger: RemoteData.RemoteData<ApiError, GrunnlagsdataOgVilkårsvurderinger>;
 }) => {
     const dispatch = useAppDispatch();
-    const { intl } = useI18n({ messages });
+    const history = useHistory();
+    const { formatMessage } = useI18n({ messages });
 
     React.useEffect(() => {
         if (RemoteData.isInitial(props.grunnlagsdataOgVilkårsvurderinger)) {
@@ -276,9 +278,16 @@ const RevurderingOppsummeringPage = (props: {
                 {pipe(
                     RemoteData.combine(beregnOgSimulerStatus, props.grunnlagsdataOgVilkårsvurderinger),
                     RemoteData.fold(
-                        () => <NavFrontendSpinner>{intl.formatMessage({ id: 'beregner.label' })}</NavFrontendSpinner>,
-                        () => <NavFrontendSpinner>{intl.formatMessage({ id: 'beregner.label' })}</NavFrontendSpinner>,
-                        (err) => <RevurderingskallFeilet error={err} />,
+                        () => <NavFrontendSpinner>{formatMessage('beregner.label')}</NavFrontendSpinner>,
+                        () => <NavFrontendSpinner>{formatMessage('beregner.label')}</NavFrontendSpinner>,
+                        (err) => (
+                            <div>
+                                <RevurderingskallFeilet error={err} />
+                                <Knapp onClick={() => history.push(props.forrigeUrl)}>
+                                    {formatMessage('knapp.tilbake')}
+                                </Knapp>
+                            </div>
+                        ),
                         ([beregning, grunnlagsdataOgVilkårsvurderinger]) => (
                             <div className={styles.content}>
                                 <Revurderingoppsummering
@@ -296,7 +305,7 @@ const RevurderingOppsummeringPage = (props: {
                                         feilmeldinger={beregning.feilmeldinger}
                                     />
                                 ) : (
-                                    <div>{intl.formatMessage({ id: 'feil.revurderingIUgyldigTilstand' })}</div>
+                                    <div>{formatMessage('feil.revurderingIUgyldigTilstand')}</div>
                                 )}
                             </div>
                         )
