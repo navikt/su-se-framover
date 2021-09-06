@@ -1,8 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
+import ModalWrapper from 'nav-frontend-modal';
 import 'nav-frontend-tabell-style';
 import * as React from 'react';
+import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~api/apiClient';
 import {
@@ -11,7 +13,10 @@ import {
     patchSøknader,
     SøknadResponse,
     IverksettResponse,
+    konsistensavstemming,
 } from '~api/driftApi';
+import { useApiCall } from '~lib/hooks';
+import { toIsoDateOnlyString } from '~utils/date/dateUtils';
 
 import styles from './index.module.less';
 
@@ -192,6 +197,11 @@ const Drift = () => {
         }
     };
 
+    const [konsistensavtemmingModalOpen, setKonsistensavtemmingModalOpen] = React.useState(false);
+    const [konsistensavstemmingFraOgMed, setKonsistensavstemmingFraOgMed] = React.useState<Date>(new Date());
+
+    const [konsistensavstemmingStatus, fetchKonsistensavstemming] = useApiCall(konsistensavstemming);
+
     return (
         <div className={styles.container}>
             <div>
@@ -242,6 +252,43 @@ const Drift = () => {
                     >
                         Kast en feil
                     </Knapp>
+
+                    <Knapp
+                        className={styles.knapp}
+                        htmlType="button"
+                        onClick={() => setKonsistensavtemmingModalOpen(true)}
+                        spinner={RemoteData.isPending(konsistensavstemmingStatus)}
+                    >
+                        Konsistensavstemming
+                    </Knapp>
+                    <ModalWrapper
+                        isOpen={konsistensavtemmingModalOpen}
+                        closeButton={true}
+                        onRequestClose={() => {
+                            setKonsistensavtemmingModalOpen(false);
+                        }}
+                        contentLabel="konsistensavstemmingModal"
+                    >
+                        <div className={styles.modalContainer}>
+                            <DatePicker
+                                dateFormat="dd/MM/yyyy"
+                                selected={konsistensavstemmingFraOgMed}
+                                onChange={(date: Date) => {
+                                    setKonsistensavstemmingFraOgMed(date);
+                                }}
+                            ></DatePicker>
+                            <Knapp
+                                className={styles.knapp}
+                                htmlType="button"
+                                onClick={() =>
+                                    fetchKonsistensavstemming(toIsoDateOnlyString(konsistensavstemmingFraOgMed))
+                                }
+                                spinner={RemoteData.isPending(konsistensavstemmingStatus)}
+                            >
+                                Konsistensavstemming
+                            </Knapp>
+                        </div>
+                    </ModalWrapper>
                 </div>
                 {RemoteData.isFailure(fixSøknaderResponse) && (
                     <AlertStripe className={styles.alert} type="feil">
@@ -262,6 +309,16 @@ const Drift = () => {
                         </p>
                     </AlertStripe>
                 )}
+                {RemoteData.isFailure(konsistensavstemmingStatus) && (
+                    <AlertStripe className={styles.alert} type="feil">
+                        <p>Konsistensavstemming feilet.</p>
+                        {konsistensavstemmingStatus.error?.statusCode}
+                        <p>
+                            {konsistensavstemmingStatus.error?.body?.message ??
+                                JSON.stringify(konsistensavstemmingStatus.error?.body)}
+                        </p>
+                    </AlertStripe>
+                )}
                 <div className={styles.tabellContainer}>
                     {RemoteData.isSuccess(fixSøknaderResponse) && (
                         <div>
@@ -272,6 +329,11 @@ const Drift = () => {
                         <div>
                             <IverksettTabell iverksettResponse={fixIverksettingResponse.value} />
                         </div>
+                    )}
+                    {RemoteData.isSuccess(konsistensavstemmingStatus) && (
+                        <AlertStripe className={styles.alert} type="suksess">
+                            <p>{JSON.stringify(konsistensavstemmingStatus.value)}</p>
+                        </AlertStripe>
                     )}
                 </div>
             </div>
