@@ -75,3 +75,11 @@ export async function patchIverksettinger(): Promise<ApiClientResult<IverksettRe
         request: { headers: new Headers({ Accept: 'application/json' }) },
     });
 }
+
+export async function konsistensavstemming(fraOgMed: string): Promise<ApiClientResult<string>> {
+    return apiClient({
+        url: `/avstemming/konsistens?fraOgMed=${fraOgMed}`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/json' }) },
+    });
+}
