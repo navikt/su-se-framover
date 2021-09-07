@@ -68,7 +68,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
         resolver: yupResolver(schema),
     });
 
-    const handleSave = (nesteUrl: string) => (values: FormData) => {
+    const handleSave = (nesteUrl: string) => async (values: FormData) => {
         if (!values.status) return;
 
         const oppholdIUtlandetValues: OppholdIUtlandetType = {
@@ -83,7 +83,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        lagreBehandlingsinformasjon(
+        await lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,

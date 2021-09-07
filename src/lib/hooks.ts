@@ -33,25 +33,33 @@ export function useAsyncActionCreator<T, U, TErrorCode extends string = string>(
     actionCreator: AsyncThunk<U, T, { rejectValue: ApiError<TErrorCode> }>
 ): [
     ApiResult<U, TErrorCode>,
-    (args: T, onSuccess?: (result: U) => void, onFailure?: (error: ApiError<TErrorCode> | undefined) => void) => void
+    (
+        args: T,
+        onSuccess?: (result: U) => void | Promise<void>,
+        onFailure?: (error: ApiError<TErrorCode> | undefined) => void | Promise<void>
+    ) => Promise<void>
 ] {
     const [apiResult, setApiResult] = useState<ApiResult<U, TErrorCode>>(RemoteData.initial);
     const dispatch = useAppDispatch();
 
     const callFn = React.useCallback(
-        (args: T, onSuccess?: (result: U) => void, onFailure?: (error: ApiError<TErrorCode> | undefined) => void) => {
+        async (
+            args: T,
+            onSuccess?: (result: U) => void | Promise<void>,
+            onFailure?: (error: ApiError<TErrorCode> | undefined) => void | Promise<void>
+        ) => {
             if (!RemoteData.isPending(apiResult)) {
                 setApiResult(RemoteData.pending);
 
-                dispatch(actionCreator(args)).then((action) => {
-                    if (actionCreator.fulfilled.match(action)) {
-                        setApiResult(RemoteData.success(action.payload));
-                        onSuccess?.(action.payload);
-                    } else {
-                        setApiResult(RemoteData.failure(action.payload));
-                        onFailure?.(action.payload);
-                    }
-                });
+                const action = await dispatch(actionCreator(args));
+
+                if (actionCreator.fulfilled.match(action)) {
+                    setApiResult(RemoteData.success(action.payload));
+                    await onSuccess?.(action.payload);
+                } else {
+                    setApiResult(RemoteData.failure(action.payload));
+                    await onFailure?.(action.payload);
+                }
             }
         },
         [apiResult, actionCreator]

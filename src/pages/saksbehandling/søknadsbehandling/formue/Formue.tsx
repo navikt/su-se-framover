@@ -160,14 +160,14 @@ const Formue = (props: {
             return;
         }
 
-        lagreEpsGrunnlag(
+        await lagreEpsGrunnlag(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 epsFnr: values.epsFnr,
             },
             () => {
-                lagreBehandlingsinformasjon(
+                return lagreBehandlingsinformasjon(
                     {
                         sakId: props.sakId,
                         behandlingId: props.behandling.id,

@@ -53,7 +53,9 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
 
-    const handleSave = (nesteUrl: string) => (values: FormData) => {
+    const handleSave = (nesteUrl: string) => async (values: FormData) => {
+        console.log('isValid: ', isValid, ', isSubmitted: ', isSubmitted);
+
         if (!values.status) return;
 
         const fastOppholdValues: FastOppholdINorgeType = {
@@ -66,7 +68,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        lagreBehandlingsinformasjon(
+        await lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
