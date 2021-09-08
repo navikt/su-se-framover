@@ -51,6 +51,8 @@ export default {
     'knapp.revurder': 'Revurder',
     'knapp.stoppUtbetaling': 'Stopp utbetaling',
 
+    'link.dokumenter': 'Brev sendt fra SU',
+
     'revurdering.fortsett': 'Fortsett revurdering',
     'revurdering.oppsummering': 'Se oppsummering',
     'revurdering.tittel': 'Revurderinger',

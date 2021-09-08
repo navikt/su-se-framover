@@ -121,6 +121,11 @@ export const revurderValgtRevurdering: Route<{ sakId: string; steg: RevurderingS
     createURL: ({ sakId, steg, revurderingId }) => `/saksoversikt/${sakId}/revurdering/${revurderingId}/${steg}`,
 };
 
+export const alleDokumenterForSak: Route<{ sakId: string }> = {
+    path: `/saksoversikt/:sakId/dokumenter/`,
+    createURL: ({ sakId }) => `/saksoversikt/${sakId}/dokumenter`,
+};
+
 //---------------Attestering-------------------------
 export const attestering: Route<{ sakId: string }> = {
     path: '/attestering/:sakId/',
