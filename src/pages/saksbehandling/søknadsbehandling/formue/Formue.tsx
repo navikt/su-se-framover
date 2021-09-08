@@ -9,7 +9,7 @@ import { Input, Textarea, Checkbox, RadioGruppe, Radio, Feiloppsummering, Skjema
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import Tekstomrade, { BoldRule, HighlightRule, LinebreakRule } from 'nav-frontend-tekstomrade';
 import { Element, Feilmelding, Undertittel } from 'nav-frontend-typografi';
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
@@ -194,13 +194,13 @@ const Formue = (props: {
     });
     const watch = form.watch();
 
-    const søkersFormue = useMemo(() => {
+    const søkersFormue = React.useMemo(() => {
         return regnUtFormDataVerdier(watch.verdier);
-    }, [watch.verdier]);
+    }, [watch]);
 
-    const ektefellesFormue = useMemo(() => {
+    const ektefellesFormue = React.useMemo(() => {
         return regnUtFormDataVerdier(watch.epsVerdier);
-    }, [watch.epsVerdier]);
+    }, [watch]);
 
     const totalFormue = søkersFormue + (watch.borSøkerMedEPS ? ektefellesFormue : 0);
 
@@ -395,9 +395,7 @@ const Formue = (props: {
                                                     className={styles.formueInput}
                                                     inputName={field.name}
                                                     onChange={field.onChange}
-                                                    defaultValue={
-                                                        keyNavn === 'verdiPåKjøretøy' ? '' : field.value ?? '0'
-                                                    }
+                                                    defaultValue={field.value}
                                                     feil={fieldState.error?.message}
                                                     inputRef={field.ref}
                                                 />
