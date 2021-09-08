@@ -101,7 +101,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         [props.behandling.behandlingsinformasjon]
     );
 
-    const handleSave = (nesteUrl: string) => (values: FormData) => {
+    const handleSave = (nesteUrl: string) => async (values: FormData) => {
         if (!values.status) return;
 
         if (eqFormData.equals(values, initialFormData)) {
@@ -109,7 +109,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        lagreUføregrunnlag(
+        await lagreUføregrunnlag(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,

@@ -242,7 +242,7 @@ const SatsForm = (props: SatsProps) => {
 
     const sats = useMemo(() => utledSats(watch, Boolean(eps), eps?.alder), [eps, watch]);
 
-    const handleSave = (nesteUrl: string) => (values: FormData) => {
+    const handleSave = (nesteUrl: string) => async (values: FormData) => {
         const bosituasjonsvalg = tilBosituasjonsValg(values, eps);
         if (!bosituasjonsvalg) {
             return;
@@ -255,7 +255,7 @@ const SatsForm = (props: SatsProps) => {
             return;
         }
 
-        lagreBosituasjon(
+        await lagreBosituasjon(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandlingId,

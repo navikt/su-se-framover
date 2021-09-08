@@ -80,7 +80,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        lagreBehandlingsinformasjon(
+        await lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
@@ -112,7 +112,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        lagreBehandlingsinformasjon(
+        await lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,

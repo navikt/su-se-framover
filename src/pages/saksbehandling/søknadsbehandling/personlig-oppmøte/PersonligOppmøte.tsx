@@ -239,7 +239,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         }
     }, [watch.møttPersonlig]);
 
-    const handleLagreOgFortsettSenere = (values: FormData) => {
+    const handleLagreOgFortsettSenere = async (values: FormData) => {
         const personligOppmøteStatus = toPersonligOppmøteStatus(values);
         if (!personligOppmøteStatus) {
             return;
@@ -255,7 +255,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        lagreBehandlingsinformasjon(
+        await lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
@@ -272,7 +272,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         );
     };
 
-    const handleSave = (values: FormData) => {
+    const handleSave = async (values: FormData) => {
         const personligOppmøteStatus = toPersonligOppmøteStatus(values);
         if (!personligOppmøteStatus) {
             return;
@@ -309,7 +309,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        lagreBehandlingsinformasjon(
+        await lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,

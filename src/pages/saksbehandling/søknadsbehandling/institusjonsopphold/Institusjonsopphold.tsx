@@ -68,7 +68,7 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
         resolver: yupResolver(schema),
     });
 
-    const handleSave = (nesteUrl: string) => (values: InstitusjonsoppholdFormData) => {
+    const handleSave = (nesteUrl: string) => async (values: InstitusjonsoppholdFormData) => {
         if (!values.status) return;
 
         const institusjonsValues: InstitusjonsoppholdType = {
@@ -86,7 +86,7 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        lagreBehandlingsinformasjon(
+        await lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,

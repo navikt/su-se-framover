@@ -52,7 +52,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
 
-    const handleSave = (nesteUrl: string) => (values: FormData) => {
+    const handleSave = (nesteUrl: string) => async (values: FormData) => {
         if (!values.status) return;
 
         const lovligOppholdValues: LovligOpphold = {
@@ -65,7 +65,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
             return;
         }
 
-        lagreBehandlingsinformasjon(
+        await lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
