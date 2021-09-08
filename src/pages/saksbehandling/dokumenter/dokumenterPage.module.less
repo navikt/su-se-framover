@@ -1,0 +1,64 @@
+@import '~/styles/variables.less';
+
+.outerContainer {
+    padding: @spacing-l 0;
+    width: 100%;
+    max-width: @container-desktop;
+}
+
+.container {
+    background-color: @navBakgrunn;
+}
+
+.headerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: @spacing 0;
+}
+
+.illustrasjonContainer {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: @spacing-s;
+
+    &::before {
+        position: absolute;
+        content: '';
+        background-color: @navGraBakgrunn;
+        left: 0;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 4px;
+    }
+
+    .illustrasjon {
+        background-color: @navOransjeLighten60;
+        padding: @spacing-s;
+        border-radius: 100%;
+        z-index: 1;
+    }
+}
+
+.contentContainer {
+    padding: @spacing-l;
+}
+
+.dokumentliste {
+    width: 100%;
+    margin-bottom: @spacing-l;
+}
+
+.dokument {
+    display: flex;
+    align-items: center;
+}
+
+.dokumentikon {
+    margin-right: @spacing;
+    width: 36px;
+    height: 36px;
+}
