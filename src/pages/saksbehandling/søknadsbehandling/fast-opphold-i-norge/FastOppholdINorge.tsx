@@ -54,8 +54,6 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
 
     const handleSave = (nesteUrl: string) => async (values: FormData) => {
-        console.log('isValid: ', isValid, ', isSubmitted: ', isSubmitted);
-
         if (!values.status) return;
 
         const fastOppholdValues: FastOppholdINorgeType = {
