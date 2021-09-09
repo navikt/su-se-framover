@@ -7,14 +7,7 @@ import * as React from 'react';
 import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~api/apiClient';
-import {
-    fetchBakoverStatus,
-    patchIverksettinger,
-    patchSøknader,
-    SøknadResponse,
-    IverksettResponse,
-    konsistensavstemming,
-} from '~api/driftApi';
+import { fetchBakoverStatus, patchSøknader, SøknadResponse, konsistensavstemming } from '~api/driftApi';
 import { useApiCall } from '~lib/hooks';
 import { toIsoDateOnlyString } from '~utils/date/dateUtils';
 
@@ -97,64 +90,6 @@ const SøknadTabell = (props: { søknadResponse: SøknadResponse }) => {
     );
 };
 
-const IverksettTabell = (props: { iverksettResponse: IverksettResponse }) => {
-    return (
-        <table className="tabell">
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Sakid</th>
-                    <th>Id</th>
-                    <th>BehandlingId</th>
-                </tr>
-            </thead>
-            <tbody>
-                {props.iverksettResponse.journalposteringer.ok.map((journalpost) => (
-                    <Rad
-                        key={journalpost.journalpostId}
-                        type="Journalpost"
-                        status="OK"
-                        sakId={journalpost.sakId}
-                        behandlingId={journalpost.behandlingId}
-                        id={journalpost.journalpostId}
-                    />
-                ))}
-                {props.iverksettResponse.journalposteringer.feilet.map((journalpost, index) => (
-                    <Rad
-                        key={index}
-                        type="Journalpost"
-                        status="FEIL"
-                        sakId={journalpost.sakId}
-                        behandlingId={journalpost.behandlingId}
-                        id={journalpost.grunn}
-                    />
-                ))}
-                {props.iverksettResponse.brevbestillinger.ok.map((brevbestilling) => (
-                    <Rad
-                        key={brevbestilling.brevbestillingId}
-                        type="Brevbestilling"
-                        status="OK"
-                        sakId={brevbestilling.sakId}
-                        behandlingId={brevbestilling.behandlingId}
-                        id={brevbestilling.brevbestillingId}
-                    />
-                ))}
-                {props.iverksettResponse.brevbestillinger.feilet.map((brevbestilling, index) => (
-                    <Rad
-                        key={index}
-                        type="Brevbestilling"
-                        status="FEIL"
-                        sakId={brevbestilling.sakId}
-                        behandlingId={brevbestilling.behandlingId}
-                        id={brevbestilling.grunn}
-                    />
-                ))}
-            </tbody>
-        </table>
-    );
-};
-
 const Drift = () => {
     const [statusBakover, setStatusBakover] = React.useState<RemoteData.RemoteData<ApiError, string>>(
         RemoteData.initial
@@ -184,22 +119,8 @@ const Drift = () => {
         }
     };
 
-    const [fixIverksettingResponse, setfixIverksettingResponse] = React.useState<
-        RemoteData.RemoteData<ApiError, IverksettResponse>
-    >(RemoteData.initial);
-
-    const fixIverksettinger = async () => {
-        const resultat = await patchIverksettinger();
-        if (resultat.status === 'ok') {
-            setfixIverksettingResponse(RemoteData.success(resultat.data));
-        } else {
-            setfixIverksettingResponse(RemoteData.failure(resultat.error));
-        }
-    };
-
     const [konsistensavtemmingModalOpen, setKonsistensavtemmingModalOpen] = React.useState(false);
     const [konsistensavstemmingFraOgMed, setKonsistensavstemmingFraOgMed] = React.useState<Date>(new Date());
-
     const [konsistensavstemmingStatus, fetchKonsistensavstemming] = useApiCall(konsistensavstemming);
 
     return (
@@ -233,16 +154,6 @@ const Drift = () => {
                     >
                         Fix Søknader
                     </Knapp>
-
-                    <Knapp
-                        className={styles.knapp}
-                        htmlType="button"
-                        onClick={fixIverksettinger}
-                        spinner={RemoteData.isPending(fixIverksettingResponse)}
-                    >
-                        Fix Iverksettinger
-                    </Knapp>
-
                     <Knapp
                         className={styles.knapp}
                         htmlType="button"
@@ -299,35 +210,10 @@ const Drift = () => {
                         </p>
                     </AlertStripe>
                 )}
-                {RemoteData.isFailure(fixIverksettingResponse) && (
-                    <AlertStripe className={styles.alert} type="feil">
-                        <p>Fix Iverksettinger feilet</p>
-                        {fixIverksettingResponse.error.statusCode}
-                        <p>
-                            {fixIverksettingResponse.error.body?.message ??
-                                JSON.stringify(fixIverksettingResponse.error.body)}
-                        </p>
-                    </AlertStripe>
-                )}
-                {RemoteData.isFailure(konsistensavstemmingStatus) && (
-                    <AlertStripe className={styles.alert} type="feil">
-                        <p>Konsistensavstemming feilet.</p>
-                        {konsistensavstemmingStatus.error?.statusCode}
-                        <p>
-                            {konsistensavstemmingStatus.error?.body?.message ??
-                                JSON.stringify(konsistensavstemmingStatus.error?.body)}
-                        </p>
-                    </AlertStripe>
-                )}
                 <div className={styles.tabellContainer}>
                     {RemoteData.isSuccess(fixSøknaderResponse) && (
                         <div>
                             <SøknadTabell søknadResponse={fixSøknaderResponse.value} />
-                        </div>
-                    )}
-                    {RemoteData.isSuccess(fixIverksettingResponse) && (
-                        <div>
-                            <IverksettTabell iverksettResponse={fixIverksettingResponse.value} />
                         </div>
                     )}
                     {RemoteData.isSuccess(konsistensavstemmingStatus) && (
