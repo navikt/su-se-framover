@@ -184,13 +184,16 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         if (Object.values(formikErrors).length > 0) {
             return;
         }
-        if (
-            !props.behandling.beregning ||
-            !erFradragLike(props.behandling.beregning?.fradrag, formik.values.fradrag) ||
-            !kanSimuleres(props.behandling)
-        ) {
-            setNeedsBeregning(true);
-            return;
+        if (!props.behandling.beregning || !erFradragLike(props.behandling.beregning?.fradrag, formik.values.fradrag)) {
+            return setNeedsBeregning(true);
+        }
+
+        if (!kanSimuleres(props.behandling)) {
+            if (props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG) {
+                return history.push(props.nesteUrl);
+            }
+
+            return setNeedsBeregning(true);
         }
 
         simuler(
