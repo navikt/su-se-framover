@@ -146,6 +146,12 @@ export const revurderFormueSchema = yup.object<FormueFormData>({
                                         return !DateFns.isBefore(value, fom);
                                     }
                                     return true;
+                                })
+                                .test('slutten av måned', 'Til og med må være siste dagen i måneden', function (value) {
+                                    if (value && DateFns.isLastDayOfMonth(value)) {
+                                        return true;
+                                    }
+                                    return false;
                                 }),
                         })
                         .required(),
