@@ -75,7 +75,7 @@ const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
             then: yup
                 .number()
                 .required('Feltet må fylles ut')
-                .min(0, 'Feltet må være større eller lik 0')
+                .min(1, 'Feltet må være større eller lik 1')
                 .typeError('Feltet må være et tall')
                 .max(100, 'Uføregrad må være mellom 0 og 100'),
             otherwise: yup.string().notRequired(),

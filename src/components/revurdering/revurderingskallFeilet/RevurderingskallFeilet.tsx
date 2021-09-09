@@ -5,95 +5,117 @@ import { IntlShape } from 'react-intl';
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
-import { RevurderingErrorCodes } from '~types/Revurdering';
+import {
+    BeregningOgSimuleringErrors,
+    BostiuasjonErrors,
+    BrevErrors,
+    ForhåndsvarslingErrors,
+    FormueErrors,
+    FradragErrors,
+    GenerellErrors,
+    OpprettelseOgOppdateringErrors,
+    PeriodeErrors,
+    RevurderingErrorCodes,
+    UføreErrors,
+    UtfallSomIkkeStøttesErrors,
+} from '~types/Revurdering';
 
 import messages from './revurderingskallFeilet-nb';
 import styles from './revurderingskallFeilet.module.less';
 
-const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string } = {
-    //Ugyldig...
-    [RevurderingErrorCodes.UGYLDIG_TILSTAND]: 'feil.ugyldig.tilstand',
-    [RevurderingErrorCodes.UGYLDIG_PERIODE]: 'feil.ugyldig.periode',
-    [RevurderingErrorCodes.UGYLDIG_ÅRSAK]: 'feil.ugyldig.årsak',
-    [RevurderingErrorCodes.UGYLDIG_DATA]: 'feil.ugyldig.data',
-    [RevurderingErrorCodes.HULL_I_TIDSLINJE]: 'feil.ugyldig.hull.tidslinje',
+const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof typeof messages } = {
+    [GenerellErrors.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'generell.gregulering.kan.ikke.føre.til.opphør',
+    [GenerellErrors.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]:
+        'generell.attestant.og.saksbehandler.kan.ikke.være.samme.person',
+    [GenerellErrors.FEILUTBETALING_STØTTES_IKKE]: 'generell.feilutbetaling.støttes.ikke',
+    [GenerellErrors.FANT_IKKE_SAK]: 'generell.fant.ikke.sak',
+    [GenerellErrors.FANT_IKKE_PERSON]: 'generell.fant.ikke.person',
+    [GenerellErrors.FANT_IKKE_AKTØR_ID]: 'generell.fant.ikke.aktør.id',
+    [GenerellErrors.FANT_IKKE_REVURDERING]: 'generell.fant.ikke.revurdering',
+    [GenerellErrors.UGYLDIG_PERIODE]: 'generell.ugyldig.periode',
+    [GenerellErrors.UGYLDIG_TILSTAND]: 'generell.ugyldig.tilstand',
+    [GenerellErrors.UGYLDIG_ÅRSAK]: 'generell.ugyldig.årsak',
+    [GenerellErrors.UGYLDIG_BODY]: 'generell.ugyldig.body',
+    [GenerellErrors.KUNNE_IKKE_OPPRETTE_OPPGAVE]: 'generell.kunne.ikke.opprette.oppgave',
+    [GenerellErrors.KUNNE_IKKE_UTBETALE]: 'generell.kunne.ikke.utbetale',
+    [GenerellErrors.KUNNE_IKKE_SLÅ_OPP_EPS]: 'generell.kunne.ikke.slå.opp.eps',
 
-    //ikke_lov...
-    [RevurderingErrorCodes.IKKE_LOV_MED_OVERLAPPENDE_PERIODER]: 'feil.ikke_lov_med_overlappende_perioder',
-    [RevurderingErrorCodes.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BOSITUASJONPERIODE]:
-        'feil.ikke_lov_med_formueperiode_utenfor_bosituasjonperiode',
-    [RevurderingErrorCodes.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN]:
-        'feil.ikke_lov_med_formueperiode_utenfor_behandlingsperioden',
-    [RevurderingErrorCodes.IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS]:
-        'feil.ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps',
+    [PeriodeErrors.INGENTING_Å_REVURDERE_I_PERIODEN]: 'periode.ingenting.å.revurdere',
+    [PeriodeErrors.OVERLAPPENDE_VURDERINGSPERIODER]: 'periode.overlappende.vurderingsperioder',
+    [PeriodeErrors.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]: 'periode.vurdering.utenfor.revurderingsperioden',
 
-    //fant ikke...
-    [RevurderingErrorCodes.FANT_IKKE_REVURDERING]: 'feil.fant.ikke.revurdering',
-    [RevurderingErrorCodes.FANT_IKKE_AKTØR_ID]: 'feil.fant.ikke.aktør.id',
-    [RevurderingErrorCodes.FANT_IKKE_SAK]: 'feil.fant.ikke.sak',
-    [RevurderingErrorCodes.FANT_IKKE_PERSON]: 'feil.fant.ikke.person',
+    [ForhåndsvarslingErrors.ALLEREDE_FORHÅNDSVARSLET]: 'forhåndsvarsel.allerede.forhåndsvarslet',
+    [ForhåndsvarslingErrors.KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET]:
+        'forhåndsvarsel.kan.ikke.oppdatere.er.forhåndsvarslet',
+    [ForhåndsvarslingErrors.MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL]: 'forhåndsvarsel.mangler.beslutning',
+    [ForhåndsvarslingErrors.UGYLDIG_VALG]: 'forhåndsvarsel.ugyldig.valg',
+    [ForhåndsvarslingErrors.ER_BESLUTTET]: 'forhåndsvarsel.er.besluttet',
+    [ForhåndsvarslingErrors.IKKE_FORHÅNDSVARSLET]: 'forhåndsvarsel.ikke.varslet',
+    [ForhåndsvarslingErrors.IKKE_RIKTIG_TILSTAND_FOR_BESLUTTNING]: 'forhåndsvarsel.feil.tilstand.for.beslutning',
 
-    //kunne ikke...
-    [RevurderingErrorCodes.KUNNE_IKKE_OPPRETTE_OPPGAVE]: 'feil.kunne.ikke.opprette.oppgave',
-    [RevurderingErrorCodes.KUNNE_IKKE_JOURNALFØRE_BREV]: 'feil.kunne.ikke.journalføre.brev',
-    [RevurderingErrorCodes.KUNNE_IKKE_DISTRIBUERE_BREV]: 'feil.kunne.ikke.distribuere.brev',
-    [RevurderingErrorCodes.KUNNE_IKKE_UTBETALE]: 'feil.kunne.ikke.utbetale',
-    [RevurderingErrorCodes.KUNNE_IKKE_SLÅ_OPP_EPS]: 'feil.kunne.ikke.slå.opp.eps',
+    [UtfallSomIkkeStøttesErrors.DELVIS_OPPHØR]: 'opphør.deler.av.revurderingsperiode',
+    [UtfallSomIkkeStøttesErrors.OPPHØR_AV_FLERE_VILKÅR]: 'opphør.flere.vilkår',
+    [UtfallSomIkkeStøttesErrors.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON]: 'opphør.andre.endringer.i.kombinasjon',
+    [UtfallSomIkkeStøttesErrors.OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE]:
+        'opphør.ikke.fra.første.dato.i.revurderingsperiode',
 
-    //forhåndsvarsling
-    [RevurderingErrorCodes.MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL]: 'feil.mangler.beslutning.på.forhåndsvarsel',
-    [RevurderingErrorCodes.KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET]:
-        'feil.kan.ikke.oppdatere.revurdering.som.er.forhåndsvarslet',
-    [RevurderingErrorCodes.ALLEREDE_FORHÅNDSVARSLET]: 'feil.allerede.forhåndsvarslet',
+    [OpprettelseOgOppdateringErrors.MÅ_VELGE_INFORMASJON_SOM_REVURDERES]:
+        'opprettelseOgOppdatering.må.velge.info.som.revurderes',
+    [OpprettelseOgOppdateringErrors.HULL_I_TIDSLINJE]: 'opprettelseOgOppdatering.vedtak.ikke.kontinuerlig',
+    [OpprettelseOgOppdateringErrors.BEGRUNNELSE_KAN_IKKE_VÆRE_TOM]: 'opprettelseOgOppdatering.tom.begrunnelse',
+    [OpprettelseOgOppdateringErrors.UGYLDIG_ÅRSAK]: 'opprettelseOgOppdatering.ugyldig.årsak',
+    [OpprettelseOgOppdateringErrors.BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES]:
+        'opprettelseOgOppdatering.bosituasjon.flere.perioder',
+    [OpprettelseOgOppdateringErrors.BOSITUASJON_FLERE_PERIODER_OG_EPS_INNTEKT]:
+        'opprettelseOgOppdatering.bosituasjon.flere.perioder.og.eps.inntekt',
+    [OpprettelseOgOppdateringErrors.FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]:
+        'opprettelseOgOppdatering.formue.til.opphør',
+    [OpprettelseOgOppdateringErrors.EPS_FORMUE_MED_FLERE_PERIODER_MÅ_REVURDERES]:
+        'opprettelseOgOppdatering.eps.formue.flere.perioder',
+    [OpprettelseOgOppdateringErrors.KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET]:
+        'opprettelseOgOppdatering.oppdaterer.forhåndsvarslet.revurdering',
 
-    //perioder
-    [RevurderingErrorCodes.INGENTING_Å_REVURDERE_I_PERIODEN]: 'feil.kan.ikke.revurdere',
-    [RevurderingErrorCodes.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:
-        'feil.vurderinger.utenfor.revurderingsperiode',
-    [RevurderingErrorCodes.HELE_REVURDERINGSPERIODEN_MÅ_HA_VURDERINGER]: 'feil.mangler.revurderingsperioder',
-    [RevurderingErrorCodes.OVERLAPPENDE_VURDERINGSPERIODER]: 'feil.overlappende.vurderingsperioder',
+    [UføreErrors.UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE]: 'uføre.uføregrad.må.være.mellom.en.og.hundre',
+    [UføreErrors.UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER]: 'uføre.grad.og.forventetinntekt.mangler',
+    [UføreErrors.PERIODE_FOR_GRUNNLAG_OG_VURDERING_ER_FORSKJELLIG]: 'uføre.grunnlag.og.vurdering.forskjellige',
+    [UføreErrors.VURDERINGENE_MÅ_HA_SAMME_RESULTAT]: 'uføre.vurderinger.samme.resultat',
+    [UføreErrors.HELE_BEHANDLINGSPERIODEN_MÅ_HA_VURDERING]: 'uføre.hele.behandlingsperioden.må.ha.vurdering',
+    [UføreErrors.VURDERINGSPERIODER_MANGLER]: 'uføre.vurderingsperiode.mangler',
 
-    //generell
-    [RevurderingErrorCodes.UFULLSTENDIG_BEHANDLINGSINFORMASJON]: 'feil.ufullstendig.behandlingsinformasjon',
-    [RevurderingErrorCodes.SISTE_MÅNED_VED_NEDGANG_I_STØNADEN]: 'feil.siste.måned.ved.nedgang.i.stønaden',
-    [RevurderingErrorCodes.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'feil.gregulering.kan.ikke.føre.til.opphør',
-    [RevurderingErrorCodes.BEGRUNNELSE_KAN_IKKE_VÆRE_TOM]: 'feil.begrunnelse.kan.ikke.være.tom',
-    [RevurderingErrorCodes.VURDERINGENE_MÅ_HA_SAMME_RESULTAT]: 'feil.vurderinger.samme.resultat',
-    [RevurderingErrorCodes.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]:
-        'feil.attestant.og.saksbehandler.kan.ikke.være.samme.person',
-    [RevurderingErrorCodes.EPS_ALDER_ER_NULL]: 'feil.eps.alder.er.null',
-    [RevurderingErrorCodes.KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS]: 'feil.kan.ikke.ha.eps.fradrag.uten.eps',
+    [BostiuasjonErrors.KUNNE_IKKE_LEGGE_TIL_BOSITUASJONSGRUNNLAG]: 'bosituasjon.kunne.ikke.legge.til',
+    [BostiuasjonErrors.EPS_ALDER_ER_NULL]: 'bosituasjon.eps.alder.er.null',
+    [BostiuasjonErrors.KUNNE_IKKE_SLÅ_OPP_EPS]: 'bosituasjon.kunne.ikke.slå.opp.eps',
 
-    //revurderingsutfall som ikke støttes
-    [RevurderingErrorCodes.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON]: 'feil.opphør.og.andre.endringer.i.kombinasjon',
-    [RevurderingErrorCodes.OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE]:
-        'feil.opphør.ikke.fra.første.dato.i.revurderingsperiode',
-    [RevurderingErrorCodes.DELVIS_OPPHØR]: 'feil.opphør.deler.av.revurderingsperiode',
-    [RevurderingErrorCodes.OPPHØR_AV_FLERE_VILKÅR]: 'feil.opphør.flere.vilkår',
-    [RevurderingErrorCodes.FEILUTBETALING_STØTTES_IKKE]: 'feil.feilutbetaling.støttes.ikke',
+    [FormueErrors.DEPOSITUM_MINDRE_ENN_INNSKUDD]: 'formue.depositum.høyere.enn.innskudd',
+    [FormueErrors.VERDIER_KAN_IKKE_VÆRE_NEGATIV]: 'formue.kan.ikke.ha.negative.verdier',
+    [FormueErrors.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN]: 'formue.periode.utenfor.behandlingsperiode',
+    [FormueErrors.IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BOSITUASJONPERIODE]: 'formue.periode.utenfor.bosituasjonsperiode',
+    [FormueErrors.IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS]: 'formue.ikke.lov.eps.formue.uten.eps',
 
-    //bosituasjon
-    [RevurderingErrorCodes.BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES]:
-        'feil.bosituasjon.med.flere.perioder.må.vurderes',
-    [RevurderingErrorCodes.BOSITUASJON_FLERE_PERIODER_OG_EPS_INNTEKT]:
-        'feil.eps.inntekt.med.flere.perioder.må.revurderes',
+    [FradragErrors.KUNNE_IKKE_LEGGE_TIL_FRADRAGSGRUNNLAG]: 'fradrag.kunne.ikke.legge.til',
+    [FradragErrors.FRADRAG_UGYLDIG_FRADRAGSTYPE]: 'fradrag.ugyldig.type',
+    [FradragErrors.KUNNE_IKKE_LAGE_FRADRAG]: 'fradrag.kunne.ikke.lage',
+    [FradragErrors.KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS]: 'fradrag.ikke.lov.eps.fradrag.uten.eps',
+    [FradragErrors.PERIODE_MANGLER]: 'fradrag.mangler.periode',
 
-    //Formue
-    [RevurderingErrorCodes.GJELDENDE_EPS_HAR_FORMUE]: 'feil.gjeldende.eps.har.formue',
-    [RevurderingErrorCodes.FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]: 'feil.formue.som.fører.til.opphør.må.revurderes',
-    [RevurderingErrorCodes.DEPOSITUM_KAN_IKKE_VÆRE_HØYERE_ENN_INNSKUDD]:
-        'feil.depositum.kan.ikke.være.høyere.enn.innskudd',
-    [RevurderingErrorCodes.EPS_FORMUE_MED_FLERE_PERIODER_MÅ_REVURDERES]:
-        'feil.eps.formue.med.flere.perioder.må.revurderes',
+    [BeregningOgSimuleringErrors.SISTE_MÅNED_VED_NEDGANG_I_STØNADEN]:
+        'beregningOgSimulering.kan.ikke.velge.siste.måned.ved.nedgang',
+    [BeregningOgSimuleringErrors.UGYLDIG_BEREGNINGSGRUNNLAG]: 'beregningOgSimulering.ugyldig.beregnignsgrunnlag',
+    [BeregningOgSimuleringErrors.KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS]:
+        'beregningOgSimulering.ikke.lov.eps.fradrag.uten.eps',
+    [BeregningOgSimuleringErrors.FEILET]: 'beregningOgSimulering.simulering.feilet',
+    [BeregningOgSimuleringErrors.OPPDRAG_STENGT_ELLER_NEDE]: 'beregningOgSimulering.oppdrag.stengt.eller.nede',
+    [BeregningOgSimuleringErrors.FINNER_IKKE_PERSON]: 'beregningOgSimulering.finner.ikke.person',
+    [BeregningOgSimuleringErrors.FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM]: 'beregningOgSimulering.finner.ikke.kjøretidsplan',
+    [BeregningOgSimuleringErrors.OPPDRAGET_FINNES_IKKE]: 'beregningOgSimulering.oppdraget.finnes.ikke',
 
-    //Simulering
-    [RevurderingErrorCodes.SIMULERING_FEILET]: 'feil.simulering.feilet',
-    [RevurderingErrorCodes.SIMULERING_FEILET_OPPDRAG_STENGT_ELLER_NEDE]:
-        'feil.simulering.feilet.oppdragStengtEllerNede',
-    [RevurderingErrorCodes.SIMULERING_FEILET_FINNER_IKKE_PERSON]: 'feil.simulering.feilet.finnerIkkePerson',
-    [RevurderingErrorCodes.SIMULERING_FEILET_FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM]:
-        'feil.simulering.feilet.finnerIkkeKjøreplansperiodeForFom',
-    [RevurderingErrorCodes.SIMULERING_FEILET_OPPDRAGET_FINNES_IKKE]: 'feil.simulering.feilet.oppdragetFinnesIkke',
+    [BrevErrors.NAVNEOPPSLAG_SAKSBEHANDLER_ATTESTTANT_FEILET]: 'brev.navnoppslag.feilet',
+    [BrevErrors.FANT_IKKE_GJELDENDEUTBETALING]: 'brev.fant.ikke.gjeldende.utbetaling',
+    [BrevErrors.KUNNE_IKKE_DISTRIBUERE]: 'brev.kunne.ikke.distribuere',
+    [BrevErrors.KUNNE_IKKE_JOURNALFØRE]: 'brev.kunne.ikke.journalføre',
+    [BrevErrors.KUNNE_IKKE_GENERERE_BREV]: 'brev.kunne.ikke.generere',
+    [BrevErrors.KUNNE_IKKE_LAGE_BREV]: 'brev.kunne.ikke.lage',
+    [BrevErrors.FEIL_VED_GENERERING_AV_DOKUMENT]: 'brev.generering.dokument.feilet',
 };
 
 export const feilkodeTilFeilmelding = (intl: IntlShape, feil?: Nullable<ErrorMessage>) => {
