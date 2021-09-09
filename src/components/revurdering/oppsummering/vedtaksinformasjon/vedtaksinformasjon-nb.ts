@@ -10,7 +10,7 @@ export default {
 
     'uførhet.label.harUførevedtak': 'Har uførevedtak',
     'uførhet.label.uføregrad': 'Uføregrad',
-    'uførhet.label.ieu': 'Forventet inntekt etter uførhet (per måned)',
+    'uførhet.label.ieu': 'Forventet inntekt etter uførhet',
 
     'bosituasjon.label.harEps': 'Ektefelle eller samboer',
     'bosituasjon.label.epsUførFlyktning': 'Er ektefelle eller samboer ufør flyktning?',
