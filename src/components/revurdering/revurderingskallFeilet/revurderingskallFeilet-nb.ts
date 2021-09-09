@@ -55,13 +55,13 @@ export default {
         'Det er ikke samsvar mellom perioden for vurdering og perioden for grunnlaget',
     'uføre.vurderinger.samme.resultat': 'Vurdering av vilkår må ha samme resultat for hele revurderingsperioden',
     'uføre.hele.behandlingsperioden.må.ha.vurdering': 'Hele behandlingsperioden må ha vurderinger',
-    'uføre.revurderingsperiode.mangler': 'Hele eller deler av revurderingsperioden mangler vurdering(er)',
+    'uføre.vurderingsperiode.mangler': 'Hele eller deler av revurderingsperioden mangler vurdering(er)',
 
     'bosituasjon.kunne.ikke.legge.til': 'Kunne ikke legge til bosituasjonsgrunnlaget',
     'bosituasjon.eps.alder.er.null': 'Alder til EPS er Null',
     'bosituasjon.kunne.ikke.slå.opp.eps': 'Kunne ikke slå opp EPS',
 
-    'formue.depositum.høyere.enn.innskud': 'Depositum kan ikke være høyere enn innskudd',
+    'formue.depositum.høyere.enn.innskudd': 'Depositum kan ikke være høyere enn innskudd',
     'formue.kan.ikke.ha.negative.verdier': 'Kan ikke sende inn negative verdier',
     'formue.periode.utenfor.behandlingsperiode': 'Ikke lov med formueperiode utenfor behandlingsperioden',
     'formue.periode.utenfor.bosituasjonsperiode': 'Ikke lov med formueperiode utenfor bosituasjonperioder',

@@ -23,7 +23,7 @@ import {
 import messages from './revurderingskallFeilet-nb';
 import styles from './revurderingskallFeilet.module.less';
 
-const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string } = {
+const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof typeof messages } = {
     [GenerellErrors.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'generell.gregulering.kan.ikke.føre.til.opphør',
     [GenerellErrors.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]:
         'generell.attestant.og.saksbehandler.kan.ikke.være.samme.person',
@@ -42,7 +42,7 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string
 
     [PeriodeErrors.INGENTING_Å_REVURDERE_I_PERIODEN]: 'periode.ingenting.å.revurdere',
     [PeriodeErrors.OVERLAPPENDE_VURDERINGSPERIODER]: 'periode.overlappende.vurderingsperioder',
-    [PeriodeErrors.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]: 'periode.vurderinger.utenfor.revurderingsperiode',
+    [PeriodeErrors.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]: 'periode.vurdering.utenfor.revurderingsperioden',
 
     [ForhåndsvarslingErrors.ALLEREDE_FORHÅNDSVARSLET]: 'forhåndsvarsel.allerede.forhåndsvarslet',
     [ForhåndsvarslingErrors.KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET]:
@@ -55,7 +55,7 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: string
 
     [UtfallSomIkkeStøttesErrors.DELVIS_OPPHØR]: 'opphør.deler.av.revurderingsperiode',
     [UtfallSomIkkeStøttesErrors.OPPHØR_AV_FLERE_VILKÅR]: 'opphør.flere.vilkår',
-    [UtfallSomIkkeStøttesErrors.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON]: 'opphør.og.andre.endringer.i.kombinasjon',
+    [UtfallSomIkkeStøttesErrors.OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON]: 'opphør.andre.endringer.i.kombinasjon',
     [UtfallSomIkkeStøttesErrors.OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE]:
         'opphør.ikke.fra.første.dato.i.revurderingsperiode',
 
