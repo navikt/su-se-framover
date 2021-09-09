@@ -23,7 +23,7 @@ export default {
     'forhåndsvarsel.mangler.beslutning': 'Mangler beslutning på forhåndsvarsel',
     'forhåndsvarsel.ugyldig.valg': 'Ugyldig valg av beslutning for forhåndsvarsel',
     'forhåndsvarsel.er.besluttet': 'Revurderingen er allerede besluttet',
-    'forhåndsvarsel.ikke.varslet.for.å.beslutte': 'Revurderingen er ikke varslet for å beslutte en forhåndsvarsling',
+    'forhåndsvarsel.ikke.varslet': 'Revurderingen er ikke varslet for å beslutte en forhåndsvarsling',
     'forhåndsvarsel.feil.tilstand.for.beslutning':
         'Revurderingen er ikke i riktig tilstand for å beslutte forhåndsvarslingen',
 

@@ -165,7 +165,7 @@ export enum ForhåndsvarslingErrors {
     MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL = 'mangler_beslutning_på_forhåndsvarsel',
     UGYLDIG_VALG = 'ugyldig_valg',
     ER_BESLUTTET = 'forhåndsvarslingen_er_allerede_besluttet',
-    IKKE_FORHÅNDSVARSLET_FOR_Å_KUNNE_BESLUTTE = 'ikke_forhåndsvarslet_for_å_kunne_beslutte',
+    IKKE_FORHÅNDSVARSLET = 'ikke_forhåndsvarslet',
     IKKE_RIKTIG_TILSTAND_FOR_BESLUTTNING = 'ikke_riktig_tilstand_for_å_beslutte_forhåndsvarslingen',
 }
 

@@ -50,7 +50,7 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof 
     [ForhåndsvarslingErrors.MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL]: 'forhåndsvarsel.mangler.beslutning',
     [ForhåndsvarslingErrors.UGYLDIG_VALG]: 'forhåndsvarsel.ugyldig.valg',
     [ForhåndsvarslingErrors.ER_BESLUTTET]: 'forhåndsvarsel.er.besluttet',
-    [ForhåndsvarslingErrors.IKKE_FORHÅNDSVARSLET_FOR_Å_KUNNE_BESLUTTE]: 'forhåndsvarsel.ikke.varslet.for.å.beslutte',
+    [ForhåndsvarslingErrors.IKKE_FORHÅNDSVARSLET]: 'forhåndsvarsel.ikke.varslet',
     [ForhåndsvarslingErrors.IKKE_RIKTIG_TILSTAND_FOR_BESLUTTNING]: 'forhåndsvarsel.feil.tilstand.for.beslutning',
 
     [UtfallSomIkkeStøttesErrors.DELVIS_OPPHØR]: 'opphør.deler.av.revurderingsperiode',
