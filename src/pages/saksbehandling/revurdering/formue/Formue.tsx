@@ -220,7 +220,7 @@ const FormueBlokk = (props: {
                                 autoComplete="off"
                                 value={field.value}
                                 onChange={(date: Date | null) => {
-                                    field.onChange(date ? DateFns.startOfMonth(date) : null);
+                                    field.onChange(date ? DateFns.endOfMonth(date) : null);
                                 }}
                                 feil={fieldState.error?.message}
                                 minDate={watch.periode.fraOgMed}
