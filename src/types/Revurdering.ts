@@ -122,79 +122,123 @@ export enum OpprettetRevurderingGrunn {
     REGULER_GRUNNBELØP = 'REGULER_GRUNNBELØP',
 }
 
-export enum RevurderingErrorCodes {
-    //forhåndsvarsling
-    ALLEREDE_FORHÅNDSVARSLET = 'allerede_forhåndsvarslet',
-    KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET = 'kan_ikke_oppdatere_revurdering_som_er_forhåndsvarslet',
-    MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL = 'mangler_beslutning_på_forhåndsvarsel',
+export type RevurderingErrorCodes =
+    | GenerellErrors
+    | PeriodeErrors
+    | VilkårErrorCodes
+    | BeregningOgSimuleringErrors
+    | ForhåndsvarslingErrors
+    | UtfallSomIkkeStøttesErrors
+    | BrevErrors;
 
-    //perioder
-    INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
-    OVERLAPPENDE_VURDERINGSPERIODER = 'overlappende_vurderingsperioder',
-    HELE_REVURDERINGSPERIODEN_MÅ_HA_VURDERINGER = 'hele_behandlingsperioden_må_ha_vurderinger',
-    VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
+type VilkårErrorCodes = OpprettelseOgOppdateringErrors | UføreErrors | BostiuasjonErrors | FormueErrors | FradragErrors;
 
-    //Fant_ikke....
+export enum GenerellErrors {
+    G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
+    ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON = 'attestant_og_saksbehandler_kan_ikke_være_samme_person',
+    FEILUTBETALING_STØTTES_IKKE = 'feilutbetalinger_støttes_ikke',
+
     FANT_IKKE_SAK = 'fant_ikke_sak',
     FANT_IKKE_PERSON = 'fant_ikke_person',
     FANT_IKKE_AKTØR_ID = 'fant_ikke_aktør_id',
     FANT_IKKE_REVURDERING = 'fant_ikke_revurdering',
 
-    //Ikke_lov...
-    IKKE_LOV_MED_OVERLAPPENDE_PERIODER = 'ikke_lov_med_overlappende_perioder',
-    IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BOSITUASJONPERIODE = 'ikke_lov_med_formueperiode_utenfor_bosituasjonperiode',
-    IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN = 'ikke_lov_med_formueperiode_utenfor_behandlingsperioden',
-    IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS = 'ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps',
-    FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES = 'formue_som_fører_til_opphør_må_revurderes',
-
-    //ugyldig...
     UGYLDIG_PERIODE = 'ugyldig_periode',
     UGYLDIG_TILSTAND = 'ugyldig_tilstand',
     UGYLDIG_ÅRSAK = 'ugyldig_årsak',
-    UGYLDIG_DATA = 'ugyldig_data',
-    HULL_I_TIDSLINJE = 'tidslinje_for_vedtak_ikke_kontinuerlig',
+    UGYLDIG_BODY = 'ugyldig_body',
 
-    //kunne_ikke...
     KUNNE_IKKE_OPPRETTE_OPPGAVE = 'kunne_ikke_opprette_oppgave',
-    KUNNE_IKKE_DISTRIBUERE_BREV = 'kunne_ikke_distribuere_brev',
-    KUNNE_IKKE_JOURNALFØRE_BREV = 'kunne_ikke_journalføre_brev',
     KUNNE_IKKE_UTBETALE = 'kunne_ikke_utbetale',
     KUNNE_IKKE_SLÅ_OPP_EPS = 'kunne_ikke_slå_opp_eps',
+}
 
-    //EPS
-    EPS_ALDER_ER_NULL = 'eps_alder_er_null',
-    KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS = 'kan_ikke_ha_eps_fradrag_uten_eps',
-    GJELDENDE_EPS_HAR_FORMUE = 'gjeldende_eps_har_formue',
-    EPS_FORMUE_MED_FLERE_PERIODER_MÅ_REVURDERES = 'eps_formue_med_flere_perioder_må_revurderes',
+export enum PeriodeErrors {
+    INGENTING_Å_REVURDERE_I_PERIODEN = 'ingenting_å_revurdere_i_perioden',
+    OVERLAPPENDE_VURDERINGSPERIODER = 'overlappende_vurderingsperioder',
+    VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
+}
 
-    //generell
-    BEGRUNNELSE_KAN_IKKE_VÆRE_TOM = 'begrunnelse_kan_ikke_være_tom',
-    UFULLSTENDIG_BEHANDLINGSINFORMASJON = 'ufullstendig_behandlingsinformasjon',
-    SISTE_MÅNED_VED_NEDGANG_I_STØNADEN = 'siste_måned_ved_nedgang_i_stønaden',
-    G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR = 'g_regulering_kan_ikke_føre_til_opphør',
-    VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
-    ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON = 'attestant_og_saksbehandler_kan_ikke_være_samme_person',
-    DEPOSITUM_KAN_IKKE_VÆRE_HØYERE_ENN_INNSKUDD = 'depositum_kan_ikke_være_høyere_enn_innskudd',
+export enum ForhåndsvarslingErrors {
+    ALLEREDE_FORHÅNDSVARSLET = 'allerede_forhåndsvarslet',
+    KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET = 'kan_ikke_oppdatere_revurdering_som_er_forhåndsvarslet',
+    MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL = 'mangler_beslutning_på_forhåndsvarsel',
+    UGYLDIG_VALG = 'ugyldig_valg',
+    ER_BESLUTTET = 'forhåndsvarslingen_er_allerede_besluttet',
+    IKKE_FORHÅNDSVARSLET_FOR_Å_KUNNE_BESLUTTE = 'ikke_forhåndsvarslet_for_å_kunne_beslutte',
+    IKKE_RIKTIG_TILSTAND_FOR_BESLUTTNING = 'ikke_riktig_tilstand_for_å_beslutte_forhåndsvarslingen',
+}
 
-    //revurderingsutfall som ikke støttes
-    OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON = 'opphør_og_andre_endringer_i_kombinasjon',
-    OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE = 'opphør_ikke_tidligste_dato',
+export enum UtfallSomIkkeStøttesErrors {
     DELVIS_OPPHØR = 'delvis_opphør',
     OPPHØR_AV_FLERE_VILKÅR = 'opphør_av_flere_vilkår',
+    OPPHØR_IKKE_FRA_FØRSTE_DATO_I_REVURDERINGSPERIODE = 'opphør_ikke_tidligste_dato',
+    OPPHØR_OG_ANDRE_ENDRINGER_I_KOMBINASJON = 'opphør_og_andre_endringer_i_kombinasjon',
+}
 
-    //bosituasjon
+export enum OpprettelseOgOppdateringErrors {
+    MÅ_VELGE_INFORMASJON_SOM_REVURDERES = 'må_velge_informasjon_som_revurderes',
+    HULL_I_TIDSLINJE = 'tidslinje_for_vedtak_ikke_kontinuerlig',
+    BEGRUNNELSE_KAN_IKKE_VÆRE_TOM = 'begrunnelse_kan_ikke_være_tom',
+    UGYLDIG_ÅRSAK = 'ugyldig_årsak',
     BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES = 'bosituasjon_med_flere_perioder_må_revurderes',
     BOSITUASJON_FLERE_PERIODER_OG_EPS_INNTEKT = 'eps_inntekt_med_flere_perioder_må_revurderes',
+    FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES = 'formue_som_fører_til_opphør_må_revurderes',
+    EPS_FORMUE_MED_FLERE_PERIODER_MÅ_REVURDERES = 'eps_formue_med_flere_perioder_må_revurderes',
+    KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET = 'kan_ikke_oppdatere_revurdering_som_er_forhåndsvarslet',
+}
 
-    //feilutbetaling
-    FEILUTBETALING_STØTTES_IKKE = 'feilutbetalinger_støttes_ikke',
+export enum UføreErrors {
+    UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE = 'uføregrad_må_være_mellom_en_og_hundre',
+    UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER = 'uføregrad_og_forventet_inntekt_mangler',
+    PERIODE_FOR_GRUNNLAG_OG_VURDERING_ER_FORSKJELLIG = 'periode_for_grunnlag_og_vurdering_er_forskjellig',
+    VURDERINGENE_MÅ_HA_SAMME_RESULTAT = 'vurderingene_må_ha_samme_resultat',
+    HELE_BEHANDLINGSPERIODEN_MÅ_HA_VURDERING = 'hele_behandlingsperioden_må_ha_vurderinger',
+    VURDERINGSPERIODER_MANGLER = 'vurderingsperioder_mangler',
+}
 
-    //simulering
-    SIMULERING_FEILET = 'simulering_feilet',
-    SIMULERING_FEILET_OPPDRAG_STENGT_ELLER_NEDE = 'simulering_feilet_oppdrag_stengt_eller_nede',
-    SIMULERING_FEILET_FINNER_IKKE_PERSON = 'simulering_feilet_finner_ikke_person_i_tps',
-    SIMULERING_FEILET_FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM = 'simulering_feilet_finner_ikke_kjøreplansperiode_for_fom',
-    SIMULERING_FEILET_OPPDRAGET_FINNES_IKKE = 'simulering_feilet_oppdraget_finnes_ikke',
+export enum BostiuasjonErrors {
+    KUNNE_IKKE_LEGGE_TIL_BOSITUASJONSGRUNNLAG = 'kunne_ikke_legge_til_bosituasjonsgrunnlag',
+    EPS_ALDER_ER_NULL = 'eps_alder_er_null',
+    KUNNE_IKKE_SLÅ_OPP_EPS = 'kunne_ikke_slå_opp_eps',
+}
+
+export enum FormueErrors {
+    DEPOSITUM_MINDRE_ENN_INNSKUDD = 'depositum_mindre_enn_innskudd',
+    VERDIER_KAN_IKKE_VÆRE_NEGATIV = 'verdier_kan_ikke_være_negativ',
+    IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BOSITUASJONPERIODE = 'ikke_lov_med_formueperiode_utenfor_bosituasjonperiode',
+    IKKE_LOV_MED_FORMUEPERIODE_UTENFOR_BEHANDLINGSPERIODEN = 'ikke_lov_med_formueperiode_utenfor_behandlingsperioden',
+    IKKE_LOV_MED_FORMUE_FOR_EPS_HVIS_MAN_IKKE_HAR_EPS = 'ikke_lov_med_formue_for_eps_hvis_man_ikke_har_eps',
+}
+
+export enum FradragErrors {
+    KUNNE_IKKE_LEGGE_TIL_FRADRAGSGRUNNLAG = 'kunne_ikke_legge_til_fradragsgrunnlag',
+    FRADRAG_UGYLDIG_FRADRAGSTYPE = 'fradrag_ugyldig_fradragstype',
+    KUNNE_IKKE_LAGE_FRADRAG = 'kunne_ikke_lage_fradrag',
+    KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS = 'kan_ikke_ha_eps_fradrag_uten_eps',
+    PERIODE_MANGLER = 'periode_mangler',
+}
+
+export enum BeregningOgSimuleringErrors {
+    SISTE_MÅNED_VED_NEDGANG_I_STØNADEN = 'siste_måned_ved_nedgang_i_stønaden',
+    UGYLDIG_BEREGNINGSGRUNNLAG = 'ugyldig_beregningsgrunnlag',
+    KAN_IKKE_HA_EPS_FRADRAG_UTEN_EPS = 'kan_ikke_ha_eps_fradrag_uten_eps',
+
+    FEILET = 'simulering_feilet',
+    OPPDRAG_STENGT_ELLER_NEDE = 'simulering_feilet_oppdrag_stengt_eller_nede',
+    FINNER_IKKE_PERSON = 'simulering_feilet_finner_ikke_person_i_tps',
+    FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM = 'simulering_feilet_finner_ikke_kjøreplansperiode_for_fom',
+    OPPDRAGET_FINNES_IKKE = 'simulering_feilet_oppdraget_finnes_ikke',
+}
+
+export enum BrevErrors {
+    NAVNEOPPSLAG_SAKSBEHANDLER_ATTESTTANT_FEILET = 'navneoppslag_feilet',
+    FANT_IKKE_GJELDENDEUTBETALING = 'kunne_ikke_hente_gjeldende_utbetaling',
+    KUNNE_IKKE_DISTRIBUERE = 'kunne_ikke_distribuere_brev',
+    KUNNE_IKKE_JOURNALFØRE = 'kunne_ikke_journalføre_brev',
+    KUNNE_IKKE_GENERERE_BREV = 'kunne_ikke_generere_brev',
+    KUNNE_IKKE_LAGE_BREV = 'kunne_ikke_lage_brevutkast',
+    FEIL_VED_GENERERING_AV_DOKUMENT = 'feil_ved_generering_av_dokument',
 }
 
 export enum InformasjonSomRevurderes {
