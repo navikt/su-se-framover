@@ -82,7 +82,7 @@ export const Utbetalinger = (props: {
                         <ol>
                             {utbetalingsperioder.map((u) => {
                                 return (
-                                    <li key={u.id}>
+                                    <li key={`${u.fraOgMed}-${u.tilOgMed}-${u.type}`}>
                                         <UtbetalingsperiodeListItem utbetalingsperiode={u} intl={intl} />
                                     </li>
                                 );
