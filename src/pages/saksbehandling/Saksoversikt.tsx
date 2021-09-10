@@ -30,6 +30,7 @@ const Vedtaksoppsummering = React.lazy(() => import('~pages/saksbehandling/vedta
 const LukkSøknad = React.lazy(() => import('./lukkSøknad/LukkSøknad'));
 const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));
 const Sakintro = React.lazy(() => import('./sakintro/Sakintro'));
+const DokumenterPage = React.lazy(() => import('~pages/saksbehandling/dokumenter/DokumenterPage'));
 
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
@@ -137,6 +138,11 @@ const Saksoversikt = () => {
                                                             <Vilkår sak={sak} søker={søker} />
                                                         </Route>
                                                     </Switch>
+                                                </div>
+                                            </Route>
+                                            <Route path={Routes.alleDokumenterForSak.path}>
+                                                <div className={styles.mainContent}>
+                                                    <DokumenterPage sak={sak} />
                                                 </div>
                                             </Route>
 

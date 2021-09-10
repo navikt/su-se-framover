@@ -6,8 +6,9 @@ import AlertStripe, { AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { EtikettInfo } from 'nav-frontend-etiketter';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
+import { LenkepanelBase } from 'nav-frontend-lenkepanel';
 import Panel from 'nav-frontend-paneler';
-import { Element, Ingress, Innholdstittel, Normaltekst, Undertittel } from 'nav-frontend-typografi';
+import { Element, Ingress, Innholdstittel, Normaltekst, Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
@@ -15,6 +16,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { ApiError } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
 import { Person } from '~api/personApi';
+import { ÅpentBrev } from '~assets/Illustrations';
 import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useUserContext } from '~context/userContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -141,6 +143,22 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                     />
                     <AvslåtteSøknader sak={props.sak} avslåtteSøknader={avslåtteSøknader} intl={intl} />
                     <LukkedeSøknader lukkedeSøknader={lukkedeSøknader} intl={intl} />
+                    <div>
+                        <LenkepanelBase
+                            href={Routes.alleDokumenterForSak.createURL({ sakId: props.sak.id })}
+                            linkCreator={({ href, ...props }) => <Link to={href ?? ''} {...props} />}
+                            className={styles.dokumenterLinkpanel}
+                        >
+                            <div className={styles.dokumenterLink}>
+                                <span className={styles.dokumenterLinkIcon}>
+                                    <ÅpentBrev />
+                                </span>
+                                <Systemtittel className="lenkepanel__heading">
+                                    {intl.formatMessage({ id: 'link.dokumenter' })}
+                                </Systemtittel>
+                            </div>
+                        </LenkepanelBase>
+                    </div>
                 </div>
             ) : (
                 'Ingen søknader'
