@@ -5,11 +5,13 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import { ErrorCode } from '~api/apiClient';
 import { fetchPerson, Kjønn, Person, Sivilstand as ISivilstand, SivilstandTyper } from '~api/personApi';
 import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
+import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 import { showName, formatFnr } from '~utils/person/personUtils';
 
@@ -34,9 +36,11 @@ const Personlinje = (props: { søker: Person; sak: Sak }) => {
                 <span className={styles.icon}>
                     <GenderIcon kjønn={props.søker.kjønn ?? Kjønn.Ukjent} />
                 </span>
-                <Normaltekst tag="span" className={styles.navn}>
-                    {showName(props.søker.navn)}
-                </Normaltekst>
+                <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
+                    <Normaltekst tag="span" className={styles.navn}>
+                        {showName(props.søker.navn)}
+                    </Normaltekst>
+                </Link>
                 <Separator />
                 <Clipboard buttonLabel={formatMessage('ariaLabel.kopierFnr')}>
                     <Normaltekst tag="span">{props.sak.fnr}</Normaltekst>
