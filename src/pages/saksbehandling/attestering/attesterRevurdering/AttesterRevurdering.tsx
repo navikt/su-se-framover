@@ -11,9 +11,9 @@ import { useHistory } from 'react-router-dom';
 import { ApiError } from '~api/apiClient';
 import * as PdfApi from '~api/pdfApi';
 import { Person } from '~api/personApi';
+import Feilresponser from '~components/Feilresponser/Feilresponser';
 import Personlinje from '~components/personlinje/Personlinje';
 import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
-import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -181,7 +181,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 RemoteData.fold(
                     () => <NavFrontendSpinner />,
                     () => <NavFrontendSpinner />,
-                    (err) => <RevurderingskallFeilet error={err} />,
+                    (err) => <Feilresponser error={err} />,
                     (grunnlag) => (
                         <div>
                             <div className={styles.oppsummeringContainer}>
@@ -297,7 +297,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                                     {intl.formatMessage({ id: 'knapp.tekst' })}
                                 </Hovedknapp>
                                 {RemoteData.isFailure(sendtBeslutning) && (
-                                    <RevurderingskallFeilet error={sendtBeslutning.error} />
+                                    <Feilresponser error={sendtBeslutning.error} />
                                 )}
                             </form>
                         </div>

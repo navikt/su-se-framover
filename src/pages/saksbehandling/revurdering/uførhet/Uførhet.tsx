@@ -15,8 +15,8 @@ import { v4 as uuid } from 'uuid';
 
 import { ApiError } from '~api/apiClient';
 import DatePicker from '~components/datePicker/DatePicker';
+import Feilresponser from '~components/Feilresponser/Feilresponser';
 import { JaNeiSpørsmål } from '~components/formElements/FormElements';
-import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import { focusAfterTimeout } from '~lib/formUtils';
@@ -403,7 +403,7 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                     {formatMessage('feil.overlappendePerioder')}
                 </AlertStripeAdvarsel>
             )}
-            {RemoteData.isFailure(savingState) && <RevurderingskallFeilet error={savingState.error} />}
+            {RemoteData.isFailure(savingState) && <Feilresponser error={savingState.error} />}
             <RevurderingBunnknapper
                 onNesteClick="submit"
                 tilbakeUrl={props.forrigeUrl}

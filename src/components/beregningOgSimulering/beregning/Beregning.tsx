@@ -7,7 +7,7 @@ import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 import { pipe } from 'fp-ts/lib/function';
 import * as S from 'fp-ts/lib/string';
-import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -21,6 +21,7 @@ import {
     fradragSchema,
     FradragInputs,
 } from '~components/beregningOgSimulering/beregning/FradragInputs';
+import Feilresponser from '~components/Feilresponser/Feilresponser';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~lib/hooks';
@@ -320,13 +321,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                         </div>
 
                         {RemoteData.isFailure(lagrefradragogberegnstatus) && (
-                            <AlertStripeFeil>
-                                <p>{intl.formatMessage({ id: 'alert.feil.beregningFeilet' })}</p>
-                                <p>
-                                    {lagrefradragogberegnstatus.error?.body?.message ||
-                                        intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
-                                </p>
-                            </AlertStripeFeil>
+                            <Feilresponser error={lagrefradragogberegnstatus.error} />
                         )}
                         {needsBeregning && (
                             <AlertStripe type="advarsel">
@@ -342,9 +337,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                         {intl.formatMessage({ id: 'display.simulerer' })}
                                     </NavFrontendSpinner>
                                 ),
-                                (error) => (
-                                    <AlertStripe type="feil">{simuleringsfeilmelding(error?.body?.code)}</AlertStripe>
-                                ),
+                                (err) => <Feilresponser error={err} />,
                                 () => null
                             )
                         )}
@@ -369,21 +362,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
             }}
         </ToKolonner>
     );
-
-    function simuleringsfeilmelding(errorCode: string | undefined) {
-        switch (errorCode) {
-            case 'simulering_feilet_oppdrag_stengt_eller_nede':
-                return intl.formatMessage({ id: 'alert.feil.simuleringFeilet.oppdragStengtEllerNede' });
-            case 'simulering_feilet_finner_ikke_person_i_tps':
-                return intl.formatMessage({ id: 'alert.feil.simuleringFeilet.finnerIkkePerson' });
-            case 'simulering_feilet_finner_ikke_kjøreplansperiode_for_fom':
-                return intl.formatMessage({ id: 'alert.feil.simuleringFeilet.finnerIkkeKjøreplansperiodeForFom' });
-            case 'simulering_feilet_oppdraget_finnes_ikke':
-                return intl.formatMessage({ id: 'alert.feil.simuleringFeilet.oppdragetFinnesIkke' });
-            default:
-                return intl.formatMessage({ id: 'alert.feil.simuleringFeilet' });
-        }
-    }
 };
 
 function erFradragLike(fradrag: Fradrag[] | undefined, formFradrag: FradragFormData[]): boolean {

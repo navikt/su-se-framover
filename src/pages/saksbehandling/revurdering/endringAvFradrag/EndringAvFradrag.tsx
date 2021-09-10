@@ -13,8 +13,8 @@ import {
     FradragInputs,
     fradragSchema,
 } from '~components/beregningOgSimulering/beregning/FradragInputs';
+import Feilresponser from '~components/Feilresponser/Feilresponser';
 import Fradragoppsummering from '~components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
-import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
@@ -212,7 +212,7 @@ const EndringAvFradrag = (props: {
                                 feil={formikErrorsTilFeiloppsummering(formik.errors)}
                                 hidden={!formikErrorsHarFeil(formik.errors)}
                             />
-                            {RemoteData.isFailure(savingState) && <RevurderingskallFeilet error={savingState.error} />}
+                            {RemoteData.isFailure(savingState) && <Feilresponser error={savingState.error} />}
                             <RevurderingBunnknapper
                                 onNesteClick="submit"
                                 tilbakeUrl={props.forrigeUrl}

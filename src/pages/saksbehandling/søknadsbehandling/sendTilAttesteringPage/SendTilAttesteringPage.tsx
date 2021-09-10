@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import AlertStripe, { AlertStripeFeil } from 'nav-frontend-alertstriper';
+import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel } from 'nav-frontend-typografi/';
@@ -7,6 +7,7 @@ import React, { useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import * as PdfApi from '~api/pdfApi';
+import Feilresponser from '~components/Feilresponser/Feilresponser';
 import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useBrevForhåndsvisning } from '~lib/hooks';
@@ -138,15 +139,7 @@ const SendTilAttesteringPage = (props: Props) => {
                     </Hovedknapp>
                 </div>
                 {RemoteData.isFailure(sendtTilAttesteringStatus) && (
-                    <AlertStripeFeil>
-                        <div>
-                            {intl.formatMessage({ id: 'feilmelding.sendingFeilet' })}
-                            <p>
-                                {intl.formatMessage({ id: 'feilmelding.errorkode' })}{' '}
-                                {sendtTilAttesteringStatus.error.statusCode}
-                            </p>
-                        </div>
-                    </AlertStripeFeil>
+                    <Feilresponser error={sendtTilAttesteringStatus.error} />
                 )}
             </div>
         );

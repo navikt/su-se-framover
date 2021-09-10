@@ -4,7 +4,6 @@ import * as DateFns from 'date-fns';
 import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import * as React from 'react';
@@ -13,6 +12,7 @@ import { useHistory } from 'react-router';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
 import DatePicker from '~components/datePicker/DatePicker';
+import Feilresponser from '~components/Feilresponser/Feilresponser';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as SakSlice from '~features/saksoversikt/sak.slice';
 import { nullableMap, pipe } from '~lib/fp';
@@ -210,7 +210,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                             RemoteData.fold(
                                 () => null,
                                 () => <NavFrontendSpinner>{formatMessage('state.lagrer')}</NavFrontendSpinner>,
-                                () => <AlertStripe type="feil">{formatMessage('state.lagringFeilet')}</AlertStripe>,
+                                (err) => <Feilresponser error={err} />,
                                 () => null
                             )
                         )}

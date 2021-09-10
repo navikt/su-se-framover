@@ -1,14 +1,6 @@
 export default {
     'alert.advarsel.kjørBeregningFørst': 'Du må kjøre en beregning før du kan gå videre',
     'alert.feil.beregningFeilet': 'Beregning feilet',
-    'alert.feil.simuleringFeilet': 'Simulering feilet',
-    'alert.feil.simuleringFeilet.oppdragStengtEllerNede':
-        'Simulering feilet. Oppdrag/UR er stengt eller nede. Prøv på nytt eller prøv igjen i Oppdrags åpningstid.',
-    'alert.feil.simuleringFeilet.finnerIkkePerson': 'Simulering feilet. Finner ikke person i TPS.',
-    'alert.feil.simuleringFeilet.finnerIkkeKjøreplansperiodeForFom':
-        'Simulering feilet. Finner ikke kjøreplansperiode for fom-dato. Kjøreplan finnes som regel bare for inneværende år.',
-    'alert.feil.simuleringFeilet.oppdragetFinnesIkke':
-        'Simulering feilet. Oppdraget finnes ikke, brukerens transaksjoner er sannsynligvis fjernet fra Oppdrag.',
 
     'beregning.behandlingErIkkeFerdig': 'Behandlingen er ikke ferdig.',
 

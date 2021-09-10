@@ -1,5 +1,6 @@
 import { formatISO } from 'date-fns';
 
+import { RevurderingErrorCodes } from '~components/Feilresponser/revurderingFeilresponser/RevurderingFeilresponser';
 import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering';
 import { Fradrag } from '~types/Fradrag';
@@ -13,7 +14,6 @@ import {
     IverksattRevurdering,
     UnderkjentRevurdering,
     OpprettetRevurderingGrunn,
-    RevurderingErrorCodes,
     BeslutningEtterForhåndsvarsling,
     InformasjonSomRevurderes,
     Revurdering,

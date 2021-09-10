@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import * as revurderingApi from '~api/revurderingApi';
+import { RevurderingErrorCodes } from '~components/Feilresponser/revurderingFeilresponser/RevurderingFeilresponser';
 import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering';
 import { Fradrag } from '~types/Fradrag';
@@ -15,7 +16,6 @@ import {
     SimulertRevurdering,
     UnderkjentRevurdering,
     OpprettetRevurderingGrunn,
-    RevurderingErrorCodes,
     BeslutningEtterForhåndsvarsling,
     InformasjonSomRevurderes,
     Revurdering,

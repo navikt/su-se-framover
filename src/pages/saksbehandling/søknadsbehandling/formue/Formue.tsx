@@ -15,6 +15,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ErrorCode } from '~api/apiClient';
 import * as personApi from '~api/personApi';
+import Feilresponser from '~components/Feilresponser/Feilresponser';
 import { FormueFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FormueFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
@@ -558,13 +559,7 @@ const Formue = (props: {
                             RemoteData.fold(
                                 () => null,
                                 () => <NavFrontendSpinner>{formatMessage('display.lagre.lagrer')}</NavFrontendSpinner>,
-                                (error) => (
-                                    <AlertStripe type="feil">
-                                        {error?.body?.code === 'ugyldige_verdier_på_formue'
-                                            ? formatMessage('feilmelding.ugyldigeVerdier.depositum')
-                                            : formatMessage('display.lagre.lagringFeilet')}
-                                    </AlertStripe>
-                                ),
+                                (err) => <Feilresponser error={err} />,
                                 () => null
                             )
                         )}

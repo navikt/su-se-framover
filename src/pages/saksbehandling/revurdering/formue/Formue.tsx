@@ -21,10 +21,10 @@ import { useHistory } from 'react-router-dom';
 
 import * as personApi from '~api/personApi';
 import DatePicker from '~components/datePicker/DatePicker';
+import Feilresponser from '~components/Feilresponser/Feilresponser';
 import { Personkort } from '~components/personkort/Personkort';
 import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
 import FormuevilkårOppsummering from '~components/revurdering/oppsummering/formuevilkåroppsummering/FormuevilkårOppsummering';
-import RevurderingskallFeilet from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreFormuegrunnlag } from '~features/revurdering/revurderingActions';
 import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
@@ -93,7 +93,7 @@ const Formue = (props: RevurderingProps) => {
                 left: (
                     <form onSubmit={handleSubmit(lagreFormuegrunnlaget)}>
                         {RemoteData.isPending(epsStatus) && <NavFrontendSpinner />}
-                        {RemoteData.isFailure(epsStatus) && <RevurderingskallFeilet error={epsStatus.error} />}
+                        {RemoteData.isFailure(epsStatus) && <Feilresponser error={epsStatus.error} />}
                         {formueArray.fields.map((field, index) => (
                             <FormueBlokk
                                 key={field.id}
@@ -119,7 +119,7 @@ const Formue = (props: RevurderingProps) => {
                             </Knapp>
                         </div>
                         {RemoteData.isFailure(lagreFormuegrunnlagStatus) && (
-                            <RevurderingskallFeilet error={lagreFormuegrunnlagStatus.error} />
+                            <Feilresponser error={lagreFormuegrunnlagStatus.error} />
                         )}
                         <RevurderingBunnknapper
                             onNesteClick="submit"
