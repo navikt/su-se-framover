@@ -6,7 +6,6 @@ export const enum Utbetalingstype {
 }
 
 export interface Utbetalingsperiode {
-    id: string;
     fraOgMed: string;
     tilOgMed: string;
     beløp: number;
