@@ -6,8 +6,8 @@ import { Controller, useForm } from 'react-hook-form';
 
 import * as pdfApi from '~api/pdfApi';
 import { Revurderingshandling } from '~api/revurderingApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { BrevInput, BrevInputProps } from '~components/brevInput/BrevInput';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
 import { ApiResult } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
@@ -187,7 +187,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                 />
             )}
 
-            {RemoteData.isFailure(props.submitStatus) && <Feilresponser error={props.submitStatus.error} />}
+            {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
 
             <RevurderingBunnknapper
                 onNesteClick="submit"
@@ -292,7 +292,7 @@ export const VelgForhåndsvarselForm = (props: {
                 />
             )}
 
-            {RemoteData.isFailure(props.submitStatus) && <Feilresponser error={props.submitStatus.error} />}
+            {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
 
             <RevurderingBunnknapper
                 onNesteClick="submit"
@@ -373,7 +373,7 @@ export const SendTilAttesteringForm = (props: {
                 />
             )}
 
-            {RemoteData.isFailure(props.submitStatus) && <Feilresponser error={props.submitStatus.error} />}
+            {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
 
             <RevurderingBunnknapper
                 onNesteClick="submit"

@@ -11,7 +11,7 @@ import { useHistory } from 'react-router-dom';
 import { ApiError } from '~api/apiClient';
 import * as PdfApi from '~api/pdfApi';
 import { Person } from '~api/personApi';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Personlinje from '~components/personlinje/Personlinje';
 import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
@@ -181,7 +181,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                 RemoteData.fold(
                     () => <NavFrontendSpinner />,
                     () => <NavFrontendSpinner />,
-                    (err) => <Feilresponser error={err} />,
+                    (err) => <ApiErrorAlert error={err} />,
                     (grunnlag) => (
                         <div>
                             <div className={styles.oppsummeringContainer}>
@@ -297,7 +297,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                                     {intl.formatMessage({ id: 'knapp.tekst' })}
                                 </Hovedknapp>
                                 {RemoteData.isFailure(sendtBeslutning) && (
-                                    <Feilresponser error={sendtBeslutning.error} />
+                                    <ApiErrorAlert error={sendtBeslutning.error} />
                                 )}
                             </form>
                         </div>

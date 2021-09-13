@@ -8,7 +8,7 @@ import React, { useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import Feilresponser from '~components/Feilresponser/Feilresponser';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { FlyktningFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FlyktningFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -208,7 +208,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                             RemoteData.fold(
                                 () => null,
                                 () => <NavFrontendSpinner>{formatMessage('display.lagre.lagrer')}</NavFrontendSpinner>,
-                                (err) => <Feilresponser error={err} />,
+                                (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )
                         )}

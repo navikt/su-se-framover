@@ -7,7 +7,7 @@ import React, { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import Feilresponser from '~components/Feilresponser/Feilresponser';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { InstitusjonsoppholdBlokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/InstitusjonsoppholdBlokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -158,7 +158,7 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
                             RemoteData.fold(
                                 () => null,
                                 () => <NavFrontendSpinner>{formatMessage('display.lagre.lagrer')}</NavFrontendSpinner>,
-                                (err) => <Feilresponser error={err} />,
+                                (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )
                         )}

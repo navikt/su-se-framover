@@ -6,6 +6,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import fradragMessages from '~components/beregningOgSimulering/beregning/beregning-nb';
 import { fradragTilFradragFormData } from '~components/beregningOgSimulering/beregning/beregningUtils';
 import {
@@ -13,7 +14,6 @@ import {
     FradragInputs,
     fradragSchema,
 } from '~components/beregningOgSimulering/beregning/FradragInputs';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
 import Fradragoppsummering from '~components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions';
@@ -212,7 +212,7 @@ const EndringAvFradrag = (props: {
                                 feil={formikErrorsTilFeiloppsummering(formik.errors)}
                                 hidden={!formikErrorsHarFeil(formik.errors)}
                             />
-                            {RemoteData.isFailure(savingState) && <Feilresponser error={savingState.error} />}
+                            {RemoteData.isFailure(savingState) && <ApiErrorAlert error={savingState.error} />}
                             <RevurderingBunnknapper
                                 onNesteClick="submit"
                                 tilbakeUrl={props.forrigeUrl}

@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~api/apiClient';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { customFormikSubmit } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
@@ -223,7 +223,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
                     />
                 </div>
-                {RemoteData.isFailure(props.nesteClickStatus) && <Feilresponser error={props.nesteClickStatus.error} />}
+                {RemoteData.isFailure(props.nesteClickStatus) && <ApiErrorAlert error={props.nesteClickStatus.error} />}
                 <RevurderingBunnknapper
                     onNesteClick={() => {
                         setSubmittedStatus(SubmittedStatus.NESTE);

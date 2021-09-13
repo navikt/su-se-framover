@@ -2,15 +2,15 @@ import { ErrorMessage } from '~api/apiClient';
 import { MessageFormatter } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 
-import feilresponseMessages from './feilresponser-nb';
-import { revurderingFeilkodeTilFeilmelding } from './revurderingFeilresponser/RevurderingFeilresponser';
-import revurderingMessages from './revurderingFeilresponser/RevurderingFeilresponser-nb';
-import { søknadsbehandlingFeilkodeTilFeilmelding } from './søknadsbehandlingFeilresponser/SøknadsbehandlingFeilresponser';
-import søknadsbehandlingMessages from './søknadsbehandlingFeilresponser/søknadsbehandlingFeilresponser-nb';
+import feilresponsMessages from './ApiErrorAlert-nb';
+import { revurderingFeilkodeTilFeilmelding } from './revurderingFeilresponser/RevurderingApiError';
+import revurderingMessages from './revurderingFeilresponser/RevurderingApiError-nb';
+import { søknadsbehandlingFeilkodeTilFeilmelding } from './søknadsbehandlingFeilresponser/SøknadsbehandlingApiError';
+import søknadsbehandlingMessages from './søknadsbehandlingFeilresponser/søknadsbehandlingApiError-nb';
 
-export const feilresponseTilFeilmelding = (
+export const feilresponsTilFeilmelding = (
     formatMessage: MessageFormatter<
-        typeof revurderingMessages | typeof søknadsbehandlingMessages | typeof feilresponseMessages
+        typeof revurderingMessages | typeof søknadsbehandlingMessages | typeof feilresponsMessages
     >,
     feil?: Nullable<ErrorMessage>
 ) => {
@@ -26,14 +26,14 @@ export const feilresponseTilFeilmelding = (
 };
 
 const feilresponsTilFeilmeldingInternal = (
-    formatMessage: MessageFormatter<typeof feilresponseMessages>,
+    formatMessage: MessageFormatter<typeof feilresponsMessages>,
     feil?: Nullable<ErrorMessage>
 ) => {
-    const error = feilresponseErrorCodeMessageIdMap[(feil?.code ?? '') as FeilresponseErrorCodes];
+    const error = feilresponsErrorCodeMessageIdMap[(feil?.code ?? '') as FeilresponsErrorCodes];
     return formatMessage(error ?? 'feil.ukjentFeil');
 };
 
-type FeilresponseErrorCodes = Generell | Periode | Vurderingsperiode | VilkårErrors | Simulering | Brev | Utbetaling;
+type FeilresponsErrorCodes = Generell | Periode | Vurderingsperiode | VilkårErrors | Simulering | Brev | Utbetaling;
 
 enum Generell {
     FANT_IKKE_BEHANDLING = 'fant_ikke_behandling',
@@ -97,7 +97,7 @@ enum Utbetaling {
     KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING = 'kontrollsimulering_ulik_saksbehandlers_simulering',
 }
 
-const feilresponseErrorCodeMessageIdMap: { [key in FeilresponseErrorCodes]: keyof typeof feilresponseMessages } = {
+const feilresponsErrorCodeMessageIdMap: { [key in FeilresponsErrorCodes]: keyof typeof feilresponsMessages } = {
     [Generell.FANT_IKKE_BEHANDLING]: 'generell.fant.ikke.behandling',
     [Generell.FANT_IKKE_AKTØR_ID]: 'generell.fant.ikke.aktør.id',
     [Generell.FANT_IKKE_PERSON]: 'generell.fant.ikke.person',

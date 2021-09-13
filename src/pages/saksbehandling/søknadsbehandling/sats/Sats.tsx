@@ -11,7 +11,7 @@ import { useHistory } from 'react-router-dom';
 
 import { Sats as FaktiskSats } from '~/types/Sats';
 import { Person, fetchPerson } from '~api/personApi';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { SatsFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
@@ -380,7 +380,7 @@ const SatsForm = (props: SatsProps) => {
                                         {props.formatMessage('display.lagre.lagrer')}
                                     </NavFrontendSpinner>
                                 ),
-                                (err) => <Feilresponser error={err} />,
+                                (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )
                         )}

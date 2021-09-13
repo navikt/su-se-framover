@@ -14,8 +14,8 @@ import { useHistory } from 'react-router';
 import { v4 as uuid } from 'uuid';
 
 import { ApiError } from '~api/apiClient';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
 import { JaNeiSpørsmål } from '~components/formElements/FormElements';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
@@ -403,7 +403,7 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                     {formatMessage('feil.overlappendePerioder')}
                 </AlertStripeAdvarsel>
             )}
-            {RemoteData.isFailure(savingState) && <Feilresponser error={savingState.error} />}
+            {RemoteData.isFailure(savingState) && <ApiErrorAlert error={savingState.error} />}
             <RevurderingBunnknapper
                 onNesteClick="submit"
                 tilbakeUrl={props.forrigeUrl}

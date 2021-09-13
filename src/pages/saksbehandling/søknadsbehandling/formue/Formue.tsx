@@ -15,7 +15,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ErrorCode } from '~api/apiClient';
 import * as personApi from '~api/personApi';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { FormueFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FormueFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
@@ -559,7 +559,7 @@ const Formue = (props: {
                             RemoteData.fold(
                                 () => null,
                                 () => <NavFrontendSpinner>{formatMessage('display.lagre.lagrer')}</NavFrontendSpinner>,
-                                (err) => <Feilresponser error={err} />,
+                                (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )
                         )}

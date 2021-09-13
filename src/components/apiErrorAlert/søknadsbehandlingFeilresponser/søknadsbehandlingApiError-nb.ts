@@ -8,7 +8,7 @@ export default {
     'stønadsperiode.periode.før.2021': 'Stønadsperiode kan ikke starte før Januar 2021',
     'stønadsperiode.periode.maks.12.måneder': 'En stønadsperiode kan være maks 12 måneder',
 
-    'formue.ugyldige.verdier': 'Ugyldige formue verdier',
+    'formue.ugyldige.verdier': 'Ugyldige formueverdier',
     'formue.har.ikke.ektefelle': 'Har ikke ektefelle',
 
     'fradrag.ugyldig.type': 'Ugyldig fradragstype',

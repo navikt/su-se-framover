@@ -1,7 +1,7 @@
 export default {
-    'generell.fant.ikke.behandling': 'Fant ikke behandling',
-    'generell.fant.ikke.aktør.id': 'Fant ikke aktør ID',
-    'generell.fant.ikke.person': 'Fant ikke person',
+    'generell.fant.ikke.behandling': 'Fant ikke behandlingen',
+    'generell.fant.ikke.aktør.id': 'Fant ikke AktørID',
+    'generell.fant.ikke.person': 'Fant ikke personen',
     'generell.kunne.ikke.opprette.oppgave': 'Kunne ikke opprette oppgave',
     'generell.kunne.ikke.utbetale': 'Kunne ikke utbetale',
 
@@ -9,7 +9,7 @@ export default {
     'generell.ugyldig.tilstand': 'Ugyldig tilstand',
 
     'periode.ugyldig.fom': 'Perioder kan kun starte første dagen i måneden',
-    'periode.ugyldig.tom': 'Perioder kan kun slutte siste dagen i morgen',
+    'periode.ugyldig.tom': 'Perioder kan kun slutte siste dagen i måneden',
     'periode.ugyldig.start.slutt': 'Startmåned må være før, eller lik sluttmåned',
 
     'vurderingsperiode.overlappende.vurderingsperioder': 'Perioder kan ikke overlappe',
@@ -23,20 +23,20 @@ export default {
 
     'bosituasjon.kunne.ikke.legge.til': 'Kunne ikke legge til bosituasjonsgrunnlaget',
 
-    'fradrag.kunne.ikke.legge.til': 'Kunne ikke legge til fradragsgrunnlag',
+    'fradrag.kunne.ikke.legge.til': 'Kunne ikke legge til fradragsgrunnlaget',
     'fradrag.mangler.periode': 'Fradrag mangler periode',
     'fradrag.utenlandsinntekt.negativt.beløp': 'Fradrag har negativt utenlandsbeløp',
     'fradrag.utenlandsinntekt.mangler.valuta': 'Fradrag mangler valuta',
-    'fradrag.utenlandsinntekt.negativ.kurs': 'Fradrag har negativ krus',
+    'fradrag.utenlandsinntekt.negativ.kurs': 'Fradrag har negativ kurs',
 
     'simulering.simulering.feilet': 'Simulering feilet',
     'simulering.oppdrag.stengt.eller.nede':
-        'Simulering feilet. Oppdrag/UR er stengt eller nede. Prøv på nytt eller prøv igjen i Oppdrags åpningstid.',
-    'simulering.finner.ikke.person': 'Simulering feilet. Finner ikke person i TPS.',
+        'Simulering feilet. Oppdrag/UR er stengt eller nede. Prøv på nytt eller prøv igjen i Oppdrags åpningstid',
+    'simulering.finner.ikke.person': 'Simulering feilet. Finner ikke person i TPS',
     'simulering.finner.ikke.kjøretidsplan':
-        'Simulering feilet. Finner ikke kjøreplansperiode for fom-dato. Kjøreplan finnes som regel bare for inneværende år.',
+        'Simulering feilet. Finner ikke kjøreplansperiode for fom-dato. Kjøreplan finnes som regel bare for inneværende år',
     'simulering.oppdraget.finnes.ikke':
-        'Simulering feilet. Oppdraget finnes ikke, brukerens transaksjoner er sannsynligvis fjernet fra Oppdrag.',
+        'Simulering feilet. Oppdraget finnes ikke, brukerens transaksjoner er sannsynligvis fjernet fra Oppdrag',
 
     'brev.kunne.ikke.generere': 'Kunne ikke generere brev',
     'brev.generering.dokument.feilet': 'Feil ved generering av dokument',

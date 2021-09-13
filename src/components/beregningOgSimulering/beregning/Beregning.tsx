@@ -15,13 +15,13 @@ import { Undertittel } from 'nav-frontend-typografi';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import {
     FradragFormData,
     isValidFradrag,
     fradragSchema,
     FradragInputs,
 } from '~components/beregningOgSimulering/beregning/FradragInputs';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~lib/hooks';
@@ -321,7 +321,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                         </div>
 
                         {RemoteData.isFailure(lagrefradragogberegnstatus) && (
-                            <Feilresponser error={lagrefradragogberegnstatus.error} />
+                            <ApiErrorAlert error={lagrefradragogberegnstatus.error} />
                         )}
                         {needsBeregning && (
                             <AlertStripe type="advarsel">
@@ -337,7 +337,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                         {intl.formatMessage({ id: 'display.simulerer' })}
                                     </NavFrontendSpinner>
                                 ),
-                                (err) => <Feilresponser error={err} />,
+                                (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )
                         )}

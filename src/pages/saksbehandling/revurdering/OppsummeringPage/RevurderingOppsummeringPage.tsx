@@ -7,9 +7,9 @@ import { useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import { Revurderingshandling } from '~api/revurderingApi';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
-import { revurderingFeilkodeTilFeilmelding } from '~components/Feilresponser/revurderingFeilresponser/RevurderingFeilresponser';
-import revurderingsfeilMessages from '~components/Feilresponser/revurderingFeilresponser/RevurderingFeilresponser-nb';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import { revurderingFeilkodeTilFeilmelding } from '~components/apiErrorAlert/revurderingFeilresponser/RevurderingApiError';
+import revurderingsfeilMessages from '~components/apiErrorAlert/revurderingFeilresponser/RevurderingApiError-nb';
 import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
@@ -281,7 +281,7 @@ const RevurderingOppsummeringPage = (props: {
                         () => <NavFrontendSpinner>{formatMessage('beregner.label')}</NavFrontendSpinner>,
                         (err) => (
                             <div>
-                                <Feilresponser error={err} />
+                                <ApiErrorAlert error={err} />
                                 <Knapp onClick={() => history.push(props.forrigeUrl)}>
                                     {formatMessage('knapp.tilbake')}
                                 </Knapp>

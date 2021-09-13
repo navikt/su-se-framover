@@ -2,7 +2,7 @@ import { ErrorMessage } from '~api/apiClient';
 import { MessageFormatter } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 
-import messages from './søknadsbehandlingFeilresponser-nb';
+import messages from './søknadsbehandlingApiError-nb';
 
 export const søknadsbehandlingFeilkodeTilFeilmelding = (
     formatMessage: MessageFormatter<typeof messages>,

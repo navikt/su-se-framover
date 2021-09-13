@@ -9,7 +9,7 @@ import React from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
@@ -222,7 +222,7 @@ const RevurderingstegPage = (props: {
             () => <NavFrontendSpinner />,
             (error) => (
                 <div className={styles.fullsideSpinnerFeilmeldingContainer}>
-                    <Feilresponser error={error} />
+                    <ApiErrorAlert error={error} />
                 </div>
             ),
             (value) => {

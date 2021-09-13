@@ -20,8 +20,8 @@ import {
 import { useHistory } from 'react-router-dom';
 
 import * as personApi from '~api/personApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
 import { Personkort } from '~components/personkort/Personkort';
 import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
 import FormuevilkårOppsummering from '~components/revurdering/oppsummering/formuevilkåroppsummering/FormuevilkårOppsummering';
@@ -93,7 +93,7 @@ const Formue = (props: RevurderingProps) => {
                 left: (
                     <form onSubmit={handleSubmit(lagreFormuegrunnlaget)}>
                         {RemoteData.isPending(epsStatus) && <NavFrontendSpinner />}
-                        {RemoteData.isFailure(epsStatus) && <Feilresponser error={epsStatus.error} />}
+                        {RemoteData.isFailure(epsStatus) && <ApiErrorAlert error={epsStatus.error} />}
                         {formueArray.fields.map((field, index) => (
                             <FormueBlokk
                                 key={field.id}
@@ -119,7 +119,7 @@ const Formue = (props: RevurderingProps) => {
                             </Knapp>
                         </div>
                         {RemoteData.isFailure(lagreFormuegrunnlagStatus) && (
-                            <Feilresponser error={lagreFormuegrunnlagStatus.error} />
+                            <ApiErrorAlert error={lagreFormuegrunnlagStatus.error} />
                         )}
                         <RevurderingBunnknapper
                             onNesteClick="submit"

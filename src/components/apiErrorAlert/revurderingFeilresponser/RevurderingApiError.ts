@@ -2,7 +2,7 @@ import { ErrorMessage } from '~api/apiClient';
 import { MessageFormatter } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 
-import messages from './RevurderingFeilresponser-nb';
+import messages from './RevurderingApiError-nb';
 
 export const revurderingFeilkodeTilFeilmelding = (
     formatMessage: MessageFormatter<typeof messages>,
@@ -125,7 +125,7 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof 
     [Forhåndsvarsling.MANGLER_BESLUTNING_PÅ_FORHÅNDSVARSEL]: 'forhåndsvarsel.mangler.beslutning',
     [Forhåndsvarsling.UGYLDIG_VALG]: 'forhåndsvarsel.ugyldig.valg',
     [Forhåndsvarsling.ER_BESLUTTET]: 'forhåndsvarsel.er.besluttet',
-    [Forhåndsvarsling.IKKE_FORHÅNDSVARSLET]: 'forhåndsvarsel.ikke.varslet.for.å.beslutte',
+    [Forhåndsvarsling.IKKE_FORHÅNDSVARSLET]: 'forhåndsvarsel.ikke.varslet',
     [Forhåndsvarsling.IKKE_RIKTIG_TILSTAND_FOR_BESLUTTNING]: 'forhåndsvarsel.feil.tilstand.for.beslutning',
 
     [UtfallSomIkkeStøttes.DELVIS_OPPHØR]: 'opphør.deler.av.revurderingsperiode',

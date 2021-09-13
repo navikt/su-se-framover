@@ -11,8 +11,8 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as SakSlice from '~features/saksoversikt/sak.slice';
 import { nullableMap, pipe } from '~lib/fp';
@@ -210,7 +210,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                             RemoteData.fold(
                                 () => null,
                                 () => <NavFrontendSpinner>{formatMessage('state.lagrer')}</NavFrontendSpinner>,
-                                (err) => <Feilresponser error={err} />,
+                                (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )
                         )}

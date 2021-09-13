@@ -7,7 +7,7 @@ import React, { useMemo, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import * as PdfApi from '~api/pdfApi';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useBrevForhåndsvisning } from '~lib/hooks';
@@ -139,7 +139,7 @@ const SendTilAttesteringPage = (props: Props) => {
                     </Hovedknapp>
                 </div>
                 {RemoteData.isFailure(sendtTilAttesteringStatus) && (
-                    <Feilresponser error={sendtTilAttesteringStatus.error} />
+                    <ApiErrorAlert error={sendtTilAttesteringStatus.error} />
                 )}
             </div>
         );

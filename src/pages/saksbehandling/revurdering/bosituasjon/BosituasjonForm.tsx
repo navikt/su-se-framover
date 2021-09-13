@@ -9,7 +9,7 @@ import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
-import Feilresponser from '~components/Feilresponser/Feilresponser';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { FnrInput } from '~components/FnrInput/FnrInput';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
@@ -436,7 +436,7 @@ const BosituasjonForm = (props: {
                                 feil={hookFormErrorsTilFeiloppsummering(errors)}
                                 hidden={Object.values(errors).length <= 0}
                             />
-                            {RemoteData.isFailure(status) && <Feilresponser error={status.error} />}
+                            {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
                             <RevurderingBunnknapper
                                 onNesteClick="submit"
                                 tilbakeUrl={props.forrigeUrl}
