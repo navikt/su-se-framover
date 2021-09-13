@@ -8,8 +8,6 @@ import revurderingMessages from './revurderingFeilresponser/RevurderingFeilrespo
 import { søknadsbehandlingFeilkodeTilFeilmelding } from './søknadsbehandlingFeilresponser/SøknadsbehandlingFeilresponser';
 import søknadsbehandlingMessages from './søknadsbehandlingFeilresponser/søknadsbehandlingFeilresponser-nb';
 
-const ukjentFeil = 'Ukjent feil';
-
 export const feilresponseTilFeilmelding = (
     formatMessage: MessageFormatter<
         typeof revurderingMessages | typeof søknadsbehandlingMessages | typeof feilresponseMessages
@@ -17,17 +15,17 @@ export const feilresponseTilFeilmelding = (
     feil?: Nullable<ErrorMessage>
 ) => {
     const søknadsbehandlingError = søknadsbehandlingFeilkodeTilFeilmelding(formatMessage, feil);
-    if (søknadsbehandlingError !== ukjentFeil) {
+    if (søknadsbehandlingError !== null) {
         return søknadsbehandlingError;
     }
     const revurderingError = revurderingFeilkodeTilFeilmelding(formatMessage, feil);
-    if (revurderingError !== ukjentFeil) {
+    if (revurderingError !== null) {
         return revurderingError;
     }
-    return feilresponseTilFeilmeldingInternal(formatMessage, feil);
+    return feilresponsTilFeilmeldingInternal(formatMessage, feil);
 };
 
-const feilresponseTilFeilmeldingInternal = (
+const feilresponsTilFeilmeldingInternal = (
     formatMessage: MessageFormatter<typeof feilresponseMessages>,
     feil?: Nullable<ErrorMessage>
 ) => {
@@ -35,16 +33,9 @@ const feilresponseTilFeilmeldingInternal = (
     return formatMessage(error ?? 'feil.ukjentFeil');
 };
 
-type FeilresponseErrorCodes =
-    | GenerellErrors
-    | PeriodeErrors
-    | VurderingsperiodeErrors
-    | VilkårErrors
-    | SimuleringsErrors
-    | BrevErrors
-    | UtbetalingErrors;
+type FeilresponseErrorCodes = Generell | Periode | Vurderingsperiode | VilkårErrors | Simulering | Brev | Utbetaling;
 
-enum GenerellErrors {
+enum Generell {
     FANT_IKKE_BEHANDLING = 'fant_ikke_behandling',
     FANT_IKKE_AKTØR_ID = 'fant_ikke_aktør_id',
     FANT_IKKE_PERSON = 'fant_ikke_person',
@@ -56,30 +47,30 @@ enum GenerellErrors {
     UGYLDIG_TILSTAND = 'ugyldig_tilstand',
 }
 
-enum PeriodeErrors {
+enum Periode {
     UGYLDIG_PERIODE_FOM = 'ugyldig_periode_fom',
     UGYLDIG_PERIODE_TOM = 'ugyldig_periode_tom',
     UGYLDIG_PERIODE_START_SLUTT = 'ugyldig_periode_start_slutt',
 }
 
-enum VurderingsperiodeErrors {
+enum Vurderingsperiode {
     OVERLAPPENDE_VURDERINGSPERIODER = 'overlappende_vurderingsperioder',
     VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE = 'vurderingsperiode_utenfor_behandlingsperiode',
 }
 
-type VilkårErrors = UføreErrors | BostiuasjonErrors | FradragErrors;
+type VilkårErrors = Uføre | Bostiuasjon | Fradrag;
 
-enum UføreErrors {
+enum Uføre {
     UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE = 'uføregrad_må_være_mellom_en_og_hundre',
     UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER = 'uføregrad_og_forventet_inntekt_mangler',
     PERIODE_FOR_GRUNNLAG_OG_VURDERING_ER_FORSKJELLIG = 'periode_for_grunnlag_og_vurdering_er_forskjellig',
 }
 
-enum BostiuasjonErrors {
+enum Bostiuasjon {
     KUNNE_IKKE_LEGGE_TIL_BOSITUASJONSGRUNNLAG = 'kunne_ikke_legge_til_bosituasjonsgrunnlag',
 }
 
-enum FradragErrors {
+enum Fradrag {
     KUNNE_IKKE_LEGGE_TIL_FRADRAGSGRUNNLAG = 'kunne_ikke_legge_til_fradragsgrunnlag',
     fradrag_mangler_periode = 'fradrag_mangler_periode',
 
@@ -88,7 +79,7 @@ enum FradragErrors {
     UTENLANDSK_INNTEKT_NEGATIV_KURS = 'utenlandsk_inntekt_negativ_kurs',
 }
 
-enum SimuleringsErrors {
+enum Simulering {
     FEILET = 'simulering_feilet',
     OPPDRAG_STENGT_ELLER_NEDE = 'simulering_feilet_oppdrag_stengt_eller_nede',
     FINNER_IKKE_PERSON = 'simulering_feilet_finner_ikke_person_i_tps',
@@ -96,55 +87,55 @@ enum SimuleringsErrors {
     OPPDRAGET_FINNES_IKKE = 'simulering_feilet_oppdraget_finnes_ikke',
 }
 
-enum BrevErrors {
+enum Brev {
     KUNNE_IKKE_GENERERE_BREV = 'kunne_ikke_generere_brev',
     FEIL_VED_GENERERING_AV_DOKUMENT = 'feil_ved_generering_av_dokument',
 }
 
-enum UtbetalingErrors {
+enum Utbetaling {
     KUNNE_IKKE_UTBETALE = 'kunne_ikke_utbetale',
     KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING = 'kontrollsimulering_ulik_saksbehandlers_simulering',
 }
 
 const feilresponseErrorCodeMessageIdMap: { [key in FeilresponseErrorCodes]: keyof typeof feilresponseMessages } = {
-    [GenerellErrors.FANT_IKKE_BEHANDLING]: 'generell.fant.ikke.behandling',
-    [GenerellErrors.FANT_IKKE_AKTØR_ID]: 'generell.fant.ikke.aktør.id',
-    [GenerellErrors.FANT_IKKE_PERSON]: 'generell.fant.ikke.person',
-    [GenerellErrors.KUNNE_IKKE_OPPRETTE_OPPGAVE]: 'generell.kunne.ikke.opprette.oppgave',
-    [GenerellErrors.KUNNE_IKKE_UTBETALE]: 'generell.kunne.ikke.utbetale',
-    [GenerellErrors.UGYLDIG_BODY]: 'generell.ugyldig.body',
-    [GenerellErrors.UGYLDIG_TILSTAND]: 'generell.ugyldig.tilstand',
+    [Generell.FANT_IKKE_BEHANDLING]: 'generell.fant.ikke.behandling',
+    [Generell.FANT_IKKE_AKTØR_ID]: 'generell.fant.ikke.aktør.id',
+    [Generell.FANT_IKKE_PERSON]: 'generell.fant.ikke.person',
+    [Generell.KUNNE_IKKE_OPPRETTE_OPPGAVE]: 'generell.kunne.ikke.opprette.oppgave',
+    [Generell.KUNNE_IKKE_UTBETALE]: 'generell.kunne.ikke.utbetale',
+    [Generell.UGYLDIG_BODY]: 'generell.ugyldig.body',
+    [Generell.UGYLDIG_TILSTAND]: 'generell.ugyldig.tilstand',
 
-    [PeriodeErrors.UGYLDIG_PERIODE_FOM]: 'periode.ugyldig.fom',
-    [PeriodeErrors.UGYLDIG_PERIODE_TOM]: 'periode.ugyldig.tom',
-    [PeriodeErrors.UGYLDIG_PERIODE_START_SLUTT]: 'periode.ugyldig.start.slutt',
+    [Periode.UGYLDIG_PERIODE_FOM]: 'periode.ugyldig.fom',
+    [Periode.UGYLDIG_PERIODE_TOM]: 'periode.ugyldig.tom',
+    [Periode.UGYLDIG_PERIODE_START_SLUTT]: 'periode.ugyldig.start.slutt',
 
-    [VurderingsperiodeErrors.OVERLAPPENDE_VURDERINGSPERIODER]: 'vurderingsperiode.overlappende.vurderingsperioder',
-    [VurderingsperiodeErrors.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:
+    [Vurderingsperiode.OVERLAPPENDE_VURDERINGSPERIODER]: 'vurderingsperiode.overlappende.vurderingsperioder',
+    [Vurderingsperiode.VURDERINGSPERIODE_UTENFOR_REVURDERINGSPERIODE]:
         'vurderingsperiode.vurdering.utenfor.revurderingsperioden',
 
-    [UføreErrors.UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE]: 'uføre.uføregrad.må.være.mellom.en.og.hundre',
-    [UføreErrors.UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER]: 'uføre.grad.og.forventetinntekt.mangler',
-    [UføreErrors.PERIODE_FOR_GRUNNLAG_OG_VURDERING_ER_FORSKJELLIG]: 'uføre.grunnlag.og.vurdering.forskjellige',
+    [Uføre.UFØREGRAD_MÅ_VÆRE_MELLOM_EN_OG_HUNDRE]: 'uføre.uføregrad.må.være.mellom.en.og.hundre',
+    [Uføre.UFØREGRAD_OG_FORVENTET_INNTEKT_MANGLER]: 'uføre.grad.og.forventetinntekt.mangler',
+    [Uføre.PERIODE_FOR_GRUNNLAG_OG_VURDERING_ER_FORSKJELLIG]: 'uføre.grunnlag.og.vurdering.forskjellige',
 
-    [BostiuasjonErrors.KUNNE_IKKE_LEGGE_TIL_BOSITUASJONSGRUNNLAG]: 'bosituasjon.kunne.ikke.legge.til',
+    [Bostiuasjon.KUNNE_IKKE_LEGGE_TIL_BOSITUASJONSGRUNNLAG]: 'bosituasjon.kunne.ikke.legge.til',
 
-    [FradragErrors.KUNNE_IKKE_LEGGE_TIL_FRADRAGSGRUNNLAG]: 'fradrag.kunne.ikke.legge.til',
-    [FradragErrors.fradrag_mangler_periode]: 'fradrag.mangler.periode',
-    [FradragErrors.UTENLANDSK_INNTEKT_NEGATIVT_BELØP]: 'fradrag.utenlandsinntekt.negativt.beløp',
-    [FradragErrors.UTENLANDSK_INNTEKT_MANGLER_VALUTA]: 'fradrag.utenlandsinntekt.mangler.valuta',
-    [FradragErrors.UTENLANDSK_INNTEKT_NEGATIV_KURS]: 'fradrag.utenlandsinntekt.negativ.kurs',
+    [Fradrag.KUNNE_IKKE_LEGGE_TIL_FRADRAGSGRUNNLAG]: 'fradrag.kunne.ikke.legge.til',
+    [Fradrag.fradrag_mangler_periode]: 'fradrag.mangler.periode',
+    [Fradrag.UTENLANDSK_INNTEKT_NEGATIVT_BELØP]: 'fradrag.utenlandsinntekt.negativt.beløp',
+    [Fradrag.UTENLANDSK_INNTEKT_MANGLER_VALUTA]: 'fradrag.utenlandsinntekt.mangler.valuta',
+    [Fradrag.UTENLANDSK_INNTEKT_NEGATIV_KURS]: 'fradrag.utenlandsinntekt.negativ.kurs',
 
-    [SimuleringsErrors.FEILET]: 'simulering.simulering.feilet',
-    [SimuleringsErrors.OPPDRAG_STENGT_ELLER_NEDE]: 'simulering.oppdrag.stengt.eller.nede',
-    [SimuleringsErrors.FINNER_IKKE_PERSON]: 'simulering.finner.ikke.person',
-    [SimuleringsErrors.FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM]: 'simulering.finner.ikke.kjøretidsplan',
-    [SimuleringsErrors.OPPDRAGET_FINNES_IKKE]: 'simulering.oppdraget.finnes.ikke',
+    [Simulering.FEILET]: 'simulering.simulering.feilet',
+    [Simulering.OPPDRAG_STENGT_ELLER_NEDE]: 'simulering.oppdrag.stengt.eller.nede',
+    [Simulering.FINNER_IKKE_PERSON]: 'simulering.finner.ikke.person',
+    [Simulering.FINNER_IKKE_KJØRETIDSPLAN_FOR_FOM]: 'simulering.finner.ikke.kjøretidsplan',
+    [Simulering.OPPDRAGET_FINNES_IKKE]: 'simulering.oppdraget.finnes.ikke',
 
-    [BrevErrors.KUNNE_IKKE_GENERERE_BREV]: 'brev.kunne.ikke.generere',
-    [BrevErrors.FEIL_VED_GENERERING_AV_DOKUMENT]: 'brev.generering.dokument.feilet',
+    [Brev.KUNNE_IKKE_GENERERE_BREV]: 'brev.kunne.ikke.generere',
+    [Brev.FEIL_VED_GENERERING_AV_DOKUMENT]: 'brev.generering.dokument.feilet',
 
-    [UtbetalingErrors.KUNNE_IKKE_UTBETALE]: 'utbetaling.kunne.ikke.utbetale',
-    [UtbetalingErrors.KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING]:
+    [Utbetaling.KUNNE_IKKE_UTBETALE]: 'utbetaling.kunne.ikke.utbetale',
+    [Utbetaling.KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING]:
         'utbetaling.kontrollsimulering.ulik.saksbehandlers.simulering',
 };

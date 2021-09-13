@@ -13,6 +13,4 @@ export default {
 
     'fradrag.ugyldig.type': 'Ugyldig fradragstype',
     'fradrag.mangler.periode': 'Fradrag mangler periode',
-
-    'feil.ukjentFeil': 'Ukjent feil',
 };
