@@ -2,13 +2,13 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Radio, RadioGruppe, Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { UførhetFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UførhetFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -249,11 +249,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                     () => (
                                         <NavFrontendSpinner>{formatMessage('display.lagre.lagrer')}</NavFrontendSpinner>
                                     ),
-                                    () => (
-                                        <AlertStripe type="feil">
-                                            {formatMessage('display.lagre.lagringFeilet')}
-                                        </AlertStripe>
-                                    ),
+                                    (err) => <ApiErrorAlert error={err} />,
                                     () => null
                                 )
                             )}

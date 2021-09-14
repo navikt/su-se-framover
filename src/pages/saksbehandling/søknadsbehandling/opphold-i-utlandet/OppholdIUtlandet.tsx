@@ -1,13 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Eq } from 'fp-ts/lib/Eq';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { UtenlandsOppholdFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -157,11 +157,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                             RemoteData.fold(
                                 () => null,
                                 () => <NavFrontendSpinner>{formatMessage('display.lagre.lagrer')}</NavFrontendSpinner>,
-                                () => (
-                                    <AlertStripe type="feil">
-                                        {formatMessage('display.lagre.lagringFeilet')}
-                                    </AlertStripe>
-                                ),
+                                (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )
                         )}

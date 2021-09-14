@@ -7,11 +7,10 @@ import { useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import { Revurderingshandling } from '~api/revurderingApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import { revurderingFeilkodeTilFeilmelding } from '~components/apiErrorAlert/revurderingFeilresponser/RevurderingApiError';
+import revurderingsfeilMessages from '~components/apiErrorAlert/revurderingFeilresponser/RevurderingApiError-nb';
 import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
-import RevurderingskallFeilet, {
-    feilkodeTilFeilmelding,
-} from '~components/revurdering/revurderingskallFeilet/RevurderingskallFeilet';
-import revurderingsfeilMessages from '~components/revurdering/revurderingskallFeilet/revurderingskallFeilet-nb';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator, useAsyncActionCreatorWithArgsTransformer } from '~lib/hooks';
@@ -54,7 +53,7 @@ const OppsummeringshandlingForm = (props: {
     feilmeldinger: ErrorMessage[];
 }) => {
     const history = useHistory();
-    const { intl } = useI18n({ messages: { ...messages, ...revurderingsfeilMessages } });
+    const { intl, formatMessage } = useI18n({ messages: { ...messages, ...revurderingsfeilMessages } });
     const feilRef = React.useRef<HTMLDivElement>(null);
 
     const [sendTilAttesteringState, sendTilAttestering] = useAsyncActionCreatorWithArgsTransformer(
@@ -155,7 +154,7 @@ const OppsummeringshandlingForm = (props: {
                     <AlertStripeFeil>
                         <ul>
                             {props.feilmeldinger.map((f) => (
-                                <li key={f.message}>{feilkodeTilFeilmelding(intl, f)}</li>
+                                <li key={f.message}>{revurderingFeilkodeTilFeilmelding(formatMessage, f)}</li>
                             ))}
                         </ul>
                     </AlertStripeFeil>
@@ -282,7 +281,7 @@ const RevurderingOppsummeringPage = (props: {
                         () => <NavFrontendSpinner>{formatMessage('beregner.label')}</NavFrontendSpinner>,
                         (err) => (
                             <div>
-                                <RevurderingskallFeilet error={err} />
+                                <ApiErrorAlert error={err} />
                                 <Knapp onClick={() => history.push(props.forrigeUrl)}>
                                     {formatMessage('knapp.tilbake')}
                                 </Knapp>

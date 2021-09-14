@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Eq } from 'fp-ts/lib/Eq';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -12,6 +11,7 @@ import { useHistory } from 'react-router-dom';
 
 import { Sats as FaktiskSats } from '~/types/Sats';
 import { Person, fetchPerson } from '~api/personApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { SatsFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
@@ -380,11 +380,7 @@ const SatsForm = (props: SatsProps) => {
                                         {props.formatMessage('display.lagre.lagrer')}
                                     </NavFrontendSpinner>
                                 ),
-                                () => (
-                                    <AlertStripe type="feil">
-                                        {props.formatMessage('display.lagre.lagringFeilet')}
-                                    </AlertStripe>
-                                ),
+                                (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )
                         )}
