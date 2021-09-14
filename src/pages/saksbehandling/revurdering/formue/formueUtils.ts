@@ -22,23 +22,25 @@ interface FormueData {
     begrunnelse: Nullable<string>;
 }
 
-const tomFormue: VerdierFormData = {
-    verdiPåBolig: '0',
-    verdiPåEiendom: '0',
-    verdiPåKjøretøy: '0',
-    innskuddsbeløp: '0',
-    verdipapir: '0',
-    kontanterOver1000: '0',
-    stårNoenIGjeldTilDeg: '0',
-    depositumskonto: '0',
+const getTomFormueVerdier = (): VerdierFormData => {
+    return {
+        verdiPåBolig: '0',
+        verdiPåEiendom: '0',
+        verdiPåKjøretøy: '0',
+        innskuddsbeløp: '0',
+        verdipapir: '0',
+        kontanterOver1000: '0',
+        stårNoenIGjeldTilDeg: '0',
+        depositumskonto: '0',
+    };
 };
 
 export const getTomFormueData = (epsFnr: Nullable<string>): FormueData => {
     return {
         epsFnr: epsFnr,
         periode: { fraOgMed: null, tilOgMed: null },
-        søkersFormue: tomFormue,
-        epsFormue: epsFnr ? tomFormue : null,
+        søkersFormue: getTomFormueVerdier(),
+        epsFormue: epsFnr ? getTomFormueVerdier() : null,
         begrunnelse: null,
     };
 };
@@ -58,9 +60,10 @@ export const getDefaultValues = (formueVilkår: Nullable<FormueVilkår>, epsFnr:
                     fraOgMed: new Date(formue.periode.fraOgMed),
                     tilOgMed: new Date(formue.periode.tilOgMed),
                 },
-                søkersFormue: formueGrunnlagVerdierTilVerdierFormData(formue.grunnlag.søkersFormue) ?? tomFormue,
+                søkersFormue:
+                    formueGrunnlagVerdierTilVerdierFormData(formue.grunnlag.søkersFormue) ?? getTomFormueVerdier(),
                 epsFormue: epsFnr
-                    ? formueGrunnlagVerdierTilVerdierFormData(formue.grunnlag.epsFormue) ?? tomFormue
+                    ? formueGrunnlagVerdierTilVerdierFormData(formue.grunnlag.epsFormue) ?? getTomFormueVerdier()
                     : null,
                 begrunnelse: formue.grunnlag.begrunnelse ?? '',
             };
