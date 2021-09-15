@@ -28,7 +28,7 @@ export default {
 
     'formue.tittel': 'Formue',
     'formue.heading.søker': 'Søker',
-    'formue.heading.eps': 'Ektefelle/samboer',
+    'formue.heading.eps': 'Ektefelle/\u200Bsamboer',
     'formue.delerBoligMed': 'Hvem deler du bolig med?',
     'formue.delerBoligMed.ingen': 'Ingen',
     'formue.ektefelleTitle': 'Ektefelle',

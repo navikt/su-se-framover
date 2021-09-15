@@ -34,7 +34,8 @@
 
     .pairBlokkContainer {
         display: flex;
-        border: 1px solid lightgrey;
+        border: 1px solid @navBorder;
+        background-color: @navBakgrunn;
 
         .blokk {
             width: 50%;
@@ -42,7 +43,7 @@
             padding: @spacing-xs;
 
             &:not(:last-child) {
-                border-right: 1px solid lightgrey;
+                border-right: 1px solid @navBorder;
             }
         }
 
@@ -54,7 +55,7 @@
 
                 &:not(:last-child) {
                     border-right: none;
-                    border-bottom: 1px solid lightgrey;
+                    border-bottom: 1px solid @navBorder;
                 }
             }
         }

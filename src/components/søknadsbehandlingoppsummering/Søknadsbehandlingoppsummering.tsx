@@ -1,3 +1,4 @@
+import Panel from 'nav-frontend-paneler';
 import { Innholdstittel, Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 
@@ -58,7 +59,9 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
                 behandlingsinformasjon={props.behandling.behandlingsinformasjon}
             />
             {props.behandling.beregning ? (
-                <VisBeregningOgSimulering behandling={props.behandling} />
+                <Panel border>
+                    <VisBeregningOgSimulering behandling={props.behandling} />
+                </Panel>
             ) : (
                 formatMessage('feilmelding.ikkeGjortEnBeregning')
             )}
