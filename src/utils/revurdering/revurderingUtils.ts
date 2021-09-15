@@ -20,7 +20,9 @@ export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurderin
     r.status === RevurderingsStatus.OPPRETTET;
 
 export const erRevurderingSimulert = (r: Revurdering): r is SimulertRevurdering =>
-    r.status === RevurderingsStatus.SIMULERT_INNVILGET || r.status === RevurderingsStatus.SIMULERT_OPPHØRT;
+    r.status === RevurderingsStatus.SIMULERT_INNVILGET ||
+    r.status === RevurderingsStatus.SIMULERT_OPPHØRT ||
+    r.status === RevurderingsStatus.SIMULERT_STANS;
 
 export const erBeregnetIngenEndring = (r: Revurdering): r is BeregnetIngenEndring =>
     r.status === RevurderingsStatus.BEREGNET_INGEN_ENDRING;

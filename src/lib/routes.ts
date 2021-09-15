@@ -142,6 +142,17 @@ export const attesterRevurdering: Route<{ sakId: string; revurderingId: string }
     createURL: (args) => `/attestering/${args.sakId}/revurdering/${args.revurderingId}`,
 };
 
+//---------------Stans------------------------------
+export const stansRoute: Route<{ sakId: string }> = {
+    path: '/saksoversikt/:sakId/stans',
+    createURL: ({ sakId }) => `/saksoversikt/${sakId}/stans`,
+};
+
+export const stansOppsummeringRoute: Route<{ sakId: string; revurderingId: string }> = {
+    path: '/saksoversikt/:sakId/stans/:revurderingId/oppsummering',
+    createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/stans/${revurderingId}/oppsummering`,
+};
+
 export interface SuccessNotificationState {
     notification?: string;
 }

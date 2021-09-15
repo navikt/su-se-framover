@@ -111,6 +111,7 @@ export enum RevurderingsStatus {
     UNDERKJENT_INNVILGET = 'UNDERKJENT_INNVILGET',
     UNDERKJENT_OPPHØRT = 'UNDERKJENT_OPPHØRT',
     UNDERKJENT_INGEN_ENDRING = 'UNDERKJENT_INGEN_ENDRING',
+    SIMULERT_STANS = 'SIMULERT_STANS',
 }
 
 export enum OpprettetRevurderingGrunn {
@@ -120,6 +121,7 @@ export enum OpprettetRevurderingGrunn {
     ANDRE_KILDER = 'ANDRE_KILDER',
     MIGRERT = 'MIGRERT',
     REGULER_GRUNNBELØP = 'REGULER_GRUNNBELØP',
+    STANS = 'STANS_AV_YTELSE',
 }
 
 export enum InformasjonSomRevurderes {

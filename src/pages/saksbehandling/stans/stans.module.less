@@ -1,0 +1,43 @@
+@import '~/styles/variables.less';
+
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .tittel {
+        width: 100%;
+        padding: @spacing-xs 10rem;
+        border-bottom: 1px solid @navBorder;
+    }
+
+    .content {
+        padding: @spacing-xs 10rem;
+    }
+
+    .select {
+        max-width: 16rem;
+    }
+
+    .datepicker {
+        margin-top: @spacing-s;
+    }
+
+    .bunnknapper {
+        margin-top: @spacing-s;
+        button:not(:first-child) {
+            margin-left: @spacing-xs;
+        }
+    }
+}
+
+.stansOppsummering {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: @spacing-s;
+
+    .iverksett {
+        margin-top: @spacing-s;
+    }
+}
