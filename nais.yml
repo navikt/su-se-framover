@@ -58,7 +58,8 @@ metadata:
   name: su-se-framover-redis
   namespace: supstonad
   annotations:
-    nais.io/security-does-not-matter: "true"
+    nais.io/run-as-group: "0" # Fix permissions for bitnami/redis
+    nais.io/read-only-file-system: "false" # Fix permissions for bitnami/redis
 spec:
   image: bitnami/redis:6.0
   port: 6379
