@@ -1,4 +1,5 @@
-import Ikon from 'nav-frontend-ikoner-assets';
+import { SuccessFilled, ErrorFilled, HelptextFilled, Notes } from '@navikt/ds-icons';
+import classNames from 'classnames';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -10,6 +11,7 @@ export enum Linjestatus {
     IkkeOk,
     Uavklart,
     Ingenting,
+    Uferdig,
 }
 
 export interface Linje {
@@ -28,24 +30,29 @@ export interface Seksjon {
 
 const erSeksjon = (arg: Linje | Seksjon): arg is Seksjon => 'tittel' in arg && 'linjer' in arg;
 
-const Statusikon = (props: { status: Linjestatus; className: string }) => {
-    const iconWidth = '24px';
-    switch (props.status) {
-        case Linjestatus.Ingenting:
-            return <div style={{ width: iconWidth }} className={props.className}></div>;
-        case Linjestatus.Uavklart:
-            return <Ikon kind="advarsel-sirkel-fyll" width={iconWidth} className={props.className} />;
-        case Linjestatus.IkkeOk:
-            return <Ikon kind="feil-sirkel-fyll" width={iconWidth} className={props.className} />;
-        case Linjestatus.Ok:
-            return <Ikon kind="ok-sirkel-fyll" width={iconWidth} className={props.className} />;
-    }
+const Statusikon = (props: { status: Linjestatus }) => {
+    const [className, Ikon] = React.useMemo(() => {
+        switch (props.status) {
+            case Linjestatus.Ingenting:
+                return [null, null];
+            case Linjestatus.Uavklart:
+                return [styles.iconYellow, HelptextFilled];
+            case Linjestatus.IkkeOk:
+                return [styles.iconRed, ErrorFilled];
+            case Linjestatus.Ok:
+                return [styles.iconGreen, SuccessFilled];
+            case Linjestatus.Uferdig:
+                return [null, Notes];
+        }
+    }, [props.status]);
+
+    return <span className={classNames(styles.icon, className)}>{Ikon && <Ikon />}</span>;
 };
 
 const Linjevisning = (props: { aktivId: string; linje: Linje }) => {
     const innmat = (
         <div className={styles.linje}>
-            <Statusikon status={props.linje.status} className={styles.icon} />
+            <Statusikon status={props.linje.status} />
             {props.linje.id === props.aktivId ? (
                 <Element>{props.linje.label}</Element>
             ) : (
