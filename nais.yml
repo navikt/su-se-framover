@@ -75,3 +75,6 @@ spec:
     protocol: redis
   envFrom:
     - secret: redis-password
+  env:
+    - name: REDIS_TMP_DIR
+      value: "/tmp/redis"
