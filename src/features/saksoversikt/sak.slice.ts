@@ -718,19 +718,19 @@ export default createSlice({
         });
 
         builder.addCase(lagreUføregrunnlagForRevurdering.fulfilled, (state, action) => {
-            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
         builder.addCase(lagreFradragsgrunnlag.fulfilled, (state, action) => {
-            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
         builder.addCase(lagreBosituasjonsgrunnlag.fulfilled, (state, action) => {
-            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
         builder.addCase(lagreFormuegrunnlag.fulfilled, (state, action) => {
-            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
         builder.addCase(beregnOgSimuler.fulfilled, (state, action) => {

@@ -5,7 +5,7 @@ import { Systemtittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ApiError } from '~api/apiClient';
+import { ApiError, ErrorMessage } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import fradragMessages from '~components/beregningOgSimulering/beregning/beregning-nb';
 import { fradragTilFradragFormData } from '~components/beregningOgSimulering/beregning/beregningUtils';
@@ -34,6 +34,7 @@ import uføreMessages from '../../søknadsbehandling/uførhet/uførhet-nb';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
+import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import messages from './endringAvFradrag-nb';
 import styles from './endringAvFradrag.module.less';
@@ -67,7 +68,9 @@ const EndringAvFradrag = (props: {
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
-    const [savingState, setSavingState] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
+    const [savingState, setSavingState] = React.useState<
+        RemoteData.RemoteData<ApiError, { revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>
+    >(RemoteData.initial);
 
     const [pressedButton, setPressedButton] = React.useState<'ingen' | 'neste' | 'lagre'>('ingen');
 
@@ -111,7 +114,10 @@ const EndringAvFradrag = (props: {
         );
 
         if (lagreFradragsgrunnlag.fulfilled.match(res)) {
-            setSavingState(RemoteData.success(null));
+            setSavingState(RemoteData.success(res.payload));
+            if (res.payload.feilmeldinger.length > 0) {
+                return false;
+            }
             return true;
         } else if (lagreFradragsgrunnlag.rejected.match(res)) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -213,6 +219,9 @@ const EndringAvFradrag = (props: {
                                 hidden={!formikErrorsHarFeil(formik.errors)}
                             />
                             {RemoteData.isFailure(savingState) && <ApiErrorAlert error={savingState.error} />}
+                            {RemoteData.isSuccess(savingState) && (
+                                <UtfallSomIkkeStøttes feilmeldinger={savingState.value.feilmeldinger} />
+                            )}
                             <RevurderingBunnknapper
                                 onNesteClick="submit"
                                 tilbakeUrl={props.forrigeUrl}

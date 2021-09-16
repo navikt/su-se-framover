@@ -3,10 +3,10 @@ import { MessageFormatter } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 
 import feilresponsMessages from './ApiErrorAlert-nb';
-import { revurderingFeilkodeTilFeilmelding } from './revurderingFeilresponser/RevurderingApiError';
-import revurderingMessages from './revurderingFeilresponser/RevurderingApiError-nb';
-import { søknadsbehandlingFeilkodeTilFeilmelding } from './søknadsbehandlingFeilresponser/SøknadsbehandlingApiError';
-import søknadsbehandlingMessages from './søknadsbehandlingFeilresponser/søknadsbehandlingApiError-nb';
+import { revurderingFeilkodeTilFeilmelding } from './revurderingApiError/RevurderingApiError';
+import revurderingMessages from './revurderingApiError/RevurderingApiError-nb';
+import { søknadsbehandlingFeilkodeTilFeilmelding } from './søknadsbehandlingApiError/SøknadsbehandlingApiError';
+import søknadsbehandlingMessages from './søknadsbehandlingApiError/søknadsbehandlingApiError-nb';
 
 export const feilresponsTilFeilmelding = (
     formatMessage: MessageFormatter<

@@ -38,6 +38,7 @@ import { regnUtFormDataVerdier, verdierId } from '~utils/søknadsbehandlingOgRev
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
+import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import messages from './formue-nb';
 import styles from './formue.module.less';
@@ -76,7 +77,9 @@ const Formue = (props: RevurderingProps) => {
                 formue: formueFormDataTilFormuegrunnlagRequest(data.formue),
             },
             (res) => {
-                history.push(props.nesteUrl(res));
+                if (res.feilmeldinger.length === 0) {
+                    history.push(props.nesteUrl(res.revurdering));
+                }
             }
         );
     };
@@ -120,6 +123,9 @@ const Formue = (props: RevurderingProps) => {
                         </div>
                         {RemoteData.isFailure(lagreFormuegrunnlagStatus) && (
                             <ApiErrorAlert error={lagreFormuegrunnlagStatus.error} />
+                        )}
+                        {RemoteData.isSuccess(lagreFormuegrunnlagStatus) && (
+                            <UtfallSomIkkeStøttes feilmeldinger={lagreFormuegrunnlagStatus.value.feilmeldinger} />
                         )}
                         <RevurderingBunnknapper
                             onNesteClick="submit"

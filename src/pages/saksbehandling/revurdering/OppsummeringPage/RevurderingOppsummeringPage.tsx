@@ -1,5 +1,4 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import * as React from 'react';
@@ -8,8 +7,6 @@ import { useHistory } from 'react-router-dom';
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import { Revurderingshandling } from '~api/revurderingApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
-import { revurderingFeilkodeTilFeilmelding } from '~components/apiErrorAlert/revurderingFeilresponser/RevurderingApiError';
-import revurderingsfeilMessages from '~components/apiErrorAlert/revurderingFeilresponser/RevurderingApiError-nb';
 import Revurderingoppsummering from '~components/revurdering/oppsummering/Revurderingoppsummering';
 import * as RevurderingActions from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
@@ -36,6 +33,7 @@ import {
 } from '~utils/revurdering/revurderingUtils';
 
 import sharedStyles from '../revurdering.module.less';
+import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import {
     ResultatEtterForhåndsvarselform,
@@ -53,7 +51,7 @@ const OppsummeringshandlingForm = (props: {
     feilmeldinger: ErrorMessage[];
 }) => {
     const history = useHistory();
-    const { intl, formatMessage } = useI18n({ messages: { ...messages, ...revurderingsfeilMessages } });
+    const { intl } = useI18n({ messages: { ...messages } });
     const feilRef = React.useRef<HTMLDivElement>(null);
 
     const [sendTilAttesteringState, sendTilAttestering] = useAsyncActionCreatorWithArgsTransformer(
@@ -151,13 +149,7 @@ const OppsummeringshandlingForm = (props: {
         <div>
             {props.feilmeldinger.length > 0 && (
                 <div ref={feilRef} tabIndex={-1} aria-live="polite" aria-atomic="true" className={styles.alertstripe}>
-                    <AlertStripeFeil>
-                        <ul>
-                            {props.feilmeldinger.map((f) => (
-                                <li key={f.message}>{revurderingFeilkodeTilFeilmelding(formatMessage, f)}</li>
-                            ))}
-                        </ul>
-                    </AlertStripeFeil>
+                    <UtfallSomIkkeStøttes feilmeldinger={props.feilmeldinger} />
                 </div>
             )}
             {erGregulering(props.revurdering.årsak) ? (

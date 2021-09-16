@@ -12,6 +12,14 @@ export const revurderingFeilkodeTilFeilmelding = (
     return messageId ? formatMessage(messageId) : null;
 };
 
+export const utfallSomIkkeStøttesKodeTilFeilmelding = (
+    formatMessage: MessageFormatter<typeof messages>,
+    feil: ErrorMessage[]
+) => {
+    const messages = feil.map((f) => revurderingErrorCodeMessageIdMap[f.code as RevurderingErrorCodes]);
+    return messages.map((messageId) => (messageId ? formatMessage(messageId) : null));
+};
+
 export type RevurderingErrorCodes =
     | Generell
     | Vurderingsperiode
