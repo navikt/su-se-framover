@@ -57,6 +57,8 @@ metadata:
     team: supstonad
   name: su-se-framover-redis
   namespace: supstonad
+  annotations:
+    nais.io/read-only-file-system: "false"
 spec:
   image: bitnami/redis:6.0
   port: 6379
@@ -75,6 +77,3 @@ spec:
     protocol: redis
   envFrom:
     - secret: redis-password
-  env:
-    - name: REDIS_TMP_DIR
-      value: "/tmp/redis"
