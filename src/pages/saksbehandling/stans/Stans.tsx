@@ -1,21 +1,22 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { History } from 'history';
 import { Knapp } from 'nav-frontend-knapper';
-import { Select } from 'nav-frontend-skjema';
+import { Select, Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
 import DatePicker from '~components/datePicker/DatePicker';
-import { opprettRevurdering } from '~features/revurdering/revurderingActions';
+import * as revurderingActions from '~features/revurdering/revurderingActions';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { OpprettetRevurderingGrunn } from '~types/Revurdering';
+import { OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
+import { StansAvYtelse } from '~types/Stans';
+import { getRevurderingsårsakMessageId } from '~utils/revurdering/revurderingUtils';
 
 import messages from './stans-nb';
 import styles from './stans.module.less';
@@ -26,26 +27,70 @@ interface Props {
 }
 
 interface FormData {
+    årsak: Nullable<OpprettetRevurderingGrunn>;
     stansDato: Nullable<Date>;
+    begrunnelse: string;
 }
+
+function hentDefaultVerdier(r: Nullable<Revurdering>): FormData {
+    if (r) {
+        return {
+            stansDato: new Date(r.periode.fraOgMed),
+            begrunnelse: r.begrunnelse ?? '',
+            årsak: null,
+        };
+    }
+
+    return {
+        stansDato: null,
+        begrunnelse: '',
+        årsak: null,
+    };
+}
+
 const Stans = (props: Props) => {
     const history = useHistory();
     const urlParams = Routes.useRouteParams<typeof Routes.stansRoute>();
+    const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId) ?? null;
 
     const { intl } = useI18n({ messages });
 
-    const [, setRevurdering] = useAsyncActionCreator(opprettRevurdering);
+    const [, opprettStans] = useAsyncActionCreator(revurderingActions.opprettStans);
+    const [, oppdaterStans] = useAsyncActionCreator(revurderingActions.oppdaterStans);
 
     const { ...form } = useForm<FormData>({
-        defaultValues: {
-            stansDato: null,
-        },
+        defaultValues: hentDefaultVerdier(revurdering),
         resolver: yupResolver(
             yup.object<FormData>({
                 stansDato: yup.date(),
+                begrunnelse: yup.string(),
+                årsak: yup
+                    .mixed()
+                    .required()
+                    .oneOf(Object.values([OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING])),
             })
         ),
     });
+
+    const handleSubmit = async (values: FormData) => {
+        const revurderingId = urlParams.revurderingId;
+        const args = {
+            sakId: urlParams.sakId,
+            fraOgMed: values.stansDato!,
+            årsak: OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING,
+            begrunnelse: values.begrunnelse,
+        };
+        const onSuccess = (stansAvYtelse: StansAvYtelse) => {
+            history.push(
+                Routes.stansOppsummeringRoute.createURL({
+                    sakId: urlParams.sakId,
+                    revurderingId: stansAvYtelse.id,
+                })
+            );
+        };
+
+        revurderingId ? oppdaterStans({ ...args, revurderingId }, onSuccess) : opprettStans(args, onSuccess);
+    };
 
     return (
         <Switch>
@@ -53,37 +98,30 @@ const Stans = (props: Props) => {
                 <StansOppsummering sak={props.sak} />
             </Route>
             <Route path="*">
-                <form
-                    className={styles.pageContainer}
-                    onSubmit={form.handleSubmit((values) => {
-                        setRevurdering(
-                            {
-                                sakId: urlParams.sakId,
-                                fraOgMed: values.stansDato!,
-                                årsak: OpprettetRevurderingGrunn.STANS,
-                                informasjonSomRevurderes: [],
-                                begrunnelse: 'null',
-                            },
-                            (opprettetRevurdering) => {
-                                history.push(
-                                    Routes.stansOppsummeringRoute.createURL({
-                                        sakId: urlParams.sakId,
-                                        revurderingId: opprettetRevurdering.id,
-                                    })
-                                );
-                            }
-                        );
-                    })}
-                >
+                <form className={styles.pageContainer} onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
                     <Innholdstittel className={styles.tittel}>
                         {intl.formatMessage({ id: 'stans.tittel' })}
                     </Innholdstittel>
                     <div className={styles.content}>
                         <div className={styles.select}>
-                            <Select className={styles.select}>
-                                <option>{intl.formatMessage({ id: 'stans.årsak.label' })}</option>
-                                <option>Manglende kontrollerklæring</option>
-                            </Select>
+                            <Controller
+                                control={form.control}
+                                name="årsak"
+                                render={({ field }) => (
+                                    <Select
+                                        value={field.value ?? undefined}
+                                        onChange={field.onChange}
+                                        className={styles.select}
+                                    >
+                                        <option>{intl.formatMessage({ id: 'stans.årsak.label' })}</option>
+                                        <option value={OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING}>
+                                            {getRevurderingsårsakMessageId(
+                                                OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING
+                                            )}
+                                        </option>
+                                    </Select>
+                                )}
+                            />
                         </div>
 
                         <div className={styles.datepicker}>
@@ -104,8 +142,34 @@ const Stans = (props: Props) => {
                                 )}
                             />
                         </div>
+                        <Controller
+                            control={form.control}
+                            name="begrunnelse"
+                            render={({ field, fieldState }) => (
+                                <Textarea
+                                    label="Begrunnelse"
+                                    name="begrunnelse"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    feil={fieldState.error}
+                                />
+                            )}
+                        />
                         <div className={styles.bunnknapper}>
-                            <Bunnknapper history={history} />
+                            <Knapp
+                                onClick={() => {
+                                    if (urlParams.revurderingId) {
+                                        return history.push(
+                                            Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })
+                                        );
+                                    }
+                                    history.goBack();
+                                }}
+                                htmlType="button"
+                            >
+                                Tilbake
+                            </Knapp>
+                            <Knapp>Neste</Knapp>
                         </div>
                     </div>
                 </form>
@@ -113,20 +177,5 @@ const Stans = (props: Props) => {
         </Switch>
     );
 };
-
-// todo ai: trekk denna ut i egen fil
-const Bunnknapper = (props: { history: History }) => (
-    <div>
-        <Knapp
-            onClick={() => {
-                props.history.goBack();
-            }}
-            htmlType="button"
-        >
-            Tilbake
-        </Knapp>
-        <Knapp>Neste</Knapp>
-    </div>
-);
 
 export default Stans;

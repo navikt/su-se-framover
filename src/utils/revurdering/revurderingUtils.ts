@@ -13,6 +13,7 @@ import {
     InformasjonSomRevurderes,
     Vurderingstatus,
 } from '~types/Revurdering';
+import { StansAvYtelse } from '~types/Stans';
 
 import { RevurderingSteg } from '../../pages/saksbehandling/types';
 
@@ -58,6 +59,9 @@ export const erRevurderingUnderkjent = (r: Revurdering): r is UnderkjentRevurder
     r.status === RevurderingsStatus.UNDERKJENT_OPPHØRT ||
     r.status === RevurderingsStatus.UNDERKJENT_INGEN_ENDRING;
 
+export const erRevurderingStans = (r: Revurdering): r is StansAvYtelse =>
+    r.status === RevurderingsStatus.SIMULERT_STANS || r.status === RevurderingsStatus.IVERKSATT_STANS;
+
 export const erGregulering = (årsak: OpprettetRevurderingGrunn): boolean =>
     årsak === OpprettetRevurderingGrunn.REGULER_GRUNNBELØP;
 
@@ -75,6 +79,8 @@ export function getRevurderingsårsakMessageId(årsak: OpprettetRevurderingGrunn
             return 'årsak.migrert';
         case OpprettetRevurderingGrunn.REGULER_GRUNNBELØP:
             return 'årsak.gRegulering';
+        case OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING:
+            return 'årsak.manglendeKontrollerklæring';
     }
 }
 

@@ -20,6 +20,7 @@ import {
     BosituasjonRequest,
     FormuegrunnlagRequest,
 } from '~types/Revurdering';
+import { StansAvYtelse } from '~types/Stans';
 
 import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
 
@@ -39,6 +40,51 @@ export async function opprettRevurdering(
             informasjonSomRevurderes: informasjonSomRevurderes,
             begrunnelse: begrunnelse,
         },
+    });
+}
+
+export async function opprettStans(
+    sakId: string,
+    fraOgMed: Date,
+    årsak: OpprettetRevurderingGrunn,
+    begrunnelse: string
+): Promise<ApiClientResult<StansAvYtelse>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/stans`,
+        method: 'POST',
+        body: {
+            fraOgMed: formatISO(fraOgMed, { representation: 'date' }),
+            årsak: årsak,
+            begrunnelse: begrunnelse,
+        },
+    });
+}
+
+export async function oppdaterStans(
+    sakId: string,
+    revurderingId: string,
+    fraOgMed: Date,
+    årsak: OpprettetRevurderingGrunn,
+    begrunnelse: string
+): Promise<ApiClientResult<StansAvYtelse>> {
+    return apiClient({
+        url: `/saker/${sakId}/revurderinger/stans/${revurderingId}`,
+        method: 'PATCH',
+        body: {
+            fraOgMed: formatISO(fraOgMed, { representation: 'date' }),
+            årsak: årsak,
+            begrunnelse: begrunnelse,
+        },
+    });
+}
+
+export async function iverksettStans(args: {
+    sakId: string;
+    revurderingId: string;
+}): Promise<ApiClientResult<StansAvYtelse>> {
+    return apiClient({
+        url: `/saker/${args.sakId}/revurderinger/stans/${args.revurderingId}/iverksett`,
+        method: 'POST',
     });
 }
 

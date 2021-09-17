@@ -143,9 +143,9 @@ export const attesterRevurdering: Route<{ sakId: string; revurderingId: string }
 };
 
 //---------------Stans------------------------------
-export const stansRoute: Route<{ sakId: string }> = {
-    path: '/saksoversikt/:sakId/stans',
-    createURL: ({ sakId }) => `/saksoversikt/${sakId}/stans`,
+export const stansRoute: Route<{ sakId: string; revurderingId?: string }> = {
+    path: `/saksoversikt/:sakId/stans/:revurderingId?`,
+    createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/stans/${revurderingId ?? ''}`,
 };
 
 export const stansOppsummeringRoute: Route<{ sakId: string; revurderingId: string }> = {

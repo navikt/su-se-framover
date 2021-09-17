@@ -22,6 +22,7 @@ import {
     BosituasjonRequest,
     FormuegrunnlagRequest,
 } from '~types/Revurdering';
+import { StansAvYtelse } from '~types/Stans';
 
 export const opprettRevurdering = createAsyncThunk<
     OpprettetRevurdering,
@@ -49,6 +50,41 @@ export const opprettRevurdering = createAsyncThunk<
         return thunkApi.rejectWithValue(res.error);
     }
 );
+
+export const opprettStans = createAsyncThunk<
+    StansAvYtelse,
+    {
+        sakId: string;
+        fraOgMed: Date;
+        årsak: OpprettetRevurderingGrunn;
+        begrunnelse: string;
+    },
+    { rejectValue: ApiError }
+>('revurdering/opprettStans', async ({ sakId, fraOgMed, årsak, begrunnelse }, thunkApi) => {
+    const res = await revurderingApi.opprettStans(sakId, fraOgMed, årsak, begrunnelse);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const oppdaterStans = createAsyncThunk<
+    StansAvYtelse,
+    {
+        sakId: string;
+        revurderingId: string;
+        fraOgMed: Date;
+        årsak: OpprettetRevurderingGrunn;
+        begrunnelse: string;
+    },
+    { rejectValue: ApiError }
+>('revurdering/oppdaterStans', async ({ sakId, revurderingId, fraOgMed, årsak, begrunnelse }, thunkApi) => {
+    const res = await revurderingApi.oppdaterStans(sakId, revurderingId, fraOgMed, årsak, begrunnelse);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
 
 export const oppdaterRevurderingsPeriode = createAsyncThunk<
     OpprettetRevurdering,

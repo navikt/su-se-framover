@@ -27,7 +27,7 @@ import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
-import { Revurdering } from '~types/Revurdering';
+import { Revurdering, RevurderingsStatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 import { Vedtak } from '~types/Vedtak';
@@ -44,6 +44,7 @@ import {
     erRevurderingSimulert,
     erForhåndsvarselSendt,
     finnNesteRevurderingsteg,
+    erRevurderingStans,
 } from '../../../utils/revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
@@ -320,7 +321,7 @@ const RevurderingStartetKnapper = (props: {
 
             {erRevurderingIverksatt(revurdering) && vedtak && (
                 <Link
-                    className="knapp"
+                    className="knapp knapp--mini"
                     to={Routes.vedtaksoppsummering.createURL({ sakId: props.sakId, vedtakId: vedtak.id })}
                 >
                     Se oppsummering
@@ -341,6 +342,18 @@ const RevurderingStartetKnapper = (props: {
                         {props.intl.formatMessage({
                             id: 'display.attestering.attester',
                         })}
+                    </Link>
+                ) : erRevurderingStans(revurdering) ? (
+                    <Link
+                        to={Routes.stansOppsummeringRoute.createURL({
+                            sakId: props.sakId,
+                            revurderingId: revurdering.id,
+                        })}
+                        className="knapp knapp--mini"
+                    >
+                        {revurdering.status === RevurderingsStatus.IVERKSATT_STANS
+                            ? props.intl.formatMessage({ id: 'revurdering.oppsummering' })
+                            : props.intl.formatMessage({ id: 'revurdering.fortsett' })}
                     </Link>
                 ) : (
                     !erRevurderingTilAttestering(revurdering) &&
@@ -416,7 +429,7 @@ const IverksattInnvilgedeSøknader = (props: {
                                     </div>
                                     <div className={(styles.knapper, styles.flexColumn)}>
                                         <Link
-                                            className="knapp"
+                                            className="knapp knapp--mini"
                                             to={Routes.vedtaksoppsummering.createURL({
                                                 sakId: props.sak.id,
                                                 vedtakId: vedtak.id,

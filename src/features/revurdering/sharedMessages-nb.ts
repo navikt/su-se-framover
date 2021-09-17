@@ -10,6 +10,7 @@ export default {
     'årsak.andreKilder': 'Nye opplysninger fra andre kilder',
     'årsak.migrert': 'Migrert',
     'årsak.gRegulering': 'G-regulering',
+    'årsak.manglendeKontrollerklæring': 'Manglende kontrollerklæring',
 
     'knapp.avslutt': 'Avslutt',
     'knapp.forrige': 'Forrige',
