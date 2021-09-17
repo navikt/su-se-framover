@@ -27,7 +27,8 @@ export type RevurderingErrorCodes =
     | Beregning
     | Forhåndsvarsling
     | UtfallSomIkkeStøttes
-    | Brev;
+    | Brev
+    | Stans;
 
 type VilkårErrorCodes = OpprettelseOgOppdatering | Uføre | Bosituasjon | Formue | Fradrag;
 
@@ -114,6 +115,10 @@ enum Brev {
     KUNNE_IKKE_LAGE_BREV = 'kunne_ikke_lage_brevutkast',
 }
 
+enum Stans {
+    KUNNE_IKKE_IVERKSETTE_STANS_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_stans_ugyldig_tilstand',
+}
+
 const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof typeof messages | undefined } = {
     [Generell.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'generell.gregulering.kan.ikke.føre.til.opphør',
     [Generell.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]:
@@ -180,4 +185,6 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof 
     [Brev.NAVNEOPPSLAG_SAKSBEHANDLER_ATTESTTANT_FEILET]: 'brev.navnoppslag.feilet',
     [Brev.FANT_IKKE_GJELDENDEUTBETALING]: 'brev.fant.ikke.gjeldende.utbetaling',
     [Brev.KUNNE_IKKE_LAGE_BREV]: 'brev.kunne.ikke.lage',
+
+    [Stans.KUNNE_IKKE_IVERKSETTE_STANS_UGYLDIG_TILSTAND]: 'stans.iverksett.ugyldig.tilstand',
 };

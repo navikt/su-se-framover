@@ -1,3 +1,4 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
@@ -5,6 +6,7 @@ import React from 'react';
 import { useHistory } from 'react-router';
 
 import * as revurderingApi from '~api/revurderingApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { Utbetalingssimulering } from '~components/beregningOgSimulering/simulering/simulering';
 import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
@@ -25,7 +27,8 @@ const StansOppsummering = (props: Props) => {
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
     const history = useHistory();
 
-    const [, iverksettStans] = useApiCall(revurderingApi.iverksettStans);
+    const [iverksettStatus, iverksettStans] = useApiCall(revurderingApi.iverksettStans);
+    const error = RemoteData.isFailure(iverksettStatus) && iverksettStatus.error;
 
     if (!revurdering) {
         return <AlertStripeFeil> {intl.formatMessage({ id: 'stans.oppsummering.error.fant.ingen' })}</AlertStripeFeil>;
@@ -36,8 +39,14 @@ const StansOppsummering = (props: Props) => {
         <div className={styles.stansOppsummering}>
             <Panel border className={styles.stansOppsummering}>
                 <Utbetalingssimulering simulering={revurdering.simulering} />
+                <p> årsak: {revurdering.årsak} </p>
                 <p> begrunnelse: {revurdering.begrunnelse} </p>
             </Panel>
+            {error && (
+                <div className={styles.error}>
+                    <ApiErrorAlert error={error} />
+                </div>
+            )}
             <div className={styles.iverksett}>
                 <Knapp
                     onClick={() =>
@@ -51,7 +60,18 @@ const StansOppsummering = (props: Props) => {
                     Tilbake
                 </Knapp>
                 {!erIverksatt && (
-                    <Knapp onClick={() => iverksettStans({ sakId: props.sak.id, revurderingId: revurdering.id })}>
+                    <Knapp
+                        onClick={() =>
+                            iverksettStans({ sakId: props.sak.id, revurderingId: revurdering.id }, () =>
+                                history.push(
+                                    Routes.createSakIntroLocation(
+                                        intl.formatMessage({ id: 'stans.notification' }),
+                                        props.sak.id
+                                    )
+                                )
+                            )
+                        }
+                    >
                         {intl.formatMessage({ id: 'stans.oppsummering.iverksett' })}
                     </Knapp>
                 )}

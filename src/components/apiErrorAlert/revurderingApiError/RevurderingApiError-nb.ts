@@ -65,4 +65,6 @@ export default {
     'brev.navnoppslag.feilet': 'Kunne ikke hente navn for saksbehandler eller attestant',
     'brev.fant.ikke.gjeldende.utbetaling': 'Kunne ikke hente gjeldende utbetaling',
     'brev.kunne.ikke.lage': 'Kunne ikke lage brevutkast',
+
+    'stans.iverksett.ugyldig.tilstand': 'Kan ikke stanse utbetalinger som allerede er stanset',
 };

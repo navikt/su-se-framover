@@ -1,13 +1,16 @@
+import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Knapp } from 'nav-frontend-knapper';
-import { Select, Textarea } from 'nav-frontend-skjema';
-import { Innholdstittel } from 'nav-frontend-typografi';
+import { Label, Select, Textarea } from 'nav-frontend-skjema';
+import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
+import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
@@ -37,7 +40,7 @@ function hentDefaultVerdier(r: Nullable<Revurdering>): FormData {
         return {
             stansDato: new Date(r.periode.fraOgMed),
             begrunnelse: r.begrunnelse ?? '',
-            årsak: null,
+            årsak: r.årsak,
         };
     }
 
@@ -53,21 +56,25 @@ const Stans = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.stansRoute>();
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId) ?? null;
 
-    const { intl } = useI18n({ messages });
+    const { intl } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
-    const [, opprettStans] = useAsyncActionCreator(revurderingActions.opprettStans);
-    const [, oppdaterStans] = useAsyncActionCreator(revurderingActions.oppdaterStans);
+    const [opprettStatus, opprettStans] = useAsyncActionCreator(revurderingActions.opprettStans);
+    const [oppdaterStatus, oppdaterStans] = useAsyncActionCreator(revurderingActions.oppdaterStans);
+    const status = RemoteData.combine(opprettStatus, oppdaterStatus);
 
     const { ...form } = useForm<FormData>({
         defaultValues: hentDefaultVerdier(revurdering),
         resolver: yupResolver(
             yup.object<FormData>({
-                stansDato: yup.date(),
+                stansDato: yup.date().required().typeError('Må velge dato'),
                 begrunnelse: yup.string(),
                 årsak: yup
                     .mixed()
                     .required()
-                    .oneOf(Object.values([OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING])),
+                    .oneOf(
+                        Object.values([OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING]),
+                        'Må velge en gyldig årsak'
+                    ),
             })
         ),
     });
@@ -77,7 +84,7 @@ const Stans = (props: Props) => {
         const args = {
             sakId: urlParams.sakId,
             fraOgMed: values.stansDato!,
-            årsak: OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING,
+            årsak: values.årsak!,
             begrunnelse: values.begrunnelse,
         };
         const onSuccess = (stansAvYtelse: StansAvYtelse) => {
@@ -104,26 +111,31 @@ const Stans = (props: Props) => {
                     </Innholdstittel>
                     <div className={styles.content}>
                         <div className={styles.select}>
+                            <Label htmlFor="årsak"> {intl.formatMessage({ id: 'stans.årsak.tittel' })}</Label>
                             <Controller
                                 control={form.control}
                                 name="årsak"
-                                render={({ field }) => (
+                                render={({ field, fieldState }) => (
                                     <Select
+                                        feil={
+                                            fieldState.error && <Feilmelding> {fieldState.error.message} </Feilmelding>
+                                        }
                                         value={field.value ?? undefined}
                                         onChange={field.onChange}
                                         className={styles.select}
                                     >
                                         <option>{intl.formatMessage({ id: 'stans.årsak.label' })}</option>
                                         <option value={OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING}>
-                                            {getRevurderingsårsakMessageId(
-                                                OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING
-                                            )}
+                                            {intl.formatMessage({
+                                                id: getRevurderingsårsakMessageId(
+                                                    OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING
+                                                ),
+                                            })}
                                         </option>
                                     </Select>
                                 )}
                             />
                         </div>
-
                         <div className={styles.datepicker}>
                             <Controller
                                 control={form.control}
@@ -142,19 +154,26 @@ const Stans = (props: Props) => {
                                 )}
                             />
                         </div>
-                        <Controller
-                            control={form.control}
-                            name="begrunnelse"
-                            render={({ field, fieldState }) => (
-                                <Textarea
-                                    label="Begrunnelse"
-                                    name="begrunnelse"
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    feil={fieldState.error}
-                                />
-                            )}
-                        />
+                        <div className={styles.begrunnelse}>
+                            <Controller
+                                control={form.control}
+                                name="begrunnelse"
+                                render={({ field, fieldState }) => (
+                                    <Textarea
+                                        label="Begrunnelse"
+                                        name="begrunnelse"
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        feil={fieldState.error}
+                                    />
+                                )}
+                            />
+                        </div>
+                        {RemoteData.isFailure(status) && (
+                            <div className={styles.error}>
+                                <ApiErrorAlert error={status.error} />
+                            </div>
+                        )}
                         <div className={styles.bunnknapper}>
                             <Knapp
                                 onClick={() => {
