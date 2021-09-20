@@ -3,9 +3,11 @@ export default {
 
     'gjenoppta.årsak.tittel': 'Årsak',
     'gjenoppta.årsak.label': 'Velg årsak',
+    'gjenoppta.begrunnelse.tittel': 'Begrunnelse',
 
     'gjenoppta.oppsummering.iverksett': 'Gjenoppta utbetaling',
-    'gjenoppta.oppsummering.avslutt': 'Avslutt',
+    'gjenoppta.oppsummering.tilbake': 'Tilbake',
+    'gjenoppta.oppsummering.error.fant.ingen': 'Fant ikke gjenopptak',
 
     'gjenoppta.notification': 'Utbetalinger har blitt gjenopptatt',
 };

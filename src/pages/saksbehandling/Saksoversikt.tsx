@@ -154,7 +154,7 @@ const Saksoversikt = () => {
                                             </Route>
 
                                             <Route path="*">
-                                                <Sakintro sak={sak} søker={søker} />
+                                                <Sakintro sak={sak} />
                                             </Route>
                                         </Switch>
                                     </div>

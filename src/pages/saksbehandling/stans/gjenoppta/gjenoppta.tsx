@@ -61,12 +61,12 @@ const Gjenoppta = (props: Props) => {
         defaultValues: hentDefaultVerdier(revurdering ?? null),
         resolver: yupResolver(
             yup.object<FormData>({
-                begrunnelse: yup.string(),
+                begrunnelse: yup.string().required('Må fylles ut'),
                 årsak: yup
                     .mixed()
                     .required()
                     .oneOf(
-                        Object.values([OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING]),
+                        Object.values([OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING]),
                         'Må velge en gyldig årsak'
                     ),
             })
@@ -95,6 +95,9 @@ const Gjenoppta = (props: Props) => {
     return (
         <Switch>
             <Route path={Routes.gjenopptaStansOppsummeringRoute.path}>
+                <Innholdstittel className={styles.tittel}>
+                    {intl.formatMessage({ id: 'gjenoppta.tittel' })}
+                </Innholdstittel>
                 <GjenopptaOppsummering sak={props.sak} />
             </Route>
             <form onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
@@ -115,10 +118,10 @@ const Gjenoppta = (props: Props) => {
                                     className={styles.select}
                                 >
                                     <option>{intl.formatMessage({ id: 'gjenoppta.årsak.label' })}</option>
-                                    <option value={OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING}>
+                                    <option value={OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING}>
                                         {intl.formatMessage({
                                             id: getRevurderingsårsakMessageId(
-                                                OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING
+                                                OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING
                                             ),
                                         })}
                                     </option>
@@ -152,9 +155,11 @@ const Gjenoppta = (props: Props) => {
                             htmlType="button"
                             onClick={() => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
                         >
-                            Tilbake
+                            {intl.formatMessage({ id: 'gjenoppta.oppsummering.tilbake' })}
                         </Knapp>
-                        <Knapp spinner={RemoteData.isPending(gjenopptaStatus)}>Gjenoppta utbetaling</Knapp>
+                        <Knapp spinner={RemoteData.isPending(gjenopptaStatus)}>
+                            {intl.formatMessage({ id: 'gjenoppta.oppsummering.iverksett' })}
+                        </Knapp>
                     </div>
                 </div>
             </form>

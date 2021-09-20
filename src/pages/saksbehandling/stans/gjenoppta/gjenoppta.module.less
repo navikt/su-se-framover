@@ -1,14 +1,14 @@
 @import '~/styles/variables.less';
 
+.tittel {
+    width: 100%;
+    padding: @spacing-xs 10rem;
+}
+
 .container {
     display: flex;
     flex-direction: column;
     margin-top: @spacing-s;
-
-    .tittel {
-        width: 100%;
-        padding: @spacing-xs 10rem;
-    }
 
     .select {
         margin-top: @spacing-s;
@@ -22,6 +22,9 @@
 
     .iverksett {
         margin-top: @spacing-s;
+        button:not(:first-child) {
+            margin-left: @spacing-xs;
+        }
     }
 
     .error {

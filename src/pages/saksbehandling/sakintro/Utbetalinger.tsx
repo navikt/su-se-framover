@@ -2,39 +2,30 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import Ikon from 'nav-frontend-ikoner-assets';
-import { Fareknapp, Flatknapp, Knapp } from 'nav-frontend-knapper';
-import ModalWrapper from 'nav-frontend-modal';
+import { Fareknapp, Knapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
 import { Element, Undertittel } from 'nav-frontend-typografi';
-import React, { useState } from 'react';
+import React from 'react';
 import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
-import { Person } from '~api/personApi';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { KanStansesEllerGjenopptas } from '~types/Sak';
 import { compareUtbetalingsperiode, Utbetalingsperiode, Utbetalingstype } from '~types/Utbetalingsperiode';
 import { formatMonthYear } from '~utils/date/dateUtils';
-import { showName } from '~utils/person/personUtils';
 
 import messages from './utbetalinger-nb';
 import styles from './utbetalinger.module.less';
 
 export const Utbetalinger = (props: {
-    søker: Person;
     sakId: string;
     utbetalingsperioder: Utbetalingsperiode[];
     kanStansesEllerGjenopptas: KanStansesEllerGjenopptas;
 }) => {
     const { intl } = useI18n({ messages });
-    const dispatch = useAppDispatch();
     const history = useHistory();
-    const { utbetalingsperioder, kanStansesEllerGjenopptas, søker } = props;
-    const { stansUtbetalingerStatus, gjenopptaUtbetalingerStatus } = useAppSelector((s) => s.sak);
-    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const { utbetalingsperioder, kanStansesEllerGjenopptas } = props;
 
     if (utbetalingsperioder.length === 0) {
         return <div></div>;
@@ -103,13 +94,16 @@ export const Utbetalinger = (props: {
                             </Knapp>
                         ) : (
                             kanStanses && (
-                                <Fareknapp onClick={() => setModalOpen(true)}>
+                                <Fareknapp
+                                    onClick={() => history.push(Routes.stansRoute.createURL({ sakId: props.sakId }))}
+                                >
                                     {intl.formatMessage({ id: 'display.utbetalingsperiode.stoppUtbetaling' })}
                                 </Fareknapp>
                             )
                         )}
                     </div>
                 </div>
+<<<<<<< HEAD
                 <ModalWrapper
                     isOpen={modalOpen}
                     closeButton={true}
@@ -163,6 +157,8 @@ export const Utbetalinger = (props: {
                         {intl.formatMessage({ id: 'display.utbetalingsperiode.gjenopptattUtbetaling' })}
                     </Alert>
                 )}
+=======
+>>>>>>> b15a9490 (Cleanup gjenoppta)
             </Panel>
         </div>
     );

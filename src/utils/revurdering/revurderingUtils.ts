@@ -84,6 +84,8 @@ export function getRevurderingsårsakMessageId(årsak: OpprettetRevurderingGrunn
             return 'årsak.gRegulering';
         case OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING:
             return 'årsak.manglendeKontrollerklæring';
+        case OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING:
+            return 'årsak.mottattKontrollerklæring';
     }
 }
 

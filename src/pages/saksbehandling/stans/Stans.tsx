@@ -67,7 +67,7 @@ const Stans = (props: Props) => {
         resolver: yupResolver(
             yup.object<FormData>({
                 stansDato: yup.date().required().typeError('Må velge dato'),
-                begrunnelse: yup.string(),
+                begrunnelse: yup.string().required(),
                 årsak: yup
                     .mixed()
                     .required()
@@ -102,6 +102,7 @@ const Stans = (props: Props) => {
     return (
         <Switch>
             <Route path={Routes.stansOppsummeringRoute.path}>
+                <Innholdstittel className={styles.tittel}>{intl.formatMessage({ id: 'stans.tittel' })}</Innholdstittel>
                 <StansOppsummering sak={props.sak} />
             </Route>
             <Route path="*">
@@ -164,7 +165,7 @@ const Stans = (props: Props) => {
                                         name="begrunnelse"
                                         value={field.value}
                                         onChange={field.onChange}
-                                        feil={fieldState.error}
+                                        feil={fieldState.error?.message}
                                     />
                                 )}
                             />
@@ -186,9 +187,13 @@ const Stans = (props: Props) => {
                                 }}
                                 htmlType="button"
                             >
-                                Tilbake
+                                {intl.formatMessage({ id: 'stans.bunnknapper.tilbake' })}
                             </Knapp>
-                            <Knapp>Neste</Knapp>
+                            <Knapp
+                                spinner={RemoteData.isPending(opprettStatus) || RemoteData.isPending(oppdaterStatus)}
+                            >
+                                {intl.formatMessage({ id: 'stans.bunnknapper.neste' })}
+                            </Knapp>
                         </div>
                     </div>
                 </form>
