@@ -96,77 +96,78 @@ const Gjenoppta = (props: Props) => {
     };
 
     return (
-        <Switch>
-            <Route path={Routes.gjenopptaStansOppsummeringRoute.path}>
-                <Innholdstittel className={styles.tittel}>
-                    {intl.formatMessage({ id: 'gjenoppta.tittel' })}
-                </Innholdstittel>
-                <GjenopptaOppsummering sak={props.sak} />
-            </Route>
-            <form onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
-                <div className={styles.container}>
-                    <Innholdstittel className={styles.tittel}>
-                        {intl.formatMessage({ id: 'gjenoppta.tittel' })}
-                    </Innholdstittel>
-                    <div className={styles.select}>
-                        <Label htmlFor="årsak"> {intl.formatMessage({ id: 'gjenoppta.årsak.tittel' })}</Label>
-                        <Controller
-                            control={form.control}
-                            name="årsak"
-                            render={({ field, fieldState }) => (
-                                <Select
-                                    feil={fieldState.error && <Feilmelding> {fieldState.error.message} </Feilmelding>}
-                                    value={field.value ?? undefined}
-                                    onChange={field.onChange}
-                                    className={styles.select}
-                                >
-                                    <option>{intl.formatMessage({ id: 'gjenoppta.årsak.label' })}</option>
-                                    <option value={OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING}>
-                                        {intl.formatMessage({
-                                            id: getRevurderingsårsakMessageId(
-                                                OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING
-                                            ),
-                                        })}
-                                    </option>
-                                </Select>
-                            )}
-                        />
-                    </div>
-
-                    <div className={styles.begrunnelse}>
-                        <Controller
-                            control={form.control}
-                            name="begrunnelse"
-                            render={({ field, fieldState }) => (
-                                <Textarea
-                                    label="Begrunnelse"
-                                    name="begrunnelse"
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    feil={fieldState.error}
-                                />
-                            )}
-                        />
-                    </div>
-                    {RemoteData.isFailure(status) && (
-                        <div className={styles.error}>
-                            <ApiErrorAlert error={status.error} />
+        <>
+            <Innholdstittel className={styles.tittel}>{intl.formatMessage({ id: 'gjenoppta.tittel' })}</Innholdstittel>
+            <Switch>
+                <Route path={Routes.gjenopptaStansOppsummeringRoute.path}>
+                    <GjenopptaOppsummering sak={props.sak} />
+                </Route>
+                <form onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
+                    <div className={styles.container}>
+                        <div className={styles.select}>
+                            <Label htmlFor="årsak"> {intl.formatMessage({ id: 'gjenoppta.årsak.tittel' })}</Label>
+                            <Controller
+                                control={form.control}
+                                name="årsak"
+                                render={({ field, fieldState }) => (
+                                    <Select
+                                        feil={
+                                            fieldState.error && <Feilmelding> {fieldState.error.message} </Feilmelding>
+                                        }
+                                        value={field.value ?? undefined}
+                                        onChange={field.onChange}
+                                        className={styles.select}
+                                    >
+                                        <option>{intl.formatMessage({ id: 'gjenoppta.årsak.label' })}</option>
+                                        <option value={OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING}>
+                                            {intl.formatMessage({
+                                                id: getRevurderingsårsakMessageId(
+                                                    OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING
+                                                ),
+                                            })}
+                                        </option>
+                                    </Select>
+                                )}
+                            />
                         </div>
-                    )}
-                    <div className={styles.knapper}>
-                        <Knapp
-                            htmlType="button"
-                            onClick={() => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
-                        >
-                            {intl.formatMessage({ id: 'gjenoppta.oppsummering.tilbake' })}
-                        </Knapp>
-                        <Knapp spinner={RemoteData.isPending(gjenopptaStatus)}>
-                            {intl.formatMessage({ id: 'gjenoppta.oppsummering.iverksett' })}
-                        </Knapp>
+
+                        <div className={styles.begrunnelse}>
+                            <Controller
+                                control={form.control}
+                                name="begrunnelse"
+                                render={({ field, fieldState }) => (
+                                    <Textarea
+                                        label="Begrunnelse"
+                                        name="begrunnelse"
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        feil={fieldState.error}
+                                    />
+                                )}
+                            />
+                        </div>
+                        {RemoteData.isFailure(status) && (
+                            <div className={styles.error}>
+                                <ApiErrorAlert error={status.error} />
+                            </div>
+                        )}
+                        <div className={styles.knapper}>
+                            <Knapp
+                                htmlType="button"
+                                onClick={() =>
+                                    history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))
+                                }
+                            >
+                                {intl.formatMessage({ id: 'gjenoppta.oppsummering.tilbake' })}
+                            </Knapp>
+                            <Knapp spinner={RemoteData.isPending(gjenopptaStatus)}>
+                                {intl.formatMessage({ id: 'gjenoppta.oppsummering.iverksett' })}
+                            </Knapp>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </Switch>
+                </form>
+            </Switch>
+        </>
     );
 };
 
