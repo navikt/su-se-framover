@@ -1,6 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Eq } from 'fp-ts/lib/Eq';
+import * as B from 'fp-ts/boolean';
+import { Eq, struct } from 'fp-ts/lib/Eq';
+import * as S from 'fp-ts/string';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -15,6 +17,7 @@ import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { SatsFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import { lagreBosituasjonGrunnlag } from '~features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
@@ -25,6 +28,7 @@ import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { Bosituasjon } from '~types/grunnlagsdataOgVilkårsvurderinger/bosituasjon/Bosituasjongrunnlag';
 import { SøknadInnhold } from '~types/Søknad';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 
 import sharedI18n from '../sharedI18n-nb';
@@ -47,6 +51,12 @@ interface FormData {
     mottarEktemakeEllerSamboerSU: Nullable<boolean>;
     begrunnelse: Nullable<string>;
 }
+
+const eqFormData = struct<FormData>({
+    delerSøkerBolig: eqNullable(B.Eq),
+    mottarEktemakeEllerSamboerSU: eqNullable(B.Eq),
+    begrunnelse: eqNullable(S.Eq),
+});
 
 interface SatsProps {
     behandlingId: string;
@@ -230,13 +240,22 @@ const SatsForm = (props: SatsProps) => {
 
     const eps = props.eps;
 
+    const initialValues = getInitialValues(eps, props.bosituasjon);
+
+    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
+        Vilkårtype.Sats,
+        (values) => eqFormData.equals(values, initialValues)
+    );
+
     const {
         formState: { isSubmitted, isValid, errors },
         ...form
     } = useForm({
-        defaultValues: getInitialValues(eps, props.bosituasjon),
+        defaultValues: draft ?? initialValues,
         resolver: yupResolver(getValidationSchema(eps)),
     });
+
+    useDraftFormSubscribe(form.watch);
 
     const watch = form.watch();
 
@@ -251,6 +270,7 @@ const SatsForm = (props: SatsProps) => {
         const bosituasjonsgrunnlag = tilBosituasjonsgrunnlag(values, eps);
 
         if (eqBosituasjon.equals(bosituasjonsgrunnlag, props.bosituasjon)) {
+            clearDraft();
             history.push(nesteUrl);
             return;
         }
@@ -263,6 +283,7 @@ const SatsForm = (props: SatsProps) => {
                 begrunnelse: values.begrunnelse,
             },
             () => {
+                clearDraft();
                 history.push(nesteUrl);
             }
         );

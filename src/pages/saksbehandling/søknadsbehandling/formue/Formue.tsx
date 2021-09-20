@@ -20,6 +20,7 @@ import { FormueFaktablokk } from '~components/oppsummering/vilkårsOppsummering/
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
+import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import personSlice from '~features/person/person.slice';
 import sakSliceActions, * as sakSlice from '~features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~lib/formUtils';
@@ -32,7 +33,7 @@ import yup, { hookFormErrorsTilFeiloppsummering, validateStringAsNonNegativeNumb
 import { useAppDispatch } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { FormueStatus, Formue as FormueType } from '~types/Behandlingsinformasjon';
-import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import { VilkårVurderingStatus, Vilkårtype } from '~types/Vilkårsvurdering';
 import { removeSpaces } from '~utils/format/formatUtils';
 import { showName } from '~utils/person/personUtils';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -55,6 +56,7 @@ import {
     formDataVerdierTilFormueVerdier,
     eqFormue,
     eqEktefelle,
+    eqFormueFormData,
 } from './utils';
 
 const VerdierSchema: yup.ObjectSchema<VerdierFormData | undefined> = yup.object<VerdierFormData>({
@@ -129,6 +131,17 @@ const Formue = (props: {
         props.behandling.grunnlagsdataOgVilkårsvurderinger.formue.formuegrenser
     );
 
+    const initialValues = getFormueInitialValues(
+        props.behandling.behandlingsinformasjon,
+        søknadInnhold,
+        props.behandling.grunnlagsdataOgVilkårsvurderinger
+    );
+
+    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormueFormData>(
+        Vilkårtype.Formue,
+        (values) => eqFormueFormData.equals(values, initialValues)
+    );
+
     const handleSave = (nesteUrl: string) => async (values: FormueFormData) => {
         if (RemoteData.isPending(eps) && values.epsFnr !== null) return;
 
@@ -157,6 +170,7 @@ const Formue = (props: {
         });
 
         if (eqFormue.equals(formueValues, props.behandling.behandlingsinformasjon.formue) && erEktefelleUendret) {
+            clearDraft();
             history.push(nesteUrl);
             return;
         }
@@ -175,6 +189,7 @@ const Formue = (props: {
                         behandlingsinformasjon: { formue: formueValues },
                     },
                     () => {
+                        clearDraft();
                         history.push(nesteUrl);
                     }
                 );
@@ -186,14 +201,12 @@ const Formue = (props: {
         formState: { isValid, isSubmitted, errors, isDirty },
         ...form
     } = useForm<FormueFormData>({
-        defaultValues: getFormueInitialValues(
-            props.behandling.behandlingsinformasjon,
-            søknadInnhold,
-            props.behandling.grunnlagsdataOgVilkårsvurderinger
-        ),
+        defaultValues: draft ?? initialValues,
         resolver: yupResolver(schema),
     });
     const watch = form.watch();
+
+    useDraftFormSubscribe(form.watch);
 
     const søkersFormue = React.useMemo(() => {
         return regnUtFormDataVerdier(watch.verdier);

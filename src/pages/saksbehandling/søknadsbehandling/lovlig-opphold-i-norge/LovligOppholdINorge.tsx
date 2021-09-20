@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Eq } from 'fp-ts/lib/Eq';
+import { struct } from 'fp-ts/Eq';
+import * as S from 'fp-ts/string';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useRef } from 'react';
@@ -10,15 +11,17 @@ import { useHistory } from 'react-router-dom';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { LovligOppholdFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/LovligOppholdFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { LovligOpphold, LovligOppholdStatus } from '~types/Behandlingsinformasjon';
+import { LovligOppholdStatus } from '~types/Behandlingsinformasjon';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
@@ -32,9 +35,10 @@ interface FormData {
     begrunnelse: Nullable<string>;
 }
 
-const eqLovligOppholdINorge: Eq<Nullable<LovligOpphold>> = {
-    equals: (lovlig1, lovlig2) => lovlig1?.status === lovlig2?.status && lovlig1?.begrunnelse === lovlig2?.begrunnelse,
-};
+const eqFormData = struct<FormData>({
+    status: eqNullable(S.Eq),
+    begrunnelse: eqNullable(S.Eq),
+});
 
 const schema = yup.object<FormData>({
     status: yup
@@ -51,16 +55,21 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
+    const initialValues = {
+        status: props.behandling.behandlingsinformasjon.lovligOpphold?.status ?? null,
+        begrunnelse: props.behandling.behandlingsinformasjon.lovligOpphold?.begrunnelse ?? null,
+    };
+
+    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
+        Vilkårtype.LovligOpphold,
+        (values) => eqFormData.equals(values, initialValues)
+    );
 
     const handleSave = (nesteUrl: string) => async (values: FormData) => {
         if (!values.status) return;
 
-        const lovligOppholdValues: LovligOpphold = {
-            status: values.status,
-            begrunnelse: values.begrunnelse,
-        };
-
-        if (eqLovligOppholdINorge.equals(lovligOppholdValues, props.behandling.behandlingsinformasjon.lovligOpphold)) {
+        if (eqFormData.equals(values, initialValues)) {
+            clearDraft();
             history.push(nesteUrl);
             return;
         }
@@ -70,11 +79,14 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    ...props.behandling.behandlingsinformasjon,
-                    lovligOpphold: lovligOppholdValues,
+                    lovligOpphold: {
+                        status: values.status,
+                        begrunnelse: values.begrunnelse,
+                    },
                 },
             },
             () => {
+                clearDraft();
                 history.push(nesteUrl);
             }
         );
@@ -84,12 +96,11 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         formState: { isValid, isSubmitted, errors },
         ...form
     } = useForm({
-        defaultValues: {
-            status: props.behandling.behandlingsinformasjon.lovligOpphold?.status ?? null,
-            begrunnelse: props.behandling.behandlingsinformasjon.lovligOpphold?.begrunnelse ?? null,
-        },
+        defaultValues: draft ?? initialValues,
         resolver: yupResolver(schema),
     });
+
+    useDraftFormSubscribe(form.watch);
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>

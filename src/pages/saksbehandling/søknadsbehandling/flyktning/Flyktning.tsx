@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Eq } from 'fp-ts/lib/Eq';
+import { struct } from 'fp-ts/Eq';
+import * as S from 'fp-ts/lib/string';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -11,16 +12,18 @@ import { useHistory } from 'react-router-dom';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { FlyktningFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FlyktningFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { Behandlingsstatus } from '~types/Behandling';
-import { Flyktning as FlyktningType, FlyktningStatus, UførhetStatus } from '~types/Behandlingsinformasjon';
+import { FlyktningStatus, UførhetStatus } from '~types/Behandlingsinformasjon';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~utils/behandling/behandlingUtils';
 
 import sharedI18n from '../sharedI18n-nb';
@@ -35,10 +38,10 @@ interface FormData {
     begrunnelse: Nullable<string>;
 }
 
-const eqFlyktning: Eq<Nullable<FlyktningType>> = {
-    equals: (flyktning1, flyktning2) =>
-        flyktning1?.status === flyktning2?.status && flyktning1?.begrunnelse === flyktning2?.begrunnelse,
-};
+const eqFormData = struct<FormData>({
+    status: eqNullable(S.Eq),
+    begrunnelse: eqNullable(S.Eq),
+});
 
 const schema = yup.object<FormData>({
     status: yup
@@ -59,6 +62,16 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const history = useHistory();
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
 
+    const initialValues: FormData = {
+        status: props.behandling.behandlingsinformasjon.flyktning?.status ?? null,
+        begrunnelse: props.behandling.behandlingsinformasjon.flyktning?.begrunnelse ?? null,
+    };
+
+    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
+        Vilkårtype.Flyktning,
+        (values) => eqFormData.equals(values, initialValues)
+    );
+
     const goToVedtak = () => {
         history.push(
             Routes.saksbehandlingSendTilAttestering.createURL({
@@ -71,12 +84,8 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const handleLagreOgFortsettSenere = async (values: FormData) => {
         if (!values.status) return;
 
-        const flyktningValues: FlyktningType = {
-            status: values.status,
-            begrunnelse: values.begrunnelse,
-        };
-
-        if (eqFlyktning.equals(flyktningValues, props.behandling.behandlingsinformasjon.flyktning)) {
+        if (eqFormData.equals(values, initialValues)) {
+            clearDraft();
             history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             return;
         }
@@ -86,10 +95,14 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    flyktning: flyktningValues,
+                    flyktning: {
+                        status: values.status,
+                        begrunnelse: values.begrunnelse,
+                    },
                 },
             },
             () => {
+                clearDraft();
                 history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             }
         );
@@ -98,12 +111,8 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const handleSave = async (values: FormData) => {
         if (!values.status) return;
 
-        const flyktningValues: FlyktningType = {
-            status: values.status,
-            begrunnelse: values.begrunnelse,
-        };
-
-        if (eqFlyktning.equals(flyktningValues, props.behandling.behandlingsinformasjon.flyktning)) {
+        if (eqFormData.equals(values, initialValues)) {
+            clearDraft();
             if (erVilkårsvurderingerVurdertAvslag(props.behandling) || erUnderkjent(props.behandling)) {
                 goToVedtak();
                 return;
@@ -118,10 +127,14 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    flyktning: flyktningValues,
+                    flyktning: {
+                        status: values.status,
+                        begrunnelse: values.begrunnelse,
+                    },
                 },
             },
             (behandling) => {
+                clearDraft();
                 if (behandling.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
                     goToVedtak();
                     return;
@@ -135,12 +148,11 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
         formState: { errors, isSubmitted, isValid },
         ...form
     } = useForm({
-        defaultValues: {
-            status: props.behandling.behandlingsinformasjon.flyktning?.status ?? null,
-            begrunnelse: props.behandling.behandlingsinformasjon.flyktning?.begrunnelse ?? null,
-        },
+        defaultValues: draft ?? initialValues,
         resolver: yupResolver(schema),
     });
+
+    useDraftFormSubscribe(form.watch);
 
     const watchStatus = form.watch('status');
 

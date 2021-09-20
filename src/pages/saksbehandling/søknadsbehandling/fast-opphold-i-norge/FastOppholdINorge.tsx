@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Eq } from 'fp-ts/lib/Eq';
+import { struct } from 'fp-ts/Eq';
+import * as S from 'fp-ts/string';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useRef } from 'react';
@@ -10,15 +11,17 @@ import { useHistory } from 'react-router-dom';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { FastOppholdFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FastOppholdFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { FastOppholdINorge as FastOppholdINorgeType, FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
+import { FastOppholdINorgeStatus } from '~types/Behandlingsinformasjon';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
@@ -32,10 +35,10 @@ interface FormData {
     begrunnelse: Nullable<string>;
 }
 
-const eqFastOppholdINorge: Eq<Nullable<FastOppholdINorgeType>> = {
-    equals: (fastOpphold1, fastOpphold2) =>
-        fastOpphold1?.status === fastOpphold2?.status && fastOpphold1?.begrunnelse === fastOpphold2?.begrunnelse,
-};
+const eqFormData = struct<FormData>({
+    status: eqNullable(S.Eq),
+    begrunnelse: eqNullable(S.Eq),
+});
 
 const schema = yup.object<FormData>({
     status: yup
@@ -53,15 +56,21 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
 
+    const initialValues = {
+        status: props.behandling.behandlingsinformasjon.fastOppholdINorge?.status ?? null,
+        begrunnelse: props.behandling.behandlingsinformasjon.fastOppholdINorge?.begrunnelse ?? null,
+    };
+
+    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
+        Vilkårtype.FastOppholdINorge,
+        (values) => eqFormData.equals(values, initialValues)
+    );
+
     const handleSave = (nesteUrl: string) => async (values: FormData) => {
         if (!values.status) return;
 
-        const fastOppholdValues: FastOppholdINorgeType = {
-            status: values.status,
-            begrunnelse: values.begrunnelse,
-        };
-
-        if (eqFastOppholdINorge.equals(fastOppholdValues, props.behandling.behandlingsinformasjon.fastOppholdINorge)) {
+        if (eqFormData.equals(values, initialValues)) {
+            clearDraft();
             history.push(nesteUrl);
             return;
         }
@@ -71,10 +80,14 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    fastOppholdINorge: fastOppholdValues,
+                    fastOppholdINorge: {
+                        status: values.status,
+                        begrunnelse: values.begrunnelse,
+                    },
                 },
             },
             () => {
+                clearDraft();
                 history.push(nesteUrl);
             }
         );
@@ -84,12 +97,11 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
         formState: { isValid, isSubmitted, errors },
         ...form
     } = useForm({
-        defaultValues: {
-            status: props.behandling.behandlingsinformasjon.fastOppholdINorge?.status ?? null,
-            begrunnelse: props.behandling.behandlingsinformasjon.fastOppholdINorge?.begrunnelse ?? null,
-        },
+        defaultValues: draft ?? initialValues,
         resolver: yupResolver(schema),
     });
+
+    useDraftFormSubscribe(form.watch);
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>

@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Eq } from 'fp-ts/lib/Eq';
+import { struct } from 'fp-ts/Eq';
+import * as S from 'fp-ts/string';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useRef } from 'react';
@@ -10,15 +11,17 @@ import { useHistory } from 'react-router-dom';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { UtenlandsOppholdFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import { OppholdIUtlandet as OppholdIUtlandetType, OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
+import { OppholdIUtlandetStatus } from '~types/Behandlingsinformasjon';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
@@ -32,11 +35,10 @@ interface FormData {
     begrunnelse: Nullable<string>;
 }
 
-const eqOppholdIUtlandet: Eq<Nullable<OppholdIUtlandetType>> = {
-    equals: (oppholdIUtlandet1, oppholdIUtlandet2) =>
-        oppholdIUtlandet1?.status === oppholdIUtlandet2?.status &&
-        oppholdIUtlandet1?.begrunnelse === oppholdIUtlandet2?.begrunnelse,
-};
+const eqFormData = struct<FormData>({
+    status: eqNullable(S.Eq),
+    begrunnelse: eqNullable(S.Eq),
+});
 
 const schema = yup.object<FormData>({
     status: yup
@@ -56,29 +58,31 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
+    const initialValues = {
+        status: props.behandling.behandlingsinformasjon.oppholdIUtlandet?.status ?? null,
+        begrunnelse: props.behandling.behandlingsinformasjon.oppholdIUtlandet?.begrunnelse ?? null,
+    };
+
+    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
+        Vilkårtype.OppholdIUtlandet,
+        (values) => eqFormData.equals(values, initialValues)
+    );
 
     const {
         formState: { isValid, isSubmitted, errors },
         ...form
     } = useForm({
-        defaultValues: {
-            status: props.behandling.behandlingsinformasjon.oppholdIUtlandet?.status ?? null,
-            begrunnelse: props.behandling.behandlingsinformasjon.oppholdIUtlandet?.begrunnelse ?? null,
-        },
+        defaultValues: draft ?? initialValues,
         resolver: yupResolver(schema),
     });
+
+    useDraftFormSubscribe(form.watch);
 
     const handleSave = (nesteUrl: string) => async (values: FormData) => {
         if (!values.status) return;
 
-        const oppholdIUtlandetValues: OppholdIUtlandetType = {
-            status: values.status,
-            begrunnelse: values.begrunnelse,
-        };
-
-        if (
-            eqOppholdIUtlandet.equals(oppholdIUtlandetValues, props.behandling.behandlingsinformasjon.oppholdIUtlandet)
-        ) {
+        if (eqFormData.equals(values, initialValues)) {
+            clearDraft();
             history.push(nesteUrl);
             return;
         }
@@ -88,10 +92,14 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    oppholdIUtlandet: oppholdIUtlandetValues,
+                    oppholdIUtlandet: {
+                        status: values.status,
+                        begrunnelse: values.begrunnelse,
+                    },
                 },
             },
             () => {
+                clearDraft();
                 history.push(nesteUrl);
             }
         );

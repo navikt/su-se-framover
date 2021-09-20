@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Eq } from 'fp-ts/lib/Eq';
+import { struct } from 'fp-ts/Eq';
+import * as S from 'fp-ts/string';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useRef } from 'react';
@@ -10,18 +11,17 @@ import { useHistory } from 'react-router-dom';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { InstitusjonsoppholdBlokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/InstitusjonsoppholdBlokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
-import {
-    InstitusjonsoppholdStatus,
-    Institusjonsopphold as InstitusjonsoppholdType,
-} from '~types/Behandlingsinformasjon';
+import { InstitusjonsoppholdStatus } from '~types/Behandlingsinformasjon';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
@@ -35,11 +35,10 @@ interface InstitusjonsoppholdFormData {
     begrunnelse: Nullable<string>;
 }
 
-const eqInstitusjonsopphold: Eq<Nullable<InstitusjonsoppholdType>> = {
-    equals: (institusjonsopphold1, institusjonsopphold2) =>
-        institusjonsopphold1?.status === institusjonsopphold2?.status &&
-        institusjonsopphold1?.begrunnelse === institusjonsopphold2?.begrunnelse,
-};
+const eqFormData = struct<InstitusjonsoppholdFormData>({
+    status: eqNullable(S.Eq),
+    begrunnelse: eqNullable(S.Eq),
+});
 
 const schema = yup.object<InstitusjonsoppholdFormData>({
     status: yup
@@ -56,32 +55,31 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
+    const initialValues = {
+        status: props.behandling.behandlingsinformasjon.institusjonsopphold?.status ?? null,
+        begrunnelse: props.behandling.behandlingsinformasjon.institusjonsopphold?.begrunnelse ?? null,
+    };
+
+    const { draft, clearDraft, useDraftFormSubscribe } =
+        useSøknadsbehandlingDraftContextFor<InstitusjonsoppholdFormData>(Vilkårtype.Institusjonsopphold, (values) =>
+            eqFormData.equals(values, initialValues)
+        );
 
     const {
         formState: { isValid, isSubmitted, errors },
         ...form
     } = useForm({
-        defaultValues: {
-            status: props.behandling.behandlingsinformasjon.institusjonsopphold?.status ?? null,
-            begrunnelse: props.behandling.behandlingsinformasjon.institusjonsopphold?.begrunnelse ?? null,
-        },
+        defaultValues: draft ?? initialValues,
         resolver: yupResolver(schema),
     });
+
+    useDraftFormSubscribe(form.watch);
 
     const handleSave = (nesteUrl: string) => async (values: InstitusjonsoppholdFormData) => {
         if (!values.status) return;
 
-        const institusjonsValues: InstitusjonsoppholdType = {
-            status: values.status,
-            begrunnelse: values.begrunnelse,
-        };
-
-        if (
-            eqInstitusjonsopphold.equals(
-                institusjonsValues,
-                props.behandling.behandlingsinformasjon.institusjonsopphold
-            )
-        ) {
+        if (eqFormData.equals(values, initialValues)) {
+            clearDraft();
             history.push(nesteUrl);
             return;
         }
@@ -91,10 +89,14 @@ const Institusjonsopphold = (props: VilkårsvurderingBaseProps) => {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
                 behandlingsinformasjon: {
-                    institusjonsopphold: institusjonsValues,
+                    institusjonsopphold: {
+                        status: values.status,
+                        begrunnelse: values.begrunnelse,
+                    },
                 },
             },
             () => {
+                clearDraft();
                 history.push(nesteUrl);
             }
         );

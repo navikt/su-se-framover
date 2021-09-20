@@ -1,4 +1,6 @@
 import * as DateFns from 'date-fns';
+import { struct } from 'fp-ts/Eq';
+import * as S from 'fp-ts/string';
 
 import { Nullable } from '~lib/types';
 import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
@@ -14,6 +16,17 @@ export interface VerdierFormData {
     stårNoenIGjeldTilDeg: string;
     depositumskonto: string;
 }
+
+export const eqVerdierFormData = struct<VerdierFormData>({
+    verdiPåBolig: S.Eq,
+    verdiPåEiendom: S.Eq,
+    verdiPåKjøretøy: S.Eq,
+    innskuddsbeløp: S.Eq,
+    verdipapir: S.Eq,
+    stårNoenIGjeldTilDeg: S.Eq,
+    kontanterOver1000: S.Eq,
+    depositumskonto: S.Eq,
+});
 
 export const verdierId: Array<keyof VerdierFormData> = [
     'verdiPåBolig',
