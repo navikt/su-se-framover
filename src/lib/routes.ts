@@ -153,6 +153,16 @@ export const stansOppsummeringRoute: Route<{ sakId: string; revurderingId: strin
     createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/stans/${revurderingId}/oppsummering`,
 };
 
+export const gjenopptaStansRoute: Route<{ sakId: string; revurderingId?: string }> = {
+    path: '/saksoversikt/:sakId/gjenoppta/:revurderingId?',
+    createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/gjenoppta/${revurderingId ?? ''}`,
+};
+
+export const gjenopptaStansOppsummeringRoute: Route<{ sakId: string; revurderingId: string }> = {
+    path: '/saksoversikt/:sakId/gjenoppta/:revurderingId/oppsummering',
+    createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/gjenoppta/${revurderingId}/oppsummering`,
+};
+
 export interface SuccessNotificationState {
     notification?: string;
 }

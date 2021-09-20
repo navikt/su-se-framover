@@ -7,5 +7,5 @@ export async function stansUtbetalinger(sakId: string): Promise<ApiClientResult<
 }
 
 export async function gjenopptaUtbetalinger(sakId: string): Promise<ApiClientResult<Sak>> {
-    return apiClient({ url: `/saker/${sakId}/utbetalinger/gjenoppta`, method: 'POST' });
+    return apiClient({ url: `/saker/${sakId}/revurderinger/gjenoppta`, method: 'POST' });
 }

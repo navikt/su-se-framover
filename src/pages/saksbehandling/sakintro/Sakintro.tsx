@@ -45,6 +45,7 @@ import {
     erForhåndsvarselSendt,
     finnNesteRevurderingsteg,
     erRevurderingStans,
+    erRevurderingGjenopptak,
 } from '../../../utils/revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
@@ -352,6 +353,18 @@ const RevurderingStartetKnapper = (props: {
                         className="knapp knapp--mini"
                     >
                         {revurdering.status === RevurderingsStatus.IVERKSATT_STANS
+                            ? props.intl.formatMessage({ id: 'revurdering.oppsummering' })
+                            : props.intl.formatMessage({ id: 'revurdering.fortsett' })}
+                    </Link>
+                ) : erRevurderingGjenopptak(revurdering) ? (
+                    <Link
+                        to={Routes.gjenopptaStansRoute.createURL({
+                            sakId: props.sakId,
+                            revurderingId: revurdering.id,
+                        })}
+                        className="knapp knapp--mini"
+                    >
+                        {revurdering.status === RevurderingsStatus.IVERKSATT_GJENOPPTAK
                             ? props.intl.formatMessage({ id: 'revurdering.oppsummering' })
                             : props.intl.formatMessage({ id: 'revurdering.fortsett' })}
                     </Link>

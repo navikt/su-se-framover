@@ -22,7 +22,10 @@ import {
     lagreFradragsgrunnlag,
     lagreBosituasjonsgrunnlag,
     lagreFormuegrunnlag,
+    opprettStans,
     oppdaterStans,
+    gjenoppta,
+    oppdaterGjenopptak,
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
@@ -718,6 +721,26 @@ export default createSlice({
             );
         });
 
+        builder.addCase(opprettStans.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: [...sak.revurderinger, action.payload],
+                }))
+            );
+        });
+
+        builder.addCase(gjenoppta.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: [...sak.revurderinger, action.payload],
+                }))
+            );
+        });
+
         builder.addCase(lagreUføregrunnlagForRevurdering.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
@@ -758,6 +781,10 @@ export default createSlice({
         });
 
         builder.addCase(oppdaterStans.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+        });
+
+        builder.addCase(oppdaterGjenopptak.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
     },

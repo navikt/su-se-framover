@@ -1,0 +1,38 @@
+@import '~/styles/variables.less';
+
+.container {
+    display: flex;
+    flex-direction: column;
+    margin-top: @spacing-s;
+
+    .tittel {
+        width: 100%;
+        padding: @spacing-xs 10rem;
+    }
+
+    .select {
+        margin-top: @spacing-s;
+        max-width: 16rem;
+    }
+
+    .begrunnelse {
+        margin-top: @spacing-s;
+        max-width: 24rem;
+    }
+
+    .iverksett {
+        margin-top: @spacing-s;
+    }
+
+    .error {
+        margin-top: @spacing-s;
+    }
+
+    .knapper {
+        margin-top: @spacing-s;
+
+        :not(:first-child) {
+            margin-left: @spacing-s;
+        }
+    }
+}

@@ -6,6 +6,11 @@ export interface StansAvYtelse
     simulering: Simulering;
 }
 
+export interface Gjenopptak
+    extends Revurdering<RevurderingsStatus.SIMULERT_GJENOPPTAK | RevurderingsStatus.IVERKSATT_GJENOPPTAK> {
+    simulering: Simulering;
+}
+
 // export interface StansAvYtelse<T extends RevurderingsStatus = RevurderingsStatus> extends Revurdering<T> {
 //     årsak: StansGrunn;
 // }

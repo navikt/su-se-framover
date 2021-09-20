@@ -22,7 +22,7 @@ import {
     BosituasjonRequest,
     FormuegrunnlagRequest,
 } from '~types/Revurdering';
-import { StansAvYtelse } from '~types/Stans';
+import { Gjenopptak, StansAvYtelse } from '~types/Stans';
 
 export const opprettRevurdering = createAsyncThunk<
     OpprettetRevurdering,
@@ -80,6 +80,41 @@ export const oppdaterStans = createAsyncThunk<
     { rejectValue: ApiError }
 >('revurdering/oppdaterStans', async ({ sakId, revurderingId, fraOgMed, årsak, begrunnelse }, thunkApi) => {
     const res = await revurderingApi.oppdaterStans(sakId, revurderingId, fraOgMed, årsak, begrunnelse);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const gjenoppta = createAsyncThunk<
+    Gjenopptak,
+    {
+        sakId: string;
+        årsak: OpprettetRevurderingGrunn;
+        begrunnelse: string;
+    },
+    { rejectValue: ApiError }
+>('revurdering/gjenoppta', async ({ sakId, årsak, begrunnelse }, thunkApi) => {
+    const res = await revurderingApi.gjenoppta({ sakId, årsak, begrunnelse });
+
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const oppdaterGjenopptak = createAsyncThunk<
+    Gjenopptak,
+    {
+        sakId: string;
+        revurderingId: string;
+        årsak: OpprettetRevurderingGrunn;
+        begrunnelse: string;
+    },
+    { rejectValue: ApiError }
+>('revurdering/oppdaterGjenopptak', async ({ sakId, årsak, begrunnelse, revurderingId }, thunkApi) => {
+    const res = await revurderingApi.oppdaterGjenopptak({ sakId, årsak, begrunnelse, revurderingId });
+
     if (res.status === 'ok') {
         return res.data;
     }

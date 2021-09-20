@@ -18,6 +18,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import Restanser from './restans/Restanser';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
+import Gjenoppta from './stans/gjenoppta/gjenoppta';
 import Stans from './stans/Stans';
 
 const Vilkår = React.lazy(() => import('./søknadsbehandling/vilkår/Vilkår'));
@@ -107,6 +108,11 @@ const Saksoversikt = () => {
                                             <Route path={Routes.stansRoute.path}>
                                                 <div className={styles.mainContent}>
                                                     <Stans sak={sak} />
+                                                </div>
+                                            </Route>
+                                            <Route path={Routes.gjenopptaStansRoute.path}>
+                                                <div className={styles.mainContent}>
+                                                    <Gjenoppta sak={sak} />
                                                 </div>
                                             </Route>
                                             <Route path={Routes.avsluttSøknadsbehandling.path}>

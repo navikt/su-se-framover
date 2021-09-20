@@ -13,7 +13,7 @@ import {
     InformasjonSomRevurderes,
     Vurderingstatus,
 } from '~types/Revurdering';
-import { StansAvYtelse } from '~types/Stans';
+import { Gjenopptak, StansAvYtelse } from '~types/Stans';
 
 import { RevurderingSteg } from '../../pages/saksbehandling/types';
 
@@ -61,6 +61,9 @@ export const erRevurderingUnderkjent = (r: Revurdering): r is UnderkjentRevurder
 
 export const erRevurderingStans = (r: Revurdering): r is StansAvYtelse =>
     r.status === RevurderingsStatus.SIMULERT_STANS || r.status === RevurderingsStatus.IVERKSATT_STANS;
+
+export const erRevurderingGjenopptak = (r: Revurdering): r is Gjenopptak =>
+    r.status === RevurderingsStatus.SIMULERT_GJENOPPTAK || r.status === RevurderingsStatus.IVERKSATT_GJENOPPTAK;
 
 export const erGregulering = (årsak: OpprettetRevurderingGrunn): boolean =>
     årsak === OpprettetRevurderingGrunn.REGULER_GRUNNBELØP;

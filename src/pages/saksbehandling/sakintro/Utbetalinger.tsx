@@ -8,10 +8,12 @@ import Panel from 'nav-frontend-paneler';
 import { Element, Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
+import { useHistory } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/i18n';
+import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { KanStansesEllerGjenopptas } from '~types/Sak';
 import { compareUtbetalingsperiode, Utbetalingsperiode, Utbetalingstype } from '~types/Utbetalingsperiode';
@@ -29,6 +31,7 @@ export const Utbetalinger = (props: {
 }) => {
     const { intl } = useI18n({ messages });
     const dispatch = useAppDispatch();
+    const history = useHistory();
     const { utbetalingsperioder, kanStansesEllerGjenopptas, søker } = props;
     const { stansUtbetalingerStatus, gjenopptaUtbetalingerStatus } = useAppSelector((s) => s.sak);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -92,16 +95,9 @@ export const Utbetalinger = (props: {
                     <div className={styles.utbetalingKnappContainer}>
                         {kanGjenopptas ? (
                             <Knapp
-                                onClick={() => {
-                                    if (kanGjenopptas && !RemoteData.isPending(gjenopptaUtbetalingerStatus)) {
-                                        dispatch(
-                                            sakSlice.gjenopptaUtbetalinger({
-                                                sakId: props.sakId,
-                                            })
-                                        );
-                                    }
-                                }}
-                                spinner={RemoteData.isPending(gjenopptaUtbetalingerStatus)}
+                                onClick={() =>
+                                    history.push(Routes.gjenopptaStansRoute.createURL({ sakId: props.sakId }))
+                                }
                             >
                                 {intl.formatMessage({ id: 'display.utbetalingsperiode.gjenopptaUtbetaling' })}
                             </Knapp>
