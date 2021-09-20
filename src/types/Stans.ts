@@ -10,22 +10,3 @@ export interface Gjenopptak
     extends Revurdering<RevurderingsStatus.SIMULERT_GJENOPPTAK | RevurderingsStatus.IVERKSATT_GJENOPPTAK> {
     simulering: Simulering;
 }
-
-// export interface StansAvYtelse<T extends RevurderingsStatus = RevurderingsStatus> extends Revurdering<T> {
-//     årsak: StansGrunn;
-// }
-
-// export type StansAvYtelsez<T extends RevurderingsStatus = RevurderingsStatus> = Revurdering<T> & {
-//     årsak: StansGrunn;
-// };
-
-// export interface SimulertStansAvYtelse extends StansAvYtelse<RevurderingsStatus.SIMULERT_STANS> {
-//     simulering: Simulering;
-// }
-// export interface IverksattStansAvYtelse extends StansAvYtelse<RevurderingsStatus.IVERKSATT_STANS> {
-//     simulering: Simulering;
-// }
-
-// export function erStans(r: Revurdering): r is StansAvYtelse {
-//     return 'årsak' in r;
-// }
