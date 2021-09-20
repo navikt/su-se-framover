@@ -1,12 +1,14 @@
-import { Eq } from 'fp-ts/lib/Eq';
+import * as B from 'fp-ts/boolean';
+import * as Eq from 'fp-ts/Eq';
+import * as S from 'fp-ts/string';
 
 import { DelerBoligMed } from '~features/søknad/types';
-import { Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~lib/types';
 import { Behandlingsinformasjon, Formue, FormueStatus, FormueVerdier } from '~types/Behandlingsinformasjon';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { SøknadInnhold } from '~types/Søknad';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
-import { VerdierFormData } from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+import { eqVerdierFormData, VerdierFormData } from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
 
 export interface FormueFormData {
     status: FormueStatus;
@@ -77,7 +79,7 @@ function getInitialVerdier(
     };
 }
 
-export const eqEktefelle: Eq<
+export const eqEktefelle: Eq.Eq<
     Nullable<{
         fnr: Nullable<string>;
     }>
@@ -85,14 +87,15 @@ export const eqEktefelle: Eq<
     equals: (ektefelle1, ektefelle2) => ektefelle1?.fnr === ektefelle2?.fnr,
 };
 
-export const eqFormue: Eq<Nullable<Formue>> = {
+export const eqFormue: Eq.Eq<Nullable<Formue>> = {
     equals: (formue1, formue2) =>
         formue1?.status === formue2?.status &&
         eqVerdier.equals(formue1?.verdier ?? null, formue2?.verdier ?? null) &&
         eqVerdier.equals(formue1?.epsVerdier ?? null, formue2?.epsVerdier ?? null) &&
         formue1?.begrunnelse === formue2?.begrunnelse,
 };
-const eqVerdier: Eq<Nullable<FormueVerdier>> = {
+
+export const eqVerdier: Eq.Eq<Nullable<FormueVerdier>> = {
     equals: (verdier1, verdier2) =>
         verdier1?.verdiIkkePrimærbolig === verdier2?.verdiIkkePrimærbolig &&
         verdier1?.verdiKjøretøy === verdier2?.verdiKjøretøy &&
@@ -102,3 +105,12 @@ const eqVerdier: Eq<Nullable<FormueVerdier>> = {
         verdier1?.kontanter === verdier2?.kontanter &&
         verdier1?.depositumskonto === verdier2?.depositumskonto,
 };
+
+export const eqFormueFormData = Eq.struct<FormueFormData>({
+    begrunnelse: eqNullable(S.Eq),
+    borSøkerMedEPS: eqNullable(B.Eq),
+    epsFnr: eqNullable(S.Eq),
+    epsVerdier: eqNullable(eqVerdierFormData),
+    verdier: eqNullable(eqVerdierFormData),
+    status: eqNullable(S.Eq),
+});

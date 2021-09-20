@@ -14,6 +14,7 @@ import { ApiError, ErrorCode } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
 import ToKolonner from '~components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import * as SakSlice from '~features/saksoversikt/sak.slice';
 import { nullableMap, pipe } from '~lib/fp';
 import { useI18n } from '~lib/i18n';
@@ -21,6 +22,7 @@ import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 import * as DateUtils from '~utils/date/dateUtils';
 
 import sharedMessages from '../sharedI18n-nb';
@@ -76,6 +78,7 @@ const schema = yup.object<FormData>({
 
 const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
+
     const history = useHistory();
     const [savingState, setSavingState] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
     const dispatch = useAppDispatch();
@@ -84,22 +87,30 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
         tilOgMed: nullableMap(props.behandling.stønadsperiode?.periode.tilOgMed ?? null, DateUtils.parseIsoDateOnly),
         begrunnelse: props.behandling.stønadsperiode?.begrunnelse ?? '',
     };
+    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
+        Vilkårtype.Virkningstidspunkt,
+        (values) => eqBehandlingsperiode.equals(values, initialValues)
+    );
 
     const {
         formState: { isValid, isSubmitted, errors },
         ...form
     } = useForm<FormData>({
-        defaultValues: initialValues,
+        defaultValues: draft ?? initialValues,
         resolver: yupResolver(schema),
     });
+    useDraftFormSubscribe(form.watch);
 
-    form.watch((values) => {
-        if (values.fraOgMed !== null && values.tilOgMed === null) {
-            form.setValue('tilOgMed', DateFns.endOfMonth(DateFns.addMonths(values.fraOgMed, 11)), {
-                shouldValidate: true,
-            });
-        }
-    });
+    React.useEffect(() => {
+        const sub = form.watch((values, { name }) => {
+            if (name === 'fraOgMed' && values.fraOgMed !== null && values.tilOgMed === null) {
+                form.setValue('tilOgMed', DateFns.endOfMonth(DateFns.addMonths(values.fraOgMed, 11)), {
+                    shouldValidate: true,
+                });
+            }
+        });
+        return () => sub.unsubscribe();
+    }, [form]);
 
     const save = async (data: FormData) => {
         const res = await dispatch(
@@ -115,6 +126,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
         );
 
         if (SakSlice.lagreVirkningstidspunkt.fulfilled.match(res)) {
+            clearDraft();
             return RemoteData.success(null);
         } else if (SakSlice.lagreVirkningstidspunkt.rejected.match(res)) {
             return RemoteData.failure(
@@ -131,6 +143,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
 
     const handleSubmit: SubmitHandler<FormData> = async (x) => {
         if (eqBehandlingsperiode.equals(form.getValues(), initialValues)) {
+            clearDraft();
             return history.push(props.nesteUrl);
         }
 

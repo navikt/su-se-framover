@@ -1,6 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Eq } from 'fp-ts/lib/Eq';
+import { Eq, struct } from 'fp-ts/lib/Eq';
+import * as S from 'fp-ts/string';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -11,13 +12,14 @@ import { useHistory } from 'react-router-dom';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { PersonligOppmøteFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
+import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { Behandlingsstatus } from '~types/Behandling';
 import {
@@ -25,7 +27,7 @@ import {
     PersonligOppmøte as PersonligOppmøteType,
     Behandlingsinformasjon,
 } from '~types/Behandlingsinformasjon';
-import { VilkårVurderingStatus } from '~types/Vilkårsvurdering';
+import { Vilkårtype, VilkårVurderingStatus } from '~types/Vilkårsvurdering';
 import { erUnderkjent, erVilkårsvurderingerVurdertAvslag } from '~utils/behandling/behandlingUtils';
 import { Vilkårsinformasjon, mapToVilkårsinformasjon } from '~utils/søknadsbehandling/vilkår/vilkårUtils';
 
@@ -55,6 +57,12 @@ interface FormData {
     grunnForManglendePersonligOppmøte: Nullable<GrunnForManglendePersonligOppmøte>;
     begrunnelse: Nullable<string>;
 }
+
+const eqFormData = struct<FormData>({
+    møttPersonlig: eqNullable(S.Eq),
+    grunnForManglendePersonligOppmøte: eqNullable(S.Eq),
+    begrunnelse: eqNullable(S.Eq),
+});
 
 const eqPersonligOppmøte: Eq<Nullable<PersonligOppmøteType>> = {
     equals: (personligOppmøte1, personligOppmøte2) =>
@@ -215,13 +223,22 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
     const advarselRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
 
+    const initialValues = getInitialFormValues(props.behandling.behandlingsinformasjon.personligOppmøte);
+
+    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
+        Vilkårtype.PersonligOppmøte,
+        (values) => eqFormData.equals(values, initialValues)
+    );
+
     const {
         formState: { isSubmitted, isValid, errors },
         ...form
     } = useForm({
-        defaultValues: getInitialFormValues(props.behandling.behandlingsinformasjon.personligOppmøte),
+        defaultValues: draft ?? initialValues,
         resolver: yupResolver(schema),
     });
+
+    useDraftFormSubscribe(form.watch);
 
     const watch = form.watch();
 
@@ -252,6 +269,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                 props.behandling.behandlingsinformasjon.personligOppmøte
             )
         ) {
+            clearDraft();
             history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             return;
         }
@@ -268,6 +286,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                 },
             },
             () => {
+                clearDraft();
                 history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
             }
         );
@@ -291,6 +310,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
         }
 
         if (erUnderkjent(props.behandling) && erVilkårsvurderingerVurdertAvslag(props.behandling)) {
+            clearDraft();
             return history.push(
                 Routes.saksbehandlingSendTilAttestering.createURL({
                     sakId: props.sakId,
@@ -306,6 +326,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
             ) &&
             !erVilkårsvurderingerVurdertAvslag(props.behandling)
         ) {
+            clearDraft();
             history.push(props.nesteUrl);
             return;
         }
@@ -322,6 +343,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                 },
             },
             (res) => {
+                clearDraft();
                 if (res.status === Behandlingsstatus.VILKÅRSVURDERT_AVSLAG) {
                     history.push(
                         Routes.saksbehandlingSendTilAttestering.createURL({

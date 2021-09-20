@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { UførhetFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UførhetFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { pipe } from '~lib/fp';
@@ -21,6 +22,7 @@ import { eqNullable, Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { UførhetInput } from '~pages/saksbehandling/søknadsbehandling/uførhet/UføreInput';
 import { UføreResultat } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 
 import sharedI18n from '../sharedI18n-nb';
 import sharedStyles from '../sharedStyles.module.less';
@@ -101,10 +103,16 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         [props.behandling.behandlingsinformasjon]
     );
 
+    const { draft, clearDraft, useDraftFormSubscribe } = useSøknadsbehandlingDraftContextFor<FormData>(
+        Vilkårtype.Uførhet,
+        (values) => eqFormData.equals(values, initialFormData)
+    );
+
     const handleSave = (nesteUrl: string) => async (values: FormData) => {
         if (!values.status) return;
 
         if (eqFormData.equals(values, initialFormData)) {
+            clearDraft();
             history.push(nesteUrl);
             return;
         }
@@ -125,6 +133,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                 },
             },
             () => {
+                clearDraft();
                 history.push(nesteUrl);
             }
         );
@@ -134,9 +143,11 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
         formState: { isValid, isSubmitted, errors },
         ...form
     } = useForm({
-        defaultValues: initialFormData,
+        defaultValues: draft ?? initialFormData,
         resolver: yupResolver(schema),
     });
+
+    useDraftFormSubscribe(form.watch);
 
     const watchStatus = form.watch('status');
     useEffect(() => {

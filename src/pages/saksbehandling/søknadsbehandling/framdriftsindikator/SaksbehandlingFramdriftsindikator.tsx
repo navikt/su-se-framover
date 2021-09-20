@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
+import { useSøknadsbehandlingDraftContext } from '~context/søknadsbehandlingDraftContext';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Behandling } from '~types/Behandling';
@@ -32,6 +33,7 @@ const SaksbehandlingFramdriftsindikator = (props: { sakId: string; behandling: B
     const vilkårrekkefølge = mapToVilkårsinformasjon(behandlingsinformasjon);
     const beregningsrekkefølge = vilkårsinformasjonForBeregningssteg(props.behandling);
     const { intl } = useI18n({ messages });
+    const { isDraftDirty } = useSøknadsbehandlingDraftContext();
 
     const vilkårUrl = (vt: Vilkårtype) =>
         Routes.saksbehandlingVilkårsvurdering.createURL({
@@ -45,7 +47,7 @@ const SaksbehandlingFramdriftsindikator = (props: { sakId: string; behandling: B
             id: v.vilkårtype,
             erKlikkbar: v.erStartet,
             label: vilkårTittelFormatted(v.vilkårtype),
-            status: vilkårstatusTilLinjestatus(v.status),
+            status: isDraftDirty(v.vilkårtype) ? Linjestatus.Uferdig : vilkårstatusTilLinjestatus(v.status),
             url: vilkårUrl(v.vilkårtype),
         }));
     };
@@ -58,7 +60,11 @@ const SaksbehandlingFramdriftsindikator = (props: { sakId: string; behandling: B
                     id: Vilkårtype.Virkningstidspunkt,
                     erKlikkbar: props.behandling.stønadsperiode !== null,
                     label: vilkårTittelFormatted(Vilkårtype.Virkningstidspunkt),
-                    status: props.behandling.stønadsperiode ? Linjestatus.Ok : Linjestatus.Ingenting,
+                    status: isDraftDirty(Vilkårtype.Virkningstidspunkt)
+                        ? Linjestatus.Uferdig
+                        : props.behandling.stønadsperiode
+                        ? Linjestatus.Ok
+                        : Linjestatus.Ingenting,
                     url: vilkårUrl(Vilkårtype.Virkningstidspunkt),
                 },
                 {
