@@ -75,9 +75,12 @@ const Gjenoppta = (props: Props) => {
 
     const handleSubmit = async (values: FormData) => {
         const revurderingId = urlParams.revurderingId;
+        if (!values.årsak) {
+            return;
+        }
         const args = {
             sakId: urlParams.sakId,
-            årsak: values.årsak!,
+            årsak: values.årsak,
             begrunnelse: values.begrunnelse,
         };
         const onSuccess = (gjenopptak: Gjenopptak) => {

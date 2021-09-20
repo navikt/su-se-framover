@@ -81,10 +81,14 @@ const Stans = (props: Props) => {
 
     const handleSubmit = async (values: FormData) => {
         const revurderingId = urlParams.revurderingId;
+        if (!values.stansDato || !values.årsak) {
+            return;
+        }
+
         const args = {
             sakId: urlParams.sakId,
-            fraOgMed: values.stansDato!,
-            årsak: values.årsak!,
+            fraOgMed: values.stansDato,
+            årsak: values.årsak,
             begrunnelse: values.begrunnelse,
         };
         const onSuccess = (stansAvYtelse: StansAvYtelse) => {
