@@ -7,7 +7,8 @@ import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Beregningblokk from '~components/revurdering/oppsummering/beregningblokk/Beregningblokk';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/i18n';
-import StansVedtakOppsummering from '~pages/saksbehandling/vedtak/stans/stansvedtaksoppsummering';
+import { Nullable } from '~lib/types';
+import StansOppsummeringsblokk from '~pages/saksbehandling/vedtak/stans/stansvedtaksoppsummering';
 import { Revurdering } from '~types/Revurdering';
 
 import messages from '../stans-nb';
@@ -25,11 +26,11 @@ interface Input {
 interface Props {
     revurdering: Revurdering;
     knapper?: { tilbake?: KnappProps; neste?: KnappProps };
-    error?: ApiError<string>;
+    error?: Nullable<ApiError<string>>;
     inputs: Input[];
 }
 
-const StansOppsummering = (props: Props) => {
+const GenerellStansOppsummering = (props: Props) => {
     const { intl } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const history = useHistory();
 
@@ -37,7 +38,9 @@ const StansOppsummering = (props: Props) => {
 
     return (
         <div className={styles.stansOppsummering}>
-            <StansVedtakOppsummering tittel="Oppsummering" oppsummeringsinput={inputs} />
+            <div className={styles.oppsummering}>
+                <StansOppsummeringsblokk tittel="Oppsummering" oppsummeringsinput={inputs} />
+            </div>
             <Beregningblokk revurdering={revurdering} />
             {error && (
                 <div className={styles.error}>
@@ -45,7 +48,7 @@ const StansOppsummering = (props: Props) => {
                 </div>
             )}
             <div className={styles.iverksett}>
-                <Knapp spinner={knapper?.neste?.spinner} onClick={knapper?.tilbake?.onClick ?? history.goBack}>
+                <Knapp spinner={knapper?.tilbake?.spinner} onClick={knapper?.tilbake?.onClick ?? history.goBack}>
                     {knapper?.tilbake?.tekst ?? intl.formatMessage({ id: 'stans.bunnknapper.tilbake' })}
                 </Knapp>
                 {knapper?.neste && (
@@ -58,4 +61,4 @@ const StansOppsummering = (props: Props) => {
     );
 };
 
-export default StansOppsummering;
+export default GenerellStansOppsummering;

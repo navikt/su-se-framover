@@ -12,7 +12,7 @@ interface Props {
     tittel: string;
     oppsummeringsinput: Array<{ label: string; verdi: string }>;
 }
-const StansVedtakOppsummering = (props: Props) => {
+const StansOppsummeringsblokk = (props: Props) => {
     return (
         <Oppsummeringspanel ikon={Oppsummeringsikon.Liste} farge={Oppsummeringsfarge.Lilla} tittel={props.tittel}>
             <div className={styles.container}>
@@ -26,4 +26,4 @@ const StansVedtakOppsummering = (props: Props) => {
         </Oppsummeringspanel>
     );
 };
-export default StansVedtakOppsummering;
+export default StansOppsummeringsblokk;
