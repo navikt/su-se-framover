@@ -61,7 +61,7 @@ export const opprettStans = createAsyncThunk<
     },
     { rejectValue: ApiError }
 >('revurdering/opprettStans', async ({ sakId, fraOgMed, årsak, begrunnelse }, thunkApi) => {
-    const res = await revurderingApi.opprettStans(sakId, fraOgMed, årsak, begrunnelse);
+    const res = await revurderingApi.opprettStans({ sakId, fraOgMed, årsak, begrunnelse });
     if (res.status === 'ok') {
         return res.data;
     }
@@ -79,7 +79,7 @@ export const oppdaterStans = createAsyncThunk<
     },
     { rejectValue: ApiError }
 >('revurdering/oppdaterStans', async ({ sakId, revurderingId, fraOgMed, årsak, begrunnelse }, thunkApi) => {
-    const res = await revurderingApi.oppdaterStans(sakId, revurderingId, fraOgMed, årsak, begrunnelse);
+    const res = await revurderingApi.oppdaterStans({ sakId, revurderingId, fraOgMed, årsak, begrunnelse });
     if (res.status === 'ok') {
         return res.data;
     }

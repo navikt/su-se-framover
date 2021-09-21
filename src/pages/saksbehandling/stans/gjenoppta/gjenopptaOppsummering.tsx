@@ -14,7 +14,7 @@ import { RevurderingsStatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { getRevurderingsårsakMessageId } from '~utils/revurdering/revurderingUtils';
 
-import StansOppsummeringskomponent from '../components/stansoppsummering';
+import StansOppsummeringskomponent from '../components/StansOppsummeringskomponent';
 
 import messages from './gjenoppta-nb';
 

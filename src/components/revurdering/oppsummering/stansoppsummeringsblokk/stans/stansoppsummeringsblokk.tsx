@@ -6,7 +6,7 @@ import Oppsummeringspanel, {
     Oppsummeringsikon,
 } from '~components/revurdering/oppsummering/oppsummeringspanel/Oppsummeringspanel';
 
-import styles from './stansvedtaksoppsummering.module.less';
+import styles from './stansoppsummeringsblokk.module.less';
 
 interface Props {
     tittel: string;

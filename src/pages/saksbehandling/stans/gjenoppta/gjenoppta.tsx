@@ -22,7 +22,7 @@ import { getRevurderingsårsakMessageId } from '~utils/revurdering/revurderingUt
 
 import messages from './gjenoppta-nb';
 import styles from './gjenoppta.module.less';
-import GjenopptaOppsummering from './gjenopptaksoppsummering';
+import GjenopptaOppsummering from './gjenopptaOppsummering';
 
 interface Props {
     sak: Sak;

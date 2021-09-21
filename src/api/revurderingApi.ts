@@ -43,37 +43,37 @@ export async function opprettRevurdering(
     });
 }
 
-export async function opprettStans(
-    sakId: string,
-    fraOgMed: Date,
-    årsak: OpprettetRevurderingGrunn,
-    begrunnelse: string
-): Promise<ApiClientResult<StansAvYtelse>> {
+export async function opprettStans(args: {
+    sakId: string;
+    fraOgMed: Date;
+    årsak: OpprettetRevurderingGrunn;
+    begrunnelse: string;
+}): Promise<ApiClientResult<StansAvYtelse>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/stans`,
+        url: `/saker/${args.sakId}/revurderinger/stans`,
         method: 'POST',
         body: {
-            fraOgMed: formatISO(fraOgMed, { representation: 'date' }),
-            årsak: årsak,
-            begrunnelse: begrunnelse,
+            fraOgMed: formatISO(args.fraOgMed, { representation: 'date' }),
+            årsak: args.årsak,
+            begrunnelse: args.begrunnelse,
         },
     });
 }
 
-export async function oppdaterStans(
-    sakId: string,
-    revurderingId: string,
-    fraOgMed: Date,
-    årsak: OpprettetRevurderingGrunn,
-    begrunnelse: string
-): Promise<ApiClientResult<StansAvYtelse>> {
+export async function oppdaterStans(args: {
+    sakId: string;
+    revurderingId: string;
+    fraOgMed: Date;
+    årsak: OpprettetRevurderingGrunn;
+    begrunnelse: string;
+}): Promise<ApiClientResult<StansAvYtelse>> {
     return apiClient({
-        url: `/saker/${sakId}/revurderinger/stans/${revurderingId}`,
+        url: `/saker/${args.sakId}/revurderinger/stans/${args.revurderingId}`,
         method: 'PATCH',
         body: {
-            fraOgMed: formatISO(fraOgMed, { representation: 'date' }),
-            årsak: årsak,
-            begrunnelse: begrunnelse,
+            fraOgMed: formatISO(args.fraOgMed, { representation: 'date' }),
+            årsak: args.årsak,
+            begrunnelse: args.begrunnelse,
         },
     });
 }
