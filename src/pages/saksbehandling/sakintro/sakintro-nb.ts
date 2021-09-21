@@ -42,7 +42,7 @@ export default {
     'display.søknad.lukket.ukjentLukking': 'Ukjent lukking',
     'display.søknad.lukkSøknad': 'Lukk søknad',
     'display.søknad.mottatt': 'Mottatt',
-    'display.søknad.typeSøknad': 'Førstegangssøknad',
+    'display.søknad.typeSøknad': 'Søknad',
 
     'display.utbetalinger.tittel': 'Utbetalinger',
 
