@@ -17,6 +17,8 @@ import { RevurderingsStatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { getRevurderingsårsakMessageId } from '~utils/revurdering/revurderingUtils';
 
+import StansVedtakOppsummering from '../vedtak/stans/stansvedtaksoppsummering';
+
 import messages from './stans-nb';
 import styles from './stans.module.less';
 
@@ -41,16 +43,22 @@ const StansOppsummering = (props: Props) => {
 
     return (
         <div className={styles.stansOppsummering}>
+            <StansVedtakOppsummering
+                tittel="Oppsummering"
+                oppsummeringsinput={[
+                    {
+                        label: intl.formatMessage({ id: 'stans.årsak.tittel' }),
+                        verdi: intl.formatMessage({
+                            id: getRevurderingsårsakMessageId(revurdering.årsak),
+                        }),
+                    },
+                    {
+                        label: intl.formatMessage({ id: 'stans.begrunnelse.tittel' }),
+                        verdi: revurdering.begrunnelse ?? '',
+                    },
+                ]}
+            />
             <Beregningblokk revurdering={revurdering} />
-            <p>
-                {intl.formatMessage({ id: 'stans.årsak.tittel' })}:{' '}
-                {intl.formatMessage({
-                    id: getRevurderingsårsakMessageId(revurdering.årsak),
-                })}
-            </p>
-            <p>
-                {intl.formatMessage({ id: 'stans.begrunnelse.tittel' })}: {revurdering.begrunnelse}
-            </p>
             {error && (
                 <div className={styles.error}>
                     <ApiErrorAlert error={error} />
