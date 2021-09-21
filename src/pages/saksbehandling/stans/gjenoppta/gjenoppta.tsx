@@ -141,7 +141,7 @@ const Gjenoppta = (props: Props) => {
                                         name="begrunnelse"
                                         value={field.value}
                                         onChange={field.onChange}
-                                        feil={fieldState.error}
+                                        feil={fieldState.error?.message}
                                     />
                                 )}
                             />
