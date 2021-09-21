@@ -67,4 +67,22 @@ export default {
     'brev.kunne.ikke.lage': 'Kunne ikke lage brevutkast',
 
     'stans.iverksett.ugyldig.tilstand': 'Kan ikke stanse utbetalinger som allerede er stanset',
+    'stans.simulering.kontroll.feil': 'Feil ved kontroll av simulering',
+    'stans.oppdrag.sending.feilet': 'Sending av utbetaling til oppdrag feilet',
+    'stans.simulering.feil': 'Feil ved simulering av stans',
+    'stans.opprett.kunne.ikke': 'Kunne ikke opprette revurdering',
+    'stans.oppdater.ugyldig.type':
+        'kunne ikke oppdatere revurdering for stans, eksisterende revurdering er av feil type',
+
+    'gjenopptak.iverksett.ugyldig.tilstand': 'Kan ikke gjenoppta utbetalinger som allerede er gjenopptatt',
+    'gjenopptak.ingen.tidligere.vedtak':
+        'Kan ikke opprette revurdering for gjenopptak av utbetaling uten tidligere vedtak',
+    'gjenopptak.oppdatering.ugyldig.type':
+        'Kunne ikke oppdatere revurdering for gjenopptak, eksisterende revurdering er av feil type',
+    'gjenopptak.opprett.kunne.ikke': 'Kunne ikke opprette revurdering',
+    'gjenopptak.simulering.feil': 'Feil ved simulering av gjenopptak',
+    'gjenopptak.oppdrag.sending.feilet': 'Sending av utbetaling til oppdrag feilet',
+    'gjenopptak.simulering.kontroll.feilet': 'Feil ved kontroll av simulering',
+    'gjenopptak.siste.vedtak.ikke.stans':
+        'Kan ikke opprette revurdering for gjenopptak av ytelse, siste vedtak er ikke en gjenopptak',
 };

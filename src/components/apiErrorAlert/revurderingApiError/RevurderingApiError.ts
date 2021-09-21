@@ -28,7 +28,8 @@ export type RevurderingErrorCodes =
     | Forhåndsvarsling
     | UtfallSomIkkeStøttes
     | Brev
-    | Stans;
+    | Stans
+    | Gjenopptak;
 
 type VilkårErrorCodes = OpprettelseOgOppdatering | Uføre | Bosituasjon | Formue | Fradrag;
 
@@ -117,6 +118,22 @@ enum Brev {
 
 enum Stans {
     KUNNE_IKKE_IVERKSETTE_STANS_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_stans_ugyldig_tilstand',
+    FEIL_VED_KONTROLL_AV_SIMULERING = 'feil_ved_kontroll_av_simulering',
+    SENDING_TIL_OPPDRAG_FEILET = 'sending_til_oppdrag_feilet',
+    FEIL_VED_SIMULERING_AV_STANS = 'feil_ved_simulering_av_stans',
+    KUNNE_IKKE_OPPRETTE_REVURDERING = 'kunne_ikke_opprette_revurdering',
+    UGYLDIG_TYPE_FOR_OPPDATERING_AV_STANS = 'ugyldig_type_for_oppdatering_av_stans',
+}
+
+enum Gjenopptak {
+    KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_gjenopptak_ugyldig_tilstand',
+    INGEN_TIDLIGERE_VEDTAK = 'ingen_tidligere_vedtak',
+    UGYLDIG_TYPE_FOR_OPPDATERING_AV_GJENOPPTAK = 'ugyldig_type_for_oppdatering_av_gjenopptak',
+    KUNNE_IKKE_OPPRETTE_REVURDERING = 'kunne_ikke_opprette_revurdering',
+    FEIL_VED_SIMULERING_AV_GJENOPPTAK = 'feil_ved_simulering_av_gjenopptak',
+    SENDING_TIL_OPPDRAG_FEILET = 'sending_til_oppdrag_feilet',
+    FEIL_VED_KONTROLL_AV_SIMULERING = 'feil_ved_kontroll_av_simulering',
+    SISTE_VEDTAK_IKKE_STANS = 'siste_vedtak_ikke_stans',
 }
 
 const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof typeof messages | undefined } = {
@@ -187,4 +204,18 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof 
     [Brev.KUNNE_IKKE_LAGE_BREV]: 'brev.kunne.ikke.lage',
 
     [Stans.KUNNE_IKKE_IVERKSETTE_STANS_UGYLDIG_TILSTAND]: 'stans.iverksett.ugyldig.tilstand',
+    [Stans.FEIL_VED_KONTROLL_AV_SIMULERING]: 'stans.simulering.kontroll.feil',
+    [Stans.FEIL_VED_SIMULERING_AV_STANS]: 'stans.simulering.feil',
+    [Stans.KUNNE_IKKE_OPPRETTE_REVURDERING]: 'stans.opprett.kunne.ikke',
+    [Stans.SENDING_TIL_OPPDRAG_FEILET]: 'stans.oppdrag.sending.feilet',
+    [Stans.UGYLDIG_TYPE_FOR_OPPDATERING_AV_STANS]: 'stans.oppdater.ugyldig.type',
+
+    [Gjenopptak.KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND]: 'gjenopptak.iverksett.ugyldig.tilstand',
+    [Gjenopptak.INGEN_TIDLIGERE_VEDTAK]: 'gjenopptak.ingen.tidligere.vedtak',
+    [Gjenopptak.UGYLDIG_TYPE_FOR_OPPDATERING_AV_GJENOPPTAK]: 'gjenopptak.oppdatering.ugyldig.type',
+    [Gjenopptak.KUNNE_IKKE_OPPRETTE_REVURDERING]: 'gjenopptak.opprett.kunne.ikke',
+    [Gjenopptak.FEIL_VED_SIMULERING_AV_GJENOPPTAK]: 'gjenopptak.simulering.feil',
+    [Gjenopptak.SENDING_TIL_OPPDRAG_FEILET]: 'gjenopptak.oppdrag.sending.feilet',
+    [Gjenopptak.FEIL_VED_KONTROLL_AV_SIMULERING]: 'gjenopptak.simulering.kontroll.feilet',
+    [Gjenopptak.SISTE_VEDTAK_IKKE_STANS]: 'gjenopptak.siste.vedtak.ikke.stans',
 };
