@@ -102,8 +102,8 @@ const Gjenoppta = (props: Props) => {
                 <Route path={Routes.gjenopptaStansOppsummeringRoute.path}>
                     <GjenopptaOppsummering sak={props.sak} />
                 </Route>
-                <form onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
-                    <div className={styles.container}>
+                <div className={styles.container}>
+                    <form onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
                         <div className={styles.select}>
                             <Label htmlFor="årsak"> {intl.formatMessage({ id: 'gjenoppta.årsak.tittel' })}</Label>
                             <Controller
@@ -164,8 +164,8 @@ const Gjenoppta = (props: Props) => {
                                 {intl.formatMessage({ id: 'gjenoppta.oppsummering.iverksett' })}
                             </Knapp>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </Switch>
         </>
     );

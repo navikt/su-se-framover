@@ -30,7 +30,7 @@ interface Props {
     inputs: Input[];
 }
 
-const GenerellStansOppsummering = (props: Props) => {
+const StansOppsummeringskomponent = (props: Props) => {
     const { intl } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const history = useHistory();
 
@@ -61,4 +61,4 @@ const GenerellStansOppsummering = (props: Props) => {
     );
 };
 
-export default GenerellStansOppsummering;
+export default StansOppsummeringskomponent;

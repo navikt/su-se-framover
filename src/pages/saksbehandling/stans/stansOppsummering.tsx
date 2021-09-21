@@ -14,7 +14,7 @@ import { RevurderingsStatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { getRevurderingsårsakMessageId } from '~utils/revurdering/revurderingUtils';
 
-import GenerellStansOppsummering from './components/stansoppsummering';
+import StansOppsummeringskomponent from './components/stansoppsummering';
 import messages from './stans-nb';
 
 interface Props {
@@ -57,11 +57,11 @@ const StansOppsummering = (props: Props) => {
     const erIverksatt = revurdering.status === RevurderingsStatus.IVERKSATT_STANS;
 
     if (erIverksatt) {
-        return <GenerellStansOppsummering revurdering={revurdering} inputs={oppsummeringsinputs} />;
+        return <StansOppsummeringskomponent revurdering={revurdering} inputs={oppsummeringsinputs} />;
     }
 
     return (
-        <GenerellStansOppsummering
+        <StansOppsummeringskomponent
             revurdering={revurdering}
             inputs={oppsummeringsinputs}
             error={error}
