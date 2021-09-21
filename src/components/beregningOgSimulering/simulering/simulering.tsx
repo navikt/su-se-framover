@@ -1,9 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
-import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Systemtittel, Element } from 'nav-frontend-typografi';
 import React from 'react';
@@ -84,9 +84,7 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                             );
                         }),
                         Option.getOrElse(() => (
-                            <AlertStripeAdvarsel>
-                                {intl.formatMessage({ id: 'feil.manglerPerioder' })}
-                            </AlertStripeAdvarsel>
+                            <Alert variant="warning">{intl.formatMessage({ id: 'feil.manglerPerioder' })}</Alert>
                         ))
                     );
                 })

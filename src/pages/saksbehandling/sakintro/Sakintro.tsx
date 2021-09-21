@@ -1,8 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { isEmpty, last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
-import AlertStripe, { AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { EtikettInfo } from 'nav-frontend-etiketter';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
@@ -55,9 +55,7 @@ import styles from './sakintro.module.less';
 const SuksessStatuser = (props: { locationState: Nullable<Routes.SuccessNotificationState> }) => {
     return (
         <div className={styles.suksessStatuserContainer}>
-            {props.locationState?.notification && (
-                <AlertStripeSuksess>{props.locationState.notification}</AlertStripeSuksess>
-            )}
+            {props.locationState?.notification && <Alert variant="success">{props.locationState.notification}</Alert>}
         </div>
     );
 };
@@ -504,11 +502,11 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                 </Link>
             </div>
             {RemoteData.isFailure(request) && (
-                <AlertStripe className={styles.feil} type="feil">
+                <Alert className={styles.feil} variant="error">
                     {props.intl.formatMessage({
                         id: requestErrorMessageFormatted(request),
                     })}
-                </AlertStripe>
+                </Alert>
             )}
         </div>
     );

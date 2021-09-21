@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Søkeknapp } from 'nav-frontend-ikonknapper';
 import { Input, Label, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -126,13 +126,13 @@ const Personsøk = (props: PersonsøkProps) => {
                             () => null,
                             () => <NavFrontendSpinner />,
                             (err) => (
-                                <AlertStripe type="feil">
+                                <Alert variant="error">
                                     {err.statusCode === ErrorCode.Unauthorized
                                         ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
                                         : err.statusCode === ErrorCode.NotFound
                                         ? intl.formatMessage({ id: 'feilmelding.ikkeFunnet' })
                                         : intl.formatMessage({ id: 'feilmelding.ukjent' })}
-                                </AlertStripe>
+                                </Alert>
                             ),
                             (s) => <Personkort person={s} />
                         )

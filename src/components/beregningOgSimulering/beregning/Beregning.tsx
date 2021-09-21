@@ -1,4 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import { formatISO } from 'date-fns';
 import { FormikHelpers, useFormik } from 'formik';
 import { getEq } from 'fp-ts/Array';
@@ -7,7 +8,6 @@ import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 import { pipe } from 'fp-ts/lib/function';
 import * as S from 'fp-ts/lib/string';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -314,7 +314,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             </Hovedknapp>
 
                             {props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG && (
-                                <AlertStripe type="advarsel" className={styles.avslagadvarsel}>
+                                <Alert variant="warning" className={styles.avslagadvarsel}>
                                     {intl.formatMessage({
                                         id:
                                             props.behandling.beregning &&
@@ -322,7 +322,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                                 ? 'beregning.nullutbetalingIStartEllerSlutt'
                                                 : 'beregning.førerTilAvslag',
                                     })}
-                                </AlertStripe>
+                                </Alert>
                             )}
                         </div>
 
@@ -330,9 +330,9 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             <ApiErrorAlert error={lagrefradragogberegnstatus.error} />
                         )}
                         {needsBeregning && (
-                            <AlertStripe type="advarsel">
+                            <Alert variant="warning">
                                 {intl.formatMessage({ id: 'alert.advarsel.kjørBeregningFørst' })}
-                            </AlertStripe>
+                            </Alert>
                         )}
                         {pipe(
                             simuleringStatus,

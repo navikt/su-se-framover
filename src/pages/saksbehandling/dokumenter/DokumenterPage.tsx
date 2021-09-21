@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { FileContent } from '@navikt/ds-icons';
+import { Alert } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { LenkepanelBase } from 'nav-frontend-lenkepanel';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -65,11 +65,11 @@ const DokumenterPage = (props: { sak: Sak }) => {
                             () => <NavFrontendSpinner />,
                             () => <NavFrontendSpinner />,
                             (err) => (
-                                <AlertStripeFeil>{err?.body?.message ?? formatMessage('feil.ukjent')}</AlertStripeFeil>
+                                <Alert variant="error">{err?.body?.message ?? formatMessage('feil.ukjent')}</Alert>
                             ),
                             (dokumenter) =>
                                 dokumenter.length === 0 ? (
-                                    <AlertStripeFeil>{formatMessage('feil.ingenBrev')}</AlertStripeFeil>
+                                    <Alert variant="error">{formatMessage('feil.ingenBrev')}</Alert>
                                 ) : (
                                     <ol className={styles.dokumentliste}>
                                         {dokumenter.map((d) => (

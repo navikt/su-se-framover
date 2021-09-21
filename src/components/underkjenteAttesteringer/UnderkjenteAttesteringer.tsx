@@ -1,4 +1,4 @@
-import AlertStripe from 'nav-frontend-alertstriper';
+import { Alert } from '@navikt/ds-react';
 import { Element, Normaltekst } from 'nav-frontend-typografi';
 import React from 'react';
 
@@ -20,9 +20,9 @@ const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
     return (
         <div>
             {underkjenteAttesteringer.length > 0 && (
-                <AlertStripe type="advarsel" form="inline" className={styles.ikon}>
+                <Alert variant="warning" inline className={styles.ikon}>
                     {formatMessage('underkjent.sendtTilbakeFraAttestering')}
-                </AlertStripe>
+                </Alert>
             )}
             <table className={styles.tabell}>
                 <thead>

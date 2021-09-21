@@ -1,4 +1,4 @@
-import AlertStripe from 'nav-frontend-alertstriper';
+import { Alert } from '@navikt/ds-react';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
@@ -90,7 +90,7 @@ export const FastOppholdVilkårsblokk = (props: VilkårsblokkProps<'fastOppholdI
             søknadfaktablokk={<FastOppholdFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
                 props.behandlingsinformasjon === null ? (
-                    <AlertStripe type="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</AlertStripe>
+                    <Alert variant="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</Alert>
                 ) : (
                     <Faktablokk
                         tittel={intl.formatMessage({ id: 'display.fraSaksbehandling' })}

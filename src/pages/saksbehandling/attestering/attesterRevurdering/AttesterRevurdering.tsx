@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import { AlertStripeAdvarsel, AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { RadioPanelGruppe, Textarea, Select } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -148,7 +148,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     if (!revurdering) {
         return (
             <div className={styles.advarselContainer}>
-                <AlertStripeFeil>{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</AlertStripeFeil>
+                <Alert variant="error">{intl.formatMessage({ id: 'feil.fantIkkeRevurdering' })}</Alert>
             </div>
         );
     }
@@ -156,7 +156,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     if (!erRevurderingTilAttestering(revurdering)) {
         return (
             <div className={styles.advarselContainer}>
-                <AlertStripeFeil>{intl.formatMessage({ id: 'feil.ikkeTilAttestering' })}</AlertStripeFeil>
+                <Alert variant="error">{intl.formatMessage({ id: 'feil.ikkeTilAttestering' })}</Alert>
             </div>
         );
     }
@@ -201,16 +201,14 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                                 </Knapp>
                             )}
                             {RemoteData.isFailure(hentPdfStatus) && (
-                                <AlertStripeFeil className={styles.brevFeil}>
+                                <Alert variant="error" className={styles.brevFeil}>
                                     {intl.formatMessage({ id: 'feil.klarteIkkeHenteBrev' })}
-                                </AlertStripeFeil>
+                                </Alert>
                             )}
 
                             {revurdering.status === RevurderingsStatus.TIL_ATTESTERING_OPPHØRT && (
                                 <div className={styles.opphørsadvarsel}>
-                                    <AlertStripeAdvarsel>
-                                        {intl.formatMessage({ id: 'info.opphør' })}
-                                    </AlertStripeAdvarsel>
+                                    <Alert variant="warning">{intl.formatMessage({ id: 'info.opphør' })}</Alert>
                                 </div>
                             )}
 

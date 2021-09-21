@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { AlertStripeFeil, AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import { Flatknapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -34,10 +34,10 @@ const Restanser = () => {
         RemoteData.fold(
             () => <NavFrontendSpinner />,
             () => <NavFrontendSpinner />,
-            () => <AlertStripeFeil>{formatMessage('feil.feilOppstod')}</AlertStripeFeil>,
+            () => <Alert variant="error">{formatMessage('feil.feilOppstod')}</Alert>,
             (restanser: Restans[]) => {
                 if (restanser.length === 0) {
-                    return <AlertStripeSuksess>{formatMessage('restans.ingenRestanser')}</AlertStripeSuksess>;
+                    return <Alert variant="success">{formatMessage('restans.ingenRestanser')}</Alert>;
                 }
                 return (
                     <Ekspanderbartpanel tittel={formatMessage('åpne.behandlinger.overskrift')}>
@@ -78,7 +78,7 @@ const KnappOgStatus = (props: { saksnummer: string }) => {
                 {formatMessage('sak.seSak')}
             </Flatknapp>
             {RemoteData.isFailure(hentSakStatus) && (
-                <AlertStripeFeil>{formatMessage('feil.sak.kunneIkkeHente')}</AlertStripeFeil>
+                <Alert variant="error">{formatMessage('feil.sak.kunneIkkeHente')}</Alert>
             )}
         </div>
     );

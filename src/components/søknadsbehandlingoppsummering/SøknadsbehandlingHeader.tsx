@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import { last } from 'fp-ts/lib/Array';
 import { isSome } from 'fp-ts/lib/Option';
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Element } from 'nav-frontend-typografi';
 import React from 'react';
@@ -146,10 +146,10 @@ const Tilleggsinfo = (props: {
             </div>
             <div className={styles.brevutkastFeil}>
                 {RemoteData.isFailure(lastNedBrevStatus) && (
-                    <AlertStripeFeil>
+                    <Alert variant="error">
                         {lastNedBrevStatus.error?.body?.message ??
                             props.intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
-                    </AlertStripeFeil>
+                    </Alert>
                 )}
             </div>
         </div>

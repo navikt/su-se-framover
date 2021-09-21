@@ -1,5 +1,5 @@
+import { Alert } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
 import Input from 'nav-frontend-skjema/lib/input';
 import * as React from 'react';
@@ -120,9 +120,9 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     }
                 />
                 {formik.values.erFlyktning === false && (
-                    <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
+                    <Alert variant="warning" className={sharedStyles.marginBottom}>
                         {formatMessage('flyktning.måVæreFlyktning')}
-                    </AlertStripe>
+                    </Alert>
                 )}
                 <JaNeiSpørsmål
                     id={keyOf<FormData>('erNorskStatsborger')}
@@ -182,15 +182,15 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     />
                 )}
                 {formik.values.harOppholdstillatelse === false && (
-                    <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
+                    <Alert variant="warning" className={sharedStyles.marginBottom}>
                         {formatMessage('oppholdstillatelse.ikkeLovligOpphold')}
-                    </AlertStripe>
+                    </Alert>
                 )}
 
                 {formik.values.typeOppholdstillatelse === 'midlertidig' && (
-                    <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
+                    <Alert variant="warning" className={sharedStyles.marginBottom}>
                         {formatMessage('oppholdstillatelse.midlertidig.info')}
-                    </AlertStripe>
+                    </Alert>
                 )}
 
                 <JaNeiSpørsmål

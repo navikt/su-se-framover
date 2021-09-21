@@ -1,9 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
+import { Alert } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
-import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
 import { Feiloppsummering, Input } from 'nav-frontend-skjema';
@@ -89,11 +89,13 @@ const uføregrunnlagFormDataSchema = (erGRegulering: boolean) =>
     });
 
 const schema = (erGRegulering: boolean) =>
-    yup.object<FormData>({
-        grunnlag: yup
-            .array(uføregrunnlagFormDataSchema(erGRegulering).required())
-            .required('Du må legge inn minst én periode'),
-    });
+    yup
+        .object<FormData>({
+            grunnlag: yup
+                .array(uføregrunnlagFormDataSchema(erGRegulering).required())
+                .required('Du må legge inn minst én periode'),
+        })
+        .required();
 
 const vurderingsperiodeTilFormData = (u: VurderingsperiodeUføre): UføregrunnlagFormData => ({
     id: uuid(),
@@ -405,9 +407,9 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                 innerRef={feiloppsummeringRef}
             />
             {isSubmitted && harOverlappendePerioder && (
-                <AlertStripeAdvarsel className={styles.feiloppsummering}>
+                <Alert variant="warning" className={styles.feiloppsummering}>
                     {formatMessage('feil.overlappendePerioder')}
-                </AlertStripeAdvarsel>
+                </Alert>
             )}
             {RemoteData.isFailure(savingState) && <ApiErrorAlert error={savingState.error} />}
             {RemoteData.isSuccess(savingState) && (

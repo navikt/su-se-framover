@@ -1,8 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Alert } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/lib/string';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useMemo, useRef } from 'react';
@@ -226,9 +226,9 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                         )}
 
                         {vilGiTidligAvslag && (
-                            <AlertStripe className={sharedStyles.avslagAdvarsel} type="info">
+                            <Alert className={sharedStyles.avslagAdvarsel} variant="info">
                                 {formatMessage('display.avslag.advarsel')}
-                            </AlertStripe>
+                            </Alert>
                         )}
 
                         <Feiloppsummering

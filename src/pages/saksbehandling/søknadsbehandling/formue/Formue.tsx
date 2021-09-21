@@ -1,8 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Alert } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import { startOfMonth } from 'date-fns/esm';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import ModalWrapper from 'nav-frontend-modal';
 import { Input, Textarea, Checkbox, RadioGruppe, Radio, Feiloppsummering, SkjemaGruppe } from 'nav-frontend-skjema';
@@ -70,35 +70,37 @@ const VerdierSchema: yup.ObjectSchema<VerdierFormData | undefined> = yup.object<
     depositumskonto: validateStringAsNonNegativeNumber('Depositumskontoverdi'),
 });
 
-const schema = yup.object<FormueFormData>({
-    status: yup
-        .mixed()
-        .required()
-        .oneOf([FormueStatus.VilkårOppfylt, FormueStatus.MåInnhenteMerInformasjon, FormueStatus.VilkårIkkeOppfylt]),
-    verdier: VerdierSchema.required(),
-    epsVerdier: yup
-        .object<VerdierFormData>()
-        .when('borSøkerMedEPS', {
+const schema = yup
+    .object<FormueFormData>({
+        status: yup
+            .mixed()
+            .required()
+            .oneOf([FormueStatus.VilkårOppfylt, FormueStatus.MåInnhenteMerInformasjon, FormueStatus.VilkårIkkeOppfylt]),
+        verdier: VerdierSchema.required(),
+        epsVerdier: yup
+            .object<VerdierFormData>()
+            .when('borSøkerMedEPS', {
+                is: true,
+                then: VerdierSchema.required('Du må legge inn ektefelle/samboers formue'),
+                otherwise: yup.object().nullable().defined(),
+            })
+            .defined(),
+        begrunnelse: yup.string().defined(),
+        borSøkerMedEPS: yup
+            .boolean()
+            .required('Du må velge om søker bor med en ektefelle eller samboer')
+            .typeError('Feltet må fylles ut'),
+        epsFnr: yup.mixed<string>().when('borSøkerMedEPS', {
             is: true,
-            then: VerdierSchema.required('Du må legge inn ektefelle/samboers formue'),
-            otherwise: yup.object().nullable().defined(),
-        })
-        .defined(),
-    begrunnelse: yup.string().defined(),
-    borSøkerMedEPS: yup
-        .boolean()
-        .required('Du må velge om søker bor med en ektefelle eller samboer')
-        .typeError('Feltet må fylles ut'),
-    epsFnr: yup.mixed<string>().when('borSøkerMedEPS', {
-        is: true,
-        then: yup
-            .mixed<string>()
-            .required('Du må legge inn ektefelle/samboers fødselsnummer')
-            .test('erGyldigFnr', 'Du må legge inn et gyldig fødselsnummer', (fnr) => {
-                return fnr && fnrValidator.fnr(fnr).status === 'valid';
-            }),
-    }),
-});
+            then: yup
+                .mixed<string>()
+                .required('Du må legge inn ektefelle/samboers fødselsnummer')
+                .test('erGyldigFnr', 'Du må legge inn et gyldig fødselsnummer', (fnr) => {
+                    return fnr && fnrValidator.fnr(fnr).status === 'valid';
+                }),
+        }),
+    })
+    .required();
 
 enum Hvem {
     Søker = 'søker',
@@ -339,7 +341,7 @@ const Formue = (props: {
                                                     () => null,
                                                     () => <NavFrontendSpinner />,
                                                     (err) => (
-                                                        <AlertStripe type="feil">
+                                                        <Alert variant="error">
                                                             {err?.statusCode === ErrorCode.Unauthorized ? (
                                                                 <ModalWrapper
                                                                     isOpen={true}
@@ -376,7 +378,7 @@ const Formue = (props: {
                                                             ) : (
                                                                 formatMessage('feilmelding.ukjent')
                                                             )}
-                                                        </AlertStripe>
+                                                        </Alert>
                                                     ),
                                                     (person) => <Personkort person={person} />
                                                 )

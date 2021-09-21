@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import AlertStripe from 'nav-frontend-alertstriper';
+import { Alert } from '@navikt/ds-react';
 import { Knapp } from 'nav-frontend-knapper';
 import ModalWrapper from 'nav-frontend-modal';
 import 'nav-frontend-tabell-style';
@@ -133,13 +133,13 @@ const Drift = () => {
                 <h1 className={styles.header}>Status</h1>
                 <div className={styles.statusContainer}>
                     {RemoteData.isSuccess(statusBakover) ? (
-                        <AlertStripe className={styles.alert} type="suksess">
+                        <Alert className={styles.alert} variant="success">
                             Bakover er oppe
-                        </AlertStripe>
+                        </Alert>
                     ) : (
-                        <AlertStripe className={styles.alert} type="feil">
+                        <Alert className={styles.alert} variant="error">
                             Bakover er nede
-                        </AlertStripe>
+                        </Alert>
                     )}
                 </div>
             </div>
@@ -202,13 +202,13 @@ const Drift = () => {
                     </ModalWrapper>
                 </div>
                 {RemoteData.isFailure(fixSøknaderResponse) && (
-                    <AlertStripe className={styles.alert} type="feil">
+                    <Alert className={styles.alert} variant="error">
                         <p>Fix Søknader feilet</p>
                         {fixSøknaderResponse.error.statusCode}
                         <p>
                             {fixSøknaderResponse.error.body?.message ?? JSON.stringify(fixSøknaderResponse.error.body)}
                         </p>
-                    </AlertStripe>
+                    </Alert>
                 )}
                 <div className={styles.tabellContainer}>
                     {RemoteData.isSuccess(fixSøknaderResponse) && (
@@ -217,9 +217,9 @@ const Drift = () => {
                         </div>
                     )}
                     {RemoteData.isSuccess(konsistensavstemmingStatus) && (
-                        <AlertStripe className={styles.alert} type="suksess">
+                        <Alert className={styles.alert} variant="success">
                             <p>{JSON.stringify(konsistensavstemmingStatus.value)}</p>
-                        </AlertStripe>
+                        </Alert>
                     )}
                 </div>
             </div>

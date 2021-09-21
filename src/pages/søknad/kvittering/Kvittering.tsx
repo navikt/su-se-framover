@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import AlertStripe, { AlertStripeInfo } from 'nav-frontend-alertstriper';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst, Undertittel, Element, Systemtittel } from 'nav-frontend-typografi';
@@ -57,9 +57,9 @@ const Kvittering = () => {
     const VisFeil = () => (
         <IntlProvider locale="nb" messages={messages}>
             <div className={styles.feilContainer}>
-                <AlertStripe type="feil">
+                <Alert variant="error">
                     <FormattedMessage id="feil.feilOppsto" />
-                </AlertStripe>
+                </Alert>
 
                 <div className={styles.nySøknadKnapp}>
                     <Knapp onClick={() => handleAvsluttSøknad(null)}>
@@ -98,7 +98,7 @@ const Kvittering = () => {
                                 <div>
                                     <div className={styles.suksessContainer}>
                                         <div>
-                                            <AlertStripe type="suksess">
+                                            <Alert variant="success">
                                                 <Normaltekst>
                                                     <FormattedMessage id="kvittering.søknadMottatt" />
                                                 </Normaltekst>
@@ -110,7 +110,7 @@ const Kvittering = () => {
                                                         }}
                                                     />
                                                 </Normaltekst>
-                                            </AlertStripe>
+                                            </Alert>
 
                                             <div className={styles.tilVeileder}>
                                                 <Undertittel tag="h3">
@@ -131,7 +131,7 @@ const Kvittering = () => {
                                         </div>
 
                                         <div className={styles.infoContainer}>
-                                            <AlertStripeInfo>
+                                            <Alert variant="info">
                                                 <p>
                                                     <FormattedMessage id="vedlegg.huskVedlegg" />
                                                 </p>
@@ -173,15 +173,15 @@ const Kvittering = () => {
                                                 <Element>
                                                     <FormattedMessage id="vedlegg.søkerManglerDok" />
                                                 </Element>
-                                            </AlertStripeInfo>
+                                            </Alert>
                                         </div>
                                     </div>
                                     <div className={styles.nySøknadKnapp}>
                                         {RemoteData.isFailure(fetchSøknadPdfState) && (
                                             <div className={styles.errorMessageContainer}>
-                                                <AlertStripe type="feil">
+                                                <Alert variant="error">
                                                     <FormattedMessage id="feil.kunneIkkeHentePdf" />
-                                                </AlertStripe>
+                                                </Alert>
                                             </div>
                                         )}
                                         <div>

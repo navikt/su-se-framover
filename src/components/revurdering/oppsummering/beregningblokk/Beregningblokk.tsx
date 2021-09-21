@@ -1,4 +1,4 @@
-import { AlertStripeInfo } from 'nav-frontend-alertstriper';
+import { Alert } from '@navikt/ds-react';
 import Panel from 'nav-frontend-paneler';
 import { Ingress, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
@@ -45,10 +45,10 @@ const Beregningblokk = (props: { revurdering: Revurdering }) => {
             ikon={Oppsummeringsikon.Kalkulator}
         >
             {alert && (
-                <AlertStripeInfo className={styles.alert}>
+                <Alert variant="info" className={styles.alert}>
                     <Undertittel className={styles.alertTittel}>{alert.tittel}</Undertittel>
                     <Normaltekst>{alert.tekst}</Normaltekst>
-                </AlertStripeInfo>
+                </Alert>
             )}
             <div className={styles.container}>
                 <div className={styles.column}>

@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import AlertStripe from 'nav-frontend-alertstriper';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Fareknapp, Flatknapp, Knapp } from 'nav-frontend-knapper';
 import ModalWrapper from 'nav-frontend-modal';
@@ -146,26 +146,26 @@ export const Utbetalinger = (props: {
                             </Fareknapp>
                         </div>
                         {RemoteData.isFailure(stansUtbetalingerStatus) && (
-                            <AlertStripe type="feil">
+                            <Alert variant="error">
                                 {intl.formatMessage({ id: 'display.utbetalingsperiode.klarteIkkeStanseUtbetaling' })}
-                            </AlertStripe>
+                            </Alert>
                         )}
                         {RemoteData.isSuccess(stansUtbetalingerStatus) && (
-                            <AlertStripe type="suksess">
+                            <Alert variant="success">
                                 {intl.formatMessage({ id: 'display.utbetalingsperiode.stansetUtbetaling' })}
-                            </AlertStripe>
+                            </Alert>
                         )}
                     </div>
                 </ModalWrapper>
                 {RemoteData.isFailure(gjenopptaUtbetalingerStatus) && (
-                    <AlertStripe type="feil">
+                    <Alert variant="error">
                         {intl.formatMessage({ id: 'display.utbetalingsperiode.klarteIkkeGjenopptaUtbetaling' })}
-                    </AlertStripe>
+                    </Alert>
                 )}
                 {RemoteData.isSuccess(gjenopptaUtbetalingerStatus) && (
-                    <AlertStripe type="suksess" className={styles.utbetalingGjenopptatt}>
+                    <Alert variant="success" className={styles.utbetalingGjenopptatt}>
                         {intl.formatMessage({ id: 'display.utbetalingsperiode.gjenopptattUtbetaling' })}
-                    </AlertStripe>
+                    </Alert>
                 )}
             </Panel>
         </div>
