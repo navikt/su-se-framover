@@ -1,6 +1,6 @@
 import { formatISO } from 'date-fns';
 
-import { RevurderingErrorCodes } from '~components/apiErrorAlert/revurderingFeilresponser/RevurderingApiError';
+import { RevurderingErrorCodes } from '~components/apiErrorAlert/revurderingApiError/RevurderingApiError';
 import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering';
 import { Fradrag } from '~types/Fradrag';
@@ -170,7 +170,7 @@ export async function lagreUføregrunnlag(arg: {
         begrunnelse: Nullable<string>;
     }>;
 }) {
-    return apiClient<OpprettetRevurdering>({
+    return apiClient<{ revurdering: OpprettetRevurdering; feilmeldinger: ErrorMessage[] }>({
         url: `/saker/${arg.sakId}/revurderinger/${arg.revurderingId}/uføregrunnlag`,
         method: 'POST',
         body: { vurderinger: arg.vurderinger },
@@ -181,7 +181,7 @@ export async function lagreFradragsgrunnlag(
     sakId: string,
     revurderingId: string,
     fradrag: Fradrag[]
-): Promise<ApiClientResult<Revurdering>> {
+): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
     return apiClient({
         url: `/saker/${sakId}/revurderinger/${revurderingId}/fradrag`,
         method: 'POST',
@@ -191,7 +191,9 @@ export async function lagreFradragsgrunnlag(
     });
 }
 
-export async function lagreBosituasjonsgrunnlag(data: BosituasjonRequest): Promise<ApiClientResult<Revurdering>> {
+export async function lagreBosituasjonsgrunnlag(
+    data: BosituasjonRequest
+): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
     return apiClient({
         url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/bosituasjongrunnlag`,
         method: 'POST',
@@ -204,7 +206,9 @@ export async function lagreBosituasjonsgrunnlag(data: BosituasjonRequest): Promi
     });
 }
 
-export async function lagreFormuegrunnlag(data: FormuegrunnlagRequest): Promise<ApiClientResult<Revurdering>> {
+export async function lagreFormuegrunnlag(
+    data: FormuegrunnlagRequest
+): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
     return apiClient({
         url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/formuegrunnlag`,
         method: 'POST',

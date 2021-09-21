@@ -13,7 +13,7 @@ import { Control, Controller, FieldArrayWithId, FieldPath, useFieldArray, useFor
 import { useHistory } from 'react-router';
 import { v4 as uuid } from 'uuid';
 
-import { ApiError } from '~api/apiClient';
+import { ApiError, ErrorMessage } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
 import { JaNeiSpørsmål } from '~components/formElements/FormElements';
@@ -28,13 +28,14 @@ import sharedMessages from '~pages/saksbehandling/søknadsbehandling/sharedI18n-
 import { useAppDispatch } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { UføreResultat, VurderingsperiodeUføre } from '~types/grunnlagsdataOgVilkårsvurderinger/uføre/Uførevilkår';
-import { Revurdering } from '~types/Revurdering';
+import { OpprettetRevurdering, Revurdering } from '~types/Revurdering';
 import * as DateUtils from '~utils/date/dateUtils';
 import * as FormatUtils from '~utils/format/formatUtils';
 import { erGregulering } from '~utils/revurdering/revurderingUtils';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
+import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import messages from './uførhet-nb';
 import styles from './uførhet.module.less';
@@ -241,7 +242,9 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
     const history = useHistory();
 
     const [pressedButton, setPressedButton] = React.useState<'ingen' | 'neste' | 'lagre'>('ingen');
-    const [savingState, setSavingState] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
+    const [savingState, setSavingState] = React.useState<
+        RemoteData.RemoteData<ApiError, { revurdering: OpprettetRevurdering; feilmeldinger: ErrorMessage[] }>
+    >(RemoteData.initial);
     const [harOverlappendePerioder, setHarOverlappendePerioder] = React.useState(false);
     const feiloppsummeringRef = React.useRef<HTMLDivElement>(null);
 
@@ -315,7 +318,10 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
         );
 
         if (revurderingActions.lagreUføregrunnlag.fulfilled.match(res)) {
-            setSavingState(RemoteData.success(null));
+            setSavingState(RemoteData.success(res.payload));
+            if (res.payload.feilmeldinger.length > 0) {
+                return false;
+            }
             return true;
         } else if (revurderingActions.lagreUføregrunnlag.rejected.match(res)) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -404,6 +410,9 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                 </AlertStripeAdvarsel>
             )}
             {RemoteData.isFailure(savingState) && <ApiErrorAlert error={savingState.error} />}
+            {RemoteData.isSuccess(savingState) && (
+                <UtfallSomIkkeStøttes feilmeldinger={savingState.value.feilmeldinger} />
+            )}
             <RevurderingBunnknapper
                 onNesteClick="submit"
                 tilbakeUrl={props.forrigeUrl}

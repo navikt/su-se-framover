@@ -7,8 +7,8 @@ import { useI18n } from '~lib/i18n';
 import messages from './ApiErrorAlert-nb';
 import styles from './apierroralert.module.less';
 import { feilresponsTilFeilmelding } from './ApiErrorAlertUtils';
-import revurderingsMessages from './revurderingFeilresponser/RevurderingApiError-nb';
-import søknadsbehandlingMessages from './søknadsbehandlingFeilresponser/søknadsbehandlingApiError-nb';
+import revurderingsMessages from './revurderingApiError/RevurderingApiError-nb';
+import søknadsbehandlingMessages from './søknadsbehandlingApiError/søknadsbehandlingApiError-nb';
 
 const ApiErrorAlert = (props: { error?: ApiError }) => {
     const { formatMessage } = useI18n({

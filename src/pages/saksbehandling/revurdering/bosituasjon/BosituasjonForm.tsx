@@ -8,7 +8,7 @@ import { Control, Controller, useForm } from 'react-hook-form';
 import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
-import { ApiError } from '~api/apiClient';
+import { ApiError, ErrorMessage } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { FnrInput } from '~components/FnrInput/FnrInput';
 import ToKolonner from '~components/toKolonner/ToKolonner';
@@ -26,6 +26,7 @@ import * as DateUtils from '~utils/date/dateUtils';
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import sharedStyles from '../revurdering.module.less';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
+import UtfallSomIkkeStøttes from '../utfallSomIkkeStøttes/UtfallSomIkkeStøttes';
 
 import messages from './bosituasjonForm-nb';
 import styles from './bosituasjonForm.module.less';
@@ -221,7 +222,9 @@ const BosituasjonForm = (props: {
 }) => {
     const { intl } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const [epsAlder, setEpsAlder] = useState<Nullable<number>>(null);
-    const [status, setStatus] = React.useState<RemoteData.RemoteData<ApiError, null>>(RemoteData.initial);
+    const [status, setStatus] = React.useState<
+        RemoteData.RemoteData<ApiError, { revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>
+    >(RemoteData.initial);
     const dispatch = useAppDispatch();
     const history = useHistory();
 
@@ -328,8 +331,10 @@ const BosituasjonForm = (props: {
         );
 
         if (revurderingActions.lagreBosituasjonsgrunnlag.fulfilled.match(res)) {
-            setStatus(RemoteData.success(null));
-            history.push(props.nesteUrl(res.payload));
+            setStatus(RemoteData.success(res.payload));
+            if (res.payload.feilmeldinger.length === 0) {
+                history.push(props.nesteUrl(res.payload.revurdering));
+            }
         }
         if (revurderingActions.lagreBosituasjonsgrunnlag.rejected.match(res)) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -437,6 +442,9 @@ const BosituasjonForm = (props: {
                                 hidden={Object.values(errors).length <= 0}
                             />
                             {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
+                            {RemoteData.isSuccess(status) && (
+                                <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
+                            )}
                             <RevurderingBunnknapper
                                 onNesteClick="submit"
                                 tilbakeUrl={props.forrigeUrl}

@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import * as revurderingApi from '~api/revurderingApi';
-import { RevurderingErrorCodes } from '~components/apiErrorAlert/revurderingFeilresponser/RevurderingApiError';
+import { RevurderingErrorCodes } from '~components/apiErrorAlert/revurderingApiError/RevurderingApiError';
 import { Nullable } from '~lib/types';
 import { UnderkjennRevurderingGrunn } from '~pages/saksbehandling/attestering/attesterRevurdering/AttesterRevurdering';
 import { Fradrag } from '~types/Fradrag';
@@ -188,7 +188,7 @@ export const fortsettEtterForhåndsvarsel = createAsyncThunk<
 );
 
 export const lagreUføregrunnlag = createAsyncThunk<
-    OpprettetRevurdering,
+    { revurdering: OpprettetRevurdering; feilmeldinger: ErrorMessage[] },
     {
         sakId: string;
         revurderingId: string;
@@ -211,7 +211,7 @@ export const lagreUføregrunnlag = createAsyncThunk<
 });
 
 export const lagreFradragsgrunnlag = createAsyncThunk<
-    Revurdering,
+    { revurdering: Revurdering; feilmeldinger: ErrorMessage[] },
     {
         sakId: string;
         revurderingId: string;
@@ -226,38 +226,40 @@ export const lagreFradragsgrunnlag = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
-export const lagreBosituasjonsgrunnlag = createAsyncThunk<Revurdering, BosituasjonRequest, { rejectValue: ApiError }>(
-    'revurdering/grunnlag/bosituasjon/lagre',
-    async (arg, thunkApi) => {
-        const res = await revurderingApi.lagreBosituasjonsgrunnlag({
-            sakId: arg.sakId,
-            revurderingId: arg.revurderingId,
-            epsFnr: arg.epsFnr,
-            delerBolig: arg.delerBolig,
-            erEPSUførFlyktning: arg.erEPSUførFlyktning,
-            begrunnelse: arg.begrunnelse,
-        });
-        if (res.status === 'ok') {
-            return res.data;
-        }
-        return thunkApi.rejectWithValue(res.error);
+export const lagreBosituasjonsgrunnlag = createAsyncThunk<
+    { revurdering: Revurdering; feilmeldinger: ErrorMessage[] },
+    BosituasjonRequest,
+    { rejectValue: ApiError }
+>('revurdering/grunnlag/bosituasjon/lagre', async (arg, thunkApi) => {
+    const res = await revurderingApi.lagreBosituasjonsgrunnlag({
+        sakId: arg.sakId,
+        revurderingId: arg.revurderingId,
+        epsFnr: arg.epsFnr,
+        delerBolig: arg.delerBolig,
+        erEPSUførFlyktning: arg.erEPSUførFlyktning,
+        begrunnelse: arg.begrunnelse,
+    });
+    if (res.status === 'ok') {
+        return res.data;
     }
-);
+    return thunkApi.rejectWithValue(res.error);
+});
 
-export const lagreFormuegrunnlag = createAsyncThunk<Revurdering, FormuegrunnlagRequest, { rejectValue: ApiError }>(
-    'revurdering/grunnlag/formue/lagre',
-    async (arg, thunkApi) => {
-        const res = await revurderingApi.lagreFormuegrunnlag({
-            sakId: arg.sakId,
-            revurderingId: arg.revurderingId,
-            formue: arg.formue,
-        });
-        if (res.status === 'ok') {
-            return res.data;
-        }
-        return thunkApi.rejectWithValue(res.error);
+export const lagreFormuegrunnlag = createAsyncThunk<
+    { revurdering: Revurdering; feilmeldinger: ErrorMessage[] },
+    FormuegrunnlagRequest,
+    { rejectValue: ApiError }
+>('revurdering/grunnlag/formue/lagre', async (arg, thunkApi) => {
+    const res = await revurderingApi.lagreFormuegrunnlag({
+        sakId: arg.sakId,
+        revurderingId: arg.revurderingId,
+        formue: arg.formue,
+    });
+    if (res.status === 'ok') {
+        return res.data;
     }
-);
+    return thunkApi.rejectWithValue(res.error);
+});
 
 export const hentGjeldendeGrunnlagsdataOgVilkårsvurderinger = createAsyncThunk<
     GrunnlagsdataOgVilkårsvurderinger,
