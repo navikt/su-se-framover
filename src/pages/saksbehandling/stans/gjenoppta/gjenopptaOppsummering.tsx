@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
+import { Alert } from '@navikt/ds-react';
 import Lenke from 'nav-frontend-lenker';
 import React from 'react';
 import { useHistory } from 'react-router';
@@ -38,7 +38,7 @@ const GjenopptaOppsummering = (props: Props) => {
     if (!revurdering) {
         return (
             <div>
-                <AlertStripeFeil> {formatMessage({ id: 'gjenoppta.oppsummering.error.fant.ingen' })}</AlertStripeFeil>
+                <Alert variant="error"> {formatMessage({ id: 'gjenoppta.oppsummering.error.fant.ingen' })}</Alert>
                 <Lenke href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })} className="knapp">
                     {formatMessage({ id: 'stans.bunnknapper.tilbake' })}
                 </Lenke>
