@@ -74,6 +74,8 @@ export default {
     'stans.oppdater.ugyldig.type':
         'Kunne ikke oppdatere revurdering for stans. Eksisterende revurdering er av feil type.',
 
+    'gjenopptak.siste.utbetaling.ikke.stans': 'Siste utbetaling er ikke stans',
+    'gjenopptak.kan.ikke.gjenoppta.opphørte.utbetalinger': 'Kan ikke gjenoppta opphørte utbetalinger',
     'gjenopptak.iverksett.ugyldig.tilstand': 'Kan ikke gjenoppta utbetalinger som allerede er gjenopptatt',
     'gjenopptak.ingen.tidligere.vedtak':
         'Kan ikke opprette revurdering for gjenopptak av utbetaling uten tidligere vedtak',
