@@ -1,9 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import * as DateFns from 'date-fns';
 import { FormikErrors, useFormik } from 'formik';
 import { Datepicker } from 'nav-datovelger';
-import AlertStripe from 'nav-frontend-alertstriper';
 import {
     Checkbox,
     Feiloppsummering,
@@ -241,9 +241,9 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     }}
                 />
                 {formik.values.borOgOppholderSegINorge === false && (
-                    <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
+                    <Alert variant="warning" className={sharedStyles.marginBottom}>
                         {formatMessage('borOgOppholderSegINorge.ikkeOppholdINorge')}
-                    </AlertStripe>
+                    </Alert>
                 )}
 
                 <JaNeiSpørsmål
@@ -460,9 +460,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     </div>
                 </RadioGruppe>
                 {formik.values.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE && (
-                    <AlertStripe type="advarsel">
-                        {formatMessage('adresse.ingenAdresse.borPåAnnenAdresse.advarsel')}
-                    </AlertStripe>
+                    <Alert variant="warning">{formatMessage('adresse.ingenAdresse.borPåAnnenAdresse.advarsel')}</Alert>
                 )}
             </div>
             <Feiloppsummering

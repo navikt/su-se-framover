@@ -1,4 +1,4 @@
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
+import { Alert } from '@navikt/ds-react';
 import React from 'react';
 
 import { ApiError } from '~api/apiClient';
@@ -17,7 +17,11 @@ const ApiErrorAlert = (props: { error?: ApiError }) => {
 
     const error = feilresponsTilFeilmelding(formatMessage, props.error?.body);
 
-    return <AlertStripeFeil className={styles.alertstripe}>{error}</AlertStripeFeil>;
+    return (
+        <Alert variant="error" className={styles.alertstripe}>
+            {error}
+        </Alert>
+    );
 };
 
 export default ApiErrorAlert;

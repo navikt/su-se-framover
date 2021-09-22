@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { useFormik } from 'formik';
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
 import { Fareknapp } from 'nav-frontend-knapper';
 import Lenke from 'nav-frontend-lenker';
 import { Select } from 'nav-frontend-skjema';
@@ -61,9 +61,9 @@ const LukkSøknad = (props: { sak: Sak }) => {
     if (!søknad) {
         return (
             <div>
-                <AlertStripeFeil>
+                <Alert variant="error">
                     {intl.formatMessage({ id: 'display.søknad.fantIkkeSøknad' })} {urlParams.soknadId}
-                </AlertStripeFeil>
+                </Alert>
             </div>
         );
     }
@@ -168,13 +168,11 @@ const LukkSøknad = (props: { sak: Sak }) => {
 
             <div>
                 {RemoteData.isFailure(lukketSøknadBrevutkastStatus) && (
-                    <AlertStripeFeil>{intl.formatMessage({ id: 'display.brev.kunneIkkeViseBrev' })}</AlertStripeFeil>
+                    <Alert variant="error">{intl.formatMessage({ id: 'display.brev.kunneIkkeViseBrev' })}</Alert>
                 )}
 
                 {RemoteData.isFailure(søknadLukketStatus) && (
-                    <AlertStripeFeil>
-                        {intl.formatMessage({ id: 'display.søknad.KunneIkkeLukkeSøknad' })}
-                    </AlertStripeFeil>
+                    <Alert variant="error">{intl.formatMessage({ id: 'display.søknad.KunneIkkeLukkeSøknad' })}</Alert>
                 )}
             </div>
         </form>

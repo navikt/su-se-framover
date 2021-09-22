@@ -1,5 +1,5 @@
+import { Alert } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -66,9 +66,9 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
                 />
             </div>
             {formik.values.harUførevedtak === false && (
-                <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
+                <Alert variant="warning" className={sharedStyles.marginBottom}>
                     {formatMessage('uførevedtak.måSøkeUføretrygd.info')}
-                </AlertStripe>
+                </Alert>
             )}
             <div>
                 <Feiloppsummering

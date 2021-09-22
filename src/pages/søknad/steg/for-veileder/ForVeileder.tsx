@@ -1,5 +1,5 @@
+import { Alert } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import AlertStripe, { AlertStripeInfo } from 'nav-frontend-alertstriper';
 import Panel from 'nav-frontend-paneler';
 import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
 import * as React from 'react';
@@ -101,9 +101,9 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                             <p className={styles.boldP}>{intl.formatMessage({ id: 'info.telefon.tittel' })}</p>
                             <p>{telefonnummerPdl}</p>
                         </div>
-                        <AlertStripeInfo className={styles.marginTopXSS}>
+                        <Alert variant="info" className={styles.marginTopXSS}>
                             {intl.formatMessage({ id: 'info.telefon.body' })}
-                        </AlertStripeInfo>
+                        </Alert>
                     </Panel>
 
                     <Panel border className={styles.panelMargin}>
@@ -115,9 +115,9 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                                 <p>{intl.formatMessage({ id: 'info.kontaktinfo.mangler' })}</p>
                             )}
                         </div>
-                        <AlertStripeInfo className={styles.marginTopXSS}>
+                        <Alert variant="info" className={styles.marginTopXSS}>
                             {intl.formatMessage({ id: 'info.kontaktform.body' })}
-                        </AlertStripeInfo>
+                        </Alert>
                     </Panel>
 
                     <JaNeiSpørsmål
@@ -162,9 +162,9 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                     )}
 
                     {formik.values.harFullmektigEllerVerge === 'fullmektig' && (
-                        <AlertStripe type="advarsel" className={sharedStyles.marginBottom}>
+                        <Alert variant="warning" className={sharedStyles.marginBottom}>
                             Husk å legge ved legeattest/legeerklæring
-                        </AlertStripe>
+                        </Alert>
                     )}
                     <Feiloppsummering
                         className={sharedStyles.marginBottom}

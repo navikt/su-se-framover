@@ -1,8 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Alert } from '@navikt/ds-react';
 import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/string';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -501,9 +501,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                         >
                             {oppdatertVilkårsinformasjon !== 'personligOppmøteIkkeVurdert' &&
                                 erVurdertUtenAvslagMenIkkeFerdigbehandlet(oppdatertVilkårsinformasjon) && (
-                                    <AlertStripe type="advarsel">
-                                        {formatMessage('alert.ikkeFerdigbehandlet')}
-                                    </AlertStripe>
+                                    <Alert variant="warning">{formatMessage('alert.ikkeFerdigbehandlet')}</Alert>
                                 )}
                         </div>
 

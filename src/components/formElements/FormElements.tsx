@@ -1,6 +1,6 @@
+import { CollapseFilled, ExpandFilled } from '@navikt/ds-icons';
 import classNames from 'classnames';
 import { FormikErrors } from 'formik';
-import { OppChevron, NedChevron } from 'nav-frontend-chevron';
 import { Radio, RadioGruppe, RadioPanel } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 import { Collapse } from 'react-collapse';
@@ -73,7 +73,7 @@ const Hjelpetekst = (props: { tittel: string; body: string }) => {
                 }}
             >
                 {props.tittel}
-                {visMer ? <OppChevron /> : <NedChevron />}
+                {visMer ? <CollapseFilled /> : <ExpandFilled />}
             </button>
             <Collapse isOpened={visMer}>{props.body}</Collapse>
         </div>

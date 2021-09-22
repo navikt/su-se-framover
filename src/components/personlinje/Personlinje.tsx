@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import Clipboard from '@navikt/nap-clipboard';
 import { pipe } from 'fp-ts/lib/function';
-import AlertStripe from 'nav-frontend-alertstriper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
@@ -88,13 +88,13 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
                     () => null,
                     () => <NavFrontendSpinner />,
                     (err) => (
-                        <AlertStripe type="feil">
+                        <Alert variant="error">
                             {err?.statusCode === ErrorCode.Unauthorized
                                 ? formatMessage('feilmelding.ikkeTilgang')
                                 : err?.statusCode === ErrorCode.NotFound
                                 ? formatMessage('feilmelding.ikkeFunnet')
                                 : formatMessage('feilmelding.ukjent')}
-                        </AlertStripe>
+                        </Alert>
                     ),
                     (eps) => (
                         <span className={styles.epsInformasjon}>

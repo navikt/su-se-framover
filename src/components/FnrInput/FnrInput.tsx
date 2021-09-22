@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Input } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useState } from 'react';
@@ -89,16 +89,16 @@ export const FnrInput = ({
             )}
             {RemoteData.isFailure(person) && (
                 <div>
-                    <AlertStripe type="feil">
+                    <Alert variant="error">
                         {intl.formatMessage({ id: 'ektefelleEllerSamboer.feil.kunneIkkeSøkePerson' })}
-                    </AlertStripe>
+                    </Alert>
                 </div>
             )}
             {harIkkeTilgang && (
                 <div>
-                    <AlertStripe type="feil">
+                    <Alert variant="error">
                         {intl.formatMessage({ id: 'ektefelleEllerSamboer.feil.ikkeTilgang' })}
-                    </AlertStripe>
+                    </Alert>
                 </div>
             )}
         </div>

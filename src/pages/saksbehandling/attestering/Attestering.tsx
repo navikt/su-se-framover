@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import AlertStripe from 'nav-frontend-alertstriper';
+import { Alert } from '@navikt/ds-react';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
@@ -38,7 +38,7 @@ const Attestering = () => {
         RemoteData.fold(
             () => null,
             () => <NavFrontendSpinner />,
-            (_err) => <AlertStripe type="feil">{intl.formatMessage({ id: 'feil.generisk' })}</AlertStripe>,
+            (_err) => <Alert variant="error">{intl.formatMessage({ id: 'feil.generisk' })}</Alert>,
             ([sakValue, søkerValue]) => {
                 return (
                     <Switch>

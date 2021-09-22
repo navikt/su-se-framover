@@ -1,5 +1,5 @@
+import { Alert } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import AlertStripe from 'nav-frontend-alertstriper';
 import React from 'react';
 
 import { useI18n } from '~lib/i18n';
@@ -82,7 +82,7 @@ export const UtenlandsoppholdVilkårsblokk = (props: VilkårsblokkProps<'opphold
             søknadfaktablokk={<UtenlandsOppholdFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
                 props.behandlingsinformasjon === null ? (
-                    <AlertStripe type="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</AlertStripe>
+                    <Alert variant="info">{intl.formatMessage({ id: 'display.ikkeVurdert' })}</Alert>
                 ) : (
                     <Faktablokk
                         tittel={intl.formatMessage({ id: 'display.fraSaksbehandling' })}

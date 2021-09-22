@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
+import { Alert } from '@navikt/ds-react';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect } from 'react';
 import { IntlShape } from 'react-intl';
@@ -30,9 +30,9 @@ const RevurderingsoppsummeringWithSnapshot = (props: {
                     () => <NavFrontendSpinner />,
                     () => <NavFrontendSpinner />,
                     (error) => (
-                        <AlertStripeFeil>
+                        <Alert variant="error">
                             {error?.body?.message ?? props.intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}
-                        </AlertStripeFeil>
+                        </Alert>
                     ),
                     (snapshot) => (
                         <Revurderingoppsummering

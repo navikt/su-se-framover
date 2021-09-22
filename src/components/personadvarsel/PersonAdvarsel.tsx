@@ -1,4 +1,4 @@
-import Etikett, { EtikettBaseProps } from 'nav-frontend-etiketter';
+import { Tag, TagProps } from '@navikt/ds-react';
 import * as React from 'react';
 
 import { Person, Adressebeskyttelse } from '~api/personApi';
@@ -7,7 +7,7 @@ import styles from './personAdvarsel.module.less';
 
 interface EtikettInfo {
     text: string;
-    type: EtikettBaseProps['type'];
+    variant: TagProps['variant'];
 }
 
 export const PersonAdvarsel = (props: { person: Person }) => {
@@ -17,34 +17,34 @@ export const PersonAdvarsel = (props: { person: Person }) => {
     if (adressebeskyttelse && adressebeskyttelse !== Adressebeskyttelse.Ugradert) {
         etiketter.push({
             text: humanize(adressebeskyttelse),
-            type: 'advarsel',
+            variant: 'error',
         });
     }
     if (skjermet) {
         etiketter.push({
             text: 'Skjermet',
-            type: 'advarsel',
+            variant: 'error',
         });
     }
     if ('vergemål' in props.person && props.person.vergemål) {
         etiketter.push({
             text: 'Vergemål',
-            type: 'fokus',
+            variant: 'warning',
         });
     }
     if ('fullmakt' in props.person && props.person.fullmakt) {
         etiketter.push({
             text: 'Fullmakt',
-            type: 'fokus',
+            variant: 'warning',
         });
     }
 
     return (
         <div className={styles.container}>
             {etiketter.map((etikett) => (
-                <Etikett className={styles.etikett} type={etikett.type} key={etikett.text} mini>
+                <Tag className={styles.etikett} variant={etikett.variant} key={etikett.text} size="small">
                     {etikett.text}
-                </Etikett>
+                </Tag>
             ))}
         </div>
     );

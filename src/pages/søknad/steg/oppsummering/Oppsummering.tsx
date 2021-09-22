@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import AlertStripe from 'nav-frontend-alertstriper';
+import { Alert } from '@navikt/ds-react';
 import { Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -54,9 +54,9 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                 </div>
 
                 {RemoteData.isFailure(innsending) && (
-                    <AlertStripe className={styles.feilmelding} type="feil">
+                    <Alert className={styles.feilmelding} variant="error">
                         {intl.formatMessage({ id: 'feilmelding.innsendingFeilet' })}
-                    </AlertStripe>
+                    </Alert>
                 )}
 
                 <Bunnknapper

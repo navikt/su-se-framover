@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, RadioPanelGruppe, Select, Textarea } from 'nav-frontend-skjema';
 import { Systemtittel } from 'nav-frontend-typografi';
@@ -117,12 +117,12 @@ const Attesteringsinnhold = ({
     if (!erTilAttestering(props.behandling) && !erIverksatt(props.behandling)) {
         return (
             <div className={styles.content}>
-                <AlertStripe type="feil">
+                <Alert variant="error">
                     <p>{intl.formatMessage({ id: 'feil.ikkeKlarForAttestering' })}</p>
                     <Link to={Routes.saksoversiktIndex.createURL()}>
                         {intl.formatMessage({ id: 'lenke.saksoversikt' })}
                     </Link>
-                </AlertStripe>
+                </Alert>
             </div>
         );
     }
@@ -225,7 +225,7 @@ const Attesteringsinnhold = ({
                             </Knapp>
                             {RemoteData.isFailure(attesteringStatus) && (
                                 <div className={styles.sendInnAttesteringFeilet}>
-                                    <AlertStripe type="feil">
+                                    <Alert variant="error">
                                         <p>{intl.formatMessage({ id: 'status.feilet' })}</p>
                                         <p>
                                             {
@@ -234,7 +234,7 @@ const Attesteringsinnhold = ({
                                                     intl.formatMessage({ id: 'feil.ukjentFeil' })
                                             }
                                         </p>
-                                    </AlertStripe>
+                                    </Alert>
                                 </div>
                             )}
                         </form>
@@ -252,7 +252,7 @@ const AttesterSøknadsbehandling = (props: { sak: Sak; søker: Person }) => {
     const behandling = props.sak.behandlinger.find((x) => x.id === urlParams.behandlingId);
 
     if (!behandling) {
-        return <AlertStripe type="feil">{intl.formatMessage({ id: 'feil.fantIkkeBehandling' })}</AlertStripe>;
+        return <Alert variant="error">{intl.formatMessage({ id: 'feil.fantIkkeBehandling' })}</Alert>;
     }
     return <Attesteringsinnhold behandling={behandling} sak={props.sak} søker={props.søker} intl={intl} />;
 };

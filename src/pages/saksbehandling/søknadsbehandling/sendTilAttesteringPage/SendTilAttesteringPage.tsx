@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import AlertStripe from 'nav-frontend-alertstriper';
+import { Alert } from '@navikt/ds-react';
 import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel } from 'nav-frontend-typografi/';
@@ -68,7 +68,7 @@ const SendTilAttesteringPage = (props: Props) => {
     }, [behandling, sisteVurderteVilkår]);
 
     if (!behandling) {
-        return <AlertStripe type="feil">{intl.formatMessage({ id: 'feilmelding.fantIkkeBehandlingsId' })}</AlertStripe>;
+        return <Alert variant="error">{intl.formatMessage({ id: 'feilmelding.fantIkkeBehandlingsId' })}</Alert>;
     }
 
     if (erSimulert(behandling) || erAvslått(behandling) || erUnderkjent(behandling)) {
@@ -93,9 +93,7 @@ const SendTilAttesteringPage = (props: Props) => {
                             className={styles.fritekstarea}
                         />
                         {RemoteData.isFailure(brevStatus) && (
-                            <AlertStripe type="feil">
-                                {intl.formatMessage({ id: 'feilmelding.brevhentingFeilet' })}
-                            </AlertStripe>
+                            <Alert variant="error">{intl.formatMessage({ id: 'feilmelding.brevhentingFeilet' })}</Alert>
                         )}
                         <Knapp
                             className={styles.visBrevKnapp}

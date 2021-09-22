@@ -1,8 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Alert } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
-import { AlertStripeInfo } from 'nav-frontend-alertstriper';
 import { Checkbox, CheckboxGruppe, Feiloppsummering, Select, Textarea } from 'nav-frontend-skjema';
 import { Ingress, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
@@ -204,7 +204,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
 
                     <div className={styles.informasjonsContainer}>
                         {formik.values.informasjonSomRevurderes.includes(InformasjonSomRevurderes.Bosituasjon) && (
-                            <AlertStripeInfo>{intl.formatMessage({ id: 'info.bosituasjon' })}</AlertStripeInfo>
+                            <Alert variant="info">{intl.formatMessage({ id: 'info.bosituasjon' })}</Alert>
                         )}
                     </div>
 

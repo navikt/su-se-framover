@@ -1,5 +1,5 @@
+import { Alert } from '@navikt/ds-react';
 import classNames from 'classnames';
-import AlertStripe from 'nav-frontend-alertstriper';
 import { Element } from 'nav-frontend-typografi';
 import React, { useMemo } from 'react';
 
@@ -234,7 +234,7 @@ export const FormueVilkårsblokk = (props: {
             søknadfaktablokk={<FormueFaktablokk søknadInnhold={props.søknadInnhold} />}
             saksbehandlingfaktablokk={
                 props.formue === null ? (
-                    <AlertStripe type="info">{formatMessage('display.ikkeVurdert')}</AlertStripe>
+                    <Alert variant="info">{formatMessage('display.ikkeVurdert')}</Alert>
                 ) : (
                     <div>
                         <Faktablokk

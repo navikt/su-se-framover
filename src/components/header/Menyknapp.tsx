@@ -1,4 +1,4 @@
-import Chevron from 'nav-frontend-chevron';
+import { ExpandFilled } from '@navikt/ds-icons';
 import { Knapp } from 'nav-frontend-knapper';
 import Popover, { PopoverOrientering } from 'nav-frontend-popover';
 import React, { useState } from 'react';
@@ -18,9 +18,7 @@ const Menyknapp = ({ navn, onLoggUtClick }: Props) => {
                 onClick={(e) => (anchor ? setAnchor(undefined) : setAnchor(e.currentTarget))}
             >
                 <p>{navn}</p>
-                <div className={styles.chevron}>
-                    <Chevron type="ned" />
-                </div>
+                <ExpandFilled />
             </button>
             <Popover
                 ankerEl={anchor}

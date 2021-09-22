@@ -1,4 +1,4 @@
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
+import { Alert } from '@navikt/ds-react';
 import React from 'react';
 
 import { ErrorMessage } from '~api/apiClient';
@@ -12,13 +12,13 @@ const UtfallSomIkkeStøttes = (props: { feilmeldinger: ErrorMessage[] }) => {
     const { formatMessage } = useI18n({ messages: revurderingErrorMessages });
     const messages = utfallSomIkkeStøttesKodeTilFeilmelding(formatMessage, props.feilmeldinger);
     return (
-        <AlertStripeFeil className={styles.alertstripe}>
+        <Alert variant="error" className={styles.alertstripe}>
             <ul>
                 {messages.map((m) => (
                     <li key={m}>{m}</li>
                 ))}
             </ul>
-        </AlertStripeFeil>
+        </Alert>
     );
 };
 

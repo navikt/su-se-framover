@@ -1,8 +1,8 @@
+import { Alert } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik, FormikErrors } from 'formik';
 import { Datepicker, DatepickerLimitations } from 'nav-datovelger';
-import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Label, SkjemaelementFeilmelding, SkjemaGruppe } from 'nav-frontend-skjema';
 import { Normaltekst } from 'nav-frontend-typografi';
@@ -431,14 +431,14 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                     )}
                 </div>
                 {antallDagerIUtlandet > 90 && (
-                    <AlertStripeAdvarsel className={styles.passert90DagerAdvarsel}>
+                    <Alert variant="warning" className={styles.passert90DagerAdvarsel}>
                         {formatMessage('passert90Dager.info', {
                             // eslint-disable-next-line react/display-name
                             p: (tekst) => <Normaltekst>{tekst}</Normaltekst>,
                             // eslint-disable-next-line react/display-name
                             br: () => <br />,
                         })}
-                    </AlertStripeAdvarsel>
+                    </Alert>
                 )}
 
                 <Feiloppsummering

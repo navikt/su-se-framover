@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import AlertStripe from 'nav-frontend-alertstriper';
+import { Alert } from '@navikt/ds-react';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
@@ -90,17 +90,17 @@ const Saksoversikt = () => {
                             () => <NavFrontendSpinner />,
                             () =>
                                 RemoteData.isFailure(søker) ? (
-                                    <AlertStripe type="feil">{visErrorMelding(søker.error)}</AlertStripe>
+                                    <Alert variant="error">{visErrorMelding(søker.error)}</Alert>
                                 ) : (
                                     RemoteData.isFailure(sak) && (
-                                        <AlertStripe type="feil">
+                                        <Alert variant="error">
                                             {intl.formatMessage(
                                                 { id: 'feilmelding.generisk' },
                                                 {
                                                     statusCode: sak.error.statusCode,
                                                 }
                                             )}
-                                        </AlertStripe>
+                                        </Alert>
                                     )
                                 ),
                             ([søker, sak]) => (
@@ -179,7 +179,7 @@ const Saksoversikt = () => {
                                 autofocusPersonsøk
                             />
                             {RemoteData.isFailure(sak) && !RemoteData.isFailure(søker) && (
-                                <AlertStripe type="feil">{visErrorMelding(sak.error)}</AlertStripe>
+                                <Alert variant="error">{visErrorMelding(sak.error)}</Alert>
                             )}
                         </div>
                         <Restanser />

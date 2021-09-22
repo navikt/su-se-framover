@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { AlertStripeFeil } from 'nav-frontend-alertstriper';
+import { Alert } from '@navikt/ds-react';
 import { Knapp } from 'nav-frontend-knapper';
 import { Textarea } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
@@ -56,9 +56,9 @@ export function BrevInput(props: BrevInputProps) {
                     {props.intl.formatMessage({ id: 'knapp.seBrev' })}
                 </Knapp>
                 {RemoteData.isFailure(hentBrevStatus) && (
-                    <AlertStripeFeil>
+                    <Alert variant="error">
                         {hentBrevStatus?.error?.body?.message || props.intl.formatMessage({ id: 'feil.ukjentFeil' })}
-                    </AlertStripeFeil>
+                    </Alert>
                 )}
             </div>
         </div>
