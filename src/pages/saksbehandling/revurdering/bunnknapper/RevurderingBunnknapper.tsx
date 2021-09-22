@@ -9,7 +9,7 @@ import sharedI18n from '../../søknadsbehandling/sharedI18n-nb';
 import styles from './revurderingBunnknapper.module.less';
 
 export const RevurderingBunnknapper = (props: {
-    tilbakeUrl: string;
+    tilbakeUrl?: string;
     onNesteClick: 'submit' | (() => void);
     onNesteClickSpinner?: boolean;
     onLagreOgFortsettSenereClick?(): void;
@@ -21,9 +21,11 @@ export const RevurderingBunnknapper = (props: {
     return (
         <div>
             <div className={styles.navigationButtonContainer}>
-                <Link to={props.tilbakeUrl} className="knapp">
-                    {intl.formatMessage({ id: 'knapp.tilbake' })}
-                </Link>
+                {props.tilbakeUrl && (
+                    <Link to={props.tilbakeUrl} className="knapp">
+                        {intl.formatMessage({ id: 'knapp.tilbake' })}
+                    </Link>
+                )}
                 <Hovedknapp
                     spinner={props.onNesteClickSpinner}
                     onClick={props.onNesteClick === 'submit' ? undefined : props.onNesteClick}

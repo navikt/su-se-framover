@@ -155,7 +155,6 @@ export const ResultatEtterForhåndsvarselform = (props: {
                     <BeslutningEtterForhåndsvarselRadios feil={fieldState.error?.message} onChange={field.onChange} />
                 )}
             />
-
             <Controller
                 control={form.control}
                 name="begrunnelse"
@@ -168,7 +167,6 @@ export const ResultatEtterForhåndsvarselform = (props: {
                     </div>
                 )}
             />
-
             {(resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger ||
                 resultatEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer) && (
                 <Controller
@@ -186,9 +184,7 @@ export const ResultatEtterForhåndsvarselform = (props: {
                     )}
                 />
             )}
-
             {RemoteData.isFailure(props.submitStatus) && <ApiErrorAlert error={props.submitStatus.error} />}
-
             <RevurderingBunnknapper
                 onNesteClick="submit"
                 nesteKnappTekst={
@@ -196,7 +192,6 @@ export const ResultatEtterForhåndsvarselform = (props: {
                         ? intl.formatMessage({ id: 'fortsett.button.label' })
                         : intl.formatMessage({ id: 'sendTilAttestering.button.label' })
                 }
-                tilbakeUrl={props.forrigeUrl}
                 onNesteClickSpinner={RemoteData.isPending(props.submitStatus)}
             />
         </form>
