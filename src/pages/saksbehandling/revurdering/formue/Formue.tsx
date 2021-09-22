@@ -342,7 +342,7 @@ const FormuePanel = (props: {
 
     return (
         <Accordion.Item open={åpen} className={åpen ? styles.formuePanel : undefined}>
-            <Accordion.Header type="button" onClick={() => handlePanelKlikk()}>
+            <Accordion.Header type="button" onClick={handlePanelKlikk}>
                 <div>
                     <Normaltekst>
                         {intl.formatMessage({
