@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, LinkPanel } from '@navikt/ds-react';
+import { Alert, LinkPanel, Tag } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { isEmpty, last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
-import { EtikettInfo } from 'nav-frontend-etiketter';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
@@ -248,11 +247,11 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                                                 {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
                                             </Undertittel>
                                             {erForhåndsvarselSendt(r) && (
-                                                <EtikettInfo className={styles.etikett}>
+                                                <Tag variant="info" className={styles.etikett}>
                                                     {props.intl.formatMessage({
                                                         id: 'revurdering.label.forhåndsvarselSendt',
                                                     })}
-                                                </EtikettInfo>
+                                                </Tag>
                                             )}
                                         </div>
                                         <div className={styles.dato}>
