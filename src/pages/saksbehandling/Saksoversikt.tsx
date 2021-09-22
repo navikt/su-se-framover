@@ -19,7 +19,6 @@ import Restanser from './restans/Restanser';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
 import Gjenoppta from './stans/gjenoppta/gjenoppta';
-import Stans from './stans/Stans';
 
 const Vilkår = React.lazy(() => import('./søknadsbehandling/vilkår/Vilkår'));
 const SendTilAttesteringPage = React.lazy(
@@ -30,6 +29,7 @@ const LukkSøknad = React.lazy(() => import('./lukkSøknad/LukkSøknad'));
 const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));
 const Sakintro = React.lazy(() => import('./sakintro/Sakintro'));
 const DokumenterPage = React.lazy(() => import('~pages/saksbehandling/dokumenter/DokumenterPage'));
+const StansPage = React.lazy(() => import('./stans/Stans'));
 
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
@@ -107,7 +107,7 @@ const Saksoversikt = () => {
                                         <Switch>
                                             <Route path={Routes.stansRoute.path}>
                                                 <div className={styles.mainContent}>
-                                                    <Stans sak={sak} />
+                                                    <StansPage sak={sak} />
                                                 </div>
                                             </Route>
                                             <Route path={Routes.gjenopptaStansRoute.path}>
