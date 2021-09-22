@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Accordion, Alert } from '@navikt/ds-react';
 import classNames from 'classnames';
-import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import { Flatknapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useState } from 'react';
@@ -40,9 +39,16 @@ const Restanser = () => {
                     return <Alert variant="success">{formatMessage('restans.ingenRestanser')}</Alert>;
                 }
                 return (
-                    <Ekspanderbartpanel tittel={formatMessage('åpne.behandlinger.overskrift')}>
-                        <RestanserTabell tabelldata={restanser} />
-                    </Ekspanderbartpanel>
+                    <Accordion>
+                        <Accordion.Item>
+                            <Accordion.Header type="button">
+                                {formatMessage('åpne.behandlinger.overskrift')}
+                            </Accordion.Header>
+                            <Accordion.Content>
+                                <RestanserTabell tabelldata={restanser} />
+                            </Accordion.Content>
+                        </Accordion.Item>
+                    </Accordion>
                 );
             }
         )

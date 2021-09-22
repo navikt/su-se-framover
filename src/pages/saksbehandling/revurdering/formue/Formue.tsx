@@ -1,8 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
+import { Accordion } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import { Knapp } from 'nav-frontend-knapper';
 import { Input, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -260,24 +260,26 @@ const FormueBlokk = (props: {
             )}
 
             <div className={styles.formuePanelerContainer}>
-                <FormuePanel
-                    tilhører={'Søkers'}
-                    blokkIndex={props.blokkIndex}
-                    sumFormue={søkersBekreftetFormue}
-                    setBekreftetFormue={setSøkersBekreftetFormue}
-                    formController={props.formController}
-                    triggerValidation={props.triggerValidation}
-                />
-                {props.eps && (
+                <Accordion>
                     <FormuePanel
-                        tilhører={'Ektefelle/Samboers'}
+                        tilhører={'Søkers'}
                         blokkIndex={props.blokkIndex}
-                        sumFormue={epsBekreftetFormue}
-                        setBekreftetFormue={setEPSBekreftetFormue}
+                        sumFormue={søkersBekreftetFormue}
+                        setBekreftetFormue={setSøkersBekreftetFormue}
                         formController={props.formController}
                         triggerValidation={props.triggerValidation}
                     />
-                )}
+                    {props.eps && (
+                        <FormuePanel
+                            tilhører={'Ektefelle/Samboers'}
+                            blokkIndex={props.blokkIndex}
+                            sumFormue={epsBekreftetFormue}
+                            setBekreftetFormue={setEPSBekreftetFormue}
+                            formController={props.formController}
+                            triggerValidation={props.triggerValidation}
+                        />
+                    )}
+                </Accordion>
             </div>
 
             <Formuestatus
@@ -339,9 +341,8 @@ const FormuePanel = (props: {
     };
 
     return (
-        <EkspanderbartpanelBase
-            className={åpen ? styles.formuePanel : undefined}
-            tittel={
+        <Accordion.Item open={åpen} className={åpen ? styles.formuePanel : undefined}>
+            <Accordion.Header type="button" onClick={() => handlePanelKlikk()}>
                 <div>
                     <Normaltekst>
                         {intl.formatMessage({
@@ -352,47 +353,46 @@ const FormuePanel = (props: {
                         {props.sumFormue} {intl.formatMessage({ id: 'panel.kroner' })}
                     </p>
                 </div>
-            }
-            apen={åpen}
-            onClick={() => handlePanelKlikk()}
-        >
-            <ul className={styles.formueInputs}>
-                {verdierId.map((id) => {
-                    return (
-                        <Controller
-                            key={id}
-                            name={`${panelName}.${id}`}
-                            control={props.formController}
-                            defaultValue={formueVerdier?.[id] ?? '0'}
-                            render={({ field, fieldState }) => {
-                                return (
-                                    <Input
-                                        id={field.name}
-                                        label={intl.formatMessage({ id: `formuepanel.${id}` })}
-                                        {...field}
-                                        feil={fieldState.error?.message}
-                                        bredde="M"
-                                        inputMode="numeric"
-                                        pattern="[0-9]*"
-                                    />
-                                );
-                            }}
-                        />
-                    );
-                })}
-            </ul>
+            </Accordion.Header>
+            <Accordion.Content>
+                <ul className={styles.formueInputs}>
+                    {verdierId.map((id) => {
+                        return (
+                            <Controller
+                                key={id}
+                                name={`${panelName}.${id}`}
+                                control={props.formController}
+                                defaultValue={formueVerdier?.[id] ?? '0'}
+                                render={({ field, fieldState }) => {
+                                    return (
+                                        <Input
+                                            id={field.name}
+                                            label={intl.formatMessage({ id: `formuepanel.${id}` })}
+                                            {...field}
+                                            feil={fieldState.error?.message}
+                                            bredde="M"
+                                            inputMode="numeric"
+                                            pattern="[0-9]*"
+                                        />
+                                    );
+                                }}
+                            />
+                        );
+                    })}
+                </ul>
 
-            <div className={styles.nyBeregningContainer}>
-                <Normaltekst>{intl.formatMessage({ id: 'formuepanel.nyBeregning' })}</Normaltekst>
-                <Undertittel>
-                    {utregnetFormue} {intl.formatMessage({ id: 'panel.kroner' })}
-                </Undertittel>
-            </div>
+                <div className={styles.nyBeregningContainer}>
+                    <Normaltekst>{intl.formatMessage({ id: 'formuepanel.nyBeregning' })}</Normaltekst>
+                    <Undertittel>
+                        {utregnetFormue} {intl.formatMessage({ id: 'panel.kroner' })}
+                    </Undertittel>
+                </div>
 
-            <Knapp htmlType="button" onClick={() => handleBekreftClick()}>
-                {intl.formatMessage({ id: 'knapp.bekreft' })}
-            </Knapp>
-        </EkspanderbartpanelBase>
+                <Knapp htmlType="button" onClick={() => handleBekreftClick()}>
+                    {intl.formatMessage({ id: 'knapp.bekreft' })}
+                </Knapp>
+            </Accordion.Content>
+        </Accordion.Item>
     );
 };
 
