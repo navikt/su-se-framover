@@ -67,7 +67,7 @@ const Gjenoppta = (props: Props) => {
                     .required()
                     .oneOf(
                         Object.values([OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING]),
-                        'Må velge en gyldig årsak'
+                        'Du må velge en gyldig årsak'
                     ),
             })
         ),
