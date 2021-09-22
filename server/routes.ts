@@ -4,7 +4,9 @@ import Bundler from 'parcel-bundler';
 import * as Config from './config';
 
 function parcelBundlerMiddleware() {
-    const bundler = new Bundler('src/index.html', {});
+    const bundler = new Bundler('src/index.html', {
+        autoInstall: false,
+    });
     return bundler.middleware();
 }
 

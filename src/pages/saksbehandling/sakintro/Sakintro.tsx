@@ -1,12 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, LinkPanel } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { isEmpty, last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
 import { EtikettInfo } from 'nav-frontend-etiketter';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { LenkepanelBase } from 'nav-frontend-lenkepanel';
 import Panel from 'nav-frontend-paneler';
 import { Element, Ingress, Innholdstittel, Normaltekst, Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
@@ -142,9 +141,9 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                     <AvslåtteSøknader sak={props.sak} avslåtteSøknader={avslåtteSøknader} intl={intl} />
                     <LukkedeSøknader lukkedeSøknader={lukkedeSøknader} intl={intl} />
                     <div>
-                        <LenkepanelBase
+                        <LinkPanel
                             href={Routes.alleDokumenterForSak.createURL({ sakId: props.sak.id })}
-                            linkCreator={({ href, ...props }) => <Link to={href ?? ''} {...props} />}
+                            as={({ href, ...props }) => <Link to={href ?? ''} {...props} />}
                             className={styles.dokumenterLinkpanel}
                         >
                             <div className={styles.dokumenterLink}>
@@ -155,7 +154,7 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                                     {intl.formatMessage({ id: 'link.dokumenter' })}
                                 </Systemtittel>
                             </div>
-                        </LenkepanelBase>
+                        </LinkPanel>
                     </div>
                 </div>
             ) : (

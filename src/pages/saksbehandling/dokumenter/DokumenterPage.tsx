@@ -1,11 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { FileContent } from '@navikt/ds-icons';
-import { Alert } from '@navikt/ds-react';
+import { Alert, LinkPanel } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import { Knapp } from 'nav-frontend-knapper';
-import { LenkepanelBase } from 'nav-frontend-lenkepanel';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Ingress, Systemtittel, Undertittel } from 'nav-frontend-typografi';
+import { Ingress, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useHistory } from 'react-router';
 
@@ -73,7 +72,7 @@ const DokumenterPage = (props: { sak: Sak }) => {
                                 ) : (
                                     <ol className={styles.dokumentliste}>
                                         {dokumenter.map((d) => (
-                                            <LenkepanelBase
+                                            <LinkPanel
                                                 key={d.id}
                                                 href="#"
                                                 onClick={(e) => {
@@ -85,11 +84,13 @@ const DokumenterPage = (props: { sak: Sak }) => {
                                                 <div className={styles.dokument}>
                                                     <FileContent className={styles.dokumentikon} />
                                                     <div>
-                                                        <Undertittel>{d.tittel}</Undertittel>
-                                                        <span>{DateUtils.formatDateTime(d.opprettet)}</span>
+                                                        <LinkPanel.Title>{d.tittel}</LinkPanel.Title>
+                                                        <LinkPanel.Description>
+                                                            {DateUtils.formatDateTime(d.opprettet)}
+                                                        </LinkPanel.Description>
                                                     </div>
                                                 </div>
-                                            </LenkepanelBase>
+                                            </LinkPanel>
                                         ))}
                                     </ol>
                                 )

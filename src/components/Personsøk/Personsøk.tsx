@@ -1,8 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, SearchField, SearchFieldInput } from '@navikt/ds-react';
+import { SearchFieldButton } from '@navikt/ds-react/esm/form/search-field';
 import fnrValidator from '@navikt/fnrvalidator';
-import { Søkeknapp } from 'nav-frontend-ikonknapper';
-import { Input, Label, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
+import { SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
@@ -85,18 +85,18 @@ const Personsøk = (props: PersonsøkProps) => {
                 }}
             >
                 <div className={styles.inputContainer}>
-                    <Label htmlFor="fnr">
-                        {props.onFetchBySaksnummer
-                            ? `${intl.formatMessage({ id: 'input.fnr.label' })} / ${intl.formatMessage({
-                                  id: 'input.fnr.saksnummer',
-                              })}`
-                            : intl.formatMessage({ id: 'input.fnr.label' })}
-                    </Label>
-                    <div className={styles.inputfeltcontainer}>
-                        <Input
+                    <SearchField
+                        label={
+                            props.onFetchBySaksnummer
+                                ? `${intl.formatMessage({ id: 'input.fnr.label' })} / ${intl.formatMessage({
+                                      id: 'input.fnr.saksnummer',
+                                  })}`
+                                : intl.formatMessage({ id: 'input.fnr.label' })
+                        }
+                    >
+                        <SearchFieldInput
                             id="fnr"
                             name="input"
-                            className={styles.inputfelt}
                             autoComplete="on"
                             onChange={(e) => {
                                 setInput(removeSpaces(e.target.value));
@@ -106,12 +106,10 @@ const Personsøk = (props: PersonsøkProps) => {
                             // eslint-disable-next-line jsx-a11y/no-autofocus
                             autoFocus={props.autofocusPersonsøk}
                         />
-                        <Søkeknapp htmlType="submit">
-                            <span>
-                                <FormattedMessage id="knapp.søk" />
-                            </span>
-                        </Søkeknapp>
-                    </div>
+                        <SearchFieldButton type="submit">
+                            <FormattedMessage id="knapp.søk" />
+                        </SearchFieldButton>
+                    </SearchField>
                     <SkjemaelementFeilmelding>
                         {hasSubmitted && fnrValidation?.status === 'invalid'
                             ? lagFnrFeilmelding(fnrValidation.reasons[0])
