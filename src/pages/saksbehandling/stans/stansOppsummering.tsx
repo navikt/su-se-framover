@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
+import Lenke from 'nav-frontend-lenker';
 import React from 'react';
 import { useHistory } from 'react-router';
 
@@ -25,32 +26,41 @@ const StansOppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.stansOppsummeringRoute>();
     const history = useHistory();
     const dispatch = useAppDispatch();
-    const { intl } = useI18n({ messages: { ...messages, ...sharedMessages } });
+    const {
+        intl: { formatMessage },
+    } = useI18n({ messages: { ...messages, ...sharedMessages } });
 
     const revurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
     const [iverksettStatus, iverksettStans] = useApiCall(revurderingApi.iverksettStans);
     const error = RemoteData.isFailure(iverksettStatus) ? iverksettStatus.error : null;
 
     if (!revurdering) {
-        return <AlertStripeFeil> {intl.formatMessage({ id: 'stans.oppsummering.error.fant.ingen' })}</AlertStripeFeil>;
+        return (
+            <div>
+                <AlertStripeFeil> {formatMessage({ id: 'stans.oppsummering.error.fant.ingen' })} </AlertStripeFeil>
+                <Lenke href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })} className="knapp">
+                    {formatMessage({ id: 'stans.bunnknapper.tilbake' })}
+                </Lenke>
+            </div>
+        );
     }
 
     const iverksettOgGåVidere = () => {
         iverksettStans({ sakId: props.sak.id, revurderingId: revurdering.id }, async () => {
             await dispatch(fetchSak({ fnr: props.sak.fnr }));
-            history.push(Routes.createSakIntroLocation(intl.formatMessage({ id: 'stans.notification' }), props.sak.id));
+            history.push(Routes.createSakIntroLocation(formatMessage({ id: 'stans.notification' }), props.sak.id));
         });
     };
 
     const oppsummeringsinputs = [
         {
-            label: intl.formatMessage({ id: 'stans.årsak.tittel' }),
-            verdi: intl.formatMessage({
+            label: formatMessage({ id: 'stans.årsak.tittel' }),
+            verdi: formatMessage({
                 id: getRevurderingsårsakMessageId(revurdering.årsak),
             }),
         },
         {
-            label: intl.formatMessage({ id: 'stans.begrunnelse.tittel' }),
+            label: formatMessage({ id: 'stans.begrunnelse.tittel' }),
             verdi: revurdering.begrunnelse ?? '',
         },
     ];
@@ -67,14 +77,14 @@ const StansOppsummering = (props: Props) => {
             error={error}
             knapper={{
                 tilbake: {
-                    tekst: intl.formatMessage({ id: 'stans.bunnknapper.tilbake' }),
+                    tekst: formatMessage({ id: 'stans.bunnknapper.tilbake' }),
                     onClick: () =>
                         history.push(
                             Routes.stansRoute.createURL({ sakId: props.sak.id, revurderingId: revurdering.id })
                         ),
                 },
                 neste: {
-                    tekst: intl.formatMessage({ id: 'stans.oppsummering.iverksett' }),
+                    tekst: formatMessage({ id: 'stans.oppsummering.iverksett' }),
                     onClick: iverksettOgGåVidere,
                     spinner: RemoteData.isPending(iverksettStatus),
                 },

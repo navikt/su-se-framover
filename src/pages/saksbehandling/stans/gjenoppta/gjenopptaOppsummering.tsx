@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { AlertStripeFeil } from 'nav-frontend-alertstriper';
+import Lenke from 'nav-frontend-lenker';
 import React from 'react';
 import { useHistory } from 'react-router';
 
@@ -24,7 +25,9 @@ interface Props {
 
 const GjenopptaOppsummering = (props: Props) => {
     const urlParams = Routes.useRouteParams<typeof Routes.gjenopptaStansOppsummeringRoute>();
-    const { intl } = useI18n({ messages: { ...messages, ...sharedMessages } });
+    const {
+        intl: { formatMessage },
+    } = useI18n({ messages: { ...messages, ...sharedMessages } });
     const history = useHistory();
     const dispatch = useAppDispatch();
 
@@ -34,28 +37,31 @@ const GjenopptaOppsummering = (props: Props) => {
 
     if (!revurdering) {
         return (
-            <AlertStripeFeil> {intl.formatMessage({ id: 'gjenoppta.oppsummering.error.fant.ingen' })}</AlertStripeFeil>
+            <div>
+                <AlertStripeFeil> {formatMessage({ id: 'gjenoppta.oppsummering.error.fant.ingen' })}</AlertStripeFeil>
+                <Lenke href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })} className="knapp">
+                    {formatMessage({ id: 'stans.bunnknapper.tilbake' })}
+                </Lenke>
+            </div>
         );
     }
 
     const iverksettOgGåVidere = () => {
         iverksettGjenopptak({ sakId: props.sak.id, revurderingId: revurdering.id }, async () => {
             await dispatch(fetchSak({ fnr: props.sak.fnr }));
-            history.push(
-                Routes.createSakIntroLocation(intl.formatMessage({ id: 'gjenoppta.notification' }), props.sak.id)
-            );
+            history.push(Routes.createSakIntroLocation(formatMessage({ id: 'gjenoppta.notification' }), props.sak.id));
         });
     };
     const erIverksatt = revurdering.status === RevurderingsStatus.IVERKSATT_GJENOPPTAK;
     const oppsummeringsinputs = [
         {
-            label: intl.formatMessage({ id: 'gjenoppta.årsak.tittel' }),
-            verdi: intl.formatMessage({
+            label: formatMessage({ id: 'gjenoppta.årsak.tittel' }),
+            verdi: formatMessage({
                 id: getRevurderingsårsakMessageId(revurdering.årsak),
             }),
         },
         {
-            label: intl.formatMessage({ id: 'gjenoppta.begrunnelse.tittel' }),
+            label: formatMessage({ id: 'gjenoppta.begrunnelse.tittel' }),
             verdi: revurdering.begrunnelse ?? '',
         },
     ];
@@ -71,14 +77,14 @@ const GjenopptaOppsummering = (props: Props) => {
             error={error}
             knapper={{
                 tilbake: {
-                    tekst: intl.formatMessage({ id: 'gjenoppta.oppsummering.tilbake' }),
+                    tekst: formatMessage({ id: 'gjenoppta.oppsummering.tilbake' }),
                     onClick: () =>
                         history.push(
                             Routes.gjenopptaStansRoute.createURL({ sakId: props.sak.id, revurderingId: revurdering.id })
                         ),
                 },
                 neste: {
-                    tekst: intl.formatMessage({ id: 'gjenoppta.oppsummering.iverksett' }),
+                    tekst: formatMessage({ id: 'gjenoppta.oppsummering.iverksett' }),
                     onClick: iverksettOgGåVidere,
                     spinner: RemoteData.isPending(iverksettStatus),
                 },

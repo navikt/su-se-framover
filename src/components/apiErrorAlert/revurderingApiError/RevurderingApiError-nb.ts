@@ -72,7 +72,15 @@ export default {
     'stans.simulering.feil': 'Feil ved simulering av stans',
     'stans.opprett.kunne.ikke': 'Kunne ikke opprette revurdering',
     'stans.oppdater.ugyldig.type':
-        'Kunne ikke oppdatere revurdering for stans. Eksisterende revurdering er av feil type.',
+        'kunne ikke oppdatere revurdering for stans. Eksisterende revurdering er av feil type',
+    'kunne.ikke.opprette.revurdering.for.stans': 'Kunne ikke opprette revurdering for stans',
+    'ugyldig.tilstand.for.oppdatering': 'Ugyldig tilstand for oppdatering',
+    'fant.ingen.utbetalinger': 'Fant ingen utbetalinger',
+    'fant.ingen.utbetalinger.etter.stansdato': 'Fant ingen utbetalinger etter stansdato',
+    'kan.ikke.stanse.opphørte.utbetalinger': 'Kan ikke stanste opphørte utbetalinger',
+    'utbetaling.allerede.stanset': 'Utbetaling allerede stanset',
+    'utbetaling.allerede.opphørt': 'Utbetaling allerede opphørt',
+    'stansdato.ikke.første.i.neste.måned': 'Stansdato ikke første i neste måned',
 
     'gjenopptak.siste.utbetaling.ikke.stans': 'Siste utbetaling er ikke stans',
     'gjenopptak.kan.ikke.gjenoppta.opphørte.utbetalinger': 'Kan ikke gjenoppta opphørte utbetalinger',
