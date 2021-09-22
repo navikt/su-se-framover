@@ -94,5 +94,5 @@ export default {
     'gjenopptak.oppdrag.sending.feilet': 'Sending av utbetaling til oppdrag feilet',
     'gjenopptak.simulering.kontroll.feilet': 'Feil ved kontroll av simulering',
     'gjenopptak.siste.vedtak.ikke.stans':
-        'Kan ikke opprette revurdering for gjenopptak av ytelse, siste vedtak er ikke en gjenopptak',
+        'Kan ikke opprette revurdering for gjenopptak av ytelse, siste vedtak er ikke en stans',
 };

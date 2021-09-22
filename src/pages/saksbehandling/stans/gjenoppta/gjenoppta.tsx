@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Knapp } from 'nav-frontend-knapper';
-import { Label, Select, Textarea } from 'nav-frontend-skjema';
+import { Select, Textarea } from 'nav-frontend-skjema';
 import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -102,70 +102,62 @@ const Gjenoppta = (props: Props) => {
                 <Route path={Routes.gjenopptaStansOppsummeringRoute.path}>
                     <GjenopptaOppsummering sak={props.sak} />
                 </Route>
-                <div className={styles.container}>
-                    <form onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
-                        <div className={styles.select}>
-                            <Label htmlFor="årsak"> {intl.formatMessage({ id: 'gjenoppta.årsak.tittel' })}</Label>
-                            <Controller
-                                control={form.control}
-                                name="årsak"
-                                render={({ field, fieldState }) => (
-                                    <Select
-                                        feil={
-                                            fieldState.error && <Feilmelding> {fieldState.error.message} </Feilmelding>
-                                        }
-                                        value={field.value ?? undefined}
-                                        onChange={field.onChange}
-                                        className={styles.select}
-                                    >
-                                        <option>{intl.formatMessage({ id: 'gjenoppta.årsak.label' })}</option>
-                                        <option value={OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING}>
-                                            {intl.formatMessage({
-                                                id: getRevurderingsårsakMessageId(
-                                                    OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING
-                                                ),
-                                            })}
-                                        </option>
-                                    </Select>
-                                )}
-                            />
-                        </div>
-
-                        <div className={styles.begrunnelse}>
-                            <Controller
-                                control={form.control}
-                                name="begrunnelse"
-                                render={({ field, fieldState }) => (
-                                    <Textarea
-                                        label="Begrunnelse"
-                                        name="begrunnelse"
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                        feil={fieldState.error?.message}
-                                    />
-                                )}
-                            />
-                        </div>
-                        {RemoteData.isFailure(status) && (
-                            <div className={styles.error}>
-                                <ApiErrorAlert error={status.error} />
-                            </div>
-                        )}
-                        <div className={styles.knapper}>
-                            <Knapp
-                                htmlType="button"
-                                onClick={() =>
-                                    history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))
-                                }
+                <form className={styles.container} onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
+                    <Controller
+                        control={form.control}
+                        name="årsak"
+                        render={({ field, fieldState }) => (
+                            <Select
+                                feil={fieldState.error && <Feilmelding> {fieldState.error.message} </Feilmelding>}
+                                value={field.value ?? undefined}
+                                onChange={field.onChange}
+                                label={intl.formatMessage({ id: 'gjenoppta.årsak.tittel' })}
+                                bredde="l"
                             >
-                                {intl.formatMessage({ id: 'gjenoppta.oppsummering.tilbake' })}
-                            </Knapp>
-                            <Knapp spinner={RemoteData.isPending(gjenopptaStatus)}>
-                                {intl.formatMessage({ id: 'gjenoppta.oppsummering.iverksett' })}
-                            </Knapp>
+                                <option>{intl.formatMessage({ id: 'gjenoppta.årsak.label' })}</option>
+                                <option value={OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING}>
+                                    {intl.formatMessage({
+                                        id: getRevurderingsårsakMessageId(
+                                            OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING
+                                        ),
+                                    })}
+                                </option>
+                            </Select>
+                        )}
+                    />
+
+                    <div className={styles.begrunnelse}>
+                        <Controller
+                            control={form.control}
+                            name="begrunnelse"
+                            render={({ field, fieldState }) => (
+                                <Textarea
+                                    label="Begrunnelse"
+                                    name="begrunnelse"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    feil={fieldState.error?.message}
+                                />
+                            )}
+                        />
+                    </div>
+                    {RemoteData.isFailure(status) && (
+                        <div className={styles.error}>
+                            <ApiErrorAlert error={status.error} />
                         </div>
-                    </form>
-                </div>
+                    )}
+                    <div className={styles.knapper}>
+                        <Knapp
+                            htmlType="button"
+                            onClick={() => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
+                        >
+                            {intl.formatMessage({ id: 'gjenoppta.oppsummering.tilbake' })}
+                        </Knapp>
+                        <Knapp spinner={RemoteData.isPending(gjenopptaStatus)}>
+                            {intl.formatMessage({ id: 'gjenoppta.oppsummering.iverksett' })}
+                        </Knapp>
+                    </div>
+                </form>
             </Switch>
         </>
     );

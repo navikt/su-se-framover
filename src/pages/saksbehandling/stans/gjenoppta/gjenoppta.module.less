@@ -2,7 +2,7 @@
 
 .tittel {
     width: 100%;
-    padding: @spacing-xs 10rem;
+    padding: @spacing-xs @spacing-xxl;
     border-bottom: 1px solid @navBorder;
 }
 
@@ -11,20 +11,14 @@
     flex-direction: column;
     margin-top: @spacing-s;
     width: 100%;
-    padding: 1rem 10rem;
-
-    .select {
-        margin-top: @spacing-s;
-        max-width: 16rem;
-    }
+    padding: 0 @spacing-xxl;
+    gap: @spacing;
 
     .begrunnelse {
-        margin-top: @spacing-s;
-        max-width: 24rem;
+        max-width: @container-sm;
     }
 
     .iverksett {
-        margin-top: @spacing-s;
         button:not(:first-child) {
             margin-left: @spacing-xs;
         }

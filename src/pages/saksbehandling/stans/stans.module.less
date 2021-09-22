@@ -2,7 +2,7 @@
 
 .tittel {
     width: 100%;
-    padding: @spacing-xs 10rem;
+    padding: @spacing-xs @spacing-xxl;
     border-bottom: 1px solid @navBorder;
 }
 
@@ -12,7 +12,11 @@
     width: 100%;
 
     .content {
-        padding: @spacing-xs 10rem;
+        padding: @spacing-xs @spacing-xxl;
+        max-width: @container-sm;
+        display: flex;
+        flex-direction: column;
+        gap: @spacing;
     }
 
     .select {

@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Knapp } from 'nav-frontend-knapper';
-import { Label, Select, Textarea } from 'nav-frontend-skjema';
+import { Select, Textarea } from 'nav-frontend-skjema';
 import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -115,65 +115,57 @@ const Stans = (props: Props) => {
                         {intl.formatMessage({ id: 'stans.tittel' })}
                     </Innholdstittel>
                     <div className={styles.content}>
-                        <div className={styles.select}>
-                            <Label htmlFor="årsak"> {intl.formatMessage({ id: 'stans.årsak.tittel' })}</Label>
-                            <Controller
-                                control={form.control}
-                                name="årsak"
-                                render={({ field, fieldState }) => (
-                                    <Select
-                                        feil={
-                                            fieldState.error && <Feilmelding> {fieldState.error.message} </Feilmelding>
-                                        }
-                                        value={field.value ?? undefined}
-                                        onChange={field.onChange}
-                                        className={styles.select}
-                                    >
-                                        <option>{intl.formatMessage({ id: 'stans.årsak.label' })}</option>
-                                        <option value={OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING}>
-                                            {intl.formatMessage({
-                                                id: getRevurderingsårsakMessageId(
-                                                    OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING
-                                                ),
-                                            })}
-                                        </option>
-                                    </Select>
-                                )}
-                            />
-                        </div>
-                        <div className={styles.datepicker}>
-                            <Controller
-                                control={form.control}
-                                name="stansDato"
-                                render={({ field, fieldState }) => (
-                                    <DatePicker
-                                        label={intl.formatMessage({ id: 'stans.dato.label' })}
-                                        dateFormat="MM/yyyy"
-                                        showMonthYearPicker
-                                        isClearable
-                                        autoComplete="off"
-                                        value={field.value}
-                                        onChange={(date: Date | null) => field.onChange(date)}
-                                        feil={fieldState.error?.message}
-                                    />
-                                )}
-                            />
-                        </div>
-                        <div className={styles.begrunnelse}>
-                            <Controller
-                                control={form.control}
-                                name="begrunnelse"
-                                render={({ field, fieldState }) => (
-                                    <Textarea
-                                        label="Begrunnelse"
-                                        name="begrunnelse"
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                        feil={fieldState.error?.message}
-                                    />
-                                )}
-                            />
-                        </div>
+                        <Controller
+                            control={form.control}
+                            name="årsak"
+                            render={({ field, fieldState }) => (
+                                <Select
+                                    feil={fieldState.error && <Feilmelding> {fieldState.error.message} </Feilmelding>}
+                                    value={field.value ?? undefined}
+                                    onChange={field.onChange}
+                                    bredde="l"
+                                    label={intl.formatMessage({ id: 'stans.årsak.tittel' })}
+                                >
+                                    <option>{intl.formatMessage({ id: 'stans.årsak.label' })}</option>
+                                    <option value={OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING}>
+                                        {intl.formatMessage({
+                                            id: getRevurderingsårsakMessageId(
+                                                OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING
+                                            ),
+                                        })}
+                                    </option>
+                                </Select>
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
+                            name="stansDato"
+                            render={({ field, fieldState }) => (
+                                <DatePicker
+                                    label={intl.formatMessage({ id: 'stans.dato.label' })}
+                                    dateFormat="MM/yyyy"
+                                    showMonthYearPicker
+                                    isClearable
+                                    autoComplete="off"
+                                    value={field.value}
+                                    onChange={(date: Date | null) => field.onChange(date)}
+                                    feil={fieldState.error?.message}
+                                />
+                            )}
+                        />
+                        <Controller
+                            control={form.control}
+                            name="begrunnelse"
+                            render={({ field, fieldState }) => (
+                                <Textarea
+                                    label="Begrunnelse"
+                                    name="begrunnelse"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    feil={fieldState.error?.message}
+                                />
+                            )}
+                        />
                         {RemoteData.isFailure(status) && (
                             <div className={styles.error}>
                                 <ApiErrorAlert error={status.error} />
