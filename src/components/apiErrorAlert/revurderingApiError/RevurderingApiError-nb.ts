@@ -72,7 +72,7 @@ export default {
     'stans.simulering.feil': 'Feil ved simulering av stans',
     'stans.opprett.kunne.ikke': 'Kunne ikke opprette revurdering',
     'stans.oppdater.ugyldig.type':
-        'kunne ikke oppdatere revurdering for stans, eksisterende revurdering er av feil type',
+        'Kunne ikke oppdatere revurdering for stans. Eksisterende revurdering er av feil type.',
 
     'gjenopptak.iverksett.ugyldig.tilstand': 'Kan ikke gjenoppta utbetalinger som allerede er gjenopptatt',
     'gjenopptak.ingen.tidligere.vedtak':
