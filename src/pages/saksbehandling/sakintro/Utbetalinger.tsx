@@ -1,5 +1,3 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Fareknapp, Knapp } from 'nav-frontend-knapper';
@@ -103,62 +101,6 @@ export const Utbetalinger = (props: {
                         )}
                     </div>
                 </div>
-<<<<<<< HEAD
-                <ModalWrapper
-                    isOpen={modalOpen}
-                    closeButton={true}
-                    onRequestClose={() => setModalOpen(false)}
-                    contentLabel={'stansUtbetalinger'}
-                >
-                    <div className={styles.modalContainer}>
-                        <Undertittel>
-                            {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetalingerTil' })}{' '}
-                            {showName(søker.navn)}
-                        </Undertittel>
-                        <p>{intl.formatMessage({ id: 'display.utbetalingsperiode.bekreftStans' })}</p>
-                        <div className={styles.modalKnappContainer}>
-                            <Flatknapp onClick={() => setModalOpen(false)}>
-                                {intl.formatMessage({ id: 'display.utbetalingsperiode.avbryt' })}
-                            </Flatknapp>
-                            <Fareknapp
-                                spinner={RemoteData.isPending(stansUtbetalingerStatus)}
-                                onClick={() => {
-                                    if (kanStanses && !RemoteData.isPending(stansUtbetalingerStatus)) {
-                                        dispatch(
-                                            sakSlice.stansUtbetalinger({
-                                                sakId: props.sakId,
-                                            })
-                                        );
-                                    }
-                                }}
-                            >
-                                {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetaling' })}
-                            </Fareknapp>
-                        </div>
-                        {RemoteData.isFailure(stansUtbetalingerStatus) && (
-                            <Alert variant="error">
-                                {intl.formatMessage({ id: 'display.utbetalingsperiode.klarteIkkeStanseUtbetaling' })}
-                            </Alert>
-                        )}
-                        {RemoteData.isSuccess(stansUtbetalingerStatus) && (
-                            <Alert variant="success">
-                                {intl.formatMessage({ id: 'display.utbetalingsperiode.stansetUtbetaling' })}
-                            </Alert>
-                        )}
-                    </div>
-                </ModalWrapper>
-                {RemoteData.isFailure(gjenopptaUtbetalingerStatus) && (
-                    <Alert variant="error">
-                        {intl.formatMessage({ id: 'display.utbetalingsperiode.klarteIkkeGjenopptaUtbetaling' })}
-                    </Alert>
-                )}
-                {RemoteData.isSuccess(gjenopptaUtbetalingerStatus) && (
-                    <Alert variant="success" className={styles.utbetalingGjenopptatt}>
-                        {intl.formatMessage({ id: 'display.utbetalingsperiode.gjenopptattUtbetaling' })}
-                    </Alert>
-                )}
-=======
->>>>>>> b15a9490 (Cleanup gjenoppta)
             </Panel>
         </div>
     );

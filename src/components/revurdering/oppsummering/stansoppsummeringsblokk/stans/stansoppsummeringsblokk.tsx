@@ -15,14 +15,14 @@ interface Props {
 const StansOppsummeringsblokk = (props: Props) => {
     return (
         <Oppsummeringspanel ikon={Oppsummeringsikon.Liste} farge={Oppsummeringsfarge.Lilla} tittel={props.tittel}>
-            <div className={styles.container}>
+            <ul className={styles.container}>
                 {props.oppsummeringsinput.map((input, index) => (
-                    <div key={index}>
+                    <li key={index}>
                         <Element>{input.label}</Element>
                         <Normaltekst>{input.verdi}</Normaltekst>
-                    </div>
+                    </li>
                 ))}
-            </div>
+            </ul>
         </Oppsummeringspanel>
     );
 };
