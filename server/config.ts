@@ -108,7 +108,6 @@ export const client = {
     LOGIN_URL: '/login',
     LOGOUT_URL: '/logout',
     AMPLITUDE_API_KEY: envVar({ name: 'AMPLITUDE_API_KEY' }),
-    FEATURE_HENDELSESLOGG: envVar({ name: 'FEATURE_HENDELSESLOGG' }),
 };
 
 export type FrontendConfig = typeof client;
