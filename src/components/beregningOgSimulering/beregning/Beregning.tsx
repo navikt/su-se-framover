@@ -185,7 +185,11 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         if (Object.values(formikErrors).length > 0) {
             return;
         }
-        if (!props.behandling.beregning || !erFradragLike(props.behandling.beregning?.fradrag, formik.values.fradrag)) {
+        if (
+            !props.behandling.beregning ||
+            !erFradragLike(props.behandling.beregning?.fradrag, formik.values.fradrag) ||
+            props.behandling.beregning.begrunnelse !== formik.values.begrunnelse
+        ) {
             return setNeedsBeregning(true);
         }
 
@@ -272,6 +276,17 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 }}
                             />
                         </div>
+
+                        <div className={styles.textareaContainer}>
+                            <Textarea
+                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
+                                name="begrunnelse"
+                                onChange={formik.handleChange}
+                                value={formik.values.begrunnelse ?? ''}
+                                feil={formik.errors.begrunnelse}
+                            />
+                        </div>
+
                         <Undertittel>
                             Beregning
                             {props.behandling.beregning &&
@@ -309,15 +324,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     })}
                                 </AlertStripe>
                             )}
-                        </div>
-                        <div className={styles.textareaContainer}>
-                            <Textarea
-                                label={intl.formatMessage({ id: 'input.label.begrunnelse' })}
-                                name="begrunnelse"
-                                onChange={formik.handleChange}
-                                value={formik.values.begrunnelse ?? ''}
-                                feil={formik.errors.begrunnelse}
-                            />
                         </div>
 
                         {RemoteData.isFailure(lagrefradragogberegnstatus) && (
