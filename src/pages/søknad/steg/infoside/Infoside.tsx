@@ -1,4 +1,4 @@
-import Lenke from 'nav-frontend-lenker';
+import { Link } from '@navikt/ds-react';
 import { Sidetittel, Ingress } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
@@ -37,9 +37,9 @@ const Infoside = (props: { nesteUrl: string }) => {
                         </p>
                     </div>
                     <div className={styles.paragraphSpacing}>
-                        <Lenke target="_blank" href={merOmSuForUføreLink}>
+                        <Link target="_blank" href={merOmSuForUføreLink}>
                             <FormattedMessage id="suppstønad.merOmSuForUføre" />
-                        </Lenke>
+                        </Link>
                     </div>
                 </div>
 
@@ -66,9 +66,9 @@ const Infoside = (props: { nesteUrl: string }) => {
                     </p>
 
                     <div className={styles.paragraphSpacing}>
-                        <Lenke target="_blank" href={personvernLink}>
+                        <Link target="_blank" href={personvernLink}>
                             <FormattedMessage id="henterInnInfo.personvernLinkTekst" />
-                        </Lenke>
+                        </Link>
                     </div>
                 </section>
 
@@ -85,9 +85,9 @@ const Infoside = (props: { nesteUrl: string }) => {
                             values={{
                                 //eslint-disable-next-line react/display-name
                                 navLink: (tekst: string) => (
-                                    <Lenke target="_blank" href={suUførFlyktningLink}>
+                                    <Link target="_blank" href={suUførFlyktningLink}>
                                         {tekst}
-                                    </Lenke>
+                                    </Link>
                                 ),
                             }}
                         />

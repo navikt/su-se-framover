@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader } from '@navikt/ds-react';
+import { Alert, Button, Link, Loader } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { useFormik } from 'formik';
-import Lenke from 'nav-frontend-lenker';
 import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -161,9 +160,9 @@ const LukkSøknad = (props: { sak: Sak }) => {
                 />
             )}
             <div className={styles.tilbakeKnappContainer}>
-                <Lenke href={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })} className="knapp">
+                <Link href={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })} className="knapp">
                     {intl.formatMessage({ id: 'knapp.tilbake' })}
-                </Lenke>
+                </Link>
             </div>
 
             <div>
