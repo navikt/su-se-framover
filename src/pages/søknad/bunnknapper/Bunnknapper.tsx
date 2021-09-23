@@ -1,5 +1,4 @@
-import { Button, Loader } from '@navikt/ds-react';
-import ModalWrapper from 'nav-frontend-modal';
+import { Button, Loader, Modal } from '@navikt/ds-react';
 import { Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -55,32 +54,29 @@ const Bunnknapper = (props: {
                     <FormattedMessage id="steg.avbryt" />
                 </Button>
             </div>
-            <ModalWrapper
-                isOpen={modalOpen}
-                closeButton={true}
-                onRequestClose={() => setModalOpen(false)}
-                contentLabel={'lukkSøknad'}
-            >
-                <div className={styles.modalContainer}>
-                    <Undertittel className={styles.modalTittel}>
-                        <FormattedMessage id="modal.tittel" />
-                    </Undertittel>
-                    <p>
-                        <FormattedMessage id="modal.infoTekst.p1" />
-                    </p>
-                    <p>
-                        <FormattedMessage id="modal.infoTekst.p2" />
-                    </p>
-                    <div className={styles.modalKnappContainer}>
-                        <Button variant="tertiary" onClick={() => setModalOpen(false)}>
-                            <FormattedMessage id="steg.avbryt" />
-                        </Button>
-                        <LinkAsButton variant="danger" href={props.avbryt.toRoute}>
-                            <FormattedMessage id="modal.lukkSøknad" />
-                        </LinkAsButton>
+            <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+                <Modal.Content>
+                    <div className={styles.modalContainer}>
+                        <Undertittel className={styles.modalTittel}>
+                            <FormattedMessage id="modal.tittel" />
+                        </Undertittel>
+                        <p>
+                            <FormattedMessage id="modal.infoTekst.p1" />
+                        </p>
+                        <p>
+                            <FormattedMessage id="modal.infoTekst.p2" />
+                        </p>
+                        <div className={styles.modalKnappContainer}>
+                            <Button variant="tertiary" onClick={() => setModalOpen(false)}>
+                                <FormattedMessage id="steg.avbryt" />
+                            </Button>
+                            <LinkAsButton variant="danger" href={props.avbryt.toRoute}>
+                                <FormattedMessage id="modal.lukkSøknad" />
+                            </LinkAsButton>
+                        </div>
                     </div>
-                </div>
-            </ModalWrapper>
+                </Modal.Content>
+            </Modal>
         </TextProvider>
     );
 };

@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader } from '@navikt/ds-react';
-import ModalWrapper from 'nav-frontend-modal';
+import { Alert, Button, Loader, Modal } from '@navikt/ds-react';
 import 'nav-frontend-tabell-style';
 import * as React from 'react';
 import DatePicker from 'react-datepicker';
@@ -169,35 +168,35 @@ const Drift = () => {
                         Konsistensavstemming
                         {RemoteData.isPending(konsistensavstemmingStatus) && <Loader />}
                     </Button>
-                    <ModalWrapper
-                        isOpen={konsistensavtemmingModalOpen}
-                        closeButton={true}
-                        onRequestClose={() => {
+                    <Modal
+                        open={konsistensavtemmingModalOpen}
+                        onClose={() => {
                             setKonsistensavtemmingModalOpen(false);
                         }}
-                        contentLabel="konsistensavstemmingModal"
                     >
-                        <div className={styles.modalContainer}>
-                            <DatePicker
-                                dateFormat="dd/MM/yyyy"
-                                selected={konsistensavstemmingFraOgMed}
-                                onChange={(date: Date) => {
-                                    setKonsistensavstemmingFraOgMed(date);
-                                }}
-                            ></DatePicker>
-                            <Button
-                                variant="secondary"
-                                className={styles.knapp}
-                                type="button"
-                                onClick={() =>
-                                    fetchKonsistensavstemming(toIsoDateOnlyString(konsistensavstemmingFraOgMed))
-                                }
-                            >
-                                Konsistensavstemming
-                                {RemoteData.isPending(konsistensavstemmingStatus) && <Loader />}
-                            </Button>
-                        </div>
-                    </ModalWrapper>
+                        <Modal.Content>
+                            <div className={styles.modalContainer}>
+                                <DatePicker
+                                    dateFormat="dd/MM/yyyy"
+                                    selected={konsistensavstemmingFraOgMed}
+                                    onChange={(date: Date) => {
+                                        setKonsistensavstemmingFraOgMed(date);
+                                    }}
+                                ></DatePicker>
+                                <Button
+                                    variant="secondary"
+                                    className={styles.knapp}
+                                    type="button"
+                                    onClick={() =>
+                                        fetchKonsistensavstemming(toIsoDateOnlyString(konsistensavstemmingFraOgMed))
+                                    }
+                                >
+                                    Konsistensavstemming
+                                    {RemoteData.isPending(konsistensavstemmingStatus) && <Loader />}
+                                </Button>
+                            </div>
+                        </Modal.Content>
+                    </Modal>
                 </div>
                 {RemoteData.isFailure(fixSøknaderResponse) && (
                     <Alert className={styles.alert} variant="error">

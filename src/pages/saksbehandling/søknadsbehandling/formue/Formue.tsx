@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Button } from '@navikt/ds-react';
+import { Alert, Button, Modal } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import { startOfMonth } from 'date-fns/esm';
-import ModalWrapper from 'nav-frontend-modal';
 import { Input, Textarea, Checkbox, RadioGruppe, Radio, Feiloppsummering, SkjemaGruppe } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import Tekstomrade, { BoldRule, HighlightRule, LinebreakRule } from 'nav-frontend-tekstomrade';
@@ -342,37 +341,50 @@ const Formue = (props: {
                                                     (err) => (
                                                         <Alert variant="error">
                                                             {err?.statusCode === ErrorCode.Unauthorized ? (
-                                                                <ModalWrapper
-                                                                    isOpen={true}
-                                                                    onRequestClose={() => {
+                                                                <Modal
+                                                                    open={true}
+                                                                    onClose={() => {
                                                                         return;
                                                                     }}
-                                                                    contentLabel={formatMessage(
-                                                                        'modal.skjerming.ariaBeskrivelse'
-                                                                    )}
-                                                                    closeButton={false}
-                                                                    contentClass={styles.modalInnhold}
                                                                 >
-                                                                    <Undertittel>
-                                                                        {formatMessage('modal.skjerming.heading')}
-                                                                    </Undertittel>
-                                                                    <Tekstomrade
-                                                                        className={styles.modalTekst}
-                                                                        rules={[BoldRule, HighlightRule, LinebreakRule]}
-                                                                    >
-                                                                        {formatMessage('modal.skjerming.innhold', {
-                                                                            navn: showName(props.søker.navn),
-                                                                            fnr: søknadInnhold.personopplysninger.fnr,
-                                                                        })}
-                                                                    </Tekstomrade>
-                                                                    <Button
-                                                                        variant="secondary"
-                                                                        type="button"
-                                                                        onClick={handleEpsSkjermingModalContinueClick}
-                                                                    >
-                                                                        OK
-                                                                    </Button>
-                                                                </ModalWrapper>
+                                                                    <Modal.Content>
+                                                                        <div className={styles.modalInnhold}>
+                                                                            <Undertittel>
+                                                                                {formatMessage(
+                                                                                    'modal.skjerming.heading'
+                                                                                )}
+                                                                            </Undertittel>
+                                                                            <Tekstomrade
+                                                                                className={styles.modalTekst}
+                                                                                rules={[
+                                                                                    BoldRule,
+                                                                                    HighlightRule,
+                                                                                    LinebreakRule,
+                                                                                ]}
+                                                                            >
+                                                                                {formatMessage(
+                                                                                    'modal.skjerming.innhold',
+                                                                                    {
+                                                                                        navn: showName(
+                                                                                            props.søker.navn
+                                                                                        ),
+                                                                                        fnr: søknadInnhold
+                                                                                            .personopplysninger.fnr,
+                                                                                    }
+                                                                                )}
+                                                                            </Tekstomrade>
+                                                                            <Button
+                                                                                variant="secondary"
+                                                                                type="button"
+                                                                                onClick={
+                                                                                    handleEpsSkjermingModalContinueClick
+                                                                                }
+                                                                            >
+                                                                                OK
+                                                                            </Button>
+                                                                        </div>
+                                                                    </Modal.Content>
+                                                                </Modal>
                                                             ) : err?.statusCode === ErrorCode.NotFound ? (
                                                                 formatMessage('feilmelding.ikkeFunnet')
                                                             ) : (

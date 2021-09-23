@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader } from '@navikt/ds-react';
+import { Alert, Button, Loader, Modal } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import Ikon from 'nav-frontend-ikoner-assets';
-import ModalWrapper from 'nav-frontend-modal';
 import Panel from 'nav-frontend-paneler';
 import { Element, Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
@@ -114,50 +113,49 @@ export const Utbetalinger = (props: {
                         )}
                     </div>
                 </div>
-                <ModalWrapper
-                    isOpen={modalOpen}
-                    closeButton={true}
-                    onRequestClose={() => setModalOpen(false)}
-                    contentLabel={'stansUtbetalinger'}
-                >
-                    <div className={styles.modalContainer}>
-                        <Undertittel>
-                            {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetalingerTil' })}{' '}
-                            {showName(søker.navn)}
-                        </Undertittel>
-                        <p>{intl.formatMessage({ id: 'display.utbetalingsperiode.bekreftStans' })}</p>
-                        <div className={styles.modalKnappContainer}>
-                            <Button variant="tertiary" onClick={() => setModalOpen(false)}>
-                                {intl.formatMessage({ id: 'display.utbetalingsperiode.avbryt' })}
-                            </Button>
-                            <Button
-                                variant="danger"
-                                onClick={() => {
-                                    if (kanStanses && !RemoteData.isPending(stansUtbetalingerStatus)) {
-                                        dispatch(
-                                            sakSlice.stansUtbetalinger({
-                                                sakId: props.sakId,
-                                            })
-                                        );
-                                    }
-                                }}
-                            >
-                                {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetaling' })}
-                                {RemoteData.isPending(stansUtbetalingerStatus) && <Loader />}
-                            </Button>
+                <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+                    <Modal.Content>
+                        <div className={styles.modalContainer}>
+                            <Undertittel>
+                                {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetalingerTil' })}{' '}
+                                {showName(søker.navn)}
+                            </Undertittel>
+                            <p>{intl.formatMessage({ id: 'display.utbetalingsperiode.bekreftStans' })}</p>
+                            <div className={styles.modalKnappContainer}>
+                                <Button variant="tertiary" onClick={() => setModalOpen(false)}>
+                                    {intl.formatMessage({ id: 'display.utbetalingsperiode.avbryt' })}
+                                </Button>
+                                <Button
+                                    variant="danger"
+                                    onClick={() => {
+                                        if (kanStanses && !RemoteData.isPending(stansUtbetalingerStatus)) {
+                                            dispatch(
+                                                sakSlice.stansUtbetalinger({
+                                                    sakId: props.sakId,
+                                                })
+                                            );
+                                        }
+                                    }}
+                                >
+                                    {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetaling' })}
+                                    {RemoteData.isPending(stansUtbetalingerStatus) && <Loader />}
+                                </Button>
+                            </div>
+                            {RemoteData.isFailure(stansUtbetalingerStatus) && (
+                                <Alert variant="error">
+                                    {intl.formatMessage({
+                                        id: 'display.utbetalingsperiode.klarteIkkeStanseUtbetaling',
+                                    })}
+                                </Alert>
+                            )}
+                            {RemoteData.isSuccess(stansUtbetalingerStatus) && (
+                                <Alert variant="success">
+                                    {intl.formatMessage({ id: 'display.utbetalingsperiode.stansetUtbetaling' })}
+                                </Alert>
+                            )}
                         </div>
-                        {RemoteData.isFailure(stansUtbetalingerStatus) && (
-                            <Alert variant="error">
-                                {intl.formatMessage({ id: 'display.utbetalingsperiode.klarteIkkeStanseUtbetaling' })}
-                            </Alert>
-                        )}
-                        {RemoteData.isSuccess(stansUtbetalingerStatus) && (
-                            <Alert variant="success">
-                                {intl.formatMessage({ id: 'display.utbetalingsperiode.stansetUtbetaling' })}
-                            </Alert>
-                        )}
-                    </div>
-                </ModalWrapper>
+                    </Modal.Content>
+                </Modal>
                 {RemoteData.isFailure(gjenopptaUtbetalingerStatus) && (
                     <Alert variant="error">
                         {intl.formatMessage({ id: 'display.utbetalingsperiode.klarteIkkeGjenopptaUtbetaling' })}
