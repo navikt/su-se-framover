@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Button, Loader } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, RadioPanelGruppe, Select, Textarea } from 'nav-frontend-skjema';
 import { Systemtittel } from 'nav-frontend-typografi';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
@@ -217,12 +216,10 @@ const Attesteringsinnhold = ({
                                 feil={formikErrorsTilFeiloppsummering(formik.errors)}
                                 hidden={!formikErrorsHarFeil(formik.errors)}
                             />
-                            <Knapp
-                                spinner={RemoteData.isPending(attesteringStatus)}
-                                className={styles.sendInnAttestering}
-                            >
+                            <Button variant="primary" className={styles.sendInnAttestering}>
                                 {intl.formatMessage({ id: 'attestering.knapp.send' })}
-                            </Knapp>
+                                {RemoteData.isPending(attesteringStatus) && <Loader />}
+                            </Button>
                             {RemoteData.isFailure(attesteringStatus) && (
                                 <div className={styles.sendInnAttesteringFeilet}>
                                     <Alert variant="error">

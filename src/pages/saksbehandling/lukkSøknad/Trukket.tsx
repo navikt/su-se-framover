@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Button, Loader } from '@navikt/ds-react';
 import { Datepicker } from 'nav-datovelger';
-import { Fareknapp, Knapp } from 'nav-frontend-knapper';
 import { Label } from 'nav-frontend-skjema';
 import { Feilmelding } from 'nav-frontend-typografi';
 import React, { useCallback, useState } from 'react';
@@ -82,20 +82,22 @@ const Trukket = (props: TrukketProps) => {
                 )}
             </div>
             <div className={styles.buttonsContainer}>
-                <Knapp
+                <Button
+                    variant="secondary"
                     className={styles.seBrevKnapp}
-                    htmlType="button"
+                    type="button"
                     onClick={() => {
                         setClickedViewLetter(true);
                         onSeBrevClick();
                     }}
-                    spinner={RemoteData.isPending(props.lukketSøknadBrevutkastStatus)}
                 >
                     {intl.formatMessage({ id: 'knapp.seBrev' })}
-                </Knapp>
-                <Fareknapp spinner={RemoteData.isPending(props.søknadLukketStatus)}>
+                    {RemoteData.isPending(props.lukketSøknadBrevutkastStatus) && <Loader />}
+                </Button>
+                <Button variant="danger">
                     {intl.formatMessage({ id: 'knapp.lukkSøknad' })}
-                </Fareknapp>
+                    {RemoteData.isPending(props.søknadLukketStatus) && <Loader />}
+                </Button>
             </div>
         </div>
     );

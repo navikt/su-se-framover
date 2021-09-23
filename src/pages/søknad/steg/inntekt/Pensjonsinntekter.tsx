@@ -1,6 +1,6 @@
+import { Button } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { FormikErrors } from 'formik';
-import { Knapp } from 'nav-frontend-knapper';
 import { Input } from 'nav-frontend-skjema';
 import * as React from 'react';
 
@@ -72,23 +72,24 @@ const PensjonsInntekter = (props: {
                             autoComplete="off"
                             feil={feltError('beløp')}
                         />
-                        <Knapp
-                            htmlType="button"
-                            kompakt
+                        <Button
+                            variant="secondary"
+                            type="button"
+                            size="small"
                             className={classNames(sharedStyles.fjernradknapp, {
                                 [sharedStyles.skjult]: props.arr.length < 2,
                             })}
                             onClick={() => props.onFjernClick(idx)}
                         >
                             {formatMessage('button.fjern.pensjonsgiver')}
-                        </Knapp>
+                        </Button>
                     </li>
                 );
             })}
             <div className={sharedStyles.leggTilFeltKnapp}>
-                <Knapp onClick={() => props.onLeggTilClick()} htmlType="button">
+                <Button variant="secondary" onClick={() => props.onLeggTilClick()} type="button">
                     {formatMessage('button.leggTil.pensjonsgiver')}
-                </Knapp>
+                </Button>
             </div>
         </ul>
     );

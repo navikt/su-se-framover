@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Button, Loader } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import Ikon from 'nav-frontend-ikoner-assets';
-import { Fareknapp, Flatknapp, Knapp } from 'nav-frontend-knapper';
 import ModalWrapper from 'nav-frontend-modal';
 import Panel from 'nav-frontend-paneler';
 import { Element, Undertittel } from 'nav-frontend-typografi';
@@ -91,7 +90,8 @@ export const Utbetalinger = (props: {
                     </div>
                     <div className={styles.utbetalingKnappContainer}>
                         {kanGjenopptas ? (
-                            <Knapp
+                            <Button
+                                variant="secondary"
                                 onClick={() => {
                                     if (kanGjenopptas && !RemoteData.isPending(gjenopptaUtbetalingerStatus)) {
                                         dispatch(
@@ -101,15 +101,15 @@ export const Utbetalinger = (props: {
                                         );
                                     }
                                 }}
-                                spinner={RemoteData.isPending(gjenopptaUtbetalingerStatus)}
                             >
                                 {intl.formatMessage({ id: 'display.utbetalingsperiode.gjenopptaUtbetaling' })}
-                            </Knapp>
+                                {RemoteData.isPending(gjenopptaUtbetalingerStatus) && <Loader />}
+                            </Button>
                         ) : (
                             kanStanses && (
-                                <Fareknapp onClick={() => setModalOpen(true)}>
+                                <Button variant="danger" onClick={() => setModalOpen(true)}>
                                     {intl.formatMessage({ id: 'display.utbetalingsperiode.stoppUtbetaling' })}
-                                </Fareknapp>
+                                </Button>
                             )
                         )}
                     </div>
@@ -127,11 +127,11 @@ export const Utbetalinger = (props: {
                         </Undertittel>
                         <p>{intl.formatMessage({ id: 'display.utbetalingsperiode.bekreftStans' })}</p>
                         <div className={styles.modalKnappContainer}>
-                            <Flatknapp onClick={() => setModalOpen(false)}>
+                            <Button variant="tertiary" onClick={() => setModalOpen(false)}>
                                 {intl.formatMessage({ id: 'display.utbetalingsperiode.avbryt' })}
-                            </Flatknapp>
-                            <Fareknapp
-                                spinner={RemoteData.isPending(stansUtbetalingerStatus)}
+                            </Button>
+                            <Button
+                                variant="danger"
                                 onClick={() => {
                                     if (kanStanses && !RemoteData.isPending(stansUtbetalingerStatus)) {
                                         dispatch(
@@ -143,7 +143,8 @@ export const Utbetalinger = (props: {
                                 }}
                             >
                                 {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetaling' })}
-                            </Fareknapp>
+                                {RemoteData.isPending(stansUtbetalingerStatus) && <Loader />}
+                            </Button>
                         </div>
                         {RemoteData.isFailure(stansUtbetalingerStatus) && (
                             <Alert variant="error">

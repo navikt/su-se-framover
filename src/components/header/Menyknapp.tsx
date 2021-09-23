@@ -1,5 +1,5 @@
 import { ExpandFilled } from '@navikt/ds-icons';
-import { Knapp } from 'nav-frontend-knapper';
+import { Button } from '@navikt/ds-react';
 import Popover, { PopoverOrientering } from 'nav-frontend-popover';
 import React, { useState } from 'react';
 
@@ -28,9 +28,9 @@ const Menyknapp = ({ navn, onLoggUtClick }: Props) => {
                 tabIndex={-1}
             >
                 <div>
-                    <Knapp onClick={onLoggUtClick} type="flat">
+                    <Button variant="tertiary" onClick={onLoggUtClick}>
                         Logg ut
-                    </Knapp>
+                    </Button>
                 </div>
             </Popover>
         </div>

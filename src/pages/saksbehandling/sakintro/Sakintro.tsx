@@ -1,10 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, LinkPanel, Tag } from '@navikt/ds-react';
+import { Alert, Button, LinkPanel, Loader, Tag } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { isEmpty, last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
 import Ikon from 'nav-frontend-ikoner-assets';
-import { Hovedknapp } from 'nav-frontend-knapper';
 import Panel from 'nav-frontend-paneler';
 import { Element, Ingress, Innholdstittel, Normaltekst, Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
@@ -457,9 +456,9 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
     return (
         <div className={styles.startSøknadsbehandlingKnapperContainer}>
             <div className={styles.startSøknadsbehandlingKnapper}>
-                <Hovedknapp
+                <Button
                     className={styles.startBehandlingKnapp}
-                    mini
+                    size="small"
                     onClick={async () => {
                         setRequest(RemoteData.pending);
                         const response = await dispatch(
@@ -481,12 +480,12 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                             setRequest(RemoteData.failure(response.payload));
                         }
                     }}
-                    spinner={RemoteData.isPending(request)}
                 >
                     {props.intl.formatMessage({
                         id: 'display.behandling.startBehandling',
                     })}
-                </Hovedknapp>
+                    {RemoteData.isPending(request) && <Loader />}
+                </Button>
                 <Link
                     className="knapp knapp--fare knapp--mini"
                     to={Routes.avsluttSøknadsbehandling.createURL({

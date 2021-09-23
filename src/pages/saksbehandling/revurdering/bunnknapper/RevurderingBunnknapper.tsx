@@ -1,4 +1,4 @@
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import { Button, Loader } from '@navikt/ds-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -26,22 +26,19 @@ export const RevurderingBunnknapper = (props: {
                         {intl.formatMessage({ id: 'knapp.tilbake' })}
                     </Link>
                 )}
-                <Hovedknapp
-                    spinner={props.onNesteClickSpinner}
+                <Button
                     onClick={props.onNesteClick === 'submit' ? undefined : props.onNesteClick}
-                    htmlType={props.onNesteClick === 'submit' ? 'submit' : 'button'}
+                    type={props.onNesteClick === 'submit' ? 'submit' : 'button'}
                 >
                     {props.nesteKnappTekst ? props.nesteKnappTekst : intl.formatMessage({ id: 'knapp.neste' })}
-                </Hovedknapp>
+                    {props.onNesteClickSpinner && <Loader />}
+                </Button>
             </div>
             {props.onLagreOgFortsettSenereClick && (
-                <Knapp
-                    spinner={props.onLagreOgFortsettSenereClickSpinner}
-                    onClick={props.onLagreOgFortsettSenereClick}
-                    htmlType="button"
-                >
+                <Button variant="secondary" onClick={props.onLagreOgFortsettSenereClick} type="button">
                     {intl.formatMessage({ id: 'knapp.lagreOgfortsettSenere' })}
-                </Knapp>
+                    {props.onLagreOgFortsettSenereClickSpinner && <Loader />}
+                </Button>
             )}
         </div>
     );

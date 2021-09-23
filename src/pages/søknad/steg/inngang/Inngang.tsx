@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Hovedknapp } from 'nav-frontend-knapper';
+import { Button } from '@navikt/ds-react';
 import { BekreftCheckboksPanel } from 'nav-frontend-skjema';
 import { Sidetittel, Ingress, Feilmelding } from 'nav-frontend-typografi';
 import * as React from 'react';
@@ -126,15 +126,15 @@ const index = (props: { nesteUrl: string }) => {
                     <Link className="knapp" to={Routes.soknad.createURL()}>
                         <FormattedMessage id="knapp.forrige" />
                     </Link>
-                    <Hovedknapp
-                        htmlType="button"
+                    <Button
+                        type="button"
                         onClick={() => {
                             setHasSubmitted(() => true);
                             handleStartSøknadKlikk();
                         }}
                     >
                         <FormattedMessage id="knapp.startSøknad" />
-                    </Hovedknapp>
+                    </Button>
                 </div>
             </div>
         </RawIntlProvider>

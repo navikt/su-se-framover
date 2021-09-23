@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
-import { Knapp } from 'nav-frontend-knapper';
+import { Alert, Button, Loader } from '@navikt/ds-react';
 import ModalWrapper from 'nav-frontend-modal';
 import 'nav-frontend-tabell-style';
 import * as React from 'react';
@@ -146,32 +145,30 @@ const Drift = () => {
             <div>
                 <h1 className={styles.header}>Actions</h1>
                 <div className={styles.actionsContainer}>
-                    <Knapp
-                        className={styles.knapp}
-                        htmlType="button"
-                        onClick={fixSøknader}
-                        spinner={RemoteData.isPending(fixSøknaderResponse)}
-                    >
+                    <Button variant="secondary" className={styles.knapp} type="button" onClick={fixSøknader}>
                         Fix Søknader
-                    </Knapp>
-                    <Knapp
+                        {RemoteData.isPending(fixSøknaderResponse) && <Loader />}
+                    </Button>
+                    <Button
+                        variant="secondary"
                         className={styles.knapp}
-                        htmlType="button"
+                        type="button"
                         onClick={() => {
                             throw Error('Feil som ble trigget manuelt fra driftssiden');
                         }}
                     >
                         Kast en feil
-                    </Knapp>
+                    </Button>
 
-                    <Knapp
+                    <Button
+                        variant="secondary"
                         className={styles.knapp}
-                        htmlType="button"
+                        type="button"
                         onClick={() => setKonsistensavtemmingModalOpen(true)}
-                        spinner={RemoteData.isPending(konsistensavstemmingStatus)}
                     >
                         Konsistensavstemming
-                    </Knapp>
+                        {RemoteData.isPending(konsistensavstemmingStatus) && <Loader />}
+                    </Button>
                     <ModalWrapper
                         isOpen={konsistensavtemmingModalOpen}
                         closeButton={true}
@@ -188,16 +185,17 @@ const Drift = () => {
                                     setKonsistensavstemmingFraOgMed(date);
                                 }}
                             ></DatePicker>
-                            <Knapp
+                            <Button
+                                variant="secondary"
                                 className={styles.knapp}
-                                htmlType="button"
+                                type="button"
                                 onClick={() =>
                                     fetchKonsistensavstemming(toIsoDateOnlyString(konsistensavstemmingFraOgMed))
                                 }
-                                spinner={RemoteData.isPending(konsistensavstemmingStatus)}
                             >
                                 Konsistensavstemming
-                            </Knapp>
+                                {RemoteData.isPending(konsistensavstemmingStatus) && <Loader />}
+                            </Button>
                         </div>
                     </ModalWrapper>
                 </div>

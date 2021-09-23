@@ -1,5 +1,5 @@
+import { Button } from '@navikt/ds-react';
 import { FormikErrors } from 'formik';
-import { Knapp } from 'nav-frontend-knapper';
 import { Input } from 'nav-frontend-skjema';
 import * as React from 'react';
 
@@ -93,22 +93,23 @@ const TrygdeytelserInputFelter = (props: {
                             />
                         </div>
                         {props.arr.length > 1 && (
-                            <Knapp
+                            <Button
+                                variant="secondary"
                                 className={styles.fjernFeltButton}
                                 onClick={() => props.onFjernClick(idx)}
-                                htmlType="button"
+                                type="button"
                             >
                                 {formatMessage('button.fjern.trygdeytelse')}
-                            </Knapp>
+                            </Button>
                         )}
                         {errorForLinje && typeof errorForLinje === 'string' && errorForLinje}
                     </li>
                 );
             })}
             <div className={sharedStyles.leggTilFeltKnapp}>
-                <Knapp onClick={() => props.onLeggTilClick()} htmlType="button">
+                <Button variant="secondary" onClick={() => props.onLeggTilClick()} type="button">
                     {formatMessage('button.leggTil.trygdeytelse')}
-                </Knapp>
+                </Button>
             </div>
         </ul>
     );

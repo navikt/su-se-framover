@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Accordion } from '@navikt/ds-react';
+import { Accordion, Button } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import { Knapp } from 'nav-frontend-knapper';
 import { Input, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element, Ingress, Normaltekst, Undertittel } from 'nav-frontend-typografi';
@@ -112,14 +111,15 @@ const Formue = (props: RevurderingProps) => {
                             />
                         ))}
                         <div className={styles.nyPeriodeKnappContainer}>
-                            <Knapp
-                                htmlType="button"
+                            <Button
+                                variant="secondary"
+                                type="button"
                                 onClick={() => {
                                     formueArray.append(getTomFormueData(epsFnr));
                                 }}
                             >
                                 {intl.formatMessage({ id: 'knapp.nyPeriode' })}
-                            </Knapp>
+                            </Button>
                         </div>
                         {RemoteData.isFailure(lagreFormuegrunnlagStatus) && (
                             <ApiErrorAlert error={lagreFormuegrunnlagStatus.error} />
@@ -238,17 +238,18 @@ const FormueBlokk = (props: {
                     />
                 </div>
                 {props.formueArrayLengde > 1 && (
-                    <Knapp
+                    <Button
+                        variant="secondary"
                         className={styles.søppelbøtte}
-                        htmlType="button"
+                        type="button"
                         onClick={() => {
                             props.onSlettClick(props.blokkIndex);
                         }}
-                        kompakt
+                        size="small"
                         aria-label={intl.formatMessage({ id: 'knapp.fjernPeriode' })}
                     >
                         <Delete />
-                    </Knapp>
+                    </Button>
                 )}
             </div>
 
@@ -388,9 +389,9 @@ const FormuePanel = (props: {
                     </Undertittel>
                 </div>
 
-                <Knapp htmlType="button" onClick={() => handleBekreftClick()}>
+                <Button variant="secondary" type="button" onClick={() => handleBekreftClick()}>
                     {intl.formatMessage({ id: 'knapp.bekreft' })}
-                </Knapp>
+                </Button>
             </Accordion.Content>
         </Accordion.Item>
     );

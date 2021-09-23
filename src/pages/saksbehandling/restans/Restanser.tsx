@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Accordion, Alert } from '@navikt/ds-react';
+import { Accordion, Alert, Button, Loader } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { Flatknapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -63,7 +62,8 @@ const KnappOgStatus = (props: { saksnummer: string }) => {
 
     return (
         <div>
-            <Flatknapp
+            <Button
+                variant="tertiary"
                 className={styles.seSakKnapp}
                 onClick={async () => {
                     //Siden man kan ha søkt opp en person og/eller før man velger å trykke på hent sak
@@ -79,10 +79,10 @@ const KnappOgStatus = (props: { saksnummer: string }) => {
                         );
                     });
                 }}
-                spinner={RemoteData.isPending(hentSakStatus)}
             >
                 {formatMessage('sak.seSak')}
-            </Flatknapp>
+                {RemoteData.isPending(hentSakStatus) && <Loader />}
+            </Button>
             {RemoteData.isFailure(hentSakStatus) && (
                 <Alert variant="error">{formatMessage('feil.sak.kunneIkkeHente')}</Alert>
             )}

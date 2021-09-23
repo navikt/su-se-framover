@@ -1,9 +1,8 @@
-import { Alert } from '@navikt/ds-react';
+import { Alert, Button } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik, FormikErrors } from 'formik';
 import { Datepicker, DatepickerLimitations } from 'nav-datovelger';
-import { Knapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Label, SkjemaelementFeilmelding, SkjemaGruppe } from 'nav-frontend-skjema';
 import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
@@ -225,16 +224,17 @@ const MultiTidsperiodevelger = (props: {
                                     <SkjemaelementFeilmelding>{errorForLinje.innreisedato}</SkjemaelementFeilmelding>
                                 )}
                             </div>
-                            <Knapp
+                            <Button
+                                variant="secondary"
                                 className={classNames(sharedStyles.fjernradknapp, {
                                     [sharedStyles.skjult]: props.perioder.length < 2,
                                 })}
                                 onClick={() => props.onFjernClick(index)}
-                                htmlType="button"
-                                kompakt
+                                type="button"
+                                size="small"
                             >
                                 {formatMessage('button.fjernReiserad')}
-                            </Knapp>
+                            </Button>
                         </SkjemaGruppe>
                         {errorForLinje && typeof errorForLinje === 'string' && (
                             <SkjemaelementFeilmelding>{errorForLinje}</SkjemaelementFeilmelding>
@@ -244,9 +244,9 @@ const MultiTidsperiodevelger = (props: {
             })}
             <SkjemaelementFeilmelding>{typeof props.errors === 'string' && props.errors}</SkjemaelementFeilmelding>
             <div className={sharedStyles.leggTilFeltKnapp}>
-                <Knapp onClick={() => props.onLeggTilClick()} htmlType="button">
+                <Button variant="secondary" onClick={() => props.onLeggTilClick()} type="button">
                     {formatMessage('button.leggTilReiserad')}
-                </Knapp>
+                </Button>
             </div>
         </div>
     );

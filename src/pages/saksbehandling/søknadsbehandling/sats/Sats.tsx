@@ -1,9 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Button } from '@navikt/ds-react';
 import * as B from 'fp-ts/boolean';
 import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/string';
-import { Hovedknapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element, Feilmelding } from 'nav-frontend-typografi';
@@ -196,13 +196,13 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
             () => (
                 <div className={styles.epsFeilContainer}>
                     <Feilmelding>{formatMessage('feilmelding.pdlFeil')}</Feilmelding>
-                    <Hovedknapp
+                    <Button
                         onClick={() => {
                             history.push(props.forrigeUrl);
                         }}
                     >
                         {formatMessage('knapp.tilbake')}
-                    </Hovedknapp>
+                    </Button>
                 </div>
             ),
             (eps) => (

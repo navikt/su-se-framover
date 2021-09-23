@@ -3,7 +3,7 @@ export default {
     'display.stønadsperioder.stoppet': 'Stoppet',
     'display.stønadsperioder.tittel': 'Stønadsperioder',
 
-    'display.utbetalingsperiode.avbryt': 'avbryt',
+    'display.utbetalingsperiode.avbryt': 'Avbryt',
     'display.utbetalingsperiode.bekreftStans':
         'Bekreft at du vil stanse utbetaling av stønaden. Dette er en midlertidig løsning og vil ikke føre til et nytt vedtak.',
 
