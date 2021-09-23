@@ -25,6 +25,7 @@ enum Støndadsperiode {
     OPPDATERING_AV_STØNADSPERIODE = 'oppdatering_av_stønadsperiode',
     STØNADSPERIODE_FØR_2021 = 'stønadsperiode_før_2021',
     STØNADSPERIODE_MAX_12MND = 'stønadsperiode_max_12mnd',
+    STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE = 'stønadsperioden_overlapper_med_eksisterende_søknadsbehandling',
 }
 
 enum Formue {
@@ -49,6 +50,7 @@ const søknadsbehandlingErrorCodeMessageIdMap: {
     [Støndadsperiode.OPPDATERING_AV_STØNADSPERIODE]: 'stønadsperiode.oppdatering.av.periode',
     [Støndadsperiode.STØNADSPERIODE_FØR_2021]: 'stønadsperiode.periode.før.2021',
     [Støndadsperiode.STØNADSPERIODE_MAX_12MND]: 'stønadsperiode.periode.maks.12.måneder',
+    [Støndadsperiode.STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE]: 'stønadsperiode.overlapper.eksisterende',
 
     [Formue.UGYLDIGE_VERDIER_PÅ_FORMUE]: 'formue.ugyldige.verdier',
     [Formue.HAR_IKKE_EKTEFELLE]: 'formue.har.ikke.ektefelle',
