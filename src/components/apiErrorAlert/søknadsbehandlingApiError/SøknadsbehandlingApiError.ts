@@ -19,6 +19,7 @@ enum Generell {
     FINNER_IKKE_UTBETALING = 'finner_ikke_utbetaling',
     ATTESTANT_SAMME_SOM_SAKSBEHANDLER = 'attestant_samme_som_saksbehandler',
     MANGLER_BEGRUNNELSE = 'mangler_begrunnelse',
+    HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING = 'har_allerede_en_åpen_søknadsbehandling',
 }
 
 enum Støndadsperiode {
@@ -46,6 +47,7 @@ const søknadsbehandlingErrorCodeMessageIdMap: {
     [Generell.FINNER_IKKE_UTBETALING]: 'generell.finner.ikke.utbetaling',
     [Generell.ATTESTANT_SAMME_SOM_SAKSBEHANDLER]: 'generell.attestant.samme.som.saksbehandler',
     [Generell.MANGLER_BEGRUNNELSE]: 'generell.mangler.begrunnelse',
+    [Generell.HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING]: 'generell.har.allerede.en.åpen.søknadsbehandling',
 
     [Støndadsperiode.OPPDATERING_AV_STØNADSPERIODE]: 'stønadsperiode.oppdatering.av.periode',
     [Støndadsperiode.STØNADSPERIODE_FØR_2021]: 'stønadsperiode.periode.før.2021',
