@@ -2,7 +2,8 @@ import Lenke from 'nav-frontend-lenker';
 import { Sidetittel, Ingress } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
+
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 
 import messages from './infoside-nb';
 import styles from './infoside.module.less';
@@ -94,9 +95,9 @@ const Infoside = (props: { nesteUrl: string }) => {
                 </section>
 
                 <div className={styles.knappContainer}>
-                    <Link className="knapp knapp--hoved" to={props.nesteUrl}>
+                    <LinkAsButton variant="primary" href={props.nesteUrl}>
                         <FormattedMessage id="knapp.neste" />
-                    </Link>
+                    </LinkAsButton>
                 </div>
             </div>
         </IntlProvider>

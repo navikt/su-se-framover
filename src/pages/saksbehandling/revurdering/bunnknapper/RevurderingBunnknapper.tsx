@@ -1,7 +1,7 @@
 import { Button, Loader } from '@navikt/ds-react';
 import React from 'react';
-import { Link } from 'react-router-dom';
 
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import { useI18n } from '~lib/i18n';
 
 import sharedI18n from '../../søknadsbehandling/sharedI18n-nb';
@@ -22,9 +22,9 @@ export const RevurderingBunnknapper = (props: {
         <div>
             <div className={styles.navigationButtonContainer}>
                 {props.tilbakeUrl && (
-                    <Link to={props.tilbakeUrl} className="knapp">
+                    <LinkAsButton href={props.tilbakeUrl} variant="secondary">
                         {intl.formatMessage({ id: 'knapp.tilbake' })}
-                    </Link>
+                    </LinkAsButton>
                 )}
                 <Button
                     onClick={props.onNesteClick === 'submit' ? undefined : props.onNesteClick}

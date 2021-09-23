@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, LinkPanel, Loader, Tag } from '@navikt/ds-react';
-import classNames from 'classnames';
 import { isEmpty, last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
 import Ikon from 'nav-frontend-ikoner-assets';
@@ -14,6 +13,7 @@ import { ApiError } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
 import { Person } from '~api/personApi';
 import { ÅpentBrev } from '~assets/Illustrations';
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useUserContext } from '~context/userContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -105,14 +105,15 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                 </Innholdstittel>
                 <div className={styles.headerKnapper}>
                     {revurderingToggle && (
-                        <Link
-                            to={Routes.revurderValgtSak.createURL({
+                        <LinkAsButton
+                            href={Routes.revurderValgtSak.createURL({
                                 sakId: props.sak.id,
                             })}
-                            className={classNames('knapp', styles.headerKnapp)}
+                            className={styles.headerKnapp}
+                            variant="secondary"
                         >
                             {intl.formatMessage({ id: 'knapp.revurder' })}
-                        </Link>
+                        </LinkAsButton>
                     )}
                 </div>
             </div>
@@ -318,21 +319,22 @@ const RevurderingStartetKnapper = (props: {
                 )}
 
             {erRevurderingIverksatt(revurdering) && vedtak && (
-                <Link
-                    className="knapp"
-                    to={Routes.vedtaksoppsummering.createURL({ sakId: props.sakId, vedtakId: vedtak.id })}
+                <LinkAsButton
+                    variant="secondary"
+                    href={Routes.vedtaksoppsummering.createURL({ sakId: props.sakId, vedtakId: vedtak.id })}
                 >
                     Se oppsummering
-                </Link>
+                </LinkAsButton>
             )}
 
             <div className={styles.knapper}>
                 {erRevurderingTilAttestering(revurdering) &&
                 user.isAttestant &&
                 user.navIdent !== revurdering.saksbehandler ? (
-                    <Link
-                        className="knapp knapp--mini"
-                        to={Routes.attesterRevurdering.createURL({
+                    <LinkAsButton
+                        variant="secondary"
+                        size="small"
+                        href={Routes.attesterRevurdering.createURL({
                             sakId: props.sakId,
                             revurderingId: revurdering.id,
                         })}
@@ -340,14 +342,15 @@ const RevurderingStartetKnapper = (props: {
                         {props.intl.formatMessage({
                             id: 'display.attestering.attester',
                         })}
-                    </Link>
+                    </LinkAsButton>
                 ) : (
                     !erRevurderingTilAttestering(revurdering) &&
                     !erRevurderingIverksatt(revurdering) &&
                     user.navIdent !== pipe(revurdering.attesteringer, last, toNullable)?.attestant && (
-                        <Link
-                            className="knapp knapp--mini"
-                            to={Routes.revurderValgtRevurdering.createURL({
+                        <LinkAsButton
+                            variant="secondary"
+                            size="small"
+                            href={Routes.revurderValgtRevurdering.createURL({
                                 sakId: props.sakId,
                                 steg: erRevurderingSimulert(revurdering)
                                     ? RevurderingSteg.Oppsummering
@@ -356,7 +359,7 @@ const RevurderingStartetKnapper = (props: {
                             })}
                         >
                             {props.intl.formatMessage({ id: 'revurdering.fortsett' })}
-                        </Link>
+                        </LinkAsButton>
                     )
                 )}
             </div>
@@ -414,15 +417,15 @@ const IverksattInnvilgedeSøknader = (props: {
                                         </div>
                                     </div>
                                     <div className={(styles.knapper, styles.flexColumn)}>
-                                        <Link
-                                            className="knapp"
-                                            to={Routes.vedtaksoppsummering.createURL({
+                                        <LinkAsButton
+                                            variant="secondary"
+                                            href={Routes.vedtaksoppsummering.createURL({
                                                 sakId: props.sak.id,
                                                 vedtakId: vedtak.id,
                                             })}
                                         >
                                             {props.intl.formatMessage({ id: 'display.behandling.seOppsummering' })}
-                                        </Link>
+                                        </LinkAsButton>
                                     </div>
                                 </div>
                             </Panel>
@@ -486,9 +489,10 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                     })}
                     {RemoteData.isPending(request) && <Loader />}
                 </Button>
-                <Link
-                    className="knapp knapp--fare knapp--mini"
-                    to={Routes.avsluttSøknadsbehandling.createURL({
+                <LinkAsButton
+                    variant="danger"
+                    size="small"
+                    href={Routes.avsluttSøknadsbehandling.createURL({
                         sakId: props.sakId,
                         soknadId: props.søknadId,
                     })}
@@ -496,7 +500,7 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                     {props.intl.formatMessage({
                         id: 'display.søknad.lukkSøknad',
                     })}
-                </Link>
+                </LinkAsButton>
             </div>
             {RemoteData.isFailure(request) && (
                 <Alert className={styles.feil} variant="error">
@@ -528,9 +532,10 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
 
             <div className={styles.knapper}>
                 {erTilAttestering(b) && user.isAttestant && user.navIdent !== b.saksbehandler ? (
-                    <Link
-                        className="knapp knapp--mini"
-                        to={Routes.attesterSøknadsbehandling.createURL({
+                    <LinkAsButton
+                        variant="secondary"
+                        size="small"
+                        href={Routes.attesterSøknadsbehandling.createURL({
                             sakId: props.sakId,
                             behandlingId: b.id,
                         })}
@@ -538,14 +543,15 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
                         {props.intl.formatMessage({
                             id: 'display.attestering.attester',
                         })}
-                    </Link>
+                    </LinkAsButton>
                 ) : (
                     !erTilAttestering(b) &&
                     !erIverksatt(b) &&
                     user.navIdent !== pipe(b.attesteringer ?? [], last, toNullable)?.attestant && (
-                        <Link
-                            className="knapp knapp--mini"
-                            to={Routes.saksbehandlingVilkårsvurdering.createURL({
+                        <LinkAsButton
+                            variant="secondary"
+                            size="small"
+                            href={Routes.saksbehandlingVilkårsvurdering.createURL({
                                 sakId: props.sakId,
                                 behandlingId: b.id,
                                 vilkar: hentSisteVurdertSaksbehandlingssteg(b),
@@ -554,7 +560,7 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
                             {props.intl.formatMessage({
                                 id: 'display.behandling.fortsettBehandling',
                             })}
-                        </Link>
+                        </LinkAsButton>
                     )
                 )}
             </div>
@@ -658,15 +664,15 @@ const AvslåtteSøknader = (props: {
                                     </div>
                                 </div>
                                 <div className={(styles.knapper, styles.flexColumn)}>
-                                    <Link
-                                        className="knapp"
-                                        to={Routes.vedtaksoppsummering.createURL({
+                                    <LinkAsButton
+                                        variant="secondary"
+                                        href={Routes.vedtaksoppsummering.createURL({
                                             sakId: props.sak.id,
                                             vedtakId: vedtak.id,
                                         })}
                                     >
                                         {props.intl.formatMessage({ id: 'revurdering.oppsummering' })}
-                                    </Link>
+                                    </LinkAsButton>
                                 </div>
                             </Panel>
                         </li>

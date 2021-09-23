@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import { useUserContext } from '~context/userContext';
 import * as Routes from '~lib/routes';
 import { Rolle } from '~types/LoggedInUser';
@@ -30,24 +31,32 @@ const HomePage = () => {
             <h1 className={styles.header}>Jeg er...</h1>
             <div className={styles.linkContainer}>
                 {harTilgangTilVeileder && (
-                    <Link to={Routes.soknad.createURL()} className={`${styles.link} knapp`}>
+                    <LinkAsButton variant="secondary" href={Routes.soknad.createURL()} className={styles.link}>
                         Veileder
-                    </Link>
+                    </LinkAsButton>
                 )}
                 {harTilgangTilSaksbehandler && (
-                    <Link to={Routes.saksoversiktIndex.createURL()} className={`${styles.link} knapp`}>
+                    <LinkAsButton
+                        variant="secondary"
+                        href={Routes.saksoversiktIndex.createURL()}
+                        className={styles.link}
+                    >
                         Saksbehandler
-                    </Link>
+                    </LinkAsButton>
                 )}
                 {harTilgangTilAttestant && (
-                    <Link to={Routes.saksoversiktIndex.createURL()} className={`${styles.link} knapp`}>
+                    <LinkAsButton
+                        variant="secondary"
+                        href={Routes.saksoversiktIndex.createURL()}
+                        className={styles.link}
+                    >
                         Attestant
-                    </Link>
+                    </LinkAsButton>
                 )}
                 {harTilgangTilDrift && (
-                    <Link to={Routes.drift.createURL()} className={`${styles.link} knapp`}>
+                    <LinkAsButton variant="secondary" href={Routes.drift.createURL()} className={styles.link}>
                         Drift
-                    </Link>
+                    </LinkAsButton>
                 )}
             </div>
         </div>

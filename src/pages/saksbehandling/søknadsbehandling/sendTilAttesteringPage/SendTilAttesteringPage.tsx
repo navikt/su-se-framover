@@ -3,10 +3,11 @@ import { Alert, Button, Loader } from '@navikt/ds-react';
 import { Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel } from 'nav-frontend-typografi/';
 import React, { useMemo, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import * as PdfApi from '~api/pdfApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useBrevForhåndsvisning } from '~lib/hooks';
@@ -113,9 +114,9 @@ const SendTilAttesteringPage = (props: Props) => {
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>
-                    <Link to={tilbakeUrl} className="knapp">
+                    <LinkAsButton variant="secondary" href={tilbakeUrl}>
                         {intl.formatMessage({ id: 'knapp.tilbake' })}
-                    </Link>
+                    </LinkAsButton>
                     <Button
                         onClick={async () => {
                             const response = await dispatch(

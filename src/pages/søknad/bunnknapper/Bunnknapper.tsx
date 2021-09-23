@@ -3,8 +3,8 @@ import ModalWrapper from 'nav-frontend-modal';
 import { Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import TextProvider from '~components/TextProvider';
 import { Languages } from '~lib/i18n';
 
@@ -75,9 +75,9 @@ const Bunnknapper = (props: {
                         <Button variant="tertiary" onClick={() => setModalOpen(false)}>
                             <FormattedMessage id="steg.avbryt" />
                         </Button>
-                        <Link className="knapp knapp--fare" to={props.avbryt.toRoute}>
+                        <LinkAsButton variant="danger" href={props.avbryt.toRoute}>
                             <FormattedMessage id="modal.lukkSøknad" />
-                        </Link>
+                        </LinkAsButton>
                     </div>
                 </div>
             </ModalWrapper>
