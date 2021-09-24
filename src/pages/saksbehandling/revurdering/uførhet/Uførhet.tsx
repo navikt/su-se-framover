@@ -1,10 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Alert, Button } from '@navikt/ds-react';
+import { Alert, Button, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
-import Panel from 'nav-frontend-paneler';
 import { Feiloppsummering, Input } from 'nav-frontend-skjema';
 import { Element, Normaltekst, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';

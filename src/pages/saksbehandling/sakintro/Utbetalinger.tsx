@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader, Modal } from '@navikt/ds-react';
+import { Alert, Button, Loader, Modal, Panel } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import Ikon from 'nav-frontend-ikoner-assets';
-import Panel from 'nav-frontend-paneler';
 import { Element, Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';

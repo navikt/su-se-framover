@@ -1,5 +1,4 @@
-import { Alert } from '@navikt/ds-react';
-import Panel from 'nav-frontend-paneler';
+import { Alert, Panel } from '@navikt/ds-react';
 import { Ingress, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 

@@ -1,9 +1,8 @@
 import { Delete } from '@navikt/ds-icons';
-import { Button } from '@navikt/ds-react';
+import { Button, Panel } from '@navikt/ds-react';
 import { lastDayOfMonth } from 'date-fns';
 import * as DateFns from 'date-fns';
 import { FormikErrors } from 'formik';
-import Panel from 'nav-frontend-paneler';
 import { SkjemaGruppe, Select, Input, Checkbox, InputProps, Label } from 'nav-frontend-skjema';
 import { Normaltekst, Feilmelding } from 'nav-frontend-typografi';
 import React from 'react';

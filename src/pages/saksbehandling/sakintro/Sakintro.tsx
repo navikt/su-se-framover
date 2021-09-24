@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, LinkPanel, Loader, Tag } from '@navikt/ds-react';
+import { Alert, Button, LinkPanel, Loader, Panel, Tag } from '@navikt/ds-react';
 import { isEmpty, last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
 import Ikon from 'nav-frontend-ikoner-assets';
-import Panel from 'nav-frontend-paneler';
 import { Element, Ingress, Innholdstittel, Normaltekst, Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';

@@ -1,6 +1,5 @@
-import { Alert } from '@navikt/ds-react';
+import { Alert, Panel } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import Panel from 'nav-frontend-paneler';
 import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
