@@ -67,7 +67,17 @@ const VerdierSchema: yup.ObjectSchema<VerdierFormData | undefined> = yup.object<
     verdipapir: validateStringAsNonNegativeNumber('Verdipapirer og aksjefond'),
     stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber('Om noen skylder søker penger'),
     kontanterOver1000: validateStringAsNonNegativeNumber('Kontanter'),
-    depositumskonto: validateStringAsNonNegativeNumber('Depositumskontoverdi'),
+    depositumskonto: validateStringAsNonNegativeNumber('Depositumskontoverdi').test(
+        'depositumMindreEllerLikInnskudd',
+        'Depositum kan ikke være større enn innskudd',
+        function (depositum) {
+            const { innskuddsbeløp } = this.parent;
+            if (!depositum) {
+                return false;
+            }
+            return depositum <= innskuddsbeløp;
+        }
+    ),
 });
 
 const schema = yup
@@ -219,6 +229,14 @@ const Formue = (props: {
     }, [watch]);
 
     const totalFormue = søkersFormue + (watch.borSøkerMedEPS ? ektefellesFormue : 0);
+
+    useEffect(() => {
+        form.trigger('verdier.depositumskonto');
+    }, [watch.verdier?.innskuddsbeløp]);
+
+    useEffect(() => {
+        form.trigger('epsVerdier.depositumskonto');
+    }, [watch.epsVerdier?.innskuddsbeløp]);
 
     useEffect(() => {
         if (watch.epsFnr && fnrValidator.fnr(watch.epsFnr).status === 'valid') {
