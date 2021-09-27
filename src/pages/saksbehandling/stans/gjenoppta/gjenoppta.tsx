@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Knapp } from 'nav-frontend-knapper';
+import { Button, Loader } from '@navikt/ds-react';
 import { Select, Textarea } from 'nav-frontend-skjema';
 import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
@@ -147,15 +147,16 @@ const Gjenoppta = (props: Props) => {
                         </div>
                     )}
                     <div className={styles.knapper}>
-                        <Knapp
-                            htmlType="button"
+                        <Button
+                            variant="secondary"
                             onClick={() => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id }))}
                         >
                             {intl.formatMessage({ id: 'gjenoppta.oppsummering.tilbake' })}
-                        </Knapp>
-                        <Knapp spinner={RemoteData.isPending(gjenopptaStatus)}>
+                        </Button>
+                        <Button variant="secondary">
                             {intl.formatMessage({ id: 'gjenoppta.oppsummering.iverksett' })}
-                        </Knapp>
+                            {RemoteData.isPending(gjenopptaStatus) && <Loader />}
+                        </Button>
                     </div>
                 </form>
             </Switch>

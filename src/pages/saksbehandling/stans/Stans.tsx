@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Knapp } from 'nav-frontend-knapper';
+import { Button, Loader } from '@navikt/ds-react';
 import { Select, Textarea } from 'nav-frontend-skjema';
 import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
@@ -172,7 +172,8 @@ const Stans = (props: Props) => {
                             </div>
                         )}
                         <div className={styles.bunnknapper}>
-                            <Knapp
+                            <Button
+                                variant="secondary"
                                 onClick={() => {
                                     if (urlParams.revurderingId) {
                                         return history.push(
@@ -181,15 +182,14 @@ const Stans = (props: Props) => {
                                     }
                                     history.goBack();
                                 }}
-                                htmlType="button"
                             >
                                 {intl.formatMessage({ id: 'stans.bunnknapper.tilbake' })}
-                            </Knapp>
-                            <Knapp
-                                spinner={RemoteData.isPending(opprettStatus) || RemoteData.isPending(oppdaterStatus)}
-                            >
+                            </Button>
+                            <Button variant="secondary">
                                 {intl.formatMessage({ id: 'stans.bunnknapper.neste' })}
-                            </Knapp>
+                                {RemoteData.isPending(opprettStatus) ||
+                                    (RemoteData.isPending(oppdaterStatus) && <Loader />)}
+                            </Button>
                         </div>
                     </div>
                 </form>

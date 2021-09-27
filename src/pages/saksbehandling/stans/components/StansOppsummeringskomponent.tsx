@@ -1,4 +1,4 @@
-import { Knapp } from 'nav-frontend-knapper';
+import { Button, Loader } from '@navikt/ds-react';
 import React from 'react';
 import { useHistory } from 'react-router';
 
@@ -48,13 +48,15 @@ const StansOppsummeringskomponent = (props: Props) => {
                 </div>
             )}
             <div className={styles.iverksett}>
-                <Knapp spinner={knapper?.tilbake?.spinner} onClick={knapper?.tilbake?.onClick ?? history.goBack}>
+                <Button variant="secondary" onClick={knapper?.tilbake?.onClick ?? history.goBack}>
                     {knapper?.tilbake?.tekst ?? intl.formatMessage({ id: 'stans.bunnknapper.tilbake' })}
-                </Knapp>
+                    {knapper?.tilbake?.spinner && <Loader />}
+                </Button>
                 {knapper?.neste && (
-                    <Knapp spinner={knapper?.neste.spinner} onClick={knapper?.neste.onClick}>
+                    <Button variant="secondary" onClick={knapper?.neste.onClick}>
                         {knapper.neste.tekst}
-                    </Knapp>
+                        {knapper?.neste.spinner && <Loader />}
+                    </Button>
                 )}
             </div>
         </div>
