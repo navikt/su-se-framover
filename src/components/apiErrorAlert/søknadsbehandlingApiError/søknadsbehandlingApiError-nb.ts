@@ -3,6 +3,7 @@ export default {
     'generell.finner.ikke.utbetaling': 'Finner ikke utbetaling',
     'generell.attestant.samme.som.saksbehandler': 'Attestant er samme som saksbehandler',
     'generell.mangler.begrunnelse': 'Mangler begrunnelse',
+    'generell.har.allerede.en.åpen.søknadsbehandling': 'Har allerede en åpen søknadsbehandling',
 
     'stønadsperiode.oppdatering.av.periode': 'Feil ved oppdatering av stønadsperiode',
     'stønadsperiode.periode.før.2021': 'Stønadsperiode kan ikke starte før Januar 2021',
