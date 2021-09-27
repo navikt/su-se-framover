@@ -1,9 +1,8 @@
 import { Delete } from '@navikt/ds-icons';
+import { Button, Panel } from '@navikt/ds-react';
 import { lastDayOfMonth } from 'date-fns';
 import * as DateFns from 'date-fns';
 import { FormikErrors } from 'formik';
-import { Knapp } from 'nav-frontend-knapper';
-import Panel from 'nav-frontend-paneler';
 import { SkjemaGruppe, Select, Input, Checkbox, InputProps, Label } from 'nav-frontend-skjema';
 import { Normaltekst, Feilmelding } from 'nav-frontend-typografi';
 import React from 'react';
@@ -216,13 +215,14 @@ export const FradragInputs = (props: {
                                     }
                                     disabled={fradrag.fraUtland}
                                 />
-                                <Knapp
+                                <Button
+                                    variant="secondary"
                                     className={styles.søppelbøtteContainer}
-                                    htmlType={'button'}
+                                    type="button"
                                     onClick={() => props.onFjernClick(index)}
                                 >
                                     <Delete />
-                                </Knapp>
+                                </Button>
                             </div>
                             <div className={styles.checkboxContainer}>
                                 {(props.harEps || fradrag.tilhørerEPS) && (
@@ -363,11 +363,11 @@ export const FradragInputs = (props: {
             })}
 
             <div className={styles.leggTilNyttFradragContainer}>
-                <Knapp onClick={() => props.onLeggTilClick()} htmlType="button" mini>
+                <Button variant="secondary" onClick={() => props.onLeggTilClick()} type="button" size="small">
                     {props.fradrag.length === 0
                         ? props.intl.formatMessage({ id: 'knapp.fradrag.leggtil' })
                         : props.intl.formatMessage({ id: 'knapp.fradrag.leggtil.annet' })}
-                </Knapp>
+                </Button>
             </div>
         </div>
     );

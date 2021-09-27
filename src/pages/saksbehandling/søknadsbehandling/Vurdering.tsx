@@ -1,4 +1,4 @@
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import { Button } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~lib/i18n';
@@ -17,16 +17,16 @@ export const Vurderingknapper = (props: {
     return (
         <div className={styles.buttonContainer}>
             <div className={styles.navigationButtonContainer}>
-                <Knapp onClick={props.onTilbakeClick} htmlType="button">
+                <Button variant="secondary" onClick={props.onTilbakeClick} type="button">
                     {intl.formatMessage({ id: 'knapp.tilbake' })}
-                </Knapp>
-                <Hovedknapp onClick={props.onNesteClick} htmlType={props.onNesteClick ? 'button' : 'submit'}>
+                </Button>
+                <Button onClick={props.onNesteClick} type={props.onNesteClick ? 'button' : 'submit'}>
                     {props.nesteKnappTekst ? props.nesteKnappTekst : intl.formatMessage({ id: 'knapp.neste' })}
-                </Hovedknapp>
+                </Button>
             </div>
-            <Knapp onClick={props.onLagreOgFortsettSenereClick} htmlType="button">
+            <Button variant="secondary" onClick={props.onLagreOgFortsettSenereClick} type="button">
                 {intl.formatMessage({ id: 'knapp.lagreOgfortsettSenere' })}
-            </Knapp>
+            </Button>
         </div>
     );
 };

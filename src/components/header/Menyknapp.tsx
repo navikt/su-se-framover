@@ -1,6 +1,5 @@
 import { ExpandFilled } from '@navikt/ds-icons';
-import { Knapp } from 'nav-frontend-knapper';
-import Popover, { PopoverOrientering } from 'nav-frontend-popover';
+import { Button, Popover } from '@navikt/ds-react';
 import React, { useState } from 'react';
 
 import styles from './menyknapp.module.less';
@@ -10,27 +9,25 @@ interface Props {
     onLoggUtClick: () => void;
 }
 const Menyknapp = ({ navn, onLoggUtClick }: Props) => {
-    const [anchor, setAnchor] = useState<HTMLElement | undefined>(undefined);
+    const anchorRef = React.useRef<HTMLButtonElement>(null);
+    const [open, setOpen] = useState(false);
     return (
         <div>
             <button
                 className={styles.menyknapp}
-                onClick={(e) => (anchor ? setAnchor(undefined) : setAnchor(e.currentTarget))}
+                onClick={() => {
+                    setOpen((o) => !o);
+                }}
+                ref={anchorRef}
             >
                 <p>{navn}</p>
                 <ExpandFilled />
             </button>
-            <Popover
-                ankerEl={anchor}
-                onRequestClose={() => setAnchor(undefined)}
-                orientering={PopoverOrientering.Under}
-                autoFokus
-                tabIndex={-1}
-            >
+            <Popover anchorEl={anchorRef.current} onClose={() => setOpen(false)} open={open} placement="top-start">
                 <div>
-                    <Knapp onClick={onLoggUtClick} type="flat">
+                    <Button variant="tertiary" onClick={onLoggUtClick}>
                         Logg ut
-                    </Knapp>
+                    </Button>
                 </div>
             </Popover>
         </div>

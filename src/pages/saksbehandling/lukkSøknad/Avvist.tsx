@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Button, Loader } from '@navikt/ds-react';
 import { FormikErrors } from 'formik';
-import { Fareknapp, Knapp } from 'nav-frontend-knapper';
 import { RadioPanelGruppe, Textarea } from 'nav-frontend-skjema';
 import React, { useCallback } from 'react';
 
@@ -119,9 +119,10 @@ const Avvist = (props: AvvistProps) => {
             )}
             <div className={styles.buttonsContainer}>
                 {props.avvistFormData.sendBrevForAvvist && (
-                    <Knapp
+                    <Button
+                        variant="secondary"
                         className={styles.seBrevKnapp}
-                        htmlType="button"
+                        type="button"
                         onClick={() => {
                             props.validateForm().then((res) => {
                                 if (Object.keys(res).length === 0) {
@@ -129,14 +130,15 @@ const Avvist = (props: AvvistProps) => {
                                 }
                             });
                         }}
-                        spinner={RemoteData.isPending(props.lukketSøknadBrevutkastStatus)}
                     >
                         {intl.formatMessage({ id: 'knapp.seBrev' })}
-                    </Knapp>
+                        {RemoteData.isPending(props.lukketSøknadBrevutkastStatus) && <Loader />}
+                    </Button>
                 )}
-                <Fareknapp spinner={RemoteData.isPending(props.søknadLukketStatus)}>
+                <Button variant="danger">
                     {intl.formatMessage({ id: 'knapp.lukkSøknad' })}
-                </Fareknapp>
+                    {RemoteData.isPending(props.søknadLukketStatus) && <Loader />}
+                </Button>
             </div>
         </div>
     );

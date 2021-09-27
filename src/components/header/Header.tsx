@@ -1,5 +1,5 @@
+import { Link } from '@navikt/ds-react';
 import NavHeader from '@navikt/nap-header';
-import Lenke from 'nav-frontend-lenker';
 import React from 'react';
 
 import Config from '~/config';
@@ -22,14 +22,14 @@ const Header = (props: Props) => {
             {props.user && (
                 <div className={styles.content}>
                     {props.user.roller.includes(Rolle.Saksbehandler) && (
-                        <Lenke
+                        <Link
                             href={Routes.soknadPersonSøk.createURL({
                                 papirsøknad: true,
                             })}
                             className={styles.papirsoknad}
                         >
                             {intl.formatMessage({ id: 'link.papirsøknad' })}
-                        </Lenke>
+                        </Link>
                     )}
                     <Menyknapp
                         navn={props.user.navn}

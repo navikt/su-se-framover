@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { FileContent } from '@navikt/ds-icons';
-import { Alert, LinkPanel } from '@navikt/ds-react';
+import { Alert, Button, LinkPanel } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import { Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Ingress, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
@@ -96,13 +95,14 @@ const DokumenterPage = (props: { sak: Sak }) => {
                                 )
                         )
                     )}
-                    <Knapp
+                    <Button
+                        variant="secondary"
                         onClick={() => {
                             history.goBack();
                         }}
                     >
                         {formatMessage('knapp.tilbake')}
-                    </Knapp>
+                    </Button>
                 </div>
             </div>
         </div>

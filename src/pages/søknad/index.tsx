@@ -4,10 +4,11 @@ import Stegindikator from 'nav-frontend-stegindikator';
 import { Undertittel, Feilmelding, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { useParams, useHistory, Link, Switch, Route } from 'react-router-dom';
+import { useParams, useHistory, Switch, Route } from 'react-router-dom';
 
 import { fetchMe } from '~api/meApi';
 import { Person } from '~api/personApi';
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import { Personkort } from '~components/personkort/Personkort';
 import { useUserContext } from '~context/userContext';
 import { SøknadState } from '~features/søknad/søknad.slice';
@@ -273,9 +274,9 @@ const StartUtfylling = () => {
             <Feilmelding className={styles.feilmeldingTekst}>
                 {intl.formatMessage({ id: 'feilmelding.tekst' })}
             </Feilmelding>
-            <Link to={routes.soknadPersonSøk.createURL({})} className="knapp">
+            <LinkAsButton variant="secondary" href={routes.soknadPersonSøk.createURL({})}>
                 {intl.formatMessage({ id: 'feilmelding.knapp' })}
-            </Link>
+            </LinkAsButton>
         </div>
     );
 

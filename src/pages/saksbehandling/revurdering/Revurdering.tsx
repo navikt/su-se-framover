@@ -6,11 +6,12 @@ import * as O from 'fp-ts/Option';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Framdriftsindikator, { Linjestatus } from '~components/framdriftsindikator/Framdriftsindikator';
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { useI18n } from '~lib/i18n';
@@ -98,9 +99,12 @@ const RevurderingPage = (props: { sak: Sak }) => {
                         </Feilmelding>
                     </div>
                     <div className={styles.knappContainer}>
-                        <Link className="knapp" to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
+                        <LinkAsButton
+                            variant="secondary"
+                            href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}
+                        >
                             {intl.formatMessage({ id: 'knapp.avslutt' })}
-                        </Link>
+                        </LinkAsButton>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Button, Loader } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst, Undertittel, Element, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
@@ -62,9 +61,9 @@ const Kvittering = () => {
                 </Alert>
 
                 <div className={styles.nySøknadKnapp}>
-                    <Knapp onClick={() => handleAvsluttSøknad(null)}>
+                    <Button variant="secondary" onClick={() => handleAvsluttSøknad(null)}>
                         <FormattedMessage id="kvittering.avslutt" />
-                    </Knapp>
+                    </Button>
                 </div>
             </div>
         </IntlProvider>
@@ -185,21 +184,22 @@ const Kvittering = () => {
                                             </div>
                                         )}
                                         <div>
-                                            <Knapp
+                                            <Button
+                                                variant="secondary"
                                                 onClick={() => handleAvsluttSøknad(saksnummerOgSøknad.søknad.sakId)}
                                                 className={styles.avsluttKnapp}
                                             >
                                                 <FormattedMessage id="kvittering.avslutt" />
-                                            </Knapp>
+                                            </Button>
 
-                                            <Hovedknapp
+                                            <Button
                                                 onClick={() => {
                                                     handleSkrivUtSøknadClick(saksnummerOgSøknad);
                                                 }}
-                                                spinner={RemoteData.isPending(fetchSøknadPdfState)}
                                             >
                                                 <FormattedMessage id="kvittering.skrivUtSøknad" />
-                                            </Hovedknapp>
+                                                {RemoteData.isPending(fetchSøknadPdfState) && <Loader />}
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
