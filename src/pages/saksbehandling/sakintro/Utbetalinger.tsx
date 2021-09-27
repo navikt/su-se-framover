@@ -1,34 +1,28 @@
-import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader, Modal, Panel } from '@navikt/ds-react';
+import { Button, Panel } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Element, Undertittel } from 'nav-frontend-typografi';
-import React, { useState } from 'react';
+import React from 'react';
 import { IntlShape } from 'react-intl';
+import { useHistory } from 'react-router-dom';
 
-import { Person } from '~api/personApi';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/i18n';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
+import * as Routes from '~lib/routes';
 import { KanStansesEllerGjenopptas } from '~types/Sak';
 import { compareUtbetalingsperiode, Utbetalingsperiode, Utbetalingstype } from '~types/Utbetalingsperiode';
 import { formatMonthYear } from '~utils/date/dateUtils';
-import { showName } from '~utils/person/personUtils';
 
 import messages from './utbetalinger-nb';
 import styles from './utbetalinger.module.less';
 
 export const Utbetalinger = (props: {
-    søker: Person;
     sakId: string;
     utbetalingsperioder: Utbetalingsperiode[];
     kanStansesEllerGjenopptas: KanStansesEllerGjenopptas;
 }) => {
     const { intl } = useI18n({ messages });
-    const dispatch = useAppDispatch();
-    const { utbetalingsperioder, kanStansesEllerGjenopptas, søker } = props;
-    const { stansUtbetalingerStatus, gjenopptaUtbetalingerStatus } = useAppSelector((s) => s.sak);
-    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const history = useHistory();
+    const { utbetalingsperioder, kanStansesEllerGjenopptas } = props;
 
     if (utbetalingsperioder.length === 0) {
         return <div></div>;
@@ -90,81 +84,24 @@ export const Utbetalinger = (props: {
                         {kanGjenopptas ? (
                             <Button
                                 variant="secondary"
-                                onClick={() => {
-                                    if (kanGjenopptas && !RemoteData.isPending(gjenopptaUtbetalingerStatus)) {
-                                        dispatch(
-                                            sakSlice.gjenopptaUtbetalinger({
-                                                sakId: props.sakId,
-                                            })
-                                        );
-                                    }
-                                }}
+                                onClick={() =>
+                                    history.push(Routes.gjenopptaStansRoute.createURL({ sakId: props.sakId }))
+                                }
                             >
                                 {intl.formatMessage({ id: 'display.utbetalingsperiode.gjenopptaUtbetaling' })}
-                                {RemoteData.isPending(gjenopptaUtbetalingerStatus) && <Loader />}
                             </Button>
                         ) : (
                             kanStanses && (
-                                <Button variant="danger" onClick={() => setModalOpen(true)}>
+                                <Button
+                                    variant="danger"
+                                    onClick={() => history.push(Routes.stansRoute.createURL({ sakId: props.sakId }))}
+                                >
                                     {intl.formatMessage({ id: 'display.utbetalingsperiode.stoppUtbetaling' })}
                                 </Button>
                             )
                         )}
                     </div>
                 </div>
-                <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-                    <Modal.Content>
-                        <div className={styles.modalContainer}>
-                            <Undertittel>
-                                {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetalingerTil' })}{' '}
-                                {showName(søker.navn)}
-                            </Undertittel>
-                            <p>{intl.formatMessage({ id: 'display.utbetalingsperiode.bekreftStans' })}</p>
-                            <div className={styles.modalKnappContainer}>
-                                <Button variant="tertiary" onClick={() => setModalOpen(false)}>
-                                    {intl.formatMessage({ id: 'display.utbetalingsperiode.avbryt' })}
-                                </Button>
-                                <Button
-                                    variant="danger"
-                                    onClick={() => {
-                                        if (kanStanses && !RemoteData.isPending(stansUtbetalingerStatus)) {
-                                            dispatch(
-                                                sakSlice.stansUtbetalinger({
-                                                    sakId: props.sakId,
-                                                })
-                                            );
-                                        }
-                                    }}
-                                >
-                                    {intl.formatMessage({ id: 'display.utbetalingsperiode.stansUtbetaling' })}
-                                    {RemoteData.isPending(stansUtbetalingerStatus) && <Loader />}
-                                </Button>
-                            </div>
-                            {RemoteData.isFailure(stansUtbetalingerStatus) && (
-                                <Alert variant="error">
-                                    {intl.formatMessage({
-                                        id: 'display.utbetalingsperiode.klarteIkkeStanseUtbetaling',
-                                    })}
-                                </Alert>
-                            )}
-                            {RemoteData.isSuccess(stansUtbetalingerStatus) && (
-                                <Alert variant="success">
-                                    {intl.formatMessage({ id: 'display.utbetalingsperiode.stansetUtbetaling' })}
-                                </Alert>
-                            )}
-                        </div>
-                    </Modal.Content>
-                </Modal>
-                {RemoteData.isFailure(gjenopptaUtbetalingerStatus) && (
-                    <Alert variant="error">
-                        {intl.formatMessage({ id: 'display.utbetalingsperiode.klarteIkkeGjenopptaUtbetaling' })}
-                    </Alert>
-                )}
-                {RemoteData.isSuccess(gjenopptaUtbetalingerStatus) && (
-                    <Alert variant="success" className={styles.utbetalingGjenopptatt}>
-                        {intl.formatMessage({ id: 'display.utbetalingsperiode.gjenopptattUtbetaling' })}
-                    </Alert>
-                )}
             </Panel>
         </div>
     );

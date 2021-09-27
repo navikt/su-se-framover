@@ -10,7 +10,6 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { ApiError } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
-import { Person } from '~api/personApi';
 import { ÅpentBrev } from '~assets/Illustrations';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
@@ -25,7 +24,7 @@ import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { useAppDispatch } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
-import { Revurdering } from '~types/Revurdering';
+import { Revurdering, RevurderingsStatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 import { Vedtak } from '~types/Vedtak';
@@ -42,6 +41,8 @@ import {
     erRevurderingSimulert,
     erForhåndsvarselSendt,
     finnNesteRevurderingsteg,
+    erRevurderingStans,
+    erRevurderingGjenopptak,
 } from '../../../utils/revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
@@ -69,7 +70,7 @@ const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
     }
 };
 
-const Sakintro = (props: { sak: Sak; søker: Person }) => {
+const Sakintro = (props: { sak: Sak }) => {
     const locationState = useNotificationFromLocation();
     const { intl } = useI18n({ messages });
 
@@ -126,7 +127,6 @@ const Sakintro = (props: { sak: Sak; søker: Person }) => {
                     />
                     <Utbetalinger
                         sakId={props.sak.id}
-                        søker={props.søker}
                         utbetalingsperioder={props.sak.utbetalinger}
                         kanStansesEllerGjenopptas={props.sak.utbetalingerKanStansesEllerGjenopptas}
                     />
@@ -341,6 +341,32 @@ const RevurderingStartetKnapper = (props: {
                         {props.intl.formatMessage({
                             id: 'display.attestering.attester',
                         })}
+                    </LinkAsButton>
+                ) : erRevurderingStans(revurdering) ? (
+                    <LinkAsButton
+                        href={Routes.stansOppsummeringRoute.createURL({
+                            sakId: props.sakId,
+                            revurderingId: revurdering.id,
+                        })}
+                        variant="secondary"
+                        size="small"
+                    >
+                        {revurdering.status === RevurderingsStatus.IVERKSATT_STANS
+                            ? props.intl.formatMessage({ id: 'revurdering.oppsummering' })
+                            : props.intl.formatMessage({ id: 'revurdering.fortsett' })}
+                    </LinkAsButton>
+                ) : erRevurderingGjenopptak(revurdering) ? (
+                    <LinkAsButton
+                        href={Routes.gjenopptaStansOppsummeringRoute.createURL({
+                            sakId: props.sakId,
+                            revurderingId: revurdering.id,
+                        })}
+                        variant="secondary"
+                        size="small"
+                    >
+                        {revurdering.status === RevurderingsStatus.IVERKSATT_GJENOPPTAK
+                            ? props.intl.formatMessage({ id: 'revurdering.oppsummering' })
+                            : props.intl.formatMessage({ id: 'revurdering.fortsett' })}
                     </LinkAsButton>
                 ) : (
                     !erRevurderingTilAttestering(revurdering) &&

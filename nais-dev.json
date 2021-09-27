@@ -8,7 +8,6 @@
         "AZURE_GROUP_DRIFT": "5ccd88bd-58d6-41a7-9652-5e0597b00f9b",
         "SU_SE_BAKOVER_AAD_APP_NAME": "dev-fss.supstonad.su-se-bakover",
         "AMPLITUDE_API_KEY": "feb0ead20059b4be531bfa6e076906ab",
-        "FEATURE_HENDELSESLOGG": false,
         "AUTH_LOGIN_REDIRECT_URI": "https://supplerendestonad.dev.adeo.no/oauth2/callback",
         "AUTH_LOGOUT_REDIRECT_URI": "https://supplerendestonad.dev.adeo.no/",
         "LOG_LEVEL": "debug"

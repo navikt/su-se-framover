@@ -20,6 +20,7 @@ import {
     BosituasjonRequest,
     FormuegrunnlagRequest,
 } from '~types/Revurdering';
+import { Gjenopptak, StansAvYtelse } from '~types/Stans';
 
 import apiClient, { ApiClientResult, ErrorMessage } from './apiClient';
 
@@ -39,6 +40,92 @@ export async function opprettRevurdering(
             informasjonSomRevurderes: informasjonSomRevurderes,
             begrunnelse: begrunnelse,
         },
+    });
+}
+
+export async function opprettStans(args: {
+    sakId: string;
+    fraOgMed: Date;
+    årsak: OpprettetRevurderingGrunn;
+    begrunnelse: string;
+}): Promise<ApiClientResult<StansAvYtelse>> {
+    return apiClient({
+        url: `/saker/${args.sakId}/revurderinger/stans`,
+        method: 'POST',
+        body: {
+            fraOgMed: formatISO(args.fraOgMed, { representation: 'date' }),
+            årsak: args.årsak,
+            begrunnelse: args.begrunnelse,
+        },
+    });
+}
+
+export async function oppdaterStans(args: {
+    sakId: string;
+    revurderingId: string;
+    fraOgMed: Date;
+    årsak: OpprettetRevurderingGrunn;
+    begrunnelse: string;
+}): Promise<ApiClientResult<StansAvYtelse>> {
+    return apiClient({
+        url: `/saker/${args.sakId}/revurderinger/stans/${args.revurderingId}`,
+        method: 'PATCH',
+        body: {
+            fraOgMed: formatISO(args.fraOgMed, { representation: 'date' }),
+            årsak: args.årsak,
+            begrunnelse: args.begrunnelse,
+        },
+    });
+}
+
+export async function gjenoppta(args: {
+    sakId: string;
+    årsak: OpprettetRevurderingGrunn;
+    begrunnelse: string;
+}): Promise<ApiClientResult<Gjenopptak>> {
+    return apiClient({
+        url: `/saker/${args.sakId}/revurderinger/gjenoppta`,
+        method: 'POST',
+        body: {
+            årsak: args.årsak,
+            begrunnelse: args.begrunnelse,
+        },
+    });
+}
+
+export async function oppdaterGjenopptak(args: {
+    sakId: string;
+    revurderingId: string;
+    årsak: OpprettetRevurderingGrunn;
+    begrunnelse: string;
+}): Promise<ApiClientResult<Gjenopptak>> {
+    return apiClient({
+        url: `/saker/${args.sakId}/revurderinger/gjenoppta/${args.revurderingId}`,
+        method: 'PATCH',
+        body: {
+            årsak: args.årsak,
+            begrunnelse: args.begrunnelse,
+        },
+    });
+}
+
+export async function iverksettGjenopptak(args: {
+    sakId: string;
+    revurderingId: string;
+}): Promise<ApiClientResult<Gjenopptak>> {
+    return apiClient({
+        url: `/saker/${args.sakId}/revurderinger/gjenoppta/${args.revurderingId}/iverksett`,
+        method: 'POST',
+    });
+}
+
+export async function iverksettStans(args: {
+    sakId: string;
+    revurderingId: string;
+}): Promise<ApiClientResult<StansAvYtelse>> {
+    return apiClient({
+        url: `/saker/${args.sakId}/revurderinger/stans/${args.revurderingId}/iverksett`,
+        method: 'POST',
     });
 }
 

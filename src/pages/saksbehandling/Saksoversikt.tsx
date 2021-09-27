@@ -6,13 +6,10 @@ import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
-import { FeatureToggle } from '~api/featureToggleApi';
-import Hendelseslogg from '~components/hendelseslog/Hendelseslogg';
 import Personlinje from '~components/personlinje/Personlinje';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
-import { useFeatureToggle } from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
 import { useI18n, Languages } from '~lib/i18n';
 import * as Routes from '~lib/routes';
@@ -21,6 +18,7 @@ import { useAppDispatch, useAppSelector } from '~redux/Store';
 import Restanser from './restans/Restanser';
 import messages from './saksoversikt-nb';
 import styles from './saksoversikt.module.less';
+import Gjenoppta from './stans/gjenoppta/gjenoppta';
 
 const Vilkår = React.lazy(() => import('./søknadsbehandling/vilkår/Vilkår'));
 const SendTilAttesteringPage = React.lazy(
@@ -31,6 +29,7 @@ const LukkSøknad = React.lazy(() => import('./lukkSøknad/LukkSøknad'));
 const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));
 const Sakintro = React.lazy(() => import('./sakintro/Sakintro'));
 const DokumenterPage = React.lazy(() => import('~pages/saksbehandling/dokumenter/DokumenterPage'));
+const StansPage = React.lazy(() => import('./stans/Stans'));
 
 const Saksoversikt = () => {
     const urlParams = Routes.useRouteParams<typeof Routes.saksoversiktValgtSak>();
@@ -56,8 +55,6 @@ const Saksoversikt = () => {
             }
         }
     }, [sak._tag, søker._tag]);
-
-    const featureHendelseslogg = useFeatureToggle(FeatureToggle.Hendelseslogg);
 
     const rerouteToSak = (id: string) => history.push(Routes.saksoversiktValgtSak.createURL({ sakId: id }));
 
@@ -108,6 +105,16 @@ const Saksoversikt = () => {
                                     <Personlinje søker={søker} sak={sak} />
                                     <div className={styles.container}>
                                         <Switch>
+                                            <Route path={Routes.stansRoute.path}>
+                                                <div className={styles.mainContent}>
+                                                    <StansPage sak={sak} />
+                                                </div>
+                                            </Route>
+                                            <Route path={Routes.gjenopptaStansRoute.path}>
+                                                <div className={styles.mainContent}>
+                                                    <Gjenoppta sak={sak} />
+                                                </div>
+                                            </Route>
                                             <Route path={Routes.avsluttSøknadsbehandling.path}>
                                                 <div className={styles.mainContent}>
                                                     <LukkSøknad sak={sak} />
@@ -147,8 +154,7 @@ const Saksoversikt = () => {
                                             </Route>
 
                                             <Route path="*">
-                                                <Sakintro sak={sak} søker={søker} />
-                                                {featureHendelseslogg && <Hendelseslogg sak={sak} />}
+                                                <Sakintro sak={sak} />
                                             </Route>
                                         </Switch>
                                     </div>

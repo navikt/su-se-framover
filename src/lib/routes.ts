@@ -142,6 +142,27 @@ export const attesterRevurdering: Route<{ sakId: string; revurderingId: string }
     createURL: (args) => `/attestering/${args.sakId}/revurdering/${args.revurderingId}`,
 };
 
+//---------------Stans------------------------------
+export const stansRoute: Route<{ sakId: string; revurderingId?: string }> = {
+    path: `/saksoversikt/:sakId/stans/:revurderingId?`,
+    createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/stans/${revurderingId ?? ''}`,
+};
+
+export const stansOppsummeringRoute: Route<{ sakId: string; revurderingId: string }> = {
+    path: '/saksoversikt/:sakId/stans/:revurderingId/oppsummering',
+    createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/stans/${revurderingId}/oppsummering`,
+};
+
+export const gjenopptaStansRoute: Route<{ sakId: string; revurderingId?: string }> = {
+    path: '/saksoversikt/:sakId/gjenoppta/:revurderingId?',
+    createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/gjenoppta/${revurderingId ?? ''}`,
+};
+
+export const gjenopptaStansOppsummeringRoute: Route<{ sakId: string; revurderingId: string }> = {
+    path: '/saksoversikt/:sakId/gjenoppta/:revurderingId/oppsummering',
+    createURL: ({ sakId, revurderingId }) => `/saksoversikt/${sakId}/gjenoppta/${revurderingId}/oppsummering`,
+};
+
 export interface SuccessNotificationState {
     notification?: string;
 }

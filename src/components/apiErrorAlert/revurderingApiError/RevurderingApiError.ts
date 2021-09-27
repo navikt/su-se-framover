@@ -27,7 +27,9 @@ export type RevurderingErrorCodes =
     | Beregning
     | Forhåndsvarsling
     | UtfallSomIkkeStøttes
-    | Brev;
+    | Brev
+    | Stans
+    | Gjenopptak;
 
 type VilkårErrorCodes = OpprettelseOgOppdatering | Uføre | Bosituasjon | Formue | Fradrag;
 
@@ -114,6 +116,34 @@ enum Brev {
     KUNNE_IKKE_LAGE_BREV = 'kunne_ikke_lage_brevutkast',
 }
 
+enum Stans {
+    KUNNE_IKKE_IVERKSETTE_STANS_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_stans_ugyldig_tilstand',
+    FEIL_VED_KONTROLL_AV_SIMULERING = 'feil_ved_kontroll_av_simulering',
+    SENDING_TIL_OPPDRAG_FEILET = 'sending_til_oppdrag_feilet',
+    FEIL_VED_SIMULERING_AV_STANS = 'feil_ved_simulering_av_stans',
+    KUNNE_IKKE_OPPRETTE_REVURDERING_FOR_STANS = 'kunne_ikke_opprette_revurdering_for_stans',
+    UGYLDIG_TILSTAND_FOR_OPPDATERING = 'ugyldig_tilstand_for_oppdatering',
+    FANT_INGEN_UTBETALINGER = 'fant_ingen_utbetalinger',
+    FANT_INGEN_UTBETALINGER_ETTER_STANSDATO = 'fant_ingen_utbetalinger_etter_stansdato',
+    KAN_IKKE_STANSE_OPPHØRTE_UTBETALINGER = 'kan_ikke_stanse_opphørte_utbetalinger',
+    UTBETALING_ALLEREDE_STANSET = 'utbetaling_allerede_stanset',
+    UTBETALING_ALLEREDE_OPPHØRT = 'utbetaling_allerede_opphørt',
+    STANSDATO_IKKE_FØRSTE_I_NESTE_MÅNED = 'stansdato_ikke_første_i_neste_måned',
+}
+
+enum Gjenopptak {
+    KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND = 'kunne_ikke_iverksette_gjenopptak_ugyldig_tilstand',
+    INGEN_TIDLIGERE_VEDTAK = 'ingen_tidligere_vedtak',
+    UGYLDIG_TYPE_FOR_OPPDATERING_AV_GJENOPPTAK = 'ugyldig_type_for_oppdatering_av_gjenopptak',
+    KUNNE_IKKE_OPPRETTE_REVURDERING = 'kunne_ikke_opprette_revurdering',
+    FEIL_VED_SIMULERING_AV_GJENOPPTAK = 'feil_ved_simulering_av_gjenopptak',
+    SENDING_TIL_OPPDRAG_FEILET = 'sending_til_oppdrag_feilet',
+    FEIL_VED_KONTROLL_AV_SIMULERING = 'feil_ved_kontroll_av_simulering',
+    SISTE_VEDTAK_IKKE_STANS = 'siste_vedtak_ikke_stans',
+    SISTE_UTBETALING_ER_IKKE_STANS = 'siste_utbetaling_er_ikke_stans',
+    KAN_IKKE_GJENOPPTA_OPPHØRTE_UTBETALINGER = 'kan_ikke_gjenoppta_opphørte_utbetalinger',
+}
+
 const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof typeof messages | undefined } = {
     [Generell.G_REGULERING_KAN_IKKE_FØRE_TIL_OPPHØR]: 'generell.gregulering.kan.ikke.føre.til.opphør',
     [Generell.ATTESTANT_OG_SAKSBEHANDLER_KAN_IKKE_VÆRE_SAMME_PERSON]:
@@ -180,4 +210,28 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof 
     [Brev.NAVNEOPPSLAG_SAKSBEHANDLER_ATTESTTANT_FEILET]: 'brev.navnoppslag.feilet',
     [Brev.FANT_IKKE_GJELDENDEUTBETALING]: 'brev.fant.ikke.gjeldende.utbetaling',
     [Brev.KUNNE_IKKE_LAGE_BREV]: 'brev.kunne.ikke.lage',
+
+    [Stans.KUNNE_IKKE_IVERKSETTE_STANS_UGYLDIG_TILSTAND]: 'stans.iverksett.ugyldig.tilstand',
+    [Stans.FEIL_VED_KONTROLL_AV_SIMULERING]: 'stans.simulering.kontroll.feil',
+    [Stans.FEIL_VED_SIMULERING_AV_STANS]: 'stans.simulering.feil',
+    [Stans.SENDING_TIL_OPPDRAG_FEILET]: 'stans.oppdrag.sending.feilet',
+    [Stans.KUNNE_IKKE_OPPRETTE_REVURDERING_FOR_STANS]: 'kunne.ikke.opprette.revurdering.for.stans',
+    [Stans.UGYLDIG_TILSTAND_FOR_OPPDATERING]: 'ugyldig.tilstand.for.oppdatering',
+    [Stans.FANT_INGEN_UTBETALINGER]: 'fant.ingen.utbetalinger',
+    [Stans.FANT_INGEN_UTBETALINGER_ETTER_STANSDATO]: 'fant.ingen.utbetalinger.etter.stansdato',
+    [Stans.KAN_IKKE_STANSE_OPPHØRTE_UTBETALINGER]: 'kan.ikke.stanse.opphørte.utbetalinger',
+    [Stans.UTBETALING_ALLEREDE_STANSET]: 'utbetaling.allerede.stanset',
+    [Stans.UTBETALING_ALLEREDE_OPPHØRT]: 'utbetaling.allerede.opphørt',
+    [Stans.STANSDATO_IKKE_FØRSTE_I_NESTE_MÅNED]: 'stansdato.ikke.første.i.neste.måned',
+
+    [Gjenopptak.KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND]: 'gjenopptak.iverksett.ugyldig.tilstand',
+    [Gjenopptak.INGEN_TIDLIGERE_VEDTAK]: 'gjenopptak.ingen.tidligere.vedtak',
+    [Gjenopptak.UGYLDIG_TYPE_FOR_OPPDATERING_AV_GJENOPPTAK]: 'gjenopptak.oppdatering.ugyldig.type',
+    [Gjenopptak.KUNNE_IKKE_OPPRETTE_REVURDERING]: 'gjenopptak.opprett.kunne.ikke',
+    [Gjenopptak.FEIL_VED_SIMULERING_AV_GJENOPPTAK]: 'gjenopptak.simulering.feil',
+    [Gjenopptak.SENDING_TIL_OPPDRAG_FEILET]: 'gjenopptak.oppdrag.sending.feilet',
+    [Gjenopptak.FEIL_VED_KONTROLL_AV_SIMULERING]: 'gjenopptak.simulering.kontroll.feilet',
+    [Gjenopptak.SISTE_VEDTAK_IKKE_STANS]: 'gjenopptak.siste.vedtak.ikke.stans',
+    [Gjenopptak.SISTE_UTBETALING_ER_IKKE_STANS]: 'gjenopptak.siste.utbetaling.ikke.stans',
+    [Gjenopptak.KAN_IKKE_GJENOPPTA_OPPHØRTE_UTBETALINGER]: 'gjenopptak.kan.ikke.gjenoppta.opphørte.utbetalinger',
 };

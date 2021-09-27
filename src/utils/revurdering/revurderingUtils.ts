@@ -13,6 +13,7 @@ import {
     InformasjonSomRevurderes,
     Vurderingstatus,
 } from '~types/Revurdering';
+import { Gjenopptak, StansAvYtelse } from '~types/Stans';
 
 import { RevurderingSteg } from '../../pages/saksbehandling/types';
 
@@ -20,7 +21,9 @@ export const erRevurderingOpprettet = (r: Revurdering): r is OpprettetRevurderin
     r.status === RevurderingsStatus.OPPRETTET;
 
 export const erRevurderingSimulert = (r: Revurdering): r is SimulertRevurdering =>
-    r.status === RevurderingsStatus.SIMULERT_INNVILGET || r.status === RevurderingsStatus.SIMULERT_OPPHØRT;
+    r.status === RevurderingsStatus.SIMULERT_INNVILGET ||
+    r.status === RevurderingsStatus.SIMULERT_OPPHØRT ||
+    r.status === RevurderingsStatus.SIMULERT_STANS;
 
 export const erBeregnetIngenEndring = (r: Revurdering): r is BeregnetIngenEndring =>
     r.status === RevurderingsStatus.BEREGNET_INGEN_ENDRING;
@@ -56,6 +59,12 @@ export const erRevurderingUnderkjent = (r: Revurdering): r is UnderkjentRevurder
     r.status === RevurderingsStatus.UNDERKJENT_OPPHØRT ||
     r.status === RevurderingsStatus.UNDERKJENT_INGEN_ENDRING;
 
+export const erRevurderingStans = (r: Revurdering): r is StansAvYtelse =>
+    r.status === RevurderingsStatus.SIMULERT_STANS || r.status === RevurderingsStatus.IVERKSATT_STANS;
+
+export const erRevurderingGjenopptak = (r: Revurdering): r is Gjenopptak =>
+    r.status === RevurderingsStatus.SIMULERT_GJENOPPTAK || r.status === RevurderingsStatus.IVERKSATT_GJENOPPTAK;
+
 export const erGregulering = (årsak: OpprettetRevurderingGrunn): boolean =>
     årsak === OpprettetRevurderingGrunn.REGULER_GRUNNBELØP;
 
@@ -73,6 +82,10 @@ export function getRevurderingsårsakMessageId(årsak: OpprettetRevurderingGrunn
             return 'årsak.migrert';
         case OpprettetRevurderingGrunn.REGULER_GRUNNBELØP:
             return 'årsak.gRegulering';
+        case OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING:
+            return 'årsak.manglendeKontrollerklæring';
+        case OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING:
+            return 'årsak.mottattKontrollerklæring';
     }
 }
 

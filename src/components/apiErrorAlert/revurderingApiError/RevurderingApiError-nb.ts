@@ -65,4 +65,34 @@ export default {
     'brev.navnoppslag.feilet': 'Kunne ikke hente navn for saksbehandler eller attestant',
     'brev.fant.ikke.gjeldende.utbetaling': 'Kunne ikke hente gjeldende utbetaling',
     'brev.kunne.ikke.lage': 'Kunne ikke lage brevutkast',
+
+    'stans.iverksett.ugyldig.tilstand': 'Kan ikke stanse utbetalinger som allerede er stanset',
+    'stans.simulering.kontroll.feil': 'Feil ved kontroll av simulering',
+    'stans.oppdrag.sending.feilet': 'Sending av utbetaling til oppdrag feilet',
+    'stans.simulering.feil': 'Feil ved simulering av stans',
+    'stans.opprett.kunne.ikke': 'Kunne ikke opprette revurdering',
+    'stans.oppdater.ugyldig.type':
+        'kunne ikke oppdatere revurdering for stans. Eksisterende revurdering er av feil type',
+    'kunne.ikke.opprette.revurdering.for.stans': 'Kunne ikke opprette revurdering for stans',
+    'ugyldig.tilstand.for.oppdatering': 'Ugyldig tilstand for oppdatering',
+    'fant.ingen.utbetalinger': 'Fant ingen utbetalinger',
+    'fant.ingen.utbetalinger.etter.stansdato': 'Fant ingen utbetalinger etter stansdato',
+    'kan.ikke.stanse.opphørte.utbetalinger': 'Kan ikke stanste opphørte utbetalinger',
+    'utbetaling.allerede.stanset': 'Utbetaling allerede stanset',
+    'utbetaling.allerede.opphørt': 'Utbetaling allerede opphørt',
+    'stansdato.ikke.første.i.neste.måned': 'Stansdato ikke første i neste måned',
+
+    'gjenopptak.siste.utbetaling.ikke.stans': 'Siste utbetaling er ikke stans',
+    'gjenopptak.kan.ikke.gjenoppta.opphørte.utbetalinger': 'Kan ikke gjenoppta opphørte utbetalinger',
+    'gjenopptak.iverksett.ugyldig.tilstand': 'Kan ikke gjenoppta utbetalinger som allerede er gjenopptatt',
+    'gjenopptak.ingen.tidligere.vedtak':
+        'Kan ikke opprette revurdering for gjenopptak av utbetaling uten tidligere vedtak',
+    'gjenopptak.oppdatering.ugyldig.type':
+        'Kunne ikke oppdatere revurdering for gjenopptak, eksisterende revurdering er av feil type',
+    'gjenopptak.opprett.kunne.ikke': 'Kunne ikke opprette revurdering',
+    'gjenopptak.simulering.feil': 'Feil ved simulering av gjenopptak',
+    'gjenopptak.oppdrag.sending.feilet': 'Sending av utbetaling til oppdrag feilet',
+    'gjenopptak.simulering.kontroll.feilet': 'Feil ved kontroll av simulering',
+    'gjenopptak.siste.vedtak.ikke.stans':
+        'Kan ikke opprette revurdering for gjenopptak av ytelse, siste vedtak er ikke en stans',
 };

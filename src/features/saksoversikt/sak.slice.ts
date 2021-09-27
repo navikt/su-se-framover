@@ -7,7 +7,6 @@ import * as dokumentApi from '~api/dokumentApi';
 import * as sakApi from '~api/sakApi';
 import * as søknadApi from '~api/søknadApi';
 import { LukkSøknadBodyTypes } from '~api/søknadApi';
-import * as utbetalingApi from '~api/utbetalingApi';
 import {
     beregnOgSimuler,
     iverksettRevurdering,
@@ -22,6 +21,10 @@ import {
     lagreFradragsgrunnlag,
     lagreBosituasjonsgrunnlag,
     lagreFormuegrunnlag,
+    opprettStans,
+    oppdaterStans,
+    gjenoppta,
+    oppdaterGjenopptak,
 } from '~features/revurdering/revurderingActions';
 import { pipe } from '~lib/fp';
 import { Nullable } from '~lib/types';
@@ -76,28 +79,6 @@ export const hentDokumenter = createAsyncThunk<
     }
     return thunkApi.rejectWithValue(res.error);
 });
-
-export const stansUtbetalinger = createAsyncThunk<Sak, { sakId: string }, { rejectValue: ApiError }>(
-    'utbetalinger/stans',
-    async ({ sakId }, thunkApi) => {
-        const res = await utbetalingApi.stansUtbetalinger(sakId);
-        if (res.status === 'ok') {
-            return res.data;
-        }
-        return thunkApi.rejectWithValue(res.error);
-    }
-);
-
-export const gjenopptaUtbetalinger = createAsyncThunk<Sak, { sakId: string }, { rejectValue: ApiError }>(
-    'utbetalinger/gjenoppta',
-    async ({ sakId }, thunkApi) => {
-        const res = await utbetalingApi.gjenopptaUtbetalinger(sakId);
-        if (res.status === 'ok') {
-            return res.data;
-        }
-        return thunkApi.rejectWithValue(res.error);
-    }
-);
 
 export const startBehandling = createAsyncThunk<
     Behandling,
@@ -324,8 +305,6 @@ export const hentLukketSøknadBrevutkast = createAsyncThunk<
 interface SakState {
     sak: RemoteData.RemoteData<ApiError, Sak>;
     revurderingGrunnlagSimulering: Dictionary<RemoteData.RemoteData<ApiError, GrunnlagsdataOgVilkårsvurderinger>>;
-    stansUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
-    gjenopptaUtbetalingerStatus: RemoteData.RemoteData<ApiError, null>;
     lagreVilkårsvurderingStatus: RemoteData.RemoteData<ApiError, null>;
     lagreBehandlingsinformasjonStatus: RemoteData.RemoteData<ApiError, null>;
     lagreUføregrunnlagStatus: RemoteData.RemoteData<ApiError, null>;
@@ -342,8 +321,6 @@ interface SakState {
 const initialState: SakState = {
     sak: RemoteData.initial,
     revurderingGrunnlagSimulering: {},
-    stansUtbetalingerStatus: RemoteData.initial,
-    gjenopptaUtbetalingerStatus: RemoteData.initial,
     lagreVilkårsvurderingStatus: RemoteData.initial,
     lagreBehandlingsinformasjonStatus: RemoteData.initial,
     lagreUføregrunnlagStatus: RemoteData.initial,
@@ -413,34 +390,6 @@ export default createSlice({
                 );
             },
             rejected: (state) => state,
-        });
-
-        handleAsyncThunk(builder, stansUtbetalinger, {
-            pending: (state) => {
-                state.stansUtbetalingerStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.stansUtbetalingerStatus = RemoteData.success(null);
-                state.gjenopptaUtbetalingerStatus = RemoteData.initial;
-                state.sak = RemoteData.success(action.payload);
-            },
-            rejected: (state, action) => {
-                state.stansUtbetalingerStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-
-        handleAsyncThunk(builder, gjenopptaUtbetalinger, {
-            pending: (state) => {
-                state.gjenopptaUtbetalingerStatus = RemoteData.pending;
-            },
-            fulfilled: (state, action) => {
-                state.gjenopptaUtbetalingerStatus = RemoteData.success(null);
-                state.stansUtbetalingerStatus = RemoteData.initial;
-                state.sak = RemoteData.success(action.payload);
-            },
-            rejected: (state, action) => {
-                state.gjenopptaUtbetalingerStatus = simpleRejectedActionToRemoteData(action);
-            },
         });
 
         handleAsyncThunk(builder, lagreVilkårsvurdering, {
@@ -717,6 +666,26 @@ export default createSlice({
             );
         });
 
+        builder.addCase(opprettStans.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: [...sak.revurderinger, action.payload],
+                }))
+            );
+        });
+
+        builder.addCase(gjenoppta.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({
+                    ...sak,
+                    revurderinger: [...sak.revurderinger, action.payload],
+                }))
+            );
+        });
+
         builder.addCase(lagreUføregrunnlagForRevurdering.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
@@ -753,6 +722,14 @@ export default createSlice({
         });
 
         builder.addCase(fortsettEtterForhåndsvarsel.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+        });
+
+        builder.addCase(oppdaterStans.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload);
+        });
+
+        builder.addCase(oppdaterGjenopptak.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload);
         });
     },
