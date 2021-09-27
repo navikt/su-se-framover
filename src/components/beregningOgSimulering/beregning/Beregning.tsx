@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Button, Loader } from '@navikt/ds-react';
 import { formatISO } from 'date-fns';
 import { FormikHelpers, useFormik } from 'formik';
 import { getEq } from 'fp-ts/Array';
@@ -8,7 +8,6 @@ import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 import { pipe } from 'fp-ts/lib/function';
 import * as S from 'fp-ts/lib/string';
-import { Hovedknapp } from 'nav-frontend-knapper';
 import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Undertittel } from 'nav-frontend-typografi';
@@ -303,15 +302,12 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                     className={styles.feiloppsummering}
                                 />
                             )}
-                            <Hovedknapp
-                                htmlType="submit"
-                                spinner={RemoteData.isPending(lagrefradragogberegnstatus)}
-                                mini
-                            >
+                            <Button type="submit" size="small">
                                 {props.behandling.beregning
                                     ? intl.formatMessage({ id: 'knapp.startNyBeregning' })
                                     : intl.formatMessage({ id: 'knapp.startBeregning' })}
-                            </Hovedknapp>
+                                {RemoteData.isPending(lagrefradragogberegnstatus) && <Loader />}
+                            </Button>
 
                             {props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG && (
                                 <Alert variant="warning" className={styles.avslagadvarsel}>

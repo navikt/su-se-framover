@@ -1,11 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Hovedknapp } from 'nav-frontend-knapper';
+import { Button } from '@navikt/ds-react';
 import { BekreftCheckboksPanel } from 'nav-frontend-skjema';
 import { Sidetittel, Ingress, Feilmelding } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
 import søknadSlice from '~features/søknad/søknad.slice';
@@ -123,18 +124,18 @@ const index = (props: { nesteUrl: string }) => {
                     </div>
                 </div>
                 <div className={styles.knapperContainer}>
-                    <Link className="knapp" to={Routes.soknad.createURL()}>
+                    <LinkAsButton variant="secondary" href={Routes.soknad.createURL()}>
                         <FormattedMessage id="knapp.forrige" />
-                    </Link>
-                    <Hovedknapp
-                        htmlType="button"
+                    </LinkAsButton>
+                    <Button
+                        type="button"
                         onClick={() => {
                             setHasSubmitted(() => true);
                             handleStartSøknadKlikk();
                         }}
                     >
                         <FormattedMessage id="knapp.startSøknad" />
-                    </Hovedknapp>
+                    </Button>
                 </div>
             </div>
         </RawIntlProvider>

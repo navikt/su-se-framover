@@ -1,4 +1,4 @@
-import Panel from 'nav-frontend-paneler';
+import { Panel } from '@navikt/ds-react';
 import { Innholdstittel, Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 

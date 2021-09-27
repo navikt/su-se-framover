@@ -1,11 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Button, Panel } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
-import { Knapp } from 'nav-frontend-knapper';
-import Panel from 'nav-frontend-paneler';
 import { Feiloppsummering, Input } from 'nav-frontend-skjema';
 import { Element, Normaltekst, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
@@ -178,16 +176,17 @@ const Uføreperiodevurdering = (props: {
                             )}
                         />
                     </div>
-                    <Knapp
+                    <Button
+                        variant="secondary"
                         className={styles.slettknapp}
                         onClick={() => {
                             props.onRemoveClick();
                         }}
-                        kompakt
+                        size="small"
                         aria-label={intl.formatMessage({ id: 'input.fjernPeriode.label' })}
                     >
                         <Delete />
-                    </Knapp>
+                    </Button>
                 </div>
                 <Controller
                     control={props.control}
@@ -380,8 +379,9 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                 ))}
             </ul>
             <div className={styles.nyperiodeContainer}>
-                <Knapp
-                    htmlType="button"
+                <Button
+                    variant="secondary"
+                    type="button"
                     onClick={() => {
                         grunnlagValues.append(
                             {
@@ -397,7 +397,7 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                     }}
                 >
                     {formatMessage('button.nyPeriode.label')}
-                </Knapp>
+                </Button>
             </div>
             <Feiloppsummering
                 tittel={formatMessage('feiloppsummering.title')}

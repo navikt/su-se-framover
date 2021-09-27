@@ -1,10 +1,9 @@
-import { Knapp, Hovedknapp, Flatknapp } from 'nav-frontend-knapper';
-import ModalWrapper from 'nav-frontend-modal';
+import { Button, Loader, Modal } from '@navikt/ds-react';
 import { Undertittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import TextProvider from '~components/TextProvider';
 import { Languages } from '~lib/i18n';
 
@@ -29,12 +28,14 @@ const Bunnknapper = (props: {
     return (
         <TextProvider messages={{ [Languages.nb]: messages }}>
             <div className={styles.container}>
-                <Hovedknapp htmlType="submit" className={styles.navKnapp} spinner={props.next?.spinner}>
+                <Button type="submit" className={styles.navKnapp}>
                     {props.next?.label ?? <FormattedMessage id="steg.neste" />}
-                </Hovedknapp>
+                    {props.next?.spinner && <Loader />}
+                </Button>
                 {props.previous && (
-                    <Knapp
-                        htmlType="button"
+                    <Button
+                        variant="secondary"
+                        type="button"
                         className={styles.navKnapp}
                         onClick={() => {
                             if (props.previous?.handleClickAsAvbryt) {
@@ -45,40 +46,37 @@ const Bunnknapper = (props: {
                         }}
                     >
                         {props.previous.label ?? <FormattedMessage id="steg.forrige" />}
-                    </Knapp>
+                    </Button>
                 )}
             </div>
             <div className={styles.avbrytknappContainer}>
-                <Flatknapp htmlType="button" onClick={() => setModalOpen(true)}>
+                <Button variant="tertiary" type="button" onClick={() => setModalOpen(true)}>
                     <FormattedMessage id="steg.avbryt" />
-                </Flatknapp>
+                </Button>
             </div>
-            <ModalWrapper
-                isOpen={modalOpen}
-                closeButton={true}
-                onRequestClose={() => setModalOpen(false)}
-                contentLabel={'lukkSøknad'}
-            >
-                <div className={styles.modalContainer}>
-                    <Undertittel className={styles.modalTittel}>
-                        <FormattedMessage id="modal.tittel" />
-                    </Undertittel>
-                    <p>
-                        <FormattedMessage id="modal.infoTekst.p1" />
-                    </p>
-                    <p>
-                        <FormattedMessage id="modal.infoTekst.p2" />
-                    </p>
-                    <div className={styles.modalKnappContainer}>
-                        <Flatknapp onClick={() => setModalOpen(false)}>
-                            <FormattedMessage id="steg.avbryt" />
-                        </Flatknapp>
-                        <Link className="knapp knapp--fare" to={props.avbryt.toRoute}>
-                            <FormattedMessage id="modal.lukkSøknad" />
-                        </Link>
+            <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+                <Modal.Content>
+                    <div className={styles.modalContainer}>
+                        <Undertittel className={styles.modalTittel}>
+                            <FormattedMessage id="modal.tittel" />
+                        </Undertittel>
+                        <p>
+                            <FormattedMessage id="modal.infoTekst.p1" />
+                        </p>
+                        <p>
+                            <FormattedMessage id="modal.infoTekst.p2" />
+                        </p>
+                        <div className={styles.modalKnappContainer}>
+                            <Button variant="tertiary" onClick={() => setModalOpen(false)}>
+                                <FormattedMessage id="steg.avbryt" />
+                            </Button>
+                            <LinkAsButton variant="danger" href={props.avbryt.toRoute}>
+                                <FormattedMessage id="modal.lukkSøknad" />
+                            </LinkAsButton>
+                        </div>
                     </div>
-                </div>
-            </ModalWrapper>
+                </Modal.Content>
+            </Modal>
         </TextProvider>
     );
 };

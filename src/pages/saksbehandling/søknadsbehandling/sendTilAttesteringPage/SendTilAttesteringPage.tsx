@@ -1,13 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import { Alert, Button, Loader } from '@navikt/ds-react';
 import { Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel } from 'nav-frontend-typografi/';
 import React, { useMemo, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import * as PdfApi from '~api/pdfApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useBrevForhåndsvisning } from '~lib/hooks';
@@ -95,9 +95,10 @@ const SendTilAttesteringPage = (props: Props) => {
                         {RemoteData.isFailure(brevStatus) && (
                             <Alert variant="error">{intl.formatMessage({ id: 'feilmelding.brevhentingFeilet' })}</Alert>
                         )}
-                        <Knapp
+                        <Button
+                            variant="secondary"
                             className={styles.visBrevKnapp}
-                            htmlType="button"
+                            type="button"
                             onClick={() => {
                                 lastNedBrev({
                                     sakId,
@@ -105,19 +106,18 @@ const SendTilAttesteringPage = (props: Props) => {
                                     fritekst,
                                 });
                             }}
-                            spinner={RemoteData.isPending(brevStatus)}
-                            mini
+                            size="small"
                         >
                             {intl.formatMessage({ id: 'knapp.vis' })}
-                        </Knapp>
+                            {RemoteData.isPending(brevStatus) && <Loader />}
+                        </Button>
                     </div>
                 </div>
                 <div className={styles.navigeringContainer}>
-                    <Link to={tilbakeUrl} className="knapp">
+                    <LinkAsButton variant="secondary" href={tilbakeUrl}>
                         {intl.formatMessage({ id: 'knapp.tilbake' })}
-                    </Link>
-                    <Hovedknapp
-                        spinner={RemoteData.isPending(sendtTilAttesteringStatus)}
+                    </LinkAsButton>
+                    <Button
                         onClick={async () => {
                             const response = await dispatch(
                                 sakSlice.sendTilAttestering({
@@ -131,10 +131,11 @@ const SendTilAttesteringPage = (props: Props) => {
                                 history.push(Routes.createSakIntroLocation(message, sak.id));
                             }
                         }}
-                        htmlType="button"
+                        type="button"
                     >
                         {intl.formatMessage({ id: 'knapp.sendTilAttestering' })}
-                    </Hovedknapp>
+                        {RemoteData.isPending(sendtTilAttesteringStatus) && <Loader />}
+                    </Button>
                 </div>
                 {RemoteData.isFailure(sendtTilAttesteringStatus) && (
                     <ApiErrorAlert error={sendtTilAttesteringStatus.error} />

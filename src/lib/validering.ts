@@ -24,7 +24,7 @@ export function validateStringAsNonNegativeNumber(name = 'feltet') {
         .required()
         .min(0)
         .label(name)
-        .typeError(`${name} må være et tall`) as unknown as yup.Schema<string>;
+        .typeError(`${name} må være et tall`) as unknown as yup.StringSchema<string>;
 }
 
 const norskLocale: yup.LocaleObject = {

@@ -1,10 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Button, Modal } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import { startOfMonth } from 'date-fns/esm';
-import { Knapp } from 'nav-frontend-knapper';
-import ModalWrapper from 'nav-frontend-modal';
 import { Input, Textarea, Checkbox, RadioGruppe, Radio, Feiloppsummering, SkjemaGruppe } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import Tekstomrade, { BoldRule, HighlightRule, LinebreakRule } from 'nav-frontend-tekstomrade';
@@ -67,7 +65,17 @@ const VerdierSchema: yup.ObjectSchema<VerdierFormData | undefined> = yup.object<
     verdipapir: validateStringAsNonNegativeNumber('Verdipapirer og aksjefond'),
     stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber('Om noen skylder søker penger'),
     kontanterOver1000: validateStringAsNonNegativeNumber('Kontanter'),
-    depositumskonto: validateStringAsNonNegativeNumber('Depositumskontoverdi'),
+    depositumskonto: validateStringAsNonNegativeNumber('Depositumskontoverdi').test(
+        'depositumMindreEllerLikInnskudd',
+        'Depositum kan ikke være større enn innskudd',
+        function (depositum) {
+            const { innskuddsbeløp } = this.parent;
+            if (!depositum) {
+                return false;
+            }
+            return depositum <= innskuddsbeløp;
+        }
+    ),
 });
 
 const schema = yup
@@ -221,6 +229,14 @@ const Formue = (props: {
     const totalFormue = søkersFormue + (watch.borSøkerMedEPS ? ektefellesFormue : 0);
 
     useEffect(() => {
+        form.trigger('verdier.depositumskonto');
+    }, [watch.verdier?.innskuddsbeløp]);
+
+    useEffect(() => {
+        form.trigger('epsVerdier.depositumskonto');
+    }, [watch.epsVerdier?.innskuddsbeløp]);
+
+    useEffect(() => {
         if (watch.epsFnr && fnrValidator.fnr(watch.epsFnr).status === 'valid') {
             fetchEps(watch.epsFnr);
         } else {
@@ -343,36 +359,50 @@ const Formue = (props: {
                                                     (err) => (
                                                         <Alert variant="error">
                                                             {err?.statusCode === ErrorCode.Unauthorized ? (
-                                                                <ModalWrapper
-                                                                    isOpen={true}
-                                                                    onRequestClose={() => {
+                                                                <Modal
+                                                                    open={true}
+                                                                    onClose={() => {
                                                                         return;
                                                                     }}
-                                                                    contentLabel={formatMessage(
-                                                                        'modal.skjerming.ariaBeskrivelse'
-                                                                    )}
-                                                                    closeButton={false}
-                                                                    contentClass={styles.modalInnhold}
                                                                 >
-                                                                    <Undertittel>
-                                                                        {formatMessage('modal.skjerming.heading')}
-                                                                    </Undertittel>
-                                                                    <Tekstomrade
-                                                                        className={styles.modalTekst}
-                                                                        rules={[BoldRule, HighlightRule, LinebreakRule]}
-                                                                    >
-                                                                        {formatMessage('modal.skjerming.innhold', {
-                                                                            navn: showName(props.søker.navn),
-                                                                            fnr: søknadInnhold.personopplysninger.fnr,
-                                                                        })}
-                                                                    </Tekstomrade>
-                                                                    <Knapp
-                                                                        htmlType="button"
-                                                                        onClick={handleEpsSkjermingModalContinueClick}
-                                                                    >
-                                                                        OK
-                                                                    </Knapp>
-                                                                </ModalWrapper>
+                                                                    <Modal.Content>
+                                                                        <div className={styles.modalInnhold}>
+                                                                            <Undertittel>
+                                                                                {formatMessage(
+                                                                                    'modal.skjerming.heading'
+                                                                                )}
+                                                                            </Undertittel>
+                                                                            <Tekstomrade
+                                                                                className={styles.modalTekst}
+                                                                                rules={[
+                                                                                    BoldRule,
+                                                                                    HighlightRule,
+                                                                                    LinebreakRule,
+                                                                                ]}
+                                                                            >
+                                                                                {formatMessage(
+                                                                                    'modal.skjerming.innhold',
+                                                                                    {
+                                                                                        navn: showName(
+                                                                                            props.søker.navn
+                                                                                        ),
+                                                                                        fnr: søknadInnhold
+                                                                                            .personopplysninger.fnr,
+                                                                                    }
+                                                                                )}
+                                                                            </Tekstomrade>
+                                                                            <Button
+                                                                                variant="secondary"
+                                                                                type="button"
+                                                                                onClick={
+                                                                                    handleEpsSkjermingModalContinueClick
+                                                                                }
+                                                                            >
+                                                                                OK
+                                                                            </Button>
+                                                                        </div>
+                                                                    </Modal.Content>
+                                                                </Modal>
                                                             ) : err?.statusCode === ErrorCode.NotFound ? (
                                                                 formatMessage('feilmelding.ikkeFunnet')
                                                             ) : (
@@ -425,13 +455,14 @@ const Formue = (props: {
 
                                         {inputToShow !== Hvem.Søker ? (
                                             <div>
-                                                <Knapp
+                                                <Button
+                                                    variant="secondary"
                                                     className={styles.toggleInput}
                                                     onClick={() => onEndreFormueClick(Hvem.Søker)}
-                                                    htmlType="button"
+                                                    type="button"
                                                 >
                                                     {formatMessage('knapp.endreSøkersFormue')}
-                                                </Knapp>
+                                                </Button>
                                                 {åpnerNyFormueBlokkMenViserEnBlokk && (
                                                     <Feilmelding>
                                                         {formatMessage('feil.åpnerAnnenPersonFormueMenViserInput')}
@@ -439,13 +470,14 @@ const Formue = (props: {
                                                 )}
                                             </div>
                                         ) : (
-                                            <Knapp
-                                                htmlType="button"
+                                            <Button
+                                                variant="secondary"
+                                                type="button"
                                                 className={styles.toggleInput}
                                                 onClick={() => onLagreClick(Hvem.Søker)}
                                             >
                                                 Lagre
-                                            </Knapp>
+                                            </Button>
                                         )}
                                     </>
                                 )}
@@ -487,13 +519,14 @@ const Formue = (props: {
 
                                     {inputToShow !== Hvem.Ektefelle ? (
                                         <div>
-                                            <Knapp
+                                            <Button
+                                                variant="secondary"
                                                 className={styles.toggleInput}
                                                 onClick={() => onEndreFormueClick(Hvem.Ektefelle)}
-                                                htmlType="button"
+                                                type="button"
                                             >
                                                 {formatMessage('knapp.endreEktefellesFormue')}
-                                            </Knapp>
+                                            </Button>
                                             {åpnerNyFormueBlokkMenViserEnBlokk && (
                                                 <Feilmelding>
                                                     {formatMessage('feil.åpnerAnnenPersonFormueMenViserInput')}
@@ -501,13 +534,14 @@ const Formue = (props: {
                                             )}
                                         </div>
                                     ) : (
-                                        <Knapp
+                                        <Button
+                                            variant="secondary"
                                             className={styles.toggleInput}
-                                            htmlType="button"
+                                            type="button"
                                             onClick={() => onLagreClick(Hvem.Ektefelle)}
                                         >
                                             Lagre
-                                        </Knapp>
+                                        </Button>
                                     )}
                                 </SkjemaGruppe>
                             )}

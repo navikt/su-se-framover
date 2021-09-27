@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Button, Loader } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
 import { RadioPanelGruppe, Textarea, Select } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel, Systemtittel } from 'nav-frontend-typografi';
@@ -191,14 +190,15 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                                 />
                             </div>
                             {revurdering.skalFøreTilBrevutsending && !erGregulering(revurdering.årsak) && (
-                                <Knapp
+                                <Button
+                                    variant="secondary"
                                     className={styles.brevButton}
-                                    htmlType="button"
-                                    spinner={RemoteData.isPending(hentPdfStatus)}
+                                    type="button"
                                     onClick={handleShowBrevClick}
                                 >
                                     {intl.formatMessage({ id: 'knapp.brev' })}
-                                </Knapp>
+                                    {RemoteData.isPending(hentPdfStatus) && <Loader />}
+                                </Button>
                             )}
                             {RemoteData.isFailure(hentPdfStatus) && (
                                 <Alert variant="error" className={styles.brevFeil}>
@@ -288,12 +288,10 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                                         </div>
                                     )}
                                 </div>
-                                <Hovedknapp
-                                    className={styles.sendBeslutningKnapp}
-                                    spinner={RemoteData.isPending(sendtBeslutning)}
-                                >
+                                <Button className={styles.sendBeslutningKnapp}>
                                     {intl.formatMessage({ id: 'knapp.tekst' })}
-                                </Hovedknapp>
+                                    {RemoteData.isPending(sendtBeslutning) && <Loader />}
+                                </Button>
                                 {RemoteData.isFailure(sendtBeslutning) && (
                                     <ApiErrorAlert error={sendtBeslutning.error} />
                                 )}

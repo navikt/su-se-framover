@@ -1,4 +1,4 @@
-import { Knapp } from 'nav-frontend-knapper';
+import { Button } from '@navikt/ds-react';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -53,9 +53,9 @@ const Vedtaksoppsummering = (props: Props) => {
     return (
         <div className={styles.container}>
             {renderOppsummering()}
-            <Knapp htmlType="button" className={styles.tilbakeKnapp} onClick={() => history.goBack()}>
+            <Button variant="secondary" type="button" className={styles.tilbakeKnapp} onClick={() => history.goBack()}>
                 {intl.formatMessage({ id: 'knapp.tilbake' })}
-            </Knapp>
+            </Button>
         </div>
     );
 };

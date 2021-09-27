@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import Lenke from 'nav-frontend-lenker';
+import { Link } from '@navikt/ds-react';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect, Suspense } from 'react';
@@ -122,9 +122,9 @@ const ContentWrapper: React.FC = (props) => {
                                             ? 'Ikke tilgang'
                                             : 'En feil oppstod'}
                                     </Innholdstittel>
-                                    <Lenke href={`${Config.LOGIN_URL}?redirectTo=${window.location.pathname}`}>
+                                    <Link href={`${Config.LOGIN_URL}?redirectTo=${window.location.pathname}`}>
                                         Logg inn på nytt
-                                    </Lenke>
+                                    </Link>
                                 </div>
                             );
                         },

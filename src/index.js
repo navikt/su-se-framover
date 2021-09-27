@@ -1,5 +1,5 @@
+import { Modal } from '@navikt/ds-react';
 import * as Sentry from '@sentry/browser';
-import ModalWrapper from 'nav-frontend-modal';
 import * as React from 'react';
 import { render } from 'react-dom';
 
@@ -22,7 +22,7 @@ polyfill().then(() => {
     }
 
     Amplitude.init();
-    ModalWrapper.setAppElement(document.getElementById('root'));
+    Modal.setAppElement(document.getElementById('root'));
 
     render(<Root />, document.getElementById('root'));
 });

@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Knapp } from 'nav-frontend-knapper';
+import { Button } from '@navikt/ds-react';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -274,9 +274,9 @@ const RevurderingOppsummeringPage = (props: {
                         (err) => (
                             <div>
                                 <ApiErrorAlert error={err} />
-                                <Knapp onClick={() => history.push(props.forrigeUrl)}>
+                                <Button variant="secondary" onClick={() => history.push(props.forrigeUrl)}>
                                     {formatMessage('knapp.tilbake')}
-                                </Knapp>
+                                </Button>
                             </div>
                         ),
                         ([beregning, grunnlagsdataOgVilkårsvurderinger]) => (

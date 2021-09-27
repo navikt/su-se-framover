@@ -1,9 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Button, Link, Loader } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { useFormik } from 'formik';
-import { Fareknapp } from 'nav-frontend-knapper';
-import Lenke from 'nav-frontend-lenker';
 import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -128,9 +126,10 @@ const LukkSøknad = (props: { sak: Sak }) => {
 
             {formik.values.lukkSøknadBegrunnelse === LukkSøknadBegrunnelse.Bortfalt && (
                 <div className={classNames(styles.bortfaltContainer, styles.buttonsContainer)}>
-                    <Fareknapp spinner={RemoteData.isPending(søknadLukketStatus)}>
+                    <Button variant="danger">
                         {intl.formatMessage({ id: 'knapp.lukkSøknad' })}
-                    </Fareknapp>
+                        {RemoteData.isPending(søknadLukketStatus) && <Loader />}
+                    </Button>
                 </div>
             )}
 
@@ -161,9 +160,9 @@ const LukkSøknad = (props: { sak: Sak }) => {
                 />
             )}
             <div className={styles.tilbakeKnappContainer}>
-                <Lenke href={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })} className="knapp">
+                <Link href={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })} className="knapp">
                     {intl.formatMessage({ id: 'knapp.tilbake' })}
-                </Lenke>
+                </Link>
             </div>
 
             <div>

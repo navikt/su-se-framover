@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Button, Loader } from '@navikt/ds-react';
 import { last } from 'fp-ts/lib/Array';
 import { isSome } from 'fp-ts/lib/Option';
-import { Knapp } from 'nav-frontend-knapper';
 import { Element } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
@@ -133,14 +132,10 @@ const Tilleggsinfo = (props: {
                 {props.medBrevutkastknapp && (
                     <div>
                         <Element>{props.intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}</Element>
-                        <Knapp
-                            spinner={RemoteData.isPending(lastNedBrevStatus)}
-                            mini
-                            htmlType="button"
-                            onClick={hentBrev}
-                        >
+                        <Button variant="secondary" size="small" type="button" onClick={hentBrev}>
                             {props.intl.formatMessage({ id: 'knapp.vis' })}
-                        </Knapp>
+                            {RemoteData.isPending(lastNedBrevStatus) && <Loader />}
+                        </Button>
                     </div>
                 )}
             </div>

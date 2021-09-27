@@ -1,7 +1,6 @@
+import { Button, Panel } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import Ikon from 'nav-frontend-ikoner-assets';
-import { Fareknapp, Knapp } from 'nav-frontend-knapper';
-import Panel from 'nav-frontend-paneler';
 import { Element, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
@@ -83,20 +82,22 @@ export const Utbetalinger = (props: {
                     </div>
                     <div className={styles.utbetalingKnappContainer}>
                         {kanGjenopptas ? (
-                            <Knapp
+                            <Button
+                                variant="secondary"
                                 onClick={() =>
                                     history.push(Routes.gjenopptaStansRoute.createURL({ sakId: props.sakId }))
                                 }
                             >
                                 {intl.formatMessage({ id: 'display.utbetalingsperiode.gjenopptaUtbetaling' })}
-                            </Knapp>
+                            </Button>
                         ) : (
                             kanStanses && (
-                                <Fareknapp
+                                <Button
+                                    variant="danger"
                                     onClick={() => history.push(Routes.stansRoute.createURL({ sakId: props.sakId }))}
                                 >
                                     {intl.formatMessage({ id: 'display.utbetalingsperiode.stoppUtbetaling' })}
-                                </Fareknapp>
+                                </Button>
                             )
                         )}
                     </div>

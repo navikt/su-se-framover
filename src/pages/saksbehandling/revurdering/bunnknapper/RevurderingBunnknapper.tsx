@@ -1,7 +1,7 @@
-import { Hovedknapp, Knapp } from 'nav-frontend-knapper';
+import { Button, Loader } from '@navikt/ds-react';
 import React from 'react';
-import { Link } from 'react-router-dom';
 
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import { useI18n } from '~lib/i18n';
 
 import sharedI18n from '../../søknadsbehandling/sharedI18n-nb';
@@ -22,26 +22,23 @@ export const RevurderingBunnknapper = (props: {
         <div>
             <div className={styles.navigationButtonContainer}>
                 {props.tilbakeUrl && (
-                    <Link to={props.tilbakeUrl} className="knapp">
+                    <LinkAsButton href={props.tilbakeUrl} variant="secondary">
                         {intl.formatMessage({ id: 'knapp.tilbake' })}
-                    </Link>
+                    </LinkAsButton>
                 )}
-                <Hovedknapp
-                    spinner={props.onNesteClickSpinner}
+                <Button
                     onClick={props.onNesteClick === 'submit' ? undefined : props.onNesteClick}
-                    htmlType={props.onNesteClick === 'submit' ? 'submit' : 'button'}
+                    type={props.onNesteClick === 'submit' ? 'submit' : 'button'}
                 >
                     {props.nesteKnappTekst ? props.nesteKnappTekst : intl.formatMessage({ id: 'knapp.neste' })}
-                </Hovedknapp>
+                    {props.onNesteClickSpinner && <Loader />}
+                </Button>
             </div>
             {props.onLagreOgFortsettSenereClick && (
-                <Knapp
-                    spinner={props.onLagreOgFortsettSenereClickSpinner}
-                    onClick={props.onLagreOgFortsettSenereClick}
-                    htmlType="button"
-                >
+                <Button variant="secondary" onClick={props.onLagreOgFortsettSenereClick} type="button">
                     {intl.formatMessage({ id: 'knapp.lagreOgfortsettSenere' })}
-                </Knapp>
+                    {props.onLagreOgFortsettSenereClickSpinner && <Loader />}
+                </Button>
             )}
         </div>
     );

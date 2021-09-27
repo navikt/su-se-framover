@@ -19,12 +19,14 @@ enum Generell {
     FINNER_IKKE_UTBETALING = 'finner_ikke_utbetaling',
     ATTESTANT_SAMME_SOM_SAKSBEHANDLER = 'attestant_samme_som_saksbehandler',
     MANGLER_BEGRUNNELSE = 'mangler_begrunnelse',
+    HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING = 'har_allerede_en_åpen_søknadsbehandling',
 }
 
 enum Støndadsperiode {
     OPPDATERING_AV_STØNADSPERIODE = 'oppdatering_av_stønadsperiode',
     STØNADSPERIODE_FØR_2021 = 'stønadsperiode_før_2021',
     STØNADSPERIODE_MAX_12MND = 'stønadsperiode_max_12mnd',
+    STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE = 'stønadsperioden_overlapper_med_eksisterende_søknadsbehandling',
 }
 
 enum Formue {
@@ -45,10 +47,12 @@ const søknadsbehandlingErrorCodeMessageIdMap: {
     [Generell.FINNER_IKKE_UTBETALING]: 'generell.finner.ikke.utbetaling',
     [Generell.ATTESTANT_SAMME_SOM_SAKSBEHANDLER]: 'generell.attestant.samme.som.saksbehandler',
     [Generell.MANGLER_BEGRUNNELSE]: 'generell.mangler.begrunnelse',
+    [Generell.HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING]: 'generell.har.allerede.en.åpen.søknadsbehandling',
 
     [Støndadsperiode.OPPDATERING_AV_STØNADSPERIODE]: 'stønadsperiode.oppdatering.av.periode',
     [Støndadsperiode.STØNADSPERIODE_FØR_2021]: 'stønadsperiode.periode.før.2021',
     [Støndadsperiode.STØNADSPERIODE_MAX_12MND]: 'stønadsperiode.periode.maks.12.måneder',
+    [Støndadsperiode.STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE]: 'stønadsperiode.overlapper.eksisterende',
 
     [Formue.UGYLDIGE_VERDIER_PÅ_FORMUE]: 'formue.ugyldige.verdier',
     [Formue.HAR_IKKE_EKTEFELLE]: 'formue.har.ikke.ektefelle',
