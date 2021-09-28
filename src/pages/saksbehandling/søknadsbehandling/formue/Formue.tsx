@@ -70,7 +70,7 @@ const VerdierSchema: yup.ObjectSchema<VerdierFormData | undefined> = yup.object<
         'Depositum kan ikke være større enn innskudd',
         function (depositum) {
             const { innskuddsbeløp } = this.parent;
-            if (!depositum) {
+            if (depositum == null) {
                 return false;
             }
             return depositum <= innskuddsbeløp;
