@@ -1,4 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { ContentContainer } from '@navikt/ds-react';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import Stegindikator from 'nav-frontend-stegindikator';
 import { Undertittel, Feilmelding, Systemtittel } from 'nav-frontend-typografi';
@@ -57,7 +58,7 @@ const Steg = (props: {
     }, [props.step]);
 
     return (
-        <section aria-labelledby="steg-heading" className={styles.stegContainer}>
+        <section aria-labelledby="steg-heading">
             <div className={styles.stegHeadingContainer} ref={sectionRef} tabIndex={-1}>
                 <Undertittel tag="h3" id="steg-heading">
                     {props.title}
@@ -281,7 +282,7 @@ const StartUtfylling = () => {
     );
 
     return (
-        <div className={styles.container}>
+        <div>
             {pipe(
                 søkerFraStore,
                 RemoteData.fold(
@@ -344,25 +345,27 @@ const index = () => {
     const isPapirsøknad = history.location.search.includes('papirsoknad');
 
     return (
-        <Switch>
-            <Route exact={true} path={routes.soknad.path}>
-                <Infoside nesteUrl={routes.soknadPersonSøk.createURL({ papirsøknad: isPapirsøknad })} />
-            </Route>
-            <Route exact={true} path={routes.soknadPersonSøk.path}>
-                <Inngang
-                    nesteUrl={routes.soknadsutfylling.createURL({
-                        step: Søknadsteg.Uførevedtak,
-                        papirsøknad: isPapirsøknad,
-                    })}
-                />
-            </Route>
-            <Route exact={true} path={routes.soknadsutfylling.path}>
-                <StartUtfylling />
-            </Route>
-            <Route exact={true} path={routes.søkandskvittering.path}>
-                <Kvittering />
-            </Route>
-        </Switch>
+        <ContentContainer className={styles.container}>
+            <Switch>
+                <Route exact={true} path={routes.soknad.path}>
+                    <Infoside nesteUrl={routes.soknadPersonSøk.createURL({ papirsøknad: isPapirsøknad })} />
+                </Route>
+                <Route exact={true} path={routes.soknadPersonSøk.path}>
+                    <Inngang
+                        nesteUrl={routes.soknadsutfylling.createURL({
+                            step: Søknadsteg.Uførevedtak,
+                            papirsøknad: isPapirsøknad,
+                        })}
+                    />
+                </Route>
+                <Route exact={true} path={routes.soknadsutfylling.path}>
+                    <StartUtfylling />
+                </Route>
+                <Route exact={true} path={routes.søkandskvittering.path}>
+                    <Kvittering />
+                </Route>
+            </Switch>
+        </ContentContainer>
     );
 };
 
