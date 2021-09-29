@@ -12,7 +12,7 @@ import { ApiResult } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
-import { BeslutningEtterForhåndsvarsling } from '~types/Revurdering';
+import { BeslutningEtterForhåndsvarsling, Revurdering } from '~types/Revurdering';
 
 import { RevurderingBunnknapper } from '../../bunnknapper/RevurderingBunnknapper';
 
@@ -304,8 +304,7 @@ export const VelgForhåndsvarselForm = (props: {
 };
 
 export const SendTilAttesteringForm = (props: {
-    sakId: string;
-    revurderingId: string;
+    revurdering: Revurdering;
     forrigeUrl: string;
     submitStatus: ApiResult<unknown>;
     brevsending: 'aldriSende' | 'alltidSende' | 'kanVelge';
@@ -318,8 +317,9 @@ export const SendTilAttesteringForm = (props: {
     }
     const form = useForm<FormData>({
         defaultValues: {
-            tekstTilVedtaksbrev: '',
-            skalFøreTilBrevutsending: props.brevsending === 'alltidSende',
+            tekstTilVedtaksbrev: props.revurdering.fritekstTilBrev,
+            skalFøreTilBrevutsending:
+                props.brevsending === 'alltidSende' || props.revurdering.fritekstTilBrev.length > 0,
         },
     });
 
@@ -357,8 +357,8 @@ export const SendTilAttesteringForm = (props: {
                     name="tekstTilVedtaksbrev"
                     render={({ field, fieldState }) => (
                         <VedtaksbrevInput
-                            sakId={props.sakId}
-                            revurderingId={props.revurderingId}
+                            sakId={props.revurdering.tilRevurdering.sakId}
+                            revurderingId={props.revurdering.id}
                             tekst={field.value}
                             feil={fieldState.error}
                             onChange={field.onChange}
