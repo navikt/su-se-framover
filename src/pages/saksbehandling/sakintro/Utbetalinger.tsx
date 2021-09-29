@@ -84,6 +84,7 @@ export const Utbetalinger = (props: {
                         {kanGjenopptas ? (
                             <Button
                                 variant="secondary"
+                                size="small"
                                 onClick={() =>
                                     history.push(Routes.gjenopptaStansRoute.createURL({ sakId: props.sakId }))
                                 }
@@ -94,6 +95,7 @@ export const Utbetalinger = (props: {
                             kanStanses && (
                                 <Button
                                     variant="danger"
+                                    size="small"
                                     onClick={() => history.push(Routes.stansRoute.createURL({ sakId: props.sakId }))}
                                 >
                                     {intl.formatMessage({ id: 'display.utbetalingsperiode.stoppUtbetaling' })}

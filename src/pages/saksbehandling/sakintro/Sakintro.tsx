@@ -321,6 +321,7 @@ const RevurderingStartetKnapper = (props: {
                 <LinkAsButton
                     variant="secondary"
                     href={Routes.vedtaksoppsummering.createURL({ sakId: props.sakId, vedtakId: vedtak.id })}
+                    size="small"
                 >
                     Se oppsummering
                 </LinkAsButton>
@@ -448,6 +449,7 @@ const IverksattInnvilgedeSøknader = (props: {
                                                 sakId: props.sak.id,
                                                 vedtakId: vedtak.id,
                                             })}
+                                            size="small"
                                         >
                                             {props.intl.formatMessage({ id: 'display.behandling.seOppsummering' })}
                                         </LinkAsButton>
