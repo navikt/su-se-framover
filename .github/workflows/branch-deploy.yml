@@ -10,7 +10,7 @@ jobs:
         name: Build and push Docker container
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v1
+            - uses: actions/checkout@v2
             - uses: actions/setup-node@v2.4.1
               with:
                   node-version: '14.x'
@@ -37,7 +37,7 @@ jobs:
         needs: build
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v1
+            - uses: actions/checkout@v2
             - uses: nais/deploy/actions/deploy@v1
               env:
                   APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
