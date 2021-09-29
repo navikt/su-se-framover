@@ -41,7 +41,7 @@ const SendTilAttesteringPage = (props: Props) => {
     const { sakId, behandlingId } = Routes.useRouteParams<typeof Routes.saksoversiktValgtBehandling>();
     const behandling = sak.behandlinger.find((x) => x.id === behandlingId);
 
-    const [fritekst, setFritekst] = useState('');
+    const [fritekst, setFritekst] = useState(behandling?.fritekstTilBrev ?? '');
     const [brevStatus, lastNedBrev] = useBrevForhåndsvisning(PdfApi.fetchBrevutkastForSøknadsbehandlingWithFritekst);
 
     const history = useHistory();

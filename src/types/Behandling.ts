@@ -21,6 +21,7 @@ export interface Behandling {
     hendelser: Nullable<Hendelse[]>;
     satsBeløp: Nullable<number>;
     stønadsperiode: Nullable<Behandlingsperiode>;
+    fritekstTilBrev: string;
 }
 
 export interface Behandlingsperiode {
