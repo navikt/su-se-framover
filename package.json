@@ -54,7 +54,7 @@
         "@navikt/nap-header": "^1.0.10",
         "@navikt/nap-side-menu": "^1.0.7",
         "@reduxjs/toolkit": "^1.6.1",
-        "@sentry/browser": "^6.12.0",
+        "@sentry/browser": "^6.13.2",
         "@sentry/cli": "^1.68.0",
         "@types/jest": "^27.0.1",
         "@types/jsonwebtoken": "^8.5.5",
