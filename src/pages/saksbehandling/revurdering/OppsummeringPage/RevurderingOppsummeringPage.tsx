@@ -154,8 +154,7 @@ const OppsummeringshandlingForm = (props: {
             )}
             {erGregulering(props.revurdering.årsak) ? (
                 <SendTilAttesteringForm
-                    sakId={props.sakId}
-                    revurderingId={props.revurdering.id}
+                    revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
                     brevsending="aldriSende"
                     submitStatus={sendTilAttesteringState}
@@ -165,8 +164,7 @@ const OppsummeringshandlingForm = (props: {
                 />
             ) : erBeregnetIngenEndring(props.revurdering) ? (
                 <SendTilAttesteringForm
-                    sakId={props.sakId}
-                    revurderingId={props.revurdering.id}
+                    revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
                     brevsending="kanVelge"
                     submitStatus={sendTilAttesteringState}
@@ -179,8 +177,7 @@ const OppsummeringshandlingForm = (props: {
                 />
             ) : erRevurderingUnderkjent(props.revurdering) ? (
                 <SendTilAttesteringForm
-                    sakId={props.sakId}
-                    revurderingId={props.revurdering.id}
+                    revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
                     brevsending="alltidSende"
                     submitStatus={sendTilAttesteringState}
@@ -203,8 +200,7 @@ const OppsummeringshandlingForm = (props: {
                 />
             ) : erForhåndsvarslingBesluttet(props.revurdering) || erIngenForhåndsvarsel(props.revurdering) ? (
                 <SendTilAttesteringForm
-                    sakId={props.sakId}
-                    revurderingId={props.revurdering.id}
+                    revurdering={props.revurdering}
                     forrigeUrl={props.forrigeUrl}
                     brevsending="alltidSende"
                     submitStatus={sendTilAttesteringState}
