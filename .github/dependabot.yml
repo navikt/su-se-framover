@@ -11,3 +11,9 @@ updates:
           - dependency-name: yup
             versions:
                 - '< 0.33'
+    - package-ecosystem: 'github-actions'
+      directory: '/'
+      schedule:
+          interval: weekly
+          time: '04:00'
+      open-pull-requests-limit: 10
