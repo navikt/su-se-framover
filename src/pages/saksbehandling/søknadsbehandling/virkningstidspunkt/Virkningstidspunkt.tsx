@@ -20,7 +20,7 @@ import { nullableMap, pipe } from '~lib/fp';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { eqNullable, Nullable } from '~lib/types';
-import yup, { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
+import yup, { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 import * as DateUtils from '~utils/date/dateUtils';
@@ -45,36 +45,42 @@ const eqBehandlingsperiode = struct<FormData>({
     begrunnelse: S.Eq,
 });
 
-const schema = yup.object<FormData>({
-    fraOgMed: yup
-        .date()
-        .nullable()
-        .required('Du må velge virkningstidspunkt for supplerende stønad')
-        .min(TIDLIGST_MULIG_START_DATO),
-    tilOgMed: yup
-        .date()
-        .nullable()
-        .required('Du må velge til-og-med-dato')
-        .test('maks12MndStønadsperiode', 'Stønadsperioden kan ikke være lenger enn 12 måneder', function (tilOgMed) {
-            const { fraOgMed } = this.parent;
-            if (!tilOgMed || !fraOgMed) {
-                return false;
-            }
-            if (DateFns.differenceInYears(tilOgMed, fraOgMed) >= 1) {
-                return false;
-            }
-            return true;
-        })
-        .test('isAfterFom', 'Sluttdato må være etter startdato', function (tilOgMed) {
-            const { fraOgMed } = this.parent;
-            if (!tilOgMed || !fraOgMed) {
-                return false;
-            }
+const schema = yup
+    .object<FormData>({
+        fraOgMed: yup
+            .date()
+            .nullable()
+            .required('Du må velge virkningstidspunkt for supplerende stønad')
+            .min(TIDLIGST_MULIG_START_DATO),
+        tilOgMed: yup
+            .date()
+            .nullable()
+            .required('Du må velge til-og-med-dato')
+            .test(
+                'maks12MndStønadsperiode',
+                'Stønadsperioden kan ikke være lenger enn 12 måneder',
+                function (tilOgMed) {
+                    const { fraOgMed } = this.parent;
+                    if (!tilOgMed || !fraOgMed) {
+                        return false;
+                    }
+                    if (DateFns.differenceInYears(tilOgMed, fraOgMed) >= 1) {
+                        return false;
+                    }
+                    return true;
+                }
+            )
+            .test('isAfterFom', 'Sluttdato må være etter startdato', function (tilOgMed) {
+                const { fraOgMed } = this.parent;
+                if (!tilOgMed || !fraOgMed) {
+                    return false;
+                }
 
-            return fraOgMed <= tilOgMed;
-        }),
-    begrunnelse: yup.string(),
-});
+                return fraOgMed <= tilOgMed;
+            }),
+        begrunnelse: yup.string(),
+    })
+    .required();
 
 const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
     const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
@@ -186,7 +192,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                     selectsEnd
                                     autoComplete="off"
                                     minDate={TIDLIGST_MULIG_START_DATO}
-                                    feil={fieldState.error?.message}
+                                    feil={getDateErrorMessage(fieldState.error)}
                                 />
                             )}
                         />
@@ -203,7 +209,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                                     isClearable
                                     selectsEnd
                                     autoComplete="off"
-                                    feil={fieldState.error?.message}
+                                    feil={getDateErrorMessage(fieldState.error)}
                                 />
                             )}
                         />

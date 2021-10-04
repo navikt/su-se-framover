@@ -138,28 +138,34 @@ const utledSats = (values: FormData, harEPS: boolean, epsAlder?: Nullable<number
 };
 
 const getValidationSchema = (eps: Nullable<Person>) => {
-    return yup.object<FormData>({
-        delerSøkerBolig: yup
-            .boolean()
-            .defined()
-            .test('deler søker bolig', 'Du må velge om søker deler bolig', function (delerSøkerBolig) {
-                if (!eps) {
-                    return delerSøkerBolig !== null;
-                }
-                return true;
-            }),
-        mottarEktemakeEllerSamboerSU: yup
-            .boolean()
-            .defined()
-            .test('eps mottar SU', 'Du må velge om ektefelle/samboer mottar supplerende stønad', function (mottarSu) {
-                if (eps && eps.alder && eps.alder < 67) {
-                    return mottarSu !== null;
-                }
+    return yup
+        .object<FormData>({
+            delerSøkerBolig: yup
+                .boolean()
+                .defined()
+                .test('deler søker bolig', 'Du må velge om søker deler bolig', function (delerSøkerBolig) {
+                    if (!eps) {
+                        return delerSøkerBolig !== null;
+                    }
+                    return true;
+                }),
+            mottarEktemakeEllerSamboerSU: yup
+                .boolean()
+                .defined()
+                .test(
+                    'eps mottar SU',
+                    'Du må velge om ektefelle/samboer mottar supplerende stønad',
+                    function (mottarSu) {
+                        if (eps && eps.alder && eps.alder < 67) {
+                            return mottarSu !== null;
+                        }
 
-                return true;
-            }),
-        begrunnelse: yup.string().defined(),
-    });
+                        return true;
+                    }
+                ),
+            begrunnelse: yup.string().defined(),
+        })
+        .required();
 };
 
 const Sats = (props: VilkårsvurderingBaseProps) => {

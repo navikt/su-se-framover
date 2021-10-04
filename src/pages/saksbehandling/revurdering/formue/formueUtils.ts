@@ -130,68 +130,74 @@ const formueGrunnlagVerdierTilVerdierFormData = (verdier?: Nullable<Formuegrunnl
     };
 };
 
-export const revurderFormueSchema = yup.object<FormueFormData>({
-    formue: yup
-        .array<FormueData>(
-            yup
-                .object({
-                    epsFnr: yup.string().nullable().defined(),
-                    periode: yup
-                        .object<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>({
-                            fraOgMed: yup.date().required().typeError('Feltet må fylles ut'),
-                            tilOgMed: yup
-                                .date()
-                                .required()
-                                .typeError('Feltet må fylles ut')
-                                .test('etterFom', 'Til-og-med kan ikke være før fra-og-med', function (value) {
-                                    const fom = this.parent.fraOgMed as Nullable<Date>;
-                                    if (value && fom) {
-                                        return !DateFns.isBefore(value, fom);
-                                    }
-                                    return true;
-                                })
-                                .test('slutten av måned', 'Til og med må være siste dagen i måneden', function (value) {
-                                    if (value && DateFns.isLastDayOfMonth(value)) {
+export const revurderFormueSchema = yup
+    .object<FormueFormData>({
+        formue: yup
+            .array<FormueData>(
+                yup
+                    .object({
+                        epsFnr: yup.string().nullable().defined(),
+                        periode: yup
+                            .object<{ fraOgMed: Nullable<Date>; tilOgMed: Nullable<Date> }>({
+                                fraOgMed: yup.date().required().typeError('Feltet må fylles ut'),
+                                tilOgMed: yup
+                                    .date()
+                                    .required()
+                                    .typeError('Feltet må fylles ut')
+                                    .test('etterFom', 'Til-og-med kan ikke være før fra-og-med', function (value) {
+                                        const fom = this.parent.fraOgMed as Nullable<Date>;
+                                        if (value && fom) {
+                                            return !DateFns.isBefore(value, fom);
+                                        }
                                         return true;
-                                    }
-                                    return false;
-                                }),
-                        })
-                        .required(),
-                    søkersFormue: yup
-                        .object<VerdierFormData>({
-                            verdiPåBolig: validateStringAsNonNegativeNumber('Verdi på bolig'),
-                            verdiPåEiendom: validateStringAsNonNegativeNumber('Verdi på eiendom'),
-                            verdiPåKjøretøy: validateStringAsNonNegativeNumber('Verdi på kjøretøy'),
-                            innskuddsbeløp: validateStringAsNonNegativeNumber('Innskuddsbeløp'),
-                            verdipapir: validateStringAsNonNegativeNumber('Verdipapir'),
-                            kontanterOver1000: validateStringAsNonNegativeNumber('Kontanter over 1000'),
-                            stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber('Står noen i gjeld til deg'),
-                            depositumskonto: validateStringAsNonNegativeNumber('Depositumskonto'),
-                        })
-                        .required(),
-                    epsFormue: yup
-                        .object<VerdierFormData>()
-                        .defined()
-                        .when('epsFnr', {
-                            is: (val) => val !== null,
-                            then: yup
-                                .object<VerdierFormData>({
-                                    verdiPåBolig: validateStringAsNonNegativeNumber(),
-                                    verdiPåEiendom: validateStringAsNonNegativeNumber(),
-                                    verdiPåKjøretøy: validateStringAsNonNegativeNumber(),
-                                    innskuddsbeløp: validateStringAsNonNegativeNumber(),
-                                    verdipapir: validateStringAsNonNegativeNumber(),
-                                    kontanterOver1000: validateStringAsNonNegativeNumber(),
-                                    stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber(),
-                                    depositumskonto: validateStringAsNonNegativeNumber(),
-                                })
-                                .required(),
-                            otherwise: yup.object().notRequired(),
-                        }),
-                    begrunnelse: yup.string().nullable().defined(),
-                })
-                .required()
-        )
-        .required(),
-});
+                                    })
+                                    .test(
+                                        'slutten av måned',
+                                        'Til og med må være siste dagen i måneden',
+                                        function (value) {
+                                            if (value && DateFns.isLastDayOfMonth(value)) {
+                                                return true;
+                                            }
+                                            return false;
+                                        }
+                                    ),
+                            })
+                            .required(),
+                        søkersFormue: yup
+                            .object<VerdierFormData>({
+                                verdiPåBolig: validateStringAsNonNegativeNumber('Verdi på bolig'),
+                                verdiPåEiendom: validateStringAsNonNegativeNumber('Verdi på eiendom'),
+                                verdiPåKjøretøy: validateStringAsNonNegativeNumber('Verdi på kjøretøy'),
+                                innskuddsbeløp: validateStringAsNonNegativeNumber('Innskuddsbeløp'),
+                                verdipapir: validateStringAsNonNegativeNumber('Verdipapir'),
+                                kontanterOver1000: validateStringAsNonNegativeNumber('Kontanter over 1000'),
+                                stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber('Står noen i gjeld til deg'),
+                                depositumskonto: validateStringAsNonNegativeNumber('Depositumskonto'),
+                            })
+                            .required(),
+                        epsFormue: yup
+                            .object<VerdierFormData>()
+                            .defined()
+                            .when('epsFnr', {
+                                is: (val) => val !== null,
+                                then: yup
+                                    .object<VerdierFormData>({
+                                        verdiPåBolig: validateStringAsNonNegativeNumber(),
+                                        verdiPåEiendom: validateStringAsNonNegativeNumber(),
+                                        verdiPåKjøretøy: validateStringAsNonNegativeNumber(),
+                                        innskuddsbeløp: validateStringAsNonNegativeNumber(),
+                                        verdipapir: validateStringAsNonNegativeNumber(),
+                                        kontanterOver1000: validateStringAsNonNegativeNumber(),
+                                        stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber(),
+                                        depositumskonto: validateStringAsNonNegativeNumber(),
+                                    })
+                                    .required(),
+                                otherwise: yup.object().notRequired(),
+                            }),
+                        begrunnelse: yup.string().nullable().defined(),
+                    })
+                    .required()
+            )
+            .required(),
+    })
+    .required();

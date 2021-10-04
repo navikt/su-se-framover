@@ -60,16 +60,18 @@ const Gjenoppta = (props: Props) => {
     const { ...form } = useForm<FormData>({
         defaultValues: hentDefaultVerdier(revurdering ?? null),
         resolver: yupResolver(
-            yup.object<FormData>({
-                begrunnelse: yup.string().required('Må fylles ut'),
-                årsak: yup
-                    .mixed()
-                    .required()
-                    .oneOf(
-                        Object.values([OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING]),
-                        'Du må velge en gyldig årsak'
-                    ),
-            })
+            yup
+                .object<FormData>({
+                    begrunnelse: yup.string().required('Må fylles ut'),
+                    årsak: yup
+                        .mixed()
+                        .required()
+                        .oneOf(
+                            Object.values([OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING]),
+                            'Du må velge en gyldig årsak'
+                        ),
+                })
+                .required()
         ),
     });
 

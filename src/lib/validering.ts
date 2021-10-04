@@ -145,4 +145,13 @@ export function formikErrorsHarFeil<T>(errors: FormikErrors<T>) {
     return Object.values(errors).length > 0;
 }
 
+// Denne er egentlig litt tullete. Pga typingen i react-hook-form blir feilmeldinger som tilhører Date-felter
+// regnet som objekt-feilmeldinger (altså feilmelding per property). Dette er ikke tilfellet i praksis for oss;
+// datoer har en "flat" feilmelding. Vi gjemmer denne cast-triksingen i en funksjon her sånn at dersom
+// oppførselen endres i react-hook-form endres så kan vi bare slette denne funksjonen, i stedet for å lete rundt
+// etter alle plassene vi hacket det til.
+export function getDateErrorMessage(err: FieldError | FieldErrors<Date> | undefined) {
+    return (err as FieldError)?.message;
+}
+
 export default yup;

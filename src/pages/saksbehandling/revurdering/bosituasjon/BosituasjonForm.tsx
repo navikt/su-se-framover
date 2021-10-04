@@ -228,51 +228,53 @@ const BosituasjonForm = (props: {
     const dispatch = useAppDispatch();
     const history = useHistory();
 
-    const schema = yup.object<BosituasjonFormData>({
-        harEPS: yup.boolean().required('Feltet må fylles ut').nullable(),
-        epsFnr: yup
-            .string()
-            .defined()
-            .when('harEPS', {
-                is: true,
-                then: yup
-                    .string()
-                    .required()
-                    .test({
-                        name: 'Gyldig fødselsnummer',
-                        message: 'Ugyldig fødselsnummer',
-                        test: function (value) {
-                            return (
-                                typeof value === 'string' &&
-                                value.length === 11 &&
-                                fnrValidator.fnr(value).status === 'valid'
-                            );
+    const schema = yup
+        .object<BosituasjonFormData>({
+            harEPS: yup.boolean().required('Feltet må fylles ut').nullable(),
+            epsFnr: yup
+                .string()
+                .defined()
+                .when('harEPS', {
+                    is: true,
+                    then: yup
+                        .string()
+                        .required()
+                        .test({
+                            name: 'Gyldig fødselsnummer',
+                            message: 'Ugyldig fødselsnummer',
+                            test: function (value) {
+                                return (
+                                    typeof value === 'string' &&
+                                    value.length === 11 &&
+                                    fnrValidator.fnr(value).status === 'valid'
+                                );
+                            },
+                        }),
+                }),
+            delerSøkerBolig: yup.boolean().defined().when('harEPS', {
+                is: false,
+                then: yup.boolean().required(),
+                otherwise: yup.boolean().defined(),
+            }),
+            erEPSUførFlyktning: yup
+                .boolean()
+                .defined()
+                .when('harEPS', {
+                    is: true,
+                    then: yup.boolean().test({
+                        name: 'er eps ufør flyktning',
+                        message: 'Feltet må fylles ut',
+                        test: function () {
+                            if (epsAlder && epsAlder < 67) {
+                                return this.parent.erEPSUførFlyktning !== null;
+                            }
+                            return true;
                         },
                     }),
-            }),
-        delerSøkerBolig: yup.boolean().defined().when('harEPS', {
-            is: false,
-            then: yup.boolean().required(),
-            otherwise: yup.boolean().defined(),
-        }),
-        erEPSUførFlyktning: yup
-            .boolean()
-            .defined()
-            .when('harEPS', {
-                is: true,
-                then: yup.boolean().test({
-                    name: 'er eps ufør flyktning',
-                    message: 'Feltet må fylles ut',
-                    test: function () {
-                        if (epsAlder && epsAlder < 67) {
-                            return this.parent.erEPSUførFlyktning !== null;
-                        }
-                        return true;
-                    },
                 }),
-            }),
-        begrunnelse: yup.string().nullable().defined(),
-    });
+            begrunnelse: yup.string().nullable().defined(),
+        })
+        .required();
 
     const {
         formState: { errors, isSubmitted },

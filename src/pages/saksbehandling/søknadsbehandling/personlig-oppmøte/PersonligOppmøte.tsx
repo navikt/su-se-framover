@@ -70,29 +70,31 @@ const eqPersonligOppmøte: Eq<Nullable<PersonligOppmøteType>> = {
         personligOppmøte1?.begrunnelse === personligOppmøte2?.begrunnelse,
 };
 
-const schema = yup.object<FormData>({
-    møttPersonlig: yup
-        .mixed<HarMøttPersonlig>()
-        .oneOf(Object.values(HarMøttPersonlig), 'Du må velge om bruker har møtt personlig')
-        .required()
-        .typeError('Du må svare for å gå videre til neste steg.'),
-    grunnForManglendePersonligOppmøte: yup
-        .mixed<Nullable<GrunnForManglendePersonligOppmøte>>()
-        .nullable()
-        .defined()
-        .when('møttPersonlig', {
-            is: HarMøttPersonlig.Nei,
-            then: yup
-                .mixed()
-                .oneOf(
-                    Object.values(GrunnForManglendePersonligOppmøte),
-                    'Du må velge hvorfor bruker ikke har møtt personlig'
-                )
-                .required(),
-            otherwise: yup.mixed().nullable().defined(),
-        }),
-    begrunnelse: yup.string().nullable().defined(),
-});
+const schema = yup
+    .object<FormData>({
+        møttPersonlig: yup
+            .mixed<HarMøttPersonlig>()
+            .oneOf(Object.values(HarMøttPersonlig), 'Du må velge om bruker har møtt personlig')
+            .required()
+            .typeError('Du må svare for å gå videre til neste steg.'),
+        grunnForManglendePersonligOppmøte: yup
+            .mixed<Nullable<GrunnForManglendePersonligOppmøte>>()
+            .nullable()
+            .defined()
+            .when('møttPersonlig', {
+                is: HarMøttPersonlig.Nei,
+                then: yup
+                    .mixed()
+                    .oneOf(
+                        Object.values(GrunnForManglendePersonligOppmøte),
+                        'Du må velge hvorfor bruker ikke har møtt personlig'
+                    )
+                    .required(),
+                otherwise: yup.mixed().nullable().defined(),
+            }),
+        begrunnelse: yup.string().nullable().defined(),
+    })
+    .required();
 
 const getInitialFormValues = (personligOppmøteFraBehandlingsinformasjon: Nullable<PersonligOppmøteType>): FormData => {
     if (!personligOppmøteFraBehandlingsinformasjon) {

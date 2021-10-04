@@ -46,46 +46,48 @@ const eqFormData = struct<FormData>({
     begrunnelse: eqNullable(S.Eq),
 });
 
-const schema = yup.object<FormData>({
-    status: yup
-        .mixed()
-        .defined()
-        .oneOf(
-            [UføreResultat.VilkårOppfylt, UføreResultat.VilkårIkkeOppfylt, UføreResultat.HarUføresakTilBehandling],
-            'Du må velge om bruker har vedtak om uføretrygd eller uføresak til behandling'
-        ),
-    uføregrad: yup
-        .number()
-        .nullable()
-        .defined()
-        .when('status', {
-            is: UføreResultat.VilkårOppfylt,
-            then: yup
-                .number()
-                .positive()
-                .min(1)
-                .max(100)
-                .required('Du må oppgi uføregrad')
-                .typeError('Uføregrad må være mellom 1 og 100'),
-            otherwise: yup.number().nullable().defined(),
-        }) as unknown as yup.Schema<string>,
-    forventetInntekt: yup
-        .number()
-        .nullable()
-        .defined()
-        .when('status', {
-            is: UføreResultat.VilkårOppfylt,
-            then: yup
-                .number()
-                .positive()
-                .integer()
-                .min(0)
-                .required('Du må oppgi forventet inntekt')
-                .typeError('Feltet må være et tall'),
-            otherwise: yup.number().nullable().defined(),
-        }) as unknown as yup.Schema<string>,
-    begrunnelse: yup.string().nullable().defined().default(null),
-});
+const schema = yup
+    .object<FormData>({
+        status: yup
+            .mixed()
+            .defined()
+            .oneOf(
+                [UføreResultat.VilkårOppfylt, UføreResultat.VilkårIkkeOppfylt, UføreResultat.HarUføresakTilBehandling],
+                'Du må velge om bruker har vedtak om uføretrygd eller uføresak til behandling'
+            ),
+        uføregrad: yup
+            .number()
+            .nullable()
+            .defined()
+            .when('status', {
+                is: UføreResultat.VilkårOppfylt,
+                then: yup
+                    .number()
+                    .positive()
+                    .min(1)
+                    .max(100)
+                    .required('Du må oppgi uføregrad')
+                    .typeError('Uføregrad må være mellom 1 og 100'),
+                otherwise: yup.number().nullable().defined(),
+            }) as unknown as yup.Schema<string>,
+        forventetInntekt: yup
+            .number()
+            .nullable()
+            .defined()
+            .when('status', {
+                is: UføreResultat.VilkårOppfylt,
+                then: yup
+                    .number()
+                    .positive()
+                    .integer()
+                    .min(0)
+                    .required('Du må oppgi forventet inntekt')
+                    .typeError('Feltet må være et tall'),
+                otherwise: yup.number().nullable().defined(),
+            }) as unknown as yup.Schema<string>,
+        begrunnelse: yup.string().nullable().defined().default(null),
+    })
+    .required();
 
 const Uførhet = (props: VilkårsvurderingBaseProps) => {
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);

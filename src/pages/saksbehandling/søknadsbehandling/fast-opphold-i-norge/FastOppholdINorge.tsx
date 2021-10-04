@@ -40,13 +40,15 @@ const eqFormData = struct<FormData>({
     begrunnelse: eqNullable(S.Eq),
 });
 
-const schema = yup.object<FormData>({
-    status: yup
-        .mixed<FastOppholdINorgeStatus>()
-        .defined()
-        .oneOf(Object.values(FastOppholdINorgeStatus), 'Du må velge om søker oppholder seg fast i norge'),
-    begrunnelse: yup.string().defined(),
-});
+const schema = yup
+    .object<FormData>({
+        status: yup
+            .mixed<FastOppholdINorgeStatus>()
+            .defined()
+            .oneOf(Object.values(FastOppholdINorgeStatus), 'Du må velge om søker oppholder seg fast i norge'),
+        begrunnelse: yup.string().defined(),
+    })
+    .required();
 
 const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
     const [lagreBehandlingsinformasjonStatus, lagreBehandlingsinformasjon] = useAsyncActionCreator(

@@ -125,14 +125,16 @@ export const ResultatEtterForhåndsvarselform = (props: {
             begrunnelse: '',
         },
         resolver: yupResolver(
-            yup.object<FormData>({
-                resultatEtterForhåndsvarsel: yup
-                    .mixed()
-                    .oneOf(Object.values(BeslutningEtterForhåndsvarsling), 'Feltet må fylles ut')
-                    .required(),
-                tekstTilVedtaksbrev: yup.string(),
-                begrunnelse: yup.string(),
-            })
+            yup
+                .object<FormData>({
+                    resultatEtterForhåndsvarsel: yup
+                        .mixed()
+                        .oneOf(Object.values(BeslutningEtterForhåndsvarsling), 'Feltet må fylles ut')
+                        .required(),
+                    tekstTilVedtaksbrev: yup.string(),
+                    begrunnelse: yup.string(),
+                })
+                .required()
         ),
     });
     const resultatEtterForhåndsvarsel = form.watch('resultatEtterForhåndsvarsel');
@@ -218,10 +220,12 @@ export const VelgForhåndsvarselForm = (props: {
             fritekstTilBrev: null,
         },
         resolver: yupResolver(
-            yup.object<FormData>({
-                revurderingshandling: yup.mixed().required().defined().oneOf(Object.values(Revurderingshandling)),
-                fritekstTilBrev: yup.string().nullable().required(),
-            })
+            yup
+                .object<FormData>({
+                    revurderingshandling: yup.mixed().required().defined().oneOf(Object.values(Revurderingshandling)),
+                    fritekstTilBrev: yup.string().nullable().required(),
+                })
+                .required()
         ),
     });
 
