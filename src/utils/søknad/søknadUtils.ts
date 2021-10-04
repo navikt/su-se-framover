@@ -1,5 +1,7 @@
 import { IntlShape } from 'react-intl';
 
+import { erIverksatt } from '~utils/behandling/behandlingUtils';
+
 import { Behandlingsstatus } from '../../types/Behandling';
 import { Sak } from '../../types/Sak';
 import { Søknad, Søknadstype } from '../../types/Søknad';
@@ -46,4 +48,12 @@ export function getIverksatteAvslåtteSøknader(sak: Sak) {
                 søknad: s,
             };
         });
+}
+
+export function harÅpenSøknad(sak: Sak): boolean {
+    return sak.søknader.some((søknad) => {
+        const behandling = sak.behandlinger.find((b) => b.søknad.id === søknad.id);
+
+        return søknad.lukket === null && (!behandling || !erIverksatt(behandling));
+    });
 }

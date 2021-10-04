@@ -2,6 +2,7 @@ export default {
     'generell.fant.ikke.behandling': 'Fant ikke behandlingen',
     'generell.fant.ikke.aktør.id': 'Fant ikke AktørID',
     'generell.fant.ikke.person': 'Fant ikke personen',
+    'generell.personen.har.ingen.sak': 'Personen har ingen sak',
     'generell.kunne.ikke.opprette.oppgave': 'Kunne ikke opprette oppgave',
     'generell.kunne.ikke.utbetale': 'Kunne ikke utbetale',
 

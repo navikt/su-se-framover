@@ -47,6 +47,7 @@ enum Generell {
     FANT_IKKE_BEHANDLING = 'fant_ikke_behandling',
     FANT_IKKE_AKTØR_ID = 'fant_ikke_aktør_id',
     FANT_IKKE_PERSON = 'fant_ikke_person',
+    PERSONEN_HAR_INGEN_SAK = 'fant_ikke_sak_for_person',
 
     KUNNE_IKKE_OPPRETTE_OPPGAVE = 'kunne_ikke_opprette_oppgave',
     KUNNE_IKKE_UTBETALE = 'kunne_ikke_utbetale',
@@ -120,6 +121,7 @@ const feilresponsErrorCodeMessageIdMap: { [key in FeilresponsErrorCodes]: keyof 
     [Generell.FANT_IKKE_BEHANDLING]: 'generell.fant.ikke.behandling',
     [Generell.FANT_IKKE_AKTØR_ID]: 'generell.fant.ikke.aktør.id',
     [Generell.FANT_IKKE_PERSON]: 'generell.fant.ikke.person',
+    [Generell.PERSONEN_HAR_INGEN_SAK]: 'generell.personen.har.ingen.sak',
     [Generell.KUNNE_IKKE_OPPRETTE_OPPGAVE]: 'generell.kunne.ikke.opprette.oppgave',
     [Generell.KUNNE_IKKE_UTBETALE]: 'generell.kunne.ikke.utbetale',
     [Generell.UGYLDIG_BODY]: 'generell.ugyldig.body',

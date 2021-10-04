@@ -6,6 +6,8 @@ export default {
 
     'feil.måSøkePerson': 'Du må søke opp person før du kan fortsette',
     'feil.påkrevdFelt': 'Feltet er påkrevd',
+    'feil.harÅpenSøknad':
+        'Bruker har allerede en åpen søknad som er til behandling. Dersom bruker ønsker og komme med ytterligere dokumentasjon kan denne sendes til skanning. Skulle bruker ønske og endre på opplysningene i søknaden kan dette gjøres ved å sende en oppgave via MODIA.',
 
     'finnSøker.tittel': 'Finn søker',
     'finnSøker.tekst': 'For å starte søknaden, må du skrive inn fødselsnummeret til søkeren',
