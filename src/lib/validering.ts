@@ -123,7 +123,6 @@ export function hookFormErrorsTilFeiloppsummering<T>(errors: FieldErrors<T>): Fe
         if (typeof v.type === 'undefined' && typeof v.message === 'undefined') {
             return hookFormErrorsTilFeiloppsummering(withFullPathKeyNames(key, v));
         }
-        console.log(key, v.message);
         return [
             {
                 skjemaelementId: key,

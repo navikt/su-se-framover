@@ -337,13 +337,6 @@ const FormuePanel = (props: {
         control: props.formController,
     });
 
-    /*
-    const { errors } = useFormState({
-        name: panelName,
-        control: props.formController,
-    });
-    */
-
     const handlePanelKlikk = () => (åpen ? handleBekreftClick() : setÅpen(true));
 
     let utregnetFormue = regnUtFormDataVerdier(formueVerdier);
