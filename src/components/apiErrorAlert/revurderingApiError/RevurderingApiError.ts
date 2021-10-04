@@ -128,7 +128,9 @@ enum Stans {
     KAN_IKKE_STANSE_OPPHØRTE_UTBETALINGER = 'kan_ikke_stanse_opphørte_utbetalinger',
     UTBETALING_ALLEREDE_STANSET = 'utbetaling_allerede_stanset',
     UTBETALING_ALLEREDE_OPPHØRT = 'utbetaling_allerede_opphørt',
-    STANSDATO_IKKE_FØRSTE_I_NESTE_MÅNED = 'stansdato_ikke_første_i_neste_måned',
+    STANSDATO_IKKE_FØRSTE_I_INNEVÆRENDE_ELLER_NESTE_MÅNED = 'stansdato_ikke_første_i_inneværende_eller_neste_måned',
+    ÅPEN_REVURDERING_EKSISTERER = 'åpen_revurdering_stans_eksisterer',
+    IVERKSETTING_FØRER_TIL_FEILUTBETALING = 'kunne_ikke_iverksette_stans_fører_til_feilutbetaling',
 }
 
 enum Gjenopptak {
@@ -142,6 +144,8 @@ enum Gjenopptak {
     SISTE_VEDTAK_IKKE_STANS = 'siste_vedtak_ikke_stans',
     SISTE_UTBETALING_ER_IKKE_STANS = 'siste_utbetaling_er_ikke_stans',
     KAN_IKKE_GJENOPPTA_OPPHØRTE_UTBETALINGER = 'kan_ikke_gjenoppta_opphørte_utbetalinger',
+    ÅPEN_REVURDERING_EKSISTERER = 'åpen_revurdering_gjenopptak_eksisterer',
+    IVERKSETTING_FØRER_TIL_FEILUTBETALING = 'kunne_ikke_iverksette_gjenopptak_fører_til_feilutbetaling',
 }
 
 const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof typeof messages | undefined } = {
@@ -222,7 +226,10 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof 
     [Stans.KAN_IKKE_STANSE_OPPHØRTE_UTBETALINGER]: 'kan.ikke.stanse.opphørte.utbetalinger',
     [Stans.UTBETALING_ALLEREDE_STANSET]: 'utbetaling.allerede.stanset',
     [Stans.UTBETALING_ALLEREDE_OPPHØRT]: 'utbetaling.allerede.opphørt',
-    [Stans.STANSDATO_IKKE_FØRSTE_I_NESTE_MÅNED]: 'stansdato.ikke.første.i.neste.måned',
+    [Stans.STANSDATO_IKKE_FØRSTE_I_INNEVÆRENDE_ELLER_NESTE_MÅNED]:
+        'stansdato.ikke.første.i.inneværende.eller.neste.måned',
+    [Stans.ÅPEN_REVURDERING_EKSISTERER]: 'stans.åpen.revurdering.eksisterer',
+    [Stans.IVERKSETTING_FØRER_TIL_FEILUTBETALING]: 'stans.iverksetting.feilutbetaling',
 
     [Gjenopptak.KUNNE_IKKE_IVERKSETTE_GJENOPPTAK_UGYLDIG_TILSTAND]: 'gjenopptak.iverksett.ugyldig.tilstand',
     [Gjenopptak.INGEN_TIDLIGERE_VEDTAK]: 'gjenopptak.ingen.tidligere.vedtak',
@@ -234,4 +241,6 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof 
     [Gjenopptak.SISTE_VEDTAK_IKKE_STANS]: 'gjenopptak.siste.vedtak.ikke.stans',
     [Gjenopptak.SISTE_UTBETALING_ER_IKKE_STANS]: 'gjenopptak.siste.utbetaling.ikke.stans',
     [Gjenopptak.KAN_IKKE_GJENOPPTA_OPPHØRTE_UTBETALINGER]: 'gjenopptak.kan.ikke.gjenoppta.opphørte.utbetalinger',
+    [Gjenopptak.ÅPEN_REVURDERING_EKSISTERER]: 'gjenopptak.åpen.revurdering.eksisterer',
+    [Gjenopptak.IVERKSETTING_FØRER_TIL_FEILUTBETALING]: 'gjenopptak.iverksetting.feilutbetaling',
 };

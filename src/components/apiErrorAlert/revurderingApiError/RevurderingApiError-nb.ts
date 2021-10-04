@@ -73,6 +73,8 @@ export default {
     'stans.opprett.kunne.ikke': 'Kunne ikke opprette revurdering',
     'stans.oppdater.ugyldig.type':
         'kunne ikke oppdatere revurdering for stans. Eksisterende revurdering er av feil type',
+    'stans.åpen.revurdering.eksisterer': 'Åpen revurdering for stans av ytelse eksisterer fra før',
+    'stans.iverksetting.feilutbetaling': 'Iverksetting av stans som fører til feilutbetaling støttes ikke',
     'kunne.ikke.opprette.revurdering.for.stans': 'Kunne ikke opprette revurdering for stans',
     'ugyldig.tilstand.for.oppdatering': 'Ugyldig tilstand for oppdatering',
     'fant.ingen.utbetalinger': 'Fant ingen utbetalinger',
@@ -80,7 +82,8 @@ export default {
     'kan.ikke.stanse.opphørte.utbetalinger': 'Kan ikke stanste opphørte utbetalinger',
     'utbetaling.allerede.stanset': 'Utbetaling allerede stanset',
     'utbetaling.allerede.opphørt': 'Utbetaling allerede opphørt',
-    'stansdato.ikke.første.i.neste.måned': 'Stansdato ikke første i neste måned',
+    'stansdato.ikke.første.i.inneværende.eller.neste.måned':
+        'Stansdato er ikke første dato i inneværende eller neste måned',
 
     'gjenopptak.siste.utbetaling.ikke.stans': 'Siste utbetaling er ikke stans',
     'gjenopptak.kan.ikke.gjenoppta.opphørte.utbetalinger': 'Kan ikke gjenoppta opphørte utbetalinger',
@@ -95,4 +98,6 @@ export default {
     'gjenopptak.simulering.kontroll.feilet': 'Feil ved kontroll av simulering',
     'gjenopptak.siste.vedtak.ikke.stans':
         'Kan ikke opprette revurdering for gjenopptak av ytelse, siste vedtak er ikke en stans',
+    'gjenopptak.åpen.revurdering.eksisterer': 'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',
+    'gjenopptak.iverksetting.feilutbetaling': 'Iverksetting av gjenopptak som fører til feilutbetaling støttes ikke',
 };
