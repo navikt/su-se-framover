@@ -160,14 +160,14 @@ export const revurderFormueSchema = yup.object<FormueFormData>({
                         .required(),
                     søkersFormue: yup
                         .object<VerdierFormData>({
-                            verdiPåBolig: validateStringAsNonNegativeNumber(),
-                            verdiPåEiendom: validateStringAsNonNegativeNumber(),
-                            verdiPåKjøretøy: validateStringAsNonNegativeNumber(),
-                            innskuddsbeløp: validateStringAsNonNegativeNumber(),
-                            verdipapir: validateStringAsNonNegativeNumber(),
-                            kontanterOver1000: validateStringAsNonNegativeNumber(),
-                            stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber(),
-                            depositumskonto: validateStringAsNonNegativeNumber(),
+                            verdiPåBolig: validateStringAsNonNegativeNumber('Verdi på bolig'),
+                            verdiPåEiendom: validateStringAsNonNegativeNumber('Verdi på eiendom'),
+                            verdiPåKjøretøy: validateStringAsNonNegativeNumber('Verdi på kjøretøy'),
+                            innskuddsbeløp: validateStringAsNonNegativeNumber('Innskuddsbeløp'),
+                            verdipapir: validateStringAsNonNegativeNumber('Verdipapir'),
+                            kontanterOver1000: validateStringAsNonNegativeNumber('Kontanter over 1000'),
+                            stårNoenIGjeldTilDeg: validateStringAsNonNegativeNumber('Står noen i gjeld til deg'),
+                            depositumskonto: validateStringAsNonNegativeNumber('Depositumskonto'),
                         })
                         .required(),
                     epsFormue: yup

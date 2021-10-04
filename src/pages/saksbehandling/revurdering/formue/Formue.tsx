@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
 import { Accordion, Button } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import { Input, Textarea } from 'nav-frontend-skjema';
+import { Feiloppsummering, Input, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element, Ingress, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
@@ -29,6 +29,7 @@ import { lagreFormuegrunnlag } from '~features/revurdering/revurderingActions';
 import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
+import { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { Periode } from '~types/Periode';
 import { RevurderingProps } from '~types/Revurdering';
@@ -58,7 +59,12 @@ const Formue = (props: RevurderingProps) => {
     const epsFnr = hentBosituasjongrunnlag(props.revurdering.grunnlagsdataOgVilkårsvurderinger).fnr;
     const [lagreFormuegrunnlagStatus, lagreFormuegrunnlagAction] = useAsyncActionCreator(lagreFormuegrunnlag);
 
-    const { control, trigger, handleSubmit } = useForm<FormueFormData>({
+    const {
+        control,
+        trigger,
+        handleSubmit,
+        formState: { errors, isValid, isValidating },
+    } = useForm<FormueFormData>({
         defaultValues: getDefaultValues(props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue, epsFnr),
         resolver: yupResolver(revurderFormueSchema),
     });
@@ -121,6 +127,12 @@ const Formue = (props: RevurderingProps) => {
                                 {intl.formatMessage({ id: 'knapp.nyPeriode' })}
                             </Button>
                         </div>
+                        <Feiloppsummering
+                            tittel={intl.formatMessage({ id: 'feiloppsummering.tittel' })}
+                            className={styles.feiloppsummering}
+                            feil={hookFormErrorsTilFeiloppsummering(errors)}
+                            hidden={isValid && !isValidating}
+                        />
                         {RemoteData.isFailure(lagreFormuegrunnlagStatus) && (
                             <ApiErrorAlert error={lagreFormuegrunnlagStatus.error} />
                         )}
@@ -325,6 +337,13 @@ const FormuePanel = (props: {
         control: props.formController,
     });
 
+    /*
+    const { errors } = useFormState({
+        name: panelName,
+        control: props.formController,
+    });
+    */
+
     const handlePanelKlikk = () => (åpen ? handleBekreftClick() : setÅpen(true));
 
     let utregnetFormue = regnUtFormDataVerdier(formueVerdier);
@@ -364,19 +383,17 @@ const FormuePanel = (props: {
                                 name={`${panelName}.${id}`}
                                 control={props.formController}
                                 defaultValue={formueVerdier?.[id] ?? '0'}
-                                render={({ field, fieldState }) => {
-                                    return (
-                                        <Input
-                                            id={field.name}
-                                            label={intl.formatMessage({ id: `formuepanel.${id}` })}
-                                            {...field}
-                                            feil={fieldState.error?.message}
-                                            bredde="M"
-                                            inputMode="numeric"
-                                            pattern="[0-9]*"
-                                        />
-                                    );
-                                }}
+                                render={({ field, fieldState }) => (
+                                    <Input
+                                        id={field.name}
+                                        label={intl.formatMessage({ id: `formuepanel.${id}` })}
+                                        {...field}
+                                        feil={fieldState?.error?.message}
+                                        bredde="M"
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
+                                    />
+                                )}
                             />
                         );
                     })}

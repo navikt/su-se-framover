@@ -1,6 +1,8 @@
 export default {
     'eksisterende.vedtakinfo.tittel': 'Eksisterende vedtaksinformasjon',
 
+    'feiloppsummering.tittel': 'For å kunne gå videre må du rette opp følgende',
+
     'formueblokk.begrunnelse': 'Begrunnelse',
 
     'formuepanel.verdiPåBolig': 'Verdier på bolig',
