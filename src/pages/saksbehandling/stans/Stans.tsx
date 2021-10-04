@@ -15,7 +15,7 @@ import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup from '~lib/validering';
+import yup, { getDateErrorMessage } from '~lib/validering';
 import { OpprettetRevurderingGrunn, Revurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { StansAvYtelse } from '~types/Stans';
@@ -65,17 +65,19 @@ const Stans = (props: Props) => {
     const { ...form } = useForm<FormData>({
         defaultValues: hentDefaultVerdier(revurdering),
         resolver: yupResolver(
-            yup.object<FormData>({
-                stansDato: yup.date().required().typeError('Må velge dato'),
-                begrunnelse: yup.string().required(),
-                årsak: yup
-                    .mixed()
-                    .required()
-                    .oneOf(
-                        Object.values([OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING]),
-                        'Må velge en gyldig årsak'
-                    ),
-            })
+            yup
+                .object<FormData>({
+                    stansDato: yup.date().required().typeError('Må velge dato'),
+                    begrunnelse: yup.string().required(),
+                    årsak: yup
+                        .mixed()
+                        .required()
+                        .oneOf(
+                            Object.values([OpprettetRevurderingGrunn.MANGLENDE_KONTROLLERKLÆRING]),
+                            'Må velge en gyldig årsak'
+                        ),
+                })
+                .required()
         ),
     });
 
@@ -149,7 +151,7 @@ const Stans = (props: Props) => {
                                     autoComplete="off"
                                     value={field.value}
                                     onChange={(date: Date | null) => field.onChange(date)}
-                                    feil={fieldState.error?.message}
+                                    feil={getDateErrorMessage(fieldState.error)}
                                 />
                             )}
                         />

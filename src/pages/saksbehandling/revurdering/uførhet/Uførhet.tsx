@@ -21,7 +21,11 @@ import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import yup, { hookFormErrorsTilFeiloppsummering, validateStringAsNonNegativeNumber } from '~lib/validering';
+import yup, {
+    getDateErrorMessage,
+    hookFormErrorsTilFeiloppsummering,
+    validateStringAsNonNegativeNumber,
+} from '~lib/validering';
 import sharedMessages from '~pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
 import { useAppDispatch } from '~redux/Store';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -144,7 +148,7 @@ const Uføreperiodevurdering = (props: {
                                 <DatePicker
                                     id={field.name}
                                     label={intl.formatMessage({ id: 'input.fom.label' })}
-                                    feil={fieldState.error?.message}
+                                    feil={getDateErrorMessage(fieldState.error)}
                                     {...field}
                                     onChange={field.onChange}
                                     dateFormat="MM/yyyy"
@@ -164,7 +168,7 @@ const Uføreperiodevurdering = (props: {
                                 <DatePicker
                                     label={intl.formatMessage({ id: 'input.tom.label' })}
                                     id={field.name}
-                                    feil={fieldState.error?.message}
+                                    feil={getDateErrorMessage(fieldState.error)}
                                     {...field}
                                     dateFormat="MM/yyyy"
                                     showMonthYearPicker

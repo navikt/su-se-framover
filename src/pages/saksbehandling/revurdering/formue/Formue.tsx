@@ -29,7 +29,7 @@ import { lagreFormuegrunnlag } from '~features/revurdering/revurderingActions';
 import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import { Nullable } from '~lib/types';
-import { hookFormErrorsTilFeiloppsummering } from '~lib/validering';
+import { getDateErrorMessage, hookFormErrorsTilFeiloppsummering } from '~lib/validering';
 import { Formuegrenser } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { Periode } from '~types/Periode';
 import { RevurderingProps } from '~types/Revurdering';
@@ -217,7 +217,7 @@ const FormueBlokk = (props: {
                                 onChange={(date: Date | null) => {
                                     field.onChange(date ? DateFns.startOfMonth(date) : null);
                                 }}
-                                feil={fieldState.error?.message}
+                                feil={getDateErrorMessage(fieldState.error)}
                                 minDate={revurderingsperiode.fraOgMed}
                                 maxDate={revurderingsperiode.tilOgMed}
                                 startDate={field.value}
@@ -240,7 +240,7 @@ const FormueBlokk = (props: {
                                 onChange={(date: Date | null) => {
                                     field.onChange(date ? DateFns.endOfMonth(date) : null);
                                 }}
-                                feil={fieldState.error?.message}
+                                feil={getDateErrorMessage(fieldState.error)}
                                 minDate={watch.periode.fraOgMed}
                                 maxDate={revurderingsperiode.tilOgMed}
                                 startDate={watch.periode.fraOgMed}

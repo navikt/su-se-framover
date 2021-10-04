@@ -43,16 +43,18 @@ const eqFormData = struct<FormData>({
     begrunnelse: eqNullable(S.Eq),
 });
 
-const schema = yup.object<FormData>({
-    status: yup
-        .mixed()
-        .defined()
-        .oneOf(
-            [FlyktningStatus.VilkårOppfylt, FlyktningStatus.VilkårIkkeOppfylt, FlyktningStatus.Uavklart],
-            'Du må velge om vilkåret er oppfylt'
-        ),
-    begrunnelse: yup.string().defined(),
-});
+const schema = yup
+    .object<FormData>({
+        status: yup
+            .mixed()
+            .defined()
+            .oneOf(
+                [FlyktningStatus.VilkårOppfylt, FlyktningStatus.VilkårIkkeOppfylt, FlyktningStatus.Uavklart],
+                'Du må velge om vilkåret er oppfylt'
+            ),
+        begrunnelse: yup.string().defined(),
+    })
+    .required();
 
 const Flyktning = (props: VilkårsvurderingBaseProps) => {
     const [lagreBehandlingsinformasjonStatus, lagreBehandlingsinformasjon] = useAsyncActionCreator(
