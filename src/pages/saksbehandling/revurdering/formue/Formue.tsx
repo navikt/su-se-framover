@@ -63,7 +63,7 @@ const Formue = (props: RevurderingProps) => {
         control,
         trigger,
         handleSubmit,
-        formState: { errors, isValid, isValidating },
+        formState: { errors, isValid, isSubmitted },
     } = useForm<FormueFormData>({
         defaultValues: getDefaultValues(props.revurdering.grunnlagsdataOgVilkårsvurderinger.formue, epsFnr),
         resolver: yupResolver(revurderFormueSchema),
@@ -131,7 +131,7 @@ const Formue = (props: RevurderingProps) => {
                             tittel={intl.formatMessage({ id: 'feiloppsummering.tittel' })}
                             className={styles.feiloppsummering}
                             feil={hookFormErrorsTilFeiloppsummering(errors)}
-                            hidden={isValid && !isValidating}
+                            hidden={isValid || !isSubmitted}
                         />
                         {RemoteData.isFailure(lagreFormuegrunnlagStatus) && (
                             <ApiErrorAlert error={lagreFormuegrunnlagStatus.error} />
