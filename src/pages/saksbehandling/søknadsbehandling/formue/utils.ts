@@ -68,7 +68,7 @@ function getInitialVerdier(
     return {
         verdiPåBolig: (verdier?.verdiIkkePrimærbolig ?? søknadsFormue?.verdiPåBolig ?? 0).toString(),
         verdiPåEiendom: (verdier?.verdiEiendommer ?? søknadsFormue?.verdiPåEiendom ?? 0).toString(),
-        verdiPåKjøretøy: verdier?.verdiKjøretøy?.toString() ?? '',
+        verdiPåKjøretøy: verdier?.verdiKjøretøy?.toString() ?? (søknadsFormue?.kjøretøy?.length ? '' : 0).toString(),
         innskuddsbeløp: (
             verdier?.innskudd ?? (søknadsFormue?.innskuddsBeløp ?? 0) + (søknadsFormue?.depositumsBeløp ?? 0)
         ).toString(),
