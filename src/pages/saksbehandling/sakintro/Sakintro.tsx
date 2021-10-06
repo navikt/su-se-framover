@@ -11,6 +11,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { ApiError } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
 import { ÅpentBrev } from '~assets/Illustrations';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
 import { useUserContext } from '~context/userContext';
@@ -469,20 +470,6 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
     const dispatch = useAppDispatch();
     const history = useHistory();
 
-    const requestErrorMessageFormatted = (request: RemoteData.RemoteFailure<ApiError>) => {
-        if (request.error.body?.message.includes('Fant ikke søknad')) {
-            return 'display.behandling.klarteIkkeStarteBehandling.fantIkkeSøknad';
-        } else if (request.error.body?.message.includes('mangler oppgave')) {
-            return 'display.behandling.klarteIkkeStarteBehandling.manglerOppgave';
-        } else if (request.error.body?.message.includes('har allerede en behandling')) {
-            return 'display.behandling.klarteIkkeStarteBehandling.harEnBehandling';
-        } else if (request.error.body?.message.includes('er lukket')) {
-            return 'display.behandling.klarteIkkeStarteBehandling.erLukket';
-        } else {
-            return 'display.behandling.klarteIkkeStarteBehandling';
-        }
-    };
-
     return (
         <div className={styles.startSøknadsbehandlingKnapperContainer}>
             <div className={styles.startSøknadsbehandlingKnapper}>
@@ -530,11 +517,9 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                 </LinkAsButton>
             </div>
             {RemoteData.isFailure(request) && (
-                <Alert className={styles.feil} variant="error">
-                    {props.intl.formatMessage({
-                        id: requestErrorMessageFormatted(request),
-                    })}
-                </Alert>
+                <div className={styles.feil}>
+                    <ApiErrorAlert error={request.error} />
+                </div>
             )}
         </div>
     );
