@@ -1,14 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
-import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { UtenlandsOppholdFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UtenlandsOppholdFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
@@ -118,34 +119,28 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                             control={form.control}
                             name="status"
                             render={({ field, fieldState }) => (
-                                <RadioGruppe
+                                <RadioGroup
                                     legend={formatMessage('radio.oppholdIUtland.legend')}
-                                    feil={fieldState.error?.message}
+                                    error={fieldState.error?.message}
                                     onBlur={field.onBlur}
+                                    onChange={field.onChange}
+                                    name={field.name}
+                                    value={field.value ?? undefined}
                                 >
                                     <Radio
                                         id={field.name}
-                                        radioRef={field.ref}
-                                        label={formatMessage('radio.label.ja')}
-                                        name={field.name}
-                                        onChange={() =>
-                                            field.onChange(OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet)
-                                        }
-                                        checked={field.value === OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet}
-                                    />
-                                    <Radio
-                                        label={formatMessage('radio.label.nei')}
-                                        name={field.name}
-                                        onChange={() => field.onChange(OppholdIUtlandetStatus.SkalHoldeSegINorge)}
-                                        checked={field.value === OppholdIUtlandetStatus.SkalHoldeSegINorge}
-                                    />
-                                    <Radio
-                                        label={formatMessage('radio.label.uavklart')}
-                                        name={field.name}
-                                        onChange={() => field.onChange(OppholdIUtlandetStatus.Uavklart)}
-                                        checked={field.value === OppholdIUtlandetStatus.Uavklart}
-                                    />
-                                </RadioGruppe>
+                                        ref={field.ref}
+                                        value={OppholdIUtlandetStatus.SkalVæreMerEnn90DagerIUtlandet}
+                                    >
+                                        {formatMessage('radio.label.ja')}
+                                    </Radio>
+                                    <Radio value={OppholdIUtlandetStatus.SkalHoldeSegINorge}>
+                                        {formatMessage('radio.label.nei')}
+                                    </Radio>
+                                    <Radio value={OppholdIUtlandetStatus.Uavklart}>
+                                        {formatMessage('radio.label.uavklart')}
+                                    </Radio>
+                                </RadioGroup>
                             )}
                         />
                         <div className={sharedStyles.textareaContainer}>
@@ -156,7 +151,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                                     <Textarea
                                         label={formatMessage('input.label.begrunnelse')}
                                         {...field}
-                                        feil={fieldState.error?.message}
+                                        error={fieldState.error?.message}
                                         value={field.value ?? ''}
                                     />
                                 )}
@@ -175,7 +170,7 @@ const OppholdIUtlandet = (props: VilkårsvurderingBaseProps) => {
                             tittel={formatMessage('feiloppsummering.title')}
                             hidden={!isSubmitted || isValid}
                             feil={hookFormErrorsTilFeiloppsummering(errors)}
-                            innerRef={feiloppsummeringRef}
+                            ref={feiloppsummeringRef}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {

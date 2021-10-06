@@ -1,7 +1,6 @@
 import { CollapseFilled, ExpandFilled } from '@navikt/ds-icons';
+import { BodyShort, Radio, RadioGroup } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { FormikErrors } from 'formik';
-import { Radio, RadioGruppe, RadioPanel } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 import { Collapse } from 'react-collapse';
 
@@ -25,37 +24,30 @@ export const JaNeiSpørsmål = (props: {
 }) => {
     const { intl } = useI18n({ messages: nb });
     return (
-        <RadioGruppe
-            className={classNames(styles.janeisporsmal, props.className)}
-            feil={props.feil}
+        <RadioGroup
+            className={classNames(props.className)}
+            error={props.feil}
             legend={props.legend}
-            description={props.description}
+            description={
+                props.description || (props.hjelpetekstTittel && props.hjelpetekstBody) ? (
+                    <div>
+                        {props.description && <BodyShort spacing>{props.description}</BodyShort>}
+                        {props.hjelpetekstTittel && props.hjelpetekstBody && (
+                            <Hjelpetekst tittel={props.hjelpetekstTittel} body={props.hjelpetekstBody} />
+                        )}
+                    </div>
+                ) : undefined
+            }
+            value={props.state?.toString()}
+            onChange={(val) => props.onChange(val === 'true')}
         >
-            {props.hjelpetekstTittel && props.hjelpetekstBody && (
-                <Hjelpetekst tittel={props.hjelpetekstTittel} body={props.hjelpetekstBody} />
-            )}
-            <div className={styles.svarContainer}>
-                <div className={styles.svar}>
-                    <RadioPanel
-                        id={props.id}
-                        label={intl.formatMessage({ id: 'jaNeiSpørsmal.label.ja' })}
-                        name={props.id}
-                        onChange={() => props.onChange(true)}
-                        checked={props.state === null ? false : props.state}
-                        autoComplete="off"
-                    />
-                </div>
-                <div className={styles.svar}>
-                    <RadioPanel
-                        label={intl.formatMessage({ id: 'jaNeiSpørsmal.label.nei' })}
-                        name={props.id}
-                        onChange={() => props.onChange(false)}
-                        checked={props.state === null ? false : !props.state}
-                        autoComplete="off"
-                    />
-                </div>
-            </div>
-        </RadioGruppe>
+            <Radio id={props.id} name={props.id} value="true" autoComplete="off">
+                {intl.formatMessage({ id: 'jaNeiSpørsmål.label.ja' })}
+            </Radio>
+            <Radio name={props.id} value="false" autoComplete="off">
+                {intl.formatMessage({ id: 'jaNeiSpørsmål.label.nei' })}
+            </Radio>
+        </RadioGroup>
     );
 };
 
@@ -79,49 +71,3 @@ const Hjelpetekst = (props: { tittel: string; body: string }) => {
         </div>
     );
 };
-
-export const SuperRadio = <T, U extends Extract<keyof T, string>>(props: {
-    id?: string;
-    values: T;
-    label: string;
-    property: U;
-    radioValue: T[U];
-    onChange: (a: T) => void;
-}) => (
-    <Radio
-        id={props.id}
-        label={props.label}
-        name={props.property}
-        onChange={() =>
-            props.onChange({
-                ...props.values,
-                [props.property]: props.radioValue,
-            })
-        }
-        checked={props.values[props.property] === props.radioValue}
-    />
-);
-
-export const SuperRadioGruppe = <T, U extends Extract<keyof T, string>>(props: {
-    id: string;
-    legend: string;
-    values: T;
-    errors: FormikErrors<T>;
-    property: U;
-    options: Array<{ label: string; radioValue: T[U] }>;
-    onChange: (a: T) => void;
-}) => (
-    <RadioGruppe legend={props.legend} feil={props.errors[props.property]}>
-        {props.options.map((e, idx) => (
-            <SuperRadio
-                id={idx === 0 ? props.id : undefined}
-                key={`${props.property}${e.radioValue}`}
-                label={e.label}
-                values={props.values}
-                onChange={props.onChange}
-                property={props.property}
-                radioValue={e.radioValue}
-            />
-        ))}
-    </RadioGruppe>
-);

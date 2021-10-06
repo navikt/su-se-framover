@@ -1,14 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { RadioGroup, Radio, Textarea } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
-import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { LovligOppholdFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/LovligOppholdFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
@@ -115,32 +116,23 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             control={form.control}
                             name="status"
                             render={({ field, fieldState }) => (
-                                <RadioGruppe
+                                <RadioGroup
                                     legend={formatMessage('radio.lovligOpphold.legend')}
-                                    feil={fieldState.error?.message}
+                                    error={fieldState.error?.message}
                                     onBlur={field.onBlur}
+                                    onChange={field.onChange}
+                                    value={field.value ?? undefined}
                                 >
-                                    <Radio
-                                        id={field.name}
-                                        label={formatMessage('radio.label.ja')}
-                                        name={field.name}
-                                        onChange={() => field.onChange(LovligOppholdStatus.VilkårOppfylt)}
-                                        checked={field.value === LovligOppholdStatus.VilkårOppfylt}
-                                        radioRef={field.ref}
-                                    />
-                                    <Radio
-                                        label={formatMessage('radio.label.nei')}
-                                        name={field.name}
-                                        onChange={() => field.onChange(LovligOppholdStatus.VilkårIkkeOppfylt)}
-                                        checked={field.value === LovligOppholdStatus.VilkårIkkeOppfylt}
-                                    />
-                                    <Radio
-                                        label={formatMessage('radio.label.uavklart')}
-                                        name={field.name}
-                                        onChange={() => field.onChange(LovligOppholdStatus.Uavklart)}
-                                        checked={field.value === LovligOppholdStatus.Uavklart}
-                                    />
-                                </RadioGruppe>
+                                    <Radio id={field.name} value={LovligOppholdStatus.VilkårOppfylt} ref={field.ref}>
+                                        {formatMessage('radio.label.ja')}
+                                    </Radio>
+                                    <Radio value={LovligOppholdStatus.VilkårIkkeOppfylt}>
+                                        {formatMessage('radio.label.nei')}
+                                    </Radio>
+                                    <Radio value={LovligOppholdStatus.Uavklart}>
+                                        {formatMessage('radio.label.uavklart')}
+                                    </Radio>
+                                </RadioGroup>
                             )}
                         />
                         <div className={sharedStyles.textareaContainer}>
@@ -152,7 +144,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                         label={formatMessage('input.label.begrunnelse')}
                                         {...field}
                                         value={field.value ?? ''}
-                                        feil={fieldState.error?.message}
+                                        error={fieldState.error?.message}
                                     />
                                 )}
                             />
@@ -171,7 +163,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             tittel={formatMessage('feiloppsummering.title')}
                             hidden={!isSubmitted || isValid}
                             feil={hookFormErrorsTilFeiloppsummering(errors)}
-                            innerRef={feiloppsummeringRef}
+                            ref={feiloppsummeringRef}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {

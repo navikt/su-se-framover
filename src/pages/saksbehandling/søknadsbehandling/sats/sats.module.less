@@ -1,8 +1,12 @@
 @import '~/styles/variables.less';
 
-.personkortContainer {
-    margin-bottom: @spacing;
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
+}
 
+.personkortContainer {
     .personkortTittel {
         margin-bottom: @spacing-xs;
     }
@@ -19,6 +23,7 @@
     }
 }
 
-.textareaContainer {
-    margin-bottom: @spacing;
+.sats {
+    text-decoration: underline;
+    text-decoration-style: double;
 }

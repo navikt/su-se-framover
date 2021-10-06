@@ -1,15 +1,16 @@
-import { Alert, Button } from '@navikt/ds-react';
+import { Alert, Button, Label, Fieldset } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik, FormikErrors } from 'formik';
 import { Datepicker, DatepickerLimitations } from 'nav-datovelger';
-import { Feiloppsummering, Label, SkjemaelementFeilmelding, SkjemaGruppe } from 'nav-frontend-skjema';
 import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
+import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import { Utenlandsopphold as UtenlandsoppholdType } from '~features/søknad/types';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
@@ -147,14 +148,14 @@ const MultiTidsperiodevelger = (props: {
 
                 return (
                     <div key={baseId} id={baseId} className={styles.reiseradContainer}>
-                        <SkjemaGruppe
+                        <Fieldset
                             className={classNames(sharedStyles.inputFelterOgFjernKnappContainer, {
                                 [sharedStyles.radfeil]: errorForLinje && typeof errorForLinje === 'object',
                             })}
                             legend={<span className="sr-only">{props.legend}</span>}
                         >
                             <div>
-                                <Label htmlFor={utreisedatoId}>
+                                <Label as="label" htmlFor={utreisedatoId}>
                                     {formatMessage('utreisedato.label')}
                                     <span className="sr-only">
                                         {formatMessage('forUtenlandsoppholdX.label', { x: index + 1 })}
@@ -190,7 +191,7 @@ const MultiTidsperiodevelger = (props: {
                             </div>
 
                             <div>
-                                <Label htmlFor={innreisedatoId}>
+                                <Label as="label" htmlFor={innreisedatoId}>
                                     {formatMessage('innreisedato.label')}
                                     <span className="sr-only">
                                         {formatMessage('forUtenlandsoppholdX.label', { x: index + 1 })}
@@ -235,7 +236,7 @@ const MultiTidsperiodevelger = (props: {
                             >
                                 {formatMessage('button.fjernReiserad')}
                             </Button>
-                        </SkjemaGruppe>
+                        </Fieldset>
                         {errorForLinje && typeof errorForLinje === 'string' && (
                             <SkjemaelementFeilmelding>{errorForLinje}</SkjemaelementFeilmelding>
                         )}
@@ -446,7 +447,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                     tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                     hidden={!formikErrorsHarFeil(formik.errors)}
                     feil={formikErrorsTilFeiloppsummering(formik.errors)}
-                    innerRef={feiloppsummeringref}
+                    ref={feiloppsummeringref}
                 />
                 <Bunnknapper
                     previous={{

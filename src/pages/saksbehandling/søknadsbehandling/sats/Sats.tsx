@@ -1,10 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button } from '@navikt/ds-react';
+import { Button, Radio, RadioGroup, Textarea, Label } from '@navikt/ds-react';
 import * as B from 'fp-ts/boolean';
 import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/string';
-import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element, Feilmelding } from 'nav-frontend-typografi';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -14,6 +13,7 @@ import { useHistory } from 'react-router-dom';
 import { Sats as FaktiskSats } from '~/types/Sats';
 import { Person, fetchPerson } from '~api/personApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { SatsFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
@@ -301,46 +301,34 @@ const SatsForm = (props: SatsProps) => {
                 left: (
                     <form
                         onSubmit={form.handleSubmit(handleSave(props.nesteUrl), focusAfterTimeout(feiloppsummeringRef))}
+                        className={styles.formContainer}
                     >
-                        <div>
-                            {eps && (
-                                <div className={styles.personkortContainer}>
-                                    <Element className={styles.personkortTittel}>
-                                        {props.formatMessage('display.eps.label')}
-                                    </Element>
-                                    <Personkort person={eps} />
-                                </div>
-                            )}
-                        </div>
+                        {eps && (
+                            <div className={styles.personkortContainer}>
+                                <Element className={styles.personkortTittel}>
+                                    {props.formatMessage('display.eps.label')}
+                                </Element>
+                                <Personkort person={eps} />
+                            </div>
+                        )}
                         {!eps && (
                             <Controller
                                 control={form.control}
                                 name="delerSøkerBolig"
                                 render={({ field, fieldState }) => (
-                                    <RadioGruppe
+                                    <RadioGroup
                                         legend={props.formatMessage('radio.delerSøkerBoligOver18.legend')}
-                                        feil={fieldState.error?.message}
+                                        error={fieldState.error?.message}
                                         onBlur={field.onBlur}
+                                        name={field.name}
+                                        value={field.value?.toString()}
+                                        onChange={(val) => field.onChange(val === true.toString())}
                                     >
-                                        <Radio
-                                            label={props.formatMessage('radio.label.ja')}
-                                            id={field.name}
-                                            name={field.name}
-                                            checked={field.value === true}
-                                            onChange={() => {
-                                                field.onChange(true);
-                                            }}
-                                            radioRef={field.ref}
-                                        />
-                                        <Radio
-                                            label={props.formatMessage('radio.label.nei')}
-                                            name={field.name}
-                                            checked={field.value === false}
-                                            onChange={() => {
-                                                field.onChange(false);
-                                            }}
-                                        />
-                                    </RadioGruppe>
+                                        <Radio id={field.name} value={true.toString()} ref={field.ref}>
+                                            {props.formatMessage('radio.label.ja')}
+                                        </Radio>
+                                        <Radio value={false.toString()}>{props.formatMessage('radio.label.nei')}</Radio>
+                                    </RadioGroup>
                                 )}
                             />
                         )}
@@ -349,42 +337,26 @@ const SatsForm = (props: SatsProps) => {
                                 control={form.control}
                                 name="mottarEktemakeEllerSamboerSU"
                                 render={({ field, fieldState }) => (
-                                    <RadioGruppe
+                                    <RadioGroup
                                         legend={props.formatMessage('radio.ektemakeEllerSamboerUførFlyktning.legend')}
-                                        feil={fieldState.error?.message}
+                                        error={fieldState.error?.message}
                                         onBlur={field.onBlur}
+                                        name={field.name}
+                                        value={field.value?.toString()}
+                                        onChange={(val) => field.onChange(val === true.toString())}
                                     >
-                                        <Radio
-                                            label={props.formatMessage('radio.label.ja')}
-                                            id={field.name}
-                                            name={field.name}
-                                            radioRef={field.ref}
-                                            checked={field.value === true}
-                                            onChange={() => {
-                                                field.onChange(true);
-                                            }}
-                                        />
-                                        <Radio
-                                            label={props.formatMessage('radio.label.nei')}
-                                            name={field.name}
-                                            checked={field.value === false}
-                                            onChange={() => {
-                                                field.onChange(false);
-                                            }}
-                                        />
-                                    </RadioGruppe>
+                                        <Radio id={field.name} value={true.toString()} ref={field.ref}>
+                                            {props.formatMessage('radio.label.ja')}
+                                        </Radio>
+                                        <Radio value={false.toString()}>{props.formatMessage('radio.label.nei')}</Radio>
+                                    </RadioGroup>
                                 )}
                             />
                         )}
                         {sats && (
-                            <>
-                                <hr />
-                                <span>{`${props.formatMessage('display.sats')} ${sats}`}</span>
-                                <hr />
-                                <hr />
-                            </>
+                            <Label className={styles.sats}>{`${props.formatMessage('display.sats')} ${sats}`}</Label>
                         )}
-                        <div className={styles.textareaContainer}>
+                        <div>
                             <Controller
                                 control={form.control}
                                 name="begrunnelse"
@@ -393,7 +365,7 @@ const SatsForm = (props: SatsProps) => {
                                         label={props.formatMessage('input.label.begrunnelse')}
                                         {...field}
                                         value={field.value ?? ''}
-                                        feil={fieldState.error?.message}
+                                        error={fieldState.error?.message}
                                     />
                                 )}
                             />
@@ -415,7 +387,7 @@ const SatsForm = (props: SatsProps) => {
                             tittel={props.formatMessage('feiloppsummering.title')}
                             hidden={!isSubmitted || isValid}
                             feil={hookFormErrorsTilFeiloppsummering(errors)}
-                            innerRef={feiloppsummeringRef}
+                            ref={feiloppsummeringRef}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {

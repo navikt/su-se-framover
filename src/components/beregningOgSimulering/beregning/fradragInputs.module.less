@@ -11,22 +11,19 @@
 .fradragTypeOgBelopContainer {
     display: flex;
     margin-bottom: @spacing-s;
+    justify-content: space-between;
+    gap: @spacing-xs;
 
-    > :not(:last-child) {
-        margin-right: @spacing-xs;
-    }
-
-    .fradragtype {
+    .fradragTypeOgBelopInputs {
+        flex-grow: 1;
         display: flex;
-        flex-direction: column;
-        margin-bottom: 0;
+        gap: @spacing-xs;
     }
 
     .søppelbøtteContainer {
-        align-self: flex-end;
-        height: 40px;
-        width: 40px;
-        padding: 0;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
     }
 }
 
@@ -44,6 +41,7 @@
     grid-template-rows: auto auto;
     grid-auto-flow: column;
     column-gap: @spacing-xxs;
+    align-items: flex-end;
 
     .label {
         grid-row-start: 1;

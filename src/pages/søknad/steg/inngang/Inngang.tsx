@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button } from '@navikt/ds-react';
-import { BekreftCheckboksPanel } from 'nav-frontend-skjema';
+import { Button, ConfirmationPanel } from '@navikt/ds-react';
 import { Sidetittel, Ingress, Feilmelding } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
@@ -77,14 +76,16 @@ const index = (props: { nesteUrl: string }) => {
                 </section>
 
                 <div className={styles.checkboksPanelContainer}>
-                    <BekreftCheckboksPanel
+                    <ConfirmationPanel
                         checked={erBekreftet}
                         label={intl.formatMessage({ id: 'bekreftelsesboks.tekst.p2' })}
                         onChange={() => setErBekreftet(!erBekreftet)}
-                        feil={hasSubmitted && !erBekreftet ? intl.formatMessage({ id: 'feil.påkrevdFelt' }) : undefined}
+                        error={
+                            hasSubmitted && !erBekreftet ? intl.formatMessage({ id: 'feil.påkrevdFelt' }) : undefined
+                        }
                     >
                         {intl.formatMessage({ id: 'bekreftelsesboks.tekst.p1' })}
-                    </BekreftCheckboksPanel>
+                    </ConfirmationPanel>
                 </div>
             </div>
         );

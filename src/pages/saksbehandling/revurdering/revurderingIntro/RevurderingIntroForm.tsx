@@ -1,15 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Checkbox, CheckboxGroup, Select, Textarea } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
-import { Checkbox, CheckboxGruppe, Feiloppsummering, Select, Textarea } from 'nav-frontend-skjema';
 import { Ingress, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { customFormikSubmit } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
@@ -161,7 +161,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                                 }))
                             }
                             value={formik.values.årsak ?? ''}
-                            feil={formik.errors.årsak}
+                            error={formik.errors.årsak}
                         >
                             <option value="" disabled>
                                 {intl.formatMessage({ id: 'input.årsak.value.default' })}
@@ -179,15 +179,14 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                     </div>
 
                     <div className={styles.årsakForRevurderingContainer}>
-                        <CheckboxGruppe
+                        <CheckboxGroup
                             legend={intl.formatMessage({ id: 'input.informasjonSomRevurderes.label' })}
-                            feil={formik.errors.informasjonSomRevurderes}
+                            error={formik.errors.informasjonSomRevurderes}
                         >
                             {Object.values(InformasjonSomRevurderes).map((i, idx) => (
                                 <Checkbox
                                     key={i}
                                     id={idx === 0 ? keyOf<FormValues>('informasjonSomRevurderes') : undefined}
-                                    label={intl.formatMessage({ id: informasjonSomRevurderesMessageId(i) })}
                                     checked={formik.values.informasjonSomRevurderes.includes(i)}
                                     onChange={(e) => {
                                         return formik.setValues({
@@ -197,9 +196,11 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                                                 : formik.values.informasjonSomRevurderes.filter((i2) => i2 !== i),
                                         });
                                     }}
-                                />
+                                >
+                                    {intl.formatMessage({ id: informasjonSomRevurderesMessageId(i) })}
+                                </Checkbox>
                             ))}
-                        </CheckboxGruppe>
+                        </CheckboxGroup>
                     </div>
 
                     <div className={styles.informasjonsContainer}>
@@ -213,7 +214,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                             label={intl.formatMessage({ id: 'input.begrunnelse.label' })}
                             name="begrunnelse"
                             value={formik.values.begrunnelse ?? ''}
-                            feil={formik.errors.begrunnelse}
+                            error={formik.errors.begrunnelse}
                             onChange={formik.handleChange}
                         />
                     </div>

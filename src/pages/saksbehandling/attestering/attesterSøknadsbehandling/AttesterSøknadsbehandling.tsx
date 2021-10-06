@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader } from '@navikt/ds-react';
+import { Alert, Button, Loader, RadioGroup, Radio, Select, Textarea } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import { Feiloppsummering, RadioPanelGruppe, Select, Textarea } from 'nav-frontend-skjema';
 import { Systemtittel } from 'nav-frontend-typografi';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useState } from 'react';
@@ -9,6 +8,7 @@ import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import Personlinje from '~components/personlinje/Personlinje';
 import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -145,69 +145,60 @@ const Attesteringsinnhold = ({
                                 setHasSubmitted(true);
                             }}
                         >
-                            <RadioPanelGruppe
+                            <RadioGroup
                                 className={SharedStyles.formElement}
                                 name={intl.formatMessage({ id: 'attestering.beslutning' })}
                                 legend={
                                     <Systemtittel>{intl.formatMessage({ id: 'attestering.beslutning' })}</Systemtittel>
                                 }
-                                radios={[
-                                    {
-                                        label: intl.formatMessage({ id: 'attestering.beslutning.godkjenn' }),
-                                        value: 'godkjenn',
-                                    },
-                                    {
-                                        label: intl.formatMessage({ id: 'attestering.beslutning.revurder' }),
-                                        value: 'revurder',
-                                    },
-                                ]}
-                                checked={
-                                    formik.values.beslutning
-                                        ? 'godkjenn'
-                                        : formik.values.beslutning === false
-                                        ? 'revurder'
-                                        : undefined
+                                value={formik.values.beslutning?.toString()}
+                                onChange={(value) =>
+                                    formik.setValues((v) => ({ ...v, beslutning: value === true.toString() }))
                                 }
-                                onChange={(_, value) =>
-                                    formik.setValues((v) => ({ ...v, beslutning: value === 'godkjenn' }))
-                                }
-                                feil={errors.beslutning}
-                            />
+                                error={errors.beslutning}
+                            >
+                                <Radio id="beslutning" value={true.toString()}>
+                                    {intl.formatMessage({ id: 'attestering.beslutning.godkjenn' })}
+                                </Radio>
+                                <Radio value={false.toString()}>
+                                    {intl.formatMessage({ id: 'attestering.beslutning.revurder' })}
+                                </Radio>
+                            </RadioGroup>
                             {formik.values.beslutning === false && (
                                 <>
-                                    <Select
-                                        label={intl.formatMessage({ id: 'input.grunn.label' })}
-                                        onChange={(event) =>
-                                            formik.setValues((v) => ({
-                                                ...v,
-                                                grunn: event.target.value as UnderkjennelseGrunn,
-                                            }))
-                                        }
-                                        value={formik.values.grunn ?? ''}
-                                        feil={errors.grunn}
-                                        className={styles.formElement}
-                                    >
-                                        <option value="" disabled>
-                                            {intl.formatMessage({ id: 'input.grunn.value.default' })}
-                                        </option>
-                                        {Object.values(UnderkjennelseGrunn).map((grunn, index) => (
-                                            <option value={grunn} key={index}>
-                                                {intl.formatMessage({
-                                                    id: getTextId(grunn),
-                                                })}
+                                    <div className={SharedStyles.formElement}>
+                                        <Select
+                                            label={intl.formatMessage({ id: 'input.grunn.label' })}
+                                            onChange={(event) =>
+                                                formik.setValues((v) => ({
+                                                    ...v,
+                                                    grunn: event.target.value as UnderkjennelseGrunn,
+                                                }))
+                                            }
+                                            value={formik.values.grunn}
+                                            error={errors.grunn}
+                                        >
+                                            <option value="" disabled>
+                                                {intl.formatMessage({ id: 'input.grunn.value.default' })}
                                             </option>
-                                        ))}
-                                    </Select>
-
-                                    <div className={styles.formElement}>
-                                        <Textarea
-                                            label={intl.formatMessage({ id: 'input.kommentar.label' })}
-                                            name="kommentar"
-                                            value={formik.values.kommentar ?? ''}
-                                            feil={formik.errors.kommentar}
-                                            onChange={formik.handleChange}
-                                        />
+                                            {Object.values(UnderkjennelseGrunn).map((grunn, index) => (
+                                                <option value={grunn} key={index}>
+                                                    {intl.formatMessage({
+                                                        id: getTextId(grunn),
+                                                    })}
+                                                </option>
+                                            ))}
+                                        </Select>
                                     </div>
+
+                                    <Textarea
+                                        label={intl.formatMessage({ id: 'input.kommentar.label' })}
+                                        name="kommentar"
+                                        value={formik.values.kommentar ?? ''}
+                                        error={formik.errors.kommentar}
+                                        onChange={formik.handleChange}
+                                        className={SharedStyles.formElement}
+                                    />
                                 </>
                             )}
                             <Feiloppsummering

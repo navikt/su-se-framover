@@ -1,23 +1,21 @@
 @import '~/styles/variables.less';
 
 .periodeliste {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
     margin-bottom: @spacing;
 }
 
 .periodeContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
     padding: @spacing-s;
-    margin-bottom: @spacing;
-
-    > :not(:last-child) {
-        margin-bottom: @spacing;
-    }
 
     .horizontal {
         display: flex;
-
-        > :not(:last-child) {
-            margin-right: @spacing;
-        }
+        gap: @spacing;
     }
 }
 

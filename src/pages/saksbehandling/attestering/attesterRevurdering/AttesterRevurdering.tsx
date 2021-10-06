@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader } from '@navikt/ds-react';
+import { Alert, Button, Loader, RadioGroup, Radio, Textarea, Select, Panel } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import { RadioPanelGruppe, Textarea, Select } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
-import { Innholdstittel, Systemtittel } from 'nav-frontend-typografi';
+import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -219,82 +218,73 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
                                     formik.handleSubmit(e);
                                 }}
                             >
-                                <div className={styles.beslutningContainer}>
-                                    <RadioPanelGruppe
-                                        className={SharedStyles.formElement}
-                                        name={intl.formatMessage({ id: 'beslutning.tittel' })}
-                                        legend={
-                                            <Systemtittel>
-                                                {intl.formatMessage({ id: 'beslutning.tittel' })}
-                                            </Systemtittel>
-                                        }
-                                        radios={[
-                                            {
-                                                label: intl.formatMessage({ id: 'beslutning.godkjenn' }),
-                                                value: 'godkjenn',
-                                            },
-                                            {
-                                                label: intl.formatMessage({ id: 'beslutning.underkjenn' }),
-                                                value: 'revurder',
-                                            },
-                                        ]}
-                                        checked={
-                                            formik.values.beslutning
-                                                ? 'godkjenn'
-                                                : formik.values.beslutning === false
-                                                ? 'revurder'
-                                                : undefined
-                                        }
-                                        onChange={(_, value) =>
-                                            formik.setValues((v) => ({ ...v, beslutning: value === 'godkjenn' }))
-                                        }
-                                        feil={formik.errors.beslutning}
-                                    />
-                                    {formik.values.beslutning === false && (
-                                        <div className={styles.selectContainer}>
-                                            <Select
-                                                label={intl.formatMessage({ id: 'input.grunn.label' })}
-                                                onChange={(event) =>
-                                                    formik.setValues((v) => ({
-                                                        ...v,
-                                                        grunn: event.target.value as UnderkjennRevurderingGrunn,
-                                                    }))
-                                                }
-                                                value={formik.values.grunn ?? ''}
-                                                feil={formik.errors.grunn}
-                                                className={styles.select}
-                                            >
-                                                <option value="" disabled>
-                                                    {intl.formatMessage({ id: 'input.grunn.value.default' })}
-                                                </option>
-                                                {Object.values(UnderkjennRevurderingGrunn).map((grunn, index) => (
-                                                    <option value={grunn} key={index}>
-                                                        {intl.formatMessage({
-                                                            id: getTextId(grunn),
-                                                        })}
+                                <Panel border>
+                                    <div className={styles.beslutningContainer}>
+                                        <RadioGroup
+                                            className={SharedStyles.formElement}
+                                            name={intl.formatMessage({ id: 'beslutning.tittel' })}
+                                            legend={intl.formatMessage({ id: 'beslutning.tittel' })}
+                                            value={formik.values.beslutning?.toString()}
+                                            onChange={(value) =>
+                                                formik.setValues((v) => ({
+                                                    ...v,
+                                                    beslutning: value === true.toString(),
+                                                }))
+                                            }
+                                            error={formik.errors.beslutning}
+                                        >
+                                            <Radio id="beslutning" value={true.toString()}>
+                                                {intl.formatMessage({ id: 'beslutning.godkjenn' })}
+                                            </Radio>
+                                            <Radio value={false.toString()}>
+                                                {intl.formatMessage({ id: 'beslutning.underkjenn' })}
+                                            </Radio>
+                                        </RadioGroup>
+                                        {formik.values.beslutning === false && (
+                                            <div className={styles.selectContainer}>
+                                                <Select
+                                                    label={intl.formatMessage({ id: 'input.grunn.label' })}
+                                                    onChange={(event) =>
+                                                        formik.setValues((v) => ({
+                                                            ...v,
+                                                            grunn: event.target.value as UnderkjennRevurderingGrunn,
+                                                        }))
+                                                    }
+                                                    value={formik.values.grunn ?? ''}
+                                                    error={formik.errors.grunn}
+                                                >
+                                                    <option value="" disabled>
+                                                        {intl.formatMessage({ id: 'input.grunn.value.default' })}
                                                     </option>
-                                                ))}
-                                            </Select>
+                                                    {Object.values(UnderkjennRevurderingGrunn).map((grunn, index) => (
+                                                        <option value={grunn} key={index}>
+                                                            {intl.formatMessage({
+                                                                id: getTextId(grunn),
+                                                            })}
+                                                        </option>
+                                                    ))}
+                                                </Select>
 
-                                            <div className={styles.textAreaContainer}>
-                                                <Textarea
-                                                    label={intl.formatMessage({ id: 'input.kommentar.label' })}
-                                                    name="kommentar"
-                                                    value={formik.values.kommentar ?? ''}
-                                                    feil={formik.errors.kommentar}
-                                                    onChange={formik.handleChange}
-                                                />
+                                                <div className={styles.textAreaContainer}>
+                                                    <Textarea
+                                                        label={intl.formatMessage({ id: 'input.kommentar.label' })}
+                                                        name="kommentar"
+                                                        value={formik.values.kommentar ?? ''}
+                                                        error={formik.errors.kommentar}
+                                                        onChange={formik.handleChange}
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
+                                        )}
+                                    </div>
+                                    <Button className={styles.sendBeslutningKnapp}>
+                                        {intl.formatMessage({ id: 'knapp.tekst' })}
+                                        {RemoteData.isPending(sendtBeslutning) && <Loader />}
+                                    </Button>
+                                    {RemoteData.isFailure(sendtBeslutning) && (
+                                        <ApiErrorAlert error={sendtBeslutning.error} />
                                     )}
-                                </div>
-                                <Button className={styles.sendBeslutningKnapp}>
-                                    {intl.formatMessage({ id: 'knapp.tekst' })}
-                                    {RemoteData.isPending(sendtBeslutning) && <Loader />}
-                                </Button>
-                                {RemoteData.isFailure(sendtBeslutning) && (
-                                    <ApiErrorAlert error={sendtBeslutning.error} />
-                                )}
+                                </Panel>
                             </form>
                         </div>
                     )

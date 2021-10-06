@@ -1,20 +1,22 @@
 import { Delete } from '@navikt/ds-icons';
-import { Button, Panel } from '@navikt/ds-react';
+import { Button, Checkbox, Fieldset, Label, Panel, Select, TextField } from '@navikt/ds-react';
+import classNames from 'classnames';
 import { lastDayOfMonth } from 'date-fns';
 import * as DateFns from 'date-fns';
 import { FormikErrors } from 'formik';
-import { SkjemaGruppe, Select, Input, Checkbox, InputProps, Label } from 'nav-frontend-skjema';
-import { Normaltekst, Feilmelding } from 'nav-frontend-typografi';
+import { Normaltekst } from 'nav-frontend-typografi';
 import React from 'react';
-import DatePicker from 'react-datepicker';
 import { IntlShape } from 'react-intl';
 
 import InntektFraUtland from '~components/beregningOgSimulering/beregning/InntektFraUtland';
+import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsPositiveNumber } from '~lib/validering';
 import { Fradrag, Fradragstype } from '~types/Fradrag';
 import { toStringDateOrNull } from '~utils/date/dateUtils';
 import { getFradragstypeString } from '~utils/søknadsbehandling/fradrag/fradragUtils';
+
+import DatePicker from '../../datePicker/DatePicker';
 
 import { UtenlandskInntektFormData } from './beregningstegTypes';
 import styles from './fradragInputs.module.less';
@@ -45,59 +47,58 @@ const InputWithFollowText = (props: {
     inputName: string;
     inputTekst: string;
     value: string;
-    bredde?: InputProps['bredde'];
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     feil: string | undefined;
     disabled?: boolean;
 }) => (
-    <div>
-        <h3>{props.tittel}</h3>
+    <div className={classNames('navds-form-field')}>
+        <Label as="label" htmlFor={props.inputName} spacing>
+            {props.tittel}
+        </Label>
         <span className={styles.inputOgtekstContainer}>
-            <Input
+            <TextField
                 className={styles.inputWithFollowTextInputfelt}
                 id={props.inputName}
+                label={props.tittel}
                 name={props.inputName}
                 value={props.value}
-                bredde={props.bredde}
                 onChange={props.onChange}
                 disabled={props.disabled}
+                error={!!props.feil}
+                hideLabel
             />
             <Normaltekst>{props.inputTekst}</Normaltekst>
         </span>
-        {props.feil && <Feilmelding>{props.feil}</Feilmelding>}
+        {props.feil && <SkjemaelementFeilmelding>{props.feil}</SkjemaelementFeilmelding>}
     </div>
 );
 
 const FradragsSelection = (props: {
     label: string;
     id: string;
-    className: string;
     name: string;
     value: string;
     onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
     feil: string | undefined;
     intl: IntlShape;
 }) => (
-    <div>
-        <h3>{props.label}</h3>
-        <Select
-            onChange={props.onChange}
-            id={props.id}
-            name={props.name}
-            value={props.value}
-            className={props.className}
-        >
-            <option value="">{props.intl.formatMessage({ id: 'fradrag.type.emptyLabel' })}</option>
-            {velgbareFradragstyper
-                .filter((type) => type !== Fradragstype.ForventetInntekt)
-                .map((f) => (
-                    <option value={f} key={f}>
-                        {getFradragstypeString(f, props.intl)}
-                    </option>
-                ))}
-        </Select>
-        {props.feil && <Feilmelding>{props.feil}</Feilmelding>}
-    </div>
+    <Select
+        onChange={props.onChange}
+        id={props.id}
+        name={props.name}
+        value={props.value}
+        label={props.label}
+        error={props.feil}
+    >
+        <option value="">{props.intl.formatMessage({ id: 'fradrag.type.emptyLabel' })}</option>
+        {velgbareFradragstyper
+            .filter((type) => type !== Fradragstype.ForventetInntekt)
+            .map((f) => (
+                <option value={f} key={f}>
+                    {getFradragstypeString(f, props.intl)}
+                </option>
+            ))}
+    </Select>
 );
 
 const utenlandskInntekt = yup
@@ -185,58 +186,55 @@ export const FradragInputs = (props: {
 
                 return (
                     <Panel key={index} border className={styles.fradragItemContainer}>
-                        <SkjemaGruppe>
+                        <Fieldset legend="Fradrag" hideLegend={false}>
                             <div className={styles.fradragTypeOgBelopContainer}>
-                                <FradragsSelection
-                                    label={props.intl.formatMessage({ id: 'display.fradrag.type' })}
-                                    onChange={props.onChange}
-                                    id={typeId}
-                                    name={typeId}
-                                    value={fradrag.type?.toString() ?? ''}
-                                    feil={
-                                        errorForLinje && typeof errorForLinje === 'object'
-                                            ? errorForLinje.type
-                                            : undefined
-                                    }
-                                    className={styles.fradragtype}
-                                    intl={props.intl}
-                                />
-                                <InputWithFollowText
-                                    tittel={props.intl.formatMessage({ id: 'display.fradrag.beløp' })}
-                                    inputName={belopId}
-                                    value={fradrag.beløp?.toString() ?? ''}
-                                    bredde={'S'}
-                                    inputTekst="NOK"
-                                    onChange={props.onChange}
-                                    feil={
-                                        errorForLinje && typeof errorForLinje === 'object'
-                                            ? errorForLinje.beløp
-                                            : undefined
-                                    }
-                                    disabled={fradrag.fraUtland}
-                                />
-                                <Button
-                                    variant="secondary"
-                                    className={styles.søppelbøtteContainer}
-                                    type="button"
-                                    onClick={() => props.onFjernClick(index)}
-                                >
-                                    <Delete />
-                                </Button>
+                                <div className={styles.fradragTypeOgBelopInputs}>
+                                    <FradragsSelection
+                                        label={props.intl.formatMessage({ id: 'display.fradrag.type' })}
+                                        onChange={props.onChange}
+                                        id={typeId}
+                                        name={typeId}
+                                        value={fradrag.type?.toString() ?? ''}
+                                        feil={
+                                            errorForLinje && typeof errorForLinje === 'object'
+                                                ? errorForLinje.type
+                                                : undefined
+                                        }
+                                        intl={props.intl}
+                                    />
+                                    <InputWithFollowText
+                                        tittel={props.intl.formatMessage({ id: 'display.fradrag.beløp' })}
+                                        inputName={belopId}
+                                        value={fradrag.beløp?.toString() ?? ''}
+                                        inputTekst="NOK"
+                                        onChange={props.onChange}
+                                        feil={
+                                            errorForLinje && typeof errorForLinje === 'object'
+                                                ? errorForLinje.beløp
+                                                : undefined
+                                        }
+                                        disabled={fradrag.fraUtland}
+                                    />
+                                </div>
+                                <div className={styles.søppelbøtteContainer}>
+                                    <Button variant="secondary" type="button" onClick={() => props.onFjernClick(index)}>
+                                        <Delete />
+                                    </Button>
+                                </div>
                             </div>
                             <div className={styles.checkboxContainer}>
                                 {(props.harEps || fradrag.tilhørerEPS) && (
                                     <Checkbox
-                                        label={props.intl.formatMessage({ id: 'display.checkbox.tilhørerEPS' })}
                                         name={tilhørerEPSId}
                                         className={styles.checkbox}
                                         checked={fradrag.tilhørerEPS}
                                         onChange={props.onChange}
                                         disabled={!props.harEps}
-                                    />
+                                    >
+                                        {props.intl.formatMessage({ id: 'display.checkbox.tilhørerEPS' })}
+                                    </Checkbox>
                                 )}
                                 <Checkbox
-                                    label={props.intl.formatMessage({ id: 'display.checkbox.fraUtland' })}
                                     name={fraUtlandId}
                                     checked={fradrag.fraUtland}
                                     className={styles.checkbox}
@@ -253,9 +251,10 @@ export const FradragInputs = (props: {
                                         }
                                         props.onChange(e);
                                     }}
-                                />
+                                >
+                                    {props.intl.formatMessage({ id: 'display.checkbox.fraUtland' })}
+                                </Checkbox>
                                 <Checkbox
-                                    label={props.intl.formatMessage({ id: 'fradrag.delerAvPeriode' })}
                                     name={periode}
                                     checked={visDelerAvPeriode}
                                     onChange={(e) =>
@@ -270,7 +269,9 @@ export const FradragInputs = (props: {
                                         })
                                     }
                                     className={styles.checkbox}
-                                />
+                                >
+                                    {props.intl.formatMessage({ id: 'fradrag.delerAvPeriode' })}
+                                </Checkbox>
                             </div>
                             {fradrag.fraUtland && (
                                 <InntektFraUtland
@@ -299,13 +300,10 @@ export const FradragInputs = (props: {
                             {visDelerAvPeriode && (
                                 <div className={styles.periode}>
                                     <div className={styles.fraOgMed}>
-                                        <Label htmlFor={periode} className={styles.label}>
-                                            {props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.fom' })}
-                                        </Label>
-
                                         <DatePicker
                                             id={`${periode}.fraOgMed`}
-                                            selected={
+                                            label={props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.fom' })}
+                                            value={
                                                 fradrag.periode?.fraOgMed ? new Date(fradrag.periode.fraOgMed) : null
                                             }
                                             onChange={(e: Date) => {
@@ -322,18 +320,22 @@ export const FradragInputs = (props: {
                                             minDate={props.beregningsDato?.fom}
                                             maxDate={props.beregningsDato?.tom}
                                             autoComplete="off"
+                                            feil={
+                                                typeof errorForLinje === 'object' && errorForLinje?.periode
+                                                    ? // formik sin typing er ikke god på nøstede feil
+                                                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                      (errorForLinje.periode as any)?.fraOgMed
+                                                    : undefined
+                                            }
                                         />
                                     </div>
 
                                     {props.beregningsDato && (
                                         <div>
-                                            <Label htmlFor={periode} className={styles.label}>
-                                                {props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.tom' })}
-                                            </Label>
-
                                             <DatePicker
                                                 id={`${periode}.tilOgMed`}
-                                                selected={
+                                                label={props.intl.formatMessage({ id: 'fradrag.delerAvPeriode.tom' })}
+                                                value={
                                                     fradrag.periode?.tilOgMed
                                                         ? new Date(fradrag.periode.tilOgMed)
                                                         : null
@@ -352,12 +354,19 @@ export const FradragInputs = (props: {
                                                 minDate={fradrag.periode?.fraOgMed}
                                                 maxDate={props.beregningsDato.tom}
                                                 autoComplete="off"
+                                                feil={
+                                                    typeof errorForLinje === 'object' && errorForLinje?.periode
+                                                        ? // formik sin typing er ikke god på nøstede feil
+                                                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                                          (errorForLinje.periode as any)?.tilOgMed
+                                                        : undefined
+                                                }
                                             />
                                         </div>
                                     )}
                                 </div>
                             )}
-                        </SkjemaGruppe>
+                        </Fieldset>
                     </Panel>
                 );
             })}

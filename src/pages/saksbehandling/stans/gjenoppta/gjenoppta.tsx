@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Loader } from '@navikt/ds-react';
-import { Select, Textarea } from 'nav-frontend-skjema';
-import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
+import { Button, Loader, Select, Textarea } from '@navikt/ds-react';
+import { Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Route, Switch, useHistory } from 'react-router';
@@ -110,11 +109,10 @@ const Gjenoppta = (props: Props) => {
                         name="årsak"
                         render={({ field, fieldState }) => (
                             <Select
-                                feil={fieldState.error && <Feilmelding> {fieldState.error.message} </Feilmelding>}
+                                error={fieldState.error?.message}
                                 value={field.value ?? undefined}
                                 onChange={field.onChange}
                                 label={intl.formatMessage({ id: 'gjenoppta.årsak.tittel' })}
-                                bredde="l"
                             >
                                 <option>{intl.formatMessage({ id: 'gjenoppta.årsak.label' })}</option>
                                 <option value={OpprettetRevurderingGrunn.MOTTATT_KONTROLLERKLÆRING}>
@@ -128,21 +126,19 @@ const Gjenoppta = (props: Props) => {
                         )}
                     />
 
-                    <div className={styles.begrunnelse}>
-                        <Controller
-                            control={form.control}
-                            name="begrunnelse"
-                            render={({ field, fieldState }) => (
-                                <Textarea
-                                    label="Begrunnelse"
-                                    name="begrunnelse"
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    feil={fieldState.error?.message}
-                                />
-                            )}
-                        />
-                    </div>
+                    <Controller
+                        control={form.control}
+                        name="begrunnelse"
+                        render={({ field, fieldState }) => (
+                            <Textarea
+                                label="Begrunnelse"
+                                name="begrunnelse"
+                                value={field.value}
+                                onChange={field.onChange}
+                                error={fieldState.error?.message}
+                            />
+                        )}
+                    />
                     {RemoteData.isFailure(status) && (
                         <div className={styles.error}>
                             <ApiErrorAlert error={status.error} />

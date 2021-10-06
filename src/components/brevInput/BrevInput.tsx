@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader } from '@navikt/ds-react';
-import { Textarea } from 'nav-frontend-skjema';
+import { Alert, Button, Loader, Textarea } from '@navikt/ds-react';
 import React, { useState } from 'react';
 import { FieldError } from 'react-hook-form';
 import { IntlShape } from 'react-intl';
@@ -47,7 +46,7 @@ export function BrevInput(props: BrevInputProps) {
                     placeholder={props.placeholder}
                     value={props.tekst ?? ''}
                     onChange={props.onChange}
-                    feil={props.feil?.message}
+                    error={props.feil?.message}
                 />
             </div>
             <div className={styles.seBrevContainer}>

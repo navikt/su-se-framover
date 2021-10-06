@@ -1,6 +1,5 @@
-import { Button } from '@navikt/ds-react';
+import { Button, TextField } from '@navikt/ds-react';
 import { FormikErrors } from 'formik';
-import { Input } from 'nav-frontend-skjema';
 import * as React from 'react';
 
 import { useI18n } from '~lib/i18n';
@@ -40,7 +39,7 @@ const TrygdeytelserInputFelter = (props: {
                 return (
                     <li className={styles.trygdeytelserContainer} key={idx}>
                         <div className={styles.trippleFelter}>
-                            <Input
+                            <TextField
                                 id={beløpId}
                                 name={beløpId}
                                 label={formatMessage('trygdeytelserIUtlandet.beløp')}
@@ -54,12 +53,12 @@ const TrygdeytelserInputFelter = (props: {
                                     });
                                 }}
                                 autoComplete="off"
-                                feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.beløp}
+                                error={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.beløp}
                                 // Dette elementet vises ikke ved sidelast
                                 // eslint-disable-next-line jsx-a11y/no-autofocus
                                 autoFocus
                             />
-                            <Input
+                            <TextField
                                 id={valutaId}
                                 name={valutaId}
                                 label={formatMessage('trygdeytelserIUtlandet.valuta')}
@@ -73,9 +72,9 @@ const TrygdeytelserInputFelter = (props: {
                                     });
                                 }}
                                 autoComplete="on"
-                                feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.valuta}
+                                error={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.valuta}
                             />
-                            <Input
+                            <TextField
                                 id={typeId}
                                 name={typeId}
                                 label={formatMessage('trygdeytelserIUtlandet.ytelse')}
@@ -89,7 +88,7 @@ const TrygdeytelserInputFelter = (props: {
                                     });
                                 }}
                                 autoComplete="off"
-                                feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.type}
+                                error={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.type}
                             />
                         </div>
                         {props.arr.length > 1 && (

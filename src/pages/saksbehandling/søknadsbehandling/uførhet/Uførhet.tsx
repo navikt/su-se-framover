@@ -1,14 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { RadioGroup, Radio, Textarea } from '@navikt/ds-react';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
-import { Radio, RadioGruppe, Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { UførhetFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/UførhetFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
@@ -176,33 +177,24 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                 control={form.control}
                                 name="status"
                                 render={({ field, fieldState }) => (
-                                    <RadioGruppe
+                                    <RadioGroup
                                         className={styles.radioGruppe}
                                         legend={formatMessage('radio.uførhet.legend')}
-                                        feil={fieldState.error?.message}
+                                        error={fieldState.error?.message}
                                         onBlur={field.onBlur}
+                                        onChange={(val) => field.onChange(val)}
+                                        value={field.value ?? undefined}
                                     >
-                                        <Radio
-                                            id={field.name}
-                                            label={formatMessage('radio.label.ja')}
-                                            name={field.name}
-                                            onChange={() => field.onChange(UføreResultat.VilkårOppfylt)}
-                                            defaultChecked={field.value === UføreResultat.VilkårOppfylt}
-                                            radioRef={field.ref}
-                                        />
-                                        <Radio
-                                            label={formatMessage('radio.label.nei')}
-                                            name={field.name}
-                                            onChange={() => field.onChange(UføreResultat.VilkårIkkeOppfylt)}
-                                            defaultChecked={field.value === UføreResultat.VilkårIkkeOppfylt}
-                                        />
-                                        <Radio
-                                            label={formatMessage('radio.label.uføresakTilBehandling')}
-                                            name={field.name}
-                                            onChange={() => field.onChange(UføreResultat.HarUføresakTilBehandling)}
-                                            defaultChecked={field.value === UføreResultat.HarUføresakTilBehandling}
-                                        />
-                                    </RadioGruppe>
+                                        <Radio id={field.name} value={UføreResultat.VilkårOppfylt} ref={field.ref}>
+                                            {formatMessage('radio.label.ja')}
+                                        </Radio>
+                                        <Radio value={UføreResultat.VilkårIkkeOppfylt}>
+                                            {formatMessage('radio.label.nei')}
+                                        </Radio>
+                                        <Radio value={UføreResultat.HarUføresakTilBehandling}>
+                                            {formatMessage('radio.label.uføresakTilBehandling')}
+                                        </Radio>
+                                    </RadioGroup>
                                 )}
                             />
                             {watchStatus === UføreResultat.VilkårOppfylt && (
@@ -215,7 +207,6 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                                 tittel={formatMessage('input.label.uføregrad')}
                                                 inputName="uføregrad"
                                                 inputTekst="%"
-                                                bredde="XS"
                                                 feil={fieldState.error?.message}
                                                 {...field}
                                                 value={field.value ?? ''}
@@ -230,7 +221,6 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                                 tittel={formatMessage('input.label.forventetInntekt')}
                                                 inputName="forventetInntekt"
                                                 inputTekst=" NOK"
-                                                bredde="L"
                                                 feil={fieldState.error?.message}
                                                 {...field}
                                                 value={field.value ?? ''}
@@ -247,7 +237,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                     render={({ field, fieldState }) => (
                                         <Textarea
                                             label={formatMessage('input.label.begrunnelse')}
-                                            feil={fieldState.error?.message}
+                                            error={fieldState.error?.message}
                                             {...field}
                                             value={field.value ?? ''}
                                         />
@@ -270,7 +260,7 @@ const Uførhet = (props: VilkårsvurderingBaseProps) => {
                                 tittel={formatMessage('feiloppsummering.title')}
                                 hidden={!isSubmitted || isValid}
                                 feil={hookFormErrorsTilFeiloppsummering(errors)}
-                                innerRef={feiloppsummeringRef}
+                                ref={feiloppsummeringRef}
                             />
                             <Vurderingknapper
                                 onTilbakeClick={() => {

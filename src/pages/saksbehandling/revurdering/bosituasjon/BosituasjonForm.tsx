@@ -1,7 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
-import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
+import classNames from 'classnames';
 import { Ingress, Element, Normaltekst } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
@@ -10,6 +11,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { FnrInput } from '~components/FnrInput/FnrInput';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
@@ -161,23 +163,18 @@ const EPSForm = (props: {
                     control={props.control}
                     name="erEPSUførFlyktning"
                     render={({ field, fieldState }) => (
-                        <RadioGruppe
+                        <RadioGroup
                             legend={props.intl.formatMessage({ id: 'form.erEPSUførFlyktning' })}
-                            feil={fieldState.error?.message}
+                            error={fieldState.error?.message}
+                            name={field.name}
+                            value={field.value?.toString()}
+                            onChange={(val) => field.onChange(val === true.toString())}
                         >
-                            <Radio
-                                label="Ja"
-                                name="erEPSUførFlyktning"
-                                checked={field.value === true}
-                                onChange={() => field.onChange(true)}
-                            />
-                            <Radio
-                                label="Nei"
-                                name="erEPSUførFlyktning"
-                                checked={field.value === false}
-                                onChange={() => field.onChange(false)}
-                            />
-                        </RadioGruppe>
+                            <Radio id={field.name} ref={field.ref} value={true.toString()}>
+                                Ja
+                            </Radio>
+                            <Radio value={false.toString()}>Nei</Radio>
+                        </RadioGroup>
                     )}
                 />
             )}
@@ -191,23 +188,18 @@ const DelerSøkerBoligForm = (props: { control: Control<BosituasjonFormData>; in
             control={props.control}
             name="delerSøkerBolig"
             render={({ field, fieldState }) => (
-                <RadioGruppe
+                <RadioGroup
                     legend={props.intl.formatMessage({ id: 'form.delerSøkerBolig' })}
-                    feil={fieldState.error?.message}
+                    error={fieldState.error?.message}
+                    name={field.name}
+                    value={field.value?.toString()}
+                    onChange={(val) => field.onChange(val === true.toString())}
                 >
-                    <Radio
-                        label="Ja"
-                        name="delerSøkerBolig"
-                        checked={field.value === true}
-                        onChange={() => field.onChange(true)}
-                    />
-                    <Radio
-                        label="Nei"
-                        name="delerSøkerBolig"
-                        checked={field.value === false}
-                        onChange={() => field.onChange(false)}
-                    />
-                </RadioGruppe>
+                    <Radio id={field.name} ref={field.ref} value={true.toString()}>
+                        Ja
+                    </Radio>
+                    <Radio value={false.toString()}>Nei</Radio>
+                </RadioGroup>
             )}
         />
     );
@@ -382,77 +374,60 @@ const BosituasjonForm = (props: {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <form className={sharedStyles.revurderingContainer} onSubmit={form.handleSubmit(handleSubmit)}>
-                        <div>
-                            <div className={styles.bosituasjonInputsContainer}>
-                                <Controller
-                                    control={form.control}
-                                    name="harEPS"
-                                    render={({ field, fieldState }) => (
-                                        <RadioGruppe
-                                            legend={intl.formatMessage({ id: 'form.harSøkerEPS' })}
-                                            feil={fieldState.error?.message}
-                                        >
-                                            <Radio
-                                                label="Ja"
-                                                name="harEPS"
-                                                checked={field.value === true}
-                                                onChange={() => {
-                                                    field.onChange(true);
-                                                }}
-                                            />
-                                            <Radio
-                                                label="Nei"
-                                                name="harEPS"
-                                                checked={field.value === false}
-                                                onChange={() => {
-                                                    field.onChange(false);
-                                                }}
-                                            />
-                                        </RadioGruppe>
-                                    )}
-                                />
-                                {harEPS && (
-                                    <EPSForm
-                                        control={form.control}
-                                        setEpsAlder={setEpsAlder}
-                                        epsAlder={epsAlder}
-                                        intl={intl}
-                                    />
-                                )}
-                                {harEPS === false && <DelerSøkerBoligForm control={form.control} intl={intl} />}
-                            </div>
-                            <div className={styles.textAreaContainer}>
-                                <Controller
-                                    control={form.control}
-                                    name="begrunnelse"
-                                    render={({ field, fieldState }) => (
-                                        <Textarea
-                                            label={intl.formatMessage({ id: 'form.begrunnelse' })}
-                                            name="begrunnelse"
-                                            value={field.value ?? ''}
-                                            onChange={field.onChange}
-                                            feil={fieldState.error}
-                                        />
-                                    )}
-                                />
-                            </div>
-                            <Feiloppsummering
-                                tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
-                                className={styles.feiloppsummering}
-                                feil={hookFormErrorsTilFeiloppsummering(errors)}
-                                hidden={Object.values(errors).length <= 0}
-                            />
-                            {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
-                            {RemoteData.isSuccess(status) && (
-                                <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
+                    <form
+                        className={classNames(sharedStyles.revurderingContainer, styles.container)}
+                        onSubmit={form.handleSubmit(handleSubmit)}
+                    >
+                        <Controller
+                            control={form.control}
+                            name="harEPS"
+                            render={({ field, fieldState }) => (
+                                <RadioGroup
+                                    legend={intl.formatMessage({ id: 'form.harSøkerEPS' })}
+                                    error={fieldState.error?.message}
+                                    name={field.name}
+                                    value={field.value?.toString()}
+                                    onChange={(val) => field.onChange(val === true.toString())}
+                                >
+                                    <Radio id={field.name} ref={field.ref} value={true.toString()}>
+                                        Ja
+                                    </Radio>
+                                    <Radio value={false.toString()}>Nei</Radio>
+                                </RadioGroup>
                             )}
-                            <RevurderingBunnknapper
-                                onNesteClick="submit"
-                                tilbakeUrl={props.forrigeUrl}
-                                onNesteClickSpinner={RemoteData.isPending(status)}
-                            />
-                        </div>
+                        />
+                        {harEPS && (
+                            <EPSForm control={form.control} setEpsAlder={setEpsAlder} epsAlder={epsAlder} intl={intl} />
+                        )}
+                        {harEPS === false && <DelerSøkerBoligForm control={form.control} intl={intl} />}
+                        <Controller
+                            control={form.control}
+                            name="begrunnelse"
+                            render={({ field, fieldState }) => (
+                                <Textarea
+                                    label={intl.formatMessage({ id: 'form.begrunnelse' })}
+                                    name="begrunnelse"
+                                    value={field.value ?? ''}
+                                    onChange={field.onChange}
+                                    error={fieldState.error}
+                                />
+                            )}
+                        />
+                        <Feiloppsummering
+                            tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
+                            className={styles.feiloppsummering}
+                            feil={hookFormErrorsTilFeiloppsummering(errors)}
+                            hidden={Object.values(errors).length <= 0}
+                        />
+                        {RemoteData.isFailure(status) && <ApiErrorAlert error={status.error} />}
+                        {RemoteData.isSuccess(status) && (
+                            <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
+                        )}
+                        <RevurderingBunnknapper
+                            onNesteClick="submit"
+                            tilbakeUrl={props.forrigeUrl}
+                            onNesteClickSpinner={RemoteData.isPending(status)}
+                        />
                     </form>
                 ),
                 right: (

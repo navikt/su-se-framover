@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Checkbox, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
+import { Checkbox, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -61,44 +61,6 @@ const ForhåndsvarselbrevInput = (
     );
 };
 
-const BeslutningEtterForhåndsvarselRadios = (props: {
-    feil?: string;
-    onChange(beslutning: BeslutningEtterForhåndsvarsling): void;
-}) => {
-    const { intl } = useI18n({ messages });
-    const name = 'beslutningEtterForhåndsvarsel';
-    return (
-        <RadioGruppe
-            legend={intl.formatMessage({ id: 'etterForhåndsvarsel.legend.resultatEtterForhåndsvarsel' })}
-            feil={props.feil}
-            className={styles.resultatEtterForhåndsvarselContainer}
-        >
-            <Radio
-                label={intl.formatMessage({
-                    id: 'etterForhåndsvarsel.radio.sammeOpplysninger',
-                })}
-                name={name}
-                onChange={() => props.onChange(BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger)}
-            />
-            <Radio
-                label={intl.formatMessage({
-                    id: 'etterForhåndsvarsel.radio.andreOpplysninger',
-                })}
-                name={name}
-                onChange={() => props.onChange(BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger)}
-            />
-            <Radio
-                label={intl.formatMessage({
-                    id: 'etterForhåndsvarsel.radio.avsluttesUtenEndring',
-                })}
-                name={name}
-                onChange={() => props.onChange(BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer)}
-                disabled={true}
-            />
-        </RadioGruppe>
-    );
-};
-
 export const ResultatEtterForhåndsvarselform = (props: {
     sakId: string;
     revurderingId: string;
@@ -154,7 +116,34 @@ export const ResultatEtterForhåndsvarselform = (props: {
                 control={form.control}
                 name="resultatEtterForhåndsvarsel"
                 render={({ field, fieldState }) => (
-                    <BeslutningEtterForhåndsvarselRadios feil={fieldState.error?.message} onChange={field.onChange} />
+                    <RadioGroup
+                        legend={intl.formatMessage({ id: 'etterForhåndsvarsel.legend.resultatEtterForhåndsvarsel' })}
+                        error={fieldState.error?.message}
+                        name={field.name}
+                        className={styles.resultatEtterForhåndsvarselContainer}
+                        value={field.value ?? undefined}
+                        onChange={(val) => field.onChange(val as BeslutningEtterForhåndsvarsling)}
+                    >
+                        <Radio
+                            id={field.name}
+                            ref={field.ref}
+                            value={BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger}
+                        >
+                            {intl.formatMessage({
+                                id: 'etterForhåndsvarsel.radio.sammeOpplysninger',
+                            })}
+                        </Radio>
+                        <Radio value={BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger}>
+                            {intl.formatMessage({
+                                id: 'etterForhåndsvarsel.radio.andreOpplysninger',
+                            })}
+                        </Radio>
+                        <Radio value={BeslutningEtterForhåndsvarsling.AvsluttUtenEndringer} disabled={true}>
+                            {intl.formatMessage({
+                                id: 'etterForhåndsvarsel.radio.avsluttesUtenEndring',
+                            })}
+                        </Radio>
+                    </RadioGroup>
                 )}
             />
             <Controller
@@ -246,21 +235,20 @@ export const VelgForhåndsvarselForm = (props: {
                 control={form.control}
                 name="revurderingshandling"
                 render={({ field, fieldState }) => (
-                    <RadioGruppe
+                    <RadioGroup
                         legend={intl.formatMessage({ id: 'velgForhåndsvarsel.handling.legend' })}
-                        feil={fieldState.error?.message}
+                        error={fieldState.error?.message}
+                        name={field.name}
+                        onChange={(val) => field.onChange(val)}
+                        value={field.value ?? undefined}
                     >
-                        <Radio
-                            label={intl.formatMessage({ id: 'ja' })}
-                            name="revurderingshandling"
-                            onChange={() => field.onChange(Revurderingshandling.Forhåndsvarsle)}
-                        />
-                        <Radio
-                            label={intl.formatMessage({ id: 'nei' })}
-                            name="revurderingshandling"
-                            onChange={() => field.onChange(Revurderingshandling.SendTilAttestering)}
-                        />
-                    </RadioGruppe>
+                        <Radio id={field.name} ref={field.ref} value={Revurderingshandling.Forhåndsvarsle}>
+                            {intl.formatMessage({ id: 'ja' })}
+                        </Radio>
+                        <Radio value={Revurderingshandling.SendTilAttestering}>
+                            {intl.formatMessage({ id: 'nei' })}
+                        </Radio>
+                    </RadioGroup>
                 )}
             />
             {revurderingshandling !== null && (
@@ -345,12 +333,13 @@ export const SendTilAttesteringForm = (props: {
                     name="skalFøreTilBrevutsending"
                     render={({ field }) => (
                         <Checkbox
-                            label={intl.formatMessage({ id: 'sendTilAttestering.skalFøreTilBrev' })}
                             name="skalFøreTilBrevutsending"
                             className={styles.skalFøreTilBrevutsendingCheckbox}
                             checked={field.value}
                             onChange={field.onChange}
-                        />
+                        >
+                            {intl.formatMessage({ id: 'sendTilAttestering.skalFøreTilBrev' })}
+                        </Checkbox>
                     )}
                 />
             )}

@@ -1,15 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/lib/string';
-import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { FlyktningFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FlyktningFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
@@ -174,32 +174,36 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                             control={form.control}
                             name="status"
                             render={({ field, fieldState }) => (
-                                <RadioGruppe
+                                <RadioGroup
                                     legend={formatMessage('radio.flyktning.legend')}
-                                    feil={fieldState.error?.message}
+                                    error={fieldState.error?.message}
                                     onBlur={field.onBlur}
+                                    onChange={field.onChange}
+                                    value={field.value ?? undefined}
                                 >
                                     <Radio
                                         id={field.name}
-                                        label={formatMessage('radio.label.ja')}
                                         name={field.name}
-                                        onChange={() => field.onChange(FlyktningStatus.VilkårOppfylt)}
-                                        defaultChecked={field.value === FlyktningStatus.VilkårOppfylt}
-                                        radioRef={field.ref}
-                                    />
+                                        value={FlyktningStatus.VilkårOppfylt}
+                                        ref={field.ref}
+                                    >
+                                        {formatMessage('radio.label.ja')}
+                                    </Radio>
                                     <Radio
-                                        label={formatMessage('radio.label.nei')}
                                         name={field.name}
                                         onChange={() => field.onChange(FlyktningStatus.VilkårIkkeOppfylt)}
-                                        defaultChecked={field.value === FlyktningStatus.VilkårIkkeOppfylt}
-                                    />
+                                        value={FlyktningStatus.VilkårIkkeOppfylt}
+                                    >
+                                        {formatMessage('radio.label.nei')}
+                                    </Radio>
                                     <Radio
-                                        label={formatMessage('radio.label.uavklart')}
                                         name={field.name}
                                         onChange={() => field.onChange(FlyktningStatus.Uavklart)}
-                                        defaultChecked={field.value === FlyktningStatus.Uavklart}
-                                    />
-                                </RadioGruppe>
+                                        value={FlyktningStatus.Uavklart}
+                                    >
+                                        {formatMessage('radio.label.uavklart')}
+                                    </Radio>
+                                </RadioGroup>
                             )}
                         />
                         <div className={sharedStyles.textareaContainer}>
@@ -209,7 +213,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                                 render={({ field, fieldState }) => (
                                     <Textarea
                                         label={formatMessage('input.label.begrunnelse')}
-                                        feil={fieldState.error?.message}
+                                        error={fieldState.error?.message}
                                         {...field}
                                         value={field.value ?? ''}
                                     />
@@ -237,7 +241,7 @@ const Flyktning = (props: VilkårsvurderingBaseProps) => {
                             tittel={formatMessage('feiloppsummering.title')}
                             hidden={!isSubmitted || isValid}
                             feil={hookFormErrorsTilFeiloppsummering(errors)}
-                            innerRef={feiloppsummeringRef}
+                            ref={feiloppsummeringRef}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {

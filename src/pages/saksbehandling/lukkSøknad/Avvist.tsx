@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Loader } from '@navikt/ds-react';
+import { Button, Loader, RadioGroup, Radio, Textarea } from '@navikt/ds-react';
 import { FormikErrors } from 'formik';
-import { RadioPanelGruppe, Textarea } from 'nav-frontend-skjema';
 import React, { useCallback } from 'react';
 
 import { ApiError } from '~api/apiClient';
@@ -81,29 +80,24 @@ const Avvist = (props: AvvistProps) => {
             </div>
             {props.avvistFormData.sendBrevForAvvist && (
                 <div className={styles.radioContainer}>
-                    <RadioPanelGruppe
-                        name={'typeBrev'}
+                    <RadioGroup
+                        name="typeBrev"
                         legend={intl.formatMessage({ id: 'display.avvist.typeBrev' })}
-                        radios={[
-                            {
-                                label: intl.formatMessage({ id: 'display.avvist.brevType.vedtaksbrev' }),
-                                value: AvvistBrevtyper.Vedtaksbrev,
-                                id: AvvistBrevtyper.Vedtaksbrev,
-                            },
-                            {
-                                label: intl.formatMessage({ id: 'display.avvist.brevType.fritekstbrev' }),
-                                value: AvvistBrevtyper.Fritekstsbrev,
-                                id: AvvistBrevtyper.Fritekstsbrev,
-                            },
-                        ]}
-                        checked={props.avvistFormData.typeBrev ?? undefined}
-                        onChange={(e) => {
+                        value={props.avvistFormData.typeBrev?.toString()}
+                        onChange={(val) => {
                             props.onValueChange({
                                 ...props.avvistFormData,
-                                typeBrev: (e as React.ChangeEvent<HTMLInputElement>).target.value as AvvistBrevtyper,
+                                typeBrev: val as AvvistBrevtyper,
                             });
                         }}
-                    />
+                    >
+                        <Radio id="typeBrev" value={AvvistBrevtyper.Vedtaksbrev}>
+                            {intl.formatMessage({ id: 'display.avvist.brevType.vedtaksbrev' })}
+                        </Radio>
+                        <Radio value={AvvistBrevtyper.Fritekstsbrev}>
+                            {intl.formatMessage({ id: 'display.avvist.brevType.fritekstbrev' })}
+                        </Radio>
+                    </RadioGroup>
                 </div>
             )}
             {props.avvistFormData.typeBrev && (
@@ -112,7 +106,7 @@ const Avvist = (props: AvvistProps) => {
                         label={intl.formatMessage({ id: 'display.avvist.fritekst' })}
                         name="fritekst"
                         value={props.avvistFormData.fritekst ?? ''}
-                        feil={props.feilmeldinger.fritekst}
+                        error={props.feilmeldinger.fritekst}
                         onChange={(e) => props.onValueChange({ ...props.avvistFormData, fritekst: e.target.value })}
                     />
                 </div>
