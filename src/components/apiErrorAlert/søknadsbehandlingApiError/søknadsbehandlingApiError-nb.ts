@@ -3,7 +3,8 @@ export default {
     'generell.finner.ikke.utbetaling': 'Finner ikke utbetaling',
     'generell.attestant.samme.som.saksbehandler': 'Attestant er samme som saksbehandler',
     'generell.mangler.begrunnelse': 'Mangler begrunnelse',
-    'generell.har.allerede.en.åpen.søknadsbehandling': 'Har allerede en åpen søknadsbehandling',
+    'generell.har.allerede.en.åpen.søknadsbehandling':
+        'Det finnes allerede en åpen søknadsbehandling. Du kan bare behandle en søknad av gangen',
     'generell.fant.ikke.søknad': 'Fant ikke søknad',
     'generell.søknad.mangler.oppgave': 'Søknad mangler oppgave',
     'generell.søknad.har.behandling': 'Søknad har allerede en behandling',
