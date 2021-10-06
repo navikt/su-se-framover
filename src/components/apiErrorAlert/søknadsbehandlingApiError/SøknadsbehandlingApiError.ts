@@ -20,6 +20,10 @@ enum Generell {
     ATTESTANT_SAMME_SOM_SAKSBEHANDLER = 'attestant_samme_som_saksbehandler',
     MANGLER_BEGRUNNELSE = 'mangler_begrunnelse',
     HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING = 'har_allerede_en_åpen_søknadsbehandling',
+    FANT_IKKE_SØKNAD = 'fant_ikke_søknad',
+    SØKNAD_MANGLER_OPPGAVE = 'søknad_mangler_oppgave',
+    SØKNAD_HAR_BEHANDLING = 'søknad_har_behandling',
+    SØKNAD_ER_LUKKET = 'søknad_er_lukket',
 }
 
 enum Støndadsperiode {
@@ -48,6 +52,10 @@ const søknadsbehandlingErrorCodeMessageIdMap: {
     [Generell.ATTESTANT_SAMME_SOM_SAKSBEHANDLER]: 'generell.attestant.samme.som.saksbehandler',
     [Generell.MANGLER_BEGRUNNELSE]: 'generell.mangler.begrunnelse',
     [Generell.HAR_ALLEREDE_EN_ÅPEN_SØKNADSBEHANDLING]: 'generell.har.allerede.en.åpen.søknadsbehandling',
+    [Generell.FANT_IKKE_SØKNAD]: 'generell.fant.ikke.søknad',
+    [Generell.SØKNAD_MANGLER_OPPGAVE]: 'generell.søknad.mangler.oppgave',
+    [Generell.SØKNAD_HAR_BEHANDLING]: 'generell.søknad.har.behandling',
+    [Generell.SØKNAD_ER_LUKKET]: 'generell.søknad.er.lukket',
 
     [Støndadsperiode.OPPDATERING_AV_STØNADSPERIODE]: 'stønadsperiode.oppdatering.av.periode',
     [Støndadsperiode.STØNADSPERIODE_FØR_2021]: 'stønadsperiode.periode.før.2021',

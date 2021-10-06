@@ -4,6 +4,10 @@ export default {
     'generell.attestant.samme.som.saksbehandler': 'Attestant er samme som saksbehandler',
     'generell.mangler.begrunnelse': 'Mangler begrunnelse',
     'generell.har.allerede.en.åpen.søknadsbehandling': 'Har allerede en åpen søknadsbehandling',
+    'generell.fant.ikke.søknad': 'Fant ikke søknad',
+    'generell.søknad.mangler.oppgave': 'Søknad mangler oppgave',
+    'generell.søknad.har.behandling': 'Søknad har allerede en behandling',
+    'generell.søknad.er.lukket': 'Søknad er lukket',
 
     'stønadsperiode.oppdatering.av.periode': 'Feil ved oppdatering av stønadsperiode',
     'stønadsperiode.periode.før.2021': 'Stønadsperiode kan ikke starte før Januar 2021',

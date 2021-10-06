@@ -13,13 +13,6 @@ export default {
     'display.behandling.fortsettBehandling': 'Fortsett behandling',
     'display.behandling.seOppsummering': 'Se oppsummering',
 
-    'display.behandling.klarteIkkeStarteBehandling': 'Klarte ikke å starte behandling',
-    'display.behandling.klarteIkkeStarteBehandling.fantIkkeSøknad': 'Fant ikke søknad',
-    'display.behandling.klarteIkkeStarteBehandling.manglerOppgave':
-        'Søknaden kan ikke behandles fordi det ikke finnes en tilknyttet oppgave i Gosys',
-    'display.behandling.klarteIkkeStarteBehandling.harEnBehandling': 'En behandling finnes allerede',
-    'display.behandling.klarteIkkeStarteBehandling.erLukket': 'Søknaden er lukket',
-
     'display.behandling.startBehandling': 'Start behandling',
 
     'display.godkjenteSøknader.tittel': 'Godkjente søknader',
