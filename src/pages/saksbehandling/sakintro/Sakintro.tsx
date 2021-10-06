@@ -4,11 +4,10 @@ import { isEmpty, last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
 import Ikon from 'nav-frontend-ikoner-assets';
 import { Element, Ingress, Innholdstittel, Normaltekst, Systemtittel, Undertittel } from 'nav-frontend-typografi';
-import React, { useState } from 'react';
+import React from 'react';
 import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
-import { ApiError } from '~api/apiClient';
 import { FeatureToggle } from '~api/featureToggleApi';
 import { ÅpentBrev } from '~assets/Illustrations';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
@@ -18,12 +17,11 @@ import { useUserContext } from '~context/userContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
-import { useNotificationFromLocation } from '~lib/hooks';
+import { useAsyncActionCreator, useNotificationFromLocation } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
-import { useAppDispatch } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { Revurdering, RevurderingsStatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
@@ -466,9 +464,8 @@ const IverksattInnvilgedeSøknader = (props: {
 };
 
 const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: string; intl: IntlShape }) => {
-    const [request, setRequest] = useState<RemoteData.RemoteData<ApiError, Behandling>>(RemoteData.initial);
-    const dispatch = useAppDispatch();
     const history = useHistory();
+    const [behandlingStatus, startBehandling] = useAsyncActionCreator(sakSlice.startBehandling);
 
     return (
         <div className={styles.startSøknadsbehandlingKnapperContainer}>
@@ -476,32 +473,27 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                 <Button
                     className={styles.startBehandlingKnapp}
                     size="small"
-                    onClick={async () => {
-                        setRequest(RemoteData.pending);
-                        const response = await dispatch(
-                            sakSlice.startBehandling({
+                    onClick={() => {
+                        startBehandling(
+                            {
                                 sakId: props.sakId,
                                 søknadId: props.søknadId,
-                            })
+                            },
+                            (response) => {
+                                history.push(
+                                    Routes.saksbehandlingVilkårsvurdering.createURL({
+                                        sakId: props.sakId,
+                                        behandlingId: response.id,
+                                    })
+                                );
+                            }
                         );
-
-                        if (response.payload && 'id' in response.payload) {
-                            return history.push(
-                                Routes.saksbehandlingVilkårsvurdering.createURL({
-                                    sakId: props.sakId,
-                                    behandlingId: response.payload.id,
-                                })
-                            );
-                        }
-                        if (response.payload) {
-                            setRequest(RemoteData.failure(response.payload));
-                        }
                     }}
                 >
                     {props.intl.formatMessage({
                         id: 'display.behandling.startBehandling',
                     })}
-                    {RemoteData.isPending(request) && <Loader />}
+                    {RemoteData.isPending(behandlingStatus) && <Loader />}
                 </Button>
                 <LinkAsButton
                     variant="danger"
@@ -516,9 +508,9 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                     })}
                 </LinkAsButton>
             </div>
-            {RemoteData.isFailure(request) && (
+            {RemoteData.isFailure(behandlingStatus) && (
                 <div className={styles.feil}>
-                    <ApiErrorAlert error={request.error} />
+                    <ApiErrorAlert error={behandlingStatus.error} />
                 </div>
             )}
         </div>
