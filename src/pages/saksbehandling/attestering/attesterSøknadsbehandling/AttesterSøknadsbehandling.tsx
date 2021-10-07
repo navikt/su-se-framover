@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader, RadioGroup, Radio, Select, Textarea } from '@navikt/ds-react';
+import { Alert, Button, Loader, Select, Textarea } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import { Systemtittel } from 'nav-frontend-typografi';
 import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
@@ -9,6 +8,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import { Person } from '~api/personApi';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
+import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import Personlinje from '~components/personlinje/Personlinje';
 import Søknadsbehandlingoppsummering from '~components/søknadsbehandlingoppsummering/Søknadsbehandlingoppsummering';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -145,25 +145,18 @@ const Attesteringsinnhold = ({
                                 setHasSubmitted(true);
                             }}
                         >
-                            <RadioGroup
+                            <BooleanRadioGroup
                                 className={SharedStyles.formElement}
-                                name={intl.formatMessage({ id: 'attestering.beslutning' })}
-                                legend={
-                                    <Systemtittel>{intl.formatMessage({ id: 'attestering.beslutning' })}</Systemtittel>
-                                }
-                                value={formik.values.beslutning?.toString()}
-                                onChange={(value) =>
-                                    formik.setValues((v) => ({ ...v, beslutning: value === true.toString() }))
-                                }
+                                name="beslutning"
+                                legend={intl.formatMessage({ id: 'attestering.beslutning' })}
+                                value={formik.values.beslutning}
+                                onChange={(value) => formik.setValues((v) => ({ ...v, beslutning: value }))}
                                 error={errors.beslutning}
-                            >
-                                <Radio id="beslutning" value={true.toString()}>
-                                    {intl.formatMessage({ id: 'attestering.beslutning.godkjenn' })}
-                                </Radio>
-                                <Radio value={false.toString()}>
-                                    {intl.formatMessage({ id: 'attestering.beslutning.revurder' })}
-                                </Radio>
-                            </RadioGroup>
+                                labels={{
+                                    true: intl.formatMessage({ id: 'attestering.beslutning.godkjenn' }),
+                                    false: intl.formatMessage({ id: 'attestering.beslutning.revurder' }),
+                                }}
+                            />
                             {formik.values.beslutning === false && (
                                 <>
                                     <div className={SharedStyles.formElement}>

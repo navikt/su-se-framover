@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
+import { BooleanRadioGroup } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { useI18n } from '~lib/i18n';
@@ -50,12 +50,12 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                 }}
             >
                 <div className={sharedStyles.formContainer}>
-                    <JaNeiSpørsmål
-                        id="harForventetInntekt"
+                    <BooleanRadioGroup
+                        name="harForventetInntekt"
                         className={sharedStyles.sporsmal}
                         legend={formatMessage('forventerInntekt.label')}
-                        feil={formik.errors.harForventetInntekt}
-                        state={formik.values.harForventetInntekt}
+                        error={formik.errors.harForventetInntekt}
+                        value={formik.values.harForventetInntekt}
                         description={formatMessage('forventerInntekt.hjelpetekst')}
                         onChange={(val) =>
                             formik.setValues({
@@ -77,12 +77,12 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         />
                     )}
 
-                    <JaNeiSpørsmål
-                        id="andreYtelserINAV"
+                    <BooleanRadioGroup
+                        name="andreYtelserINAV"
                         className={sharedStyles.sporsmal}
                         legend={formatMessage('andreYtelserINAV.label')}
-                        feil={formik.errors.andreYtelserINav}
-                        state={formik.values.andreYtelserINav}
+                        error={formik.errors.andreYtelserINav}
+                        value={formik.values.andreYtelserINav}
                         onChange={(val) =>
                             formik.setValues({
                                 ...formik.values,
@@ -114,13 +114,13 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         </div>
                     )}
 
-                    <JaNeiSpørsmål
-                        id="søktAndreYtelserIkkeBehandlet"
+                    <BooleanRadioGroup
+                        name="søktAndreYtelserIkkeBehandlet"
                         className={sharedStyles.sporsmal}
                         legend={formatMessage('søktAndreYtelserIkkeBehandlet.label')}
                         description={formatMessage('søktAndreYtelserIkkeBehandlet.hjelpetekst')}
-                        feil={formik.errors.søktAndreYtelserIkkeBehandlet}
-                        state={formik.values.søktAndreYtelserIkkeBehandlet}
+                        error={formik.errors.søktAndreYtelserIkkeBehandlet}
+                        value={formik.values.søktAndreYtelserIkkeBehandlet}
                         onChange={(val) =>
                             formik.setValues({
                                 ...formik.values,
@@ -142,12 +142,12 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         />
                     )}
 
-                    <JaNeiSpørsmål
-                        id="harMottattSosialstønad"
+                    <BooleanRadioGroup
+                        name="harMottattSosialstønad"
                         className={sharedStyles.sporsmal}
                         legend={formatMessage('sosialstønad.label')}
-                        feil={formik.errors.harMottattSosialstønad}
-                        state={formik.values.harMottattSosialstønad}
+                        error={formik.errors.harMottattSosialstønad}
+                        value={formik.values.harMottattSosialstønad}
                         onChange={(val) =>
                             formik.setValues({
                                 ...formik.values,
@@ -172,12 +172,12 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         />
                     )}
 
-                    <JaNeiSpørsmål
-                        id="trygdeytelserIUtlandet"
+                    <BooleanRadioGroup
+                        name="trygdeytelserIUtlandet"
                         className={sharedStyles.sporsmal}
                         legend={formatMessage('trygdeytelserIUtlandet.label')}
-                        feil={formik.errors.harTrygdeytelserIUtlandet}
-                        state={formik.values.harTrygdeytelserIUtlandet}
+                        error={formik.errors.harTrygdeytelserIUtlandet}
+                        value={formik.values.harTrygdeytelserIUtlandet}
                         onChange={(val) =>
                             formik.setValues({
                                 ...formik.values,
@@ -229,12 +229,12 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         />
                     )}
 
-                    <JaNeiSpørsmål
-                        id="mottarPensjon"
+                    <BooleanRadioGroup
+                        name="mottarPensjon"
                         className={sharedStyles.sporsmal}
                         legend={formatMessage('mottarPensjon.label')}
-                        feil={formik.errors.mottarPensjon}
-                        state={formik.values.mottarPensjon}
+                        error={formik.errors.mottarPensjon}
+                        value={formik.values.mottarPensjon}
                         onChange={(val) =>
                             formik.setValues({
                                 ...formik.values,

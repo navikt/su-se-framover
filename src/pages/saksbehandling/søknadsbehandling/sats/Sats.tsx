@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Radio, RadioGroup, Textarea, Label } from '@navikt/ds-react';
+import { Button, Textarea, Label } from '@navikt/ds-react';
 import * as B from 'fp-ts/boolean';
 import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/string';
@@ -14,6 +14,7 @@ import { Sats as FaktiskSats } from '~/types/Sats';
 import { Person, fetchPerson } from '~api/personApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
+import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import { SatsFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
@@ -316,19 +317,11 @@ const SatsForm = (props: SatsProps) => {
                                 control={form.control}
                                 name="delerSøkerBolig"
                                 render={({ field, fieldState }) => (
-                                    <RadioGroup
+                                    <BooleanRadioGroup
                                         legend={props.formatMessage('radio.delerSøkerBoligOver18.legend')}
                                         error={fieldState.error?.message}
-                                        onBlur={field.onBlur}
-                                        name={field.name}
-                                        value={field.value?.toString()}
-                                        onChange={(val) => field.onChange(val === true.toString())}
-                                    >
-                                        <Radio id={field.name} value={true.toString()} ref={field.ref}>
-                                            {props.formatMessage('radio.label.ja')}
-                                        </Radio>
-                                        <Radio value={false.toString()}>{props.formatMessage('radio.label.nei')}</Radio>
-                                    </RadioGroup>
+                                        {...field}
+                                    />
                                 )}
                             />
                         )}
@@ -337,19 +330,11 @@ const SatsForm = (props: SatsProps) => {
                                 control={form.control}
                                 name="mottarEktemakeEllerSamboerSU"
                                 render={({ field, fieldState }) => (
-                                    <RadioGroup
+                                    <BooleanRadioGroup
                                         legend={props.formatMessage('radio.ektemakeEllerSamboerUførFlyktning.legend')}
                                         error={fieldState.error?.message}
-                                        onBlur={field.onBlur}
-                                        name={field.name}
-                                        value={field.value?.toString()}
-                                        onChange={(val) => field.onChange(val === true.toString())}
-                                    >
-                                        <Radio id={field.name} value={true.toString()} ref={field.ref}>
-                                            {props.formatMessage('radio.label.ja')}
-                                        </Radio>
-                                        <Radio value={false.toString()}>{props.formatMessage('radio.label.nei')}</Radio>
-                                    </RadioGroup>
+                                        {...field}
+                                    />
                                 )}
                             />
                         )}

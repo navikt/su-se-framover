@@ -1,4 +1,4 @@
 export default {
-    'jaNeiSpørsmål.label.ja': 'Ja',
-    'jaNeiSpørsmål.label.nei': 'Nei',
+    'label.ja': 'Ja',
+    'label.nei': 'Nei',
 };

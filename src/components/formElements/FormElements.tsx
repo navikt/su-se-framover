@@ -1,57 +1,42 @@
 import { CollapseFilled, ExpandFilled } from '@navikt/ds-icons';
-import { BodyShort, Radio, RadioGroup } from '@navikt/ds-react';
-import classNames from 'classnames';
+import { Radio, RadioGroup, RadioGroupProps } from '@navikt/ds-react';
 import React, { useState } from 'react';
 import { Collapse } from 'react-collapse';
 
 import { useI18n } from '~lib/i18n';
 import { trackEvent } from '~lib/tracking/amplitude';
 import { søknadHjelpeTekstKlikk } from '~lib/tracking/trackingEvents';
+import { Nullable } from '~lib/types';
 
 import nb from './formElements-nb';
 import styles from './formElements.module.less';
 
-export const JaNeiSpørsmål = (props: {
-    id: string;
-    legend: React.ReactNode;
-    feil?: React.ReactNode;
-    state: boolean | null;
-    onChange: (value: boolean) => void;
-    className?: string;
-    hjelpetekstTittel?: string;
-    hjelpetekstBody?: string;
-    description?: string;
-}) => {
-    const { intl } = useI18n({ messages: nb });
+interface BooleanRadioGroupProps extends Omit<RadioGroupProps, 'value' | 'onChange' | 'children'> {
+    value: Nullable<boolean> | undefined;
+    labels?: {
+        true: string;
+        false: string;
+    };
+    ref?: React.Ref<HTMLInputElement>;
+    onChange(val: boolean): void;
+}
+
+/**
+ * Første radioboks (true-alternativet) vil få `id = props.id ?? props.name`, og ref vil også bli gitt til denne.
+ */
+export const BooleanRadioGroup = ({ ref, labels, value, onChange, ...props }: BooleanRadioGroupProps) => {
+    const { formatMessage } = useI18n({ messages: nb });
     return (
-        <RadioGroup
-            className={classNames(props.className)}
-            error={props.feil}
-            legend={props.legend}
-            description={
-                props.description || (props.hjelpetekstTittel && props.hjelpetekstBody) ? (
-                    <div>
-                        {props.description && <BodyShort spacing>{props.description}</BodyShort>}
-                        {props.hjelpetekstTittel && props.hjelpetekstBody && (
-                            <Hjelpetekst tittel={props.hjelpetekstTittel} body={props.hjelpetekstBody} />
-                        )}
-                    </div>
-                ) : undefined
-            }
-            value={props.state?.toString()}
-            onChange={(val) => props.onChange(val === 'true')}
-        >
-            <Radio id={props.id} name={props.id} value="true" autoComplete="off">
-                {intl.formatMessage({ id: 'jaNeiSpørsmål.label.ja' })}
+        <RadioGroup {...props} value={value?.toString()} onChange={(val) => onChange(val === true.toString())}>
+            <Radio id={props.id ?? props.name} ref={ref} value={true.toString()}>
+                {labels?.true ?? formatMessage('label.ja')}
             </Radio>
-            <Radio name={props.id} value="false" autoComplete="off">
-                {intl.formatMessage({ id: 'jaNeiSpørsmål.label.nei' })}
-            </Radio>
+            <Radio value={false.toString()}>{labels?.false ?? formatMessage('label.nei')}</Radio>
         </RadioGroup>
     );
 };
 
-const Hjelpetekst = (props: { tittel: string; body: string }) => {
+export const CollapsableFormElementDescription = (props: { title: string; children: React.ReactNode }) => {
     const [visMer, setVisMer] = useState(false);
 
     return (
@@ -64,10 +49,10 @@ const Hjelpetekst = (props: { tittel: string; body: string }) => {
                     trackEvent(søknadHjelpeTekstKlikk());
                 }}
             >
-                {props.tittel}
+                {props.title}
                 {visMer ? <CollapseFilled /> : <ExpandFilled />}
             </button>
-            <Collapse isOpened={visMer}>{props.body}</Collapse>
+            <Collapse isOpened={visMer}>{props.children}</Collapse>
         </div>
     );
 };

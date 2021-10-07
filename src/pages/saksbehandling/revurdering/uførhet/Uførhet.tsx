@@ -14,7 +14,7 @@ import { ApiError, ErrorMessage } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
-import { JaNeiSpørsmål } from '~components/formElements/FormElements';
+import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import { focusAfterTimeout } from '~lib/formUtils';
@@ -197,12 +197,10 @@ const Uføreperiodevurdering = (props: {
                     name={`grunnlag.${props.index}.oppfylt` as const}
                     defaultValue={props.item.oppfylt}
                     render={({ field, fieldState }) => (
-                        <JaNeiSpørsmål
-                            id={field.name}
+                        <BooleanRadioGroup
                             legend={intl.formatMessage({ id: 'input.erVilkårOppfylt.label' })}
-                            state={field.value}
-                            onChange={field.onChange}
-                            feil={fieldState.error?.message}
+                            error={fieldState.error?.message}
+                            {...field}
                         />
                     )}
                 />
