@@ -1,8 +1,9 @@
 import { FormikErrors } from 'formik';
-import { Radio, RadioGruppe, SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import React, { useMemo } from 'react';
 
 import { FnrInput } from '~components/FnrInput/FnrInput';
+import { JaNeiSpørsmål } from '~components/formElements/FormElements';
+import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import { EPSFormData } from '~features/søknad/types';
 import { useI18n } from '~lib/i18n';
 import { keyOf, Nullable } from '~lib/types';
@@ -48,34 +49,15 @@ const EktefellePartnerSamboer = (props: Props) => {
 
             <div className={styles.ufør}>
                 {erEpsUnder67 && (
-                    <RadioGruppe
+                    <JaNeiSpørsmål
+                        id={`${props.id}.${keyOf<EPSFormData>('erUførFlyktning')}`}
                         legend={formatMessage('delerBoligMed.epsUførFlyktning')}
                         feil={props.feil?.erUførFlyktning}
-                    >
-                        <Radio
-                            id={`${props.id}.${keyOf<EPSFormData>('erUførFlyktning')}`}
-                            checked={Boolean(epsFormData.erUførFlyktning)}
-                            onChange={() =>
-                                props.onChange({
-                                    ...epsFormData,
-                                    erUførFlyktning: true,
-                                })
-                            }
-                            label="Ja"
-                            name="erUfør"
-                        />
-                        <Radio
-                            checked={epsFormData.erUførFlyktning === false}
-                            onChange={() =>
-                                props.onChange({
-                                    ...epsFormData,
-                                    erUførFlyktning: false,
-                                })
-                            }
-                            label="Nei"
-                            name="erUfør"
-                        />
-                    </RadioGruppe>
+                        state={epsFormData.erUførFlyktning}
+                        onChange={(val) => {
+                            props.onChange({ ...epsFormData, erUførFlyktning: val });
+                        }}
+                    />
                 )}
             </div>
             {typeof props.feil === 'string' && (

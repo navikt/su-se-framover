@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Link, Loader } from '@navikt/ds-react';
+import { Alert, Button, Link, Loader, Select } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { useFormik } from 'formik';
-import { Select } from 'nav-frontend-skjema';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -96,7 +95,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
                         });
                         formik.handleChange(e);
                     }}
-                    feil={formik.errors.lukkSøknadBegrunnelse}
+                    error={formik.errors.lukkSøknadBegrunnelse}
                 >
                     <option value="velgBegrunnelse">
                         {intl.formatMessage({ id: 'display.selector.velgBegrunnelse' })}

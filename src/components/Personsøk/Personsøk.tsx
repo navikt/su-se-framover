@@ -2,13 +2,13 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, SearchField, SearchFieldInput } from '@navikt/ds-react';
 import { SearchFieldButton } from '@navikt/ds-react/esm/form/search-field';
 import fnrValidator from '@navikt/fnrvalidator';
-import { SkjemaelementFeilmelding } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 
 import { ApiError, ErrorCode } from '~api/apiClient';
 import { Person } from '~api/personApi';
+import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/i18n';
 import { removeSpaces } from '~utils/format/formatUtils';

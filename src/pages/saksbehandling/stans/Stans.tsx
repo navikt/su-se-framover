@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Loader } from '@navikt/ds-react';
-import { Select, Textarea } from 'nav-frontend-skjema';
-import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
+import { Button, Loader, Select, Textarea } from '@navikt/ds-react';
+import { Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Route, Switch, useHistory } from 'react-router-dom';
@@ -122,10 +121,9 @@ const Stans = (props: Props) => {
                             name="årsak"
                             render={({ field, fieldState }) => (
                                 <Select
-                                    feil={fieldState.error && <Feilmelding> {fieldState.error.message} </Feilmelding>}
+                                    error={fieldState.error?.message}
                                     value={field.value ?? undefined}
                                     onChange={field.onChange}
-                                    bredde="l"
                                     label={intl.formatMessage({ id: 'stans.årsak.tittel' })}
                                 >
                                     <option>{intl.formatMessage({ id: 'stans.årsak.label' })}</option>
@@ -164,7 +162,7 @@ const Stans = (props: Props) => {
                                     name="begrunnelse"
                                     value={field.value}
                                     onChange={field.onChange}
-                                    feil={fieldState.error?.message}
+                                    error={fieldState.error?.message}
                                 />
                             )}
                         />

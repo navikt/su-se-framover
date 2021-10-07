@@ -1,10 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Alert, Button, Panel } from '@navikt/ds-react';
+import { Alert, Button, Panel, TextField } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
-import { Feiloppsummering, Input } from 'nav-frontend-skjema';
 import { Element, Normaltekst, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { Control, Controller, FieldArrayWithId, FieldPath, useFieldArray, useForm, useWatch } from 'react-hook-form';
@@ -14,6 +13,7 @@ import { v4 as uuid } from 'uuid';
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { JaNeiSpørsmål } from '~components/formElements/FormElements';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
@@ -213,10 +213,10 @@ const Uføreperiodevurdering = (props: {
                             name={`grunnlag.${props.index}.uføregrad` as const}
                             defaultValue={props.item.uføregrad ?? ''}
                             render={({ field, fieldState }) => (
-                                <Input
+                                <TextField
                                     id={field.name}
                                     label={intl.formatMessage({ id: 'input.uføregrad.label' })}
-                                    feil={fieldState.error?.message}
+                                    error={fieldState.error?.message}
                                     {...field}
                                 />
                             )}
@@ -226,10 +226,10 @@ const Uføreperiodevurdering = (props: {
                             name={`grunnlag.${props.index}.forventetInntekt` as const}
                             defaultValue={props.item.forventetInntekt ?? ''}
                             render={({ field, fieldState }) => (
-                                <Input
+                                <TextField
                                     id={field.name}
                                     label={intl.formatMessage({ id: 'input.forventetInntekt.label' })}
-                                    feil={fieldState.error?.message}
+                                    error={fieldState.error?.message}
                                     {...field}
                                 />
                             )}
@@ -408,7 +408,7 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                 className={styles.feiloppsummering}
                 feil={hookFormErrorsTilFeiloppsummering(errors)}
                 hidden={isValid || !isSubmitted}
-                innerRef={feiloppsummeringRef}
+                ref={feiloppsummeringRef}
             />
             {isSubmitted && harOverlappendePerioder && (
                 <Alert variant="warning" className={styles.feiloppsummering}>

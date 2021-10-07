@@ -1,7 +1,6 @@
-import { Button } from '@navikt/ds-react';
+import { Button, TextField } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { FormikErrors } from 'formik';
-import { Input } from 'nav-frontend-skjema';
 import * as React from 'react';
 
 import { useI18n } from '~lib/i18n';
@@ -42,12 +41,12 @@ const KjøretøyInputFelter = (props: {
                         })}
                         key={idx}
                     >
-                        <Input
+                        <TextField
                             id={kjøretøyId}
                             name={kjøretøyId}
                             label={formatMessage('kjøretøy.regNr')}
                             value={input.kjøretøyDeEier}
-                            feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.kjøretøyDeEier}
+                            error={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.kjøretøyDeEier}
                             onChange={(e) =>
                                 props.onChange({
                                     index: idx,
@@ -60,12 +59,12 @@ const KjøretøyInputFelter = (props: {
                             // eslint-disable-next-line jsx-a11y/no-autofocus
                             autoFocus
                         />
-                        <Input
+                        <TextField
                             id={kjøretøyVerdiId}
                             name={kjøretøyVerdiId}
                             label={formatMessage('kjøretøy.verdi')}
                             value={input.verdiPåKjøretøy}
-                            feil={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.verdiPåKjøretøy}
+                            error={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.verdiPåKjøretøy}
                             onChange={(e) => {
                                 props.onChange({
                                     index: idx,

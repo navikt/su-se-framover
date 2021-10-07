@@ -14,8 +14,8 @@
 
 .inputFelterDiv {
     display: flex;
-    justify-content: space-around;
     margin-bottom: @spacing-l;
+    gap: @spacing;
 }
 
 .leggTilFeltKnapp {
@@ -28,13 +28,15 @@
     margin-bottom: @spacing-l;
 }
 
+.narrow {
+    width: 50%;
+}
+
 .inputFelterOgFjernKnappContainer {
     display: flex;
     margin-bottom: @spacing;
     justify-content: space-evenly;
-    > :not(:last-child) {
-        margin-right: @spacing-xs;
-    }
+    gap: @spacing-xs;
 
     .fjernradknapp {
         align-self: flex-end;

@@ -1,11 +1,11 @@
 import { Alert } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import { Feiloppsummering } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { useI18n } from '~lib/i18n';
 import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
 import { useAppSelector, useAppDispatch } from '~redux/Store';
@@ -76,7 +76,7 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
                     tittel={formatMessage('feiloppsummering.title')}
                     feil={formikErrorsTilFeiloppsummering(formik.errors)}
                     hidden={!formikErrorsHarFeil(formik.errors)}
-                    innerRef={feiloppsummeringref}
+                    ref={feiloppsummeringref}
                 />
             </div>
 

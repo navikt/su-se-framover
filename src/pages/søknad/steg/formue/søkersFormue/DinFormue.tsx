@@ -1,10 +1,12 @@
+import { TextField } from '@navikt/ds-react';
+import classNames from 'classnames';
 import { useFormik } from 'formik';
-import { Input, Feiloppsummering } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
 import { keyOf } from '~lib/types';
@@ -138,24 +140,24 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
                 {formik.values.borIBolig === false && (
                     <div className={sharedStyles.inputFelterDiv}>
-                        <Input
+                        <TextField
                             id={keyOf<FormData>('verdiPåBolig')}
                             name={keyOf<FormData>('verdiPåBolig')}
                             label={formatMessage('eierBolig.formuePåBolig')}
                             value={formik.values.verdiPåBolig || ''}
-                            feil={formik.errors.verdiPåBolig}
+                            error={formik.errors.verdiPåBolig}
                             onChange={formik.handleChange}
                             autoComplete="off"
                             // Dette elementet vises ikke ved sidelast
                             // eslint-disable-next-line jsx-a11y/no-autofocus
                             autoFocus
                         />
-                        <Input
+                        <TextField
                             id={keyOf<FormData>('boligBrukesTil')}
                             name={keyOf<FormData>('boligBrukesTil')}
                             label={formatMessage('eierBolig.boligBrukesTil')}
                             value={formik.values.boligBrukesTil || ''}
-                            feil={formik.errors.boligBrukesTil}
+                            error={formik.errors.boligBrukesTil}
                             onChange={formik.handleChange}
                             autoComplete="off"
                         />
@@ -182,24 +184,24 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
                 {formik.values.harDepositumskonto && (
                     <div className={sharedStyles.inputFelterDiv}>
-                        <Input
+                        <TextField
                             id={keyOf<FormData>('depositumsBeløp')}
                             name="depositumsBeløp"
                             label={formatMessage('depositum.beløp')}
                             value={formik.values.depositumsBeløp || ''}
-                            feil={formik.errors.depositumsBeløp}
+                            error={formik.errors.depositumsBeløp}
                             onChange={formik.handleChange}
                             autoComplete="off"
                             // Dette elementet vises ikke ved sidelast
                             // eslint-disable-next-line jsx-a11y/no-autofocus
                             autoFocus
                         />
-                        <Input
+                        <TextField
                             id={keyOf<FormData>('kontonummer')}
                             name={keyOf<FormData>('kontonummer')}
                             label={formatMessage('depositum.kontonummer')}
                             value={formik.values.kontonummer || ''}
-                            feil={formik.errors.kontonummer}
+                            error={formik.errors.kontonummer}
                             onChange={formik.handleChange}
                             autoComplete="off"
                         />
@@ -226,24 +228,24 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
                 {formik.values.eierBolig && formik.values.eierMerEnnEnBolig && (
                     <div className={sharedStyles.inputFelterDiv}>
-                        <Input
+                        <TextField
                             id={keyOf<FormData>('verdiPåEiendom')}
                             name={keyOf<FormData>('verdiPåEiendom')}
                             label={formatMessage('eiendom.samledeVerdi')}
                             value={formik.values.verdiPåEiendom || ''}
-                            feil={formik.errors.verdiPåEiendom}
+                            error={formik.errors.verdiPåEiendom}
                             onChange={formik.handleChange}
                             autoComplete="off"
                             // Dette elementet vises ikke ved sidelast
                             // eslint-disable-next-line jsx-a11y/no-autofocus
                             autoFocus
                         />
-                        <Input
+                        <TextField
                             id={keyOf<FormData>('eiendomBrukesTil')}
                             name={keyOf<FormData>('eiendomBrukesTil')}
                             label={formatMessage('eiendom.brukesTil')}
                             value={formik.values.eiendomBrukesTil || ''}
-                            feil={formik.errors.eiendomBrukesTil}
+                            error={formik.errors.eiendomBrukesTil}
                             onChange={formik.handleChange}
                             autoComplete="off"
                         />
@@ -324,13 +326,12 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                 />
 
                 {formik.values.harInnskuddPåKonto && (
-                    <Input
-                        className={sharedStyles.marginBottom}
+                    <TextField
+                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
                         id={keyOf<FormData>('innskuddsBeløp')}
                         name={keyOf<FormData>('innskuddsBeløp')}
-                        bredde="S"
                         label={formatMessage('innskudd.beløp')}
-                        feil={formik.errors.innskuddsBeløp}
+                        error={formik.errors.innskuddsBeløp}
                         value={formik.values.innskuddsBeløp || ''}
                         onChange={formik.handleChange}
                         // Dette elementet vises ikke ved sidelast
@@ -355,14 +356,13 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                 />
 
                 {formik.values.harVerdipapir && (
-                    <Input
-                        className={sharedStyles.marginBottom}
+                    <TextField
+                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
                         id={keyOf<FormData>('verdipapirBeløp')}
                         name={keyOf<FormData>('verdipapirBeløp')}
-                        bredde="S"
                         label={formatMessage('verdipapir.beløp')}
                         value={formik.values.verdipapirBeløp || ''}
-                        feil={formik.errors.verdipapirBeløp}
+                        error={formik.errors.verdipapirBeløp}
                         onChange={formik.handleChange}
                         autoComplete="off"
                         // Dette elementet vises ikke ved sidelast
@@ -387,14 +387,13 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                 />
 
                 {formik.values.skylderNoenMegPenger && (
-                    <Input
-                        className={sharedStyles.marginBottom}
+                    <TextField
+                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
                         id={keyOf<FormData>('skylderNoenMegPengerBeløp')}
                         name={keyOf<FormData>('skylderNoenMegPengerBeløp')}
-                        bredde="S"
                         label={formatMessage('skylderNoenMegPenger.beløp')}
                         value={formik.values.skylderNoenMegPengerBeløp || ''}
-                        feil={formik.errors.skylderNoenMegPengerBeløp}
+                        error={formik.errors.skylderNoenMegPengerBeløp}
                         onChange={formik.handleChange}
                         autoComplete="off"
                         // Dette elementet vises ikke ved sidelast
@@ -419,14 +418,13 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                 />
 
                 {formik.values.harKontanter && (
-                    <Input
-                        className={sharedStyles.marginBottom}
+                    <TextField
+                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
                         id={keyOf<FormData>('kontanterBeløp')}
                         name={keyOf<FormData>('kontanterBeløp')}
-                        bredde="S"
                         label={formatMessage('harKontanter.beløp')}
                         value={formik.values.kontanterBeløp || ''}
-                        feil={formik.errors.kontanterBeløp}
+                        error={formik.errors.kontanterBeløp}
                         onChange={formik.handleChange}
                         autoComplete="off"
                         // Dette elementet vises ikke ved sidelast
@@ -440,7 +438,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                 tittel={formatMessage('feiloppsummering.title')}
                 feil={formikErrorsTilFeiloppsummering(formik.errors)}
                 hidden={!formikErrorsHarFeil(formik.errors)}
-                innerRef={feiloppsummeringref}
+                ref={feiloppsummeringref}
             />
             <Bunnknapper
                 previous={{

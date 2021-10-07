@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader } from '@navikt/ds-react';
+import { Alert, Button, Loader, Textarea } from '@navikt/ds-react';
 import { formatISO } from 'date-fns';
 import { FormikHelpers, useFormik } from 'formik';
 import { getEq } from 'fp-ts/Array';
@@ -8,7 +8,6 @@ import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 import { pipe } from 'fp-ts/lib/function';
 import * as S from 'fp-ts/lib/string';
-import { Feiloppsummering, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Undertittel } from 'nav-frontend-typografi';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -21,6 +20,8 @@ import {
     fradragSchema,
     FradragInputs,
 } from '~components/beregningOgSimulering/beregning/FradragInputs';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
+import BeregningFaktablokk from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/BeregningFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~lib/hooks';
@@ -40,7 +41,6 @@ import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/
 import sharedI18n from '../../../pages/saksbehandling/søknadsbehandling/sharedI18n-nb';
 import { VilkårsvurderingBaseProps } from '../../../pages/saksbehandling/søknadsbehandling/types';
 import { Vurderingknapper } from '../../../pages/saksbehandling/søknadsbehandling/Vurdering';
-import BeregningFaktablokk from '../../oppsummering/vilkårsOppsummering/faktablokk/faktablokker/BeregningFaktablokk';
 
 import messages from './beregning-nb';
 import styles from './beregning.module.less';
@@ -282,7 +282,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 name="begrunnelse"
                                 onChange={formik.handleChange}
                                 value={formik.values.begrunnelse ?? ''}
-                                feil={formik.errors.begrunnelse}
+                                error={formik.errors.begrunnelse}
                             />
                         </div>
 

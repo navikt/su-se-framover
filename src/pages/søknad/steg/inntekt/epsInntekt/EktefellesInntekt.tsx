@@ -1,10 +1,11 @@
+import { TextField } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import { Feiloppsummering, Input } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { useI18n } from '~lib/i18n';
 import { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -66,10 +67,9 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     />
 
                     {formik.values.harForventetInntekt && (
-                        <Input
+                        <TextField
                             id="forventetInntekt"
-                            feil={formik.errors.forventetInntekt}
-                            bredde="S"
+                            error={formik.errors.forventetInntekt}
                             className={sharedStyles.marginBottom}
                             value={formik.values.forventetInntekt || ''}
                             label={formatMessage('forventerInntekt.beløp')}
@@ -95,21 +95,21 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
 
                     {formik.values.andreYtelserINav && (
                         <div className={sharedStyles.inputFelterDiv}>
-                            <Input
+                            <TextField
                                 id="andreYtelserINavYtelse"
                                 name="andreYtelserINavYtelse"
                                 label={formatMessage('andreYtelserINAV.ytelse')}
                                 value={formik.values.andreYtelserINavYtelse || ''}
                                 onChange={formik.handleChange}
-                                feil={formik.errors.andreYtelserINavYtelse}
+                                error={formik.errors.andreYtelserINavYtelse}
                             />
-                            <Input
+                            <TextField
                                 id="andreYtelserINavBeløp"
                                 name="andreYtelserINavBeløp"
                                 label={formatMessage('andreYtelserINAV.beløp')}
                                 value={formik.values.andreYtelserINavBeløp || ''}
                                 onChange={formik.handleChange}
-                                feil={formik.errors.andreYtelserINavBeløp}
+                                error={formik.errors.andreYtelserINavBeløp}
                             />
                         </div>
                     )}
@@ -131,14 +131,14 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     />
 
                     {formik.values.søktAndreYtelserIkkeBehandlet && (
-                        <Input
+                        <TextField
                             className={sharedStyles.marginBottom}
                             id="søktAndreYtelserIkkeBehandletBegrunnelse"
                             name="søktAndreYtelserIkkeBehandletBegrunnelse"
                             label={formatMessage('søktAndreYtelserIkkeBehandlet.begrunnelse')}
                             value={formik.values.søktAndreYtelserIkkeBehandletBegrunnelse || ''}
                             onChange={formik.handleChange}
-                            feil={formik.errors.søktAndreYtelserIkkeBehandletBegrunnelse}
+                            error={formik.errors.søktAndreYtelserIkkeBehandletBegrunnelse}
                         />
                     )}
 
@@ -157,15 +157,14 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         }
                     />
                     {formik.values.harMottattSosialstønad && (
-                        <Input
+                        <TextField
                             className={sharedStyles.marginBottom}
                             id="sosialStønadBeløp"
                             name="sosialStønadBeløp"
-                            bredde="S"
                             label={formatMessage('sosialstønad.beløp')}
                             value={formik.values.sosialStønadBeløp || ''}
                             onChange={formik.handleChange}
-                            feil={formik.errors.sosialStønadBeløp}
+                            error={formik.errors.sosialStønadBeløp}
                             autoComplete="off"
                             // Dette elementet vises ikke ved sidelast
                             // eslint-disable-next-line jsx-a11y/no-autofocus

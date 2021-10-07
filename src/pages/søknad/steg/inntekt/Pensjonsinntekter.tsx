@@ -1,7 +1,6 @@
-import { Button } from '@navikt/ds-react';
+import { Button, TextField } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { FormikErrors } from 'formik';
-import { Input } from 'nav-frontend-skjema';
 import * as React from 'react';
 
 import { useI18n } from '~lib/i18n';
@@ -41,7 +40,7 @@ const PensjonsInntekter = (props: {
                         })}
                         key={idx}
                     >
-                        <Input
+                        <TextField
                             id={feltId('ordning')}
                             label={formatMessage('mottarPensjon.fra')}
                             value={item.ordning}
@@ -56,9 +55,9 @@ const PensjonsInntekter = (props: {
                             // eslint-disable-next-line jsx-a11y/no-autofocus
                             autoFocus
                             autoComplete="on"
-                            feil={feltError('ordning')}
+                            error={feltError('ordning')}
                         />
-                        <Input
+                        <TextField
                             id={feltId('beløp')}
                             label={formatMessage('mottarPensjon.beløp')}
                             value={item.beløp}
@@ -70,7 +69,7 @@ const PensjonsInntekter = (props: {
                                 })
                             }
                             autoComplete="off"
-                            feil={feltError('beløp')}
+                            error={feltError('beløp')}
                         />
                         <Button
                             variant="secondary"

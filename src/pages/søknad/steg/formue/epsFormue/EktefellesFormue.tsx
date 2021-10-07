@@ -1,10 +1,12 @@
+import { TextField } from '@navikt/ds-react';
+import classNames from 'classnames';
 import { useFormik } from 'formik';
-import { Input, Feiloppsummering } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
 import { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
@@ -98,20 +100,20 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                 {formik.values.borIBolig === false && (
                     <div className={sharedStyles.inputFelterDiv}>
-                        <Input
+                        <TextField
                             id="verdiPåBolig"
                             name="verdiPåBolig"
                             label={formatMessage('eierBolig.formuePåBolig')}
                             value={formik.values.verdiPåBolig || ''}
-                            feil={formik.errors.verdiPåBolig}
+                            error={formik.errors.verdiPåBolig}
                             onChange={formik.handleChange}
                         />
-                        <Input
+                        <TextField
                             id="boligBrukesTil"
                             name="boligBrukesTil"
                             label={formatMessage('eierBolig.boligBrukesTil')}
                             value={formik.values.boligBrukesTil || ''}
-                            feil={formik.errors.boligBrukesTil}
+                            error={formik.errors.boligBrukesTil}
                             onChange={formik.handleChange}
                         />
                     </div>
@@ -137,20 +139,20 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                 {formik.values.harDepositumskonto && (
                     <div className={sharedStyles.inputFelterDiv}>
-                        <Input
+                        <TextField
                             id="depositumsBeløp"
                             name="depositumsBeløp"
                             label={formatMessage('depositum.beløp')}
                             value={formik.values.depositumsBeløp || ''}
-                            feil={formik.errors.depositumsBeløp}
+                            error={formik.errors.depositumsBeløp}
                             onChange={formik.handleChange}
                         />
-                        <Input
+                        <TextField
                             id="kontonummer"
                             name="kontonummer"
                             label={formatMessage('depositum.kontonummer')}
                             value={formik.values.kontonummer || ''}
-                            feil={formik.errors.kontonummer}
+                            error={formik.errors.kontonummer}
                             onChange={formik.handleChange}
                         />
                     </div>
@@ -176,20 +178,20 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                 {formik.values.eierMerEnnEnBolig && (
                     <div className={sharedStyles.inputFelterDiv}>
-                        <Input
+                        <TextField
                             id="verdiPåEiendom"
                             name="verdiPåEiendom"
                             label={formatMessage('eiendom.samledeVerdi')}
                             value={formik.values.verdiPåEiendom || ''}
-                            feil={formik.errors.verdiPåEiendom}
+                            error={formik.errors.verdiPåEiendom}
                             onChange={formik.handleChange}
                         />
-                        <Input
+                        <TextField
                             id="eiendomBrukesTil"
                             name="eiendomBrukesTil"
                             label={formatMessage('eiendom.brukesTil')}
                             value={formik.values.eiendomBrukesTil || ''}
-                            feil={formik.errors.eiendomBrukesTil}
+                            error={formik.errors.eiendomBrukesTil}
                             onChange={formik.handleChange}
                         />
                     </div>
@@ -269,14 +271,13 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 />
 
                 {formik.values.harInnskuddPåKonto && (
-                    <Input
-                        className={sharedStyles.marginBottom}
+                    <TextField
+                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
                         id="innskuddsBeløp"
                         name="innskuddsBeløp"
-                        bredde="S"
                         label={formatMessage('innskudd.beløp')}
                         value={formik.values.innskuddsBeløp || ''}
-                        feil={formik.errors.innskuddsBeløp}
+                        error={formik.errors.innskuddsBeløp}
                         onChange={formik.handleChange}
                     />
                 )}
@@ -297,14 +298,13 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 />
 
                 {formik.values.harVerdipapir && (
-                    <Input
-                        className={sharedStyles.marginBottom}
+                    <TextField
+                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
                         id="verdipapirBeløp"
                         name="verdipapirBeløp"
-                        bredde="S"
                         label={formatMessage('verdipapir.beløp')}
                         value={formik.values.verdipapirBeløp || ''}
-                        feil={formik.errors.verdipapirBeløp}
+                        error={formik.errors.verdipapirBeløp}
                         onChange={formik.handleChange}
                     />
                 )}
@@ -325,14 +325,13 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 />
 
                 {formik.values.skylderNoenMegPenger && (
-                    <Input
-                        className={sharedStyles.marginBottom}
+                    <TextField
+                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
                         id="skylderNoenMegPengerBeløp"
                         name="skylderNoenMegPengerBeløp"
-                        bredde="S"
                         label={formatMessage('skylderNoenMegPenger.beløp')}
                         value={formik.values.skylderNoenMegPengerBeløp || ''}
-                        feil={formik.errors.skylderNoenMegPengerBeløp}
+                        error={formik.errors.skylderNoenMegPengerBeløp}
                         onChange={formik.handleChange}
                     />
                 )}
@@ -353,14 +352,13 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 />
 
                 {formik.values.harKontanter && (
-                    <Input
-                        className={sharedStyles.marginBottom}
+                    <TextField
+                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
                         id="kontanterBeløp"
                         name="kontanterBeløp"
-                        bredde="S"
                         label={formatMessage('harKontanter.beløp')}
                         value={formik.values.kontanterBeløp || ''}
-                        feil={formik.errors.kontanterBeløp}
+                        error={formik.errors.kontanterBeløp}
                         onChange={formik.handleChange}
                     />
                 )}
@@ -370,7 +368,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 tittel={formatMessage('feiloppsummering.title')}
                 feil={formikErrorsTilFeiloppsummering(formik.errors)}
                 hidden={!formikErrorsHarFeil(formik.errors)}
-                innerRef={feiloppsummeringref}
+                ref={feiloppsummeringref}
             />
             <Bunnknapper
                 previous={{

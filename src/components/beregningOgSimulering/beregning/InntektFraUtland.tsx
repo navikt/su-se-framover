@@ -1,6 +1,6 @@
+import { TextField, Label, Select } from '@navikt/ds-react';
 import { currencies } from 'country-data-list';
 import { FormikErrors } from 'formik';
-import { Input, Label, Select } from 'nav-frontend-skjema';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
@@ -22,11 +22,14 @@ const InntektFraUtland = (props: {
 
     return (
         <div className={styles.utlandOgPeriodeContainer}>
-            <Label htmlFor={beløpId} className={styles.label}>
+            <Label as="label" htmlFor={beløpId} className={styles.label}>
                 {props.intl.formatMessage({ id: 'display.input.beløpIUtenlandskValuta' })}
             </Label>
-            <Input
+            <TextField
                 id={beløpId}
+                label={props.intl.formatMessage({ id: 'display.input.beløpIUtenlandskValuta' })}
+                name={beløpId}
+                hideLabel
                 value={props.value.beløpIUtenlandskValuta}
                 onChange={(a) =>
                     props.onChange({
@@ -34,13 +37,16 @@ const InntektFraUtland = (props: {
                         beløpIUtenlandskValuta: a.target.value,
                     })
                 }
-                feil={props.errors?.beløpIUtenlandskValuta}
+                error={!!props.errors?.beløpIUtenlandskValuta}
             />
-            <Label htmlFor={valutaId} className={styles.label}>
+            <Label as="label" htmlFor={valutaId} className={styles.label}>
                 {props.intl.formatMessage({ id: 'display.input.valuta' })}
             </Label>
             <Select
                 id={valutaId}
+                name={valutaId}
+                label={props.intl.formatMessage({ id: 'display.input.valuta' })}
+                hideLabel
                 value={props.value.valuta}
                 onChange={(a) =>
                     props.onChange({
@@ -48,7 +54,7 @@ const InntektFraUtland = (props: {
                         valuta: a.target.value,
                     })
                 }
-                feil={props.errors?.valuta}
+                error={!!props.errors?.valuta}
             >
                 <option value="" disabled={true}>
                     Velg valuta..
@@ -60,13 +66,16 @@ const InntektFraUtland = (props: {
                 ))}
             </Select>
             <div className={styles.labelAndDescription}>
-                <Label htmlFor={kursId} className={styles.label}>
+                <Label as="label" htmlFor={kursId} className={styles.label}>
                     {props.intl.formatMessage({ id: 'display.input.kurs' })}
                 </Label>
                 <p className={styles.description}>{props.intl.formatMessage({ id: 'display.input.kurs.desimal' })}</p>
             </div>
-            <Input
+            <TextField
                 id={kursId}
+                label={props.intl.formatMessage({ id: 'display.input.kurs' })}
+                hideLabel
+                name={kursId}
                 value={props.value.kurs}
                 onChange={(a) =>
                     props.onChange({
@@ -74,7 +83,7 @@ const InntektFraUtland = (props: {
                         kurs: a.target.value,
                     })
                 }
-                feil={props.errors?.kurs}
+                error={!!props.errors?.kurs}
             />
         </div>
     );

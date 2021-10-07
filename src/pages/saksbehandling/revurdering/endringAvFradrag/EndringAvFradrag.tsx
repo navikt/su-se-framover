@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { useFormik } from 'formik';
-import { Feiloppsummering } from 'nav-frontend-skjema';
 import { Systemtittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -14,6 +13,7 @@ import {
     FradragInputs,
     fradragSchema,
 } from '~components/beregningOgSimulering/beregning/FradragInputs';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import Fradragoppsummering from '~components/revurdering/oppsummering/fradragoppsummering/Fradragoppsummering';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions';

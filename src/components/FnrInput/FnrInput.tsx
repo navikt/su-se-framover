@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, TextField } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
-import { Input } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useState } from 'react';
 
@@ -69,7 +68,7 @@ export const FnrInput = ({
 
     return (
         <div className={styles.fnrInput}>
-            <Input
+            <TextField
                 id={inputId}
                 label={label ?? intl.formatMessage({ id: 'input.ektefelleEllerSamboerFnr.label' })}
                 name={name}
@@ -77,7 +76,7 @@ export const FnrInput = ({
                 onChange={(e) => onFnrChange(e.target.value)}
                 value={fnr ?? ''}
                 maxLength={11}
-                feil={feil}
+                error={feil}
                 autoComplete={autoComplete}
             />
 

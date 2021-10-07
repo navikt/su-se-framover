@@ -1,6 +1,5 @@
-import { Alert, Panel } from '@navikt/ds-react';
+import { Alert, Panel, RadioGroup, Radio } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -8,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { ForVeilederDigitalSøknad } from '~/features/søknad/søknad.slice';
 import { Person } from '~api/personApi';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import TextProvider from '~components/TextProvider';
 import { Vergemål } from '~features/søknad/types';
 import { focusAfterTimeout } from '~lib/formUtils';
@@ -135,29 +135,26 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                     />
 
                     {formik.values.harSøkerMøttPersonlig === false && (
-                        <RadioPanelGruppe
+                        <RadioGroup
                             className={sharedStyles.sporsmal}
-                            feil={formik.errors.harFullmektigEllerVerge}
+                            error={formik.errors.harFullmektigEllerVerge}
                             legend={<FormattedMessage id={'input.fullmektigEllerVerge.label'} />}
-                            name="fullmektigEllerVerge"
-                            radios={[
-                                {
-                                    label: <FormattedMessage id={'input.fullmektigEllerVerge.fullmektig.label'} />,
-                                    value: 'fullmektig',
-                                },
-                                {
-                                    label: <FormattedMessage id={'input.fullmektigEllerVerge.verge.label'} />,
-                                    value: 'verge',
-                                },
-                            ]}
-                            onChange={(_, value) => {
+                            name="harFullmektigEllerVerge"
+                            onChange={(value) => {
                                 formik.setValues((values) => ({
                                     ...values,
-                                    harFullmektigEllerVerge: value,
+                                    harFullmektigEllerVerge: value as Vergemål,
                                 }));
                             }}
-                            checked={formik.values.harFullmektigEllerVerge?.toString()}
-                        />
+                            value={formik.values.harFullmektigEllerVerge?.toString()}
+                        >
+                            <Radio id="harFullmektigEllerVerge" value={Vergemål.Fullmektig}>
+                                <FormattedMessage id={'input.fullmektigEllerVerge.fullmektig.label'} />
+                            </Radio>
+                            <Radio value={Vergemål.Verge}>
+                                <FormattedMessage id={'input.fullmektigEllerVerge.verge.label'} />
+                            </Radio>
+                        </RadioGroup>
                     )}
 
                     {formik.values.harFullmektigEllerVerge === 'fullmektig' && (
@@ -170,7 +167,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}
                         feil={formikErrorsTilFeiloppsummering(formik.errors)}
                         hidden={!formikErrorsHarFeil(formik.errors)}
-                        innerRef={feiloppsummeringref}
+                        ref={feiloppsummeringref}
                     />
                     <Bunnknapper
                         previous={{

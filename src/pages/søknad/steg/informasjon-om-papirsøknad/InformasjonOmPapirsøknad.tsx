@@ -1,11 +1,13 @@
+import { Label, RadioGroup, Radio, Textarea } from '@navikt/ds-react';
 import { useFormik } from 'formik';
 import { Datepicker } from 'nav-datovelger';
-import { Feiloppsummering, Label, RadioPanelGruppe, SkjemaelementFeilmelding, Textarea } from 'nav-frontend-skjema';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import søknadSlice, { ForVeilederPapirsøknad } from '~/features/søknad/søknad.slice';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
+import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import TextProvider from '~components/TextProvider';
 import { GrunnForPapirinnsending } from '~features/søknad/types';
 import { useI18n, Languages } from '~lib/i18n';
@@ -84,7 +86,7 @@ const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string
                 className={styles.foo}
             >
                 <div className={styles.inputContainer}>
-                    <Label htmlFor="mottaksdato">
+                    <Label as="label" htmlFor="mottaksdato">
                         <FormattedMessage id="input.mottaksdato.label" />
                     </Label>
                     <Datepicker
@@ -103,40 +105,36 @@ const InformasjonOmPapirsøknad = (props: { forrigeUrl: string; nesteUrl: string
                     )}
                 </div>
                 <div className={styles.inputContainer}>
-                    <RadioPanelGruppe
+                    <RadioGroup
                         name={intl.formatMessage({ id: 'input.grunn.label' })}
                         legend={intl.formatMessage({ id: 'input.grunn.label' })}
-                        radios={[
-                            {
-                                label: intl.formatMessage({ id: 'input.grunn.verge' }),
-                                value: GrunnForPapirinnsending.VergeHarSøktPåVegneAvBruker,
-                            },
-                            {
-                                label: intl.formatMessage({ id: 'input.grunn.midlertidigUnntak' }),
-                                value: GrunnForPapirinnsending.MidlertidigUnntakFraOppmøteplikt,
-                            },
-                            {
-                                label: intl.formatMessage({ id: 'input.grunn.annet' }),
-                                value: GrunnForPapirinnsending.Annet,
-                            },
-                        ]}
-                        checked={formik.values.grunnForPapirinnsending ?? undefined}
-                        onChange={(_, value) => {
+                        value={formik.values.grunnForPapirinnsending?.toString()}
+                        onChange={(value) => {
                             formik.setValues((v) => ({
                                 ...v,
-                                grunnForPapirinnsending: value ?? null,
+                                grunnForPapirinnsending: value as GrunnForPapirinnsending,
                                 annenGrunn: null,
                             }));
                         }}
-                        feil={formik.errors.grunnForPapirinnsending}
-                    />
+                        error={formik.errors.grunnForPapirinnsending}
+                    >
+                        <Radio value={GrunnForPapirinnsending.VergeHarSøktPåVegneAvBruker} id="grunnForPapirinnsending">
+                            {intl.formatMessage({ id: 'input.grunn.verge' })}
+                        </Radio>
+                        <Radio value={GrunnForPapirinnsending.MidlertidigUnntakFraOppmøteplikt}>
+                            {intl.formatMessage({ id: 'input.grunn.midlertidigUnntak' })}
+                        </Radio>
+                        <Radio value={GrunnForPapirinnsending.Annet}>
+                            {intl.formatMessage({ id: 'input.grunn.annet' })}
+                        </Radio>
+                    </RadioGroup>
                 </div>
                 {formik.values.grunnForPapirinnsending === GrunnForPapirinnsending.Annet && (
                     <div className={styles.inputContainer}>
                         <Textarea
                             label={intl.formatMessage({ id: 'input.annengrunn.label' })}
                             name="beskrivelse"
-                            feil={formik.errors.annenGrunn}
+                            error={formik.errors.annenGrunn}
                             value={formik.values.annenGrunn ?? ''}
                             onChange={(e) => {
                                 formik.setValues((v) => ({

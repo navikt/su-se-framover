@@ -1,4 +1,4 @@
-import { Input, Label } from 'nav-frontend-skjema';
+import { TextField } from '@navikt/ds-react';
 import { Element, Undertittel } from 'nav-frontend-typografi';
 import React, { RefCallback } from 'react';
 import { useIntl } from 'react-intl';
@@ -12,20 +12,19 @@ export const FormueInput = (props: {
     feil: string | undefined;
     inputRef?: RefCallback<HTMLInputElement>;
 }) => (
-    <>
-        <Label htmlFor={props.inputName}> {props.tittel} </Label>
-        <Input
-            id={props.inputName}
-            className={props.className}
-            name={props.inputName}
-            type="numeric"
-            pattern="[0-9]*"
-            feil={props.feil}
-            defaultValue={props.defaultValue}
-            onChange={props.onChange}
-            inputRef={props.inputRef}
-        />
-    </>
+    <TextField
+        id={props.inputName}
+        label={props.tittel}
+        className={props.className}
+        name={props.inputName}
+        inputMode="numeric"
+        pattern="[0-9]*"
+        size="small"
+        error={props.feil}
+        defaultValue={props.defaultValue}
+        onChange={props.onChange}
+        ref={props.inputRef}
+    />
 );
 
 export const ShowSum = ({ sum, tittel }: { sum: number; tittel: string }) => {

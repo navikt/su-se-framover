@@ -1,13 +1,14 @@
 @import '~/styles/variables.less';
 
-.feiloppsummering {
-    margin-bottom: @spacing;
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
 }
 
 .nyPeriodeKnappContainer {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: @spacing;
 }
 
 .personkortContainer {
@@ -27,6 +28,7 @@
 
 .formuePanel {
     .formueInputs {
+        width: 50%;
         margin-bottom: @spacing;
 
         > :not(:last-child) {
@@ -38,10 +40,13 @@
     }
 }
 
-.formueBlokk {
-    border-bottom: @navBorder 2px solid;
-    margin-bottom: @spacing-xl;
+.formueBlokkContainer {
+    display: flex;
+    flex-direction: column;
+    gap: @spacing;
+}
 
+.formueBlokk {
     .formuePanelerContainer {
         margin-bottom: @spacing;
 
@@ -65,10 +70,5 @@
         .søppelbøtte {
             height: min-content;
         }
-    }
-
-    .begrunnelseContainer {
-        margin-bottom: @spacing-xl;
-        width: 50%;
     }
 }

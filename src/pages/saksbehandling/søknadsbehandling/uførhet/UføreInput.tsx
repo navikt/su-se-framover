@@ -1,4 +1,4 @@
-import { Input, Label } from 'nav-frontend-skjema';
+import { TextField, Label } from '@navikt/ds-react';
 import { Feilmelding, Normaltekst } from 'nav-frontend-typografi';
 import React from 'react';
 
@@ -9,21 +9,24 @@ export const UførhetInput = (props: {
     inputName: string;
     inputTekst: string;
     value: string;
-    bredde?: 'fullbredde' | 'XXL' | 'XL' | 'L' | 'M' | 'S' | 'XS' | 'XXS';
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     feil: string | undefined;
 }) => (
     <div className={styles.uføreAndFeilmeldingInputContainer}>
-        <Label htmlFor={props.inputName}> {props.tittel} </Label>
+        <Label as="label" htmlFor={props.inputName}>
+            {props.tittel}
+        </Label>
         <span>
             <span className={styles.uføreInputContainer}>
-                <Input
+                <TextField
+                    label={props.tittel}
+                    hideLabel
                     className={styles.uførehetInputFelt}
                     name={props.inputName}
-                    bredde={props.bredde}
                     onChange={props.onChange}
                     id={props.inputName}
                     value={props.value}
+                    error={!!props.feil}
                 />
                 <Normaltekst>{props.inputTekst}</Normaltekst>
             </span>

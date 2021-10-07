@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader } from '@navikt/ds-react';
-import { Textarea } from 'nav-frontend-skjema';
+import { Alert, Button, Loader, Textarea } from '@navikt/ds-react';
 import { Innholdstittel } from 'nav-frontend-typografi/';
 import React, { useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -90,7 +89,6 @@ const SendTilAttesteringPage = (props: Props) => {
                             name="fritekst"
                             onChange={(e) => setFritekst(e.target.value)}
                             value={fritekst}
-                            className={styles.fritekstarea}
                         />
                         {RemoteData.isFailure(brevStatus) && (
                             <Alert variant="error">{intl.formatMessage({ id: 'feilmelding.brevhentingFeilet' })}</Alert>

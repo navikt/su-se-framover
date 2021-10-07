@@ -1,12 +1,11 @@
-import { Alert } from '@navikt/ds-react';
+import { Alert, Radio, RadioGroup, TextField } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import { Feiloppsummering, RadioPanelGruppe } from 'nav-frontend-skjema';
-import Input from 'nav-frontend-skjema/lib/input';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { TypeOppholdstillatelse } from '~features/søknad/types';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
@@ -156,30 +155,26 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     />
                 )}
                 {formik.values.harOppholdstillatelse === true && (
-                    <RadioPanelGruppe
+                    <RadioGroup
                         className={sharedStyles.sporsmal}
-                        feil={formik.errors.typeOppholdstillatelse}
+                        error={formik.errors.typeOppholdstillatelse}
                         legend={formatMessage('oppholdstillatelse.type')}
                         name={keyOf<FormData>('typeOppholdstillatelse')}
-                        radios={[
-                            {
-                                id: keyOf<FormData>('typeOppholdstillatelse'),
-                                label: formatMessage('oppholdstillatelse.permanent'),
-                                value: TypeOppholdstillatelse.Permanent,
-                            },
-                            {
-                                label: formatMessage('oppholdstillatelse.midlertidig'),
-                                value: TypeOppholdstillatelse.Midlertidig,
-                            },
-                        ]}
-                        onChange={(_, value) => {
+                        onChange={(value) => {
                             formik.setValues({
                                 ...formik.values,
-                                typeOppholdstillatelse: value,
+                                typeOppholdstillatelse: value as TypeOppholdstillatelse,
                             });
                         }}
-                        checked={formik.values.typeOppholdstillatelse?.toString()}
-                    />
+                        value={formik.values.typeOppholdstillatelse?.toString()}
+                    >
+                        <Radio id={keyOf<FormData>('typeOppholdstillatelse')} value={TypeOppholdstillatelse.Permanent}>
+                            {formatMessage('oppholdstillatelse.permanent')}
+                        </Radio>
+                        <Radio value={TypeOppholdstillatelse.Midlertidig}>
+                            {formatMessage('oppholdstillatelse.midlertidig')}
+                        </Radio>
+                    </RadioGroup>
                 )}
                 {formik.values.harOppholdstillatelse === false && (
                     <Alert variant="warning" className={sharedStyles.marginBottom}>
@@ -208,11 +203,11 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     }
                 />
                 {formik.values.statsborgerskapAndreLand && (
-                    <Input
+                    <TextField
                         id={keyOf<FormData>('statsborgerskapAndreLandFritekst')}
                         name={keyOf<FormData>('statsborgerskapAndreLandFritekst')}
                         label={formatMessage('statsborger.andre.land.fritekst')}
-                        feil={formik.errors.statsborgerskapAndreLandFritekst}
+                        error={formik.errors.statsborgerskapAndreLandFritekst}
                         value={formik.values.statsborgerskapAndreLandFritekst || ''}
                         onChange={formik.handleChange}
                         autoComplete="off"
@@ -227,7 +222,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                 tittel={formatMessage('feiloppsummering.title')}
                 feil={formikErrorsTilFeiloppsummering(formik.errors)}
                 hidden={!formikErrorsHarFeil(formik.errors)}
-                innerRef={feiloppsummeringref}
+                ref={feiloppsummeringref}
             />
 
             <Bunnknapper

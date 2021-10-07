@@ -1,15 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/string';
-import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { PersonligOppmøteFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/PersonligOppmøteFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
@@ -370,38 +370,22 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                 control={form.control}
                                 name="møttPersonlig"
                                 render={({ field, fieldState }) => (
-                                    <RadioGruppe
+                                    <RadioGroup
                                         legend={formatMessage('radio.personligOppmøte.legend')}
-                                        feil={fieldState.error?.message}
+                                        error={fieldState.error?.message}
                                         onBlur={field.onBlur}
+                                        name={field.name}
+                                        value={field.value ?? undefined}
+                                        onChange={field.onChange}
                                     >
-                                        <Radio
-                                            id={field.name}
-                                            label={formatMessage('radio.label.ja')}
-                                            name={field.name}
-                                            checked={field.value === HarMøttPersonlig.Ja}
-                                            onChange={() => {
-                                                field.onChange(HarMøttPersonlig.Ja);
-                                            }}
-                                            radioRef={field.ref}
-                                        />
-                                        <Radio
-                                            label={formatMessage('radio.label.nei')}
-                                            name={field.name}
-                                            checked={field.value === HarMøttPersonlig.Nei}
-                                            onChange={() => {
-                                                field.onChange(HarMøttPersonlig.Nei);
-                                            }}
-                                        />
-                                        <Radio
-                                            label={formatMessage('radio.label.uavklart')}
-                                            name={field.name}
-                                            checked={field.value === HarMøttPersonlig.Uavklart}
-                                            onChange={() => {
-                                                field.onChange(HarMøttPersonlig.Uavklart);
-                                            }}
-                                        />
-                                    </RadioGruppe>
+                                        <Radio id={field.name} value={HarMøttPersonlig.Ja} ref={field.ref}>
+                                            {formatMessage('radio.label.ja')}
+                                        </Radio>
+                                        <Radio value={HarMøttPersonlig.Nei}>{formatMessage('radio.label.nei')}</Radio>
+                                        <Radio value={HarMøttPersonlig.Uavklart}>
+                                            {formatMessage('radio.label.uavklart')}
+                                        </Radio>
+                                    </RadioGroup>
                                 )}
                             />
                         </div>
@@ -411,10 +395,13 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                     control={form.control}
                                     name="grunnForManglendePersonligOppmøte"
                                     render={({ field, fieldState }) => (
-                                        <RadioGruppe
+                                        <RadioGroup
                                             legend={formatMessage('radio.personligOppmøte.grunn.legend')}
-                                            feil={fieldState.error?.message}
+                                            error={fieldState.error?.message}
                                             onBlur={field.onBlur}
+                                            name={field.name}
+                                            value={field.value ?? undefined}
+                                            onChange={field.onChange}
                                         >
                                             {[
                                                 {
@@ -455,17 +442,14 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                             ].map(({ label, radioValue }, idx) => (
                                                 <Radio
                                                     id={idx === 0 ? field.name : undefined}
-                                                    radioRef={idx === 0 ? field.ref : undefined}
+                                                    ref={idx === 0 ? field.ref : undefined}
                                                     key={radioValue}
-                                                    label={label}
-                                                    name={field.name}
-                                                    checked={field.value === radioValue}
-                                                    onChange={() => {
-                                                        field.onChange(radioValue);
-                                                    }}
-                                                />
+                                                    value={radioValue}
+                                                >
+                                                    {label}
+                                                </Radio>
                                             ))}
-                                        </RadioGruppe>
+                                        </RadioGroup>
                                     )}
                                 />
                             </div>
@@ -478,7 +462,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                                     <Textarea
                                         label={formatMessage('input.label.begrunnelse')}
                                         {...field}
-                                        feil={fieldState.error?.message}
+                                        error={fieldState.error?.message}
                                         value={field.value ?? ''}
                                     />
                                 )}
@@ -511,7 +495,7 @@ const PersonligOppmøte = (props: VilkårsvurderingBaseProps) => {
                             tittel={formatMessage('feiloppsummering.title')}
                             hidden={!isSubmitted || isValid}
                             feil={hookFormErrorsTilFeiloppsummering(errors)}
-                            innerRef={feiloppsummeringRef}
+                            ref={feiloppsummeringRef}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {

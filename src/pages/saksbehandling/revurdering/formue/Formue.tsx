@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Accordion, Button } from '@navikt/ds-react';
+import { Panel, Accordion, Button, Textarea, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import { Feiloppsummering, Input, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element, Ingress, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
@@ -21,6 +20,7 @@ import { useHistory } from 'react-router-dom';
 import * as personApi from '~api/personApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import DatePicker from '~components/datePicker/DatePicker';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { Personkort } from '~components/personkort/Personkort';
 import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
 import FormuevilkårOppsummering from '~components/revurdering/oppsummering/formuevilkåroppsummering/FormuevilkårOppsummering';
@@ -99,23 +99,28 @@ const Formue = (props: RevurderingProps) => {
         <ToKolonner tittel={<RevurderingsperiodeHeader periode={props.revurdering.periode} />}>
             {{
                 left: (
-                    <form onSubmit={handleSubmit(lagreFormuegrunnlaget)}>
+                    <form onSubmit={handleSubmit(lagreFormuegrunnlaget)} className={styles.container}>
                         {RemoteData.isPending(epsStatus) && <NavFrontendSpinner />}
                         {RemoteData.isFailure(epsStatus) && <ApiErrorAlert error={epsStatus.error} />}
-                        {formueArray.fields.map((field, index) => (
-                            <FormueBlokk
-                                key={field.id}
-                                revurderingsperiode={props.revurdering.periode}
-                                blokkIndex={index}
-                                blokkField={field}
-                                formueArrayLengde={formueArray.fields.length}
-                                eps={RemoteData.isSuccess(epsStatus) ? epsStatus.value : null}
-                                formController={control}
-                                triggerValidation={trigger}
-                                onSlettClick={() => formueArray.remove(index)}
-                                formuegrenser={formuegrenser}
-                            />
-                        ))}
+                        <ul className={styles.formueBlokkContainer}>
+                            {formueArray.fields.map((field, index) => (
+                                <li key={field.id}>
+                                    <Panel border>
+                                        <FormueBlokk
+                                            revurderingsperiode={props.revurdering.periode}
+                                            blokkIndex={index}
+                                            blokkField={field}
+                                            formueArrayLengde={formueArray.fields.length}
+                                            eps={RemoteData.isSuccess(epsStatus) ? epsStatus.value : null}
+                                            formController={control}
+                                            triggerValidation={trigger}
+                                            onSlettClick={() => formueArray.remove(index)}
+                                            formuegrenser={formuegrenser}
+                                        />
+                                    </Panel>
+                                </li>
+                            ))}
+                        </ul>
                         <div className={styles.nyPeriodeKnappContainer}>
                             <Button
                                 variant="secondary"
@@ -208,6 +213,7 @@ const FormueBlokk = (props: {
                         defaultValue={props.blokkField.periode.fraOgMed}
                         render={({ field, fieldState }) => (
                             <DatePicker
+                                id={field.name}
                                 label={intl.formatMessage({ id: 'periode.fraOgMed' })}
                                 dateFormat="MM/yyyy"
                                 showMonthYearPicker
@@ -231,6 +237,7 @@ const FormueBlokk = (props: {
                         defaultValue={props.blokkField.periode.tilOgMed}
                         render={({ field, fieldState }) => (
                             <DatePicker
+                                id={field.name}
                                 label={intl.formatMessage({ id: 'periode.tilOgMed' })}
                                 dateFormat="MM/yyyy"
                                 showMonthYearPicker
@@ -310,7 +317,7 @@ const FormueBlokk = (props: {
                             label={intl.formatMessage({ id: 'formueblokk.begrunnelse' })}
                             value={field.value ?? ''}
                             onChange={field.onChange}
-                            feil={fieldState.error?.message}
+                            error={fieldState.error?.message}
                         />
                     )}
                 />
@@ -371,23 +378,23 @@ const FormuePanel = (props: {
                 <ul className={styles.formueInputs}>
                     {verdierId.map((id) => {
                         return (
-                            <Controller
-                                key={id}
-                                name={`${panelName}.${id}`}
-                                control={props.formController}
-                                defaultValue={formueVerdier?.[id] ?? '0'}
-                                render={({ field, fieldState }) => (
-                                    <Input
-                                        id={field.name}
-                                        label={intl.formatMessage({ id: `formuepanel.${id}` })}
-                                        {...field}
-                                        feil={fieldState?.error?.message}
-                                        bredde="M"
-                                        inputMode="numeric"
-                                        pattern="[0-9]*"
-                                    />
-                                )}
-                            />
+                            <li key={id}>
+                                <Controller
+                                    name={`${panelName}.${id}`}
+                                    control={props.formController}
+                                    defaultValue={formueVerdier?.[id] ?? '0'}
+                                    render={({ field, fieldState }) => (
+                                        <TextField
+                                            id={field.name}
+                                            label={intl.formatMessage({ id: `formuepanel.${id}` })}
+                                            {...field}
+                                            error={fieldState?.error?.message}
+                                            inputMode="numeric"
+                                            pattern="[0-9]*"
+                                        />
+                                    )}
+                                />
+                            </li>
                         );
                     })}
                 </ul>

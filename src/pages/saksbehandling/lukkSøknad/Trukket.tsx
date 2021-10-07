@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Loader } from '@navikt/ds-react';
+import { Button, Label, Loader } from '@navikt/ds-react';
 import { Datepicker } from 'nav-datovelger';
-import { Label } from 'nav-frontend-skjema';
 import { Feilmelding } from 'nav-frontend-typografi';
 import React, { useCallback, useState } from 'react';
 
@@ -55,7 +54,7 @@ const Trukket = (props: TrukketProps) => {
     return (
         <div className={styles.trukketContainer}>
             <div className={styles.datoContainer}>
-                <Label htmlFor={'datoSøkerTrakkSøknad'}>
+                <Label as="label" htmlFor={'datoSøkerTrakkSøknad'}>
                     {intl.formatMessage({ id: 'display.trekking.datoSøkerTrakkSøknad' })}
                 </Label>
                 <Datepicker

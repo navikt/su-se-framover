@@ -1,14 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
-import { Feiloppsummering, Radio, RadioGruppe, Textarea } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { FastOppholdFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FastOppholdFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
@@ -116,31 +117,24 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             control={form.control}
                             name="status"
                             render={({ field, fieldState }) => (
-                                <RadioGruppe
+                                <RadioGroup
                                     legend={formatMessage('radio.fastOpphold.legend')}
-                                    feil={fieldState.error?.message}
+                                    error={fieldState.error?.message}
                                     onBlur={field.onBlur}
+                                    value={field.value ?? undefined}
+                                    onChange={field.onChange}
+                                    name={field.name}
                                 >
-                                    <Radio
-                                        id={field.name}
-                                        label={formatMessage('radio.label.ja')}
-                                        name={field.name}
-                                        checked={field.value === FastOppholdINorgeStatus.VilkårOppfylt}
-                                        onChange={() => field.onChange(FastOppholdINorgeStatus.VilkårOppfylt)}
-                                    />
-                                    <Radio
-                                        label={formatMessage('radio.label.nei')}
-                                        name={field.name}
-                                        checked={field.value === FastOppholdINorgeStatus.VilkårIkkeOppfylt}
-                                        onChange={() => field.onChange(FastOppholdINorgeStatus.VilkårIkkeOppfylt)}
-                                    />
-                                    <Radio
-                                        label={formatMessage('radio.label.uavklart')}
-                                        name={field.name}
-                                        checked={field.value === FastOppholdINorgeStatus.Uavklart}
-                                        onChange={() => field.onChange(FastOppholdINorgeStatus.Uavklart)}
-                                    />
-                                </RadioGruppe>
+                                    <Radio id={field.name} value={FastOppholdINorgeStatus.VilkårOppfylt}>
+                                        {formatMessage('radio.label.ja')}
+                                    </Radio>
+                                    <Radio value={FastOppholdINorgeStatus.VilkårIkkeOppfylt}>
+                                        {formatMessage('radio.label.nei')}
+                                    </Radio>
+                                    <Radio value={FastOppholdINorgeStatus.Uavklart}>
+                                        {formatMessage('radio.label.uavklart')}
+                                    </Radio>
+                                </RadioGroup>
                             )}
                         />
                         <div className={sharedStyles.textareaContainer}>
@@ -151,7 +145,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                                     <Textarea
                                         label={formatMessage('input.label.begrunnelse')}
                                         {...field}
-                                        feil={fieldState.error?.message}
+                                        error={fieldState.error?.message}
                                         value={field.value ?? ''}
                                     />
                                 )}
@@ -170,7 +164,7 @@ const FastOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             tittel={formatMessage('feiloppsummering.title')}
                             hidden={!isSubmitted || isValid}
                             feil={hookFormErrorsTilFeiloppsummering(errors)}
-                            innerRef={feiloppsummeringRef}
+                            ref={feiloppsummeringRef}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {

@@ -1,12 +1,11 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Alert, Button, Modal } from '@navikt/ds-react';
+import { Checkbox, Alert, Button, Fieldset, Modal, Radio, RadioGroup, Textarea, TextField } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import { startOfMonth } from 'date-fns/esm';
-import { Input, Textarea, Checkbox, RadioGruppe, Radio, Feiloppsummering, SkjemaGruppe } from 'nav-frontend-skjema';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import Tekstomrade, { BoldRule, HighlightRule, LinebreakRule } from 'nav-frontend-tekstomrade';
-import { Element, Feilmelding, Undertittel } from 'nav-frontend-typografi';
+import { Feilmelding, Undertittel } from 'nav-frontend-typografi';
 import React, { useState, useEffect, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -14,6 +13,7 @@ import { useHistory } from 'react-router-dom';
 import { ErrorCode } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { FormueFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FormueFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
@@ -305,45 +305,38 @@ const Formue = (props: {
                         onSubmit={form.handleSubmit(handleSave(props.nesteUrl), focusAfterTimeout(feiloppsummeringRef))}
                     >
                         <div className={styles.ektefellePartnerSamboer}>
-                            <Element>{formatMessage('input.label.borSøkerMedEktefelle')}</Element>
                             <Controller
                                 control={form.control}
                                 name="borSøkerMedEPS"
                                 render={({ field, fieldState }) => (
-                                    <RadioGruppe feil={fieldState.error?.message} onBlur={field.onBlur}>
-                                        <Radio
-                                            id={field.name}
-                                            radioRef={field.ref}
-                                            label={formatMessage('radio.label.ja')}
-                                            name={field.name}
-                                            checked={field.value}
-                                            onChange={() => {
-                                                field.onChange(true);
-                                            }}
-                                        />
-                                        <Radio
-                                            label={formatMessage('radio.label.nei')}
-                                            name={field.name}
-                                            checked={field.value === false}
-                                            onChange={() => {
-                                                field.onChange(false);
-                                            }}
-                                        />
-                                    </RadioGruppe>
+                                    <RadioGroup
+                                        legend={formatMessage('input.label.borSøkerMedEktefelle')}
+                                        error={fieldState.error?.message}
+                                        onBlur={field.onBlur}
+                                        name={field.name}
+                                        value={field.value?.toString()}
+                                        onChange={(val) => field.onChange(val === true.toString())}
+                                    >
+                                        <Radio id={field.name} ref={field.ref} value={true.toString()}>
+                                            {formatMessage('radio.label.ja')}
+                                        </Radio>
+                                        <Radio value={false.toString()}>{formatMessage('radio.label.nei')}</Radio>
+                                    </RadioGroup>
                                 )}
                             />
                             {watch.borSøkerMedEPS && (
                                 <>
-                                    <Element>{formatMessage('input.label.ektefellesFødselsnummer')}</Element>
-                                    <div className={styles.fnrInput}>
+                                    <div className={styles.fnrInputContainer}>
                                         <Controller
                                             control={form.control}
                                             name="epsFnr"
                                             render={({ field, fieldState }) => (
-                                                <Input
+                                                <TextField
                                                     id={field.name}
-                                                    bredde="S"
-                                                    feil={fieldState.error?.message}
+                                                    label={formatMessage('input.label.ektefellesFødselsnummer')}
+                                                    className={styles.fnrInput}
+                                                    error={fieldState.error?.message}
+                                                    size="small"
                                                     {...field}
                                                     value={field.value ?? ''}
                                                     onChange={(e) => field.onChange(removeSpaces(e.target.value))}
@@ -420,14 +413,16 @@ const Formue = (props: {
                         </div>
 
                         <div className={styles.formueInputContainer}>
-                            <SkjemaGruppe
+                            <Fieldset
+                                legend="Søkers formue"
+                                hideLegend
                                 className={inputToShow === Hvem.Søker ? styles.aktivFormueBlokk : undefined}
-                                feil={
+                                error={
                                     errors.verdier &&
                                     inputToShow !== Hvem.Søker &&
                                     formatMessage('feil.måLeggeInn.søkersFormue')
                                 }
-                                utenFeilPropagering
+                                errorPropagation={false}
                             >
                                 {inputToShow === Hvem.Søker &&
                                     verdierId.map((keyNavn) => (
@@ -457,7 +452,6 @@ const Formue = (props: {
                                             <div>
                                                 <Button
                                                     variant="secondary"
-                                                    className={styles.toggleInput}
                                                     onClick={() => onEndreFormueClick(Hvem.Søker)}
                                                     type="button"
                                                 >
@@ -473,7 +467,6 @@ const Formue = (props: {
                                             <Button
                                                 variant="secondary"
                                                 type="button"
-                                                className={styles.toggleInput}
                                                 onClick={() => onLagreClick(Hvem.Søker)}
                                             >
                                                 Lagre
@@ -481,17 +474,19 @@ const Formue = (props: {
                                         )}
                                     </>
                                 )}
-                            </SkjemaGruppe>
+                            </Fieldset>
 
                             {watch.borSøkerMedEPS && (
-                                <SkjemaGruppe
+                                <Fieldset
+                                    legend="Ektefelle/partners formue"
+                                    hideLegend
                                     className={inputToShow === Hvem.Ektefelle ? styles.aktivFormueBlokk : undefined}
-                                    feil={
+                                    error={
                                         errors.epsVerdier &&
                                         inputToShow !== Hvem.Ektefelle &&
                                         formatMessage('feil.måLeggeInn.epsFormue')
                                     }
-                                    utenFeilPropagering
+                                    errorPropagation={false}
                                 >
                                     {inputToShow === Hvem.Ektefelle &&
                                         verdierId.map((keyNavn) => (
@@ -543,7 +538,7 @@ const Formue = (props: {
                                             Lagre
                                         </Button>
                                     )}
-                                </SkjemaGruppe>
+                                </Fieldset>
                             )}
                         </div>
 
@@ -577,7 +572,7 @@ const Formue = (props: {
                                     label={formatMessage('input.label.begrunnelse')}
                                     {...field}
                                     value={field.value || ''}
-                                    feil={fieldState.error?.message}
+                                    error={fieldState.error?.message}
                                 />
                             )}
                         />
@@ -587,10 +582,9 @@ const Formue = (props: {
                             name="status"
                             render={({ field, fieldState }) => (
                                 <Checkbox
-                                    label={formatMessage('checkbox.henteMerInfo')}
                                     className={styles.henteMerInfoCheckbox}
                                     {...field}
-                                    feil={fieldState.error?.message}
+                                    error={fieldState.error?.message}
                                     checked={field.value === FormueStatus.MåInnhenteMerInformasjon}
                                     onChange={() => {
                                         field.onChange(
@@ -599,7 +593,9 @@ const Formue = (props: {
                                                 : FormueStatus.VilkårOppfylt
                                         );
                                     }}
-                                />
+                                >
+                                    {formatMessage('checkbox.henteMerInfo')}
+                                </Checkbox>
                             )}
                         />
 
@@ -617,7 +613,7 @@ const Formue = (props: {
                             tittel={formatMessage('feiloppsummering.title')}
                             hidden={!isSubmitted || isValid}
                             feil={hookFormErrorsTilFeiloppsummering(errors)}
-                            innerRef={feiloppsummeringRef}
+                            ref={feiloppsummeringRef}
                         />
                         <Vurderingknapper
                             onTilbakeClick={() => {

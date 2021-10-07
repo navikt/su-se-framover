@@ -1,7 +1,8 @@
 import { FormikErrors } from 'formik';
-import { FeiloppsummeringFeil } from 'nav-frontend-skjema';
 import { FieldError, FieldErrors } from 'react-hook-form';
 import * as yup from 'yup';
+
+import { FeiloppsummeringFeil } from '~components/feiloppsummering/Feiloppsummering';
 
 function label(data: Partial<yup.TestMessageParams>) {
     return data.label ?? 'Feltet';
