@@ -1,10 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Loader } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Systemtittel, Element } from 'nav-frontend-typografi';
 import React from 'react';
 
@@ -115,7 +114,7 @@ export const VisSimulering = (props: Props) => {
     if (RemoteData.isFailure(simuleringStatus)) {
         return <div>Feilet mens vi hentet oppdrag/simulering</div>;
     } else if (RemoteData.isPending(simuleringStatus)) {
-        return <NavFrontendSpinner />;
+        return <Loader />;
     }
     if (!behandling.simulering) {
         return <div>Behandlingen har ingen simulering</div>;

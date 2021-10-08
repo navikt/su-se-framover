@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { ContentContainer } from '@navikt/ds-react';
-import NavFrontendSpinner from 'nav-frontend-spinner';
+import { ContentContainer, Loader } from '@navikt/ds-react';
 import Stegindikator from 'nav-frontend-stegindikator';
 import { Undertittel, Feilmelding, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
@@ -287,7 +286,7 @@ const StartUtfylling = () => {
                 søkerFraStore,
                 RemoteData.fold(
                     manglendeData,
-                    () => <NavFrontendSpinner />,
+                    () => <Loader />,
                     manglendeData,
                     (søker) => (
                         <>

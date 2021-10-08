@@ -8,7 +8,6 @@ import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 import { pipe } from 'fp-ts/lib/function';
 import * as S from 'fp-ts/lib/string';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Undertittel } from 'nav-frontend-typografi';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -334,11 +333,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             simuleringStatus,
                             RemoteData.fold(
                                 () => null,
-                                () => (
-                                    <NavFrontendSpinner>
-                                        {intl.formatMessage({ id: 'display.simulerer' })}
-                                    </NavFrontendSpinner>
-                                ),
+                                () => <Loader title={intl.formatMessage({ id: 'display.simulerer' })} />,
                                 (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )

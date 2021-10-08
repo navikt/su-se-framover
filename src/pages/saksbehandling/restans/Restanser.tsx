@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Accordion, Alert, Button, Loader } from '@navikt/ds-react';
 import classNames from 'classnames';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -30,8 +29,8 @@ const Restanser = () => {
     return pipe(
         hentÅpneBehandlingerStatus,
         RemoteData.fold(
-            () => <NavFrontendSpinner />,
-            () => <NavFrontendSpinner />,
+            () => <Loader />,
+            () => <Loader />,
             () => <Alert variant="error">{formatMessage('feil.feilOppstod')}</Alert>,
             (restanser: Restans[]) => {
                 if (restanser.length === 0) {

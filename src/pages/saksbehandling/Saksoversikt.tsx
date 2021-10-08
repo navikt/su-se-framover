@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
-import NavFrontendSpinner from 'nav-frontend-spinner';
+import { Alert, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { Route, Switch, useHistory } from 'react-router-dom';
@@ -85,7 +84,7 @@ const Saksoversikt = () => {
                         RemoteData.combine(søker, sak),
                         RemoteData.fold(
                             () => null,
-                            () => <NavFrontendSpinner />,
+                            () => <Loader />,
                             () =>
                                 RemoteData.isFailure(søker) ? (
                                     <Alert variant="error">{visErrorMelding(søker.error)}</Alert>

@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst, Undertittel, Element, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
@@ -78,7 +77,7 @@ const Kvittering = () => {
                     () => {
                         return (
                             <div className={styles.senderSøknadSpinnerContainer}>
-                                <NavFrontendSpinner />
+                                <Loader />
                             </div>
                         );
                     },

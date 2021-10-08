@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
-import NavFrontendSpinner from 'nav-frontend-spinner';
+import { Alert, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
@@ -37,7 +36,7 @@ const Attestering = () => {
         RemoteData.combine(sak, søker),
         RemoteData.fold(
             () => null,
-            () => <NavFrontendSpinner />,
+            () => <Loader />,
             (_err) => <Alert variant="error">{intl.formatMessage({ id: 'feil.generisk' })}</Alert>,
             ([sakValue, søkerValue]) => {
                 return (

@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Loader } from '@navikt/ds-react';
 import Clipboard from '@navikt/nap-clipboard';
 import { pipe } from 'fp-ts/lib/function';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -86,7 +85,7 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
                 status,
                 RemoteData.fold(
                     () => null,
-                    () => <NavFrontendSpinner />,
+                    () => <Loader />,
                     (err) => (
                         <Alert variant="error">
                             {err?.statusCode === ErrorCode.Unauthorized

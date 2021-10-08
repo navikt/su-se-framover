@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Checkbox, Alert, Button, Fieldset, Modal, Textarea, TextField } from '@navikt/ds-react';
+import { Checkbox, Alert, Button, Fieldset, Loader, Modal, Textarea, TextField } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import { startOfMonth } from 'date-fns/esm';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import Tekstomrade, { BoldRule, HighlightRule, LinebreakRule } from 'nav-frontend-tekstomrade';
 import { Feilmelding, Undertittel } from 'nav-frontend-typografi';
 import React, { useState, useEffect, useRef } from 'react';
@@ -341,7 +340,7 @@ const Formue = (props: {
                                                 eps,
                                                 RemoteData.fold(
                                                     () => null,
-                                                    () => <NavFrontendSpinner />,
+                                                    () => <Loader />,
                                                     (err) => (
                                                         <Alert variant="error">
                                                             {err?.statusCode === ErrorCode.Unauthorized ? (
@@ -596,7 +595,7 @@ const Formue = (props: {
                             RemoteData.combine(lagreBehandlingsinformasjonStatus, lagreEpsGrunnlagStatus),
                             RemoteData.fold(
                                 () => null,
-                                () => <NavFrontendSpinner>{formatMessage('display.lagre.lagrer')}</NavFrontendSpinner>,
+                                () => <Loader title={formatMessage('display.lagre.lagrer')} />,
                                 (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )

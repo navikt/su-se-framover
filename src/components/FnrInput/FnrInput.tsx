@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, TextField } from '@navikt/ds-react';
+import { Alert, Loader, TextField } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useEffect, useState } from 'react';
 
 import { ApiError } from '~api/apiClient';
@@ -80,7 +79,7 @@ export const FnrInput = ({
                 autoComplete={autoComplete}
             />
 
-            {RemoteData.isPending(person) && <NavFrontendSpinner />}
+            {RemoteData.isPending(person) && <Loader />}
             {RemoteData.isSuccess(person) && (
                 <div>
                     <Personkort person={person.value} />

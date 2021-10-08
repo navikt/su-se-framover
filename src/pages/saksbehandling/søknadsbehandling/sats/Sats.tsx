@@ -1,10 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Textarea, Label } from '@navikt/ds-react';
+import { Button, Loader, Textarea, Label } from '@navikt/ds-react';
 import * as B from 'fp-ts/boolean';
 import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/string';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element, Feilmelding } from 'nav-frontend-typografi';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -198,8 +197,8 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
     return pipe(
         epsStatus,
         RemoteData.fold(
-            () => <NavFrontendSpinner />,
-            () => <NavFrontendSpinner />,
+            () => <Loader />,
+            () => <Loader />,
             () => (
                 <div className={styles.epsFeilContainer}>
                     <Feilmelding>{formatMessage('feilmelding.pdlFeil')}</Feilmelding>
@@ -359,11 +358,7 @@ const SatsForm = (props: SatsProps) => {
                             lagreBosituasjonStatus,
                             RemoteData.fold(
                                 () => null,
-                                () => (
-                                    <NavFrontendSpinner>
-                                        {props.formatMessage('display.lagre.lagrer')}
-                                    </NavFrontendSpinner>
-                                ),
+                                () => <Loader title={props.formatMessage('display.lagre.lagrer')} />,
                                 (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )

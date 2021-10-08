@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { RadioGroup, Radio, Textarea } from '@navikt/ds-react';
+import { Loader, RadioGroup, Radio, Textarea } from '@navikt/ds-react';
 import { struct } from 'fp-ts/Eq';
 import * as S from 'fp-ts/string';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import React, { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -154,7 +153,7 @@ const LovligOppholdINorge = (props: VilkårsvurderingBaseProps) => {
                             lagreBehandlingsinformasjonStatus,
                             RemoteData.fold(
                                 () => null,
-                                () => <NavFrontendSpinner>{formatMessage('display.lagre.lagrer')}</NavFrontendSpinner>,
+                                () => <Loader title={formatMessage('display.lagre.lagrer')} />,
                                 (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )

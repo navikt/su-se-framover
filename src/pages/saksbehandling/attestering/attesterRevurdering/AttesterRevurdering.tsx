@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader, Textarea, Select, Panel } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -178,8 +177,8 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
             {pipe(
                 grunnlagsdataOgVilkårsvurderinger,
                 RemoteData.fold(
-                    () => <NavFrontendSpinner />,
-                    () => <NavFrontendSpinner />,
+                    () => <Loader />,
+                    () => <Loader />,
                     (err) => <ApiErrorAlert error={err} />,
                     (grunnlag) => (
                         <div>

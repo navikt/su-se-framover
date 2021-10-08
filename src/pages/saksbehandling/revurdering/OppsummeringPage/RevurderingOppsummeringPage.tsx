@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button } from '@navikt/ds-react';
-import NavFrontendSpinner from 'nav-frontend-spinner';
+import { Button, Loader } from '@navikt/ds-react';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -265,8 +264,8 @@ const RevurderingOppsummeringPage = (props: {
                 {pipe(
                     RemoteData.combine(beregnOgSimulerStatus, props.grunnlagsdataOgVilkårsvurderinger),
                     RemoteData.fold(
-                        () => <NavFrontendSpinner>{formatMessage('beregner.label')}</NavFrontendSpinner>,
-                        () => <NavFrontendSpinner>{formatMessage('beregner.label')}</NavFrontendSpinner>,
+                        () => <Loader title={formatMessage('beregner.label')} />,
+                        () => <Loader title={formatMessage('beregner.label')} />,
                         (err) => (
                             <div>
                                 <ApiErrorAlert error={err} />
