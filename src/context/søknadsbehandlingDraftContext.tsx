@@ -4,16 +4,15 @@ import { UseFormWatch } from 'react-hook-form';
 
 import { Vilkårtype } from '~types/Vilkårsvurdering';
 
-type SøknadsbehandlingDraft = Record<Vilkårtype, Record<string, unknown> | undefined>;
+type DraftKey = Vilkårtype | 'SendTilAttesteringPage';
+
+type SøknadsbehandlingDraft = Record<DraftKey, Record<string, unknown> | undefined>;
 type SøknadsbehandlingDraftContext = {
     value: SøknadsbehandlingDraft;
     setValue: React.Dispatch<React.SetStateAction<SøknadsbehandlingDraft>>;
 };
 
-const initialDraft = Object.values(Vilkårtype).reduce(
-    (acc, currentElement) => ({ ...acc, [currentElement]: undefined }),
-    {} as SøknadsbehandlingDraft
-);
+const initialDraft = {} as SøknadsbehandlingDraft;
 const Context = createContext<SøknadsbehandlingDraftContext>({
     value: initialDraft,
     setValue: () => {
@@ -37,7 +36,7 @@ export const useSøknadsbehandlingDraftContext = () => {
     return { draft: value, isDraftDirty };
 };
 
-export const useSøknadsbehandlingDraftContextFor = <U, T extends Vilkårtype = Vilkårtype>(
+export const useSøknadsbehandlingDraftContextFor = <U, T extends DraftKey = DraftKey>(
     vilkårtype: T,
     equalsInitialValues?: (values: U) => boolean
 ) => {

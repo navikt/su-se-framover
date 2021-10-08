@@ -8,6 +8,7 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import { ApiError, ErrorCode } from '~api/apiClient';
 import Personlinje from '~components/personlinje/Personlinje';
 import Personsøk from '~components/Personsøk/Personsøk';
+import { SøknadsbehandlingDraftProvider } from '~context/søknadsbehandlingDraftContext';
 import * as personSlice from '~features/person/person.slice';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
@@ -136,16 +137,18 @@ const Saksoversikt = () => {
                                                 </div>
                                             </Route>
                                             <Route path={Routes.saksoversiktValgtBehandling.path}>
-                                                <div className={styles.mainContent}>
-                                                    <Switch>
-                                                        <Route path={Routes.saksbehandlingSendTilAttestering.path}>
-                                                            <SendTilAttesteringPage sak={sak} />
-                                                        </Route>
-                                                        <Route path={Routes.saksbehandlingVilkårsvurdering.path}>
-                                                            <Vilkår sak={sak} søker={søker} />
-                                                        </Route>
-                                                    </Switch>
-                                                </div>
+                                                <SøknadsbehandlingDraftProvider>
+                                                    <div className={styles.mainContent}>
+                                                        <Switch>
+                                                            <Route path={Routes.saksbehandlingSendTilAttestering.path}>
+                                                                <SendTilAttesteringPage sak={sak} />
+                                                            </Route>
+                                                            <Route path={Routes.saksbehandlingVilkårsvurdering.path}>
+                                                                <Vilkår sak={sak} søker={søker} />
+                                                            </Route>
+                                                        </Switch>
+                                                    </div>
+                                                </SøknadsbehandlingDraftProvider>
                                             </Route>
                                             <Route path={Routes.alleDokumenterForSak.path}>
                                                 <div className={styles.mainContent}>
