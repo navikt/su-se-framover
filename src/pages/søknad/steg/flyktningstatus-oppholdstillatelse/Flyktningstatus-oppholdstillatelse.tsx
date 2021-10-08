@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
+import { BooleanRadioGroup, CollapsableFormElementDescription } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { TypeOppholdstillatelse } from '~features/søknad/types';
@@ -92,6 +92,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
+    console.log(formik.values.erFlyktning);
 
     return (
         <form
@@ -103,14 +104,17 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
             className={sharedStyles.container}
         >
             <div className={sharedStyles.formContainer}>
-                <JaNeiSpørsmål
-                    id={keyOf<FormData>('erFlyktning')}
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('erFlyktning')}
                     className={sharedStyles.sporsmal}
                     legend={formatMessage('flyktning.label')}
-                    hjelpetekstTittel={formatMessage('flyktning.hjelpetekst.tittel')}
-                    hjelpetekstBody={formatMessage('flyktning.hjelpetekst.body')}
-                    feil={formik.errors.erFlyktning}
-                    state={formik.values.erFlyktning}
+                    description={
+                        <CollapsableFormElementDescription title={formatMessage('flyktning.hjelpetekst.tittel')}>
+                            {formatMessage('flyktning.hjelpetekst.body')}
+                        </CollapsableFormElementDescription>
+                    }
+                    error={formik.errors.erFlyktning}
+                    value={formik.values.erFlyktning}
                     onChange={(val) =>
                         formik.setValues({
                             ...formik.values,
@@ -123,12 +127,12 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                         {formatMessage('flyktning.måVæreFlyktning')}
                     </Alert>
                 )}
-                <JaNeiSpørsmål
-                    id={keyOf<FormData>('erNorskStatsborger')}
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('erNorskStatsborger')}
                     className={sharedStyles.sporsmal}
                     legend={formatMessage('norsk.statsborger.label')}
-                    feil={formik.errors.erNorskStatsborger}
-                    state={formik.values.erNorskStatsborger}
+                    error={formik.errors.erNorskStatsborger}
+                    value={formik.values.erNorskStatsborger}
                     onChange={(val) =>
                         formik.setValues({
                             ...formik.values,
@@ -139,12 +143,12 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     }
                 />
                 {formik.values.erNorskStatsborger === false && (
-                    <JaNeiSpørsmål
-                        id={keyOf<FormData>('harOppholdstillatelse')}
+                    <BooleanRadioGroup
+                        name={keyOf<FormData>('harOppholdstillatelse')}
                         className={sharedStyles.sporsmal}
                         legend={formatMessage('oppholdstillatelse.label')}
-                        feil={formik.errors.harOppholdstillatelse}
-                        state={formik.values.harOppholdstillatelse}
+                        error={formik.errors.harOppholdstillatelse}
+                        value={formik.values.harOppholdstillatelse}
                         onChange={(val) =>
                             formik.setValues({
                                 ...formik.values,
@@ -188,12 +192,12 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     </Alert>
                 )}
 
-                <JaNeiSpørsmål
-                    id={keyOf<FormData>('statsborgerskapAndreLand')}
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('statsborgerskapAndreLand')}
                     className={sharedStyles.sporsmal}
                     legend={formatMessage('statsborger.andre.land.label')}
-                    feil={formik.errors.statsborgerskapAndreLand}
-                    state={formik.values.statsborgerskapAndreLand}
+                    error={formik.errors.statsborgerskapAndreLand}
+                    value={formik.values.statsborgerskapAndreLand}
                     onChange={(val) =>
                         formik.setValues({
                             ...formik.values,

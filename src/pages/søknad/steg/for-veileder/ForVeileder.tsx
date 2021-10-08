@@ -4,7 +4,7 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
-import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
+import { BooleanRadioGroup } from '~/components/formElements/FormElements';
 import søknadSlice, { ForVeilederDigitalSøknad } from '~/features/søknad/søknad.slice';
 import { Person } from '~api/personApi';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
@@ -119,12 +119,12 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                         </Alert>
                     </Panel>
 
-                    <JaNeiSpørsmål
-                        id="harSøkerMøttPersonlig"
+                    <BooleanRadioGroup
+                        name="harSøkerMøttPersonlig"
                         className={sharedStyles.sporsmal}
                         legend={<FormattedMessage id="input.harSøkerMøttPersonlig.label" />}
-                        feil={formik.errors.harSøkerMøttPersonlig}
-                        state={formik.values.harSøkerMøttPersonlig}
+                        error={formik.errors.harSøkerMøttPersonlig}
+                        value={formik.values.harSøkerMøttPersonlig}
                         onChange={(val) => {
                             formik.setValues((values) => ({
                                 ...values,

@@ -2,7 +2,7 @@ import { FormikErrors } from 'formik';
 import React, { useMemo } from 'react';
 
 import { FnrInput } from '~components/FnrInput/FnrInput';
-import { JaNeiSpørsmål } from '~components/formElements/FormElements';
+import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import { EPSFormData } from '~features/søknad/types';
 import { useI18n } from '~lib/i18n';
@@ -49,11 +49,11 @@ const EktefellePartnerSamboer = (props: Props) => {
 
             <div className={styles.ufør}>
                 {erEpsUnder67 && (
-                    <JaNeiSpørsmål
-                        id={`${props.id}.${keyOf<EPSFormData>('erUførFlyktning')}`}
+                    <BooleanRadioGroup
+                        name={`${props.id}.${keyOf<EPSFormData>('erUførFlyktning')}`}
                         legend={formatMessage('delerBoligMed.epsUførFlyktning')}
-                        feil={props.feil?.erUførFlyktning}
-                        state={epsFormData.erUførFlyktning}
+                        error={props.feil?.erUførFlyktning}
+                        value={epsFormData.erUførFlyktning}
                         onChange={(val) => {
                             props.onChange({ ...epsFormData, erUførFlyktning: val });
                         }}

@@ -7,7 +7,7 @@ import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
+import { BooleanRadioGroup } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
@@ -305,12 +305,12 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 }}
             >
                 <div className={sharedStyles.formContainer}>
-                    <JaNeiSpørsmål
-                        id="harReistTilUtlandetSiste90dager"
+                    <BooleanRadioGroup
+                        name="harReistTilUtlandetSiste90dager"
                         className={sharedStyles.sporsmal}
                         legend={formatMessage('harReistSiste90.label')}
-                        feil={formik.errors.harReistTilUtlandetSiste90dager}
-                        state={formik.values.harReistTilUtlandetSiste90dager}
+                        error={formik.errors.harReistTilUtlandetSiste90dager}
+                        value={formik.values.harReistTilUtlandetSiste90dager}
                         onChange={(val) => {
                             formik.setValues({
                                 ...formik.values,
@@ -368,12 +368,12 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         />
                     )}
 
-                    <JaNeiSpørsmål
-                        id="skalReiseTilUtlandetNeste12Måneder"
+                    <BooleanRadioGroup
+                        name="skalReiseTilUtlandetNeste12Måneder"
                         className={sharedStyles.sporsmal}
                         legend={formatMessage('skalReiseNeste12.label')}
-                        feil={formik.errors.skalReiseTilUtlandetNeste12Måneder}
-                        state={formik.values.skalReiseTilUtlandetNeste12Måneder}
+                        error={formik.errors.skalReiseTilUtlandetNeste12Måneder}
+                        value={formik.values.skalReiseTilUtlandetNeste12Måneder}
                         onChange={(val) => {
                             formik.setValues({
                                 ...formik.values,

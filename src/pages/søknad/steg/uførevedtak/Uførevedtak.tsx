@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
+import { BooleanRadioGroup } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { useI18n } from '~lib/i18n';
@@ -52,11 +52,11 @@ const Uførevedtak = (props: { nesteUrl: string; forrigeUrl: string; avbrytUrl: 
             className={sharedStyles.container}
         >
             <div className={sharedStyles.formContainer}>
-                <JaNeiSpørsmål
-                    id="harUførevedtak"
+                <BooleanRadioGroup
+                    name="harUførevedtak"
                     legend={formatMessage('uførevedtak.label')}
-                    feil={formik.errors.harUførevedtak}
-                    state={formik.values.harUførevedtak}
+                    error={formik.errors.harUførevedtak}
+                    value={formik.values.harUførevedtak}
                     onChange={(e) =>
                         formik.setValues({
                             ...formik.values,

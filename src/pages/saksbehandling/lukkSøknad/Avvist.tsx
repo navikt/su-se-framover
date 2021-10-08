@@ -4,7 +4,7 @@ import { FormikErrors } from 'formik';
 import React, { useCallback } from 'react';
 
 import { ApiError } from '~api/apiClient';
-import { JaNeiSpørsmål } from '~components/formElements/FormElements';
+import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import { hentLukketSøknadBrevutkast } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
@@ -68,11 +68,11 @@ const Avvist = (props: AvvistProps) => {
     return (
         <div className={styles.avvistContainer}>
             <div className={styles.radioContainer}>
-                <JaNeiSpørsmål
-                    id={'sendBrevForAvvist'}
+                <BooleanRadioGroup
+                    name="sendBrevForAvvist"
                     legend={intl.formatMessage({ id: 'display.avvist.sendBrevTilSøker' })}
-                    feil={props.feilmeldinger.sendBrevForAvvist}
-                    state={props.avvistFormData.sendBrevForAvvist}
+                    error={props.feilmeldinger.sendBrevForAvvist}
+                    value={props.avvistFormData.sendBrevForAvvist}
                     onChange={(val) => {
                         props.onValueChange({ sendBrevForAvvist: val, typeBrev: null, fritekst: null });
                     }}

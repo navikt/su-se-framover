@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
+import { BooleanRadioGroup } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { focusAfterTimeout } from '~lib/formUtils';
@@ -100,12 +100,12 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
             className={sharedStyles.container}
         >
             <div className={sharedStyles.formContainer}>
-                <JaNeiSpørsmål
-                    id={keyOf<FormData>('eierBolig')}
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('eierBolig')}
                     className={sharedStyles.sporsmal}
                     legend={formatMessage('eierBolig.label')}
-                    feil={formik.errors.eierBolig}
-                    state={formik.values.eierBolig}
+                    error={formik.errors.eierBolig}
+                    value={formik.values.eierBolig}
                     onChange={(e) =>
                         formik.setValues((v) => ({
                             ...v,
@@ -121,12 +121,12 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     }
                 />
                 {formik.values.eierBolig && (
-                    <JaNeiSpørsmål
-                        id={keyOf<FormData>('borIBolig')}
+                    <BooleanRadioGroup
+                        name={keyOf<FormData>('borIBolig')}
                         className={sharedStyles.sporsmal}
                         legend={formatMessage('eierBolig.borIBolig')}
-                        feil={formik.errors.borIBolig}
-                        state={formik.values.borIBolig}
+                        error={formik.errors.borIBolig}
+                        value={formik.values.borIBolig}
                         onChange={(e) =>
                             formik.setValues((v) => ({
                                 ...v,
@@ -165,12 +165,12 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                 )}
 
                 {formik.values.eierBolig === false && (
-                    <JaNeiSpørsmål
-                        id={keyOf<FormData>('harDepositumskonto')}
+                    <BooleanRadioGroup
+                        name={keyOf<FormData>('harDepositumskonto')}
                         className={sharedStyles.sporsmal}
                         legend={formatMessage('depositum.label')}
-                        feil={formik.errors.harDepositumskonto}
-                        state={formik.values.harDepositumskonto}
+                        error={formik.errors.harDepositumskonto}
+                        value={formik.values.harDepositumskonto}
                         onChange={(e) =>
                             formik.setValues((v) => ({
                                 ...v,
@@ -209,12 +209,12 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                 )}
 
                 {formik.values.eierBolig && (
-                    <JaNeiSpørsmål
-                        id={keyOf<FormData>('eierMerEnnEnBolig')}
+                    <BooleanRadioGroup
+                        name={keyOf<FormData>('eierMerEnnEnBolig')}
                         className={sharedStyles.sporsmal}
                         legend={formatMessage('eiendom.eierAndreEiendommer')}
-                        feil={formik.errors.eierMerEnnEnBolig}
-                        state={formik.values.eierMerEnnEnBolig}
+                        error={formik.errors.eierMerEnnEnBolig}
+                        value={formik.values.eierMerEnnEnBolig}
                         onChange={(e) =>
                             formik.setValues((v) => ({
                                 ...v,
@@ -252,12 +252,12 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     </div>
                 )}
 
-                <JaNeiSpørsmål
-                    id={keyOf<FormData>('eierKjøretøy')}
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('eierKjøretøy')}
                     className={sharedStyles.sporsmal}
                     legend={formatMessage('kjøretøy.label')}
-                    feil={formik.errors.eierKjøretøy}
-                    state={formik.values.eierKjøretøy}
+                    error={formik.errors.eierKjøretøy}
+                    value={formik.values.eierKjøretøy}
                     onChange={(e) =>
                         formik.setValues((v) => ({
                             ...v,
@@ -306,16 +306,16 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     />
                 )}
 
-                <JaNeiSpørsmål
-                    id={keyOf<FormData>('harInnskuddPåKonto')}
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('harInnskuddPåKonto')}
                     className={sharedStyles.sporsmal}
                     legend={
                         formik.values.harDepositumskonto
                             ? formatMessage('innskudd.pengerPåKontoInkludertDepositum')
                             : formatMessage('innskudd.label')
                     }
-                    feil={formik.errors.harInnskuddPåKonto}
-                    state={formik.values.harInnskuddPåKonto}
+                    error={formik.errors.harInnskuddPåKonto}
+                    value={formik.values.harInnskuddPåKonto}
                     onChange={(e) =>
                         formik.setValues((v) => ({
                             ...v,
@@ -340,12 +340,12 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     />
                 )}
 
-                <JaNeiSpørsmål
-                    id={keyOf<FormData>('harVerdipapir')}
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('harVerdipapir')}
                     className={sharedStyles.sporsmal}
                     legend={formatMessage('verdipapir.label')}
-                    feil={formik.errors.harVerdipapir}
-                    state={formik.values.harVerdipapir}
+                    error={formik.errors.harVerdipapir}
+                    value={formik.values.harVerdipapir}
                     onChange={(e) =>
                         formik.setValues((v) => ({
                             ...v,
@@ -371,12 +371,12 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     />
                 )}
 
-                <JaNeiSpørsmål
-                    id={keyOf<FormData>('skylderNoenMegPenger')}
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('skylderNoenMegPenger')}
                     className={sharedStyles.sporsmal}
                     legend={formatMessage('skylderNoenMegPenger.label')}
-                    feil={formik.errors.skylderNoenMegPenger}
-                    state={formik.values.skylderNoenMegPenger}
+                    error={formik.errors.skylderNoenMegPenger}
+                    value={formik.values.skylderNoenMegPenger}
                     onChange={(e) =>
                         formik.setValues((v) => ({
                             ...v,
@@ -402,12 +402,12 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                     />
                 )}
 
-                <JaNeiSpørsmål
-                    id={keyOf<FormData>('harKontanter')}
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('harKontanter')}
                     className={sharedStyles.sporsmal}
                     legend={formatMessage('harKontanter.label')}
-                    feil={formik.errors.harKontanter}
-                    state={formik.values.harKontanter}
+                    error={formik.errors.harKontanter}
+                    value={formik.values.harKontanter}
                     onChange={(e) =>
                         formik.setValues((v) => ({
                             ...v,

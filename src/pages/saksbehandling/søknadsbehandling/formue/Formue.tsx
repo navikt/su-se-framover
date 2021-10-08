@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Checkbox, Alert, Button, Fieldset, Modal, Radio, RadioGroup, Textarea, TextField } from '@navikt/ds-react';
+import { Checkbox, Alert, Button, Fieldset, Modal, Textarea, TextField } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import { startOfMonth } from 'date-fns/esm';
 import NavFrontendSpinner from 'nav-frontend-spinner';
@@ -14,6 +14,7 @@ import { ErrorCode } from '~api/apiClient';
 import * as personApi from '~api/personApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
+import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import { FormueFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FormueFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
@@ -309,19 +310,11 @@ const Formue = (props: {
                                 control={form.control}
                                 name="borSøkerMedEPS"
                                 render={({ field, fieldState }) => (
-                                    <RadioGroup
+                                    <BooleanRadioGroup
                                         legend={formatMessage('input.label.borSøkerMedEktefelle')}
                                         error={fieldState.error?.message}
-                                        onBlur={field.onBlur}
-                                        name={field.name}
-                                        value={field.value?.toString()}
-                                        onChange={(val) => field.onChange(val === true.toString())}
-                                    >
-                                        <Radio id={field.name} ref={field.ref} value={true.toString()}>
-                                            {formatMessage('radio.label.ja')}
-                                        </Radio>
-                                        <Radio value={false.toString()}>{formatMessage('radio.label.nei')}</Radio>
-                                    </RadioGroup>
+                                        {...field}
+                                    />
                                 )}
                             />
                             {watch.borSøkerMedEPS && (

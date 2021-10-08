@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Radio, RadioGroup, Textarea } from '@navikt/ds-react';
+import { Textarea } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import classNames from 'classnames';
 import { Ingress, Element, Normaltekst } from 'nav-frontend-typografi';
@@ -13,6 +13,7 @@ import { ApiError, ErrorMessage } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { FnrInput } from '~components/FnrInput/FnrInput';
+import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
@@ -163,18 +164,11 @@ const EPSForm = (props: {
                     control={props.control}
                     name="erEPSUførFlyktning"
                     render={({ field, fieldState }) => (
-                        <RadioGroup
+                        <BooleanRadioGroup
                             legend={props.intl.formatMessage({ id: 'form.erEPSUførFlyktning' })}
                             error={fieldState.error?.message}
-                            name={field.name}
-                            value={field.value?.toString()}
-                            onChange={(val) => field.onChange(val === true.toString())}
-                        >
-                            <Radio id={field.name} ref={field.ref} value={true.toString()}>
-                                Ja
-                            </Radio>
-                            <Radio value={false.toString()}>Nei</Radio>
-                        </RadioGroup>
+                            {...field}
+                        />
                     )}
                 />
             )}
@@ -188,18 +182,11 @@ const DelerSøkerBoligForm = (props: { control: Control<BosituasjonFormData>; in
             control={props.control}
             name="delerSøkerBolig"
             render={({ field, fieldState }) => (
-                <RadioGroup
+                <BooleanRadioGroup
                     legend={props.intl.formatMessage({ id: 'form.delerSøkerBolig' })}
                     error={fieldState.error?.message}
-                    name={field.name}
-                    value={field.value?.toString()}
-                    onChange={(val) => field.onChange(val === true.toString())}
-                >
-                    <Radio id={field.name} ref={field.ref} value={true.toString()}>
-                        Ja
-                    </Radio>
-                    <Radio value={false.toString()}>Nei</Radio>
-                </RadioGroup>
+                    {...field}
+                />
             )}
         />
     );
@@ -382,18 +369,11 @@ const BosituasjonForm = (props: {
                             control={form.control}
                             name="harEPS"
                             render={({ field, fieldState }) => (
-                                <RadioGroup
+                                <BooleanRadioGroup
                                     legend={intl.formatMessage({ id: 'form.harSøkerEPS' })}
                                     error={fieldState.error?.message}
-                                    name={field.name}
-                                    value={field.value?.toString()}
-                                    onChange={(val) => field.onChange(val === true.toString())}
-                                >
-                                    <Radio id={field.name} ref={field.ref} value={true.toString()}>
-                                        Ja
-                                    </Radio>
-                                    <Radio value={false.toString()}>Nei</Radio>
-                                </RadioGroup>
+                                    {...field}
+                                />
                             )}
                         />
                         {harEPS && (

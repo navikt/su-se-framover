@@ -7,7 +7,7 @@ import { Datepicker } from 'nav-datovelger';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { JaNeiSpørsmål } from '~/components/formElements/FormElements';
+import { BooleanRadioGroup } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { Adresse, IngenAdresseGrunn } from '~api/personApi';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
@@ -223,12 +223,12 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
             className={sharedStyles.container}
         >
             <div className={sharedStyles.formContainer}>
-                <JaNeiSpørsmål
-                    id={keyOf<FormData>('borOgOppholderSegINorge')}
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('borOgOppholderSegINorge')}
                     className={sharedStyles.sporsmal}
                     legend={formatMessage('borOgOppholderSegINorge.label')}
-                    feil={formik.errors.borOgOppholderSegINorge}
-                    state={formik.values.borOgOppholderSegINorge}
+                    error={formik.errors.borOgOppholderSegINorge}
+                    value={formik.values.borOgOppholderSegINorge}
                     onChange={(val) => {
                         formik.setValues((v) => ({ ...v, borOgOppholderSegINorge: val }));
                     }}
@@ -239,12 +239,12 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     </Alert>
                 )}
 
-                <JaNeiSpørsmål
-                    id={keyOf<FormData>('innlagtPåInstitusjon')}
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('innlagtPåInstitusjon')}
                     className={sharedStyles.sporsmal}
                     legend={formatMessage('innlagtPåInstitusjon.label')}
-                    feil={formik.errors.innlagtPåInstitusjon}
-                    state={formik.values.innlagtPåInstitusjon}
+                    error={formik.errors.innlagtPåInstitusjon}
+                    value={formik.values.innlagtPåInstitusjon}
                     onChange={(val) => {
                         formik.setValues((v) => ({
                             ...v,
@@ -334,12 +334,12 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     </div>
                 )}
 
-                <JaNeiSpørsmål
-                    id={keyOf<FormData>('delerBoligMedPersonOver18')}
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('delerBoligMedPersonOver18')}
                     className={sharedStyles.sporsmal}
                     legend={formatMessage('delerBoligMed.delerBoligMedPersonOver18')}
-                    feil={formik.errors.delerBoligMedPersonOver18}
-                    state={formik.values.delerBoligMedPersonOver18}
+                    error={formik.errors.delerBoligMedPersonOver18}
+                    value={formik.values.delerBoligMedPersonOver18}
                     onChange={(val) => {
                         formik.setValues((v) => ({
                             ...v,
