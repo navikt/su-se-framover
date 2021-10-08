@@ -182,20 +182,19 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                         <CheckboxGroup
                             legend={intl.formatMessage({ id: 'input.informasjonSomRevurderes.label' })}
                             error={formik.errors.informasjonSomRevurderes}
+                            value={formik.values.informasjonSomRevurderes}
+                            onChange={(vals) =>
+                                formik.setValues((v) => ({
+                                    ...v,
+                                    informasjonSomRevurderes: vals as InformasjonSomRevurderes[],
+                                }))
+                            }
                         >
                             {Object.values(InformasjonSomRevurderes).map((i, idx) => (
                                 <Checkbox
                                     key={i}
                                     id={idx === 0 ? keyOf<FormValues>('informasjonSomRevurderes') : undefined}
-                                    checked={formik.values.informasjonSomRevurderes.includes(i)}
-                                    onChange={(e) => {
-                                        return formik.setValues({
-                                            ...formik.values,
-                                            informasjonSomRevurderes: e.target.checked
-                                                ? [...formik.values.informasjonSomRevurderes, i]
-                                                : formik.values.informasjonSomRevurderes.filter((i2) => i2 !== i),
-                                        });
-                                    }}
+                                    value={i}
                                 >
                                     {intl.formatMessage({ id: informasjonSomRevurderesMessageId(i) })}
                                 </Checkbox>
