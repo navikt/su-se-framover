@@ -5,6 +5,7 @@ import * as S from 'fp-ts/lib/string';
 
 import { Nullable } from '~lib/types';
 
+import { Beregningsmerknad } from './Beregningsmerknad';
 import { Fradrag, eqFradragBortsettFraPeriode } from './Fradrag';
 import { Sats } from './Sats';
 
@@ -29,10 +30,11 @@ export interface Månedsberegning {
     satsbeløp: number;
     epsFribeløp: number;
     epsInputFradrag: Fradrag[];
+    merknader: Beregningsmerknad[];
 }
 
-export const eqMånedsberegningBortsettFraPeriode: Eq<Månedsberegning> = struct<
-    Omit<Månedsberegning, 'fraOgMed' | 'tilOgMed'>
+export const eqMånedsberegningBortsettFraPeriodeOgMerknad: Eq<Månedsberegning> = struct<
+    Omit<Månedsberegning, 'fraOgMed' | 'tilOgMed' | 'merknader'>
 >({
     beløp: N.Eq,
     epsFribeløp: N.Eq,

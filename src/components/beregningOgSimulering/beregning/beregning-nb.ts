@@ -60,4 +60,18 @@ export default {
     'utbetaling.tabellheader.periode': 'Periode',
     'utbetaling.tabellheader.beløp': 'Beløp',
     'utbetaling.tabellheader.grunnbeløp': 'Grunnbeløp',
+
+    'merknad.type.endringGrunnbeløp': 'Endring av grunnbeløp',
+    'merknad.type.øktYtelse': 'Økt ytelse',
+    'merknad.type.redusertYtelse': 'Redusert ytelse',
+    'merknad.type.endringUnderTiProsent': 'Endring under ti prosent',
+    'merknad.type.nyYtelse': 'Ny ytelse',
+
+    'merknad.heading': 'Beregningen har merknader',
+    'merknad.heading.forkastetBeregning': 'Forkastet beregning',
+    'merknad.heading.benyttetBeregning': 'Benyttet beregning',
+    'merknad.heading.gammeltGrunnbeløp': 'Gammelt grunnbeløp',
+    'merknad.heading.nyttGrunnbeløp': 'Nytt grunnbeløp',
+
+    'merknad.detail.grunnbeløp': '{grunnbeløp} (gyldig fra {dato})',
 };
