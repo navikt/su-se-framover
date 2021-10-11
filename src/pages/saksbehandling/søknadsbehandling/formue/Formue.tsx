@@ -1,10 +1,20 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Checkbox, Alert, Button, Fieldset, Loader, Modal, Textarea, TextField } from '@navikt/ds-react';
+import {
+    Checkbox,
+    Alert,
+    Button,
+    BodyLong,
+    Fieldset,
+    Loader,
+    Modal,
+    Textarea,
+    TextField,
+    Heading,
+} from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import { startOfMonth } from 'date-fns/esm';
-import Tekstomrade, { BoldRule, HighlightRule, LinebreakRule } from 'nav-frontend-tekstomrade';
-import { Feilmelding, Undertittel } from 'nav-frontend-typografi';
+import { Feilmelding } from 'nav-frontend-typografi';
 import React, { useState, useEffect, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -343,7 +353,8 @@ const Formue = (props: {
                                                     () => <Loader />,
                                                     (err) => (
                                                         <Alert variant="error">
-                                                            {err?.statusCode === ErrorCode.Unauthorized ? (
+                                                            {err?.statusCode === ErrorCode.Unauthorized ||
+                                                            true.toString() === 'true' ? (
                                                                 <Modal
                                                                     open={true}
                                                                     onClose={() => {
@@ -352,19 +363,12 @@ const Formue = (props: {
                                                                 >
                                                                     <Modal.Content>
                                                                         <div className={styles.modalInnhold}>
-                                                                            <Undertittel>
+                                                                            <Heading level="2" size="small" spacing>
                                                                                 {formatMessage(
                                                                                     'modal.skjerming.heading'
                                                                                 )}
-                                                                            </Undertittel>
-                                                                            <Tekstomrade
-                                                                                className={styles.modalTekst}
-                                                                                rules={[
-                                                                                    BoldRule,
-                                                                                    HighlightRule,
-                                                                                    LinebreakRule,
-                                                                                ]}
-                                                                            >
+                                                                            </Heading>
+                                                                            <BodyLong spacing>
                                                                                 {formatMessage(
                                                                                     'modal.skjerming.innhold',
                                                                                     {
@@ -373,9 +377,11 @@ const Formue = (props: {
                                                                                         ),
                                                                                         fnr: søknadInnhold
                                                                                             .personopplysninger.fnr,
+                                                                                        b: (chunks) => <b>{chunks}</b>,
+                                                                                        br: () => <br />,
                                                                                     }
                                                                                 )}
-                                                                            </Tekstomrade>
+                                                                            </BodyLong>
                                                                             <Button
                                                                                 variant="secondary"
                                                                                 type="button"
