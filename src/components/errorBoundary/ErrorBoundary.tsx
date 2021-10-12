@@ -2,6 +2,8 @@ import * as Sentry from '@sentry/browser';
 import { Feilmelding } from 'nav-frontend-typografi';
 import React, { ErrorInfo } from 'react';
 
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
+
 import styles from './errorBoundary.module.less';
 
 class ErrorBoundary extends React.Component<unknown, { hasError: boolean; error?: Error; eventId?: string }> {
@@ -27,9 +29,9 @@ class ErrorBoundary extends React.Component<unknown, { hasError: boolean; error?
             return (
                 <div className={styles.container}>
                     <Feilmelding>En feil har oppstått.</Feilmelding>
-                    <a href="/" className="knapp knapp--hoved">
+                    <LinkAsButton href="/" variant="primary">
                         Tilbake
-                    </a>
+                    </LinkAsButton>
                     <hr />
                     <div>
                         Informasjon for utviklere:

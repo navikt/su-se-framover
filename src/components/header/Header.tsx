@@ -1,5 +1,4 @@
-import { Link } from '@navikt/ds-react';
-import NavHeader from '@navikt/nap-header';
+import { Header } from '@navikt/ds-react-internal';
 import React from 'react';
 
 import Config from '~/config';
@@ -8,39 +7,45 @@ import * as Routes from '~lib/routes';
 import { LoggedInUser, Rolle } from '~types/LoggedInUser';
 
 import messages from './header-nb';
-import styles from './header.module.less';
-import Menyknapp from './Menyknapp';
 
 interface Props {
     user: LoggedInUser | null;
 }
 
-const Header = (props: Props) => {
+const SuHeader = (props: Props) => {
     const { intl } = useI18n({ messages });
     return (
-        <NavHeader title={intl.formatMessage({ id: 'title' })} titleHref={'/'}>
+        <Header>
+            <Header.Title href="/" style={{ marginRight: 'auto' }}>
+                {intl.formatMessage({ id: 'title' })}
+            </Header.Title>
             {props.user && (
-                <div className={styles.content}>
+                <>
                     {props.user.roller.includes(Rolle.Saksbehandler) && (
-                        <Link
+                        <Header.Title
                             href={Routes.soknadPersonSøk.createURL({
                                 papirsøknad: true,
                             })}
-                            className={styles.papirsoknad}
                         >
                             {intl.formatMessage({ id: 'link.papirsøknad' })}
-                        </Link>
+                        </Header.Title>
                     )}
-                    <Menyknapp
-                        navn={props.user.navn}
-                        onLoggUtClick={() => {
-                            window.location.href = Config.LOGOUT_URL;
-                        }}
-                    />
-                </div>
+                    <Header.Dropdown>
+                        <Header.Dropdown.UserButton name={props.user.navn} description={props.user.navIdent} />
+                        <Header.Dropdown.Menu>
+                            <Header.Dropdown.Menu.Item
+                                onClick={() => {
+                                    window.location.href = Config.LOGOUT_URL;
+                                }}
+                            >
+                                Logg ut
+                            </Header.Dropdown.Menu.Item>
+                        </Header.Dropdown.Menu>
+                    </Header.Dropdown>
+                </>
             )}
-        </NavHeader>
+        </Header>
     );
 };
 
-export default Header;
+export default SuHeader;
