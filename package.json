@@ -51,7 +51,7 @@
         "@navikt/ds-react": "^0.10.2",
         "@navikt/ds-react-internal": "^0.3.1",
         "@navikt/fnrvalidator": "^1.1.4",
-        "@reduxjs/toolkit": "^1.6.1",
+        "@reduxjs/toolkit": "^1.6.2",
         "@sentry/browser": "^6.13.3",
         "@sentry/cli": "^1.69.1",
         "@types/jest": "^27.0.2",
