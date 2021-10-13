@@ -285,13 +285,13 @@ export const FormueVilkårsblokk = (props: {
                         <div>
                             {props.formue.status === FormueStatus.VilkårOppfylt ? (
                                 <>
-                                    <Element>{formatMessage('display.vilkårOppfylt')}</Element>
-                                    <p>{formatMessage('display.vilkårOppfyltGrunn')}</p>
+                                    <Element>{formatMessage('formue.vilkårOppfylt')}</Element>
+                                    <p>{formatMessage('formue.vilkårOppfyltGrunn')}</p>
                                 </>
                             ) : props.formue.status === FormueStatus.VilkårIkkeOppfylt ? (
                                 <>
-                                    <p>{formatMessage('display.vilkårIkkeOppfylt')}</p>
-                                    <p>{formatMessage('display.vilkårIkkeOppfyltGrunn')}</p>
+                                    <p>{formatMessage('formue.vilkårIkkeOppfylt')}</p>
+                                    <p>{formatMessage('formue.vilkårIkkeOppfyltGrunn')}</p>
                                 </>
                             ) : (
                                 <>

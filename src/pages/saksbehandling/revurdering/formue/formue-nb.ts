@@ -5,16 +5,6 @@ export default {
 
     'formueblokk.begrunnelse': 'Begrunnelse',
 
-    'formuepanel.verdiPåBolig': 'Verdier på bolig',
-    'formuepanel.verdiPåEiendom': 'Verdier på eiendom',
-    'formuepanel.verdiPåKjøretøy': 'Verdier på kjøretøy',
-    'formuepanel.innskuddsbeløp': 'Innskuddsbeløp',
-    'formuepanel.verdipapir': 'Verdipapir',
-    'formuepanel.kontanterOver1000': 'Kontanter over 1000',
-    'formuepanel.stårNoenIGjeldTilDeg': 'Står noen i gjeld til deg',
-    'formuepanel.depositumskonto': 'Depositumskonto',
-    'formuepanel.nyBeregning': 'Ny beregning',
-
     'gjeldendeformue.tittel': 'Formue',
     'gjeldendeformue.søker': 'Søker',
     'gjeldendeformue.eps': 'Ektefelle/Samboer',
@@ -28,13 +18,8 @@ export default {
     'gjeldendeformue.depositum': 'Depositumskonto',
     'gjeldendeformue.gjeldendePeriode': 'Gjeldende periode',
 
-    'knapp.bekreft': 'Bekreft',
     'knapp.fjernPeriode': 'Fjern periode',
     'knapp.nyPeriode': 'Ny periode for opplysning',
-
-    'panel.formue.søkers': 'Søkers formue',
-    'panel.formue.eps': 'Ektefelle/Samboers formue',
-    'panel.kroner': 'kr',
 
     'periode.fraOgMed': 'Fra og med',
     'periode.tilOgMed': 'Til og med',

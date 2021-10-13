@@ -34,6 +34,7 @@ import { Periode } from '~types/Periode';
 import { RevurderingProps } from '~types/Revurdering';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
 import { regnUtFormDataVerdier, verdierId } from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+import sharedFormueMessages from '~utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
 
 import { RevurderingBunnknapper } from '../bunnknapper/RevurderingBunnknapper';
 import RevurderingsperiodeHeader from '../revurderingsperiodeheader/RevurderingsperiodeHeader';
@@ -53,7 +54,7 @@ import {
 const Formue = (props: RevurderingProps) => {
     const formuegrenser = props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue.formuegrenser;
     const history = useHistory();
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     const [epsStatus, hentEPS] = useApiCall(personApi.fetchPerson);
     const epsFnr = hentBosituasjongrunnlag(props.revurdering.grunnlagsdataOgVilkårsvurderinger).fnr;
     const [lagreFormuegrunnlagStatus, lagreFormuegrunnlagAction] = useAsyncActionCreator(lagreFormuegrunnlag);
@@ -128,11 +129,11 @@ const Formue = (props: RevurderingProps) => {
                                     formueArray.append(getTomFormueData(epsFnr));
                                 }}
                             >
-                                {intl.formatMessage({ id: 'knapp.nyPeriode' })}
+                                {formatMessage('knapp.nyPeriode')}
                             </Button>
                         </div>
                         <Feiloppsummering
-                            tittel={intl.formatMessage({ id: 'feiloppsummering.tittel' })}
+                            tittel={formatMessage('feiloppsummering.tittel')}
                             className={styles.feiloppsummering}
                             feil={hookFormErrorsTilFeiloppsummering(errors)}
                             hidden={isValid || !isSubmitted}
@@ -153,7 +154,7 @@ const Formue = (props: RevurderingProps) => {
                 right: (
                     <div>
                         <div className={styles.eksisterendeVedtakTittelContainer}>
-                            <Ingress>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.tittel' })}</Ingress>
+                            <Ingress>{formatMessage('eksisterende.vedtakinfo.tittel')}</Ingress>
                         </div>
                         <FormuevilkårOppsummering
                             gjeldendeFormue={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue}
@@ -176,7 +177,7 @@ const FormueBlokk = (props: {
     triggerValidation: UseFormTrigger<FormueFormData>;
     onSlettClick: (index: number) => void;
 }) => {
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     const blokkName = `formue.${props.blokkIndex}` as const;
     const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(
         regnUtFormDataVerdier(props.blokkField.søkersFormue)
@@ -213,7 +214,7 @@ const FormueBlokk = (props: {
                         render={({ field, fieldState }) => (
                             <DatePicker
                                 id={field.name}
-                                label={intl.formatMessage({ id: 'periode.fraOgMed' })}
+                                label={formatMessage('periode.fraOgMed')}
                                 dateFormat="MM/yyyy"
                                 showMonthYearPicker
                                 isClearable
@@ -237,7 +238,7 @@ const FormueBlokk = (props: {
                         render={({ field, fieldState }) => (
                             <DatePicker
                                 id={field.name}
-                                label={intl.formatMessage({ id: 'periode.tilOgMed' })}
+                                label={formatMessage('periode.tilOgMed')}
                                 dateFormat="MM/yyyy"
                                 showMonthYearPicker
                                 isClearable
@@ -264,7 +265,7 @@ const FormueBlokk = (props: {
                             props.onSlettClick(props.blokkIndex);
                         }}
                         size="small"
-                        aria-label={intl.formatMessage({ id: 'knapp.fjernPeriode' })}
+                        aria-label={formatMessage('knapp.fjernPeriode')}
                     >
                         <Delete />
                     </Button>
@@ -273,7 +274,7 @@ const FormueBlokk = (props: {
 
             {props.eps && (
                 <div className={styles.personkortContainer}>
-                    <Element>{intl.formatMessage({ id: 'personkort.eps' })}</Element>
+                    <Element>{formatMessage('personkort.eps')}</Element>
                     <Personkort person={props.eps} />
                 </div>
             )}
@@ -313,7 +314,7 @@ const FormueBlokk = (props: {
                     defaultValue={props.blokkField.begrunnelse}
                     render={({ field, fieldState }) => (
                         <Textarea
-                            label={intl.formatMessage({ id: 'formueblokk.begrunnelse' })}
+                            label={formatMessage('formueblokk.begrunnelse')}
                             value={field.value ?? ''}
                             onChange={field.onChange}
                             error={fieldState.error?.message}
@@ -333,7 +334,7 @@ const FormuePanel = (props: {
     formController: Control<FormueFormData>;
     triggerValidation: UseFormTrigger<FormueFormData>;
 }) => {
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages: { ...messages, ...sharedFormueMessages } });
     const [åpen, setÅpen] = useState<boolean>(false);
     const formueTilhører = props.tilhører === 'Søkers' ? 'søkersFormue' : 'epsFormue';
     const panelName = `formue.${props.blokkIndex}.${formueTilhører}` as const;
@@ -364,12 +365,10 @@ const FormuePanel = (props: {
             <Accordion.Header type="button" onClick={handlePanelKlikk}>
                 <div>
                     <Normaltekst>
-                        {intl.formatMessage({
-                            id: props.tilhører === 'Søkers' ? 'panel.formue.søkers' : 'panel.formue.eps',
-                        })}
+                        {formatMessage(props.tilhører === 'Søkers' ? 'panel.formue.søkers' : 'panel.formue.eps')}
                     </Normaltekst>
                     <p>
-                        {props.sumFormue} {intl.formatMessage({ id: 'panel.kroner' })}
+                        {props.sumFormue} {formatMessage('panel.kroner')}
                     </p>
                 </div>
             </Accordion.Header>
@@ -385,7 +384,7 @@ const FormuePanel = (props: {
                                     render={({ field, fieldState }) => (
                                         <TextField
                                             id={field.name}
-                                            label={intl.formatMessage({ id: `formuepanel.${id}` })}
+                                            label={formatMessage(`formuepanel.${id}`)}
                                             {...field}
                                             error={fieldState?.error?.message}
                                             inputMode="numeric"
@@ -399,14 +398,14 @@ const FormuePanel = (props: {
                 </ul>
 
                 <div className={styles.nyBeregningContainer}>
-                    <Normaltekst>{intl.formatMessage({ id: 'formuepanel.nyBeregning' })}</Normaltekst>
+                    <Normaltekst>{formatMessage('formuepanel.nyBeregning')}</Normaltekst>
                     <Undertittel>
-                        {utregnetFormue} {intl.formatMessage({ id: 'panel.kroner' })}
+                        {utregnetFormue} {formatMessage('panel.kroner')}
                     </Undertittel>
                 </div>
 
                 <Button variant="secondary" type="button" onClick={() => handleBekreftClick()}>
-                    {intl.formatMessage({ id: 'knapp.bekreft' })}
+                    {formatMessage('knapp.bekreft')}
                 </Button>
             </Accordion.Content>
         </Accordion.Item>

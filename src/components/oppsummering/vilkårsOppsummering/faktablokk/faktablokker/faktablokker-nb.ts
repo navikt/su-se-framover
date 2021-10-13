@@ -45,6 +45,11 @@ export default {
     'formue.depositumsBeløp': 'Depositumskonto',
     'formue.totalt': 'Totalt',
 
+    'formue.vilkårOppfylt': 'Oppfylt vilkår',
+    'formue.vilkårOppfyltGrunn': 'Formue er lavere enn 0.5G',
+    'formue.vilkårIkkeOppfylt': 'Ikke oppfylt vilkår',
+    'formue.vilkårIkkeOppfyltGrunn': 'Formue er høyere enn 0.5G',
+
     'fraSøknad.ja': 'Ja',
     'fraSøknad.nei': 'Nei',
     'fraSøknad.uavklart': 'Uavklart',
