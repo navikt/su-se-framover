@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
-import NavFrontendSpinner from 'nav-frontend-spinner';
+import { Alert, Loader } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { IntlShape } from 'react-intl';
 
@@ -27,8 +26,8 @@ const RevurderingsoppsummeringWithSnapshot = (props: {
             {pipe(
                 revurderingSnapshot,
                 RemoteData.fold(
-                    () => <NavFrontendSpinner />,
-                    () => <NavFrontendSpinner />,
+                    () => <Loader />,
+                    () => <Loader />,
                     (error) => (
                         <Alert variant="error">
                             {error?.body?.message ?? props.intl.formatMessage({ id: 'feilmelding.ukjentFeil' })}

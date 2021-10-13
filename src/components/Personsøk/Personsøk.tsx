@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, SearchField, SearchFieldInput } from '@navikt/ds-react';
+import { Alert, Loader, SearchField, SearchFieldInput } from '@navikt/ds-react';
 import { SearchFieldButton } from '@navikt/ds-react/esm/form/search-field';
 import fnrValidator from '@navikt/fnrvalidator';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 
@@ -122,7 +121,7 @@ const Personsøk = (props: PersonsøkProps) => {
                         props.person,
                         RemoteData.fold(
                             () => null,
-                            () => <NavFrontendSpinner />,
+                            () => <Loader />,
                             (err) => (
                                 <Alert variant="error">
                                     {err.statusCode === ErrorCode.Unauthorized

@@ -1,11 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Textarea } from '@navikt/ds-react';
+import { Loader, Textarea } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/lib/string';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import * as React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
@@ -229,7 +228,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
                             savingState,
                             RemoteData.fold(
                                 () => null,
-                                () => <NavFrontendSpinner>{formatMessage('state.lagrer')}</NavFrontendSpinner>,
+                                () => <Loader title={formatMessage('state.lagrer')} />,
                                 (err) => <ApiErrorAlert error={err} />,
                                 () => null
                             )

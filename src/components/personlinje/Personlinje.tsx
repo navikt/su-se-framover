@@ -1,8 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
-import Clipboard from '@navikt/nap-clipboard';
+import { Alert, CopyToClipboard, Loader } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -42,15 +40,23 @@ const Personlinje = (props: { søker: Person; sak: Sak }) => {
                     </Normaltekst>
                 </Link>
                 <Separator />
-                <Clipboard buttonLabel={formatMessage('ariaLabel.kopierFnr')}>
-                    <Normaltekst tag="span">{props.sak.fnr}</Normaltekst>
-                </Clipboard>
+                <CopyToClipboard
+                    copyText={props.sak.fnr}
+                    popoverText={formatMessage('ariaLabel.kopierteFnr')}
+                    size="small"
+                >
+                    {formatFnr(props.sak.fnr)}
+                </CopyToClipboard>
                 <Separator />
                 <span className={styles.saksnummer}>
                     <Normaltekst tag="span">{formatMessage('label.saksnummer')}&nbsp;</Normaltekst>
-                    <Clipboard buttonLabel={formatMessage('ariaLabel.kopierSaksnummer')}>
-                        <Normaltekst>{props.sak.saksnummer.toString()}</Normaltekst>
-                    </Clipboard>
+                    <CopyToClipboard
+                        copyText={props.sak.saksnummer.toString()}
+                        popoverText={formatMessage('ariaLabel.kopierteSaksnummer')}
+                        size="small"
+                    >
+                        {props.sak.saksnummer.toString()}
+                    </CopyToClipboard>
                 </span>
                 {props.søker.sivilstand && (
                     <span className={styles.sivilstandAndSeperator}>
@@ -86,7 +92,7 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
                 status,
                 RemoteData.fold(
                     () => null,
-                    () => <NavFrontendSpinner />,
+                    () => <Loader />,
                     (err) => (
                         <Alert variant="error">
                             {err?.statusCode === ErrorCode.Unauthorized
@@ -100,9 +106,13 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
                         <span className={styles.epsInformasjon}>
                             <GenderIcon kjønn={eps.kjønn ?? Kjønn.Ukjent} />
                             <Normaltekst>{showName(eps.navn)}</Normaltekst>
-                            <Clipboard buttonLabel={formatMessage('ariaLabel.kopierFnr')}>
-                                <Normaltekst tag="span">{formatFnr(eps.fnr)}</Normaltekst>
-                            </Clipboard>
+                            <CopyToClipboard
+                                copyText={formatFnr(eps.fnr)}
+                                popoverText={formatMessage('ariaLabel.kopierteFnr')}
+                                size="small"
+                            >
+                                {formatFnr(eps.fnr)}
+                            </CopyToClipboard>
                         </span>
                     )
                 )

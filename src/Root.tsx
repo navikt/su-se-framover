@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Link } from '@navikt/ds-react';
-import NavFrontendSpinner from 'nav-frontend-spinner';
+import { Link, Loader } from '@navikt/ds-react';
 import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect, Suspense } from 'react';
 import { hot } from 'react-hot-loader';
@@ -50,7 +49,7 @@ const Root = () => {
                     <Router>
                         <Route>
                             <ContentWrapper>
-                                <Suspense fallback={<NavFrontendSpinner />}>
+                                <Suspense fallback={<Loader />}>
                                     <ScrollToTop />
                                     <Switch>
                                         <Route exact path={routes.home.path}>
@@ -111,8 +110,8 @@ const ContentWrapper: React.FC = (props) => {
                 {pipe(
                     loggedInUser,
                     RemoteData.fold(
-                        () => <NavFrontendSpinner />,
-                        () => <NavFrontendSpinner />,
+                        () => <Loader />,
+                        () => <Loader />,
                         (err) => {
                             return (
                                 <div className={styles.ikkeTilgangContainer}>

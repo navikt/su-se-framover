@@ -1,10 +1,10 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert } from '@navikt/ds-react';
-import Lenke from 'nav-frontend-lenker';
 import React from 'react';
 import { useHistory } from 'react-router';
 
 import * as revurderingApi from '~api/revurderingApi';
+import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { fetchSak } from '~features/saksoversikt/sak.slice';
 import { useApiCall } from '~lib/hooks';
@@ -39,9 +39,9 @@ const GjenopptaOppsummering = (props: Props) => {
         return (
             <div>
                 <Alert variant="error"> {formatMessage({ id: 'gjenoppta.oppsummering.error.fant.ingen' })}</Alert>
-                <Lenke href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })} className="knapp">
+                <LinkAsButton href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
                     {formatMessage({ id: 'stans.bunnknapper.tilbake' })}
-                </Lenke>
+                </LinkAsButton>
             </div>
         );
     }

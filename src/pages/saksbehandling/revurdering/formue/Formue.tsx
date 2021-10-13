@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Panel, Accordion, Button, Textarea, TextField } from '@navikt/ds-react';
+import { Panel, Accordion, Button, Loader, Textarea, TextField } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Element, Ingress, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
 import {
@@ -100,7 +99,7 @@ const Formue = (props: RevurderingProps) => {
             {{
                 left: (
                     <form onSubmit={handleSubmit(lagreFormuegrunnlaget)} className={styles.container}>
-                        {RemoteData.isPending(epsStatus) && <NavFrontendSpinner />}
+                        {RemoteData.isPending(epsStatus) && <Loader />}
                         {RemoteData.isFailure(epsStatus) && <ApiErrorAlert error={epsStatus.error} />}
                         <ul className={styles.formueBlokkContainer}>
                             {formueArray.fields.map((field, index) => (

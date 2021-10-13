@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { FileContent } from '@navikt/ds-icons';
-import { Alert, Button, LinkPanel } from '@navikt/ds-react';
+import { Alert, Button, LinkPanel, Loader } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Ingress, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useHistory } from 'react-router';
@@ -60,8 +59,8 @@ const DokumenterPage = (props: { sak: Sak }) => {
                     {pipe(
                         dokumenterState,
                         RemoteData.fold(
-                            () => <NavFrontendSpinner />,
-                            () => <NavFrontendSpinner />,
+                            () => <Loader />,
+                            () => <Loader />,
                             (err) => (
                                 <Alert variant="error">{err?.body?.message ?? formatMessage('feil.ukjent')}</Alert>
                             ),

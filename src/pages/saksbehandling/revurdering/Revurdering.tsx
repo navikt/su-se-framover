@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
+import { Alert, Loader } from '@navikt/ds-react';
 import * as A from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
-import NavFrontendSpinner from 'nav-frontend-spinner';
 import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
@@ -222,8 +221,8 @@ const RevurderingstegPage = (props: {
     return pipe(
         props.grunnlagsdataOgVilkårsvurderinger,
         RemoteData.fold(
-            () => <NavFrontendSpinner />,
-            () => <NavFrontendSpinner />,
+            () => <Loader />,
+            () => <Loader />,
             (error) => (
                 <div className={styles.fullsideSpinnerFeilmeldingContainer}>
                     <ApiErrorAlert error={error} />

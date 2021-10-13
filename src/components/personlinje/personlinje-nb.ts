@@ -1,6 +1,6 @@
 export default {
-    'ariaLabel.kopierSaksnummer': 'Kopier saksnummer til utklipstavlen',
-    'ariaLabel.kopierFnr': 'Kopier fødselsnummer til utklipstavlen',
+    'ariaLabel.kopierteSaksnummer': 'Kopierte saksnummer',
+    'ariaLabel.kopierteFnr': 'Kopierte fødselsnummer',
 
     'label.saksnummer': 'Saksnr:',
     'label.sivilstand': 'Sivilstand',
