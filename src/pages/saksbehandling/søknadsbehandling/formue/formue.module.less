@@ -20,48 +20,29 @@
     }
 }
 
-.formueInputContainer {
+.formuePanelerContainer {
     display: flex;
     flex-direction: column;
-    gap: @spacing;
-
-    .formueInput {
-        width: 10em;
-        margin-bottom: @spacing-s;
-    }
-
-    .søkersFormue {
-        margin: @spacing-l 0;
-    }
+    margin-bottom: @spacing-s;
 }
 
-.totalFormueContainer {
-    display: flex;
-    flex-direction: row;
-    margin: @spacing 0;
+.formuePanel {
+    .formueInputs {
+        width: 50%;
+        margin-bottom: @spacing;
 
-    .status {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin-left: @spacing-l;
-
-        .statusInformasjon {
-            margin-left: @spacing-xxs;
+        > :not(:last-child) {
+            margin-bottom: @spacing-xs;
         }
+    }
+    .nyBeregningContainer {
+        margin-bottom: @spacing;
     }
 }
 
 .henteMerInfoCheckbox {
     margin-top: @spacing-xs;
     margin-bottom: @spacing-s;
-}
-
-.aktivFormueBlokk {
-    border: 1px solid @navBorder;
-    border-radius: @border-radius-base;
-    padding: @spacing-s;
-    background-color: @navBakgrunn;
 }
 
 .modalInnhold {

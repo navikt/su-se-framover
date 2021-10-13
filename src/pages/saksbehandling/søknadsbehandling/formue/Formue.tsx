@@ -5,18 +5,18 @@ import {
     Alert,
     Button,
     BodyLong,
-    Fieldset,
     Loader,
     Modal,
     Textarea,
     TextField,
     Heading,
+    Accordion,
 } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import { startOfMonth } from 'date-fns/esm';
-import { Feilmelding } from 'nav-frontend-typografi';
+import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import React, { useState, useEffect, useRef } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Control, Controller, useForm, UseFormTrigger } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { ErrorCode } from '~api/apiClient';
@@ -26,8 +26,8 @@ import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~components/formElements/FormElements';
 import { FormueFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/FormueFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
+import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
 import ToKolonner from '~components/toKolonner/ToKolonner';
-import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
 import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import personSlice from '~features/person/person.slice';
 import sakSliceActions, * as sakSlice from '~features/saksoversikt/sak.slice';
@@ -36,12 +36,11 @@ import { pipe } from '~lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering, validateStringAsNonNegativeNumber } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
 import { FormueStatus, Formue as FormueType } from '~types/Behandlingsinformasjon';
-import { VilkårVurderingStatus, Vilkårtype } from '~types/Vilkårsvurdering';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 import { removeSpaces } from '~utils/format/formatUtils';
 import { showName } from '~utils/person/personUtils';
 import { hentBosituasjongrunnlag } from '~utils/søknadsbehandlingOgRevurdering/bosituasjon/bosituasjonUtils';
@@ -51,13 +50,13 @@ import {
     VerdierFormData,
     verdierId,
 } from '~utils/søknadsbehandlingOgRevurdering/formue/formueSøbOgRevUtils';
+import sharedFormueMessages from '~utils/søknadsbehandlingOgRevurdering/formue/sharedFormueMessages-nb';
 
 import sharedI18n from '../sharedI18n-nb';
 import { Vurderingknapper } from '../Vurdering';
 
 import messages from './formue-nb';
 import styles from './formue.module.less';
-import { FormueInput, ShowSum } from './FormueComponents';
 import {
     FormueFormData,
     getFormueInitialValues,
@@ -120,11 +119,6 @@ const schema = yup
     })
     .required();
 
-enum Hvem {
-    Søker = 'søker',
-    Ektefelle = 'ektefelle',
-}
-
 const Formue = (props: {
     behandling: Behandling;
     forrigeUrl: string;
@@ -136,7 +130,6 @@ const Formue = (props: {
     const dispatch = useAppDispatch();
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
     const [eps, fetchEps, resetEpsToInitial] = useApiCall(personApi.fetchPerson);
-    const [åpnerNyFormueBlokkMenViserEnBlokk, setÅpnerNyFormueBlokkMenViserEnBlokk] = useState<boolean>(false);
     const søknadInnhold = props.behandling.søknad.søknadInnhold;
     const [lagreBehandlingsinformasjonStatus, lagreBehandlingsinformasjon] = useAsyncActionCreator(
         sakSlice.lagreBehandlingsinformasjon
@@ -259,10 +252,8 @@ const Formue = (props: {
             return;
         }
         form.setValue('epsFnr', null);
-        setÅpnerNyFormueBlokkMenViserEnBlokk(false);
         if (!watch.borSøkerMedEPS) {
             form.setValue('epsVerdier', null);
-            setInputToShow(Hvem.Søker);
         } else {
             form.setValue('epsVerdier', {
                 verdiPåBolig: '0',
@@ -284,28 +275,10 @@ const Formue = (props: {
         });
     };
 
-    const [inputToShow, setInputToShow] = useState<Nullable<Hvem>>(watch.borSøkerMedEPS ? null : Hvem.Søker);
+    const erVilkårOppfylt = totalFormue <= senesteHalvG;
 
-    const vilkårErOppfylt = totalFormue <= senesteHalvG;
-
-    const onLagreClick = (hvem: Hvem) => {
-        form.trigger(hvem === Hvem.Søker ? 'verdier' : 'epsVerdier', {
-            shouldFocus: true,
-        }).then((isValid) => {
-            if (isValid) {
-                setInputToShow(null);
-                setÅpnerNyFormueBlokkMenViserEnBlokk(false);
-            }
-        });
-    };
-
-    const onEndreFormueClick = (søkerEllerEktefelle: Hvem) => {
-        if (inputToShow === null) {
-            setInputToShow(søkerEllerEktefelle);
-        } else {
-            setÅpnerNyFormueBlokkMenViserEnBlokk(true);
-        }
-    };
+    const [søkersBekreftetFormue, setSøkersBekreftetFormue] = useState<number>(regnUtFormDataVerdier(watch.verdier));
+    const [epsBekreftetFormue, setEPSBekreftetFormue] = useState<number>(regnUtFormDataVerdier(watch.epsVerdier));
 
     return (
         <ToKolonner tittel={formatMessage('page.tittel')}>
@@ -378,6 +351,7 @@ const Formue = (props: {
                                                                                         fnr: søknadInnhold
                                                                                             .personopplysninger.fnr,
                                                                                         b: (chunks) => <b>{chunks}</b>,
+                                                                                        // eslint-disable-next-line react/display-name
                                                                                         br: () => <br />,
                                                                                     }
                                                                                 )}
@@ -410,157 +384,28 @@ const Formue = (props: {
                             )}
                         </div>
 
-                        <div className={styles.formueInputContainer}>
-                            <Fieldset
-                                legend="Søkers formue"
-                                hideLegend
-                                className={inputToShow === Hvem.Søker ? styles.aktivFormueBlokk : undefined}
-                                error={
-                                    errors.verdier &&
-                                    inputToShow !== Hvem.Søker &&
-                                    formatMessage('feil.måLeggeInn.søkersFormue')
-                                }
-                                errorPropagation={false}
-                            >
-                                {inputToShow === Hvem.Søker &&
-                                    verdierId.map((keyNavn) => (
-                                        <Controller
-                                            key={keyNavn}
-                                            control={form.control}
-                                            name={`verdier.${keyNavn}` as const}
-                                            render={({ field, fieldState }) => (
-                                                <FormueInput
-                                                    tittel={formatMessage(`input.label.${keyNavn}`)}
-                                                    className={styles.formueInput}
-                                                    inputName={field.name}
-                                                    onChange={field.onChange}
-                                                    defaultValue={field.value}
-                                                    feil={fieldState.error?.message}
-                                                    inputRef={field.ref}
-                                                />
-                                            )}
-                                        />
-                                    ))}
-
-                                {watch.borSøkerMedEPS && (
-                                    <>
-                                        <ShowSum tittel={formatMessage('display.søkersFormue')} sum={søkersFormue} />
-
-                                        {inputToShow !== Hvem.Søker ? (
-                                            <div>
-                                                <Button
-                                                    variant="secondary"
-                                                    onClick={() => onEndreFormueClick(Hvem.Søker)}
-                                                    type="button"
-                                                >
-                                                    {formatMessage('knapp.endreSøkersFormue')}
-                                                </Button>
-                                                {åpnerNyFormueBlokkMenViserEnBlokk && (
-                                                    <Feilmelding>
-                                                        {formatMessage('feil.åpnerAnnenPersonFormueMenViserInput')}
-                                                    </Feilmelding>
-                                                )}
-                                            </div>
-                                        ) : (
-                                            <Button
-                                                variant="secondary"
-                                                type="button"
-                                                onClick={() => onLagreClick(Hvem.Søker)}
-                                            >
-                                                Lagre
-                                            </Button>
-                                        )}
-                                    </>
-                                )}
-                            </Fieldset>
-
+                        <Accordion className={styles.formuePanelerContainer}>
+                            <FormuePanel
+                                tilhører={'Søkers'}
+                                sumFormue={søkersBekreftetFormue}
+                                setBekreftetFormue={setSøkersBekreftetFormue}
+                                watch={watch}
+                                formController={form.control}
+                                triggerValidation={form.trigger}
+                            />
                             {watch.borSøkerMedEPS && (
-                                <Fieldset
-                                    legend="Ektefelle/partners formue"
-                                    hideLegend
-                                    className={inputToShow === Hvem.Ektefelle ? styles.aktivFormueBlokk : undefined}
-                                    error={
-                                        errors.epsVerdier &&
-                                        inputToShow !== Hvem.Ektefelle &&
-                                        formatMessage('feil.måLeggeInn.epsFormue')
-                                    }
-                                    errorPropagation={false}
-                                >
-                                    {inputToShow === Hvem.Ektefelle &&
-                                        verdierId.map((keyNavn) => (
-                                            <Controller
-                                                key={keyNavn}
-                                                control={form.control}
-                                                name={`epsVerdier.${keyNavn}` as const}
-                                                render={({ field, fieldState }) => (
-                                                    <FormueInput
-                                                        tittel={formatMessage(`input.label.${keyNavn}`)}
-                                                        className={styles.formueInput}
-                                                        inputName={field.name}
-                                                        onChange={field.onChange}
-                                                        defaultValue={field.value ?? '0'}
-                                                        feil={fieldState.error?.message}
-                                                        inputRef={field.ref}
-                                                    />
-                                                )}
-                                            />
-                                        ))}
-                                    <ShowSum
-                                        tittel={formatMessage('display.ektefellesFormue')}
-                                        sum={ektefellesFormue}
-                                    />
-
-                                    {inputToShow !== Hvem.Ektefelle ? (
-                                        <div>
-                                            <Button
-                                                variant="secondary"
-                                                className={styles.toggleInput}
-                                                onClick={() => onEndreFormueClick(Hvem.Ektefelle)}
-                                                type="button"
-                                            >
-                                                {formatMessage('knapp.endreEktefellesFormue')}
-                                            </Button>
-                                            {åpnerNyFormueBlokkMenViserEnBlokk && (
-                                                <Feilmelding>
-                                                    {formatMessage('feil.åpnerAnnenPersonFormueMenViserInput')}
-                                                </Feilmelding>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <Button
-                                            variant="secondary"
-                                            className={styles.toggleInput}
-                                            type="button"
-                                            onClick={() => onLagreClick(Hvem.Ektefelle)}
-                                        >
-                                            Lagre
-                                        </Button>
-                                    )}
-                                </Fieldset>
-                            )}
-                        </div>
-
-                        <div className={styles.totalFormueContainer}>
-                            <ShowSum tittel={formatMessage('display.totalt')} sum={totalFormue} />
-
-                            <div className={styles.status}>
-                                <VilkårvurderingStatusIcon
-                                    status={vilkårErOppfylt ? VilkårVurderingStatus.Ok : VilkårVurderingStatus.IkkeOk}
+                                <FormuePanel
+                                    tilhører={'Ektefelle/Samboers'}
+                                    sumFormue={epsBekreftetFormue}
+                                    setBekreftetFormue={setEPSBekreftetFormue}
+                                    watch={watch}
+                                    formController={form.control}
+                                    triggerValidation={form.trigger}
                                 />
-                                <div className={styles.statusInformasjon}>
-                                    <p>
-                                        {vilkårErOppfylt
-                                            ? formatMessage('display.vilkårOppfylt')
-                                            : formatMessage('display.vilkårIkkeOppfylt')}
-                                    </p>
-                                    <p>
-                                        {vilkårErOppfylt
-                                            ? formatMessage('display.vilkårOppfyltGrunn')
-                                            : formatMessage('display.vilkårIkkeOppfyltGrunn')}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                            )}
+                        </Accordion>
+
+                        <Formuestatus bekreftetFormue={totalFormue} erVilkårOppfylt={erVilkårOppfylt} />
 
                         <Controller
                             control={form.control}
@@ -631,3 +476,86 @@ const Formue = (props: {
 };
 
 export default Formue;
+
+const FormuePanel = (props: {
+    tilhører: 'Søkers' | 'Ektefelle/Samboers';
+    sumFormue: number;
+    setBekreftetFormue: (formue: number) => void;
+    watch: FormueFormData;
+    formController: Control<FormueFormData>;
+    triggerValidation: UseFormTrigger<FormueFormData>;
+}) => {
+    const { intl } = useI18n({ messages: { ...sharedFormueMessages } });
+    const [åpen, setÅpen] = useState<boolean>(false);
+    const formueTilhører = props.tilhører === 'Søkers' ? 'verdier' : 'epsVerdier';
+    const formueVerdier = props.watch[formueTilhører];
+
+    let utregnetFormue = regnUtFormDataVerdier(formueVerdier);
+    useEffect(() => {
+        utregnetFormue = regnUtFormDataVerdier(formueVerdier);
+    }, [formueVerdier]);
+
+    const handlePanelKlikk = () => (åpen ? handleBekreftClick() : setÅpen(true));
+
+    const handleBekreftClick = () => {
+        props.triggerValidation(formueTilhører).then((isPanelValid) => {
+            if (isPanelValid) {
+                setÅpen(false);
+                props.setBekreftetFormue(utregnetFormue);
+            }
+        });
+    };
+
+    return (
+        <Accordion.Item open={åpen} className={åpen ? styles.formuePanel : undefined}>
+            <Accordion.Header type="button" onClick={handlePanelKlikk}>
+                <div>
+                    <Normaltekst>
+                        {intl.formatMessage({
+                            id: props.tilhører === 'Søkers' ? 'panel.formue.søkers' : 'panel.formue.eps',
+                        })}
+                    </Normaltekst>
+                    <p>
+                        {props.sumFormue} {intl.formatMessage({ id: 'panel.kroner' })}
+                    </p>
+                </div>
+            </Accordion.Header>
+            <Accordion.Content>
+                <ul className={styles.formueInputs}>
+                    {verdierId.map((id) => {
+                        return (
+                            <li key={id}>
+                                <Controller
+                                    name={`${formueTilhører}.${id}`}
+                                    control={props.formController}
+                                    defaultValue={formueVerdier?.[id] ?? '0'}
+                                    render={({ field, fieldState }) => (
+                                        <TextField
+                                            id={field.name}
+                                            label={intl.formatMessage({ id: `formuepanel.${id}` })}
+                                            {...field}
+                                            error={fieldState?.error?.message}
+                                            inputMode="numeric"
+                                            pattern="[0-9]*"
+                                        />
+                                    )}
+                                />
+                            </li>
+                        );
+                    })}
+                </ul>
+
+                <div className={styles.nyBeregningContainer}>
+                    <Normaltekst>{intl.formatMessage({ id: 'formuepanel.nyBeregning' })}</Normaltekst>
+                    <Undertittel>
+                        {utregnetFormue} {intl.formatMessage({ id: 'panel.kroner' })}
+                    </Undertittel>
+                </div>
+
+                <Button variant="secondary" type="button" onClick={() => handleBekreftClick()}>
+                    {intl.formatMessage({ id: 'knapp.bekreft' })}
+                </Button>
+            </Accordion.Content>
+        </Accordion.Item>
+    );
+};
