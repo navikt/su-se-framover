@@ -8,7 +8,7 @@ export default {
     'søknader.papir': 'Papir',
 
     'personer.tittel': 'Om brukerne',
-    'personer.antal': 'Antal personer som har en sak',
+    'personer.antal': 'Antall personer som har en sak',
 
     'knapp.tilbake': 'Tilbake',
 
