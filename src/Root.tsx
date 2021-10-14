@@ -30,6 +30,7 @@ const Drift = React.lazy(() => import('~pages/drift'));
 const HomePage = React.lazy(() => import('~pages/HomePage'));
 const Saksoversikt = React.lazy(() => import('~pages/saksbehandling/Saksoversikt'));
 const Soknad = React.lazy(() => import('~pages/søknad'));
+const Nøkkeltall = React.lazy(() => import('~pages/nøkkeltall'));
 
 const ScrollToTop = () => {
     const { pathname } = useLocation();
@@ -66,6 +67,9 @@ const Root = () => {
                                         </Route>
                                         <Route path={routes.drift.path}>
                                             <WithDocTitle title="Drift" Page={Drift} />
+                                        </Route>
+                                        <Route path={routes.nøkkeltall.path}>
+                                            <WithDocTitle title="Nøkkeltall" Page={Nøkkeltall} />
                                         </Route>
                                         <Route>404</Route>
                                     </Switch>
