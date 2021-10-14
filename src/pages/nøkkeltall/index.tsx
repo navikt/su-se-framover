@@ -58,34 +58,29 @@ const NøkkelTall = () => {
                     >
                         <Ingress>{formatMessage('søknader.tittel')}</Ingress>
                         <Panel border className={styles.panel}>
-                            <div>
-                                <ul className={styles.list}>
-                                    <Rad
-                                        label={formatMessage('søknader.iverksatt.innvilget')}
-                                        verdi={nøkkeltall.søknader.iverksatteInnvilget}
-                                    />
-                                    <Rad
-                                        label={formatMessage('søknader.iverksatt.avslag')}
-                                        verdi={nøkkeltall.søknader.iverksatteInnvilget}
-                                    />
-                                    <Rad
-                                        label={formatMessage('søknader.påbegynt')}
-                                        verdi={nøkkeltall.søknader.påbegynt}
-                                    />
-                                    <Rad
-                                        label={formatMessage('søknader.ikkePåbegynt')}
-                                        verdi={nøkkeltall.søknader.ikkePåbegynt}
-                                    />
-                                    <Rad
-                                        label={formatMessage('søknader.digital')}
-                                        verdi={nøkkeltall.søknader.digitalsøknader}
-                                    />
-                                    <Rad
-                                        label={formatMessage('søknader.papir')}
-                                        verdi={nøkkeltall.søknader.papirsøknader}
-                                    />
-                                </ul>
-                            </div>
+                            <ul className={styles.list}>
+                                <Rad
+                                    label={formatMessage('søknader.iverksatt.innvilget')}
+                                    verdi={nøkkeltall.søknader.iverksatteInnvilget}
+                                />
+                                <Rad
+                                    label={formatMessage('søknader.iverksatt.avslag')}
+                                    verdi={nøkkeltall.søknader.iverksatteInnvilget}
+                                />
+                                <Rad label={formatMessage('søknader.påbegynt')} verdi={nøkkeltall.søknader.påbegynt} />
+                                <Rad
+                                    label={formatMessage('søknader.ikkePåbegynt')}
+                                    verdi={nøkkeltall.søknader.ikkePåbegynt}
+                                />
+                                <Rad
+                                    label={formatMessage('søknader.digital')}
+                                    verdi={nøkkeltall.søknader.digitalsøknader}
+                                />
+                                <Rad
+                                    label={formatMessage('søknader.papir')}
+                                    verdi={nøkkeltall.søknader.papirsøknader}
+                                />
+                            </ul>
                         </Panel>
 
                         <Ingress>{formatMessage('personer.tittel')}</Ingress>
