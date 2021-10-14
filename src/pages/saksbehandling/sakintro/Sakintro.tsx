@@ -209,7 +209,8 @@ const ÅpneSøknader = (props: {
                                             <SøknadsbehandlingStartetKnapper
                                                 sakId={props.sakId}
                                                 intl={props.intl}
-                                                b={behandling}
+                                                behandling={behandling}
+                                                søknadId={s.id}
                                             />
                                         )}
                                     </div>
@@ -517,13 +518,18 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
     );
 };
 
-const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string; intl: IntlShape }) => {
+const SøknadsbehandlingStartetKnapper = (props: {
+    behandling: Behandling;
+    sakId: string;
+    søknadId: string;
+    intl: IntlShape;
+}) => {
     const user = useUserContext();
-    const { b } = props;
+    const { behandling } = props;
 
     return (
         <div className={styles.behandlingContainer}>
-            {erTilAttestering(b) && (!user.isAttestant || user.navIdent === b.saksbehandler) && (
+            {erTilAttestering(behandling) && (!user.isAttestant || user.navIdent === behandling.saksbehandler) && (
                 <div className={styles.ikonContainer}>
                     <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
                     <p>
@@ -535,13 +541,13 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
             )}
 
             <div className={styles.knapper}>
-                {erTilAttestering(b) && user.isAttestant && user.navIdent !== b.saksbehandler ? (
+                {erTilAttestering(behandling) && user.isAttestant && user.navIdent !== behandling.saksbehandler ? (
                     <LinkAsButton
                         variant="secondary"
                         size="small"
                         href={Routes.attesterSøknadsbehandling.createURL({
                             sakId: props.sakId,
-                            behandlingId: b.id,
+                            behandlingId: behandling.id,
                         })}
                     >
                         {props.intl.formatMessage({
@@ -549,22 +555,36 @@ const SøknadsbehandlingStartetKnapper = (props: { b: Behandling; sakId: string;
                         })}
                     </LinkAsButton>
                 ) : (
-                    !erTilAttestering(b) &&
-                    !erIverksatt(b) &&
-                    user.navIdent !== pipe(b.attesteringer ?? [], last, toNullable)?.attestant && (
-                        <LinkAsButton
-                            variant="secondary"
-                            size="small"
-                            href={Routes.saksbehandlingVilkårsvurdering.createURL({
-                                sakId: props.sakId,
-                                behandlingId: b.id,
-                                vilkar: hentSisteVurdertSaksbehandlingssteg(b),
-                            })}
-                        >
-                            {props.intl.formatMessage({
-                                id: 'display.behandling.fortsettBehandling',
-                            })}
-                        </LinkAsButton>
+                    !erTilAttestering(behandling) &&
+                    !erIverksatt(behandling) &&
+                    user.navIdent !== pipe(behandling.attesteringer ?? [], last, toNullable)?.attestant && (
+                        <>
+                            <LinkAsButton
+                                variant="secondary"
+                                size="small"
+                                href={Routes.saksbehandlingVilkårsvurdering.createURL({
+                                    sakId: props.sakId,
+                                    behandlingId: behandling.id,
+                                    vilkar: hentSisteVurdertSaksbehandlingssteg(behandling),
+                                })}
+                            >
+                                {props.intl.formatMessage({
+                                    id: 'display.behandling.fortsettBehandling',
+                                })}
+                            </LinkAsButton>
+                            <LinkAsButton
+                                variant="danger"
+                                size="small"
+                                href={Routes.avsluttSøknadsbehandling.createURL({
+                                    sakId: props.sakId,
+                                    soknadId: props.søknadId,
+                                })}
+                            >
+                                {props.intl.formatMessage({
+                                    id: 'display.søknad.lukkSøknad',
+                                })}
+                            </LinkAsButton>
+                        </>
                     )
                 )}
             </div>
