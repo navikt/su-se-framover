@@ -14,6 +14,7 @@ export default {
     'stønadsperiode.periode.før.2021': 'Stønadsperiode kan ikke starte før Januar 2021',
     'stønadsperiode.periode.maks.12.måneder': 'En stønadsperiode kan være maks 12 måneder',
     'stønadsperiode.overlapper.eksisterende': 'Stønadsperioden overlapper med en eksisterende stønadsperiode',
+    'stønadsperiode.senere.periode.eksisterer': 'Kan ikke legge til ny stønadsperiode forut for eksisterende',
 
     'formue.ugyldige.verdier': 'Ugyldige formueverdier',
     'formue.har.ikke.ektefelle': 'Har ikke ektefelle',
