@@ -1,4 +1,4 @@
-import { Alert, Panel, RadioGroup, Radio } from '@navikt/ds-react';
+import { Alert, Panel, RadioGroup, Radio, Label, BodyShort } from '@navikt/ds-react';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -86,19 +86,19 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                 >
                     <Panel border className={styles.panelMargin}>
                         <div className={styles.infoboks}>
-                            <p className={styles.boldP}>{intl.formatMessage({ id: 'info.kontaktinfo.tittel' })}</p>
+                            <Label spacing>{intl.formatMessage({ id: 'info.kontaktinfo.tittel' })}</Label>
                             {kontaktinfo ? (
                                 <div>
-                                    <p>{telefonnummerKrr}</p>
-                                    <p>{epostKrr}</p>
+                                    <BodyShort>{telefonnummerKrr}</BodyShort>
+                                    <BodyShort>{epostKrr}</BodyShort>
                                 </div>
                             ) : (
-                                <p>{intl.formatMessage({ id: 'info.kontaktinfo.mangler' })}</p>
+                                <BodyShort>{intl.formatMessage({ id: 'info.kontaktinfo.mangler' })}</BodyShort>
                             )}
                         </div>
                         <div className={styles.infoboks}>
-                            <p className={styles.boldP}>{intl.formatMessage({ id: 'info.telefon.tittel' })}</p>
-                            <p>{telefonnummerPdl}</p>
+                            <Label spacing>{intl.formatMessage({ id: 'info.telefon.tittel' })}</Label>
+                            <BodyShort>{telefonnummerPdl}</BodyShort>
                         </div>
                         <Alert variant="info" className={styles.marginTopXSS}>
                             {intl.formatMessage({ id: 'info.telefon.body' })}
@@ -107,11 +107,13 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
 
                     <Panel border className={styles.panelMargin}>
                         <div className={styles.infoboks}>
-                            <p className={styles.boldP}>{intl.formatMessage({ id: 'info.kontaktform.tittel' })}</p>
+                            <Label spacing>{intl.formatMessage({ id: 'info.kontaktform.tittel' })}</Label>
                             {kontaktinfo ? (
-                                <p>{digitalBruker ? 'Digital' : 'Reservert mot digital kommunikasjon'}</p>
+                                <BodyShort>
+                                    {digitalBruker ? 'Digital' : 'Reservert mot digital kommunikasjon'}
+                                </BodyShort>
                             ) : (
-                                <p>{intl.formatMessage({ id: 'info.kontaktinfo.mangler' })}</p>
+                                <BodyShort>{intl.formatMessage({ id: 'info.kontaktinfo.mangler' })}</BodyShort>
                             )}
                         </div>
                         <Alert variant="info" className={styles.marginTopXSS}>

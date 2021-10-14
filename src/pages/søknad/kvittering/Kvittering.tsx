@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader } from '@navikt/ds-react';
+import { Alert, BodyLong, BodyShort, Button, Heading, Label, Loader } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import { Normaltekst, Undertittel, Element, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -85,92 +84,85 @@ const Kvittering = () => {
                     ([saksnummerOgSøknad, søker]) => {
                         return (
                             <IntlProvider locale="nb" messages={messages}>
-                                <Systemtittel className={styles.pageTittel}>
+                                <Heading level="1" size="medium" className={styles.pageTittel} spacing>
                                     <FormattedMessage
                                         id="kvittering.søknadSendtInn"
                                         values={{
                                             navn: showName(søker.navn),
                                         }}
                                     />
-                                </Systemtittel>
+                                </Heading>
                                 <div>
                                     <div className={styles.suksessContainer}>
                                         <div>
                                             <Alert variant="success">
-                                                <Normaltekst>
+                                                <BodyLong>
                                                     <FormattedMessage id="kvittering.søknadMottatt" />
-                                                </Normaltekst>
-                                                <Normaltekst>
+                                                </BodyLong>
+                                                <BodyShort>
                                                     <FormattedMessage
                                                         id="kvittering.saksnummer"
                                                         values={{
                                                             saksnummer: saksnummerOgSøknad.saksnummer,
                                                         }}
                                                     />
-                                                </Normaltekst>
+                                                </BodyShort>
                                             </Alert>
 
                                             <div className={styles.tilVeileder}>
-                                                <Undertittel tag="h3">
+                                                <Heading level="3" size="medium">
                                                     <FormattedMessage id="kvittering.tilVeileder.heading" />
-                                                </Undertittel>
-                                                <ol>
-                                                    <li>
-                                                        <FormattedMessage id="kvittering.tilVeileder.punkt1" />
-                                                    </li>
-                                                    <li>
-                                                        <FormattedMessage id="kvittering.tilVeileder.punkt2" />
-                                                    </li>
-                                                    <li>
-                                                        <FormattedMessage id="kvittering.tilVeileder.punkt3" />
-                                                    </li>
-                                                </ol>
+                                                </Heading>
+                                                <BodyShort as="div">
+                                                    <ol>
+                                                        <li>
+                                                            <FormattedMessage id="kvittering.tilVeileder.punkt1" />
+                                                        </li>
+                                                        <li>
+                                                            <FormattedMessage id="kvittering.tilVeileder.punkt2" />
+                                                        </li>
+                                                        <li>
+                                                            <FormattedMessage id="kvittering.tilVeileder.punkt3" />
+                                                        </li>
+                                                    </ol>
+                                                </BodyShort>
                                             </div>
                                         </div>
 
                                         <div className={styles.infoContainer}>
                                             <Alert variant="info">
-                                                <p>
+                                                <BodyLong spacing>
                                                     <FormattedMessage id="vedlegg.huskVedlegg" />
-                                                </p>
-                                                <br />
-                                                <p>
+                                                </BodyLong>
+                                                <BodyLong>
                                                     <FormattedMessage id="vedlegg.måLeggesMed" />
-                                                </p>
-                                                <br />
-                                                <ul className={styles.list}>
-                                                    <li className={styles.listItem}>
-                                                        <Element>
+                                                </BodyLong>
+                                                <Label as="div" spacing>
+                                                    <ul className={styles.list}>
+                                                        <li className={styles.listItem}>
                                                             <FormattedMessage id="vedlegg.måLeggesMed.puntk1" />
-                                                        </Element>
-                                                    </li>
-                                                    <li className={styles.listItem}>
-                                                        <Element>
+                                                        </li>
+                                                        <li className={styles.listItem}>
                                                             <FormattedMessage id="vedlegg.måLeggesMed.puntk2" />
-                                                        </Element>
-                                                    </li>
-                                                </ul>
-                                                <br />
-                                                <p>
+                                                        </li>
+                                                    </ul>
+                                                </Label>
+                                                <BodyLong>
                                                     <FormattedMessage id="vedlegg.formueIUtlandet" />
-                                                </p>
-                                                <br />
-                                                <ul className={styles.list}>
-                                                    <li className={styles.listItem}>
-                                                        <Element>
+                                                </BodyLong>
+                                                <Label as="div" spacing>
+                                                    <ul className={styles.list}>
+                                                        <li className={styles.listItem}>
                                                             <FormattedMessage id="vedlegg.formueIUtlandet.punkt1" />
-                                                        </Element>
-                                                    </li>
-                                                    <li className={styles.listItem}>
-                                                        <Element>
+                                                        </li>
+                                                        <li className={styles.listItem}>
                                                             <FormattedMessage id="vedlegg.formueIUtlandet.punkt2" />
-                                                        </Element>
-                                                    </li>
-                                                </ul>
-                                                <br />
-                                                <Element>
+                                                        </li>
+                                                    </ul>
+                                                </Label>
+                                                <Label>
                                                     <FormattedMessage id="vedlegg.søkerManglerDok" />
-                                                </Element>
+                                                </Label>
                                             </Alert>
                                         </div>
                                     </div>

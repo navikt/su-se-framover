@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert } from '@navikt/ds-react';
-import { Undertittel } from 'nav-frontend-typografi';
+import { Alert, BodyLong, Heading } from '@navikt/ds-react';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -49,8 +48,10 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
                 <Søknadoppsummering søknad={søknadFraStore} søker={props.søker} />
 
                 <div className={styles.meldFraOmEndringerContainer}>
-                    <Undertittel>{intl.formatMessage({ id: 'meldFraOmEndringer.tittel' })}</Undertittel>
-                    <p>{intl.formatMessage({ id: 'meldFraOmEndringer.tekst' })}</p>
+                    <Heading level="2" size="medium" spacing>
+                        {intl.formatMessage({ id: 'meldFraOmEndringer.tittel' })}
+                    </Heading>
+                    <BodyLong>{intl.formatMessage({ id: 'meldFraOmEndringer.tekst' })}</BodyLong>
                 </div>
 
                 {RemoteData.isFailure(innsending) && (
