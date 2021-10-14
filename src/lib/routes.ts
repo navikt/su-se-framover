@@ -27,6 +27,11 @@ export const drift: Route<never> = {
     createURL: () => '/drift/',
 };
 
+export const nøkkeltall: Route<never> = {
+    path: '/nøkkeltall/',
+    createURL: () => '/nøkkeltall/',
+};
+
 //-------------Søknad--------------------------------
 export const soknad: Route<never> = {
     path: '/soknad/',

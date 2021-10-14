@@ -22,13 +22,18 @@ const SuHeader = (props: Props) => {
             {props.user && (
                 <>
                     {props.user.roller.includes(Rolle.Saksbehandler) && (
-                        <Header.Title
-                            href={Routes.soknadPersonSøk.createURL({
-                                papirsøknad: true,
-                            })}
-                        >
-                            {intl.formatMessage({ id: 'link.papirsøknad' })}
-                        </Header.Title>
+                        <>
+                            <Header.Title href={Routes.nøkkeltall.createURL()}>
+                                {intl.formatMessage({ id: 'link.nøkkeltall' })}
+                            </Header.Title>
+                            <Header.Title
+                                href={Routes.soknadPersonSøk.createURL({
+                                    papirsøknad: true,
+                                })}
+                            >
+                                {intl.formatMessage({ id: 'link.papirsøknad' })}
+                            </Header.Title>
+                        </>
                     )}
                     <Header.Dropdown>
                         <Header.Dropdown.UserButton name={props.user.navn} description={props.user.navIdent} />
