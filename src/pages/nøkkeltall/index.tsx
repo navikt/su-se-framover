@@ -65,7 +65,7 @@ const NøkkelTall = () => {
                                 />
                                 <Rad
                                     label={formatMessage('søknader.iverksatt.avslag')}
-                                    verdi={nøkkeltall.søknader.iverksatteInnvilget}
+                                    verdi={nøkkeltall.søknader.iverksatteAvslag}
                                 />
                                 <Rad label={formatMessage('søknader.påbegynt')} verdi={nøkkeltall.søknader.påbegynt} />
                                 <Rad
