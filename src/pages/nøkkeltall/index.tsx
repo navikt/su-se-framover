@@ -1,7 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Loader, Panel } from '@navikt/ds-react';
+import { Button, Loader, Panel } from '@navikt/ds-react';
 import { Feilmelding, Ingress, Normaltekst, Element } from 'nav-frontend-typografi';
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router';
 
 import { pipe } from '~/lib/fp';
 import { hentNøkkeltall } from '~api/nøkkeltallApi';
@@ -18,6 +19,7 @@ import messages from './nøkkeltall-nb';
 const NøkkelTall = () => {
     const [nøkkeltallStatus, fetchNøkkeltall] = useApiCall(hentNøkkeltall);
     const { intl } = useI18n({ messages });
+    const history = useHistory();
 
     useEffect(() => {
         fetchNøkkeltall({});
@@ -30,12 +32,23 @@ const NøkkelTall = () => {
         </li>
     );
 
+    const TilbakeKnapp = () => (
+        <Button className={styles.tilbakeKnapp} variant="secondary" onClick={history.goBack} type="button">
+            {intl.formatMessage({ id: 'knapp.tilbake' })}
+        </Button>
+    );
+
     return pipe(
         nøkkeltallStatus,
         RemoteData.fold(
             () => <Loader />,
             () => <Loader />,
-            () => <Feilmelding>err0r</Feilmelding>,
+            () => (
+                <div className={styles.container}>
+                    <Feilmelding>{intl.formatMessage({ id: 'ukjentFeil' })}</Feilmelding>
+                    <TilbakeKnapp />
+                </div>
+            ),
             (nøkkeltall) => (
                 <div className={styles.container}>
                     <Oppsummeringspanel
@@ -70,6 +83,7 @@ const NøkkelTall = () => {
                             </ul>
                         </Panel>
                     </Oppsummeringspanel>
+                    <TilbakeKnapp />
                 </div>
             )
         )

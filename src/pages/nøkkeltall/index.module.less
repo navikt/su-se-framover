@@ -2,6 +2,7 @@
 
 .container {
     display: flex;
+    flex-direction: column;
     align-items: center;
     margin-top: @spacing;
     min-width: 400px;
@@ -20,5 +21,9 @@
 
     .panel:not(:last-child) {
         margin-bottom: @spacing;
+    }
+
+    .tilbakeKnapp {
+        margin-top: @spacing;
     }
 }

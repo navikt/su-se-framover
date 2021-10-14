@@ -9,4 +9,8 @@ export default {
 
     'personer.tittel': 'Om brukerne',
     'personer.antal': 'Antal personer som har en sak',
+
+    'knapp.tilbake': 'Tilbake',
+
+    ukjentFeil: 'Ukjent feil',
 };
