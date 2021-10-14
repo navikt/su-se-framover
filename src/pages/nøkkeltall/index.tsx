@@ -16,27 +16,27 @@ import { useI18n } from '~lib/i18n';
 import styles from './index.module.less';
 import messages from './nøkkeltall-nb';
 
+const Rad = ({ label, verdi }: { label: string; verdi: number }) => (
+    <li className={styles.item}>
+        <Element>{`${label}:`}</Element>
+        <Normaltekst>{verdi}</Normaltekst>
+    </li>
+);
+
+const TilbakeKnapp = ({ onClick, label }: { label: string; onClick: () => void }) => (
+    <Button className={styles.tilbakeKnapp} variant="secondary" onClick={onClick} type="button">
+        {label}
+    </Button>
+);
+
 const NøkkelTall = () => {
     const [nøkkeltallStatus, fetchNøkkeltall] = useApiCall(hentNøkkeltall);
-    const { intl } = useI18n({ messages });
+    const { formatMessage } = useI18n({ messages });
     const history = useHistory();
 
     useEffect(() => {
         fetchNøkkeltall({});
     }, []);
-
-    const Rad = ({ messageId, verdi }: { messageId: string; verdi: number }) => (
-        <li className={styles.item}>
-            <Element>{`${intl.formatMessage({ id: messageId })}:`}</Element>
-            <Normaltekst>{verdi}</Normaltekst>
-        </li>
-    );
-
-    const TilbakeKnapp = () => (
-        <Button className={styles.tilbakeKnapp} variant="secondary" onClick={history.goBack} type="button">
-            {intl.formatMessage({ id: 'knapp.tilbake' })}
-        </Button>
-    );
 
     return pipe(
         nøkkeltallStatus,
@@ -45,8 +45,8 @@ const NøkkelTall = () => {
             () => <Loader />,
             () => (
                 <div className={styles.container}>
-                    <Feilmelding>{intl.formatMessage({ id: 'ukjentFeil' })}</Feilmelding>
-                    <TilbakeKnapp />
+                    <Feilmelding>{formatMessage('ukjentFeil')}</Feilmelding>
+                    <TilbakeKnapp label={formatMessage('knapp.tilbake')} onClick={history.goBack} />
                 </div>
             ),
             (nøkkeltall) => (
@@ -56,34 +56,46 @@ const NøkkelTall = () => {
                         farge={Oppsummeringsfarge.Grønn}
                         tittel={'Nøkkeltall'}
                     >
-                        <Ingress>{intl.formatMessage({ id: 'søknader.tittel' })}</Ingress>
+                        <Ingress>{formatMessage('søknader.tittel')}</Ingress>
                         <Panel border className={styles.panel}>
                             <div>
                                 <ul className={styles.list}>
                                     <Rad
-                                        messageId="søknader.iverksatt.innvilget"
+                                        label={formatMessage('søknader.iverksatt.innvilget')}
                                         verdi={nøkkeltall.søknader.iverksatteInnvilget}
                                     />
                                     <Rad
-                                        messageId="søknader.iverksatt.avslag"
+                                        label={formatMessage('søknader.iverksatt.avslag')}
                                         verdi={nøkkeltall.søknader.iverksatteInnvilget}
                                     />
-                                    <Rad messageId="søknader.påbegynt" verdi={nøkkeltall.søknader.påbegynt} />
-                                    <Rad messageId="søknader.ikkePåbegynt" verdi={nøkkeltall.søknader.ikkePåbegynt} />
-                                    <Rad messageId="søknader.digital" verdi={nøkkeltall.søknader.digitalsøknader} />
-                                    <Rad messageId="søknader.papir" verdi={nøkkeltall.søknader.papirsøknader} />
+                                    <Rad
+                                        label={formatMessage('søknader.påbegynt')}
+                                        verdi={nøkkeltall.søknader.påbegynt}
+                                    />
+                                    <Rad
+                                        label={formatMessage('søknader.ikkePåbegynt')}
+                                        verdi={nøkkeltall.søknader.ikkePåbegynt}
+                                    />
+                                    <Rad
+                                        label={formatMessage('søknader.digital')}
+                                        verdi={nøkkeltall.søknader.digitalsøknader}
+                                    />
+                                    <Rad
+                                        label={formatMessage('søknader.papir')}
+                                        verdi={nøkkeltall.søknader.papirsøknader}
+                                    />
                                 </ul>
                             </div>
                         </Panel>
 
-                        <Ingress>{intl.formatMessage({ id: 'personer.tittel' })}</Ingress>
+                        <Ingress>{formatMessage('personer.tittel')}</Ingress>
                         <Panel border className={styles.panel}>
                             <ul className={styles.list}>
-                                <Rad messageId="personer.antal" verdi={nøkkeltall.antallUnikePersoner} />
+                                <Rad label={formatMessage('personer.antall')} verdi={nøkkeltall.antallUnikePersoner} />
                             </ul>
                         </Panel>
                     </Oppsummeringspanel>
-                    <TilbakeKnapp />
+                    <TilbakeKnapp label={formatMessage('knapp.tilbake')} onClick={history.goBack} />
                 </div>
             )
         )
