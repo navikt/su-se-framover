@@ -54,7 +54,7 @@ const NøkkelTall = () => {
                     <Oppsummeringspanel
                         ikon={Oppsummeringsikon.Liste}
                         farge={Oppsummeringsfarge.Grønn}
-                        tittel={'Nøkkeltall'}
+                        tittel={formatMessage('oppsummering.tittel')}
                     >
                         <Ingress>{formatMessage('søknader.tittel')}</Ingress>
                         <Panel border className={styles.panel}>

@@ -1,4 +1,5 @@
 export default {
+    'oppsummering.tittel': 'Nøkkeltall',
     'søknader.tittel': 'Søknader',
     'søknader.iverksatt.innvilget': 'Innvilget og iverksatt',
     'søknader.iverksatt.avslag': 'Avslått og iverksatt',
