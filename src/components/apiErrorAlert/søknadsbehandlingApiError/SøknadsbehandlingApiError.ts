@@ -12,7 +12,7 @@ export const søknadsbehandlingFeilkodeTilFeilmelding = (
     return messageId ? formatMessage(messageId) : null;
 };
 
-export type SøknadsbehandlingErrorCodes = Generell | Støndadsperiode | Formue | Fradrag;
+export type SøknadsbehandlingErrorCodes = Generell | Stønadsperiode | Formue | Fradrag;
 
 enum Generell {
     FEIL_VED_HENTING_AV_SAKSBEHANDLER_ELLER_ATTESTANT = 'feil_ved_henting_av_saksbehandler_eller_attestant',
@@ -26,12 +26,12 @@ enum Generell {
     SØKNAD_ER_LUKKET = 'søknad_er_lukket',
 }
 
-enum Støndadsperiode {
+enum Stønadsperiode {
     OPPDATERING_AV_STØNADSPERIODE = 'oppdatering_av_stønadsperiode',
     STØNADSPERIODE_FØR_2021 = 'stønadsperiode_før_2021',
     STØNADSPERIODE_MAX_12MND = 'stønadsperiode_max_12mnd',
     STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE = 'stønadsperioden_overlapper_med_eksisterende_søknadsbehandling',
-    SENRERE_STØNADSPERIODE_EKSISTERER = 'senere_stønadsperioder_eksisterer',
+    SENERE_STØNADSPERIODE_EKSISTERER = 'senere_stønadsperioder_eksisterer',
 }
 
 enum Formue {
@@ -58,11 +58,11 @@ const søknadsbehandlingErrorCodeMessageIdMap: {
     [Generell.SØKNAD_HAR_BEHANDLING]: 'generell.søknad.har.behandling',
     [Generell.SØKNAD_ER_LUKKET]: 'generell.søknad.er.lukket',
 
-    [Støndadsperiode.OPPDATERING_AV_STØNADSPERIODE]: 'stønadsperiode.oppdatering.av.periode',
-    [Støndadsperiode.STØNADSPERIODE_FØR_2021]: 'stønadsperiode.periode.før.2021',
-    [Støndadsperiode.STØNADSPERIODE_MAX_12MND]: 'stønadsperiode.periode.maks.12.måneder',
-    [Støndadsperiode.STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE]: 'stønadsperiode.overlapper.eksisterende',
-    [Støndadsperiode.SENRERE_STØNADSPERIODE_EKSISTERER]: 'stønadsperiode.senere.periode.eksisterer',
+    [Stønadsperiode.OPPDATERING_AV_STØNADSPERIODE]: 'stønadsperiode.oppdatering.av.periode',
+    [Stønadsperiode.STØNADSPERIODE_FØR_2021]: 'stønadsperiode.periode.før.2021',
+    [Stønadsperiode.STØNADSPERIODE_MAX_12MND]: 'stønadsperiode.periode.maks.12.måneder',
+    [Stønadsperiode.STØNADSPERIODEN_OVERLAPPER_EKSISTERENDE]: 'stønadsperiode.overlapper.eksisterende',
+    [Stønadsperiode.SENERE_STØNADSPERIODE_EKSISTERER]: 'stønadsperiode.senere.periode.eksisterer',
 
     [Formue.UGYLDIGE_VERDIER_PÅ_FORMUE]: 'formue.ugyldige.verdier',
     [Formue.HAR_IKKE_EKTEFELLE]: 'formue.har.ikke.ektefelle',
