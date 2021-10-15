@@ -52,7 +52,7 @@ export default {
     'lukk.søknad.alleredeLukket': 'Søknaden er allerede lukket',
     'lukk.søknad.manglerOppgave': 'Søknaden mangler oppgave',
     'lukk.søknadsbehandling.alleredeLukket': 'Kan ikke lukke en allerede lukket søknadsbehandling',
-    'lukk.søknadsbehandling.iverksatt': 'Kan ikke lukket en iverksatt søknadsbehandling',
+    'lukk.søknadsbehandling.iverksatt': 'Kan ikke lukke en iverksatt søknadsbehandling',
     'lukk.søknadsbehandling.tilAttestering': 'Kan ikke lukket en søknadsbehandling til attestering',
     'lukk.dokument.generer': 'Feil ved generering av dokument',
 };
