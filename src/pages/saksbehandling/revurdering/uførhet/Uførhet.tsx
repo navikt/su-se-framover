@@ -269,14 +269,15 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
         name: 'grunnlag',
     });
 
-    const watchGrunnlag = form.watch('grunnlag');
-
-    React.useEffect(
-        () => {
-            const harOverlapp = watchGrunnlag.some(
+    React.useEffect(() => {
+        const sub = form.watch((values, info) => {
+            if (info.name !== 'grunnlag') {
+                return;
+            }
+            const harOverlapp = values.grunnlag.some(
                 (v1) =>
                     DateUtils.isValidInterval(v1.fraOgMed, v1.tilOgMed) &&
-                    watchGrunnlag.some(
+                    values.grunnlag.some(
                         (v2) =>
                             v1.id !== v2.id &&
                             DateUtils.isValidInterval(v2.fraOgMed, v2.tilOgMed) &&
@@ -291,9 +292,11 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                     )
             );
             setHarOverlappendePerioder(harOverlapp);
-        },
-        watchGrunnlag.flatMap((f) => [f.fraOgMed, f.tilOgMed])
-    );
+        });
+        return () => {
+            sub.unsubscribe();
+        };
+    }, [form.watch()]);
 
     const save = async (values: FormData) => {
         if (harOverlappendePerioder || RemoteData.isPending(savingState)) {
