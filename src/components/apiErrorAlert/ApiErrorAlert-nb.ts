@@ -46,4 +46,13 @@ export default {
         'Kontrollsimuleringen er ulik saksbehandlers simulering',
 
     'feil.ukjentFeil': 'Ukjent feil',
+
+    'lukk.dato.ugyldig': 'Ugyldig dato',
+    'lukk.input.ugyldig': 'Ugyldig input',
+    'lukk.søknad.alleredeLukket': 'Søknaden er allerede lukket',
+    'lukk.søknad.manglerOppgave': 'Søknaden mangler oppgave',
+    'lukk.søknadsbehandling.alleredeLukket': 'Kan ikke lukket en allerede lukket søknadsbehandling',
+    'lukk.søknadsbehandling.iverksatt': 'Kan ikke lukket en iverksatt søknadsbehandling',
+    'lukk.søknadsbehandling.tilAttestering': 'Kan ikke lukket en søknadsbehandling til attestering',
+    'lukk.dokument.generer': 'Feil ved generering av dokument',
 };
