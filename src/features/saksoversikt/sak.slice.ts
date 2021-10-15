@@ -575,6 +575,7 @@ export default createSlice({
         handleAsyncThunk(builder, lukkSøknad, {
             pending: (state) => {
                 state.søknadLukketStatus = RemoteData.pending;
+                state.lukketSøknadBrevutkastStatus = RemoteData.initial;
             },
             fulfilled: (state, action) => {
                 state.søknadLukketStatus = RemoteData.success(null);
@@ -589,6 +590,7 @@ export default createSlice({
         handleAsyncThunk(builder, hentLukketSøknadBrevutkast, {
             pending: (state) => {
                 state.lukketSøknadBrevutkastStatus = RemoteData.pending;
+                state.søknadLukketStatus = RemoteData.initial;
             },
             fulfilled: (state) => {
                 state.lukketSøknadBrevutkastStatus = RemoteData.success(null);

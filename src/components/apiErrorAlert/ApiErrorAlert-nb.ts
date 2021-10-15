@@ -54,5 +54,5 @@ export default {
     'lukk.søknadsbehandling.alleredeLukket': 'Kan ikke lukke en allerede lukket søknadsbehandling',
     'lukk.søknadsbehandling.iverksatt': 'Kan ikke lukke en iverksatt søknadsbehandling',
     'lukk.søknadsbehandling.tilAttestering': 'Kan ikke lukke en søknadsbehandling til attestering',
-    'lukk.dokument.generer': 'Feil ved generering av dokument',
+    'lukk.dokument.generer': 'En feil skjedde under forhåndsvisning av brev',
 };
