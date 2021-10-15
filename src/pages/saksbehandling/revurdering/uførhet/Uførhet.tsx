@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Alert, Button, Panel, TextField } from '@navikt/ds-react';
+import { Button, Panel, TextField } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { Element, Normaltekst, Systemtittel } from 'nav-frontend-typografi';
@@ -95,7 +95,37 @@ const schema = (erGRegulering: boolean) =>
         .object<FormData>({
             grunnlag: yup
                 .array(uføregrunnlagFormDataSchema(erGRegulering).required())
-                .required('Du må legge inn minst én periode'),
+                .required('Du må legge inn minst én periode')
+                .test(
+                    'Har ikke overlappende perioder',
+                    'To eller flere av periodene overlapper. Du må rette opp i det før du kan gå videre.',
+                    function (uføregrunnlager) {
+                        if (!uføregrunnlager) {
+                            return false;
+                        }
+                        const harOverlapp = uføregrunnlager.some(
+                            (v1) =>
+                                DateUtils.isValidInterval(v1.fraOgMed, v1.tilOgMed) &&
+                                uføregrunnlager.some(
+                                    (v2) =>
+                                        v1.id !== v2.id &&
+                                        DateUtils.isValidInterval(v2.fraOgMed, v2.tilOgMed) &&
+                                        DateFns.areIntervalsOverlapping(
+                                            {
+                                                start: v1.fraOgMed ?? DateFns.minTime,
+                                                end: v1.tilOgMed ?? DateFns.maxTime,
+                                            },
+                                            {
+                                                start: v2.fraOgMed ?? DateFns.minTime,
+                                                end: v2.tilOgMed ?? DateFns.maxTime,
+                                            },
+                                            { inclusive: true }
+                                        )
+                                )
+                        );
+                        return !harOverlapp;
+                    }
+                ),
         })
         .required();
 
@@ -150,13 +180,15 @@ const Uføreperiodevurdering = (props: {
                                     label={intl.formatMessage({ id: 'input.fom.label' })}
                                     feil={getDateErrorMessage(fieldState.error)}
                                     {...field}
-                                    onChange={field.onChange}
                                     dateFormat="MM/yyyy"
                                     showMonthYearPicker
                                     isClearable
                                     autoComplete="off"
                                     minDate={props.minDate}
                                     maxDate={props.maxDate}
+                                    onChange={(date: Date) => {
+                                        field.onChange(DateFns.startOfMonth(date));
+                                    }}
                                 />
                             )}
                         />
@@ -176,6 +208,9 @@ const Uføreperiodevurdering = (props: {
                                     autoComplete="off"
                                     minDate={props.minDate}
                                     maxDate={props.maxDate}
+                                    onChange={(date: Date) => {
+                                        field.onChange(DateFns.endOfMonth(date));
+                                    }}
                                 />
                             )}
                         />
@@ -248,11 +283,11 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
     const [savingState, setSavingState] = React.useState<
         RemoteData.RemoteData<ApiError, { revurdering: OpprettetRevurdering; feilmeldinger: ErrorMessage[] }>
     >(RemoteData.initial);
-    const [harOverlappendePerioder, setHarOverlappendePerioder] = React.useState(false);
+    //const [harOverlappendePerioder, setHarOverlappendePerioder] = React.useState(false);
     const feiloppsummeringRef = React.useRef<HTMLDivElement>(null);
 
     const {
-        formState: { errors, isValid, isSubmitted },
+        formState: { errors, isSubmitted },
         ...form
     } = useForm<FormData>({
         defaultValues: {
@@ -269,37 +304,8 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
         name: 'grunnlag',
     });
 
-    React.useEffect(() => {
-        const sub = form.watch((values, info) => {
-            if (info.name !== 'grunnlag') {
-                return;
-            }
-            const harOverlapp = values.grunnlag.some(
-                (v1) =>
-                    DateUtils.isValidInterval(v1.fraOgMed, v1.tilOgMed) &&
-                    values.grunnlag.some(
-                        (v2) =>
-                            v1.id !== v2.id &&
-                            DateUtils.isValidInterval(v2.fraOgMed, v2.tilOgMed) &&
-                            DateFns.areIntervalsOverlapping(
-                                {
-                                    start: v1.fraOgMed ?? DateFns.minTime,
-                                    end: v1.tilOgMed ?? DateFns.maxTime,
-                                },
-                                { start: v2.fraOgMed ?? DateFns.minTime, end: v2.tilOgMed ?? DateFns.maxTime },
-                                { inclusive: true }
-                            )
-                    )
-            );
-            setHarOverlappendePerioder(harOverlapp);
-        });
-        return () => {
-            sub.unsubscribe();
-        };
-    }, [form.watch()]);
-
     const save = async (values: FormData) => {
-        if (harOverlappendePerioder || RemoteData.isPending(savingState)) {
+        if (RemoteData.isPending(savingState)) {
             return false;
         }
         setSavingState(RemoteData.pending);
@@ -312,7 +318,7 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                     periode: {
                         /* eslint-disable @typescript-eslint/no-non-null-assertion */
                         fraOgMed: DateUtils.toIsoDateOnlyString(g.fraOgMed!),
-                        tilOgMed: DateUtils.toIsoDateOnlyString(DateUtils.sluttenAvMåneden(g.tilOgMed!)),
+                        tilOgMed: DateUtils.toIsoDateOnlyString(g.tilOgMed!),
                         /* eslint-enable @typescript-eslint/no-non-null-assertion */
                     },
                     forventetInntekt: Number.parseInt(g.forventetInntekt, 10),
@@ -361,6 +367,8 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
         }
     }, [grunnlagValues.fields]);
 
+    const valdieringsFeil = hookFormErrorsTilFeiloppsummering(errors);
+
     return (
         <form onSubmit={form.handleSubmit(handleSubmit, focusAfterTimeout(feiloppsummeringRef))}>
             <ul className={styles.periodeliste}>
@@ -407,15 +415,10 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
             <Feiloppsummering
                 tittel={formatMessage('feiloppsummering.title')}
                 className={styles.feiloppsummering}
-                feil={hookFormErrorsTilFeiloppsummering(errors)}
-                hidden={isValid || !isSubmitted}
+                feil={valdieringsFeil}
+                hidden={valdieringsFeil.length === 0 || !isSubmitted}
                 ref={feiloppsummeringRef}
             />
-            {isSubmitted && harOverlappendePerioder && (
-                <Alert variant="warning" className={styles.feiloppsummering}>
-                    {formatMessage('feil.overlappendePerioder')}
-                </Alert>
-            )}
             {RemoteData.isFailure(savingState) && <ApiErrorAlert error={savingState.error} />}
             {RemoteData.isSuccess(savingState) && (
                 <UtfallSomIkkeStøttes feilmeldinger={savingState.value.feilmeldinger} />
