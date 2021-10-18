@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { LukkSøknadBodyTypes } from '~api/søknadApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { lukkSøknad } from '~features/saksoversikt/sak.slice';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
@@ -32,6 +33,9 @@ const LukkSøknad = (props: { sak: Sak }) => {
     const søknad = props.sak.søknader.find((s) => s.id === urlParams.soknadId);
     const { intl } = useI18n({ messages: nb });
     const history = useHistory();
+
+    const status = RemoteData.combine(søknadLukketStatus, lukketSøknadBrevutkastStatus);
+    const error = RemoteData.isFailure(status) ? status.error : undefined;
 
     const formik = useFormik<LukkSøknadFormData>({
         initialValues: lukkSøknadInitialValues,
@@ -164,15 +168,7 @@ const LukkSøknad = (props: { sak: Sak }) => {
                 </Link>
             </div>
 
-            <div>
-                {RemoteData.isFailure(lukketSøknadBrevutkastStatus) && (
-                    <Alert variant="error">{intl.formatMessage({ id: 'display.brev.kunneIkkeViseBrev' })}</Alert>
-                )}
-
-                {RemoteData.isFailure(søknadLukketStatus) && (
-                    <Alert variant="error">{intl.formatMessage({ id: 'display.søknad.KunneIkkeLukkeSøknad' })}</Alert>
-                )}
-            </div>
+            <div>{error && <ApiErrorAlert error={error} />}</div>
         </form>
     );
 };
