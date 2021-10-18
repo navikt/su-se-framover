@@ -68,7 +68,7 @@ export const useSøknadsbehandlingDraftContextFor = <U, T extends DraftKey = Dra
     const useDraftFromFormikValues = React.useCallback(
         (values: U) => {
             React.useEffect(() => {
-                setDraft(values as U);
+                setDraft(values);
             }, [values, setDraft]);
         },
         [setDraft]
