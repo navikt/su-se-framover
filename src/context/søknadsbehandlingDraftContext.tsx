@@ -65,5 +65,20 @@ export const useSøknadsbehandlingDraftContextFor = <U, T extends DraftKey = Dra
         [setDraft]
     );
 
-    return { draft: value[vilkårtype] as U | undefined, setDraft, clearDraft, useDraftFormSubscribe };
+    const useDraftFromFormikValues = React.useCallback(
+        (values: U) => {
+            React.useEffect(() => {
+                setDraft(values);
+            }, [values, setDraft]);
+        },
+        [setDraft]
+    );
+
+    return {
+        draft: value[vilkårtype] as U | undefined,
+        setDraft,
+        clearDraft,
+        useDraftFormSubscribe,
+        useDraftFromFormikValues,
+    };
 };
