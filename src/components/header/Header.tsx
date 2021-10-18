@@ -1,4 +1,4 @@
-import { Header } from '@navikt/ds-react-internal';
+import { Dropdown, Header } from '@navikt/ds-react-internal';
 import React from 'react';
 
 import Config from '~/config';
@@ -35,18 +35,24 @@ const SuHeader = (props: Props) => {
                             </Header.Title>
                         </>
                     )}
-                    <Header.Dropdown>
-                        <Header.Dropdown.UserButton name={props.user.navn} description={props.user.navIdent} />
-                        <Header.Dropdown.Menu>
-                            <Header.Dropdown.Menu.Item
-                                onClick={() => {
-                                    window.location.href = Config.LOGOUT_URL;
-                                }}
-                            >
-                                Logg ut
-                            </Header.Dropdown.Menu.Item>
-                        </Header.Dropdown.Menu>
-                    </Header.Dropdown>
+                    <Dropdown>
+                        <Header.UserButton
+                            as={Dropdown.Toggle}
+                            name={props.user.navn}
+                            description={props.user.navIdent}
+                        />
+                        <Dropdown.Menu>
+                            <Dropdown.Menu.List>
+                                <Dropdown.Menu.List.Item
+                                    onClick={() => {
+                                        window.location.href = Config.LOGOUT_URL;
+                                    }}
+                                >
+                                    Logg ut
+                                </Dropdown.Menu.List.Item>
+                            </Dropdown.Menu.List>
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </>
             )}
         </Header>
