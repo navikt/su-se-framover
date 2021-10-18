@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Loader, Select, Textarea } from '@navikt/ds-react';
-import { Innholdstittel } from 'nav-frontend-typografi';
+import { Button, Heading, Loader, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Route, Switch, useHistory } from 'react-router-dom';
@@ -107,14 +106,16 @@ const Stans = (props: Props) => {
     return (
         <Switch>
             <Route path={Routes.stansOppsummeringRoute.path}>
-                <Innholdstittel className={styles.tittel}>{intl.formatMessage({ id: 'stans.tittel' })}</Innholdstittel>
+                <Heading level="1" size="xlarge" className={styles.tittel}>
+                    {intl.formatMessage({ id: 'stans.tittel' })}
+                </Heading>
                 <StansOppsummering sak={props.sak} />
             </Route>
             <Route path="*">
                 <form className={styles.pageContainer} onSubmit={form.handleSubmit((values) => handleSubmit(values))}>
-                    <Innholdstittel className={styles.tittel}>
+                    <Heading level="1" size="xlarge" className={styles.tittel}>
                         {intl.formatMessage({ id: 'stans.tittel' })}
-                    </Innholdstittel>
+                    </Heading>
                     <div className={styles.content}>
                         <Controller
                             control={form.control}

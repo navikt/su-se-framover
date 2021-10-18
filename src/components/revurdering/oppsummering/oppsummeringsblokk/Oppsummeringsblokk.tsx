@@ -1,4 +1,4 @@
-import { Normaltekst, Element } from 'nav-frontend-typografi';
+import { BodyShort, Label } from '@navikt/ds-react';
 import * as React from 'react';
 
 import UnderkjenteAttesteringer from '~components/underkjenteAttesteringer/UnderkjenteAttesteringer';
@@ -45,8 +45,8 @@ const Intro = (props: { revurdering: Revurdering }) => {
                     },
                 ].map((item) => (
                     <div className={styles.introItem} key={item.tittel}>
-                        <Element>{item.tittel}</Element>
-                        <Normaltekst>{item.verdi}</Normaltekst>
+                        <Label>{item.tittel}</Label>
+                        <BodyShort>{item.verdi}</BodyShort>
                     </div>
                 ))}
             </div>

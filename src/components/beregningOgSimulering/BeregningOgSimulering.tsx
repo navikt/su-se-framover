@@ -1,4 +1,4 @@
-import { Element } from 'nav-frontend-typografi';
+import { Label } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~lib/i18n';
@@ -16,9 +16,9 @@ const VisBeregningOgSimulering = (props: { behandling: Behandling }) => {
         <div className={styles.beregningOgSimuleringContainer}>
             <VisBeregning beregning={props.behandling.beregning} />
             {!erBeregnetAvslag(props.behandling) && <VisSimulering behandling={props.behandling} />}
-            {props.behandling.beregning.begrunnelse && (
+            {!props.behandling.beregning.begrunnelse && (
                 <div>
-                    <Element>{intl.formatMessage({ id: 'display.visBeregning.begrunnelse' })}</Element>
+                    <Label size="small">{intl.formatMessage({ id: 'display.visBeregning.begrunnelse' })}</Label>
                     <p>{props.behandling.beregning.begrunnelse}</p>
                 </div>
             )}

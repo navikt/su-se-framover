@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Textarea } from '@navikt/ds-react';
+import { BodyShort, Heading, Label, Textarea } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import classNames from 'classnames';
-import { Ingress, Element, Normaltekst } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
 import { Control, Controller, useForm } from 'react-hook-form';
 import { IntlShape } from 'react-intl';
@@ -47,54 +46,46 @@ const GjeldendeBosituasjon = (props: { bosituasjon?: Bosituasjon[] }) => {
 
     return (
         <div>
-            <Ingress className={styles.eksisterendeVedtakTittel}>
+            <Heading level="2" size="large" spacing>
                 {intl.formatMessage({ id: 'eksisterende.vedtakinfo.tittel' })}
-            </Ingress>
+            </Heading>
             <ul className={styles.grunnlagsliste}>
                 {props.bosituasjon?.map((item, index) => (
                     <li key={index}>
-                        <Element>
-                            {DateUtils.formatMonthYear(item.periode.fraOgMed)}
-                            {' – '}
-                            {DateUtils.formatMonthYear(item.periode.tilOgMed)}
-                        </Element>
+                        <Label spacing>{DateUtils.formatPeriode(item.periode)}</Label>
                         <div className={styles.informasjonsbitContainer}>
-                            <Normaltekst>
-                                {intl.formatMessage({ id: 'eksisterende.vedtakinfo.søkerBorMed' })}
-                            </Normaltekst>
-                            <Element>
+                            <BodyShort>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.søkerBorMed' })}</BodyShort>
+                            <Label>
                                 {item.fnr
                                     ? intl.formatMessage({ id: 'eksisterende.vedtakinfo.eps' })
                                     : item.delerBolig
                                     ? intl.formatMessage({ id: 'eksisterende.vedtakinfo.over18år' })
                                     : intl.formatMessage({ id: 'eksisterende.vedtakinfo.enslig' })}
-                            </Element>
+                            </Label>
                         </div>
 
                         {item.fnr && (
                             <div>
                                 <div className={styles.informasjonsbitContainer}>
-                                    <Normaltekst>
-                                        {intl.formatMessage({ id: 'eksisterende.vedtakinfo.eps' })}
-                                    </Normaltekst>
-                                    <Element>{item.fnr}</Element>
+                                    <BodyShort>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.eps' })}</BodyShort>
+                                    <Label>{item.fnr}</Label>
                                 </div>
                                 <div className={styles.informasjonsbitContainer}>
-                                    <Normaltekst>
+                                    <BodyShort>
                                         {intl.formatMessage({ id: 'eksisterende.vedtakinfo.mottarSU' })}
-                                    </Normaltekst>
-                                    <Element>
+                                    </BodyShort>
+                                    <Label>
                                         {item.ektemakeEllerSamboerUførFlyktning
                                             ? intl.formatMessage({ id: 'eksisterende.vedtakinfo.ja' })
                                             : intl.formatMessage({ id: 'eksisterende.vedtakinfo.nei' })}
-                                    </Element>
+                                    </Label>
                                 </div>
                             </div>
                         )}
 
                         <div className={styles.informasjonsbitContainer}>
-                            <Normaltekst>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.sats' })}</Normaltekst>
-                            <Element>{item.sats}</Element>
+                            <BodyShort>{intl.formatMessage({ id: 'eksisterende.vedtakinfo.sats' })}</BodyShort>
+                            <Label>{item.sats}</Label>
                         </div>
                     </li>
                 ))}

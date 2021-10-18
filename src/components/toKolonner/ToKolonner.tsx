@@ -1,4 +1,4 @@
-import { Systemtittel } from 'nav-frontend-typografi';
+import { Heading } from '@navikt/ds-react';
 import * as React from 'react';
 
 import styles from './toKolonner.module.less';
@@ -13,9 +13,9 @@ const ToKolonner = (props: {
     <div className={styles.contentContainer}>
         <div className={styles.left}>
             {typeof props.tittel === 'string' ? (
-                <Systemtittel tag="h1" className={styles.tittel}>
+                <Heading level="1" size="large" spacing>
                     {props.tittel}
-                </Systemtittel>
+                </Heading>
             ) : (
                 props.tittel
             )}

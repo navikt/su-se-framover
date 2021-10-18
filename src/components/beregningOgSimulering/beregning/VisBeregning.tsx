@@ -1,9 +1,9 @@
+import { BodyShort, Heading, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
 import * as Ord from 'fp-ts/Ord';
 import * as S from 'fp-ts/string';
-import { Element, Systemtittel, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
@@ -57,10 +57,12 @@ const DetaljertFradrag = (props: {
         <>
             {props.detaljer.map((d, index) => (
                 <React.Fragment key={d.label + index}>
-                    <Undertekst className={d.epsUtland ? styles.additionalDetails : styles.detailedLinje}>
+                    <BodyShort size="small" className={d.epsUtland ? styles.additionalDetails : styles.detailedLinje}>
                         {d.label}
-                    </Undertekst>
-                    <Undertekst className={styles.alignTextRight}>{d.verdi}</Undertekst>
+                    </BodyShort>
+                    <BodyShort size="small" className={styles.alignTextRight}>
+                        {d.verdi}
+                    </BodyShort>
                 </React.Fragment>
             ))}
         </>
@@ -131,11 +133,11 @@ const VisBeregning = (props: Props) => {
     return (
         <div className={styles.beregningdetaljer}>
             {!props.utenTittel && (
-                <Systemtittel className={styles.visBeregningTittel}>
+                <Heading level="4" size="medium" spacing>
                     {props.beregningsTittel ? props.beregningsTittel : intl.formatMessage({ id: 'page.tittel' })}
-                </Systemtittel>
+                </Heading>
             )}
-            <Element className={classNames(styles.totalt, styles.linje)}>
+            <Label className={classNames(styles.totalt, styles.linje)}>
                 <span>{intl.formatMessage({ id: 'display.totaltBeløp' })}</span>
                 <span>
                     {formatCurrency(
@@ -145,7 +147,7 @@ const VisBeregning = (props: Props) => {
                         }
                     )}
                 </span>
-            </Element>
+            </Label>
             {pipe(
                 props.beregning.månedsberegninger,
                 groupByEq(eqMånedsberegningBortsettFraPeriode),
@@ -164,7 +166,7 @@ const VisBeregning = (props: Props) => {
                                 })
                             ),
                             ({ tittel, beløp }) => (
-                                <Element tag="h3" className={classNames(styles.periodeoverskrift, styles.linje)}>
+                                <Heading level="5" size="xsmall" className={styles.linje} spacing>
                                     <span>{tittel}</span>
                                     <span>
                                         {formatCurrency(beløp, {
@@ -172,7 +174,7 @@ const VisBeregning = (props: Props) => {
                                         })}{' '}
                                         i mnd
                                     </span>
-                                </Element>
+                                </Heading>
                             )
                         )}
 

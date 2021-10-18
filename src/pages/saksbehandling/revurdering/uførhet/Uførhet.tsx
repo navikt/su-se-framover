@@ -1,10 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Button, Panel, TextField } from '@navikt/ds-react';
+import { Button, BodyShort, Heading, Label, Panel, TextField } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
-import { Element, Normaltekst, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { Control, Controller, FieldArrayWithId, FieldPath, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router';
@@ -450,46 +449,44 @@ const GjeldendeGrunnlagsdata = (props: { vilkårsvurderinger: GrunnlagsdataOgVil
     const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
     return (
         <div>
-            <Systemtittel className={styles.grunnlagsdataHeading}>
+            <Heading level="2" size="large" spacing>
                 {intl.formatMessage({ id: 'heading.gjeldendeGrunnlag' })}
-            </Systemtittel>
+            </Heading>
             <ul className={styles.grunnlagsliste}>
                 {props.vilkårsvurderinger.uføre?.vurderinger.map((item) => (
                     <li key={item.periode.fraOgMed + item.periode.tilOgMed}>
-                        <Element>
+                        <Label>
                             {DateUtils.formatMonthYear(item.periode.fraOgMed)}
                             {' – '}
                             {DateUtils.formatMonthYear(item.periode.tilOgMed)}
-                        </Element>
+                        </Label>
                         <div>
-                            <Normaltekst>{intl.formatMessage({ id: 'gjeldende.vilkårOppfylt' })}</Normaltekst>
-                            <Element>
+                            <BodyShort>{intl.formatMessage({ id: 'gjeldende.vilkårOppfylt' })}</BodyShort>
+                            <Label>
                                 {intl.formatMessage({
                                     id:
                                         item.resultat === UføreResultat.VilkårOppfylt
                                             ? 'radio.label.ja'
                                             : 'radio.label.nei',
                                 })}
-                            </Element>
+                            </Label>
                         </div>
-                        <>
+                        <div>
+                            <BodyShort>{intl.formatMessage({ id: 'gjeldende.uføregrad' })}</BodyShort>
+                            <Label>{item.grunnlag ? `${item.grunnlag.uføregrad}%` : '—'}</Label>
+                        </div>
+                        <div>
+                            <BodyShort>{intl.formatMessage({ id: 'gjeldende.inntektEtterUførhet' })}</BodyShort>
+                            <Label>
+                                {item.grunnlag ? FormatUtils.formatCurrency(item.grunnlag.forventetInntekt) : '—'}
+                            </Label>
+                        </div>
+                        {item.begrunnelse && (
                             <div>
-                                <Normaltekst>{intl.formatMessage({ id: 'gjeldende.uføregrad' })}</Normaltekst>
-                                <Element>{item.grunnlag ? `${item.grunnlag.uføregrad}%` : '—'}</Element>
+                                <BodyShort>{intl.formatMessage({ id: 'gjeldende.begrunnelse' })}</BodyShort>
+                                <Label>{item.begrunnelse}</Label>
                             </div>
-                            <div>
-                                <Normaltekst>{intl.formatMessage({ id: 'gjeldende.inntektEtterUførhet' })}</Normaltekst>
-                                <Element>
-                                    {item.grunnlag ? FormatUtils.formatCurrency(item.grunnlag.forventetInntekt) : '—'}
-                                </Element>
-                            </div>
-                            {item.begrunnelse && (
-                                <div>
-                                    <Normaltekst>{intl.formatMessage({ id: 'gjeldende.begrunnelse' })}</Normaltekst>
-                                    <Element>{item.begrunnelse}</Element>
-                                </div>
-                            )}
-                        </>
+                        )}
                     </li>
                 ))}
             </ul>

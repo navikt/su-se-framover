@@ -1,5 +1,4 @@
-import { Alert } from '@navikt/ds-react';
-import { Element, Normaltekst } from 'nav-frontend-typografi';
+import { Alert, BodyShort, Label } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~lib/i18n';
@@ -28,13 +27,13 @@ const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
                 <thead>
                     <tr>
                         <th>
-                            <Element>{formatMessage('underkjent.tidspunkt')}</Element>
+                            <Label>{formatMessage('underkjent.tidspunkt')}</Label>
                         </th>
                         <th>
-                            <Element>{formatMessage('underkjent.grunn')}</Element>
+                            <Label>{formatMessage('underkjent.grunn')}</Label>
                         </th>
                         <th>
-                            <Element>{formatMessage('underkjent.kommentar')}</Element>
+                            <Label>{formatMessage('underkjent.kommentar')}</Label>
                         </th>
                     </tr>
                 </thead>
@@ -42,17 +41,15 @@ const UnderkjenteAttesteringer = (props: { attesteringer: Attestering[] }) => {
                     {underkjenteAttesteringer.map((a) => (
                         <tr key={a.opprettet}>
                             <td>
-                                <Normaltekst className={styles.tidspunkt}>{formatDateTime(a.opprettet)}</Normaltekst>
+                                <BodyShort className={styles.tidspunkt}>{formatDateTime(a.opprettet)}</BodyShort>
                             </td>
                             {/* underkjente attesteringer har alltid grunn og kommentar */}
                             {/* eslint-disable @typescript-eslint/no-non-null-assertion */}
                             <td>
-                                <Normaltekst>
-                                    {underkjentGrunnTilTekst(a.underkjennelse!.grunn, formatMessage)}
-                                </Normaltekst>
+                                <BodyShort>{underkjentGrunnTilTekst(a.underkjennelse!.grunn, formatMessage)}</BodyShort>
                             </td>
                             <td>
-                                <Normaltekst className={styles.kommentar}>{a.underkjennelse!.kommentar}</Normaltekst>
+                                <BodyShort className={styles.kommentar}>{a.underkjennelse!.kommentar}</BodyShort>
                             </td>
                             {/* eslint-enable @typescript-eslint/no-non-null-assertion */}
                         </tr>

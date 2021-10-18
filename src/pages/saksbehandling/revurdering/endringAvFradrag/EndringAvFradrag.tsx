@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Heading } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import { Systemtittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -47,9 +47,9 @@ const GjeldendeFradrag = (props: { fradrag: Fradrag[] }) => {
     const { intl } = useI18n({ messages: { ...messages, ...fradragstypeMessages } });
     return (
         <div>
-            <Systemtittel className={styles.grunnlagsdataHeading}>
+            <Heading level="2" size="large" spacing>
                 {intl.formatMessage({ id: 'heading.gjeldendeFradrag' })}
-            </Systemtittel>
+            </Heading>
             <Fradragoppsummering fradrag={props.fradrag} />
         </div>
     );

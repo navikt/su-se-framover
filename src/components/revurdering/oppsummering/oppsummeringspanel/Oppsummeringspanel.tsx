@@ -1,6 +1,6 @@
 import { Calculator, List } from '@navikt/ds-icons';
+import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 
 import styles from './oppsummeringspanel.module.less';
@@ -50,7 +50,9 @@ const Oppsummeringspanel = (props: {
     <div className={styles.container}>
         <div className={classNames(styles.tittel, fargeklassenavn(props.farge))}>
             <Ikon className={styles.ikon} ikon={props.ikon} />
-            <Systemtittel>{props.tittel}</Systemtittel>
+            <Heading level="2" size="medium">
+                {props.tittel}
+            </Heading>
         </div>
         <div className={styles.content}>{props.children}</div>
     </div>

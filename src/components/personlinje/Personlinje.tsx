@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, CopyToClipboard, Loader } from '@navikt/ds-react';
+import { Alert, BodyShort, CopyToClipboard, Loader } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -20,9 +19,9 @@ import messages from './personlinje-nb';
 import styles from './personlinje.module.less';
 
 const Separator = () => (
-    <Normaltekst tag="span" className={styles.separator}>
+    <BodyShort as="span" className={styles.separator}>
         /
-    </Normaltekst>
+    </BodyShort>
 );
 
 const Personlinje = (props: { søker: Person; sak: Sak }) => {
@@ -35,9 +34,9 @@ const Personlinje = (props: { søker: Person; sak: Sak }) => {
                     <GenderIcon kjønn={props.søker.kjønn ?? Kjønn.Ukjent} />
                 </span>
                 <Link to={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
-                    <Normaltekst tag="span" className={styles.navn}>
+                    <BodyShort as="span" className={styles.navn}>
                         {showName(props.søker.navn)}
-                    </Normaltekst>
+                    </BodyShort>
                 </Link>
                 <Separator />
                 <CopyToClipboard
@@ -49,7 +48,7 @@ const Personlinje = (props: { søker: Person; sak: Sak }) => {
                 </CopyToClipboard>
                 <Separator />
                 <span className={styles.saksnummer}>
-                    <Normaltekst tag="span">{formatMessage('label.saksnummer')}&nbsp;</Normaltekst>
+                    <BodyShort as="span">{formatMessage('label.saksnummer')}&nbsp;</BodyShort>
                     <CopyToClipboard
                         copyText={props.sak.saksnummer.toString()}
                         popoverText={formatMessage('ariaLabel.kopierteSaksnummer')}
@@ -84,9 +83,9 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
 
     return (
         <span className={styles.sivilstand}>
-            <Normaltekst tag="span">
+            <BodyShort as="span">
                 {formatMessage('label.sivilstand')}: {formatSivilstandType(props.sivilstand.type, formatMessage)}
-            </Normaltekst>
+            </BodyShort>
 
             {pipe(
                 status,
@@ -105,7 +104,7 @@ const Sivilstand = (props: { sivilstand: ISivilstand }) => {
                     (eps) => (
                         <span className={styles.epsInformasjon}>
                             <GenderIcon kjønn={eps.kjønn ?? Kjønn.Ukjent} />
-                            <Normaltekst>{showName(eps.navn)}</Normaltekst>
+                            <BodyShort>{showName(eps.navn)}</BodyShort>
                             <CopyToClipboard
                                 copyText={formatFnr(eps.fnr)}
                                 popoverText={formatMessage('ariaLabel.kopierteFnr')}

@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Link, Loader, Select } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, Link, Loader, Select } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
@@ -78,12 +78,12 @@ const LukkSøknad = (props: { sak: Sak }) => {
             className={styles.formContainer}
         >
             <div>
-                <p>
+                <BodyShort>
                     {intl.formatMessage({ id: 'display.saksnummer' })} {props.sak.saksnummer}
-                </p>
-                <p>
+                </BodyShort>
+                <BodyShort spacing>
                     {intl.formatMessage({ id: 'display.søknadId' })} {urlParams.soknadId}
-                </p>
+                </BodyShort>
             </div>
             <div className={styles.selectContainer}>
                 <Select
