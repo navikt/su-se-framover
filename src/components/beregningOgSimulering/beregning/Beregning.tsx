@@ -22,6 +22,7 @@ import {
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import BeregningFaktablokk from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/BeregningFaktablokk';
 import ToKolonner from '~components/toKolonner/ToKolonner';
+import { useSøknadsbehandlingDraftContextFor } from '~context/søknadsbehandlingDraftContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
@@ -32,6 +33,7 @@ import { useAppDispatch } from '~redux/Store';
 import { Behandling, Behandlingsstatus } from '~types/Behandling';
 import { Beregning } from '~types/Beregning';
 import { Fradrag, Fradragstype, FradragTilhører } from '~types/Fradrag';
+import { Vilkårtype } from '~types/Vilkårsvurdering';
 import { kanSimuleres } from '~utils/behandling/behandlingUtils';
 import * as DateUtils from '~utils/date/dateUtils';
 import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
@@ -83,6 +85,15 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     const [beregningStatus, beregn] = useAsyncActionCreator(sakSlice.startBeregning);
     const [simuleringStatus, simuler] = useAsyncActionCreator(sakSlice.startSimulering);
 
+    const initialFormData = useMemo<FormData>(
+        () =>
+            getInitialValues(
+                props.behandling.grunnlagsdataOgVilkårsvurderinger.fradrag,
+                props.behandling.beregning?.begrunnelse
+            ),
+        [props.behandling.grunnlagsdataOgVilkårsvurderinger.fradrag]
+    );
+
     const lagrefradragogberegnstatus = RemoteData.combine(lagreFradragstatus, beregningStatus);
     const stønadsperiode = useMemo(() => {
         const fom = props.behandling.stønadsperiode?.periode.fraOgMed;
@@ -104,6 +115,11 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         return <div>{intl.formatMessage({ id: 'beregning.behandlingErIkkeFerdig' })}</div>;
     }
 
+    const { draft, clearDraft, useDraftFromFormikValues } = useSøknadsbehandlingDraftContextFor<FormData>(
+        Vilkårtype.Beregning,
+        (values) => eqBeregningFormData.equals(values, initialFormData)
+    );
+
     const lagreFradragOgBeregn = async (values: FormData) => {
         if (!props.behandling.behandlingsinformasjon.utledetSats) {
             return null;
@@ -112,6 +128,11 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         const fradrag = values.fradrag.filter(isValidFradrag);
         if (fradrag.length !== values.fradrag.length) {
             return null;
+        }
+
+        if (eqBeregningFormData.equals(values, initialFormData)) {
+            clearDraft();
+            return;
         }
 
         return new Promise<Behandling | null>((resolve) =>
@@ -153,7 +174,10 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             behandlingId: props.behandling.id,
                             begrunnelse: values.begrunnelse,
                         },
-                        (behandling) => resolve(behandling),
+                        (behandling) => {
+                            resolve(behandling);
+                            clearDraft();
+                        },
                         () => resolve(null)
                     ),
                 () => resolve(null)
@@ -209,10 +233,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
     };
 
     const formik = useFormik<FormData>({
-        initialValues: getInitialValues(
-            props.behandling.grunnlagsdataOgVilkårsvurderinger.fradrag,
-            props.behandling.beregning?.begrunnelse
-        ),
+        initialValues: draft ?? initialFormData,
         onSubmit: handleStartBeregningClick,
         validationSchema: yup.object<FormData>({
             fradrag: yup.array(fradragSchema.required()).defined(),
@@ -220,6 +241,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         }),
         validateOnChange: false,
     });
+
+    useDraftFromFormikValues(formik.values);
 
     return (
         <ToKolonner tittel={intl.formatMessage({ id: 'page.tittel' })}>
@@ -389,6 +412,11 @@ const eqFradragFormData = struct<FradragFormData>({
     utenlandskInntekt: eqUtenlandskInntekt,
     tilhørerEPS: B.Eq,
     periode: eqNullable(eqPeriode),
+});
+
+const eqBeregningFormData = struct<FormData>({
+    fradrag: getEq(eqFradragFormData),
+    begrunnelse: eqNullable(S.Eq),
 });
 
 export default Beregning;
