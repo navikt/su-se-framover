@@ -148,6 +148,7 @@ const Uføreperiodevurdering = (props: {
     index: number;
     control: Control<FormData>;
     trigger(path: FieldPath<FormData> | Array<FieldPath<FormData>>): void;
+    resetUføregradEllerForventetInntekt(index: number, field: 'uføregrad' | 'forventetInntekt'): void;
     minDate: Date;
     maxDate: Date;
     onRemoveClick(): void;
@@ -160,6 +161,11 @@ const Uføreperiodevurdering = (props: {
             `grunnlag.${props.index}.uføregrad` as const,
             `grunnlag.${props.index}.forventetInntekt` as const,
         ]);
+
+        if (!value.oppfylt) {
+            props.resetUføregradEllerForventetInntekt(props.index, 'uføregrad');
+            props.resetUføregradEllerForventetInntekt(props.index, 'forventetInntekt');
+        }
     }, [value.oppfylt]);
     React.useEffect(() => {
         props.trigger(`grunnlag.${props.index}.tilOgMed` as const);
@@ -321,8 +327,8 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                         tilOgMed: DateUtils.toIsoDateOnlyString(g.tilOgMed!),
                         /* eslint-enable @typescript-eslint/no-non-null-assertion */
                     },
-                    forventetInntekt: Number.parseInt(g.forventetInntekt, 10),
-                    uføregrad: Number.parseInt(g.uføregrad, 10),
+                    forventetInntekt: g.oppfylt ? Number.parseInt(g.forventetInntekt, 10) : null,
+                    uføregrad: g.oppfylt ? Number.parseInt(g.uføregrad, 10) : null,
                     begrunnelse: null,
                     resultat: g.oppfylt ? UføreResultat.VilkårOppfylt : UføreResultat.VilkårIkkeOppfylt,
                 })),
@@ -384,6 +390,12 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                             if (isSubmitted) {
                                 form.trigger(path);
                             }
+                        }}
+                        resetUføregradEllerForventetInntekt={(
+                            index: number,
+                            field: 'uføregrad' | 'forventetInntekt'
+                        ) => {
+                            form.setValue(`grunnlag.${index}.${field}`, '');
                         }}
                         onRemoveClick={() => {
                             grunnlagValues.remove(idx);
