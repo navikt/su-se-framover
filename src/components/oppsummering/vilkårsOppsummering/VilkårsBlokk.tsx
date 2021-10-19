@@ -36,7 +36,7 @@ const Vilkårsblokk = (props: {
                     {props.begrunnelse && (
                         <div>
                             <Heading level="4" size="medium" spacing>
-                                {intl.formatMessage({ id: 'vilkår.begrunnelse' })} hallo
+                                {intl.formatMessage({ id: 'vilkår.begrunnelse' })}
                             </Heading>
                             <p>{props.begrunnelse}</p>
                         </div>
