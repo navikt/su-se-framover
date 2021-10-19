@@ -131,7 +131,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 
         if (eqBeregningFormData.equals(values, initialFormData)) {
             clearDraft();
-            return;
         }
 
         return new Promise<Behandling | null>((resolve) =>
