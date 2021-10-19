@@ -1,5 +1,4 @@
-import { Panel } from '@navikt/ds-react';
-import { Innholdstittel, Systemtittel, Undertittel } from 'nav-frontend-typografi';
+import { Heading, Panel } from '@navikt/ds-react';
 import * as React from 'react';
 
 import VisBeregningOgSimulering from '~components/beregningOgSimulering/BeregningOgSimulering';
@@ -19,6 +18,7 @@ import styles from './søknadsbehandlingoppsummering.module.less';
 interface Props {
     sak: Sak;
     behandling: Behandling;
+    tittel?: React.ReactNode;
     vedtakForBehandling?: Vedtak;
     medBrevutkastknapp?: boolean;
 }
@@ -29,7 +29,13 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
 
     return (
         <div>
-            <Innholdstittel className={styles.tittel}>{formatMessage('tittel')}</Innholdstittel>
+            {props.tittel && typeof props.tittel !== 'string' ? (
+                props.tittel
+            ) : (
+                <Heading level="1" size="2xlarge" spacing>
+                    {props.tittel ?? formatMessage('tittel')}
+                </Heading>
+            )}
             <SøknadsbehandlingHeader
                 sakId={props.sak.id}
                 behandling={props.behandling}
@@ -37,19 +43,19 @@ const Søknadsbehandlingoppsummering = (props: Props) => {
                 medBrevutkastknapp={props.medBrevutkastknapp}
             />
             <div className={styles.virkningstidspunkt}>
-                <Systemtittel className={styles.tittel}>
+                <Heading level="2" size="large" spacing>
                     {`${formatMessage('virkningstidspunkt.tittel')}:
                     ${
                         periode ? DateUtils.formatPeriode(periode) : formatMessage('virkningstidspunkt.periode.mangler')
                     }`}
-                </Systemtittel>
-                {props.behandling.stønadsperiode?.begrunnelse ? (
+                </Heading>
+                {props.behandling.stønadsperiode?.begrunnelse && (
                     <div>
-                        <Undertittel>{formatMessage('virkningstidspunkt.begrunnelse')}</Undertittel>
+                        <Heading level="3" size="medium" spacing>
+                            {formatMessage('virkningstidspunkt.begrunnelse')}
+                        </Heading>
                         <p>{props.behandling.stønadsperiode?.begrunnelse}</p>
                     </div>
-                ) : (
-                    <></>
                 )}
             </div>
             <VilkårsOppsummering

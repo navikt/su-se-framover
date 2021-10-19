@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader } from '@navikt/ds-react';
+import { Alert, Button, Label, Loader } from '@navikt/ds-react';
 import { last } from 'fp-ts/lib/Array';
 import { isSome } from 'fp-ts/lib/Option';
-import { Element } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
@@ -101,37 +100,51 @@ const Tilleggsinfo = (props: {
         <div>
             <div className={styles.tilleggsinfoContainer}>
                 <div>
-                    <Element>{props.intl.formatMessage({ id: 'vurdering.tittel' })}</Element>
+                    <Label size="small" spacing>
+                        {props.intl.formatMessage({ id: 'vurdering.tittel' })}
+                    </Label>
                     <p>{statusTilTekst(props.behandling.status, props.intl)}</p>
                 </div>
                 <div>
-                    <Element> {props.intl.formatMessage({ id: 'behandlet.av' })}</Element>
+                    <Label size="small" spacing>
+                        {props.intl.formatMessage({ id: 'behandlet.av' })}
+                    </Label>
                     <p>{props.behandling.saksbehandler || user.navn}</p>
                 </div>
                 {isSome(senesteAttestering) && (
                     <div>
-                        <Element> {props.intl.formatMessage({ id: 'attestert.av' })}</Element>
+                        <Label size="small" spacing>
+                            {props.intl.formatMessage({ id: 'attestert.av' })}
+                        </Label>
                         <p>{senesteAttestering.value.attestant}</p>
                     </div>
                 )}
 
                 <div>
-                    <Element> {props.intl.formatMessage({ id: 'behandling.søknadsdato' })}</Element>
+                    <Label size="small" spacing>
+                        {props.intl.formatMessage({ id: 'behandling.søknadsdato' })}
+                    </Label>
                     <p>{søknadMottatt(props.behandling.søknad, props.intl)}</p>
                 </div>
                 <div>
-                    <Element> {props.intl.formatMessage({ id: 'behandling.saksbehandlingStartet' })}</Element>
+                    <Label size="small" spacing>
+                        {props.intl.formatMessage({ id: 'behandling.saksbehandlingStartet' })}
+                    </Label>
                     <p>{props.intl.formatDate(props.behandling.opprettet)}</p>
                 </div>
                 {erIverksatt(props.behandling) && (
                     <div>
-                        <Element> {props.intl.formatMessage({ id: 'behandling.iverksattDato' })}</Element>
+                        <Label size="small" spacing>
+                            {props.intl.formatMessage({ id: 'behandling.iverksattDato' })}
+                        </Label>
                         <p>{props.intl.formatDate(props.vedtakForBehandling?.opprettet)}</p>
                     </div>
                 )}
                 {props.medBrevutkastknapp && (
                     <div>
-                        <Element>{props.intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}</Element>
+                        <Label size="small" spacing>
+                            {props.intl.formatMessage({ id: 'brev.utkastVedtaksbrev' })}
+                        </Label>
                         <Button variant="secondary" size="small" type="button" onClick={hentBrev}>
                             {props.intl.formatMessage({ id: 'knapp.vis' })}
                             {RemoteData.isPending(lastNedBrevStatus) && <Loader />}

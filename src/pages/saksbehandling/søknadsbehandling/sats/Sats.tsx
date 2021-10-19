@@ -4,7 +4,6 @@ import { Button, Loader, Textarea, Label } from '@navikt/ds-react';
 import * as B from 'fp-ts/boolean';
 import { Eq, struct } from 'fp-ts/lib/Eq';
 import * as S from 'fp-ts/string';
-import { Element, Feilmelding } from 'nav-frontend-typografi';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -14,6 +13,7 @@ import { Person, fetchPerson } from '~api/personApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import { BooleanRadioGroup } from '~components/formElements/FormElements';
+import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import { SatsFaktablokk } from '~components/oppsummering/vilkårsOppsummering/faktablokk/faktablokker/SatsFaktablokk';
 import { Personkort } from '~components/personkort/Personkort';
 import ToKolonner from '~components/toKolonner/ToKolonner';
@@ -201,7 +201,7 @@ const Sats = (props: VilkårsvurderingBaseProps) => {
             () => <Loader />,
             () => (
                 <div className={styles.epsFeilContainer}>
-                    <Feilmelding>{formatMessage('feilmelding.pdlFeil')}</Feilmelding>
+                    <SkjemaelementFeilmelding>{formatMessage('feilmelding.pdlFeil')}</SkjemaelementFeilmelding>
                     <Button
                         onClick={() => {
                             history.push(props.forrigeUrl);
@@ -305,9 +305,9 @@ const SatsForm = (props: SatsProps) => {
                     >
                         {eps && (
                             <div className={styles.personkortContainer}>
-                                <Element className={styles.personkortTittel}>
+                                <Label className={styles.personkortTittel} spacing>
                                     {props.formatMessage('display.eps.label')}
-                                </Element>
+                                </Label>
                                 <Personkort person={eps} />
                             </div>
                         )}

@@ -1,6 +1,7 @@
-import { TextField, Label } from '@navikt/ds-react';
-import { Feilmelding, Normaltekst } from 'nav-frontend-typografi';
+import { BodyShort, TextField, Label } from '@navikt/ds-react';
 import React from 'react';
+
+import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 
 import styles from './Uførhet.module.less';
 
@@ -28,9 +29,9 @@ export const UførhetInput = (props: {
                     value={props.value}
                     error={!!props.feil}
                 />
-                <Normaltekst>{props.inputTekst}</Normaltekst>
+                <BodyShort>{props.inputTekst}</BodyShort>
             </span>
-            {props.feil && <Feilmelding>{props.feil}</Feilmelding>}
+            {props.feil && <SkjemaelementFeilmelding>{props.feil}</SkjemaelementFeilmelding>}
         </span>
     </div>
 );

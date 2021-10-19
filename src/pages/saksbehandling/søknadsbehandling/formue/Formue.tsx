@@ -11,10 +11,11 @@ import {
     TextField,
     Heading,
     Accordion,
+    BodyShort,
+    Label,
 } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import { startOfMonth } from 'date-fns/esm';
-import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import React, { useState, useEffect, useRef } from 'react';
 import { Control, Controller, useForm, UseFormTrigger } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -510,11 +511,11 @@ const FormuePanel = (props: {
         <Accordion.Item open={åpen} className={åpen ? styles.formuePanel : undefined}>
             <Accordion.Header type="button" onClick={handlePanelKlikk}>
                 <div>
-                    <Normaltekst>
+                    <BodyShort>
                         {intl.formatMessage({
                             id: props.tilhører === 'Søkers' ? 'panel.formue.søkers' : 'panel.formue.eps',
                         })}
-                    </Normaltekst>
+                    </BodyShort>
                     <p>
                         {props.sumFormue} {intl.formatMessage({ id: 'panel.kroner' })}
                     </p>
@@ -546,10 +547,10 @@ const FormuePanel = (props: {
                 </ul>
 
                 <div className={styles.nyBeregningContainer}>
-                    <Normaltekst>{intl.formatMessage({ id: 'formuepanel.nyBeregning' })}</Normaltekst>
-                    <Undertittel>
+                    <BodyShort>{intl.formatMessage({ id: 'formuepanel.nyBeregning' })}</BodyShort>
+                    <Label>
                         {utregnetFormue} {intl.formatMessage({ id: 'panel.kroner' })}
-                    </Undertittel>
+                    </Label>
                 </div>
 
                 <Button variant="secondary" type="button" onClick={() => handleBekreftClick()}>

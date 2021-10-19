@@ -59,13 +59,7 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                         combineOptions([arr.head(gruppe), arr.last(gruppe)]),
                         Option.map(([head, last]) => {
                             return (
-                                <Heading
-                                    level="5"
-                                    size="xsmall"
-                                    className={styles.linje}
-                                    key={head.fraOgMed + head.tilOgMed}
-                                    spacing
-                                >
+                                <Label className={styles.linje} key={head.fraOgMed + head.tilOgMed} spacing>
                                     <span className={styles.periode}>{`${formatMonthYear(
                                         head.fraOgMed
                                     )} - ${formatMonthYear(last.tilOgMed)}`}</span>
@@ -80,7 +74,7 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                                         })}{' '}
                                         {intl.formatMessage({ id: 'iMnd' })}
                                     </span>
-                                </Heading>
+                                </Label>
                             );
                         }),
                         Option.getOrElse(() => (

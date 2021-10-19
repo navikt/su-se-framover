@@ -6,9 +6,9 @@ export default {
     'display.attestering.kommentar': 'Kommentar',
     'display.attestering.tidspunkt': 'Tidspunkt',
 
-    'display.avslåtteSøknader.tittel': 'Avslåtte søknad',
+    'display.avslåtteSøknader.tittel': 'Avslåtte søknader',
 
-    'display.lukkedeSøknader.tittel': 'Lukket søknad',
+    'display.lukkedeSøknader.tittel': 'Lukkede søknader',
 
     'display.behandling.fortsettBehandling': 'Fortsett behandling',
     'display.behandling.seOppsummering': 'Se oppsummering',

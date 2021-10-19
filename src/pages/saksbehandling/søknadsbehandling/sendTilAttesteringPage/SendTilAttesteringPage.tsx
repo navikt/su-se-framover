@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader, Textarea } from '@navikt/ds-react';
-import { Innholdstittel } from 'nav-frontend-typografi/';
 import React, { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
@@ -104,15 +103,8 @@ const SendTilAttesteringPage = (props: Props) => {
     if (erSimulert(behandling) || erAvslått(behandling) || erUnderkjent(behandling)) {
         return (
             <form className={styles.vedtakContainer} onSubmit={form.handleSubmit(handleSubmit)}>
-                <div>
-                    <div className={styles.tittelContainer}>
-                        <Innholdstittel className={styles.pageTittel}>
-                            {intl.formatMessage({ id: 'page.tittel' })}
-                        </Innholdstittel>
-                    </div>
+                <Søknadsbehandlingoppsummering sak={sak} behandling={behandling} />
 
-                    <Søknadsbehandlingoppsummering sak={sak} behandling={behandling} />
-                </div>
                 <div className={styles.fritekstareaOuterContainer}>
                     <div className={styles.fritekstareaContainer}>
                         <Controller

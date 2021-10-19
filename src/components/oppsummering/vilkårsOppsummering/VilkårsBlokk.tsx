@@ -1,4 +1,4 @@
-import { Undertittel } from 'nav-frontend-typografi';
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
@@ -20,7 +20,7 @@ const Vilkårsblokk = (props: {
 
     return (
         <div className={styles.blokkContainer}>
-            <div className={styles.blokkHeader}>
+            <Heading level="3" size="xsmall" className={styles.blokkHeader}>
                 {props.status ? (
                     <VilkårvurderingStatusIcon
                         className={styles.ikon}
@@ -29,15 +29,15 @@ const Vilkårsblokk = (props: {
                     />
                 ) : null}
                 {props.tittel}
-            </div>
+            </Heading>
             <div className={styles.pairBlokkContainer}>
                 <div className={styles.blokk}>
                     <div className={styles.faktaContainer}>{props.saksbehandlingfaktablokk}</div>
                     {props.begrunnelse && (
                         <div>
-                            <Undertittel className={styles.blokkOverskrift}>
-                                {intl.formatMessage({ id: 'vilkår.begrunnelse' })}
-                            </Undertittel>
+                            <Heading level="4" size="medium" spacing>
+                                {intl.formatMessage({ id: 'vilkår.begrunnelse' })} hallo
+                            </Heading>
                             <p>{props.begrunnelse}</p>
                         </div>
                     )}

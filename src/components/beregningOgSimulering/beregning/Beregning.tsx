@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader, Textarea } from '@navikt/ds-react';
+import { Alert, Button, Heading, Loader, Textarea } from '@navikt/ds-react';
 import { formatISO } from 'date-fns';
 import { FormikHelpers, useFormik } from 'formik';
 import { getEq } from 'fp-ts/Array';
@@ -8,7 +8,6 @@ import * as D from 'fp-ts/lib/Date';
 import { struct } from 'fp-ts/lib/Eq';
 import { pipe } from 'fp-ts/lib/function';
 import * as S from 'fp-ts/lib/string';
-import { Undertittel } from 'nav-frontend-typografi';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -253,7 +252,9 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             formik.handleSubmit(e);
                         }}
                     >
-                        <Undertittel>Fradrag</Undertittel>
+                        <Heading level="2" size="medium">
+                            Fradrag
+                        </Heading>
                         <div className={styles.container}>
                             <FradragInputs
                                 harEps={
@@ -308,12 +309,12 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             />
                         </div>
 
-                        <Undertittel>
+                        <Heading level="2" size="medium">
                             Beregning
                             {props.behandling.beregning &&
                                 ` ${DateUtils.formatMonthYear(props.behandling.beregning.fraOgMed)}-
                                 ${DateUtils.formatMonthYear(props.behandling.beregning.tilOgMed)}`}
-                        </Undertittel>
+                        </Heading>
                         <div className={styles.beregningsContainer}>
                             {props.behandling.beregning && <VisBeregning beregning={props.behandling.beregning} />}
                             {formik.errors && (

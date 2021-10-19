@@ -1,7 +1,6 @@
-import { Button, Panel } from '@navikt/ds-react';
+import { Button, Heading, Panel } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import Ikon from 'nav-frontend-ikoner-assets';
-import { Element, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -44,15 +43,15 @@ export const Utbetalinger = (props: {
 
     return (
         <div className={styles.utbetalingContainer}>
-            <Undertittel className={styles.tittel}>
+            <Heading level="2" size="medium" spacing>
                 {intl.formatMessage({ id: 'display.stønadsperioder.tittel' })}
-            </Undertittel>
+            </Heading>
             <Panel border>
                 <div className={styles.stønadsperiodeHeader}>
-                    <Undertittel>
+                    <Heading level="3" size="small" spacing>
                         {intl.formatDate(utbetalingsperioder[0].fraOgMed, { month: '2-digit', year: 'numeric' })} -{' '}
                         {formatMonthYear(sisteUtbetalingsDato.toString())}
-                    </Undertittel>
+                    </Heading>
                     {kanGjenopptas ? (
                         <div className={styles.ikonContainer}>
                             <Ikon className={styles.ikon} kind="advarsel-sirkel-fyll" width={'24px'} />
@@ -67,9 +66,9 @@ export const Utbetalinger = (props: {
                 </div>
                 <div className={styles.utbetalingsperioderContainer}>
                     <div>
-                        <Element className={styles.utbetalingsperiodeTittel}>
+                        <Heading level="4" size="small" spacing>
                             {intl.formatMessage({ id: 'display.utbetalingsperiode.tittel' })}
-                        </Element>
+                        </Heading>
                         <ol>
                             {utbetalingsperioder.map((u) => {
                                 return (

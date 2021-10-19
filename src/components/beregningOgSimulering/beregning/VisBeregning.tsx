@@ -166,7 +166,7 @@ const VisBeregning = (props: Props) => {
                                 })
                             ),
                             ({ tittel, beløp }) => (
-                                <Heading level="5" size="xsmall" className={styles.linje} spacing>
+                                <Label className={styles.linje} spacing>
                                     <span>{tittel}</span>
                                     <span>
                                         {formatCurrency(beløp, {
@@ -174,7 +174,7 @@ const VisBeregning = (props: Props) => {
                                         })}{' '}
                                         i mnd
                                     </span>
-                                </Heading>
+                                </Label>
                             )
                         )}
 
