@@ -2,7 +2,7 @@ import { IntlShape } from 'react-intl';
 
 import { erIverksatt } from '~utils/behandling/behandlingUtils';
 
-import { Behandlingsstatus } from '../../types/Behandling';
+import { Behandling, Behandlingsstatus, IverksattInnvilgetBehandling } from '../../types/Behandling';
 import { Sak } from '../../types/Sak';
 import { Søknad, Søknadstype } from '../../types/Søknad';
 
@@ -56,4 +56,20 @@ export function harÅpenSøknad(sak: Sak): boolean {
 
         return søknad.lukket === null && (!behandling || !erIverksatt(behandling));
     });
+}
+
+export function hentGjeldendeInnvilgetBehandling(sak: Sak): IverksattInnvilgetBehandling | undefined {
+    const nå = new Date();
+
+    return hentIverksattInnvilgetBehandling(sak.behandlinger).find(
+        (b) => nå >= new Date(b.stønadsperiode.periode.fraOgMed) && nå <= new Date(b.stønadsperiode.periode.tilOgMed)
+    );
+}
+
+function hentIverksattInnvilgetBehandling(behandlinger: Behandling[]): IverksattInnvilgetBehandling[] {
+    return behandlinger.filter(erIverksattInnvilgetBehandling);
+}
+
+function erIverksattInnvilgetBehandling(behandling: Behandling): behandling is IverksattInnvilgetBehandling {
+    return behandling.status === Behandlingsstatus.IVERKSATT_INNVILGET;
 }

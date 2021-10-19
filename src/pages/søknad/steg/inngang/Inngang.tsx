@@ -14,7 +14,9 @@ import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { IverksattInnvilgetBehandling } from '~types/Behandling';
 import { Søknadstype } from '~types/Søknad';
+import { startenPåNesteMåned, toIsoDateOnlyString } from '~utils/date/dateUtils';
 import * as søknadUtils from '~utils/søknad/søknadUtils';
 
 import nb from './inngang-nb';
@@ -28,6 +30,9 @@ const index = (props: { nesteUrl: string }) => {
     const [hasSubmitted, setHasSubmitted] = React.useState<boolean>(false);
     const [erBekreftet, setErBekreftet] = React.useState<boolean>(false);
     const [harÅpenSøknad, setHarÅpenSøknad] = React.useState<boolean | undefined>(undefined);
+    const [innvilgetIverksattBehandling, setInnvilgetIverksattBehandling] = React.useState<
+        IverksattInnvilgetBehandling | undefined
+    >(undefined);
 
     const { intl } = useI18n({ messages: nb });
 
@@ -124,10 +129,16 @@ const index = (props: { nesteUrl: string }) => {
                             }}
                             onFetchByFnr={async (fnr) => {
                                 setHarÅpenSøknad(undefined);
+                                setInnvilgetIverksattBehandling(undefined);
                                 hentPerson({ fnr });
                                 hentSak(
                                     { fnr },
-                                    (sak) => setHarÅpenSøknad(søknadUtils.harÅpenSøknad(sak)),
+                                    (sak) => {
+                                        setHarÅpenSøknad(søknadUtils.harÅpenSøknad(sak));
+                                        setInnvilgetIverksattBehandling(
+                                            søknadUtils.hentGjeldendeInnvilgetBehandling(sak)
+                                        );
+                                    },
                                     (error) => {
                                         // Brukeren kan ikke ha en åpen søknad dersom hen ikke har en sak.
                                         if (error?.statusCode === 404) {
@@ -141,6 +152,21 @@ const index = (props: { nesteUrl: string }) => {
                         {harÅpenSøknad && (
                             <Alert className={styles.åpenSøknadContainer} variant="warning">
                                 {intl.formatMessage({ id: 'feil.harÅpenSøknad' })}
+                            </Alert>
+                        )}
+                        {innvilgetIverksattBehandling && (
+                            <Alert className={styles.åpenSøknadContainer} variant="warning">
+                                {intl.formatMessage(
+                                    { id: 'åpenSøknad.løpendeYtelse' },
+                                    {
+                                        løpendePeriode: `${innvilgetIverksattBehandling.stønadsperiode.periode.fraOgMed} - ${innvilgetIverksattBehandling.stønadsperiode.periode.tilOgMed}`,
+                                        tidligestNyPeriode: toIsoDateOnlyString(
+                                            startenPåNesteMåned(
+                                                new Date(innvilgetIverksattBehandling.stønadsperiode.periode.tilOgMed)
+                                            )
+                                        ).toString(),
+                                    }
+                                )}
                             </Alert>
                         )}
                         {/* Vi ønsker ikke å vise en feil dersom personkallet ikke er 2xx eller sakskallet ga 404  */}
