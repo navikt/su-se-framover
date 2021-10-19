@@ -18,7 +18,9 @@ $ ./start-dev.sh # starter Redis og mock-oauth2-server (se under for mer info)
 $ npm start
 ```
 
-`./start-dev.sh` kjører opp Redis og [#mock-oauth2-server](#mock-oauth2-server).
+`./start-dev.sh` kjører opp Redis og [#mock-oauth2-server](#mock-oauth2-server). (Obs: mock-oauth2-server leser
+github token fra `~/.gradle/gradle.properties`. Dette kan være smart å sjekke ut
+før førsteoppstart. Trykk på lenken for innføring.)
 
 `npm start` starter opp `express`-serveren med `parcel`-middleware som ordner med bygging av frontenden.
 
@@ -37,7 +39,7 @@ Vi har erfart at det er lettere å bruke et GUI-verktøy når det kommer til Red
 #### Lokalt
 
 -   Antar at du har kjørt `./start-dev.sh` og at docker-containeren kjører lokalt.
--   Koble til med hostname: localhost/127.0.0.1, port: 6379, default username og passord: subar (ligger i docker-compose.yml)
+-   Start opp RedisInsight. Koble til med hostname: `localhost` eller `127.0.0.1`. port: `6379`, username: `default` og passord: `subar` (ligger i docker-compose.yml)
 
 #### Via naisdevice i preprod
 
@@ -54,6 +56,13 @@ Vi bruker Docker for å kjøre den, konfigurert i [./docker-copmpose.yml]().
 Imaget hentes fra docker.pkg.github.com, og man må da være innlogget mot det repoet.
 For innloggingen må man oppgi Github-brukernavn og et personlig access-token.
 Vi bruker allerede et PAT i [https://github.com/navikt/su-se-bakover]() for å hente pakker der, så [./start-oauth-server.sh]() vil prøve å hente ut dette tokenet automagisk (fra `~/.gradle/gradle.properties`).
+
+```
+//~/.gradle/gradle.properties
+githubUser=x-access-token
+githubPassword={PAT fra Github}
+```
+
 Man trenger da altså kun å skrive inn Github-brukernavnet sitt.
 Dersom scriptet ikke klarer å finne tokenet vil man bli spurt om å skrive det inn.
 
