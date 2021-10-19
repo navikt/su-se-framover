@@ -327,8 +327,8 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
                         tilOgMed: DateUtils.toIsoDateOnlyString(g.tilOgMed!),
                         /* eslint-enable @typescript-eslint/no-non-null-assertion */
                     },
-                    forventetInntekt: Number.parseInt(g.forventetInntekt, 10),
-                    uføregrad: Number.parseInt(g.uføregrad, 10),
+                    forventetInntekt: g.oppfylt ? Number.parseInt(g.forventetInntekt, 10) : null,
+                    uføregrad: g.oppfylt ? Number.parseInt(g.uføregrad, 10) : null,
                     begrunnelse: null,
                     resultat: g.oppfylt ? UføreResultat.VilkårOppfylt : UføreResultat.VilkårIkkeOppfylt,
                 })),
