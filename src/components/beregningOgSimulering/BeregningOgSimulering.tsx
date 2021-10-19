@@ -16,7 +16,7 @@ const VisBeregningOgSimulering = (props: { behandling: Behandling }) => {
         <div className={styles.beregningOgSimuleringContainer}>
             <VisBeregning beregning={props.behandling.beregning} />
             {!erBeregnetAvslag(props.behandling) && <VisSimulering behandling={props.behandling} />}
-            {!props.behandling.beregning.begrunnelse && (
+            {props.behandling.beregning.begrunnelse && (
                 <div>
                     <Label size="small">{intl.formatMessage({ id: 'display.visBeregning.begrunnelse' })}</Label>
                     <p>{props.behandling.beregning.begrunnelse}</p>
