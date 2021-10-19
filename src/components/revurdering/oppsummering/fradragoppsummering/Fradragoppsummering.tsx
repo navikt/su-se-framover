@@ -1,7 +1,7 @@
+import { BodyShort, Label } from '@navikt/ds-react';
 import * as A from 'fp-ts/Array';
 import * as Eq from 'fp-ts/Eq';
 import * as O from 'fp-ts/Option';
-import { Undertekst, Element } from 'nav-frontend-typografi';
 import * as React from 'react';
 
 import { pipe } from '~lib/fp';
@@ -32,16 +32,16 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                 ),
                 A.mapWithIndex((index, fradragsgruppe) => (
                     <li key={index}>
-                        <Element className={styles.fradragperiodeHeader}>
+                        <Label spacing>
                             {pipe(
                                 A.head(fradragsgruppe),
                                 O.chainNullableK((head) => head.periode),
                                 O.map((periode) => DateUtils.formatPeriode(periode)),
                                 O.getOrElse(() => formatMessage('feil.ukjent.periode'))
                             )}
-                        </Element>
+                        </Label>
 
-                        <ul className={styles.fradragliste}>
+                        <BodyShort as="ul" className={styles.fradragliste}>
                             {fradragsgruppe.map((fradrag, idx) => (
                                 <li key={idx} className={styles.linje}>
                                     <span>
@@ -50,25 +50,25 @@ const Fradragoppsummering = (props: { fradrag: Fradrag[] }) => {
                                     <span>{formatCurrency(fradrag.beløp)}</span>
                                     {fradrag.utenlandskInntekt !== null && (
                                         <>
-                                            <Undertekst className={styles.detailedLinje}>
+                                            <BodyShort size="small" className={styles.detailedLinje}>
                                                 {formatMessage('fradrag.utenlandsk.beløp')}
-                                            </Undertekst>
-                                            <Undertekst className={styles.alignTextRight}>
+                                            </BodyShort>
+                                            <BodyShort size="small" className={styles.alignTextRight}>
                                                 {formatCurrency(fradrag.utenlandskInntekt.beløpIUtenlandskValuta, {
                                                     currency: fradrag.utenlandskInntekt.valuta,
                                                 })}
-                                            </Undertekst>
-                                            <Undertekst className={styles.detailedLinje}>
+                                            </BodyShort>
+                                            <BodyShort size="small" className={styles.detailedLinje}>
                                                 {formatMessage('fradrag.utenlandsk.kurs')}
-                                            </Undertekst>
-                                            <Undertekst className={styles.alignTextRight}>
+                                            </BodyShort>
+                                            <BodyShort size="small" className={styles.alignTextRight}>
                                                 {intl.formatNumber(fradrag.utenlandskInntekt.kurs)}
-                                            </Undertekst>
+                                            </BodyShort>
                                         </>
                                     )}
                                 </li>
                             ))}
-                        </ul>
+                        </BodyShort>
                     </li>
                 ))
             )}

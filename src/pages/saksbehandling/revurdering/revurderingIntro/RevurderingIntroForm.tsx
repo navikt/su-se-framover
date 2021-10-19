@@ -1,15 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Checkbox, CheckboxGroup, Select, Textarea } from '@navikt/ds-react';
+import { Alert, Checkbox, CheckboxGroup, Heading, Label, Select, Textarea } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik } from 'formik';
-import { Ingress, Feilmelding } from 'nav-frontend-typografi';
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
 import { ApiError } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
+import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { customFormikSubmit } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
@@ -123,11 +123,15 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
     return (
         <form className={sharedStyles.revurderingContainer} onSubmit={formik.handleSubmit}>
             <div className={sharedStyles.mainContentContainer}>
-                <Ingress>{intl.formatMessage({ id: 'periode.overskrift' })}</Ingress>
+                <Heading level="2" size="small">
+                    {intl.formatMessage({ id: 'periode.overskrift' })}
+                </Heading>
                 <div className={styles.periodeContainer}>
                     <div className={classNames(styles.datoContainerWrapper)}>
                         <div className={styles.datoContainer}>
-                            <label htmlFor="fom">{intl.formatMessage({ id: 'datovelger.fom.legend' })}</label>
+                            <Label as="label" htmlFor="fom">
+                                {intl.formatMessage({ id: 'datovelger.fom.legend' })}
+                            </Label>
                             <span>
                                 <DatePicker
                                     id="fom"
@@ -148,7 +152,9 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                                     autoComplete="off"
                                 />
                             </span>
-                            {formik.errors.fraOgMed && <Feilmelding>{formik.errors.fraOgMed}</Feilmelding>}
+                            {formik.errors.fraOgMed && (
+                                <SkjemaelementFeilmelding>{formik.errors.fraOgMed}</SkjemaelementFeilmelding>
+                            )}
                         </div>
                     </div>
                     <div className={styles.selectContainer}>

@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, Loader, Textarea, Select, Panel } from '@navikt/ds-react';
+import { Alert, Button, Heading, Loader, Textarea, Select, Panel } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import { Innholdstittel } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -173,7 +172,9 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     return (
         <div className={SharedStyles.container}>
             <Personlinje søker={props.søker} sak={props.sak} />
-            <Innholdstittel className={SharedStyles.tittel}>{intl.formatMessage({ id: 'page.tittel' })}</Innholdstittel>
+            <Heading level="1" size="xlarge" className={SharedStyles.tittel}>
+                {intl.formatMessage({ id: 'page.tittel' })}
+            </Heading>
             {pipe(
                 grunnlagsdataOgVilkårsvurderinger,
                 RemoteData.fold(

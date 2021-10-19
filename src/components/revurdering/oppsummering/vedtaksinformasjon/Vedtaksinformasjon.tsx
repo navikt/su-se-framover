@@ -1,7 +1,7 @@
+import { BodyShort, Heading, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
-import { Normaltekst, Element, Ingress } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
@@ -28,7 +28,9 @@ const Rad = (props: {
     <div className={classNames(styles.rad, { [styles.overskriftsrad]: props.overskrift })}>
         {props.radTittel && (
             <div className={styles.radTittelContainer}>
-                <Element>{props.radTittel}</Element>
+                <Heading level="4" size="small">
+                    {props.radTittel}
+                </Heading>
             </div>
         )}
         <div className={styles.childrenContainer}>
@@ -48,8 +50,8 @@ const Vilkårvisning = (props: { grunnlagsblokker: Grunnlagsblokk[] }) => (
             <div key={idx} className={styles.grunnlagsblokk}>
                 {grunnlagsblokk.map((grunnlagsinfo) => (
                     <div key={grunnlagsinfo.label} className={styles.info}>
-                        <Normaltekst className={styles.infolabel}>{grunnlagsinfo.label}</Normaltekst>
-                        <Element className={styles.infoverdi}>{grunnlagsinfo.verdi}</Element>
+                        <BodyShort className={styles.infolabel}>{grunnlagsinfo.label}</BodyShort>
+                        <Label className={styles.infoverdi}>{grunnlagsinfo.verdi}</Label>
                     </div>
                 ))}
             </div>
@@ -136,8 +138,8 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; intl: IntlS
                             erVilkårOppfylt={vurdering.resultat === FormueResultat.VilkårOppfylt}
                         />
                         <div className={styles.begrunnelseContainer}>
-                            <Normaltekst>{props.intl.formatMessage({ id: 'formue.begrunnelse' })}</Normaltekst>
-                            <Element>{vurdering.grunnlag.begrunnelse}</Element>
+                            <BodyShort>{props.intl.formatMessage({ id: 'formue.begrunnelse' })}</BodyShort>
+                            <Label>{vurdering.grunnlag.begrunnelse}</Label>
                         </div>
                     </li>
                 );
@@ -210,8 +212,16 @@ const Vedtaksinformasjon = (props: {
             {skalViseEndringerIOppsummering && (
                 <Rad overskrift>
                     {{
-                        venstre: <Ingress>{intl.formatMessage({ id: 'heading.nyInfo' })}</Ingress>,
-                        høyre: <Ingress>{intl.formatMessage({ id: 'heading.eksisterende' })}</Ingress>,
+                        venstre: (
+                            <Heading level="3" size="medium">
+                                {intl.formatMessage({ id: 'heading.nyInfo' })}
+                            </Heading>
+                        ),
+                        høyre: (
+                            <Heading level="3" size="medium">
+                                {intl.formatMessage({ id: 'heading.eksisterende' })}
+                            </Heading>
+                        ),
                     }}
                 </Rad>
             )}

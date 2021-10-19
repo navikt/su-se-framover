@@ -1,4 +1,4 @@
-import { Normaltekst, Undertittel } from 'nav-frontend-typografi';
+import { BodyShort, Label } from '@navikt/ds-react';
 import * as React from 'react';
 
 import VilkårvurderingStatusIcon from '~components/VilkårvurderingStatusIcon';
@@ -14,10 +14,10 @@ const Formuestatus = (props: { bekreftetFormue: number; erVilkårOppfylt: boolea
     return (
         <div className={styles.statusContainer}>
             <div>
-                <Normaltekst>{intl.formatMessage({ id: 'formueblokk.totalFormue' })}</Normaltekst>
-                <Undertittel>
+                <BodyShort>{intl.formatMessage({ id: 'formueblokk.totalFormue' })}</BodyShort>
+                <Label>
                     {props.bekreftetFormue} {intl.formatMessage({ id: 'panel.kroner' })}
-                </Undertittel>
+                </Label>
             </div>
 
             <div className={styles.status}>

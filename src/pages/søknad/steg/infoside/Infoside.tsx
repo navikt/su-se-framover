@@ -1,5 +1,4 @@
-import { Link } from '@navikt/ds-react';
-import { Sidetittel, Ingress } from 'nav-frontend-typografi';
+import { BodyLong, Heading, Link } from '@navikt/ds-react';
 import React from 'react';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 
@@ -17,69 +16,69 @@ const Infoside = (props: { nesteUrl: string }) => {
     return (
         <IntlProvider locale="nb" messages={messages}>
             <div className={styles.pageContainer}>
-                <Sidetittel className={styles.tittel}>
+                <Heading level="1" size="2xlarge" spacing>
                     <FormattedMessage id="page.tittel" />
-                </Sidetittel>
+                </Heading>
 
                 <div>
-                    <p>
+                    <BodyLong>
                         <FormattedMessage id="suppstønadInfo.kanFåSupp" />
-                    </p>
-                    <p>
+                    </BodyLong>
+                    <BodyLong spacing>
                         <FormattedMessage id="suppstønadInfo.sikreEnInntekt" />
-                    </p>
-                    <div className={styles.paragraphSpacing}>
-                        <p>
-                            <FormattedMessage id="suppstønadInfo.inntekt.medEPS" />
-                        </p>
-                        <p>
-                            <FormattedMessage id="suppstønadInfo.inntekt.alene" />
-                        </p>
-                    </div>
-                    <div className={styles.paragraphSpacing}>
+                    </BodyLong>
+                    <BodyLong>
+                        <FormattedMessage id="suppstønadInfo.inntekt.medEPS" />
+                    </BodyLong>
+                    <BodyLong spacing>
+                        <FormattedMessage id="suppstønadInfo.inntekt.alene" />
+                    </BodyLong>
+                    <BodyLong spacing>
                         <Link target="_blank" href={merOmSuForUføreLink}>
                             <FormattedMessage id="suppstønad.merOmSuForUføre" />
                         </Link>
-                    </div>
+                    </BodyLong>
                 </div>
 
                 <section className={styles.section}>
-                    <Ingress>
+                    <Heading level="2" size="small" spacing>
                         <FormattedMessage id="henterInnInfo.ingress" />
-                    </Ingress>
-                    <p className={styles.paragraphSpacing}>
+                    </Heading>
+                    <BodyLong>
                         <FormattedMessage id="henterInnInfo.viHenterInfo" />
-                    </p>
-                    <ul className={styles.list}>
-                        <li className={styles.listItem}>
-                            <FormattedMessage id="henterInnInfo.viHenter.personinfo" />
-                        </li>
-                        <li className={styles.listItem}>
-                            <FormattedMessage id="henterInnInfo.viHenter.arbeidsforhold" />
-                        </li>
-                        <li className={styles.listItem}>
-                            <FormattedMessage id="henterInnInfo.viHenter.flyktningsstatus" />
-                        </li>
-                    </ul>
-                    <p className={styles.paragraphSpacing}>
+                    </BodyLong>
+                    <BodyLong spacing>
+                        <ul className={styles.list}>
+                            <li className={styles.listItem}>
+                                <FormattedMessage id="henterInnInfo.viHenter.personinfo" />
+                            </li>
+                            <li className={styles.listItem}>
+                                <FormattedMessage id="henterInnInfo.viHenter.arbeidsforhold" />
+                            </li>
+                            <li className={styles.listItem}>
+                                <FormattedMessage id="henterInnInfo.viHenter.flyktningsstatus" />
+                            </li>
+                        </ul>
+                    </BodyLong>
+                    <BodyLong spacing>
                         <FormattedMessage id="henterInnInfo.brukerTidligereOpplysninger" />
-                    </p>
+                    </BodyLong>
 
-                    <div className={styles.paragraphSpacing}>
+                    <BodyLong spacing>
                         <Link target="_blank" href={personvernLink}>
                             <FormattedMessage id="henterInnInfo.personvernLinkTekst" />
                         </Link>
-                    </div>
+                    </BodyLong>
                 </section>
 
                 <section className={styles.section}>
-                    <Ingress>
+                    <Heading level="2" size="small" spacing>
                         <FormattedMessage id="viktigÅVite.ingress" />
-                    </Ingress>
-                    <p className={styles.paragraphSpacing}>
+                    </Heading>
+                    <BodyLong spacing>
                         <FormattedMessage id="viktigÅVite.blirIkkeLagret" />
-                    </p>
-                    <p className={styles.paragraphSpacing}>
+                    </BodyLong>
+                    <BodyLong spacing>
                         <FormattedMessage
                             id="viktigÅVite.manglerDuDokumentasjon"
                             values={{
@@ -91,7 +90,7 @@ const Infoside = (props: { nesteUrl: string }) => {
                                 ),
                             }}
                         />
-                    </p>
+                    </BodyLong>
                 </section>
 
                 <div className={styles.knappContainer}>

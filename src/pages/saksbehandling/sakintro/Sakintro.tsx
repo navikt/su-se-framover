@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Button, LinkPanel, Loader, Panel, Tag } from '@navikt/ds-react';
+import { Alert, BodyShort, Button, Heading, Label, LinkPanel, Loader, Panel, Tag } from '@navikt/ds-react';
 import { isEmpty, last } from 'fp-ts/lib/Array';
 import { toNullable } from 'fp-ts/lib/Option';
 import Ikon from 'nav-frontend-ikoner-assets';
-import { Element, Ingress, Innholdstittel, Normaltekst, Systemtittel, Undertittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
@@ -99,9 +98,9 @@ const Sakintro = (props: { sak: Sak }) => {
         <div className={styles.sakintroContainer}>
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
-                <Innholdstittel className={styles.tittel}>
+                <Heading level="1" size="xlarge" className={styles.tittel}>
                     {intl.formatMessage({ id: 'display.saksoversikt.tittel' })}: {props.sak.saksnummer}
-                </Innholdstittel>
+                </Heading>
                 <div className={styles.headerKnapper}>
                     {revurderingToggle && (
                         <LinkAsButton
@@ -135,7 +134,11 @@ const Sakintro = (props: { sak: Sak }) => {
                         iverksatteInnvilgedeSøknader={iverksatteInnvilgedeSøknader}
                         intl={intl}
                     />
-                    <AvslåtteSøknader sak={props.sak} avslåtteSøknader={avslåtteSøknader} intl={intl} />
+                    <AvslåtteSøknader
+                        sak={props.sak}
+                        avslåtteSøknader={avslåtteSøknader.concat(iverksatteInnvilgedeSøknader)}
+                        intl={intl}
+                    />
                     <LukkedeSøknader lukkedeSøknader={lukkedeSøknader} intl={intl} />
                     <div>
                         <LinkPanel
@@ -147,9 +150,7 @@ const Sakintro = (props: { sak: Sak }) => {
                                 <span className={styles.dokumenterLinkIcon}>
                                     <ÅpentBrev />
                                 </span>
-                                <Systemtittel className="lenkepanel__heading">
-                                    {intl.formatMessage({ id: 'link.dokumenter' })}
-                                </Systemtittel>
+                                <LinkPanel.Title>{intl.formatMessage({ id: 'link.dokumenter' })}</LinkPanel.Title>
                             </div>
                         </LinkPanel>
                     </div>
@@ -171,9 +172,9 @@ const ÅpneSøknader = (props: {
 
     return (
         <div className={styles.søknadsContainer}>
-            <Ingress className={styles.søknadsContainerTittel}>
+            <Heading level="2" size="medium" spacing>
                 {props.intl.formatMessage({ id: 'display.åpneSøknader.tittel' })}
-            </Ingress>
+            </Heading>
             <ol>
                 {props.åpneSøknader.map((s) => {
                     const behandling = props.behandlinger.find((b) => b.søknad.id === s.id);
@@ -185,14 +186,14 @@ const ÅpneSøknader = (props: {
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
                                     <div>
-                                        <Undertittel>
+                                        <Heading level="3" size="medium">
                                             {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
-                                        </Undertittel>
+                                        </Heading>
                                         <div className={styles.dato}>
-                                            <Element>
+                                            <Label>
                                                 {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
-                                            </Element>
-                                            <Normaltekst>{søknadMottatt(s, props.intl)}</Normaltekst>
+                                            </Label>
+                                            <BodyShort>{søknadMottatt(s, props.intl)}</BodyShort>
                                         </div>
                                         {senesteAttestering?.underkjennelse && (
                                             <UnderkjenteAttesteringer attesteringer={attesteringer} />
@@ -229,9 +230,9 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
 
     return (
         <div className={styles.søknadsContainer}>
-            <Ingress className={styles.søknadsContainerTittel}>
+            <Heading level="2" size="medium" spacing>
                 {props.intl.formatMessage({ id: 'revurdering.tittel' })}
-            </Ingress>
+            </Heading>
             <ol>
                 {props.revurderinger.map((r) => {
                     const vedtakForBehandling = props.sak.vedtak.find((v) => v.behandlingId === r.id);
@@ -242,9 +243,9 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                                 <div className={styles.info}>
                                     <div>
                                         <div className={styles.tittel}>
-                                            <Undertittel>
+                                            <Heading level="3" size="small" spacing>
                                                 {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
-                                            </Undertittel>
+                                            </Heading>
                                             {erForhåndsvarselSendt(r) && (
                                                 <Tag variant="info" className={styles.etikett}>
                                                     {props.intl.formatMessage({
@@ -254,19 +255,17 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                                             )}
                                         </div>
                                         <div className={styles.dato}>
-                                            <Element>
-                                                {props.intl.formatMessage({ id: 'revurdering.opprettet' })}{' '}
-                                            </Element>
-                                            <Normaltekst>{props.intl.formatDate(r.opprettet)}</Normaltekst>
+                                            <Label>{props.intl.formatMessage({ id: 'revurdering.opprettet' })} </Label>
+                                            <BodyShort>{props.intl.formatDate(r.opprettet)}</BodyShort>
                                         </div>
                                         {vedtakForBehandling?.opprettet && (
                                             <div className={styles.dato}>
-                                                <Element>
+                                                <Label>
                                                     {props.intl.formatMessage({ id: 'revurdering.iverksattDato' })}{' '}
-                                                </Element>
-                                                <Normaltekst>
+                                                </Label>
+                                                <BodyShort>
                                                     {props.intl.formatDate(vedtakForBehandling.opprettet)}
-                                                </Normaltekst>
+                                                </BodyShort>
                                             </div>
                                         )}
                                         {underkjenteRevurderinger.length > 0 && !erRevurderingIverksatt(r) && (
@@ -406,9 +405,9 @@ const IverksattInnvilgedeSøknader = (props: {
 
     return (
         <div className={styles.søknadsContainer}>
-            <Ingress className={styles.søknadsContainerTittel}>
+            <Heading level="2" size="medium" spacing>
                 {props.intl.formatMessage({ id: 'display.godkjenteSøknader.tittel' })}
-            </Ingress>
+            </Heading>
             <ol>
                 {props.iverksatteInnvilgedeSøknader.map((s) => {
                     if (!s.søknadensBehandlingsId) {
@@ -424,22 +423,22 @@ const IverksattInnvilgedeSøknader = (props: {
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
                                     <div>
-                                        <Undertittel>
+                                        <Heading level="3" size="small" spacing>
                                             {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
-                                        </Undertittel>
+                                        </Heading>
                                         <div className={styles.dato}>
-                                            <Element>
+                                            <Label>
                                                 {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
-                                            </Element>
-                                            <Normaltekst>{søknadMottatt(s.søknad, props.intl)}</Normaltekst>
+                                            </Label>
+                                            <BodyShort>{søknadMottatt(s.søknad, props.intl)}</BodyShort>
                                         </div>
                                         <div className={styles.dato}>
-                                            <Element>
+                                            <Label>
                                                 {`${props.intl.formatMessage({
                                                     id: 'display.søknad.iverksattDato',
                                                 })}: `}
-                                            </Element>
-                                            <Normaltekst>{props.intl.formatDate(s.iverksattDato)}</Normaltekst>
+                                            </Label>
+                                            <BodyShort>{props.intl.formatDate(s.iverksattDato)}</BodyShort>
                                         </div>
                                     </div>
                                     <div className={(styles.knapper, styles.flexColumn)}>
@@ -597,25 +596,25 @@ const LukkedeSøknader = (props: { lukkedeSøknader: Søknad[]; intl: IntlShape 
 
     return (
         <div className={styles.søknadsContainer}>
-            <Ingress className={styles.søknadsContainerTittel}>
+            <Heading level="2" size="medium" spacing>
                 {props.intl.formatMessage({
                     id: 'display.lukkedeSøknader.tittel',
                 })}
-            </Ingress>
+            </Heading>
             <ol>
                 {props.lukkedeSøknader.map((søknad) => (
                     <li key={søknad.id}>
                         <Panel border className={styles.søknad}>
                             <div className={styles.info}>
                                 <div>
-                                    <Undertittel>
+                                    <Heading level="3" size="small" spacing>
                                         {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
-                                    </Undertittel>
+                                    </Heading>
                                     <div className={styles.dato}>
-                                        <Element>
+                                        <Label>
                                             {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
-                                        </Element>
-                                        <Normaltekst>{søknadMottatt(søknad, props.intl)}</Normaltekst>
+                                        </Label>
+                                        <BodyShort>{søknadMottatt(søknad, props.intl)}</BodyShort>
                                     </div>
                                 </div>
                             </div>
@@ -648,11 +647,11 @@ const AvslåtteSøknader = (props: {
 
     return (
         <div className={styles.søknadsContainer}>
-            <Ingress className={styles.søknadsContainerTittel}>
+            <Heading level="2" size="medium" spacing>
                 {props.intl.formatMessage({
                     id: 'display.avslåtteSøknader.tittel',
                 })}
-            </Ingress>
+            </Heading>
             <ol>
                 {props.avslåtteSøknader.map((s) => {
                     if (!s.søknadensBehandlingsId) {
@@ -668,22 +667,22 @@ const AvslåtteSøknader = (props: {
                             <Panel border className={styles.søknad}>
                                 <div className={styles.info}>
                                     <div>
-                                        <Undertittel>
+                                        <Heading level="3" size="small" spacing>
                                             {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
-                                        </Undertittel>
+                                        </Heading>
                                         <div className={styles.dato}>
-                                            <Element>
+                                            <Label>
                                                 {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
-                                            </Element>
-                                            <Normaltekst>{søknadMottatt(s.søknad, props.intl)}</Normaltekst>
+                                            </Label>
+                                            <BodyShort>{søknadMottatt(s.søknad, props.intl)}</BodyShort>
                                         </div>
                                         <div className={styles.dato}>
-                                            <Element>
+                                            <Label>
                                                 {`${props.intl.formatMessage({
                                                     id: 'display.søknad.iverksattDato',
                                                 })}: `}
-                                            </Element>
-                                            <Normaltekst>{props.intl.formatDate(s.iverksattDato)}</Normaltekst>
+                                            </Label>
+                                            <BodyShort>{props.intl.formatDate(s.iverksattDato)}</BodyShort>
                                         </div>
                                     </div>
                                 </div>
@@ -694,6 +693,7 @@ const AvslåtteSøknader = (props: {
                                             sakId: props.sak.id,
                                             vedtakId: vedtak.id,
                                         })}
+                                        size="small"
                                     >
                                         {props.intl.formatMessage({ id: 'revurdering.oppsummering' })}
                                     </LinkAsButton>

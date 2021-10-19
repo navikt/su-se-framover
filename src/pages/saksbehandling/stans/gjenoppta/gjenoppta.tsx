@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Loader, Select, Textarea } from '@navikt/ds-react';
-import { Innholdstittel } from 'nav-frontend-typografi';
+import { Button, Heading, Loader, Select, Textarea } from '@navikt/ds-react';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Route, Switch, useHistory } from 'react-router';
@@ -98,7 +97,9 @@ const Gjenoppta = (props: Props) => {
 
     return (
         <>
-            <Innholdstittel className={styles.tittel}>{intl.formatMessage({ id: 'gjenoppta.tittel' })}</Innholdstittel>
+            <Heading level="1" size="xlarge" className={styles.tittel}>
+                {intl.formatMessage({ id: 'gjenoppta.tittel' })}
+            </Heading>
             <Switch>
                 <Route path={Routes.gjenopptaStansOppsummeringRoute.path}>
                     <GjenopptaOppsummering sak={props.sak} />

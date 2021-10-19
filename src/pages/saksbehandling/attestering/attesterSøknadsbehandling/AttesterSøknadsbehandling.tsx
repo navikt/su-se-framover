@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Loader, Select, Textarea } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import Innholdstittel from 'nav-frontend-typografi/lib/innholdstittel';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
@@ -130,11 +129,12 @@ const Attesteringsinnhold = ({
         <div className={SharedStyles.container}>
             <Personlinje søker={props.søker} sak={props.sak} />
             <div>
-                <Innholdstittel className={SharedStyles.tittel}>
-                    {intl.formatMessage({ id: 'page.tittel' })}
-                </Innholdstittel>
-
-                <Søknadsbehandlingoppsummering sak={props.sak} behandling={props.behandling} medBrevutkastknapp />
+                <Søknadsbehandlingoppsummering
+                    sak={props.sak}
+                    behandling={props.behandling}
+                    medBrevutkastknapp
+                    tittel={intl.formatMessage({ id: 'page.tittel' })}
+                />
 
                 <div className={SharedStyles.navigeringContainer}>
                     {erTilAttestering(props.behandling) && (

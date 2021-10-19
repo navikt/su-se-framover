@@ -1,5 +1,5 @@
+import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { Element, Normaltekst } from 'nav-frontend-typografi';
 import React from 'react';
 
 import { useI18n } from '~lib/i18n';
@@ -27,52 +27,52 @@ export const Formuevurdering = ({ vurdering }: { vurdering: VurderingsperiodeFor
     return (
         <div>
             <div className={styles.gjeldendePeriode}>
-                <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.gjeldendePeriode' })}</Normaltekst>
-                <Element>{DateUtils.formatPeriode(vurdering.periode)}</Element>
+                <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.gjeldendePeriode' })}</BodyShort>
+                <Label>{DateUtils.formatPeriode(vurdering.periode)}</Label>
             </div>
             <div className={styles.oppsummeringsContainer}>
                 <div className={styles.formueInfo}>
                     {/*Finnes en bedre måte? Denne er for å få teksten alignet med verdiene */}
-                    <Normaltekst>&nbsp;</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.verdiBolig' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.verdiEiendom' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.verdiKjøretøy' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.innskudd' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.verdiPapir' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.stårNoenIGjeldTilDeg' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.kontanter' })}</Normaltekst>
-                    <Normaltekst>{intl.formatMessage({ id: 'gjeldendeformue.depositum' })}</Normaltekst>
+                    <BodyShort>&nbsp;</BodyShort>
+                    <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.verdiBolig' })}</BodyShort>
+                    <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.verdiEiendom' })}</BodyShort>
+                    <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.verdiKjøretøy' })}</BodyShort>
+                    <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.innskudd' })}</BodyShort>
+                    <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.verdiPapir' })}</BodyShort>
+                    <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.stårNoenIGjeldTilDeg' })}</BodyShort>
+                    <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.kontanter' })}</BodyShort>
+                    <BodyShort>{intl.formatMessage({ id: 'gjeldendeformue.depositum' })}</BodyShort>
                 </div>
                 <div className={styles.søkerOgEPSContainer}>
                     <div>
-                        <Normaltekst className={styles.formueVerdiTittel}>
+                        <BodyShort className={styles.formueVerdiTittel}>
                             {intl.formatMessage({ id: 'gjeldendeformue.søker' })}
-                        </Normaltekst>
+                        </BodyShort>
                         <div className={classNames(styles.formueVerdier, styles.formueInfo)}>
-                            <Element>{vurdering.grunnlag.søkersFormue.verdiIkkePrimærbolig}</Element>
-                            <Element>{vurdering.grunnlag.søkersFormue.verdiEiendommer}</Element>
-                            <Element>{vurdering.grunnlag.søkersFormue.verdiKjøretøy}</Element>
-                            <Element>{vurdering.grunnlag.søkersFormue.innskudd}</Element>
-                            <Element>{vurdering.grunnlag.søkersFormue.verdipapir}</Element>
-                            <Element>{vurdering.grunnlag.søkersFormue.pengerSkyldt}</Element>
-                            <Element>{vurdering.grunnlag.søkersFormue.kontanter}</Element>
-                            <Element>{vurdering.grunnlag.søkersFormue.depositumskonto}</Element>
+                            <Label>{vurdering.grunnlag.søkersFormue.verdiIkkePrimærbolig}</Label>
+                            <Label>{vurdering.grunnlag.søkersFormue.verdiEiendommer}</Label>
+                            <Label>{vurdering.grunnlag.søkersFormue.verdiKjøretøy}</Label>
+                            <Label>{vurdering.grunnlag.søkersFormue.innskudd}</Label>
+                            <Label>{vurdering.grunnlag.søkersFormue.verdipapir}</Label>
+                            <Label>{vurdering.grunnlag.søkersFormue.pengerSkyldt}</Label>
+                            <Label>{vurdering.grunnlag.søkersFormue.kontanter}</Label>
+                            <Label>{vurdering.grunnlag.søkersFormue.depositumskonto}</Label>
                         </div>
                     </div>
                     {vurdering.grunnlag.epsFormue && (
                         <div>
-                            <Normaltekst className={styles.formueVerdiTittel}>
+                            <BodyShort className={styles.formueVerdiTittel}>
                                 {intl.formatMessage({ id: 'gjeldendeformue.eps' })}
-                            </Normaltekst>
+                            </BodyShort>
                             <div className={classNames(styles.formueVerdier, styles.formueInfo)}>
-                                <Element>{vurdering.grunnlag.epsFormue.verdiIkkePrimærbolig}</Element>
-                                <Element>{vurdering.grunnlag.epsFormue.verdiEiendommer}</Element>
-                                <Element>{vurdering.grunnlag.epsFormue.verdiKjøretøy}</Element>
-                                <Element>{vurdering.grunnlag.epsFormue.innskudd}</Element>
-                                <Element>{vurdering.grunnlag.epsFormue.verdipapir}</Element>
-                                <Element>{vurdering.grunnlag.epsFormue.pengerSkyldt}</Element>
-                                <Element>{vurdering.grunnlag.epsFormue.kontanter}</Element>
-                                <Element>{vurdering.grunnlag.epsFormue.depositumskonto}</Element>
+                                <Label>{vurdering.grunnlag.epsFormue.verdiIkkePrimærbolig}</Label>
+                                <Label>{vurdering.grunnlag.epsFormue.verdiEiendommer}</Label>
+                                <Label>{vurdering.grunnlag.epsFormue.verdiKjøretøy}</Label>
+                                <Label>{vurdering.grunnlag.epsFormue.innskudd}</Label>
+                                <Label>{vurdering.grunnlag.epsFormue.verdipapir}</Label>
+                                <Label>{vurdering.grunnlag.epsFormue.pengerSkyldt}</Label>
+                                <Label>{vurdering.grunnlag.epsFormue.kontanter}</Label>
+                                <Label>{vurdering.grunnlag.epsFormue.depositumskonto}</Label>
                             </div>
                         </div>
                     )}

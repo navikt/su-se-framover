@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Loader, Panel } from '@navikt/ds-react';
-import { Feilmelding, Ingress, Normaltekst, Element } from 'nav-frontend-typografi';
+import { BodyShort, Button, Heading, Label, Loader, Panel } from '@navikt/ds-react';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router';
 
@@ -13,13 +12,15 @@ import Oppsummeringspanel, {
 import { useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 
+import SkjemaelementFeilmelding from '../../components/formElements/SkjemaelementFeilmelding';
+
 import styles from './index.module.less';
 import messages from './nøkkeltall-nb';
 
 const Rad = ({ label, verdi }: { label: string; verdi: number }) => (
     <li className={styles.item}>
-        <Element>{`${label}:`}</Element>
-        <Normaltekst>{verdi}</Normaltekst>
+        <Label>{`${label}:`}</Label>
+        <BodyShort>{verdi}</BodyShort>
     </li>
 );
 
@@ -45,7 +46,7 @@ const NøkkelTall = () => {
             () => <Loader />,
             () => (
                 <div className={styles.container}>
-                    <Feilmelding>{formatMessage('ukjentFeil')}</Feilmelding>
+                    <SkjemaelementFeilmelding>{formatMessage('ukjentFeil')}</SkjemaelementFeilmelding>
                     <TilbakeKnapp label={formatMessage('knapp.tilbake')} onClick={history.goBack} />
                 </div>
             ),
@@ -56,7 +57,9 @@ const NøkkelTall = () => {
                         farge={Oppsummeringsfarge.Grønn}
                         tittel={formatMessage('oppsummering.tittel')}
                     >
-                        <Ingress>{formatMessage('søknader.tittel')}</Ingress>
+                        <Heading level="2" size="medium">
+                            {formatMessage('søknader.tittel')}
+                        </Heading>
                         <Panel border className={styles.panel}>
                             <ul className={styles.list}>
                                 <Rad
@@ -83,7 +86,9 @@ const NøkkelTall = () => {
                             </ul>
                         </Panel>
 
-                        <Ingress>{formatMessage('personer.tittel')}</Ingress>
+                        <Heading level="2" size="medium">
+                            {formatMessage('personer.tittel')}
+                        </Heading>
                         <Panel border className={styles.panel}>
                             <ul className={styles.list}>
                                 <Rad label={formatMessage('personer.antall')} verdi={nøkkeltall.antallUnikePersoner} />

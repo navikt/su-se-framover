@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Delete } from '@navikt/ds-icons';
-import { Panel, Accordion, Button, Loader, Textarea, TextField } from '@navikt/ds-react';
+import { Panel, Accordion, Button, Loader, Textarea, TextField, Heading, Label, BodyShort } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
-import { Element, Ingress, Normaltekst, Undertittel } from 'nav-frontend-typografi';
 import React, { useEffect, useState } from 'react';
 import {
     Control,
@@ -154,7 +153,9 @@ const Formue = (props: RevurderingProps) => {
                 right: (
                     <div>
                         <div className={styles.eksisterendeVedtakTittelContainer}>
-                            <Ingress>{formatMessage('eksisterende.vedtakinfo.tittel')}</Ingress>
+                            <Heading level="2" size="large">
+                                {formatMessage('eksisterende.vedtakinfo.tittel')}
+                            </Heading>
                         </div>
                         <FormuevilkårOppsummering
                             gjeldendeFormue={props.gjeldendeGrunnlagsdataOgVilkårsvurderinger.formue}
@@ -274,7 +275,7 @@ const FormueBlokk = (props: {
 
             {props.eps && (
                 <div className={styles.personkortContainer}>
-                    <Element>{formatMessage('personkort.eps')}</Element>
+                    <Label>{formatMessage('personkort.eps')}</Label>
                     <Personkort person={props.eps} />
                 </div>
             )}
@@ -364,9 +365,9 @@ const FormuePanel = (props: {
         <Accordion.Item open={åpen} className={åpen ? styles.formuePanel : undefined}>
             <Accordion.Header type="button" onClick={handlePanelKlikk}>
                 <div>
-                    <Normaltekst>
+                    <BodyShort>
                         {formatMessage(props.tilhører === 'Søkers' ? 'panel.formue.søkers' : 'panel.formue.eps')}
-                    </Normaltekst>
+                    </BodyShort>
                     <p>
                         {props.sumFormue} {formatMessage('panel.kroner')}
                     </p>
@@ -398,10 +399,10 @@ const FormuePanel = (props: {
                 </ul>
 
                 <div className={styles.nyBeregningContainer}>
-                    <Normaltekst>{formatMessage('formuepanel.nyBeregning')}</Normaltekst>
-                    <Undertittel>
+                    <BodyShort>{formatMessage('formuepanel.nyBeregning')}</BodyShort>
+                    <Label>
                         {utregnetFormue} {formatMessage('panel.kroner')}
-                    </Undertittel>
+                    </Label>
                 </div>
 
                 <Button variant="secondary" type="button" onClick={() => handleBekreftClick()}>

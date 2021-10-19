@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { ContentContainer, Loader } from '@navikt/ds-react';
+import { BodyLong, ContentContainer, Heading, Loader, Tag } from '@navikt/ds-react';
 import Stegindikator from 'nav-frontend-stegindikator';
-import { Undertittel, Feilmelding, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useParams, useHistory, Switch, Route } from 'react-router-dom';
@@ -59,10 +58,10 @@ const Steg = (props: {
     return (
         <section aria-labelledby="steg-heading">
             <div className={styles.stegHeadingContainer} ref={sectionRef} tabIndex={-1}>
-                <Undertittel tag="h3" id="steg-heading">
+                <Heading id="steg-heading" level="3" size="large" spacing>
                     {props.title}
-                </Undertittel>
-                {props.hjelpetekst}
+                </Heading>
+                <BodyLong>{props.hjelpetekst}</BodyLong>
             </div>
             {showSteg(props.step, props.søknad, props.søker, props.erSaksbehandler)}
         </section>
@@ -271,9 +270,9 @@ const StartUtfylling = () => {
 
     const manglendeData = () => (
         <div>
-            <Feilmelding className={styles.feilmeldingTekst}>
+            <Tag variant="error" className={styles.feilmeldingTekst}>
                 {intl.formatMessage({ id: 'feilmelding.tekst' })}
-            </Feilmelding>
+            </Tag>
             <LinkAsButton variant="secondary" href={routes.soknadPersonSøk.createURL({})}>
                 {intl.formatMessage({ id: 'feilmelding.knapp' })}
             </LinkAsButton>
@@ -291,13 +290,13 @@ const StartUtfylling = () => {
                     (søker) => (
                         <>
                             <div className={styles.headerContainer}>
-                                <Systemtittel>
+                                <Heading level="1" size="xlarge" spacing>
                                     <div className={styles.sidetittelContainer}>Søknad for</div>
 
                                     <div className={styles.personkortContainer}>
                                         <Personkort person={søker} />
                                     </div>
-                                </Systemtittel>
+                                </Heading>
                                 <div className={styles.stegindikatorContainer}>
                                     <Stegindikator
                                         steg={steg.map((s, index) => ({

@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, ConfirmationPanel } from '@navikt/ds-react';
-import { Sidetittel, Ingress, Feilmelding } from 'nav-frontend-typografi';
+import { BodyLong, Button, ConfirmationPanel, Heading, Tag } from '@navikt/ds-react';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -45,34 +44,34 @@ const index = (props: { nesteUrl: string }) => {
     const Informasjon = () => {
         return (
             <div>
-                <section className={styles.section}>
-                    <p className={styles.paragraphSpacing}>
+                <section>
+                    <BodyLong spacing>
                         <FormattedMessage id="sendeInnDokumentasjon.dokGjelder" />
-                    </p>
+                    </BodyLong>
 
-                    <p className={styles.paragraphSpacing}>
+                    <BodyLong as="div" spacing>
                         <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed" />
-                    </p>
-                    <ul className={styles.list}>
-                        <li className={styles.listItem}>
-                            <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed.punkt1" />
-                        </li>
-                        <li className={styles.listItem}>
-                            <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed.punkt2" />
-                        </li>
-                    </ul>
+                        <ul className={styles.list}>
+                            <li className={styles.listItem}>
+                                <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed.punkt1" />
+                            </li>
+                            <li className={styles.listItem}>
+                                <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed.punkt2" />
+                            </li>
+                        </ul>
+                    </BodyLong>
 
-                    <p className={styles.paragraphSpacing}>
+                    <BodyLong as="div" spacing>
                         <FormattedMessage id="sendeInnDokumentasjon.ogsåLeggesVed" />
-                    </p>
-                    <ul className={styles.list}>
-                        <li className={styles.listItem}>
-                            <FormattedMessage id="sendeInnDokumentasjon.ogsåLeggesVed.punkt1" />
-                        </li>
-                        <li className={styles.listItem}>
-                            <FormattedMessage id="sendeInnDokumentasjon.ogsåLeggesVed.punkt2" />
-                        </li>
-                    </ul>
+                        <ul className={styles.list}>
+                            <li className={styles.listItem}>
+                                <FormattedMessage id="sendeInnDokumentasjon.ogsåLeggesVed.punkt1" />
+                            </li>
+                            <li className={styles.listItem}>
+                                <FormattedMessage id="sendeInnDokumentasjon.ogsåLeggesVed.punkt2" />
+                            </li>
+                        </ul>
+                    </BodyLong>
                 </section>
 
                 <div className={styles.checkboksPanelContainer}>
@@ -94,21 +93,21 @@ const index = (props: { nesteUrl: string }) => {
     return (
         <RawIntlProvider value={intl}>
             <div className={styles.pageContainer}>
-                <Sidetittel className={styles.tittel}>
+                <Heading level="1" size="2xlarge" spacing>
                     {intl.formatMessage(
                         isPapirsøknad ? { id: 'page.tittel.papirSøknad' } : { id: 'page.tittel.digitalSøknad' }
                     )}
-                </Sidetittel>
+                </Heading>
 
                 {!isPapirsøknad && <Informasjon />}
 
                 <div className={styles.searchContainer}>
-                    <Ingress>
+                    <Heading level="2" size="small" spacing>
                         <FormattedMessage id="finnSøker.tittel" />
-                    </Ingress>
-                    <p className={styles.finnSøkerTekst}>
+                    </Heading>
+                    <BodyLong className={styles.finnSøkerTekst} spacing>
                         <FormattedMessage id="finnSøker.tekst" />
-                    </p>
+                    </BodyLong>
                     <div className={styles.searchboxContainer}>
                         <Personsøk
                             onReset={() => {
@@ -120,7 +119,7 @@ const index = (props: { nesteUrl: string }) => {
                             person={søker}
                         />
                         {hasSubmitted && RemoteData.isInitial(søker) && (
-                            <Feilmelding>{intl.formatMessage({ id: 'feil.måSøkePerson' })}</Feilmelding>
+                            <Tag variant="error">{intl.formatMessage({ id: 'feil.måSøkePerson' })}</Tag>
                         )}
                     </div>
                 </div>

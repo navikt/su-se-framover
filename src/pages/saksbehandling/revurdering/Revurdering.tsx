@@ -1,9 +1,8 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Loader } from '@navikt/ds-react';
+import { Alert, Heading, Loader } from '@navikt/ds-react';
 import * as A from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
-import { Feilmelding, Innholdstittel } from 'nav-frontend-typografi';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
@@ -24,6 +23,7 @@ import {
     revurderingstegTilInformasjonSomRevurderes,
 } from '~utils/revurdering/revurderingUtils';
 
+import SkjemaelementFeilmelding from '../../../components/formElements/SkjemaelementFeilmelding';
 import { RevurderingSteg } from '../types';
 
 import Formue from './formue/Formue';
@@ -88,14 +88,14 @@ const RevurderingPage = (props: { sak: Sak }) => {
     if (props.sak.utbetalinger.length === 0) {
         return (
             <div className={styles.revurderingContainer}>
-                <Innholdstittel className={styles.tittel}>
+                <Heading level="1" size="xlarge" className={styles.tittel}>
                     {intl.formatMessage({ id: 'revurdering.tittel' })}
-                </Innholdstittel>
+                </Heading>
                 <div className={styles.mainContentContainer}>
                     <div>
-                        <Feilmelding className={styles.feilmelding}>
+                        <SkjemaelementFeilmelding className={styles.feilmelding}>
                             {intl.formatMessage({ id: 'feil.kanIkkeRevurdere' })}
-                        </Feilmelding>
+                        </SkjemaelementFeilmelding>
                     </div>
                     <div className={styles.knappContainer}>
                         <LinkAsButton
@@ -148,9 +148,9 @@ const RevurderingPage = (props: { sak: Sak }) => {
                     <Alert variant="error">Fant ikke revurdering</Alert>
                 ) : (
                     <>
-                        <Innholdstittel className={styles.tittel}>
+                        <Heading level="1" size="xlarge" className={styles.tittel}>
                             {intl.formatMessage({ id: 'revurdering.tittel' })}
-                        </Innholdstittel>
+                        </Heading>
                         <Route
                             path={Routes.revurderValgtRevurdering.createURL({
                                 sakId: props.sak.id,

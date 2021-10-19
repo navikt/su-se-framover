@@ -1,10 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Loader } from '@navikt/ds-react';
+import { Alert, Heading, Label, Loader } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import * as arr from 'fp-ts/Array';
 import * as Option from 'fp-ts/Option';
-import { Systemtittel, Element } from 'nav-frontend-typografi';
 import React from 'react';
 
 import sharedMessages from '~components/beregningOgSimulering/beregning/beregning-nb';
@@ -30,12 +29,12 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
 
     return (
         <div className={styles.simuleringsdetaljer}>
-            {!props.utenTittel && (
-                <Systemtittel className={styles.visBeregningTittel}>
+            {props.utenTittel && (
+                <Heading level="4" size="medium" spacing>
                     {intl.formatMessage({ id: 'simulering.tittel' })}
-                </Systemtittel>
+                </Heading>
             )}
-            <Element className={classNames(styles.totalt, styles.linje)}>
+            <Label className={classNames(styles.totalt, styles.linje)}>
                 <span>{intl.formatMessage({ id: 'totaltBeløp' })}</span>
                 <span />
                 <span className={styles.beløp}>
@@ -43,7 +42,7 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                         numDecimals: 0,
                     })}
                 </span>
-            </Element>
+            </Label>
             {pipe(
                 props.simulering.perioder,
                 groupWhile(
@@ -60,11 +59,7 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                         combineOptions([arr.head(gruppe), arr.last(gruppe)]),
                         Option.map(([head, last]) => {
                             return (
-                                <Element
-                                    tag="h3"
-                                    className={classNames(styles.periodeoverskrift, styles.linje)}
-                                    key={head.fraOgMed + head.tilOgMed}
-                                >
+                                <Label className={styles.linje} key={head.fraOgMed + head.tilOgMed} spacing>
                                     <span className={styles.periode}>{`${formatMonthYear(
                                         head.fraOgMed
                                     )} - ${formatMonthYear(last.tilOgMed)}`}</span>
@@ -79,7 +74,7 @@ export const Utbetalingssimulering = (props: { simulering: Simulering; utenTitte
                                         })}{' '}
                                         {intl.formatMessage({ id: 'iMnd' })}
                                     </span>
-                                </Element>
+                                </Label>
                             );
                         }),
                         Option.getOrElse(() => (

@@ -1,10 +1,9 @@
 import { Delete } from '@navikt/ds-icons';
-import { Button, Checkbox, Fieldset, Label, Panel, Select, TextField } from '@navikt/ds-react';
+import { BodyShort, Button, Checkbox, Fieldset, Label, Panel, Select, TextField } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { lastDayOfMonth } from 'date-fns';
 import * as DateFns from 'date-fns';
 import { FormikErrors } from 'formik';
-import { Normaltekst } from 'nav-frontend-typografi';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
@@ -67,7 +66,7 @@ const InputWithFollowText = (props: {
                 error={!!props.feil}
                 hideLabel
             />
-            <Normaltekst>{props.inputTekst}</Normaltekst>
+            <BodyShort>{props.inputTekst}</BodyShort>
         </span>
         {props.feil && <SkjemaelementFeilmelding>{props.feil}</SkjemaelementFeilmelding>}
     </div>

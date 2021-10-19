@@ -12,10 +12,6 @@
     gap: @spacing;
 }
 
-.eksisterendeVedtakTittel {
-    margin-bottom: @spacing;
-}
-
 .grunnlagsliste {
     > * {
         margin-bottom: @spacing-xxs;
@@ -25,7 +21,6 @@
 .informasjonsbitContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    > :not(:last-child) {
-        margin-right: @spacing-xl;
-    }
+    gap: @spacing-xl;
+    margin-bottom: @spacing-xxs;
 }

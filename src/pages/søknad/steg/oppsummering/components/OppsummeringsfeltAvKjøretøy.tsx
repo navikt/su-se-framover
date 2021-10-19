@@ -1,4 +1,4 @@
-import { Element, Normaltekst } from 'nav-frontend-typografi';
+import { BodyShort, Label } from '@navikt/ds-react';
 import React from 'react';
 
 import styles from '../Søknadoppsummering/søknadsoppsummering.module.less';
@@ -14,12 +14,12 @@ export const OppsummeringsfeltAvKjøretøy = (props: {
                 return (
                     <div className={styles.oppsummeringsfeltKjøretøyContainer} key={idx}>
                         <div className={styles.oppsummeringElement}>
-                            <Element>{props.labelScndEl}</Element>
-                            <Normaltekst>{el.kjøretøyDeEier}</Normaltekst>
+                            <Label size="small">{props.labelScndEl}</Label>
+                            <BodyShort size="small">{el.kjøretøyDeEier}</BodyShort>
                         </div>
                         <div className={styles.oppsummeringElement}>
-                            <Element>{props.labelFirstEl}</Element>
-                            <Normaltekst>{el.verdiPåKjøretøy}</Normaltekst>
+                            <Label size="small">{props.labelFirstEl}</Label>
+                            <BodyShort size="small">{el.verdiPåKjøretøy}</BodyShort>
                         </div>
                     </div>
                 );

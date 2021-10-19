@@ -1,4 +1,4 @@
-import { Systemtittel } from 'nav-frontend-typografi';
+import { Heading } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~lib/i18n';
@@ -44,7 +44,9 @@ const VilkårsOppsummering = (props: {
 
     return (
         <div>
-            <Systemtittel className={styles.tittel}>{intl.formatMessage({ id: 'page.tittel' })}</Systemtittel>
+            <Heading level="2" size="large" spacing>
+                {intl.formatMessage({ id: 'page.tittel' })}
+            </Heading>
             <div className={styles.vilkårsblokkerContainer}>
                 {vilkårsinformasjon.map((v) => (
                     <Vilkårsting

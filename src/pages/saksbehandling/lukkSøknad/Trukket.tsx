@@ -1,7 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Label, Loader } from '@navikt/ds-react';
+import { Button, Label, Loader, Tag } from '@navikt/ds-react';
 import { Datepicker } from 'nav-datovelger';
-import { Feilmelding } from 'nav-frontend-typografi';
 import React, { useCallback, useState } from 'react';
 
 import { ApiError } from '~api/apiClient';
@@ -75,9 +74,9 @@ const Trukket = (props: TrukketProps) => {
                         props.onDatoSøkerTrakkSøknadChange(value);
                     }}
                 />
-                <Feilmelding>{props.feilmelding ?? ''}</Feilmelding>
+                {props.feilmelding && <Tag variant="error">{props.feilmelding}</Tag>}
                 {clickedViewLetter && props.datoSøkerTrakkSøknad === null && (
-                    <Feilmelding>{intl.formatMessage({ id: 'display.feil.feltMåFyllesUt' })}</Feilmelding>
+                    <Tag variant="error">{intl.formatMessage({ id: 'display.feil.feltMåFyllesUt' })}</Tag>
                 )}
             </div>
             <div className={styles.buttonsContainer}>

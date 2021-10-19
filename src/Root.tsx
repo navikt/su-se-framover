@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Link, Loader } from '@navikt/ds-react';
-import { Innholdstittel } from 'nav-frontend-typografi';
+import { Heading, Link, Loader } from '@navikt/ds-react';
 import React, { useEffect, Suspense } from 'react';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
@@ -119,12 +118,12 @@ const ContentWrapper: React.FC = (props) => {
                         (err) => {
                             return (
                                 <div className={styles.ikkeTilgangContainer}>
-                                    <Innholdstittel className={styles.overskrift}>
+                                    <Heading level="1" size="medium" className={styles.overskrift}>
                                         {err.statusCode === ErrorCode.NotAuthenticated ||
                                         err.statusCode === ErrorCode.Unauthorized
                                             ? 'Ikke tilgang'
                                             : 'En feil oppstod'}
-                                    </Innholdstittel>
+                                    </Heading>
                                     <Link href={`${Config.LOGIN_URL}?redirectTo=${window.location.pathname}`}>
                                         Logg inn på nytt
                                     </Link>

@@ -1,5 +1,5 @@
+import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { Element, Normaltekst, Undertekst } from 'nav-frontend-typografi';
 import React from 'react';
 
 import styles from './faktablokk.module.less';
@@ -34,7 +34,9 @@ function isCustomfakta(f: Fakta): f is CustomFakta {
 
 const Faktablokk = (props: { tittel: string; fakta: Fakta[] }) => (
     <div>
-        <Undertekst className={styles.overskrift}>{props.tittel}</Undertekst>
+        <Label className={styles.overskrift} spacing>
+            {props.tittel}
+        </Label>
         <Faktaliste fakta={props.fakta} />
     </div>
 );
@@ -48,12 +50,12 @@ const Faktaliste = (props: { fakta: Fakta[] }) => (
                 <li key={index}>{f.element}</li>
             ) : (
                 <li key={index}>
-                    <Normaltekst tag="span" className={styles.tittel}>
+                    <BodyShort size="small" className={styles.tittel}>
                         {f.tittel}
-                    </Normaltekst>
-                    <Element tag="span" className={styles.verdi}>
+                    </BodyShort>
+                    <Label size="small" className={styles.verdi}>
                         {f.verdi}
-                    </Element>
+                    </Label>
                 </li>
             )
         )}

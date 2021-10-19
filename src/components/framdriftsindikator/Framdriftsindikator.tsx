@@ -1,6 +1,6 @@
 import { SuccessFilled, ErrorFilled, HelptextFilled, Notes } from '@navikt/ds-icons';
+import { BodyShort, Label } from '@navikt/ds-react';
 import classNames from 'classnames';
-import { Element, Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -54,9 +54,9 @@ const Linjevisning = (props: { aktivId: string; linje: Linje }) => {
         <div className={styles.linje}>
             <Statusikon status={props.linje.status} />
             {props.linje.id === props.aktivId ? (
-                <Element>{props.linje.label}</Element>
+                <Label size="small">{props.linje.label}</Label>
             ) : (
-                <Normaltekst>{props.linje.label}</Normaltekst>
+                <BodyShort size="small">{props.linje.label}</BodyShort>
             )}
         </div>
     );
@@ -79,7 +79,7 @@ const Framdriftsindikator = (props: { elementer: Array<Linje | Seksjon>; aktivId
             {props.elementer.map((e) =>
                 erSeksjon(e) ? (
                     <li key={e.id}>
-                        <Element className={styles.seksjonstittel}>{e.tittel}</Element>
+                        <Label spacing>{e.tittel}</Label>
                         <ol>
                             {e.linjer.map((l) => (
                                 <Linjevisning key={l.id} aktivId={props.aktivId} linje={l} />

@@ -1,9 +1,8 @@
-import { Alert, Button, Label, Fieldset } from '@navikt/ds-react';
+import { Alert, Button, Label, Fieldset, BodyLong } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik, FormikErrors } from 'formik';
 import { Datepicker, DatepickerLimitations } from 'nav-datovelger';
-import { Normaltekst } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -435,7 +434,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                     <Alert variant="warning" className={styles.passert90DagerAdvarsel}>
                         {formatMessage('passert90Dager.info', {
                             // eslint-disable-next-line react/display-name
-                            p: (tekst) => <Normaltekst>{tekst}</Normaltekst>,
+                            p: (tekst) => <BodyLong>{tekst}</BodyLong>,
                             // eslint-disable-next-line react/display-name
                             br: () => <br />,
                         })}

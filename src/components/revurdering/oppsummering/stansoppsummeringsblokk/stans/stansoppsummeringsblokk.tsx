@@ -1,4 +1,4 @@
-import { Element, Normaltekst } from 'nav-frontend-typografi';
+import { BodyShort, Label } from '@navikt/ds-react';
 import React from 'react';
 
 import Oppsummeringspanel, {
@@ -18,8 +18,8 @@ const StansOppsummeringsblokk = (props: Props) => {
             <ul className={styles.container}>
                 {props.oppsummeringsinput.map((input, index) => (
                     <li key={index}>
-                        <Element>{input.label}</Element>
-                        <Normaltekst>{input.verdi}</Normaltekst>
+                        <Label>{input.label}</Label>
+                        <BodyShort>{input.verdi}</BodyShort>
                     </li>
                 ))}
             </ul>
