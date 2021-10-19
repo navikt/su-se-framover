@@ -1,8 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { FileContent } from '@navikt/ds-icons';
-import { Alert, Button, LinkPanel, Loader } from '@navikt/ds-react';
+import { Alert, Button, Heading, Ingress, LinkPanel, Loader } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
-import { Ingress, Systemtittel } from 'nav-frontend-typografi';
 import * as React from 'react';
 import { useHistory } from 'react-router';
 
@@ -25,12 +24,14 @@ const Header = (props: { saksnummer: number; formatMessage: MessageFormatter<typ
                 <ÅpentBrev />
             </div>
         </div>
-        <Systemtittel>
+        <Heading level="1" size="large">
+            {props.formatMessage('undertittel')}
+        </Heading>
+        <Ingress>
             {props.formatMessage('tittel.saksnummer', {
                 saksnummer: props.saksnummer,
             })}
-        </Systemtittel>
-        <Ingress>{props.formatMessage('undertittel')}</Ingress>
+        </Ingress>
     </div>
 );
 
@@ -70,25 +71,26 @@ const DokumenterPage = (props: { sak: Sak }) => {
                                 ) : (
                                     <ol className={styles.dokumentliste}>
                                         {dokumenter.map((d) => (
-                                            <LinkPanel
-                                                key={d.id}
-                                                href="#"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    handleDokumentClick(d);
-                                                }}
-                                                border
-                                            >
-                                                <div className={styles.dokument}>
-                                                    <FileContent className={styles.dokumentikon} />
-                                                    <div>
-                                                        <LinkPanel.Title>{d.tittel}</LinkPanel.Title>
-                                                        <LinkPanel.Description>
-                                                            {DateUtils.formatDateTime(d.opprettet)}
-                                                        </LinkPanel.Description>
+                                            <li key={d.id}>
+                                                <LinkPanel
+                                                    href="#"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        handleDokumentClick(d);
+                                                    }}
+                                                    border
+                                                >
+                                                    <div className={styles.dokument}>
+                                                        <FileContent className={styles.dokumentikon} />
+                                                        <div>
+                                                            <LinkPanel.Title>{d.tittel}</LinkPanel.Title>
+                                                            <LinkPanel.Description>
+                                                                {DateUtils.formatDateTime(d.opprettet)}
+                                                            </LinkPanel.Description>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </LinkPanel>
+                                                </LinkPanel>
+                                            </li>
                                         ))}
                                     </ol>
                                 )

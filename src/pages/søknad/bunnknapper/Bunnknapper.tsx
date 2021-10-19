@@ -1,5 +1,4 @@
-import { Button, Loader, Modal } from '@navikt/ds-react';
-import { Undertittel } from 'nav-frontend-typografi';
+import { BodyLong, Button, Heading, Loader, Modal } from '@navikt/ds-react';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -57,15 +56,17 @@ const Bunnknapper = (props: {
             <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
                 <Modal.Content>
                     <div className={styles.modalContainer}>
-                        <Undertittel className={styles.modalTittel}>
+                        <Heading level="2" size="medium" className={styles.modalTittel}>
                             <FormattedMessage id="modal.tittel" />
-                        </Undertittel>
-                        <p>
-                            <FormattedMessage id="modal.infoTekst.p1" />
-                        </p>
-                        <p>
-                            <FormattedMessage id="modal.infoTekst.p2" />
-                        </p>
+                        </Heading>
+                        <BodyLong>
+                            <p>
+                                <FormattedMessage id="modal.infoTekst.p1" />
+                            </p>
+                            <p>
+                                <FormattedMessage id="modal.infoTekst.p2" />
+                            </p>
+                        </BodyLong>
                         <div className={styles.modalKnappContainer}>
                             <Button variant="tertiary" onClick={() => setModalOpen(false)}>
                                 <FormattedMessage id="steg.avbryt" />
