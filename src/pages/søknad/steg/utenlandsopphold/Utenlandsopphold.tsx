@@ -1,8 +1,8 @@
+import { Datepicker, DatepickerLimitations } from '@navikt/ds-datepicker';
 import { Alert, Button, Label, Fieldset, BodyLong } from '@navikt/ds-react';
 import classNames from 'classnames';
 import * as DateFns from 'date-fns';
 import { useFormik, FormikErrors } from 'formik';
-import { Datepicker, DatepickerLimitations } from 'nav-datovelger';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 

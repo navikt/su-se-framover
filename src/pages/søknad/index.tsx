@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyLong, ContentContainer, Heading, Loader, Tag } from '@navikt/ds-react';
+import { Alert, BodyLong, ContentContainer, Heading, Loader } from '@navikt/ds-react';
 import Stegindikator from 'nav-frontend-stegindikator';
 import * as React from 'react';
 import { useEffect } from 'react';
@@ -269,10 +269,10 @@ const StartUtfylling = () => {
     const aktivtSteg = steg.findIndex((s) => s.step === step);
 
     const manglendeData = () => (
-        <div>
-            <Tag variant="error" className={styles.feilmeldingTekst}>
+        <div className={styles.feilmeldingContainer}>
+            <Alert variant="error" className={styles.feilmeldingTekst}>
                 {intl.formatMessage({ id: 'feilmelding.tekst' })}
-            </Tag>
+            </Alert>
             <LinkAsButton variant="secondary" href={routes.soknadPersonSøk.createURL({})}>
                 {intl.formatMessage({ id: 'feilmelding.knapp' })}
             </LinkAsButton>

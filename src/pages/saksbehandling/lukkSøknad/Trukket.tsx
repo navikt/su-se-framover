@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Datepicker } from '@navikt/ds-datepicker';
 import { Button, Label, Loader, Tag } from '@navikt/ds-react';
-import { Datepicker } from 'nav-datovelger';
 import React, { useCallback, useState } from 'react';
 
 import { ApiError } from '~api/apiClient';

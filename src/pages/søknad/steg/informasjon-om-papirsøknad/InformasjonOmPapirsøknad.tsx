@@ -1,6 +1,6 @@
+import { Datepicker } from '@navikt/ds-datepicker';
 import { Label, RadioGroup, Radio, Textarea } from '@navikt/ds-react';
 import { useFormik } from 'formik';
-import { Datepicker } from 'nav-datovelger';
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useHistory } from 'react-router-dom';
