@@ -39,6 +39,7 @@ const index = (props: { nesteUrl: string }) => {
     React.useEffect(() => {
         dispatch(søknadSlice.actions.resetSøknad());
         setHarÅpenSøknad(undefined);
+        setInnvilgetIverksattBehandling(undefined);
     }, [søker]);
 
     const [hentPersonStatus, hentPerson] = useAsyncActionCreator(personSlice.fetchPerson);
