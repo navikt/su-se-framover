@@ -33,15 +33,7 @@ const feilresponsTilFeilmeldingInternal = (
     return formatMessage(error ?? 'feil.ukjentFeil');
 };
 
-type FeilresponsErrorCodes =
-    | Generell
-    | Periode
-    | Vurderingsperiode
-    | VilkårErrors
-    | Simulering
-    | Brev
-    | Utbetaling
-    | Lukk;
+type FeilresponsErrorCodes = Generell | Periode | Vurderingsperiode | VilkårErrors | Simulering | Brev | Utbetaling;
 
 enum Generell {
     FANT_IKKE_BEHANDLING = 'fant_ikke_behandling',
@@ -106,17 +98,6 @@ enum Utbetaling {
     KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING = 'kontrollsimulering_ulik_saksbehandlers_simulering',
 }
 
-enum Lukk {
-    UGYLDIG_DATO = 'ugyldig_dato',
-    UGYLDIG_INPUT = 'ugyldig_input',
-    SØKNAD_ALLEREDE_LUKKET = 'søknad_allerede_lukket',
-    SØKNAD_MANGLER_OPPGAVE = 'søknad_mangler_oppgave',
-    KAN_IKKE_LUKKE_EN_ALLEREDE_LUKKET_SØKNADSBEHANDLING = 'kan_ikke_lukke_en_allerede_lukket_søknadsbehandling',
-    KAN_IKKE_LUKKE_EN_IVERKSATT_SØKNADSBEHANDLING = 'kan_ikke_lukke_en_iverksatt_søknadsbehandling',
-    KAN_IKKE_LUKKE_EN_SØKNADSBEHANDLING_TIL_ATTESTERING = 'kan_ikke_lukke_en_søknadsbehandling_til_attestering',
-    FEIL_VED_GENERERING_AV_DOKUMENT = 'feil_ved_generering_av_dokument',
-}
-
 const feilresponsErrorCodeMessageIdMap: { [key in FeilresponsErrorCodes]: keyof typeof feilresponsMessages } = {
     [Generell.FANT_IKKE_BEHANDLING]: 'generell.fant.ikke.behandling',
     [Generell.FANT_IKKE_AKTØR_ID]: 'generell.fant.ikke.aktør.id',
@@ -159,13 +140,4 @@ const feilresponsErrorCodeMessageIdMap: { [key in FeilresponsErrorCodes]: keyof 
     [Utbetaling.KUNNE_IKKE_UTBETALE]: 'utbetaling.kunne.ikke.utbetale',
     [Utbetaling.KONTROLLSIMULERING_ULIK_SAKSBEHANDLERS_SIMULERING]:
         'utbetaling.kontrollsimulering.ulik.saksbehandlers.simulering',
-
-    [Lukk.UGYLDIG_DATO]: 'lukk.dato.ugyldig',
-    [Lukk.UGYLDIG_INPUT]: 'lukk.input.ugyldig',
-    [Lukk.SØKNAD_ALLEREDE_LUKKET]: 'lukk.søknad.alleredeLukket',
-    [Lukk.SØKNAD_MANGLER_OPPGAVE]: 'lukk.søknad.manglerOppgave',
-    [Lukk.KAN_IKKE_LUKKE_EN_ALLEREDE_LUKKET_SØKNADSBEHANDLING]: 'lukk.søknadsbehandling.alleredeLukket',
-    [Lukk.KAN_IKKE_LUKKE_EN_IVERKSATT_SØKNADSBEHANDLING]: 'lukk.søknadsbehandling.iverksatt',
-    [Lukk.KAN_IKKE_LUKKE_EN_SØKNADSBEHANDLING_TIL_ATTESTERING]: 'lukk.søknadsbehandling.tilAttestering',
-    [Lukk.FEIL_VED_GENERERING_AV_DOKUMENT]: 'lukk.søknadsbehandling.tilAttestering',
 };
