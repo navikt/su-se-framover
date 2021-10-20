@@ -117,8 +117,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         (values) => eqBeregningFormData.equals(values, initialFormData)
     );
 
-    //if (!getEq(eqFradragFormData).equals(values.fradrag, initialFormData.fradrag)) {
-
     const lagreFradragsgrunnlag = async (values: FormData) => {
         return new Promise<Behandling | null>((resolve, reject) =>
             lagreFradrag(
