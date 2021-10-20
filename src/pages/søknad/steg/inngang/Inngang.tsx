@@ -39,6 +39,7 @@ const index = (props: { nesteUrl: string }) => {
     React.useEffect(() => {
         dispatch(søknadSlice.actions.resetSøknad());
         setHarÅpenSøknad(undefined);
+        setInnvilgetIverksattBehandling(undefined);
     }, [søker]);
 
     const [hentPersonStatus, hentPerson] = useAsyncActionCreator(personSlice.fetchPerson);
@@ -130,7 +131,7 @@ const index = (props: { nesteUrl: string }) => {
                             onFetchByFnr={async (fnr) => {
                                 setHarÅpenSøknad(undefined);
                                 setInnvilgetIverksattBehandling(undefined);
-                                hentPerson({ fnr });
+                                await hentPerson({ fnr });
                                 hentSak(
                                     { fnr },
                                     (sak) => {
