@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Link, Loader, Textarea } from '@navikt/ds-react';
-import { useFormik } from 'formik';
 import React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { AvslagManglendeDokType } from '~api/søknadApi';
@@ -21,6 +21,7 @@ interface Props {
 
 const AvslåttSøknad = (props: Props) => {
     const dispatch = useAppDispatch();
+    const { control, handleSubmit } = useForm<AvslagManglendeDokType>();
     const { søknadLukketStatus, lukketSøknadBrevutkastStatus } = useAppSelector((s) => s.sak);
     const urlParams = Routes.useRouteParams<typeof Routes.avsluttSøknadsbehandling>();
     const søknad = props.sak.søknader.find((s) => s.id === urlParams.soknadId);
@@ -40,25 +41,22 @@ const AvslåttSøknad = (props: Props) => {
         );
     }
 
-    const formik = useFormik<AvslagManglendeDokType>({
-        initialValues: { fritekst: '' },
-        async onSubmit(values) {
-            const response = await dispatch(
-                avslagManglendeDokSøknad({
-                    søknadId: urlParams.soknadId,
-                    body: values,
-                })
-            );
+    const onSubmit = async (data: AvslagManglendeDokType) => {
+        const response = await dispatch(
+            avslagManglendeDokSøknad({
+                søknadId: urlParams.soknadId,
+                body: { fritekst: data.fritekst },
+            })
+        );
 
-            if (avslagManglendeDokSøknad.fulfilled.match(response)) {
-                const message = intl.formatMessage({ id: 'display.søknad.harBlittLukket' });
-                history.push(Routes.createSakIntroLocation(message, props.sak.id));
-            }
-        },
-    });
+        if (avslagManglendeDokSøknad.fulfilled.match(response)) {
+            const message = intl.formatMessage({ id: 'display.søknad.harBlittLukket' });
+            history.push(Routes.createSakIntroLocation(message, props.sak.id));
+        }
+    };
 
     return (
-        <form onSubmit={(e) => formik.handleSubmit(e)} className={styles.formContainer}>
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.formContainer}>
             <div>
                 <p>
                     {intl.formatMessage({ id: 'display.saksnummer' })} {props.sak.saksnummer}
@@ -69,16 +67,15 @@ const AvslåttSøknad = (props: Props) => {
             </div>
             <div className={styles.avvistContainer}>
                 <div className={styles.textAreaContainer}>
-                    <Textarea
-                        label={intl.formatMessage({ id: 'display.avvist.fritekst' })}
+                    <Controller
                         name="fritekst"
-                        value={formik.values.fritekst}
-                        onChange={(e) => {
-                            formik.setValues({ fritekst: e.target.value });
-                        }}
+                        control={control}
+                        render={({ field }) => (
+                            <Textarea {...field} label={intl.formatMessage({ id: 'display.avvist.fritekst' })} />
+                        )}
                     />
                 </div>
-                <Button variant="danger" className={styles.avvisButton}>
+                <Button variant="danger" className={styles.avvisButton} type="submit">
                     {intl.formatMessage({ id: 'knapp.avvis' })}
                     {RemoteData.isPending(søknadLukketStatus) && <Loader />}
                 </Button>
