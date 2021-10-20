@@ -1,9 +1,9 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Datepicker } from '@navikt/ds-datepicker';
 import { Alert, Checkbox, Label, Radio, RadioGroup } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import * as DateFns from 'date-fns';
 import { FormikErrors, useFormik } from 'formik';
-import { Datepicker } from 'nav-datovelger';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
