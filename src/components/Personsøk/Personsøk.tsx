@@ -1,12 +1,13 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Loader, SearchField, SearchFieldInput } from '@navikt/ds-react';
+import { Loader, SearchField, SearchFieldInput } from '@navikt/ds-react';
 import { SearchFieldButton } from '@navikt/ds-react/esm/form/search-field';
 import fnrValidator from '@navikt/fnrvalidator';
 import React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 
-import { ApiError, ErrorCode } from '~api/apiClient';
+import { ApiError } from '~api/apiClient';
 import { Person } from '~api/personApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import { pipe } from '~lib/fp';
 import { useI18n } from '~lib/i18n';
@@ -122,15 +123,7 @@ const Personsøk = (props: PersonsøkProps) => {
                         RemoteData.fold(
                             () => null,
                             () => <Loader />,
-                            (err) => (
-                                <Alert variant="error">
-                                    {err.statusCode === ErrorCode.Unauthorized
-                                        ? intl.formatMessage({ id: 'feilmelding.ikkeTilgang' })
-                                        : err.statusCode === ErrorCode.NotFound
-                                        ? intl.formatMessage({ id: 'feilmelding.ikkeFunnet' })
-                                        : intl.formatMessage({ id: 'feilmelding.ukjent' })}
-                                </Alert>
-                            ),
+                            (err) => <ApiErrorAlert error={err} />,
                             (s) => <Personkort person={s} />
                         )
                     )}
