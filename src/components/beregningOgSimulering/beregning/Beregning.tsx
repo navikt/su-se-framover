@@ -1,7 +1,7 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, Button, Heading, Loader, Textarea } from '@navikt/ds-react';
 import { formatISO } from 'date-fns';
-import { FormikHelpers, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { getEq } from 'fp-ts/Array';
 import * as B from 'fp-ts/lib/boolean';
 import * as D from 'fp-ts/lib/Date';
@@ -14,7 +14,6 @@ import { useHistory } from 'react-router-dom';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import {
     FradragFormData,
-    isValidFradrag,
     fradragSchema,
     FradragInputs,
 } from '~components/beregningOgSimulering/beregning/FradragInputs';
@@ -93,7 +92,6 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         [props.behandling.grunnlagsdataOgVilkårsvurderinger.fradrag]
     );
 
-    const lagrefradragogberegnstatus = RemoteData.combine(lagreFradragstatus, beregningStatus);
     const stønadsperiode = useMemo(() => {
         const fom = props.behandling.stønadsperiode?.periode.fraOgMed;
         const tom = props.behandling.stønadsperiode?.periode.tilOgMed;
@@ -119,21 +117,10 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         (values) => eqBeregningFormData.equals(values, initialFormData)
     );
 
-    const lagreFradragOgBeregn = async (values: FormData) => {
-        if (!props.behandling.behandlingsinformasjon.utledetSats) {
-            return null;
-        }
+    //if (!getEq(eqFradragFormData).equals(values.fradrag, initialFormData.fradrag)) {
 
-        const fradrag = values.fradrag.filter(isValidFradrag);
-        if (fradrag.length !== values.fradrag.length) {
-            return null;
-        }
-
-        if (eqBeregningFormData.equals(values, initialFormData)) {
-            clearDraft();
-        }
-
-        return new Promise<Behandling | null>((resolve) =>
+    const lagreFradragsgrunnlag = async (values: FormData) => {
+        return new Promise<Behandling | null>((resolve, reject) =>
             lagreFradrag(
                 {
                     sakId: props.sakId,
@@ -165,31 +152,57 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                         /* eslint-enable @typescript-eslint/no-non-null-assertion */
                     })),
                 },
-                () =>
-                    beregn(
-                        {
-                            sakId: props.sakId,
-                            behandlingId: props.behandling.id,
-                            begrunnelse: values.begrunnelse,
-                        },
-                        (behandling) => {
-                            resolve(behandling);
-                            clearDraft();
-                        },
-                        () => resolve(null)
-                    ),
-                () => resolve(null)
+                (b) => {
+                    resolve(b);
+                    formik.resetForm({
+                        values: getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, b.beregning?.begrunnelse),
+                    });
+                },
+                () => reject(null)
             )
         );
     };
 
-    const handleStartBeregningClick = async (values: FormData, helpers: FormikHelpers<FormData>) => {
+    const kjørBeregning = (values: FormData) => {
+        return new Promise<Behandling | null>((resolve, reject) =>
+            beregn(
+                {
+                    sakId: props.sakId,
+                    behandlingId: props.behandling.id,
+                    begrunnelse: values.begrunnelse,
+                },
+                (b) => {
+                    clearDraft();
+                    resolve(b);
+                    formik.resetForm({
+                        values: getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, b.beregning?.begrunnelse),
+                    });
+                },
+                () => reject(null)
+            )
+        );
+    };
+
+    const lagreFradragOgBeregn = async (values: FormData) => {
+        if (!props.behandling.behandlingsinformasjon.utledetSats) {
+            return null;
+        }
+
+        if (eqBeregningFormData.equals(values, initialFormData)) {
+            clearDraft();
+        }
+
+        if (!getEq(eqFradragFormData).equals(values.fradrag, initialFormData.fradrag)) {
+            await lagreFradragsgrunnlag(values);
+        }
+
+        return kjørBeregning(values);
+    };
+
+    const handleStartBeregningClick = async (values: FormData) => {
         const b = await lagreFradragOgBeregn(values);
         if (b) {
             setNeedsBeregning(false);
-            helpers.resetForm({
-                values: getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, b.beregning?.begrunnelse),
-            });
         }
     };
 
@@ -328,7 +341,7 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                                 {props.behandling.beregning
                                     ? intl.formatMessage({ id: 'knapp.startNyBeregning' })
                                     : intl.formatMessage({ id: 'knapp.startBeregning' })}
-                                {RemoteData.isPending(lagrefradragogberegnstatus) && <Loader />}
+                                {RemoteData.isPending(beregningStatus) && <Loader />}
                             </Button>
 
                             {props.behandling.status === Behandlingsstatus.BEREGNET_AVSLAG && (
@@ -344,9 +357,8 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             )}
                         </div>
 
-                        {RemoteData.isFailure(lagrefradragogberegnstatus) && (
-                            <ApiErrorAlert error={lagrefradragogberegnstatus.error} />
-                        )}
+                        {RemoteData.isFailure(lagreFradragstatus) && <ApiErrorAlert error={lagreFradragstatus.error} />}
+                        {RemoteData.isFailure(beregningStatus) && <ApiErrorAlert error={beregningStatus.error} />}
                         {needsBeregning && (
                             <Alert variant="warning">
                                 {intl.formatMessage({ id: 'alert.advarsel.kjørBeregningFørst' })}
