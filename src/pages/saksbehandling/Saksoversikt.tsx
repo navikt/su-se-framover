@@ -13,6 +13,7 @@ import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n, Languages } from '~lib/i18n';
 import * as Routes from '~lib/routes';
+import AvslåttSøknad from '~pages/saksbehandling/avslag/AvslåttSøknad';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import Restanser from './restans/Restanser';
@@ -118,6 +119,11 @@ const Saksoversikt = () => {
                                             <Route path={Routes.avsluttSøknadsbehandling.path}>
                                                 <div className={styles.mainContent}>
                                                     <LukkSøknad sak={sak} />
+                                                </div>
+                                            </Route>
+                                            <Route path={Routes.avslagManglendeDokSøknadsbehandling.path}>
+                                                <div className={styles.mainContent}>
+                                                    <AvslåttSøknad sak={sak} />
                                                 </div>
                                             </Route>
                                             <Route path={Routes.revurderValgtSak.path}>

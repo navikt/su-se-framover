@@ -27,6 +27,7 @@ export default {
 
     'display.saksoversikt.tittel': 'Saksnummer',
 
+    'display.søknad.avslag.manglendeDokumentajon': 'Avslag pga manglende dokumentasjon',
     'display.søknad.avslått': 'Avslått',
     'display.søknad.iverksattDato': 'Iverksatt dato',
     'display.søknad.lukket.avvist': 'Avvist',
