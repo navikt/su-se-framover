@@ -134,11 +134,7 @@ const Sakintro = (props: { sak: Sak }) => {
                         iverksatteInnvilgedeSøknader={iverksatteInnvilgedeSøknader}
                         intl={intl}
                     />
-                    <AvslåtteSøknader
-                        sak={props.sak}
-                        avslåtteSøknader={avslåtteSøknader.concat(iverksatteInnvilgedeSøknader)}
-                        intl={intl}
-                    />
+                    <AvslåtteSøknader sak={props.sak} avslåtteSøknader={avslåtteSøknader} intl={intl} />
                     <LukkedeSøknader lukkedeSøknader={lukkedeSøknader} intl={intl} />
                     <div>
                         <LinkPanel
