@@ -38,9 +38,9 @@ interface Stønadsperiode {
     };
     begrunnelse: string;
 }
-export type IverksattInnvilgetBehandling = Behandling & {
+export interface IverksattInnvilgetBehandling extends Behandling {
     stønadsperiode: Stønadsperiode;
-};
+}
 
 export enum Behandlingsstatus {
     OPPRETTET = 'OPPRETTET',
