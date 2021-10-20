@@ -288,7 +288,7 @@ const UførhetForm = (props: { sakId: string; revurdering: Revurdering; forrigeU
     const [savingState, setSavingState] = React.useState<
         RemoteData.RemoteData<ApiError, { revurdering: OpprettetRevurdering; feilmeldinger: ErrorMessage[] }>
     >(RemoteData.initial);
-    //const [harOverlappendePerioder, setHarOverlappendePerioder] = React.useState(false);
+
     const feiloppsummeringRef = React.useRef<HTMLDivElement>(null);
 
     const {

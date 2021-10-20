@@ -11,7 +11,7 @@ import InntektFraUtland from '~components/beregningOgSimulering/beregning/Inntek
 import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
 import { Nullable, KeyDict } from '~lib/types';
 import yup, { validateStringAsPositiveNumber } from '~lib/validering';
-import { Fradrag, Fradragstype } from '~types/Fradrag';
+import { Fradragstype } from '~types/Fradrag';
 import { toStringDateOrNull } from '~utils/date/dateUtils';
 import { getFradragstypeString } from '~utils/søknadsbehandling/fradrag/fradragUtils';
 
@@ -146,8 +146,6 @@ export const fradragSchema = yup.object<FradragFormData>({
         })
         .defined(),
 });
-
-export const isValidFradrag = (f: unknown): f is Fradrag => fradragSchema.isValidSync(f);
 
 export const FradragInputs = (props: {
     harEps: boolean;
