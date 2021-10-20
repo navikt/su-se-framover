@@ -1,17 +1,23 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { BodyLong, Button, ConfirmationPanel, Heading, Tag } from '@navikt/ds-react';
+import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Tag } from '@navikt/ds-react';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
+import * as sakSlice from '~features/saksoversikt/sak.slice';
 import søknadSlice from '~features/søknad/søknad.slice';
+import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { IverksattInnvilgetBehandling } from '~types/Behandling';
 import { Søknadstype } from '~types/Søknad';
+import { startenPåNesteMåned, toIsoDateOnlyString } from '~utils/date/dateUtils';
+import * as søknadUtils from '~utils/søknad/søknadUtils';
 
 import nb from './inngang-nb';
 import styles from './inngang.module.less';
@@ -23,12 +29,20 @@ const index = (props: { nesteUrl: string }) => {
     const isPapirsøknad = history.location.search.includes('papirsoknad');
     const [hasSubmitted, setHasSubmitted] = React.useState<boolean>(false);
     const [erBekreftet, setErBekreftet] = React.useState<boolean>(false);
+    const [harÅpenSøknad, setHarÅpenSøknad] = React.useState<boolean | undefined>(undefined);
+    const [innvilgetIverksattBehandling, setInnvilgetIverksattBehandling] = React.useState<
+        IverksattInnvilgetBehandling | undefined
+    >(undefined);
 
     const { intl } = useI18n({ messages: nb });
 
     React.useEffect(() => {
         dispatch(søknadSlice.actions.resetSøknad());
+        setHarÅpenSøknad(undefined);
     }, [søker]);
+
+    const [hentPersonStatus, hentPerson] = useAsyncActionCreator(personSlice.fetchPerson);
+    const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
 
     const isFormValid = RemoteData.isSuccess(søker) && (isPapirsøknad || erBekreftet);
 
@@ -113,11 +127,52 @@ const index = (props: { nesteUrl: string }) => {
                             onReset={() => {
                                 dispatch(personSlice.default.actions.resetSøker());
                             }}
-                            onFetchByFnr={(fnr) => {
-                                dispatch(personSlice.fetchPerson({ fnr }));
+                            onFetchByFnr={async (fnr) => {
+                                setHarÅpenSøknad(undefined);
+                                setInnvilgetIverksattBehandling(undefined);
+                                hentPerson({ fnr });
+                                hentSak(
+                                    { fnr },
+                                    (sak) => {
+                                        setHarÅpenSøknad(søknadUtils.harÅpenSøknad(sak));
+                                        setInnvilgetIverksattBehandling(
+                                            søknadUtils.hentGjeldendeInnvilgetBehandling(sak)
+                                        );
+                                    },
+                                    (error) => {
+                                        // Brukeren kan ikke ha en åpen søknad dersom hen ikke har en sak.
+                                        if (error?.statusCode === 404) {
+                                            setHarÅpenSøknad(false);
+                                        }
+                                    }
+                                );
                             }}
                             person={søker}
                         />
+                        {harÅpenSøknad && (
+                            <Alert className={styles.åpenSøknadContainer} variant="warning">
+                                {intl.formatMessage({ id: 'feil.harÅpenSøknad' })}
+                            </Alert>
+                        )}
+                        {innvilgetIverksattBehandling && (
+                            <Alert className={styles.åpenSøknadContainer} variant="warning">
+                                {intl.formatMessage(
+                                    { id: 'åpenSøknad.løpendeYtelse' },
+                                    {
+                                        løpendePeriode: `${innvilgetIverksattBehandling.stønadsperiode.periode.fraOgMed} - ${innvilgetIverksattBehandling.stønadsperiode.periode.tilOgMed}`,
+                                        tidligestNyPeriode: toIsoDateOnlyString(
+                                            startenPåNesteMåned(
+                                                new Date(innvilgetIverksattBehandling.stønadsperiode.periode.tilOgMed)
+                                            )
+                                        ).toString(),
+                                    }
+                                )}
+                            </Alert>
+                        )}
+                        {/* Vi ønsker ikke å vise en feil dersom personkallet ikke er 2xx eller sakskallet ga 404  */}
+                        {RemoteData.isSuccess(hentPersonStatus) &&
+                            RemoteData.isFailure(hentSakStatus) &&
+                            hentSakStatus.error?.statusCode !== 404 && <ApiErrorAlert error={hentSakStatus.error} />}
                         {hasSubmitted && RemoteData.isInitial(søker) && (
                             <Tag variant="error">{intl.formatMessage({ id: 'feil.måSøkePerson' })}</Tag>
                         )}

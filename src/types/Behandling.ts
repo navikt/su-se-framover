@@ -31,6 +31,16 @@ export interface Behandlingsperiode {
     };
     begrunnelse: Nullable<string>;
 }
+interface Stønadsperiode {
+    periode: {
+        fraOgMed: string;
+        tilOgMed: string;
+    };
+    begrunnelse: string;
+}
+export interface IverksattInnvilgetBehandling extends Behandling {
+    stønadsperiode: Stønadsperiode;
+}
 
 export enum Behandlingsstatus {
     OPPRETTET = 'OPPRETTET',
