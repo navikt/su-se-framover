@@ -92,7 +92,6 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
     const feiloppsummeringref = React.useRef<HTMLDivElement>(null);
 
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
-    console.log(formik.values.erFlyktning);
 
     return (
         <form

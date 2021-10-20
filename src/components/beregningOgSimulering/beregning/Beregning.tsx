@@ -117,73 +117,49 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         (values) => eqBeregningFormData.equals(values, initialFormData)
     );
 
-    const lagreFradragsgrunnlag = async (values: FormData) => {
-        return new Promise<Behandling | null>((resolve, reject) =>
-            lagreFradrag(
-                {
-                    sakId: props.sakId,
-                    behandlingId: props.behandling.id,
-                    fradrag: values.fradrag.map((f) => ({
-                        //valdiering sikrer at feltet ikke er null
-                        /* eslint-disable @typescript-eslint/no-non-null-assertion */
-                        periode:
-                            f.periode?.fraOgMed && f.periode.tilOgMed
-                                ? {
-                                      fraOgMed: formatISO(f.periode.fraOgMed, { representation: 'date' }),
-                                      tilOgMed: formatISO(f.periode.tilOgMed, { representation: 'date' }),
-                                  }
-                                : {
-                                      fraOgMed: formatISO(stønadsperiode.fom, { representation: 'date' }),
-                                      tilOgMed: formatISO(stønadsperiode.tom, { representation: 'date' }),
-                                  },
-
-                        beløp: parseInt(f.beløp!, 10),
-                        type: f.type!,
-                        utenlandskInntekt: f.fraUtland
+    const lagreFradragsgrunnlag = (values: FormData) => {
+        lagreFradrag(
+            {
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+                fradrag: values.fradrag.map((f) => ({
+                    //valdiering sikrer at feltet ikke er null
+                    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+                    periode:
+                        f.periode?.fraOgMed && f.periode.tilOgMed
                             ? {
-                                  beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
-                                  valuta: f.utenlandskInntekt.valuta,
-                                  kurs: Number.parseFloat(f.utenlandskInntekt.kurs),
+                                  fraOgMed: formatISO(f.periode.fraOgMed, { representation: 'date' }),
+                                  tilOgMed: formatISO(f.periode.tilOgMed, { representation: 'date' }),
                               }
-                            : null,
-                        tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
-                        /* eslint-enable @typescript-eslint/no-non-null-assertion */
-                    })),
-                },
-                (b) => {
-                    resolve(b);
-                    formik.resetForm({
-                        values: getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, b.beregning?.begrunnelse),
-                    });
-                },
-                () => reject(null)
-            )
+                            : {
+                                  fraOgMed: formatISO(stønadsperiode.fom, { representation: 'date' }),
+                                  tilOgMed: formatISO(stønadsperiode.tom, { representation: 'date' }),
+                              },
+
+                    beløp: parseInt(f.beløp!, 10),
+                    type: f.type!,
+                    utenlandskInntekt: f.fraUtland
+                        ? {
+                              beløpIUtenlandskValuta: parseInt(f.utenlandskInntekt.beløpIUtenlandskValuta),
+                              valuta: f.utenlandskInntekt.valuta,
+                              kurs: Number.parseFloat(f.utenlandskInntekt.kurs),
+                          }
+                        : null,
+                    tilhører: f.tilhørerEPS ? FradragTilhører.EPS : FradragTilhører.Bruker,
+                    /* eslint-enable @typescript-eslint/no-non-null-assertion */
+                })),
+            },
+            (b) => {
+                formik.resetForm({
+                    values: getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, b.beregning?.begrunnelse),
+                });
+            }
         );
     };
 
-    const kjørBeregning = (values: FormData) => {
-        return new Promise<Behandling | null>((resolve, reject) =>
-            beregn(
-                {
-                    sakId: props.sakId,
-                    behandlingId: props.behandling.id,
-                    begrunnelse: values.begrunnelse,
-                },
-                (b) => {
-                    clearDraft();
-                    resolve(b);
-                    formik.resetForm({
-                        values: getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, b.beregning?.begrunnelse),
-                    });
-                },
-                () => reject(null)
-            )
-        );
-    };
-
-    const lagreFradragOgBeregn = async (values: FormData) => {
+    const lagreFradragOgBeregn = (values: FormData, onSuccess: (behandling: Behandling) => void) => {
         if (!props.behandling.behandlingsinformasjon.utledetSats) {
-            return null;
+            return;
         }
 
         if (eqBeregningFormData.equals(values, initialFormData)) {
@@ -191,24 +167,19 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
         }
 
         if (!getEq(eqFradragFormData).equals(values.fradrag, initialFormData.fradrag)) {
-            await lagreFradragsgrunnlag(values);
+            lagreFradragsgrunnlag(values);
         }
 
-        return kjørBeregning(values);
-    };
-
-    const handleStartBeregningClick = async (values: FormData) => {
-        const b = await lagreFradragOgBeregn(values);
-        if (b) {
-            setNeedsBeregning(false);
-        }
-    };
-
-    const handleLagreOgFortsettSenereClick = async (values: FormData) => {
-        const b = await lagreFradragOgBeregn(values);
-        if (b) {
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
-        }
+        beregn(
+            {
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+                begrunnelse: values.begrunnelse,
+            },
+            (b) => {
+                onSuccess(b);
+            }
+        );
     };
 
     const handleNesteClick = async () => {
@@ -243,7 +214,14 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
 
     const formik = useFormik<FormData>({
         initialValues: draft ?? initialFormData,
-        onSubmit: handleStartBeregningClick,
+        onSubmit: (values) =>
+            lagreFradragOgBeregn(values, (b) => {
+                clearDraft();
+                setNeedsBeregning(false);
+                formik.resetForm({
+                    values: getInitialValues(b.grunnlagsdataOgVilkårsvurderinger.fradrag, b.beregning?.begrunnelse),
+                });
+            }),
         validationSchema: yup.object<FormData>({
             fradrag: yup.array(fradragSchema.required()).defined(),
             begrunnelse: yup.string(),
@@ -381,7 +359,9 @@ const Beregning = (props: VilkårsvurderingBaseProps) => {
                             onLagreOgFortsettSenereClick={() => {
                                 formik.validateForm().then((res) => {
                                     if (Object.keys(res).length === 0) {
-                                        handleLagreOgFortsettSenereClick(formik.values);
+                                        lagreFradragOgBeregn(formik.values, () => {
+                                            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+                                        });
                                     }
                                 });
                             }}
