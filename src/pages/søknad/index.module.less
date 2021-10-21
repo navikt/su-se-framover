@@ -2,15 +2,34 @@
 
 .container {
     width: 100%;
-    max-width: @container-sm;
-    margin-bottom: @spacing-xxl;
+}
+
+.infostripe {
+    width: 100%;
+    background-color: var(--navds-color-success-background);
+    text-align: center;
+    padding: var(--navds-spacing-3) 0;
+}
+
+.contentContainer {
+    width: 100%;
+    max-width: @container-md;
+    margin: 0 auto @spacing-xxl auto;
     background-color: @navBakgrunn;
 }
 
+.content {
+    width: 100%;
+    max-width: @container-sm;
+    margin: 0 auto;
+}
+
+.infoContainer {
+    padding: @spacing 0;
+}
+
 .headerContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 100%;
 }
 
 .stegHeadingContainer {
@@ -24,16 +43,13 @@
     }
 }
 
-.sidetittelContainer {
-    display: flex;
-    justify-content: center;
-    margin-bottom: @spacing-xs;
-}
-
 .personkortContainer {
+    width: 100%;
     font-size: initial;
     font-weight: initial;
     line-height: initial;
+    padding: @spacing-xs @spacing;
+    border-bottom: var(--navds-border-default);
 }
 
 .stegindikatorContainer {

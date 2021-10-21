@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyLong, ContentContainer, Heading, Loader } from '@navikt/ds-react';
+import classNames from 'classnames';
 import Stegindikator from 'nav-frontend-stegindikator';
 import * as React from 'react';
 import { useEffect } from 'react';
@@ -269,14 +270,14 @@ const StartUtfylling = () => {
     const aktivtSteg = steg.findIndex((s) => s.step === step);
 
     const manglendeData = () => (
-        <div className={styles.feilmeldingContainer}>
+        <ContentContainer className={classNames(styles.content, styles.feilmeldingContainer)}>
             <Alert variant="error" className={styles.feilmeldingTekst}>
                 {intl.formatMessage({ id: 'feilmelding.tekst' })}
             </Alert>
             <LinkAsButton variant="secondary" href={routes.soknadPersonSøk.createURL({})}>
                 {intl.formatMessage({ id: 'feilmelding.knapp' })}
             </LinkAsButton>
-        </div>
+        </ContentContainer>
     );
 
     return (
@@ -290,13 +291,11 @@ const StartUtfylling = () => {
                     (søker) => (
                         <>
                             <div className={styles.headerContainer}>
-                                <Heading level="1" size="xlarge" spacing>
-                                    <div className={styles.sidetittelContainer}>Søknad for</div>
-
-                                    <div className={styles.personkortContainer}>
-                                        <Personkort person={søker} />
-                                    </div>
+                                <Heading level="2" size="xlarge" className={styles.personkortContainer}>
+                                    <Personkort person={søker} />
                                 </Heading>
+                            </div>
+                            <div className={styles.content}>
                                 <div className={styles.stegindikatorContainer}>
                                     <Stegindikator
                                         steg={steg.map((s, index) => ({
@@ -321,15 +320,15 @@ const StartUtfylling = () => {
                                         }
                                     />
                                 </div>
+                                <Steg
+                                    title={steg.find((s) => s.step === step)?.label || ''}
+                                    step={step}
+                                    søknad={søknad}
+                                    søker={søker}
+                                    erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
+                                    hjelpetekst={steg.find((s) => s.step === step)?.hjelpetekst}
+                                />
                             </div>
-                            <Steg
-                                title={steg.find((s) => s.step === step)?.label || ''}
-                                step={step}
-                                søknad={søknad}
-                                søker={søker}
-                                erSaksbehandler={user.roller.includes(Rolle.Saksbehandler)}
-                                hjelpetekst={steg.find((s) => s.step === step)?.hjelpetekst}
-                            />
                         </>
                     )
                 )
@@ -341,29 +340,47 @@ const StartUtfylling = () => {
 const index = () => {
     const history = useHistory();
     const isPapirsøknad = history.location.search.includes('papirsoknad');
+    const { formatMessage } = useI18n({ messages });
 
     return (
-        <ContentContainer className={styles.container}>
-            <Switch>
-                <Route exact={true} path={routes.soknad.path}>
-                    <Infoside nesteUrl={routes.soknadPersonSøk.createURL({ papirsøknad: isPapirsøknad })} />
-                </Route>
-                <Route exact={true} path={routes.soknadPersonSøk.path}>
-                    <Inngang
-                        nesteUrl={routes.soknadsutfylling.createURL({
-                            step: Søknadsteg.Uførevedtak,
-                            papirsøknad: isPapirsøknad,
-                        })}
-                    />
-                </Route>
-                <Route exact={true} path={routes.soknadsutfylling.path}>
-                    <StartUtfylling />
-                </Route>
-                <Route exact={true} path={routes.søkandskvittering.path}>
-                    <Kvittering />
-                </Route>
-            </Switch>
-        </ContentContainer>
+        <div className={styles.container}>
+            <div className={styles.infostripe}>
+                <Heading level="2" size="small">
+                    {formatMessage('infolinje')}
+                </Heading>
+            </div>
+            <div className={styles.contentContainer}>
+                <Switch>
+                    <Route exact={true} path={routes.soknadsutfylling.path}>
+                        <StartUtfylling />
+                    </Route>
+                    <div className={styles.content}>
+                        <div className={styles.infoContainer}>
+                            <Switch>
+                                <Route exact={true} path={routes.soknad.path}>
+                                    <Infoside
+                                        nesteUrl={routes.soknadPersonSøk.createURL({
+                                            papirsøknad: isPapirsøknad,
+                                        })}
+                                    />
+                                </Route>
+                                <Route exact={true} path={routes.soknadPersonSøk.path}>
+                                    <Inngang
+                                        nesteUrl={routes.soknadsutfylling.createURL({
+                                            step: Søknadsteg.Uførevedtak,
+                                            papirsøknad: isPapirsøknad,
+                                        })}
+                                    />
+                                </Route>
+                                <Route exact={true} path={routes.søkandskvittering.path}>
+                                    <Kvittering />
+                                </Route>
+                            </Switch>
+                        </div>
+                    </div>
+                </Switch>
+            </div>
+        </div>
     );
 };
 
