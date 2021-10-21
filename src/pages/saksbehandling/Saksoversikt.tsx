@@ -13,7 +13,6 @@ import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { pipe } from '~lib/fp';
 import { useI18n, Languages } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import AvslåttSøknad from '~pages/saksbehandling/avslag/AvslåttSøknad';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 
 import Restanser from './restans/Restanser';
@@ -25,6 +24,7 @@ const Vilkår = React.lazy(() => import('./søknadsbehandling/vilkår/Vilkår'))
 const SendTilAttesteringPage = React.lazy(
     () => import('./søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage')
 );
+const AvslåttSøknad = React.lazy(() => import('~pages/saksbehandling/avslag/AvslåttSøknad'));
 const Vedtaksoppsummering = React.lazy(() => import('~pages/saksbehandling/vedtak/Vedtaksoppsummering'));
 const LukkSøknad = React.lazy(() => import('./lukkSøknad/LukkSøknad'));
 const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));

@@ -291,7 +291,7 @@ export const avslagManglendeDokSøknad = createAsyncThunk<
         body: AvslagManglendeDokType;
     },
     { rejectValue: ApiError }
->('soknad/lukkSøknad', async (arg, thunkApi) => {
+>('soknad/avslag', async (arg, thunkApi) => {
     const res = await søknadApi.avslagManglendeDokSøknad(arg);
     if (res.status === 'ok') {
         return res.data;
@@ -661,6 +661,13 @@ export default createSlice({
                 state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] =
                     simpleRejectedActionToRemoteData(action);
             },
+        });
+
+        builder.addCase(avslagManglendeDokSøknad.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({ ...sak, ...action.payload }))
+            );
         });
 
         builder.addCase(lagreBosituasjonGrunnlag.fulfilled, (state, action) => {

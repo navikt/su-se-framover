@@ -19,9 +19,9 @@ interface Avvist {
 
 export type LukkSøknadBodyTypes = Trukket | Bortfalt | Avvist;
 
-export type AvslagManglendeDokType = {
+export interface AvslagManglendeDokType {
     fritekst: string;
-};
+}
 
 export interface OpprettetSøknad {
     saksnummer: number;

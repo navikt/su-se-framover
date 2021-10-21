@@ -7,9 +7,9 @@ import { useHistory } from 'react-router-dom';
 import { AvslagManglendeDokType } from '~api/søknadApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { avslagManglendeDokSøknad } from '~features/saksoversikt/sak.slice';
+import { useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Sak } from '~types/Sak';
 
 import nb from './lukkSøknad-nb';
@@ -20,49 +20,44 @@ interface Props {
 }
 
 const AvslåttSøknad = (props: Props) => {
-    const dispatch = useAppDispatch();
     const { control, handleSubmit } = useForm<AvslagManglendeDokType>();
-    const { søknadLukketStatus, lukketSøknadBrevutkastStatus } = useAppSelector((s) => s.sak);
     const urlParams = Routes.useRouteParams<typeof Routes.avsluttSøknadsbehandling>();
+    const [apiStatus, setApiStatus] = useAsyncActionCreator(avslagManglendeDokSøknad);
     const søknad = props.sak.søknader.find((s) => s.id === urlParams.soknadId);
-    const { intl } = useI18n({ messages: nb });
+    const { formatMessage } = useI18n({ messages: nb });
     const history = useHistory();
-
-    const status = RemoteData.combine(søknadLukketStatus, lukketSøknadBrevutkastStatus);
-    const error = RemoteData.isFailure(status) ? status.error : undefined;
 
     if (!søknad) {
         return (
             <div>
                 <Alert variant="error">
-                    {intl.formatMessage({ id: 'display.søknad.fantIkkeSøknad' })} {urlParams.soknadId}
+                    {formatMessage('display.søknad.fantIkkeSøknad')} {urlParams.soknadId}
                 </Alert>
             </div>
         );
     }
 
-    const onSubmit = async (data: AvslagManglendeDokType) => {
-        const response = await dispatch(
-            avslagManglendeDokSøknad({
+    const onSubmit = (data: AvslagManglendeDokType) => {
+        setApiStatus(
+            {
                 søknadId: urlParams.soknadId,
                 body: { fritekst: data.fritekst },
-            })
+            },
+            () => {
+                const message = formatMessage('display.søknad.harBlittAvslått');
+                return history.push(Routes.createSakIntroLocation(message, props.sak.id));
+            }
         );
-
-        if (avslagManglendeDokSøknad.fulfilled.match(response)) {
-            const message = intl.formatMessage({ id: 'display.søknad.harBlittLukket' });
-            history.push(Routes.createSakIntroLocation(message, props.sak.id));
-        }
     };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={styles.formContainer}>
             <div>
                 <p>
-                    {intl.formatMessage({ id: 'display.saksnummer' })} {props.sak.saksnummer}
+                    {formatMessage('display.saksnummer')} {props.sak.saksnummer}
                 </p>
                 <p>
-                    {intl.formatMessage({ id: 'display.søknadId' })} {urlParams.soknadId}
+                    {formatMessage('display.søknadId')} {urlParams.soknadId}
                 </p>
             </div>
             <div className={styles.avvistContainer}>
@@ -70,23 +65,21 @@ const AvslåttSøknad = (props: Props) => {
                     <Controller
                         name="fritekst"
                         control={control}
-                        render={({ field }) => (
-                            <Textarea {...field} label={intl.formatMessage({ id: 'display.avvist.fritekst' })} />
-                        )}
+                        render={({ field }) => <Textarea {...field} label={formatMessage('display.avvist.fritekst')} />}
                     />
                 </div>
                 <Button variant="danger" className={styles.avvisButton} type="submit">
-                    {intl.formatMessage({ id: 'knapp.avvis' })}
-                    {RemoteData.isPending(søknadLukketStatus) && <Loader />}
+                    {formatMessage('knapp.avvis')}
+                    {RemoteData.isPending(apiStatus) && <Loader />}
                 </Button>
             </div>
             <div className={styles.tilbakeKnappContainer}>
                 <Link href={Routes.saksoversiktValgtSak.createURL({ sakId: urlParams.sakId })}>
-                    {intl.formatMessage({ id: 'knapp.tilbake' })}
+                    {formatMessage('knapp.tilbake')}
                 </Link>
             </div>
 
-            <div>{error && <ApiErrorAlert error={error} />}</div>
+            <div>{RemoteData.isFailure(apiStatus) && <ApiErrorAlert error={apiStatus.error} />}</div>
         </form>
     );
 };
