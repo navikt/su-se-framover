@@ -40,7 +40,7 @@ export async function lukkSøknad(arg: { søknadId: string; body: LukkSøknadBod
     });
 }
 
-export async function avslagManglendeDokSøknad(arg: {
+export async function avslåSøknadPgaManglendeDokumentasjon(arg: {
     søknadId: string;
     body: AvslagManglendeDokType;
 }): Promise<ApiClientResult<Sak>> {

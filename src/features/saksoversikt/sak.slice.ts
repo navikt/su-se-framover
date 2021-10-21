@@ -292,7 +292,7 @@ export const avslagManglendeDokSøknad = createAsyncThunk<
     },
     { rejectValue: ApiError }
 >('soknad/avslag', async (arg, thunkApi) => {
-    const res = await søknadApi.avslagManglendeDokSøknad(arg);
+    const res = await søknadApi.avslåSøknadPgaManglendeDokumentasjon(arg);
     if (res.status === 'ok') {
         return res.data;
     }
