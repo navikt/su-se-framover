@@ -4,7 +4,6 @@
     display: flex;
     flex-direction: column;
     align-self: center;
-    margin-bottom: @spacing-xxl;
 
     .list {
         .listItem {
@@ -20,22 +19,24 @@
 
     .searchContainer {
         margin-top: @spacing;
-
-        .searchboxContainer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
     }
 }
 
-.knapperContainer {
-    margin-top: @spacing-xl;
+.heading {
     display: flex;
-    justify-content: center;
+    align-items: center;
+    gap: @spacing-s;
+}
 
-    > :not(:last-child) {
-        margin-right: @spacing;
+.knapperContainer {
+    align-self: center;
+    display: flex;
+    width: 50%;
+    margin-top: @spacing-xl;
+    gap: @spacing;
+
+    > * {
+        width: 50%;
     }
 }
 

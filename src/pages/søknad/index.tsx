@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyLong, ContentContainer, Heading, Loader } from '@navikt/ds-react';
+import { Alert, ContentContainer, Heading, Ingress, Loader } from '@navikt/ds-react';
 import classNames from 'classnames';
 import Stegindikator from 'nav-frontend-stegindikator';
 import * as React from 'react';
@@ -59,10 +59,10 @@ const Steg = (props: {
     return (
         <section aria-labelledby="steg-heading">
             <div className={styles.stegHeadingContainer} ref={sectionRef} tabIndex={-1}>
-                <Heading id="steg-heading" level="3" size="large" spacing>
+                <Heading id="steg-heading" level="1" size="large" spacing>
                     {props.title}
                 </Heading>
-                <BodyLong>{props.hjelpetekst}</BodyLong>
+                <Ingress>{props.hjelpetekst}</Ingress>
             </div>
             {showSteg(props.step, props.søknad, props.søker, props.erSaksbehandler)}
         </section>
@@ -292,7 +292,7 @@ const StartUtfylling = () => {
                         <>
                             <div className={styles.headerContainer}>
                                 <Heading level="2" size="xlarge" className={styles.personkortContainer}>
-                                    <Personkort person={søker} />
+                                    <Personkort person={søker} variant="wide" />
                                 </Heading>
                             </div>
                             <div className={styles.content}>
