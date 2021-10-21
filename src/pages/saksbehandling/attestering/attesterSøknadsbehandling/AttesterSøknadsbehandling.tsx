@@ -171,7 +171,7 @@ const Attesteringsinnhold = ({
                                             value={formik.values.grunn}
                                             error={errors.grunn}
                                         >
-                                            <option value="" disabled>
+                                            <option value="">
                                                 {intl.formatMessage({ id: 'input.grunn.value.default' })}
                                             </option>
                                             {Object.values(UnderkjennelseGrunn).map((grunn, index) => (
