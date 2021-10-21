@@ -12,8 +12,8 @@ import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Sak } from '~types/Sak';
 
-import nb from './lukkSøknad-nb';
-import styles from './lukkSøknad.module.less';
+import nb from './avslåttSøknad-nb';
+import styles from './avslåttSøknad.module.less';
 
 interface Props {
     sak: Sak;
