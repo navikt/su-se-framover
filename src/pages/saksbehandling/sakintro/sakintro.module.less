@@ -2,8 +2,8 @@
 
 .knapper {
     display: flex;
-    align-items: flex-end;
     align-items: center;
+    flex-wrap: wrap;
 
     > :not(:last-child) {
         margin-right: @spacing;
@@ -14,6 +14,27 @@
     display: flex;
     padding-left: 10rem;
     margin-top: @spacing-xs;
+}
+
+.søknadsbehandlingKnapperContainer {
+    display: flex;
+    flex-direction: column;
+
+    .søknadsbehandlingKnapper {
+        align-self: flex-end;
+        display: flex;
+        flex-wrap: wrap;
+
+        button {
+            margin-right: @spacing-xs;
+            margin-top: @spacing-xxs;
+            margin-bottom: @spacing-xxs;
+        }
+
+        > :last-child {
+            margin-right: 0;
+        }
+    }
 }
 
 .sakintroContainer {
@@ -70,10 +91,12 @@
             flex-direction: row;
             justify-content: space-between;
             white-space: pre;
+            flex-wrap: wrap;
 
             .tittel {
                 display: flex;
                 flex-direction: row;
+
                 .etikett {
                     margin-left: @spacing;
                 }
@@ -114,6 +137,7 @@
     .ikon {
         margin-right: @spacing-xxs;
     }
+
     .ikonTekst {
         width: 50px;
     }
@@ -121,15 +145,6 @@
 
 .feil {
     margin-top: @spacing-xs;
-}
-
-.startSøknadsbehandlingKnapperContainer {
-    display: flex;
-    flex-direction: column;
-
-    .startSøknadsbehandlingKnapper {
-        align-self: flex-end;
-    }
 }
 
 .dokumenterLinkpanel {

@@ -81,6 +81,14 @@ export const avsluttSøknadsbehandling: Route<{
     createURL: (args) => `/saksoversikt/${args.sakId}/${args.soknadId}/avsluttSoknadsbehandling`,
 };
 
+export const avslagManglendeDokSøknadsbehandling: Route<{
+    sakId: string;
+    soknadId: string;
+}> = {
+    path: '/saksoversikt/:sakId/:soknadId/avslagManglendeDokSoknadsbehandling/',
+    createURL: (args) => `/saksoversikt/${args.sakId}/${args.soknadId}/avslagManglendeDokSoknadsbehandling`,
+};
+
 export const saksoversiktValgtBehandling: Route<{
     sakId: string;
     behandlingId: string;

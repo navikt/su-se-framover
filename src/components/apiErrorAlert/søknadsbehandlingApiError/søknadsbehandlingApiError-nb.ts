@@ -5,6 +5,8 @@ export default {
     'generell.mangler.begrunnelse': 'Mangler begrunnelse',
     'generell.har.allerede.en.åpen.søknadsbehandling':
         'Det finnes allerede en åpen søknadsbehandling. Du kan bare behandle en søknad av gangen',
+    'generell.har.allerede.en.aktiv.behandling':
+        'Det finnes allerede en åpen søknadsbehandling. Du må fullføre denne før du kan avslå en annen',
     'generell.fant.ikke.søknad': 'Fant ikke søknad',
     'generell.søknad.mangler.oppgave': 'Søknad mangler oppgave',
     'generell.søknad.har.behandling': 'Søknad har allerede en behandling',

@@ -6,7 +6,7 @@ import * as behandlingApi from '~api/behandlingApi';
 import * as dokumentApi from '~api/dokumentApi';
 import * as sakApi from '~api/sakApi';
 import * as søknadApi from '~api/søknadApi';
-import { LukkSøknadBodyTypes } from '~api/søknadApi';
+import { AvslagManglendeDokType, LukkSøknadBodyTypes } from '~api/søknadApi';
 import {
     beregnOgSimuler,
     iverksettRevurdering,
@@ -278,6 +278,21 @@ export const lukkSøknad = createAsyncThunk<
     { rejectValue: ApiError }
 >('soknad/lukkSøknad', async (arg, thunkApi) => {
     const res = await søknadApi.lukkSøknad(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const avslagManglendeDokSøknad = createAsyncThunk<
+    Sak,
+    {
+        søknadId: string;
+        body: AvslagManglendeDokType;
+    },
+    { rejectValue: ApiError }
+>('soknad/avslag', async (arg, thunkApi) => {
+    const res = await søknadApi.avslåSøknadPgaManglendeDokumentasjon(arg);
     if (res.status === 'ok') {
         return res.data;
     }
@@ -646,6 +661,13 @@ export default createSlice({
                 state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] =
                     simpleRejectedActionToRemoteData(action);
             },
+        });
+
+        builder.addCase(avslagManglendeDokSøknad.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({ ...sak, ...action.payload }))
+            );
         });
 
         builder.addCase(lagreBosituasjonGrunnlag.fulfilled, (state, action) => {

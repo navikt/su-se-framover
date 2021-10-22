@@ -464,8 +464,32 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
     const [behandlingStatus, startBehandling] = useAsyncActionCreator(sakSlice.startBehandling);
 
     return (
-        <div className={styles.startSøknadsbehandlingKnapperContainer}>
-            <div className={styles.startSøknadsbehandlingKnapper}>
+        <div className={styles.søknadsbehandlingKnapperContainer}>
+            <div className={styles.søknadsbehandlingKnapper}>
+                <LinkAsButton
+                    size="small"
+                    variant="secondary"
+                    href={Routes.avslagManglendeDokSøknadsbehandling.createURL({
+                        sakId: props.sakId,
+                        soknadId: props.søknadId,
+                    })}
+                >
+                    {props.intl.formatMessage({
+                        id: 'display.søknad.avslag.manglendeDokumentajon',
+                    })}
+                </LinkAsButton>
+                <LinkAsButton
+                    size="small"
+                    variant="secondary"
+                    href={Routes.avsluttSøknadsbehandling.createURL({
+                        sakId: props.sakId,
+                        soknadId: props.søknadId,
+                    })}
+                >
+                    {props.intl.formatMessage({
+                        id: 'display.søknad.lukkSøknad',
+                    })}
+                </LinkAsButton>
                 <Button
                     className={styles.startBehandlingKnapp}
                     size="small"
@@ -491,18 +515,6 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                     })}
                     {RemoteData.isPending(behandlingStatus) && <Loader />}
                 </Button>
-                <LinkAsButton
-                    variant="danger"
-                    size="small"
-                    href={Routes.avsluttSøknadsbehandling.createURL({
-                        sakId: props.sakId,
-                        soknadId: props.søknadId,
-                    })}
-                >
-                    {props.intl.formatMessage({
-                        id: 'display.søknad.lukkSøknad',
-                    })}
-                </LinkAsButton>
             </div>
             {RemoteData.isFailure(behandlingStatus) && (
                 <div className={styles.feil}>
@@ -523,7 +535,7 @@ const SøknadsbehandlingStartetKnapper = (props: {
     const { behandling } = props;
 
     return (
-        <div className={styles.behandlingContainer}>
+        <div className={styles.søknadsbehandlingKnapperContainer}>
             {erTilAttestering(behandling) && (!user.isAttestant || user.navIdent === behandling.saksbehandler) && (
                 <div className={styles.ikonContainer}>
                     <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
@@ -535,7 +547,7 @@ const SøknadsbehandlingStartetKnapper = (props: {
                 </div>
             )}
 
-            <div className={styles.knapper}>
+            <div className={styles.søknadsbehandlingKnapper}>
                 {erTilAttestering(behandling) && user.isAttestant && user.navIdent !== behandling.saksbehandler ? (
                     <LinkAsButton
                         variant="secondary"
@@ -565,6 +577,18 @@ const SøknadsbehandlingStartetKnapper = (props: {
                             >
                                 {props.intl.formatMessage({
                                     id: 'display.behandling.fortsettBehandling',
+                                })}
+                            </LinkAsButton>
+                            <LinkAsButton
+                                size="small"
+                                variant="danger"
+                                href={Routes.avslagManglendeDokSøknadsbehandling.createURL({
+                                    sakId: props.sakId,
+                                    soknadId: props.søknadId,
+                                })}
+                            >
+                                {props.intl.formatMessage({
+                                    id: 'display.søknad.avslag.manglendeDokumentajon',
                                 })}
                             </LinkAsButton>
                             <LinkAsButton

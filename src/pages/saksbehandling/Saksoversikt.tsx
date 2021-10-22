@@ -24,6 +24,7 @@ const Vilkår = React.lazy(() => import('./søknadsbehandling/vilkår/Vilkår'))
 const SendTilAttesteringPage = React.lazy(
     () => import('./søknadsbehandling/sendTilAttesteringPage/SendTilAttesteringPage')
 );
+const AvslåttSøknad = React.lazy(() => import('~pages/saksbehandling/avslag/AvslåttSøknad'));
 const Vedtaksoppsummering = React.lazy(() => import('~pages/saksbehandling/vedtak/Vedtaksoppsummering'));
 const LukkSøknad = React.lazy(() => import('./lukkSøknad/LukkSøknad'));
 const Revurdering = React.lazy(() => import('./revurdering/Revurdering'));
@@ -118,6 +119,11 @@ const Saksoversikt = () => {
                                             <Route path={Routes.avsluttSøknadsbehandling.path}>
                                                 <div className={styles.mainContent}>
                                                     <LukkSøknad sak={sak} />
+                                                </div>
+                                            </Route>
+                                            <Route path={Routes.avslagManglendeDokSøknadsbehandling.path}>
+                                                <div className={styles.mainContent}>
+                                                    <AvslåttSøknad sak={sak} />
                                                 </div>
                                             </Route>
                                             <Route path={Routes.revurderValgtSak.path}>

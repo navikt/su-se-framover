@@ -19,6 +19,10 @@ interface Avvist {
 
 export type LukkSøknadBodyTypes = Trukket | Bortfalt | Avvist;
 
+export interface AvslagManglendeDokType {
+    fritekst: string;
+}
+
 export interface OpprettetSøknad {
     saksnummer: number;
     søknad: Søknad;
@@ -31,6 +35,17 @@ export async function sendSøknad(søknad: SøknadInnhold): Promise<ApiClientRes
 export async function lukkSøknad(arg: { søknadId: string; body: LukkSøknadBodyTypes }): Promise<ApiClientResult<Sak>> {
     return apiClient({
         url: `/soknad/${arg.søknadId}/lukk`,
+        method: 'POST',
+        body: arg.body,
+    });
+}
+
+export async function avslåSøknadPgaManglendeDokumentasjon(arg: {
+    søknadId: string;
+    body: AvslagManglendeDokType;
+}): Promise<ApiClientResult<Sak>> {
+    return apiClient({
+        url: `/soknad/${arg.søknadId}/avslag`,
         method: 'POST',
         body: arg.body,
     });
