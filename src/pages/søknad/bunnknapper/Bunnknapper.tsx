@@ -49,7 +49,12 @@ const Bunnknapper = (props: {
                 )}
             </div>
             <div className={styles.avbrytknappContainer}>
-                <Button variant="tertiary" type="button" onClick={() => setModalOpen(true)}>
+                <Button
+                    variant="tertiary"
+                    type="button"
+                    onClick={() => setModalOpen(true)}
+                    className={styles.avbrytknapp}
+                >
                     <FormattedMessage id="steg.avbryt" />
                 </Button>
             </div>
