@@ -54,7 +54,7 @@
         "@navikt/fnrvalidator": "^1.1.4",
         "@reduxjs/toolkit": "^1.6.2",
         "@sentry/browser": "^6.13.3",
-        "@sentry/cli": "^1.69.1",
+        "@sentry/cli": "^1.70.1",
         "@types/jest": "^27.0.2",
         "@types/jsonwebtoken": "^8.5.5",
         "@types/react-collapse": "^5.0.1",
