@@ -74,7 +74,6 @@ enum OpprettelseOgOppdatering {
     BEGRUNNELSE_KAN_IKKE_VÆRE_TOM = 'begrunnelse_kan_ikke_være_tom',
     UGYLDIG_ÅRSAK = 'ugyldig_årsak',
     BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES = 'bosituasjon_med_flere_perioder_må_revurderes',
-    BOSITUASJON_FLERE_PERIODER_OG_EPS_INNTEKT = 'eps_inntekt_med_flere_perioder_må_revurderes',
     FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES = 'formue_som_fører_til_opphør_må_revurderes',
     EPS_FORMUE_MED_FLERE_PERIODER_MÅ_REVURDERES = 'eps_formue_med_flere_perioder_må_revurderes',
     KAN_IKKE_OPPDATERE_REVURDERING_SOM_ER_FORHÅNDSVARSLET = 'kan_ikke_oppdatere_revurdering_som_er_forhåndsvarslet',
@@ -183,8 +182,6 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof 
     [OpprettelseOgOppdatering.UGYLDIG_ÅRSAK]: 'opprettelseOgOppdatering.ugyldig.årsak',
     [OpprettelseOgOppdatering.BOSITUASJON_MED_FLERE_PERIODER_MÅ_VURDERES]:
         'opprettelseOgOppdatering.bosituasjon.flere.perioder',
-    [OpprettelseOgOppdatering.BOSITUASJON_FLERE_PERIODER_OG_EPS_INNTEKT]:
-        'opprettelseOgOppdatering.bosituasjon.flere.perioder.og.eps.inntekt',
     [OpprettelseOgOppdatering.FORMUE_SOM_FØRER_TIL_OPPHØR_MÅ_REVURDERES]: 'opprettelseOgOppdatering.formue.til.opphør',
     [OpprettelseOgOppdatering.EPS_FORMUE_MED_FLERE_PERIODER_MÅ_REVURDERES]:
         'opprettelseOgOppdatering.eps.formue.flere.perioder',

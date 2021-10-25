@@ -32,9 +32,7 @@ export default {
     'opprettelseOgOppdatering.tom.begrunnelse': 'Kan ikke sende in tom begrunnelse',
     'opprettelseOgOppdatering.ugyldig.årsak': 'Årsak er ugyldig',
     'opprettelseOgOppdatering.bosituasjon.flere.perioder':
-        'Bosituasjon må revurderes siden det finnes bosituasjonsperioder',
-    'opprettelseOgOppdatering.bosituasjon.flere.perioder.og.eps.inntekt':
-        'Inntekt må revurderes siden det finnes EPS inntekt og flere bosituasjonsperioder',
+        'Bosituasjon og inntekt må revurderes siden det finnes flere bosituasjonsperioder',
     'opprettelseOgOppdatering.formue.til.opphør': 'Formue som fører til opphør må revurderes',
     'opprettelseOgOppdatering.eps.formue.flere.perioder':
         'Formue må revurderes siden det finnes EPS formue og flere bosituasjonsperioder',
