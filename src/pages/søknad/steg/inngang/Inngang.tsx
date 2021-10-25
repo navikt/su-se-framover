@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Tag } from '@navikt/ds-react';
+import * as DateFns from 'date-fns';
 import * as React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -16,7 +17,7 @@ import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { IverksattInnvilgetBehandling } from '~types/Behandling';
 import { Søknadstype } from '~types/Søknad';
-import { startenPåNesteMåned, toIsoDateOnlyString } from '~utils/date/dateUtils';
+import { formatDate } from '~utils/date/dateUtils';
 import * as søknadUtils from '~utils/søknad/søknadUtils';
 
 import nb from './inngang-nb';
@@ -160,12 +161,16 @@ const index = (props: { nesteUrl: string }) => {
                                 {intl.formatMessage(
                                     { id: 'åpenSøknad.løpendeYtelse' },
                                     {
-                                        løpendePeriode: `${innvilgetIverksattBehandling.stønadsperiode.periode.fraOgMed} - ${innvilgetIverksattBehandling.stønadsperiode.periode.tilOgMed}`,
-                                        tidligestNyPeriode: toIsoDateOnlyString(
-                                            startenPåNesteMåned(
+                                        løpendePeriode: `${formatDate(
+                                            innvilgetIverksattBehandling.stønadsperiode.periode.fraOgMed
+                                        )} - ${formatDate(
+                                            innvilgetIverksattBehandling.stønadsperiode.periode.tilOgMed
+                                        )}`,
+                                        tidligestNyPeriode: formatDate(
+                                            DateFns.startOfMonth(
                                                 new Date(innvilgetIverksattBehandling.stønadsperiode.periode.tilOgMed)
-                                            )
-                                        ).toString(),
+                                            ).toString()
+                                        ),
                                     }
                                 )}
                             </Alert>
