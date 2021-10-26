@@ -569,19 +569,6 @@ const SøknadsbehandlingStartetKnapper = (props: {
                             <LinkAsButton
                                 variant="secondary"
                                 size="small"
-                                href={Routes.saksbehandlingVilkårsvurdering.createURL({
-                                    sakId: props.sakId,
-                                    behandlingId: behandling.id,
-                                    vilkar: hentSisteVurdertSaksbehandlingssteg(behandling),
-                                })}
-                            >
-                                {props.intl.formatMessage({
-                                    id: 'display.behandling.fortsettBehandling',
-                                })}
-                            </LinkAsButton>
-                            <LinkAsButton
-                                size="small"
-                                variant="danger"
                                 href={Routes.avslagManglendeDokSøknadsbehandling.createURL({
                                     sakId: props.sakId,
                                     soknadId: props.søknadId,
@@ -592,7 +579,7 @@ const SøknadsbehandlingStartetKnapper = (props: {
                                 })}
                             </LinkAsButton>
                             <LinkAsButton
-                                variant="danger"
+                                variant="secondary"
                                 size="small"
                                 href={Routes.avsluttSøknadsbehandling.createURL({
                                     sakId: props.sakId,
@@ -601,6 +588,18 @@ const SøknadsbehandlingStartetKnapper = (props: {
                             >
                                 {props.intl.formatMessage({
                                     id: 'display.søknad.lukkSøknad',
+                                })}
+                            </LinkAsButton>
+                            <LinkAsButton
+                                size="small"
+                                href={Routes.saksbehandlingVilkårsvurdering.createURL({
+                                    sakId: props.sakId,
+                                    behandlingId: behandling.id,
+                                    vilkar: hentSisteVurdertSaksbehandlingssteg(behandling),
+                                })}
+                            >
+                                {props.intl.formatMessage({
+                                    id: 'display.behandling.fortsettBehandling',
                                 })}
                             </LinkAsButton>
                         </>
