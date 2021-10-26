@@ -1,21 +1,14 @@
 @import '~/styles/variables.less';
 
 .container {
+    --su-soknad-spacing-default: var(--navds-spacing-8);
+
     width: 100%;
-}
-
-.formContainer {
-    .blokk();
-}
-
-.sporsmal {
-    .blokk-s();
 }
 
 .inputFelterDiv {
     display: flex;
-    margin-bottom: @spacing-l;
-    gap: @spacing;
+    margin-bottom: var(--su-soknad-spacing-default);
 }
 
 .leggTilFeltKnapp {
@@ -25,7 +18,7 @@
 }
 
 .marginBottom {
-    margin-bottom: @spacing-l;
+    margin-bottom: var(--su-soknad-spacing-default);
 }
 
 .narrow {
