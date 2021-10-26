@@ -6,9 +6,10 @@
     width: 100%;
 }
 
-.inputFelterDiv {
+.oppsummeringDetaljrad {
     display: flex;
-    margin-bottom: var(--su-soknad-spacing-default);
+    gap: var(--su-soknad-spacing-default);
+    padding-left: var(--su-soknad-spacing-default);
 }
 
 .leggTilFeltKnapp {
@@ -21,7 +22,12 @@
     margin-bottom: var(--su-soknad-spacing-default);
 }
 
-.narrow {
+/* TODO:
+Har med not(input) her fordi i ds-react så vil klassenavn man sender inn til f.eks. TextField
+settes både på containeren og på input-elementet.
+Dette skal fikses i ds-react, og denne hacken bør følgelig fjernes når det er gjort.
+*/
+.narrow:not(input) {
     width: 50%;
 }
 

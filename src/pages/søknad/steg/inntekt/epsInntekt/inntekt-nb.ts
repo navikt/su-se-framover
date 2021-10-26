@@ -1,4 +1,8 @@
 export default {
+    'legend.fremtidigInntekt': 'Fremtidig inntekt',
+    'legend.andreUtbetalingerFraNav': 'Andre utbetalinger fra NAV',
+    'legend.andreUtbetalinger': 'Utbetalinger fra andre steder',
+
     'forventerInntekt.label': 'Forventer ektefelle/samboer å ha arbeidsinntekt fremover?',
     'forventerInntekt.hjelpetekst': 'Gjelder all inntekt i Norge og utlandet.',
     'forventerInntekt.beløp': 'Hvor mye regner de med å tjene i måneden?',

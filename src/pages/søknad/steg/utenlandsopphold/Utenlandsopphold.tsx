@@ -17,6 +17,7 @@ import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~utils/date/dateUtils';
 
+import SøknadSpørsmålsgruppe from '../../../../features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
@@ -146,7 +147,7 @@ const MultiTidsperiodevelger = (props: {
                 const innreisedatoId = `${baseId}.innreisedato`;
 
                 return (
-                    <div key={baseId} id={baseId} className={styles.reiseradContainer}>
+                    <div key={baseId} id={baseId} className={sharedStyles.marginBottom}>
                         <Fieldset
                             className={classNames(sharedStyles.inputFelterOgFjernKnappContainer, {
                                 [sharedStyles.radfeil]: errorForLinje && typeof errorForLinje === 'object',
@@ -303,7 +304,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                     focusAfterTimeout(feiloppsummeringref)();
                 }}
             >
-                <div className={sharedStyles.formContainer}>
+                <SøknadSpørsmålsgruppe withoutLegend>
                     <BooleanRadioGroup
                         name="harReistTilUtlandetSiste90dager"
                         className={sharedStyles.sporsmal}
@@ -429,7 +430,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                             }}
                         />
                     )}
-                </div>
+                </SøknadSpørsmålsgruppe>
                 {antallDagerIUtlandet > 90 && (
                     <Alert variant="warning" className={styles.passert90DagerAdvarsel}>
                         {formatMessage('passert90Dager.info', {

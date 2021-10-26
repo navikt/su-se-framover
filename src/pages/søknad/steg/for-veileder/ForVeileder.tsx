@@ -17,6 +17,7 @@ import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Søknadstype } from '~types/Søknad';
 
+import SøknadSpørsmålsgruppe from '../../../../features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
@@ -76,7 +77,7 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
     const { intl } = useI18n({ messages: { ...sharedI18n, ...messages } });
     return (
         <TextProvider messages={{ [Languages.nb]: messages }}>
-            <div>
+            <div className={sharedStyles.container}>
                 <form
                     onSubmit={(e) => {
                         setHasSubmitted(true);
@@ -121,49 +122,47 @@ const ForVeileder = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: s
                         </Alert>
                     </Panel>
 
-                    <BooleanRadioGroup
-                        name="harSøkerMøttPersonlig"
-                        className={sharedStyles.sporsmal}
-                        legend={<FormattedMessage id="input.harSøkerMøttPersonlig.label" />}
-                        error={formik.errors.harSøkerMøttPersonlig}
-                        value={formik.values.harSøkerMøttPersonlig}
-                        onChange={(val) => {
-                            formik.setValues((values) => ({
-                                ...values,
-                                harSøkerMøttPersonlig: val,
-                                harFullmektigEllerVerge: null,
-                            }));
-                        }}
-                    />
-
-                    {formik.values.harSøkerMøttPersonlig === false && (
-                        <RadioGroup
-                            className={sharedStyles.sporsmal}
-                            error={formik.errors.harFullmektigEllerVerge}
-                            legend={<FormattedMessage id={'input.fullmektigEllerVerge.label'} />}
-                            name="harFullmektigEllerVerge"
-                            onChange={(value) => {
+                    <SøknadSpørsmålsgruppe withoutLegend>
+                        <BooleanRadioGroup
+                            name="harSøkerMøttPersonlig"
+                            legend={<FormattedMessage id="input.harSøkerMøttPersonlig.label" />}
+                            error={formik.errors.harSøkerMøttPersonlig}
+                            value={formik.values.harSøkerMøttPersonlig}
+                            onChange={(val) => {
                                 formik.setValues((values) => ({
                                     ...values,
-                                    harFullmektigEllerVerge: value as Vergemål,
+                                    harSøkerMøttPersonlig: val,
+                                    harFullmektigEllerVerge: null,
                                 }));
                             }}
-                            value={formik.values.harFullmektigEllerVerge?.toString()}
-                        >
-                            <Radio id="harFullmektigEllerVerge" value={Vergemål.Fullmektig}>
-                                <FormattedMessage id={'input.fullmektigEllerVerge.fullmektig.label'} />
-                            </Radio>
-                            <Radio value={Vergemål.Verge}>
-                                <FormattedMessage id={'input.fullmektigEllerVerge.verge.label'} />
-                            </Radio>
-                        </RadioGroup>
-                    )}
+                        />
 
-                    {formik.values.harFullmektigEllerVerge === 'fullmektig' && (
-                        <Alert variant="warning" className={sharedStyles.marginBottom}>
-                            Husk å legge ved legeattest/legeerklæring
-                        </Alert>
-                    )}
+                        {formik.values.harSøkerMøttPersonlig === false && (
+                            <RadioGroup
+                                error={formik.errors.harFullmektigEllerVerge}
+                                legend={<FormattedMessage id={'input.fullmektigEllerVerge.label'} />}
+                                name="harFullmektigEllerVerge"
+                                onChange={(value) => {
+                                    formik.setValues((values) => ({
+                                        ...values,
+                                        harFullmektigEllerVerge: value as Vergemål,
+                                    }));
+                                }}
+                                value={formik.values.harFullmektigEllerVerge?.toString()}
+                            >
+                                <Radio id="harFullmektigEllerVerge" value={Vergemål.Fullmektig}>
+                                    <FormattedMessage id={'input.fullmektigEllerVerge.fullmektig.label'} />
+                                </Radio>
+                                <Radio value={Vergemål.Verge}>
+                                    <FormattedMessage id={'input.fullmektigEllerVerge.verge.label'} />
+                                </Radio>
+                            </RadioGroup>
+                        )}
+
+                        {formik.values.harFullmektigEllerVerge === 'fullmektig' && (
+                            <Alert variant="warning">Husk å legge ved legeattest/legeerklæring</Alert>
+                        )}
+                    </SøknadSpørsmålsgruppe>
                     <Feiloppsummering
                         className={sharedStyles.marginBottom}
                         tittel={intl.formatMessage({ id: 'feiloppsummering.title' })}

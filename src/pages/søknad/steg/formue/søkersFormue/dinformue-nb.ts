@@ -1,5 +1,9 @@
 export default {
-    //Nøklene på tekstene må være identisk til EPS'formue spåkfilen
+    //Nøklene på tekstene må være identisk til språkfilen for EPS' formue
+    'legend.eiendom': 'Eiendom',
+    'legend.kjøretøy': 'Kjøretøy',
+    'legend.verdi': 'Verdi på konto og/eller kontanter',
+
     'eierBolig.label': 'Eier du en bolig?',
     'eierBolig.borIBolig': 'Bor du i boligen?',
     'eierBolig.formuePåBolig': 'Boligens formueverdi',

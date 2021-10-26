@@ -114,13 +114,16 @@ const InntektsOppsummering = ({
                 label={formatMessage('mottarPensjon.label')}
                 verdi={inntekt.mottarPensjon ? 'Ja' : inntekt.mottarPensjon === false ? 'Nei' : 'Ubesvart'}
             />
-            {inntekt.mottarPensjon &&
-                inntekt.pensjonsInntekt.map((item, index) => (
-                    <div className={sharedStyles.inputFelterDiv} key={index}>
-                        <Oppsummeringsfelt label={formatMessage('mottarPensjon.fra')} verdi={item.ordning} />
-                        <Oppsummeringsfelt label={formatMessage('mottarPensjon.beløp')} verdi={item.beløp} />
-                    </div>
-                ))}
+            {inntekt.mottarPensjon && (
+                <ul>
+                    {inntekt.pensjonsInntekt.map((item, index) => (
+                        <li className={sharedStyles.oppsummeringDetaljrad} key={index}>
+                            <Oppsummeringsfelt label={formatMessage('mottarPensjon.fra')} verdi={item.ordning} />
+                            <Oppsummeringsfelt label={formatMessage('mottarPensjon.beløp')} verdi={item.beløp} />
+                        </li>
+                    ))}
+                </ul>
+            )}
         </>
     );
 };

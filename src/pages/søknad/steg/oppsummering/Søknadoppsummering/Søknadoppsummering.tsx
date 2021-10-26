@@ -272,23 +272,34 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                     : 'Ubesvart'
                             }
                         />
-                        {søknad.utenlandsopphold.harReistTilUtlandetSiste90dager &&
-                            søknad.utenlandsopphold.harReistDatoer.map((item, index) => (
-                                <div className={sharedStyles.inputFelterDiv} key={index}>
-                                    <Oppsummeringsfelt
-                                        label={formatMessage('utreisedato.label')}
-                                        verdi={
-                                            item.utreisedato ? <FormattedDate value={item.utreisedato} /> : 'Ubesvart'
-                                        }
-                                    />
-                                    <Oppsummeringsfelt
-                                        label={formatMessage('innreisedato.label')}
-                                        verdi={
-                                            item.innreisedato ? <FormattedDate value={item.innreisedato} /> : 'Ubesvart'
-                                        }
-                                    />
-                                </div>
-                            ))}
+                        {søknad.utenlandsopphold.harReistTilUtlandetSiste90dager && (
+                            <ul>
+                                {søknad.utenlandsopphold.harReistDatoer.map((item, index) => (
+                                    <li className={sharedStyles.oppsummeringDetaljrad} key={index}>
+                                        <Oppsummeringsfelt
+                                            label={formatMessage('utreisedato.label')}
+                                            verdi={
+                                                item.utreisedato ? (
+                                                    <FormattedDate value={item.utreisedato} />
+                                                ) : (
+                                                    'Ubesvart'
+                                                )
+                                            }
+                                        />
+                                        <Oppsummeringsfelt
+                                            label={formatMessage('innreisedato.label')}
+                                            verdi={
+                                                item.innreisedato ? (
+                                                    <FormattedDate value={item.innreisedato} />
+                                                ) : (
+                                                    'Ubesvart'
+                                                )
+                                            }
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
 
                         <Oppsummeringsfelt
                             label={formatMessage('skalReiseNeste12.label')}
@@ -300,23 +311,34 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                     : 'Ubesvart'
                             }
                         />
-                        {søknad.utenlandsopphold.skalReiseTilUtlandetNeste12Måneder &&
-                            søknad.utenlandsopphold.skalReiseDatoer.map((item, index) => (
-                                <div className={sharedStyles.inputFelterDiv} key={index}>
-                                    <Oppsummeringsfelt
-                                        label={formatMessage('utreisedato.label')}
-                                        verdi={
-                                            item.utreisedato ? <FormattedDate value={item.utreisedato} /> : 'Ubesvart'
-                                        }
-                                    />
-                                    <Oppsummeringsfelt
-                                        label={formatMessage('innreisedato.label')}
-                                        verdi={
-                                            item.innreisedato ? <FormattedDate value={item.innreisedato} /> : 'Ubesvart'
-                                        }
-                                    />
-                                </div>
-                            ))}
+                        {søknad.utenlandsopphold.skalReiseTilUtlandetNeste12Måneder && (
+                            <ul>
+                                {søknad.utenlandsopphold.skalReiseDatoer.map((item, index) => (
+                                    <li className={sharedStyles.oppsummeringDetaljrad} key={index}>
+                                        <Oppsummeringsfelt
+                                            label={formatMessage('utreisedato.label')}
+                                            verdi={
+                                                item.utreisedato ? (
+                                                    <FormattedDate value={item.utreisedato} />
+                                                ) : (
+                                                    'Ubesvart'
+                                                )
+                                            }
+                                        />
+                                        <Oppsummeringsfelt
+                                            label={formatMessage('innreisedato.label')}
+                                            verdi={
+                                                item.innreisedato ? (
+                                                    <FormattedDate value={item.innreisedato} />
+                                                ) : (
+                                                    'Ubesvart'
+                                                )
+                                            }
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                         <EndreSvar path={Søknadsteg.ReiseTilUtlandet} søker={søker} />
                     </Accordion.Content>
                 </Accordion.Item>

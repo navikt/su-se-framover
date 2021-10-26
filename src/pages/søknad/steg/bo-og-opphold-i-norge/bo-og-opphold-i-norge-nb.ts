@@ -1,4 +1,7 @@
 export default {
+    'institusjonsopphold.legend': 'Institusjonsopphold',
+    'bosituasjon.legend': 'Bosituasjon',
+
     'ektefelleEllerSamboer.feil.felteneMåFyllesUt': 'Feltene må fylles ut',
 
     'borOgOppholderSegINorge.label': 'Bor og oppholder du deg i Norge?',
