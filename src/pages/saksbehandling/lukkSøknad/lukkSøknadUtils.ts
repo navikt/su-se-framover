@@ -3,20 +3,40 @@ import yup from '~lib/validering';
 import { LukkSøknadBegrunnelse } from '~types/Søknad';
 
 export interface LukkSøknadFormData {
-    lukkSøknadBegrunnelse: Nullable<LukkSøknadBegrunnelse>;
-    datoSøkerTrakkSøknad: Nullable<string>;
-    sendBrevForAvvist: Nullable<boolean>;
-    typeBrev: Nullable<AvvistBrevtyper>;
-    fritekst: Nullable<string>;
+    lukkSøknadOgAvsluttSøknadsbehandling: Nullable<LukkSøknadOgAvsluttSøknadsbehandlingType>;
+    trukket: {
+        datoSøkerTrakkSøknad: Nullable<string>;
+    };
+    avvist: {
+        skalSendesBrev: Nullable<boolean>;
+        typeBrev: Nullable<AvvistBrevtyper>;
+        fritekst: Nullable<string>;
+    };
+    manglendeDok: {
+        fritekst: Nullable<string>;
+    };
 }
 
 export const lukkSøknadInitialValues = {
-    lukkSøknadBegrunnelse: null,
-    datoSøkerTrakkSøknad: null,
-    sendBrevForAvvist: null,
-    typeBrev: null,
-    fritekst: null,
+    lukkSøknadOgAvsluttSøknadsbehandling: null,
+    trukket: {
+        datoSøkerTrakkSøknad: null,
+    },
+    avvist: {
+        skalSendesBrev: null,
+        typeBrev: null,
+        fritekst: null,
+    },
+    manglendeDok: {
+        fritekst: null,
+    },
 };
+
+export enum AvsluttSøknadsbehandlingBegrunnelse {
+    ManglendeDok = 'MANGLENDE_DOK',
+}
+
+export type LukkSøknadOgAvsluttSøknadsbehandlingType = LukkSøknadBegrunnelse | AvsluttSøknadsbehandlingBegrunnelse;
 
 export enum AvvistBrevtyper {
     Vedtaksbrev = 'VEDTAK',
@@ -29,45 +49,60 @@ export interface AvvistBrevConfig {
 }
 
 export const LukkSøknadValidationSchema = yup.object<LukkSøknadFormData>({
-    lukkSøknadBegrunnelse: yup
+    lukkSøknadOgAvsluttSøknadsbehandling: yup
         .mixed()
-        .oneOf([LukkSøknadBegrunnelse.Trukket, LukkSøknadBegrunnelse.Bortfalt, LukkSøknadBegrunnelse.Avvist])
+        .oneOf([
+            LukkSøknadBegrunnelse.Trukket,
+            LukkSøknadBegrunnelse.Bortfalt,
+            LukkSøknadBegrunnelse.Avvist,
+            AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok,
+        ])
         .required(),
-    datoSøkerTrakkSøknad: yup.string().nullable().defined().when('lukkSøknadType', {
-        is: LukkSøknadBegrunnelse.Trukket,
-        then: yup.string().required(),
-        otherwise: yup.string().nullable().defined(),
-    }),
-    sendBrevForAvvist: yup.boolean().nullable().defined().when('lukkSøknadType', {
-        is: LukkSøknadBegrunnelse.Avvist,
-        then: yup.boolean().required(),
-    }),
-    typeBrev: yup
-        .mixed<AvvistBrevtyper>()
-        .nullable()
-        .defined()
-        .when('sendBrevForAvvist', {
-            is: true,
-            then: yup.mixed().oneOf([AvvistBrevtyper.Fritekstsbrev, AvvistBrevtyper.Vedtaksbrev]),
-        }),
-    fritekst: yup
-        .string()
-        .nullable()
-        .defined()
-        .when('typeBrev', {
-            is: AvvistBrevtyper.Fritekstsbrev,
-            then: yup.string().required().min(1),
-            otherwise: yup.string().defined().nullable(),
-        }),
+    trukket: yup
+        .object({
+            datoSøkerTrakkSøknad: yup.string().nullable().defined().when('lukkSøknadOgAvsluttSøknadsbehandling', {
+                is: LukkSøknadBegrunnelse.Trukket,
+                then: yup.string().required(),
+                otherwise: yup.string().nullable().defined(),
+            }),
+        })
+        .defined(),
+    avvist: yup
+        .object({
+            skalSendesBrev: yup.boolean().nullable().defined().when('lukkSøknadOgAvsluttSøknadsbehandling', {
+                is: LukkSøknadBegrunnelse.Avvist,
+                then: yup.boolean().required(),
+            }),
+            typeBrev: yup
+                .mixed<AvvistBrevtyper>()
+                .nullable()
+                .defined()
+                .when('sendBrevForAvvist', {
+                    is: true,
+                    then: yup.mixed().oneOf([AvvistBrevtyper.Fritekstsbrev, AvvistBrevtyper.Vedtaksbrev]),
+                }),
+            fritekst: yup
+                .string()
+                .nullable()
+                .defined()
+                .when('typeBrev', {
+                    is: AvvistBrevtyper.Fritekstsbrev,
+                    then: yup.string().required().min(1),
+                    otherwise: yup.string().defined().nullable(),
+                }),
+        })
+        .defined(),
+    manglendeDok: yup
+        .object({
+            fritekst: yup
+                .string()
+                .nullable()
+                .defined()
+                .when('lukkSøknadOgAvsluttSøknadsbehandling', {
+                    is: AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok,
+                    then: yup.string().required().min(1),
+                    otherwise: yup.string().nullable().defined(),
+                }),
+        })
+        .defined(),
 });
-
-export const lukkSøknadBegrunnelseI18nId = (type: LukkSøknadBegrunnelse): string => {
-    switch (type) {
-        case LukkSøknadBegrunnelse.Trukket:
-            return 'lukking.begrunnelse.trukket';
-        case LukkSøknadBegrunnelse.Bortfalt:
-            return 'lukking.begrunnelse.bortfalt';
-        case LukkSøknadBegrunnelse.Avvist:
-            return 'lukking.begrunnelse.avvist';
-    }
-};

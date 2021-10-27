@@ -1,15 +1,15 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { Button, Loader, RadioGroup, Radio, Textarea } from '@navikt/ds-react';
 import { FormikErrors } from 'formik';
-import React, { useCallback } from 'react';
+import React from 'react';
 
-import { ApiError } from '~api/apiClient';
+import * as søknadApi from '~api/søknadApi';
+import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import { BooleanRadioGroup } from '~components/formElements/FormElements';
-import { hentLukketSøknadBrevutkast } from '~features/saksoversikt/sak.slice';
+import { ApiResult, useBrevForhåndsvisning } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
-import { useAppDispatch } from '~redux/Store';
+import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse } from '~types/Søknad';
 
 import nb from './lukkSøknad-nb';
@@ -17,72 +17,43 @@ import styles from './lukkSøknad.module.less';
 import { AvvistBrevtyper, LukkSøknadFormData } from './lukkSøknadUtils';
 
 interface AvvistFormData {
-    sendBrevForAvvist: Nullable<boolean>;
+    skalSendesBrev: Nullable<boolean>;
     typeBrev: Nullable<AvvistBrevtyper>;
     fritekst: Nullable<string>;
 }
 
 interface AvvistProps {
-    lukkSøknadBegrunnelse: LukkSøknadBegrunnelse;
+    søknadId: string;
     validateForm: () => Promise<FormikErrors<LukkSøknadFormData>>;
     avvistFormData: AvvistFormData;
-    lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
-    søknadLukketStatus: RemoteData.RemoteData<ApiError, null>;
+    søknadLukketStatus: ApiResult<Sak, string>;
     feilmeldinger: FormikErrors<AvvistFormData>;
     onValueChange: (value: AvvistFormData) => void;
 }
 
 const Avvist = (props: AvvistProps) => {
-    const dispatch = useAppDispatch();
-    const urlParams = Routes.useRouteParams<typeof Routes.avsluttSøknadsbehandling>();
-    const { intl } = useI18n({ messages: nb });
+    const { formatMessage } = useI18n({ messages: nb });
 
-    const onSeBrevClick = useCallback(() => {
-        if (
-            RemoteData.isPending(props.lukketSøknadBrevutkastStatus) ||
-            props.lukkSøknadBegrunnelse !== LukkSøknadBegrunnelse.Avvist ||
-            !props.avvistFormData.typeBrev
-        ) {
-            return;
-        }
-        dispatch(
-            hentLukketSøknadBrevutkast({
-                søknadId: urlParams.soknadId,
-                body: {
-                    type: props.lukkSøknadBegrunnelse,
-                    brevConfig: props.avvistFormData.typeBrev
-                        ? {
-                              brevtype: props.avvistFormData.typeBrev,
-                              fritekst: props.avvistFormData.fritekst,
-                          }
-                        : null,
-                },
-            })
-        ).then((action) => {
-            if (hentLukketSøknadBrevutkast.fulfilled.match(action)) {
-                window.open(action.payload.objectUrl);
-            }
-        });
-    }, [props]);
+    const [brevStatus, hentBrev] = useBrevForhåndsvisning(søknadApi.hentLukketSøknadsBrevutkast);
 
     return (
         <div className={styles.avvistContainer}>
             <div className={styles.radioContainer}>
                 <BooleanRadioGroup
-                    name="sendBrevForAvvist"
-                    legend={intl.formatMessage({ id: 'display.avvist.sendBrevTilSøker' })}
-                    error={props.feilmeldinger.sendBrevForAvvist}
-                    value={props.avvistFormData.sendBrevForAvvist}
+                    name="skalSendesBrev"
+                    legend={formatMessage('avvist.skalSendesBrevTilSøker')}
+                    error={props.feilmeldinger.skalSendesBrev}
+                    value={props.avvistFormData.skalSendesBrev}
                     onChange={(val) => {
-                        props.onValueChange({ sendBrevForAvvist: val, typeBrev: null, fritekst: null });
+                        props.onValueChange({ skalSendesBrev: val, typeBrev: null, fritekst: null });
                     }}
                 />
             </div>
-            {props.avvistFormData.sendBrevForAvvist && (
+            {props.avvistFormData.skalSendesBrev && (
                 <div className={styles.radioContainer}>
                     <RadioGroup
                         name="typeBrev"
-                        legend={intl.formatMessage({ id: 'display.avvist.typeBrev' })}
+                        legend={formatMessage('avvist.typeBrev')}
                         value={props.avvistFormData.typeBrev?.toString()}
                         onChange={(val) => {
                             props.onValueChange({
@@ -92,10 +63,10 @@ const Avvist = (props: AvvistProps) => {
                         }}
                     >
                         <Radio id="typeBrev" value={AvvistBrevtyper.Vedtaksbrev}>
-                            {intl.formatMessage({ id: 'display.avvist.brevType.vedtaksbrev' })}
+                            {formatMessage('avvist.brevType.vedtaksbrev')}
                         </Radio>
                         <Radio value={AvvistBrevtyper.Fritekstsbrev}>
-                            {intl.formatMessage({ id: 'display.avvist.brevType.fritekstbrev' })}
+                            {formatMessage('avvist.brevType.fritekstbrev')}
                         </Radio>
                     </RadioGroup>
                 </div>
@@ -103,7 +74,7 @@ const Avvist = (props: AvvistProps) => {
             {props.avvistFormData.typeBrev && (
                 <div className={styles.textAreaContainer}>
                     <Textarea
-                        label={intl.formatMessage({ id: 'display.avvist.fritekst' })}
+                        label={formatMessage('avvist.fritekst')}
                         name="fritekst"
                         value={props.avvistFormData.fritekst ?? ''}
                         error={props.feilmeldinger.fritekst}
@@ -112,7 +83,7 @@ const Avvist = (props: AvvistProps) => {
                 </div>
             )}
             <div className={styles.buttonsContainer}>
-                {props.avvistFormData.sendBrevForAvvist && (
+                {props.avvistFormData.skalSendesBrev && (
                     <Button
                         variant="secondary"
                         className={styles.seBrevKnapp}
@@ -120,20 +91,34 @@ const Avvist = (props: AvvistProps) => {
                         onClick={() => {
                             props.validateForm().then((res) => {
                                 if (Object.keys(res).length === 0) {
-                                    onSeBrevClick();
+                                    hentBrev({
+                                        søknadId: props.søknadId,
+                                        body: {
+                                            type: LukkSøknadBegrunnelse.Avvist,
+                                            //Vi har en use-state som sjekker at verdi ikke er null
+                                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                            brevConfig: props.avvistFormData.typeBrev
+                                                ? {
+                                                      brevtype: props.avvistFormData.typeBrev,
+                                                      fritekst: props.avvistFormData.fritekst,
+                                                  }
+                                                : null,
+                                        },
+                                    });
                                 }
                             });
                         }}
                     >
-                        {intl.formatMessage({ id: 'knapp.seBrev' })}
-                        {RemoteData.isPending(props.lukketSøknadBrevutkastStatus) && <Loader />}
+                        {formatMessage('knapp.seBrev')}
+                        {RemoteData.isPending(brevStatus) && <Loader />}
                     </Button>
                 )}
                 <Button variant="danger">
-                    {intl.formatMessage({ id: 'knapp.lukkSøknad' })}
+                    {formatMessage('knapp.lukkSøknad')}
                     {RemoteData.isPending(props.søknadLukketStatus) && <Loader />}
                 </Button>
             </div>
+            <div>{RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}</div>
         </div>
     );
 };

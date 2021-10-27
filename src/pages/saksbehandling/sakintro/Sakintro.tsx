@@ -58,13 +58,13 @@ const SuksessStatuser = (props: { locationState: Nullable<Routes.SuccessNotifica
 const lukketBegrunnelseResourceId = (type?: LukkSøknadBegrunnelse) => {
     switch (type) {
         case LukkSøknadBegrunnelse.Avvist:
-            return 'display.søknad.lukket.avvist';
+            return 'søknad.lukket.avvist';
         case LukkSøknadBegrunnelse.Bortfalt:
-            return 'display.søknad.lukket.bortfalt';
+            return 'søknad.lukket.bortfalt';
         case LukkSøknadBegrunnelse.Trukket:
-            return 'display.søknad.lukket.trukket';
+            return 'søknad.lukket.trukket';
         default:
-            return 'display.søknad.lukket.ukjentLukking';
+            return 'søknad.lukket.ukjentLukking';
     }
 };
 
@@ -99,7 +99,7 @@ const Sakintro = (props: { sak: Sak }) => {
             <SuksessStatuser locationState={locationState} />
             <div className={styles.pageHeader}>
                 <Heading level="1" size="xlarge" className={styles.tittel}>
-                    {intl.formatMessage({ id: 'display.saksoversikt.tittel' })}: {props.sak.saksnummer}
+                    {intl.formatMessage({ id: 'saksoversikt.tittel' })}: {props.sak.saksnummer}
                 </Heading>
                 <div className={styles.headerKnapper}>
                     {revurderingToggle && (
@@ -169,7 +169,7 @@ const ÅpneSøknader = (props: {
     return (
         <div className={styles.søknadsContainer}>
             <Heading level="2" size="medium" spacing>
-                {props.intl.formatMessage({ id: 'display.åpneSøknader.tittel' })}
+                {props.intl.formatMessage({ id: 'søknad.åpneSøknader.tittel' })}
             </Heading>
             <ol>
                 {props.åpneSøknader.map((s) => {
@@ -183,12 +183,10 @@ const ÅpneSøknader = (props: {
                                 <div className={styles.info}>
                                     <div>
                                         <Heading level="3" size="medium">
-                                            {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
+                                            {props.intl.formatMessage({ id: 'søknad.typeSøknad' })}
                                         </Heading>
                                         <div className={styles.dato}>
-                                            <Label>
-                                                {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
-                                            </Label>
+                                            <Label>{`${props.intl.formatMessage({ id: 'søknad.mottatt' })}: `}</Label>
                                             <BodyShort>{søknadMottatt(s, props.intl)}</BodyShort>
                                         </div>
                                         {senesteAttestering?.underkjennelse && (
@@ -306,7 +304,7 @@ const RevurderingStartetKnapper = (props: {
                         <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
                         <p>
                             {props.intl.formatMessage({
-                                id: 'display.attestering.tilAttestering',
+                                id: 'attestering.tilAttestering',
                             })}
                         </p>
                     </div>
@@ -335,7 +333,7 @@ const RevurderingStartetKnapper = (props: {
                         })}
                     >
                         {props.intl.formatMessage({
-                            id: 'display.attestering.attester',
+                            id: 'attestering.attester',
                         })}
                     </LinkAsButton>
                 ) : erRevurderingStans(revurdering) ? (
@@ -368,19 +366,33 @@ const RevurderingStartetKnapper = (props: {
                     !erRevurderingTilAttestering(revurdering) &&
                     !erRevurderingIverksatt(revurdering) &&
                     user.navIdent !== pipe(revurdering.attesteringer, last, toNullable)?.attestant && (
-                        <LinkAsButton
-                            variant="secondary"
-                            size="small"
-                            href={Routes.revurderValgtRevurdering.createURL({
-                                sakId: props.sakId,
-                                steg: erRevurderingSimulert(revurdering)
-                                    ? RevurderingSteg.Oppsummering
-                                    : finnNesteRevurderingsteg(revurdering.informasjonSomRevurderes),
-                                revurderingId: revurdering.id,
-                            })}
-                        >
-                            {props.intl.formatMessage({ id: 'revurdering.fortsett' })}
-                        </LinkAsButton>
+                        <div>
+                            <LinkAsButton
+                                variant="secondary"
+                                size="small"
+                                href={Routes.avsluttBehandling.createURL({
+                                    sakId: props.sakId,
+                                    id: revurdering.id,
+                                })}
+                            >
+                                {props.intl.formatMessage({
+                                    id: 'behandling.avsluttBehandling',
+                                })}
+                            </LinkAsButton>
+                            <LinkAsButton
+                                variant="primary"
+                                size="small"
+                                href={Routes.revurderValgtRevurdering.createURL({
+                                    sakId: props.sakId,
+                                    steg: erRevurderingSimulert(revurdering)
+                                        ? RevurderingSteg.Oppsummering
+                                        : finnNesteRevurderingsteg(revurdering.informasjonSomRevurderes),
+                                    revurderingId: revurdering.id,
+                                })}
+                            >
+                                {props.intl.formatMessage({ id: 'revurdering.fortsett' })}
+                            </LinkAsButton>
+                        </div>
                     )
                 )}
             </div>
@@ -402,7 +414,7 @@ const IverksattInnvilgedeSøknader = (props: {
     return (
         <div className={styles.søknadsContainer}>
             <Heading level="2" size="medium" spacing>
-                {props.intl.formatMessage({ id: 'display.godkjenteSøknader.tittel' })}
+                {props.intl.formatMessage({ id: 'søknad.godkjenteSøknader.tittel' })}
             </Heading>
             <ol>
                 {props.iverksatteInnvilgedeSøknader.map((s) => {
@@ -420,18 +432,16 @@ const IverksattInnvilgedeSøknader = (props: {
                                 <div className={styles.info}>
                                     <div>
                                         <Heading level="3" size="small" spacing>
-                                            {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
+                                            {props.intl.formatMessage({ id: 'søknad.typeSøknad' })}
                                         </Heading>
                                         <div className={styles.dato}>
-                                            <Label>
-                                                {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
-                                            </Label>
+                                            <Label>{`${props.intl.formatMessage({ id: 'søknad.mottatt' })}: `}</Label>
                                             <BodyShort>{søknadMottatt(s.søknad, props.intl)}</BodyShort>
                                         </div>
                                         <div className={styles.dato}>
                                             <Label>
                                                 {`${props.intl.formatMessage({
-                                                    id: 'display.søknad.iverksattDato',
+                                                    id: 'søknad.iverksattDato',
                                                 })}: `}
                                             </Label>
                                             <BodyShort>{props.intl.formatDate(s.iverksattDato)}</BodyShort>
@@ -446,7 +456,7 @@ const IverksattInnvilgedeSøknader = (props: {
                                             })}
                                             size="small"
                                         >
-                                            {props.intl.formatMessage({ id: 'display.behandling.seOppsummering' })}
+                                            {props.intl.formatMessage({ id: 'behandling.seOppsummering' })}
                                         </LinkAsButton>
                                     </div>
                                 </div>
@@ -469,25 +479,13 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                 <LinkAsButton
                     size="small"
                     variant="secondary"
-                    href={Routes.avslagManglendeDokSøknadsbehandling.createURL({
+                    href={Routes.avsluttBehandling.createURL({
                         sakId: props.sakId,
-                        soknadId: props.søknadId,
+                        id: props.søknadId,
                     })}
                 >
                     {props.intl.formatMessage({
-                        id: 'display.søknad.avslag.manglendeDokumentajon',
-                    })}
-                </LinkAsButton>
-                <LinkAsButton
-                    size="small"
-                    variant="secondary"
-                    href={Routes.avsluttSøknadsbehandling.createURL({
-                        sakId: props.sakId,
-                        soknadId: props.søknadId,
-                    })}
-                >
-                    {props.intl.formatMessage({
-                        id: 'display.søknad.lukkSøknad',
+                        id: 'behandling.avsluttBehandling',
                     })}
                 </LinkAsButton>
                 <Button
@@ -511,7 +509,7 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                     }}
                 >
                     {props.intl.formatMessage({
-                        id: 'display.behandling.startBehandling',
+                        id: 'behandling.startBehandling',
                     })}
                     {RemoteData.isPending(behandlingStatus) && <Loader />}
                 </Button>
@@ -541,7 +539,7 @@ const SøknadsbehandlingStartetKnapper = (props: {
                     <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
                     <p>
                         {props.intl.formatMessage({
-                            id: 'display.attestering.tilAttestering',
+                            id: 'attestering.tilAttestering',
                         })}
                     </p>
                 </div>
@@ -558,7 +556,7 @@ const SøknadsbehandlingStartetKnapper = (props: {
                         })}
                     >
                         {props.intl.formatMessage({
-                            id: 'display.attestering.attester',
+                            id: 'attestering.attester',
                         })}
                     </LinkAsButton>
                 ) : (
@@ -569,25 +567,13 @@ const SøknadsbehandlingStartetKnapper = (props: {
                             <LinkAsButton
                                 variant="secondary"
                                 size="small"
-                                href={Routes.avslagManglendeDokSøknadsbehandling.createURL({
+                                href={Routes.avsluttBehandling.createURL({
                                     sakId: props.sakId,
-                                    soknadId: props.søknadId,
+                                    id: props.søknadId,
                                 })}
                             >
                                 {props.intl.formatMessage({
-                                    id: 'display.søknad.avslag.manglendeDokumentajon',
-                                })}
-                            </LinkAsButton>
-                            <LinkAsButton
-                                variant="secondary"
-                                size="small"
-                                href={Routes.avsluttSøknadsbehandling.createURL({
-                                    sakId: props.sakId,
-                                    soknadId: props.søknadId,
-                                })}
-                            >
-                                {props.intl.formatMessage({
-                                    id: 'display.søknad.lukkSøknad',
+                                    id: 'behandling.avsluttBehandling',
                                 })}
                             </LinkAsButton>
                             <LinkAsButton
@@ -599,7 +585,7 @@ const SøknadsbehandlingStartetKnapper = (props: {
                                 })}
                             >
                                 {props.intl.formatMessage({
-                                    id: 'display.behandling.fortsettBehandling',
+                                    id: 'behandling.fortsettBehandling',
                                 })}
                             </LinkAsButton>
                         </>
@@ -617,7 +603,7 @@ const LukkedeSøknader = (props: { lukkedeSøknader: Søknad[]; intl: IntlShape 
         <div className={styles.søknadsContainer}>
             <Heading level="2" size="medium" spacing>
                 {props.intl.formatMessage({
-                    id: 'display.lukkedeSøknader.tittel',
+                    id: 'søknad.lukkedeSøknader.tittel',
                 })}
             </Heading>
             <ol>
@@ -627,12 +613,10 @@ const LukkedeSøknader = (props: { lukkedeSøknader: Søknad[]; intl: IntlShape 
                             <div className={styles.info}>
                                 <div>
                                     <Heading level="3" size="small" spacing>
-                                        {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
+                                        {props.intl.formatMessage({ id: 'søknad.typeSøknad' })}
                                     </Heading>
                                     <div className={styles.dato}>
-                                        <Label>
-                                            {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
-                                        </Label>
+                                        <Label>{`${props.intl.formatMessage({ id: 'søknad.mottatt' })}: `}</Label>
                                         <BodyShort>{søknadMottatt(søknad, props.intl)}</BodyShort>
                                     </div>
                                 </div>
@@ -668,7 +652,7 @@ const AvslåtteSøknader = (props: {
         <div className={styles.søknadsContainer}>
             <Heading level="2" size="medium" spacing>
                 {props.intl.formatMessage({
-                    id: 'display.avslåtteSøknader.tittel',
+                    id: 'søknad.avslåtteSøknader.tittel',
                 })}
             </Heading>
             <ol>
@@ -687,18 +671,16 @@ const AvslåtteSøknader = (props: {
                                 <div className={styles.info}>
                                     <div>
                                         <Heading level="3" size="small" spacing>
-                                            {props.intl.formatMessage({ id: 'display.søknad.typeSøknad' })}
+                                            {props.intl.formatMessage({ id: 'søknad.typeSøknad' })}
                                         </Heading>
                                         <div className={styles.dato}>
-                                            <Label>
-                                                {`${props.intl.formatMessage({ id: 'display.søknad.mottatt' })}: `}
-                                            </Label>
+                                            <Label>{`${props.intl.formatMessage({ id: 'søknad.mottatt' })}: `}</Label>
                                             <BodyShort>{søknadMottatt(s.søknad, props.intl)}</BodyShort>
                                         </div>
                                         <div className={styles.dato}>
                                             <Label>
                                                 {`${props.intl.formatMessage({
-                                                    id: 'display.søknad.iverksattDato',
+                                                    id: 'søknad.iverksattDato',
                                                 })}: `}
                                             </Label>
                                             <BodyShort>{props.intl.formatDate(s.iverksattDato)}</BodyShort>

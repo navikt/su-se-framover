@@ -343,8 +343,6 @@ interface SakState {
     simuleringStatus: RemoteData.RemoteData<ApiError, null>;
     sendtTilAttesteringStatus: RemoteData.RemoteData<ApiError, null>;
     attesteringStatus: RemoteData.RemoteData<ApiError, null>;
-    søknadLukketStatus: RemoteData.RemoteData<ApiError, null>;
-    lukketSøknadBrevutkastStatus: RemoteData.RemoteData<ApiError, null>;
     opprettRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
     oppdaterRevurderingStatus: RemoteData.RemoteData<ApiError, null>;
 }
@@ -359,8 +357,6 @@ const initialState: SakState = {
     simuleringStatus: RemoteData.initial,
     sendtTilAttesteringStatus: RemoteData.initial,
     attesteringStatus: RemoteData.initial,
-    søknadLukketStatus: RemoteData.initial,
-    lukketSøknadBrevutkastStatus: RemoteData.initial,
     opprettRevurderingStatus: RemoteData.initial,
     oppdaterRevurderingStatus: RemoteData.initial,
 };
@@ -603,34 +599,6 @@ export default createSlice({
             },
         });
 
-        handleAsyncThunk(builder, lukkSøknad, {
-            pending: (state) => {
-                state.søknadLukketStatus = RemoteData.pending;
-                state.lukketSøknadBrevutkastStatus = RemoteData.initial;
-            },
-            fulfilled: (state, action) => {
-                state.søknadLukketStatus = RemoteData.success(null);
-
-                state.sak = RemoteData.success(action.payload);
-            },
-            rejected: (state, action) => {
-                state.søknadLukketStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-
-        handleAsyncThunk(builder, hentLukketSøknadBrevutkast, {
-            pending: (state) => {
-                state.lukketSøknadBrevutkastStatus = RemoteData.pending;
-                state.søknadLukketStatus = RemoteData.initial;
-            },
-            fulfilled: (state) => {
-                state.lukketSøknadBrevutkastStatus = RemoteData.success(null);
-            },
-            rejected: (state, action) => {
-                state.lukketSøknadBrevutkastStatus = simpleRejectedActionToRemoteData(action);
-            },
-        });
-
         handleAsyncThunk(builder, opprettRevurdering, {
             pending: (state) => {
                 state.opprettRevurderingStatus = RemoteData.pending;
@@ -677,6 +645,13 @@ export default createSlice({
                 state.revurderingGrunnlagSimulering[action.meta.arg.revurderingId] =
                     simpleRejectedActionToRemoteData(action);
             },
+        });
+
+        builder.addCase(lukkSøknad.fulfilled, (state, action) => {
+            state.sak = pipe(
+                state.sak,
+                RemoteData.map((sak) => ({ ...sak, ...action.payload }))
+            );
         });
 
         builder.addCase(avslagManglendeDokSøknad.fulfilled, (state, action) => {

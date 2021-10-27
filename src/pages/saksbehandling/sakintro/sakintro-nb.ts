@@ -1,46 +1,27 @@
 export default {
-    'display.attestering.attester': 'Attester',
-    'display.attestering.iverksatt': 'Iverksatt',
-    'display.attestering.tilAttestering': 'Til attestering',
-    'display.attestering.sendtTilbakeFordi': 'Sendt tilbake fordi',
-    'display.attestering.kommentar': 'Kommentar',
-    'display.attestering.tidspunkt': 'Tidspunkt',
+    'attestering.attester': 'Attester',
+    'attestering.tilAttestering': 'Til attestering',
 
-    'display.avslåtteSøknader.tittel': 'Avslåtte søknader',
+    'behandling.fortsettBehandling': 'Fortsett behandling',
+    'behandling.seOppsummering': 'Se oppsummering',
+    'behandling.startBehandling': 'Start behandling',
+    'behandling.avsluttBehandling': 'Avslutt behandling',
 
-    'display.lukkedeSøknader.tittel': 'Lukkede søknader',
+    'saksoversikt.tittel': 'Saksnummer',
 
-    'display.behandling.fortsettBehandling': 'Fortsett behandling',
-    'display.behandling.seOppsummering': 'Se oppsummering',
+    'søknad.avslått': 'Avslått',
+    'søknad.iverksattDato': 'Iverksatt dato',
+    'søknad.lukket.avvist': 'Avvist',
+    'søknad.lukket.bortfalt': 'Bortfalt',
+    'søknad.lukket.trukket': 'Trukket',
+    'søknad.lukket.ukjentLukking': 'Ukjent lukking',
+    'søknad.mottatt': 'Mottatt',
+    'søknad.typeSøknad': 'Søknad',
 
-    'display.behandling.startBehandling': 'Start behandling',
-
-    'display.godkjenteSøknader.tittel': 'Godkjente søknader',
-
-    'behandling.attestering.advarsel': 'Sendt tilbake fra attestering',
-
-    'behandling.underkjent.dokumentasjonMangler': 'Dokumentasjon mangler',
-    'behandling.underkjent.beregningenErFeil': 'Beregningen er feil',
-    'behandling.underkjent.InngangsvilkåreneErFeilvurdert': 'Inngangsvilkårene er feilvurdert',
-    'behandling.underkjent.vedtaksbrevetErFeil': 'Vedtaksbrevet er feil',
-    'behandling.underkjent.andreForhold': 'Andre forhold',
-
-    'display.saksoversikt.tittel': 'Saksnummer',
-
-    'display.søknad.avslag.manglendeDokumentajon': 'Avslag pga manglende dokumentasjon',
-    'display.søknad.avslått': 'Avslått',
-    'display.søknad.iverksattDato': 'Iverksatt dato',
-    'display.søknad.lukket.avvist': 'Avvist',
-    'display.søknad.lukket.bortfalt': 'Bortfalt',
-    'display.søknad.lukket.trukket': 'Trukket',
-    'display.søknad.lukket.ukjentLukking': 'Ukjent lukking',
-    'display.søknad.lukkSøknad': 'Lukk søknad',
-    'display.søknad.mottatt': 'Mottatt',
-    'display.søknad.typeSøknad': 'Søknad',
-
-    'display.utbetalinger.tittel': 'Utbetalinger',
-
-    'display.åpneSøknader.tittel': 'Åpne søknader',
+    'søknad.avslåtteSøknader.tittel': 'Avslåtte søknader',
+    'søknad.lukkedeSøknader.tittel': 'Lukkede søknader',
+    'søknad.godkjenteSøknader.tittel': 'Godkjente søknader',
+    'søknad.åpneSøknader.tittel': 'Åpne søknader',
 
     'knapp.revurder': 'Revurder',
     'knapp.stoppUtbetaling': 'Stopp utbetaling',
