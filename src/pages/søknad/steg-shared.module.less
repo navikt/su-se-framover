@@ -30,24 +30,3 @@ Dette skal fikses i ds-react, og denne hacken bør følgelig fjernes når det er
 .narrow:not(input) {
     width: 50%;
 }
-
-.inputFelterOgFjernKnappContainer {
-    display: flex;
-    margin-bottom: @spacing;
-    justify-content: space-evenly;
-    gap: @spacing-xs;
-
-    .fjernradknapp {
-        align-self: flex-end;
-
-        &.skjult {
-            visibility: hidden;
-        }
-    }
-
-    &.radfeil {
-        .fjernradknapp {
-            align-self: center;
-        }
-    }
-}

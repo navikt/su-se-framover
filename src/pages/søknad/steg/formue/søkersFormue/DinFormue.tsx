@@ -17,7 +17,7 @@ import Bunnknapper from '../../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../../steg-shared.module.less';
 import sharedI18n from '../../steg-shared-i18n';
 import { formueValideringSchema } from '../formueSøknadUtils';
-import KjøretøyInputFelter from '../KjøretøyInputFelter';
+import KjøretøyInputFelter from '../kjøretøyInputfelter/KjøretøyInputFelter';
 
 import messages from './dinformue-nb';
 
@@ -268,7 +268,6 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                         }))
                     }
                 />
-
                 {formik.values.eierKjøretøy && (
                     <KjøretøyInputFelter
                         arr={formik.values.kjøretøy}

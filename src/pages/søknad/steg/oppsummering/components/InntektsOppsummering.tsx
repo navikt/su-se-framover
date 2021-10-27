@@ -6,7 +6,7 @@ import { useI18n } from '~lib/i18n';
 import inntektMessages from '~pages/søknad/steg/inntekt/søkersInntekt/inntekt-nb';
 
 import sharedStyles from '../../../steg-shared.module.less';
-import { pensjonsinntekterMessages } from '../../inntekt/Pensjonsinntekter';
+import { pensjonsinntekterMessages } from '../../inntekt/pensonsinntekter/Pensjonsinntekter';
 import { trygdeytelserMessages } from '../../inntekt/TrygdeytelserInputs/TrygdeytelserInputs';
 
 import { OppsummeringAvTrygdeytelser } from './OppsummeringAvTrygdeytelser';

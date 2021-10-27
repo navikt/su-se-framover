@@ -1,6 +1,5 @@
 import { Datepicker, DatepickerLimitations } from '@navikt/ds-datepicker';
-import { Alert, Button, Label, Fieldset, BodyLong } from '@navikt/ds-react';
-import classNames from 'classnames';
+import { Alert, Label, Fieldset, BodyLong } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { useFormik, FormikErrors } from 'formik';
 import * as React from 'react';
@@ -10,6 +9,8 @@ import { BooleanRadioGroup } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
+import SøknadInputliste from '~features/søknad/søknadInputliste/SøknadInputliste';
+import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { Utenlandsopphold as UtenlandsoppholdType } from '~features/søknad/types';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
@@ -17,7 +18,6 @@ import yup, { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/
 import { useAppSelector, useAppDispatch } from '~redux/Store';
 import { kalkulerTotaltAntallDagerIUtlandet } from '~utils/date/dateUtils';
 
-import SøknadSpørsmålsgruppe from '../../../../features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import Bunnknapper from '../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../steg-shared.module.less';
 import sharedI18n from '../steg-shared-i18n';
@@ -139,21 +139,24 @@ const MultiTidsperiodevelger = (props: {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     return (
-        <div>
+        <SøknadInputliste leggTilLabel={formatMessage('button.leggTilReiserad')} onLeggTilClick={props.onLeggTilClick}>
             {props.perioder.map((periode, index) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : null;
                 const baseId = `${props.feltnavn}[${index}]`;
                 const utreisedatoId = `${baseId}.utreisedato`;
                 const innreisedatoId = `${baseId}.innreisedato`;
-
                 return (
-                    <div key={baseId} id={baseId} className={sharedStyles.marginBottom}>
-                        <Fieldset
-                            className={classNames(sharedStyles.inputFelterOgFjernKnappContainer, {
-                                [sharedStyles.radfeil]: errorForLinje && typeof errorForLinje === 'object',
-                            })}
-                            legend={<span className="sr-only">{props.legend}</span>}
-                        >
+                    <SøknadInputliste.Item
+                        key={index}
+                        onFjernClick={() => {
+                            props.onFjernClick(index);
+                        }}
+                        as={Fieldset}
+                        legend={props.legend}
+                        error={errorForLinje && typeof errorForLinje === 'object'}
+                        hideLegend
+                    >
+                        <div className={styles.reiseItemContainer}>
                             <div>
                                 <Label as="label" htmlFor={utreisedatoId}>
                                     {formatMessage('utreisedato.label')}
@@ -225,31 +228,11 @@ const MultiTidsperiodevelger = (props: {
                                     <SkjemaelementFeilmelding>{errorForLinje.innreisedato}</SkjemaelementFeilmelding>
                                 )}
                             </div>
-                            <Button
-                                variant="secondary"
-                                className={classNames(sharedStyles.fjernradknapp, {
-                                    [sharedStyles.skjult]: props.perioder.length < 2,
-                                })}
-                                onClick={() => props.onFjernClick(index)}
-                                type="button"
-                                size="small"
-                            >
-                                {formatMessage('button.fjernReiserad')}
-                            </Button>
-                        </Fieldset>
-                        {errorForLinje && typeof errorForLinje === 'string' && (
-                            <SkjemaelementFeilmelding>{errorForLinje}</SkjemaelementFeilmelding>
-                        )}
-                    </div>
+                        </div>
+                    </SøknadInputliste.Item>
                 );
             })}
-            <SkjemaelementFeilmelding>{typeof props.errors === 'string' && props.errors}</SkjemaelementFeilmelding>
-            <div className={sharedStyles.leggTilFeltKnapp}>
-                <Button variant="secondary" onClick={() => props.onLeggTilClick()} type="button">
-                    {formatMessage('button.leggTilReiserad')}
-                </Button>
-            </div>
-        </div>
+        </SøknadInputliste>
     );
 };
 

@@ -5,7 +5,7 @@ import { useI18n } from '~lib/i18n';
 import epsFormueMessages from '~pages/søknad/steg/formue/epsFormue/ektefellesformue-nb';
 import formueMessages from '~pages/søknad/steg/formue/søkersFormue/dinformue-nb';
 
-import { kjøretøyMessages } from '../../formue/KjøretøyInputFelter';
+import { kjøretøyMessages } from '../../formue/kjøretøyInputfelter/KjøretøyInputFelter';
 
 import { Oppsummeringsfelt } from './Oppsummeringsfelt';
 import { OppsummeringsfeltAvKjøretøy } from './OppsummeringsfeltAvKjøretøy';

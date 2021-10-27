@@ -17,7 +17,7 @@ import Bunnknapper from '../../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../../steg-shared.module.less';
 import sharedI18n from '../../steg-shared-i18n';
 import { inntektsValideringSchema } from '../inntektSøknadUtils';
-import PensjonsInntekter from '../Pensjonsinntekter';
+import PensjonsInntekter from '../pensonsinntekter/Pensjonsinntekter';
 import TrygdeytelserInputFelter from '../TrygdeytelserInputs/TrygdeytelserInputs';
 
 import messages from './inntekt-nb';

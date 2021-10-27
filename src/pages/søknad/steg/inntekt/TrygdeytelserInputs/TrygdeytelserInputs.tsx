@@ -1,11 +1,9 @@
-import { Button, TextField } from '@navikt/ds-react';
+import { Fieldset, TextField } from '@navikt/ds-react';
 import { FormikErrors } from 'formik';
 import * as React from 'react';
 
+import SøknadInputliste from '~features/søknad/søknadInputliste/SøknadInputliste';
 import { useI18n } from '~lib/i18n';
-
-import sharedStyles from '../../../steg-shared.module.less';
-import sharedI18n from '../../steg-shared-i18n';
 
 import styles from './trygdeytelserInputs.module.less';
 
@@ -15,6 +13,8 @@ export const trygdeytelserMessages = {
     'trygdeytelserIUtlandet.valuta': 'Valuta',
     'button.fjern.trygdeytelse': 'Fjern trygdeytelse',
     'button.leggTil.trygdeytelse': 'Legg til annen trygdeytelse',
+
+    'trygdeytelse.legend': 'Trygdeytelse {number}',
 };
 
 const TrygdeytelserInputFelter = (props: {
@@ -25,20 +25,32 @@ const TrygdeytelserInputFelter = (props: {
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
 }) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...trygdeytelserMessages } });
+    const { formatMessage } = useI18n({ messages: trygdeytelserMessages });
 
     return (
-        <ul>
+        <SøknadInputliste
+            leggTilLabel={formatMessage('button.leggTil.trygdeytelse')}
+            onLeggTilClick={props.onLeggTilClick}
+        >
             {props.arr.map((input, idx) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[idx] : null;
                 const feltId = (felt: keyof typeof input) => `${props.feltnavn}[${idx}].${felt}`;
                 const beløpId = feltId('beløp');
                 const typeId = feltId('type');
                 const valutaId = feltId('valuta');
-
                 return (
-                    <li className={styles.trygdeytelserContainer} key={idx}>
-                        <div className={styles.trippleFelter}>
+                    <SøknadInputliste.Item
+                        key={idx}
+                        onFjernClick={() => {
+                            props.onFjernClick(idx);
+                        }}
+                        as={Fieldset}
+                        legend={formatMessage('trygdeytelse.legend', {
+                            number: idx + 1,
+                        })}
+                        hideLegend
+                    >
+                        <div className={styles.trygdeytelseItemContainer}>
                             <TextField
                                 id={beløpId}
                                 name={beløpId}
@@ -91,26 +103,10 @@ const TrygdeytelserInputFelter = (props: {
                                 error={errorForLinje && typeof errorForLinje === 'object' && errorForLinje.type}
                             />
                         </div>
-                        {props.arr.length > 1 && (
-                            <Button
-                                variant="secondary"
-                                className={styles.fjernFeltButton}
-                                onClick={() => props.onFjernClick(idx)}
-                                type="button"
-                            >
-                                {formatMessage('button.fjern.trygdeytelse')}
-                            </Button>
-                        )}
-                        {errorForLinje && typeof errorForLinje === 'string' && errorForLinje}
-                    </li>
+                    </SøknadInputliste.Item>
                 );
             })}
-            <div className={sharedStyles.leggTilFeltKnapp}>
-                <Button variant="secondary" onClick={() => props.onLeggTilClick()} type="button">
-                    {formatMessage('button.leggTil.trygdeytelse')}
-                </Button>
-            </div>
-        </ul>
+        </SøknadInputliste>
     );
 };
 
