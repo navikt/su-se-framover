@@ -47,12 +47,12 @@ const Oppsummering = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: 
             >
                 <Søknadoppsummering søknad={søknadFraStore} søker={props.søker} />
 
-                <div className={styles.meldFraOmEndringerContainer}>
+                <Alert variant="info" className={styles.meldFraOmEndringerContainer}>
                     <Heading level="2" size="medium" spacing>
                         {intl.formatMessage({ id: 'meldFraOmEndringer.tittel' })}
                     </Heading>
                     <BodyLong>{intl.formatMessage({ id: 'meldFraOmEndringer.tekst' })}</BodyLong>
-                </div>
+                </Alert>
 
                 {RemoteData.isFailure(innsending) && (
                     <Alert className={styles.feilmelding} variant="error">
