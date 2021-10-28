@@ -199,6 +199,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     <TextField
                         id={keyOf<FormData>('statsborgerskapAndreLandFritekst')}
                         name={keyOf<FormData>('statsborgerskapAndreLandFritekst')}
+                        className={sharedStyles.narrow}
                         label={formatMessage('statsborger.andre.land.fritekst')}
                         error={formik.errors.statsborgerskapAndreLandFritekst}
                         value={formik.values.statsborgerskapAndreLandFritekst || ''}
