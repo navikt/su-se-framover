@@ -1,4 +1,4 @@
-import { BodyLong, GuidePanel, Heading, Link } from '@navikt/ds-react';
+import { BodyLong, GuidePanel, Heading, Ingress, Link } from '@navikt/ds-react';
 import React from 'react';
 
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
@@ -30,10 +30,8 @@ const Infoside = (props: { nesteUrl: string }) => {
             </Heading>
 
             <section className={styles.section}>
-                <BodyLong spacing>{formatMessage('suppstønadInfo.sikreEnInntekt')}</BodyLong>
-                <BodyLong>{formatMessage('suppstønadInfo.inntekt.medEPS')}</BodyLong>
-                <BodyLong spacing>{formatMessage('suppstønadInfo.inntekt.alene')}</BodyLong>
-                <BodyLong spacing>
+                <Ingress spacing>{formatMessage('suppstønadInfo.ingress')}</Ingress>
+                <BodyLong>
                     <Link target="_blank" href={merOmSuForUføreLink}>
                         {formatMessage('suppstønad.merOmSuForUføre')}
                     </Link>
@@ -54,7 +52,7 @@ const Infoside = (props: { nesteUrl: string }) => {
                 </BodyLong>
                 <BodyLong spacing>{formatMessage('henterInnInfo.brukerTidligereOpplysninger')}</BodyLong>
 
-                <BodyLong spacing>
+                <BodyLong>
                     <Link target="_blank" href={personvernLink}>
                         {formatMessage('henterInnInfo.personvernLinkTekst')}
                     </Link>
