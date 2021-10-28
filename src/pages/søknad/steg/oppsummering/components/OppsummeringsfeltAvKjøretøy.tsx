@@ -9,10 +9,10 @@ export const OppsummeringsfeltAvKjøretøy = (props: {
     arr: Array<{ verdiPåKjøretøy: string; kjøretøyDeEier: string }>;
 }) => {
     return (
-        <div>
+        <ul>
             {props.arr.map((el, idx) => {
                 return (
-                    <div className={styles.oppsummeringsfeltKjøretøyContainer} key={idx}>
+                    <li className={styles.oppsummeringsfeltKjøretøyContainer} key={idx}>
                         <div className={styles.oppsummeringElement}>
                             <Label size="small">{props.labelScndEl}</Label>
                             <BodyShort size="small">{el.kjøretøyDeEier}</BodyShort>
@@ -21,9 +21,9 @@ export const OppsummeringsfeltAvKjøretøy = (props: {
                             <Label size="small">{props.labelFirstEl}</Label>
                             <BodyShort size="small">{el.verdiPåKjøretøy}</BodyShort>
                         </div>
-                    </div>
+                    </li>
                 );
             })}
-        </div>
+        </ul>
     );
 };

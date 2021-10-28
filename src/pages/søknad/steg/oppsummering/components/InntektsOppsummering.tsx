@@ -118,8 +118,16 @@ const InntektsOppsummering = ({
                 <ul>
                     {inntekt.pensjonsInntekt.map((item, index) => (
                         <li className={sharedStyles.oppsummeringDetaljrad} key={index}>
-                            <Oppsummeringsfelt label={formatMessage('mottarPensjon.fra')} verdi={item.ordning} />
-                            <Oppsummeringsfelt label={formatMessage('mottarPensjon.beløp')} verdi={item.beløp} />
+                            <Oppsummeringsfelt
+                                label={formatMessage('mottarPensjon.fra')}
+                                verdi={item.ordning}
+                                size="small"
+                            />
+                            <Oppsummeringsfelt
+                                label={formatMessage('mottarPensjon.beløp')}
+                                verdi={item.beløp}
+                                size="small"
+                            />
                         </li>
                     ))}
                 </ul>
