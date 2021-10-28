@@ -48,7 +48,6 @@ const TrygdeytelserInputFelter = (props: {
                         legend={formatMessage('trygdeytelse.legend', {
                             number: idx + 1,
                         })}
-                        hideLegend
                     >
                         <div className={styles.trygdeytelseItemContainer}>
                             <TextField

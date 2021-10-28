@@ -129,9 +129,9 @@ const schema = yup.object<FormData>({
 const MultiTidsperiodevelger = (props: {
     perioder: Array<{ utreisedato: string; innreisedato: string }>;
     errors: string | string[] | Array<FormikErrors<{ utreisedato: string; innreisedato: string }>> | undefined;
-    legend: string;
     feltnavn: string;
     limitations?: { innreise?: DatepickerLimitations; utreise?: DatepickerLimitations };
+    legendForNumber(num: number): string;
     onChange: (element: { index: number; utreisedato: string; innreisedato: string }) => void;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
@@ -152,10 +152,10 @@ const MultiTidsperiodevelger = (props: {
                             props.onFjernClick(index);
                         }}
                         as={Fieldset}
-                        legend={props.legend}
+                        legend={props.legendForNumber(index + 1)}
                         error={errorForLinje && typeof errorForLinje === 'object'}
-                        hideLegend
                     >
+                        {/*TODO: Fiks nummer på legend: */}
                         <div className={styles.reiseItemContainer}>
                             <div>
                                 <Label as="label" htmlFor={utreisedatoId}>
@@ -309,7 +309,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                     {formik.values.harReistTilUtlandetSiste90dager && (
                         <MultiTidsperiodevelger
-                            legend={formatMessage('gruppe.tidligereUtenlandsopphold.legend')}
+                            legendForNumber={(x) => formatMessage('gruppe.tidligereUtenlandsoppholdX.legend', { x })}
                             feltnavn="harReistDatoer"
                             perioder={formik.values.harReistDatoer}
                             limitations={{
@@ -372,7 +372,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                     {formik.values.skalReiseTilUtlandetNeste12Måneder && (
                         <MultiTidsperiodevelger
-                            legend={formatMessage('gruppe.kommendeUtenlandsopphold.legend')}
+                            legendForNumber={(x) => formatMessage('gruppe.kommendeUtenlandsoppholdX.legend', { x })}
                             feltnavn="skalReiseDatoer"
                             perioder={formik.values.skalReiseDatoer}
                             limitations={{

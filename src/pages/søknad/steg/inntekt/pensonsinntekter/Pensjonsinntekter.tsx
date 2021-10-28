@@ -12,7 +12,7 @@ export const pensjonsinntekterMessages = {
     'mottarPensjon.beløp': 'Hvor mye penger får du i måneden?',
     'button.leggTil.pensjonsgiver': 'Legg til annen pensjonsgiver',
 
-    'pensjonsgiver.legend': 'Pensjonsgiver {number}',
+    'pensjonsgiver.legend': 'Pensjon {number}',
 };
 
 const PensjonsInntekter = (props: {
@@ -45,7 +45,6 @@ const PensjonsInntekter = (props: {
                         legend={formatMessage('pensjonsgiver.legend', {
                             number: idx + 1,
                         })}
-                        hideLegend
                     >
                         <div className={styles.itemContainer}>
                             <TextField

@@ -48,7 +48,6 @@ const KjøretøyInputFelter = (props: {
                             legend={formatMessage('item.legend', {
                                 number: index + 1,
                             })}
-                            hideLegend
                         >
                             <div className={styles.itemContainer}>
                                 <TextField
