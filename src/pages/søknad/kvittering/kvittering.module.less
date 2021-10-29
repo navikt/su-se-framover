@@ -1,64 +1,53 @@
 @import '~/styles/variables.less';
 
-.feilContainer {
-    margin-top: @spacing-xl;
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--navds-spacing-8);
+
+    ul {
+        list-style: disc inside;
+    }
+
+    ol {
+        list-style: decimal inside;
+    }
 }
 
-.suksessContainer {
-    margin-top: @spacing-l;
+.headingpanel {
+    margin-bottom: var(--navds-spacing-8);
     display: flex;
-    justify-content: center;
-    margin-bottom: @spacing-xl;
+    gap: var(--navds-spacing-4);
 
-    > :not(:last-child) {
-        margin-right: @spacing-xxl;
-    }
-
-    @media (max-width: @screen-md) {
+    .headingContainer {
+        display: flex;
         flex-direction: column;
     }
+
+    .successIcon {
+        color: var(--navds-color-green-50);
+        font-size: var(--navds-font-size-heading-xlarge);
+    }
+}
+
+.buttonContainer {
+    width: 50%;
+    margin: 0 auto;
+    display: flex;
+    gap: var(--navds-spacing-4);
+
+    > button {
+        width: 50%;
+    }
+}
+
+.vedleggHeadingContainer {
+    display: flex;
+    align-items: center;
+    gap: var(--navds-spacing-4);
 }
 
 .senderSøknadSpinnerContainer {
     display: flex;
     justify-content: center;
-}
-
-.tilVeileder {
-    margin-top: @spacing-l;
-
-    h3 {
-        margin-bottom: @spacing-xs;
-    }
-
-    ol {
-        list-style: decimal inside;
-
-        li {
-            margin-bottom: @spacing-xs;
-        }
-    }
-}
-
-.list {
-    .listItem {
-        display: list-item;
-        list-style-type: disc;
-        margin-left: @spacing;
-    }
-}
-
-.nySøknadKnapp {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-
-    .avsluttKnapp {
-        margin-right: @spacing;
-    }
-
-    .errorMessageContainer {
-        display: flex;
-        margin-bottom: @spacing;
-    }
 }
