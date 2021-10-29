@@ -42,10 +42,10 @@ const Saksoversikt = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        if (urlParams.sakId && RemoteData.isInitial(sak)) {
+        if (urlParams.sakId) {
             dispatch(sakSlice.fetchSak({ sakId: urlParams.sakId }));
         }
-    }, [sak._tag]);
+    }, []);
 
     useEffect(() => {
         if (RemoteData.isSuccess(sak)) {
