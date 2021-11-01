@@ -93,10 +93,7 @@ export async function getOpenIdClient(issuerUrl: string) {
         if (Config.server.proxy) {
             const proxyAgent = new HttpsProxyAgent(Config.server.proxy);
             OpenIdClient.custom.setHttpOptionsDefaults({
-                agent: {
-                    http: proxyAgent,
-                    https: proxyAgent,
-                },
+                agent: proxyAgent,
             });
         }
         const issuer = await OpenIdClient.Issuer.discover(issuerUrl);
