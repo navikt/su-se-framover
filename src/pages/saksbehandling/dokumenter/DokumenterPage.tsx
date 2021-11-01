@@ -88,22 +88,18 @@ const DokumenterPage = (props: { sak: Sak }) => {
                                                                 className={styles.linkPanelBeskrivelse}
                                                             >
                                                                 {DateUtils.formatDateTime(d.opprettet)}
-                                                                <div className={styles.statusContainer}>
-                                                                    <Tag
-                                                                        variant={d.journalført ? 'success' : 'error'}
-                                                                        size="small"
-                                                                    >
-                                                                        {d.journalført
-                                                                            ? 'Journalført'
-                                                                            : 'Ikke journalført'}
-                                                                    </Tag>
-                                                                    <Tag
-                                                                        variant={d.brevErBestilt ? 'success' : 'error'}
-                                                                        size="small"
-                                                                    >
-                                                                        {d.brevErBestilt ? 'Sendt' : 'Ikke sendt'}
-                                                                    </Tag>
-                                                                </div>
+                                                                <Tag
+                                                                    variant={d.journalført ? 'success' : 'error'}
+                                                                    size="small"
+                                                                >
+                                                                    {d.journalført ? 'Journalført' : 'Ikke journalført'}
+                                                                </Tag>
+                                                                <Tag
+                                                                    variant={d.brevErBestilt ? 'success' : 'error'}
+                                                                    size="small"
+                                                                >
+                                                                    {d.brevErBestilt ? 'Sendt' : 'Ikke sendt'}
+                                                                </Tag>
                                                             </LinkPanel.Description>
                                                         </div>
                                                     </div>
