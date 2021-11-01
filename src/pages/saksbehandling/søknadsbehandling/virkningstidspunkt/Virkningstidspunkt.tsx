@@ -109,7 +109,7 @@ const Virkningstidspunkt = (props: VilkårsvurderingBaseProps) => {
 
     React.useEffect(() => {
         const sub = form.watch((values, { name }) => {
-            if (name === 'fraOgMed' && values.fraOgMed !== null && values.tilOgMed === null) {
+            if (name === 'fraOgMed' && values.fraOgMed && values.tilOgMed === null) {
                 form.setValue('tilOgMed', DateFns.endOfMonth(DateFns.addMonths(values.fraOgMed, 11)), {
                     shouldValidate: true,
                 });
