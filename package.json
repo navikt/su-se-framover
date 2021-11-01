@@ -104,7 +104,7 @@
         "react-modal": "^3.14.3",
         "react-redux": "^7.2.6",
         "react-router-dom": "^5.3.0",
-        "redux": "^4.1.1",
+        "redux": "^4.1.2",
         "redux-thunk": "^2.4.0",
         "reset-css": "^5.0.1",
         "styles": "^0.2.1",
