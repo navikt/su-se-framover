@@ -48,7 +48,7 @@
         "@navikt/ds-css": "^0.9.2",
         "@navikt/ds-css-internal": "^0.6.0",
         "@navikt/ds-datepicker": "^1.0.4",
-        "@navikt/ds-icons": "^0.5.6",
+        "@navikt/ds-icons": "^0.5.10",
         "@navikt/ds-react": "^0.10.7",
         "@navikt/ds-react-internal": "^0.6.5",
         "@navikt/fnrvalidator": "^1.1.4",
