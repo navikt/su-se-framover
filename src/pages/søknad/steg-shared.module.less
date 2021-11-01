@@ -1,21 +1,15 @@
 @import '~/styles/variables.less';
 
 .container {
+    --su-soknad-spacing-default: var(--navds-spacing-8);
+
     width: 100%;
 }
 
-.formContainer {
-    .blokk();
-}
-
-.sporsmal {
-    .blokk-s();
-}
-
-.inputFelterDiv {
+.oppsummeringDetaljrad {
     display: flex;
-    margin-bottom: @spacing-l;
-    gap: @spacing;
+    gap: var(--su-soknad-spacing-default);
+    padding-left: var(--su-soknad-spacing-default);
 }
 
 .leggTilFeltKnapp {
@@ -25,30 +19,9 @@
 }
 
 .marginBottom {
-    margin-bottom: @spacing-l;
+    margin-bottom: var(--su-soknad-spacing-default);
 }
 
 .narrow {
     width: 50%;
-}
-
-.inputFelterOgFjernKnappContainer {
-    display: flex;
-    margin-bottom: @spacing;
-    justify-content: space-evenly;
-    gap: @spacing-xs;
-
-    .fjernradknapp {
-        align-self: flex-end;
-
-        &.skjult {
-            visibility: hidden;
-        }
-    }
-
-    &.radfeil {
-        .fjernradknapp {
-            align-self: center;
-        }
-    }
 }

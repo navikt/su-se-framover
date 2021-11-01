@@ -1,0 +1,18 @@
+@import '~/styles/variables.less';
+
+.container {
+    --spacing: var(--su-soknad-spacing-default);
+
+    margin-bottom: var(--spacing);
+
+    + .container {
+        border-top: var(--navds-border-default);
+        padding-top: var(--spacing);
+    }
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--navds-spacing-8);
+}

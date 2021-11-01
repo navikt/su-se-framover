@@ -12,6 +12,7 @@ import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import { Adresse, IngenAdresseGrunn } from '~api/personApi';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
+import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { DelerBoligMed, EPSFormData } from '~features/søknad/types';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
@@ -222,26 +223,12 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
             }}
             className={sharedStyles.container}
         >
-            <div className={sharedStyles.formContainer}>
-                <BooleanRadioGroup
-                    name={keyOf<FormData>('borOgOppholderSegINorge')}
-                    className={sharedStyles.sporsmal}
-                    legend={formatMessage('borOgOppholderSegINorge.label')}
-                    error={formik.errors.borOgOppholderSegINorge}
-                    value={formik.values.borOgOppholderSegINorge}
-                    onChange={(val) => {
-                        formik.setValues((v) => ({ ...v, borOgOppholderSegINorge: val }));
-                    }}
-                />
-                {formik.values.borOgOppholderSegINorge === false && (
-                    <Alert variant="warning" className={sharedStyles.marginBottom}>
-                        {formatMessage('borOgOppholderSegINorge.ikkeOppholdINorge')}
-                    </Alert>
-                )}
-
+            <SøknadSpørsmålsgruppe
+                legend={formatMessage('institusjonsopphold.legend')}
+                className={sharedStyles.formContainer}
+            >
                 <BooleanRadioGroup
                     name={keyOf<FormData>('innlagtPåInstitusjon')}
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('innlagtPåInstitusjon.label')}
                     error={formik.errors.innlagtPåInstitusjon}
                     value={formik.values.innlagtPåInstitusjon}
@@ -257,7 +244,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                 />
 
                 {formik.values.innlagtPåInstitusjon && (
-                    <div className={styles.innlagtPåInstitusjonFelter}>
+                    <div>
                         <div className={styles.datoForInnleggelseContainer}>
                             <Label as="label" htmlFor={keyOf<FormData>('datoForInnleggelse')}>
                                 {formatMessage('innlagtPåInstitusjon.datoForInnleggelse')}
@@ -333,10 +320,23 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         )}
                     </div>
                 )}
+            </SøknadSpørsmålsgruppe>
+            <SøknadSpørsmålsgruppe legend={formatMessage('bosituasjon.legend')} className={sharedStyles.formContainer}>
+                <BooleanRadioGroup
+                    name={keyOf<FormData>('borOgOppholderSegINorge')}
+                    legend={formatMessage('borOgOppholderSegINorge.label')}
+                    error={formik.errors.borOgOppholderSegINorge}
+                    value={formik.values.borOgOppholderSegINorge}
+                    onChange={(val) => {
+                        formik.setValues((v) => ({ ...v, borOgOppholderSegINorge: val }));
+                    }}
+                />
+                {formik.values.borOgOppholderSegINorge === false && (
+                    <Alert variant="warning">{formatMessage('borOgOppholderSegINorge.ikkeOppholdINorge')}</Alert>
+                )}
 
                 <BooleanRadioGroup
                     name={keyOf<FormData>('delerBoligMedPersonOver18')}
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('delerBoligMed.delerBoligMedPersonOver18')}
                     error={formik.errors.delerBoligMedPersonOver18}
                     value={formik.values.delerBoligMedPersonOver18}
@@ -351,7 +351,6 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                 />
                 {formik.values.delerBoligMedPersonOver18 && (
                     <RadioGroup
-                        className={sharedStyles.sporsmal}
                         error={formik.errors.delerBoligMed}
                         legend={formatMessage('delerBoligMed.delerMedHvem')}
                         name={keyOf<FormData>('delerBoligMed')}
@@ -475,7 +474,7 @@ const BoOgOppholdINorge = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                 {formik.values.ingenAdresseGrunn === IngenAdresseGrunn.BOR_PÅ_ANNEN_ADRESSE && (
                     <Alert variant="warning">{formatMessage('adresse.ingenAdresse.borPåAnnenAdresse.advarsel')}</Alert>
                 )}
-            </div>
+            </SøknadSpørsmålsgruppe>
             <Feiloppsummering
                 className={sharedStyles.marginBottom}
                 tittel={formatMessage('feiloppsummering.title')}

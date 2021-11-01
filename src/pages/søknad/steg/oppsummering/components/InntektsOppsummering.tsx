@@ -6,7 +6,7 @@ import { useI18n } from '~lib/i18n';
 import inntektMessages from '~pages/søknad/steg/inntekt/søkersInntekt/inntekt-nb';
 
 import sharedStyles from '../../../steg-shared.module.less';
-import { pensjonsinntekterMessages } from '../../inntekt/Pensjonsinntekter';
+import { pensjonsinntekterMessages } from '../../inntekt/pensonsinntekter/Pensjonsinntekter';
 import { trygdeytelserMessages } from '../../inntekt/TrygdeytelserInputs/TrygdeytelserInputs';
 
 import { OppsummeringAvTrygdeytelser } from './OppsummeringAvTrygdeytelser';
@@ -114,13 +114,24 @@ const InntektsOppsummering = ({
                 label={formatMessage('mottarPensjon.label')}
                 verdi={inntekt.mottarPensjon ? 'Ja' : inntekt.mottarPensjon === false ? 'Nei' : 'Ubesvart'}
             />
-            {inntekt.mottarPensjon &&
-                inntekt.pensjonsInntekt.map((item, index) => (
-                    <div className={sharedStyles.inputFelterDiv} key={index}>
-                        <Oppsummeringsfelt label={formatMessage('mottarPensjon.fra')} verdi={item.ordning} />
-                        <Oppsummeringsfelt label={formatMessage('mottarPensjon.beløp')} verdi={item.beløp} />
-                    </div>
-                ))}
+            {inntekt.mottarPensjon && (
+                <ul>
+                    {inntekt.pensjonsInntekt.map((item, index) => (
+                        <li className={sharedStyles.oppsummeringDetaljrad} key={index}>
+                            <Oppsummeringsfelt
+                                label={formatMessage('mottarPensjon.fra')}
+                                verdi={item.ordning}
+                                size="small"
+                            />
+                            <Oppsummeringsfelt
+                                label={formatMessage('mottarPensjon.beløp')}
+                                verdi={item.beløp}
+                                size="small"
+                            />
+                        </li>
+                    ))}
+                </ul>
+            )}
         </>
     );
 };

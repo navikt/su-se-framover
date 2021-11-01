@@ -1,8 +1,8 @@
-import { BodyLong, Heading, Link } from '@navikt/ds-react';
+import { BodyLong, GuidePanel, Heading, Ingress, Link } from '@navikt/ds-react';
 import React from 'react';
-import { IntlProvider, FormattedMessage } from 'react-intl';
 
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
+import { useI18n } from '~lib/i18n';
 
 import messages from './infoside-nb';
 import styles from './infoside.module.less';
@@ -13,93 +13,73 @@ const Infoside = (props: { nesteUrl: string }) => {
         'https://www.nav.no/no/person/pensjon/andre-pensjonsordninger/supplerende-stonad-for-ufore-flyktninger';
     const personvernLink = 'https://www.nav.no/no/nav-og-samfunn/om-nav/personvern-i-arbeids-og-velferdsetaten';
 
+    const { formatMessage } = useI18n({ messages });
+
     return (
-        <IntlProvider locale="nb" messages={messages}>
-            <div className={styles.pageContainer}>
-                <Heading level="1" size="2xlarge" spacing>
-                    <FormattedMessage id="page.tittel" />
+        <div className={styles.pageContainer}>
+            <GuidePanel className={styles.guide}>
+                <BodyLong>
+                    {formatMessage('suppstønadInfo.kanFåSupp', {
+                        b: (text) => <b>{text}</b>,
+                    })}
+                </BodyLong>
+            </GuidePanel>
+
+            <Heading level="1" size="2xlarge" spacing>
+                {formatMessage('page.tittel')}
+            </Heading>
+
+            <section className={styles.section}>
+                <Ingress spacing>{formatMessage('suppstønadInfo.ingress')}</Ingress>
+                <BodyLong>
+                    <Link target="_blank" href={merOmSuForUføreLink}>
+                        {formatMessage('suppstønad.merOmSuForUføre')}
+                    </Link>
+                </BodyLong>
+            </section>
+
+            <section className={styles.section}>
+                <Heading level="2" size="small" spacing>
+                    {formatMessage('henterInnInfo.ingress')}
                 </Heading>
+                <BodyLong>{formatMessage('henterInnInfo.viHenterInfo')}</BodyLong>
+                <BodyLong spacing>
+                    <ul className={styles.list}>
+                        <li className={styles.listItem}>{formatMessage('henterInnInfo.viHenter.personinfo')}</li>
+                        <li className={styles.listItem}>{formatMessage('henterInnInfo.viHenter.arbeidsforhold')}</li>
+                        <li className={styles.listItem}>{formatMessage('henterInnInfo.viHenter.flyktningsstatus')}</li>
+                    </ul>
+                </BodyLong>
+                <BodyLong spacing>{formatMessage('henterInnInfo.brukerTidligereOpplysninger')}</BodyLong>
 
-                <div>
-                    <BodyLong>
-                        <FormattedMessage id="suppstønadInfo.kanFåSupp" />
-                    </BodyLong>
-                    <BodyLong spacing>
-                        <FormattedMessage id="suppstønadInfo.sikreEnInntekt" />
-                    </BodyLong>
-                    <BodyLong>
-                        <FormattedMessage id="suppstønadInfo.inntekt.medEPS" />
-                    </BodyLong>
-                    <BodyLong spacing>
-                        <FormattedMessage id="suppstønadInfo.inntekt.alene" />
-                    </BodyLong>
-                    <BodyLong spacing>
-                        <Link target="_blank" href={merOmSuForUføreLink}>
-                            <FormattedMessage id="suppstønad.merOmSuForUføre" />
-                        </Link>
-                    </BodyLong>
-                </div>
+                <BodyLong>
+                    <Link target="_blank" href={personvernLink}>
+                        {formatMessage('henterInnInfo.personvernLinkTekst')}
+                    </Link>
+                </BodyLong>
+            </section>
 
-                <section className={styles.section}>
-                    <Heading level="2" size="small" spacing>
-                        <FormattedMessage id="henterInnInfo.ingress" />
-                    </Heading>
-                    <BodyLong>
-                        <FormattedMessage id="henterInnInfo.viHenterInfo" />
-                    </BodyLong>
-                    <BodyLong spacing>
-                        <ul className={styles.list}>
-                            <li className={styles.listItem}>
-                                <FormattedMessage id="henterInnInfo.viHenter.personinfo" />
-                            </li>
-                            <li className={styles.listItem}>
-                                <FormattedMessage id="henterInnInfo.viHenter.arbeidsforhold" />
-                            </li>
-                            <li className={styles.listItem}>
-                                <FormattedMessage id="henterInnInfo.viHenter.flyktningsstatus" />
-                            </li>
-                        </ul>
-                    </BodyLong>
-                    <BodyLong spacing>
-                        <FormattedMessage id="henterInnInfo.brukerTidligereOpplysninger" />
-                    </BodyLong>
+            <section className={styles.section}>
+                <Heading level="2" size="small" spacing>
+                    {formatMessage('viktigÅVite.ingress')}
+                </Heading>
+                <BodyLong spacing>{formatMessage('viktigÅVite.blirIkkeLagret')}</BodyLong>
+                <BodyLong spacing>
+                    {formatMessage('viktigÅVite.manglerDuDokumentasjon', {
+                        //eslint-disable-next-line react/display-name
+                        navLink: (tekst) => (
+                            <Link target="_blank" href={suUførFlyktningLink}>
+                                {tekst}
+                            </Link>
+                        ),
+                    })}
+                </BodyLong>
+            </section>
 
-                    <BodyLong spacing>
-                        <Link target="_blank" href={personvernLink}>
-                            <FormattedMessage id="henterInnInfo.personvernLinkTekst" />
-                        </Link>
-                    </BodyLong>
-                </section>
-
-                <section className={styles.section}>
-                    <Heading level="2" size="small" spacing>
-                        <FormattedMessage id="viktigÅVite.ingress" />
-                    </Heading>
-                    <BodyLong spacing>
-                        <FormattedMessage id="viktigÅVite.blirIkkeLagret" />
-                    </BodyLong>
-                    <BodyLong spacing>
-                        <FormattedMessage
-                            id="viktigÅVite.manglerDuDokumentasjon"
-                            values={{
-                                //eslint-disable-next-line react/display-name
-                                navLink: (tekst: string) => (
-                                    <Link target="_blank" href={suUførFlyktningLink}>
-                                        {tekst}
-                                    </Link>
-                                ),
-                            }}
-                        />
-                    </BodyLong>
-                </section>
-
-                <div className={styles.knappContainer}>
-                    <LinkAsButton variant="primary" href={props.nesteUrl}>
-                        <FormattedMessage id="knapp.neste" />
-                    </LinkAsButton>
-                </div>
-            </div>
-        </IntlProvider>
+            <LinkAsButton variant="primary" href={props.nesteUrl} className={styles.knapp}>
+                {formatMessage('knapp.neste')}
+            </LinkAsButton>
+        </div>
     );
 };
 

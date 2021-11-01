@@ -1,5 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, BodyShort, CopyToClipboard, Loader } from '@navikt/ds-react';
+import { Alert, BodyShort, Loader } from '@navikt/ds-react';
+import { CopyToClipboard } from '@navikt/ds-react-internal';
 import { pipe } from 'fp-ts/lib/function';
 import * as React from 'react';
 import { Link } from 'react-router-dom';

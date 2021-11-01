@@ -1,6 +1,5 @@
 import { Datepicker, DatepickerLimitations } from '@navikt/ds-datepicker';
-import { Alert, Button, Label, Fieldset, BodyLong } from '@navikt/ds-react';
-import classNames from 'classnames';
+import { Alert, Label, Fieldset, BodyLong } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import { useFormik, FormikErrors } from 'formik';
 import * as React from 'react';
@@ -10,6 +9,8 @@ import { BooleanRadioGroup } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
 import SkjemaelementFeilmelding from '~components/formElements/SkjemaelementFeilmelding';
+import SøknadInputliste from '~features/søknad/søknadInputliste/SøknadInputliste';
+import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { Utenlandsopphold as UtenlandsoppholdType } from '~features/søknad/types';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
@@ -128,9 +129,9 @@ const schema = yup.object<FormData>({
 const MultiTidsperiodevelger = (props: {
     perioder: Array<{ utreisedato: string; innreisedato: string }>;
     errors: string | string[] | Array<FormikErrors<{ utreisedato: string; innreisedato: string }>> | undefined;
-    legend: string;
     feltnavn: string;
     limitations?: { innreise?: DatepickerLimitations; utreise?: DatepickerLimitations };
+    legendForNumber(num: number): string;
     onChange: (element: { index: number; utreisedato: string; innreisedato: string }) => void;
     onLeggTilClick: () => void;
     onFjernClick: (index: number) => void;
@@ -138,21 +139,24 @@ const MultiTidsperiodevelger = (props: {
     const { formatMessage } = useI18n({ messages: { ...sharedI18n, ...messages } });
 
     return (
-        <div>
+        <SøknadInputliste leggTilLabel={formatMessage('button.leggTilReiserad')} onLeggTilClick={props.onLeggTilClick}>
             {props.perioder.map((periode, index) => {
                 const errorForLinje = Array.isArray(props.errors) ? props.errors[index] : null;
                 const baseId = `${props.feltnavn}[${index}]`;
                 const utreisedatoId = `${baseId}.utreisedato`;
                 const innreisedatoId = `${baseId}.innreisedato`;
-
                 return (
-                    <div key={baseId} id={baseId} className={styles.reiseradContainer}>
-                        <Fieldset
-                            className={classNames(sharedStyles.inputFelterOgFjernKnappContainer, {
-                                [sharedStyles.radfeil]: errorForLinje && typeof errorForLinje === 'object',
-                            })}
-                            legend={<span className="sr-only">{props.legend}</span>}
-                        >
+                    <SøknadInputliste.Item
+                        key={index}
+                        onFjernClick={() => {
+                            props.onFjernClick(index);
+                        }}
+                        as={Fieldset}
+                        legend={props.legendForNumber(index + 1)}
+                        error={errorForLinje && typeof errorForLinje === 'object'}
+                    >
+                        {/*TODO: Fiks nummer på legend: */}
+                        <div className={styles.reiseItemContainer}>
                             <div>
                                 <Label as="label" htmlFor={utreisedatoId}>
                                     {formatMessage('utreisedato.label')}
@@ -224,31 +228,11 @@ const MultiTidsperiodevelger = (props: {
                                     <SkjemaelementFeilmelding>{errorForLinje.innreisedato}</SkjemaelementFeilmelding>
                                 )}
                             </div>
-                            <Button
-                                variant="secondary"
-                                className={classNames(sharedStyles.fjernradknapp, {
-                                    [sharedStyles.skjult]: props.perioder.length < 2,
-                                })}
-                                onClick={() => props.onFjernClick(index)}
-                                type="button"
-                                size="small"
-                            >
-                                {formatMessage('button.fjernReiserad')}
-                            </Button>
-                        </Fieldset>
-                        {errorForLinje && typeof errorForLinje === 'string' && (
-                            <SkjemaelementFeilmelding>{errorForLinje}</SkjemaelementFeilmelding>
-                        )}
-                    </div>
+                        </div>
+                    </SøknadInputliste.Item>
                 );
             })}
-            <SkjemaelementFeilmelding>{typeof props.errors === 'string' && props.errors}</SkjemaelementFeilmelding>
-            <div className={sharedStyles.leggTilFeltKnapp}>
-                <Button variant="secondary" onClick={() => props.onLeggTilClick()} type="button">
-                    {formatMessage('button.leggTilReiserad')}
-                </Button>
-            </div>
-        </div>
+        </SøknadInputliste>
     );
 };
 
@@ -303,7 +287,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                     focusAfterTimeout(feiloppsummeringref)();
                 }}
             >
-                <div className={sharedStyles.formContainer}>
+                <SøknadSpørsmålsgruppe withoutLegend>
                     <BooleanRadioGroup
                         name="harReistTilUtlandetSiste90dager"
                         className={sharedStyles.sporsmal}
@@ -325,7 +309,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                     {formik.values.harReistTilUtlandetSiste90dager && (
                         <MultiTidsperiodevelger
-                            legend={formatMessage('gruppe.tidligereUtenlandsopphold.legend')}
+                            legendForNumber={(x) => formatMessage('gruppe.tidligereUtenlandsoppholdX.legend', { x })}
                             feltnavn="harReistDatoer"
                             perioder={formik.values.harReistDatoer}
                             limitations={{
@@ -388,7 +372,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                     {formik.values.skalReiseTilUtlandetNeste12Måneder && (
                         <MultiTidsperiodevelger
-                            legend={formatMessage('gruppe.kommendeUtenlandsopphold.legend')}
+                            legendForNumber={(x) => formatMessage('gruppe.kommendeUtenlandsoppholdX.legend', { x })}
                             feltnavn="skalReiseDatoer"
                             perioder={formik.values.skalReiseDatoer}
                             limitations={{
@@ -429,7 +413,7 @@ const Utenlandsopphold = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                             }}
                         />
                     )}
-                </div>
+                </SøknadSpørsmålsgruppe>
                 {antallDagerIUtlandet > 90 && (
                     <Alert variant="warning" className={styles.passert90DagerAdvarsel}>
                         {formatMessage('passert90Dager.info', {

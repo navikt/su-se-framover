@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { BooleanRadioGroup, CollapsableFormElementDescription } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
+import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { TypeOppholdstillatelse } from '~features/søknad/types';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
@@ -102,10 +103,9 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
             }}
             className={sharedStyles.container}
         >
-            <div className={sharedStyles.formContainer}>
+            <SøknadSpørsmålsgruppe withoutLegend className={sharedStyles.formContainer}>
                 <BooleanRadioGroup
                     name={keyOf<FormData>('erFlyktning')}
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('flyktning.label')}
                     description={
                         <CollapsableFormElementDescription title={formatMessage('flyktning.hjelpetekst.tittel')}>
@@ -122,13 +122,10 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     }
                 />
                 {formik.values.erFlyktning === false && (
-                    <Alert variant="warning" className={sharedStyles.marginBottom}>
-                        {formatMessage('flyktning.måVæreFlyktning')}
-                    </Alert>
+                    <Alert variant="warning">{formatMessage('flyktning.måVæreFlyktning')}</Alert>
                 )}
                 <BooleanRadioGroup
                     name={keyOf<FormData>('erNorskStatsborger')}
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('norsk.statsborger.label')}
                     error={formik.errors.erNorskStatsborger}
                     value={formik.values.erNorskStatsborger}
@@ -144,7 +141,6 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                 {formik.values.erNorskStatsborger === false && (
                     <BooleanRadioGroup
                         name={keyOf<FormData>('harOppholdstillatelse')}
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('oppholdstillatelse.label')}
                         error={formik.errors.harOppholdstillatelse}
                         value={formik.values.harOppholdstillatelse}
@@ -159,7 +155,6 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                 )}
                 {formik.values.harOppholdstillatelse === true && (
                     <RadioGroup
-                        className={sharedStyles.sporsmal}
                         error={formik.errors.typeOppholdstillatelse}
                         legend={formatMessage('oppholdstillatelse.type')}
                         name={keyOf<FormData>('typeOppholdstillatelse')}
@@ -180,20 +175,15 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     </RadioGroup>
                 )}
                 {formik.values.harOppholdstillatelse === false && (
-                    <Alert variant="warning" className={sharedStyles.marginBottom}>
-                        {formatMessage('oppholdstillatelse.ikkeLovligOpphold')}
-                    </Alert>
+                    <Alert variant="warning">{formatMessage('oppholdstillatelse.ikkeLovligOpphold')}</Alert>
                 )}
 
                 {formik.values.typeOppholdstillatelse === 'midlertidig' && (
-                    <Alert variant="warning" className={sharedStyles.marginBottom}>
-                        {formatMessage('oppholdstillatelse.midlertidig.info')}
-                    </Alert>
+                    <Alert variant="warning">{formatMessage('oppholdstillatelse.midlertidig.info')}</Alert>
                 )}
 
                 <BooleanRadioGroup
                     name={keyOf<FormData>('statsborgerskapAndreLand')}
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('statsborger.andre.land.label')}
                     error={formik.errors.statsborgerskapAndreLand}
                     value={formik.values.statsborgerskapAndreLand}
@@ -209,6 +199,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                     <TextField
                         id={keyOf<FormData>('statsborgerskapAndreLandFritekst')}
                         name={keyOf<FormData>('statsborgerskapAndreLandFritekst')}
+                        className={sharedStyles.narrow}
                         label={formatMessage('statsborger.andre.land.fritekst')}
                         error={formik.errors.statsborgerskapAndreLandFritekst}
                         value={formik.values.statsborgerskapAndreLandFritekst || ''}
@@ -219,7 +210,7 @@ const FlyktningstatusOppholdstillatelse = (props: { forrigeUrl: string; nesteUrl
                         autoFocus
                     />
                 )}
-            </div>
+            </SøknadSpørsmålsgruppe>
             <Feiloppsummering
                 className={sharedStyles.marginBottom}
                 tittel={formatMessage('feiloppsummering.title')}

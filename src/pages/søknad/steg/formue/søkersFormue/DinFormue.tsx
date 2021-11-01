@@ -1,5 +1,4 @@
 import { TextField } from '@navikt/ds-react';
-import classNames from 'classnames';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -7,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { BooleanRadioGroup } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
+import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
 import { keyOf } from '~lib/types';
@@ -17,7 +17,7 @@ import Bunnknapper from '../../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../../steg-shared.module.less';
 import sharedI18n from '../../steg-shared-i18n';
 import { formueValideringSchema } from '../formueSøknadUtils';
-import KjøretøyInputFelter from '../KjøretøyInputFelter';
+import KjøretøyInputFelter from '../kjøretøyInputfelter/KjøretøyInputFelter';
 
 import messages from './dinformue-nb';
 
@@ -99,10 +99,9 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
             }}
             className={sharedStyles.container}
         >
-            <div className={sharedStyles.formContainer}>
+            <SøknadSpørsmålsgruppe legend={formatMessage('legend.eiendom')}>
                 <BooleanRadioGroup
                     name={keyOf<FormData>('eierBolig')}
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('eierBolig.label')}
                     error={formik.errors.eierBolig}
                     value={formik.values.eierBolig}
@@ -123,7 +122,6 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                 {formik.values.eierBolig && (
                     <BooleanRadioGroup
                         name={keyOf<FormData>('borIBolig')}
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('eierBolig.borIBolig')}
                         error={formik.errors.borIBolig}
                         value={formik.values.borIBolig}
@@ -139,10 +137,11 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                 )}
 
                 {formik.values.borIBolig === false && (
-                    <div className={sharedStyles.inputFelterDiv}>
+                    <>
                         <TextField
                             id={keyOf<FormData>('verdiPåBolig')}
                             name={keyOf<FormData>('verdiPåBolig')}
+                            className={sharedStyles.narrow}
                             label={formatMessage('eierBolig.formuePåBolig')}
                             value={formik.values.verdiPåBolig || ''}
                             error={formik.errors.verdiPåBolig}
@@ -155,19 +154,19 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                         <TextField
                             id={keyOf<FormData>('boligBrukesTil')}
                             name={keyOf<FormData>('boligBrukesTil')}
+                            className={sharedStyles.narrow}
                             label={formatMessage('eierBolig.boligBrukesTil')}
                             value={formik.values.boligBrukesTil || ''}
                             error={formik.errors.boligBrukesTil}
                             onChange={formik.handleChange}
                             autoComplete="off"
                         />
-                    </div>
+                    </>
                 )}
 
                 {formik.values.eierBolig === false && (
                     <BooleanRadioGroup
                         name={keyOf<FormData>('harDepositumskonto')}
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('depositum.label')}
                         error={formik.errors.harDepositumskonto}
                         value={formik.values.harDepositumskonto}
@@ -183,10 +182,11 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                 )}
 
                 {formik.values.harDepositumskonto && (
-                    <div className={sharedStyles.inputFelterDiv}>
+                    <>
                         <TextField
                             id={keyOf<FormData>('depositumsBeløp')}
                             name="depositumsBeløp"
+                            className={sharedStyles.narrow}
                             label={formatMessage('depositum.beløp')}
                             value={formik.values.depositumsBeløp || ''}
                             error={formik.errors.depositumsBeløp}
@@ -199,19 +199,19 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                         <TextField
                             id={keyOf<FormData>('kontonummer')}
                             name={keyOf<FormData>('kontonummer')}
+                            className={sharedStyles.narrow}
                             label={formatMessage('depositum.kontonummer')}
                             value={formik.values.kontonummer || ''}
                             error={formik.errors.kontonummer}
                             onChange={formik.handleChange}
                             autoComplete="off"
                         />
-                    </div>
+                    </>
                 )}
 
                 {formik.values.eierBolig && (
                     <BooleanRadioGroup
                         name={keyOf<FormData>('eierMerEnnEnBolig')}
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('eiendom.eierAndreEiendommer')}
                         error={formik.errors.eierMerEnnEnBolig}
                         value={formik.values.eierMerEnnEnBolig}
@@ -227,10 +227,11 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                 )}
 
                 {formik.values.eierBolig && formik.values.eierMerEnnEnBolig && (
-                    <div className={sharedStyles.inputFelterDiv}>
+                    <>
                         <TextField
                             id={keyOf<FormData>('verdiPåEiendom')}
                             name={keyOf<FormData>('verdiPåEiendom')}
+                            className={sharedStyles.narrow}
                             label={formatMessage('eiendom.samledeVerdi')}
                             value={formik.values.verdiPåEiendom || ''}
                             error={formik.errors.verdiPåEiendom}
@@ -243,18 +244,19 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                         <TextField
                             id={keyOf<FormData>('eiendomBrukesTil')}
                             name={keyOf<FormData>('eiendomBrukesTil')}
+                            className={sharedStyles.narrow}
                             label={formatMessage('eiendom.brukesTil')}
                             value={formik.values.eiendomBrukesTil || ''}
                             error={formik.errors.eiendomBrukesTil}
                             onChange={formik.handleChange}
                             autoComplete="off"
                         />
-                    </div>
+                    </>
                 )}
-
+            </SøknadSpørsmålsgruppe>
+            <SøknadSpørsmålsgruppe legend={formatMessage('legend.kjøretøy')}>
                 <BooleanRadioGroup
                     name={keyOf<FormData>('eierKjøretøy')}
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('kjøretøy.label')}
                     error={formik.errors.eierKjøretøy}
                     value={formik.values.eierKjøretøy}
@@ -266,7 +268,6 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                         }))
                     }
                 />
-
                 {formik.values.eierKjøretøy && (
                     <KjøretøyInputFelter
                         arr={formik.values.kjøretøy}
@@ -305,10 +306,10 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                         }}
                     />
                 )}
-
+            </SøknadSpørsmålsgruppe>
+            <SøknadSpørsmålsgruppe legend={formatMessage('legend.verdi')}>
                 <BooleanRadioGroup
                     name={keyOf<FormData>('harInnskuddPåKonto')}
-                    className={sharedStyles.sporsmal}
                     legend={
                         formik.values.harDepositumskonto
                             ? formatMessage('innskudd.pengerPåKontoInkludertDepositum')
@@ -327,7 +328,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
                 {formik.values.harInnskuddPåKonto && (
                     <TextField
-                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
+                        className={sharedStyles.narrow}
                         id={keyOf<FormData>('innskuddsBeløp')}
                         name={keyOf<FormData>('innskuddsBeløp')}
                         label={formatMessage('innskudd.beløp')}
@@ -342,7 +343,6 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
                 <BooleanRadioGroup
                     name={keyOf<FormData>('harVerdipapir')}
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('verdipapir.label')}
                     error={formik.errors.harVerdipapir}
                     value={formik.values.harVerdipapir}
@@ -357,7 +357,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
                 {formik.values.harVerdipapir && (
                     <TextField
-                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
+                        className={sharedStyles.narrow}
                         id={keyOf<FormData>('verdipapirBeløp')}
                         name={keyOf<FormData>('verdipapirBeløp')}
                         label={formatMessage('verdipapir.beløp')}
@@ -373,7 +373,6 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
                 <BooleanRadioGroup
                     name={keyOf<FormData>('skylderNoenMegPenger')}
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('skylderNoenMegPenger.label')}
                     error={formik.errors.skylderNoenMegPenger}
                     value={formik.values.skylderNoenMegPenger}
@@ -388,7 +387,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
                 {formik.values.skylderNoenMegPenger && (
                     <TextField
-                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
+                        className={sharedStyles.narrow}
                         id={keyOf<FormData>('skylderNoenMegPengerBeløp')}
                         name={keyOf<FormData>('skylderNoenMegPengerBeløp')}
                         label={formatMessage('skylderNoenMegPenger.beløp')}
@@ -404,7 +403,6 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
                 <BooleanRadioGroup
                     name={keyOf<FormData>('harKontanter')}
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('harKontanter.label')}
                     error={formik.errors.harKontanter}
                     value={formik.values.harKontanter}
@@ -419,7 +417,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
 
                 {formik.values.harKontanter && (
                     <TextField
-                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
+                        className={sharedStyles.narrow}
                         id={keyOf<FormData>('kontanterBeløp')}
                         name={keyOf<FormData>('kontanterBeløp')}
                         label={formatMessage('harKontanter.beløp')}
@@ -432,7 +430,7 @@ const DinFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytUrl: str
                         autoFocus
                     />
                 )}
-            </div>
+            </SøknadSpørsmålsgruppe>
             <Feiloppsummering
                 className={sharedStyles.marginBottom}
                 tittel={formatMessage('feiloppsummering.title')}

@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { BooleanRadioGroup } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
+import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { useI18n } from '~lib/i18n';
 import { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
@@ -14,7 +15,7 @@ import Bunnknapper from '../../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../../steg-shared.module.less';
 import sharedI18n from '../../steg-shared-i18n';
 import { inntektsValideringSchema } from '../inntektSøknadUtils';
-import PensjonsInntekter from '../Pensjonsinntekter';
+import PensjonsInntekter from '../pensonsinntekter/Pensjonsinntekter';
 import TrygdeytelserInputFelter from '../TrygdeytelserInputs/TrygdeytelserInputs';
 
 import messages from './inntekt-nb';
@@ -49,10 +50,9 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     formik.handleSubmit(e);
                 }}
             >
-                <div className={sharedStyles.formContainer}>
+                <SøknadSpørsmålsgruppe legend={formatMessage('legend.fremtidigInntekt')}>
                     <BooleanRadioGroup
                         name="harForventetInntekt"
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('forventerInntekt.label')}
                         error={formik.errors.harForventetInntekt}
                         value={formik.values.harForventetInntekt}
@@ -70,16 +70,17 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                         <TextField
                             id="forventetInntekt"
                             error={formik.errors.forventetInntekt}
-                            className={sharedStyles.marginBottom}
+                            className={sharedStyles.narrow}
                             value={formik.values.forventetInntekt || ''}
                             label={formatMessage('forventerInntekt.beløp')}
                             onChange={formik.handleChange}
                         />
                     )}
+                </SøknadSpørsmålsgruppe>
 
+                <SøknadSpørsmålsgruppe legend={formatMessage('legend.andreUtbetalingerFraNav')}>
                     <BooleanRadioGroup
                         name="andreYtelserINAV"
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('andreYtelserINAV.label')}
                         error={formik.errors.andreYtelserINav}
                         value={formik.values.andreYtelserINav}
@@ -94,10 +95,11 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     />
 
                     {formik.values.andreYtelserINav && (
-                        <div className={sharedStyles.inputFelterDiv}>
+                        <>
                             <TextField
                                 id="andreYtelserINavYtelse"
                                 name="andreYtelserINavYtelse"
+                                className={sharedStyles.narrow}
                                 label={formatMessage('andreYtelserINAV.ytelse')}
                                 value={formik.values.andreYtelserINavYtelse || ''}
                                 onChange={formik.handleChange}
@@ -106,17 +108,17 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                             <TextField
                                 id="andreYtelserINavBeløp"
                                 name="andreYtelserINavBeløp"
+                                className={sharedStyles.narrow}
                                 label={formatMessage('andreYtelserINAV.beløp')}
                                 value={formik.values.andreYtelserINavBeløp || ''}
                                 onChange={formik.handleChange}
                                 error={formik.errors.andreYtelserINavBeløp}
                             />
-                        </div>
+                        </>
                     )}
 
                     <BooleanRadioGroup
                         name="søktAndreYtelserIkkeBehandlet"
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('søktAndreYtelserIkkeBehandlet.label')}
                         description={formatMessage('søktAndreYtelserIkkeBehandlet.hjelpetekst')}
                         error={formik.errors.søktAndreYtelserIkkeBehandlet}
@@ -132,7 +134,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
 
                     {formik.values.søktAndreYtelserIkkeBehandlet && (
                         <TextField
-                            className={sharedStyles.marginBottom}
+                            className={sharedStyles.narrow}
                             id="søktAndreYtelserIkkeBehandletBegrunnelse"
                             name="søktAndreYtelserIkkeBehandletBegrunnelse"
                             label={formatMessage('søktAndreYtelserIkkeBehandlet.begrunnelse')}
@@ -144,7 +146,6 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
 
                     <BooleanRadioGroup
                         name="harMottattSosialstønad"
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('sosialstønad.label')}
                         error={formik.errors.harMottattSosialstønad}
                         value={formik.values.harMottattSosialstønad}
@@ -158,7 +159,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                     />
                     {formik.values.harMottattSosialstønad && (
                         <TextField
-                            className={sharedStyles.marginBottom}
+                            className={sharedStyles.narrow}
                             id="sosialStønadBeløp"
                             name="sosialStønadBeløp"
                             label={formatMessage('sosialstønad.beløp')}
@@ -171,10 +172,10 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                             autoFocus
                         />
                     )}
-
+                </SøknadSpørsmålsgruppe>
+                <SøknadSpørsmålsgruppe legend={formatMessage('legend.andreUtbetalinger')}>
                     <BooleanRadioGroup
                         name="trygdeytelserIUtlandet"
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('trygdeytelserIUtlandet.label')}
                         error={formik.errors.harTrygdeytelserIUtlandet}
                         value={formik.values.harTrygdeytelserIUtlandet}
@@ -231,7 +232,6 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
 
                     <BooleanRadioGroup
                         name="mottarPensjon"
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('mottarPensjon.label')}
                         error={formik.errors.mottarPensjon}
                         value={formik.values.mottarPensjon}
@@ -284,7 +284,7 @@ const EktefellesInntekt = (props: { forrigeUrl: string; nesteUrl: string; avbryt
                             }}
                         />
                     )}
-                </div>
+                </SøknadSpørsmålsgruppe>
                 <Feiloppsummering
                     className={sharedStyles.marginBottom}
                     tittel={formatMessage('feiloppsummering.title')}

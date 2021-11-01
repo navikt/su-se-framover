@@ -1,5 +1,4 @@
 import { TextField } from '@navikt/ds-react';
-import classNames from 'classnames';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -7,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { BooleanRadioGroup } from '~/components/formElements/FormElements';
 import søknadSlice, { SøknadState } from '~/features/søknad/søknad.slice';
 import Feiloppsummering from '~components/feiloppsummering/Feiloppsummering';
+import SøknadSpørsmålsgruppe from '~features/søknad/søknadSpørsmålsgruppe/SøknadSpørsmålsgruppe';
 import { focusAfterTimeout } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
 import { formikErrorsTilFeiloppsummering, formikErrorsHarFeil } from '~lib/validering';
@@ -16,7 +16,7 @@ import Bunnknapper from '../../../bunnknapper/Bunnknapper';
 import sharedStyles from '../../../steg-shared.module.less';
 import sharedI18n from '../../steg-shared-i18n';
 import { formueValideringSchema } from '../formueSøknadUtils';
-import KjøretøyInputFelter from '../KjøretøyInputFelter';
+import KjøretøyInputFelter from '../kjøretøyInputfelter/KjøretøyInputFelter';
 
 import messages from './ektefellesformue-nb';
 
@@ -59,7 +59,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
             }}
             className={sharedStyles.container}
         >
-            <div className={sharedStyles.formContainer}>
+            <SøknadSpørsmålsgruppe legend={formatMessage('legend.eiendom')}>
                 <BooleanRadioGroup
                     name="eierBolig"
                     className={sharedStyles.sporsmal}
@@ -83,7 +83,6 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 {formik.values.eierBolig && (
                     <BooleanRadioGroup
                         name="borIBolig"
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('eierBolig.borIBolig')}
                         error={formik.errors.borIBolig}
                         value={formik.values.borIBolig}
@@ -99,10 +98,11 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 )}
 
                 {formik.values.borIBolig === false && (
-                    <div className={sharedStyles.inputFelterDiv}>
+                    <>
                         <TextField
                             id="verdiPåBolig"
                             name="verdiPåBolig"
+                            className={sharedStyles.narrow}
                             label={formatMessage('eierBolig.formuePåBolig')}
                             value={formik.values.verdiPåBolig || ''}
                             error={formik.errors.verdiPåBolig}
@@ -111,18 +111,18 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         <TextField
                             id="boligBrukesTil"
                             name="boligBrukesTil"
+                            className={sharedStyles.narrow}
                             label={formatMessage('eierBolig.boligBrukesTil')}
                             value={formik.values.boligBrukesTil || ''}
                             error={formik.errors.boligBrukesTil}
                             onChange={formik.handleChange}
                         />
-                    </div>
+                    </>
                 )}
 
                 {formik.values.eierBolig === false && (
                     <BooleanRadioGroup
                         name="depositumskonto"
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('depositum.label')}
                         error={formik.errors.harDepositumskonto}
                         value={formik.values.harDepositumskonto}
@@ -138,10 +138,11 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 )}
 
                 {formik.values.harDepositumskonto && (
-                    <div className={sharedStyles.inputFelterDiv}>
+                    <>
                         <TextField
                             id="depositumsBeløp"
                             name="depositumsBeløp"
+                            className={sharedStyles.narrow}
                             label={formatMessage('depositum.beløp')}
                             value={formik.values.depositumsBeløp || ''}
                             error={formik.errors.depositumsBeløp}
@@ -150,18 +151,18 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         <TextField
                             id="kontonummer"
                             name="kontonummer"
+                            className={sharedStyles.narrow}
                             label={formatMessage('depositum.kontonummer')}
                             value={formik.values.kontonummer || ''}
                             error={formik.errors.kontonummer}
                             onChange={formik.handleChange}
                         />
-                    </div>
+                    </>
                 )}
 
                 {formik.values.eierBolig && (
                     <BooleanRadioGroup
                         name="eierMerEnnEnBolig"
-                        className={sharedStyles.sporsmal}
                         legend={formatMessage('eiendom.eierAndreEiendommer')}
                         error={formik.errors.eierMerEnnEnBolig}
                         value={formik.values.eierMerEnnEnBolig}
@@ -177,10 +178,11 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                 )}
 
                 {formik.values.eierMerEnnEnBolig && (
-                    <div className={sharedStyles.inputFelterDiv}>
+                    <>
                         <TextField
                             id="verdiPåEiendom"
                             name="verdiPåEiendom"
+                            className={sharedStyles.narrow}
                             label={formatMessage('eiendom.samledeVerdi')}
                             value={formik.values.verdiPåEiendom || ''}
                             error={formik.errors.verdiPåEiendom}
@@ -189,17 +191,19 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         <TextField
                             id="eiendomBrukesTil"
                             name="eiendomBrukesTil"
+                            className={sharedStyles.narrow}
                             label={formatMessage('eiendom.brukesTil')}
                             value={formik.values.eiendomBrukesTil || ''}
                             error={formik.errors.eiendomBrukesTil}
                             onChange={formik.handleChange}
                         />
-                    </div>
+                    </>
                 )}
+            </SøknadSpørsmålsgruppe>
 
+            <SøknadSpørsmålsgruppe legend={formatMessage('legend.kjøretøy')}>
                 <BooleanRadioGroup
                     name="eierKjøretøy"
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('kjøretøy.label')}
                     error={formik.errors.eierKjøretøy}
                     value={formik.values.eierKjøretøy}
@@ -250,10 +254,11 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         }}
                     />
                 )}
+            </SøknadSpørsmålsgruppe>
 
+            <SøknadSpørsmålsgruppe legend={formatMessage('legend.verdi')}>
                 <BooleanRadioGroup
                     name="harInnskuddPåKonto"
-                    className={sharedStyles.sporsmal}
                     legend={
                         formik.values.harDepositumskonto
                             ? formatMessage('innskudd.pengerPåKontoInkludertDepositum')
@@ -272,7 +277,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                 {formik.values.harInnskuddPåKonto && (
                     <TextField
-                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
+                        className={sharedStyles.narrow}
                         id="innskuddsBeløp"
                         name="innskuddsBeløp"
                         label={formatMessage('innskudd.beløp')}
@@ -284,7 +289,6 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                 <BooleanRadioGroup
                     name="harVerdipapir"
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('verdipapir.label')}
                     error={formik.errors.harVerdipapir}
                     value={formik.values.harVerdipapir}
@@ -299,7 +303,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                 {formik.values.harVerdipapir && (
                     <TextField
-                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
+                        className={sharedStyles.narrow}
                         id="verdipapirBeløp"
                         name="verdipapirBeløp"
                         label={formatMessage('verdipapir.beløp')}
@@ -311,7 +315,6 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                 <BooleanRadioGroup
                     name="skylderNoenMegPenger"
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('skylderNoenMegPenger.label')}
                     error={formik.errors.skylderNoenMegPenger}
                     value={formik.values.skylderNoenMegPenger}
@@ -326,7 +329,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                 {formik.values.skylderNoenMegPenger && (
                     <TextField
-                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
+                        className={sharedStyles.narrow}
                         id="skylderNoenMegPengerBeløp"
                         name="skylderNoenMegPengerBeløp"
                         label={formatMessage('skylderNoenMegPenger.beløp')}
@@ -338,7 +341,6 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                 <BooleanRadioGroup
                     name="harKontanter"
-                    className={sharedStyles.sporsmal}
                     legend={formatMessage('harKontanter.label')}
                     error={formik.errors.harKontanter}
                     value={formik.values.harKontanter}
@@ -353,7 +355,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
 
                 {formik.values.harKontanter && (
                     <TextField
-                        className={classNames(sharedStyles.marginBottom, sharedStyles.narrow)}
+                        className={sharedStyles.narrow}
                         id="kontanterBeløp"
                         name="kontanterBeløp"
                         label={formatMessage('harKontanter.beløp')}
@@ -362,7 +364,7 @@ const EktefellesFormue = (props: { forrigeUrl: string; nesteUrl: string; avbrytU
                         onChange={formik.handleChange}
                     />
                 )}
-            </div>
+            </SøknadSpørsmålsgruppe>
             <Feiloppsummering
                 className={sharedStyles.marginBottom}
                 tittel={formatMessage('feiloppsummering.title')}

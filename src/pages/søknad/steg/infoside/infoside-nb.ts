@@ -1,9 +1,13 @@
 export default {
-    'suppstønadInfo.kanFåSupp': 'Du kan få supplerende stønad hvis du er flyktning, ufør og har bodd kort tid i Norge.',
-    'suppstønadInfo.sikreEnInntekt': 'Stønaden vil sikre deg en inntekt som er det minste du kan få i uføretrygd.',
-    'suppstønadInfo.inntekt.medEPS':
-        'Inntekten din og inntekten til samboeren eller ektefellen din, avgjør hvor mye penger du har rett til.',
-    'suppstønadInfo.inntekt.alene': 'Om du bor alene eller sammen med andre avgjør også hvor mye du har rett til.',
+    'suppstønadInfo.kanFåSupp':
+        'Du kan få supplerende stønad hvis du er <b>flyktning</b>, <b>ufør</b> og har <b>bodd kort tid i Norge</b>.',
+    'suppstønadInfo.ingress':
+        'Stønaden vil sikre deg en inntekt som er det minste du kan få i uføretrygd. Inntekten din og inntekten til samboeren eller ektefellen din, avgjør hvor mye penger du har rett til. Om du bor alene eller sammen med andre avgjør også hvor mye du har rett til.',
+
+    // 'suppstønadInfo.sikreEnInntekt': 'Stønaden vil sikre deg en inntekt som er det minste du kan få i uføretrygd.',
+    // 'suppstønadInfo.inntekt.medEPS':
+    //     'Inntekten din og inntekten til samboeren eller ektefellen din, avgjør hvor mye penger du har rett til.',
+    // 'suppstønadInfo.inntekt.alene': 'Om du bor alene eller sammen med andre avgjør også hvor mye du har rett til.',
     'suppstønad.merOmSuForUføre': 'Mer om supplerende stønad for uføre flyktninger',
 
     'henterInnInfo.ingress': 'Vi vil hente informasjon om deg',
@@ -25,5 +29,5 @@ export default {
     'viktigÅVite.manglerDuDokumentasjon':
         'Mangler du dokumentasjon, kan du sende den inn på et senere tidspunkt. Du finner mer om dette på <navLink>nav.no.</navLink>',
 
-    'page.tittel': 'Søknad om supplerende stønad for uføre flyktninger',
+    'page.tittel': 'Start en ny søknad om supplerende stønad for uføre flyktninger',
 };

@@ -1,3 +1,4 @@
+import { Calculator, Email, FileContent, Home, Plane, Saving } from '@navikt/ds-icons';
 import { Accordion } from '@navikt/ds-react';
 import React from 'react';
 import { RawIntlProvider, FormattedDate } from 'react-intl';
@@ -22,6 +23,7 @@ import { Oppsummeringsfelt } from '../components/Oppsummeringsfelt';
 
 import { ingenAdresseGrunnTekst } from './OppsummeringUtils';
 import oppsummeringMessages from './søknadsoppsummering-nb';
+import styles from './søknadsoppsummering.module.less';
 
 const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søker: Person }) => {
     const { intl, formatMessage } = useI18n({
@@ -39,7 +41,11 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
         <RawIntlProvider value={intl}>
             <Accordion>
                 <Accordion.Item>
-                    <Accordion.Header type="button">{formatMessage('steg.uforevedtak')}</Accordion.Header>
+                    <Accordion.Header type="button">
+                        <div className={styles.headerContent}>
+                            <Email /> {formatMessage('steg.uforevedtak')}
+                        </div>
+                    </Accordion.Header>
                     <Accordion.Content>
                         <Oppsummeringsfelt
                             label={formatMessage('uførevedtak.label')}
@@ -50,7 +56,11 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 </Accordion.Item>
 
                 <Accordion.Item>
-                    <Accordion.Header type="button">{formatMessage('steg.flyktningstatus')}</Accordion.Header>
+                    <Accordion.Header type="button">
+                        <div className={styles.headerContent}>
+                            <FileContent /> {formatMessage('steg.flyktningstatus')}
+                        </div>
+                    </Accordion.Header>
                     <Accordion.Content>
                         <Oppsummeringsfelt
                             label={formatMessage('flyktning.label')}
@@ -121,7 +131,11 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 </Accordion.Item>
 
                 <Accordion.Item>
-                    <Accordion.Header type="button">{formatMessage('steg.boOgOppholdINorge')}</Accordion.Header>
+                    <Accordion.Header type="button">
+                        <div className={styles.headerContent}>
+                            <Home /> {formatMessage('steg.boOgOppholdINorge')}
+                        </div>
+                    </Accordion.Header>
                     <Accordion.Content>
                         <Oppsummeringsfelt
                             label={formatMessage('borOgOppholderSegINorge.label')}
@@ -225,7 +239,11 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 </Accordion.Item>
 
                 <Accordion.Item>
-                    <Accordion.Header type="button">{formatMessage('steg.formue')}</Accordion.Header>
+                    <Accordion.Header type="button">
+                        <div className={styles.headerContent}>
+                            <Saving /> {formatMessage('steg.formue')}
+                        </div>
+                    </Accordion.Header>
                     <Accordion.Content>
                         <FormueOppsummering formue={søknad.formue} tilhører={'søker'} />
                         <EndreSvar path={Søknadsteg.DinFormue} søker={søker} />
@@ -233,7 +251,11 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 </Accordion.Item>
 
                 <Accordion.Item>
-                    <Accordion.Header type="button">{formatMessage('steg.inntekt')}</Accordion.Header>
+                    <Accordion.Header type="button">
+                        <div className={styles.headerContent}>
+                            <Calculator /> {formatMessage('steg.inntekt')}
+                        </div>
+                    </Accordion.Header>
                     <Accordion.Content>
                         <InntektsOppsummering inntekt={søknad.inntekt} tilhører={'søker'} />
                         <EndreSvar path={Søknadsteg.DinInntekt} søker={søker} />
@@ -243,14 +265,22 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 {søknad.boOgOpphold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER && (
                     <>
                         <Accordion.Item>
-                            <Accordion.Header type="button">{formatMessage('steg.ektefellesFormue')}</Accordion.Header>
+                            <Accordion.Header type="button">
+                                <div className={styles.headerContent}>
+                                    <Saving /> {formatMessage('steg.ektefellesFormue')}
+                                </div>
+                            </Accordion.Header>
                             <Accordion.Content>
                                 <FormueOppsummering formue={søknad.ektefelle.formue} tilhører={'eps'} />
                                 <EndreSvar path={Søknadsteg.EktefellesFormue} søker={søker} />
                             </Accordion.Content>
                         </Accordion.Item>
                         <Accordion.Item>
-                            <Accordion.Header type="button">{formatMessage('steg.ektefellesInntekt')}</Accordion.Header>
+                            <Accordion.Header type="button">
+                                <div className={styles.headerContent}>
+                                    <Calculator /> {formatMessage('steg.ektefellesInntekt')}
+                                </div>
+                            </Accordion.Header>
                             <Accordion.Content>
                                 <InntektsOppsummering inntekt={søknad.ektefelle.inntekt} tilhører={'eps'} />
                                 <EndreSvar path={Søknadsteg.EktefellesInntekt} søker={søker} />
@@ -260,7 +290,11 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                 )}
 
                 <Accordion.Item>
-                    <Accordion.Header type="button">{formatMessage('steg.utenlandsopphold')}</Accordion.Header>
+                    <Accordion.Header type="button">
+                        <div className={styles.headerContent}>
+                            <Plane /> {formatMessage('steg.utenlandsopphold')}
+                        </div>
+                    </Accordion.Header>
                     <Accordion.Content>
                         <Oppsummeringsfelt
                             label={formatMessage('harReistSiste90.label')}
@@ -272,23 +306,34 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                     : 'Ubesvart'
                             }
                         />
-                        {søknad.utenlandsopphold.harReistTilUtlandetSiste90dager &&
-                            søknad.utenlandsopphold.harReistDatoer.map((item, index) => (
-                                <div className={sharedStyles.inputFelterDiv} key={index}>
-                                    <Oppsummeringsfelt
-                                        label={formatMessage('utreisedato.label')}
-                                        verdi={
-                                            item.utreisedato ? <FormattedDate value={item.utreisedato} /> : 'Ubesvart'
-                                        }
-                                    />
-                                    <Oppsummeringsfelt
-                                        label={formatMessage('innreisedato.label')}
-                                        verdi={
-                                            item.innreisedato ? <FormattedDate value={item.innreisedato} /> : 'Ubesvart'
-                                        }
-                                    />
-                                </div>
-                            ))}
+                        {søknad.utenlandsopphold.harReistTilUtlandetSiste90dager && (
+                            <ul>
+                                {søknad.utenlandsopphold.harReistDatoer.map((item, index) => (
+                                    <li className={sharedStyles.oppsummeringDetaljrad} key={index}>
+                                        <Oppsummeringsfelt
+                                            label={formatMessage('utreisedato.label')}
+                                            verdi={
+                                                item.utreisedato ? (
+                                                    <FormattedDate value={item.utreisedato} />
+                                                ) : (
+                                                    'Ubesvart'
+                                                )
+                                            }
+                                        />
+                                        <Oppsummeringsfelt
+                                            label={formatMessage('innreisedato.label')}
+                                            verdi={
+                                                item.innreisedato ? (
+                                                    <FormattedDate value={item.innreisedato} />
+                                                ) : (
+                                                    'Ubesvart'
+                                                )
+                                            }
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
 
                         <Oppsummeringsfelt
                             label={formatMessage('skalReiseNeste12.label')}
@@ -300,23 +345,34 @@ const Søknadoppsummering = ({ søknad, søker }: { søknad: SøknadState; søke
                                     : 'Ubesvart'
                             }
                         />
-                        {søknad.utenlandsopphold.skalReiseTilUtlandetNeste12Måneder &&
-                            søknad.utenlandsopphold.skalReiseDatoer.map((item, index) => (
-                                <div className={sharedStyles.inputFelterDiv} key={index}>
-                                    <Oppsummeringsfelt
-                                        label={formatMessage('utreisedato.label')}
-                                        verdi={
-                                            item.utreisedato ? <FormattedDate value={item.utreisedato} /> : 'Ubesvart'
-                                        }
-                                    />
-                                    <Oppsummeringsfelt
-                                        label={formatMessage('innreisedato.label')}
-                                        verdi={
-                                            item.innreisedato ? <FormattedDate value={item.innreisedato} /> : 'Ubesvart'
-                                        }
-                                    />
-                                </div>
-                            ))}
+                        {søknad.utenlandsopphold.skalReiseTilUtlandetNeste12Måneder && (
+                            <ul>
+                                {søknad.utenlandsopphold.skalReiseDatoer.map((item, index) => (
+                                    <li className={sharedStyles.oppsummeringDetaljrad} key={index}>
+                                        <Oppsummeringsfelt
+                                            label={formatMessage('utreisedato.label')}
+                                            verdi={
+                                                item.utreisedato ? (
+                                                    <FormattedDate value={item.utreisedato} />
+                                                ) : (
+                                                    'Ubesvart'
+                                                )
+                                            }
+                                        />
+                                        <Oppsummeringsfelt
+                                            label={formatMessage('innreisedato.label')}
+                                            verdi={
+                                                item.innreisedato ? (
+                                                    <FormattedDate value={item.innreisedato} />
+                                                ) : (
+                                                    'Ubesvart'
+                                                )
+                                            }
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                         <EndreSvar path={Søknadsteg.ReiseTilUtlandet} søker={søker} />
                     </Accordion.Content>
                 </Accordion.Item>

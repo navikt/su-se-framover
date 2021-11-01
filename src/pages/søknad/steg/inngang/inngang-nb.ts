@@ -27,6 +27,6 @@ export default {
     'sendeInnDokumentasjon.ogsåLeggesVed.punkt1': 'Dokumentasjon som viser at du har formue i utlandet',
     'sendeInnDokumentasjon.ogsåLeggesVed.punkt2': 'Dokumentasjon som viser at du har pensjon i utlandet',
 
-    'page.tittel.digitalSøknad': 'Søknad om supplerende stønad for uføre flyktninger',
+    'page.tittel.digitalSøknad': 'Dokumentasjon',
     'page.tittel.papirSøknad': 'Registrering av papirsøknad',
 };

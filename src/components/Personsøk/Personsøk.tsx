@@ -1,6 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Loader, SearchField, SearchFieldInput } from '@navikt/ds-react';
-import { SearchFieldButton } from '@navikt/ds-react/esm/form/search-field';
+import { Loader, SearchField } from '@navikt/ds-react';
 import fnrValidator from '@navikt/fnrvalidator';
 import React from 'react';
 import { FormattedMessage, RawIntlProvider } from 'react-intl';
@@ -94,7 +93,7 @@ const Personsøk = (props: PersonsøkProps) => {
                                 : intl.formatMessage({ id: 'input.fnr.label' })
                         }
                     >
-                        <SearchFieldInput
+                        <SearchField.Input
                             id="fnr"
                             name="input"
                             autoComplete="on"
@@ -106,9 +105,9 @@ const Personsøk = (props: PersonsøkProps) => {
                             // eslint-disable-next-line jsx-a11y/no-autofocus
                             autoFocus={props.autofocusPersonsøk}
                         />
-                        <SearchFieldButton type="submit">
+                        <SearchField.Button type="submit">
                             <FormattedMessage id="knapp.søk" />
-                        </SearchFieldButton>
+                        </SearchField.Button>
                     </SearchField>
                     <SkjemaelementFeilmelding>
                         {hasSubmitted && fnrValidation?.status === 'invalid'

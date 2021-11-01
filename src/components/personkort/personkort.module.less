@@ -5,6 +5,21 @@
     align-items: center;
 
     .personkortSVG {
-        margin-right: @spacing-xxs;
+        margin-right: @spacing-xs;
+    }
+}
+
+.variant-normal {
+    .personalia {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.variant-wide {
+    .personalia {
+        display: flex;
+        align-items: center;
+        gap: @spacing-xxs;
     }
 }

@@ -6,8 +6,8 @@ export default {
     'utreisedato.label': 'Utreisedato',
 
     'forUtenlandsoppholdX.label': ' for utenlandsopphold {x}',
-    'gruppe.tidligereUtenlandsopphold.legend': 'Tidligere utenlandsopphold',
-    'gruppe.kommendeUtenlandsopphold.legend': 'Kommende utenlandsopphold',
+    'gruppe.tidligereUtenlandsoppholdX.legend': 'Tidligere utenlandsopphold {x}',
+    'gruppe.kommendeUtenlandsoppholdX.legend': 'Kommende utenlandsopphold {x}',
     'button.fjernReiserad': 'Fjern utenlandsopphold',
     'button.leggTilReiserad': 'Legg til et annet utenlandsopphold',
     'passert90Dager.info':

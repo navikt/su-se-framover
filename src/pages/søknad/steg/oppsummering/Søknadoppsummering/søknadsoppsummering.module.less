@@ -4,6 +4,12 @@
     .blokk-s();
 }
 
+.headerContent {
+    display: flex;
+    align-items: center;
+    gap: var(--navds-spacing-4);
+}
+
 .endreSvarContainer {
     margin-top: @spacing-l;
     color: @navBla;
@@ -17,6 +23,7 @@
 .oppsummeringsfeltKjøretøyContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    padding-left: var(--su-soknad-spacing-default);
 
     .oppsummeringElement {
         margin-bottom: @spacing-s;
@@ -26,6 +33,7 @@
 .oppsummeringsfeltTrygdeytelserContainer {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    padding-left: var(--su-soknad-spacing-default);
 
     .oppsummeringElement {
         margin-bottom: @spacing-s;

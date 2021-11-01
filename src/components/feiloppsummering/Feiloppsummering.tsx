@@ -1,4 +1,4 @@
-import { ErrorSummary, ErrorSummaryItem, ErrorSummaryProps } from '@navikt/ds-react';
+import { ErrorSummary, ErrorSummaryProps } from '@navikt/ds-react';
 import * as React from 'react';
 
 export interface FeiloppsummeringFeil {
@@ -15,9 +15,9 @@ const Feiloppsummering = ({ tittel, feil, ...errorSummaryProps }: Props, ref: Re
     return (
         <ErrorSummary heading={tittel} {...errorSummaryProps} ref={ref}>
             {feil.map((f) => (
-                <ErrorSummaryItem href={`#${f.skjemaelementId}`} key={f.skjemaelementId}>
+                <ErrorSummary.Item href={`#${f.skjemaelementId}`} key={f.skjemaelementId}>
                     {f.feilmelding}
-                </ErrorSummaryItem>
+                </ErrorSummary.Item>
             ))}
         </ErrorSummary>
     );

@@ -17,4 +17,6 @@ export default {
     'steg.forrige': 'Forrige',
     'feilmelding.tekst': 'En feil oppstod',
     'feilmelding.knapp': 'Start ny søknad',
+
+    infolinje: 'Søknad om supplerende stønad for uføre flyktninger',
 };

@@ -1,11 +1,12 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
+import { Attachment } from '@navikt/ds-icons';
 import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Tag } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
 import * as React from 'react';
-import { FormattedMessage, RawIntlProvider } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import CircleWithIcon from '~components/circleWithIcon/CircleWithIcon';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
@@ -35,7 +36,7 @@ const index = (props: { nesteUrl: string }) => {
         IverksattInnvilgetBehandling | undefined
     >(undefined);
 
-    const { intl } = useI18n({ messages: nb });
+    const { formatMessage } = useI18n({ messages: nb });
 
     React.useEffect(() => {
         dispatch(søknadSlice.actions.resetSøknad());
@@ -61,30 +62,28 @@ const index = (props: { nesteUrl: string }) => {
         return (
             <div>
                 <section>
-                    <BodyLong spacing>
-                        <FormattedMessage id="sendeInnDokumentasjon.dokGjelder" />
-                    </BodyLong>
+                    <BodyLong spacing>{formatMessage('sendeInnDokumentasjon.dokGjelder')}</BodyLong>
 
                     <BodyLong as="div" spacing>
-                        <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed" />
+                        {formatMessage('sendeInnDokumentasjon.måLeggesVed')}
                         <ul className={styles.list}>
                             <li className={styles.listItem}>
-                                <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed.punkt1" />
+                                {formatMessage('sendeInnDokumentasjon.måLeggesVed.punkt1')}
                             </li>
                             <li className={styles.listItem}>
-                                <FormattedMessage id="sendeInnDokumentasjon.måLeggesVed.punkt2" />
+                                {formatMessage('sendeInnDokumentasjon.måLeggesVed.punkt2')}
                             </li>
                         </ul>
                     </BodyLong>
 
                     <BodyLong as="div" spacing>
-                        <FormattedMessage id="sendeInnDokumentasjon.ogsåLeggesVed" />
+                        {formatMessage('sendeInnDokumentasjon.ogsåLeggesVed')}
                         <ul className={styles.list}>
                             <li className={styles.listItem}>
-                                <FormattedMessage id="sendeInnDokumentasjon.ogsåLeggesVed.punkt1" />
+                                {formatMessage('sendeInnDokumentasjon.ogsåLeggesVed.punkt1')}
                             </li>
                             <li className={styles.listItem}>
-                                <FormattedMessage id="sendeInnDokumentasjon.ogsåLeggesVed.punkt2" />
+                                {formatMessage('sendeInnDokumentasjon.ogsåLeggesVed.punkt2')}
                             </li>
                         </ul>
                     </BodyLong>
@@ -93,13 +92,11 @@ const index = (props: { nesteUrl: string }) => {
                 <div className={styles.checkboksPanelContainer}>
                     <ConfirmationPanel
                         checked={erBekreftet}
-                        label={intl.formatMessage({ id: 'bekreftelsesboks.tekst.p2' })}
+                        label={formatMessage('bekreftelsesboks.tekst.p2')}
                         onChange={() => setErBekreftet(!erBekreftet)}
-                        error={
-                            hasSubmitted && !erBekreftet ? intl.formatMessage({ id: 'feil.påkrevdFelt' }) : undefined
-                        }
+                        error={hasSubmitted && !erBekreftet ? formatMessage('feil.påkrevdFelt') : undefined}
                     >
-                        {intl.formatMessage({ id: 'bekreftelsesboks.tekst.p1' })}
+                        {formatMessage('bekreftelsesboks.tekst.p1')}
                     </ConfirmationPanel>
                 </div>
             </div>
@@ -107,99 +104,95 @@ const index = (props: { nesteUrl: string }) => {
     };
 
     return (
-        <RawIntlProvider value={intl}>
-            <div className={styles.pageContainer}>
-                <Heading level="1" size="2xlarge" spacing>
-                    {intl.formatMessage(
-                        isPapirsøknad ? { id: 'page.tittel.papirSøknad' } : { id: 'page.tittel.digitalSøknad' }
-                    )}
+        <div className={styles.pageContainer}>
+            <Heading level="1" size="2xlarge" spacing className={styles.heading}>
+                {isPapirsøknad ? (
+                    formatMessage('page.tittel.papirSøknad')
+                ) : (
+                    <>
+                        <CircleWithIcon icon={<Attachment />} variant="yellow" />
+                        {formatMessage('page.tittel.digitalSøknad')}
+                    </>
+                )}
+            </Heading>
+
+            {!isPapirsøknad && <Informasjon />}
+
+            <div className={styles.searchContainer}>
+                <Heading level="2" size="small" spacing>
+                    {formatMessage('finnSøker.tittel')}
                 </Heading>
-
-                {!isPapirsøknad && <Informasjon />}
-
-                <div className={styles.searchContainer}>
-                    <Heading level="2" size="small" spacing>
-                        <FormattedMessage id="finnSøker.tittel" />
-                    </Heading>
-                    <BodyLong className={styles.finnSøkerTekst} spacing>
-                        <FormattedMessage id="finnSøker.tekst" />
-                    </BodyLong>
-                    <div className={styles.searchboxContainer}>
-                        <Personsøk
-                            onReset={() => {
-                                dispatch(personSlice.default.actions.resetSøker());
-                            }}
-                            onFetchByFnr={async (fnr) => {
-                                setHarÅpenSøknad(undefined);
-                                setInnvilgetIverksattBehandling(undefined);
-                                await hentPerson({ fnr });
-                                hentSak(
-                                    { fnr },
-                                    (sak) => {
-                                        setHarÅpenSøknad(søknadUtils.harÅpenSøknad(sak));
-                                        setInnvilgetIverksattBehandling(
-                                            søknadUtils.hentGjeldendeInnvilgetBehandling(sak)
-                                        );
-                                    },
-                                    (error) => {
-                                        // Brukeren kan ikke ha en åpen søknad dersom hen ikke har en sak.
-                                        if (error?.statusCode === 404) {
-                                            setHarÅpenSøknad(false);
-                                        }
-                                    }
-                                );
-                            }}
-                            person={søker}
-                        />
-                        {harÅpenSøknad && (
-                            <Alert className={styles.åpenSøknadContainer} variant="warning">
-                                {intl.formatMessage({ id: 'feil.harÅpenSøknad' })}
-                            </Alert>
-                        )}
-                        {innvilgetIverksattBehandling && (
-                            <Alert className={styles.åpenSøknadContainer} variant="warning">
-                                {intl.formatMessage(
-                                    { id: 'åpenSøknad.løpendeYtelse' },
-                                    {
-                                        løpendePeriode: `${formatDate(
-                                            innvilgetIverksattBehandling.stønadsperiode.periode.fraOgMed
-                                        )} - ${formatDate(
-                                            innvilgetIverksattBehandling.stønadsperiode.periode.tilOgMed
-                                        )}`,
-                                        tidligestNyPeriode: formatDate(
-                                            DateFns.startOfMonth(
-                                                new Date(innvilgetIverksattBehandling.stønadsperiode.periode.tilOgMed)
-                                            ).toString()
-                                        ),
-                                    }
-                                )}
-                            </Alert>
-                        )}
-                        {/* Vi ønsker ikke å vise en feil dersom personkallet ikke er 2xx eller sakskallet ga 404  */}
-                        {RemoteData.isSuccess(hentPersonStatus) &&
-                            RemoteData.isFailure(hentSakStatus) &&
-                            hentSakStatus.error?.statusCode !== 404 && <ApiErrorAlert error={hentSakStatus.error} />}
-                        {hasSubmitted && RemoteData.isInitial(søker) && (
-                            <Tag variant="error">{intl.formatMessage({ id: 'feil.måSøkePerson' })}</Tag>
-                        )}
-                    </div>
-                </div>
-                <div className={styles.knapperContainer}>
-                    <LinkAsButton variant="secondary" href={Routes.soknad.createURL()}>
-                        <FormattedMessage id="knapp.forrige" />
-                    </LinkAsButton>
-                    <Button
-                        type="button"
-                        onClick={() => {
-                            setHasSubmitted(() => true);
-                            handleStartSøknadKlikk();
+                <BodyLong className={styles.finnSøkerTekst} spacing>
+                    {formatMessage('finnSøker.tekst')}
+                </BodyLong>
+                <div>
+                    <Personsøk
+                        onReset={() => {
+                            dispatch(personSlice.default.actions.resetSøker());
                         }}
-                    >
-                        <FormattedMessage id="knapp.startSøknad" />
-                    </Button>
+                        onFetchByFnr={async (fnr) => {
+                            setHarÅpenSøknad(undefined);
+                            setInnvilgetIverksattBehandling(undefined);
+                            await hentPerson({ fnr });
+                            hentSak(
+                                { fnr },
+                                (sak) => {
+                                    setHarÅpenSøknad(søknadUtils.harÅpenSøknad(sak));
+                                    setInnvilgetIverksattBehandling(søknadUtils.hentGjeldendeInnvilgetBehandling(sak));
+                                },
+                                (error) => {
+                                    // Brukeren kan ikke ha en åpen søknad dersom hen ikke har en sak.
+                                    if (error?.statusCode === 404) {
+                                        setHarÅpenSøknad(false);
+                                    }
+                                }
+                            );
+                        }}
+                        person={søker}
+                    />
+                    {harÅpenSøknad && (
+                        <Alert className={styles.åpenSøknadContainer} variant="warning">
+                            {formatMessage('feil.harÅpenSøknad')}
+                        </Alert>
+                    )}
+                    {innvilgetIverksattBehandling && (
+                        <Alert className={styles.åpenSøknadContainer} variant="warning">
+                            {formatMessage('åpenSøknad.løpendeYtelse', {
+                                løpendePeriode: `${formatDate(
+                                    innvilgetIverksattBehandling.stønadsperiode.periode.fraOgMed
+                                )} - ${formatDate(innvilgetIverksattBehandling.stønadsperiode.periode.tilOgMed)}`,
+                                tidligestNyPeriode: formatDate(
+                                    DateFns.startOfMonth(
+                                        new Date(innvilgetIverksattBehandling.stønadsperiode.periode.tilOgMed)
+                                    ).toString()
+                                ),
+                            })}
+                        </Alert>
+                    )}
+                    {/* Vi ønsker ikke å vise en feil dersom personkallet ikke er 2xx eller sakskallet ga 404  */}
+                    {RemoteData.isSuccess(hentPersonStatus) &&
+                        RemoteData.isFailure(hentSakStatus) &&
+                        hentSakStatus.error?.statusCode !== 404 && <ApiErrorAlert error={hentSakStatus.error} />}
+                    {hasSubmitted && RemoteData.isInitial(søker) && (
+                        <Tag variant="error">{formatMessage('feil.måSøkePerson')}</Tag>
+                    )}
                 </div>
             </div>
-        </RawIntlProvider>
+            <div className={styles.knapperContainer}>
+                <LinkAsButton variant="secondary" href={Routes.soknad.createURL()}>
+                    {formatMessage('knapp.forrige')}
+                </LinkAsButton>
+                <Button
+                    type="button"
+                    onClick={() => {
+                        setHasSubmitted(() => true);
+                        handleStartSøknadKlikk();
+                    }}
+                >
+                    {formatMessage('knapp.startSøknad')}
+                </Button>
+            </div>
+        </div>
     );
 };
 
