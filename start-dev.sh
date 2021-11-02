@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 start() {
-  docker-compose up -d
+  docker compose up -d
 }
 
 if start; then
