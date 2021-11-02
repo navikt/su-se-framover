@@ -4,10 +4,6 @@ export default {
     'suppstønadInfo.ingress':
         'Stønaden vil sikre deg en inntekt som er det minste du kan få i uføretrygd. Inntekten din og inntekten til samboeren eller ektefellen din, avgjør hvor mye penger du har rett til. Om du bor alene eller sammen med andre avgjør også hvor mye du har rett til.',
 
-    // 'suppstønadInfo.sikreEnInntekt': 'Stønaden vil sikre deg en inntekt som er det minste du kan få i uføretrygd.',
-    // 'suppstønadInfo.inntekt.medEPS':
-    //     'Inntekten din og inntekten til samboeren eller ektefellen din, avgjør hvor mye penger du har rett til.',
-    // 'suppstønadInfo.inntekt.alene': 'Om du bor alene eller sammen med andre avgjør også hvor mye du har rett til.',
     'suppstønad.merOmSuForUføre': 'Mer om supplerende stønad for uføre flyktninger',
 
     'henterInnInfo.ingress': 'Vi vil hente informasjon om deg',
