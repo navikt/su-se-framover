@@ -46,6 +46,7 @@ enum Generell {
 
     UGYLDIG_BODY = 'ugyldig_body',
     UGYLDIG_TILSTAND = 'ugyldig_tilstand',
+    UGYLDIG_FØDSELSNUMMER = 'ugyldig_fødselsnummer',
 }
 
 enum Periode {
@@ -107,6 +108,7 @@ const feilresponsErrorCodeMessageIdMap: { [key in FeilresponsErrorCodes]: keyof 
     [Generell.KUNNE_IKKE_UTBETALE]: 'generell.kunne.ikke.utbetale',
     [Generell.UGYLDIG_BODY]: 'generell.ugyldig.body',
     [Generell.UGYLDIG_TILSTAND]: 'generell.ugyldig.tilstand',
+    [Generell.UGYLDIG_FØDSELSNUMMER]: 'generell.ugyldig.fødselsnummer',
 
     [Periode.UGYLDIG_PERIODE_FOM]: 'periode.ugyldig.fom',
     [Periode.UGYLDIG_PERIODE_TOM]: 'periode.ugyldig.tom',

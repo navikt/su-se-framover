@@ -8,6 +8,7 @@ export default {
 
     'generell.ugyldig.body': 'Ugyldig data som ble innsendt',
     'generell.ugyldig.tilstand': 'Ugyldig tilstand',
+    'generell.ugyldig.fødselsnummer': 'Ugyldig fødselsnummer',
 
     'periode.ugyldig.fom': 'Perioder kan kun starte første dagen i måneden',
     'periode.ugyldig.tom': 'Perioder kan kun slutte siste dagen i måneden',

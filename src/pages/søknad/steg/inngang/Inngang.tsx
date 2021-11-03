@@ -2,24 +2,24 @@ import * as RemoteData from '@devexperts/remote-data-ts';
 import { Attachment } from '@navikt/ds-icons';
 import { Alert, BodyLong, Button, ConfirmationPanel, Heading, Tag } from '@navikt/ds-react';
 import * as DateFns from 'date-fns';
+import { pipe } from 'fp-ts/function';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { ErrorCode } from '~api/apiClient';
+import * as personApi from '~api/personApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import CircleWithIcon from '~components/circleWithIcon/CircleWithIcon';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
 import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
-import * as sakSlice from '~features/saksoversikt/sak.slice';
 import søknadSlice from '~features/søknad/søknad.slice';
-import { useAsyncActionCreator } from '~lib/hooks';
+import { useAsyncActionCreator, useApiCall } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
-import { IverksattInnvilgetBehandling } from '~types/Behandling';
 import { Søknadstype } from '~types/Søknad';
 import { formatDate } from '~utils/date/dateUtils';
-import * as søknadUtils from '~utils/søknad/søknadUtils';
 
 import nb from './inngang-nb';
 import styles from './inngang.module.less';
@@ -31,21 +31,15 @@ const index = (props: { nesteUrl: string }) => {
     const isPapirsøknad = history.location.search.includes('papirsoknad');
     const [hasSubmitted, setHasSubmitted] = React.useState<boolean>(false);
     const [erBekreftet, setErBekreftet] = React.useState<boolean>(false);
-    const [harÅpenSøknad, setHarÅpenSøknad] = React.useState<boolean | undefined>(undefined);
-    const [innvilgetIverksattBehandling, setInnvilgetIverksattBehandling] = React.useState<
-        IverksattInnvilgetBehandling | undefined
-    >(undefined);
 
     const { formatMessage } = useI18n({ messages: nb });
 
     React.useEffect(() => {
         dispatch(søknadSlice.actions.resetSøknad());
-        setHarÅpenSøknad(undefined);
-        setInnvilgetIverksattBehandling(undefined);
     }, [søker]);
 
     const [hentPersonStatus, hentPerson] = useAsyncActionCreator(personSlice.fetchPerson);
-    const [hentSakStatus, hentSak] = useAsyncActionCreator(sakSlice.fetchSak);
+    const [sakInfo, hentSakinfo] = useApiCall(personApi.fetchSakInfo);
 
     const isFormValid = RemoteData.isSuccess(søker) && (isPapirsøknad || erBekreftet);
 
@@ -103,6 +97,10 @@ const index = (props: { nesteUrl: string }) => {
         );
     };
 
+    const handleSøk = async (fnr: string): Promise<void> => {
+        hentPerson({ fnr });
+        hentSakinfo(fnr);
+    };
     return (
         <div className={styles.pageContainer}>
             <Heading level="1" size="2xlarge" spacing className={styles.heading}>
@@ -130,49 +128,55 @@ const index = (props: { nesteUrl: string }) => {
                         onReset={() => {
                             dispatch(personSlice.default.actions.resetSøker());
                         }}
-                        onFetchByFnr={async (fnr) => {
-                            setHarÅpenSøknad(undefined);
-                            setInnvilgetIverksattBehandling(undefined);
-                            await hentPerson({ fnr });
-                            hentSak(
-                                { fnr },
-                                (sak) => {
-                                    setHarÅpenSøknad(søknadUtils.harÅpenSøknad(sak));
-                                    setInnvilgetIverksattBehandling(søknadUtils.hentGjeldendeInnvilgetBehandling(sak));
-                                },
-                                (error) => {
-                                    // Brukeren kan ikke ha en åpen søknad dersom hen ikke har en sak.
-                                    if (error?.statusCode === 404) {
-                                        setHarÅpenSøknad(false);
-                                    }
-                                }
-                            );
-                        }}
-                        person={søker}
+                        onFetchByFnr={handleSøk}
+                        person={
+                            // Vi ønsker ikke at personen skal dukke opp før vi også har eventuelle
+                            // alerts på plass.
+                            pipe(
+                                sakInfo,
+                                RemoteData.chain(() => hentPersonStatus),
+                                RemoteData.mapLeft(
+                                    (e) =>
+                                        e ?? {
+                                            statusCode: ErrorCode.Unknown,
+                                            correlationId: '',
+                                            body: null,
+                                        }
+                                )
+                            )
+                        }
                     />
-                    {harÅpenSøknad && (
-                        <Alert className={styles.åpenSøknadContainer} variant="warning">
-                            {formatMessage('feil.harÅpenSøknad')}
-                        </Alert>
-                    )}
-                    {innvilgetIverksattBehandling && (
-                        <Alert className={styles.åpenSøknadContainer} variant="warning">
-                            {formatMessage('åpenSøknad.løpendeYtelse', {
-                                løpendePeriode: `${formatDate(
-                                    innvilgetIverksattBehandling.stønadsperiode.periode.fraOgMed
-                                )} - ${formatDate(innvilgetIverksattBehandling.stønadsperiode.periode.tilOgMed)}`,
-                                tidligestNyPeriode: formatDate(
-                                    DateFns.startOfMonth(
-                                        new Date(innvilgetIverksattBehandling.stønadsperiode.periode.tilOgMed)
-                                    ).toString()
-                                ),
-                            })}
-                        </Alert>
+                    {pipe(
+                        sakInfo,
+                        RemoteData.map((info) => (
+                            <>
+                                {info.harÅpenSøknad && (
+                                    <Alert className={styles.åpenSøknadContainer} variant="warning">
+                                        {formatMessage('feil.harÅpenSøknad')}
+                                    </Alert>
+                                )}
+                                {info.iverksattInnvilgetStønadsperiode && (
+                                    <Alert className={styles.åpenSøknadContainer} variant="warning">
+                                        {formatMessage('åpenSøknad.løpendeYtelse', {
+                                            løpendePeriode: `${formatDate(
+                                                info.iverksattInnvilgetStønadsperiode.fraOgMed
+                                            )} - ${formatDate(info.iverksattInnvilgetStønadsperiode.tilOgMed)}`,
+                                            tidligestNyPeriode: formatDate(
+                                                DateFns.startOfMonth(
+                                                    new Date(info.iverksattInnvilgetStønadsperiode.tilOgMed)
+                                                ).toString()
+                                            ),
+                                        })}
+                                    </Alert>
+                                )}
+                            </>
+                        )),
+                        RemoteData.getOrElse(() => <span />)
                     )}
                     {/* Vi ønsker ikke å vise en feil dersom personkallet ikke er 2xx eller sakskallet ga 404  */}
                     {RemoteData.isSuccess(hentPersonStatus) &&
-                        RemoteData.isFailure(hentSakStatus) &&
-                        hentSakStatus.error?.statusCode !== 404 && <ApiErrorAlert error={hentSakStatus.error} />}
+                        RemoteData.isFailure(sakInfo) &&
+                        sakInfo.error?.statusCode !== 404 && <ApiErrorAlert error={sakInfo.error} />}
                     {hasSubmitted && RemoteData.isInitial(søker) && (
                         <Tag variant="error">{formatMessage('feil.måSøkePerson')}</Tag>
                     )}
