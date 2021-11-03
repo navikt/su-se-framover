@@ -70,10 +70,10 @@ Hvis scriptet ikke funker så kan prosessen gjøres manuelt:
 
 ```sh
 $ docker login https://docker.pkg.github.com
-$ docker-compose up
+$ docker compose up
 ```
 
-Dersom docker-compose ikke er knyttet riktig til docker's credentials kan man kjøre
+Dersom docker compose ikke er knyttet riktig til docker's credentials kan man kjøre
 
 ```sh
 $ docker pull docker.pkg.github.com/navikt/mock-oauth2-server/mock-oauth2-server:0.2.3
