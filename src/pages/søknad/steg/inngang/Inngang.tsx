@@ -15,7 +15,7 @@ import Personsøk from '~components/Personsøk/Personsøk';
 import * as personSlice from '~features/person/person.slice';
 import søknadSlice from '~features/søknad/søknad.slice';
 import { useAsyncActionCreator, useApiCall } from '~lib/hooks';
-import { useI18n } from '~lib/i18n';
+import { MessageFormatter, useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { Søknadstype } from '~types/Søknad';
@@ -23,6 +23,48 @@ import { formatDate } from '~utils/date/dateUtils';
 
 import nb from './inngang-nb';
 import styles from './inngang.module.less';
+
+const SakInfoAlert = ({
+    info,
+    formatMessage,
+}: {
+    info: personApi.SakInfo;
+    formatMessage: MessageFormatter<typeof nb>;
+}) => (
+    <Alert className={styles.åpenSøknadContainer} variant="warning">
+        {info.harÅpenSøknad && (
+            <>
+                {info.iverksattInnvilgetStønadsperiode && (
+                    <Heading level="2" size="small" spacing>
+                        {formatMessage('heading.åpenSøknad')}
+                    </Heading>
+                )}
+                <BodyLong spacing={info.iverksattInnvilgetStønadsperiode !== null}>
+                    {formatMessage('feil.harÅpenSøknad')}
+                </BodyLong>
+            </>
+        )}
+        {info.iverksattInnvilgetStønadsperiode && (
+            <>
+                {info.harÅpenSøknad && (
+                    <Heading level="2" size="small" spacing>
+                        {formatMessage('heading.løpendeYtelse')}
+                    </Heading>
+                )}
+                <BodyLong>
+                    {formatMessage('åpenSøknad.løpendeYtelse', {
+                        løpendePeriode: `${formatDate(info.iverksattInnvilgetStønadsperiode.fraOgMed)} - ${formatDate(
+                            info.iverksattInnvilgetStønadsperiode.tilOgMed
+                        )}`,
+                        tidligestNyPeriode: formatDate(
+                            DateFns.startOfMonth(new Date(info.iverksattInnvilgetStønadsperiode.tilOgMed)).toString()
+                        ),
+                    })}
+                </BodyLong>
+            </>
+        )}
+    </Alert>
+);
 
 const index = (props: { nesteUrl: string }) => {
     const { søker } = useAppSelector((s) => s.søker);
@@ -148,30 +190,13 @@ const index = (props: { nesteUrl: string }) => {
                     />
                     {pipe(
                         sakInfo,
-                        RemoteData.map((info) => (
-                            <>
-                                {info.harÅpenSøknad && (
-                                    <Alert className={styles.åpenSøknadContainer} variant="warning">
-                                        {formatMessage('feil.harÅpenSøknad')}
-                                    </Alert>
-                                )}
-                                {info.iverksattInnvilgetStønadsperiode && (
-                                    <Alert className={styles.åpenSøknadContainer} variant="warning">
-                                        {formatMessage('åpenSøknad.løpendeYtelse', {
-                                            løpendePeriode: `${formatDate(
-                                                info.iverksattInnvilgetStønadsperiode.fraOgMed
-                                            )} - ${formatDate(info.iverksattInnvilgetStønadsperiode.tilOgMed)}`,
-                                            tidligestNyPeriode: formatDate(
-                                                DateFns.startOfMonth(
-                                                    new Date(info.iverksattInnvilgetStønadsperiode.tilOgMed)
-                                                ).toString()
-                                            ),
-                                        })}
-                                    </Alert>
-                                )}
-                            </>
-                        )),
-                        RemoteData.getOrElse(() => <span />)
+                        RemoteData.map(
+                            (info) =>
+                                (info.harÅpenSøknad || info.iverksattInnvilgetStønadsperiode) && (
+                                    <SakInfoAlert info={info} formatMessage={formatMessage} />
+                                )
+                        ),
+                        RemoteData.getOrElse(() => null as React.ReactNode)
                     )}
                     {/* Vi ønsker ikke å vise en feil dersom personkallet ikke er 2xx eller sakskallet ga 404  */}
                     {RemoteData.isSuccess(hentPersonStatus) &&

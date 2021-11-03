@@ -9,6 +9,9 @@ export default {
     'feil.harÅpenSøknad':
         'Bruker har allerede en åpen søknad som er til behandling. Dersom bruker ønsker å komme med ytterligere dokumentasjon kan denne sendes til skanning. Skulle bruker ønske å endre på opplysningene i søknaden kan dette gjøres ved å sende en oppgave via MODIA personoversikt.',
 
+    'heading.åpenSøknad': 'Åpen søknad',
+    'heading.løpendeYtelse': 'Løpende ytelse',
+
     'åpenSøknad.løpendeYtelse':
         'Bruker har allerede en løpende ytelse, supplerende stønad er innvilget for perioden {løpendePeriode}. Bruker kan tidligst søke om ny periode {tidligestNyPeriode}.',
 

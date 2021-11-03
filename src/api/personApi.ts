@@ -84,7 +84,7 @@ export interface Person {
     fullmakt: Nullable<boolean>;
 }
 
-interface SakInfo {
+export interface SakInfo {
     harÅpenSøknad: boolean;
     iverksattInnvilgetStønadsperiode: Nullable<Periode<string>>;
 }
