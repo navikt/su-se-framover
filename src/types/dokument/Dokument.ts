@@ -3,6 +3,8 @@ export interface Dokument {
     tittel: string;
     opprettet: string;
     dokument: string;
+    journalført: boolean;
+    brevErBestilt: boolean;
 }
 
 export enum DokumentIdType {

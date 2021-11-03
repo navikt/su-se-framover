@@ -1,6 +1,6 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
 import { FileContent } from '@navikt/ds-icons';
-import { Alert, Button, Heading, Ingress, LinkPanel, Loader } from '@navikt/ds-react';
+import { Alert, Button, Heading, Ingress, LinkPanel, Loader, Tag } from '@navikt/ds-react';
 import { pipe } from 'fp-ts/lib/function';
 import * as React from 'react';
 import { useHistory } from 'react-router';
@@ -84,8 +84,22 @@ const DokumenterPage = (props: { sak: Sak }) => {
                                                         <FileContent className={styles.dokumentikon} />
                                                         <div>
                                                             <LinkPanel.Title>{d.tittel}</LinkPanel.Title>
-                                                            <LinkPanel.Description>
+                                                            <LinkPanel.Description
+                                                                className={styles.linkPanelBeskrivelse}
+                                                            >
                                                                 {DateUtils.formatDateTime(d.opprettet)}
+                                                                <Tag
+                                                                    variant={d.journalført ? 'success' : 'error'}
+                                                                    size="small"
+                                                                >
+                                                                    {d.journalført ? 'Journalført' : 'Ikke journalført'}
+                                                                </Tag>
+                                                                <Tag
+                                                                    variant={d.brevErBestilt ? 'success' : 'error'}
+                                                                    size="small"
+                                                                >
+                                                                    {d.brevErBestilt ? 'Sendt' : 'Ikke sendt'}
+                                                                </Tag>
                                                             </LinkPanel.Description>
                                                         </div>
                                                     </div>
