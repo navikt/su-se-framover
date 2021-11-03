@@ -1,4 +1,4 @@
-import { Alert, Link } from '@navikt/ds-react';
+import { Alert, Heading, Link, Panel } from '@navikt/ds-react';
 import React from 'react';
 
 import { useI18n } from '~lib/i18n';
@@ -8,6 +8,7 @@ import { Sak } from '~types/Sak';
 import LukkSøknadOgAvsluttBehandling from '../lukkSøknad/LukkSøknad';
 
 import messages from './avsluttBehandling-nb';
+import styles from './avsluttBehandling.module.less';
 import AvsluttRevurdering from './avsluttRevurdering/AvsluttRevurdering';
 
 const AvsluttBehandling = (props: { sak: Sak }) => {
@@ -31,16 +32,22 @@ const AvsluttBehandling = (props: { sak: Sak }) => {
     }
 
     return (
-        <div>
-            <p>
+        <Panel className={styles.pageContainer}>
+            <Heading level="2" size="medium">
                 {formatMessage('display.saksnummer')} {props.sak.saksnummer}
-            </p>
-            <p>
+            </Heading>
+            <Heading level="2" size="medium" spacing>
                 {formatMessage(søknad ? 'behandling.søknadsId' : 'behandling.revurderingsId')} {urlParams.id}
-            </p>
-            {søknad && <LukkSøknadOgAvsluttBehandling sakId={props.sak.id} søknad={søknad} />}
-            {revurdering && <AvsluttRevurdering />}
-        </div>
+            </Heading>
+
+            <div className={styles.mainContent}>
+                {søknad && <LukkSøknadOgAvsluttBehandling sakId={props.sak.id} søknad={søknad} />}
+                {revurdering && <AvsluttRevurdering sakId={props.sak.id} revurdering={revurdering} />}
+            </div>
+            <Link href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
+                {formatMessage('link.tilbake')}
+            </Link>
+        </Panel>
     );
 };
 

@@ -322,3 +322,19 @@ export async function hentTidligereGrunnlagsdataForVedtak(args: {
         method: 'GET',
     });
 }
+
+export async function avsluttRevurdering(args: {
+    sakId: string;
+    revurderingId: string;
+    begrunnelse: string;
+    fritekst: Nullable<string>;
+}): Promise<ApiClientResult<Revurdering>> {
+    return apiClient<Revurdering>({
+        url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/avslutt`,
+        method: 'POST',
+        body: {
+            begrunnelse: args.begrunnelse,
+            fritekst: args.fritekst,
+        },
+    });
+}

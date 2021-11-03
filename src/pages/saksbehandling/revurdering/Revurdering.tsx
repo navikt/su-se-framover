@@ -19,6 +19,7 @@ import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkå
 import { Revurdering, Vurderingstatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import {
+    erRevurdering,
     revurderingstegrekkefølge,
     revurderingstegTilInformasjonSomRevurderes,
 } from '~utils/revurdering/revurderingUtils';
@@ -60,6 +61,16 @@ const RevurderingPage = (props: { sak: Sak }) => {
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
 
     const påbegyntRevurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
+
+    if (påbegyntRevurdering && !erRevurdering(påbegyntRevurdering)) {
+        //TODO: håndter at vi ikke skal ha ikke-revurderinger inn her
+        return (
+            <div>
+                Hvis du ser denne meldingen, så har noe virkelig gått galt, eller så har du brukt en feil
+                revurderings-id
+            </div>
+        );
+    }
 
     const dispatch = useAppDispatch();
     const grunnlag = useAppSelector(

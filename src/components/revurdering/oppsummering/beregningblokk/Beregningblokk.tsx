@@ -4,19 +4,19 @@ import * as React from 'react';
 import VisBeregning from '~components/beregningOgSimulering/beregning/VisBeregning';
 import { Utbetalingssimulering } from '~components/beregningOgSimulering/simulering/simulering';
 import { useI18n } from '~lib/i18n';
-import { harBeregninger, harSimulering, Revurdering, RevurderingsStatus } from '~types/Revurdering';
-import { erGregulering, erRevurderingIngenEndring } from '~utils/revurdering/revurderingUtils';
+import { AbstraktRevurdering, harBeregninger, harSimulering, RevurderingsStatus } from '~types/Revurdering';
+import { erGregulering, erRevurdering, erRevurderingIngenEndring } from '~utils/revurdering/revurderingUtils';
 
 import Oppsummeringspanel, { Oppsummeringsfarge, Oppsummeringsikon } from '../oppsummeringspanel/Oppsummeringspanel';
 
 import messages from './beregningblokk-nb';
 import styles from './beregningblokk.module.less';
 
-const Beregningblokk = (props: { revurdering: Revurdering }) => {
+const Beregningblokk = (props: { revurdering: AbstraktRevurdering }) => {
     const { intl } = useI18n({ messages });
 
     const alert = React.useMemo(() => {
-        if (erRevurderingIngenEndring(props.revurdering)) {
+        if (erRevurdering(props.revurdering) && erRevurderingIngenEndring(props.revurdering)) {
             return erGregulering(props.revurdering.årsak)
                 ? {
                       tittel: intl.formatMessage({ id: 'revurdering.ingenEndring.gregulering.tittel' }),
@@ -56,8 +56,8 @@ const Beregningblokk = (props: { revurdering: Revurdering }) => {
                         {intl.formatMessage({ id: 'heading.beregning' })}
                     </Heading>
                     <Panel border>
-                        {harBeregninger(props.revurdering) ? (
-                            <VisBeregning beregning={props.revurdering.beregninger.revurdert} utenTittel />
+                        {erRevurdering(props.revurdering) && harBeregninger(props.revurdering) ? (
+                            <VisBeregning beregning={props.revurdering.beregninger} utenTittel />
                         ) : (
                             intl.formatMessage({ id: 'error.ingenBeregning' })
                         )}

@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Button, Link, Loader, Select } from '@navikt/ds-react';
+import { Button, Loader, Select } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
@@ -21,7 +21,7 @@ import styles from './lukkSøknad.module.less';
 import {
     lukkSøknadInitialValues,
     LukkSøknadValidationSchema,
-    LukkSøknadFormData,
+    LukkSøknadOgAvsluttSøknadsbehandlingFormData,
     AvsluttSøknadsbehandlingBegrunnelse,
     LukkSøknadOgAvsluttSøknadsbehandlingType,
 } from './lukkSøknadUtils';
@@ -34,36 +34,38 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
     const [søknadLukketStatus, lukkSøknad] = useAsyncActionCreator(sakSlice.lukkSøknad);
     const [avslagManglendeDokStatus, avslåPgaManglendeDok] = useAsyncActionCreator(sakSlice.avslagManglendeDokSøknad);
 
-    const formik = useFormik<LukkSøknadFormData>({
+    const formik = useFormik<LukkSøknadOgAvsluttSøknadsbehandlingFormData>({
         initialValues: lukkSøknadInitialValues,
         async onSubmit(values) {
-            if (!values.lukkSøknadOgAvsluttSøknadsbehandling) {
+            if (!values.begrunnelse) {
                 return;
             }
 
-            if (values.lukkSøknadOgAvsluttSøknadsbehandling === AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok) {
+            if (values.begrunnelse === AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok) {
                 avslåPgaManglendeDok(
                     {
                         søknadId: props.søknad.id,
-                        body: { fritekst: '' /*data.fritekst*()*/ },
+                        //validering fanger denne
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        body: { fritekst: values.manglendeDok.fritekst! },
                     },
                     () => {
                         const message = formatMessage('avslutt.behandlingHarBlittAvsluttet');
                         return history.push(Routes.createSakIntroLocation(message, props.sakId));
                     }
                 );
+            } else {
+                lukkSøknad(
+                    {
+                        søknadId: props.søknad.id,
+                        body: lagBody(values),
+                    },
+                    () => {
+                        const message = formatMessage('avslutt.behandlingHarBlittAvsluttet');
+                        history.push(Routes.createSakIntroLocation(message, props.sakId));
+                    }
+                );
             }
-
-            lukkSøknad(
-                {
-                    søknadId: props.søknad.id,
-                    body: lagBody(values),
-                },
-                () => {
-                    const message = formatMessage('avslutt.behandlingHarBlittAvsluttet');
-                    history.push(Routes.createSakIntroLocation(message, props.sakId));
-                }
-            );
         },
         validationSchema: LukkSøknadValidationSchema,
         validateOnChange: hasSubmitted,
@@ -80,11 +82,11 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
             <div className={styles.selectContainer}>
                 <Select
                     label={formatMessage('lukkSøknadOgAvsluttSøknadsbehandling.begrunnelseForAvsluttelse')}
-                    name={'lukkSøknadOgAvsluttSøknadsbehandling'}
+                    name={'begrunnelse'}
                     onChange={(e) => {
                         formik.handleChange(e);
                     }}
-                    error={formik.errors.lukkSøknadOgAvsluttSøknadsbehandling}
+                    error={formik.errors.begrunnelse}
                 >
                     <option value="velgBegrunnelse">{formatMessage('selector.velgBegrunnelse')}</option>
                     {Object.values(LukkSøknadBegrunnelse).map((begrunnelse) => (
@@ -100,7 +102,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                 </Select>
             </div>
 
-            {formik.values.lukkSøknadOgAvsluttSøknadsbehandling === LukkSøknadBegrunnelse.Trukket && (
+            {formik.values.begrunnelse === LukkSøknadBegrunnelse.Trukket && (
                 <Trukket
                     datoSøkerTrakkSøknad={formik.values.trukket.datoSøkerTrakkSøknad}
                     søknadId={props.søknad.id}
@@ -113,7 +115,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                 />
             )}
 
-            {formik.values.lukkSøknadOgAvsluttSøknadsbehandling === LukkSøknadBegrunnelse.Bortfalt && (
+            {formik.values.begrunnelse === LukkSøknadBegrunnelse.Bortfalt && (
                 <div className={classNames(styles.bortfaltContainer, styles.buttonsContainer)}>
                     <Button variant="danger">
                         {formatMessage('knapp.lukkSøknad')}
@@ -122,7 +124,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                 </div>
             )}
 
-            {formik.values.lukkSøknadOgAvsluttSøknadsbehandling === LukkSøknadBegrunnelse.Avvist && (
+            {formik.values.begrunnelse === LukkSøknadBegrunnelse.Avvist && (
                 <Avvist
                     søknadId={props.søknad.id}
                     søknadLukketStatus={søknadLukketStatus}
@@ -150,8 +152,7 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                 />
             )}
 
-            {formik.values.lukkSøknadOgAvsluttSøknadsbehandling ===
-                AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok && (
+            {formik.values.begrunnelse === AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok && (
                 <AvslåttSøknad
                     søknadsbehandlingAvsluttetStatus={avslagManglendeDokStatus}
                     fritekstValue={formik.values.manglendeDok.fritekst}
@@ -166,22 +167,17 @@ const LukkSøknadOgAvsluttBehandling = (props: { sakId: string; søknad: Søknad
                     }
                 />
             )}
-            <div className={styles.tilbakeKnappContainer}>
-                <Link href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}>
-                    {formatMessage('link.tilbake')}
-                </Link>
-            </div>
 
             <div>{RemoteData.isFailure(søknadLukketStatus) && <ApiErrorAlert error={søknadLukketStatus.error} />}</div>
         </form>
     );
 };
 
-function lagBody(values: LukkSøknadFormData): LukkSøknadBodyTypes {
-    switch (values.lukkSøknadOgAvsluttSøknadsbehandling) {
+function lagBody(values: LukkSøknadOgAvsluttSøknadsbehandlingFormData): LukkSøknadBodyTypes {
+    switch (values.begrunnelse) {
         case LukkSøknadBegrunnelse.Trukket:
             return {
-                type: values.lukkSøknadOgAvsluttSøknadsbehandling,
+                type: values.begrunnelse,
                 // Denne har validering i trukket komponenten
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 datoSøkerTrakkSøknad: values.trukket.datoSøkerTrakkSøknad!,
@@ -189,11 +185,11 @@ function lagBody(values: LukkSøknadFormData): LukkSøknadBodyTypes {
 
         case LukkSøknadBegrunnelse.Bortfalt:
             return {
-                type: values.lukkSøknadOgAvsluttSøknadsbehandling,
+                type: values.begrunnelse,
             };
         case LukkSøknadBegrunnelse.Avvist:
             return {
-                type: values.lukkSøknadOgAvsluttSøknadsbehandling,
+                type: values.begrunnelse,
                 brevConfig: values.avvist.typeBrev
                     ? {
                           brevtype: values.avvist.typeBrev,

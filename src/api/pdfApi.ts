@@ -1,3 +1,5 @@
+import { Nullable } from '~lib/types';
+
 import apiClient, { ApiClientResult } from './apiClient';
 
 export async function fetchBrevutkastForSøknadsbehandling(args: {
@@ -35,22 +37,10 @@ export async function fetchSøknadutskrift(søknadId: string): Promise<ApiClient
     });
 }
 
-export async function fetchBrevutkastForRevurdering(args: {
+export async function fetchBrevutkastForRevurderingMedPotensieltFritekst(args: {
     sakId: string;
     revurderingId: string;
-}): Promise<ApiClientResult<Blob>> {
-    return apiClient({
-        url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/brevutkast`,
-        method: 'GET',
-        request: { headers: new Headers({ Accept: 'application/pdf' }) },
-        bodyTransformer: (res) => res.blob(),
-    });
-}
-
-export async function fetchBrevutkastForRevurderingWithFritekst(args: {
-    sakId: string;
-    revurderingId: string;
-    fritekst: string;
+    fritekst: Nullable<string>;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
         url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/brevutkast`,
@@ -74,6 +64,22 @@ export async function fetchBrevutkastForForhåndsvarsel(
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
         body: {
             fritekst,
+        },
+        bodyTransformer: (res) => res.blob(),
+    });
+}
+
+export async function fetchBrevutkastForAvslutningAvRevurdering(args: {
+    sakId: string;
+    revurderingId: string;
+    fritekst: Nullable<string>;
+}): Promise<ApiClientResult<Blob>> {
+    return apiClient({
+        url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/brevutkastForAvslutning`,
+        method: 'POST',
+        request: { headers: new Headers({ Accept: 'application/pdf' }) },
+        body: {
+            fritekst: args.fritekst,
         },
         bodyTransformer: (res) => res.blob(),
     });

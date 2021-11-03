@@ -78,7 +78,7 @@ const Trukket = (props: TrukketProps) => {
                     {formatMessage('knapp.seBrev')}
                     {RemoteData.isPending(brevStatus) && <Loader />}
                 </Button>
-                <Button variant="danger">
+                <Button variant="danger" type="submit">
                     {formatMessage('knapp.lukkSøknad')}
                     {RemoteData.isPending(props.søknadLukketStatus) && <Loader />}
                 </Button>

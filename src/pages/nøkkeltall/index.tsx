@@ -85,7 +85,6 @@ const NøkkelTall = () => {
                                 />
                             </ul>
                         </Panel>
-
                         <Heading level="2" size="medium">
                             {formatMessage('personer.tittel')}
                         </Heading>

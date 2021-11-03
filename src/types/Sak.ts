@@ -3,7 +3,7 @@ import { Utbetalingsperiode } from '~types/Utbetalingsperiode';
 
 import { Behandling } from './Behandling';
 import { Periode } from './Periode';
-import { Revurdering } from './Revurdering';
+import { AbstraktRevurdering } from './Revurdering';
 import { Søknad } from './Søknad';
 import { Vedtak } from './Vedtak';
 
@@ -15,7 +15,7 @@ export interface Sak {
     søknader: Søknad[];
     utbetalinger: Utbetalingsperiode[];
     utbetalingerKanStansesEllerGjenopptas: KanStansesEllerGjenopptas;
-    revurderinger: Revurdering[];
+    revurderinger: AbstraktRevurdering[];
     vedtak: Vedtak[];
 }
 

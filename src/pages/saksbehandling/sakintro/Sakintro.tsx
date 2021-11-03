@@ -22,7 +22,7 @@ import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
 import Utbetalinger from '~pages/saksbehandling/sakintro/Utbetalinger';
 import { Behandling } from '~types/Behandling';
-import { Revurdering, RevurderingsStatus } from '~types/Revurdering';
+import { AbstraktRevurdering, RevurderingsStatus } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
 import { LukkSøknadBegrunnelse, Søknad } from '~types/Søknad';
 import { Vedtak } from '~types/Vedtak';
@@ -41,6 +41,7 @@ import {
     finnNesteRevurderingsteg,
     erRevurderingStans,
     erRevurderingGjenopptak,
+    erRevurdering,
 } from '../../../utils/revurdering/revurderingUtils';
 import { RevurderingSteg } from '../types';
 
@@ -219,7 +220,7 @@ const ÅpneSøknader = (props: {
     );
 };
 
-const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: IntlShape }) => {
+const Revurderinger = (props: { sak: Sak; revurderinger: AbstraktRevurdering[]; intl: IntlShape }) => {
     if (props.revurderinger.length === 0) return null;
 
     return (
@@ -240,7 +241,7 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                                             <Heading level="3" size="small" spacing>
                                                 {props.intl.formatMessage({ id: 'revurdering.undertittel' })}
                                             </Heading>
-                                            {erForhåndsvarselSendt(r) && (
+                                            {erRevurdering(r) && erForhåndsvarselSendt(r) && (
                                                 <Tag variant="info" className={styles.etikett}>
                                                     {props.intl.formatMessage({
                                                         id: 'revurdering.label.forhåndsvarselSendt',
@@ -262,11 +263,13 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
                                                 </BodyShort>
                                             </div>
                                         )}
-                                        {underkjenteRevurderinger.length > 0 && !erRevurderingIverksatt(r) && (
-                                            <div className={styles.underkjenteAttesteringerContainer}>
-                                                <UnderkjenteAttesteringer attesteringer={r.attesteringer} />
-                                            </div>
-                                        )}
+                                        {underkjenteRevurderinger.length > 0 &&
+                                            erRevurdering(r) &&
+                                            !erRevurderingIverksatt(r) && (
+                                                <div className={styles.underkjenteAttesteringerContainer}>
+                                                    <UnderkjenteAttesteringer attesteringer={r.attesteringer} />
+                                                </div>
+                                            )}
                                     </div>
                                     <div className={styles.knapper}>
                                         <RevurderingStartetKnapper
@@ -288,7 +291,7 @@ const Revurderinger = (props: { sak: Sak; revurderinger: Revurdering[]; intl: In
 
 const RevurderingStartetKnapper = (props: {
     sakId: string;
-    revurdering: Revurdering;
+    revurdering: AbstraktRevurdering;
     vedtak: Vedtak[];
     intl: IntlShape;
 }) => {
@@ -298,7 +301,8 @@ const RevurderingStartetKnapper = (props: {
 
     return (
         <div className={styles.behandlingContainer}>
-            {erRevurderingTilAttestering(revurdering) &&
+            {erRevurdering(revurdering) &&
+                erRevurderingTilAttestering(revurdering) &&
                 (!user.isAttestant || user.navIdent === revurdering.saksbehandler) && (
                     <div className={styles.ikonContainer}>
                         <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
@@ -310,7 +314,7 @@ const RevurderingStartetKnapper = (props: {
                     </div>
                 )}
 
-            {erRevurderingIverksatt(revurdering) && vedtak && (
+            {erRevurdering(revurdering) && erRevurderingIverksatt(revurdering) && vedtak && (
                 <LinkAsButton
                     variant="secondary"
                     href={Routes.vedtaksoppsummering.createURL({ sakId: props.sakId, vedtakId: vedtak.id })}
@@ -321,7 +325,8 @@ const RevurderingStartetKnapper = (props: {
             )}
 
             <div className={styles.knapper}>
-                {erRevurderingTilAttestering(revurdering) &&
+                {erRevurdering(revurdering) &&
+                erRevurderingTilAttestering(revurdering) &&
                 user.isAttestant &&
                 user.navIdent !== revurdering.saksbehandler ? (
                     <LinkAsButton
@@ -363,6 +368,7 @@ const RevurderingStartetKnapper = (props: {
                             : props.intl.formatMessage({ id: 'revurdering.fortsett' })}
                     </LinkAsButton>
                 ) : (
+                    erRevurdering(revurdering) &&
                     !erRevurderingTilAttestering(revurdering) &&
                     !erRevurderingIverksatt(revurdering) &&
                     user.navIdent !== pipe(revurdering.attesteringer, last, toNullable)?.attestant && (

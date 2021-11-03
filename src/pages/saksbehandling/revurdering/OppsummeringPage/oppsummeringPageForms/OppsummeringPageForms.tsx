@@ -31,7 +31,7 @@ const VedtaksbrevInput = (
                 id: 'brevInput.tekstTilVedtaksbrev.placeholder',
             })}
             onVisBrevClick={() =>
-                pdfApi.fetchBrevutkastForRevurderingWithFritekst({
+                pdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst({
                     sakId: props.sakId,
                     revurderingId: props.revurderingId,
                     fritekst: props.tekst,

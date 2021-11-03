@@ -22,7 +22,7 @@ import yup from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { IverksattRevurdering, RevurderingsStatus, UnderkjentRevurdering } from '~types/Revurdering';
 import { Sak } from '~types/Sak';
-import { erRevurderingTilAttestering, erGregulering } from '~utils/revurdering/revurderingUtils';
+import { erRevurderingTilAttestering, erGregulering, erRevurdering } from '~utils/revurdering/revurderingUtils';
 
 import SharedStyles from '../sharedStyles.module.less';
 
@@ -74,7 +74,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     const dispatch = useAppDispatch();
     const history = useHistory();
     const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
-    const [hentPdfStatus, hentPdf] = useApiCall(PdfApi.fetchBrevutkastForRevurdering);
+    const [hentPdfStatus, hentPdf] = useApiCall(PdfApi.fetchBrevutkastForRevurderingMedPotensieltFritekst);
     const [sendtBeslutning, setSendtBeslutning] = useState<
         RemoteData.RemoteData<ApiError, IverksattRevurdering | UnderkjentRevurdering>
     >(RemoteData.initial);
@@ -150,7 +150,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
         );
     }
 
-    if (!erRevurderingTilAttestering(revurdering)) {
+    if (!erRevurdering(revurdering) || !erRevurderingTilAttestering(revurdering)) {
         return (
             <div className={styles.advarselContainer}>
                 <Alert variant="error">{intl.formatMessage({ id: 'feil.ikkeTilAttestering' })}</Alert>
@@ -159,7 +159,7 @@ const AttesterRevurdering = (props: { sak: Sak; søker: Person }) => {
     }
 
     const handleShowBrevClick = async () => {
-        hentPdf({ sakId: props.sak.id, revurderingId: revurdering.id }, (data) => {
+        hentPdf({ sakId: props.sak.id, revurderingId: revurdering.id, fritekst: null }, (data) => {
             window.open(URL.createObjectURL(data));
         });
     };

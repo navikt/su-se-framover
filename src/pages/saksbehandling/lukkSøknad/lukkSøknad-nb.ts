@@ -33,5 +33,5 @@ export default {
     'lukking.søknad.harBlittLukket': 'Søknaden har blitt lukket',
     'lukking.søknad.KunneIkkeLukkeSøknad': 'Kunne ikke lukke søknad',
 
-    'lukkSøknadOgAvsluttSøknadsbehandling.begrunnelseForAvsluttelse': 'Begrunnelse for å lukke søknad',
+    'lukkSøknadOgAvsluttSøknadsbehandling.begrunnelseForAvsluttelse': 'Begrunnelse for å avslutte behandling av søknad',
 };

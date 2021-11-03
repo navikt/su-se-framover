@@ -14,7 +14,7 @@ import { LukkSøknadBegrunnelse } from '~types/Søknad';
 
 import nb from './lukkSøknad-nb';
 import styles from './lukkSøknad.module.less';
-import { AvvistBrevtyper, LukkSøknadFormData } from './lukkSøknadUtils';
+import { AvvistBrevtyper, LukkSøknadOgAvsluttSøknadsbehandlingFormData } from './lukkSøknadUtils';
 
 interface AvvistFormData {
     skalSendesBrev: Nullable<boolean>;
@@ -24,7 +24,7 @@ interface AvvistFormData {
 
 interface AvvistProps {
     søknadId: string;
-    validateForm: () => Promise<FormikErrors<LukkSøknadFormData>>;
+    validateForm: () => Promise<FormikErrors<LukkSøknadOgAvsluttSøknadsbehandlingFormData>>;
     avvistFormData: AvvistFormData;
     søknadLukketStatus: ApiResult<Sak, string>;
     feilmeldinger: FormikErrors<AvvistFormData>;
@@ -82,42 +82,44 @@ const Avvist = (props: AvvistProps) => {
                     />
                 </div>
             )}
-            <div className={styles.buttonsContainer}>
-                {props.avvistFormData.skalSendesBrev && (
-                    <Button
-                        variant="secondary"
-                        className={styles.seBrevKnapp}
-                        type="button"
-                        onClick={() => {
-                            props.validateForm().then((res) => {
-                                if (Object.keys(res).length === 0) {
-                                    hentBrev({
-                                        søknadId: props.søknadId,
-                                        body: {
-                                            type: LukkSøknadBegrunnelse.Avvist,
-                                            //Vi har en use-state som sjekker at verdi ikke er null
-                                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                            brevConfig: props.avvistFormData.typeBrev
-                                                ? {
-                                                      brevtype: props.avvistFormData.typeBrev,
-                                                      fritekst: props.avvistFormData.fritekst,
-                                                  }
-                                                : null,
-                                        },
-                                    });
-                                }
-                            });
-                        }}
-                    >
-                        {formatMessage('knapp.seBrev')}
-                        {RemoteData.isPending(brevStatus) && <Loader />}
+            {props.avvistFormData.skalSendesBrev !== null && (
+                <div className={styles.buttonsContainer}>
+                    {props.avvistFormData.skalSendesBrev && (
+                        <Button
+                            variant="secondary"
+                            className={styles.seBrevKnapp}
+                            type="button"
+                            onClick={() => {
+                                props.validateForm().then((res) => {
+                                    if (Object.keys(res).length === 0) {
+                                        hentBrev({
+                                            søknadId: props.søknadId,
+                                            body: {
+                                                type: LukkSøknadBegrunnelse.Avvist,
+                                                //Vi har en use-state som sjekker at verdi ikke er null
+                                                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                                                brevConfig: props.avvistFormData.typeBrev
+                                                    ? {
+                                                          brevtype: props.avvistFormData.typeBrev,
+                                                          fritekst: props.avvistFormData.fritekst,
+                                                      }
+                                                    : null,
+                                            },
+                                        });
+                                    }
+                                });
+                            }}
+                        >
+                            {formatMessage('knapp.seBrev')}
+                            {RemoteData.isPending(brevStatus) && <Loader />}
+                        </Button>
+                    )}
+                    <Button variant="danger" type="submit">
+                        {formatMessage('knapp.lukkSøknad')}
+                        {RemoteData.isPending(props.søknadLukketStatus) && <Loader />}
                     </Button>
-                )}
-                <Button variant="danger">
-                    {formatMessage('knapp.lukkSøknad')}
-                    {RemoteData.isPending(props.søknadLukketStatus) && <Loader />}
-                </Button>
-            </div>
+                </div>
+            )}
             <div>{RemoteData.isFailure(brevStatus) && <ApiErrorAlert error={brevStatus.error} />}</div>
         </div>
     );

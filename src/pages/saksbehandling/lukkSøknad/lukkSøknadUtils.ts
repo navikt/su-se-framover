@@ -2,8 +2,8 @@ import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { LukkSøknadBegrunnelse } from '~types/Søknad';
 
-export interface LukkSøknadFormData {
-    lukkSøknadOgAvsluttSøknadsbehandling: Nullable<LukkSøknadOgAvsluttSøknadsbehandlingType>;
+export interface LukkSøknadOgAvsluttSøknadsbehandlingFormData {
+    begrunnelse: Nullable<LukkSøknadOgAvsluttSøknadsbehandlingType>;
     trukket: {
         datoSøkerTrakkSøknad: Nullable<string>;
     };
@@ -18,7 +18,7 @@ export interface LukkSøknadFormData {
 }
 
 export const lukkSøknadInitialValues = {
-    lukkSøknadOgAvsluttSøknadsbehandling: null,
+    begrunnelse: null,
     trukket: {
         datoSøkerTrakkSøknad: null,
     },
@@ -48,8 +48,8 @@ export interface AvvistBrevConfig {
     fritekst: Nullable<string>;
 }
 
-export const LukkSøknadValidationSchema = yup.object<LukkSøknadFormData>({
-    lukkSøknadOgAvsluttSøknadsbehandling: yup
+export const LukkSøknadValidationSchema = yup.object<LukkSøknadOgAvsluttSøknadsbehandlingFormData>({
+    begrunnelse: yup
         .mixed()
         .oneOf([
             LukkSøknadBegrunnelse.Trukket,
@@ -60,7 +60,7 @@ export const LukkSøknadValidationSchema = yup.object<LukkSøknadFormData>({
         .required(),
     trukket: yup
         .object({
-            datoSøkerTrakkSøknad: yup.string().nullable().defined().when('lukkSøknadOgAvsluttSøknadsbehandling', {
+            datoSøkerTrakkSøknad: yup.string().nullable().defined().when('begrunnelse', {
                 is: LukkSøknadBegrunnelse.Trukket,
                 then: yup.string().required(),
                 otherwise: yup.string().nullable().defined(),
@@ -69,7 +69,7 @@ export const LukkSøknadValidationSchema = yup.object<LukkSøknadFormData>({
         .defined(),
     avvist: yup
         .object({
-            skalSendesBrev: yup.boolean().nullable().defined().when('lukkSøknadOgAvsluttSøknadsbehandling', {
+            skalSendesBrev: yup.boolean().nullable().defined().when('begrunnelse', {
                 is: LukkSøknadBegrunnelse.Avvist,
                 then: yup.boolean().required(),
             }),
@@ -93,16 +93,12 @@ export const LukkSøknadValidationSchema = yup.object<LukkSøknadFormData>({
         })
         .defined(),
     manglendeDok: yup
-        .object({
-            fritekst: yup
-                .string()
-                .nullable()
-                .defined()
-                .when('lukkSøknadOgAvsluttSøknadsbehandling', {
-                    is: AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok,
-                    then: yup.string().required().min(1),
-                    otherwise: yup.string().nullable().defined(),
-                }),
+        .object<{ fritekst: Nullable<string> }>()
+        .when('begrunnelse', {
+            is: AvsluttSøknadsbehandlingBegrunnelse.ManglendeDok,
+            then: yup.object({
+                fritekst: yup.string().nullable().required(),
+            }),
         })
         .defined(),
 });

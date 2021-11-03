@@ -346,3 +346,21 @@ export const hentGjeldendeGrunnlagsdataOgVilkårsvurderinger = createAsyncThunk<
     }
     return thunkApi.rejectWithValue(res.error);
 });
+
+export const avsluttRevurdering = createAsyncThunk<
+    Revurdering,
+    { sakId: string; revurderingId: string; begrunnelse: string; fritekst: Nullable<string> },
+    { rejectValue: ApiError }
+>('revurdering/avsluttRevurdering', async (arg, thunkApi) => {
+    const res = await revurderingApi.avsluttRevurdering({
+        sakId: arg.sakId,
+        revurderingId: arg.revurderingId,
+        begrunnelse: arg.begrunnelse,
+        fritekst: arg.fritekst,
+    });
+
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
