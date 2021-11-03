@@ -74,19 +74,6 @@ enum SubmittedStatus {
     LAGRE,
 }
 
-const informasjonSomRevurderesMessageId = (i: InformasjonSomRevurderes) => {
-    switch (i) {
-        case InformasjonSomRevurderes.Uførhet:
-            return 'informasjonSomRevurderes.uførhet';
-        case InformasjonSomRevurderes.Inntekt:
-            return 'informasjonSomRevurderes.inntekt';
-        case InformasjonSomRevurderes.Bosituasjon:
-            return 'informasjonSomRevurderes.bosituasjon';
-        case InformasjonSomRevurderes.Formue:
-            return 'informasjonSomRevurderes.formue';
-    }
-};
-
 const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
     const { intl } = useI18n({ messages: { ...sharedMessages, ...messages } });
     const [submittedStatus, setSubmittedStatus] = useState<SubmittedStatus>(SubmittedStatus.NOT_SUBMITTED);
@@ -172,15 +159,13 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                             <option value="" disabled>
                                 {intl.formatMessage({ id: 'input.årsak.value.default' })}
                             </option>
-                            {gyldigeÅrsaker.map((grunn) => {
-                                return (
-                                    <option value={grunn} key={grunn}>
-                                        {intl.formatMessage({
-                                            id: getRevurderingsårsakMessageId(grunn),
-                                        })}
-                                    </option>
-                                );
-                            })}
+                            {gyldigeÅrsaker.map((grunn) => (
+                                <option value={grunn} key={grunn}>
+                                    {intl.formatMessage({
+                                        id: getRevurderingsårsakMessageId(grunn),
+                                    })}
+                                </option>
+                            ))}
                         </Select>
                     </div>
 
@@ -202,7 +187,7 @@ const RevurderingIntroForm = (props: RevurderingIntroFormProps) => {
                                     id={idx === 0 ? keyOf<FormValues>('informasjonSomRevurderes') : undefined}
                                     value={i}
                                 >
-                                    {intl.formatMessage({ id: informasjonSomRevurderesMessageId(i) })}
+                                    {intl.formatMessage({ id: messages[i] })}
                                 </Checkbox>
                             ))}
                         </CheckboxGroup>

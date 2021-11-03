@@ -689,6 +689,10 @@ export default createSlice({
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });
 
+        builder.addCase(revurderingActions.lagreUtenlandsopphold.fulfilled, (state, action) => {
+            state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
+        });
+
         builder.addCase(revurderingActions.lagreFormuegrunnlag.fulfilled, (state, action) => {
             state.sak = oppdaterRevurderingISak(state.sak, action.payload.revurdering);
         });

@@ -1,4 +1,8 @@
-export default {
+import { InformasjonSomRevurderes } from '~types/Revurdering';
+
+type infomessagesType = { [key in InformasjonSomRevurderes]: string };
+
+const messages: infomessagesType & { [key: string]: string } = {
     'datovelger.fom.legend': 'Fra',
     'datovelger.tom.legend': 'Til',
 
@@ -7,10 +11,13 @@ export default {
     'input.begrunnelse.label': 'Begrunnelse',
     'input.informasjonSomRevurderes.label': 'Hva vil du revurdere?',
 
-    'informasjonSomRevurderes.uførhet': 'Uførhet',
-    'informasjonSomRevurderes.inntekt': 'Inntekt',
-    'informasjonSomRevurderes.bosituasjon': 'Bosituasjon',
-    'informasjonSomRevurderes.formue': 'Formue',
+    [InformasjonSomRevurderes.Uførhet]: 'Uførhet',
+    [InformasjonSomRevurderes.Inntekt]: 'Inntekt',
+    [InformasjonSomRevurderes.Bosituasjon]: 'Bosituasjon',
+    [InformasjonSomRevurderes.Formue]: 'Formue',
+    [InformasjonSomRevurderes.Utenlandsopphold]: 'Utenlandsopphold',
 
     'info.bosituasjon': 'Ved boforhold kan det være relevant å endre inntekt og formue også',
 };
+
+export default messages;

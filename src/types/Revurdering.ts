@@ -180,6 +180,7 @@ export enum InformasjonSomRevurderes {
     Inntekt = 'Inntekt',
     Bosituasjon = 'Bosituasjon',
     Formue = 'Formue',
+    Utenlandsopphold = 'Utenlandsopphold',
 }
 
 export enum Vurderingstatus {
@@ -194,6 +195,17 @@ export interface BosituasjonRequest {
     erEPSUførFlyktning: Nullable<boolean>;
     delerBolig: Nullable<boolean>;
     begrunnelse: Nullable<string>;
+}
+
+export enum Utenlandsoppholdstatus {
+    Utenlands = 'SkalVæreMerEnn90DagerIUtlandet',
+    Innenlands = 'SkalHoldeSegINorge',
+}
+
+export interface UtenlandsoppholdRequest {
+    sakId: string;
+    revurderingId: string;
+    status: Utenlandsoppholdstatus;
 }
 
 export interface FormuegrunnlagVerdier {

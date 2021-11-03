@@ -24,6 +24,7 @@ import {
     InformasjonsRevurdering,
     StansAvYtelse,
     Gjenopptak,
+    UtenlandsoppholdRequest,
 } from '~types/Revurdering';
 
 export const opprettRevurdering = createAsyncThunk<
@@ -306,6 +307,22 @@ export const lagreBosituasjonsgrunnlag = createAsyncThunk<
         delerBolig: arg.delerBolig,
         erEPSUførFlyktning: arg.erEPSUførFlyktning,
         begrunnelse: arg.begrunnelse,
+    });
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
+export const lagreUtenlandsopphold = createAsyncThunk<
+    { revurdering: Revurdering; feilmeldinger: ErrorMessage[] },
+    UtenlandsoppholdRequest,
+    { rejectValue: ApiError }
+>('revurdering/grunnlag/utenlandsopphold/lagre', async (arg, thunkApi) => {
+    const res = await revurderingApi.lagreUtenlandsopphold({
+        sakId: arg.sakId,
+        revurderingId: arg.revurderingId,
+        status: arg.status,
     });
     if (res.status === 'ok') {
         return res.data;

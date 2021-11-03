@@ -27,9 +27,10 @@ import SkjemaelementFeilmelding from '../../../components/formElements/Skjemaele
 import { RevurderingSteg } from '../types';
 
 import Formue from './formue/Formue';
-import messages from './revurdering-nb';
+import messages, { stegmessages } from './revurdering-nb';
 import styles from './revurdering.module.less';
 
+const UtenlandsoppholdPage = React.lazy(() => import('./utenlandsopphold/Utenlandsopphold'));
 const NyRevurderingPage = React.lazy(() => import('./revurderingIntro/NyRevurderingPage'));
 const EndreRevurderingPage = React.lazy(() => import('./revurderingIntro/EndreRevurderingPage'));
 const Bosituasjon = React.lazy(() => import('./bosituasjon/BosituasjonForm'));
@@ -37,29 +38,12 @@ const EndringAvFradrag = React.lazy(() => import('./endringAvFradrag/EndringAvFr
 const RevurderingOppsummeringPage = React.lazy(() => import('./OppsummeringPage/RevurderingOppsummeringPage'));
 const Uførhet = React.lazy(() => import('./uførhet/Uførhet'));
 
-const stegTilTekstId = (steg: RevurderingSteg) => {
-    switch (steg) {
-        case RevurderingSteg.Periode:
-            return 'steg.periode';
-        case RevurderingSteg.Uførhet:
-            return 'steg.uførhet';
-        case RevurderingSteg.Bosituasjon:
-            return 'steg.bosituasjon';
-        case RevurderingSteg.EndringAvFradrag:
-            return 'steg.fradrag';
-        case RevurderingSteg.Formue:
-            return 'steg.formue';
-        case RevurderingSteg.Oppsummering:
-            return 'steg.oppsummering';
-    }
-};
-
 const RevurderingPage = (props: {
     sakId: string;
     utbetalinger: Utbetalingsperiode[];
     informasjonsRevurderinger: InformasjonsRevurdering[];
 }) => {
-    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages } });
+    const { formatMessage } = useI18n({ messages: { ...sharedMessages, ...messages, ...stegmessages } });
 
     const urlParams = Routes.useRouteParams<typeof Routes.revurderValgtRevurdering>();
 
@@ -116,7 +100,7 @@ const RevurderingPage = (props: {
 
     const alleSteg = revurderingstegrekkefølge.map((steg) => ({
         id: steg,
-        label: formatMessage(stegTilTekstId(steg)),
+        label: formatMessage(steg),
         erKlikkbar: false,
         status: Linjestatus.Ingenting,
         url: createRevurderingsPath(steg),
@@ -271,6 +255,16 @@ const RevurderingstegPage = (props: {
                     case RevurderingSteg.EndringAvFradrag:
                         return (
                             <EndringAvFradrag
+                                sakId={props.sakId}
+                                revurdering={props.informasjonsRevurdering}
+                                grunnlagsdataOgVilkårsvurderinger={value}
+                                forrigeUrl={props.forrigeUrl}
+                                nesteUrl={props.nesteUrl(props.informasjonsRevurdering)}
+                            />
+                        );
+                    case RevurderingSteg.Utenlandsopphold:
+                        return (
+                            <UtenlandsoppholdPage
                                 sakId={props.sakId}
                                 revurdering={props.informasjonsRevurdering}
                                 grunnlagsdataOgVilkårsvurderinger={value}
