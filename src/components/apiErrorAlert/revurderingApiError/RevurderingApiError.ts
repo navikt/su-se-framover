@@ -45,6 +45,8 @@ enum Generell {
     UGYLDIG_ÅRSAK = 'ugyldig_årsak',
 
     KUNNE_IKKE_SLÅ_OPP_EPS = 'kunne_ikke_slå_opp_eps',
+
+    REVURDERINGEN_ER_ALLEREDE_AVSLUTTET = 'revurderingen_er_allerede_avsluttet',
 }
 
 enum Vurderingsperiode {
@@ -157,6 +159,7 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof 
     [Generell.UGYLDIG_PERIODE]: 'generell.ugyldig.periode',
     [Generell.UGYLDIG_ÅRSAK]: 'generell.ugyldig.årsak',
     [Generell.KUNNE_IKKE_SLÅ_OPP_EPS]: 'generell.kunne.ikke.slå.opp.eps',
+    [Generell.REVURDERINGEN_ER_ALLEREDE_AVSLUTTET]: 'generell.revurderingen.er.allerede.avsluttet',
 
     [Vurderingsperiode.INGENTING_Å_REVURDERE_I_PERIODEN]: 'periode.ingenting.å.revurdere',
 

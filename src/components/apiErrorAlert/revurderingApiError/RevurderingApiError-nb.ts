@@ -7,6 +7,7 @@ export default {
     'generell.ugyldig.periode': 'Ugyldig periode',
     'generell.ugyldig.årsak': 'Ugyldig årsak',
     'generell.kunne.ikke.slå.opp.eps': 'Kunne ikke slå opp ektefelle eller samboer i PDL',
+    'generell.revurderingen.er.allerede.avsluttet': 'Revurderingen er allerede blitt avsluttet',
 
     'periode.ingenting.å.revurdere': 'Fant ingen vedtak som kan revurderes for angitt periode',
 

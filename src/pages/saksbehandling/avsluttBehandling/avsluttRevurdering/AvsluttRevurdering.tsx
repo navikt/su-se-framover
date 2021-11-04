@@ -81,7 +81,7 @@ const AvsluttRevurdering = (props: { sakId: string; revurdering: AbstraktRevurde
                     )}
                 />
             </div>
-            <Button variant="danger">
+            <Button variant="danger" className={styles.avsluttRevurderingButton}>
                 {formatMessage('knapp.avsluttRevurdering')}{' '}
                 {RemoteData.isPending(avsluttRevurderingStatus) && <Loader />}
             </Button>

@@ -16,7 +16,7 @@ import { useUserContext } from '~context/userContext';
 import * as sakSlice from '~features/saksoversikt/sak.slice';
 import { useFeatureToggle } from '~lib/featureToggles';
 import { pipe } from '~lib/fp';
-import { useAsyncActionCreator, useNotificationFromLocation } from '~lib/hooks';
+import { ApiResult, useAsyncActionCreator, useNotificationFromLocation } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { Nullable } from '~lib/types';
@@ -342,63 +342,59 @@ const RevurderingStartetKnapper = (props: {
                         })}
                     </LinkAsButton>
                 ) : erRevurderingStans(revurdering) ? (
-                    <LinkAsButton
-                        href={Routes.stansOppsummeringRoute.createURL({
-                            sakId: props.sakId,
-                            revurderingId: revurdering.id,
-                        })}
-                        variant="secondary"
-                        size="small"
-                    >
-                        {revurdering.status === RevurderingsStatus.IVERKSATT_STANS
-                            ? props.intl.formatMessage({ id: 'revurdering.oppsummering' })
-                            : props.intl.formatMessage({ id: 'revurdering.fortsett' })}
-                    </LinkAsButton>
+                    <AvsluttOgStartFortsettButtons
+                        sakId={props.sakId}
+                        behandlingsId={revurdering.id}
+                        primaryButtonTekst={
+                            revurdering.status === RevurderingsStatus.IVERKSATT_STANS
+                                ? props.intl.formatMessage({ id: 'revurdering.oppsummering' })
+                                : props.intl.formatMessage({ id: 'revurdering.fortsett' })
+                        }
+                        usePrimaryAsLink={{
+                            url: Routes.stansOppsummeringRoute.createURL({
+                                sakId: props.sakId,
+                                revurderingId: revurdering.id,
+                            }),
+                        }}
+                        intl={props.intl}
+                    />
                 ) : erRevurderingGjenopptak(revurdering) ? (
-                    <LinkAsButton
-                        href={Routes.gjenopptaStansOppsummeringRoute.createURL({
-                            sakId: props.sakId,
-                            revurderingId: revurdering.id,
-                        })}
-                        variant="secondary"
-                        size="small"
-                    >
-                        {revurdering.status === RevurderingsStatus.IVERKSATT_GJENOPPTAK
-                            ? props.intl.formatMessage({ id: 'revurdering.oppsummering' })
-                            : props.intl.formatMessage({ id: 'revurdering.fortsett' })}
-                    </LinkAsButton>
+                    <AvsluttOgStartFortsettButtons
+                        sakId={props.sakId}
+                        behandlingsId={revurdering.id}
+                        primaryButtonTekst={
+                            revurdering.status === RevurderingsStatus.IVERKSATT_GJENOPPTAK
+                                ? props.intl.formatMessage({ id: 'revurdering.oppsummering' })
+                                : props.intl.formatMessage({ id: 'revurdering.fortsett' })
+                        }
+                        usePrimaryAsLink={{
+                            url: Routes.gjenopptaStansOppsummeringRoute.createURL({
+                                sakId: props.sakId,
+                                revurderingId: revurdering.id,
+                            }),
+                        }}
+                        intl={props.intl}
+                    />
                 ) : (
                     erRevurdering(revurdering) &&
                     !erRevurderingTilAttestering(revurdering) &&
                     !erRevurderingIverksatt(revurdering) &&
                     user.navIdent !== pipe(revurdering.attesteringer, last, toNullable)?.attestant && (
-                        <div>
-                            <LinkAsButton
-                                variant="secondary"
-                                size="small"
-                                href={Routes.avsluttBehandling.createURL({
-                                    sakId: props.sakId,
-                                    id: revurdering.id,
-                                })}
-                            >
-                                {props.intl.formatMessage({
-                                    id: 'behandling.avsluttBehandling',
-                                })}
-                            </LinkAsButton>
-                            <LinkAsButton
-                                variant="primary"
-                                size="small"
-                                href={Routes.revurderValgtRevurdering.createURL({
+                        <AvsluttOgStartFortsettButtons
+                            sakId={props.sakId}
+                            behandlingsId={revurdering.id}
+                            primaryButtonTekst={props.intl.formatMessage({ id: 'revurdering.fortsett' })}
+                            usePrimaryAsLink={{
+                                url: Routes.revurderValgtRevurdering.createURL({
                                     sakId: props.sakId,
                                     steg: erRevurderingSimulert(revurdering)
                                         ? RevurderingSteg.Oppsummering
                                         : finnNesteRevurderingsteg(revurdering.informasjonSomRevurderes),
                                     revurderingId: revurdering.id,
-                                })}
-                            >
-                                {props.intl.formatMessage({ id: 'revurdering.fortsett' })}
-                            </LinkAsButton>
-                        </div>
+                                }),
+                            }}
+                            intl={props.intl}
+                        />
                     )
                 )}
             </div>
@@ -453,7 +449,7 @@ const IverksattInnvilgedeSøknader = (props: {
                                             <BodyShort>{props.intl.formatDate(s.iverksattDato)}</BodyShort>
                                         </div>
                                     </div>
-                                    <div className={(styles.knapper, styles.flexColumn)}>
+                                    <div>
                                         <LinkAsButton
                                             variant="secondary"
                                             href={Routes.vedtaksoppsummering.createURL({
@@ -480,24 +476,15 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
     const [behandlingStatus, startBehandling] = useAsyncActionCreator(sakSlice.startBehandling);
 
     return (
-        <div className={styles.søknadsbehandlingKnapperContainer}>
-            <div className={styles.søknadsbehandlingKnapper}>
-                <LinkAsButton
-                    size="small"
-                    variant="secondary"
-                    href={Routes.avsluttBehandling.createURL({
-                        sakId: props.sakId,
-                        id: props.søknadId,
-                    })}
-                >
-                    {props.intl.formatMessage({
-                        id: 'behandling.avsluttBehandling',
-                    })}
-                </LinkAsButton>
-                <Button
-                    className={styles.startBehandlingKnapp}
-                    size="small"
-                    onClick={() => {
+        <div>
+            <AvsluttOgStartFortsettButtons
+                sakId={props.sakId}
+                behandlingsId={props.søknadId}
+                primaryButtonTekst={props.intl.formatMessage({
+                    id: 'behandling.startBehandling',
+                })}
+                usePrimaryAsButton={{
+                    onClick: () =>
                         startBehandling(
                             {
                                 sakId: props.sakId,
@@ -511,15 +498,12 @@ const StartSøknadsbehandlingKnapper = (props: { sakId: string; søknadId: strin
                                     })
                                 );
                             }
-                        );
-                    }}
-                >
-                    {props.intl.formatMessage({
-                        id: 'behandling.startBehandling',
-                    })}
-                    {RemoteData.isPending(behandlingStatus) && <Loader />}
-                </Button>
-            </div>
+                        ),
+                    status: behandlingStatus,
+                }}
+                intl={props.intl}
+            />
+
             {RemoteData.isFailure(behandlingStatus) && (
                 <div className={styles.feil}>
                     <ApiErrorAlert error={behandlingStatus.error} />
@@ -539,7 +523,7 @@ const SøknadsbehandlingStartetKnapper = (props: {
     const { behandling } = props;
 
     return (
-        <div className={styles.søknadsbehandlingKnapperContainer}>
+        <div>
             {erTilAttestering(behandling) && (!user.isAttestant || user.navIdent === behandling.saksbehandler) && (
                 <div className={styles.ikonContainer}>
                     <Ikon className={styles.ikon} kind="info-sirkel-fyll" width={'24px'} />
@@ -569,32 +553,21 @@ const SøknadsbehandlingStartetKnapper = (props: {
                     !erTilAttestering(behandling) &&
                     !erIverksatt(behandling) &&
                     user.navIdent !== pipe(behandling.attesteringer ?? [], last, toNullable)?.attestant && (
-                        <>
-                            <LinkAsButton
-                                variant="secondary"
-                                size="small"
-                                href={Routes.avsluttBehandling.createURL({
-                                    sakId: props.sakId,
-                                    id: props.søknadId,
-                                })}
-                            >
-                                {props.intl.formatMessage({
-                                    id: 'behandling.avsluttBehandling',
-                                })}
-                            </LinkAsButton>
-                            <LinkAsButton
-                                size="small"
-                                href={Routes.saksbehandlingVilkårsvurdering.createURL({
+                        <AvsluttOgStartFortsettButtons
+                            sakId={props.sakId}
+                            behandlingsId={props.søknadId}
+                            primaryButtonTekst={props.intl.formatMessage({
+                                id: 'behandling.fortsettBehandling',
+                            })}
+                            usePrimaryAsLink={{
+                                url: Routes.saksbehandlingVilkårsvurdering.createURL({
                                     sakId: props.sakId,
                                     behandlingId: behandling.id,
                                     vilkar: hentSisteVurdertSaksbehandlingssteg(behandling),
-                                })}
-                            >
-                                {props.intl.formatMessage({
-                                    id: 'behandling.fortsettBehandling',
-                                })}
-                            </LinkAsButton>
-                        </>
+                                }),
+                            }}
+                            intl={props.intl}
+                        />
                     )
                 )}
             </div>
@@ -693,7 +666,7 @@ const AvslåtteSøknader = (props: {
                                         </div>
                                     </div>
                                 </div>
-                                <div className={(styles.knapper, styles.flexColumn)}>
+                                <div>
                                     <LinkAsButton
                                         variant="secondary"
                                         href={Routes.vedtaksoppsummering.createURL({
@@ -710,6 +683,47 @@ const AvslåtteSøknader = (props: {
                     );
                 })}
             </ol>
+        </div>
+    );
+};
+
+const AvsluttOgStartFortsettButtons = (props: {
+    sakId: string;
+    behandlingsId: string;
+    primaryButtonTekst: string;
+    intl: IntlShape;
+    usePrimaryAsLink?: {
+        url: string;
+    };
+    usePrimaryAsButton?: {
+        onClick: () => Promise<void>;
+        status: ApiResult<Behandling, string>;
+    };
+}) => {
+    return (
+        <div className={styles.avsluttOgStartFortsettKnapperContainer}>
+            <LinkAsButton
+                variant="secondary"
+                size="small"
+                href={Routes.avsluttBehandling.createURL({
+                    sakId: props.sakId,
+                    id: props.behandlingsId,
+                })}
+            >
+                {props.intl.formatMessage({
+                    id: 'behandling.avsluttBehandling',
+                })}
+            </LinkAsButton>
+            {props.usePrimaryAsButton ? (
+                <Button size="small" onClick={props.usePrimaryAsButton.onClick}>
+                    {props.primaryButtonTekst}
+                    {RemoteData.isPending(props.usePrimaryAsButton.status) && <Loader />}
+                </Button>
+            ) : (
+                <LinkAsButton href={props.usePrimaryAsLink?.url ?? ''} variant="primary" size="small">
+                    {props.primaryButtonTekst}
+                </LinkAsButton>
+            )}
         </div>
     );
 };
