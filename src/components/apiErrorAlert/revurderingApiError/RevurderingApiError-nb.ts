@@ -7,7 +7,6 @@ export default {
     'generell.ugyldig.periode': 'Ugyldig periode',
     'generell.ugyldig.årsak': 'Ugyldig årsak',
     'generell.kunne.ikke.slå.opp.eps': 'Kunne ikke slå opp ektefelle eller samboer i PDL',
-    'generell.revurderingen.er.allerede.avsluttet': 'Revurderingen er allerede blitt avsluttet',
 
     'periode.ingenting.å.revurdere': 'Fant ingen vedtak som kan revurderes for angitt periode',
 
@@ -99,4 +98,10 @@ export default {
         'Kan ikke opprette revurdering for gjenopptak av ytelse, siste vedtak er ikke en stans',
     'gjenopptak.åpen.revurdering.eksisterer': 'Åpen revurdering for gjenopptak av ytelse eksisterer fra før',
     'gjenopptak.iverksetting.feilutbetaling': 'Iverksetting av gjenopptak som fører til feilutbetaling støttes ikke',
+
+    'avsluttet.revurderingen.er.allerede.avsluttet': 'Revurderingen er allerede blitt avsluttet',
+    'avsluttet.revurderingen.er.til.attestering': 'Revurderingen er til attestering',
+    'avsluttet.revurderingen.er.iverksatt': 'Revurderingen er Iverksatt',
+    'avsluttet.revurderingen.er.ikke.forhåndsvarslet.for.å.vise.brev':
+        'Revurderingen er ikke forhåndsvarslet for å vise brev',
 };

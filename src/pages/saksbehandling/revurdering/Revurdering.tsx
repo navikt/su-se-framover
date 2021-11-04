@@ -1,5 +1,5 @@
 import * as RemoteData from '@devexperts/remote-data-ts';
-import { Alert, Heading, Loader } from '@navikt/ds-react';
+import { Alert, Heading, Link, Loader } from '@navikt/ds-react';
 import * as A from 'fp-ts/Array';
 import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
@@ -63,11 +63,15 @@ const RevurderingPage = (props: { sak: Sak }) => {
     const påbegyntRevurdering = props.sak.revurderinger.find((r) => r.id === urlParams.revurderingId);
 
     if (påbegyntRevurdering && !erRevurdering(påbegyntRevurdering)) {
-        //TODO: håndter at vi ikke skal ha ikke-revurderinger inn her
         return (
             <div>
-                Hvis du ser denne meldingen, så har noe virkelig gått galt, eller så har du brukt en feil
-                revurderings-id
+                <p>
+                    Hvis du ser denne meldingen, så har noe virkelig gått galt, eller så har du brukt en feil
+                    revurderings-id
+                </p>
+                <Link href={Routes.saksoversiktValgtSak.createURL({ sakId: props.sak.id })}>
+                    Tilbake til saksoversikt
+                </Link>
             </div>
         );
     }

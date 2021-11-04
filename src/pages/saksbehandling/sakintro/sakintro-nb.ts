@@ -34,8 +34,12 @@ export default {
     'revurdering.undertittel': 'Revurdering',
     'revurdering.opprettet': 'Opprettet:',
     'revurdering.iverksattDato': 'Iverksatt dato:',
+    'revurdering.type': 'Type: ',
+    'revurdering.type.stansGjenoppta.label': 'Stans/Gjenoppta av utbetaling',
 
     'revurdering.label.forhåndsvarselSendt': 'Forhåndsvarsel sendt',
+
+    'revurdering.avsluttede.tittel': 'Avsluttede revurderinger',
 
     'suksess.forhåndsvarsel': 'Forhåndsvarsel er sendt til bruker og oppgave i Gosys er opprettet',
     'suksess.sendtTilAttestering': 'Revurderingen er sendt til attestering',

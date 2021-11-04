@@ -31,6 +31,9 @@ export const erBeregnetIngenEndring = (r: Revurdering): r is BeregnetIngenEndrin
 
 export const erRevurderingForhåndsvarslet = (r: Revurdering) =>
     erForhåndsvarselSendt(r) || erForhåndsvarslingBesluttet(r) || erIngenForhåndsvarsel(r);
+
+export const erForhåndsvarselSendtEllerBesluttet = (r: Revurdering) =>
+    erForhåndsvarselSendt(r) || erForhåndsvarslingBesluttet(r);
 export const erForhåndsvarselSendt = (r: Revurdering) => r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesSendt;
 export const erForhåndsvarslingBesluttet = (r: Revurdering) =>
     r.forhåndsvarsel?.type === Forhåndsvarseltype.SkalVarslesBesluttet;
@@ -68,6 +71,11 @@ export const erRevurderingGjenopptak = (r: AbstraktRevurdering): r is Gjenopptak
 
 export const erGregulering = (årsak: OpprettetRevurderingGrunn): boolean =>
     årsak === OpprettetRevurderingGrunn.REGULER_GRUNNBELØP;
+
+export const erAbstraktRevurderingAvsluttet = (r: AbstraktRevurdering): boolean =>
+    r.status === RevurderingsStatus.AVSLUTTET ||
+    r.status === RevurderingsStatus.AVSLUTTET_GJENOPPTAK ||
+    r.status === RevurderingsStatus.AVSLUTTET_STANS;
 
 export function getRevurderingsårsakMessageId(årsak: OpprettetRevurderingGrunn): keyof typeof sharedMessages {
     switch (årsak) {
@@ -128,4 +136,21 @@ export const finnNesteRevurderingsteg = (
     });
 
     return førsteIkkeVurderteSteg ?? RevurderingSteg.Oppsummering;
+};
+
+export const getAvsluttedeOgIkkeAvsluttedeRevurderinger = (
+    revurderinger: AbstraktRevurdering[]
+): { avsluttedeRevurderinger: AbstraktRevurdering[]; åpneRevurderinger: AbstraktRevurdering[] } => {
+    const avsluttedeRevurderinger: AbstraktRevurdering[] = [];
+    const åpneRevurderinger: AbstraktRevurdering[] = [];
+
+    revurderinger.forEach((r) => {
+        if (erAbstraktRevurderingAvsluttet(r)) {
+            avsluttedeRevurderinger.push(r);
+        } else {
+            åpneRevurderinger.push(r);
+        }
+    });
+
+    return { avsluttedeRevurderinger, åpneRevurderinger };
 };
