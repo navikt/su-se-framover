@@ -189,18 +189,18 @@ const Formue = (props: {
             return;
         }
 
-        await lagreEpsGrunnlag(
+        await lagreBehandlingsinformasjon(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                epsFnr: values.epsFnr,
+                behandlingsinformasjon: { formue: formueValues },
             },
             () => {
-                return lagreBehandlingsinformasjon(
+                return lagreEpsGrunnlag(
                     {
                         sakId: props.sakId,
                         behandlingId: props.behandling.id,
-                        behandlingsinformasjon: { formue: formueValues },
+                        epsFnr: values.epsFnr,
                     },
                     () => {
                         clearDraft();
@@ -273,7 +273,7 @@ const Formue = (props: {
         form.handleSubmit(handleSave(Routes.home.createURL()), () => {
             dispatch(sakSliceActions.actions.resetSak());
             dispatch(personSlice.actions.resetSøker());
-        });
+        })();
     };
 
     const erVilkårOppfylt = totalFormue <= senesteHalvG;
