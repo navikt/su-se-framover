@@ -59,7 +59,7 @@ const Personsøk = (props: PersonsøkProps) => {
             return setInputErrorMsg(intl.formatMessage({ id: 'feilmelding.måVareTall' }));
         }
 
-        if (input.length === 11) {
+        if (!props.onFetchBySaksnummer || input.length === 11) {
             return fetchSakByFnr();
         }
 
@@ -107,6 +107,7 @@ const Personsøk = (props: PersonsøkProps) => {
                         />
                         <SearchField.Button type="submit">
                             <FormattedMessage id="knapp.søk" />
+                            {RemoteData.isPending(props.person) && <Loader />}
                         </SearchField.Button>
                     </SearchField>
                     <SkjemaelementFeilmelding>
@@ -121,7 +122,7 @@ const Personsøk = (props: PersonsøkProps) => {
                         props.person,
                         RemoteData.fold(
                             () => null,
-                            () => <Loader />,
+                            () => null,
                             (err) => <ApiErrorAlert error={err} />,
                             (s) => <Personkort person={s} />
                         )

@@ -1,5 +1,5 @@
 import { Restans } from '~types/Restans';
-import { Sak } from '~types/Sak';
+import { BegrensetSakinfo, Sak } from '~types/Sak';
 
 import apiClient, { ApiClientResult } from './apiClient';
 
@@ -29,4 +29,8 @@ export async function fetchSakBySakId(sakId: string): Promise<ApiClientResult<Sa
 
 export async function hentRestanser(): Promise<ApiClientResult<Restans[]>> {
     return apiClient({ url: `/saker/restanser`, method: 'GET' });
+}
+
+export async function hentBegrensetSakinfo(fnr: string): Promise<ApiClientResult<BegrensetSakinfo>> {
+    return apiClient({ url: `/saker/info/${fnr}`, method: 'GET' });
 }
