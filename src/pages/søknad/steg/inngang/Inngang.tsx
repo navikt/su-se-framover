@@ -7,7 +7,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ErrorCode } from '~api/apiClient';
-import * as personApi from '~api/personApi';
+import * as sakApi from '~api/sakApi';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
 import CircleWithIcon from '~components/circleWithIcon/CircleWithIcon';
 import LinkAsButton from '~components/linkAsButton/LinkAsButton';
@@ -18,17 +18,18 @@ import { useAsyncActionCreator, useApiCall } from '~lib/hooks';
 import { MessageFormatter, useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
+import { BegrensetSakinfo } from '~types/Sak';
 import { Søknadstype } from '~types/Søknad';
 import { formatDate } from '~utils/date/dateUtils';
 
 import nb from './inngang-nb';
 import styles from './inngang.module.less';
 
-const SakInfoAlert = ({
+const SakinfoAlert = ({
     info,
     formatMessage,
 }: {
-    info: personApi.SakInfo;
+    info: BegrensetSakinfo;
     formatMessage: MessageFormatter<typeof nb>;
 }) => (
     <Alert className={styles.åpenSøknadContainer} variant="warning">
@@ -81,7 +82,7 @@ const index = (props: { nesteUrl: string }) => {
     }, [søker]);
 
     const [hentPersonStatus, hentPerson] = useAsyncActionCreator(personSlice.fetchPerson);
-    const [sakInfo, hentSakinfo] = useApiCall(personApi.fetchSakInfo);
+    const [sakinfo, hentSakinfo] = useApiCall(sakApi.hentBegrensetSakinfo);
 
     const isFormValid = RemoteData.isSuccess(søker) && (isPapirsøknad || erBekreftet);
 
@@ -175,7 +176,7 @@ const index = (props: { nesteUrl: string }) => {
                             // Vi ønsker ikke at personen skal dukke opp før vi også har eventuelle
                             // alerts på plass.
                             pipe(
-                                sakInfo,
+                                sakinfo,
                                 RemoteData.chain(() => hentPersonStatus),
                                 RemoteData.mapLeft(
                                     (e) =>
@@ -189,19 +190,19 @@ const index = (props: { nesteUrl: string }) => {
                         }
                     />
                     {pipe(
-                        sakInfo,
+                        sakinfo,
                         RemoteData.map(
                             (info) =>
                                 (info.harÅpenSøknad || info.iverksattInnvilgetStønadsperiode) && (
-                                    <SakInfoAlert info={info} formatMessage={formatMessage} />
+                                    <SakinfoAlert info={info} formatMessage={formatMessage} />
                                 )
                         ),
                         RemoteData.getOrElse(() => null as React.ReactNode)
                     )}
                     {/* Vi ønsker ikke å vise en feil dersom personkallet ikke er 2xx eller sakskallet ga 404  */}
                     {RemoteData.isSuccess(hentPersonStatus) &&
-                        RemoteData.isFailure(sakInfo) &&
-                        sakInfo.error?.statusCode !== 404 && <ApiErrorAlert error={sakInfo.error} />}
+                        RemoteData.isFailure(sakinfo) &&
+                        sakinfo.error?.statusCode !== 404 && <ApiErrorAlert error={sakinfo.error} />}
                     {hasSubmitted && RemoteData.isInitial(søker) && (
                         <Tag variant="error">{formatMessage('feil.måSøkePerson')}</Tag>
                     )}

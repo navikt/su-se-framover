@@ -1,7 +1,5 @@
 import { Nullable } from '~lib/types';
 
-import { Periode } from '../types/Periode';
-
 import apiClient, { ApiClientResult } from './apiClient';
 
 export enum Kjønn {
@@ -84,11 +82,6 @@ export interface Person {
     fullmakt: Nullable<boolean>;
 }
 
-export interface SakInfo {
-    harÅpenSøknad: boolean;
-    iverksattInnvilgetStønadsperiode: Nullable<Periode<string>>;
-}
-
 export async function fetchPerson(fnr: string): Promise<ApiClientResult<Person>> {
     return apiClient({
         url: `/person/søk`,
@@ -96,12 +89,5 @@ export async function fetchPerson(fnr: string): Promise<ApiClientResult<Person>>
         body: {
             fnr: fnr,
         },
-    });
-}
-
-export async function fetchSakInfo(fnr: string): Promise<ApiClientResult<SakInfo>> {
-    return apiClient({
-        url: `/person/${fnr}/sakinfo`,
-        method: 'GET',
     });
 }
