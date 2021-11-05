@@ -133,10 +133,19 @@ const OppsummeringshandlingForm = (props: {
         (args) => {
             if (args.beslutningEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettMedAndreOpplysninger) {
                 history.push(props.førsteRevurderingstegUrl);
-            } else {
+            } else if (
+                args.beslutningEtterForhåndsvarsel === BeslutningEtterForhåndsvarsling.FortsettSammeOpplysninger
+            ) {
                 history.push(
                     Routes.createSakIntroLocation(
                         intl.formatMessage({ id: 'notification.sendtTilAttestering' }),
+                        props.sakId
+                    )
+                );
+            } else {
+                history.push(
+                    Routes.createSakIntroLocation(
+                        intl.formatMessage({ id: 'notification.avsluttetRevurdering' }),
                         props.sakId
                     )
                 );
@@ -216,7 +225,7 @@ const OppsummeringshandlingForm = (props: {
                     onSubmit={(args) =>
                         fortsettEtterForhåndsvarsel({
                             beslutningEtterForhåndsvarsel: args.resultatEtterForhåndsvarsel,
-                            brevtekst: args.tekstTilVedtaksbrev,
+                            brevtekst: args.brevTekst,
                             begrunnelse: args.begrunnelse,
                         })
                     }
