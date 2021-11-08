@@ -35,7 +35,7 @@ export function getFormueInitialValues(
         status: behandlingsFormue?.status ?? FormueStatus.VilkårOppfylt,
         begrunnelse: behandlingsFormue?.begrunnelse ?? null,
         borSøkerMedEPS:
-            behandlingsFormue?.borSøkerMedEPS ??
+            !!hentBosituasjongrunnlag(grunnlagsdata)?.fnr ??
             søknadsInnhold.boforhold.delerBoligMed === DelerBoligMed.EKTEMAKE_SAMBOER,
         epsFnr:
             hentBosituasjongrunnlag(grunnlagsdata)?.fnr ??
