@@ -54,7 +54,7 @@
         "@navikt/fnrvalidator": "^1.1.4",
         "@reduxjs/toolkit": "^1.6.2",
         "@sentry/browser": "^6.14.1",
-        "@sentry/cli": "^1.70.1",
+        "@sentry/cli": "^1.71.0",
         "@types/jest": "^27.0.2",
         "@types/react-collapse": "^5.0.1",
         "@types/react-datepicker": "^4.1.7",
