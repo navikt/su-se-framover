@@ -300,10 +300,11 @@ export async function lagreUtenlandsopphold(
     data: UtenlandsoppholdRequest
 ): Promise<ApiClientResult<{ revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>> {
     return apiClient({
-        url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/utenlandsopphold`,
+        url: `/saker/${data.sakId}/revurderinger/${data.revurderingId}/utlandsopphold`,
         method: 'POST',
         body: {
             status: data.status,
+            begrunnelse: data.begrunnelse,
         },
     });
 }

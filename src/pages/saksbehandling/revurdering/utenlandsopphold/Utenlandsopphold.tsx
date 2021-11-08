@@ -7,10 +7,12 @@ import { useHistory } from 'react-router-dom';
 
 import { ApiError, ErrorMessage } from '~api/apiClient';
 import ApiErrorAlert from '~components/apiErrorAlert/ApiErrorAlert';
+import { Utenlandsoppsummering } from '~components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import ToKolonner from '~components/toKolonner/ToKolonner';
 import * as revurderingActions from '~features/revurdering/revurderingActions';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
+import { Nullable } from '~lib/types';
 import yup from '~lib/validering';
 import { RevurderingBunnknapper } from '~pages/saksbehandling/revurdering/bunnknapper/RevurderingBunnknapper';
 import { StegProps } from '~pages/saksbehandling/revurdering/common';
@@ -24,12 +26,12 @@ import messages from './utenlandsopphold-nb';
 
 interface UtenlandsoppholdFormData {
     status?: Utenlandsoppholdstatus;
-    begrunnelse?: string;
+    begrunnelse: Nullable<string>;
 }
 
 const schemaValidation = yup.object<UtenlandsoppholdFormData>({
     status: yup.mixed<Utenlandsoppholdstatus>().oneOf(Object.values(Utenlandsoppholdstatus)).required(),
-    begrunnelse: yup.string().optional(),
+    begrunnelse: yup.string().nullable().defined(),
 });
 
 const Utenlandsopphold = (props: StegProps) => {
@@ -38,6 +40,10 @@ const Utenlandsopphold = (props: StegProps) => {
     const history = useHistory();
     const form = useForm<UtenlandsoppholdFormData>({
         resolver: yupResolver(schemaValidation),
+        defaultValues: {
+            status: props.revurdering.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet.status,
+            begrunnelse: props.revurdering.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet.begrunnelse ?? null,
+        },
     });
     const [status, setStatus] = React.useState<
         RemoteData.RemoteData<ApiError, { revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>
@@ -54,6 +60,7 @@ const Utenlandsopphold = (props: StegProps) => {
                 revurderingId: props.revurdering.id,
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 status: form.status!,
+                begrunnelse: form.begrunnelse,
             })
         );
 
@@ -126,7 +133,9 @@ const Utenlandsopphold = (props: StegProps) => {
                         <Heading level="2" size="large" spacing>
                             {formatMessage('eksisterende.vedtakinfo.tittel')}
                         </Heading>
-                        <div>{props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold}</div>
+                        <Utenlandsoppsummering
+                            oppholdIUtlandet={props.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet}
+                        />
                     </div>
                 ),
             }}

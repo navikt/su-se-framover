@@ -165,8 +165,8 @@ const Utenlandsblokk = (props: { nyeData: Utenlandsopphold; gamleData: Utenlands
     return (
         <Rad radTittel={formatMessage('radTittel.utenlandsopphold')}>
             {{
-                venstre: <Utenlandsoppsummering utenlandsopphold={props.nyeData} />,
-                høyre: <Utenlandsoppsummering utenlandsopphold={props.gamleData} />,
+                venstre: <Utenlandsoppsummering oppholdIUtlandet={props.nyeData} />,
+                høyre: <Utenlandsoppsummering oppholdIUtlandet={props.gamleData} />,
             }}
         </Rad>
     );
@@ -224,10 +224,10 @@ const Vedtaksinformasjon = (props: {
                     gamleData={props.grunnlagsdataOgVilkårsvurderinger}
                 />
             )}
-            {props.revurdering.informasjonSomRevurderes.Utenlandsopphold === Vurderingstatus.Vurdert && (
+            {props.revurdering.informasjonSomRevurderes.UtenlandsoppholdOver90Dager === Vurderingstatus.Vurdert && (
                 <Utenlandsblokk
-                    nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold}
-                    gamleData={props.grunnlagsdataOgVilkårsvurderinger.utenlandsopphold}
+                    nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet}
+                    gamleData={props.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet}
                 />
             )}
         </div>

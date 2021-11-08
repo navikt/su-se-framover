@@ -5,7 +5,7 @@ import styles from './oppsummeringspar.module.less';
 
 interface Props {
     label: string;
-    verdi: string | number | undefined;
+    verdi: string | number | undefined | null;
     className?: string;
 }
 

@@ -318,11 +318,12 @@ export const lagreUtenlandsopphold = createAsyncThunk<
     { revurdering: Revurdering; feilmeldinger: ErrorMessage[] },
     UtenlandsoppholdRequest,
     { rejectValue: ApiError }
->('revurdering/grunnlag/utenlandsopphold/lagre', async (arg, thunkApi) => {
+>('revurdering/grunnlag/utlandsopphold/lagre', async (arg, thunkApi) => {
     const res = await revurderingApi.lagreUtenlandsopphold({
         sakId: arg.sakId,
         revurderingId: arg.revurderingId,
         status: arg.status,
+        begrunnelse: arg.begrunnelse,
     });
     if (res.status === 'ok') {
         return res.data;
