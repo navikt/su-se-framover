@@ -75,7 +75,7 @@ export async function fetchBrevutkastForAvslutningAvRevurdering(args: {
     fritekst: Nullable<string>;
 }): Promise<ApiClientResult<Blob>> {
     return apiClient({
-        url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/brevutkastForAvslutning`,
+        url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/brevutkastForAvslutting`,
         method: 'POST',
         request: { headers: new Headers({ Accept: 'application/pdf' }) },
         body: {

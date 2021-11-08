@@ -19,6 +19,7 @@ import {
     Revurdering,
     BosituasjonRequest,
     FormuegrunnlagRequest,
+    AbstraktRevurdering,
 } from '~types/Revurdering';
 import { Gjenopptak, StansAvYtelse } from '~types/Stans';
 
@@ -328,7 +329,7 @@ export async function avsluttRevurdering(args: {
     revurderingId: string;
     begrunnelse: string;
     fritekst: Nullable<string>;
-}): Promise<ApiClientResult<Revurdering>> {
+}): Promise<ApiClientResult<AbstraktRevurdering>> {
     return apiClient<Revurdering>({
         url: `/saker/${args.sakId}/revurderinger/${args.revurderingId}/avslutt`,
         method: 'POST',

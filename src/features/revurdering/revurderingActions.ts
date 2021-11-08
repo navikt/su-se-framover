@@ -21,6 +21,7 @@ import {
     Revurdering,
     BosituasjonRequest,
     FormuegrunnlagRequest,
+    AbstraktRevurdering,
 } from '~types/Revurdering';
 import { Gjenopptak, StansAvYtelse } from '~types/Stans';
 
@@ -348,7 +349,7 @@ export const hentGjeldendeGrunnlagsdataOgVilkårsvurderinger = createAsyncThunk<
 });
 
 export const avsluttRevurdering = createAsyncThunk<
-    Revurdering,
+    AbstraktRevurdering,
     { sakId: string; revurderingId: string; begrunnelse: string; fritekst: Nullable<string> },
     { rejectValue: ApiError }
 >('revurdering/avsluttRevurdering', async (arg, thunkApi) => {

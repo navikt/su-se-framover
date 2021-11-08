@@ -31,36 +31,36 @@ export interface Revurdering<T extends RevurderingsStatus = RevurderingsStatus> 
 export type OpprettetRevurdering = Revurdering<RevurderingsStatus.OPPRETTET>;
 
 export interface BeregnetInnvilget extends Revurdering<RevurderingsStatus.BEREGNET_INNVILGET> {
-    beregninger: Beregning;
+    beregning: Beregning;
 }
 
 export interface BeregnetIngenEndring extends Revurdering<RevurderingsStatus.BEREGNET_INGEN_ENDRING> {
-    beregninger: Beregning;
+    beregning: Beregning;
 }
 
 export interface SimulertRevurdering
     extends Revurdering<RevurderingsStatus.SIMULERT_INNVILGET | RevurderingsStatus.SIMULERT_OPPHØRT> {
-    beregninger: Beregning;
+    beregning: Beregning;
     simulering: Simulering;
 }
 
 export interface RevurderingTilAttestering
     extends Revurdering<RevurderingsStatus.TIL_ATTESTERING_INNVILGET | RevurderingsStatus.TIL_ATTESTERING_OPPHØRT> {
-    beregninger: Beregning;
+    beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
 }
 
 export interface IverksattRevurdering
     extends Revurdering<RevurderingsStatus.IVERKSATT_INNVILGET | RevurderingsStatus.IVERKSATT_OPPHØRT> {
-    beregninger: Beregning;
+    beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
 }
 
 export interface UnderkjentRevurdering
     extends Revurdering<RevurderingsStatus.UNDERKJENT_INNVILGET | RevurderingsStatus.UNDERKJENT_OPPHØRT> {
-    beregninger: Beregning;
+    beregning: Beregning;
     skalFøreTilBrevutsending: boolean;
     simulering: Nullable<Simulering>;
 }
@@ -72,8 +72,8 @@ export interface AvsluttetRevurdering extends Revurdering<RevurderingsStatus.AVS
     informasjonSomRevurderes: Record<InformasjonSomRevurderes, Vurderingstatus>;
 }
 
-export function harBeregninger(r: Revurdering): r is Revurdering & { beregninger: Beregning } {
-    return 'beregninger' in r;
+export function harBeregninger(r: Revurdering): r is Revurdering & { beregning: Beregning } {
+    return 'beregning' in r;
 }
 export function harSimulering(r: AbstraktRevurdering): r is AbstraktRevurdering & { simulering: Simulering } {
     return 'simulering' in r && (r as SimulertRevurdering).simulering !== null;

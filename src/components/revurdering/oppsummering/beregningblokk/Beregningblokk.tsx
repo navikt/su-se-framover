@@ -57,7 +57,7 @@ const Beregningblokk = (props: { revurdering: AbstraktRevurdering }) => {
                     </Heading>
                     <Panel border>
                         {erRevurdering(props.revurdering) && harBeregninger(props.revurdering) ? (
-                            <VisBeregning beregning={props.revurdering.beregninger} utenTittel />
+                            <VisBeregning beregning={props.revurdering.beregning} utenTittel />
                         ) : (
                             intl.formatMessage({ id: 'error.ingenBeregning' })
                         )}
