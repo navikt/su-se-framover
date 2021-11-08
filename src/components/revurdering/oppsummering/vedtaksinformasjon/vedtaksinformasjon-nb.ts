@@ -36,4 +36,5 @@ export default {
     'radTittel.bosituasjon': 'Bosituasjon',
     'radTittel.formue': 'Formue',
     'radTittel.fradrag': 'Inntekt',
+    'radTittel.utenlandsopphold': 'Utenlandsopphold',
 };

@@ -1,4 +1,4 @@
-import { BodyShort, Heading, Label } from '@navikt/ds-react';
+import { Heading } from '@navikt/ds-react';
 import classNames from 'classnames';
 import { pipe } from 'fp-ts/lib/function';
 import * as O from 'fp-ts/Option';
@@ -6,6 +6,8 @@ import * as React from 'react';
 import { IntlShape } from 'react-intl';
 
 import Formuestatus from '~components/revurdering/formuestatus/Formuestatus';
+import { OppsummeringPar } from '~components/revurdering/oppsummering/oppsummeringspar/Oppsummeringspar';
+import { Utenlandsoppsummering } from '~components/revurdering/oppsummering/utenlandsopphold/Utenlandsoppsummering';
 import { useI18n } from '~lib/i18n';
 import { FormueResultat, FormueVilkår } from '~types/grunnlagsdataOgVilkårsvurderinger/formue/Formuevilkår';
 import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
@@ -48,11 +50,8 @@ const Vilkårvisning = (props: { grunnlagsblokker: Grunnlagsblokk[] }) => (
     <div className={styles.vilkårvisningContainer}>
         {props.grunnlagsblokker.map((grunnlagsblokk, idx) => (
             <div key={idx} className={styles.grunnlagsblokk}>
-                {grunnlagsblokk.map((grunnlagsinfo) => (
-                    <div key={grunnlagsinfo.label} className={styles.info}>
-                        <BodyShort className={styles.infolabel}>{grunnlagsinfo.label}</BodyShort>
-                        <Label className={styles.infoverdi}>{grunnlagsinfo.verdi}</Label>
-                    </div>
+                {grunnlagsblokk.map(({ label, verdi }) => (
+                    <OppsummeringPar key={label} className={styles.info} label={label} verdi={verdi} />
                 ))}
             </div>
         ))}
@@ -137,10 +136,10 @@ const FormuevilkårVisning = (props: { formuevilkår: FormueVilkår; intl: IntlS
                             bekreftetFormue={bekreftetFormue}
                             erVilkårOppfylt={vurdering.resultat === FormueResultat.VilkårOppfylt}
                         />
-                        <div className={styles.begrunnelseContainer}>
-                            <BodyShort>{props.intl.formatMessage({ id: 'formue.begrunnelse' })}</BodyShort>
-                            <Label>{vurdering.grunnlag.begrunnelse}</Label>
-                        </div>
+                        <OppsummeringPar
+                            label={props.intl.formatMessage({ id: 'formue.begrunnelse' })}
+                            verdi={vurdering.grunnlag.begrunnelse}
+                        />
                     </li>
                 );
             })}
@@ -197,6 +196,22 @@ const Fradragblokk = (props: {
     );
 };
 
+const Utenlandsblokk = (props: {
+    nyeData: GrunnlagsdataOgVilkårsvurderinger;
+    gamleData: GrunnlagsdataOgVilkårsvurderinger;
+}) => {
+    const { formatMessage } = useI18n({ messages });
+
+    return (
+        <Rad radTittel={formatMessage('radTittel.utenlandsopphold')}>
+            {{
+                venstre: <Utenlandsoppsummering utenlandsopphold={props.nyeData.utenlandsopphold} />,
+                høyre: <Utenlandsoppsummering utenlandsopphold={props.gamleData.utenlandsopphold} />,
+            }}
+        </Rad>
+    );
+};
+
 const Vedtaksinformasjon = (props: {
     revurdering: InformasjonsRevurdering;
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
@@ -245,6 +260,12 @@ const Vedtaksinformasjon = (props: {
             )}
             {props.revurdering.informasjonSomRevurderes.Inntekt === Vurderingstatus.Vurdert && (
                 <Fradragblokk
+                    nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger}
+                    gamleData={props.grunnlagsdataOgVilkårsvurderinger}
+                />
+            )}
+            {props.revurdering.informasjonSomRevurderes.Utenlandsopphold === Vurderingstatus.Vurdert && (
+                <Utenlandsblokk
                     nyeData={props.revurdering.grunnlagsdataOgVilkårsvurderinger}
                     gamleData={props.grunnlagsdataOgVilkårsvurderinger}
                 />
