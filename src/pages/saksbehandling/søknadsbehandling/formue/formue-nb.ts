@@ -14,7 +14,7 @@ export default {
     'modal.skjerming.ariaBeskrivelse': 'Advarsel om at søkers ektefelle har en type skjerming',
     'modal.skjerming.heading': 'Ektefelle/samboer har en type skjerming',
     'modal.skjerming.innhold': `
-    Ektellen/samboeren til {navn} ({fnr}) har en type <b>skjerming</b> (fortrolig adresse, strengt fortrolig adresse eller skjerming).
+    Ektefellen/samboeren til {navn} ({fnr}) har en type <b>skjerming</b> (fortrolig adresse, strengt fortrolig adresse eller skjerming).
     {br}
     {br}
     Derfor mister du tilgang til saken og den må behandles av noen med riktig tilgang.

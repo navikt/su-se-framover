@@ -37,6 +37,7 @@ import { pipe } from '~lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
+import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering, validateStringAsNonNegativeNumber } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
@@ -189,18 +190,18 @@ const Formue = (props: {
             return;
         }
 
-        await lagreBehandlingsinformasjon(
+        await lagreEpsGrunnlag(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
-                behandlingsinformasjon: { formue: formueValues },
+                epsFnr: values.epsFnr,
             },
             () => {
-                return lagreEpsGrunnlag(
+                return lagreBehandlingsinformasjon(
                     {
                         sakId: props.sakId,
                         behandlingId: props.behandling.id,
-                        epsFnr: values.epsFnr,
+                        behandlingsinformasjon: { formue: formueValues },
                     },
                     () => {
                         clearDraft();
@@ -269,11 +270,19 @@ const Formue = (props: {
         }
     }, [watch.borSøkerMedEPS]);
 
-    const handleEpsSkjermingModalContinueClick = () => {
-        form.handleSubmit(handleSave(Routes.home.createURL()), () => {
-            dispatch(sakSliceActions.actions.resetSak());
-            dispatch(personSlice.actions.resetSøker());
-        })();
+    const handleEpsSkjermingModalContinueClick = (epsFnr: Nullable<string>) => {
+        lagreEpsGrunnlag(
+            {
+                sakId: props.sakId,
+                behandlingId: props.behandling.id,
+                epsFnr: epsFnr,
+            },
+            () => {
+                dispatch(sakSliceActions.actions.resetSak());
+                dispatch(personSlice.actions.resetSøker());
+                history.push(Routes.home.createURL());
+            }
+        );
     };
 
     const erVilkårOppfylt = totalFormue <= senesteHalvG;
@@ -327,8 +336,7 @@ const Formue = (props: {
                                                     () => <Loader />,
                                                     (err) => (
                                                         <Alert variant="error">
-                                                            {err?.statusCode === ErrorCode.Unauthorized ||
-                                                            true.toString() === 'true' ? (
+                                                            {err?.statusCode === ErrorCode.Unauthorized ? (
                                                                 <Modal
                                                                     open={true}
                                                                     onClose={() => {
@@ -360,8 +368,10 @@ const Formue = (props: {
                                                                             <Button
                                                                                 variant="secondary"
                                                                                 type="button"
-                                                                                onClick={
-                                                                                    handleEpsSkjermingModalContinueClick
+                                                                                onClick={() =>
+                                                                                    handleEpsSkjermingModalContinueClick(
+                                                                                        form.getValues().epsFnr
+                                                                                    )
                                                                                 }
                                                                             >
                                                                                 OK
