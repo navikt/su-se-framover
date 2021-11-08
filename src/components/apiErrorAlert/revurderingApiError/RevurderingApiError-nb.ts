@@ -104,4 +104,7 @@ export default {
     'avsluttet.revurderingen.er.iverksatt': 'Revurderingen er Iverksatt',
     'avsluttet.revurderingen.er.ikke.forhåndsvarslet.for.å.vise.brev':
         'Revurderingen er ikke forhåndsvarslet for å vise brev',
+    'avsluttet.fritekst.fyllt.ut.uten.forhåndsvarsel':
+        'Fritekst har blitt fyllt ut, men revurderingen er ikke forhåndsvarslet',
+    'avsluttet.fant.ikke.person.eller.saksbehandler.navn': 'Fant ikke person, eller saksbehandler navn',
 };

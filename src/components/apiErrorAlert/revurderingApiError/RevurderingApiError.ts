@@ -153,6 +153,8 @@ enum Avsluttet {
     REVURDERINGER_ER_TIL_ATTESTERING = ' ',
     REVURDERINGEN_ER_IVERKSATT = 'revurderingen_er_iverksatt',
     REVURDERING_ER_IKKE_FORHÅNDSVARSLET_FOR_Å_VISE_BREV = 'revurdering_er_ikke_forhåndsvarslet_for_å_vise_brev',
+    FRITEKST_ER_FYLLT_UT_UTEN_FORHÅNDSVARSEL = 'fritekst_er_fyllt_ut_uten_forhåndsvarsel',
+    FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN = 'fant_ikke_person_eller_saksbehandler_navn',
 }
 
 const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof typeof messages | undefined } = {
@@ -254,4 +256,6 @@ const revurderingErrorCodeMessageIdMap: { [key in RevurderingErrorCodes]: keyof 
     [Avsluttet.REVURDERINGEN_ER_IVERKSATT]: 'avsluttet.revurderingen.er.iverksatt',
     [Avsluttet.REVURDERING_ER_IKKE_FORHÅNDSVARSLET_FOR_Å_VISE_BREV]:
         'avsluttet.revurderingen.er.ikke.forhåndsvarslet.for.å.vise.brev',
+    [Avsluttet.FRITEKST_ER_FYLLT_UT_UTEN_FORHÅNDSVARSEL]: 'avsluttet.fritekst.fyllt.ut.uten.forhåndsvarsel',
+    [Avsluttet.FANT_IKKE_PERSON_ELLER_SAKSBEHANDLER_NAVN]: 'avsluttet.fant.ikke.person.eller.saksbehandler.navn',
 };
