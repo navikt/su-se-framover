@@ -13,7 +13,6 @@ import * as Config from './config';
 import { httpLogger, logger } from './logger';
 import setupProxy from './proxy';
 import routes from './routes';
-import setupSession from './session';
 
 const hotjarCsp = {
     imgSrc: ['http://*.hotjar.com', 'https://*.hotjar.com', 'http://*.hotjar.io', 'https://*.hotjar.io'],
@@ -96,9 +95,6 @@ export default async function startServer() {
     );
 
     app.use(compression());
-
-    // Session
-    setupSession(app);
 
     const authClient = await AuthUtils.getOpenIdClient(Config.auth.discoverUrl);
     await setupAuth(app, authClient);
