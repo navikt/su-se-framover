@@ -188,8 +188,9 @@ const Stans = (props: Props) => {
                             </Button>
                             <Button variant="secondary">
                                 {intl.formatMessage({ id: 'stans.bunnknapper.neste' })}
-                                {RemoteData.isPending(opprettStatus) ||
-                                    (RemoteData.isPending(oppdaterStatus) && <Loader />)}
+                                {(RemoteData.isPending(opprettStatus) || RemoteData.isPending(oppdaterStatus)) && (
+                                    <Loader />
+                                )}
                             </Button>
                         </div>
                     </div>
