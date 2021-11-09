@@ -14,13 +14,11 @@ $ npm install # installerer avhengigheter
 Starte for lokal utvikling:
 
 ```sh
-$ ./start-dev.sh # starter Redis og mock-oauth2-server (se under for mer info)
+$ docker compose up # starter Redis og mock-oauth2-server (se under for mer info)
 $ npm start
 ```
 
-`./start-dev.sh` kjører opp Redis og [#mock-oauth2-server](#mock-oauth2-server). (Obs: mock-oauth2-server leser
-github token fra `~/.gradle/gradle.properties`. Dette kan være smart å sjekke ut
-før førsteoppstart. Trykk på lenken for innføring.)
+`docker compose up` kjører opp Redis og [#mock-oauth2-server](#mock-oauth2-server).
 
 `npm start` starter opp `express`-serveren med `parcel`-middleware som ordner med bygging av frontenden.
 
@@ -38,7 +36,7 @@ Vi har erfart at det er lettere å bruke et GUI-verktøy når det kommer til Red
 
 #### Lokalt
 
--   Antar at du har kjørt `./start-dev.sh` og at docker-containeren kjører lokalt.
+-   Antar at du har kjørt `docker compose up` og at docker-containeren kjører lokalt.
 -   Start opp RedisInsight. Koble til med hostname: `localhost` eller `127.0.0.1`. port: `6379`, username: `default` og passord: `subar` (ligger i docker-compose.yml)
 
 #### Via naisdevice i preprod
@@ -53,31 +51,6 @@ Vi har erfart at det er lettere å bruke et GUI-verktøy når det kommer til Red
 For autentisering lokalt så bruker vi https://github.com/navikt/mock-oauth2-server.
 
 Vi bruker Docker for å kjøre den, konfigurert i [./docker-copmpose.yml]().
-Imaget hentes fra docker.pkg.github.com, og man må da være innlogget mot det repoet.
-For innloggingen må man oppgi Github-brukernavn og et personlig access-token.
-Vi bruker allerede et PAT i [https://github.com/navikt/su-se-bakover]() for å hente pakker der, så [./start-oauth-server.sh]() vil prøve å hente ut dette tokenet automagisk (fra `~/.gradle/gradle.properties`).
-
-```
-//~/.gradle/gradle.properties
-githubUser=x-access-token
-githubPassword={PAT fra Github}
-```
-
-Man trenger da altså kun å skrive inn Github-brukernavnet sitt.
-Dersom scriptet ikke klarer å finne tokenet vil man bli spurt om å skrive det inn.
-
-Hvis scriptet ikke funker så kan prosessen gjøres manuelt:
-
-```sh
-$ docker login https://docker.pkg.github.com
-$ docker compose up
-```
-
-Dersom docker compose ikke er knyttet riktig til docker's credentials kan man kjøre
-
-```sh
-$ docker pull docker.pkg.github.com/navikt/mock-oauth2-server/mock-oauth2-server:0.2.3
-```
 
 ## Azure
 
