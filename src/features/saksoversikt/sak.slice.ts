@@ -180,6 +180,22 @@ export const lagreEpsGrunnlag = createAsyncThunk<
     return thunkApi.rejectWithValue(res.error);
 });
 
+export const lagreEpsGrunnlagSkjermet = createAsyncThunk<
+    unknown,
+    {
+        sakId: string;
+        behandlingId: string;
+        epsFnr: string;
+    },
+    { rejectValue: ApiError }
+>('behandling/grunnlag/bosituasjon/eps/skjermet', async (arg, thunkApi) => {
+    const res = await behandlingApi.lagreGrunnlagEpsSkjermet(arg);
+    if (res.status === 'ok') {
+        return res.data;
+    }
+    return thunkApi.rejectWithValue(res.error);
+});
+
 export const lagreBosituasjonGrunnlag = createAsyncThunk<
     Behandling,
     {

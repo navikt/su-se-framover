@@ -115,6 +115,17 @@ export async function lagreGrunnlagEps(arg: { sakId: string; behandlingId: strin
     });
 }
 
+export async function lagreGrunnlagEpsSkjermet(arg: { sakId: string; behandlingId: string; epsFnr: string }) {
+    return apiClient({
+        url: `/saker/${arg.sakId}/behandlinger/${arg.behandlingId}/grunnlag/bosituasjon/eps/skjermet`,
+        method: 'POST',
+        body: {
+            epsFnr: arg.epsFnr,
+        },
+        bodyTransformer: () => Promise.resolve({}),
+    });
+}
+
 export async function lagreGrunnlagBosituasjon(arg: {
     sakId: string;
     behandlingId: string;

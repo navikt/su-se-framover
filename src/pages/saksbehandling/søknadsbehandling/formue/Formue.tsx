@@ -37,7 +37,6 @@ import { pipe } from '~lib/fp';
 import { useApiCall, useAsyncActionCreator } from '~lib/hooks';
 import { useI18n } from '~lib/i18n';
 import * as Routes from '~lib/routes';
-import { Nullable } from '~lib/types';
 import yup, { hookFormErrorsTilFeiloppsummering, validateStringAsNonNegativeNumber } from '~lib/validering';
 import { useAppDispatch } from '~redux/Store';
 import { Behandling } from '~types/Behandling';
@@ -137,6 +136,9 @@ const Formue = (props: {
         sakSlice.lagreBehandlingsinformasjon
     );
     const [lagreEpsGrunnlagStatus, lagreEpsGrunnlag] = useAsyncActionCreator(sakSlice.lagreEpsGrunnlag);
+    const [lagreEpsGrunnlagSkjermetStatus, lagreEpsGrunnlagSkjermet] = useAsyncActionCreator(
+        sakSlice.lagreEpsGrunnlagSkjermet
+    );
     const feiloppsummeringRef = useRef<HTMLDivElement>(null);
 
     const senesteHalvG = getSenesteHalvGVerdi(
@@ -270,8 +272,8 @@ const Formue = (props: {
         }
     }, [watch.borSøkerMedEPS]);
 
-    const handleEpsSkjermingModalContinueClick = (epsFnr: Nullable<string>) => {
-        lagreEpsGrunnlag(
+    const handleEpsSkjermingModalContinueClick = (epsFnr: string) => {
+        lagreEpsGrunnlagSkjermet(
             {
                 sakId: props.sakId,
                 behandlingId: props.behandling.id,
@@ -365,16 +367,28 @@ const Formue = (props: {
                                                                                     }
                                                                                 )}
                                                                             </BodyLong>
+                                                                            {RemoteData.isFailure(
+                                                                                lagreEpsGrunnlagSkjermetStatus
+                                                                            ) && (
+                                                                                <ApiErrorAlert
+                                                                                    error={
+                                                                                        lagreEpsGrunnlagSkjermetStatus.error
+                                                                                    }
+                                                                                />
+                                                                            )}
                                                                             <Button
                                                                                 variant="secondary"
                                                                                 type="button"
                                                                                 onClick={() =>
                                                                                     handleEpsSkjermingModalContinueClick(
-                                                                                        form.getValues().epsFnr
+                                                                                        form.getValues().epsFnr ?? ''
                                                                                     )
                                                                                 }
                                                                             >
                                                                                 OK
+                                                                                {RemoteData.isPending(
+                                                                                    lagreEpsGrunnlagSkjermetStatus
+                                                                                ) && <Loader />}
                                                                             </Button>
                                                                         </div>
                                                                     </Modal.Content>
