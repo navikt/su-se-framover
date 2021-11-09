@@ -165,8 +165,8 @@ const Utenlandsblokk = (props: { nyeData: Utenlandsopphold; gamleData: Utenlands
     return (
         <Rad radTittel={formatMessage('radTittel.utenlandsopphold')}>
             {{
-                venstre: <Utenlandsoppsummering oppholdIUtlandet={props.nyeData} />,
-                høyre: <Utenlandsoppsummering oppholdIUtlandet={props.gamleData} />,
+                venstre: <Utenlandsoppsummering utenlandsopphold={props.nyeData} />,
+                høyre: <Utenlandsoppsummering utenlandsopphold={props.gamleData} />,
             }}
         </Rad>
     );

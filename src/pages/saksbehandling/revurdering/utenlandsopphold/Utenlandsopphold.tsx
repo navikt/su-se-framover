@@ -134,7 +134,7 @@ const Utenlandsopphold = (props: StegProps) => {
                             {formatMessage('eksisterende.vedtakinfo.tittel')}
                         </Heading>
                         <Utenlandsoppsummering
-                            oppholdIUtlandet={props.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet}
+                            utenlandsopphold={props.grunnlagsdataOgVilkårsvurderinger.oppholdIUtlandet}
                         />
                     </div>
                 ),
