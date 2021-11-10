@@ -1,12 +1,13 @@
 version: '3.7'
 services:
     mock-oauth2-server:
-        image: docker.pkg.github.com/navikt/mock-oauth2-server/mock-oauth2-server:0.2.3
+        image: ghcr.io/navikt/mock-oauth2-server:0.4.0
         ports:
             - 4321:4321
         hostname: localhost
         environment:
             SERVER_PORT: 4321
+            JSON_CONFIG: '{ "interactiveLogin": false }'
         restart: unless-stopped # Ønsker å starter container ved reboot maskin/docker
     redis:
         image: bitnami/redis:6.0
