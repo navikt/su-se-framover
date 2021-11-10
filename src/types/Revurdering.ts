@@ -176,6 +176,10 @@ export enum OpprettetRevurderingGrunn {
     MOTTATT_KONTROLLERKLÆRING = 'MOTTATT_KONTROLLERKLÆRING',
 }
 
+export const gyldigeÅrsaker = Object.values(OpprettetRevurderingGrunn).filter(
+    (x) => x !== OpprettetRevurderingGrunn.MIGRERT
+);
+
 export enum InformasjonSomRevurderes {
     Uførhet = 'Uførhet',
     Inntekt = 'Inntekt',

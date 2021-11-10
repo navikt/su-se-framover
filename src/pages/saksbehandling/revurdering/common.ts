@@ -7,4 +7,5 @@ export interface StegProps {
     grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
     forrigeUrl: string;
     nesteUrl: string;
+    avsluttUrl: string;
 }

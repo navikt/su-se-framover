@@ -2,7 +2,10 @@ import * as DateFns from 'date-fns';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { oppdaterRevurderingsPeriode as oppdaterRevurdering } from '~features/revurdering/revurderingActions';
+import {
+    oppdaterRevurderingsPeriode as oppdaterRevurdering,
+    opprettRevurdering,
+} from '~features/revurdering/revurderingActions';
 import * as Routes from '~lib/routes';
 import { useAppDispatch, useAppSelector } from '~redux/Store';
 import { InformasjonSomRevurderes, InformasjonsRevurdering, OpprettetRevurderingGrunn } from '~types/Revurdering';
@@ -11,54 +14,47 @@ import { finnNesteRevurderingsteg } from '~utils/revurdering/revurderingUtils';
 
 import RevurderingIntroForm from './RevurderingIntroForm';
 
+export interface FormValues {
+    fraOgMed: Date;
+    årsak: OpprettetRevurderingGrunn;
+    informasjonSomRevurderes: InformasjonSomRevurderes[];
+    begrunnelse: string;
+}
+
 const EndreRevurderingPage = (props: {
     sakId: string;
     utbetalinger: Utbetalingsperiode[];
-    informasjonsRevurdering: InformasjonsRevurdering;
+    informasjonsRevurdering: InformasjonsRevurdering | undefined;
 }) => {
     const oppdaterRevurderingStatus = useAppSelector((state) => state.sak.oppdaterRevurderingStatus);
     const history = useHistory();
-
     const dispatch = useAppDispatch();
-    const handleNesteClick = async (arg: {
-        fraOgMed: Date;
-        årsak: OpprettetRevurderingGrunn;
-        informasjonSomRevurderes: InformasjonSomRevurderes[];
-        begrunnelse: string;
-    }) => {
-        const response = await dispatch(
-            oppdaterRevurdering({
-                sakId: props.sakId,
-                revurderingId: props.informasjonsRevurdering.id,
-                ...arg,
-            })
-        );
-        if (oppdaterRevurdering.fulfilled.match(response)) {
-            history.push(
-                Routes.revurderValgtRevurdering.createURL({
-                    sakId: props.sakId,
-                    revurderingId: props.informasjonsRevurdering.id,
-                    steg: finnNesteRevurderingsteg(response.payload.informasjonSomRevurderes),
-                })
-            );
-        }
-    };
-    const handleLagreOgFortsettSenereClick = async (arg: {
-        fraOgMed: Date;
-        årsak: OpprettetRevurderingGrunn;
-        informasjonSomRevurderes: InformasjonSomRevurderes[];
-        begrunnelse: string;
-    }) => {
-        const response = await dispatch(
-            oppdaterRevurdering({
-                sakId: props.sakId,
-                revurderingId: props.informasjonsRevurdering.id,
-                ...arg,
-            })
-        );
 
-        if (oppdaterRevurdering.fulfilled.match(response)) {
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
+    const forrigeUrl = Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId });
+    const thunk = (arg: FormValues) =>
+        props.informasjonsRevurdering
+            ? oppdaterRevurdering({
+                  sakId: props.sakId,
+                  revurderingId: props.informasjonsRevurdering.id,
+                  ...arg,
+              })
+            : opprettRevurdering({
+                  sakId: props.sakId,
+                  ...arg,
+              });
+
+    const endre = async (arg: FormValues, goTo: 'neste' | 'avbryt') => {
+        const response = await dispatch(thunk(arg));
+        if ((props.informasjonsRevurdering ? oppdaterRevurdering : opprettRevurdering).fulfilled.match(response)) {
+            history.push(
+                goTo === 'avbryt'
+                    ? forrigeUrl
+                    : Routes.revurderValgtRevurdering.createURL({
+                          sakId: props.sakId,
+                          revurderingId: response.payload.id,
+                          steg: finnNesteRevurderingsteg(response.payload.informasjonSomRevurderes),
+                      })
+            );
         }
     };
 
@@ -70,9 +66,8 @@ const EndreRevurderingPage = (props: {
 
     return (
         <RevurderingIntroForm
-            onNesteClick={handleNesteClick}
-            onLagreOgFortsettSenereClick={handleLagreOgFortsettSenereClick}
-            tilbakeUrl={Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId })}
+            save={endre}
+            tilbakeUrl={forrigeUrl}
             revurdering={props.informasjonsRevurdering}
             maxFraOgMed={DateFns.parseISO(sisteUtbetaling.tilOgMed)}
             minFraOgMed={DateFns.parseISO(førsteUtbetaling.fraOgMed)}

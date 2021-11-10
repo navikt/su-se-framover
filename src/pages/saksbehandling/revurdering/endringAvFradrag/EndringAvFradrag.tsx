@@ -20,11 +20,10 @@ import { lagreFradragsgrunnlag } from '~features/revurdering/revurderingActions'
 import sharedMessages from '~features/revurdering/sharedMessages-nb';
 import { customFormikSubmit } from '~lib/formUtils';
 import { useI18n } from '~lib/i18n';
-import * as Routes from '~lib/routes';
 import yup, { formikErrorsHarFeil, formikErrorsTilFeiloppsummering } from '~lib/validering';
+import { StegProps } from '~pages/saksbehandling/revurdering/common';
 import { useAppDispatch } from '~redux/Store';
 import { Fradrag, FradragTilhører } from '~types/Fradrag';
-import { GrunnlagsdataOgVilkårsvurderinger } from '~types/grunnlagsdataOgVilkårsvurderinger/grunnlagsdataOgVilkårsvurderinger';
 import { Revurdering } from '~types/Revurdering';
 import * as DateUtils from '~utils/date/dateUtils';
 import fradragstypeMessages from '~utils/søknadsbehandling/fradrag/fradragstyper-nb';
@@ -55,13 +54,7 @@ const GjeldendeFradrag = (props: { fradrag: Fradrag[] }) => {
     );
 };
 
-const EndringAvFradrag = (props: {
-    sakId: string;
-    revurdering: Revurdering;
-    grunnlagsdataOgVilkårsvurderinger: GrunnlagsdataOgVilkårsvurderinger;
-    forrigeUrl: string;
-    nesteUrl: string;
-}) => {
+const EndringAvFradrag = (props: StegProps) => {
     const { intl } = useI18n({
         messages: { ...sharedMessages, ...fradragMessages, ...uføreMessages, ...fradragstypeMessages },
     });
@@ -72,11 +65,9 @@ const EndringAvFradrag = (props: {
         RemoteData.RemoteData<ApiError, { revurdering: Revurdering; feilmeldinger: ErrorMessage[] }>
     >(RemoteData.initial);
 
-    const [pressedButton, setPressedButton] = React.useState<'ingen' | 'neste' | 'lagre'>('ingen');
-
-    const save = async (values: EndringAvFradragFormData) => {
+    const save = async (values: EndringAvFradragFormData, onSuccess: () => void) => {
         if (RemoteData.isPending(savingState)) {
-            return false;
+            return;
         }
         setSavingState(RemoteData.pending);
 
@@ -115,23 +106,12 @@ const EndringAvFradrag = (props: {
 
         if (lagreFradragsgrunnlag.fulfilled.match(res)) {
             setSavingState(RemoteData.success(res.payload));
-            if (res.payload.feilmeldinger.length > 0) {
-                return false;
+            if (res.payload.feilmeldinger.length === 0) {
+                onSuccess();
             }
-            return true;
         } else if (lagreFradragsgrunnlag.rejected.match(res)) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             setSavingState(RemoteData.failure(res.payload!));
-        }
-        return false;
-    };
-
-    const handleLagreOgFortsettSenereClick = async () => {
-        setPressedButton('lagre');
-        const res = await save(formik.values);
-        setPressedButton('ingen');
-        if (res) {
-            history.push(Routes.saksoversiktValgtSak.createURL({ sakId: props.sakId }));
         }
     };
 
@@ -143,12 +123,7 @@ const EndringAvFradrag = (props: {
             fradrag: props.revurdering.grunnlagsdataOgVilkårsvurderinger.fradrag.map(fradragTilFradragFormData),
         },
         async onSubmit(values) {
-            setPressedButton('neste');
-            const res = await save(values);
-            setPressedButton('ingen');
-            if (res) {
-                history.push(props.nesteUrl);
-            }
+            await save(values, () => history.push(props.nesteUrl));
         },
         validationSchema: schema,
         validateOnChange: hasSubmitted,
@@ -223,16 +198,14 @@ const EndringAvFradrag = (props: {
                                 <UtfallSomIkkeStøttes feilmeldinger={savingState.value.feilmeldinger} />
                             )}
                             <RevurderingBunnknapper
-                                onNesteClick="submit"
                                 tilbakeUrl={props.forrigeUrl}
                                 onLagreOgFortsettSenereClick={() => {
                                     setHasSubmitted(true);
-                                    customFormikSubmit(formik, handleLagreOgFortsettSenereClick);
+                                    customFormikSubmit(formik, () =>
+                                        save(formik.values, () => history.push(props.avsluttUrl))
+                                    );
                                 }}
-                                onNesteClickSpinner={pressedButton === 'neste' && RemoteData.isPending(savingState)}
-                                onLagreOgFortsettSenereClickSpinner={
-                                    pressedButton === 'lagre' && RemoteData.isPending(savingState)
-                                }
+                                loading={RemoteData.isPending(savingState)}
                             />
                         </div>
                     </form>

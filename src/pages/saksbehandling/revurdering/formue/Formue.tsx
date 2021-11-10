@@ -144,9 +144,8 @@ const Formue = (props: RevurderingProps) => {
                             <UtfallSomIkkeStøttes feilmeldinger={lagreFormuegrunnlagStatus.value.feilmeldinger} />
                         )}
                         <RevurderingBunnknapper
-                            onNesteClick="submit"
                             tilbakeUrl={props.forrigeUrl}
-                            onNesteClickSpinner={RemoteData.isPending(lagreFormuegrunnlagStatus)}
+                            loading={RemoteData.isPending(lagreFormuegrunnlagStatus)}
                         />
                     </form>
                 ),

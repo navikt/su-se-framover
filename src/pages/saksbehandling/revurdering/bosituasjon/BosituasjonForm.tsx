@@ -394,11 +394,7 @@ const BosituasjonForm = (props: {
                         {RemoteData.isSuccess(status) && (
                             <UtfallSomIkkeStøttes feilmeldinger={status.value.feilmeldinger} />
                         )}
-                        <RevurderingBunnknapper
-                            onNesteClick="submit"
-                            tilbakeUrl={props.forrigeUrl}
-                            onNesteClickSpinner={RemoteData.isPending(status)}
-                        />
+                        <RevurderingBunnknapper tilbakeUrl={props.forrigeUrl} loading={RemoteData.isPending(status)} />
                     </form>
                 ),
                 right: (
